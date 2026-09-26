@@ -1,0 +1,42 @@
+{
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\focus-stack.exe",
+    "sha256": "e256176d70bec54bb51a448b2adc452e7f49d21bc5042b40689a3257bbfdee9e",
+    "bytes": 1895424
+  },
+  "inventory": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\inventory-3\\inventory.json",
+    "sha256": "4a12d3a56cc4b31e141e2a9239247728b98a78a364e86d1c7354e63b86b65fdb",
+    "bytes": 5319
+  },
+  "prepared": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\run-3\\prepared.json",
+    "sha256": "8bb92495cbfa26ab90df9c5ba5f2879bd8d76bf19ea39541ca54c362bdf6eb06",
+    "bytes": 78349
+  },
+  "command_chars": 17587,
+  "settings": {
+    "threads": 8,
+    "batchsize": 4,
+    "opencl": false,
+    "whitebalance_correction": false,
+    "contrast_correction": false,
+    "alignment": "stock default neighbour alignment",
+    "default_crop": true,
+    "other_defaults": "unchanged pinned vendor defaults"
+  },
+  "limits": {
+    "vendor_wall_seconds": 900,
+    "vendor_cpu_seconds": 18000,
+    "vendor_committed_bytes": 42949672960
+  },
+  "scope": "External complete workflow reference,8bit output; not our CFA recipe, pure merge test or SOTA claim",
+  "resource_only_retry": true,
+  "prior_process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\run-2\\process.json",
+    "sha256": "2b2633dfc2f1097f2de3123264eb7f32a3e1ff322a82262334b47f231f008b65",
+    "bytes": 21716
+  },
+  "image_argv_unchanged_except_output": true,
+  "no_further_resource_retry": true
+}

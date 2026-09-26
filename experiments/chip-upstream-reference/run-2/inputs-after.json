@@ -1,0 +1,1796 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00001.tiff",
+    "sha256": "cf8ded034e62818674bb54f99535eacf5f98ab69a7873978dc626a0353c2441f",
+    "bytes": 197801322,
+    "mtime_ns": 1789900441709484700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00002.tiff",
+    "sha256": "91359ba6d6c58e7f60ec1ac595d0cf048dbaec120a14a7cd005a8e153dd26e60",
+    "bytes": 197801322,
+    "mtime_ns": 1789900442334475700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00003.tiff",
+    "sha256": "3473967f613adc8ea5eb8c685aa4d87f45ea924bca9caa8b193b1bc2474afa9c",
+    "bytes": 197801322,
+    "mtime_ns": 1789900442883471000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00004.tiff",
+    "sha256": "2492c1a004050ca8bceecfc0aa53ea806a0dbae932ca14a6d3cb65022b24f192",
+    "bytes": 197801322,
+    "mtime_ns": 1789900443492467800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00005.tiff",
+    "sha256": "a77def3323f8486fae5de025f1ff4fcfd2ee9350e7ce0a1693668d6ffae94bed",
+    "bytes": 197801322,
+    "mtime_ns": 1789900444084461700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00006.tiff",
+    "sha256": "2b5d659a7497b57c01ae143052109d2f14f0719c0833625aa8302797e7b6630b",
+    "bytes": 197801322,
+    "mtime_ns": 1789900444647455500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00007.tiff",
+    "sha256": "2c8875ce299ab321adbb8cfd902ae49557b4966f9a80b86aa1824a0474dc8d2e",
+    "bytes": 197801322,
+    "mtime_ns": 1789900445256452800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00008.tiff",
+    "sha256": "2eca5b6d1068807ad8d393324633155aa44b0c5be99fe68489085d8307b63db7",
+    "bytes": 197801322,
+    "mtime_ns": 1789900445828446100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00009.tiff",
+    "sha256": "c1656476374e785596bb486f1e9a43ceb4c96c49449c6792e334cb69158a7897",
+    "bytes": 197801322,
+    "mtime_ns": 1789900446378442600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00010.tiff",
+    "sha256": "a1b8fd7ab7971d4464fe7f5f3ae7f2c4ddfafda6d4ffee8a5f78749f8377b89a",
+    "bytes": 197801322,
+    "mtime_ns": 1789900447024435900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00011.tiff",
+    "sha256": "c7184262d7a6492e3e7eafe902236178f3c44ff222181635720a57fc9c9fe90d",
+    "bytes": 197801322,
+    "mtime_ns": 1789900447578431800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00012.tiff",
+    "sha256": "0f478fbd0a9aaae18b4cd7ba6dc13f0d8a5f316f31422aa983e0c08bb76df40f",
+    "bytes": 197801322,
+    "mtime_ns": 1789900448214427900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00013.tiff",
+    "sha256": "d97383912e6e6ebe4f418b990dd0ac156efdf8aec8d8329d4e3556001c9d742d",
+    "bytes": 197801322,
+    "mtime_ns": 1789900448798423600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00014.tiff",
+    "sha256": "185c68865e5e54c35a9371cfe7e597258920b5f5953fff073fa4ddab6659e06f",
+    "bytes": 197801322,
+    "mtime_ns": 1789900449358417900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00015.tiff",
+    "sha256": "e6249ce531d602be100275619f1397f71a4216b1bdde5049b2adc5b267fe2373",
+    "bytes": 197801322,
+    "mtime_ns": 1789900449987411200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00016.tiff",
+    "sha256": "9d1878af7711155f8e9ee7579b2093babbeafb1d2d1ee4b2d18751f66b8bdc14",
+    "bytes": 197801322,
+    "mtime_ns": 1789900450572408000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00017.tiff",
+    "sha256": "224eec6bdc67799cfb8e421e8df698f2361a4c31f6494a5fed19880df3b0c8b9",
+    "bytes": 197801322,
+    "mtime_ns": 1789900451138402200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00018.tiff",
+    "sha256": "1d66983cf1b197ab96f3fa85fd3521252e654b3bccd9a27fc97b334995b8768b",
+    "bytes": 197801322,
+    "mtime_ns": 1789900451756399600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00019.tiff",
+    "sha256": "a6330bfe0d7d2c8cb0fd3889765b98f72dee82ea7c1231086982ceba1b336acf",
+    "bytes": 197801322,
+    "mtime_ns": 1789900452287393600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00020.tiff",
+    "sha256": "c697ec9a458f97e34766dd73f9e9c6b17f293ed52f4d20f145dd683517ff6800",
+    "bytes": 197801322,
+    "mtime_ns": 1789900452857389000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00021.tiff",
+    "sha256": "52ded907cce3d95f89e9d2a6670e456479fd598b851b18e8331e5fdf989154ae",
+    "bytes": 197801322,
+    "mtime_ns": 1789900453477382900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00022.tiff",
+    "sha256": "d4b6badd20e5a42f93ca4da4615b2fad45ca17db938a227e29f0fc088de928c9",
+    "bytes": 197801322,
+    "mtime_ns": 1789900454013378800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00023.tiff",
+    "sha256": "e033a07f1e677fb13b41e0dfb4b0ebc7549f86505a265d4c37956a4a0938abf0",
+    "bytes": 197801322,
+    "mtime_ns": 1789900454580374100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00024.tiff",
+    "sha256": "e3406b77ecebe54300d053dcffb21afae6d58692612bbd11462e51965fd0c955",
+    "bytes": 197801322,
+    "mtime_ns": 1789900455201369400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00025.tiff",
+    "sha256": "103e08136a924c2282ff725d82686a7096184aaa80513b11a582a96a68c3b139",
+    "bytes": 197801322,
+    "mtime_ns": 1789900455741365200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00026.tiff",
+    "sha256": "757918a343239b1a1c7b6147be2f8b2db217390ccfaac0e4783ed47478b0d794",
+    "bytes": 197801322,
+    "mtime_ns": 1789900456322359300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00027.tiff",
+    "sha256": "067d1c205968b2778afed91903d7ec5b0bdeb078341258ff9b7659ba77689a31",
+    "bytes": 197801322,
+    "mtime_ns": 1789900456995353800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00028.tiff",
+    "sha256": "2730a0ed9652244ecaaccd914a66dbc4b6cbd99bb600fbc9c4ceb83d5bd0260f",
+    "bytes": 197801322,
+    "mtime_ns": 1789900457538349900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00029.tiff",
+    "sha256": "ef8929ad1c15e28065ceffc3fcc4b19032bc2d144fd6d36f541b164bb1c3c238",
+    "bytes": 197801322,
+    "mtime_ns": 1789900458111344500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00030.tiff",
+    "sha256": "044804fb80c42ce24860ffbee4c3ee86fbf8c16d4c3532e8456187434b0e0420",
+    "bytes": 197801322,
+    "mtime_ns": 1789900458748340000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00031.tiff",
+    "sha256": "ed4fa00831f292aa87f64c48a31ccb0c61d637cbcdb2e7ff7b1663ed4d2688cd",
+    "bytes": 197801322,
+    "mtime_ns": 1789900459324334200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00032.tiff",
+    "sha256": "9e0f1cda2a5e5bc99d64ba708cfb8ab6b1a002eb475f4212f0289c236fc672de",
+    "bytes": 197801322,
+    "mtime_ns": 1789900459914332200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00033.tiff",
+    "sha256": "6a75085ae754923dfd88bc1ade21a8a23487eac9436f5e0d9269e07aafb55319",
+    "bytes": 197801322,
+    "mtime_ns": 1789900460511324700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00034.tiff",
+    "sha256": "2a12756e46755e955ea91f1206ff05ce63eef669627188dd30db0b58cc252a81",
+    "bytes": 197801322,
+    "mtime_ns": 1789900461057324000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00035.tiff",
+    "sha256": "4a29ef4e5a76abfb347fab0cdd47c816f6ee72d7e3a9fd53538a4d7eba2f0afb",
+    "bytes": 197801322,
+    "mtime_ns": 1789900461634315700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00036.tiff",
+    "sha256": "3672c6b9097b65b9e33912a24273202e0a75e9b20e6243e79ce8e9683bf5a934",
+    "bytes": 197801322,
+    "mtime_ns": 1789900462226310600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00037.tiff",
+    "sha256": "a3f8d1a61b028d3a24e7ca8f65f5bb00df657afc125653d7f1b20e2741e5ac14",
+    "bytes": 197801322,
+    "mtime_ns": 1789900462779306900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00038.tiff",
+    "sha256": "fa9c3a1a81aed959d7308ec2abc75b3f7370d54f9415e395028c554e2ee20238",
+    "bytes": 197801322,
+    "mtime_ns": 1789900463423300300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00039.tiff",
+    "sha256": "216aacd48e875c26891c1307f6e2c11656199d7e39812d2497cbdf64ce888c25",
+    "bytes": 197801322,
+    "mtime_ns": 1789900463999295300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00040.tiff",
+    "sha256": "854435273f7bbcf66dbe06713b21150c14d2ba7b0b0f9d7bec8c4576f9c76a8f",
+    "bytes": 197801322,
+    "mtime_ns": 1789900464616290800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00041.tiff",
+    "sha256": "0b12213a48f9ff17f34adae0818a26581907090a68fb1b12e4d4906b5672b6eb",
+    "bytes": 197801322,
+    "mtime_ns": 1789900465215285600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00042.tiff",
+    "sha256": "17affdf25f5191b6305734364de4c4ddb0336a75e06a7fac2806f91e6998bef2",
+    "bytes": 197801322,
+    "mtime_ns": 1789900465783280600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00043.tiff",
+    "sha256": "fa126bcace942d5bbbf569a72ec70da1921ea5e0fb86ffeedeaad0850a4e8916",
+    "bytes": 197801322,
+    "mtime_ns": 1789900466409277500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00044.tiff",
+    "sha256": "fe48e6ab23c353766982f43f8853c491b2d4a55922035aedb1465267602d461c",
+    "bytes": 197801322,
+    "mtime_ns": 1789900467038270900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00045.tiff",
+    "sha256": "74aebccf6d42a02399919aae81b970a80686ded94e64f1fdc5c938a2d504459e",
+    "bytes": 197801322,
+    "mtime_ns": 1789900467589266500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00046.tiff",
+    "sha256": "435e90b37c5039c7af233b6cf32edbebb68464da147362855c2923f99a5db21d",
+    "bytes": 197801322,
+    "mtime_ns": 1789900468197262500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00047.tiff",
+    "sha256": "dd35f8883be24bc2af2ee3e2b72d2fb8a305f531de5e32d5efefcd50cac16480",
+    "bytes": 197801322,
+    "mtime_ns": 1789900468770256200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00048.tiff",
+    "sha256": "b55122bad228b8e8958bb389ca93f8d3f799792f7de6ef2e3b671ed432593e03",
+    "bytes": 197801322,
+    "mtime_ns": 1789900469333252700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00049.tiff",
+    "sha256": "2f2414b76be1d0bfb52dd86929ac754b579092adf08d354e5751aa6c8773e92e",
+    "bytes": 197801322,
+    "mtime_ns": 1789900469990249500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00050.tiff",
+    "sha256": "4e2d82014401bca2a5b924a2a3a67a7dc02cb73806c74afb35193a2db72acf69",
+    "bytes": 197801322,
+    "mtime_ns": 1789900470615243200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00051.tiff",
+    "sha256": "43b79d55d30cdae13fef1bc5649da9713240444d23a8c60a5592646133399153",
+    "bytes": 197801322,
+    "mtime_ns": 1789900471178240200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00052.tiff",
+    "sha256": "0707935ad0e02210f10b5bdb330ce40d7a2f51322e28758800c23e11a35b2b38",
+    "bytes": 197801322,
+    "mtime_ns": 1789900471805230800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00053.tiff",
+    "sha256": "4a979908e720deac573317080a63107af53fb2aef583351b20dc5d1c5f602d9f",
+    "bytes": 197801322,
+    "mtime_ns": 1789900472329226200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00054.tiff",
+    "sha256": "6130c6399e435b7bfcfd09add601f08049524dd75e19e900d388eca0bd6edaa9",
+    "bytes": 197801322,
+    "mtime_ns": 1789900473013220800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00055.tiff",
+    "sha256": "9f695ee2cbc20e2b53cdf6ade9e07661d7926185487e44d52d322069a55e2281",
+    "bytes": 197801322,
+    "mtime_ns": 1789900473570216000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00056.tiff",
+    "sha256": "5727e75506ab31856022782a4d590fee35800a0212b81b2111ad0423c4381e5c",
+    "bytes": 197801322,
+    "mtime_ns": 1789900474130213500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00057.tiff",
+    "sha256": "3e1370ffde56ff072d444e850589495aaedbfa0f7fe860cf7e8d5b7ecc99722d",
+    "bytes": 197801322,
+    "mtime_ns": 1789900474763207100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00058.tiff",
+    "sha256": "23c531e27aca115061027162d625098459914be51c9d035c328f338baf455dac",
+    "bytes": 197801322,
+    "mtime_ns": 1789900475321202000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00059.tiff",
+    "sha256": "3344615dd15a774fa5a57565462f9049b5bd6ce668d89eb3248ed7caa3b5c2c5",
+    "bytes": 197801322,
+    "mtime_ns": 1789900475889197000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00060.tiff",
+    "sha256": "4657e59fcca84e23588be64e2f995134de1d005dfc2ccad882c12cd3b0c4f62d",
+    "bytes": 197801322,
+    "mtime_ns": 1789900476494191300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00061.tiff",
+    "sha256": "a58255f948b840244c3cc06e4c4b59a4eb731042f6044ed2de3cb708f34adada",
+    "bytes": 197801322,
+    "mtime_ns": 1789900477072187200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00062.tiff",
+    "sha256": "3669f6ed0fb5271c9bc6ec37b43d626437e22ff55edb1136474c1f57591ae0ee",
+    "bytes": 197801322,
+    "mtime_ns": 1789900477660182900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00063.tiff",
+    "sha256": "596710aa0301b4ae43877ca76c82367c4b446ea1e0fccdc362d988c54c5ff1c0",
+    "bytes": 197801322,
+    "mtime_ns": 1789900478344176400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00064.tiff",
+    "sha256": "e22c4dacb512b3d6d8fbe859b99af109c8e3c77996e65653f15a9884cb29b904",
+    "bytes": 197801322,
+    "mtime_ns": 1789900478905171100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00065.tiff",
+    "sha256": "ba4b188c9b6d2fa78bc9691fc708305c8e985cc0ddc06da492d60882a509940d",
+    "bytes": 197801322,
+    "mtime_ns": 1789900479481166600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00066.tiff",
+    "sha256": "32c22a5ae013737f15935cc3cdc3577112e0d5499581afef6b1649a0b91cf06b",
+    "bytes": 197801322,
+    "mtime_ns": 1789900480082162100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00067.tiff",
+    "sha256": "c62ff497247e383dc3ee6ff23cef4156920e440237d2fab24193330c02373036",
+    "bytes": 197801322,
+    "mtime_ns": 1789900480627159700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00068.tiff",
+    "sha256": "77b503f7a9124e05508f8226526baedc4e58b973db729f9a82e45403ca4f8cda",
+    "bytes": 197801322,
+    "mtime_ns": 1789900481194152700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00069.tiff",
+    "sha256": "94f3b875914c14c7c06dcf1d4196a07bab17fe0663dff1235b4806e781c05fd9",
+    "bytes": 197801322,
+    "mtime_ns": 1789900481855148500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00070.tiff",
+    "sha256": "8fb5555a68c68f59def8348c921a6a19bbc0a2bf0ab8f64a2bbddbcb0e387a36",
+    "bytes": 197801322,
+    "mtime_ns": 1789900482404143600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00071.tiff",
+    "sha256": "eb6b26bb0eb3cebcd833571a7a507cb2d9272bbf7dec12d185a30ad73c6130b7",
+    "bytes": 197801322,
+    "mtime_ns": 1789900482966139200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00072.tiff",
+    "sha256": "4fdd8efb8201ce0926c5a22d3a00c71919e5277d75d2ae1fd966aef5cff68997",
+    "bytes": 197801322,
+    "mtime_ns": 1789900483575133200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00073.tiff",
+    "sha256": "590e6c6538e595f30031f0e0c3056c310258866fe8daca26fe322ef2dca829a7",
+    "bytes": 197801322,
+    "mtime_ns": 1789900484133130900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00074.tiff",
+    "sha256": "de246907a0f813a0509fc211bc3eb4140822df7bed8f773640eb7f5b63803c7a",
+    "bytes": 197801322,
+    "mtime_ns": 1789900484709124100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00075.tiff",
+    "sha256": "e273fd8141d3d85cbeee140a6c5ffa8b81c2fddf6c20e7404a5a87600cd9890f",
+    "bytes": 197801322,
+    "mtime_ns": 1789900485310119700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00076.tiff",
+    "sha256": "d27db7da727664dbef340912b7571d1c45a656736fdb7297eab0256a0225ac32",
+    "bytes": 197801322,
+    "mtime_ns": 1789900485874113900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00077.tiff",
+    "sha256": "009876ff0edab2086eba528fb6721965989ce39b7015504760de08f0c9ddf4fa",
+    "bytes": 197801322,
+    "mtime_ns": 1789900486465108500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00078.tiff",
+    "sha256": "5e55db5e38c0ec0c3db3963afe48239b043692ad8467f9f48cddf971e445e8af",
+    "bytes": 197801322,
+    "mtime_ns": 1789900487066104500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00079.tiff",
+    "sha256": "8276dec993344cb1a1a9c3851f0c5543da8d1c159c78f2ed936bab4226f90d6a",
+    "bytes": 197801322,
+    "mtime_ns": 1789900487615101100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00080.tiff",
+    "sha256": "e39ec51a247c15904d7f7f6388197ab90ba5a65e3f5c3a75509ef5e20640f55c",
+    "bytes": 197801322,
+    "mtime_ns": 1789900488185094900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00081.tiff",
+    "sha256": "5cf9faff54e5b3d746a26a1e03201cd450a05c393d00d90b3f151f4d917da238",
+    "bytes": 197801322,
+    "mtime_ns": 1789900488787461500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00082.tiff",
+    "sha256": "5559deebd2b85ce94f29c17df2eaf8ef16395f2937ec5722d1fb99da7a4b49f8",
+    "bytes": 197801322,
+    "mtime_ns": 1789900489351457600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00083.tiff",
+    "sha256": "ac7dc46e1d049b345fddbdb901861b191b40c4eca5df00ecd421e3adebcd55de",
+    "bytes": 197801322,
+    "mtime_ns": 1789900489941451100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00084.tiff",
+    "sha256": "255fab0dee5a3ad7e624a6ea0f28ff66ede2dac381b029089f92cec77ddb0ec2",
+    "bytes": 197801322,
+    "mtime_ns": 1789900490539446400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00085.tiff",
+    "sha256": "b44938a7c88a72b8069a8d5be7c9c7b95490f97ea16a48cc9d0cc0c0aeb7fe97",
+    "bytes": 197801322,
+    "mtime_ns": 1789900491082441200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00086.tiff",
+    "sha256": "971dd0fa53c80d551333cf81c8c7371e96ce51479b387027a2e5120ea13af408",
+    "bytes": 197801322,
+    "mtime_ns": 1789900491698437100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00087.tiff",
+    "sha256": "481e4ddcc5ae9ed2567940f8183bab0512276c9206270ae19b60b286f169a039",
+    "bytes": 197801322,
+    "mtime_ns": 1789900492325433300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00088.tiff",
+    "sha256": "1901e1a88577c927fbec906eda4e45aa2f8ef2b2b32d71eb6876227d08036d90",
+    "bytes": 197801322,
+    "mtime_ns": 1789900493103425500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00089.tiff",
+    "sha256": "55978f019887c6e68e69b46693a09d12e414027c26b7077cc7c733ee06c6c689",
+    "bytes": 197801322,
+    "mtime_ns": 1789900493830420400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00090.tiff",
+    "sha256": "782f0c2b8b2fbce88ae7ac75ccddc38ac819c828fbf8e3560e6799867efe4d7b",
+    "bytes": 197801322,
+    "mtime_ns": 1789900494452414300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00091.tiff",
+    "sha256": "04015bd2a32fcfe2a1f3e182298daf605d0091f42c073e40a813a65b61c65b37",
+    "bytes": 197801322,
+    "mtime_ns": 1789900495037408800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00092.tiff",
+    "sha256": "1aee32a3c40c331805462db8dd6be0a54f6da329e1663adee3a00935d9c361dc",
+    "bytes": 197801322,
+    "mtime_ns": 1789900495621403600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00093.tiff",
+    "sha256": "1dcd6523dbcb48eec1c07f10e687aa4ea584b0938e655fd327e141b1010476bd",
+    "bytes": 197801322,
+    "mtime_ns": 1789900496212399500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00094.tiff",
+    "sha256": "bdab8f36203d042397c0c643d53c3146141ca8313763a82e764422ea2d43ece1",
+    "bytes": 197801322,
+    "mtime_ns": 1789900496784394500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00095.tiff",
+    "sha256": "04177c989abe9185af511ed8826891b314063f4ebb727c9b371aa44a02db59d0",
+    "bytes": 197801322,
+    "mtime_ns": 1789900497418389400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00096.tiff",
+    "sha256": "1642980e75850041d5a8ca01c3f270c17f72fd8949dfe3074e499218fad71f87",
+    "bytes": 197801322,
+    "mtime_ns": 1789900498024383400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00097.tiff",
+    "sha256": "0d75ce25da4f2d36877f97a68f6d2f7bb054063b9a0dc9fd5a4f0c4d6f717f37",
+    "bytes": 197801322,
+    "mtime_ns": 1789900498596378900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00098.tiff",
+    "sha256": "83af47773b3d6b7ac0bf3b5348817c07c5e351c2edd6b59dca4bdefcc70143a6",
+    "bytes": 197801322,
+    "mtime_ns": 1789900499194374400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00099.tiff",
+    "sha256": "dd2d7fe40aacae7d47693dc952bf1ecef6f28bb56f6dac6fdbd45d90eec3358e",
+    "bytes": 197801322,
+    "mtime_ns": 1789900499773369000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00100.tiff",
+    "sha256": "baff2023793cdd67076bc1cb0fb1f124cf5c42260bbcab18e1d1247202981148",
+    "bytes": 197801322,
+    "mtime_ns": 1789900500360364600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00101.tiff",
+    "sha256": "4e34814600b96a16af32df15b4e615784a05f7744285fbfeafa25e0a39bddcc3",
+    "bytes": 197801322,
+    "mtime_ns": 1789900501043358700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00102.tiff",
+    "sha256": "c945e0ee6517de8d82c38f5a3cb8e475d4c20b6a9c0fd3ea664fbe462aecf5fa",
+    "bytes": 197801322,
+    "mtime_ns": 1789900501641354600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00103.tiff",
+    "sha256": "e460eac9b362965b9326a1f7db78679839c5817338d234aed544b20062fc33d4",
+    "bytes": 197801322,
+    "mtime_ns": 1789900502253351200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00104.tiff",
+    "sha256": "b29b300c14a584a7e49b838e815c3a6449bfef706e018ef4c6f92b7cd4c3da1b",
+    "bytes": 197801322,
+    "mtime_ns": 1789900502841344000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00105.tiff",
+    "sha256": "8cc13f560488c156ee545896c5b7622fd62db7b53a249079d3a4e8ec72dedc20",
+    "bytes": 197801322,
+    "mtime_ns": 1789900503421339800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00106.tiff",
+    "sha256": "fe8c8af3b137cdbba07d3d4afe1eb598c5d6b19b4ea4b3257b29ee1770559e08",
+    "bytes": 197801322,
+    "mtime_ns": 1789900504061335400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00107.tiff",
+    "sha256": "3cb04e09b68c72d75056cd34286ec1fb096c900a2723a32b54cb268e62edb586",
+    "bytes": 197801322,
+    "mtime_ns": 1789900504627329300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00108.tiff",
+    "sha256": "e76de20e3d3e0b973ad96bd0a2a791198b6e516bae1a1666858f7a144209db57",
+    "bytes": 197801322,
+    "mtime_ns": 1789900505256324800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00109.tiff",
+    "sha256": "674e3da6e4a257c2e5775422f7bb427d48c2683893d2d37750400f1794abbbb7",
+    "bytes": 197801322,
+    "mtime_ns": 1789900505869318600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00110.tiff",
+    "sha256": "8cf96765eb024f1720b546ce2d2d56c870a1f9b99dbb2be992175e4277430428",
+    "bytes": 197801322,
+    "mtime_ns": 1789900506473314900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00111.tiff",
+    "sha256": "0c6fb656a41ca1546556490c524dac5826943d7b14037b2b0b200d3f231e0400",
+    "bytes": 197801322,
+    "mtime_ns": 1789900507133308700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00112.tiff",
+    "sha256": "0574511db4d5be79a2297815fd2a6db91e3963caa116fb26b7fb39b81cbb3cc7",
+    "bytes": 197801322,
+    "mtime_ns": 1789900507726305500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00113.tiff",
+    "sha256": "913925370dbf4384c2b9831367fe979d0cd358638713727ab5b988e4d03bda13",
+    "bytes": 197801322,
+    "mtime_ns": 1789900508292300600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00114.tiff",
+    "sha256": "3ffdd757fb054b17099a54f36cb6e19985fa28cc17adb3a8780d58c235fe5633",
+    "bytes": 197801322,
+    "mtime_ns": 1789900508915299200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00115.tiff",
+    "sha256": "4e54ea9d9892528c21609299774dcc98bfb50f69988068cb5c483314c2e61bad",
+    "bytes": 197801322,
+    "mtime_ns": 1789900509533290200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00116.tiff",
+    "sha256": "d42c0341b62fd975112f6811ce1d2e434d89d6be475b3462aa73cf74232f0ae9",
+    "bytes": 197801322,
+    "mtime_ns": 1789900510106285500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00117.tiff",
+    "sha256": "5fa8aca5ef72795f8163139629040c5c59a713d5fff7ac7c1d65e3a57a9f2687",
+    "bytes": 197801322,
+    "mtime_ns": 1789900510758278300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00118.tiff",
+    "sha256": "8deacd00277c4e0aafd3586af77c9411163ede078254121e035639d0c450ab31",
+    "bytes": 197801322,
+    "mtime_ns": 1789900511347274400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00119.tiff",
+    "sha256": "523729116e7b6e7699832bf7c030f6c38911e2e3139bfe1502f3e9cf616373f7",
+    "bytes": 197801322,
+    "mtime_ns": 1789900511927268800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00120.tiff",
+    "sha256": "fb082b786faa977e55ce10cb91485f66df1183ed67b46d57dc06dad07fa45333",
+    "bytes": 197801322,
+    "mtime_ns": 1789900512537263800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00121.tiff",
+    "sha256": "87675ee3b357773970281db9c3f7a7f3dd090f3cfa4c305c882867420de95529",
+    "bytes": 197801322,
+    "mtime_ns": 1789900513115259200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00122.tiff",
+    "sha256": "45191c5849e3fb073265970b706ecd41668f31931a8c71425cdbd1e8bc192ef2",
+    "bytes": 197801322,
+    "mtime_ns": 1789900513743254800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00123.tiff",
+    "sha256": "e8942c51507d4a5f603b782fa8777cdbf63d812f6269e5c4cafc64cd76ba82cc",
+    "bytes": 197801322,
+    "mtime_ns": 1789900514562247200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00124.tiff",
+    "sha256": "d505b77274f0291485d71a123e30852f84125435cbaaf93836387ec931478a3b",
+    "bytes": 197801322,
+    "mtime_ns": 1789900515157241600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00125.tiff",
+    "sha256": "efbb4545f02b7d369a322492b68b72b39dc88aeeb4fcdceaf9069eb8ddcf0622",
+    "bytes": 197801322,
+    "mtime_ns": 1789900515728237900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00126.tiff",
+    "sha256": "d30803242fbbbf35916a73d07fcbd2f7bb660886dff0bf6ee6f8fcd4827f738a",
+    "bytes": 197801322,
+    "mtime_ns": 1789900516327235100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00127.tiff",
+    "sha256": "a47fa19e6060cae674f85e9a0a44d4797c11ec5a2930a27f50e7ec7ff06ffeac",
+    "bytes": 197801322,
+    "mtime_ns": 1789900516928228700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00128.tiff",
+    "sha256": "db54d3fbb164ff0674db82a5413e686208714d3075f74163001fc357b3269bbf",
+    "bytes": 197801322,
+    "mtime_ns": 1789900517495223300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00129.tiff",
+    "sha256": "198f810feba177085e4cb733795f7ba7e9548145041f9d5e784b285cfd7ae06e",
+    "bytes": 197801322,
+    "mtime_ns": 1789900518111217300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00130.tiff",
+    "sha256": "35e96b4f33fa61ae596adbfc881459ddffc73e7364476f76b40ddba59567c42a",
+    "bytes": 197801322,
+    "mtime_ns": 1789900518686215100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00131.tiff",
+    "sha256": "87f43d3ad00ba52fc570f5e0eddfa07a26df55102e127e7ecc362bd2752c1e23",
+    "bytes": 197801322,
+    "mtime_ns": 1789900519325210300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00132.tiff",
+    "sha256": "9c47f06c6a574a3d640f37bf2671a12c4578c080a48db73262f4633669c62ae2",
+    "bytes": 197801322,
+    "mtime_ns": 1789900519979202300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00133.tiff",
+    "sha256": "ecfa261d62900f59bd762bdb2faa089c3f0365f82c2d83720c9faf98895ebdca",
+    "bytes": 197801322,
+    "mtime_ns": 1789900520553198500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00134.tiff",
+    "sha256": "2d511f4967d92dad518f49110e48b2d95b95a0dede660c2edcebd9ba0adb5dd8",
+    "bytes": 197801322,
+    "mtime_ns": 1789900521186192300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00135.tiff",
+    "sha256": "c9b954486bd3801cc87fc592c56cc894d65cef574a1f2df963bd75bbb57ff3f7",
+    "bytes": 197801322,
+    "mtime_ns": 1789900521759187600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00136.tiff",
+    "sha256": "05eba3ae04d8d0ba3c2d18314e6a84dc33484c8a86ae9e11f013eec5cbf2d4f9",
+    "bytes": 197801322,
+    "mtime_ns": 1789900522371181900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00137.tiff",
+    "sha256": "7904e39c036d9cee00504ff10c58fb45b9311a5dd836aafdefbde800a2c8a01e",
+    "bytes": 197801322,
+    "mtime_ns": 1789900522963177800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00138.tiff",
+    "sha256": "d62f1c1ed938316dd3e4233f42a111174c3369c8cae9e5c45fda2cde82fc2583",
+    "bytes": 197801322,
+    "mtime_ns": 1789900523527173000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00139.tiff",
+    "sha256": "b6fad484f43135ecfb936ba98fec5f7f3ff220237d8a4bbe52e8f06f21a9b71a",
+    "bytes": 197801322,
+    "mtime_ns": 1789900524153172100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00140.tiff",
+    "sha256": "4a591c7a3e1404125e2befa6eda77a4039ddbc352f22a36bae7c1979fa57322a",
+    "bytes": 197801322,
+    "mtime_ns": 1789900524727162700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00141.tiff",
+    "sha256": "241701e0268228b650e58dc07404d944e93c716fa75dcaa9c645ba4d74d9370b",
+    "bytes": 197801322,
+    "mtime_ns": 1789900525312158600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00142.tiff",
+    "sha256": "b2a4ae299db799f96804c06e6f5db682f3a5d4260ea5760cb35af5784280ad74",
+    "bytes": 197801322,
+    "mtime_ns": 1789900525966151500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00143.tiff",
+    "sha256": "e241ccf523cc2f8e82d8dd64f5ea9a7f9e75e69ee1ff9f2dd193583352331253",
+    "bytes": 197801322,
+    "mtime_ns": 1789900526530147900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00144.tiff",
+    "sha256": "905b4b9f9fd1a516cd2aac0d4a0e9ae0f5a4b77aae3172207513bbee67538394",
+    "bytes": 197801322,
+    "mtime_ns": 1789900527166143100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00145.tiff",
+    "sha256": "3a45822d08192c42612be457b075e8ee3ddcbf6454e21c08b86336d7d8d34006",
+    "bytes": 197801322,
+    "mtime_ns": 1789900527753139600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00146.tiff",
+    "sha256": "b468446b6a158cc332e5a8b227a002f7c82b6695063e2a532fb29c4eddff8763",
+    "bytes": 197801322,
+    "mtime_ns": 1789900528320132800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00147.tiff",
+    "sha256": "82ff48f93e58d0d31473196e10c71283f4b8b17cb37824b0d5943bbc5fe7ba59",
+    "bytes": 197801322,
+    "mtime_ns": 1789900528932126800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00148.tiff",
+    "sha256": "87275b09067dc5c2f59350ff9fbc63318a7b9d86b04704f76a0e155f0dd673d8",
+    "bytes": 197801322,
+    "mtime_ns": 1789900529516124700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00149.tiff",
+    "sha256": "946f202df5bacb74ff7ae12a09fe2377b1061d855f8c15304c72707cb7d2fd4a",
+    "bytes": 197801322,
+    "mtime_ns": 1789900530112799900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00150.tiff",
+    "sha256": "f18c7dadea1bcc9073dc2b9f8a77875480a577e9389690601d2f35aee52f6397",
+    "bytes": 197801322,
+    "mtime_ns": 1789900530740792400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00151.tiff",
+    "sha256": "be7829f95d84778accf46c7782520ca0094254b68e8df860ba15f9f65d645b0a",
+    "bytes": 197801322,
+    "mtime_ns": 1789900531322993300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00152.tiff",
+    "sha256": "986096d7e5a78c1e30388ee4dc946dd399221a10961fd38baf767a4743587f33",
+    "bytes": 197801322,
+    "mtime_ns": 1789900531909212400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00153.tiff",
+    "sha256": "1211721a40627d7585ff28cf31dcfbd9bf974310cc12b30b35bad58320d05f03",
+    "bytes": 197801322,
+    "mtime_ns": 1789900532528208500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00154.tiff",
+    "sha256": "f0f7e424144cc877ec77c7a3d5df786f5e416fdf51ccab06732c8961926a2892",
+    "bytes": 197801322,
+    "mtime_ns": 1789900533098953300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00155.tiff",
+    "sha256": "682ca89d0e0bd3a20ced5863b0837b5f46848f2a7802274317be7f396fbe5f6b",
+    "bytes": 197801322,
+    "mtime_ns": 1789900533746591400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00156.tiff",
+    "sha256": "0a99412f2c660247730dd7935136f3beec0a767fdc8b16509fff58b3690cf2ec",
+    "bytes": 197801322,
+    "mtime_ns": 1789900534365587100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00157.tiff",
+    "sha256": "d39c7c166e612fb7f90840d13c414f018df54ba42a73bf0096fab4698439176f",
+    "bytes": 197801322,
+    "mtime_ns": 1789900534962586200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00158.tiff",
+    "sha256": "f6ec82a4fcf2fa28051f9f88c576e8517e72c75c71ba64757b49cb28313429e4",
+    "bytes": 197801322,
+    "mtime_ns": 1789900535542138100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00159.tiff",
+    "sha256": "51b1b782f19e1ed6bc722583d249654114aafecc19801b7e7ca1dc4be72d6d29",
+    "bytes": 197801322,
+    "mtime_ns": 1789900536197134500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00160.tiff",
+    "sha256": "9c3d603e3d75b4c67bd158ba03353bd238418822fce5f382fa746ba9aa508b53",
+    "bytes": 197801322,
+    "mtime_ns": 1789900536770658800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00161.tiff",
+    "sha256": "8998ab1b89d89aaafded73dccb07d9572a8a1cb05356cb0d9153ed75f7f84c55",
+    "bytes": 197801322,
+    "mtime_ns": 1789900537360853900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00162.tiff",
+    "sha256": "6bd3a0c1df7fb2d2fb80f3482024fcff5bdf0ce87ec695d92a21dd4cafe7d727",
+    "bytes": 197801322,
+    "mtime_ns": 1789900538014847800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00163.tiff",
+    "sha256": "98ced66aaf0a2283e24a8140b562407d4ad906456b56ae64585df3660bf65272",
+    "bytes": 197801322,
+    "mtime_ns": 1789900538814569400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00164.tiff",
+    "sha256": "9e1a5260fbc891b3de351825823e3f127f5ed68441ed9e4be3ace970ca2262d0",
+    "bytes": 197801322,
+    "mtime_ns": 1789900539395866300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00165.tiff",
+    "sha256": "8c69516d64128e19f2475d4028498624275e4df347e7fafc252fb33e44aa5faa",
+    "bytes": 197801322,
+    "mtime_ns": 1789900540054860300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00166.tiff",
+    "sha256": "a6d0c1c3a1d2f16eb4b6fd01c69e7bcf31628e99dc526cd5c960e868a4c355ce",
+    "bytes": 197801322,
+    "mtime_ns": 1789900540638494500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00167.tiff",
+    "sha256": "81c87b17b3720a64fb3a56b83acced4a6dbd53ec9e8849f773b123ed73e6c473",
+    "bytes": 197801322,
+    "mtime_ns": 1789900541205852200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00168.tiff",
+    "sha256": "893991c4187902bd9a4964a7a38df8d3fb9a6ea8297299a6725fdbadf101eddf",
+    "bytes": 197801322,
+    "mtime_ns": 1789900541823850800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00169.tiff",
+    "sha256": "38387ff4aa5e8c5135cc45a7e3881d7e72e393aca56ae2bf31f0440b9cd425ed",
+    "bytes": 197801322,
+    "mtime_ns": 1789900542468931000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00170.tiff",
+    "sha256": "adc16b6a352472206bd6052cfe3fd6e0b1e56dde67539c7d39d21cc15001ce15",
+    "bytes": 197801322,
+    "mtime_ns": 1789900543066592200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00171.tiff",
+    "sha256": "1f37e06466729357b19f5ef1d7659ebd5355a31d23ffcae1a0e915f374f2c6ae",
+    "bytes": 197801322,
+    "mtime_ns": 1789900543699586100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00172.tiff",
+    "sha256": "e834ce678f8f540b9ef80c6462a2a27936a6183e960a683d159ecc2e764bf97c",
+    "bytes": 197801322,
+    "mtime_ns": 1789900544285135800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00173.tiff",
+    "sha256": "1eb844f1e7eac26a02ea7a5c72cf9ed97fb9b0762542f26071556ed2d86148ff",
+    "bytes": 197801322,
+    "mtime_ns": 1789900544852313900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00174.tiff",
+    "sha256": "f6c1c695fe83cce1e6370d93254a5aef24e79c6426c6315f94d0a7e72f525540",
+    "bytes": 197801322,
+    "mtime_ns": 1789900545470308500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00175.tiff",
+    "sha256": "a9378eac1a47e11881c586a714578ec1a43eac8b4c71a59d4133456f9426e8c5",
+    "bytes": 197801322,
+    "mtime_ns": 1789900546111477500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00176.tiff",
+    "sha256": "1d69abdde2ed93ebdbe939f67320de4aaab57b6a79247f4d441c2dcf23922e37",
+    "bytes": 197801322,
+    "mtime_ns": 1789900546695527700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00177.tiff",
+    "sha256": "cd6aa550f307d51a54c6679e20b6ade86f3d956e142632d0807ea61562e4af6e",
+    "bytes": 197801322,
+    "mtime_ns": 1789900547329522300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00178.tiff",
+    "sha256": "e57d7ec4ca7b53cda40a11087e80b7729ffada709463c62cf38c6eb1548bf653",
+    "bytes": 197801322,
+    "mtime_ns": 1789900547899369500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00179.tiff",
+    "sha256": "4d9474a5eb74f8fb92fcebfafaed8d3ce4cd0a7009cb6c8e22be9bd8c896bdff",
+    "bytes": 197801322,
+    "mtime_ns": 1789900548476397600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00180.tiff",
+    "sha256": "797bf858e58a311c0d993258067564c40449509d1862ca5688df59931d55f30a",
+    "bytes": 197801322,
+    "mtime_ns": 1789900549094141100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00181.tiff",
+    "sha256": "92549218eb3aed52e8fe4d2d90a5fea775c3e15bcca0714455844816172f5e0d",
+    "bytes": 197801322,
+    "mtime_ns": 1789900549682367100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00182.tiff",
+    "sha256": "dd1415c324f4b3e8abec53a05b1a1a955694d23f6de7f70a029e8846009a5a08",
+    "bytes": 197801322,
+    "mtime_ns": 1789900550279217700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00183.tiff",
+    "sha256": "fd0cab7cdd22f64939b7c3118d2becb1032b29ddbb4de102b405575a296f2e11",
+    "bytes": 197801322,
+    "mtime_ns": 1789900550900212900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00184.tiff",
+    "sha256": "8a93fdeed2be045268ffb31372b255b93f5b8cd593ca1a69a32b9c671715f376",
+    "bytes": 197801322,
+    "mtime_ns": 1789900551507357700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00185.tiff",
+    "sha256": "b36f168fa2d11fe3c61bd6f8335f3b34f997d2ed259c85bde424b228d978bf8d",
+    "bytes": 197801322,
+    "mtime_ns": 1789900552071441700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00186.tiff",
+    "sha256": "db9b09bd6a8bc0fd525ef5bf0ae086d404eccb0e1fcf49ac155caaa6d9cbe800",
+    "bytes": 197801322,
+    "mtime_ns": 1789900552718439600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00187.tiff",
+    "sha256": "147341c8a2a0b23a7ef34a714415840555ac630ddb804aaa482b581c8903bd4e",
+    "bytes": 197801322,
+    "mtime_ns": 1789900553346661200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00188.tiff",
+    "sha256": "44789da8274d50d23ee663f4ff46cd5c6752994f6654abcdd1abfea02e992a51",
+    "bytes": 197801322,
+    "mtime_ns": 1789900553940703800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00189.tiff",
+    "sha256": "6201787029c8288ec11b4036c21be7b09aa8a6684a3f13cae815e53b0285b0dc",
+    "bytes": 197801322,
+    "mtime_ns": 1789900554577698800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00190.tiff",
+    "sha256": "f7c2b0020233e2521b84541c0610f7e36511c0cb23583b0ffeeb98a772c27bc9",
+    "bytes": 197801322,
+    "mtime_ns": 1789900555180735200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00191.tiff",
+    "sha256": "22d80808a0e2c615206d926a850e1509d3ed7fef5b67bc6feb4301fcc495de93",
+    "bytes": 197801322,
+    "mtime_ns": 1789900555743899600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00192.tiff",
+    "sha256": "f041258e6b5726dadd16742e3fcd25107876bbf90f2fde8ebad0fd41178e2e5e",
+    "bytes": 197801322,
+    "mtime_ns": 1789900556416893500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00193.tiff",
+    "sha256": "8ca41f7864ac0fd82ede2ee2f425f962e3c12a59ca4f8fa58caf08667c1b1694",
+    "bytes": 197801322,
+    "mtime_ns": 1789900556986304600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00194.tiff",
+    "sha256": "652968b7de541699db78bc295b35bb0f6e97d6a5e3e1e4da3ef5b36d278458a7",
+    "bytes": 197801322,
+    "mtime_ns": 1789900557564712800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00195.tiff",
+    "sha256": "37e312cfaca5a0e11bdb1c368d779d28804828541bf079a63cafe1962986ba57",
+    "bytes": 197801322,
+    "mtime_ns": 1789900558169707600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00196.tiff",
+    "sha256": "14e0a8758d9d84fc20e11ab232fc5fa87cdb72322a4619c50e106be7ce0ab23a",
+    "bytes": 197801322,
+    "mtime_ns": 1789900558777013900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00197.tiff",
+    "sha256": "fc71b0e9ff38bbdeb8ddfaec2098e36cf8efe820e082099221f605dcf94a6876",
+    "bytes": 197801322,
+    "mtime_ns": 1789900559341972100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00198.tiff",
+    "sha256": "a39c856c95ec80f932d632ef7e3fe24d5394f2e961cdf55131a52339fcc0cf75",
+    "bytes": 197801322,
+    "mtime_ns": 1789900559992965800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00199.tiff",
+    "sha256": "2d03994135555d6fb01d78ac048c0cbb312d568a1e0637867e1785f388029168",
+    "bytes": 197801322,
+    "mtime_ns": 1789900560623466700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00200.tiff",
+    "sha256": "53056abb3f092c6337add1dccbfffb264e77faf84bfa22cce6e4c4cd0a587262",
+    "bytes": 197801322,
+    "mtime_ns": 1789900561202635100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00201.tiff",
+    "sha256": "86fe1a0f256b7364cace4b4b33757b1ffd3bf150d4a6fcd1a66c09dab78b3023",
+    "bytes": 197801322,
+    "mtime_ns": 1789900561841626500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00202.tiff",
+    "sha256": "10901d58a271b5755197cee7fb3a5c6ecf86a7f9706fcada97afdc4fb4d52b58",
+    "bytes": 197801322,
+    "mtime_ns": 1789900562419838600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00203.tiff",
+    "sha256": "c8a256bf281de7c841023022c7988806463ef60be5901c2eeb9194082a34a2bf",
+    "bytes": 197801322,
+    "mtime_ns": 1789900562997038300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00204.tiff",
+    "sha256": "d6d1c8d8918bd86060895f395602b064cc6d9058f6dc749072508ec6e2eb7343",
+    "bytes": 197801322,
+    "mtime_ns": 1789900563665033600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00205.tiff",
+    "sha256": "315b2dc8bed2439158c257306e6975b8084d22f876e9de755a2b3d04fb9b4714",
+    "bytes": 197801322,
+    "mtime_ns": 1789900564242073600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00206.tiff",
+    "sha256": "346cb6130518191d1b8269eaafc1df6194e7a4d125ade891313deaa5db3884b5",
+    "bytes": 197801322,
+    "mtime_ns": 1789900564817056400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00207.tiff",
+    "sha256": "eec706a08aa9de348e8da34e875e6bf0ddc48411a4a9605873721c5fc12a5d59",
+    "bytes": 197801322,
+    "mtime_ns": 1789900565427051700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00208.tiff",
+    "sha256": "fb05c5ef3ded97645c41eeb24cb6460aa78cda749bd2d6bef1c21eb7af13d0b9",
+    "bytes": 197801322,
+    "mtime_ns": 1789900566008578000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00209.tiff",
+    "sha256": "5178c01caefdf09a0880bf0b1c8e06e0d04e56b0dff3674c2028e5d737c0f957",
+    "bytes": 197801322,
+    "mtime_ns": 1789900566571926700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00210.tiff",
+    "sha256": "b1268aacb9c211d92421c226e14b9372a11e957acfff5e575f633190a18ae5df",
+    "bytes": 197801322,
+    "mtime_ns": 1789900567212924100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00211.tiff",
+    "sha256": "2066258b72000f3ba8cd4d0c4b9f1d5e7e2f43c32bbe75be2426c06e929be69b",
+    "bytes": 197801322,
+    "mtime_ns": 1789900567788255700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00212.tiff",
+    "sha256": "24e57a8c0c4c7770541cc156ec4d435154b3f7a146bb0ab8e5caa96b89340992",
+    "bytes": 197801322,
+    "mtime_ns": 1789900568371130500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00213.tiff",
+    "sha256": "dd9625147b242ea1a0feb842b8b9c44f63f771078e693e6337b162c7d0babe77",
+    "bytes": 197801322,
+    "mtime_ns": 1789900569013125700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00214.tiff",
+    "sha256": "c953b6b9a9ce91d5d6d503315c2ac3e62a9d18eaec7737966ddf05542101daf3",
+    "bytes": 197801322,
+    "mtime_ns": 1789900569594242900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00215.tiff",
+    "sha256": "08afde1d87fe6433db5aa0b6e7707908d516c16a8bc43c6b8c6d9ee744f96f44",
+    "bytes": 197801322,
+    "mtime_ns": 1789900570159706500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00216.tiff",
+    "sha256": "9dc91bbe23491aad69c254d8ae7a62e58d45a7ade9d0f1d0887ab9bda4a3c459",
+    "bytes": 197801322,
+    "mtime_ns": 1789900570842699300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00217.tiff",
+    "sha256": "35f8485976d22f972ca401844389024628b954860fbdb9042cdbe83ffe971d42",
+    "bytes": 197801322,
+    "mtime_ns": 1789900571429875400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00218.tiff",
+    "sha256": "91f3d2b8b09eef75bd90105d1b2d0ee23c7eb9b641edcea0cba4507d054cd7a8",
+    "bytes": 197801322,
+    "mtime_ns": 1789900572007789500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00219.tiff",
+    "sha256": "c22c18647489c7be2c89c918f21c1087bbd7051f217b0502e53b512463e1aafa",
+    "bytes": 197801322,
+    "mtime_ns": 1789900572644783800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00220.tiff",
+    "sha256": "75b6744e418dc63d86a2bee2c3cfed9df4f2c6b2bccf8dab8aa334afd9d92f40",
+    "bytes": 197801322,
+    "mtime_ns": 1789900573196053200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00221.tiff",
+    "sha256": "8fa9777b7e24f787a702b281565d2aabe1d031d6afe63f65aa4009dd027b6edc",
+    "bytes": 197801322,
+    "mtime_ns": 1789900573815198000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00222.tiff",
+    "sha256": "14e13761bf2e848a4551826f8da7d4cf4f382634e7cf3ab7595f7e7bd969f28d",
+    "bytes": 197801322,
+    "mtime_ns": 1789900574418192100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00223.tiff",
+    "sha256": "64ecb82917b6963c53406385e4c29a604a8cc0de45fa4e44378551d7e9cb0f83",
+    "bytes": 197801322,
+    "mtime_ns": 1789900574991245200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00224.tiff",
+    "sha256": "622277e282830656fc481eaf7085ed84367747c3948885c5f6b2b3c7d25d9c5e",
+    "bytes": 197801322,
+    "mtime_ns": 1789900575561107000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00225.tiff",
+    "sha256": "8088764199b6d33200528ee560401c45285d8c5d06b185b4515d7dcf4ea710c0",
+    "bytes": 197801322,
+    "mtime_ns": 1789900576210101800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00226.tiff",
+    "sha256": "5f56ad5132efa928b78770765de7c8606a09236e96d19153ea2bf0840682dc65",
+    "bytes": 197801322,
+    "mtime_ns": 1789900576798262600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00227.tiff",
+    "sha256": "f35bd7ce29dfe7e343fde78238005fbd990bd53d54aa6094a2dea0d1d7e1d34c",
+    "bytes": 197801322,
+    "mtime_ns": 1789900577376024600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00228.tiff",
+    "sha256": "10f6f37b4fe01f5b0b0ae47f600be860bf71659562895fceeafd2e05d5ed7b29",
+    "bytes": 197801322,
+    "mtime_ns": 1789900578053018700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00229.tiff",
+    "sha256": "013e78351e9e0f321bb69420c98b2616cb93b0636b6aec99636424384f186077",
+    "bytes": 197801322,
+    "mtime_ns": 1789900578598255100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00230.tiff",
+    "sha256": "4def8dc81553f8d813ccdb7e505b269852787c5a2b516b83dbfe76a3ac9d9919",
+    "bytes": 197801322,
+    "mtime_ns": 1789900579173375900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00231.tiff",
+    "sha256": "f5ba8fb8d1a9641966024f0adf46eddd81a6ccd9448b310b5dfb44dbedb4b588",
+    "bytes": 197801322,
+    "mtime_ns": 1789900579811368500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00232.tiff",
+    "sha256": "73fef7e99b1899292ee85d9ee51270c57727aa57e9a97872ca47f985c2f6e069",
+    "bytes": 197801322,
+    "mtime_ns": 1789900580388775700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00233.tiff",
+    "sha256": "a0c59061e38adf72a6bbe06fdddfba6f9a3aa15eee7374b60d5b8b752fdee5ff",
+    "bytes": 197801322,
+    "mtime_ns": 1789900580966813100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00234.tiff",
+    "sha256": "ae5f4fc117986c674949f8955f243445c19d6518198dde50b902467e67cc37b3",
+    "bytes": 197801322,
+    "mtime_ns": 1789900581636806700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00235.tiff",
+    "sha256": "7b626879df8b412dffbc4dd2d0490400104c8d42525575cabc2d46cfbe983cb8",
+    "bytes": 197801322,
+    "mtime_ns": 1789900582206274700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00236.tiff",
+    "sha256": "bd9e342f163e3ab7652bf78d167560d3e115d8a834d74513ea1023c87728db85",
+    "bytes": 197801322,
+    "mtime_ns": 1789900582769374400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00237.tiff",
+    "sha256": "e6dc4bdfecfdfa0ed1ba70b6f88fbf2307bf8931911d9e829996a07487e50c32",
+    "bytes": 197801322,
+    "mtime_ns": 1789900583387368300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00238.tiff",
+    "sha256": "d1a7db8bb51562d11742832db045012889c5050413df7effb4b103a219d01582",
+    "bytes": 197801322,
+    "mtime_ns": 1789900583962488600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00239.tiff",
+    "sha256": "3c1f9c8f76239ac838c23b82e71ea53d9d385e8cb12aa73539d3f36b6ab0aece",
+    "bytes": 197801322,
+    "mtime_ns": 1789900584544111600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00240.tiff",
+    "sha256": "b28da36c69a184ca6f9dd40cefc824b69d2bf06ffc2b917deba44a37e27f4a03",
+    "bytes": 197801322,
+    "mtime_ns": 1789900585212105200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00241.tiff",
+    "sha256": "8011858be246d543f1b5f027b73a042bc8efa9f76a9f80e6e57eb7eef7df2266",
+    "bytes": 197801322,
+    "mtime_ns": 1789900585789415100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00242.tiff",
+    "sha256": "858e22a500f4c7482e5a1b463429bf8664448583f9dbb7ceb3a58dabd9d777e3",
+    "bytes": 197801322,
+    "mtime_ns": 1789900586362598800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00243.tiff",
+    "sha256": "aa6f4506c8238b05a2219de9369f0321e67021095e972ebff5dd2b5047dbb44b",
+    "bytes": 197801322,
+    "mtime_ns": 1789900586988593600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00244.tiff",
+    "sha256": "41f88d97c19ad8043e39310b0738c518ddc39000f9ef72666e659e5a05226721",
+    "bytes": 197801322,
+    "mtime_ns": 1789900587582976400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00245.tiff",
+    "sha256": "ceee63adae55601c6f4e19ab8aa1bbc8c06cd996371bc656c47d1ad4aeffc8e4",
+    "bytes": 197801322,
+    "mtime_ns": 1789900588150843600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00246.tiff",
+    "sha256": "2925a5c3ad49d841209f0cd670f5da16237796eae56673da2bca9d6c457d292b",
+    "bytes": 197801322,
+    "mtime_ns": 1789900588822839300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00247.tiff",
+    "sha256": "db9607861cbb03fd50cbc4f48d1220706cf9bcb08718b92c30f3b592f375eceb",
+    "bytes": 197801322,
+    "mtime_ns": 1789900589440933600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00248.tiff",
+    "sha256": "e9a50ef9af63b928607b160d44ee775a7cf70f6ba8bb72cc1bf7604e3c6c8e8e",
+    "bytes": 197801322,
+    "mtime_ns": 1789900590012216400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00249.tiff",
+    "sha256": "c58154b39f9eeb56f7452d5037a06afffdf1dbe10ef10d92fac992289f4f326f",
+    "bytes": 197801322,
+    "mtime_ns": 1789900590650212400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00250.tiff",
+    "sha256": "38d385b2f211fe740f9269ff90416dd7767cb854d57f9f5eb7a1f1649a94b805",
+    "bytes": 197801322,
+    "mtime_ns": 1789900591246279100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00251.tiff",
+    "sha256": "7c8c69f43a23d8f260154f77cc9fd81f10fcae947539878629526a1078ef2f6e",
+    "bytes": 197801322,
+    "mtime_ns": 1789900591819561700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00252.tiff",
+    "sha256": "38d57bfc81ac5646f081bbcda0767ec5a37d076d3ed13379d9a07a6e712ed8ee",
+    "bytes": 197801322,
+    "mtime_ns": 1789900592487556600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00253.tiff",
+    "sha256": "17bed5caa357ef2a2ae385b8997596a7249070a9a5ce1164415d48e521cbf0ca",
+    "bytes": 197801322,
+    "mtime_ns": 1789900593044677400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00254.tiff",
+    "sha256": "029423bd4c0b127d5e713dfce57a94c89c81424c2e1c6c1c456d76355f818966",
+    "bytes": 197801322,
+    "mtime_ns": 1789900593611091600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00255.tiff",
+    "sha256": "45b0525c5b05e94553f1e1b71aec6171bd1bf8621cd4bb38b891a07e121de63b",
+    "bytes": 197801322,
+    "mtime_ns": 1789900594328684700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00256.tiff",
+    "sha256": "13c955c9203c62cc9c9e80934b541e7798f6c43b7495d7d4ed69f4615e20e13a",
+    "bytes": 197801322,
+    "mtime_ns": 1789900594928679500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00257.tiff",
+    "sha256": "19da1aa2beb66e4d5fff348fbb3a87b626534e6bd8d66366d6af6c929a7818b8",
+    "bytes": 197801322,
+    "mtime_ns": 1789900595548490600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00258.tiff",
+    "sha256": "7f55d37f34f9d8d7a46215da4ad7206d62d340ec2e8de6fee3f2d3f97e137773",
+    "bytes": 197801322,
+    "mtime_ns": 1789900596127979000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00259.tiff",
+    "sha256": "8c447831bdb22d38a5c8673e46404ede4f0e4e4f93ab6d6932b63d9651fbd856",
+    "bytes": 197801322,
+    "mtime_ns": 1789900596705974600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00260.tiff",
+    "sha256": "739f326bcac618a737400164d63f67f734d0f0b8332e69041beac1704c95fcf8",
+    "bytes": 197801322,
+    "mtime_ns": 1789900597294128600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00261.tiff",
+    "sha256": "95af9b4aa6366ebd5b3e62ccc4ed23f11de0f433a8ebbd6e6837380ee1ba7bb9",
+    "bytes": 197801322,
+    "mtime_ns": 1789900597897933100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00262.tiff",
+    "sha256": "87d078b910a243018627a641a7040c4d01853563b53c8541ab4cea969c5d0fc4",
+    "bytes": 197801322,
+    "mtime_ns": 1789900598458929000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00263.tiff",
+    "sha256": "d32dee85eabe23d66da55b00feb4c602db4b68e9b5f1703abf695be194ef7f95",
+    "bytes": 197801322,
+    "mtime_ns": 1789900599063123200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00264.tiff",
+    "sha256": "4dc144ff44507a23ba4bb952526b6addfd03f579385ca63bc05420013e5f5d6b",
+    "bytes": 197801322,
+    "mtime_ns": 1789900599682692500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00265.tiff",
+    "sha256": "47f983bcac72e30e219084be50b3aceb90b64e41cb7dd47adb1c97989af3dcb3",
+    "bytes": 197801322,
+    "mtime_ns": 1789900600253689000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00266.tiff",
+    "sha256": "9291bfe2d78c9d476c4b5cc55f8a071c4a20271c0adc4ec6109042cc08c0d501",
+    "bytes": 197801322,
+    "mtime_ns": 1789900600836494100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00267.tiff",
+    "sha256": "7a5b1f3209e721be0917dbad252326262b9456f13d379bb3a8e8a5748a9e0588",
+    "bytes": 197801322,
+    "mtime_ns": 1789900601451482200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00268.tiff",
+    "sha256": "dbb01ce037a53d953ae61eb1f1113accf2341abf7eba06cd6002a00cea1115ed",
+    "bytes": 197801322,
+    "mtime_ns": 1789900602004002800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00269.tiff",
+    "sha256": "c7c0ea1b65cdab08531e166f32c789683c2bb39fd3797b771dec915eb8f4dbf7",
+    "bytes": 197801322,
+    "mtime_ns": 1789900602599406300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00270.tiff",
+    "sha256": "5d8a823b9bceff27e0f6d66274dfeb2761c2fac0120349cdebc6dbb419f1e11d",
+    "bytes": 197801322,
+    "mtime_ns": 1789900603192401300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00271.tiff",
+    "sha256": "d2c4de8c6eb08a17f8bd4c5703d320c30d8dd8250d7689aeeeb054fa92e29ad1",
+    "bytes": 197801322,
+    "mtime_ns": 1789900603766332400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00272.tiff",
+    "sha256": "45990285b96f054f063eb35253f1c12807ba6cf04f8c0df5a4a3d1ba68a91a7f",
+    "bytes": 197801322,
+    "mtime_ns": 1789900604382648100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00273.tiff",
+    "sha256": "62376d7523082eac6c135c86dd1a10686f9d7f0de29513fcdf38187646a5f5ba",
+    "bytes": 197801322,
+    "mtime_ns": 1789900604995642600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00274.tiff",
+    "sha256": "2a6a8246b6c90f617c67b22dbc7d01daa920c19ac0f931c57eb9211fa2bdf71a",
+    "bytes": 197801322,
+    "mtime_ns": 1789900605541639000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00275.tiff",
+    "sha256": "e2c132d67da5b4afc7a5fe66b4b47abd36011a8acb0031fb0e57395e1f3c9520",
+    "bytes": 197801322,
+    "mtime_ns": 1789900606070634400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00276.tiff",
+    "sha256": "87e2f2dadde5943073b9a82aea93ec40d6096e78f4143198608ed0a22471a314",
+    "bytes": 197801322,
+    "mtime_ns": 1789900606587631700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00277.tiff",
+    "sha256": "1dd000e5163cb86ddd8df48311cfc2d65e78bdf2c941c1b7db92e753316131b3",
+    "bytes": 197801322,
+    "mtime_ns": 1789900607104626700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00278.tiff",
+    "sha256": "93e2be887b564ae4a3ba7cb00a26b045e456474e9557e202f7c0e8ad98cd60e0",
+    "bytes": 197801322,
+    "mtime_ns": 1789900607610251300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00279.tiff",
+    "sha256": "b0e0d013606e95602e9bd98951a7cd1244e99c3fbb151007c2ab653cb5057d77",
+    "bytes": 197801322,
+    "mtime_ns": 1789900608135614000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00280.tiff",
+    "sha256": "7a1556f10b17f8692bae06f7c6df4b2944b4b08c15add6416bcc251578a3426c",
+    "bytes": 197801322,
+    "mtime_ns": 1789900608632920600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00281.tiff",
+    "sha256": "b4c3816d1116d98a0bdba9a7addc6ad76e39763644e1d8ff1213cb66d027599d",
+    "bytes": 197801322,
+    "mtime_ns": 1789900609147251200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00282.tiff",
+    "sha256": "9bc7975d10016d343fbf7e6255b6719712b2a4baa9bdbe5e11cc7a9e91a0ab7d",
+    "bytes": 197801322,
+    "mtime_ns": 1789900609651021800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00283.tiff",
+    "sha256": "6c5ac9b8dc5ef4cc49a9ade50c9ca20533062b58f378a9d382ab873b8cff3f9a",
+    "bytes": 197801322,
+    "mtime_ns": 1789900610176054800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00284.tiff",
+    "sha256": "08284891c570aa2b561652d3e2a4c5c48883b26fe62906fdf9200c7c94db09cb",
+    "bytes": 197801322,
+    "mtime_ns": 1789900610679012700
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00285.tiff",
+    "sha256": "a05775ff707fdd4bdd63d28ad58d6672cdde9079e74ec71110216971c4a89f10",
+    "bytes": 197801322,
+    "mtime_ns": 1789900611182019200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00286.tiff",
+    "sha256": "68e0464edbd60dd132bf11d3debc7349d8b710f4145da0c0b5bbd568dfa3a399",
+    "bytes": 197801322,
+    "mtime_ns": 1789900611691408200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00287.tiff",
+    "sha256": "02c86c8bdaddaaa34c44c9aeb269f53790d30bc2d2e5a9a90b1a94aa1ab65037",
+    "bytes": 197801322,
+    "mtime_ns": 1789900612199377600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00288.tiff",
+    "sha256": "09ed431d62ae2604cc7eefb38dea208ba26c7bc5c4abf6a9452effb13057d80f",
+    "bytes": 197801322,
+    "mtime_ns": 1789900612690931900
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00289.tiff",
+    "sha256": "56df5b849436913123e1f87b6bc618ffeccecc35cf628272f7764cc65d8cf62b",
+    "bytes": 197801322,
+    "mtime_ns": 1789900613199597200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00290.tiff",
+    "sha256": "beb4983a3be18cdd745380919b4ddd964a6db16e8688193f300cab2173e2f76b",
+    "bytes": 197801322,
+    "mtime_ns": 1789900613685439300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00291.tiff",
+    "sha256": "2b8dff07628c5a6903c1ba5258445d2b2cce5b90641551926a91dad71313a90e",
+    "bytes": 197801322,
+    "mtime_ns": 1789900614188821400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00292.tiff",
+    "sha256": "ad9070e5fb01e83b3161b8a1bc758367f2b63ddb3b82bee24fab88d63251408e",
+    "bytes": 197801322,
+    "mtime_ns": 1789900614668519500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00293.tiff",
+    "sha256": "260cd90d6ef73cc7e4d3e3c98199bf1a68b1209c9e899b03fe606c45e88a766e",
+    "bytes": 197801322,
+    "mtime_ns": 1789900615165756500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00294.tiff",
+    "sha256": "366cce91001396dcac4bb4aac4f7451d0275421ca6959923943ce0a1febcd05c",
+    "bytes": 197801322,
+    "mtime_ns": 1789900615657301100
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00295.tiff",
+    "sha256": "ae711f3f0b28ccc2d69b49c143cc1f66bf47cb02246d7fecc9909eec93e887c2",
+    "bytes": 197801322,
+    "mtime_ns": 1789900616157715600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00296.tiff",
+    "sha256": "d24fd54841dfc537c5a2132c6a0304812a53182507ce205891422fec4c8d175d",
+    "bytes": 197801322,
+    "mtime_ns": 1789900616651816500
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00297.tiff",
+    "sha256": "79a1e498eeed64843ce9f5dd3c3271d89d09fe73868cad1ab10a346f9c599a09",
+    "bytes": 197801322,
+    "mtime_ns": 1789900617149065400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00298.tiff",
+    "sha256": "a3b1edb8ed2339bc6ed55d6af36269e20e6448c909a2d69437d575db325f1bde",
+    "bytes": 197801322,
+    "mtime_ns": 1789900617649281300
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00299.tiff",
+    "sha256": "dd70fa8a25a9d02aec2c1d24f6bbb750bdacc1be7130de141503579619d6c2f6",
+    "bytes": 197801322,
+    "mtime_ns": 1789900618137158600
+  }
+]

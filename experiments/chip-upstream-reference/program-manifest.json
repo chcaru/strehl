@@ -1,0 +1,662 @@
+{
+  "schema": 1,
+  "files": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\abseil_dll.dll",
+      "bytes": 2002432,
+      "sha256": "7d3d93b87c81414366e913a737c6ef5d508bbbce1d4045d0775a33250a31e210"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\focus-stack.exe",
+      "bytes": 1895424,
+      "sha256": "e256176d70bec54bb51a448b2adc452e7f49d21bc5042b40689a3257bbfdee9e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\jpeg62.dll",
+      "bytes": 686080,
+      "sha256": "20bb5db2ca93574f1ffb6ab1db0ef674df00d78d723e8d6767ce0d1b3d76399e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\liblzma.dll",
+      "bytes": 188928,
+      "sha256": "1d55d214462406b5cf00c2350f756db17c4752519e8ab9d03890b15f428b55ae"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\libpng16.dll",
+      "bytes": 197632,
+      "sha256": "172edde5e03390e0e3d23bbae076d7793796cec22ad98a094ec3bdaa698ddfa5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\libprotobuf-lite.dll",
+      "bytes": 1495040,
+      "sha256": "940d398bdbf51241bb079b0958c91ed39ae493355148792ca8b21f2c7ae0cb5f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\libprotobuf.dll",
+      "bytes": 12089344,
+      "sha256": "36e7e36b191edf2ef74eb9063146b8b91c47b0c37dcdeb100b2562fb075657b1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\libprotoc.dll",
+      "bytes": 10251776,
+      "sha256": "c68420e9f91ec6fb257e162c5fd031584136035a098ebec2332dc0acd350b5b6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\libsharpyuv.dll",
+      "bytes": 25600,
+      "sha256": "b716cb0e8874ca63180e43c0b194fb1d96bae0d2314c2f7d5243569a3426ee59"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\libwebp.dll",
+      "bytes": 372736,
+      "sha256": "cb1a14f62b023fc1550d0a5c7a58ed968423d029a61b2829467e9c8e85bc79f6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\libwebpdecoder.dll",
+      "bytes": 162304,
+      "sha256": "5887aff73298699525360dad72f1ca183d8d2dd025a0b67359b0275394bbe57e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\libwebpdemux.dll",
+      "bytes": 20480,
+      "sha256": "ad2afa5fc77adc60658a9557a61303b575c99837826a487b9c79268a2fc2775e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\libwebpmux.dll",
+      "bytes": 41472,
+      "sha256": "fb76bc143c064a3ca1aec03c4fdfa7392dcb54fce197d78b909dd52e2c975486"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\opencv_calib3d4.dll",
+      "bytes": 2437120,
+      "sha256": "7b6911fcc9431c6aa0d79245575e6695cbd703ed8e4d721e344d4502cad16360"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\opencv_core4.dll",
+      "bytes": 3161600,
+      "sha256": "50c9ba6c48f75ad2a873623499beef6f0b939faac7753a71e1dc1d718a661717"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\opencv_dnn4.dll",
+      "bytes": 4469248,
+      "sha256": "fc50e58ea36d63bff8bf390fdf1ef8d67855ebbc945731cbe6396b246959fb9e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\opencv_features2d4.dll",
+      "bytes": 732672,
+      "sha256": "41ef2be706ff9664e081209d566de43f2fb4683b023e8cf30bdf055f958f75ee"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\opencv_flann4.dll",
+      "bytes": 427520,
+      "sha256": "0fc0ce00cee2d6a5eebe57e624beb6b19f0acb9189230737abbf8e2364ea8dc2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\opencv_highgui4.dll",
+      "bytes": 300032,
+      "sha256": "13a96dd79480692b928439d010965dbf84a4ae0778b28aa200bc0f13b7c4ee79"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\opencv_imgcodecs4.dll",
+      "bytes": 485888,
+      "sha256": "ffbb86cd3826ba92a8e9974001c193c75d89dda633bb31326df8cda7a3ca7034"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\opencv_imgproc4.dll",
+      "bytes": 4606976,
+      "sha256": "48c68b5dadc03ba44a45703dd92dad0724da8d496975c6fcde9b9a86eafbd7e7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\opencv_ml4.dll",
+      "bytes": 575488,
+      "sha256": "65d2d2fb352a2e7f7fdf44efca7ade9c835ad3c98754b0ec733854c809c655f5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\opencv_objdetect4.dll",
+      "bytes": 1206272,
+      "sha256": "81443725525055b2729a5f9da09a9d9c0ed6187a0316411ab6fdb295afae2669"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\opencv_photo4.dll",
+      "bytes": 614912,
+      "sha256": "23f52e2a908e82aff8a9729fadd5b9dc50cd83eff7d87ca41feb59b2d3710486"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\opencv_stitching4.dll",
+      "bytes": 758272,
+      "sha256": "51106d1b480e65e57f773d84ca7c18672ff0059439ade18422664a95f8333d9f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\opencv_video4.dll",
+      "bytes": 583168,
+      "sha256": "caca7e795cce5d75d5ecbb52f8ea8026e5e0accb749de99c79687462f6a57f6e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\opencv_videoio4.dll",
+      "bytes": 582144,
+      "sha256": "eeae85d603524b3adc1c276e00b7d39000180ba10ed87f7db9db0977026acb42"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\tiff.dll",
+      "bytes": 468992,
+      "sha256": "642a4173aae6ba69bfc398fc795d40e056f6e6c851bd86473388cfbf24509fa8"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\turbojpeg.dll",
+      "bytes": 830976,
+      "sha256": "824220882717deeaeebc959698a5b2cc9fe6bd00682537babe75d31533a19496"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\zlib1.dll",
+      "bytes": 90112,
+      "sha256": "9e3e04cc53e290f27527c3566311b4ab2d69ad7fc66d1815ccc5cbb03c409c23"
+    }
+  ],
+  "original_files": [
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\abseil_dll.dll",
+      "bytes": 2002432,
+      "sha256": "7d3d93b87c81414366e913a737c6ef5d508bbbce1d4045d0775a33250a31e210"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\focus-stack.exe",
+      "bytes": 1895424,
+      "sha256": "e256176d70bec54bb51a448b2adc452e7f49d21bc5042b40689a3257bbfdee9e"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\jpeg62.dll",
+      "bytes": 686080,
+      "sha256": "20bb5db2ca93574f1ffb6ab1db0ef674df00d78d723e8d6767ce0d1b3d76399e"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\liblzma.dll",
+      "bytes": 188928,
+      "sha256": "1d55d214462406b5cf00c2350f756db17c4752519e8ab9d03890b15f428b55ae"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\libpng16.dll",
+      "bytes": 197632,
+      "sha256": "172edde5e03390e0e3d23bbae076d7793796cec22ad98a094ec3bdaa698ddfa5"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\libprotobuf-lite.dll",
+      "bytes": 1495040,
+      "sha256": "940d398bdbf51241bb079b0958c91ed39ae493355148792ca8b21f2c7ae0cb5f"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\libprotobuf.dll",
+      "bytes": 12089344,
+      "sha256": "36e7e36b191edf2ef74eb9063146b8b91c47b0c37dcdeb100b2562fb075657b1"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\libprotoc.dll",
+      "bytes": 10251776,
+      "sha256": "c68420e9f91ec6fb257e162c5fd031584136035a098ebec2332dc0acd350b5b6"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\libsharpyuv.dll",
+      "bytes": 25600,
+      "sha256": "b716cb0e8874ca63180e43c0b194fb1d96bae0d2314c2f7d5243569a3426ee59"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\libwebp.dll",
+      "bytes": 372736,
+      "sha256": "cb1a14f62b023fc1550d0a5c7a58ed968423d029a61b2829467e9c8e85bc79f6"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\libwebpdecoder.dll",
+      "bytes": 162304,
+      "sha256": "5887aff73298699525360dad72f1ca183d8d2dd025a0b67359b0275394bbe57e"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\libwebpdemux.dll",
+      "bytes": 20480,
+      "sha256": "ad2afa5fc77adc60658a9557a61303b575c99837826a487b9c79268a2fc2775e"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\libwebpmux.dll",
+      "bytes": 41472,
+      "sha256": "fb76bc143c064a3ca1aec03c4fdfa7392dcb54fce197d78b909dd52e2c975486"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_calib3d4.dll",
+      "bytes": 2437120,
+      "sha256": "7b6911fcc9431c6aa0d79245575e6695cbd703ed8e4d721e344d4502cad16360"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_core4.dll",
+      "bytes": 3161600,
+      "sha256": "50c9ba6c48f75ad2a873623499beef6f0b939faac7753a71e1dc1d718a661717"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_dnn4.dll",
+      "bytes": 4469248,
+      "sha256": "fc50e58ea36d63bff8bf390fdf1ef8d67855ebbc945731cbe6396b246959fb9e"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_features2d4.dll",
+      "bytes": 732672,
+      "sha256": "41ef2be706ff9664e081209d566de43f2fb4683b023e8cf30bdf055f958f75ee"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_flann4.dll",
+      "bytes": 427520,
+      "sha256": "0fc0ce00cee2d6a5eebe57e624beb6b19f0acb9189230737abbf8e2364ea8dc2"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_highgui4.dll",
+      "bytes": 300032,
+      "sha256": "13a96dd79480692b928439d010965dbf84a4ae0778b28aa200bc0f13b7c4ee79"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_imgcodecs4.dll",
+      "bytes": 485888,
+      "sha256": "ffbb86cd3826ba92a8e9974001c193c75d89dda633bb31326df8cda7a3ca7034"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_imgproc4.dll",
+      "bytes": 4606976,
+      "sha256": "48c68b5dadc03ba44a45703dd92dad0724da8d496975c6fcde9b9a86eafbd7e7"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_ml4.dll",
+      "bytes": 575488,
+      "sha256": "65d2d2fb352a2e7f7fdf44efca7ade9c835ad3c98754b0ec733854c809c655f5"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_objdetect4.dll",
+      "bytes": 1206272,
+      "sha256": "81443725525055b2729a5f9da09a9d9c0ed6187a0316411ab6fdb295afae2669"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_photo4.dll",
+      "bytes": 614912,
+      "sha256": "23f52e2a908e82aff8a9729fadd5b9dc50cd83eff7d87ca41feb59b2d3710486"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_stitching4.dll",
+      "bytes": 758272,
+      "sha256": "51106d1b480e65e57f773d84ca7c18672ff0059439ade18422664a95f8333d9f"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_video4.dll",
+      "bytes": 583168,
+      "sha256": "caca7e795cce5d75d5ecbb52f8ea8026e5e0accb749de99c79687462f6a57f6e"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_videoio4.dll",
+      "bytes": 582144,
+      "sha256": "eeae85d603524b3adc1c276e00b7d39000180ba10ed87f7db9db0977026acb42"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\tiff.dll",
+      "bytes": 468992,
+      "sha256": "642a4173aae6ba69bfc398fc795d40e056f6e6c851bd86473388cfbf24509fa8"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\turbojpeg.dll",
+      "bytes": 830976,
+      "sha256": "824220882717deeaeebc959698a5b2cc9fe6bd00682537babe75d31533a19496"
+    },
+    {
+      "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\zlib1.dll",
+      "bytes": 90112,
+      "sha256": "9e3e04cc53e290f27527c3566311b4ab2d69ad7fc66d1815ccc5cbb03c409c23"
+    }
+  ],
+  "all_original_common_binaries_exact": [
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\abseil_dll.dll",
+        "bytes": 2002432,
+        "sha256": "7d3d93b87c81414366e913a737c6ef5d508bbbce1d4045d0775a33250a31e210"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\abseil_dll.dll",
+        "bytes": 2002432,
+        "sha256": "7d3d93b87c81414366e913a737c6ef5d508bbbce1d4045d0775a33250a31e210"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\focus-stack.exe",
+        "bytes": 1895424,
+        "sha256": "e256176d70bec54bb51a448b2adc452e7f49d21bc5042b40689a3257bbfdee9e"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\focus-stack.exe",
+        "bytes": 1895424,
+        "sha256": "e256176d70bec54bb51a448b2adc452e7f49d21bc5042b40689a3257bbfdee9e"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\jpeg62.dll",
+        "bytes": 686080,
+        "sha256": "20bb5db2ca93574f1ffb6ab1db0ef674df00d78d723e8d6767ce0d1b3d76399e"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\jpeg62.dll",
+        "bytes": 686080,
+        "sha256": "20bb5db2ca93574f1ffb6ab1db0ef674df00d78d723e8d6767ce0d1b3d76399e"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\liblzma.dll",
+        "bytes": 188928,
+        "sha256": "1d55d214462406b5cf00c2350f756db17c4752519e8ab9d03890b15f428b55ae"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\liblzma.dll",
+        "bytes": 188928,
+        "sha256": "1d55d214462406b5cf00c2350f756db17c4752519e8ab9d03890b15f428b55ae"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\libpng16.dll",
+        "bytes": 197632,
+        "sha256": "172edde5e03390e0e3d23bbae076d7793796cec22ad98a094ec3bdaa698ddfa5"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\libpng16.dll",
+        "bytes": 197632,
+        "sha256": "172edde5e03390e0e3d23bbae076d7793796cec22ad98a094ec3bdaa698ddfa5"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\libprotobuf-lite.dll",
+        "bytes": 1495040,
+        "sha256": "940d398bdbf51241bb079b0958c91ed39ae493355148792ca8b21f2c7ae0cb5f"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\libprotobuf-lite.dll",
+        "bytes": 1495040,
+        "sha256": "940d398bdbf51241bb079b0958c91ed39ae493355148792ca8b21f2c7ae0cb5f"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\libsharpyuv.dll",
+        "bytes": 25600,
+        "sha256": "b716cb0e8874ca63180e43c0b194fb1d96bae0d2314c2f7d5243569a3426ee59"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\libsharpyuv.dll",
+        "bytes": 25600,
+        "sha256": "b716cb0e8874ca63180e43c0b194fb1d96bae0d2314c2f7d5243569a3426ee59"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\libwebp.dll",
+        "bytes": 372736,
+        "sha256": "cb1a14f62b023fc1550d0a5c7a58ed968423d029a61b2829467e9c8e85bc79f6"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\libwebp.dll",
+        "bytes": 372736,
+        "sha256": "cb1a14f62b023fc1550d0a5c7a58ed968423d029a61b2829467e9c8e85bc79f6"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\libwebpdecoder.dll",
+        "bytes": 162304,
+        "sha256": "5887aff73298699525360dad72f1ca183d8d2dd025a0b67359b0275394bbe57e"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\libwebpdecoder.dll",
+        "bytes": 162304,
+        "sha256": "5887aff73298699525360dad72f1ca183d8d2dd025a0b67359b0275394bbe57e"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\libwebpdemux.dll",
+        "bytes": 20480,
+        "sha256": "ad2afa5fc77adc60658a9557a61303b575c99837826a487b9c79268a2fc2775e"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\libwebpdemux.dll",
+        "bytes": 20480,
+        "sha256": "ad2afa5fc77adc60658a9557a61303b575c99837826a487b9c79268a2fc2775e"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\libwebpmux.dll",
+        "bytes": 41472,
+        "sha256": "fb76bc143c064a3ca1aec03c4fdfa7392dcb54fce197d78b909dd52e2c975486"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\libwebpmux.dll",
+        "bytes": 41472,
+        "sha256": "fb76bc143c064a3ca1aec03c4fdfa7392dcb54fce197d78b909dd52e2c975486"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\opencv_calib3d4.dll",
+        "bytes": 2437120,
+        "sha256": "7b6911fcc9431c6aa0d79245575e6695cbd703ed8e4d721e344d4502cad16360"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_calib3d4.dll",
+        "bytes": 2437120,
+        "sha256": "7b6911fcc9431c6aa0d79245575e6695cbd703ed8e4d721e344d4502cad16360"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\opencv_core4.dll",
+        "bytes": 3161600,
+        "sha256": "50c9ba6c48f75ad2a873623499beef6f0b939faac7753a71e1dc1d718a661717"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_core4.dll",
+        "bytes": 3161600,
+        "sha256": "50c9ba6c48f75ad2a873623499beef6f0b939faac7753a71e1dc1d718a661717"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\opencv_dnn4.dll",
+        "bytes": 4469248,
+        "sha256": "fc50e58ea36d63bff8bf390fdf1ef8d67855ebbc945731cbe6396b246959fb9e"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_dnn4.dll",
+        "bytes": 4469248,
+        "sha256": "fc50e58ea36d63bff8bf390fdf1ef8d67855ebbc945731cbe6396b246959fb9e"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\opencv_features2d4.dll",
+        "bytes": 732672,
+        "sha256": "41ef2be706ff9664e081209d566de43f2fb4683b023e8cf30bdf055f958f75ee"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_features2d4.dll",
+        "bytes": 732672,
+        "sha256": "41ef2be706ff9664e081209d566de43f2fb4683b023e8cf30bdf055f958f75ee"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\opencv_flann4.dll",
+        "bytes": 427520,
+        "sha256": "0fc0ce00cee2d6a5eebe57e624beb6b19f0acb9189230737abbf8e2364ea8dc2"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_flann4.dll",
+        "bytes": 427520,
+        "sha256": "0fc0ce00cee2d6a5eebe57e624beb6b19f0acb9189230737abbf8e2364ea8dc2"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\opencv_highgui4.dll",
+        "bytes": 300032,
+        "sha256": "13a96dd79480692b928439d010965dbf84a4ae0778b28aa200bc0f13b7c4ee79"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_highgui4.dll",
+        "bytes": 300032,
+        "sha256": "13a96dd79480692b928439d010965dbf84a4ae0778b28aa200bc0f13b7c4ee79"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\opencv_imgcodecs4.dll",
+        "bytes": 485888,
+        "sha256": "ffbb86cd3826ba92a8e9974001c193c75d89dda633bb31326df8cda7a3ca7034"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_imgcodecs4.dll",
+        "bytes": 485888,
+        "sha256": "ffbb86cd3826ba92a8e9974001c193c75d89dda633bb31326df8cda7a3ca7034"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\opencv_imgproc4.dll",
+        "bytes": 4606976,
+        "sha256": "48c68b5dadc03ba44a45703dd92dad0724da8d496975c6fcde9b9a86eafbd7e7"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_imgproc4.dll",
+        "bytes": 4606976,
+        "sha256": "48c68b5dadc03ba44a45703dd92dad0724da8d496975c6fcde9b9a86eafbd7e7"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\opencv_ml4.dll",
+        "bytes": 575488,
+        "sha256": "65d2d2fb352a2e7f7fdf44efca7ade9c835ad3c98754b0ec733854c809c655f5"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_ml4.dll",
+        "bytes": 575488,
+        "sha256": "65d2d2fb352a2e7f7fdf44efca7ade9c835ad3c98754b0ec733854c809c655f5"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\opencv_objdetect4.dll",
+        "bytes": 1206272,
+        "sha256": "81443725525055b2729a5f9da09a9d9c0ed6187a0316411ab6fdb295afae2669"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_objdetect4.dll",
+        "bytes": 1206272,
+        "sha256": "81443725525055b2729a5f9da09a9d9c0ed6187a0316411ab6fdb295afae2669"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\opencv_photo4.dll",
+        "bytes": 614912,
+        "sha256": "23f52e2a908e82aff8a9729fadd5b9dc50cd83eff7d87ca41feb59b2d3710486"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_photo4.dll",
+        "bytes": 614912,
+        "sha256": "23f52e2a908e82aff8a9729fadd5b9dc50cd83eff7d87ca41feb59b2d3710486"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\opencv_stitching4.dll",
+        "bytes": 758272,
+        "sha256": "51106d1b480e65e57f773d84ca7c18672ff0059439ade18422664a95f8333d9f"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_stitching4.dll",
+        "bytes": 758272,
+        "sha256": "51106d1b480e65e57f773d84ca7c18672ff0059439ade18422664a95f8333d9f"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\opencv_video4.dll",
+        "bytes": 583168,
+        "sha256": "caca7e795cce5d75d5ecbb52f8ea8026e5e0accb749de99c79687462f6a57f6e"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_video4.dll",
+        "bytes": 583168,
+        "sha256": "caca7e795cce5d75d5ecbb52f8ea8026e5e0accb749de99c79687462f6a57f6e"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\opencv_videoio4.dll",
+        "bytes": 582144,
+        "sha256": "eeae85d603524b3adc1c276e00b7d39000180ba10ed87f7db9db0977026acb42"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\opencv_videoio4.dll",
+        "bytes": 582144,
+        "sha256": "eeae85d603524b3adc1c276e00b7d39000180ba10ed87f7db9db0977026acb42"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\tiff.dll",
+        "bytes": 468992,
+        "sha256": "642a4173aae6ba69bfc398fc795d40e056f6e6c851bd86473388cfbf24509fa8"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\tiff.dll",
+        "bytes": 468992,
+        "sha256": "642a4173aae6ba69bfc398fc795d40e056f6e6c851bd86473388cfbf24509fa8"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\turbojpeg.dll",
+        "bytes": 830976,
+        "sha256": "824220882717deeaeebc959698a5b2cc9fe6bd00682537babe75d31533a19496"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\turbojpeg.dll",
+        "bytes": 830976,
+        "sha256": "824220882717deeaeebc959698a5b2cc9fe6bd00682537babe75d31533a19496"
+      }
+    },
+    {
+      "original": {
+        "path": "C:\\dev\\strehl-out\\V-LINEAR2\\fs15\\focus-stack\\zlib1.dll",
+        "bytes": 90112,
+        "sha256": "9e3e04cc53e290f27527c3566311b4ab2d69ad7fc66d1815ccc5cbb03c409c23"
+      },
+      "complete_cached": {
+        "path": "C:\\dev\\macro\\tools\\focus-stack\\focus-stack\\zlib1.dll",
+        "bytes": 90112,
+        "sha256": "9e3e04cc53e290f27527c3566311b4ab2d69ad7fc66d1815ccc5cbb03c409c23"
+      }
+    }
+  ],
+  "additional_dependency": "libprotobuf.dll",
+  "source_bundle_unchanged": true,
+  "no_installation": true,
+  "inventory": [
+    {
+      "argument": "--version",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "focus-stack 1.3-42-g0cd289e, built Jan 11 2026 19:05:22\r\nCompiled with OpenCV version 4.12.0\r\nCopyright (c) 2019 Petteri Aimonen\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy\r\nof this software and associated documentation files (the \"Software\"), to\r\ndeal in the Software without restriction, including without limitation the\r\nrights to use, copy, modify, merge, publish, distribute, sublicense, and/or\r\nsell copies of the Software, and to permit persons to whom the Software is\r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all\r\ncopies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\r\nSOFTWARE.\r\n"
+    },
+    {
+      "argument": "--help",
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Usage: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\focus-stack.exe [options] file1.jpg file2.jpg ...\r\n\r\nOutput file options:\r\n  --output=output.jpg           Set output filename\r\n  --depthmap=depthmap.png       Write a depth map image (default disabled)\r\n  --3dview=3dview.png           Write a 3D preview image (default disabled)\r\n  --save-steps                  Save intermediate images from processing steps\r\n  --jpgquality=95               Quality for saving in JPG format (0-100, default 95)\r\n  --nocrop                      Save full image, including extrapolated border data\r\n\r\nImage alignment options:\r\n  --reference=0                 Set index of image used as alignment reference (default middle one)\r\n  --global-align                Align directly against reference (default with neighbour image)\r\n  --full-resolution-align       Use full resolution images in alignment (default max 2048 px)\r\n  --no-whitebalance             Don't attempt to correct white balance differences\r\n  --no-contrast                 Don't attempt to correct contrast and exposure differences\r\n  --no-transform                Don't attempt to correct image position alignment\r\n  --align-only                  Only align the input image stack and exit\r\n  --align-keep-size             Keep original image size by not cropping alignment borders\r\n  --no-align                    Skips the alignment completely, overrides all other alignment options\r\n\r\nImage merge options:\r\n  --consistency=2               Neighbour pixel consistency filter level 0..2 (default 2)\r\n  --denoise=1.0                 Merged image denoise level (default 1.0)\r\n\r\nDepth map generation options:\r\n  --depthmap-threshold=10       Threshold to accept depth points (0-255, default 10)\r\n  --depthmap-smooth-xy=20       Smoothing of depthmap in X and Y directions (default 20)\r\n  --depthmap-smooth-z=40        Smoothing of depthmap in Z direction (default 40)\r\n  --remove-bg=0                 Positive value removes black background, negative white\r\n  --halo-radius=20              Radius of halo effects to remove from depthmap\r\n  --3dviewpoint=x:y:z:zscale    Viewpoint for 3D view (default 1:1:1:2)\r\n\r\nPerformance options:\r\n  --threads=2                   Select number of threads to use (default number of CPUs + 1)\r\n  --batchsize=8                 Images per merge batch (default 8)\r\n  --no-opencl                   Disable OpenCL GPU acceleration (default enabled)\r\n  --wait-images=0.0             Wait for image files to appear (allows simultaneous capture and processing)\r\n\r\nInformation options:\r\n  --verbose                     Verbose output from steps\r\n  --version                     Show application version number\r\n  --opencv-version              Show OpenCV library version and build info\r\n"
+    }
+  ]
+}

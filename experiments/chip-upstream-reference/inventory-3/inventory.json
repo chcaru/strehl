@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\focus-stack.exe",
+    "sha256": "e256176d70bec54bb51a448b2adc452e7f49d21bc5042b40689a3257bbfdee9e",
+    "bytes": 1895424
+  },
+  "attempts": [
+    {
+      "argument": "--version",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "focus-stack 1.3-42-g0cd289e, built Jan 11 2026 19:05:22\r\nCompiled with OpenCV version 4.12.0\r\nCopyright (c) 2019 Petteri Aimonen\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy\r\nof this software and associated documentation files (the \"Software\"), to\r\ndeal in the Software without restriction, including without limitation the\r\nrights to use, copy, modify, merge, publish, distribute, sublicense, and/or\r\nsell copies of the Software, and to permit persons to whom the Software is\r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all\r\ncopies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\r\nSOFTWARE.\r\n"
+    },
+    {
+      "argument": "--help",
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Usage: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-1\\focus-stack.exe [options] file1.jpg file2.jpg ...\r\n\r\nOutput file options:\r\n  --output=output.jpg           Set output filename\r\n  --depthmap=depthmap.png       Write a depth map image (default disabled)\r\n  --3dview=3dview.png           Write a 3D preview image (default disabled)\r\n  --save-steps                  Save intermediate images from processing steps\r\n  --jpgquality=95               Quality for saving in JPG format (0-100, default 95)\r\n  --nocrop                      Save full image, including extrapolated border data\r\n\r\nImage alignment options:\r\n  --reference=0                 Set index of image used as alignment reference (default middle one)\r\n  --global-align                Align directly against reference (default with neighbour image)\r\n  --full-resolution-align       Use full resolution images in alignment (default max 2048 px)\r\n  --no-whitebalance             Don't attempt to correct white balance differences\r\n  --no-contrast                 Don't attempt to correct contrast and exposure differences\r\n  --no-transform                Don't attempt to correct image position alignment\r\n  --align-only                  Only align the input image stack and exit\r\n  --align-keep-size             Keep original image size by not cropping alignment borders\r\n  --no-align                    Skips the alignment completely, overrides all other alignment options\r\n\r\nImage merge options:\r\n  --consistency=2               Neighbour pixel consistency filter level 0..2 (default 2)\r\n  --denoise=1.0                 Merged image denoise level (default 1.0)\r\n\r\nDepth map generation options:\r\n  --depthmap-threshold=10       Threshold to accept depth points (0-255, default 10)\r\n  --depthmap-smooth-xy=20       Smoothing of depthmap in X and Y directions (default 20)\r\n  --depthmap-smooth-z=40        Smoothing of depthmap in Z direction (default 40)\r\n  --remove-bg=0                 Positive value removes black background, negative white\r\n  --halo-radius=20              Radius of halo effects to remove from depthmap\r\n  --3dviewpoint=x:y:z:zscale    Viewpoint for 3D view (default 1:1:1:2)\r\n\r\nPerformance options:\r\n  --threads=2                   Select number of threads to use (default number of CPUs + 1)\r\n  --batchsize=8                 Images per merge batch (default 8)\r\n  --no-opencl                   Disable OpenCL GPU acceleration (default enabled)\r\n  --wait-images=0.0             Wait for image files to appear (allows simultaneous capture and processing)\r\n\r\nInformation options:\r\n  --verbose                     Verbose output from steps\r\n  --version                     Show application version number\r\n  --opencv-version              Show OpenCV library version and build info\r\n"
+    }
+  ],
+  "required_flags": [
+    "--no-whitebalance",
+    "--no-contrast",
+    "--threads",
+    "--batchsize",
+    "--no-opencl",
+    "--output"
+  ],
+  "required_flags_present": true,
+  "inventory_passed": true,
+  "program_manifest": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-manifest.json",
+    "sha256": "21292fb65e86d7d72b92240041c6a56527a0a225d804c67d166c9e9775d1cc44",
+    "bytes": 32034
+  },
+  "inventory_execution": "Retained root version/help calls;0/1 expected exits, combined stdout+stderr",
+  "no_image_inputs_supplied": true,
+  "complete_render_authorized_by_this_phase": false
+}

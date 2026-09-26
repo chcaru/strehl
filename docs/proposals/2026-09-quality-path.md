@@ -18,6 +18,15 @@ production gain remains the weighted-numerator overflow repair below; broad
 marigold ghosts, occlusion halos and mineral reflection recovery remain open.
 No SOTA claim is earned. The detailed entries below preserve the closed trials.
 
+The separate stock PetteriAimonen reference on all299 prepared chip TIFFs now
+ends in resource refusal. Its24GiB attempt stops after46.922s and a single
+resource-only40GiB retry after124.828s; neither produces a photograph. Both
+fresh299-input before/after hash sets are identical. Close this fixed reference
+attempt without another cap, thread, batch or source-subset retry. This is not
+an algorithm-quality result or a completed speed comparison. The existing
+Helicon and native photographs remain the available visual evidence. See
+`experiments/chip-upstream-reference/results.md` and its independent review.
+
 The RAFT-large pilot uses the official fixed checkpoint, float32 CUDA and the
 existing global reference244. Flat noise is safely refused, small independent
 translations and static defocus pass, and opposing motions are recovered and

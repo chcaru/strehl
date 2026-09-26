@@ -1,0 +1,102 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\run.py",
+    "sha256": "199a80683f5a0fc60256b0704f34daf4b0c684d97441d303f3ee2325dad53d60",
+    "bytes": 13447
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\plan.md",
+    "sha256": "fed35c34919ae15c873f428c8d139a87b8a0815612877ca76c3146a495facfe3",
+    "bytes": 5883
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\independent-review.md",
+    "sha256": "e3ff805fdd1fa452b168c690926865d8f13eb1cacab61cf547434b85c1a8f645",
+    "bytes": 3588
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-manifest.json",
+    "sha256": "21292fb65e86d7d72b92240041c6a56527a0a225d804c67d166c9e9775d1cc44",
+    "bytes": 32034
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\prepare-program.py",
+    "sha256": "23ee5eb9bae23a892d5359d8f010096a0dfe6720c1191a0f672795769fc129d2",
+    "bytes": 2759
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run.py",
+    "sha256": "7c1b7adaed188d85eab7695bb91515e2f2c508a938c0d511ea0c07005944303b",
+    "bytes": 13018
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\run.py",
+    "sha256": "17451d237bf256004ca8853ef4c2a9e1c582012d43ad33fd687606e68a5fb76f",
+    "bytes": 7707
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+    "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+    "bytes": 12664
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+    "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+    "bytes": 117908
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\resource-retry.py",
+    "sha256": "dd8d1b7713cf53a13393bcf57d79c0341bbb40c565745e8f4c19be2571fb7b50",
+    "bytes": 5866
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\resource-decision.md",
+    "sha256": "fd373e6de4322f593cf09004b6678c026808dcd93cda1a51c67f95bc42d8e61a",
+    "bytes": 1933
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\resource-review.md",
+    "sha256": "cb905badbd9b5c190d647c4bccfa7e43b5c6d6deaa3edd3273aa7bc1b07efb63",
+    "bytes": 1609
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\run-2\\process.json",
+    "sha256": "2b2633dfc2f1097f2de3123264eb7f32a3e1ff322a82262334b47f231f008b65",
+    "bytes": 21716
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\run-2\\process.log",
+    "sha256": "4ce5d8442b6bebcdea734cb482a648cafae6a0f7d96e79516ea7f2b56fd7b2b0",
+    "bytes": 51420
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\run-2\\inputs-before.json",
+    "sha256": "1136226cf0136d8e2168dfa9a93cbcbfc320f66d8c668c2e7976de1ead5b072e",
+    "bytes": 85519
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\run-2\\inputs-after.json",
+    "sha256": "1136226cf0136d8e2168dfa9a93cbcbfc320f66d8c668c2e7976de1ead5b072e",
+    "bytes": 85519
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\run-2\\bindings.json",
+    "sha256": "0188a60f5ad92c85248babf6a96a0cfbb89851822089b0400538f3a4523d30dd",
+    "bytes": 1353
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\run-2\\invocation.json",
+    "sha256": "906bb6184883ca17df19137897bb186f1c029f892e4c6260a83313befe8c04e1",
+    "bytes": 20123
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\run-2\\prepared.json",
+    "sha256": "8bb92495cbfa26ab90df9c5ba5f2879bd8d76bf19ea39541ca54c362bdf6eb06",
+    "bytes": 78349
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\run-2\\sources.json",
+    "sha256": "12a9a59e8adc6842df3c4dbe8471ae780b85ea78c6bf7a15e461a274b888bc43",
+    "bytes": 2083
+  }
+]

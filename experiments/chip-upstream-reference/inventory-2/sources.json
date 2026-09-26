@@ -1,0 +1,47 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\run.py",
+    "sha256": "5dc36f614c2c7b705c250aa333c9e24ff609e09b731cb0ac135056b36a41bd23",
+    "bytes": 13181
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\plan.md",
+    "sha256": "c7886ae5cb9879430b75101f94dbcac9fbad93ad6675c8b5a789d4ab5fb03acb",
+    "bytes": 4753
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\independent-review.md",
+    "sha256": "4c0485276c29c5155d0561bedc46463c151141f46e32d1eb1a1c6942b54f1c03",
+    "bytes": 2711
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\program-manifest.json",
+    "sha256": "21292fb65e86d7d72b92240041c6a56527a0a225d804c67d166c9e9775d1cc44",
+    "bytes": 32034
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-upstream-reference\\prepare-program.py",
+    "sha256": "23ee5eb9bae23a892d5359d8f010096a0dfe6720c1191a0f672795769fc129d2",
+    "bytes": 2759
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run.py",
+    "sha256": "7c1b7adaed188d85eab7695bb91515e2f2c508a938c0d511ea0c07005944303b",
+    "bytes": 13018
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\run.py",
+    "sha256": "17451d237bf256004ca8853ef4c2a9e1c582012d43ad33fd687606e68a5fb76f",
+    "bytes": 7707
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+    "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+    "bytes": 12664
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+    "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+    "bytes": 117908
+  }
+]
