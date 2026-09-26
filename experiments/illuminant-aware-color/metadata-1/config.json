@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "phase": "metadata",
+  "shot_kelvin": 3000.0,
+  "out_dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\metadata-1\\output",
+  "captures": [
+    {
+      "name": "opal103",
+      "source": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00046.ARW",
+      "source_bytes": 34349056,
+      "source_sha256": "7e90a3d476b9abadc5f9002e39463869dec51cf151813324d7add090bb31da9f",
+      "cache": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\cache-1\\output\\baseline-cache.json",
+      "cache_sha256": "35584ce30352e4fe9e75cbeba36cc0fd6e2f79cba509bbe90b7dbf1ff6cb856f",
+      "baseline": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\cache-1\\output\\baseline.tiff",
+      "baseline_sha256": "a0105e044012f52457358a1277bebc6cca1e936089a2c5d180e4ff4e6407895a",
+      "baseline_pixels_sha256": "a8d1b7844f90861b2df863d0316808ee48036847ec9a4c35551003e1472f5a7b"
+    },
+    {
+      "name": "marigold4",
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00021.ARW",
+      "source_bytes": 37216256,
+      "source_sha256": "ee69aeebc4b5b001d208a6d0f87468e993f57b5645687dacc7077104a96a4a00",
+      "cache": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate-cache.json",
+      "cache_sha256": "3af5e0a0d00b28e73083ce132ff495cd482020b600fecd4bddb2902b1273a95c",
+      "baseline": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate.tiff",
+      "baseline_sha256": "19e657e419d52adf567ec86472f917ad9b9abfc9b0812131e9bba0eacbae462f",
+      "baseline_pixels_sha256": "6d26d2cc00f6eb76500d4574a7f0d3ba7eb35b364e100daac8eeb96422c13c11"
+    }
+  ],
+  "metadata_receipt": null,
+  "metadata_receipt_sha256": null
+}

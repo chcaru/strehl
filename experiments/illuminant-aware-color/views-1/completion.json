@@ -1,0 +1,334 @@
+{
+  "full_images": [
+    {
+      "name": "opal103",
+      "arm": "current",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\cached-1\\output\\opal103-current.tiff",
+        "sha256": "2ff8b3b12d4986ced06c4b6e265346d365dd6e8bdd1cc25a19259a303b78fecd",
+        "bytes": 184530145
+      },
+      "full": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\opal103-current-full.jpg",
+        "sha256": "676c82a852d34e651eb69959ba6b4c73007d3245d2fbc390cb0571649a345dbb",
+        "bytes": 9001237
+      },
+      "overview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\opal103-current-overview.png",
+        "sha256": "950bc29f5ff9aae3f5204961552c744e82239e5a7c13d8c7c731825a2a05df7d",
+        "bytes": 1657425
+      },
+      "native_dimensions": [
+        6792,
+        4528
+      ]
+    },
+    {
+      "name": "opal103",
+      "arm": "candidate",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\cached-1\\output\\opal103-candidate.tiff",
+        "sha256": "17593d71f857f3915ca6df38b5a469ad6a675b7c3495e0195de1900b340a8071",
+        "bytes": 184530145
+      },
+      "full": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\opal103-candidate-full.jpg",
+        "sha256": "2858c2b266b7d3105d8da0b6160db91a73b95084f1942341bf20a36f73c68871",
+        "bytes": 9248776
+      },
+      "overview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\opal103-candidate-overview.png",
+        "sha256": "879292bc6c15dae7ebeb813407f80a9ae9968a24c96f730294568fb70e63f441",
+        "bytes": 1677358
+      },
+      "native_dimensions": [
+        6792,
+        4528
+      ]
+    },
+    {
+      "name": "marigold4",
+      "arm": "current",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\cached-1\\output\\marigold4-current.tiff",
+        "sha256": "c3049921ae46734704aa8818353688d1b5d9c7db078110ab3d376bf4e05729d4",
+        "bytes": 157055880
+      },
+      "full": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\marigold4-current-full.jpg",
+        "sha256": "9b8c5aeb8b10a96a3a58389febdb9aa03d5551b03a968b1fc2709eb13bcf5f43",
+        "bytes": 10018664
+      },
+      "overview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\marigold4-current-overview.png",
+        "sha256": "d4bc4237a94004e08d103a5e91fc5934201bb67e6222d2a3f73629de6e3916de",
+        "bytes": 1690652
+      },
+      "native_dimensions": [
+        6268,
+        4176
+      ]
+    },
+    {
+      "name": "marigold4",
+      "arm": "candidate",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\cached-1\\output\\marigold4-candidate.tiff",
+        "sha256": "b867b3d66cc4b8d473b475933a8993391c0f1d7cebad36bf7db74e7dc1ce922c",
+        "bytes": 157055880
+      },
+      "full": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\marigold4-candidate-full.jpg",
+        "sha256": "29a0bcfa144f95ce7707107de93c4515937c637291d9537166470296a18015f4",
+        "bytes": 10159434
+      },
+      "overview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\marigold4-candidate-overview.png",
+        "sha256": "3f1de536c2b276e4a36beb2cb5db8ec7d7c97a7859ec145fd1969021a90506e0",
+        "bytes": 1661668
+      },
+      "native_dimensions": [
+        6268,
+        4176
+      ]
+    }
+  ],
+  "native_tiles": [
+    {
+      "name": "opal103",
+      "arm": "current",
+      "target": "reflection",
+      "native_xywh": [
+        3628,
+        1658,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\opal103-current-reflection.png",
+        "sha256": "8760b24e569922592999d9b39845360820f9abe5a154bbdbd394f01b7290cbe2",
+        "bytes": 160571
+      }
+    },
+    {
+      "name": "opal103",
+      "arm": "current",
+      "target": "colour-control",
+      "native_xywh": [
+        2128,
+        2228,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\opal103-current-colour-control.png",
+        "sha256": "ee845c059da2d974b9768a5ceaad74291f0c31b7b116c593eebc39fd82993b02",
+        "bytes": 191481
+      }
+    },
+    {
+      "name": "opal103",
+      "arm": "candidate",
+      "target": "reflection",
+      "native_xywh": [
+        3628,
+        1658,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\opal103-candidate-reflection.png",
+        "sha256": "230d3581c18fe7031a673883ffd7facc244024d5e644163bd715047de70b293e",
+        "bytes": 161405
+      }
+    },
+    {
+      "name": "opal103",
+      "arm": "candidate",
+      "target": "colour-control",
+      "native_xywh": [
+        2128,
+        2228,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\opal103-candidate-colour-control.png",
+        "sha256": "2d42b2b7075d55b1a2c88c7fb4aff92ce7d417dc37600efd2a49ba51c84e21a2",
+        "bytes": 194321
+      }
+    },
+    {
+      "name": "marigold4",
+      "arm": "current",
+      "target": "fan-core",
+      "native_xywh": [
+        3230,
+        3000,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\marigold4-current-fan-core.png",
+        "sha256": "e9d1f10ef79e6332513b97b83dbba906c2a18f29b92b62a0bab121970c989b43",
+        "bytes": 118261
+      }
+    },
+    {
+      "name": "marigold4",
+      "arm": "current",
+      "target": "ring-upper-left",
+      "native_xywh": [
+        3184,
+        2954,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\marigold4-current-ring-upper-left.png",
+        "sha256": "15c0fab3a04b34740757cb3c746f805c65dc79649daec4e6910305eac9936130",
+        "bytes": 115290
+      }
+    },
+    {
+      "name": "marigold4",
+      "arm": "current",
+      "target": "ring-lower-right",
+      "native_xywh": [
+        3276,
+        3046,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\marigold4-current-ring-lower-right.png",
+        "sha256": "2795a23004960c59bbf22016244de418f718e1cc60a98c0c42976b3caa29bc7d",
+        "bytes": 120708
+      }
+    },
+    {
+      "name": "marigold4",
+      "arm": "current",
+      "target": "rim-hairs-control",
+      "native_xywh": [
+        1436,
+        1596,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\marigold4-current-rim-hairs-control.png",
+        "sha256": "aebf24554312822ffe19589e09b27e0801d19576bffc4918e28267d0a2d2193e",
+        "bytes": 150113
+      }
+    },
+    {
+      "name": "marigold4",
+      "arm": "current",
+      "target": "inner-bud-control",
+      "native_xywh": [
+        4320,
+        1540,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\marigold4-current-inner-bud-control.png",
+        "sha256": "ffa4e2c588e6d564da44ef453f4b51d66341d1f75c472be81256b5856ab9833b",
+        "bytes": 116936
+      }
+    },
+    {
+      "name": "marigold4",
+      "arm": "candidate",
+      "target": "fan-core",
+      "native_xywh": [
+        3230,
+        3000,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\marigold4-candidate-fan-core.png",
+        "sha256": "28b3637104c1f04e94c640876293fc515e04103bc0d777e3f3079ef25d37355c",
+        "bytes": 121582
+      }
+    },
+    {
+      "name": "marigold4",
+      "arm": "candidate",
+      "target": "ring-upper-left",
+      "native_xywh": [
+        3184,
+        2954,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\marigold4-candidate-ring-upper-left.png",
+        "sha256": "85b6adb2b404d941b6515e461999f8342885961a762882a036790241b0be0c67",
+        "bytes": 118676
+      }
+    },
+    {
+      "name": "marigold4",
+      "arm": "candidate",
+      "target": "ring-lower-right",
+      "native_xywh": [
+        3276,
+        3046,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\marigold4-candidate-ring-lower-right.png",
+        "sha256": "d4c3861c1da4d7f655c2bfa92d02855d64fcf9c81d17b499e3c0576ecd522e07",
+        "bytes": 123601
+      }
+    },
+    {
+      "name": "marigold4",
+      "arm": "candidate",
+      "target": "rim-hairs-control",
+      "native_xywh": [
+        1436,
+        1596,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\marigold4-candidate-rim-hairs-control.png",
+        "sha256": "1ce49ccdf7dd00db4aabd761e55d5d745f0a93fe5410963e9b9ed6815d75f1af",
+        "bytes": 155417
+      }
+    },
+    {
+      "name": "marigold4",
+      "arm": "candidate",
+      "target": "inner-bud-control",
+      "native_xywh": [
+        4320,
+        1540,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\views-1\\marigold4-candidate-inner-bud-control.png",
+        "sha256": "130431b8a15dce67b5142c7fd909bd78b125313d462f445f38846396963df1b2",
+        "bytes": 119133
+      }
+    }
+  ],
+  "targets": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\targets.json",
+    "sha256": "90b919ae40d1b12e39861f9deff371d0122e8677b9b937fe8ee2b0c5d1313165",
+    "bytes": 2405
+  },
+  "run_completion": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\cached-1\\completion.json",
+    "sha256": "6d1eec48503dd92c9eda5914b77208254b73eb054711a1b95555dc78ea49836d",
+    "bytes": 745
+  },
+  "conversion": "Identical RGB16-to8 mapping; retained ICC; no resampling of native tiles.",
+  "scope": "Fixed 3000K matrix intervention; no spatial ghosting/glare recovery or absolute photographic colour accuracy claim."
+}

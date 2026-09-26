@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "opal103": {
+    "native_dimensions": [
+      6792,
+      4528
+    ],
+    "source": "experiments/opal-headroom/targets.json",
+    "targets": [
+      {
+        "name": "reflection",
+        "native_xywh": [
+          3628,
+          1658,
+          384,
+          384
+        ],
+        "protection": "Preserve fine slanted bright bands, physical reflection, and cyan surroundings. Require distinct additional gradation rather than a darker patch."
+      },
+      {
+        "name": "colour-control",
+        "native_xywh": [
+          2128,
+          2228,
+          384,
+          384
+        ],
+        "protection": "Preserve blue/pink variation, fine irregular texture and small dark marks. This textured region is not a flat-noise control."
+      }
+    ]
+  },
+  "marigold4": {
+    "native_dimensions": [
+      6268,
+      4176
+    ],
+    "source": "experiments/marigold-source-pure/views-1/receipt.json",
+    "targets": [
+      {
+        "name": "fan-core",
+        "native_xywh": [
+          3230,
+          3000,
+          384,
+          384
+        ],
+        "protection": "Preserve real hairs, petal boundaries and local color variation; inspect alongside complete image."
+      },
+      {
+        "name": "ring-upper-left",
+        "native_xywh": [
+          3184,
+          2954,
+          384,
+          384
+        ],
+        "protection": "Preserve real hairs, petal boundaries and local color variation; inspect alongside complete image."
+      },
+      {
+        "name": "ring-lower-right",
+        "native_xywh": [
+          3276,
+          3046,
+          384,
+          384
+        ],
+        "protection": "Preserve real hairs, petal boundaries and local color variation; inspect alongside complete image."
+      },
+      {
+        "name": "rim-hairs-control",
+        "native_xywh": [
+          1436,
+          1596,
+          384,
+          384
+        ],
+        "protection": "Preserve real hairs, petal boundaries and local color variation; inspect alongside complete image."
+      },
+      {
+        "name": "inner-bud-control",
+        "native_xywh": [
+          4320,
+          1540,
+          384,
+          384
+        ],
+        "protection": "Preserve real hairs, petal boundaries and local color variation; inspect alongside complete image."
+      }
+    ]
+  }
+}

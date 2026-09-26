@@ -1,0 +1,17 @@
+{
+  "instrument_completed": true,
+  "tests": [
+    "independent_d65_equivalence_controls",
+    "independent_warm_colour_controls",
+    "independent_interpolation_controls",
+    "independent_metadata_refusal_controls"
+  ],
+  "count": 4,
+  "sources_unchanged": true,
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\controls-1\\process.json",
+    "sha256": "8d1080199a89b3c0edfafa456599c8d0d9c7839105fe217869ee149ec206b77c",
+    "bytes": 2656
+  },
+  "scope": "Fixed 3000K matrix intervention; no spatial ghosting/glare recovery or absolute photographic colour accuracy claim."
+}

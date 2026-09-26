@@ -1,0 +1,16 @@
+{
+  "phase": "cached",
+  "instrument_completed": true,
+  "sources_and_caches_unchanged": true,
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\cached-1\\output\\receipt.json",
+    "sha256": "017174bf369c29502daf28523459da0937375121801e344a4e10c29f85eb2e4a",
+    "bytes": 13397
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\cached-1\\process.json",
+    "sha256": "ac7a13bf82a3f2c8f40cd9b226eb06f46a88736776be0a33d8f5437878e0ad6c",
+    "bytes": 2686
+  },
+  "scope": "Fixed 3000K matrix intervention; no spatial ghosting/glare recovery or absolute photographic colour accuracy claim."
+}

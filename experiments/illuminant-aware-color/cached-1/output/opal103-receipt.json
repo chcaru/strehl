@@ -1,0 +1,214 @@
+{
+  "baseline_current_rgb16_icc_exact": true,
+  "baseline_pinned_rewrite_exact": true,
+  "baseline_resolved": {
+    "ceiling_bits": [
+      1069276204,
+      1063142233,
+      1074531792
+    ],
+    "exposure_gain_bits": 1062203334,
+    "matrix_bits": [
+      [
+        1070688889,
+        3202724187,
+        3191861519
+      ],
+      [
+        3186350977,
+        1069455000,
+        3200213889
+      ],
+      [
+        3147518954,
+        3198529296,
+        1068107544
+      ]
+    ],
+    "sensor_top_bits": 1064271804,
+    "srgb": true,
+    "tone_bits": [
+      3107251800,
+      1045876117,
+      1057803469
+    ],
+    "wants_tone": true
+  },
+  "cache_binary_sha256": "9b285bc5b134213f7095dafe5ae45ce347e84a957ed487dec1fafabcb898e700",
+  "cache_plane_sha256": [
+    "5c14532bafc0552457c28521f474521e50809aebe7aa3f9375d18a04006f2b3b",
+    "c118ce3b25da4e26243286e8908405351aedfd614dc30697edbd5175cb48c0b4",
+    "3426f69d1632e7e791c68f9c9a40495cc551e9318e91cd1e52c56fafa31d4c21",
+    "e121749df6d463eb11b21959947aee8cd945e8b8c13e5249a196645316f2e642"
+  ],
+  "cache_unchanged": true,
+  "candidate_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\cached-1\\output\\opal103-candidate.tiff",
+  "candidate_resolved": {
+    "ceiling_bits": [
+      1069276204,
+      1063142233,
+      1074531792
+    ],
+    "exposure_gain_bits": 1062203334,
+    "matrix_bits": [
+      [
+        1070330930,
+        3196288787,
+        3198964143
+      ],
+      [
+        3194375323,
+        1069159986,
+        3194643716
+      ],
+      [
+        3167670524,
+        3203893761,
+        1069620676
+      ]
+    ],
+    "sensor_top_bits": 1064271804,
+    "srgb": true,
+    "tone_bits": [
+      3107251800,
+      1045876117,
+      1057803469
+    ],
+    "wants_tone": true
+  },
+  "candidate_rgb16_le_sha256": "6f8177f224a76256aaffca6018a37abdc00e89a6c63607206b5390accf8f6fc9",
+  "candidate_sha256": "17593d71f857f3915ca6df38b5a469ad6a675b7c3495e0195de1900b340a8071",
+  "current_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\cached-1\\output\\opal103-current.tiff",
+  "current_rgb16_le_sha256": "a8d1b7844f90861b2df863d0316808ee48036847ec9a4c35551003e1472f5a7b",
+  "current_sha256": "2ff8b3b12d4986ced06c4b6e265346d365dd6e8bdd1cc25a19259a303b78fecd",
+  "input": {
+    "baseline": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\cache-1\\output\\baseline.tiff",
+    "baseline_pixels_sha256": "a8d1b7844f90861b2df863d0316808ee48036847ec9a4c35551003e1472f5a7b",
+    "baseline_sha256": "a0105e044012f52457358a1277bebc6cca1e936089a2c5d180e4ff4e6407895a",
+    "cache": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\cache-1\\output\\baseline-cache.json",
+    "cache_sha256": "35584ce30352e4fe9e75cbeba36cc0fd6e2f79cba509bbe90b7dbf1ff6cb856f",
+    "name": "opal103",
+    "source": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00046.ARW",
+    "source_bytes": 34349056,
+    "source_sha256": "7e90a3d476b9abadc5f9002e39463869dec51cf151813324d7add090bb31da9f"
+  },
+  "matrix_only_changed": true,
+  "name": "opal103",
+  "native_dimensions": [
+    6792,
+    4528
+  ],
+  "pinned_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\cached-1\\output\\opal103-pinned.tiff",
+  "pinned_sha256": "2ff8b3b12d4986ced06c4b6e265346d365dd6e8bdd1cc25a19259a303b78fecd",
+  "seconds": 1.8711143,
+  "selection": {
+    "cool": {
+      "bits": [
+        [
+          1061091803,
+          3195153678,
+          3178289221
+        ],
+        [
+          3205600851,
+          1068240575,
+          1048401517
+        ],
+        [
+          3179255588,
+          1038925745,
+          1059622119
+        ]
+      ],
+      "name": "D65"
+    },
+    "cool_kelvin": 6504.0,
+    "interpolated_xyz_to_camera": [
+      [
+        0.8670693720516406,
+        -0.4583385368240507,
+        0.10259531855308694
+      ],
+      [
+        -0.3657899692717351,
+        1.0928257046749719,
+        0.31497571580504113
+      ],
+      [
+        -0.004517147237692324,
+        0.056254074753899326,
+        0.7325595346500999
+      ]
+    ],
+    "shot_kelvin": 3000.0,
+    "transform": {
+      "camera_neutral": [
+        0.5915655690352397,
+        1.0,
+        0.39674544750096863
+      ],
+      "matrix": [
+        [
+          1.5933897495269775,
+          -0.2568288743495941,
+          -0.3365606963634491
+        ],
+        [
+          -0.22490160167217255,
+          1.4538023471832275,
+          -0.2289009690284729
+        ],
+        [
+          -0.025246135890483856,
+          -0.4834747612476349,
+          1.508720874786377
+        ]
+      ],
+      "matrix_f64": [
+        [
+          1.5933897115914937,
+          -0.2568288728457219,
+          -0.33656068503188696
+        ],
+        [
+          -0.22490159603829757,
+          1.4538023805751856,
+          -0.22890097213798055
+        ],
+        [
+          -0.025246135453177606,
+          -0.48347476737123285,
+          1.5087209232269956
+        ]
+      ],
+      "source_white_xyz": [
+        1.0489465443842318,
+        1.0,
+        0.37826042356889616
+      ],
+      "unnormalized_white_y": 1.2073293175068565
+    },
+    "warm": {
+      "bits": [
+        [
+          1063313107,
+          3203746968,
+          1039207603
+        ],
+        [
+          3199307717,
+          1065934547,
+          1050968431
+        ],
+        [
+          980151802,
+          1028631246,
+          1060982751
+        ]
+      ],
+      "name": "A"
+    },
+    "warm_fraction": 0.9144210526315789,
+    "warm_kelvin": 2856.0
+  }
+}

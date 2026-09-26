@@ -1,0 +1,214 @@
+{
+  "baseline_current_rgb16_icc_exact": true,
+  "baseline_pinned_rewrite_exact": true,
+  "baseline_resolved": {
+    "ceiling_bits": [
+      1067682475,
+      1061256642,
+      1072945436
+    ],
+    "exposure_gain_bits": 1060439283,
+    "matrix_bits": [
+      [
+        1070688889,
+        3202724187,
+        3191861519
+      ],
+      [
+        3186350977,
+        1069455000,
+        3200213889
+      ],
+      [
+        3147518954,
+        3198529296,
+        1068107544
+      ]
+    ],
+    "sensor_top_bits": 1064271804,
+    "srgb": true,
+    "tone_bits": [
+      1008079930,
+      1049460607,
+      1057803469
+    ],
+    "wants_tone": true
+  },
+  "cache_binary_sha256": "fa394a59a1786e478c3ceff578924769c0162d0c1ecaaa2a602f401012523824",
+  "cache_plane_sha256": [
+    "f14bb27a068860ef187e64bd89354989089c56d7018f147b62027c8ca3697060",
+    "5345cabc3ab815e5341f0d3d8f9d6411c14ac839e69dbbf9afd5e70febadea96",
+    "b4667e173665324fab1b91a84434653f3d3f579c8d97c991f8d97ff667e39675",
+    "3537e7e57acd666d729071ccec17ab70b2891368b88d398bdcc7c1fd2a467a0c"
+  ],
+  "cache_unchanged": true,
+  "candidate_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\cached-1\\output\\marigold4-candidate.tiff",
+  "candidate_resolved": {
+    "ceiling_bits": [
+      1067682475,
+      1061256642,
+      1072945436
+    ],
+    "exposure_gain_bits": 1060439283,
+    "matrix_bits": [
+      [
+        1070330930,
+        3196288787,
+        3198964143
+      ],
+      [
+        3194375323,
+        1069159986,
+        3194643716
+      ],
+      [
+        3167670524,
+        3203893761,
+        1069620676
+      ]
+    ],
+    "sensor_top_bits": 1064271804,
+    "srgb": true,
+    "tone_bits": [
+      1008079930,
+      1049460607,
+      1057803469
+    ],
+    "wants_tone": true
+  },
+  "candidate_rgb16_le_sha256": "c2f372cbb142f168b57162690a75a32de5da3efa29f6c1a145f5d96d4294313d",
+  "candidate_sha256": "b867b3d66cc4b8d473b475933a8993391c0f1d7cebad36bf7db74e7dc1ce922c",
+  "current_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\cached-1\\output\\marigold4-current.tiff",
+  "current_rgb16_le_sha256": "6d26d2cc00f6eb76500d4574a7f0d3ba7eb35b364e100daac8eeb96422c13c11",
+  "current_sha256": "c3049921ae46734704aa8818353688d1b5d9c7db078110ab3d376bf4e05729d4",
+  "input": {
+    "baseline": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate.tiff",
+    "baseline_pixels_sha256": "6d26d2cc00f6eb76500d4574a7f0d3ba7eb35b364e100daac8eeb96422c13c11",
+    "baseline_sha256": "19e657e419d52adf567ec86472f917ad9b9abfc9b0812131e9bba0eacbae462f",
+    "cache": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate-cache.json",
+    "cache_sha256": "3af5e0a0d00b28e73083ce132ff495cd482020b600fecd4bddb2902b1273a95c",
+    "name": "marigold4",
+    "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00021.ARW",
+    "source_bytes": 37216256,
+    "source_sha256": "ee69aeebc4b5b001d208a6d0f87468e993f57b5645687dacc7077104a96a4a00"
+  },
+  "matrix_only_changed": true,
+  "name": "marigold4",
+  "native_dimensions": [
+    6268,
+    4176
+  ],
+  "pinned_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\cached-1\\output\\marigold4-pinned.tiff",
+  "pinned_sha256": "c3049921ae46734704aa8818353688d1b5d9c7db078110ab3d376bf4e05729d4",
+  "seconds": 1.7374242,
+  "selection": {
+    "cool": {
+      "bits": [
+        [
+          1061091803,
+          3195153678,
+          3178289221
+        ],
+        [
+          3205600851,
+          1068240575,
+          1048401517
+        ],
+        [
+          3179255588,
+          1038925745,
+          1059622119
+        ]
+      ],
+      "name": "D65"
+    },
+    "cool_kelvin": 6504.0,
+    "interpolated_xyz_to_camera": [
+      [
+        0.8670693720516406,
+        -0.4583385368240507,
+        0.10259531855308694
+      ],
+      [
+        -0.3657899692717351,
+        1.0928257046749719,
+        0.31497571580504113
+      ],
+      [
+        -0.004517147237692324,
+        0.056254074753899326,
+        0.7325595346500999
+      ]
+    ],
+    "shot_kelvin": 3000.0,
+    "transform": {
+      "camera_neutral": [
+        0.5915655690352397,
+        1.0,
+        0.39674544750096863
+      ],
+      "matrix": [
+        [
+          1.5933897495269775,
+          -0.2568288743495941,
+          -0.3365606963634491
+        ],
+        [
+          -0.22490160167217255,
+          1.4538023471832275,
+          -0.2289009690284729
+        ],
+        [
+          -0.025246135890483856,
+          -0.4834747612476349,
+          1.508720874786377
+        ]
+      ],
+      "matrix_f64": [
+        [
+          1.5933897115914937,
+          -0.2568288728457219,
+          -0.33656068503188696
+        ],
+        [
+          -0.22490159603829757,
+          1.4538023805751856,
+          -0.22890097213798055
+        ],
+        [
+          -0.025246135453177606,
+          -0.48347476737123285,
+          1.5087209232269956
+        ]
+      ],
+      "source_white_xyz": [
+        1.0489465443842318,
+        1.0,
+        0.37826042356889616
+      ],
+      "unnormalized_white_y": 1.2073293175068565
+    },
+    "warm": {
+      "bits": [
+        [
+          1063313107,
+          3203746968,
+          1039207603
+        ],
+        [
+          3199307717,
+          1065934547,
+          1050968431
+        ],
+        [
+          980151802,
+          1028631246,
+          1060982751
+        ]
+      ],
+      "name": "A"
+    },
+    "warm_fraction": 0.9144210526315789,
+    "warm_kelvin": 2856.0
+  }
+}

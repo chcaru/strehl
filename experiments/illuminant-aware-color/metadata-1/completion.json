@@ -1,0 +1,16 @@
+{
+  "phase": "metadata",
+  "instrument_completed": true,
+  "sources_and_caches_unchanged": true,
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\metadata-1\\output\\receipt.json",
+    "sha256": "f324b122f02d7e2e125344fa128c45c6a172d8f8942f06a8ac485aa5f17b979e",
+    "bytes": 11673
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\metadata-1\\process.json",
+    "sha256": "a3f8d880b0ce3458d9d5e8e9f59d6a00f89e0ffb50aeeac742a316a63dba5d49",
+    "bytes": 2724
+  },
+  "scope": "Fixed 3000K matrix intervention; no spatial ghosting/glare recovery or absolute photographic colour accuracy claim."
+}

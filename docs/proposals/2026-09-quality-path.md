@@ -166,6 +166,16 @@ It tests a known daylight-only approximation, not a proven cause of glare or
 ghosting. Primary-standard arithmetic and actual capture matrix availability
 must pass before full writer comparisons. See the September25
 `next-after-reconstruction.md` decision; no default changes are implied.
+That colour route now completes its four numerical controls, actual two-frame
+calibration check and complete155-source opal/488-source marigold writer pairs.
+Current RGB16/ICC and pinned development identities pass. Root and independent
+whole/native review find hue shifts without useful added detail or gradation;
+the broad reflection and ghosted hairs remain. Close the fixed3000K arm without
+a temperature/saturation sweep. Full candidates were shown to the owner.
+See `experiments/illuminant-aware-color/results.md`. The next bounded candidate
+tests existing gain-only photometric normalization in the actual native
+consumer, requiring rejection of pure-defocus and spatially varying changes
+before any photographic run; no geometric scale-law correction is revived.
 Do not repeat donor, prior-strength or base-weighting sweeps. The bounded
 FocusDeep readiness check found no verified licensed checkpoint/inference route
 and does not justify a training campaign; see

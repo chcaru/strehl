@@ -1,0 +1,37 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\build-2\\cli-tests.exe",
+    "merge_cmd::illuminant_aware_color::metadata_pair",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "on",
+    "STREHL_DEFECT": "off",
+    "STREHL_FINE_SUPPORT": "off",
+    "STREHL_CA_BEFORE_MHC": "off",
+    "STREHL_ILLUMINANT_AWARE_COLOR_CONFIG": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\metadata-1\\config.json"
+  },
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\run.py",
+    "sha256": "64022f1c05f4c769184cd529dac7f2e993713d1522e87f4a028d8f86e88b07c5",
+    "bytes": 18717
+  },
+  "limits": {
+    "wall_seconds": 300,
+    "cpu_seconds": 1800,
+    "committed_bytes": 8589934592
+  }
+}

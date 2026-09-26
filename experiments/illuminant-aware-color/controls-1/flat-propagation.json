@@ -1,0 +1,28 @@
+{
+  "baseline_variance": [
+    4.042473543264258e-05,
+    2.3755218609755602e-05,
+    1.8088393316184614e-05
+  ],
+  "candidate_baseline_variance_ratio": [
+    1.169059095934765,
+    1.3580600712190394,
+    1.8580539231489432
+  ],
+  "candidate_variance": [
+    4.725890465828719e-05,
+    3.226101387698854e-05,
+    3.360921016459795e-05
+  ],
+  "independent_expected_variance": [
+    4.725860602083484e-05,
+    3.2261220000858305e-05,
+    3.3609299127610386e-05
+  ],
+  "propagation_relative_error": [
+    6.319218392117749e-06,
+    6.389214969473509e-06,
+    2.6469761271082526e-06
+  ],
+  "scope": "actual Render covariance arithmetic only; no photographic quality admission"
+}

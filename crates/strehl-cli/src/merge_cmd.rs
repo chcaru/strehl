@@ -5035,6 +5035,11 @@ mod consistent_reconstruction_full {
 }
 
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+mod illuminant_aware_color {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/illuminant-aware-color/implementation.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
 mod marigold_source_pure {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/marigold-source-pure/oracle.rs"));
 }

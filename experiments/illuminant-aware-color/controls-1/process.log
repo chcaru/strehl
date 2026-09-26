@@ -1,0 +1,10 @@
+
+running 4 tests
+test merge_cmd::illuminant_aware_color::independent_controls::independent_d65_equivalence_controls ... ok
+test merge_cmd::illuminant_aware_color::independent_controls::independent_interpolation_controls ... ok
+test merge_cmd::illuminant_aware_color::independent_controls::independent_metadata_refusal_controls ... ok
+test merge_cmd::illuminant_aware_color::independent_controls::independent_warm_colour_controls ... ILLUMINANT_FLAT {"baseline_variance":[0.00004042473543264258,0.000023755218609755602,0.000018088393316184614],"candidate_baseline_variance_ratio":[1.169059095934765,1.3580600712190394,1.8580539231489432],"candidate_variance":[0.00004725890465828719,0.00003226101387698854,0.00003360921016459795],"independent_expected_variance":[0.00004725860602083484,0.000032261220000858305,0.000033609299127610386],"propagation_relative_error":[6.319218392117749e-6,6.389214969473509e-6,2.6469761271082526e-6],"scope":"actual Render covariance arithmetic only; no photographic quality admission"}
+ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 282 filtered out; finished in 0.00s
+
