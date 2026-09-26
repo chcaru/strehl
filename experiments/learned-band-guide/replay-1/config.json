@@ -1,0 +1,6 @@
+{
+  "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\replay-1\\output",
+  "dataset": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\dataset.json",
+  "weights": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\train-1\\output\\model.json",
+  "inference": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\infer-1\\output\\predictions.json"
+}

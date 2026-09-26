@@ -27,6 +27,17 @@ The low core-texture recovery of both references leaves that separate protection
 unqualified; it is not credited as candidate-induced damage. See
 `experiments/variance-stabilized-guide/results.md` and its independent review.
 
+The distinct learned-band-guide experiment now has an actual native training
+and replay path: a737-parameter per-band scorer learns weights while retaining
+original linear CFA coefficients, mean base, input bounds and MHC. Its one fixed
+1024-step fit finishes in14.46s after viable baseline controls and exact training
+reconstruction commissioning. Actual held native parity passes. Both flat
+controls pass, but curved/near-far positive RGB errors are1.47747/1.09696times
+current, and a smaller glint spread accompanies damage to its real core. This
+checkpoint is rejected without a photo or tuning; its gains over uniform are
+not gains over current. See `experiments/learned-band-guide/results.md` and the
+independent scientific and execution reviews. No real-image improvement follows.
+
 The separate stock PetteriAimonen reference on all299 prepared chip TIFFs now
 ends in resource refusal. Its24GiB attempt stops after46.922s and a single
 resource-only40GiB retry after124.828s; neither produces a photograph. Both

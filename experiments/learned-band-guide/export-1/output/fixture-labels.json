@@ -1,0 +1,488 @@
+{
+  "cases": [
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "flat",
+      "id": "train-flat-0",
+      "iso": 100.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "circular-disc64",
+      "source_buffer_sha256": [
+        "fa710b26d4f84e635e6c04473d3a7c1cd3f8269c8fa735d90cc2ca379aedd61d",
+        "98f3950c648d6b9794d4ba6dfd60045af9a7c5c55af7f5456feb0a87dfb6f9b0",
+        "f7d7b5f7995a51bb66423641dbc06cd8eee887ba4ae6a769f99c8b02e4dbe8b0",
+        "1e2b6e0cff3f2fda56745c73ebd55728988f9048a350ca31a8b7b1d5e62a618f",
+        "da996893e94175c37bb9cf3d5508ce760ed17b3be4cc8a7d6dcf6b92205cb0a5"
+      ],
+      "sources": 5,
+      "training": true,
+      "truth_sha256": "4d9bd9160039424a42f8da7b948cc1347bea11305ff584551a2135d0c9ed1029",
+      "variant": 0
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "flat",
+      "id": "train-flat-1",
+      "iso": 400.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "circular-disc64",
+      "source_buffer_sha256": [
+        "92b4b5a43b49ffa960c2c2ab989cbbb5ff1e560b8c941ce76b8348e72570f603",
+        "009fa9b73c5a20237a835b6134ec315a80925f9fc8856cf4fd448d4521fa6957",
+        "74aa495f508d09b9f562ade9656c31b238692a0d4acb9903bb08cbb871b43b94",
+        "d463bc9b5fbf651e84ea6a17c9d86a998b9d27c0c9d646ec573559e0bbac6cbc",
+        "8bb83f3b1e101cabd0ad4ff264b8275cc039e99f44512a9b909ba463178479f0"
+      ],
+      "sources": 5,
+      "training": true,
+      "truth_sha256": "901ae8b2883509091525d767a1ff601062f200d11742e1741fcc68665028cbf2",
+      "variant": 1
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "single-depth-cosine",
+      "id": "train-single-depth-cosine-0",
+      "iso": 100.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "circular-disc64",
+      "source_buffer_sha256": [
+        "36d536ccb460b1556624e26914967b3a1c57c131c124e4513ca87ef691d88f71",
+        "a952000ad78a5883a184c03ce409d30c8e31009d4dc779c166a4c4521caf31ee",
+        "62a8901d849a9665d5f71a57046ef05d24a6d60a03b3b98c74862b9ec4083a48",
+        "ad89c2fd59382db2db7650fc240c4b933af8de0985d4338ed0d924a80a0ea5f1",
+        "03d5e9ff3f5b4aacd386864fd98d9aa99cd86d34be9e4a0a44fb61b5c9ad6f10"
+      ],
+      "sources": 5,
+      "training": true,
+      "truth_sha256": "3ce2f5b5be69abfd7c8697af9d9a152d88f9aa63218c407e76331af47d25234a",
+      "variant": 0
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "single-depth-cosine",
+      "id": "train-single-depth-cosine-1",
+      "iso": 400.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "circular-disc64",
+      "source_buffer_sha256": [
+        "8314e5a496676e27d958b3f158547de99c58a0117ca6789cfff4300f7bddf53e",
+        "514f3e9e7279f91d2e76e6416e4a5adc9b2f08200dc98249e192cb9e0df28d19",
+        "aa95570c86988dc08b089ea61fe3708adfe22ec11fbe71cc48d0d66559d8c3d1",
+        "079619ddc447757ca98bcc297eaa5f573629cccc82470fca2dd632b1a313541d",
+        "69b79c9c2be0194a9a7d8c24f86be715a54a4cbb21a97f9ce4c9800cd68255d7"
+      ],
+      "sources": 5,
+      "training": true,
+      "truth_sha256": "da12ae9aeb6acaffb6cc92fca352e684cbf5f27993a92e8fd48e8fb75f81832f",
+      "variant": 1
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "single-depth-cosine",
+      "id": "train-single-depth-cosine-2",
+      "iso": 100.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "circular-disc64",
+      "source_buffer_sha256": [
+        "5ebcfdeee30535132d79a461658ff0225f6294f7af4e5e348e1594a3f6bc0c84",
+        "54828626b32a1b1abffbb2260ff73a43f9db954f9d19eb4b0047ed6639877b0b",
+        "4f538bd6cb542ee2418048e7c68b1c21436ecc7b37ba39d1d16ea15e2759950e",
+        "20b09a52fe322495a1a1070e2afed23a16f286c4911f0b92c49f6eda4912252d",
+        "370a8d1178dd51b22f27025c53dce9b860eafea05db25f811e5e7615bb22b100"
+      ],
+      "sources": 5,
+      "training": true,
+      "truth_sha256": "fbe5b536999cb080b6af88305a98daa57f5960e82c0cbcd0e12d3e160fa31073",
+      "variant": 2
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "single-depth-cosine",
+      "id": "train-single-depth-cosine-3",
+      "iso": 400.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "circular-disc64",
+      "source_buffer_sha256": [
+        "5125a27fb78345f35fbc7c3c249f22b7a6fc2bb27f3ddad6644f73c217c2590b",
+        "b9f25cd94ce9212160e13a415a5a308725ea1806fbcd7489031059ae9b6f2a4e",
+        "e6933e932facdc299111aa2f02277b660ef4d38ddfa62600c15fcaf58e8cc49c",
+        "f63fd213bb92d307d993dbde3f87400e8e085030a823c5c6f5ffc5bb37535e09",
+        "59f47871420f5ab938a6b42dad03e9f1ca6171399b78f651a4f1faeedc69ea45"
+      ],
+      "sources": 5,
+      "training": true,
+      "truth_sha256": "611e7a36fc13ae22caca90135f0861644b9129c0cc4baaa58004b0261662fe0f",
+      "variant": 3
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "straight-checker-layers",
+      "id": "train-straight-checker-layers-0",
+      "iso": 100.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "circular-disc64",
+      "source_buffer_sha256": [
+        "9dbb9b8eee8684414c6098ef26bcec79262dfcb27f5fda371a17f45cae91cd6c",
+        "e9ddfd6bf18f48eb0369e0c75356e9307320809cbf30b0cb1f483610b42e6536",
+        "049ebb3ffbc41ec7d7efff645882cbf2566dc482228dae1d7987c818ba95b605",
+        "906fbfd8c2a159a0fd926080830f328734d1f1692c1df12abcae7dcb4e0e94b6",
+        "64d24ccb8e5c0358031f9ae98238a7883c668cf013884831f6f2a3b730c31965"
+      ],
+      "sources": 5,
+      "training": true,
+      "truth_sha256": "6b63aae73b731f0037f7b8c5cde9913286bbaa30c38a9081da2d299a7cc468e6",
+      "variant": 0
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "straight-checker-layers",
+      "id": "train-straight-checker-layers-1",
+      "iso": 400.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "circular-disc64",
+      "source_buffer_sha256": [
+        "c741f912fb5ddbea97da14e087622eacbea92a4a72276e112de4824716af2d6d",
+        "ecb5833df9c30e1e54dfc8af4ab19e21d3265ab72cd74f2bebe8a3d2b031ce0f",
+        "c78047fa2c9b233b7c3968ea0b290b41e2fca5290d3407b7541e9ab0ec1a9738",
+        "3b923259493a3dd19a771f26fb0a5772437e254f18afcd938b65263dee2ee1cd",
+        "cce8390fd4d7f651c702f031193d6c413703a6b162714b400244d57a316db57d"
+      ],
+      "sources": 5,
+      "training": true,
+      "truth_sha256": "b38e66fd1887ec9fe5a33fb9a3b0d25870cafc583106d0aecda324cfcc8296bd",
+      "variant": 1
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "straight-checker-layers",
+      "id": "train-straight-checker-layers-2",
+      "iso": 100.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "circular-disc64",
+      "source_buffer_sha256": [
+        "a330b60141b19a97a094d90ae268c2f0b1d502a5b8f10d58530282e3fb994df9",
+        "20b3cf50d3350b4fee2b52869640d3522be9492bc409065dafcf6f69af73f4b1",
+        "9ebad0ef5ad2cab96742199e3255cff393de2e8c5fd6e2d73fb9bc25abea2822",
+        "0e55b57511e9101d20ad826b20b2e8a4d98b17dcd31c9eb7987178ba16de430d",
+        "728b8de4d0930c93cd07bae84dcb3de3d8560991ee59897df7674627b01a6a3c"
+      ],
+      "sources": 5,
+      "training": true,
+      "truth_sha256": "5edfc87caf42bcd362124634c50e99a3e51eff12879347d726283db365956509",
+      "variant": 2
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "straight-checker-layers",
+      "id": "train-straight-checker-layers-3",
+      "iso": 400.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "circular-disc64",
+      "source_buffer_sha256": [
+        "0aa725fc4c0c6775184cb881eb14776aacd39eb511634ea13d8ee25590bd4713",
+        "530fac25d35e098de7055ce15629de64a0ef49c75b1d50e5d9b6ee2b5ad967d9",
+        "1b90d12659c6622527bac690b89007ace9591e2b0a5d34221d40cbb6d6280971",
+        "b4dc871633269e7e9a14af2283beb1be426da7ad8853f19aa9cd2ab3c06e9d82",
+        "3c0ab00001115d6e7357347c15a3106fa28f234a3d029a2c0546264cfff06e0b"
+      ],
+      "sources": 5,
+      "training": true,
+      "truth_sha256": "d58fd5e09e67119cdf178e53120c1829eb8f4f39fd11bfb593c40d703d2224d0",
+      "variant": 3
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "gaussian-blobs",
+      "id": "train-gaussian-blobs-0",
+      "iso": 100.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "circular-disc64",
+      "source_buffer_sha256": [
+        "603187ca5298ad37ea4db7795384031fe1a8c8c18d7b71466fdbf1e8d44c85b1",
+        "3c29e5e3d39ed0096ef23da2248f705bbc8b471e25c6968ba67f1d9b45cb722c",
+        "4e2e65e8a4ced54092e7ef3af373ad572facdaf4eb53f20a5462b798478b6735",
+        "0b415e3dd23f5b6191f8ac96aee05ac0757b10ff8260e95d84476e96cd08186e",
+        "3ffa43417ea7b4a058d72e5a88d1283292f0e0b395acecd79d4416e0ae6182eb"
+      ],
+      "sources": 5,
+      "training": true,
+      "truth_sha256": "1f3de843ee3f755cbb2483f2f77aac247561d683d2de9d41cd6a1af11c460871",
+      "variant": 0
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "gaussian-blobs",
+      "id": "train-gaussian-blobs-1",
+      "iso": 400.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "circular-disc64",
+      "source_buffer_sha256": [
+        "f6f0dda55965f36f8147eb874b3b8fc52794cfee0744fc98e72038756158f8c1",
+        "e2cb88b99a02651e5a7a4382a81d97d828a74e5d6f31dcfeab2a36dc0849cea8",
+        "b5bcf405c717958b5a7fedbacb1066e4abd543242ac1e62d7c6e4b7ad432fd0a",
+        "57183cd3d7382adc6db6ce79c39318c25cb59531f2ad09acddee420977d64d1b",
+        "3a96e86040d19d89afc8178001be619112f01e42f9c9a808ccc2c09343076b49"
+      ],
+      "sources": 5,
+      "training": true,
+      "truth_sha256": "436aec0d5dd0656030c108e17a063ccea4b227ff23d02a9e62688aaef925fc30",
+      "variant": 1
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "flat",
+      "id": "held-flat-n5",
+      "iso": 100.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "elliptical-.55-rotated-.60-64",
+      "source_buffer_sha256": [
+        "9561e03b3a767691f1e9b691ac3e4595107110ec277ae292ccd26c9722660711",
+        "d4ffe8a7c58c59e8417b0abbe48f0cdea23f5075d785ad3955049f29fc708a74",
+        "16c9f006edcfb6f9fe9fdbaed6b8872f168b917a6ea3e8bf62ec78856c5c739c",
+        "29dc9e81ee5f0283d9c55b16a8017f1a5a94739c8c34fc6fd6d92f07162d6d92",
+        "f59853f5b34b7f32005a2cdf9344b9bdc7c6cdf004fcf469b6ebcf80af8aa0b7"
+      ],
+      "sources": 5,
+      "training": false,
+      "truth_sha256": "957435305c77e5ba6d903fbef5fa679da95f03bc47ae798e7574adedea5b782e",
+      "variant": 0
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "flat",
+      "id": "held-flat-n9",
+      "iso": 100.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "elliptical-.55-rotated-.60-64",
+      "source_buffer_sha256": [
+        "9561e03b3a767691f1e9b691ac3e4595107110ec277ae292ccd26c9722660711",
+        "d4ffe8a7c58c59e8417b0abbe48f0cdea23f5075d785ad3955049f29fc708a74",
+        "16c9f006edcfb6f9fe9fdbaed6b8872f168b917a6ea3e8bf62ec78856c5c739c",
+        "29dc9e81ee5f0283d9c55b16a8017f1a5a94739c8c34fc6fd6d92f07162d6d92",
+        "f59853f5b34b7f32005a2cdf9344b9bdc7c6cdf004fcf469b6ebcf80af8aa0b7",
+        "e9a184b98393e2181df1502086b711e194fe1119dd3c764b8b95fe30b17f7016",
+        "692722cbd31c6fc8d210bbbbb9ccecc80db5d692df1df765ee8e6bd63975f066",
+        "acd79238b4e8c5779e01a04db96fd3e2d9917da99b00c17b0ae5865e4b8a5983",
+        "8f6443849230f45273bf8fefe579d641c6965508a3bcc8f453f80f8560267aeb"
+      ],
+      "sources": 9,
+      "training": false,
+      "truth_sha256": "957435305c77e5ba6d903fbef5fa679da95f03bc47ae798e7574adedea5b782e",
+      "variant": 0
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "curved-bright-occlusion",
+      "id": "held-curved-bright-occlusion-n9",
+      "iso": 100.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "elliptical-.55-rotated-.60-64",
+      "source_buffer_sha256": [
+        "48284f4a493f4330c003e7428f1eee95ef1fec7fc220b6c00c94db39fc69a666",
+        "b327dd451a11f29fccad8cc3e229f2d83a731ab575105cf61348736217822c53",
+        "1f43ff7acba035f637ead991420d9dd64b16fd7d89b86809dc810885e31e6f29",
+        "01287d8f85166297ff7dd5bd7bceb06dc4323af1de53ab72e539739da5511ced",
+        "a6c52a0cb2db17d4457f1009776bf0a1b6e1eb4e476d7e56003df737328da71b",
+        "2b298d595b83a122e3edf5d4cdb892c7656aa6eaa039bb7f7ff11fb86284ff83",
+        "4118ca4e708cc170b93a457ca6fbc993da06bd796990e6c1fdcda440a574c553",
+        "5739a599702b0efadc1f89a144e0cd1462c56aab8c2a9058939ae32b9139ed25",
+        "f83f39b76e22ab7cd3606322df01a2561f66230511f3aed237985ba3b15005b3"
+      ],
+      "sources": 9,
+      "training": false,
+      "truth_sha256": "2527ab8e6e8489ad705f06d5f4711292208b64480131b9559c16108549756bcb",
+      "variant": 0
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "near-fine-far-coarse",
+      "id": "held-near-fine-far-coarse-n5",
+      "iso": 100.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "elliptical-.55-rotated-.60-64",
+      "source_buffer_sha256": [
+        "b0d8ea8a6bd8fc85046284965794a62db41f021d69e5463637eaa2247a62b16c",
+        "0d436b06f58441d14267ccc69860eac058b1a5f0986ab68535962d92e7b05deb",
+        "f6caec8980c41b0cfb599a74bcd41cd9cefe98842a45f14a6ddd98331e6aacfa",
+        "0bc5332a4a21803e8dee34ce08505d760197a38032052998acc486eef457067c",
+        "7930082c8a39961d36591d665215f1ea16e1caca4a8f9f1caf0fa6b4783813c8"
+      ],
+      "sources": 5,
+      "training": false,
+      "truth_sha256": "09b20c9fbdc726a2ba533300050f1210ce45f28b1c70d38d5edd27d883719757",
+      "variant": 0
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "unclipped-point-glint",
+      "id": "held-unclipped-point-glint-n5",
+      "iso": 100.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "annulus-inner-radius-.45-64",
+      "source_buffer_sha256": [
+        "f4a1e72f8eae5117f5f1c3e030ad37953703f0d7b0adc6748363298bbf54c912",
+        "7599b0ce432c60baae06e4f27e7e2897c8f2230cd92aed4b9055cd52eac003ca",
+        "b8a3034f5d5084412c8c339a58bd70e497f53a59c35af7efee5dcf5eda719534",
+        "d707488bf0717cb7a595160395da1fbb1ffb2c164833ab1a40e5f5e385cf1d78",
+        "d769b08d823f8c7fea50101cb5715c10cbef6aaf350fcd01e412fb0b58e6531f"
+      ],
+      "sources": 5,
+      "training": false,
+      "truth_sha256": "403c60203c35713c646d8546448e2026fd1b10ff53193b62a0465ca3240b6ef3",
+      "variant": 0
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        1,
+        6,
+        6,
+        0
+      ],
+      "family": "clipped-point-glint",
+      "id": "held-clipped-point-glint-n5",
+      "iso": 100.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "annulus-inner-radius-.45-64",
+      "source_buffer_sha256": [
+        "2456b7df54083130ef0a572dca426c0f9dd6a2a9dea0b464f8e9232566b84379",
+        "ec09e3ddac3201efd70d5affb717ec80d3caaa30e564ba730e9c034475cc59ab",
+        "367572962895cf1b80b1d2b5678b637836ee54bf452dd469a261626ae610c873",
+        "b9f521aa349d970d10d53ba25b8f35dc269eb44ff4b0cb707a841698faf56d5b",
+        "cdfb5a4bab811b46a1690f9f74d89f5d267efa3ee10642a2153f56e8251f02b6"
+      ],
+      "sources": 5,
+      "training": false,
+      "truth_sha256": "3fbd1f7207c1c9eb9f2c95c6db6fa9eef661d489d464216e6d2b86ad0789f6cb",
+      "variant": 0
+    },
+    {
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "weak-colour-dots",
+      "id": "held-weak-colour-dots-n5",
+      "iso": 100.0,
+      "noise_drawn_after_illumination": true,
+      "pupil": "annulus-inner-radius-.45-64",
+      "source_buffer_sha256": [
+        "635599364121e6d35564fe62185439aa23d28e07db2d4ed6f8dec47a717e123d",
+        "9f84649a7c8c9a57aaab65015120e4bb0fa4c86a5b071f2d66b15125b7e3ad6e",
+        "aedeba7c7773eff4ed06c6441a8efed02a78e3cd1559ec980673d1663239b411",
+        "c4fe43c62b1be6eb0e48d8cbf8a50143973a0547f5fe0efc3802af9c8ba1ed55",
+        "15b2d6fec79555c28bdcc1a4b4842aa6da2f25435fd5cfdfd8b83c788982c976"
+      ],
+      "sources": 5,
+      "training": false,
+      "truth_sha256": "1996bf48f125c059d1ffce14a4e31ecb8b3ff0b20bcd1dc4277d824d75c2e308",
+      "variant": 0
+    }
+  ],
+  "schema": 1
+}

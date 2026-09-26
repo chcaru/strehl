@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "dataset": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\dataset.json",
+  "dataset_sha256": "0c8e7c457f971cc387fa06e7f5261e2b9ef15014c6591b6d7950ce0acdda9e19",
+  "source_sha256": "b5455f488a92ed75c2a8ae8d9dcfb31b054237805b7ded22893459ef4ea9b987",
+  "torch": "2.11.0+cu128",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "deterministic": true,
+  "float32": true,
+  "tf32": false,
+  "seed": 137,
+  "phase": "train",
+  "wall_seconds": 14.6049251000004,
+  "peak_cuda_bytes": 156370944,
+  "completed": true
+}

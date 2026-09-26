@@ -1,0 +1,256 @@
+{
+  "schema": 1,
+  "dataset": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\dataset.json",
+  "dataset_sha256": "0c8e7c457f971cc387fa06e7f5261e2b9ef15014c6591b6d7950ce0acdda9e19",
+  "source_sha256": "b5455f488a92ed75c2a8ae8d9dcfb31b054237805b7ded22893459ef4ea9b987",
+  "torch": "2.11.0+cu128",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "deterministic": true,
+  "float32": true,
+  "tf32": false,
+  "seed": 137,
+  "passed": true,
+  "training_only": true,
+  "records": [
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\case.json",
+      "sha256": "58f237f11d2d74345c3684a43de9225b00bdfef1dc6f4393ec43b9c68cb5d584",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-1\\case.json",
+      "sha256": "ef52547b1cb4b64a9a495d8eb6e0e2cdcb419131e7aeb71a8a252024aaae37b9",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-single-depth-cosine-0\\case.json",
+      "sha256": "f3ca31208e4eb36f3a3cf62bff5d396b6a816b221689cd0c4ebc53b1ebb98bde",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 5
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-single-depth-cosine-1\\case.json",
+      "sha256": "df0206ae8595a54a7db52cfd48e4da9f5ff3adb10324b28251c683210e4121a2",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 4
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-single-depth-cosine-2\\case.json",
+      "sha256": "cffbac836a321896b018a9871b8cd97d6594480b11262343cf6e12f8ea7cc19c",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 27
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-single-depth-cosine-3\\case.json",
+      "sha256": "61527c27db279e88a1eb4b124383edb46d13dba5e5aa74e854a524a00e6be265",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 1
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-straight-checker-layers-0\\case.json",
+      "sha256": "e15776a0ff1be1bb2319c5e392391c3680b2cc450290667714e4531685884240",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 8
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-straight-checker-layers-1\\case.json",
+      "sha256": "198300a440187dfe82ce115295792cb25ae1b248c712de0421e3a40fd1ab93e7",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 2
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-straight-checker-layers-2\\case.json",
+      "sha256": "b35be0dcba8ca13a0c0f416611c2a922bffeb4e6be00540b2ae292562cfc2d45",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 30
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-straight-checker-layers-3\\case.json",
+      "sha256": "b51e443820cf5d1c866579a55f0bfb8acfb47427760af07f3784dadb8db3bc61",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-gaussian-blobs-0\\case.json",
+      "sha256": "6a1e02b3fb7c03287c45826394713f51ca8767ccd64fa885ab342a4fab12f877",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-gaussian-blobs-1\\case.json",
+      "sha256": "5065b9a2309adc53dd813817040782ba36b1ef3401b5e3d8b4f6123577ddb975",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "comparison_includes_all_boundary_pixels": true,
+          "clamped_sites": 0
+        }
+      ]
+    }
+  ]
+}
