@@ -1,0 +1,13 @@
+
+running 4 tests
+test merge_cmd::chip_focus_radiance::independent_controls::address_gauge_and_destroyers ... CHIP_FOCUS_RADIANCE_CONTROL {"name":"address","result":{"channel_weights_shared":true,"crop_mutant_rejected":true,"factor_mutant_absolute_errors":[0.0,0.135],"factor_mutant_rejected":true,"factor_mutant_values":[0.45,0.585],"factor_rejection_scope":"at least one of two original points","first_factor_point_degenerate":true,"mechanical_pass":true}}
+ok
+test merge_cmd::chip_focus_radiance::independent_controls::constants_source_and_uniform_mean ... CHIP_FOCUS_RADIANCE_CONTROL {"name":"identities","result":{"constant_max_absolute_error_dn":0.0078125,"constant_relative_rounding_bound":0.00003588328371863357,"constant_sources":299,"mechanical_pass":true,"single_supported_source_exact":true,"uniform_mean_exact":true}}
+ok
+test merge_cmd::chip_focus_radiance::independent_controls::planar_focus_and_flat_noise ... CHIP_FOCUS_RADIANCE_CONTROL {"name":"planar","result":{"actual_native_quality_qualified":false,"candidate_mse_dn2":55248.280917379445,"erased_detail_rejected":true,"erased_mse_dn2":1339927.6454559779,"flat_first":true,"flat_mse_dn2":88.20584015658824,"mechanical_pass":true,"positive_exercised":true,"single_source_mean_mse_dn2":399.9474347856571,"uniform_flat_mse_dn2":12.11941842379747,"uniform_mse_dn2":951982.5741924063,"wrong_front_mse_dn2":1331480.0797285645,"wrong_front_rejected":true}}
+ok
+test merge_cmd::chip_focus_radiance::independent_controls::refusal_and_order ... CHIP_FOCUS_RADIANCE_CONTROL {"name":"refusal","result":{"finite_input_sum_overflow_rejected":true,"invalid_model_rejected":true,"mechanical_pass":true,"nonfinite_or_wrong_planes_rejected":true,"order_duplicate_missing_rejected":true,"zero_mass_whole_candidate_refused":true}}
+ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 291 filtered out; finished in 0.07s
+

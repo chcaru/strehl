@@ -1,0 +1,12 @@
+{
+  "strehl": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-radiance\\build-3\\strehl.exe",
+    "sha256": "ad3082b82d7bdb9feb137711b4ff013d9e76a98296ddbe79d8c4730ff0774046",
+    "bytes": 17950720
+  },
+  "cli-tests": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-radiance\\build-3\\cli-tests.exe",
+    "sha256": "17c78d77bf8970c04fa055ff10cb8e9ac03202cb63868dcca55876b70ff3798c",
+    "bytes": 32898048
+  }
+}

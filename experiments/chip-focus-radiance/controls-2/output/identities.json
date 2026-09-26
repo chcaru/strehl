@@ -1,0 +1,8 @@
+{
+  "constant_max_absolute_error_dn": 0.0078125,
+  "constant_relative_rounding_bound": 0.00003588328371863357,
+  "constant_sources": 299,
+  "mechanical_pass": true,
+  "single_supported_source_exact": true,
+  "uniform_mean_exact": true
+}

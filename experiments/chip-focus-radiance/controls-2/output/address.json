@@ -1,0 +1,16 @@
+{
+  "channel_weights_shared": true,
+  "crop_mutant_rejected": true,
+  "factor_mutant_absolute_errors": [
+    0.0,
+    0.135
+  ],
+  "factor_mutant_rejected": true,
+  "factor_mutant_values": [
+    0.45,
+    0.585
+  ],
+  "factor_rejection_scope": "at least one of two original points",
+  "first_factor_point_degenerate": true,
+  "mechanical_pass": true
+}

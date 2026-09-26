@@ -1,0 +1,8 @@
+{
+  "finite_input_sum_overflow_rejected": true,
+  "invalid_model_rejected": true,
+  "mechanical_pass": true,
+  "nonfinite_or_wrong_planes_rejected": true,
+  "order_duplicate_missing_rejected": true,
+  "zero_mass_whole_candidate_refused": true
+}

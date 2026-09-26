@@ -1,0 +1,26 @@
+{
+  "status": "COMPLETE_AWAITING_INDEPENDENT_PHOTOGRAPHIC_REVIEW",
+  "candidate_valid": true,
+  "phase": "full",
+  "source_count": 299,
+  "reference": 149,
+  "sources_unchanged": true,
+  "baseline_current_production_pixels_and_icc_exact": true,
+  "actual_tone_pinned": true,
+  "candidate_pixels_changed": true,
+  "original_metadata_unchanged": true,
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-radiance\\full-1\\output\\receipt.json",
+    "sha256": "2dd0919cbf4a8f29fa4aec091197447d3c2371bb03b9487b85e6991cc302b958",
+    "bytes": 167495
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-radiance\\full-1\\process.json",
+    "sha256": "91688b6ccca7c443a1a03abd5d2eb091f45679c1cbb16d612e7403b66d0d9530",
+    "bytes": 2763
+  },
+  "generated_general_qualification": false,
+  "photographic_replay_admitted": false,
+  "visual_verdict": null,
+  "scope": "One root-authorized complete native focus-surface radiance observation; original two-band proxy remains refused."
+}

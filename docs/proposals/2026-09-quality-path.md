@@ -775,3 +775,9 @@ idea of coherent averaging. Whole-field extrapolation and lost noise/detail
 remain explicit risks. A fresh exact canonical baseline, pinned development,
 all25native comparisons and complete masters decide the observation. It cannot
 establish general multilayer performance. See chip-focus-radiance/charter.md.
+That complete299-RAW observation now finishes131.813s with exact canonical
+RGB16/ICC and pinned development. Both full outputs were shown to the owner.
+Independent review of all25native pairs confirms conspicuous broad coloured
+spill reduction but rejects the candidate for lost fine subdivisions, stipple
+and scratch branches. Keep this tradeoff explicit; no width/source sweep or
+default promotion. See chip-focus-radiance/results.md and photographic-review.md.
