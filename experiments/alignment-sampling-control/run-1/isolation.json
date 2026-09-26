@@ -1,0 +1,239 @@
+[
+  {
+    "phase": [
+      0.0,
+      0.0
+    ],
+    "geometry": "identity",
+    "motion": "fixed-at-known-displacement",
+    "scalar_blur_interpretation": true,
+    "no_physical_blur": true,
+    "phase_guide": false,
+    "source_dtype": "float64",
+    "arms": {
+      "exact": {
+        "gain": 0.9433962264150949,
+        "bias": -0.016037735849056656,
+        "lap_coefficient": 1.3530843112619095e-15,
+        "beta_source_native_squared": 1.4342693699376232e-15,
+        "rank": 3,
+        "singular_values": [
+          120.92375545733643,
+          6.759550048666907,
+          0.32796434099814
+        ],
+        "standardized_condition": 3.2956691547162453,
+        "fit_rmse": 2.413861058968752e-16,
+        "validation_rmse": 2.419373272421797e-16,
+        "validation_max_abs": 3.885780586188048e-16,
+        "target_spatial_sd": 0.06337131799097817,
+        "fit_samples": 12136,
+        "validation_samples": 12136
+      },
+      "bilinear": {
+        "gain": 0.9433962264150949,
+        "bias": -0.016037735849056656,
+        "lap_coefficient": 1.0234868508263162e-15,
+        "beta_source_native_squared": 1.0848960618758945e-15,
+        "rank": 3,
+        "singular_values": [
+          120.92375545733643,
+          6.759550048666907,
+          0.32796434099814104
+        ],
+        "standardized_condition": 3.295669154716247,
+        "fit_rmse": 2.4158956194931664e-16,
+        "validation_rmse": 2.420773948109071e-16,
+        "validation_max_abs": 3.885780586188048e-16,
+        "target_spatial_sd": 0.06337131799097817,
+        "fit_samples": 12136,
+        "validation_samples": 12136
+      }
+    },
+    "raster_laplacian_vs_exact_five_point_integer_max_abs": 3.3306690738754696e-16,
+    "raster": {
+      "shape": [
+        392,
+        392
+      ],
+      "dtype": "float64",
+      "sha256": "a4566d97df909cce5d460499d3b08bbe0ea08475c3fb256d5637de59570d0cf2"
+    },
+    "grids": [
+      {
+        "shape": [
+          12136,
+          2
+        ],
+        "dtype": "float64",
+        "sha256": "9dcb27a262179216eb753806167e7789adbbc0d17ca29394b2964e0a42d6978d"
+      },
+      {
+        "shape": [
+          12136,
+          2
+        ],
+        "dtype": "float64",
+        "sha256": "45705668474d9f0e586d912607343df970b300c8825b636ad8cead50c59b7396"
+      }
+    ]
+  },
+  {
+    "phase": [
+      0.5,
+      0.5
+    ],
+    "geometry": "identity",
+    "motion": "fixed-at-known-displacement",
+    "scalar_blur_interpretation": true,
+    "no_physical_blur": true,
+    "phase_guide": false,
+    "source_dtype": "float64",
+    "arms": {
+      "exact": {
+        "gain": 0.9433962264150949,
+        "bias": -0.016037735849056656,
+        "lap_coefficient": 1.3530843112619095e-15,
+        "beta_source_native_squared": 1.4342693699376232e-15,
+        "rank": 3,
+        "singular_values": [
+          120.92375545733643,
+          6.759550048666907,
+          0.32796434099814
+        ],
+        "standardized_condition": 3.2956691547162453,
+        "fit_rmse": 2.413861058968752e-16,
+        "validation_rmse": 2.419373272421797e-16,
+        "validation_max_abs": 3.885780586188048e-16,
+        "target_spatial_sd": 0.06337131799097817,
+        "fit_samples": 12136,
+        "validation_samples": 12136
+      },
+      "bilinear": {
+        "gain": 0.9433051815811911,
+        "bias": -0.015996620651191215,
+        "lap_coefficient": -0.121041823600972,
+        "beta_source_native_squared": -0.1283167165456239,
+        "rank": 3,
+        "singular_values": [
+          120.9230578725516,
+          6.7031116656626395,
+          0.3235684980399791
+        ],
+        "standardized_condition": 3.289206782321821,
+        "fit_rmse": 1.3655390557316383e-06,
+        "validation_rmse": 1.3658429467486031e-06,
+        "validation_max_abs": 3.4065024488438844e-06,
+        "target_spatial_sd": 0.06337131799097817,
+        "fit_samples": 12136,
+        "validation_samples": 12136
+      }
+    },
+    "raster_laplacian_vs_exact_five_point_integer_max_abs": 3.3306690738754696e-16,
+    "raster": {
+      "shape": [
+        392,
+        392
+      ],
+      "dtype": "float64",
+      "sha256": "40afc60e105991c82d6d17726c0ec68f117c5532466720f3ae0718942d4d6984"
+    },
+    "grids": [
+      {
+        "shape": [
+          12136,
+          2
+        ],
+        "dtype": "float64",
+        "sha256": "9dcb27a262179216eb753806167e7789adbbc0d17ca29394b2964e0a42d6978d"
+      },
+      {
+        "shape": [
+          12136,
+          2
+        ],
+        "dtype": "float64",
+        "sha256": "45705668474d9f0e586d912607343df970b300c8825b636ad8cead50c59b7396"
+      }
+    ]
+  },
+  {
+    "phase": [
+      0.5,
+      0.0
+    ],
+    "geometry": "identity",
+    "motion": "fixed-at-known-displacement",
+    "scalar_blur_interpretation": false,
+    "no_physical_blur": true,
+    "phase_guide": false,
+    "source_dtype": "float64",
+    "arms": {
+      "exact": {
+        "gain": 0.9433962264150949,
+        "bias": -0.016037735849056656,
+        "lap_coefficient": 1.3530843112619095e-15,
+        "beta_source_native_squared": 1.4342693699376232e-15,
+        "rank": 3,
+        "singular_values": [
+          120.92375545733643,
+          6.759550048666907,
+          0.32796434099814
+        ],
+        "standardized_condition": 3.2956691547162453,
+        "fit_rmse": 2.413861058968752e-16,
+        "validation_rmse": 2.419373272421797e-16,
+        "validation_max_abs": 3.885780586188048e-16,
+        "target_spatial_sd": 0.06337131799097817,
+        "fit_samples": 12136,
+        "validation_samples": 12136
+      },
+      "bilinear": {
+        "gain": 0.9429390392636756,
+        "bias": -0.015831225757635105,
+        "lap_coefficient": -0.07588377022419432,
+        "beta_source_native_squared": -0.08047579648780966,
+        "rank": 3,
+        "singular_values": [
+          120.92334886810538,
+          6.726785583462368,
+          0.3254421522255767
+        ],
+        "standardized_condition": 3.2905810134928997,
+        "fit_rmse": 0.00019636447442629933,
+        "validation_rmse": 0.00019639439594697382,
+        "validation_max_abs": 0.0004761229881973805,
+        "target_spatial_sd": 0.06337131799097817,
+        "fit_samples": 12136,
+        "validation_samples": 12136
+      }
+    },
+    "raster_laplacian_vs_exact_five_point_integer_max_abs": 3.3306690738754696e-16,
+    "raster": {
+      "shape": [
+        392,
+        392
+      ],
+      "dtype": "float64",
+      "sha256": "7120b0fde739bd51a26e71fb7b101495fde4bc94b6bf10b4ab3029d18615bde0"
+    },
+    "grids": [
+      {
+        "shape": [
+          12136,
+          2
+        ],
+        "dtype": "float64",
+        "sha256": "9dcb27a262179216eb753806167e7789adbbc0d17ca29394b2964e0a42d6978d"
+      },
+      {
+        "shape": [
+          12136,
+          2
+        ],
+        "dtype": "float64",
+        "sha256": "45705668474d9f0e586d912607343df970b300c8825b636ad8cead50c59b7396"
+      }
+    ]
+  }
+]

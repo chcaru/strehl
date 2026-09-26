@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "checks": [
+    "integer-f32-identity",
+    "constant-identity",
+    "independent-half-and-quarter-taps",
+    "compact-support",
+    "mixed-quadratic-axes"
+  ],
+  "scope": "Sampler implementation only; not fitted-motion or photographic admission."
+}

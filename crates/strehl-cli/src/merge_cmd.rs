@@ -5005,6 +5005,16 @@ mod real_source_contributions {
 }
 
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+mod band_source_agreement {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/band-source-agreement/implementation.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+mod band_source_agreement_full {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/band-source-agreement/full-adapter.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
 mod marigold_source_pure {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/marigold-source-pure/oracle.rs"));
 }

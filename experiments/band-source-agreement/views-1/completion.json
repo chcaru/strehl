@@ -1,0 +1,825 @@
+{
+  "full_images": [
+    {
+      "arm": "baseline",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\full-1\\output\\baseline.tiff",
+        "sha256": "bb4b1e8518e49b3e7026933d7fe345acab76f82dff3cba0266d311923ab234c1",
+        "bytes": 168952968
+      },
+      "full_jpeg": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-full.jpg",
+        "sha256": "f88275aba4c07371b147915e38e98d8a54e70b9509dfd0bec686d174b48b7e45",
+        "bytes": 23962478
+      },
+      "overview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-overview.png",
+        "sha256": "1c2b7029773b9033b3e283378b045a7d1b65259fb57bc02f1cd8863fa293de3d",
+        "bytes": 3222297
+      },
+      "native_dimensions": [
+        6500,
+        4332
+      ],
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b"
+    },
+    {
+      "arm": "candidate",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\full-1\\output\\candidate.tiff",
+        "sha256": "1a17689b51c43b0a7a40029616d758b8fee45fbbc7fa6b76c9e38db7012a6944",
+        "bytes": 168952968
+      },
+      "full_jpeg": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-full.jpg",
+        "sha256": "3b7d040dca6d9fcdccd7d1a8739edd76df57ec896deac490231067bd8a4bfa7f",
+        "bytes": 23968606
+      },
+      "overview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-overview.png",
+        "sha256": "e9fcd7407df99d892245861bb1623cae98aaea809ebe4da99b6cfb7f284efe95",
+        "bytes": 3221908
+      },
+      "native_dimensions": [
+        6500,
+        4332
+      ],
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b"
+    }
+  ],
+  "native_tiles": [
+    {
+      "arm": "baseline",
+      "region": "rail-crossing",
+      "native_xywh": [
+        1098,
+        958,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-rail-crossing-1098-958.png",
+        "sha256": "bdd4ac7ed25cd02081ef4dce96634d08fae1fb36c8642ffb9f00872fae16fb22",
+        "bytes": 308439
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-colour",
+      "native_xywh": [
+        1036,
+        196,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-upper-colour-1036-196.png",
+        "sha256": "e22ecfe3c366a5004371174288ce52cc831343bce84a770542dcf3994c5e88a3",
+        "bytes": 113160
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-colour",
+      "native_xywh": [
+        1292,
+        196,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-upper-colour-1292-196.png",
+        "sha256": "39aa01d1e5bed2d8873aad0431fd44d2f6c1aceb3c57a16667bf834db8b3a95c",
+        "bytes": 117680
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-colour",
+      "native_xywh": [
+        1036,
+        452,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-upper-colour-1036-452.png",
+        "sha256": "7a536b647be25c2d01d272f8b95925e77ca1447821900e9871b8e68c5293ecef",
+        "bytes": 132184
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-colour",
+      "native_xywh": [
+        1292,
+        452,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-upper-colour-1292-452.png",
+        "sha256": "5ebd536b3aea2de34b4062c5ef4e3b616cf9c853063299932d3ede8de6da7a19",
+        "bytes": 130109
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "central-stipple",
+      "native_xywh": [
+        2976,
+        1306,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-central-stipple-2976-1306.png",
+        "sha256": "9f420533f0778a59443a31e032051894979760d621abe2205e9ae5fcb8bf4561",
+        "bytes": 125123
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "central-stipple",
+      "native_xywh": [
+        3232,
+        1306,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-central-stipple-3232-1306.png",
+        "sha256": "e1102c1d1b4464aaba6f74e4b556efa3f33ec774ba1e3a364f4d8e30365d8662",
+        "bytes": 113415
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "central-stipple",
+      "native_xywh": [
+        2976,
+        1562,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-central-stipple-2976-1562.png",
+        "sha256": "55260d39ac5ca78d019d9278064e4631015ca675a06449562643060471c4e8fb",
+        "bytes": 135601
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "central-stipple",
+      "native_xywh": [
+        3232,
+        1562,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-central-stipple-3232-1562.png",
+        "sha256": "fa605242353e34a54174c660a1d8b90aea6483605f2f03f2c8754db81facf84c",
+        "bytes": 103938
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-array",
+      "native_xywh": [
+        566,
+        2796,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-lower-array-566-2796.png",
+        "sha256": "4c18b814f2044f000bb374dad4b2b67efde2116ccc3f7ceb5487befc83d4a695",
+        "bytes": 144155
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-array",
+      "native_xywh": [
+        822,
+        2796,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-lower-array-822-2796.png",
+        "sha256": "2a47033f4707bba7318f7bd5a7796f7833fe22b2562d4be9ee2305bcc8bb63c5",
+        "bytes": 136232
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-array",
+      "native_xywh": [
+        566,
+        3052,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-lower-array-566-3052.png",
+        "sha256": "6507a5b28b3ce3a989be8074fad63ce0781d0cfd978d2834c5f9f044afac26a4",
+        "bytes": 141376
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-array",
+      "native_xywh": [
+        822,
+        3052,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-lower-array-822-3052.png",
+        "sha256": "1d9541de4bb88edfd397f7a7bb739fbea9bfa05fdfeae236a7ecc7bf146408d1",
+        "bytes": 135588
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-colour",
+      "native_xywh": [
+        4666,
+        3016,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-lower-colour-4666-3016.png",
+        "sha256": "5eed295ab1d397c6513486946ffaa9e6c218a275e7e5433f170f1115b0097dff",
+        "bytes": 78701
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-colour",
+      "native_xywh": [
+        4922,
+        3016,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-lower-colour-4922-3016.png",
+        "sha256": "aca70668a71393f310613c391cb2458c0d561470bf88df6814d547e88be8bc5e",
+        "bytes": 84403
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-colour",
+      "native_xywh": [
+        4666,
+        3272,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-lower-colour-4666-3272.png",
+        "sha256": "fc256da9260cff1d99bc1f52db721c40a75d574e2b31c9ff9f35c65ad7163329",
+        "bytes": 79753
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-colour",
+      "native_xywh": [
+        4922,
+        3272,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-lower-colour-4922-3272.png",
+        "sha256": "80d1a25d13ec5e463d6a25e1fbb8292c41c5324a3d0036a8c51bdcd2b046a9bc",
+        "bytes": 85747
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "surface-scratches",
+      "native_xywh": [
+        4856,
+        1256,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-surface-scratches-4856-1256.png",
+        "sha256": "ebc6e685b2e9864db380576f006030e04ffdc7e2c1f20a38493051571f57b201",
+        "bytes": 83261
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "surface-scratches",
+      "native_xywh": [
+        5112,
+        1256,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-surface-scratches-5112-1256.png",
+        "sha256": "1a1b41f3b7fe58a1544ede45b8baca45e6946dc374f697007d95d293e5ed3b23",
+        "bytes": 86377
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "surface-scratches",
+      "native_xywh": [
+        4856,
+        1512,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-surface-scratches-4856-1512.png",
+        "sha256": "d8d6bd69d9ac343a2deba217784b1860a5206af953b7672f2f8e84a8098a318c",
+        "bytes": 82102
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "surface-scratches",
+      "native_xywh": [
+        5112,
+        1512,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-surface-scratches-5112-1512.png",
+        "sha256": "c13dabf5aaff8db872b1e74c3515b08b381933b22dd058858ee3173225d8026e",
+        "bytes": 86545
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        48,
+        336,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-upper-left-contact-grid-48-336.png",
+        "sha256": "23e4fdeb848d8c7446b20dde30216305f65a2aeff3d872459889a9f85ec5d152",
+        "bytes": 142279
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        304,
+        336,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-upper-left-contact-grid-304-336.png",
+        "sha256": "7c50ff4c9484252b6411ccecfaa28fe8c423b613b2218bcd0988e6ae110a012c",
+        "bytes": 129608
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        48,
+        592,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-upper-left-contact-grid-48-592.png",
+        "sha256": "aadaab7b7c42ff7a3d962f504cbe43d3c78876ff69b04f0ac450d3e1f43aed48",
+        "bytes": 138148
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        304,
+        592,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\baseline-upper-left-contact-grid-304-592.png",
+        "sha256": "409964314454fe89d7dc0ad8fc1e94920f82c72ca7186c1fb07b1814b7de6ebd",
+        "bytes": 126487
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "rail-crossing",
+      "native_xywh": [
+        1098,
+        958,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-rail-crossing-1098-958.png",
+        "sha256": "b6d16cedefc2f6e7a4c7e598a7a469d3fc97694c30a6d72dabaaf447fcc49d24",
+        "bytes": 308230
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "upper-colour",
+      "native_xywh": [
+        1036,
+        196,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-upper-colour-1036-196.png",
+        "sha256": "5d02644eb0d54fa01dce92ec84ce2083cab605f5ea3fb88353ae8ebde7c373e2",
+        "bytes": 113075
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "upper-colour",
+      "native_xywh": [
+        1292,
+        196,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-upper-colour-1292-196.png",
+        "sha256": "6f3e321d3ebbd4a4f06f2be55ff6bb5147452f98ae977d075152309b24aa4977",
+        "bytes": 117845
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "upper-colour",
+      "native_xywh": [
+        1036,
+        452,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-upper-colour-1036-452.png",
+        "sha256": "1b23c32f5cf3623daa0788801d2eed00ff983657e133e1eb7974ebbaabe27d1c",
+        "bytes": 132189
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "upper-colour",
+      "native_xywh": [
+        1292,
+        452,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-upper-colour-1292-452.png",
+        "sha256": "13fefa1fb8dd26c14a0be8b2eaf052cf41d6894059545f6eddc27e585daacd41",
+        "bytes": 130122
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "central-stipple",
+      "native_xywh": [
+        2976,
+        1306,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-central-stipple-2976-1306.png",
+        "sha256": "1fe290a22406c048f4b294b7c0b961f43ee282060e7bf93774227d2f3aa6fc3f",
+        "bytes": 125343
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "central-stipple",
+      "native_xywh": [
+        3232,
+        1306,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-central-stipple-3232-1306.png",
+        "sha256": "980af2340930503fd13d6ec25c2fb9b7e29d915cde67f52155d943cf61c889cc",
+        "bytes": 113585
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "central-stipple",
+      "native_xywh": [
+        2976,
+        1562,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-central-stipple-2976-1562.png",
+        "sha256": "a9a6c493db9a4f8d6bc3bd25d82095a45f0679d1525ef7ffd6152f2fa5e08ca6",
+        "bytes": 135788
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "central-stipple",
+      "native_xywh": [
+        3232,
+        1562,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-central-stipple-3232-1562.png",
+        "sha256": "72259a5c7441dc0aa8bb96dc2f3b20c303d9641df9ddf224468bcc5af5d1077f",
+        "bytes": 103901
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "lower-array",
+      "native_xywh": [
+        566,
+        2796,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-lower-array-566-2796.png",
+        "sha256": "96f9cbf4cd9a6437a54fa018556325e8c35bd7aeb4e100feb065ead5a1cf140f",
+        "bytes": 143864
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "lower-array",
+      "native_xywh": [
+        822,
+        2796,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-lower-array-822-2796.png",
+        "sha256": "0bb65016a62385781f7c4f53cbb3b94727054d23e498776f877397558bd780f3",
+        "bytes": 136048
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "lower-array",
+      "native_xywh": [
+        566,
+        3052,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-lower-array-566-3052.png",
+        "sha256": "1b92905c43a61256838f20bda4ee941d28a27f82648241bbebb652104e977be2",
+        "bytes": 141226
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "lower-array",
+      "native_xywh": [
+        822,
+        3052,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-lower-array-822-3052.png",
+        "sha256": "63980773119f5b06f029265b1bb90f56f13bf9f0f26abba53bc3d9ce5b308d5f",
+        "bytes": 135460
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "lower-colour",
+      "native_xywh": [
+        4666,
+        3016,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-lower-colour-4666-3016.png",
+        "sha256": "bd79bae298d7a56e941323d07e5e72a84edf9992a0a1b46b8c5c589e820db684",
+        "bytes": 78734
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "lower-colour",
+      "native_xywh": [
+        4922,
+        3016,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-lower-colour-4922-3016.png",
+        "sha256": "379ff2b4509013140eb291eebb678b8a1b94d479587c091535af74bbc81d142a",
+        "bytes": 84475
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "lower-colour",
+      "native_xywh": [
+        4666,
+        3272,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-lower-colour-4666-3272.png",
+        "sha256": "8271837984c25127d804b2bc9cd7514a3c676048b8fc8e776639c921c2f09726",
+        "bytes": 79599
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "lower-colour",
+      "native_xywh": [
+        4922,
+        3272,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-lower-colour-4922-3272.png",
+        "sha256": "4562d85591e165b48115e2805d2c9f93d82be1a6387391fce1f99b2123d23a17",
+        "bytes": 85668
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "surface-scratches",
+      "native_xywh": [
+        4856,
+        1256,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-surface-scratches-4856-1256.png",
+        "sha256": "00d9673d3029bb53d8bb9bfdda2fb5ad447fbd5271ce492db9b3ef31a6976220",
+        "bytes": 83275
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "surface-scratches",
+      "native_xywh": [
+        5112,
+        1256,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-surface-scratches-5112-1256.png",
+        "sha256": "5346f6e6d47331f737329bdc22059e56b7a8d3c19a38d18e85ae92b51032963b",
+        "bytes": 86334
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "surface-scratches",
+      "native_xywh": [
+        4856,
+        1512,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-surface-scratches-4856-1512.png",
+        "sha256": "a36123bd557b673118e1d24667c0adf9bae23a2943597c983f9537006ee7d6df",
+        "bytes": 82082
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "surface-scratches",
+      "native_xywh": [
+        5112,
+        1512,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-surface-scratches-5112-1512.png",
+        "sha256": "09c5c4ceaa2acc9c46f9957f8daeae2c665129cd931700e10fa30a972b0bc005",
+        "bytes": 86756
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        48,
+        336,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-upper-left-contact-grid-48-336.png",
+        "sha256": "5e89e0303da18a43e82b1aefb00533715cd58359d6623292c0f2d9f027f8bb20",
+        "bytes": 142306
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        304,
+        336,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-upper-left-contact-grid-304-336.png",
+        "sha256": "aff541bbbcf0e64c719397703fb905f5a9098e112a5518f0a0654833e1d9dbd6",
+        "bytes": 129555
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        48,
+        592,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-upper-left-contact-grid-48-592.png",
+        "sha256": "117a7a4f97afc644a232959ae8e05980ad910f1930ec7fdb4fa2549dc0a7a906",
+        "bytes": 138103
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        304,
+        592,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\views-1\\candidate-upper-left-contact-grid-304-592.png",
+        "sha256": "2f5d9ba8df0b0bf964ce16b6e1b85b23d324fc9f8517e033225e1acf7be4ee3d",
+        "bytes": 126587
+      }
+    }
+  ],
+  "targets": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\targets.json",
+    "sha256": "60f1075e914dd754dd7113ae6749f438170669db71d8c0fbebfb8e69e2023888",
+    "bytes": 15337
+  },
+  "run_completion": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\full-1\\completion.json",
+    "sha256": "cb204c2850bb3ad2c9e366c293da7aaff47739dd910db14d3338f584c0faa33c",
+    "bytes": 1158
+  },
+  "native_size": [
+    6500,
+    4332
+  ],
+  "crop": [
+    133,
+    89,
+    3250,
+    2166
+  ],
+  "conversion": "Identical (RGB16+128)//257 with retained ICC; native tiles never resampled.",
+  "visual_verdict": null,
+  "scope": "One complete fixed same-band source-agreement chip observation. Generated quality negatives remain explicit; mechanical safety is not general quality qualification or a default change."
+}

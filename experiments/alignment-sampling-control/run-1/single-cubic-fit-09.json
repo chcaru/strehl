@@ -1,0 +1,114 @@
+{
+  "call": 9,
+  "joint": true,
+  "axis": 1,
+  "input_arrays": [
+    {
+      "shape": [
+        392,
+        392
+      ],
+      "dtype": "float32",
+      "sha256": "b4725f9af3e15601e6c945604a69585ad4f73701af9b2e478f6f0f8b624da24f"
+    },
+    {
+      "shape": [
+        392,
+        392
+      ],
+      "dtype": "float32",
+      "sha256": "2059eb4ca4e262a0c572617baa1c3c430dd46783d6ab1e68691ccc6c658c40cc"
+    },
+    {
+      "shape": [
+        12136
+      ],
+      "dtype": "float64",
+      "sha256": "811321b55fe2e8ea72aa11fd5f64878730bb7eb13d3b2cfea4dd7ddaf173e76e"
+    },
+    {
+      "shape": [
+        12136
+      ],
+      "dtype": "float64",
+      "sha256": "82c8f30c29b3a49f1eb17d27f897e1d8bc13b8e8b88c9e9043738f368b1faf2d"
+    },
+    {
+      "shape": [
+        12136,
+        2
+      ],
+      "dtype": "float64",
+      "sha256": "9dcb27a262179216eb753806167e7789adbbc0d17ca29394b2964e0a42d6978d"
+    },
+    {
+      "shape": [
+        12136,
+        2
+      ],
+      "dtype": "float64",
+      "sha256": "45705668474d9f0e586d912607343df970b300c8825b636ad8cead50c59b7396"
+    }
+  ],
+  "probe_deltas": [],
+  "result": {
+    "model": "translation-plus-laplacian",
+    "before": {
+      "delta_source_native": [
+        0.0,
+        0.0
+      ],
+      "gain": 0.9433963794685415,
+      "bias": -0.016037794392510542,
+      "lap_coefficient": 2.1507846274936016e-05,
+      "beta_source_native_squared": 2.2798313352710103e-05,
+      "rank": 3,
+      "standardized_condition": 1.2227993549234943,
+      "fit_rmse": 1.634945534381523e-08,
+      "validation_rmse": 1.7726431982169247e-08,
+      "validation_mean_error": -1.1032903950192727e-09,
+      "validation_max_abs": 6.960341919493018e-08
+    },
+    "after": {
+      "delta_source_native": [
+        4.786998032413337e-07,
+        0.0
+      ],
+      "gain": 0.9433963794685428,
+      "bias": -0.016037794392511313,
+      "lap_coefficient": 2.1507846678672088e-05,
+      "beta_source_native_squared": 2.2798313780670237e-05,
+      "rank": 3,
+      "standardized_condition": 1.2227993554569967,
+      "fit_rmse": 1.6349455322229332e-08,
+      "validation_rmse": 1.7726432063285085e-08,
+      "validation_mean_error": -1.103290559183348e-09,
+      "validation_max_abs": 6.960341930595249e-08
+    },
+    "delta_source_native": [
+      4.786998032413337e-07,
+      0.0
+    ],
+    "beta_source_native_squared": 2.2798313780670237e-05,
+    "converged": true,
+    "at_translation_bound": false,
+    "nfev": 27,
+    "status": 3,
+    "optimality": 1.539754534044475e-07,
+    "motion_singular_values": [
+      0.17599534690138696,
+      0.0
+    ],
+    "motion_condition": 1.7599534690138694e+29,
+    "probes": [],
+    "source_support_gap_native": 6.960000000000001,
+    "fit_samples": 12136,
+    "validation_samples": 12136,
+    "admitted": false,
+    "refusal_reasons": [
+      "motion-aperture-or-conditioning"
+    ],
+    "original_bilinear_support_gap_native": 8.96,
+    "sampler_radius_native": 2
+  }
+}

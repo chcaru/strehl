@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "status": "RENDERED_AWAITING_INDEPENDENT_VISUAL_REVIEW",
+  "frames": 207,
+  "native_dimensions": [
+    6702,
+    4468
+  ],
+  "crop_quad_xywh": [
+    83,
+    55,
+    3351,
+    2234
+  ],
+  "master": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\ore-100\\stack-master.tiff",
+    "sha256": "65ebf5e8a76ed34a0919400987c54f0738f68e54abccb570e15761951e531be7",
+    "bytes": 179672281
+  },
+  "full_jpeg": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\ore-100\\stack-full.jpg",
+    "sha256": "834bce7b594d5b784ac19f42344751c72c1d790c8fda89e7dfcfc3078432469e",
+    "bytes": 27303267
+  },
+  "overview": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\ore-100\\overview.jpg",
+    "sha256": "03e6fb6ed1fcbb03f6eb445c2437edd6db4078f23cc3d7dac42cfcf62724fd6e",
+    "bytes": 1477241
+  },
+  "warp_map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\peacock-ore\\100msdcf\\alignment.txt",
+    "sha256": "a1c74342f2266fac447577fa04f7486f0ade56f0861f95176b6957d510dcbfc7",
+    "bytes": 28357
+  },
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\build-fixed-2\\strehl.exe",
+    "sha256": "bec4c357836ad1383800a6c933460ee7ef072c525b5957a6f5deb5194b203314",
+    "bytes": 17950720
+  },
+  "original_bytes_and_metadata_unchanged": true,
+  "viewing_note": "Full JPEG and RGB16 master contain the entire stack output. Overview is resampled for orientation."
+}

@@ -1,0 +1,97 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sampling-control\\measure.py",
+    "bytes": 15077,
+    "sha256": "dd80ecd646daabdc9b22eb731b9188c0aeba05bd0fb021034ba01f24dfc9d1d7"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sampling-control\\run.py",
+    "bytes": 3510,
+    "sha256": "36b900517e3d0a3ef21b655ba43b81b1d9ae58ccc87ee5ff1f8981d33b36bfec"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sampling-control\\design.md",
+    "bytes": 6302,
+    "sha256": "0578c7d92d36df8eff4191f39dd81187e33be7cc3d2fd54dd0e8956863071d3b"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sampling-control\\independent-controls.py",
+    "bytes": 7624,
+    "sha256": "48cee7c87c8522abc67cc45ed1eafc799c4ba34644b97d780e13490919b00d62"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sampling-control\\independent-plan.md",
+    "bytes": 3708,
+    "sha256": "68d8470180ab83f7128fa010421cb1bf6c70ffa582345e2682d3cf28b5edc06b"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sampling-control\\independent-source-review.md",
+    "bytes": 2217,
+    "sha256": "8a912c873716812c593f2c0bcaa5633f41bd99e8df291560980a048f138f6da8"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-differential-blur\\implementation.py",
+    "bytes": 7165,
+    "sha256": "14f193c81bc02dd8e8dbf2cb5edf0389a8e5a37751311cbec91d59cfea3cc7db"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-differential-blur\\measure.py",
+    "bytes": 7882,
+    "sha256": "0fcd8710ff494678b4a46e471999d32b202f3b1afb71835f2db8d47ec230f302"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-differential-blur\\independent-controls.py",
+    "bytes": 7177,
+    "sha256": "c2890db5008dd1e54fb508a8d15218346b33c99535b35864964e16bf92028e68"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-differential-blur\\resampling-audit.md",
+    "bytes": 8097,
+    "sha256": "faa6f85e440d3151be3315c6f68c60bd22945beeb9055f18d227b7e173dd597b"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-differential-blur\\run-1\\result.json",
+    "bytes": 229,
+    "sha256": "2a062d47338e6dd2ba3f44f3f4ec2a3f882aee0109bbbb6000795b15e6a9f295"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-differential-blur\\run-1\\process.json",
+    "bytes": 2814,
+    "sha256": "c07d0fabaaf5e70545bd96d01cf4c27c06b5a3c822ffb949cd72bd06e9cd49b2"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-differential-blur\\run-1\\sources.json",
+    "bytes": 2101,
+    "sha256": "a1de7fbaca9545214344bfcfbe0e85724aad274e49256b7650cdf06640f53863"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+    "bytes": 12664,
+    "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+    "bytes": 117908,
+    "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\local-green-translation.py",
+    "bytes": 9763,
+    "sha256": "5b64f7e612fd94cd8a22515bffb67addcee71021f6338f10a249c63864420196"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sampling-control\\run-1\\result.json",
+    "bytes": 89807,
+    "sha256": "41081ba11e15d910d11c0b5d6814db0fc7369675c8362f3b399d4d573aeeb4bd"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sampling-control\\run-1\\process.json",
+    "bytes": 2842,
+    "sha256": "43a87f1c8037eb2d35018226c2f4e64df575fcf4fce0d09653da63fe851910f2"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sampling-control\\run-1\\sources.json",
+    "bytes": 3797,
+    "sha256": "372499e17c3db822414986122ece1ee538d0c0749527d5f48d461d70faaec400"
+  }
+]

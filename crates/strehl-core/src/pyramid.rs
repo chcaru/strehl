@@ -126,6 +126,11 @@ pub mod real_source_contributions {
 }
 
 #[cfg(feature = "native-correction-variance")]
+pub mod band_source_agreement_diagnostic {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/band-source-agreement/core-bridge.rs"));
+}
+
+#[cfg(feature = "native-correction-variance")]
 pub mod rb_residual_guard_diagnostic {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/rb-residual-guard/core-bridge.rs"));
 }

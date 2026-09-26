@@ -1,0 +1,214 @@
+{
+  "script": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\mineral-repair-review\\review-ore100.py",
+    "bytes": 7500,
+    "sha256": "976a459d1fcfbada363f4f65c6b4c7de47efb4594e3b5cb73d962d56c9328659"
+  },
+  "results": [
+    {
+      "code": "100",
+      "frames": 207,
+      "ordered_source_name_bytes_hashes_exact": true,
+      "source_reads": 0,
+      "original_hash_scope": "Prior and new producer manifests compared; reviewer opened no RAW files.",
+      "old_root_path_changed": false,
+      "effective_command_settings": {
+        "--merge": "pyramid",
+        "--pyramid-bands": "7",
+        "--pyramid-gate": "2",
+        "--pyramid-exponent": "2",
+        "--pyramid-sharpen": "1.4",
+        "--pyramid-select": "soft",
+        "--pyramid-base": "mean",
+        "--srgb": true,
+        "--demosaic": true,
+        "--resampler": "catmull-rom",
+        "--cover": "crop",
+        "--exposure": 0.0
+      },
+      "held_environment_exact": true,
+      "explicit_new_off_fields": {
+        "STREHL_FINE_SUPPORT": "off",
+        "STREHL_CA_BEFORE_MHC": "off"
+      },
+      "gpu_log_change": [
+        "off",
+        "on"
+      ],
+      "crop": [
+        83,
+        55,
+        3351,
+        2234
+      ],
+      "reference": 103,
+      "warp": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\peacock-ore\\100msdcf\\alignment.txt",
+        "bytes": 28357,
+        "sha256": "a1c74342f2266fac447577fa04f7486f0ade56f0861f95176b6957d510dcbfc7"
+      },
+      "master_before": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\peacock-ore\\final\\peacock-ore-100msdcf-master.tiff",
+        "bytes": 179672275,
+        "sha256": "cfbfd68d72c5e02b1c47d7f6cb1e6465824d330ef64f828dff5bde9d09335530"
+      },
+      "master_after": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\ore-100\\stack-master.tiff",
+        "bytes": 179672281,
+        "sha256": "65ebf5e8a76ed34a0919400987c54f0738f68e54abccb570e15761951e531be7"
+      },
+      "exact_dimensions_and_icc": true,
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "tone_log_before_after": [
+        "black -0.00050, white 0.78240 (linear), contrast 0.55",
+        "black -0.00050, white 0.78240 (linear), contrast 0.55"
+      ],
+      "inputs": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\inventory.json",
+          "bytes": 4758,
+          "sha256": "a926adb0a1c3b24fc48ae0ad1c1f9559df54e479ef4863b327cd24e9546218c7"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\native-tiles.json",
+          "bytes": 5324,
+          "sha256": "8cb3e456529e8f87df98b0cf9f7fa5091430414d1188f93ccdec9156c4edd0a4"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\peacock-ore\\100msdcf\\input-order.json",
+          "bytes": 45228,
+          "sha256": "181937d57fd665422ed9a532dd6754be2812afd822460d4fb524f082e614137a"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\ore-100\\input-order.json",
+          "bytes": 53094,
+          "sha256": "e1769abecc24189e034b2e0a8381bdb1b1e24792eecf0c088e67924cc8bcb2a0"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\peacock-ore\\100msdcf\\invocation.json",
+          "bytes": 2540,
+          "sha256": "76287ee7fbcce86bb5ed103137a7ae1a779fbb2703bd53d29ec6d5a20b172cdf"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\ore-100\\invocation.json",
+          "bytes": 3114,
+          "sha256": "0a8066bb49911aa91e6d7a1077cc3234543116df078c795ade8fbb10f07b3113"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\ore-100\\completion.json",
+          "bytes": 1644,
+          "sha256": "ef514e8864c67f87cdc44e8a55bb369e181f98db5573e4d1144e7dee6fcc7c8f"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\peacock-ore\\100msdcf\\completion.json",
+          "bytes": 744,
+          "sha256": "6cd83141c85c2d309b67560c22514a36cf9e2d6c93af805ea944fc0770cdb344"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\ore100-delivery-1\\comparison.json",
+          "bytes": 2142,
+          "sha256": "b0086c7cac878447645bb00fd7fb106c7bdcca20563d90450d096e840708e994"
+        }
+      ],
+      "views": [
+        {
+          "arm": "before",
+          "target": "largest-change",
+          "native_xywh": [
+            4197,
+            392,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\mineral-repair-review\\ore100-views-1\\100-before-largest-change.png",
+            "bytes": 273542,
+            "sha256": "e56d8050dbd382c3ea17dbab312d05b67083c90b416cc2dd8b1a0116c398423c"
+          },
+          "independent_target": false
+        },
+        {
+          "arm": "corrected",
+          "target": "largest-change",
+          "native_xywh": [
+            4197,
+            392,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\mineral-repair-review\\ore100-views-1\\100-corrected-largest-change.png",
+            "bytes": 273271,
+            "sha256": "ce29d5f2320be97860c7d7032ed3f066a1242333511108677a1f785b62d5bbef"
+          },
+          "independent_target": false
+        },
+        {
+          "arm": "before",
+          "target": "white-patch",
+          "native_xywh": [
+            1208,
+            748,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\mineral-repair-review\\ore100-views-1\\100-before-white-patch.png",
+            "bytes": 262922,
+            "sha256": "efef78cbcd34ea5ba68fa5f212c82dc82a7f62f1edeb5b792cd112838ca41a64"
+          },
+          "independent_target": true
+        },
+        {
+          "arm": "corrected",
+          "target": "white-patch",
+          "native_xywh": [
+            1208,
+            748,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\mineral-repair-review\\ore100-views-1\\100-corrected-white-patch.png",
+            "bytes": 262922,
+            "sha256": "efef78cbcd34ea5ba68fa5f212c82dc82a7f62f1edeb5b792cd112838ca41a64"
+          },
+          "independent_target": true
+        },
+        {
+          "arm": "before",
+          "target": "blue-control",
+          "native_xywh": [
+            2908,
+            2768,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\mineral-repair-review\\ore100-views-1\\100-before-blue-control.png",
+            "bytes": 254309,
+            "sha256": "d03c0285672b8488c781a88009057f71f276023548857045218149baebf6c776"
+          },
+          "independent_target": true
+        },
+        {
+          "arm": "corrected",
+          "target": "blue-control",
+          "native_xywh": [
+            2908,
+            2768,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\mineral-repair-review\\ore100-views-1\\100-corrected-blue-control.png",
+            "bytes": 254309,
+            "sha256": "d03c0285672b8488c781a88009057f71f276023548857045218149baebf6c776"
+          },
+          "independent_target": true
+        }
+      ],
+      "quality_verdict": null
+    }
+  ]
+}

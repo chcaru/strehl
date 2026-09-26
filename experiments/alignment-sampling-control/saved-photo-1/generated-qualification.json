@@ -1,0 +1,19 @@
+{
+  "result": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sampling-control\\run-1\\result.json",
+    "bytes": 89807,
+    "sha256": "41081ba11e15d910d11c0b5d6814db0fc7369675c8362f3b399d4d573aeeb4bd"
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sampling-control\\run-1\\process.json",
+    "bytes": 2842,
+    "sha256": "43a87f1c8037eb2d35018226c2f4e64df575fcf4fce0d09653da63fe851910f2"
+  },
+  "sources": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sampling-control\\run-1\\sources.json",
+    "bytes": 3797,
+    "sha256": "372499e17c3db822414986122ece1ee538d0c0749527d5f48d461d70faaec400"
+  },
+  "substitution": "compact Catmull-Rom sample and radius2 support guard only",
+  "raw_decodes": 0
+}

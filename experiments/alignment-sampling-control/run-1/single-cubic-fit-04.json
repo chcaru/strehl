@@ -1,0 +1,112 @@
+{
+  "call": 4,
+  "joint": true,
+  "axis": 1,
+  "input_arrays": [
+    {
+      "shape": [
+        392,
+        392
+      ],
+      "dtype": "float32",
+      "sha256": "a94d84b21959a64cb2339b1d59fcc752168a468343f14560ce38f1bf5cfd4b4d"
+    },
+    {
+      "shape": [
+        392,
+        392
+      ],
+      "dtype": "float32",
+      "sha256": "c81d17a0880a71e4f32d0f63d3bcef093e50f5bd726a79878c8db150adc0553a"
+    },
+    {
+      "shape": [
+        12136
+      ],
+      "dtype": "float64",
+      "sha256": "e4717f9cde1b056f8ac5daa654f8d32d9a26cdcc50e9382a6827ef99ca7f7567"
+    },
+    {
+      "shape": [
+        12136
+      ],
+      "dtype": "float64",
+      "sha256": "b181c3e04d932aa15ab256c8e95663f8c4089e3662d361e36d84e8d359e5f975"
+    },
+    {
+      "shape": [
+        12136,
+        2
+      ],
+      "dtype": "float64",
+      "sha256": "57fe459881344202ad93b3c9391cf7e74a12f0b7ffb1fefda6b1f5124c596bc5"
+    },
+    {
+      "shape": [
+        12136,
+        2
+      ],
+      "dtype": "float64",
+      "sha256": "f4cd05e32946e2106f41416657ceaf436b7c9189724c815f6807a8ce2fde3b8f"
+    }
+  ],
+  "probe_deltas": [],
+  "result": {
+    "model": "translation-plus-laplacian",
+    "before": {
+      "delta_source_native": [
+        0.0,
+        0.0
+      ],
+      "gain": 0.943294361330595,
+      "bias": -0.015991718532112602,
+      "lap_coefficient": -0.09755239157226868,
+      "beta_source_native_squared": -0.10341670169072456,
+      "rank": 3,
+      "standardized_condition": 3.2467669396081504,
+      "fit_rmse": 1.8828983656188834e-05,
+      "validation_rmse": 1.7982780875759973e-05,
+      "validation_mean_error": 7.542327034103511e-09,
+      "validation_max_abs": 4.807354030950117e-05
+    },
+    "after": {
+      "delta_source_native": [
+        0.0008957914426191448,
+        -0.0013792555720034123
+      ],
+      "gain": 0.9432937314942419,
+      "bias": -0.01599137714265312,
+      "lap_coefficient": -0.0975704932287384,
+      "beta_source_native_squared": -0.10343596058269151,
+      "rank": 3,
+      "standardized_condition": 3.2467718356156094,
+      "fit_rmse": 7.0839979809789144e-06,
+      "validation_rmse": 6.874574578073391e-06,
+      "validation_mean_error": 2.7713274451505542e-08,
+      "validation_max_abs": 2.2329781018792794e-05
+    },
+    "delta_source_native": [
+      0.0008957914426191448,
+      -0.0013792555720034123
+    ],
+    "beta_source_native_squared": -0.10343596058269151,
+    "converged": true,
+    "at_translation_bound": false,
+    "nfev": 8,
+    "status": 2,
+    "optimality": 2.063681361812933e-06,
+    "motion_singular_values": [
+      1.2485566654172704,
+      1.0359738459970764
+    ],
+    "motion_condition": 1.2052009519753781,
+    "probes": [],
+    "source_support_gap_native": 6.8889,
+    "fit_samples": 12136,
+    "validation_samples": 12136,
+    "admitted": true,
+    "refusal_reasons": [],
+    "original_bilinear_support_gap_native": 8.8889,
+    "sampler_radius_native": 2
+  }
+}

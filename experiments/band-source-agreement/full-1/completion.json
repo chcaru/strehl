@@ -1,0 +1,25 @@
+{
+  "status": "COMPLETE_AWAITING_INDEPENDENT_PHOTOGRAPHIC_REVIEW",
+  "phase": "full",
+  "source_count": 299,
+  "reference": 149,
+  "sources_unchanged": true,
+  "baseline_current_production_pixels_and_icc_exact": true,
+  "actual_tone_pinned": true,
+  "candidate_pixels_changed": true,
+  "original_metadata_unchanged": true,
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\full-1\\output\\receipt.json",
+    "sha256": "bd307a408052d01591140bed11f49aa22487409c1376cf6a30465126631ea13a",
+    "bytes": 1316822
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\full-1\\process.json",
+    "sha256": "31bf33d7a3db36e2ace36ffb68c9e2878cbcd7fac70de77e81262bed26036229",
+    "bytes": 2734
+  },
+  "generated_general_qualification": false,
+  "photographic_replay_admitted": false,
+  "visual_verdict": null,
+  "scope": "One complete fixed same-band source-agreement chip observation. Generated quality negatives remain explicit; mechanical safety is not general quality qualification or a default change."
+}

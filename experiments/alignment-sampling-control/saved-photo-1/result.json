@@ -1,0 +1,5541 @@
+{
+  "status": "STOP_LOCAL_BLUR_NOT_IDENTIFIED",
+  "interpretation": "Local model identifiability only; no camera-motion, PSF calibration, photographic improvement, or generalization claim.",
+  "frames": [
+    {
+      "frame": 145,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.6288349376833251,
+          "bias": 0.1941981420914173,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 0.0890400327049917,
+          "validation_rmse": 0.09290519956068871,
+          "validation_mean_error": 0.024144853437351087,
+          "validation_max_abs": 0.376164599066359
+        },
+        "after": {
+          "delta_source_native": [
+            1.0316831402941344,
+            -3.9999999999999996
+          ],
+          "gain": 0.8178282059520694,
+          "bias": 0.09490132594369984,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 0.06329241410600969,
+          "validation_rmse": 0.05508062921134262,
+          "validation_mean_error": 0.011524065910599464,
+          "validation_max_abs": 0.22758402216858264
+        },
+        "delta_source_native": [
+          1.0316831402941344,
+          -3.9999999999999996
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": true,
+        "nfev": 13,
+        "status": 2,
+        "optimality": 3.276938402913655e-05,
+        "motion_singular_values": [
+          2.6846451006211627,
+          2.598961565597298
+        ],
+        "motion_condition": 1.0329683732757213,
+        "probes": [],
+        "source_support_gap_native": 6.859182632374051,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": false,
+        "refusal_reasons": [
+          "translation-at-bound"
+        ],
+        "original_bilinear_support_gap_native": 8.85918263237405,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          1.0324252097537185,
+          -3.9964226706735135
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -1.0324252097537185,
+          3.9964226706735135
+        ],
+        "change_from_frozen_source_native": 0.041139526403298765
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.7409114209514829,
+          "bias": 0.13566815693289233,
+          "lap_coefficient": 1.0169798653685582,
+          "beta_source_native_squared": 1.3726065446022502,
+          "rank": 3,
+          "standardized_condition": 1.8766797920265939,
+          "fit_rmse": 0.08665573964288026,
+          "validation_rmse": 0.08661706047311256,
+          "validation_mean_error": 0.017594097668296872,
+          "validation_max_abs": 0.37985200075320313
+        },
+        "after": {
+          "delta_source_native": [
+            1.0373835097687314,
+            -3.9999999999999996
+          ],
+          "gain": 0.836414060709399,
+          "bias": 0.08518333010084847,
+          "lap_coefficient": 0.16905363059916884,
+          "beta_source_native_squared": 0.2021171552948155,
+          "rank": 3,
+          "standardized_condition": 1.8511720681201138,
+          "fit_rmse": 0.06319858089562695,
+          "validation_rmse": 0.05464697552771636,
+          "validation_mean_error": 0.010386881441556192,
+          "validation_max_abs": 0.22174626799000097
+        },
+        "delta_source_native": [
+          1.0373835097687314,
+          -3.9999999999999996
+        ],
+        "beta_source_native_squared": 0.2021171552948155,
+        "converged": true,
+        "at_translation_bound": true,
+        "nfev": 12,
+        "status": 2,
+        "optimality": 2.5474626933648716e-05,
+        "motion_singular_values": [
+          2.5395581402254255,
+          2.524093234011069
+        ],
+        "motion_condition": 1.0061269156012043,
+        "probes": [],
+        "source_support_gap_native": 6.859182632374051,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": false,
+        "refusal_reasons": [
+          "translation-at-bound"
+        ],
+        "original_bilinear_support_gap_native": 8.85918263237405,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          1.0381210549298436,
+          -3.9964204462453754
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -1.0381210549298436,
+          3.9964204462453754
+        ],
+        "change_from_frozen_source_native": 0.03543915692870181
+      },
+      "frozen_delta_source_native": [
+        1.0728226666974332,
+        -3.9999999999999996
+      ],
+      "frozen_at_bound": true,
+      "incremental_holdout_rmse_ratio": 0.9921269293790681,
+      "joint_shift_change_reference149_native": 0.0056958456104838386
+    },
+    {
+      "frame": 146,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.718598279849095,
+          "bias": 0.14811028783047167,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.08056985028674034,
+          "validation_rmse": 0.07888711149318738,
+          "validation_mean_error": 0.019288007855674486,
+          "validation_max_abs": 0.36288231236787444
+        },
+        "after": {
+          "delta_source_native": [
+            0.7183754179694201,
+            -3.4760350300814187
+          ],
+          "gain": 0.8924429216152802,
+          "bias": 0.0568332444205117,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000002,
+          "fit_rmse": 0.051573881591075704,
+          "validation_rmse": 0.043107029296610595,
+          "validation_mean_error": 0.007914833827418437,
+          "validation_max_abs": 0.21923702169122328
+        },
+        "delta_source_native": [
+          0.7183754179694201,
+          -3.4760350300814187
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 12,
+        "status": 2,
+        "optimality": 4.517417710423664e-05,
+        "motion_singular_values": [
+          2.9878179342754527,
+          2.8070088066226258
+        ],
+        "motion_condition": 1.064413452222252,
+        "probes": [],
+        "source_support_gap_native": 6.876938738241698,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.876938738241698,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.7190581762533403,
+          -3.4738657311375603
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.7190581762533403,
+          3.4738657311375603
+        ],
+        "change_from_frozen_source_native": 0.016351207180748988
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.8461794204264654,
+          "bias": 0.08162464618729276,
+          "lap_coefficient": 1.0775947328478706,
+          "beta_source_native_squared": 1.2734825579955305,
+          "rank": 3,
+          "standardized_condition": 1.8697183604981287,
+          "fit_rmse": 0.07725652830785507,
+          "validation_rmse": 0.07253927075896668,
+          "validation_mean_error": 0.011894260124555781,
+          "validation_max_abs": 0.3476052814539833
+        },
+        "after": {
+          "delta_source_native": [
+            0.721872230027469,
+            -3.465928404110089
+          ],
+          "gain": 0.9130303677981808,
+          "bias": 0.046090143713532,
+          "lap_coefficient": 0.17418823964811792,
+          "beta_source_native_squared": 0.19078033523483093,
+          "rank": 3,
+          "standardized_condition": 1.8529034278546637,
+          "fit_rmse": 0.051439597866615686,
+          "validation_rmse": 0.04296516692132459,
+          "validation_mean_error": 0.006681209974255883,
+          "validation_max_abs": 0.22142877207098677
+        },
+        "delta_source_native": [
+          0.721872230027469,
+          -3.465928404110089
+        ],
+        "beta_source_native_squared": 0.19078033523483093,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 16,
+        "status": 2,
+        "optimality": 8.944827090426017e-05,
+        "motion_singular_values": [
+          2.824573701386963,
+          2.67017472026031
+        ],
+        "motion_condition": 1.0578235498805117,
+        "probes": [],
+        "source_support_gap_native": 6.876938738241698,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.876938738241698,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.7225498776472947,
+          -3.4637636694010707
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.7225498776472947,
+          3.4637636694010707
+        ],
+        "change_from_frozen_source_native": 0.014768673708639542
+      },
+      "frozen_delta_source_native": [
+        0.734533754227414,
+        -3.473531004194696
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9967090663030876,
+      "joint_shift_change_reference149_native": 0.01068848118080342
+    },
+    {
+      "frame": 147,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.8416288369371812,
+          "bias": 0.08520075469943905,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 0.06462137266020887,
+          "validation_rmse": 0.058761472354983614,
+          "validation_mean_error": 0.012752800597912737,
+          "validation_max_abs": 0.3069267096059896
+        },
+        "after": {
+          "delta_source_native": [
+            0.5301663247936049,
+            -2.269646489226548
+          ],
+          "gain": 0.9469476430577657,
+          "bias": 0.030007636406011968,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.040681149868972234,
+          "validation_rmse": 0.03276314136781415,
+          "validation_mean_error": 0.005745587354629457,
+          "validation_max_abs": 0.2277035792901192
+        },
+        "delta_source_native": [
+          0.5301663247936049,
+          -2.269646489226548
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 11,
+        "status": 2,
+        "optimality": 0.00046028706276060545,
+        "motion_singular_values": [
+          3.156269773409407,
+          2.7399734740372406
+        ],
+        "motion_condition": 1.1519344268536917,
+        "probes": [],
+        "source_support_gap_native": 6.906290020221569,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.906290020221569,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.530430456360079,
+          -2.2687012512207727
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.530430456360079,
+          2.2687012512207727
+        ],
+        "change_from_frozen_source_native": 0.045157857083440285
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9390819785931274,
+          "bias": 0.034539982974349466,
+          "lap_coefficient": 0.8064490365751547,
+          "beta_source_native_squared": 0.8587631910297385,
+          "rank": 3,
+          "standardized_condition": 1.8533884332627646,
+          "fit_rmse": 0.06224441489970209,
+          "validation_rmse": 0.05535545968128739,
+          "validation_mean_error": 0.007142908525683869,
+          "validation_max_abs": 0.29175130984357645
+        },
+        "after": {
+          "delta_source_native": [
+            0.5336484899651339,
+            -2.2725922247979677
+          ],
+          "gain": 0.9722204405300973,
+          "bias": 0.016853447244812282,
+          "lap_coefficient": 0.20513469620581642,
+          "beta_source_native_squared": 0.2109960741968848,
+          "rank": 3,
+          "standardized_condition": 1.833060981666725,
+          "fit_rmse": 0.04042198086226558,
+          "validation_rmse": 0.0328832033565794,
+          "validation_mean_error": 0.004253606317411008,
+          "validation_max_abs": 0.2139553829577221
+        },
+        "delta_source_native": [
+          0.5336484899651339,
+          -2.2725922247979677
+        ],
+        "beta_source_native_squared": 0.2109960741968848,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 8,
+        "status": 2,
+        "optimality": 0.00016371082977540175,
+        "motion_singular_values": [
+          2.9689501534066234,
+          2.5942593115881554
+        ],
+        "motion_condition": 1.1444307591553327,
+        "probes": [],
+        "source_support_gap_native": 6.906290020221569,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.906290020221569,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.5339119329313293,
+          -2.271645193894639
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.5339119329313293,
+          2.271645193894639
+        ],
+        "change_from_frozen_source_native": 0.04881692593066607
+      },
+      "frozen_delta_source_native": [
+        0.5212236011843451,
+        -2.225382963036051
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 1.0036645444775083,
+      "joint_shift_change_reference149_native": 0.004559328632943164
+    },
+    {
+      "frame": 148,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.952094126804537,
+          "bias": 0.02698616499086255,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.03873747642098697,
+          "validation_rmse": 0.033290077369312145,
+          "validation_mean_error": 0.004728124873572577,
+          "validation_max_abs": 0.21226591381168358
+        },
+        "after": {
+          "delta_source_native": [
+            0.3082649783287441,
+            -1.1181939960294993
+          ],
+          "gain": 0.9851311279447854,
+          "bias": 0.009568031372683432,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 0.025105034452979808,
+          "validation_rmse": 0.020105432604939775,
+          "validation_mean_error": 0.002179326093966835,
+          "validation_max_abs": 0.2113336573086123
+        },
+        "delta_source_native": [
+          0.3082649783287441,
+          -1.1181939960294993
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 9,
+        "status": 2,
+        "optimality": 9.247053783940822e-05,
+        "motion_singular_values": [
+          3.3161171385298025,
+          3.0528222997136023
+        ],
+        "motion_condition": 1.08624636908637,
+        "probes": [],
+        "source_support_gap_native": 6.929033288817401,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.9290332888174,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.30833378739973266,
+          -1.1179421589993273
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.30833378739973266,
+          1.1179421589993273
+        ],
+        "change_from_frozen_source_native": 0.021272436553478314
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9868200922686362,
+          "bias": 0.008903901024215349,
+          "lap_coefficient": 0.2763118997140944,
+          "beta_source_native_squared": 0.280002304248661,
+          "rank": 3,
+          "standardized_condition": 1.8477870100000937,
+          "fit_rmse": 0.03823611855361195,
+          "validation_rmse": 0.03272702866611142,
+          "validation_mean_error": 0.002663387827339348,
+          "validation_max_abs": 0.2087779029608895
+        },
+        "after": {
+          "delta_source_native": [
+            0.30882509691241605,
+            -1.1209903346059518
+          ],
+          "gain": 0.9987900101419623,
+          "bias": 0.0024517576074171853,
+          "lap_coefficient": 0.10696332906187316,
+          "beta_source_native_squared": 0.10709291039732165,
+          "rank": 3,
+          "standardized_condition": 1.8380269363914885,
+          "fit_rmse": 0.024983734716357692,
+          "validation_rmse": 0.020239079669598554,
+          "validation_mean_error": 0.0013579501897244884,
+          "validation_max_abs": 0.20459773113720736
+        },
+        "delta_source_native": [
+          0.30882509691241605,
+          -1.1209903346059518
+        ],
+        "beta_source_native_squared": 0.10709291039732165,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 6,
+        "status": 2,
+        "optimality": 7.900127794038434e-05,
+        "motion_singular_values": [
+          3.2190452604032775,
+          2.952517858049825
+        ],
+        "motion_condition": 1.0902712244827868,
+        "probes": [],
+        "source_support_gap_native": 6.929033288817401,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.9290332888174,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.30889411885365586,
+          -1.120737892007872
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.30889411885365586,
+          1.120737892007872
+        ],
+        "change_from_frozen_source_native": 0.022872492397199202
+      },
+      "frozen_delta_source_native": [
+        0.2882349539056873,
+        -1.1110305695774787
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 1.0066473110668577,
+      "joint_shift_change_reference149_native": 0.0028513320384204554
+    },
+    {
+      "frame": 149,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9999999999999983,
+          "bias": -1.7883917155705628e-17,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 9.130621974525406e-16,
+          "validation_rmse": 8.306617528427957e-16,
+          "validation_mean_error": -7.843085639491231e-16,
+          "validation_max_abs": 1.5543122344752192e-15
+        },
+        "after": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9999999999999983,
+          "bias": -1.7883917155705628e-17,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 9.130621974525406e-16,
+          "validation_rmse": 8.306617528427957e-16,
+          "validation_mean_error": -7.843085639491231e-16,
+          "validation_max_abs": 1.5543122344752192e-15
+        },
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 1,
+        "status": 1,
+        "optimality": 6.413784746324164e-17,
+        "motion_singular_values": [
+          3.380173491202485,
+          2.7910664302274446
+        ],
+        "motion_condition": 1.211068806745325,
+        "probes": [],
+        "source_support_gap_native": 6.960000000000001,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.96,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.0,
+          0.0
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.0,
+          -0.0
+        ],
+        "change_from_frozen_source_native": 0.0
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9999999999999986,
+          "bias": 1.3261373094953725e-16,
+          "lap_coefficient": -1.6007165159893054e-16,
+          "beta_source_native_squared": -1.6007165159893076e-16,
+          "rank": 3,
+          "standardized_condition": 1.8271693519115129,
+          "fit_rmse": 6.607512352757512e-16,
+          "validation_rmse": 6.044260885456783e-16,
+          "validation_mean_error": -5.537873133770601e-16,
+          "validation_max_abs": 1.2212453270876722e-15
+        },
+        "after": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9999999999999986,
+          "bias": 1.3261373094953725e-16,
+          "lap_coefficient": -1.6007165159893054e-16,
+          "beta_source_native_squared": -1.6007165159893076e-16,
+          "rank": 3,
+          "standardized_condition": 1.8271693519115129,
+          "fit_rmse": 6.607512352757512e-16,
+          "validation_rmse": 6.044260885456783e-16,
+          "validation_mean_error": -5.537873133770601e-16,
+          "validation_max_abs": 1.2212453270876722e-15
+        },
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "beta_source_native_squared": -1.6007165159893076e-16,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 1,
+        "status": 1,
+        "optimality": 1.7667682690563386e-16,
+        "motion_singular_values": [
+          3.380007035674583,
+          2.7910064267232597
+        ],
+        "motion_condition": 1.211035203398951,
+        "probes": [],
+        "source_support_gap_native": 6.960000000000001,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.96,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.0,
+          0.0
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.0,
+          -0.0
+        ],
+        "change_from_frozen_source_native": 0.0
+      },
+      "frozen_delta_source_native": [
+        0.0,
+        0.0
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.6044260885456783,
+      "joint_shift_change_reference149_native": 0.0
+    },
+    {
+      "frame": 150,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9660941958665643,
+          "bias": 0.017176343158932215,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 0.030046108521727205,
+          "validation_rmse": 0.02701509691083987,
+          "validation_mean_error": 0.0007067730555166191,
+          "validation_max_abs": 0.20321551399241145
+        },
+        "after": {
+          "delta_source_native": [
+            -0.14302407550050808,
+            0.7390455539336112
+          ],
+          "gain": 0.9782319028862001,
+          "bias": 0.010981724376824296,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 0.023558357673611086,
+          "validation_rmse": 0.021368018965646145,
+          "validation_mean_error": 0.00021285472887979228,
+          "validation_max_abs": 0.22583305276402943
+        },
+        "delta_source_native": [
+          -0.14302407550050808,
+          0.7390455539336112
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 7,
+        "status": 2,
+        "optimality": 0.00012078807302217949,
+        "motion_singular_values": [
+          3.3821386095857005,
+          2.8937462530914124
+        ],
+        "motion_condition": 1.168775114947461,
+        "probes": [],
+        "source_support_gap_native": 6.917841267659433,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.917841267659433,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.1429805450217217,
+          0.7392364638036856
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.1429805450217217,
+          -0.7392364638036856
+        ],
+        "change_from_frozen_source_native": 0.01480640552496295
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9802738380231241,
+          "bias": 0.009753330712352048,
+          "lap_coefficient": 0.11557987234759753,
+          "beta_source_native_squared": 0.11790569926938219,
+          "rank": 3,
+          "standardized_condition": 1.8283933661459288,
+          "fit_rmse": 0.02993255887399989,
+          "validation_rmse": 0.026525064018471385,
+          "validation_mean_error": -0.00018364206401148315,
+          "validation_max_abs": 0.1922141796659249
+        },
+        "after": {
+          "delta_source_native": [
+            -0.14419298867299646,
+            0.7384117094293196
+          ],
+          "gain": 0.9841994383900138,
+          "bias": 0.007858744609630739,
+          "lap_coefficient": 0.04834775442489423,
+          "beta_source_native_squared": 0.04912394026965012,
+          "rank": 3,
+          "standardized_condition": 1.8254931339499536,
+          "fit_rmse": 0.02353257697443839,
+          "validation_rmse": 0.021155474337615613,
+          "validation_mean_error": -0.00015799432127861426,
+          "validation_max_abs": 0.2234184119755489
+        },
+        "delta_source_native": [
+          -0.14419298867299646,
+          0.7384117094293196
+        ],
+        "beta_source_native_squared": 0.04912394026965012,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 10,
+        "status": 2,
+        "optimality": 2.2519030886866136e-05,
+        "motion_singular_values": [
+          3.33267574907543,
+          2.8506398228399763
+        ],
+        "motion_condition": 1.1690974504647245,
+        "probes": [],
+        "source_support_gap_native": 6.917841267659433,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.917841267659433,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.14414980293265306,
+          0.7386025911307315
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.14414980293265306,
+          -0.7386025911307315
+        ],
+        "change_from_frozen_source_native": 0.015944545499526497
+      },
+      "frozen_delta_source_native": [
+        -0.13582581064956387,
+        0.7519844343992973
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9900531430465199,
+      "joint_shift_change_reference149_native": 0.001330022040341278
+    },
+    {
+      "frame": 151,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.8838429579806185,
+          "bias": 0.05941448949737955,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 0.05346616903807409,
+          "validation_rmse": 0.05078292729926256,
+          "validation_mean_error": 0.005001247348907471,
+          "validation_max_abs": 0.311927284058257
+        },
+        "after": {
+          "delta_source_native": [
+            -0.3152792080586876,
+            1.5953309171149974
+          ],
+          "gain": 0.931824633592074,
+          "bias": 0.034604269761355444,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 0.04008080484009831,
+          "validation_rmse": 0.03663193723337456,
+          "validation_mean_error": 0.002499153200704264,
+          "validation_max_abs": 0.2895601728894581
+        },
+        "delta_source_native": [
+          -0.3152792080586876,
+          1.5953309171149974
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 14,
+        "status": 4,
+        "optimality": 0.000642693370379696,
+        "motion_singular_values": [
+          3.2905127375466807,
+          2.6417991292295615
+        ],
+        "motion_condition": 1.2455575070563014,
+        "probes": [],
+        "source_support_gap_native": 6.885218554608592,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.885218554608592,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.3151405765417117,
+          1.5961466607594814
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.3151405765417117,
+          -1.5961466607594814
+        ],
+        "change_from_frozen_source_native": 0.015433573030575519
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9317960781596967,
+          "bias": 0.03425743192186721,
+          "lap_coefficient": 0.4179245900816148,
+          "beta_source_native_squared": 0.4485150773622256,
+          "rank": 3,
+          "standardized_condition": 1.8485620860736685,
+          "fit_rmse": 0.052751499313195796,
+          "validation_rmse": 0.04837909830657343,
+          "validation_mean_error": 0.001952907084495456,
+          "validation_max_abs": 0.3028246001253334
+        },
+        "after": {
+          "delta_source_native": [
+            -0.3216673326126029,
+            1.5993574397928485
+          ],
+          "gain": 0.9491987939206452,
+          "bias": 0.02549979136059576,
+          "lap_coefficient": 0.14949558626345552,
+          "beta_source_native_squared": 0.15749660368400514,
+          "rank": 3,
+          "standardized_condition": 1.8356150289404676,
+          "fit_rmse": 0.03995314674283443,
+          "validation_rmse": 0.03582925521557591,
+          "validation_mean_error": 0.0014208114046772738,
+          "validation_max_abs": 0.2773878656982275
+        },
+        "delta_source_native": [
+          -0.3216673326126029,
+          1.5993574397928485
+        ],
+        "beta_source_native_squared": 0.15749660368400514,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 12,
+        "status": 2,
+        "optimality": 0.00012224358945212618,
+        "motion_singular_values": [
+          3.1319683795528808,
+          2.531162697527867
+        ],
+        "motion_condition": 1.2373635178061875,
+        "probes": [],
+        "source_support_gap_native": 6.885218554608592,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.885218554608592,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.3215310108437657,
+          1.6001762539107953
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.3215310108437657,
+          -1.6001762539107953
+        ],
+        "change_from_frozen_source_native": 0.009950522573919457
+      },
+      "frozen_delta_source_native": [
+        -0.32182696945364636,
+        1.609306681752569
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9780879178547144,
+      "joint_shift_change_reference149_native": 0.007554817769740328
+    },
+    {
+      "frame": 152,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.7957692512002336,
+          "bias": 0.10577995654480842,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 0.06912851373539221,
+          "validation_rmse": 0.06968747283689232,
+          "validation_mean_error": 0.0108638964664917,
+          "validation_max_abs": 0.3608060100910888
+        },
+        "after": {
+          "delta_source_native": [
+            -0.4728456802098287,
+            2.572497144613639
+          ],
+          "gain": 0.8791068123391913,
+          "bias": 0.06271952779712314,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000016,
+          "fit_rmse": 0.05252851603166922,
+          "validation_rmse": 0.0496198524680109,
+          "validation_mean_error": 0.006411219928452571,
+          "validation_max_abs": 0.28912112837235526
+        },
+        "delta_source_native": [
+          -0.4728456802098287,
+          2.572497144613639
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 13,
+        "status": 2,
+        "optimality": 0.0001439475816946846,
+        "motion_singular_values": [
+          3.044082550419736,
+          2.523467787656475
+        ],
+        "motion_condition": 1.2063092563772142,
+        "probes": [],
+        "source_support_gap_native": 6.866139731286658,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.866139731286658,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.47258217439271777,
+          2.57427285465637
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.47258217439271777,
+          -2.57427285465637
+        ],
+        "change_from_frozen_source_native": 0.06069485557724311
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.8687380485202499,
+          "bias": 0.06749573447202126,
+          "lap_coefficient": 0.6826211106514674,
+          "beta_source_native_squared": 0.7857617285373862,
+          "rank": 3,
+          "standardized_condition": 1.8442102073653226,
+          "fit_rmse": 0.06780958240173733,
+          "validation_rmse": 0.06527961525761877,
+          "validation_mean_error": 0.006225953683061962,
+          "validation_max_abs": 0.34876266693308994
+        },
+        "after": {
+          "delta_source_native": [
+            -0.480671526746363,
+            2.564870600417201
+          ],
+          "gain": 0.9031776540610309,
+          "bias": 0.050115942210422516,
+          "lap_coefficient": 0.22272056140032237,
+          "beta_source_native_squared": 0.24659662514776118,
+          "rank": 3,
+          "standardized_condition": 1.8263279785277429,
+          "fit_rmse": 0.05233466444348168,
+          "validation_rmse": 0.04844973825053298,
+          "validation_mean_error": 0.004926811203296779,
+          "validation_max_abs": 0.28723805722986007
+        },
+        "delta_source_native": [
+          -0.480671526746363,
+          2.564870600417201
+        ],
+        "beta_source_native_squared": 0.24659662514776118,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 11,
+        "status": 2,
+        "optimality": 0.0007394972754908851,
+        "motion_singular_values": [
+          2.8185705457629218,
+          2.3618228033621658
+        ],
+        "motion_condition": 1.193387811206901,
+        "probes": [],
+        "source_support_gap_native": 6.866139731286658,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.866139731286658,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.48041479546137483,
+          2.5666430929376873
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.48041479546137483,
+          -2.5666430929376873
+        ],
+        "change_from_frozen_source_native": 0.06526202536781398
+      },
+      "frozen_delta_source_native": [
+        -0.49768813315609584,
+        2.627875100743808
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9764184261081335,
+      "joint_shift_change_reference149_native": 0.010934496636290253
+    },
+    {
+      "frame": 153,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.6933698824394624,
+          "bias": 0.15927532752075754,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.0816729481506726,
+          "validation_rmse": 0.08748234121950889,
+          "validation_mean_error": 0.017164410873376716,
+          "validation_max_abs": 0.3613262638171433
+        },
+        "after": {
+          "delta_source_native": [
+            -0.7498114408157339,
+            3.705575016813299
+          ],
+          "gain": 0.807504082052523,
+          "bias": 0.10040160542508812,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000009,
+          "fit_rmse": 0.06387829734079382,
+          "validation_rmse": 0.06393912171823941,
+          "validation_mean_error": 0.011160215067972904,
+          "validation_max_abs": 0.3086060675985782
+        },
+        "delta_source_native": [
+          -0.7498114408157339,
+          3.705575016813299
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 16,
+        "status": 2,
+        "optimality": 0.0002512547450680426,
+        "motion_singular_values": [
+          2.7061442434923566,
+          2.2586506480769715
+        ],
+        "motion_condition": 1.1981243074471848,
+        "probes": [],
+        "source_support_gap_native": 6.847694033174058,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.847694033174058,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.7494294152108895,
+          3.7087154154870676
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.7494294152108895,
+          -3.7087154154870676
+        ],
+        "change_from_frozen_source_native": 0.09656858056820011
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.7805559060177475,
+          "bias": 0.1135377531123442,
+          "lap_coefficient": 0.8474860490743212,
+          "beta_source_native_squared": 1.0857467639929073,
+          "rank": 3,
+          "standardized_condition": 1.8456377364404821,
+          "fit_rmse": 0.08001361211631797,
+          "validation_rmse": 0.08187330192007086,
+          "validation_mean_error": 0.011604098533109172,
+          "validation_max_abs": 0.3340862468285094
+        },
+        "after": {
+          "delta_source_native": [
+            -0.7537242461127496,
+            3.6696774320600443
+          ],
+          "gain": 0.8393076341137671,
+          "bias": 0.08375568752272433,
+          "lap_coefficient": 0.3069458142458624,
+          "beta_source_native_squared": 0.36571312087488567,
+          "rank": 3,
+          "standardized_condition": 1.8253348478247575,
+          "fit_rmse": 0.06358950588705606,
+          "validation_rmse": 0.06227318188986521,
+          "validation_mean_error": 0.009203875123267254,
+          "validation_max_abs": 0.29638965530812744
+        },
+        "delta_source_native": [
+          -0.7537242461127496,
+          3.6696774320600443
+        ],
+        "beta_source_native_squared": 0.36571312087488567,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 13,
+        "status": 2,
+        "optimality": 0.00012240777571580642,
+        "motion_singular_values": [
+          2.4340577885669332,
+          2.1396028843013153
+        ],
+        "motion_condition": 1.1376212877754517,
+        "probes": [],
+        "source_support_gap_native": 6.847694033174058,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.847694033174058,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.7533547967267524,
+          3.6727903564167352
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.7533547967267524,
+          -3.6727903564167352
+        ],
+        "change_from_frozen_source_native": 0.06081289183200881
+      },
+      "frozen_delta_source_native": [
+        -0.7708538182772289,
+        3.6113268916132455
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9739449059729738,
+      "joint_shift_change_reference149_native": 0.03613887780842053
+    },
+    {
+      "frame": 145,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.6341506715070035,
+          "bias": 0.1920527363167489,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000002,
+          "fit_rmse": 0.08737302007170002,
+          "validation_rmse": 0.09369498628911871,
+          "validation_mean_error": 0.025332545662393544,
+          "validation_max_abs": 0.3699375614284642
+        },
+        "after": {
+          "delta_source_native": [
+            1.0446357523429772,
+            -3.999999999658592
+          ],
+          "gain": 0.8131977335998876,
+          "bias": 0.09795961207222824,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.06300514098716649,
+          "validation_rmse": 0.05587960475443709,
+          "validation_mean_error": 0.012743565703138974,
+          "validation_max_abs": 0.2554006822556255
+        },
+        "delta_source_native": [
+          1.0446357523429772,
+          -3.999999999658592
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": true,
+        "nfev": 18,
+        "status": 3,
+        "optimality": 3.607615838795481e-05,
+        "motion_singular_values": [
+          2.6312081641521323,
+          2.5488793448461324
+        ],
+        "motion_condition": 1.0323000064606707,
+        "probes": [],
+        "source_support_gap_native": 8.859989267490128,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": false,
+        "refusal_reasons": [
+          "translation-at-bound"
+        ],
+        "original_bilinear_support_gap_native": 10.859989267490128,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          1.0453675415068862,
+          -3.996417615896024
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -1.0453675415068862,
+          3.996417615896024
+        ],
+        "change_from_frozen_source_native": 0.028186914354455975
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.7392257007108136,
+          "bias": 0.13725863226817747,
+          "lap_coefficient": 0.9755134749901211,
+          "beta_source_native_squared": 1.3196422608847358,
+          "rank": 3,
+          "standardized_condition": 1.8535217843812681,
+          "fit_rmse": 0.08516299627834195,
+          "validation_rmse": 0.08742977515028906,
+          "validation_mean_error": 0.01906796006995437,
+          "validation_max_abs": 0.3719733824144112
+        },
+        "after": {
+          "delta_source_native": [
+            1.0490485085880452,
+            -3.9999999999983005
+          ],
+          "gain": 0.8307787984572731,
+          "bias": 0.08878211332319827,
+          "lap_coefficient": 0.1631894358170418,
+          "beta_source_native_squared": 0.19642946608661513,
+          "rank": 3,
+          "standardized_condition": 1.826000738773335,
+          "fit_rmse": 0.06291736438153855,
+          "validation_rmse": 0.05540002774991884,
+          "validation_mean_error": 0.011648915489422654,
+          "validation_max_abs": 0.2502541007604919
+        },
+        "delta_source_native": [
+          1.0490485085880452,
+          -3.9999999999983005
+        ],
+        "beta_source_native_squared": 0.19642946608661513,
+        "converged": true,
+        "at_translation_bound": true,
+        "nfev": 16,
+        "status": 2,
+        "optimality": 5.1657306106471656e-05,
+        "motion_singular_values": [
+          2.485939687212196,
+          2.469987948305724
+        ],
+        "motion_condition": 1.006458225400417,
+        "probes": [],
+        "source_support_gap_native": 8.859989267490128,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": false,
+        "refusal_reasons": [
+          "translation-at-bound"
+        ],
+        "original_bilinear_support_gap_native": 10.859989267490128,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          1.0497767954130848,
+          -3.9964158942665273
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -1.0497767954130848,
+          3.9964158942665273
+        ],
+        "change_from_frozen_source_native": 0.02377415810938799
+      },
+      "frozen_delta_source_native": [
+        1.0728226666974332,
+        -3.9999999999999996
+      ],
+      "frozen_at_bound": true,
+      "incremental_holdout_rmse_ratio": 0.9914176736463017,
+      "joint_shift_change_reference149_native": 0.0044092542423108125
+    },
+    {
+      "frame": 146,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.7111259719335341,
+          "bias": 0.152451616734684,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.000000000000001,
+          "fit_rmse": 0.07964886883241143,
+          "validation_rmse": 0.08028145292143643,
+          "validation_mean_error": 0.020833652730863055,
+          "validation_max_abs": 0.3538375822010679
+        },
+        "after": {
+          "delta_source_native": [
+            0.7145554431087966,
+            -3.4319940975849823
+          ],
+          "gain": 0.8741777134616886,
+          "bias": 0.0668636013958848,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000009,
+          "fit_rmse": 0.05306612099009545,
+          "validation_rmse": 0.044304743740414196,
+          "validation_mean_error": 0.009680786335129126,
+          "validation_max_abs": 0.20106246573578213
+        },
+        "delta_source_native": [
+          0.7145554431087966,
+          -3.4319940975849823
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 12,
+        "status": 2,
+        "optimality": 0.00012640087067094364,
+        "motion_singular_values": [
+          2.9116227598539353,
+          2.758522913249566
+        ],
+        "motion_condition": 1.0555006615565923,
+        "probes": [],
+        "source_support_gap_native": 8.877433501862889,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.877433501862889,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.7152265953670905,
+          -3.4298506351426385
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.7152265953670905,
+          3.4298506351426385
+        ],
+        "change_from_frozen_source_native": 0.04609172947347879
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.83261740445112,
+          "bias": 0.08924464147387312,
+          "lap_coefficient": 1.0393780716209158,
+          "beta_source_native_squared": 1.2483261412318147,
+          "rank": 3,
+          "standardized_condition": 1.859151217016828,
+          "fit_rmse": 0.0765292790605763,
+          "validation_rmse": 0.073467594744921,
+          "validation_mean_error": 0.013648355823934907,
+          "validation_max_abs": 0.3442950338540192
+        },
+        "after": {
+          "delta_source_native": [
+            0.7182245803623365,
+            -3.416075138194637
+          ],
+          "gain": 0.8969839985635302,
+          "bias": 0.05498113099112617,
+          "lap_coefficient": 0.19467048755901703,
+          "beta_source_native_squared": 0.2170278264392352,
+          "rank": 3,
+          "standardized_condition": 1.8405848873510737,
+          "fit_rmse": 0.052901491538423266,
+          "validation_rmse": 0.04390884759878656,
+          "validation_mean_error": 0.008286512760384728,
+          "validation_max_abs": 0.20542740118292357
+        },
+        "delta_source_native": [
+          0.7182245803623365,
+          -3.416075138194637
+        ],
+        "beta_source_native_squared": 0.2170278264392352,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 18,
+        "status": 4,
+        "optimality": 0.0001924814191063633,
+        "motion_singular_values": [
+          2.7302963428803193,
+          2.604219027194009
+        ],
+        "motion_condition": 1.0484127158160563,
+        "probes": [],
+        "source_support_gap_native": 8.877433501862889,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.877433501862889,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.7188887117044892,
+          -3.413939438675894
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.7188887117044892,
+          3.413939438675894
+        ],
+        "change_from_frozen_source_native": 0.05972575399254572
+      },
+      "frozen_delta_source_native": [
+        0.734533754227414,
+        -3.473531004194696
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9910642493736737,
+      "joint_shift_change_reference149_native": 0.01632719415796817
+    },
+    {
+      "frame": 147,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.8311814505909375,
+          "bias": 0.09054670917226157,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.06430763118444796,
+          "validation_rmse": 0.059852395585258025,
+          "validation_mean_error": 0.013717848447713827,
+          "validation_max_abs": 0.3160280452359502
+        },
+        "after": {
+          "delta_source_native": [
+            0.5043976807038031,
+            -2.239539138424828
+          ],
+          "gain": 0.9327902543180445,
+          "bias": 0.03724247538789421,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.04204140913199857,
+          "validation_rmse": 0.033071002040903116,
+          "validation_mean_error": 0.006626829423774229,
+          "validation_max_abs": 0.20004146314003246
+        },
+        "delta_source_native": [
+          0.5043976807038031,
+          -2.239539138424828
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 10,
+        "status": 2,
+        "optimality": 0.00010292734386358812,
+        "motion_singular_values": [
+          3.133047824355888,
+          2.7560141038702
+        ],
+        "motion_condition": 1.136803988033381,
+        "probes": [],
+        "source_support_gap_native": 8.906622990131801,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.906622990131801,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.5046652247263517,
+          -2.238610235162825
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.5046652247263517,
+          2.238610235162825
+        ],
+        "change_from_frozen_source_native": 0.02198883584129322
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9291608745294704,
+          "bias": 0.03964695494197857,
+          "lap_coefficient": 0.808694503870434,
+          "beta_source_native_squared": 0.8703492861555961,
+          "rank": 3,
+          "standardized_condition": 1.856239844237145,
+          "fit_rmse": 0.06189894718219206,
+          "validation_rmse": 0.055721714654998006,
+          "validation_mean_error": 0.007932140279741144,
+          "validation_max_abs": 0.3128614499693516
+        },
+        "after": {
+          "delta_source_native": [
+            0.507491826176937,
+            -2.2420639061850722
+          ],
+          "gain": 0.9609475802158416,
+          "bias": 0.022587142696483847,
+          "lap_coefficient": 0.22869335482158612,
+          "beta_source_native_squared": 0.2379873361772955,
+          "rank": 3,
+          "standardized_condition": 1.837777862503846,
+          "fit_rmse": 0.04173298209411788,
+          "validation_rmse": 0.032923902989733224,
+          "validation_mean_error": 0.0049134137967734495,
+          "validation_max_abs": 0.19473117673554174
+        },
+        "delta_source_native": [
+          0.507491826176937,
+          -2.2420639061850722
+        ],
+        "beta_source_native_squared": 0.2379873361772955,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 11,
+        "status": 2,
+        "optimality": 0.0001887604853721049,
+        "motion_singular_values": [
+          2.920437087650891,
+          2.5861080545146216
+        ],
+        "motion_condition": 1.129278833710225,
+        "probes": [],
+        "source_support_gap_native": 8.906622990131801,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.906622990131801,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.5077587395443592,
+          -2.2411334440371107
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.5077587395443592,
+          2.2411334440371107
+        ],
+        "change_from_frozen_source_native": 0.021605913755149354
+      },
+      "frozen_delta_source_native": [
+        0.5212236011843451,
+        -2.225382963036051
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9955520231595052,
+      "joint_shift_change_reference149_native": 0.003992044207233356
+    },
+    {
+      "frame": 148,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9525664874180303,
+          "bias": 0.026738586539076778,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.03795366043813323,
+          "validation_rmse": 0.03372956133555964,
+          "validation_mean_error": 0.005247970432634623,
+          "validation_max_abs": 0.22916215970429737
+        },
+        "after": {
+          "delta_source_native": [
+            0.29833227098221177,
+            -1.0595890226231284
+          ],
+          "gain": 0.9828369333665802,
+          "bias": 0.01078187121364321,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.026069667749858406,
+          "validation_rmse": 0.020867358258639366,
+          "validation_mean_error": 0.002833630519486596,
+          "validation_max_abs": 0.2314265983207071
+        },
+        "delta_source_native": [
+          0.29833227098221177,
+          -1.0595890226231284
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 7,
+        "status": 2,
+        "optimality": 2.4109826669568352e-05,
+        "motion_singular_values": [
+          3.3009322899561924,
+          2.9965522035360324
+        ],
+        "motion_condition": 1.1015767674799661,
+        "probes": [],
+        "source_support_gap_native": 8.929190551728844,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.929190551728844,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.29839626920740375,
+          -1.0593496694263476
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.29839626920740375,
+          1.0593496694263476
+        ],
+        "change_from_frozen_source_native": 0.052423168210253196
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9863666425957599,
+          "bias": 0.009149092194995614,
+          "lap_coefficient": 0.2700893693291744,
+          "beta_source_native_squared": 0.27382248918961505,
+          "rank": 3,
+          "standardized_condition": 1.8416416436378464,
+          "fit_rmse": 0.037471082530053317,
+          "validation_rmse": 0.033065994033153814,
+          "validation_mean_error": 0.003199050834775721,
+          "validation_max_abs": 0.22097863220628233
+        },
+        "after": {
+          "delta_source_native": [
+            0.2986942032401923,
+            -1.0603075053194262
+          ],
+          "gain": 0.9979668958323824,
+          "bias": 0.0029034100220709774,
+          "lap_coefficient": 0.11882936609372821,
+          "beta_source_native_squared": 0.11907145075650553,
+          "rank": 3,
+          "standardized_condition": 1.830241665324294,
+          "fit_rmse": 0.025926482074386123,
+          "validation_rmse": 0.020940652334813244,
+          "validation_mean_error": 0.0019045453107022282,
+          "validation_max_abs": 0.22668772929563963
+        },
+        "delta_source_native": [
+          0.2986942032401923,
+          -1.0603075053194262
+        ],
+        "beta_source_native_squared": 0.11907145075650553,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 6,
+        "status": 2,
+        "optimality": 2.245669342809628e-05,
+        "motion_singular_values": [
+          3.1920483620281317,
+          2.8860135793275066
+        ],
+        "motion_condition": 1.1060406592999943,
+        "probes": [],
+        "source_support_gap_native": 8.929190551728844,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.929190551728844,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.2987582139637132,
+          -1.0600679714813843
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.2987582139637132,
+          1.0600679714813843
+        ],
+        "change_from_frozen_source_native": 0.051790203169787496
+      },
+      "frozen_delta_source_native": [
+        0.2882349539056873,
+        -1.1110305695774787
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 1.0035123792511462,
+      "joint_shift_change_reference149_native": 0.0008043393866334933
+    },
+    {
+      "frame": 149,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9999999999999968,
+          "bias": -7.525675856232821e-20,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 1.72469941476268e-15,
+          "validation_rmse": 1.5778820445840492e-15,
+          "validation_mean_error": -1.483198291900543e-15,
+          "validation_max_abs": 2.9976021664879227e-15
+        },
+        "after": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9999999999999968,
+          "bias": -7.525675856232821e-20,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 1.72469941476268e-15,
+          "validation_rmse": 1.5778820445840492e-15,
+          "validation_mean_error": -1.483198291900543e-15,
+          "validation_max_abs": 2.9976021664879227e-15
+        },
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 1,
+        "status": 1,
+        "optimality": 1.892777804319052e-16,
+        "motion_singular_values": [
+          3.3404728864844913,
+          2.7805385055761045
+        ],
+        "motion_condition": 1.201376236935936,
+        "probes": [],
+        "source_support_gap_native": 8.96,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.96,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.0,
+          0.0
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.0,
+          -0.0
+        ],
+        "change_from_frozen_source_native": 0.0
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.999999999999997,
+          "bias": -1.5068078063683922e-16,
+          "lap_coefficient": -2.0564573888509882e-16,
+          "beta_source_native_squared": -2.0564573888509943e-16,
+          "rank": 3,
+          "standardized_condition": 1.8194709207399686,
+          "fit_rmse": 1.7234543540914445e-15,
+          "validation_rmse": 1.5879738543587183e-15,
+          "validation_mean_error": -1.512668007589006e-15,
+          "validation_max_abs": 2.886579864025407e-15
+        },
+        "after": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.999999999999997,
+          "bias": -1.5068078063683922e-16,
+          "lap_coefficient": -2.0564573888509882e-16,
+          "beta_source_native_squared": -2.0564573888509943e-16,
+          "rank": 3,
+          "standardized_condition": 1.8194709207399686,
+          "fit_rmse": 1.7234543540914445e-15,
+          "validation_rmse": 1.5879738543587183e-15,
+          "validation_mean_error": -1.512668007589006e-15,
+          "validation_max_abs": 2.886579864025407e-15
+        },
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "beta_source_native_squared": -2.0564573888509943e-16,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 1,
+        "status": 1,
+        "optimality": 6.729668757244013e-16,
+        "motion_singular_values": [
+          3.340309719986236,
+          2.7804783011420495
+        ],
+        "motion_condition": 1.2013435669015082,
+        "probes": [],
+        "source_support_gap_native": 8.96,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.96,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.0,
+          0.0
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.0,
+          -0.0
+        ],
+        "change_from_frozen_source_native": 0.0
+      },
+      "frozen_delta_source_native": [
+        0.0,
+        0.0
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 1.006395794799306,
+      "joint_shift_change_reference149_native": 0.0
+    },
+    {
+      "frame": 150,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9600527052190618,
+          "bias": 0.020563804496753574,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 0.03079473091617873,
+          "validation_rmse": 0.02776291529496958,
+          "validation_mean_error": 0.0012871518976542752,
+          "validation_max_abs": 0.18688734889587222
+        },
+        "after": {
+          "delta_source_native": [
+            -0.1459127250949884,
+            0.7487238706987742
+          ],
+          "gain": 0.9723893252935492,
+          "bias": 0.014294843004156227,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.024393266825509543,
+          "validation_rmse": 0.021836679893282335,
+          "validation_mean_error": 0.0007821869378268256,
+          "validation_max_abs": 0.18015959779816837
+        },
+        "delta_source_native": [
+          -0.1459127250949884,
+          0.7487238706987742
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 6,
+        "status": 2,
+        "optimality": 8.47423476652829e-06,
+        "motion_singular_values": [
+          3.315029622791175,
+          2.8930033612483754
+        ],
+        "motion_condition": 1.1458782479121243,
+        "probes": [],
+        "source_support_gap_native": 8.917575167993355,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.917575167993355,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.14586886628576232,
+          0.7489173872705982
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.14586886628576232,
+          -0.7489173872705982
+        ],
+        "change_from_frozen_source_native": 0.01060080745389156
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9743041347040041,
+          "bias": 0.013111437721048627,
+          "lap_coefficient": 0.11694426230260496,
+          "beta_source_native_squared": 0.12002849842994139,
+          "rank": 3,
+          "standardized_condition": 1.822837871157905,
+          "fit_rmse": 0.03068275747362913,
+          "validation_rmse": 0.027197420832002876,
+          "validation_mean_error": 0.00036974446155651385,
+          "validation_max_abs": 0.18625075501802668
+        },
+        "after": {
+          "delta_source_native": [
+            -0.14735233285765856,
+            0.7481335611347111
+          ],
+          "gain": 0.9789249793375487,
+          "bias": 0.010878304971553874,
+          "lap_coefficient": 0.05326471689243787,
+          "beta_source_native_squared": 0.05441143909565246,
+          "rank": 3,
+          "standardized_condition": 1.8182367766528547,
+          "fit_rmse": 0.02436327690887288,
+          "validation_rmse": 0.021577032732003867,
+          "validation_mean_error": 0.000366317716630868,
+          "validation_max_abs": 0.17911755036644106
+        },
+        "delta_source_native": [
+          -0.14735233285765856,
+          0.7481335611347111
+        ],
+        "beta_source_native_squared": 0.05441143909565246,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 6,
+        "status": 2,
+        "optimality": 9.578689749823027e-06,
+        "motion_singular_values": [
+          3.260299979027772,
+          2.8459509253087134
+        ],
+        "motion_condition": 1.145592480191524,
+        "probes": [],
+        "source_support_gap_native": 8.917575167993355,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.917575167993355,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.14730887864454814,
+          0.7483270883119414
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.14730887864454814,
+          -0.7483270883119414
+        ],
+        "change_from_frozen_source_native": 0.012152774955276882
+      },
+      "frozen_delta_source_native": [
+        -0.13582581064956387,
+        0.7519844343992973
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9881095861391299,
+      "joint_shift_change_reference149_native": 0.001556306028404192
+    },
+    {
+      "frame": 151,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.8755271301982427,
+          "bias": 0.06415301049051629,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000009,
+          "fit_rmse": 0.05334028474151495,
+          "validation_rmse": 0.05267686437432147,
+          "validation_mean_error": 0.006367786665966801,
+          "validation_max_abs": 0.29878712824653897
+        },
+        "after": {
+          "delta_source_native": [
+            -0.3198874833537472,
+            1.6305087793336153
+          ],
+          "gain": 0.9247000649931566,
+          "bias": 0.03884271032199148,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 0.039532476741198475,
+          "validation_rmse": 0.03867264087019796,
+          "validation_mean_error": 0.003816012203146702,
+          "validation_max_abs": 0.32089932777278296
+        },
+        "delta_source_native": [
+          -0.3198874833537472,
+          1.6305087793336153
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 8,
+        "status": 2,
+        "optimality": 0.000105760243906649,
+        "motion_singular_values": [
+          3.2452444443964303,
+          2.5984182986297526
+        ],
+        "motion_condition": 1.2489307230124473,
+        "probes": [],
+        "source_support_gap_native": 8.88462920169055,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.88462920169055,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.3197446802705852,
+          1.6313420865828296
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.3197446802705852,
+          -1.6313420865828296
+        ],
+        "change_from_frozen_source_native": 0.02129062113156662
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9232790476715251,
+          "bias": 0.03914507915946525,
+          "lap_coefficient": 0.41954113487166916,
+          "beta_source_native_squared": 0.4544033961668859,
+          "rank": 3,
+          "standardized_condition": 1.841606206940194,
+          "fit_rmse": 0.05262219665805685,
+          "validation_rmse": 0.05000134603203628,
+          "validation_mean_error": 0.003275556819122768,
+          "validation_max_abs": 0.2968790323206455
+        },
+        "after": {
+          "delta_source_native": [
+            -0.3258269638151422,
+            1.635661054959647
+          ],
+          "gain": 0.9413162878242192,
+          "bias": 0.030150218467238792,
+          "lap_coefficient": 0.14418954129838354,
+          "beta_source_native_squared": 0.15317863205327795,
+          "rank": 3,
+          "standardized_condition": 1.829189010649534,
+          "fit_rmse": 0.03941276852700235,
+          "validation_rmse": 0.03782261047445214,
+          "validation_mean_error": 0.002764745281460264,
+          "validation_max_abs": 0.30751077243878144
+        },
+        "delta_source_native": [
+          -0.3258269638151422,
+          1.635661054959647
+        ],
+        "beta_source_native_squared": 0.15317863205327795,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 13,
+        "status": 3,
+        "optimality": 0.0001367241463690755,
+        "motion_singular_values": [
+          3.0924113753048585,
+          2.4942141597920435
+        ],
+        "motion_condition": 1.2398339425523468,
+        "probes": [],
+        "source_support_gap_native": 8.88462920169055,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.88462920169055,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.3256860534789943,
+          1.636497886919003
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.3256860534789943,
+          -1.636497886919003
+        ],
+        "change_from_frozen_source_native": 0.026656198941896338
+      },
+      "frozen_delta_source_native": [
+        -0.32182696945364636,
+        1.609306681752569
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9780198513311028,
+      "joint_shift_change_reference149_native": 0.007866523546528458
+    },
+    {
+      "frame": 152,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.7845789773961069,
+          "bias": 0.1116462064002817,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.06898054475236146,
+          "validation_rmse": 0.0719517281907084,
+          "validation_mean_error": 0.012460760105833043,
+          "validation_max_abs": 0.3573523461164396
+        },
+        "after": {
+          "delta_source_native": [
+            -0.4707228931132933,
+            2.5926421158390784
+          ],
+          "gain": 0.8698208741448702,
+          "bias": 0.06772782900612216,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.000000000000001,
+          "fit_rmse": 0.051938240337328224,
+          "validation_rmse": 0.05120281188704617,
+          "validation_mean_error": 0.007882500069717307,
+          "validation_max_abs": 0.271398363005793
+        },
+        "delta_source_native": [
+          -0.4707228931132933,
+          2.5926421158390784
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 12,
+        "status": 2,
+        "optimality": 0.00045897368159602273,
+        "motion_singular_values": [
+          3.007500211309961,
+          2.527543043157882
+        ],
+        "motion_condition": 1.1898907990711907,
+        "probes": [],
+        "source_support_gap_native": 8.865284537872604,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.865284537872604,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.4704535401088271,
+          2.594430439090633
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.4704535401088271,
+          -2.594430439090633
+        ],
+        "change_from_frozen_source_native": 0.04436763906117675
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.8610820469078516,
+          "bias": 0.07157396272590366,
+          "lap_coefficient": 0.7148846550289131,
+          "beta_source_native_squared": 0.8302166531006727,
+          "rank": 3,
+          "standardized_condition": 1.8469232309837436,
+          "fit_rmse": 0.06753043558233235,
+          "validation_rmse": 0.06707727607999825,
+          "validation_mean_error": 0.007525223827435419,
+          "validation_max_abs": 0.3570556051051457
+        },
+        "after": {
+          "delta_source_native": [
+            -0.47907203771288587,
+            2.5862369506303726
+          ],
+          "gain": 0.8935678536609746,
+          "bias": 0.05530938099831917,
+          "lap_coefficient": 0.21921067694882787,
+          "beta_source_native_squared": 0.24532068387500186,
+          "rank": 3,
+          "standardized_condition": 1.8284868212546275,
+          "fit_rmse": 0.051747549233202066,
+          "validation_rmse": 0.049956148981134506,
+          "validation_mean_error": 0.00639734003810782,
+          "validation_max_abs": 0.2737974944472912
+        },
+        "delta_source_native": [
+          -0.47907203771288587,
+          2.5862369506303726
+        ],
+        "beta_source_native_squared": 0.24532068387500186,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 11,
+        "status": 2,
+        "optimality": 3.13011508272326e-05,
+        "motion_singular_values": [
+          2.7874232644881407,
+          2.365081696252675
+        ],
+        "motion_condition": 1.178573775656308,
+        "probes": [],
+        "source_support_gap_native": 8.865284537872604,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.865284537872604,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.47880952820089195,
+          2.588022965715259
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.47880952820089195,
+          -2.588022965715259
+        ],
+        "change_from_frozen_source_native": 0.04561024615609605
+      },
+      "frozen_delta_source_native": [
+        -0.49768813315609584,
+        2.627875100743808
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9756524522781715,
+      "joint_shift_change_reference149_native": 0.010529874265671917
+    },
+    {
+      "frame": 153,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "left-right",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.6900405538664153,
+          "bias": 0.16113028643215724,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.000000000000001,
+          "fit_rmse": 0.08075747617254342,
+          "validation_rmse": 0.08921983784908323,
+          "validation_mean_error": 0.018042252772629344,
+          "validation_max_abs": 0.37210970943797056
+        },
+        "after": {
+          "delta_source_native": [
+            -0.7414129312768246,
+            3.668396579120513
+          ],
+          "gain": 0.8023566174393771,
+          "bias": 0.10327700971550079,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000016,
+          "fit_rmse": 0.06312461110158539,
+          "validation_rmse": 0.06495370605298918,
+          "validation_mean_error": 0.01207087337168332,
+          "validation_max_abs": 0.3158628268084438
+        },
+        "delta_source_native": [
+          -0.7414129312768246,
+          3.668396579120513
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 15,
+        "status": 2,
+        "optimality": 0.00011514512200116954,
+        "motion_singular_values": [
+          2.675997853754614,
+          2.2483371995591037
+        ],
+        "motion_condition": 1.1902119727767586,
+        "probes": [],
+        "source_support_gap_native": 8.846633667339766,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.846633667339766,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.7410340432826215,
+          3.671505238875161
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.7410340432826215,
+          -3.671505238875161
+        ],
+        "change_from_frozen_source_native": 0.06421615886634549
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.7744653759985717,
+          "bias": 0.11690162329409255,
+          "lap_coefficient": 0.831771657808875,
+          "beta_source_native_squared": 1.0739946336999435,
+          "rank": 3,
+          "standardized_condition": 1.8329985961142228,
+          "fit_rmse": 0.07915189830344244,
+          "validation_rmse": 0.08336023836071363,
+          "validation_mean_error": 0.012524870530159823,
+          "validation_max_abs": 0.3601800189447761
+        },
+        "after": {
+          "delta_source_native": [
+            -0.7466836193164705,
+            3.637254743706726
+          ],
+          "gain": 0.8323538042443013,
+          "bias": 0.0875944974943643,
+          "lap_coefficient": 0.292335976654157,
+          "beta_source_native_squared": 0.3512160035353842,
+          "rank": 3,
+          "standardized_condition": 1.8146279330956516,
+          "fit_rmse": 0.06285967721072679,
+          "validation_rmse": 0.06332609126095834,
+          "validation_mean_error": 0.010189880037386391,
+          "validation_max_abs": 0.3078994483862082
+        },
+        "delta_source_native": [
+          -0.7466836193164705,
+          3.637254743706726
+        ],
+        "beta_source_native_squared": 0.3512160035353842,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 20,
+        "status": 3,
+        "optimality": 0.00040762460439765,
+        "motion_singular_values": [
+          2.4156122989167326,
+          2.126875555783962
+        ],
+        "motion_condition": 1.1357562939437436,
+        "probes": [],
+        "source_support_gap_native": 8.846633667339766,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.846633667339766,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.7463171313733545,
+          3.640340063887818
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.7463171313733545,
+          -3.640340063887818
+        ],
+        "change_from_frozen_source_native": 0.03544646712980072
+      },
+      "frozen_delta_source_native": [
+        -0.7708538182772289,
+        3.6113268916132455
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9749419257047006,
+      "joint_shift_change_reference149_native": 0.03160979518703264
+    },
+    {
+      "frame": 145,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.6939246218261895,
+          "bias": 0.15222204155047353,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.11044900051631695,
+          "validation_rmse": 0.06662821339781917,
+          "validation_mean_error": 0.004648530083574404,
+          "validation_max_abs": 0.3518179754383468
+        },
+        "after": {
+          "delta_source_native": [
+            1.0215093860179398,
+            -3.9999999999999996
+          ],
+          "gain": 0.9013974980336512,
+          "bias": 0.047830735592160396,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 0.06599444164639218,
+          "validation_rmse": 0.05147358843617353,
+          "validation_mean_error": 0.0005878821182878841,
+          "validation_max_abs": 0.36201935105449967
+        },
+        "delta_source_native": [
+          1.0215093860179398,
+          -3.9999999999999996
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": true,
+        "nfev": 12,
+        "status": 2,
+        "optimality": 1.3193261290098291e-05,
+        "motion_singular_values": [
+          3.228781734665208,
+          3.124563324874529
+        ],
+        "motion_condition": 1.03335455196603,
+        "probes": [],
+        "source_support_gap_native": 8.860770958223576,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": false,
+        "refusal_reasons": [
+          "translation-at-bound"
+        ],
+        "original_bilinear_support_gap_native": 10.860770958223576,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          1.022259530234981,
+          -3.9964266407293803
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -1.022259530234981,
+          3.9964266407293803
+        ],
+        "change_from_frozen_source_native": 0.05131328067949337
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.8131585625788014,
+          "bias": 0.0928525539707192,
+          "lap_coefficient": 1.4489004499374187,
+          "beta_source_native_squared": 1.781817860150749,
+          "rank": 3,
+          "standardized_condition": 1.8556008783453088,
+          "fit_rmse": 0.10689984528888481,
+          "validation_rmse": 0.06648405117168432,
+          "validation_mean_error": 0.0032335282156217304,
+          "validation_max_abs": 0.33840022532419467
+        },
+        "after": {
+          "delta_source_native": [
+            1.0184393798947173,
+            -3.999999999999498
+          ],
+          "gain": 0.8859537257501069,
+          "bias": 0.0555240479602056,
+          "lap_coefficient": -0.18781205881519095,
+          "beta_source_native_squared": -0.21198856481604259,
+          "rank": 3,
+          "standardized_condition": 1.8431559895022105,
+          "fit_rmse": 0.0658933873812041,
+          "validation_rmse": 0.051989725745592776,
+          "validation_mean_error": 0.0007900949301059978,
+          "validation_max_abs": 0.37746862414985416
+        },
+        "delta_source_native": [
+          1.0184393798947173,
+          -3.999999999999498
+        ],
+        "beta_source_native_squared": -0.21198856481604259,
+        "converged": true,
+        "at_translation_bound": true,
+        "nfev": 14,
+        "status": 2,
+        "optimality": 3.709523361456014e-06,
+        "motion_singular_values": [
+          3.545232963255019,
+          3.263535143538165
+        ],
+        "motion_condition": 1.0863167722506737,
+        "probes": [],
+        "source_support_gap_native": 8.860770958223576,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": false,
+        "refusal_reasons": [
+          "translation-at-bound"
+        ],
+        "original_bilinear_support_gap_native": 10.860770958223576,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          1.0191919607299589,
+          -3.9964278387228047
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -1.0191919607299589,
+          3.9964278387228047
+        ],
+        "change_from_frozen_source_native": 0.05438328680271587
+      },
+      "frozen_delta_source_native": [
+        1.0728226666974332,
+        -3.9999999999999996
+      ],
+      "frozen_at_bound": true,
+      "incremental_holdout_rmse_ratio": 1.0100272260998326,
+      "joint_shift_change_reference149_native": 0.003067569738951388
+    },
+    {
+      "frame": 146,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.7650532841695612,
+          "bias": 0.11748800152816423,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000013,
+          "fit_rmse": 0.09911999621973963,
+          "validation_rmse": 0.05696678623357092,
+          "validation_mean_error": 0.00391740834634175,
+          "validation_max_abs": 0.3248084830820892
+        },
+        "after": {
+          "delta_source_native": [
+            0.708545923607725,
+            -3.4382216962464454
+          ],
+          "gain": 0.9423686807247906,
+          "bias": 0.02833584820808672,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000002,
+          "fit_rmse": 0.052305790426048895,
+          "validation_rmse": 0.04397256650292693,
+          "validation_mean_error": 0.0005699187432424472,
+          "validation_max_abs": 0.27821452572796457
+        },
+        "delta_source_native": [
+          0.708545923607725,
+          -3.4382216962464454
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 10,
+        "status": 2,
+        "optimality": 2.5851843223373155e-05,
+        "motion_singular_values": [
+          3.508090272135901,
+          3.421399740128665
+        ],
+        "motion_condition": 1.0253377385256877,
+        "probes": [],
+        "source_support_gap_native": 8.878058329681572,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.878058329681572,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.7092223820845348,
+          -3.436076624321751
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.7092223820845348,
+          3.436076624321751
+        ],
+        "change_from_frozen_source_native": 0.04384192705735056
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.8965352347003418,
+          "bias": 0.052153731894629324,
+          "lap_coefficient": 1.4377561987393166,
+          "beta_source_native_squared": 1.6036806397462702,
+          "rank": 3,
+          "standardized_condition": 1.868612307661237,
+          "fit_rmse": 0.09441711470541583,
+          "validation_rmse": 0.057666265007152745,
+          "validation_mean_error": 0.0023459803664362972,
+          "validation_max_abs": 0.29329991923685905
+        },
+        "after": {
+          "delta_source_native": [
+            0.7072545500096016,
+            -3.4559652106410113
+          ],
+          "gain": 0.9273304844300524,
+          "bias": 0.035809302734410055,
+          "lap_coefficient": -0.16524326263067135,
+          "beta_source_native_squared": -0.1781924194287991,
+          "rank": 3,
+          "standardized_condition": 1.8574691435563437,
+          "fit_rmse": 0.05219197506183922,
+          "validation_rmse": 0.04454198655567244,
+          "validation_mean_error": 0.0007560751090548622,
+          "validation_max_abs": 0.2848707974942458
+        },
+        "delta_source_native": [
+          0.7072545500096016,
+          -3.4559652106410113
+        ],
+        "beta_source_native_squared": -0.1781924194287991,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 11,
+        "status": 2,
+        "optimality": 3.173640411332901e-05,
+        "motion_singular_values": [
+          3.696065672128824,
+          3.5526623034538556
+        ],
+        "motion_condition": 1.0403650435718457,
+        "probes": [],
+        "source_support_gap_native": 8.878058329681572,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.878058329681572,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.707937268232311,
+          -3.453810612792915
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.707937268232311,
+          3.453810612792915
+        ],
+        "change_from_frozen_source_native": 0.03244552489832439
+      },
+      "frozen_delta_source_native": [
+        0.734533754227414,
+        -3.473531004194696
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 1.012949438662117,
+      "joint_shift_change_reference149_native": 0.01778049112675318
+    },
+    {
+      "frame": 147,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.8650000452221498,
+          "bias": 0.06878285542805115,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 0.07878125073184346,
+          "validation_rmse": 0.04347280796317865,
+          "validation_mean_error": 0.0030143910207192062,
+          "validation_max_abs": 0.27333485985207173
+        },
+        "after": {
+          "delta_source_native": [
+            0.5454445389840424,
+            -2.268410169290262
+          ],
+          "gain": 0.9681629488173725,
+          "bias": 0.0170603662730616,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000002,
+          "fit_rmse": 0.04181657674365355,
+          "validation_rmse": 0.0335687286524894,
+          "validation_mean_error": 0.0010168210792260899,
+          "validation_max_abs": 0.20938739178023058
+        },
+        "delta_source_native": [
+          0.5454445389840424,
+          -2.268410169290262
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 11,
+        "status": 2,
+        "optimality": 0.000503867084004311,
+        "motion_singular_values": [
+          3.603601279126102,
+          3.475403350406665
+        ],
+        "motion_condition": 1.036887208704692,
+        "probes": [],
+        "source_support_gap_native": 8.907028496866552,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.907028496866552,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.5457027802201665,
+          -2.267462292240531
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.5457027802201665,
+          2.267462292240531
+        ],
+        "change_from_frozen_source_native": 0.049376049922398815
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.965147709186411,
+          "bias": 0.019131140121804186,
+          "lap_coefficient": 1.0235428253413974,
+          "beta_source_native_squared": 1.0605038126280293,
+          "rank": 3,
+          "standardized_condition": 1.8733384607336834,
+          "fit_rmse": 0.07542565579622207,
+          "validation_rmse": 0.04430167498480541,
+          "validation_mean_error": 0.0018201171155279915,
+          "validation_max_abs": 0.2392219435695464
+        },
+        "after": {
+          "delta_source_native": [
+            0.5451693732556289,
+            -2.266457045308485
+          ],
+          "gain": 0.972093682974038,
+          "bias": 0.015110399126606291,
+          "lap_coefficient": 0.03985752966171975,
+          "beta_source_native_squared": 0.04100173713687659,
+          "rank": 3,
+          "standardized_condition": 1.852479871943289,
+          "fit_rmse": 0.041806659395819304,
+          "validation_rmse": 0.03348756466731656,
+          "validation_mean_error": 0.0009704755465250432,
+          "validation_max_abs": 0.21061447713549475
+        },
+        "delta_source_native": [
+          0.5451693732556289,
+          -2.266457045308485
+        ],
+        "beta_source_native_squared": 0.04100173713687659,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 11,
+        "status": 2,
+        "optimality": 0.0004750057787822149,
+        "motion_singular_values": [
+          3.5724052191753244,
+          3.457846289829784
+        ],
+        "motion_condition": 1.0331301393247239,
+        "probes": [],
+        "source_support_gap_native": 8.907028496866552,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.907028496866552,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.5454273203571113,
+          -2.265509944990592
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.5454273203571113,
+          2.265509944990592
+        ],
+        "change_from_frozen_source_native": 0.047544507933225434
+      },
+      "frozen_delta_source_native": [
+        0.5212236011843451,
+        -2.225382963036051
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9975821549271923,
+      "joint_shift_change_reference149_native": 0.001971684031607962
+    },
+    {
+      "frame": 148,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9571561608771528,
+          "bias": 0.022668596441174863,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0,
+          "fit_rmse": 0.04724178357585985,
+          "validation_rmse": 0.024987195143988946,
+          "validation_mean_error": 0.0013029854239469574,
+          "validation_max_abs": 0.20305792506702736
+        },
+        "after": {
+          "delta_source_native": [
+            0.33413405636953886,
+            -1.1208619905787263
+          ],
+          "gain": 0.9879212310695172,
+          "bias": 0.0072173921313239695,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.02748631893542082,
+          "validation_rmse": 0.019426932216534954,
+          "validation_mean_error": 0.0005067883179858098,
+          "validation_max_abs": 0.2033576525321622
+        },
+        "delta_source_native": [
+          0.33413405636953886,
+          -1.1208619905787263
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 8,
+        "status": 2,
+        "optimality": 4.813017597799085e-05,
+        "motion_singular_values": [
+          3.867271159310434,
+          3.8048716889605867
+        ],
+        "motion_condition": 1.0163998882093428,
+        "probes": [],
+        "source_support_gap_native": 8.929420425353747,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.929420425353747,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.33419816516754686,
+          -1.1206066650156041
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.33419816516754686,
+          1.1206066650156041
+        ],
+        "change_from_frozen_source_native": 0.04694022204773763
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9924297894729724,
+          "bias": 0.005170750652022475,
+          "lap_coefficient": 0.33433572708036224,
+          "beta_source_native_squared": 0.33688602521485217,
+          "rank": 3,
+          "standardized_condition": 1.8745752894730465,
+          "fit_rmse": 0.04655617916384007,
+          "validation_rmse": 0.025178207536070238,
+          "validation_mean_error": 0.0008744188745372427,
+          "validation_max_abs": 0.19865199916358334
+        },
+        "after": {
+          "delta_source_native": [
+            0.33296372248405537,
+            -1.1210503981084443
+          ],
+          "gain": 0.9934112573503354,
+          "bias": 0.004493289528224494,
+          "lap_coefficient": 0.0515987434454294,
+          "beta_source_native_squared": 0.05194096912396135,
+          "rank": 3,
+          "standardized_condition": 1.8688254501418275,
+          "fit_rmse": 0.02745766394517112,
+          "validation_rmse": 0.01938160813766068,
+          "validation_mean_error": 0.0004417635833605146,
+          "validation_max_abs": 0.2032644999756782
+        },
+        "delta_source_native": [
+          0.33296372248405537,
+          -1.1210503981084443
+        ],
+        "beta_source_native_squared": 0.05194096912396135,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 9,
+        "status": 2,
+        "optimality": 0.0012559041765003145,
+        "motion_singular_values": [
+          3.8153771528922342,
+          3.7633854891080265
+        ],
+        "motion_condition": 1.0138151310660792,
+        "probes": [],
+        "source_support_gap_native": 8.929420425353747,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.929420425353747,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.33302807943975554,
+          -1.1207951705425578
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.33302807943975554,
+          1.1207951705425578
+        ],
+        "change_from_frozen_source_native": 0.045837317791589394
+      },
+      "frozen_delta_source_native": [
+        0.2882349539056873,
+        -1.1110305695774787
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9976669461565477,
+      "joint_shift_change_reference149_native": 0.0011851729595603443
+    },
+    {
+      "frame": 149,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9999999999999986,
+          "bias": -1.0654137752386351e-16,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000002,
+          "fit_rmse": 8.536751433744345e-16,
+          "validation_rmse": 8.330446799299233e-16,
+          "validation_mean_error": -8.071792977661337e-16,
+          "validation_max_abs": 1.3322676295501878e-15
+        },
+        "after": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9999999999999986,
+          "bias": -1.0654137752386351e-16,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000002,
+          "fit_rmse": 8.536751433744345e-16,
+          "validation_rmse": 8.330446799299233e-16,
+          "validation_mean_error": -8.071792977661337e-16,
+          "validation_max_abs": 1.3322676295501878e-15
+        },
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 1,
+        "status": 1,
+        "optimality": 2.7289386316280776e-17,
+        "motion_singular_values": [
+          3.9747054871392535,
+          3.6493250576642455
+        ],
+        "motion_condition": 1.0891618105632026,
+        "probes": [],
+        "source_support_gap_native": 8.96,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.96,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.0,
+          0.0
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.0,
+          -0.0
+        ],
+        "change_from_frozen_source_native": 0.0
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.999999999999999,
+          "bias": 3.3284749908863263e-16,
+          "lap_coefficient": -2.9764823712988356e-17,
+          "beta_source_native_squared": -2.9764823712988387e-17,
+          "rank": 3,
+          "standardized_condition": 1.8568279257386324,
+          "fit_rmse": 2.2168080077587905e-16,
+          "validation_rmse": 2.1594819282521776e-16,
+          "validation_mean_error": -1.5991245901618237e-16,
+          "validation_max_abs": 5.551115123125783e-16
+        },
+        "after": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.999999999999999,
+          "bias": 3.3284749908863263e-16,
+          "lap_coefficient": -2.9764823712988356e-17,
+          "beta_source_native_squared": -2.9764823712988387e-17,
+          "rank": 3,
+          "standardized_condition": 1.8568279257386324,
+          "fit_rmse": 2.2168080077587905e-16,
+          "validation_rmse": 2.1594819282521776e-16,
+          "validation_mean_error": -1.5991245901618237e-16,
+          "validation_max_abs": 5.551115123125783e-16
+        },
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "beta_source_native_squared": -2.9764823712988387e-17,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 1,
+        "status": 1,
+        "optimality": 7.794771739263045e-17,
+        "motion_singular_values": [
+          3.973216740863664,
+          3.649314971981722
+        ],
+        "motion_condition": 1.0887568684448332,
+        "probes": [],
+        "source_support_gap_native": 8.96,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.96,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.0,
+          0.0
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.0,
+          -0.0
+        ],
+        "change_from_frozen_source_native": 0.0
+      },
+      "frozen_delta_source_native": [
+        0.0,
+        0.0
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.21594819282521774,
+      "joint_shift_change_reference149_native": 0.0
+    },
+    {
+      "frame": 150,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.976586084287126,
+          "bias": 0.011810511001225642,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000002,
+          "fit_rmse": 0.038027041718356205,
+          "validation_rmse": 0.019950508270603726,
+          "validation_mean_error": -0.00010361500312440865,
+          "validation_max_abs": 0.2060463864896862
+        },
+        "after": {
+          "delta_source_native": [
+            -0.17127383573414232,
+            0.7750177825069631
+          ],
+          "gain": 0.9918463804685788,
+          "bias": 0.004331272327019182,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.027872314990724963,
+          "validation_rmse": 0.018680164155304376,
+          "validation_mean_error": -0.00020402704695417963,
+          "validation_max_abs": 0.19537225765127175
+        },
+        "delta_source_native": [
+          -0.17127383573414232,
+          0.7750177825069631
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 6,
+        "status": 2,
+        "optimality": 2.26479461032814e-05,
+        "motion_singular_values": [
+          4.040789318264476,
+          3.8169842461075283
+        ],
+        "motion_condition": 1.0586340046818845,
+        "probes": [],
+        "source_support_gap_native": 8.917365345283052,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.917365345283052,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.17123325319883015,
+          0.7752202191441175
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.17123325319883015,
+          -0.7752202191441175
+        ],
+        "change_from_frozen_source_native": 0.042274077251263725
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 1.002676500909357,
+          "bias": -0.0011550706613774205,
+          "lap_coefficient": 0.23401601197320196,
+          "beta_source_native_squared": 0.23339133983988447,
+          "rank": 3,
+          "standardized_condition": 1.8483607556565655,
+          "fit_rmse": 0.037539015512581424,
+          "validation_rmse": 0.020403535712070223,
+          "validation_mean_error": -0.00043753821184418213,
+          "validation_max_abs": 0.1837894384533877
+        },
+        "after": {
+          "delta_source_native": [
+            -0.17431662772773387,
+            0.7730417109821911
+          ],
+          "gain": 1.006468126104026,
+          "bias": -0.0029392254336984363,
+          "lap_coefficient": 0.13060981384616363,
+          "beta_source_native_squared": 0.12977044226104398,
+          "rank": 3,
+          "standardized_condition": 1.8475409888177683,
+          "fit_rmse": 0.027664430813649766,
+          "validation_rmse": 0.018849875202393507,
+          "validation_mean_error": -0.00039187464088656973,
+          "validation_max_abs": 0.18429762900454794
+        },
+        "delta_source_native": [
+          -0.17431662772773387,
+          0.7730417109821911
+        ],
+        "beta_source_native_squared": 0.12977044226104398,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 5,
+        "status": 2,
+        "optimality": 1.8953006376926398e-05,
+        "motion_singular_values": [
+          3.9153213330020886,
+          3.680822902997169
+        ],
+        "motion_condition": 1.0637081533626558,
+        "probes": [],
+        "source_support_gap_native": 8.917365345283052,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.917365345283052,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.17427697680868584,
+          0.7732439966762675
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.17427697680868584,
+          -0.7732439966762675
+        ],
+        "change_from_frozen_source_native": 0.04387427374252059
+      },
+      "frozen_delta_source_native": [
+        -0.13582581064956387,
+        0.7519844343992973
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 1.0090850939894411,
+      "joint_shift_change_reference149_native": 0.003629009321512986
+    },
+    {
+      "frame": 151,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9058345621544347,
+          "bias": 0.04616398078481382,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0,
+          "fit_rmse": 0.06895627630298781,
+          "validation_rmse": 0.035527147565393755,
+          "validation_mean_error": 0.00014903650498970794,
+          "validation_max_abs": 0.2458070442251663
+        },
+        "after": {
+          "delta_source_native": [
+            -0.36719110983953007,
+            1.6993142338721252
+          ],
+          "gain": 0.9672946605706608,
+          "bias": 0.01565410919167508,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000002,
+          "fit_rmse": 0.04645577454595572,
+          "validation_rmse": 0.033051274730122836,
+          "validation_mean_error": -0.0007758269418402195,
+          "validation_max_abs": 0.23361025921038714
+        },
+        "delta_source_native": [
+          -0.36719110983953007,
+          1.6993142338721252
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 9,
+        "status": 2,
+        "optimality": 0.0005275746255063077,
+        "motion_singular_values": [
+          4.0930158407574275,
+          3.4341821095875456
+        ],
+        "motion_condition": 1.1918458923102973,
+        "probes": [],
+        "source_support_gap_native": 8.884267773233624,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.884267773233624,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.3670583576535887,
+          1.7001888204721962
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.3670583576535887,
+          -1.7001888204721962
+        ],
+        "change_from_frozen_source_native": 0.10079317770317989
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9871940243227282,
+          "bias": 0.005642700834904291,
+          "lap_coefficient": 0.7371024203529996,
+          "beta_source_native_squared": 0.7466641837289222,
+          "rank": 3,
+          "standardized_condition": 1.8626297794737035,
+          "fit_rmse": 0.06641081319365186,
+          "validation_rmse": 0.037138590414099046,
+          "validation_mean_error": -0.0009631112479833469,
+          "validation_max_abs": 0.2350292531233984
+        },
+        "after": {
+          "delta_source_native": [
+            -0.38167698926824706,
+            1.6902278134546322
+          ],
+          "gain": 1.0026505542815183,
+          "bias": -0.001975500463151634,
+          "lap_coefficient": 0.3141415392974781,
+          "beta_source_native_squared": 0.31331109124313644,
+          "rank": 3,
+          "standardized_condition": 1.846657133155151,
+          "fit_rmse": 0.04573551074428234,
+          "validation_rmse": 0.03334143557505689,
+          "validation_mean_error": -0.0012642200108440506,
+          "validation_max_abs": 0.23100278888422254
+        },
+        "delta_source_native": [
+          -0.38167698926824706,
+          1.6902278134546322
+        ],
+        "beta_source_native_squared": 0.31331109124313644,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 7,
+        "status": 2,
+        "optimality": 7.01035231230442e-05,
+        "motion_singular_values": [
+          3.764213301164128,
+          3.1943768847212617
+        ],
+        "motion_condition": 1.1783873465802988,
+        "probes": [],
+        "source_support_gap_native": 8.884267773233624,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.884267773233624,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.3815527699437898,
+          1.6911006989929194
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.3815527699437898,
+          -1.6911006989929194
+        ],
+        "change_from_frozen_source_native": 0.10064916506236286
+      },
+      "frozen_delta_source_native": [
+        -0.32182696945364636,
+        1.609306681752569
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 1.008779112070664,
+      "joint_shift_change_reference149_native": 0.017107949604216917
+    },
+    {
+      "frame": 152,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.8201632029018605,
+          "bias": 0.08868358330919413,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 0.09011184871530366,
+          "validation_rmse": 0.04776988896237658,
+          "validation_mean_error": 0.0007387548568939317,
+          "validation_max_abs": 0.298910148240167
+        },
+        "after": {
+          "delta_source_native": [
+            -0.5498661540918719,
+            2.6975828832974673
+          ],
+          "gain": 0.939402608325979,
+          "bias": 0.029248044279563862,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000013,
+          "fit_rmse": 0.05838225729672993,
+          "validation_rmse": 0.04520634797639793,
+          "validation_mean_error": -0.0015235726825429227,
+          "validation_max_abs": 0.3049998091510314
+        },
+        "delta_source_native": [
+          -0.5498661540918719,
+          2.6975828832974673
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 9,
+        "status": 2,
+        "optimality": 0.0004729443843720458,
+        "motion_singular_values": [
+          4.009236410328156,
+          3.516556645917746
+        ],
+        "motion_condition": 1.1401028943987994,
+        "probes": [],
+        "source_support_gap_native": 8.864841484664986,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.864841484664986,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.5496249269204576,
+          2.69945692025465
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.5496249269204576,
+          -2.69945692025465
+        ],
+        "change_from_frozen_source_native": 0.0870730774540704
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.941300310985419,
+          "bias": 0.028290770941697255,
+          "lap_coefficient": 1.118656994714329,
+          "beta_source_native_squared": 1.1884166845151052,
+          "rank": 3,
+          "standardized_condition": 1.8591274296441116,
+          "fit_rmse": 0.08573328397577036,
+          "validation_rmse": 0.049266892724380916,
+          "validation_mean_error": -0.0010482161989693256,
+          "validation_max_abs": 0.28730473256447303
+        },
+        "after": {
+          "delta_source_native": [
+            -0.5689920792244998,
+            2.6781813549018767
+          ],
+          "gain": 0.9776487514928803,
+          "bias": 0.010168448381347861,
+          "lap_coefficient": 0.343182167014866,
+          "beta_source_native_squared": 0.3510280829293988,
+          "rank": 3,
+          "standardized_condition": 1.8308120303183915,
+          "fit_rmse": 0.05769664782146947,
+          "validation_rmse": 0.04512862832459598,
+          "validation_mean_error": -0.002083211291296773,
+          "validation_max_abs": 0.29941244875658485
+        },
+        "delta_source_native": [
+          -0.5689920792244998,
+          2.6781813549018767
+        ],
+        "beta_source_native_squared": 0.3510280829293988,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 9,
+        "status": 2,
+        "optimality": 1.1050657230453357e-05,
+        "motion_singular_values": [
+          3.637375732876435,
+          3.2004582292529276
+        ],
+        "motion_condition": 1.1365171710819346,
+        "probes": [],
+        "source_support_gap_native": 8.864841484664986,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.864841484664986,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.5687675778003964,
+          2.6800470330552537
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.5687675778003964,
+          -2.6800470330552537
+        ],
+        "change_from_frozen_source_native": 0.08726380654281632
+      },
+      "frozen_delta_source_native": [
+        -0.49768813315609584,
+        2.627875100743808
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9982807801275492,
+      "joint_shift_change_reference149_native": 0.027261416027134514
+    },
+    {
+      "frame": 153,
+      "train_phase": "G1",
+      "test_phase": "G2",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.7179257441490852,
+          "bias": 0.1395768097809036,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000002,
+          "fit_rmse": 0.10732820039811165,
+          "validation_rmse": 0.06057609836118492,
+          "validation_mean_error": 0.001583133227153163,
+          "validation_max_abs": 0.3187682994041445
+        },
+        "after": {
+          "delta_source_native": [
+            -0.8332346573222852,
+            3.9254334794945076
+          ],
+          "gain": 0.8931362551113838,
+          "bias": 0.052005813674207306,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0,
+          "fit_rmse": 0.07140201398021373,
+          "validation_rmse": 0.056310435771054275,
+          "validation_mean_error": -0.0021464203628730346,
+          "validation_max_abs": 0.3306351398781489
+        },
+        "delta_source_native": [
+          -0.8332346573222852,
+          3.9254334794945076
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 15,
+        "status": 2,
+        "optimality": 0.0002823565613033503,
+        "motion_singular_values": [
+          3.805988841907842,
+          3.2282629121689705
+        ],
+        "motion_condition": 1.178958760626691,
+        "probes": [],
+        "source_support_gap_native": 8.846106945503571,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.846106945503571,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.8328608843431452,
+          3.928770474091778
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.8328608843431452,
+          -3.928770474091778
+        ],
+        "change_from_frozen_source_native": 0.32024103052290825
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.8539468157035303,
+          "bias": 0.07177047764648507,
+          "lap_coefficient": 1.265089808852569,
+          "beta_source_native_squared": 1.481462060152207,
+          "rank": 3,
+          "standardized_condition": 1.8489504416628617,
+          "fit_rmse": 0.10252827297792347,
+          "validation_rmse": 0.05981817819210616,
+          "validation_mean_error": -0.0005220448127743138,
+          "validation_max_abs": 0.32975518697267
+        },
+        "after": {
+          "delta_source_native": [
+            -0.8525785599672673,
+            3.8631384407012166
+          ],
+          "gain": 0.9341517351591172,
+          "bias": 0.03152541203393042,
+          "lap_coefficient": 0.37239271895952153,
+          "beta_source_native_squared": 0.39864264545426403,
+          "rank": 3,
+          "standardized_condition": 1.822754816291572,
+          "fit_rmse": 0.07074794165551336,
+          "validation_rmse": 0.05580018152387362,
+          "validation_mean_error": -0.0027877437023212516,
+          "validation_max_abs": 0.32237425243671547
+        },
+        "delta_source_native": [
+          -0.8525785599672673,
+          3.8631384407012166
+        ],
+        "beta_source_native_squared": 0.39864264545426403,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 13,
+        "status": 2,
+        "optimality": 0.00019647101059652275,
+        "motion_singular_values": [
+          3.415454015998088,
+          2.9490398246848253
+        ],
+        "motion_condition": 1.158157983289734,
+        "probes": [],
+        "source_support_gap_native": 8.846106945503571,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 10.846106945503571,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.852236580215095,
+          3.866431069048975
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.852236580215095,
+          -3.866431069048975
+        ],
+        "change_from_frozen_source_native": 0.264741363708785
+      },
+      "frozen_delta_source_native": [
+        -0.7708538182772289,
+        3.6113268916132455
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9909385491304803,
+      "joint_shift_change_reference149_native": 0.06528107697957305
+    },
+    {
+      "frame": 145,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.6922994493843025,
+          "bias": 0.1529899852708667,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.10827213427303767,
+          "validation_rmse": 0.0677127569210825,
+          "validation_mean_error": 0.0063397760847741505,
+          "validation_max_abs": 0.3524082446743688
+        },
+        "after": {
+          "delta_source_native": [
+            1.0310622438988346,
+            -3.9999999999999996
+          ],
+          "gain": 0.8923430261695747,
+          "bias": 0.05234763266163905,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000002,
+          "fit_rmse": 0.06596979768734136,
+          "validation_rmse": 0.05200270905256161,
+          "validation_mean_error": 0.002151151564447445,
+          "validation_max_abs": 0.3513296712513043
+        },
+        "delta_source_native": [
+          1.0310622438988346,
+          -3.9999999999999996
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": true,
+        "nfev": 12,
+        "status": 2,
+        "optimality": 5.459884981150467e-06,
+        "motion_singular_values": [
+          3.1585599165537404,
+          3.0610904198375817
+        ],
+        "motion_condition": 1.031841430127154,
+        "probes": [],
+        "source_support_gap_native": 6.858400941640603,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": false,
+        "refusal_reasons": [
+          "translation-at-bound"
+        ],
+        "original_bilinear_support_gap_native": 8.858400941640603,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          1.0318048061546532,
+          -3.996422912962968
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -1.0318048061546532,
+          3.996422912962968
+        ],
+        "change_from_frozen_source_native": 0.041760422798598595
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.809990340430464,
+          "bias": 0.09436632584965501,
+          "lap_coefficient": 1.4358839607143268,
+          "beta_source_native_squared": 1.772717388149636,
+          "rank": 3,
+          "standardized_condition": 1.8473516363643345,
+          "fit_rmse": 0.104755456676183,
+          "validation_rmse": 0.06667701327799891,
+          "validation_mean_error": 0.004827351990565301,
+          "validation_max_abs": 0.318648356215107
+        },
+        "after": {
+          "delta_source_native": [
+            1.028531021740267,
+            -3.9999999999999996
+          ],
+          "gain": 0.8789361447343796,
+          "bias": 0.059028126136786624,
+          "lap_coefficient": -0.16339636835306226,
+          "beta_source_native_squared": -0.18590243367729714,
+          "rank": 3,
+          "standardized_condition": 1.836266959941062,
+          "fit_rmse": 0.06589406026506396,
+          "validation_rmse": 0.05249084681095935,
+          "validation_mean_error": 0.0023367544803994766,
+          "validation_max_abs": 0.3553529925025041
+        },
+        "delta_source_native": [
+          1.028531021740267,
+          -3.9999999999999996
+        ],
+        "beta_source_native_squared": -0.18590243367729714,
+        "converged": true,
+        "at_translation_bound": true,
+        "nfev": 12,
+        "status": 2,
+        "optimality": 5.755405069179747e-07,
+        "motion_singular_values": [
+          3.4331039890236967,
+          3.182848982781508
+        ],
+        "motion_condition": 1.0786261012055587,
+        "probes": [],
+        "source_support_gap_native": 6.858400941640603,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": false,
+        "refusal_reasons": [
+          "translation-at-bound"
+        ],
+        "original_bilinear_support_gap_native": 8.858400941640603,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          1.0292755929894666,
+          -3.996423900709783
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -1.0292755929894666,
+          3.996423900709783
+        ],
+        "change_from_frozen_source_native": 0.0442916449571662
+      },
+      "frozen_delta_source_native": [
+        1.0728226666974332,
+        -3.9999999999999996
+      ],
+      "frozen_at_bound": true,
+      "incremental_holdout_rmse_ratio": 1.00938677556018,
+      "joint_shift_change_reference149_native": 0.002529213358061568
+    },
+    {
+      "frame": 146,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.7549922792777592,
+          "bias": 0.12242692234912263,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 0.09773405603516207,
+          "validation_rmse": 0.05833435700950525,
+          "validation_mean_error": 0.00527711493339398,
+          "validation_max_abs": 0.3394370929997894
+        },
+        "after": {
+          "delta_source_native": [
+            0.7018272320565561,
+            -3.4191607780984627
+          ],
+          "gain": 0.9252558099979667,
+          "bias": 0.036748485634347766,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000009,
+          "fit_rmse": 0.053735905130138956,
+          "validation_rmse": 0.044017187291327114,
+          "validation_mean_error": 0.0017824765953614382,
+          "validation_max_abs": 0.2706587469841403
+        },
+        "delta_source_native": [
+          0.7018272320565561,
+          -3.4191607780984627
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 12,
+        "status": 2,
+        "optimality": 0.0003876315455772013,
+        "motion_singular_values": [
+          3.461377711134902,
+          3.3607645592704385
+        ],
+        "motion_condition": 1.0299375782177091,
+        "probes": [],
+        "source_support_gap_native": 6.876313910423015,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.876313910423015,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.702501501944617,
+          -3.4170284689460586
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.702501501944617,
+          3.4170284689460586
+        ],
+        "change_from_frozen_source_native": 0.06344949234050931
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.8874107943534026,
+          "bias": 0.05659445618470459,
+          "lap_coefficient": 1.4379050003642038,
+          "beta_source_native_squared": 1.6203375139378484,
+          "rank": 3,
+          "standardized_condition": 1.8694628874908348,
+          "fit_rmse": 0.09294223994326005,
+          "validation_rmse": 0.05786323628515331,
+          "validation_mean_error": 0.0035384772945567496,
+          "validation_max_abs": 0.30831361103786403
+        },
+        "after": {
+          "delta_source_native": [
+            0.7010267097750904,
+            -3.430983514751255
+          ],
+          "gain": 0.9167739171390308,
+          "bias": 0.040963164394213256,
+          "lap_coefficient": -0.0922835974217343,
+          "beta_source_native_squared": -0.10066123795245288,
+          "rank": 3,
+          "standardized_condition": 1.8582342769460218,
+          "fit_rmse": 0.05370127442723278,
+          "validation_rmse": 0.044341969496626416,
+          "validation_mean_error": 0.0018938215828300652,
+          "validation_max_abs": 0.2786640874599551
+        },
+        "delta_source_native": [
+          0.7010267097750904,
+          -3.430983514751255
+        ],
+        "beta_source_native_squared": -0.10066123795245288,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 17,
+        "status": 4,
+        "optimality": 7.51607094816531e-05,
+        "motion_singular_values": [
+          3.59710769177129,
+          3.434532782311601
+        ],
+        "motion_condition": 1.0473353785693866,
+        "probes": [],
+        "source_support_gap_native": 6.876313910423015,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.876313910423015,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.7017051170745572,
+          -3.428844839646818
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.7017051170745572,
+          3.428844839646818
+        ],
+        "change_from_frozen_source_native": 0.054157279158666465
+      },
+      "frozen_delta_source_native": [
+        0.734533754227414,
+        -3.473531004194696
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 1.0073785315529076,
+      "joint_shift_change_reference149_native": 0.011843177166581065
+    },
+    {
+      "frame": 147,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.8504166534944234,
+          "bias": 0.07558960590826191,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000002,
+          "fit_rmse": 0.07768304116678722,
+          "validation_rmse": 0.04482243012219061,
+          "validation_mean_error": 0.003530003419093025,
+          "validation_max_abs": 0.33199954705075885
+        },
+        "after": {
+          "delta_source_native": [
+            0.5209785319150964,
+            -2.2442518457399094
+          ],
+          "gain": 0.9486736610805401,
+          "bias": 0.026183292167770957,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.043189291696661886,
+          "validation_rmse": 0.033589705016249506,
+          "validation_mean_error": 0.0013124150498510163,
+          "validation_max_abs": 0.26299957105248983
+        },
+        "delta_source_native": [
+          0.5209785319150964,
+          -2.2442518457399094
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 14,
+        "status": 3,
+        "optimality": 0.0006249297655767369,
+        "motion_singular_values": [
+          3.577154044941879,
+          3.4535441700741787
+        ],
+        "motion_condition": 1.0357921800852616,
+        "probes": [],
+        "source_support_gap_native": 6.905884513486363,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.905884513486363,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.5212409100428397,
+          -2.243317843472495
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.5212409100428397,
+          2.243317843472495
+        ],
+        "change_from_frozen_source_native": 0.01887047411801554
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9522614588985485,
+          "bias": 0.025028059428536267,
+          "lap_coefficient": 1.0310201196866993,
+          "beta_source_native_squared": 1.0827069709187311,
+          "rank": 3,
+          "standardized_condition": 1.883146154843149,
+          "fit_rmse": 0.07422462101416295,
+          "validation_rmse": 0.04487487669364678,
+          "validation_mean_error": 0.0021377062897305035,
+          "validation_max_abs": 0.2885956248184559
+        },
+        "after": {
+          "delta_source_native": [
+            0.5210176170011553,
+            -2.2393434104528147
+          ],
+          "gain": 0.9576145381870512,
+          "bias": 0.02174425268218436,
+          "lap_coefficient": 0.08985891737947385,
+          "beta_source_native_squared": 0.09383620840760636,
+          "rank": 3,
+          "standardized_condition": 1.8630893975378373,
+          "fit_rmse": 0.04314060191548987,
+          "validation_rmse": 0.03339940206482592,
+          "validation_mean_error": 0.0011898590133836053,
+          "validation_max_abs": 0.26334848499774577
+        },
+        "delta_source_native": [
+          0.5210176170011553,
+          -2.2393434104528147
+        ],
+        "beta_source_native_squared": 0.09383620840760636,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 13,
+        "status": 4,
+        "optimality": 0.0002563547753887133,
+        "motion_singular_values": [
+          3.505015481604723,
+          3.403131800294491
+        ],
+        "motion_condition": 1.0299382120026663,
+        "probes": [],
+        "source_support_gap_native": 6.905884513486363,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.905884513486363,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.5212789862336927,
+          -2.238411212181632
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.5212789862336927,
+          2.238411212181632
+        ],
+        "change_from_frozen_source_native": 0.0139619669660097
+      },
+      "frozen_delta_source_native": [
+        0.5212236011843451,
+        -2.225382963036051
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9943344857797493,
+      "joint_shift_change_reference149_native": 0.004906779027099948
+    },
+    {
+      "frame": 148,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9525682132295415,
+          "bias": 0.024971482137892666,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0,
+          "fit_rmse": 0.04584062010719196,
+          "validation_rmse": 0.02531952007159792,
+          "validation_mean_error": 0.0018186981565749259,
+          "validation_max_abs": 0.2231188943466167
+        },
+        "after": {
+          "delta_source_native": [
+            0.3195572843036924,
+            -1.0878738365620138
+          ],
+          "gain": 0.9812772446068381,
+          "bias": 0.010497309678561433,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000002,
+          "fit_rmse": 0.027829100417699374,
+          "validation_rmse": 0.019203651220049148,
+          "validation_mean_error": 0.0010190785694498758,
+          "validation_max_abs": 0.1999992495894336
+        },
+        "delta_source_native": [
+          0.3195572843036924,
+          -1.0878738365620138
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 8,
+        "status": 2,
+        "optimality": 0.0019180513584541772,
+        "motion_singular_values": [
+          3.793774262238424,
+          3.761238529447402
+        ],
+        "motion_condition": 1.0086502710573375,
+        "probes": [],
+        "source_support_gap_native": 6.928803415192725,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.928803415192725,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.31962042426281384,
+          -1.0876265704177546
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.31962042426281384,
+          1.0876265704177546
+        ],
+        "change_from_frozen_source_native": 0.038952826155637506
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9873335242475795,
+          "bias": 0.007725062366217735,
+          "lap_coefficient": 0.32970520980976614,
+          "beta_source_native_squared": 0.3339349892540372,
+          "rank": 3,
+          "standardized_condition": 1.8754911536450123,
+          "fit_rmse": 0.04516883131975235,
+          "validation_rmse": 0.025314512690150892,
+          "validation_mean_error": 0.00134689949758411,
+          "validation_max_abs": 0.1872665239720731
+        },
+        "after": {
+          "delta_source_native": [
+            0.31842702576569987,
+            -1.087264548312647
+          ],
+          "gain": 0.9888505776350798,
+          "bias": 0.006740783048707285,
+          "lap_coefficient": 0.07125715818512934,
+          "beta_source_native_squared": 0.07206059216302113,
+          "rank": 3,
+          "standardized_condition": 1.8675245424424933,
+          "fit_rmse": 0.027776092037625186,
+          "validation_rmse": 0.019127910154655554,
+          "validation_mean_error": 0.000917753927009867,
+          "validation_max_abs": 0.19216481576923106
+        },
+        "delta_source_native": [
+          0.31842702576569987,
+          -1.087264548312647
+        ],
+        "beta_source_native_squared": 0.07206059216302113,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 6,
+        "status": 2,
+        "optimality": 2.878462705121406e-05,
+        "motion_singular_values": [
+          3.7268203252008836,
+          3.7001772595482367
+        ],
+        "motion_condition": 1.0072004835941022,
+        "probes": [],
+        "source_support_gap_native": 6.928803415192725,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.928803415192725,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.31849031447704534,
+          -1.0870175299505127
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.31849031447704534,
+          1.0870175299505127
+        ],
+        "change_from_frozen_source_native": 0.038423755281864244
+      },
+      "frozen_delta_source_native": [
+        0.2882349539056873,
+        -1.1110305695774787
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9960559028840037,
+      "joint_shift_change_reference149_native": 0.0012837750654331548
+    },
+    {
+      "frame": 149,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9999999999999982,
+          "bias": 8.396914674117694e-17,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0,
+          "fit_rmse": 8.441309822817231e-16,
+          "validation_rmse": 8.168382822974514e-16,
+          "validation_mean_error": -7.755397483297037e-16,
+          "validation_max_abs": 1.4432899320127035e-15
+        },
+        "after": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9999999999999982,
+          "bias": 8.396914674117694e-17,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0,
+          "fit_rmse": 8.441309822817231e-16,
+          "validation_rmse": 8.168382822974514e-16,
+          "validation_mean_error": -7.755397483297037e-16,
+          "validation_max_abs": 1.4432899320127035e-15
+        },
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 1,
+        "status": 1,
+        "optimality": 9.028643619733336e-16,
+        "motion_singular_values": [
+          3.8961316215850244,
+          3.58969612244846
+        ],
+        "motion_condition": 1.0853653035476303,
+        "probes": [],
+        "source_support_gap_native": 6.960000000000001,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.96,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.0,
+          0.0
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.0,
+          -0.0
+        ],
+        "change_from_frozen_source_native": 0.0
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9999999999999984,
+          "bias": -1.2362134166233457e-16,
+          "lap_coefficient": -2.1171253376127049e-16,
+          "beta_source_native_squared": -2.117125337612708e-16,
+          "rank": 3,
+          "standardized_condition": 1.852245841106555,
+          "fit_rmse": 9.157315434880833e-16,
+          "validation_rmse": 8.94174316195908e-16,
+          "validation_mean_error": -8.6584885785741e-16,
+          "validation_max_abs": 1.4432899320127035e-15
+        },
+        "after": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9999999999999984,
+          "bias": -1.2362134166233457e-16,
+          "lap_coefficient": -2.1171253376127049e-16,
+          "beta_source_native_squared": -2.117125337612708e-16,
+          "rank": 3,
+          "standardized_condition": 1.852245841106555,
+          "fit_rmse": 9.157315434880833e-16,
+          "validation_rmse": 8.94174316195908e-16,
+          "validation_mean_error": -8.6584885785741e-16,
+          "validation_max_abs": 1.4432899320127035e-15
+        },
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "beta_source_native_squared": -2.117125337612708e-16,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 1,
+        "status": 1,
+        "optimality": 5.544555977420672e-16,
+        "motion_singular_values": [
+          3.894777125201364,
+          3.5896667974467342
+        ],
+        "motion_condition": 1.0849968381387514,
+        "probes": [],
+        "source_support_gap_native": 6.960000000000001,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.96,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          0.0,
+          0.0
+        ],
+        "inverse_observation_delta_reference149_native": [
+          -0.0,
+          -0.0
+        ],
+        "change_from_frozen_source_native": 0.0
+      },
+      "frozen_delta_source_native": [
+        0.0,
+        0.0
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.8941743161959078,
+      "joint_shift_change_reference149_native": 0.0
+    },
+    {
+      "frame": 150,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9720323673873501,
+          "bias": 0.01364971192000403,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000002,
+          "fit_rmse": 0.037474907588896086,
+          "validation_rmse": 0.019196287619062738,
+          "validation_mean_error": -3.699636333981005e-05,
+          "validation_max_abs": 0.22115423607049955
+        },
+        "after": {
+          "delta_source_native": [
+            -0.17323196687472586,
+            0.7730118671740775
+          ],
+          "gain": 0.9871168061184621,
+          "bias": 0.006234313684735784,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000002,
+          "fit_rmse": 0.027461336822037007,
+          "validation_rmse": 0.01819989547018648,
+          "validation_mean_error": -0.00017624752456640546,
+          "validation_max_abs": 0.23794190578684637
+        },
+        "delta_source_native": [
+          -0.17323196687472586,
+          0.7730118671740775
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 10,
+        "status": 2,
+        "optimality": 0.0007671874869083934,
+        "motion_singular_values": [
+          3.9529980107138294,
+          3.7998211651737157
+        ],
+        "motion_condition": 1.0403115933307643,
+        "probes": [],
+        "source_support_gap_native": 6.918051090369737,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.918051090369737,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.17319206093144993,
+          0.7732140319177094
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.17319206093144993,
+          -0.7732140319177094
+        ],
+        "change_from_frozen_source_native": 0.04291122758252353
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 1.0003586844005457,
+          "bias": -0.00044132513339931645,
+          "lap_coefficient": 0.2539447012423026,
+          "beta_source_native_squared": 0.25385364789877973,
+          "rank": 3,
+          "standardized_condition": 1.8483620002430534,
+          "fit_rmse": 0.03690381407070376,
+          "validation_rmse": 0.01966345347622417,
+          "validation_mean_error": -0.0004573039494141131,
+          "validation_max_abs": 0.2033341962714118
+        },
+        "after": {
+          "delta_source_native": [
+            -0.1771146610519957,
+            0.7708515312628712
+          ],
+          "gain": 1.0044009233935147,
+          "bias": -0.002366678289296414,
+          "lap_coefficient": 0.154077293750358,
+          "beta_source_native_squared": 0.15340218249679166,
+          "rank": 3,
+          "standardized_condition": 1.8448007313820858,
+          "fit_rmse": 0.027171196909116208,
+          "validation_rmse": 0.01840646650104409,
+          "validation_mean_error": -0.00043286935012842913,
+          "validation_max_abs": 0.22676679965309
+        },
+        "delta_source_native": [
+          -0.1771146610519957,
+          0.7708515312628712
+        ],
+        "beta_source_native_squared": 0.15340218249679166,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 10,
+        "status": 4,
+        "optimality": 0.00018800695452195036,
+        "motion_singular_values": [
+          3.8077610377773294,
+          3.641398794619939
+        ],
+        "motion_condition": 1.0456863564087477,
+        "probes": [],
+        "source_support_gap_native": 6.918051090369737,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.918051090369737,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.17707590596805567,
+          0.7710535893644719
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.17707590596805567,
+          -0.7710535893644719
+        ],
+        "change_from_frozen_source_native": 0.045395335791399045
+      },
+      "frozen_delta_source_native": [
+        -0.13582581064956387,
+        0.7519844343992973
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 1.0113501218287764,
+      "joint_shift_change_reference149_native": 0.0044442957028315135
+    },
+    {
+      "frame": 151,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.896434333457488,
+          "bias": 0.050835399404562755,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0,
+          "fit_rmse": 0.06736623604370684,
+          "validation_rmse": 0.03533003219433515,
+          "validation_mean_error": 0.0009960770390956132,
+          "validation_max_abs": 0.242041086659039
+        },
+        "after": {
+          "delta_source_native": [
+            -0.36528232805638483,
+            1.7342453744185005
+          ],
+          "gain": 0.959612914954193,
+          "bias": 0.01949361848935693,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.04371947388009411,
+          "validation_rmse": 0.03295252421320321,
+          "validation_mean_error": 5.531851141533122e-05,
+          "validation_max_abs": 0.21102518160128936
+        },
+        "delta_source_native": [
+          -0.36528232805638483,
+          1.7342453744185005
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 8,
+        "status": 2,
+        "optimality": 0.00011991768851782737,
+        "motion_singular_values": [
+          4.0278005945470285,
+          3.376198650952542
+        ],
+        "motion_condition": 1.192998697932258,
+        "probes": [],
+        "source_support_gap_native": 6.885579983065519,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.885579983065519,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.365142349524154,
+          1.7351362284409397
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.365142349524154,
+          -1.7351362284409397
+        ],
+        "change_from_frozen_source_native": 0.13228017658124244
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9769094816998869,
+          "bias": 0.010739459777849854,
+          "lap_coefficient": 0.7351303066410002,
+          "beta_source_native_squared": 0.7525060616279668,
+          "rank": 3,
+          "standardized_condition": 1.8556317460908789,
+          "fit_rmse": 0.06480043108864221,
+          "validation_rmse": 0.03656551209069791,
+          "validation_mean_error": -0.00022272974841692947,
+          "validation_max_abs": 0.25032058856920864
+        },
+        "after": {
+          "delta_source_native": [
+            -0.3774786155425966,
+            1.7241625643128238
+          ],
+          "gain": 0.9937747296206938,
+          "bias": 0.0024581752722331275,
+          "lap_coefficient": 0.3064195193917275,
+          "beta_source_native_squared": 0.30833901311686845,
+          "rank": 3,
+          "standardized_condition": 1.83918935954857,
+          "fit_rmse": 0.04299815823310667,
+          "validation_rmse": 0.033079281551207644,
+          "validation_mean_error": -0.0004701254353246872,
+          "validation_max_abs": 0.2080133637388249
+        },
+        "delta_source_native": [
+          -0.3774786155425966,
+          1.7241625643128238
+        ],
+        "beta_source_native_squared": 0.30833901311686845,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 9,
+        "status": 2,
+        "optimality": 0.00042660664425190974,
+        "motion_singular_values": [
+          3.7088994612956068,
+          3.1456996921239346
+        ],
+        "motion_condition": 1.1790379960877344,
+        "probes": [],
+        "source_support_gap_native": 6.885579983065519,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.885579983065519,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.3773462612114657,
+          1.7250508292508935
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.3773462612114657,
+          -1.7250508292508935
+        ],
+        "change_from_frozen_source_native": 0.12762828632832462
+      },
+      "frozen_delta_source_native": [
+        -0.32182696945364636,
+        1.609306681752569
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 1.0038466654992593,
+      "joint_shift_change_reference149_native": 0.015831953047375082
+    },
+    {
+      "frame": 152,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.8107801815531782,
+          "bias": 0.09311627903656686,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000004,
+          "fit_rmse": 0.08881845588488223,
+          "validation_rmse": 0.047658885929930395,
+          "validation_mean_error": 0.001808942440303188,
+          "validation_max_abs": 0.29892261121687386
+        },
+        "after": {
+          "delta_source_native": [
+            -0.5383037898931994,
+            2.722791000282811
+          ],
+          "gain": 0.9317482044945599,
+          "bias": 0.032865944226454294,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000007,
+          "fit_rmse": 0.05638479917078459,
+          "validation_rmse": 0.04479796268976444,
+          "validation_mean_error": -0.0004211607774339029,
+          "validation_max_abs": 0.2717343306580756
+        },
+        "delta_source_native": [
+          -0.5383037898931994,
+          2.722791000282811
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 11,
+        "status": 2,
+        "optimality": 0.00021275775731546262,
+        "motion_singular_values": [
+          3.9508613240609276,
+          3.4873278474220393
+        ],
+        "motion_condition": 1.132919386108636,
+        "probes": [],
+        "source_support_gap_native": 6.866582784494277,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.866582784494277,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.5380494614899851,
+          2.724678845105816
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.5380494614899851,
+          -2.724678845105816
+        ],
+        "change_from_frozen_source_native": 0.10324078437073385
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.9330543651763239,
+          "bias": 0.03212610039546265,
+          "lap_coefficient": 1.1324108076356512,
+          "beta_source_native_squared": 1.2136600501532984,
+          "rank": 3,
+          "standardized_condition": 1.8533534146164867,
+          "fit_rmse": 0.08428524417603388,
+          "validation_rmse": 0.048749908865024956,
+          "validation_mean_error": -0.0001324824476051667,
+          "validation_max_abs": 0.30670399017766636
+        },
+        "after": {
+          "delta_source_native": [
+            -0.5560607801149048,
+            2.7057124105247126
+          ],
+          "gain": 0.9691909908039525,
+          "bias": 0.014183116720714725,
+          "lap_coefficient": 0.33652198462058425,
+          "beta_source_native_squared": 0.3472194725432149,
+          "rank": 3,
+          "standardized_condition": 1.8243627359332004,
+          "fit_rmse": 0.055700327228487286,
+          "validation_rmse": 0.044592889924032125,
+          "validation_mean_error": -0.0010106628433857773,
+          "validation_max_abs": 0.2677236459257194
+        },
+        "delta_source_native": [
+          -0.5560607801149048,
+          2.7057124105247126
+        ],
+        "beta_source_native_squared": 0.3472194725432149,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 13,
+        "status": 2,
+        "optimality": 0.0017449143863955566,
+        "motion_singular_values": [
+          3.5850685465625123,
+          3.1752290683469337
+        ],
+        "motion_condition": 1.1290739878584402,
+        "probes": [],
+        "source_support_gap_native": 6.866582784494277,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.866582784494277,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.5558217730801579,
+          2.707593101633174
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.5558217730801579,
+          -2.707593101633174
+        ],
+        "change_from_frozen_source_native": 0.09729343609363511
+      },
+      "frozen_delta_source_native": [
+        -0.49768813315609584,
+        2.627875100743808
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9954222747326149,
+      "joint_shift_change_reference149_native": 0.02465314765442976
+    },
+    {
+      "frame": 153,
+      "train_phase": "G2",
+      "test_phase": "G1",
+      "support": "top-bottom",
+      "translation": {
+        "model": "translation",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.7143192491440601,
+          "bias": 0.14059011486247566,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0,
+          "fit_rmse": 0.10543508614446997,
+          "validation_rmse": 0.06022886600517354,
+          "validation_mean_error": 0.0021030207975874767,
+          "validation_max_abs": 0.32531098818184956
+        },
+        "after": {
+          "delta_source_native": [
+            -0.8239958651143626,
+            3.888137916641727
+          ],
+          "gain": 0.888977775664299,
+          "bias": 0.053277743633938286,
+          "lap_coefficient": 0.0,
+          "beta_source_native_squared": 0.0,
+          "rank": 2,
+          "standardized_condition": 1.0000000000000002,
+          "fit_rmse": 0.06945707880662841,
+          "validation_rmse": 0.055258260065154025,
+          "validation_mean_error": -0.001695868892235648,
+          "validation_max_abs": 0.32144812195697514
+        },
+        "delta_source_native": [
+          -0.8239958651143626,
+          3.888137916641727
+        ],
+        "beta_source_native_squared": 0.0,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 15,
+        "status": 2,
+        "optimality": 0.0001665161196379666,
+        "motion_singular_values": [
+          3.7628765473305585,
+          3.185381461381588
+        ],
+        "motion_condition": 1.1812954250378838,
+        "probes": [],
+        "source_support_gap_native": 6.84822075501048,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.84822075501048,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.8236245933687975,
+          3.89144285766102
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.8236245933687975,
+          -3.89144285766102
+        ],
+        "change_from_frozen_source_native": 0.2818659623284775
+      },
+      "joint": {
+        "model": "translation-plus-laplacian",
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain": 0.8480837000115143,
+          "bias": 0.07378521396697178,
+          "lap_coefficient": 1.2364325780441716,
+          "beta_source_native_squared": 1.4579133852323594,
+          "rank": 3,
+          "standardized_condition": 1.8420983660134902,
+          "fit_rmse": 0.10073546282326502,
+          "validation_rmse": 0.05888881517638595,
+          "validation_mean_error": -0.00022072476676218185,
+          "validation_max_abs": 0.33617744188579124
+        },
+        "after": {
+          "delta_source_native": [
+            -0.8436108084864521,
+            3.822230171004236
+          ],
+          "gain": 0.9323142224828028,
+          "bias": 0.03160172359039814,
+          "lap_coefficient": 0.390857838182448,
+          "beta_source_native_squared": 0.41923401869980337,
+          "rank": 3,
+          "standardized_condition": 1.8156117852226816,
+          "fit_rmse": 0.06870557887882907,
+          "validation_rmse": 0.054633307689140743,
+          "validation_mean_error": -0.002453353937951721,
+          "validation_max_abs": 0.3142252702668883
+        },
+        "delta_source_native": [
+          -0.8436108084864521,
+          3.822230171004236
+        ],
+        "beta_source_native_squared": 0.41923401869980337,
+        "converged": true,
+        "at_translation_bound": false,
+        "nfev": 13,
+        "status": 2,
+        "optimality": 9.952251262564323e-05,
+        "motion_singular_values": [
+          3.3498309746218364,
+          2.900485954097343
+        ],
+        "motion_condition": 1.1549205986982045,
+        "probes": [],
+        "source_support_gap_native": 6.84822075501048,
+        "fit_samples": 12136,
+        "validation_samples": 12136,
+        "admitted": true,
+        "refusal_reasons": [],
+        "original_bilinear_support_gap_native": 8.84822075501048,
+        "sampler_radius_native": 2,
+        "delta_reference149_native": [
+          -0.8432724981600747,
+          3.825487948402126
+        ],
+        "inverse_observation_delta_reference149_native": [
+          0.8432724981600747,
+          -3.825487948402126
+        ],
+        "change_from_frozen_source_native": 0.22310036504268468
+      },
+      "frozen_delta_source_native": [
+        -0.7708538182772289,
+        3.6113268916132455
+      ],
+      "frozen_at_bound": false,
+      "incremental_holdout_rmse_ratio": 0.9886903356117906,
+      "joint_shift_change_reference149_native": 0.06881925761032327
+    }
+  ],
+  "stability": [
+    {
+      "frame": 145,
+      "joint_phase_support_spread_reference149_native": 0.030584837015491455,
+      "betas_source_native_squared": [
+        0.2021171552948155,
+        0.19642946608661513,
+        -0.21198856481604259,
+        -0.18590243367729714
+      ],
+      "coefficient_sign_stable": false,
+      "all_fits_admitted": false,
+      "all_holdout_improve_at_least_five_percent": false,
+      "stable": false,
+      "historical_boundary_refusal": true,
+      "reference_identity": false
+    },
+    {
+      "frame": 146,
+      "joint_phase_support_spread_reference149_native": 0.049958563864630996,
+      "betas_source_native_squared": [
+        0.19078033523483093,
+        0.2170278264392352,
+        -0.1781924194287991,
+        -0.10066123795245288
+      ],
+      "coefficient_sign_stable": false,
+      "all_fits_admitted": true,
+      "all_holdout_improve_at_least_five_percent": false,
+      "stable": false,
+      "historical_boundary_refusal": false,
+      "reference_identity": false
+    },
+    {
+      "frame": 147,
+      "joint_phase_support_spread_reference149_native": 0.044867981670473185,
+      "betas_source_native_squared": [
+        0.2109960741968848,
+        0.2379873361772955,
+        0.04100173713687659,
+        0.09383620840760636
+      ],
+      "coefficient_sign_stable": true,
+      "all_fits_admitted": true,
+      "all_holdout_improve_at_least_five_percent": false,
+      "stable": true,
+      "historical_boundary_refusal": false,
+      "reference_identity": false
+    },
+    {
+      "frame": 148,
+      "joint_phase_support_spread_reference149_native": 0.06972959476120187,
+      "betas_source_native_squared": [
+        0.10709291039732165,
+        0.11907145075650553,
+        0.05194096912396135,
+        0.07206059216302113
+      ],
+      "coefficient_sign_stable": true,
+      "all_fits_admitted": true,
+      "all_holdout_improve_at_least_five_percent": false,
+      "stable": true,
+      "historical_boundary_refusal": false,
+      "reference_identity": false
+    },
+    {
+      "frame": 149,
+      "joint_phase_support_spread_reference149_native": 0.0,
+      "betas_source_native_squared": [
+        -1.6007165159893076e-16,
+        -2.0564573888509943e-16,
+        -2.9764823712988387e-17,
+        -2.117125337612708e-16
+      ],
+      "coefficient_sign_stable": true,
+      "all_fits_admitted": true,
+      "all_holdout_improve_at_least_five_percent": false,
+      "stable": true,
+      "historical_boundary_refusal": false,
+      "reference_identity": true
+    },
+    {
+      "frame": 150,
+      "joint_phase_support_spread_reference149_native": 0.04622981232347989,
+      "betas_source_native_squared": [
+        0.04912394026965012,
+        0.05441143909565246,
+        0.12977044226104398,
+        0.15340218249679166
+      ],
+      "coefficient_sign_stable": true,
+      "all_fits_admitted": true,
+      "all_holdout_improve_at_least_five_percent": false,
+      "stable": true,
+      "historical_boundary_refusal": false,
+      "reference_identity": false
+    },
+    {
+      "frame": 151,
+      "joint_phase_support_spread_reference149_native": 0.13678085297284445,
+      "betas_source_native_squared": [
+        0.15749660368400514,
+        0.15317863205327795,
+        0.31331109124313644,
+        0.30833901311686845
+      ],
+      "coefficient_sign_stable": true,
+      "all_fits_admitted": true,
+      "all_holdout_improve_at_least_five_percent": false,
+      "stable": true,
+      "historical_boundary_refusal": false,
+      "reference_identity": false
+    },
+    {
+      "frame": 152,
+      "joint_phase_support_spread_reference149_native": 0.1598534241887155,
+      "betas_source_native_squared": [
+        0.24659662514776118,
+        0.24532068387500186,
+        0.3510280829293988,
+        0.3472194725432149
+      ],
+      "coefficient_sign_stable": true,
+      "all_fits_admitted": true,
+      "all_holdout_improve_at_least_five_percent": false,
+      "stable": true,
+      "historical_boundary_refusal": false,
+      "reference_identity": false
+    },
+    {
+      "frame": 153,
+      "joint_phase_support_spread_reference149_native": 0.2496719292546129,
+      "betas_source_native_squared": [
+        0.36571312087488567,
+        0.3512160035353842,
+        0.39864264545426403,
+        0.41923401869980337
+      ],
+      "coefficient_sign_stable": true,
+      "all_fits_admitted": true,
+      "all_holdout_improve_at_least_five_percent": false,
+      "stable": true,
+      "historical_boundary_refusal": false,
+      "reference_identity": false
+    }
+  ],
+  "all_eligible_stable": false,
+  "incremental_blur_identified": false,
+  "excluded_from_admission": [
+    {
+      "frame": 145,
+      "reason": "historical translation bound"
+    },
+    {
+      "frame": 149,
+      "reason": "reference identity"
+    }
+  ],
+  "thresholds": {
+    "phase_support_spread_native": 0.25,
+    "sign_dead_zone_beta": 0.02,
+    "maximum_abs_beta": 1.0,
+    "maximum_incremental_rmse_ratio": 0.95
+  },
+  "source_bindings": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-raw-samples-2\\receipt.json",
+      "bytes": 9301,
+      "sha256": "7815340c1dac862c65904746b98beb0d2db80908e60f4f9c7cbb2c534952f638"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\local-green-translation-1\\result.json",
+      "bytes": 20102,
+      "sha256": "ed8880a95a4dc7f0af5da6b27968ae74805eb205780d5281c84790c53eac1b6e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-raw-samples-2\\frame-145-cfa.npy",
+      "bytes": 336328,
+      "sha256": "aee8bc13be0c303268c9e10a177421e05bb01815234d29097aadfb605c1e6186"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-raw-samples-2\\frame-146-cfa.npy",
+      "bytes": 337968,
+      "sha256": "dcb642b341725ee87f09f4e2f4ad21ecac4841b1896e129e9b91be58982988e7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-raw-samples-2\\frame-147-cfa.npy",
+      "bytes": 336328,
+      "sha256": "ba08b871400f58fe9ad9f40e54ff9892b0ad4b1a1993573e661c3f9efd1fa062"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-raw-samples-2\\frame-148-cfa.npy",
+      "bytes": 336328,
+      "sha256": "cc986e3a4a4710bf8d98b42fe9478817eb3c46b5834ede11fc755b285070fb91"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-raw-samples-2\\frame-149-cfa.npy",
+      "bytes": 334688,
+      "sha256": "a1a70e2183653765f6e7d33390f9a47d938e4303f8e024d40a326574f2393882"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-raw-samples-2\\frame-150-cfa.npy",
+      "bytes": 336328,
+      "sha256": "4dc1af52d66ad5cbec5c2908f72d4cbce30f36fd1d4bb269ff0daed0db103f3e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-raw-samples-2\\frame-151-cfa.npy",
+      "bytes": 336328,
+      "sha256": "2094a268d02d781803b57ffbada156e48c87b613b017ec26ec5db1ccb1d2ec5f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-raw-samples-2\\frame-152-cfa.npy",
+      "bytes": 336328,
+      "sha256": "675afb988937f6b48ceb77b400afa891314b08dd90a226580833d2ec9eed4129"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-raw-samples-2\\frame-153-cfa.npy",
+      "bytes": 336328,
+      "sha256": "6593a27b1dbc431c79ce51f2f0c0a541c0f6109cb930bc1b626b87d21dcc1fd7"
+    }
+  ],
+  "source_map_sha256": "ce8534c9e65c5c761373bad87df5352c1c46319b7eaf7f7c91477ea61b4f4922",
+  "saved_photographic_arrays_read": 9,
+  "raw_decodes": 0,
+  "cpu_seconds": 8.4375,
+  "numpy": "2.4.4",
+  "scipy": "1.17.1"
+}

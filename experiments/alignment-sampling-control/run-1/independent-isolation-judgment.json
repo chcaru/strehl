@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "checks": {
+    "exact_three_registered_phases": true,
+    "phase_0_known_motion_unit_only": true,
+    "phase_0_same_discrete_derivative": true,
+    "phase_0_exact_identified_finite_fit": true,
+    "phase_0_bilinear_identified_finite_fit": true,
+    "phase_0_exact_near_zero_beta": true,
+    "phase_1_known_motion_unit_only": true,
+    "phase_1_same_discrete_derivative": true,
+    "phase_1_exact_identified_finite_fit": true,
+    "phase_1_bilinear_identified_finite_fit": true,
+    "phase_1_exact_near_zero_beta": true,
+    "phase_2_known_motion_unit_only": true,
+    "phase_2_same_discrete_derivative": true,
+    "phase_2_exact_identified_finite_fit": true,
+    "phase_2_bilinear_identified_finite_fit": true,
+    "phase_2_exact_near_zero_beta": true,
+    "same_support_counts_in_all_arms": true,
+    "integer_bilinear_placebo": true,
+    "half_bilinear_has_negative_nonzero_beta": true,
+    "half_bilinear_exceeds_exact_magnitude": true
+  },
+  "photographic_admission": false,
+  "scope": "Known-motion interpolation unit evidence; not dominance in the original guide or photographic truth."
+}

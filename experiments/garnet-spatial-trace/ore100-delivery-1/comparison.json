@@ -1,0 +1,57 @@
+{
+  "code": "100",
+  "inputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\inventory.json",
+      "bytes": 4758,
+      "sha256": "a926adb0a1c3b24fc48ae0ad1c1f9559df54e479ef4863b327cd24e9546218c7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\peacock-ore\\final\\peacock-ore-100msdcf-master.tiff",
+      "bytes": 179672275,
+      "sha256": "cfbfd68d72c5e02b1c47d7f6cb1e6465824d330ef64f828dff5bde9d09335530"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\ore-100\\stack-master.tiff",
+      "bytes": 179672281,
+      "sha256": "65ebf5e8a76ed34a0919400987c54f0738f68e54abccb570e15761951e531be7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\ore-100\\completion.json",
+      "bytes": 1644,
+      "sha256": "ef514e8864c67f87cdc44e8a55bb369e181f98db5573e4d1144e7dee6fcc7c8f"
+    }
+  ],
+  "full_shape": [
+    4468,
+    6702,
+    3
+  ],
+  "pixels_changed": 2576,
+  "pixels_max_channel_change_gt_32": 2520,
+  "max_channel_change": 65535,
+  "selected_peak_native_xy": [
+    4389,
+    584
+  ],
+  "diagnostic_crop_native_xywh": [
+    4197,
+    392,
+    384,
+    384
+  ],
+  "views": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\ore100-delivery-1\\before-largest-change-native.png",
+      "bytes": 273542,
+      "sha256": "e56d8050dbd382c3ea17dbab312d05b67083c90b416cc2dd8b1a0116c398423c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\ore100-delivery-1\\corrected-largest-change-native.png",
+      "bytes": 273271,
+      "sha256": "ce29d5f2320be97860c7d7032ed3f066a1242333511108677a1f785b62d5bbef"
+    }
+  ],
+  "scope": "Whole delivered RGB comparison. Differences include automatic-tone changes. Change counts are not quality metrics; view location is deliberately selected by change.",
+  "photographic_verdict": null
+}

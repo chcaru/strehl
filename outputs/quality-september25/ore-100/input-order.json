@@ -1,0 +1,1451 @@
+[
+  {
+    "index": 0,
+    "mtime_ns": 1790149771980000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00031.ARW",
+    "sha256": "b1d471226dc1eb79c7bc3865bd246a8541396f69cc0ea5c9bca4af920b8521a4",
+    "bytes": 36790272
+  },
+  {
+    "index": 1,
+    "mtime_ns": 1790149774440000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00032.ARW",
+    "sha256": "f0a4e302b75bb12465dca4332db6cf1977e858f2c2ba10588bcbdc4091917b61",
+    "bytes": 36802560
+  },
+  {
+    "index": 2,
+    "mtime_ns": 1790149776930000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00033.ARW",
+    "sha256": "e233012c2d8ddf6a2e634f8a7bfef4591287dd63f9170c3f470db7f63dcb3e8b",
+    "bytes": 36814848
+  },
+  {
+    "index": 3,
+    "mtime_ns": 1790149779400000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00034.ARW",
+    "sha256": "617022b886607d1ef8edf1f0474304d469935d1b3d339fd35b1e90c61507b0d2",
+    "bytes": 36810752
+  },
+  {
+    "index": 4,
+    "mtime_ns": 1790149781900000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00035.ARW",
+    "sha256": "58acf5af7c997ed7fbe8adf9576575f9e167d68cd31ba7b000d53d1adaab83b7",
+    "bytes": 36835328
+  },
+  {
+    "index": 5,
+    "mtime_ns": 1790149784380000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00036.ARW",
+    "sha256": "47b87316efb3038b5d4fbae641cb153d09d2d3982eb3e9ddd7571aca0b901509",
+    "bytes": 36855808
+  },
+  {
+    "index": 6,
+    "mtime_ns": 1790149786830000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00037.ARW",
+    "sha256": "95543cfd887f3a06fd533115929575f385582c486f91adc83f8120644c183c18",
+    "bytes": 36868096
+  },
+  {
+    "index": 7,
+    "mtime_ns": 1790149789290000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00038.ARW",
+    "sha256": "ed6902611a56fae34d71122d0e3806d6208d197c5b0fdb1b60fec4ca458686b0",
+    "bytes": 36888576
+  },
+  {
+    "index": 8,
+    "mtime_ns": 1790149791750000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00039.ARW",
+    "sha256": "02bf0032ea3fa5c015d9d00c7b35b8f4ddd377502244e12595d55cc523c72181",
+    "bytes": 36909056
+  },
+  {
+    "index": 9,
+    "mtime_ns": 1790149794220000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00040.ARW",
+    "sha256": "c3518daf1c71622c4c0c019baa7fc8b8ffb6378b86b488c1057205ae5d2e108c",
+    "bytes": 36929536
+  },
+  {
+    "index": 10,
+    "mtime_ns": 1790149796700000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00041.ARW",
+    "sha256": "980c86d59abab738d2853594b711114520e484f6d02f9f18c7c8646a7cddf9b3",
+    "bytes": 36950016
+  },
+  {
+    "index": 11,
+    "mtime_ns": 1790149799170000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00042.ARW",
+    "sha256": "d12081aba25029d8e1920d4e8e189e8211d58deca745fe59bbdb4914c2b1195e",
+    "bytes": 36978688
+  },
+  {
+    "index": 12,
+    "mtime_ns": 1790149801620000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00043.ARW",
+    "sha256": "3e3df32a2cbf7343ab8e8d44b058e21f4a6de425708cd16d206e688f6735227b",
+    "bytes": 36995072
+  },
+  {
+    "index": 13,
+    "mtime_ns": 1790149804080000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00044.ARW",
+    "sha256": "ff65a95ce7f187253d061fc43da242c29c83a55cad7e8e413d4669e5d297ba7c",
+    "bytes": 37027840
+  },
+  {
+    "index": 14,
+    "mtime_ns": 1790149806550000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00045.ARW",
+    "sha256": "46b93f381ac13354f27c23a574ba62c8455fff761c445df93ef4ba7942c6244a",
+    "bytes": 37068800
+  },
+  {
+    "index": 15,
+    "mtime_ns": 1790149809040000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00046.ARW",
+    "sha256": "3dfb025511fece63ad68b26a6ea8922a6ae77697c6a8520a8435263efee8ff5f",
+    "bytes": 37101568
+  },
+  {
+    "index": 16,
+    "mtime_ns": 1790149811510000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00047.ARW",
+    "sha256": "61bd08c8607533352eccb11a742a1e17504dbd4bba1586cf62d9f587aee0584d",
+    "bytes": 37150720
+  },
+  {
+    "index": 17,
+    "mtime_ns": 1790149813970000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00048.ARW",
+    "sha256": "ff9ab393f84f7b9850927926bb0ea220634d905f3dd6395fa0b017a8442a5900",
+    "bytes": 37187584
+  },
+  {
+    "index": 18,
+    "mtime_ns": 1790149816420000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00049.ARW",
+    "sha256": "6b28e50e8ad494d7ef45a1507e697041442deb8472b111e6e9aa3532b4102943",
+    "bytes": 37244928
+  },
+  {
+    "index": 19,
+    "mtime_ns": 1790149818880000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00050.ARW",
+    "sha256": "22862c5195d4b37391d8236ef2349a816d4e4cfee67322b279cfc80ed7f2627e",
+    "bytes": 37298176
+  },
+  {
+    "index": 20,
+    "mtime_ns": 1790149821360000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00051.ARW",
+    "sha256": "3773f64c57c71d52cf3fa5f933ac7e76a82bad4196f5634df256e1929dfbd85c",
+    "bytes": 37359616
+  },
+  {
+    "index": 21,
+    "mtime_ns": 1790149823830000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00052.ARW",
+    "sha256": "62966df3d3dff548f44ae4444c4dbab658817375e69f5aa74977c8427586991a",
+    "bytes": 37416960
+  },
+  {
+    "index": 22,
+    "mtime_ns": 1790149826290000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00053.ARW",
+    "sha256": "8a6486df57321ef4c34fcd75845ad5b9a8e297d113b7f283fb957cde6098c0c2",
+    "bytes": 37474304
+  },
+  {
+    "index": 23,
+    "mtime_ns": 1790149828750000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00054.ARW",
+    "sha256": "a8329e4fba8fbd12c47c76334359fbee194023d15b7464d2bf4e1da1f7a96965",
+    "bytes": 37531648
+  },
+  {
+    "index": 24,
+    "mtime_ns": 1790149831210000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00055.ARW",
+    "sha256": "ad54099884796a6a32398fa23dddabc15c14399717ed0b0d4f7f091582f16ddc",
+    "bytes": 37584896
+  },
+  {
+    "index": 25,
+    "mtime_ns": 1790149833700000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00056.ARW",
+    "sha256": "8961cfdb9889ac100409e6e44fe60eaaa5f528032d32980ded38c338ae65aa17",
+    "bytes": 37634048
+  },
+  {
+    "index": 26,
+    "mtime_ns": 1790149836180000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00057.ARW",
+    "sha256": "ae84211715965e1177249b96f13d3561115818edb1fd99a8fcde8b22b7407364",
+    "bytes": 37675008
+  },
+  {
+    "index": 27,
+    "mtime_ns": 1790149838660000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00058.ARW",
+    "sha256": "f042f5da07bc885eab8123a01b2dabd8ac713be27e4f16ecb8c120ed05dc1545",
+    "bytes": 37707776
+  },
+  {
+    "index": 28,
+    "mtime_ns": 1790149841130000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00059.ARW",
+    "sha256": "c391054879edca05477da38b4ef7c627e55a17e25e88de60a07bd0320fc12790",
+    "bytes": 37740544
+  },
+  {
+    "index": 29,
+    "mtime_ns": 1790149843580000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00060.ARW",
+    "sha256": "8624a6e180c21cdfbd4170bdfdfbfc955802ce19a44c48e0ee762f06e9eb0ab0",
+    "bytes": 37761024
+  },
+  {
+    "index": 30,
+    "mtime_ns": 1790149846040000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00061.ARW",
+    "sha256": "4b8293405d9126c03349e8de260cd8183b451626ac288a8a3b373a5a6110e90b",
+    "bytes": 37793792
+  },
+  {
+    "index": 31,
+    "mtime_ns": 1790149848540000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00062.ARW",
+    "sha256": "9d2f02e62d70ca547bd738259ba0eef15857407d34213f6203b14ba036381fd4",
+    "bytes": 37826560
+  },
+  {
+    "index": 32,
+    "mtime_ns": 1790149851010000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00063.ARW",
+    "sha256": "0f8bab7abd99bf8a070373b1e4ee45dfbd7a80230e279f3e6a3ffb4cd40361a4",
+    "bytes": 37851136
+  },
+  {
+    "index": 33,
+    "mtime_ns": 1790149853500000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00064.ARW",
+    "sha256": "30a883089f94aaf731a57a44a86991c64df7f173c568c6c0b9a6a1a9e09b44ba",
+    "bytes": 37900288
+  },
+  {
+    "index": 34,
+    "mtime_ns": 1790149855970000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00065.ARW",
+    "sha256": "a6ecfdebaa483dcca336046637da3a21fc928ac4b2e66c03b2fc90be7f4d1488",
+    "bytes": 37945344
+  },
+  {
+    "index": 35,
+    "mtime_ns": 1790149858430000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00066.ARW",
+    "sha256": "9ca254cae872a36ed67639688e0e28f99187649e96e3bff00bd1e4e085bd190c",
+    "bytes": 37990400
+  },
+  {
+    "index": 36,
+    "mtime_ns": 1790149860890000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00067.ARW",
+    "sha256": "3850f797ecc364d9f66e55ec8ecfebaf0102f50848cc1228fdff8ab3ba59de00",
+    "bytes": 38047744
+  },
+  {
+    "index": 37,
+    "mtime_ns": 1790149863380000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00068.ARW",
+    "sha256": "f09abddf83b9cfbbbf65cf97f3d09af3c2b53138468b5b7170a6229a71df948e",
+    "bytes": 38117376
+  },
+  {
+    "index": 38,
+    "mtime_ns": 1790149865840000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00069.ARW",
+    "sha256": "a1a6233047df41c4be6e8b1077c63691cd86a11f5c22cdda2f518db77bd8609a",
+    "bytes": 38207488
+  },
+  {
+    "index": 39,
+    "mtime_ns": 1790149868330000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00070.ARW",
+    "sha256": "c2cd008c373e82be0b1305eee1338647325cd08e9fc2204b9fd036eb1bd495ba",
+    "bytes": 38293504
+  },
+  {
+    "index": 40,
+    "mtime_ns": 1790149870830000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00071.ARW",
+    "sha256": "488590bc728e961c830637560d6e20574ece89fd18a4626148cde06871440f9d",
+    "bytes": 38387712
+  },
+  {
+    "index": 41,
+    "mtime_ns": 1790149873310000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00072.ARW",
+    "sha256": "a1812794a69fd032e1f527e9bccd0391f28945dc31b28f456ab88e1dd6be0342",
+    "bytes": 38486016
+  },
+  {
+    "index": 42,
+    "mtime_ns": 1790149875800000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00073.ARW",
+    "sha256": "cf0f2ee2f6a437dbdebf9b293b9c5581530da0a878cb9418457345fa552a6e5c",
+    "bytes": 38588416
+  },
+  {
+    "index": 43,
+    "mtime_ns": 1790149878280000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00074.ARW",
+    "sha256": "b28f2f2a9fce7ed478e1baf57e9335c7e8c3ea139579473b35169f10232c25b5",
+    "bytes": 38694912
+  },
+  {
+    "index": 44,
+    "mtime_ns": 1790149880740000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00075.ARW",
+    "sha256": "6ebd7d7c23e6e834155882879a3f1eb055621666b6e726ca0aff9ce20607d694",
+    "bytes": 38797312
+  },
+  {
+    "index": 45,
+    "mtime_ns": 1790149883220000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00076.ARW",
+    "sha256": "04f91f48435cde0620523dd9c9e8591c4662639db07d691542d78ba8046cd33b",
+    "bytes": 38912000
+  },
+  {
+    "index": 46,
+    "mtime_ns": 1790149885680000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00077.ARW",
+    "sha256": "d63bce40d59ecb3ed1bd1157afdc92d1f67aa529cc8f3f46ace9e75a3f4f3320",
+    "bytes": 39030784
+  },
+  {
+    "index": 47,
+    "mtime_ns": 1790149888160000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00078.ARW",
+    "sha256": "a414b9e683971d7b97ffff53a92943bb9ef696bea57c1f191731e9a1d1c12759",
+    "bytes": 39145472
+  },
+  {
+    "index": 48,
+    "mtime_ns": 1790149890650000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00079.ARW",
+    "sha256": "527b84c082edd37f860bc73f9ab92f7db69a329b044fac2f2235b0449a7367f3",
+    "bytes": 39260160
+  },
+  {
+    "index": 49,
+    "mtime_ns": 1790149893130000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00080.ARW",
+    "sha256": "b32acbbfa299b8f7078da222fbf7390d19608da0cab26af9cdf3891172dddacf",
+    "bytes": 39378944
+  },
+  {
+    "index": 50,
+    "mtime_ns": 1790149895620000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00081.ARW",
+    "sha256": "22e69c811d083bffe5ec57633d428eacdee3a19f4843c8ef00997d87533839bc",
+    "bytes": 39473152
+  },
+  {
+    "index": 51,
+    "mtime_ns": 1790149898090000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00082.ARW",
+    "sha256": "8a05f2eaacf03660a876ca8df268465768534c94e1b4d827425f6cb5640965dd",
+    "bytes": 39579648
+  },
+  {
+    "index": 52,
+    "mtime_ns": 1790149900590000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00083.ARW",
+    "sha256": "f62a687e2b02ff6b17e140ae8c39efe3987df33856f7df313a8712c3e44258c6",
+    "bytes": 39673856
+  },
+  {
+    "index": 53,
+    "mtime_ns": 1790149903050000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00084.ARW",
+    "sha256": "c19a9f8a26fa3758808f1d0c3daef24ce00a110f365595c871faed87a0b9bcbb",
+    "bytes": 39759872
+  },
+  {
+    "index": 54,
+    "mtime_ns": 1790149905510000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00085.ARW",
+    "sha256": "d1089c59747430346fc2f0fd621efc129a02e98d97dbeb30efa7f32fc4a7b142",
+    "bytes": 39829504
+  },
+  {
+    "index": 55,
+    "mtime_ns": 1790149907970000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00086.ARW",
+    "sha256": "09fc19c0c0eb7877370067f5f0ff6287683253e00801d1e78818466e17d994f1",
+    "bytes": 39882752
+  },
+  {
+    "index": 56,
+    "mtime_ns": 1790149910460000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00087.ARW",
+    "sha256": "065a6fc3cdb5c70cc91ab1221147e5d4ab22f8891164ab320f7d6a2de79ca0ae",
+    "bytes": 39931904
+  },
+  {
+    "index": 57,
+    "mtime_ns": 1790149912930000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00088.ARW",
+    "sha256": "f02f249e4b548eaec0e02a0e0f6c96a5376a321879780d2dfbc3a4e00df4fdc4",
+    "bytes": 39948288
+  },
+  {
+    "index": 58,
+    "mtime_ns": 1790149915390000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00089.ARW",
+    "sha256": "5a00099e9bccef9347e291a9999a0124c4b0552101d3a77a6912570044143ce7",
+    "bytes": 39985152
+  },
+  {
+    "index": 59,
+    "mtime_ns": 1790149917850000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00090.ARW",
+    "sha256": "199ebbb6b9488d9a145ec33839be696c138ffc1d986f72d37b0f99f3cf89b47e",
+    "bytes": 40013824
+  },
+  {
+    "index": 60,
+    "mtime_ns": 1790149920310000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00091.ARW",
+    "sha256": "f6f6306530cbdd7097ccc9ca45f4c6a99933ea1979621ad28810760565ad0a01",
+    "bytes": 40026112
+  },
+  {
+    "index": 61,
+    "mtime_ns": 1790149922790000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00092.ARW",
+    "sha256": "04aa4cf2c7a7974f0a0f2e6edf60fdb05a83199c6c9ecf25bd1f22537fb69907",
+    "bytes": 40046592
+  },
+  {
+    "index": 62,
+    "mtime_ns": 1790149925280000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00093.ARW",
+    "sha256": "9705b8bbf3115016abfaa532ba8a71d576a12ea21c45f807a6179d3b2455f750",
+    "bytes": 40103936
+  },
+  {
+    "index": 63,
+    "mtime_ns": 1790149927760000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00094.ARW",
+    "sha256": "b6ac8faf2df39b89e0f2db1028658bb8b6b25965c06702b0c4faf3d02a78eb83",
+    "bytes": 40153088
+  },
+  {
+    "index": 64,
+    "mtime_ns": 1790149930260000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00095.ARW",
+    "sha256": "e99fed1e71b4a9c33c7c9c6b3a349e8fe94737af7fce6a0bde42bb82f7762f9f",
+    "bytes": 40194048
+  },
+  {
+    "index": 65,
+    "mtime_ns": 1790149932740000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00096.ARW",
+    "sha256": "8dc51573d9b65f48cec7f6d5058ee65679cc603c5c76d8ba87a1d0b616566d07",
+    "bytes": 40226816
+  },
+  {
+    "index": 66,
+    "mtime_ns": 1790149935230000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00097.ARW",
+    "sha256": "1f42c05e8f0bb6258951939b693ae2de7119e4cf3ed5d08b78f5b74e99c44c0c",
+    "bytes": 40239104
+  },
+  {
+    "index": 67,
+    "mtime_ns": 1790149937680000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00098.ARW",
+    "sha256": "e0b3bb4541626eb8d633c538c25d5f06bf047d72728783ce7850ec95115970ae",
+    "bytes": 40243200
+  },
+  {
+    "index": 68,
+    "mtime_ns": 1790149940140000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00099.ARW",
+    "sha256": "9be9e2c157192e2809ca084097ca8b7adfcd43d86694f5efa1e41533fce17f42",
+    "bytes": 40235008
+  },
+  {
+    "index": 69,
+    "mtime_ns": 1790149942600000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00100.ARW",
+    "sha256": "e4482030cd8383ee3344d053af60ed8be282060e257dc32ebefde898a51166b6",
+    "bytes": 40226816
+  },
+  {
+    "index": 70,
+    "mtime_ns": 1790149945090000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00101.ARW",
+    "sha256": "29e3c972de8c66baa83980baea90fef443002f2348fd4b50a4e587cc6f5b9d63",
+    "bytes": 40206336
+  },
+  {
+    "index": 71,
+    "mtime_ns": 1790149947570000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00102.ARW",
+    "sha256": "d3191d62b3ae7883eb4b160d34a01e80cb002cd31d7ab4d870b209810838da3a",
+    "bytes": 40177664
+  },
+  {
+    "index": 72,
+    "mtime_ns": 1790149950050000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00103.ARW",
+    "sha256": "7908e90bd00ed03ed1edff527db64f8d01582ab4b3886e8670f6d141c0049b60",
+    "bytes": 40136704
+  },
+  {
+    "index": 73,
+    "mtime_ns": 1790149952510000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00104.ARW",
+    "sha256": "0ab7b09b958b86bb93a92691c74baa62b09c5a35f245fff19f4794852537857d",
+    "bytes": 40091648
+  },
+  {
+    "index": 74,
+    "mtime_ns": 1790149954970000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00105.ARW",
+    "sha256": "4536187ee30feffe806b731fd222faee78f5f3a7691b2edb6bcb070c61926871",
+    "bytes": 40042496
+  },
+  {
+    "index": 75,
+    "mtime_ns": 1790149957460000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00106.ARW",
+    "sha256": "f6b33377dc9e742a61a2216c545f37e895daf05976fff7ed4da60e3fb0b7683d",
+    "bytes": 39989248
+  },
+  {
+    "index": 76,
+    "mtime_ns": 1790149959920000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00107.ARW",
+    "sha256": "5cd85fbfdb75ec82e75f358a2d9384848459854a714a07ed1ad26d7771a66ad4",
+    "bytes": 39911424
+  },
+  {
+    "index": 77,
+    "mtime_ns": 1790149962400000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00108.ARW",
+    "sha256": "11fc96fd70199401f08951530d5b242f50d0cacd0f716f080024c90eadf42d77",
+    "bytes": 39821312
+  },
+  {
+    "index": 78,
+    "mtime_ns": 1790149964900000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00109.ARW",
+    "sha256": "e15f08b5a7ef38af972974154c022ed3c08fd5c9e49cdc4f76d95942abc23d19",
+    "bytes": 39776256
+  },
+  {
+    "index": 79,
+    "mtime_ns": 1790149967370000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00110.ARW",
+    "sha256": "b0cb20eb17331d9a3b6455a8a5a96dfe74e3629e5873281cbc58949a05278015",
+    "bytes": 39739392
+  },
+  {
+    "index": 80,
+    "mtime_ns": 1790149969880000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00111.ARW",
+    "sha256": "48bd92c27233e21134a6ac62e8a916dbea2042edfd35e6ab3d7e679c7ee4d6e9",
+    "bytes": 39682048
+  },
+  {
+    "index": 81,
+    "mtime_ns": 1790149972350000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00112.ARW",
+    "sha256": "b59e0bd90a3f996a24a0e7ecb3e2a3c648c0e8fdba6cfaf658bfb95653eb62f9",
+    "bytes": 39628800
+  },
+  {
+    "index": 82,
+    "mtime_ns": 1790149974850000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00113.ARW",
+    "sha256": "92d18c12471aff58c443f4221b487d4ba30049822e1debaf7d4f097f3d1675db",
+    "bytes": 39579648
+  },
+  {
+    "index": 83,
+    "mtime_ns": 1790149977310000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00114.ARW",
+    "sha256": "6633c340c4d5ad3d442ed61ae19b09e8972ea94882cbd92f2e93f4cf75c5ad7f",
+    "bytes": 39518208
+  },
+  {
+    "index": 84,
+    "mtime_ns": 1790149979770000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00115.ARW",
+    "sha256": "e64172aeb3387bd13e8ce7b3222cef3841aa9e064233a5adc68cf894fa6127d4",
+    "bytes": 39464960
+  },
+  {
+    "index": 85,
+    "mtime_ns": 1790149982230000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00116.ARW",
+    "sha256": "7d7b7f32e9cb27244253065c55acaea401a6ce4db028e5aa0c73eac27ff15241",
+    "bytes": 39432192
+  },
+  {
+    "index": 86,
+    "mtime_ns": 1790149984730000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00117.ARW",
+    "sha256": "7c8a37eef624cf2b4570b8d9a54b9fde3fb07cdcbb11122f7bf403d891f98357",
+    "bytes": 39383040
+  },
+  {
+    "index": 87,
+    "mtime_ns": 1790149987210000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00118.ARW",
+    "sha256": "5491291b518aad22950d78ee0ae4327f943ec503b6c26e24ab6766f17aea1fd1",
+    "bytes": 39329792
+  },
+  {
+    "index": 88,
+    "mtime_ns": 1790149989700000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00119.ARW",
+    "sha256": "a715e5bc1a8e94d9dd875e1185bbb40070c9b55c764d1453997b33fbc15d9a67",
+    "bytes": 39272448
+  },
+  {
+    "index": 89,
+    "mtime_ns": 1790149992180000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00120.ARW",
+    "sha256": "aec0b1656b7c897d29086c427a81105a32c91a72813fdee269d7efbdb87aa203",
+    "bytes": 39239680
+  },
+  {
+    "index": 90,
+    "mtime_ns": 1790149994650000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00121.ARW",
+    "sha256": "7920c33979efd24ef0c261f231146568d878ce055a5943d67d9cf9a4f8022329",
+    "bytes": 39194624
+  },
+  {
+    "index": 91,
+    "mtime_ns": 1790149997130000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00122.ARW",
+    "sha256": "fb7357d7abbb8c34b06919366837212336a2a2d12fd6f5c496e9c3bfeecd8a17",
+    "bytes": 39153664
+  },
+  {
+    "index": 92,
+    "mtime_ns": 1790149999590000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00123.ARW",
+    "sha256": "be6625647ed977ed2902d1bb7d574d088bc32a6972b4e149f1eb8c6fda1583b1",
+    "bytes": 39100416
+  },
+  {
+    "index": 93,
+    "mtime_ns": 1790150002050000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00124.ARW",
+    "sha256": "ece54ff9c12952038c9e76c2f3fa472e63a001d87ca82e9582d3518e361fcc88",
+    "bytes": 39055360
+  },
+  {
+    "index": 94,
+    "mtime_ns": 1790150004540000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00125.ARW",
+    "sha256": "3940654ed917cdc59c98665e13d5e5369604b882749cceb23760c6341ed49a7b",
+    "bytes": 39026688
+  },
+  {
+    "index": 95,
+    "mtime_ns": 1790150007020000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00126.ARW",
+    "sha256": "b0336c357e091f4d46780dabd1eff232b3ae948fd62ec1c4378c1d9a72cb7e4a",
+    "bytes": 39002112
+  },
+  {
+    "index": 96,
+    "mtime_ns": 1790150009510000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00127.ARW",
+    "sha256": "6d32c8958c263abd476e6fb3d8aa2f357fe2e68fa0a8ef57dc0d260730827265",
+    "bytes": 38989824
+  },
+  {
+    "index": 97,
+    "mtime_ns": 1790150012000000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00128.ARW",
+    "sha256": "db00c058fcf581e5d3c4f5b3fae07e80fa24c48ea2c57e73a45884de02026a35",
+    "bytes": 38961152
+  },
+  {
+    "index": 98,
+    "mtime_ns": 1790150014480000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00129.ARW",
+    "sha256": "7e37dc1a6ef29fd4938e408c42bbbf71cd380e899ca648f425544fc1c8a378f3",
+    "bytes": 38936576
+  },
+  {
+    "index": 99,
+    "mtime_ns": 1790150016960000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00130.ARW",
+    "sha256": "a0c661e115be02688813db636d7d64abef7fd9234ef250501d56152c6b78252d",
+    "bytes": 38920192
+  },
+  {
+    "index": 100,
+    "mtime_ns": 1790150019430000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00131.ARW",
+    "sha256": "a54c709e0593b66f7bed0008379d9c77efe2187fbd64ecc0154b29727e267b90",
+    "bytes": 38907904
+  },
+  {
+    "index": 101,
+    "mtime_ns": 1790150021890000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00132.ARW",
+    "sha256": "a79be98726533c6860eec1df149a439bd36904b5bc64428566d93724ded536c3",
+    "bytes": 38895616
+  },
+  {
+    "index": 102,
+    "mtime_ns": 1790150024350000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00133.ARW",
+    "sha256": "4244b5ca242ed9901128dcf8fe32686aaac5c39b511a5188d2e993ef93e24782",
+    "bytes": 38887424
+  },
+  {
+    "index": 103,
+    "mtime_ns": 1790150026840000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00134.ARW",
+    "sha256": "b2181536da66f816f25bee2a49369f2505f42e6fb1a194e90f00c0999c27bf6f",
+    "bytes": 38887424
+  },
+  {
+    "index": 104,
+    "mtime_ns": 1790150029320000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00135.ARW",
+    "sha256": "418e4632e27a086e1a694eed4293f185728b59809cb088f325253263fe0b0cd7",
+    "bytes": 38887424
+  },
+  {
+    "index": 105,
+    "mtime_ns": 1790150031820000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00136.ARW",
+    "sha256": "3d6a48e7604feffc453e05c8d080cf92018d12e918075b582e028605c9c4dde2",
+    "bytes": 38891520
+  },
+  {
+    "index": 106,
+    "mtime_ns": 1790150034300000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00137.ARW",
+    "sha256": "0ca3ab5c121fcf09c42bc9f85ba7ea878fdb03cf933f11df3c6c2e51c19ecfe8",
+    "bytes": 38891520
+  },
+  {
+    "index": 107,
+    "mtime_ns": 1790150036790000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00138.ARW",
+    "sha256": "7de738fcf62a9ab0654080c6056dc9205bc5019ec5015ec449392f4dc3bcc1e1",
+    "bytes": 38879232
+  },
+  {
+    "index": 108,
+    "mtime_ns": 1790150039270000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00139.ARW",
+    "sha256": "78e7b02a030d0f731e1f9e26e9b3ad1d05484884cbb969ce0e4da44f01485489",
+    "bytes": 38875136
+  },
+  {
+    "index": 109,
+    "mtime_ns": 1790150041730000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00140.ARW",
+    "sha256": "311cff956bf1ce49cc99c04a3efc96e5285b5d65b2729825aaa3c4c03bfa431c",
+    "bytes": 38879232
+  },
+  {
+    "index": 110,
+    "mtime_ns": 1790150044190000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00141.ARW",
+    "sha256": "37a6021ac1b430c6229bb651f1aa3dcd671b65473bb4de58b692ae1f29afa790",
+    "bytes": 38866944
+  },
+  {
+    "index": 111,
+    "mtime_ns": 1790150046640000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00142.ARW",
+    "sha256": "9a903c85d83326f1c103fbbda612f6188565e187edcdbf526a5573a8f119dae1",
+    "bytes": 38854656
+  },
+  {
+    "index": 112,
+    "mtime_ns": 1790150049140000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00143.ARW",
+    "sha256": "ddbe5c7e307b259f854ee447b951a65b4de33fcc434dfd64f0ea76bd7552f60f",
+    "bytes": 38846464
+  },
+  {
+    "index": 113,
+    "mtime_ns": 1790150051610000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00144.ARW",
+    "sha256": "333a8a944c1cbf5c1acfbe9243b41afbebc883d28a241f9b55efd469da9556ab",
+    "bytes": 38825984
+  },
+  {
+    "index": 114,
+    "mtime_ns": 1790150054110000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00145.ARW",
+    "sha256": "2edde787a06ebddd630803413c185ad5cd5e870c802eb3b1c5995b626aca4083",
+    "bytes": 38801408
+  },
+  {
+    "index": 115,
+    "mtime_ns": 1790150056570000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00146.ARW",
+    "sha256": "d28f80e95acc05971dd4258ace142913cfc2e513045e8472b9c59cb881b9d872",
+    "bytes": 38780928
+  },
+  {
+    "index": 116,
+    "mtime_ns": 1790150059030000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00147.ARW",
+    "sha256": "3add106f152dfa3ac79dcb2e21c940613ef6a70cb37bd1d5befba568d05f82fc",
+    "bytes": 38739968
+  },
+  {
+    "index": 117,
+    "mtime_ns": 1790150061490000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00148.ARW",
+    "sha256": "e8acc425c8091284c6932b2c8c12eda64d06df45299ede501381ed0369c7f921",
+    "bytes": 38715392
+  },
+  {
+    "index": 118,
+    "mtime_ns": 1790150063950000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00149.ARW",
+    "sha256": "0652ae4878ed9df8a951733d22902b1c5bafbe88725e9a5eebf7d5ada98dca30",
+    "bytes": 38678528
+  },
+  {
+    "index": 119,
+    "mtime_ns": 1790150066430000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00150.ARW",
+    "sha256": "1344545ebca05b836d3d8d4e7d37fb495eb2df2de0cf6409e65551686020642f",
+    "bytes": 38658048
+  },
+  {
+    "index": 120,
+    "mtime_ns": 1790150068890000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00151.ARW",
+    "sha256": "6a932f13cd60be0fab3a109093577584d67962307a6e237c85ab3013cd16ac53",
+    "bytes": 38641664
+  },
+  {
+    "index": 121,
+    "mtime_ns": 1790150071350000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00152.ARW",
+    "sha256": "b90af242590a443956eee26daa68f9ed8ebb2ce012e6149f7d5a8f70170a39d6",
+    "bytes": 38621184
+  },
+  {
+    "index": 122,
+    "mtime_ns": 1790150073800000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00153.ARW",
+    "sha256": "c17b38acdadab5071951803b7b40f6c0bd7d328728a7688ace3ed42c74605a3d",
+    "bytes": 38604800
+  },
+  {
+    "index": 123,
+    "mtime_ns": 1790150076290000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00154.ARW",
+    "sha256": "54d87db57a4024e94ec01cffefd8b80c71d9cd32468825bf2673ab0ec24e2250",
+    "bytes": 38580224
+  },
+  {
+    "index": 124,
+    "mtime_ns": 1790150078790000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00155.ARW",
+    "sha256": "9042cd0adda432d9698600e0bed49eb2725e32a6dc3f06591c7e4bf7bfbe4d64",
+    "bytes": 38543360
+  },
+  {
+    "index": 125,
+    "mtime_ns": 1790150081270000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00156.ARW",
+    "sha256": "79663bed9f017e45b0eb912a4be071fb425d9e59b23723fb08aaf60e54ec8981",
+    "bytes": 38518784
+  },
+  {
+    "index": 126,
+    "mtime_ns": 1790150083760000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00157.ARW",
+    "sha256": "fe54b9f27e6eef7d9619f9ccd3e3805a2d9611c93adf376bac5278b08e93e883",
+    "bytes": 38481920
+  },
+  {
+    "index": 127,
+    "mtime_ns": 1790150086240000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00158.ARW",
+    "sha256": "1062686d28b74628cc56dbb6e9b7a1c6d569a29a63cc5764b8260ea6289375c5",
+    "bytes": 38440960
+  },
+  {
+    "index": 128,
+    "mtime_ns": 1790150088720000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00159.ARW",
+    "sha256": "731bcec4a2472435944cb4bd2516962860bbe9d467686bbd2ac7fd702e49400a",
+    "bytes": 38391808
+  },
+  {
+    "index": 129,
+    "mtime_ns": 1790150091180000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00160.ARW",
+    "sha256": "77d5f51d903f8c05ee857d082d0e7d6cefd8f8543d7a4f635129de70038809f6",
+    "bytes": 38346752
+  },
+  {
+    "index": 130,
+    "mtime_ns": 1790150093650000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00161.ARW",
+    "sha256": "c38074fd5b523a732aba8b51048076b0767c77715a88aafff4fb9c80e786cfd2",
+    "bytes": 38301696
+  },
+  {
+    "index": 131,
+    "mtime_ns": 1790150096100000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00162.ARW",
+    "sha256": "22983845f455cf05c7493a167d76b1c398e9d1ce8afcb037568536a3e1a2b9f7",
+    "bytes": 38252544
+  },
+  {
+    "index": 132,
+    "mtime_ns": 1790150098600000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00163.ARW",
+    "sha256": "54d556deb27a6d4fd1c1ba65955c1998629e0aa8ecac7410e39609ca75d474d4",
+    "bytes": 38199296
+  },
+  {
+    "index": 133,
+    "mtime_ns": 1790150101070000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00164.ARW",
+    "sha256": "107d1ca574b2df2d329a1bfb56d7c6c23742bd75790a87ea67466164631969e3",
+    "bytes": 38146048
+  },
+  {
+    "index": 134,
+    "mtime_ns": 1790150103580000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00165.ARW",
+    "sha256": "5f2f8e4ff2e738e117d82f27834aadcc71e58de7fd203f225d9aafd49cb911a6",
+    "bytes": 38092800
+  },
+  {
+    "index": 135,
+    "mtime_ns": 1790150106050000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00166.ARW",
+    "sha256": "fa8a116b9c759f49cc186e8de070bf15005c5a77fd12caa4b5e60ad669796007",
+    "bytes": 38031360
+  },
+  {
+    "index": 136,
+    "mtime_ns": 1790150108510000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00167.ARW",
+    "sha256": "306c4e591011fa300102645ca0d8aa61cee64356e891ab63b983dd14444b96b0",
+    "bytes": 37974016
+  },
+  {
+    "index": 137,
+    "mtime_ns": 1790150110970000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00168.ARW",
+    "sha256": "d1fd73bce07eaa9386bbea0d3ea164377e0616d8ff1063fb56e593588e6c9b5b",
+    "bytes": 37920768
+  },
+  {
+    "index": 138,
+    "mtime_ns": 1790150113430000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00169.ARW",
+    "sha256": "e69acc1164f79d5d4e52a1ff01f491e0af4daff53c5de1f9df7cde7c26174f90",
+    "bytes": 37863424
+  },
+  {
+    "index": 139,
+    "mtime_ns": 1790150115920000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00170.ARW",
+    "sha256": "c3737e42238f3142e294dd6fe3728180f48ad4c051c620119fac3253587ad5b6",
+    "bytes": 37822464
+  },
+  {
+    "index": 140,
+    "mtime_ns": 1790150118420000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00171.ARW",
+    "sha256": "b804dcb499c223787f1cdfbb325ff11c7beb3895ab203c404540b9050148ba76",
+    "bytes": 37765120
+  },
+  {
+    "index": 141,
+    "mtime_ns": 1790150120890000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00172.ARW",
+    "sha256": "8d08c44f6ace001813b3889e51e6af76e043de70ae8e8e4d8f4a2cfcf796c35a",
+    "bytes": 37711872
+  },
+  {
+    "index": 142,
+    "mtime_ns": 1790150123370000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00173.ARW",
+    "sha256": "4fc8af85a2ee8e8ce9564bf9f06eb16497698e1d54453ae7e3e6ccffe2bf5559",
+    "bytes": 37654528
+  },
+  {
+    "index": 143,
+    "mtime_ns": 1790150125830000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00174.ARW",
+    "sha256": "4c4208767d0d0303babe2b33257249195dd832f5d7790b6bea4e7a5f45f2425b",
+    "bytes": 37605376
+  },
+  {
+    "index": 144,
+    "mtime_ns": 1790150128310000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00175.ARW",
+    "sha256": "5213b3fb3969d81153329bc9884f7245b605ad46dc7049040912e09194070e3f",
+    "bytes": 37560320
+  },
+  {
+    "index": 145,
+    "mtime_ns": 1790150130770000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00176.ARW",
+    "sha256": "7e901173ba33bbe86359a507f4b61d663348c8bbb004b16377887a2d4b46a289",
+    "bytes": 37523456
+  },
+  {
+    "index": 146,
+    "mtime_ns": 1790150133220000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00177.ARW",
+    "sha256": "e5e1a6f77894aa30f6ac74df4f557684888496c0b6590da4602424e44ad555af",
+    "bytes": 37482496
+  },
+  {
+    "index": 147,
+    "mtime_ns": 1790150135710000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00178.ARW",
+    "sha256": "d11bd071a13b518916422c82d82d30d94e78b43484a829e4ddfffcd1a311bb15",
+    "bytes": 37445632
+  },
+  {
+    "index": 148,
+    "mtime_ns": 1790150138180000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00179.ARW",
+    "sha256": "1823915b321ba6ba7649b8d168fd426befa02d637539932e0a6ed3f8e2cf2e40",
+    "bytes": 37412864
+  },
+  {
+    "index": 149,
+    "mtime_ns": 1790150140660000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00180.ARW",
+    "sha256": "a8e3db061ef979e02ee09e4c25b87e0280fa9981376b1fd31969c1be984cb816",
+    "bytes": 37376000
+  },
+  {
+    "index": 150,
+    "mtime_ns": 1790150143120000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00181.ARW",
+    "sha256": "5fdfdf325e88f95241b6b1b37f80d16fa46d9837f1951d75df38d465f4fc7971",
+    "bytes": 37347328
+  },
+  {
+    "index": 151,
+    "mtime_ns": 1790150145600000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00182.ARW",
+    "sha256": "e1e178b98c8bad8306cbd173f6c40854ac946f6f44cd221ff48e4d07e5126454",
+    "bytes": 37318656
+  },
+  {
+    "index": 152,
+    "mtime_ns": 1790150148070000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00183.ARW",
+    "sha256": "3dfa11a45bc5cbef19701694b61eb06a4b0d99d0fd8b150afc8ebf3a82579244",
+    "bytes": 37289984
+  },
+  {
+    "index": 153,
+    "mtime_ns": 1790150150560000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00184.ARW",
+    "sha256": "1e2185cda5f11b5e82a72eff484d27a602e481176619c63204a0fc7a02fcf05f",
+    "bytes": 37265408
+  },
+  {
+    "index": 154,
+    "mtime_ns": 1790150153040000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00185.ARW",
+    "sha256": "39bfc2cfacf4caae7f83ed5a395d1af5370592ab2c8c60d05c4b572846641f42",
+    "bytes": 37236736
+  },
+  {
+    "index": 155,
+    "mtime_ns": 1790150155510000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00186.ARW",
+    "sha256": "226b7aee6d5f886773b1d6d158d8e0c4c6c424bb46c722803d26de0fded57f09",
+    "bytes": 37212160
+  },
+  {
+    "index": 156,
+    "mtime_ns": 1790150157980000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00187.ARW",
+    "sha256": "b0b29acc196a26352841be9b34625386ecdeda01a6153b017737eeda2a4256cb",
+    "bytes": 37187584
+  },
+  {
+    "index": 157,
+    "mtime_ns": 1790150160430000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00188.ARW",
+    "sha256": "ade7cada6a4cd857fb8d860d2b7c2cab2901430757fb22f9e76837e59ec37dbe",
+    "bytes": 37171200
+  },
+  {
+    "index": 158,
+    "mtime_ns": 1790150162890000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00189.ARW",
+    "sha256": "e2036e8acd3316ac802c8dcff0119ea828701b72c177bff59c49745b752aebb6",
+    "bytes": 37146624
+  },
+  {
+    "index": 159,
+    "mtime_ns": 1790150165370000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00190.ARW",
+    "sha256": "2f200fed278b116544eb05cc87d7b223b198dae6b889b1b12568d76eab6d1a9a",
+    "bytes": 37130240
+  },
+  {
+    "index": 160,
+    "mtime_ns": 1790150167850000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00191.ARW",
+    "sha256": "7541eeb3e059a22309df83f82fa94eb9eb1884a18e00884b73728558534776c4",
+    "bytes": 37113856
+  },
+  {
+    "index": 161,
+    "mtime_ns": 1790150170320000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00192.ARW",
+    "sha256": "86f0f89f76f1a0d0d09adfd258479ba69f3c046b9b9ab067bbfc1597b9489bad",
+    "bytes": 37093376
+  },
+  {
+    "index": 162,
+    "mtime_ns": 1790150172780000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00193.ARW",
+    "sha256": "a5db3d0260f71d8dfbf6da79de4388c07d7aa7494f13c9e3dd28eb4d99681cfb",
+    "bytes": 37076992
+  },
+  {
+    "index": 163,
+    "mtime_ns": 1790150175240000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00194.ARW",
+    "sha256": "d36c20ee990c86238cd4c53e841081f58af6059aa19ed0c9f72dc84b04766e1c",
+    "bytes": 37060608
+  },
+  {
+    "index": 164,
+    "mtime_ns": 1790150177710000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00195.ARW",
+    "sha256": "6d6447b1feb5940ff935bbfafb2a39543686d2ad86215eb284f4691ae5f54418",
+    "bytes": 37048320
+  },
+  {
+    "index": 165,
+    "mtime_ns": 1790150180200000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00196.ARW",
+    "sha256": "8cd89c53ba50bd0a02292b5041d8be99f51aaba70bd049456d3307d732cdda0c",
+    "bytes": 37031936
+  },
+  {
+    "index": 166,
+    "mtime_ns": 1790150182670000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00197.ARW",
+    "sha256": "c9f5ba6934c1546e67b514511842ea1366c4ea8a9b8182003f384cab92be2d46",
+    "bytes": 37019648
+  },
+  {
+    "index": 167,
+    "mtime_ns": 1790150185160000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00198.ARW",
+    "sha256": "d25207a97c06eee4540499d4cf49da6e06a3d3078ae61ac51fb6546692b5497a",
+    "bytes": 37007360
+  },
+  {
+    "index": 168,
+    "mtime_ns": 1790150187640000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00199.ARW",
+    "sha256": "729e6ac386d5898f7b48f64aa225de89772d7ab1d9a1a99a09aa20f267aa5c31",
+    "bytes": 36995072
+  },
+  {
+    "index": 169,
+    "mtime_ns": 1790150190110000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00200.ARW",
+    "sha256": "6e9eb1c9813c54412cab64f4a8afdcc46560e8164fdfd9ae347482e05e90c89f",
+    "bytes": 36982784
+  },
+  {
+    "index": 170,
+    "mtime_ns": 1790150192570000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00201.ARW",
+    "sha256": "1783ef7979319d01fdd158a22fc28ec93de505b1d2f71fe2af53711010cfeccb",
+    "bytes": 36970496
+  },
+  {
+    "index": 171,
+    "mtime_ns": 1790150195020000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00202.ARW",
+    "sha256": "11291a9755674d25314ff4169a9891beb27fdaae5c634c25e19267d4f46940c5",
+    "bytes": 36962304
+  },
+  {
+    "index": 172,
+    "mtime_ns": 1790150197500000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00203.ARW",
+    "sha256": "448b3b13799d2147996f0cdbc820d55fd0df01e9aef5593d1930c019144037b3",
+    "bytes": 36950016
+  },
+  {
+    "index": 173,
+    "mtime_ns": 1790150199980000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00204.ARW",
+    "sha256": "e066db1ef9fddd914c83566650aad696d4a22883d5108935bdaf561fe5ad50f7",
+    "bytes": 36937728
+  },
+  {
+    "index": 174,
+    "mtime_ns": 1790150202450000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00205.ARW",
+    "sha256": "5281b84b49a8a724e2491ed15c7e3e3c027f1698869f3d2680bf1f86376b3b3e",
+    "bytes": 36929536
+  },
+  {
+    "index": 175,
+    "mtime_ns": 1790150204910000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00206.ARW",
+    "sha256": "da08b32a2abfce754e3d0b5d84511f316ed8debbba150db68d4d6bc1bc8e735e",
+    "bytes": 36909056
+  },
+  {
+    "index": 176,
+    "mtime_ns": 1790150207370000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00207.ARW",
+    "sha256": "56c394f315c510ce652d992b223a8f9384e8afa3f5fd5f2c2a9642f00c6b5a38",
+    "bytes": 36896768
+  },
+  {
+    "index": 177,
+    "mtime_ns": 1790150209820000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00208.ARW",
+    "sha256": "865a7f4815d4e16ccdb3381b3f796e59a7a3abd6456b98c96cfbb4e95c66f004",
+    "bytes": 36884480
+  },
+  {
+    "index": 178,
+    "mtime_ns": 1790150212330000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00209.ARW",
+    "sha256": "940639fbf004e70624b94d92b69ab457b75c58cf6488a2e90a09b3a8ef7e48f0",
+    "bytes": 36880384
+  },
+  {
+    "index": 179,
+    "mtime_ns": 1790150214810000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00210.ARW",
+    "sha256": "453807a0c8498b83e2b8b85d8d3ea2b4a97bf6ff1f104c454eb0c8363bcd9d46",
+    "bytes": 36872192
+  },
+  {
+    "index": 180,
+    "mtime_ns": 1790150217280000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00211.ARW",
+    "sha256": "4cfe69fd5d4d57e0569c198f3b051edea5f6386d538e7ec5fd56604d30a7621a",
+    "bytes": 36855808
+  },
+  {
+    "index": 181,
+    "mtime_ns": 1790150219750000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00212.ARW",
+    "sha256": "9a0e578acc8879c824d4e4a2b75d8b7b8ddc10bb7da728d579a3cf23c6a6f393",
+    "bytes": 36851712
+  },
+  {
+    "index": 182,
+    "mtime_ns": 1790150222210000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00213.ARW",
+    "sha256": "28e44c8ccafcf0280a56545a2da481dc3a13e6295ab9a432c6b7953f6034b99f",
+    "bytes": 36843520
+  },
+  {
+    "index": 183,
+    "mtime_ns": 1790150224670000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00214.ARW",
+    "sha256": "ae1335be66000a4c9d35a9b75c72aef1a65e2c0dd74fde9d61da5211f2691c7c",
+    "bytes": 36831232
+  },
+  {
+    "index": 184,
+    "mtime_ns": 1790150227130000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00215.ARW",
+    "sha256": "950011fa8b8a6f44f9bc3ad4753e5769df85c39b5e21dd40af744b8604049400",
+    "bytes": 36823040
+  },
+  {
+    "index": 185,
+    "mtime_ns": 1790150229600000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00216.ARW",
+    "sha256": "1b0dc8460d3636d2c794e0fd9d41f48a233eba22907f25d8b34e3cb8aae6de1c",
+    "bytes": 36818944
+  },
+  {
+    "index": 186,
+    "mtime_ns": 1790150232070000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00217.ARW",
+    "sha256": "d8bd2b14773f994eeb11897c7b331fb8f264479251ce31de8e4a95adc193b6de",
+    "bytes": 36814848
+  },
+  {
+    "index": 187,
+    "mtime_ns": 1790150234530000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00218.ARW",
+    "sha256": "db38a066a46d32dd4e306ac4fa3d228221ee5b310d0c9b6cc1b495c976c3ad95",
+    "bytes": 36806656
+  },
+  {
+    "index": 188,
+    "mtime_ns": 1790150236980000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00219.ARW",
+    "sha256": "47e1a8204a0d6439171c7a7336bb0239719dd5127aefae6257bf4a05c2a5fd52",
+    "bytes": 36802560
+  },
+  {
+    "index": 189,
+    "mtime_ns": 1790150239480000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00220.ARW",
+    "sha256": "c2f64313e43e7e5c7019a7e164e316ab4d15b7df41ff5d020e1af24dc9187e2f",
+    "bytes": 36794368
+  },
+  {
+    "index": 190,
+    "mtime_ns": 1790150241960000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00221.ARW",
+    "sha256": "3bea937d66c91db4478da8baf56768a535036f57a9908ace046ac9b4c0f2472f",
+    "bytes": 36790272
+  },
+  {
+    "index": 191,
+    "mtime_ns": 1790150244450000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00222.ARW",
+    "sha256": "3fa6209c5c71e4d26da421ecd161074e837635eafe5685a86e75b44bd119959c",
+    "bytes": 36786176
+  },
+  {
+    "index": 192,
+    "mtime_ns": 1790150246920000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00223.ARW",
+    "sha256": "2ec40f2f4c8593ff975a5b292ba36692dd06402d2d79bce0b38eb6d02baf7f8b",
+    "bytes": 36769792
+  },
+  {
+    "index": 193,
+    "mtime_ns": 1790150249390000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00224.ARW",
+    "sha256": "86e16eb61e4c7d98967ac58d6618672abbb3d165fe32aa08de1f20ebe985a0cd",
+    "bytes": 36765696
+  },
+  {
+    "index": 194,
+    "mtime_ns": 1790150251850000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00225.ARW",
+    "sha256": "45501978f70a04557c1bde4142cb17f4622913c4915713a25153c072c07742ab",
+    "bytes": 36757504
+  },
+  {
+    "index": 195,
+    "mtime_ns": 1790150254310000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00226.ARW",
+    "sha256": "0e1cb7465bf2bbbc2bad46809ff1e5623db55191b4d2558718c119edd4767020",
+    "bytes": 36749312
+  },
+  {
+    "index": 196,
+    "mtime_ns": 1790150256790000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00227.ARW",
+    "sha256": "d653061a3afecd03e9a77250ec3439d3e4a5b1d77b722d05beafacb21cd793ae",
+    "bytes": 36737024
+  },
+  {
+    "index": 197,
+    "mtime_ns": 1790150259270000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00228.ARW",
+    "sha256": "3a7e75517f31df4e142d29ba2bc96acc4ae0d993124e4491cfedd14099c32715",
+    "bytes": 36732928
+  },
+  {
+    "index": 198,
+    "mtime_ns": 1790150261740000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00229.ARW",
+    "sha256": "2f50343c178564594cdc5f46105c297fccb2f6bda1f214f658de109f8b12d23b",
+    "bytes": 36716544
+  },
+  {
+    "index": 199,
+    "mtime_ns": 1790150264220000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00230.ARW",
+    "sha256": "804f3a418983941abe827d3e2f5d481a9a330b6f5d0013108d34c5993a1d013a",
+    "bytes": 36708352
+  },
+  {
+    "index": 200,
+    "mtime_ns": 1790150266700000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00231.ARW",
+    "sha256": "1a25032ea2f1ac8a02a2551ba1ac6b88424c28d2895a10dbcab19d547cfef8e1",
+    "bytes": 36696064
+  },
+  {
+    "index": 201,
+    "mtime_ns": 1790150269170000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00232.ARW",
+    "sha256": "0098b0e70d2c64d525592161eb5f94924a5692b52973bb75a6355539fc56a467",
+    "bytes": 36691968
+  },
+  {
+    "index": 202,
+    "mtime_ns": 1790150271630000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00233.ARW",
+    "sha256": "514ee33b277e059b281eef2b8afa37e96bf7984e06cf4401cb628364a77a82b0",
+    "bytes": 36687872
+  },
+  {
+    "index": 203,
+    "mtime_ns": 1790150274120000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00234.ARW",
+    "sha256": "cea3324f3b300ac43c4204ee57bc050fda78d5f72063e46bdfb3bf04d47dfd75",
+    "bytes": 36675584
+  },
+  {
+    "index": 204,
+    "mtime_ns": 1790150276590000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00235.ARW",
+    "sha256": "898e4e63366c9e188d94bbeaf2a3cf821c0eda70d2039e5ea3fb3263b05fae27",
+    "bytes": 36667392
+  },
+  {
+    "index": 205,
+    "mtime_ns": 1790150279080000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00236.ARW",
+    "sha256": "eaacd298b287833098604805d3da6c3256c0024826c14b3c79a78578f46db409",
+    "bytes": 36659200
+  },
+  {
+    "index": 206,
+    "mtime_ns": 1790150281560000000,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00237.ARW",
+    "sha256": "b3f46f85919fe6baa38db6613ca994878c193559ddbf2e21f7629d7343e65212",
+    "bytes": 36655104
+  }
+]

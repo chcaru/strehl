@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "scope": "Judge software commission only; these records are artificial.",
+  "admitted_fixture": true,
+  "rejected_cases": {
+    "missing_phase": [
+      "exact_three_registered_phases"
+    ],
+    "no_sampler_effect": [
+      "half_bilinear_has_negative_nonzero_beta",
+      "half_bilinear_exceeds_exact_magnitude"
+    ],
+    "opposite_beta_sign": [
+      "half_bilinear_has_negative_nonzero_beta"
+    ],
+    "exact_evaluation_already_blurred": [
+      "phase_1_exact_near_zero_beta",
+      "half_bilinear_exceeds_exact_magnitude"
+    ],
+    "integer_placebo_broken": [
+      "integer_bilinear_placebo"
+    ],
+    "inconsistent_derivative": [
+      "phase_1_same_discrete_derivative"
+    ],
+    "fitted_motion_confounds_isolation": [
+      "phase_1_known_motion_unit_only"
+    ],
+    "anisotropy_mislabeled_isotropic": [
+      "phase_2_known_motion_unit_only"
+    ],
+    "flat_design": [
+      "phase_1_bilinear_identified_finite_fit"
+    ],
+    "rank_deficient_design": [
+      "phase_1_bilinear_identified_finite_fit"
+    ],
+    "ill_conditioned_design": [
+      "phase_1_bilinear_identified_finite_fit"
+    ],
+    "empty_holdout": [
+      "phase_1_bilinear_identified_finite_fit",
+      "same_support_counts_in_all_arms"
+    ],
+    "nonfinite_result": [
+      "phase_1_bilinear_identified_finite_fit"
+    ]
+  }
+}

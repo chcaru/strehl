@@ -94,16 +94,46 @@ remain. No ramp sweep or marigold transfer follows. Automatic tone differs,
 so brightness is not attributed solely to source weights. See
 `experiments/chip-stock-selectivity/independent-photographic-review.md`.
 
-Next is a bounded correction of the failed alignment discriminator's numerical
-model, not relaxation of its old bar. Source review identifies fractional
-bilinear interpolation applied only to the fitted source as a concrete
-confound of the physical blur coefficient. Generated exact-evaluation and
-sampling controls must establish its contribution before any photographic
-patch is reopened. The original failed control remains failed. See
-`experiments/chip-differential-blur/resampling-audit.md` and the separately
-scoped `experiments/alignment-sampling-control/` continuation. In parallel,
-review the remaining real source/depth alternatives against prior closures;
-do not repeat donor, source-prior-strength or base-weighting sweeps.
+The alignment discriminator's sampler correction is now measured and independently
+reviewed. Source-only bilinear interpolation creates a false blur coefficient;
+one compact cubic substitution passes all original generated controls without
+relaxing their bars. The separately admitted nine-patch photographic replay
+still refuses the scalar-blur model: one eligible frame reverses its coefficient
+sign across supports, and none meets the held-out improvement requirement across
+all four choices. No alignment map or photographic improvement follows. Keep
+the numerical lesson and close this local blur route. See
+`experiments/alignment-sampling-control/results.md` and `independent-results.md`.
+
+The complete207-source ore100 delivery also has independent acceptance of the
+bounded numerical repair: a bright red rectangular intrusion disappears while
+the white reflection and surrounding blue texture remain. Both previously fixed
+native controls look unchanged. All five recent mineral sets now have corrected
+full outputs; broad glare remains unresolved. See
+`experiments/quality-september25/mineral-repair-review/ore100-review.md`.
+
+The same-band spatial source-agreement comparison is now also closed. Four
+independent tests pass its mechanical and preservation screen, but its general
+qualification remains false. The complete299-source chip pair keeps the exact
+baseline tone and production RGB16/ICC; root and independent full/native review
+find no useful visible improvement in broad spill, contact boundaries or
+duplicated rails. No tuning sweep or transfer follows. See
+`experiments/band-source-agreement/results.md` and its independent photographic
+review. The complete candidate was shown to the owner.
+
+Next are two distinct bounded experiments. First, observe the existing shared
+source field's complete-AC reconstruction on the whole chip, with its original
+costs/penalties and only explicit source-capacity extension. Its prior generated
+glint/near-detail failures remain; no photographic pair was previously run.
+The chip-specific vendor gap and earlier contact improvement justify changing
+the scheduling scope, not passing the old gate or promoting it generally. See
+`experiments/chip-shared-source-observation/design.md`. Second, test shared
+coarse source weights from co-sited RAW colour differences, retaining original
+CFA coefficients and covariance-aware injected-noise probes, first on fixed
+generated controls; see `experiments/chromatic-source-evidence/design.md`.
+Do not repeat donor, prior-strength or base-weighting sweeps. The bounded
+FocusDeep readiness check found no verified licensed checkpoint/inference route
+and does not justify a training campaign; see
+`experiments/quality-september25/focusdeep-feasibility.md`.
 
 Use `scripts/render-native.py` and its checked `scripts/native-build.json`
 for current native renders; `docs/native-rendering.md` documents the entry

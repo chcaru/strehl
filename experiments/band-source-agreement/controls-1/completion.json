@@ -1,0 +1,20 @@
+{
+  "instrument_completed": true,
+  "controls_executed": 4,
+  "mechanical_safety_pass": true,
+  "legacy_general_qualification": false,
+  "photographic_replay_admitted": false,
+  "root_review_required": true,
+  "sources_unchanged": true,
+  "screen": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\controls-1\\output\\screen.json",
+    "sha256": "766ab82f2589ac5158baece8a75c4eaa43a1d99e67c770160e8750d2a97ed46d",
+    "bytes": 263272
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\controls-1\\process.json",
+    "sha256": "901ee68885484d2d8c5969d4b419563e6353674c42d20cb40f819778b732c053",
+    "bytes": 2713
+  },
+  "scope": "One complete fixed same-band source-agreement chip observation. Generated quality negatives remain explicit; mechanical safety is not general quality qualification or a default change."
+}

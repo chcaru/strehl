@@ -1,0 +1,112 @@
+{
+  "call": 3,
+  "joint": false,
+  "axis": 1,
+  "input_arrays": [
+    {
+      "shape": [
+        392,
+        392
+      ],
+      "dtype": "float32",
+      "sha256": "a94d84b21959a64cb2339b1d59fcc752168a468343f14560ce38f1bf5cfd4b4d"
+    },
+    {
+      "shape": [
+        392,
+        392
+      ],
+      "dtype": "float32",
+      "sha256": "c81d17a0880a71e4f32d0f63d3bcef093e50f5bd726a79878c8db150adc0553a"
+    },
+    {
+      "shape": [
+        12136
+      ],
+      "dtype": "float64",
+      "sha256": "e4717f9cde1b056f8ac5daa654f8d32d9a26cdcc50e9382a6827ef99ca7f7567"
+    },
+    {
+      "shape": [
+        12136
+      ],
+      "dtype": "float64",
+      "sha256": "b181c3e04d932aa15ab256c8e95663f8c4089e3662d361e36d84e8d359e5f975"
+    },
+    {
+      "shape": [
+        12136,
+        2
+      ],
+      "dtype": "float64",
+      "sha256": "57fe459881344202ad93b3c9391cf7e74a12f0b7ffb1fefda6b1f5124c596bc5"
+    },
+    {
+      "shape": [
+        12136,
+        2
+      ],
+      "dtype": "float64",
+      "sha256": "f4cd05e32946e2106f41416657ceaf436b7c9189724c815f6807a8ce2fde3b8f"
+    }
+  ],
+  "probe_deltas": [],
+  "result": {
+    "model": "translation",
+    "before": {
+      "delta_source_native": [
+        0.0,
+        0.0
+      ],
+      "gain": 0.9493287832794716,
+      "bias": -0.01871707978524169,
+      "lap_coefficient": 0.0,
+      "beta_source_native_squared": 0.0,
+      "rank": 2,
+      "standardized_condition": 1.0000000000000004,
+      "fit_rmse": 0.0002556156666511547,
+      "validation_rmse": 0.0002536836396266252,
+      "validation_mean_error": 7.158832859129374e-07,
+      "validation_max_abs": 0.0006134392772438324
+    },
+    "after": {
+      "delta_source_native": [
+        0.0008476847721631561,
+        -0.0013476482356150601
+      ],
+      "gain": 0.9493292015423477,
+      "bias": -0.01871721283612576,
+      "lap_coefficient": 0.0,
+      "beta_source_native_squared": 0.0,
+      "rank": 2,
+      "standardized_condition": 1.0000000000000002,
+      "fit_rmse": 0.00025506333833475174,
+      "validation_rmse": 0.00025318546215911757,
+      "validation_mean_error": 7.361002093705386e-07,
+      "validation_max_abs": 0.0006074583031929204
+    },
+    "delta_source_native": [
+      0.0008476847721631561,
+      -0.0013476482356150601
+    ],
+    "beta_source_native_squared": 0.0,
+    "converged": true,
+    "at_translation_bound": false,
+    "nfev": 13,
+    "status": 3,
+    "optimality": 1.5237013150596393e-08,
+    "motion_singular_values": [
+      1.242834017244605,
+      1.0353915401382416
+    ],
+    "motion_condition": 1.2003517211263544,
+    "probes": [],
+    "source_support_gap_native": 6.8889,
+    "fit_samples": 12136,
+    "validation_samples": 12136,
+    "admitted": true,
+    "refusal_reasons": [],
+    "original_bilinear_support_gap_native": 8.8889,
+    "sampler_radius_native": 2
+  }
+}
