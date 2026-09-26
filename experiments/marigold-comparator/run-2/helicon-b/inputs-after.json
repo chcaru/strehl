@@ -1,0 +1,2442 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00000.tiff",
+    "sha256": "2e374116858067a4199969f3b1764884422b27953fedee74ec5e2c1c6aa31b49",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00001.tiff",
+    "sha256": "2b66420a28c33f12285b4bd8254066a13420ac4bcf006fa97d65491b9bd9f3ad",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00002.tiff",
+    "sha256": "f83f7fdd56cf6b5513465f94e95fc5a4b8919fc9d62b231b2826ee23d3c906db",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00003.tiff",
+    "sha256": "137c001098650e7036100e7b42775a3c67ccccce3e90b6770dc32d2d38c814f1",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00004.tiff",
+    "sha256": "5fe1c904129e44d9024cb9f72fd76a0afd23b3524bb32150d4924764eea77070",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00005.tiff",
+    "sha256": "a1bf0fc5e09126f7d55590d6f6d61f11a0f5be1bd4ac8d7b2f10033492631fb4",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00006.tiff",
+    "sha256": "3fa5f5e9b2fe6c625b64b3f50e9003c0427653522d78a1d3d126bf6b32969a0f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00007.tiff",
+    "sha256": "fa0e4861384aa165abfa00f2914f88c0ec9771d5ea50ccf3a467d00028290273",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00008.tiff",
+    "sha256": "27bdf8db18f9c280f4d3738d1d46e13df320666ca49cb63c5e08c769337500ef",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00009.tiff",
+    "sha256": "923fa94d548ed5958257fc9a1203b0beea9de8f67a1d7dd3bec4ef1b5b23e788",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00010.tiff",
+    "sha256": "a85acbfce8e0ef9f860c88d90f9d95d4ff6db5b6aaec9c85bd720e496fe9bebc",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00011.tiff",
+    "sha256": "045955453049986143bff6ae76a79d55b8c9bc97b1060aeca7474cbcbfc683ba",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00012.tiff",
+    "sha256": "a9ab52f76fb802135103cec1d64919411c3ecdc0ca61f70a3a8bbb95fbabc5fd",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00013.tiff",
+    "sha256": "f08c53abb3b9a2ad532940f168c2a7eed2a55ba1e34997e668a4aea2a06abc47",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00014.tiff",
+    "sha256": "2cf66545e555fdb98954ab17847bfd2aaa2f7ffaadfb4b96baea4a715fc108a1",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00015.tiff",
+    "sha256": "5690eceecf95062ec9ef09c9741072377f12d4f067f065ac0167d2af9d5043b9",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00016.tiff",
+    "sha256": "bee2e0f6d6b82979fc88130c448c10f0184934562d503366f4f8bc9a66b27deb",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00017.tiff",
+    "sha256": "ca6d69f0efd32a77035dd120999831231d603e69485422917551e2d52e5b14f9",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00018.tiff",
+    "sha256": "576d8141821ebfa4d64ec352a5abcaf40eceea70d766fb9a8f200efd15515b20",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00019.tiff",
+    "sha256": "cdead965de75158540f17d803bbf3cbe0d25fe5fd97c8d0d08f60445ebf0c0b0",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00020.tiff",
+    "sha256": "fe751e7f7515b09934609ccef03b737a8b0c539da88d073963265bbbb7b1493f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00021.tiff",
+    "sha256": "2e57a0dfeab4e2eca15398c7e54f1dd0e058753961728080a08a42ad1246e7f0",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00022.tiff",
+    "sha256": "bede3ad8c1ab1624ab8b7865bbe6fc8e280b9ce45fe4862c7b0b27dc846a0225",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00023.tiff",
+    "sha256": "7eb19e4f9396ccb97e8808a425669d1786ce9b9a322da2703bc4a7262dfbfc80",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00024.tiff",
+    "sha256": "53d8f41550faa29641079b0fd98ac0c864e4b24486125a9ed1ce24b7f8c39790",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00025.tiff",
+    "sha256": "1b0f7416f9ac3e2a45c5b3f4d5bc4df95675e9aa0987243e1f049fa2753c1145",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00026.tiff",
+    "sha256": "115724e8dc2ea9ef1e3848b36bbf0b90d3f627842d928d7aebebcdfa79b6a8f1",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00027.tiff",
+    "sha256": "6eeb462fcd6e6fafa400309da9856799f70e787dfc2e0c3ac9973a3529f2bf2b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00028.tiff",
+    "sha256": "e254eb587c89e45aafb704728f18eb54b5bae4eeb2c1cdf9b5b0420fa50bc533",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00029.tiff",
+    "sha256": "6ffee42b93409b5869bf80771784bc9dfc1b0f27f36af404d13549993834db59",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00030.tiff",
+    "sha256": "80a7c123bc9ac5ce660fb2e882e7ba21574b6d72a472c99fdc48067c4aba6c05",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00031.tiff",
+    "sha256": "a6c5296faa4c64fec64600d52bfbc377983f54658367dfbbdf2c90464494eca0",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00032.tiff",
+    "sha256": "416f3b180e0605ab3593cea8936ba64e58c735cd8e48366524437b095613b897",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00033.tiff",
+    "sha256": "7d88c90a4f2b801dd6336159f5b5f5d7cb695ccc0f9e9159fa6355032456715f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00034.tiff",
+    "sha256": "4b212156c1dee9ced0c19c6b788a04d5573931b6503bbec923f14ab6ed3db660",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00035.tiff",
+    "sha256": "a045895560fe6703baad4a9213772cbee743a58204a6c7a5d833d2bb97841d4d",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00036.tiff",
+    "sha256": "9548a509844d913459ca6f8973c542668711657591fb013c02a51cdd66e14c27",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00037.tiff",
+    "sha256": "a8fa9a7d422b0b7c724accaa992b44f7f6742b164ed9b788d8734b539f2e2a2c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00038.tiff",
+    "sha256": "3fcaad884eecba0e473c92eca0bb7e2ac4a77c12d189f322d28fa0eaa3ad2b40",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00039.tiff",
+    "sha256": "43725c71abc25562ffb4239e90fec7356b64f3f151d3c6ab075ae5473bbdb127",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00040.tiff",
+    "sha256": "d57e88d6b47d12304b875f57819446409227459fcc3dc4fb91bececd368952af",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00041.tiff",
+    "sha256": "3ffd940ad99293b315f9a6abdac40f92d776c7366269e939b9eb7ce37f925376",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00042.tiff",
+    "sha256": "b569e79522633c59c4e9b59a3a6187b64e090f5a3eecd89f90e424fd9ea04123",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00043.tiff",
+    "sha256": "a239983e215b7ed52b5c53972bbc482a20f9edfb748a9116311fbf952499d481",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00044.tiff",
+    "sha256": "208529669fda5f62a3836e08af9b2bf4bfb421a35a657f169586d77912c503b5",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00045.tiff",
+    "sha256": "6b7d12674cbfdd6d7996b2ea8fa63dd1d2affbb62a4f45a0949b7d1d0ca90f1e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00046.tiff",
+    "sha256": "76ece17320adbd56a04b419fec8c8f84e93f665bf5770c4a7d4f847da30f6434",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00047.tiff",
+    "sha256": "abe827bb6c11af8c44fe79909138ba09c64f2049ef6f69abdfcbb5f58c72fe8c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00048.tiff",
+    "sha256": "25b5261f4c6f11a3b5f1422665b91152900cbf33a8761abbe2c662cc152175d6",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00049.tiff",
+    "sha256": "8ba7fbd10af9aee67fe45c010e02f3b5b238f3c73435a7bb297eb48b72441418",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00050.tiff",
+    "sha256": "37fbf618b448b95df8c3bc7d3a54c8eab2b78ffc3e625130f89056a4b03ee427",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00051.tiff",
+    "sha256": "1e54744ff2b34a34150ebe0c4ec033734c64ca5ffd49ef35a27bcf2e052a69ce",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00052.tiff",
+    "sha256": "953a8cedd6e65d38c1630fbd7de4c5200fab86d75347ed84208010725bc1c10c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00053.tiff",
+    "sha256": "f1a5b4e282c246087122c5e3b26228824ab21c7512faf974ebda595d6afc5293",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00054.tiff",
+    "sha256": "ea9ada2b7a127f6606d55bec99aee09eaf36a39db7952748deab98d7b7fbd4dc",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00055.tiff",
+    "sha256": "07875c37ffdb8dd2fbbc07ea756e46c101778988ba05b8eb2c069157aceafbd7",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00056.tiff",
+    "sha256": "cffad3d3b3cd0ac3d8937eca08e7822ad07f3b42d8bf983bc56d25477cdc741f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00057.tiff",
+    "sha256": "92463c835558ebcd727d34e6da398ac191727ff3f261aa5388f7082d3ee033bf",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00058.tiff",
+    "sha256": "6ed2045fc458888de48d6d0ec9f7b88ffa311c12b727e43a3cb75243f9f031ea",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00059.tiff",
+    "sha256": "fdf3a6b8cd14b587cfa41463a27f8e4c0e04714e92d4318dc1d69f3e13d54912",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00060.tiff",
+    "sha256": "cb05ead65e5c0f9acc91c5dc856151379095329a5059f5ff8909f523a280ed0f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00061.tiff",
+    "sha256": "e3e78891222b67b21e564fcd9b4fb1e1ffe3d64026e556c13d04ff12b37691f5",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00062.tiff",
+    "sha256": "e15bbd93f2ff2f277457d75f51a77d891f904788e2d40726d26bf25eb3a1c031",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00063.tiff",
+    "sha256": "eef37704c6b5f2283bca4095f139cdc19e3caf7734bcec460c72051081aba61d",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00064.tiff",
+    "sha256": "7aafabd75793d105c940653d7cdeaab63cf5ef7578542208baad347c7ea0a35b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00065.tiff",
+    "sha256": "43413249ca73eb72a7c69ffaf4bfe5e387aacb75e05c9cdadec215dfd61a13ec",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00066.tiff",
+    "sha256": "9298edbe2bbe147980d77ad8aee3cabe1d2d212638e8b04eedec2b2ce9b35594",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00067.tiff",
+    "sha256": "da9bad87dc243cb994d12627c788dfc03511bd8b05b32573e1e0371ace29708f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00068.tiff",
+    "sha256": "c7f53a99766fc6fd109d650f79e950cb3bd681df2139e26cfe68e1f3b0bbe52e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00069.tiff",
+    "sha256": "a85b4147c92b58ea66da18188024b806a091779630cda832cf338514ab9f379a",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00070.tiff",
+    "sha256": "79c0a66a5226392d7da110f6c42724571ca55fc945dbae5caad8e810d54cf763",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00071.tiff",
+    "sha256": "aeb179fba6ba3745d6d17d60c0e83ce09e5cbf8f0a7d2a74cd82ace93f0e349d",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00072.tiff",
+    "sha256": "62f97348930f8fa97d80e36a5ab14a69852dfdfbca6190a34a4168a44b500ccd",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00073.tiff",
+    "sha256": "71f2ae7057930aac4be8b6d85edc04201915bd886ede455a8e10a79dba02e66f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00074.tiff",
+    "sha256": "9fd8b03ee70ffeca27da94cb93790963c5cd7103904c78b974507d8783440692",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00075.tiff",
+    "sha256": "36bf64a34561ea49b094a1a74bf6a7906837389c7164556093f2a659cec1e6f4",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00076.tiff",
+    "sha256": "9c148d5c0750c0ac097d3fd2ab3aa998f94f05320b977c6127f90f2291b7f0fe",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00077.tiff",
+    "sha256": "1f5a39a8caa699dc72905cddcd30c6c7ab9bde4f3aabbbfc689661beceecc927",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00078.tiff",
+    "sha256": "2d4c05d45bb45058f81685e802c493b03b675e5ca19c9b95cdbc637ad78feb8f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00079.tiff",
+    "sha256": "858cd2c80ab06d988343eb660e3af48312da6cc736c95f7b0a787aa1cec6a940",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00080.tiff",
+    "sha256": "2d6f27896afdbc9cb4183989269c62e311a1fd2a333fa062d6c512001805488c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00081.tiff",
+    "sha256": "67df64f7c364372cbeaa8ea3b2a7cbfdb8714e509b5950402fecada26f9f3b01",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00082.tiff",
+    "sha256": "e8789cad13473eec01826e25f2f8c8491a346d03319a85d5b04506c6e2a92916",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00083.tiff",
+    "sha256": "5bbbb3edb9226f8fb1d6dfcf5a0f3097bab8ba616bb16eba338753a63dae96ef",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00084.tiff",
+    "sha256": "b32b8688b5bdf3ef3e9b0cbd438f2895a140d856ddb4152eff1d5e91a134e1f2",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00085.tiff",
+    "sha256": "b43f28702a86db8a0fccd825748d5747d57059b8c4be98c56d0bbcbb419b7170",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00086.tiff",
+    "sha256": "42b87f58ac0907bb33193e430dfbc0db232431bff9842966a2c2bfc710771217",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00087.tiff",
+    "sha256": "e3552e14348f5e65457441c32c54ae78326a064bcdbc26aace04ad33086ad3b0",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00088.tiff",
+    "sha256": "603de8fcbc875e8281fe5499c9fa695fe9b0e72f5b35e1fbc8db1efccabaeace",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00089.tiff",
+    "sha256": "b76fc49db2a4c7bdc9451592e1105f9b1bef972fbc9d3ad04c2bf604e27aaa5e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00090.tiff",
+    "sha256": "3e32d7e05bab603ec196001394ff0f8895c030f7d470740238b6cf0c680e3ea4",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00091.tiff",
+    "sha256": "1556956a546b8f61610bc435c87bc6cb23565fac9270fbb52952f6c25a8958b8",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00092.tiff",
+    "sha256": "6c3ab410e9e55f43e971f57b7d8e9c348fe8b6e07dc5695e05830b736584ce93",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00093.tiff",
+    "sha256": "7430fc7d4a814767a863a6d7b49608272d87012860f737a25e0b1e10bf327552",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00094.tiff",
+    "sha256": "92003d9ac71ca133bf29c6ba8f76aa4576e5814c419542097acdbfcf43d60967",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00095.tiff",
+    "sha256": "60faa787fbfe3782d8d9811e1a1010d3a90bf033a34150d80aac2d466362c26b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00096.tiff",
+    "sha256": "5885833afa0007a01c7fbfda6a78a6d2149d443d3754b8462035b7151dbbb0f1",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00097.tiff",
+    "sha256": "dbc390fe2e84ec2a8bc8f4054d0cd13fd82a1eede32e0746506bce0a284ba045",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00098.tiff",
+    "sha256": "91df7a84d46d42d7d1999cc87b173ec9e9f310b6be1c8e2a4a0178cb7fd9ca47",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00099.tiff",
+    "sha256": "eb91afd52153d282a5d39115a5fbbb8aecd83589359b72d0fcb789d89fb896f5",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00100.tiff",
+    "sha256": "bb5021fd407acc0ecf4c1943dffac43548a2e707a9bcd273125bde5247e334e8",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00101.tiff",
+    "sha256": "949ed77b073efefb8f6c18a9b13907578f258511cd47de16c6915465daacb6fe",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00102.tiff",
+    "sha256": "e305fa7ab3f2fc8d1374a31940599d27525b19cd1e41bfe842ecc62ba4517cc6",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00103.tiff",
+    "sha256": "398c33fce22ab6dadc0085b7e8d467719255a73e3c4f5ddc4da0cb94dee91c99",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00104.tiff",
+    "sha256": "cf407c9879d0899adbb4013a1dfce4f3915ac4b49f8fa97c080fefd347500349",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00105.tiff",
+    "sha256": "84faf4a6f441b04fcd01bf8a8bae2c286b5267334ccce9146cca2951a02a1ceb",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00106.tiff",
+    "sha256": "1cc78fd45cf97b96b82237f66197ce1d0e5c8d8333adcff78e4f48d10e4a0004",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00107.tiff",
+    "sha256": "dde6ee634dc058f087eda0af37fa45ae11b0307f9e13371f5c9e65b2a773da56",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00108.tiff",
+    "sha256": "60bd3abcb5d59afdae133de9cb3148a42f27d1e3f8fb33730e88a81d53876ca8",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00109.tiff",
+    "sha256": "4810ff86bf509dcf02331986c63c1594b317d7ab5b0ffbaf797287162860eec7",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00110.tiff",
+    "sha256": "4302a8db3fad8fc0a8f58675fb4134fa13a136c41889c3bb83e6abc953a4f284",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00111.tiff",
+    "sha256": "6287d8ff3b68c3454e1209c8df8597871e48c072ca13db539d60590dd1ba3ac4",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00112.tiff",
+    "sha256": "6ab1f1d8a7148b7197e334344293a565d66ec60fb13b164deb881dfc24618819",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00113.tiff",
+    "sha256": "4288c7965c052b78fb42939dca7316817e912a1b7ee893105163b097cd05c98e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00114.tiff",
+    "sha256": "14ebcf5fc157219d412dae6609ddaf8f89deaf071279fe1e2fb50789974538a8",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00115.tiff",
+    "sha256": "5b19e049b0b1ed0d3eda64ffb164f03a187ff679ac12b729fa73494302824b0d",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00116.tiff",
+    "sha256": "b945946a176f455ee404e3c29aa5b93189a326c7fd55c910377fdac42d7f1b07",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00117.tiff",
+    "sha256": "366ab525a0109f612079f107c6b2a34c1172aaf803edf94edaeb24baa0634601",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00118.tiff",
+    "sha256": "4ef8d610c1a43bd361faa0c2d28fccf769e9f857b1f7a99247145fb2838ca80e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00119.tiff",
+    "sha256": "cc36246d421829571cba32dad59f68e9ffc9332876e268efed2493e4d7b0bf75",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00120.tiff",
+    "sha256": "0523610f6244ebaa98a07278bd5e6d82186cd8e8045b60f2c3988766b97a5502",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00121.tiff",
+    "sha256": "3792dbceee14892f4d82ed563303a11836b751fcff0499bcdc8825a73d77e8ba",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00122.tiff",
+    "sha256": "192604185b331e18f61070bac13518491661c421fb762b49f53b0d6e28cf4ecc",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00123.tiff",
+    "sha256": "ddd02488a51a778ccec6f3a274230ce0f8ae7d1c6a8419fa7ab4665b2fbdf8eb",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00124.tiff",
+    "sha256": "b630dc57fcf836fbda28fb8dc60b2310e77c623b9b73645c6e8707a7b4f55b3e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00125.tiff",
+    "sha256": "b3baa79cca4b1b2b338fecc20a0796de2c9736c86b9b8dcea3c3cb0336005135",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00126.tiff",
+    "sha256": "b233aab19ed5a5be5b213bd0385a25fe1a4e94268cf7678357983e9604a0585e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00127.tiff",
+    "sha256": "1c0595ca87662e11947c09067d3029cf5c37efe09832946c951569e6a6eaf4fc",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00128.tiff",
+    "sha256": "4cf86e8561804ef111b74097258f65ac655d7e55998896d683572d7883e53ef9",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00129.tiff",
+    "sha256": "2a43902e15ac4cca8cafb87924b3f8d63f2a6e0102ef34b1c1bcfea41f1f4e1b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00130.tiff",
+    "sha256": "566dc83e143a29f14eb93b76b42d3a87a8e2474861cd5a32a2595d636fbb40f4",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00131.tiff",
+    "sha256": "c1d39fd6285cef88ff766171e79d468610b311ff3ca44bd999a179d898cdc098",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00132.tiff",
+    "sha256": "9a5fccb8cc56f2e2a5be16e41013c9cd50de63dd0fc2413adb7423b9bf837ffe",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00133.tiff",
+    "sha256": "dbae370480a6b784c2b924fcfcfd486b64af9a328a64dcb3b99e87e712851126",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00134.tiff",
+    "sha256": "9da4a7fb5ca16915a3eab388f240ff0f67ad81e1f55a443500c695bb03eddac9",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00135.tiff",
+    "sha256": "105eeeea47ffa7fc7e1093823ce8d2774d322190711694a8bd4286b827449e5e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00136.tiff",
+    "sha256": "1259d2b4380a8f6435795b0d079c6fdd98ea24f4a152560819497181edec346a",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00137.tiff",
+    "sha256": "5512620f164b1f6486f1af226921fa239075efaede330aeaa9140f4b0892e6c3",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00138.tiff",
+    "sha256": "177f7f194b5cb19e9f06e2ba929271301605555bbf9eebf4388c66740c7a94e6",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00139.tiff",
+    "sha256": "db21d53a95da71566474d958fc1dc94d07ec31cbfcd0f69fb10a8c3c902aedb7",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00140.tiff",
+    "sha256": "56c7ea1c2cfbd6e4ff6f1768469e501a96760108e2c22c07ec40cdb39fac0243",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00141.tiff",
+    "sha256": "7732a179db0a3dd4fccfd6ffe59508d09a135e7e86ba1beb128587a1063ee0da",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00142.tiff",
+    "sha256": "4b9eb2611880b0c4f405ef3e081c9a2503a50e7a0e49453020f1fb6d884f3739",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00143.tiff",
+    "sha256": "0ef3e97968021572841fcba0529963b50d8b1707598f22cd16f760ae4ad21b38",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00144.tiff",
+    "sha256": "1b109046185beb3e5fb8173a1aacca4b96aea8c5a74295f68fe33a3c07162644",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00145.tiff",
+    "sha256": "ca74f0ac6561459ff67016b8e33562d19967516fb6602bc87b5ff3f37e270261",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00146.tiff",
+    "sha256": "ef2f04f938a90ee21beecc8e80fe880e8fea4a5fcdaaf1fae0cfa931d6361523",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00147.tiff",
+    "sha256": "f8315235c3a7b511ba191b196c7bb13483b1a7ea54b1a988515f2f50148a3394",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00148.tiff",
+    "sha256": "b538381f12be798aff7c2d485708cbad1bc370868f5c5acade33df471affb61b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00149.tiff",
+    "sha256": "15f5e02c7c674041217317a9d0952f774505b78975341b33a53be1a61cc96f58",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00150.tiff",
+    "sha256": "27df75a8e7015fbbb073bd867a2cefd2a243e84d178f5f9fe992cde575144890",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00151.tiff",
+    "sha256": "1dc6f8398976de14498e4d07d18c362130c94aa6e4796898bbc74d93c6075dd6",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00152.tiff",
+    "sha256": "4ec51a3083f355a6fa0edc0048a35b274141c3dc17b5b09e4c629bb0977e2249",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00153.tiff",
+    "sha256": "a3adb6590b418ea90be129b663070f631fc5f22fc85fd9ff1a2aee889d21b086",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00154.tiff",
+    "sha256": "929e940ac64cee089d8a49fd6982ab12b0bffba7865564524412d239b8e0d95d",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00155.tiff",
+    "sha256": "7087761d2fa73828265f3a764ba75d64b06bf7857f094b9a3f4de06173d4ab6e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00156.tiff",
+    "sha256": "29e88e4d949918f7d66e4dcd2e5eb5cf20e8aa45ec34e802d93ea6cc292c2a5b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00157.tiff",
+    "sha256": "377da45a87eb8982dfd326b4ba5f20243307d6cf4db3bcee0a37f5fa1371a0c9",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00158.tiff",
+    "sha256": "f4699065ba07a1f0b04d4b9ba842328f141a96e42c81cf2618ef06a158e1cd21",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00159.tiff",
+    "sha256": "2056d58b40f84ca29e14ba8f5a1661a4823e5c52c4e8b8bc9a2e7ba1ffb142fe",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00160.tiff",
+    "sha256": "702e766a9fad327c3109b561fdd9543ee6a52d32b26fb363dba709003fac8b0c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00161.tiff",
+    "sha256": "77eaef55d081661ef0c7b8fa4c56dd02ae98c1fcab3776094d648e546c311662",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00162.tiff",
+    "sha256": "8e4b6d65a07337600e8f1a110d1f46a0ee07e8dd536ce6067bba5291489b10b9",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00163.tiff",
+    "sha256": "4204902716a6e60c4bf7dcee2d666f1744a112d331f62b8e3600ae09e48b6a0f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00164.tiff",
+    "sha256": "fc3a9fc6ceeb00cf16caaacb245511f0a7bc0fa8ec2ac0afc46803851d18aae6",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00165.tiff",
+    "sha256": "109cebbd55497abe15a7e84dcf2d6f0a0b4fd64af3224963ad70c53ba8101eeb",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00166.tiff",
+    "sha256": "e55fd1561b1bd99821c20b7981482e5f6cc0a0e3b69ba0e9c10dc2561be1e8a2",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00167.tiff",
+    "sha256": "cff32182aa4c5be35eed1b83f87a30e580394d610ef815ee710039450640a351",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00168.tiff",
+    "sha256": "d70875ad5bb5448ba0d63dcef0267c37ad11db410f9a5e1f5d7c51c7e64c8563",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00169.tiff",
+    "sha256": "221c2cb6e1c1d0e6438f1d0fbaebde70f7cf2a74bd43d6445184bb9178c690de",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00170.tiff",
+    "sha256": "43b7d21440bd10e2b1426eb950dd770ad14597bb85735ab2e3c5f2c683264295",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00171.tiff",
+    "sha256": "004f26e8220e00c6288c7c673912f6aaa86a473eb03e93bb4f6b50b97dd12435",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00172.tiff",
+    "sha256": "115b06b9f12c6d926aab8d2dcfaad831f1d202732c497b5f6dad3f493f0c6f42",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00173.tiff",
+    "sha256": "23c9a514939605c2a7fce7d57d47127051146f2e29a75492fcad7b6f1f0dcc19",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00174.tiff",
+    "sha256": "f992662566115a851a31d51918be41300e2771632b2ec649e984d1b5b33aa445",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00175.tiff",
+    "sha256": "22b879027d90c77b3a316e2d4c80c00fd03c82b388f2405a3ed73518a575a9b9",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00176.tiff",
+    "sha256": "49a0d6ac51a9cafbf01798a0976964d6ae42f3fc39d942aa449254d9569818f6",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00177.tiff",
+    "sha256": "6cba78ff8ebc30d315440f55bd0cf94c75bb12caaf3850b42f0d986aaf37a6cb",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00178.tiff",
+    "sha256": "6191eaf0fcb5946cc9c65f07200a124ab0bbaf8067eb286f1b08bc4c8fe68c93",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00179.tiff",
+    "sha256": "d145be0de52f776e6202ea1190c087d253f16d0285f25a2540fdd5e4dd754c08",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00180.tiff",
+    "sha256": "b1b69d5f79851e1e04de948e50fd658d4840f836e0c58808037847ce15abcc38",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00181.tiff",
+    "sha256": "03c35b0a89ba876ca5f408afd0fcb50d57d6faa1687f17b0dac49194ea4f4011",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00182.tiff",
+    "sha256": "9ce82f8911d23a1e8ca7977adafc973ef0c708e5fa7df961909381684965f800",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00183.tiff",
+    "sha256": "6561aa50adf143d140f74a3ca5961f620141987c0c4bcea83172fcb61ee51c83",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00184.tiff",
+    "sha256": "f65a53c1eb055553dee743ec4c3770422103540b5643e8f74103ed85294d9aef",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00185.tiff",
+    "sha256": "0c03b09729e443e008c85b38add50fc3db1ff9cfd79333aebaae67ece71500a6",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00186.tiff",
+    "sha256": "32be72098abdc0a86afb9fe47bba8b4667f8df650677f09488be8936d5f9d853",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00187.tiff",
+    "sha256": "b03e22b2cd43e60fda2e72bd12d2c03e65b4fb08dad1413ef130f5e49a5f56b8",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00188.tiff",
+    "sha256": "72da4500787414846db5b4dd9df0aa9c3bcf4670b5bf74940d1282155226fc9e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00189.tiff",
+    "sha256": "7e4f5b599d0d07cbabd63af8307578fcb730c4def5155f1c35d1160f20726692",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00190.tiff",
+    "sha256": "02022e89dda7ff9929d633410234d1d212c3bfc6cab7332951023acefc1a6de7",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00191.tiff",
+    "sha256": "778f95c69b36ddb3254313e40adaf3128b028aeedc561ccd0a6c27e3a0904d68",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00192.tiff",
+    "sha256": "4a59bf80f10c2736abf3dc034dd0c8d83de031863d5904f287c0dd06bf726978",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00193.tiff",
+    "sha256": "437d6c74cbc7969f7288583aeb5843384b5c0f90934d58a7d2fc66e024de94f5",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00194.tiff",
+    "sha256": "db2eaa3212ff0150966bbc4695216f5a7abef5cd2db1858bedc93740b4654033",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00195.tiff",
+    "sha256": "b9bb8b7e92860d27cf7cbc31226c089ce31b7cc108e6c171b3ad0f7600883a0b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00196.tiff",
+    "sha256": "08cb1fe8a00f73efc04dd4c1e5c54d0d7cc039e1e131419e24bce248c08c8017",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00197.tiff",
+    "sha256": "91d970711c24d11b10c26ae2706a394e41503401354fcc0b17f4474b0a3a17e7",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00198.tiff",
+    "sha256": "b3c9f870ed1dc5448b25fc5738fd1a2fceeb5ff02ceb0cb306ef29dc6c90c00c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00199.tiff",
+    "sha256": "35abf4325db32f5aa7f443071b34f711b8eda3ebb9cdb55b296d714259fa42c5",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00200.tiff",
+    "sha256": "16a6821b4a0768df67c2295d1562a06f97083bf5639dd9202894b22c3c6b1871",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00201.tiff",
+    "sha256": "8d303770fcaae8cb6b361a18e3ef6efa2bab529c82fdc5f4dd69afc04f8e5811",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00202.tiff",
+    "sha256": "9ae13fa02b7eb991a03de8445afeac102c02f8fa5be80fb290248f24a368f61e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00203.tiff",
+    "sha256": "b2ba4cbcd8b65665f6deaa75e3aeeb1a41496bd566ba9f14370307b08053aa89",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00204.tiff",
+    "sha256": "f3c33fcf182ce5e7ac306d32a5a716b0d7995f47e5acd6d353fe5e590734a678",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00205.tiff",
+    "sha256": "517d3e6a8b3b29a5f7ff4b078793497fe20fb9575099fd6ef83aa1daa43cc37b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00206.tiff",
+    "sha256": "5ba73413f5dee7295195cbd9185fa01726e5a4e25566717221573f1f1f424b53",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00207.tiff",
+    "sha256": "e8b3e9a78eeeb80e980fc5e926c6f7ffd553024376059f8cd70374d8ba581fb8",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00208.tiff",
+    "sha256": "bc355a6d5c615dec052344c94adea5a54fa5e9a43aba212c2a76218360e5ea24",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00209.tiff",
+    "sha256": "c4cbca106d2c4a57aca7078dfe21e80f86e632e0645bdd16ed95e9876618d56b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00210.tiff",
+    "sha256": "648c24f0850e523da2dc58b8d70de11b31f953b2562e4696d4c7a10a6d513ed7",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00211.tiff",
+    "sha256": "e0022ab28cb7be48e7383a209759ed82c412926e51e5c743b7db5cf5a62354cc",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00212.tiff",
+    "sha256": "07c881405297ebaa1666c66c57f096427e4b1f5bf1dd02df36a03e42b96ea3b5",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00213.tiff",
+    "sha256": "2469c3f4bcf7a5954c11e73eac04d05e6206ffdd88c63aa911ff9e2cdc4fb0e3",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00214.tiff",
+    "sha256": "56b7a7236ae49c7de8fa2715f6baaf9e0e7b2a43046f5ee51bd43d18545a9c7a",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00215.tiff",
+    "sha256": "4769b9e9395e0d0d957b45afdc0bd6da4c2af8845ee0c691b400b6c8ad317728",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00216.tiff",
+    "sha256": "a6bd2658534de9e62e5d945078c7e49e2a552b027dc95760e6825f3f0b2f1f12",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00217.tiff",
+    "sha256": "fdb102c6807bd01c67e1d8843f3faff89dffd1b5282dc046cea236140f8b8a68",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00218.tiff",
+    "sha256": "2cb642d3a13607830846b755f186e9b71c4fd81853742fe4dbd86b42e74b9ea9",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00219.tiff",
+    "sha256": "bb91ae8b8423afabb380edc21df81afd3f81bbdac62c446d083a543335d4cec1",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00220.tiff",
+    "sha256": "dcd56344ff8e4b88509c89b622f0954fa6656807c47b4c1cbd910fb7141d8dd8",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00221.tiff",
+    "sha256": "78e9c3e33ecbf3b0c24ec73c4e2077f503352198e862538f931a7807713ddec6",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00222.tiff",
+    "sha256": "1409d7e328f9dda40a6f440cd433f990b033f45bdcd3f8fcd19a28d982423780",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00223.tiff",
+    "sha256": "58bedbb0450b00dfcf77297a5625e47f4e5f0e7236b57664b82673c23bf83e2c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00224.tiff",
+    "sha256": "b919d592d2730923f65e541072b6e55cf0d26aa9cf707208892b2aa663030327",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00225.tiff",
+    "sha256": "6e622887f024d7ebe6a248ab73e566059ee0c3e39d2663bbdb7273ec84efe2df",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00226.tiff",
+    "sha256": "7c5c2d992a505981d653679da72de0ba3e93b48009d5db37d6565375e56a214a",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00227.tiff",
+    "sha256": "6956a60f701d1e22c4b0da1a0a2725fe903b3c63738daafd97e3b9d499d9d876",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00228.tiff",
+    "sha256": "42592bfd2d6b0c2673fb0f8b5af3401b2ae65b16332b6402950bf6ec1a35e3c4",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00229.tiff",
+    "sha256": "9c36e1a41483061783385496ce5e5018885d0f2258eb000ab29d1f5964d547fa",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00230.tiff",
+    "sha256": "d498a693deb6530908caec171fbbf6296960f273e70165001fc0b6c95e161c88",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00231.tiff",
+    "sha256": "79d8ea645cab9ee9f60f911ba103cd6321d1d6597716bf3fc30ad2b59489eb23",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00232.tiff",
+    "sha256": "36c0c983394072b4f5747d4845a4c4cf8ba23c88f3aa75068350fec59c5716f8",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00233.tiff",
+    "sha256": "6af1ae2c333a31e21cb6f00fd32c269017ac8fe931cb599966508d1540334f57",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00234.tiff",
+    "sha256": "a84b0352c1cef3c8ce0fe83019a93c348ea2463e75bc8985ec06a47fc17ede6b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00235.tiff",
+    "sha256": "096174464a5a81511b9f01342960b1a34909f26619d4ba12dbcf4326967e2dc7",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00236.tiff",
+    "sha256": "2a510f4b3ed749da775a83bb3624db08b7b9c3e73449997e1b3177ec942d8977",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00237.tiff",
+    "sha256": "316badbe2afe9e0a790998d8feb505ce379bd9ae0f4bd4571454da03cb24b6f4",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00238.tiff",
+    "sha256": "1a253cdf250156fbc8e95d51d54e31dc255dc0d882633128d048492ca83a458c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00239.tiff",
+    "sha256": "85fee05106dddf73b8b57718700b5d5443278b64af630449fdffebe7f86db742",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00240.tiff",
+    "sha256": "dad48db5794cfda594dd42b80fc4d6fa4e28b984735f97a7273ab2eafb58c023",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00241.tiff",
+    "sha256": "bae8d6716f42feddbe79b50d94b356911ba3534aae16b0985b2557308615cc47",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00242.tiff",
+    "sha256": "f7ae273dc24a287a305e90be44af9b45fd14c3ce655fc800fd3c5a4ab4203034",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00243.tiff",
+    "sha256": "27b6a568f31771bfca138ca41dbf3f77994bd9d365e285399d26c54b31d430eb",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00244.tiff",
+    "sha256": "54c50dde7cab80bbf4934a1945a6d4166a931c7c666fe4054c03b9bc84186b45",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00245.tiff",
+    "sha256": "2b92b70f34f4344d90003b3da3e7cc100ce957653079f21536f5f116d69d8794",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00246.tiff",
+    "sha256": "7debda7cd2b3731f2e3cc2ef9f060716c8b70e9c65dd9c67280a58b5917a3871",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00247.tiff",
+    "sha256": "95dd1589a2c6942845b35c9dbf5a3238a92e8a2412f6fee14cb485cbf078b3f6",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00248.tiff",
+    "sha256": "f4c4667581894dd26a0bd22500520112c5f6468015181a62a6b4f1da9283de54",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00249.tiff",
+    "sha256": "bc19e53746e6e5ab2633ffc43ecbdddb8c177cc04cd2157164527ac61d7bb80d",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00250.tiff",
+    "sha256": "fc00d69b0bdaea0339b1609459e1bcf0afb99dda6a4f7946b1f921eb5cf6e783",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00251.tiff",
+    "sha256": "458de0f10f2f2bddcaf2b6044f35165119965da0fc593f7ea62b928136f302f4",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00252.tiff",
+    "sha256": "2071600066bb3cf630fd69eb8cd71b552c91a7ee265744621735ab53a419b96b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00253.tiff",
+    "sha256": "ae8e5a0c535bf831f3bf1f07216419e64d6844a9b8d3b9c09992c8747836a641",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00254.tiff",
+    "sha256": "695a163d3a048b4a3b22923dc22417e06adc07db720a1dfcc912bac7cb3f18d6",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00255.tiff",
+    "sha256": "827b6d88704bfc715ccbd1e195cdf9cb49a2aef9bd0bb08979028c54e52c4c92",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00256.tiff",
+    "sha256": "daeab759ab2d318ac1e4e3b41d648af293a6c7250d8d1a43f751e3451cff4a90",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00257.tiff",
+    "sha256": "b0ade64e9aaae8c047de10da1c79dcf99aada2fa6a0aa53d19894bb43003d98d",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00258.tiff",
+    "sha256": "31829e5e8873b85aa98885cc31328e1342d0a21665b2163210e3d8f66e8d3d8d",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00259.tiff",
+    "sha256": "0c9b9d2102e7a05e178e3a48fbccc0d53ce05da93daf193f30926bbb4770e8b3",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00260.tiff",
+    "sha256": "e412a2a7fdcb299b4e10f4203968d054473e1522e6d7813ddc22fad2b2296f3c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00261.tiff",
+    "sha256": "c40d2687ac0bc5dc16ea06f9ff1fe965c54ea0b290671b2b84ca7d78fc2c6042",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00262.tiff",
+    "sha256": "2ff3b2dc18857f32a252e5f28f943475e334b328b878ff3f97f70fde35d3f259",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00263.tiff",
+    "sha256": "dedc8dd11bb4cb1f457f4ab56379fc96c3afff775db3871634ae9d9024dfa7df",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00264.tiff",
+    "sha256": "2c4ce5a9dd7d8f03341055f83e8dd5a0df5755db60173823cb0b15df0c826bce",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00265.tiff",
+    "sha256": "6f41785d6a115f453e95c47548fd7e628e831cf70d251e64334022775d7cd283",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00266.tiff",
+    "sha256": "17229e5c71c400eb5ef2812b21172839c7244ee1aadc41c5d2e6cfd4d8111b74",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00267.tiff",
+    "sha256": "d0408cc0f3a162335a0faff83fdc0e35f3e27e3a84fd92bb9448eeca2b001104",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00268.tiff",
+    "sha256": "fa09e42525eddb0eae086c2b463c8410c44ce4bb2e690148ac2e4dde763e1963",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00269.tiff",
+    "sha256": "b42c8a6e0dfea08836bb87ea4fe444febf156218cced268f20d9fd1fac609529",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00270.tiff",
+    "sha256": "1651ef13678f73258b42011b5e1806afcce8c90c15f30dd8cffa4836bac6a946",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00271.tiff",
+    "sha256": "5cdf7e499cf23b274917089633c658e34830885f06bec4693d778ebbc49c1540",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00272.tiff",
+    "sha256": "be83b6bf7c0407c9ce8b7e0f7c554fba2cb4149aed7f48a09dcaa082329eb5d8",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00273.tiff",
+    "sha256": "fadb35400a260321c0b567f80dbffc6b3306fcc86adafb1674cb2d5393fd3024",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00274.tiff",
+    "sha256": "1f4fbe26d85848264c7cb95235c9a9337c6b6e0cd8ef9db6cb5f87e7d996840b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00275.tiff",
+    "sha256": "1645624ed34b079a3b3c9ed4c9ea7a2e515d2a08dd502a9f6107d5dc3ba9f79f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00276.tiff",
+    "sha256": "41fc6f70fe3fd54a0416ed538a31aa41b6d41c1ea6f76d7544cef5abb5bd149e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00277.tiff",
+    "sha256": "9c49f978ba213a7b1e544f5370f450de9f967b9ec3eb4becbe93723e8046a6c0",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00278.tiff",
+    "sha256": "5b60c72e6c68745b4751bc48c4357872981634dc0bbf1d7405c75acf6a6ccc07",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00279.tiff",
+    "sha256": "b839dc9fc8977a9028315d7e01d27d8b6ff9481a7f04cbc5a580f2ae97be9fd8",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00280.tiff",
+    "sha256": "7caca40afcd718d66a588b65dff3c2ff96605e5fba53b97f0437c961b4984302",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00281.tiff",
+    "sha256": "7bfda7d825a5393aa514b69eafabd115d5dea4aca7d4af8a19776875ea52bc8a",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00282.tiff",
+    "sha256": "d002fcc2fc52c16c19537afbc136db5c606b7d1b091d7b39f42ad17d49b421fe",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00283.tiff",
+    "sha256": "63e6d6c3bc8942a36bbcfa5f28040e6e162a5361af878149082d589a5b3ccc8f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00284.tiff",
+    "sha256": "74d31b49d8ba8930ebeeb34476cfa0219cd6b10088398c9d76df746818962a1c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00285.tiff",
+    "sha256": "b011f768d90c519a923f15e1d1058e0253e14237dfed1346c06bcdf4ff39447a",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00286.tiff",
+    "sha256": "8fab7ada3d29e8830ab61e9f6bc6d4e621f84fa91953f207577e74d6e172a59a",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00287.tiff",
+    "sha256": "74269211cf78ec0f95720ecf259e7f591220fe462e1de20c3621f740cdc9b845",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00288.tiff",
+    "sha256": "a2af258a79b4cd5db43e36e3ed83f293b27eb114cf6e83c0b346f75092690f4d",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00289.tiff",
+    "sha256": "510e5db5ff675c0e41dbe1be7f5c8b2e7ec519c769994506876d38284df88d98",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00290.tiff",
+    "sha256": "e156dd356ef1fcaa346924f55c507666b817c7a0a9ceda77ff37dcbee3d8e338",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00291.tiff",
+    "sha256": "94c5952b82981bb68479ef69d6a36be24b7415772484e4ae45d99224f9cf8c6f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00292.tiff",
+    "sha256": "9173a55778e946ce65ecda110a71ad95bed75160098739aad66e90e08a1c862a",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00293.tiff",
+    "sha256": "f3b384907600b81d00c3d48a7b8a1c76c82bfc247140a046ab66d7544118b8e1",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00294.tiff",
+    "sha256": "2a44797b19a3f7bc4a4c3f9fa14f807ba2bc70e3f16fe67e3e5756096c931e70",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00295.tiff",
+    "sha256": "8d84c3e8edc7083eb28ae72dc804c3db289c025bfcb4f1e8bfd7790a7f61c936",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00296.tiff",
+    "sha256": "33956b1f0879d16cf3ef06b60297787d00915c9ebe68fdea813fdb75ef9ccba7",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00297.tiff",
+    "sha256": "577c5d8f0c216845712c2934787c03e7b243dd2acc896ab5b1f66a91c2f0ed49",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00298.tiff",
+    "sha256": "b4baf02dc515bb18e69ff99e4bbd90537bef1e67bea894c37f9e87c0f222dc30",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00299.tiff",
+    "sha256": "f13c1544dd8c15ef82c9df1d65626a20c89cb825213ac47ec6688d2abc8f54c4",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00300.tiff",
+    "sha256": "8d5d908f9319f212297be3cdac24e6e132ac81853c10ed92883c2a99eb5033f3",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00301.tiff",
+    "sha256": "bab460945d71d117806ecf0fcb9e23bf500692ac364b777dc452c2f849e97abe",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00302.tiff",
+    "sha256": "95bb99e41de79c6261dcdd34f200da9eaee73a265b5a054c221d3eddc8e8904c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00303.tiff",
+    "sha256": "514d312329fbec602ed0d74e8aba6450362e1cd7da063f0805929a360a8634c4",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00304.tiff",
+    "sha256": "7339a74d408f2d3b93d905344b4633990a2286f329774f05f7c69a389ef59d07",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00305.tiff",
+    "sha256": "9e19cfc3c7ccc6a1c5be1ceaeefed7f6515bf0d004c883145ffcea3128edafa7",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00306.tiff",
+    "sha256": "2373d19c039a7694de241ef963d2797e5b8a94cbdb7db886303e214ebacce490",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00307.tiff",
+    "sha256": "39f32f36c3c293a0c9b1bf6dd55f9c072f0ea81f59a54d67aa090e7a3f2d3e50",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00308.tiff",
+    "sha256": "8ce1fbd655d2f6ac0818de3534954d3eb9c3447248717fd958ec0d5972e4a920",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00309.tiff",
+    "sha256": "cb69684fd38ad6ce892cd29dfa804e7074bbd3026577f84e1c9c2f6b469fc8c0",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00310.tiff",
+    "sha256": "f84e1643e36afb131ef30e182d48f92297b512e0db5d5a7118c950e8a8e54389",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00311.tiff",
+    "sha256": "ce1dd45ffa2d454088ce0a1c8ebce92a11da444aba026dac46aca64c34d8df04",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00312.tiff",
+    "sha256": "fb28007b8ce5b247481b3873b9588d9fb321cbc2ce9112ad5b7afb9e6fa60100",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00313.tiff",
+    "sha256": "67da7cfe459b57ad94cf99f00fe38c0c22754d196dcf880f2718634c809a2b3c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00314.tiff",
+    "sha256": "58f4bba068c3cb0f0a5b5796e2f7c5d20626065b02b6498a6d77544802793d34",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00315.tiff",
+    "sha256": "0503f9dd5d287b6baa38a2cbc51c2fcadcc9fc74e0c6903834b9119aadc638dd",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00316.tiff",
+    "sha256": "4550fd763c7bb27405e898a586f64276a2a128fb531162535768ddf32b08a55d",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00317.tiff",
+    "sha256": "9907730745b27d43c46c706700450e4cba7c2ffc11db892ddc652e9f85a2e9bb",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00318.tiff",
+    "sha256": "f7a0393e9eb6b95f7fe78540f6fb4be197133a4ef9e3aee0f3d8eaf5bd77db0c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00319.tiff",
+    "sha256": "2c4d114b1f3238ca5d1964ec00149283417a30ef4c075227504336fa25c60268",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00320.tiff",
+    "sha256": "7a0ed765b0afddee9db61c176115b1786f387ffe86038f951c03198ed6ca90e7",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00321.tiff",
+    "sha256": "6f175dc195a11fc96a48410d180586a31d473af1ecab4dd01ecec6e68b5e14c6",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00322.tiff",
+    "sha256": "0b90872599b5b13bc099d7eec9c76e127dd69460c28d92a8374d6f68e2160ff5",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00323.tiff",
+    "sha256": "41fe9193d461e629513b2ef246445acf205b373af4e750fe9912da4f55bc2c16",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00324.tiff",
+    "sha256": "e5c0d130447dc821231be69fd099b3b1de5450a31dad4b7d0d4810160901b214",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00325.tiff",
+    "sha256": "01297610784e30c38344c40ab4627bf1012a8b64301243735fa356255bb8357e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00326.tiff",
+    "sha256": "5084f2c41863fc609ad9911501302ce0a052bd45f93105597158ae88ecc44e1c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00327.tiff",
+    "sha256": "a71fe7c940f20552508fab86b8814045a8e424f06df8bbd83cf209c920c28698",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00328.tiff",
+    "sha256": "4460365d52d4b196fb06ca2cce117a6ad6c07aad9c9da73ae2ee195344c4847a",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00329.tiff",
+    "sha256": "8408c0f6019e212349f4f81ad97832cca587f834f188fa2a0bfbadba045e6c69",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00330.tiff",
+    "sha256": "c920477d0bc8c2f37357bba9f1c09cafd1dab3e4269504bde0ad40e308f2444f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00331.tiff",
+    "sha256": "b18856bfdda162ad1f695d4f403b291772c7dc9d388384a85b59645e436489af",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00332.tiff",
+    "sha256": "0c60c6cfbe1318edbe40f1e22177729a3977e5504bc29085558ebac1c815f070",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00333.tiff",
+    "sha256": "4402069956cf2b7f8619c147fd69f201c7a6e6ce54a863d1ab63ce8beaa64dfe",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00334.tiff",
+    "sha256": "b58dcd8cda1397227cf6bed977a272ed6166406ee90601c70893761efbbc87c4",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00335.tiff",
+    "sha256": "63916f53bb42a40bba805b743ac203e708f59b03908a83c59c7b98a1645bbc39",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00336.tiff",
+    "sha256": "5c79e2ae92b58190411b89b5ecff345e428249c416ed1377b67b078e41f30e5e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00337.tiff",
+    "sha256": "f7901b14b30e08c08b1ec59fe06f5ff7e814c142c9c4ccd75c47a4968b72a91c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00338.tiff",
+    "sha256": "aba14377c31c2cd81e95f534b413383bbbc011a61306de16eaa4f7ce68e9303c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00339.tiff",
+    "sha256": "ace877ccb24cce546a9a7b95c690f57dc8dec5b6e887d19f424b7a63d3f79267",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00340.tiff",
+    "sha256": "58410d8b91481fd49dee60adb9013d0d301bd608f32e0fa2486f5934759dcf78",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00341.tiff",
+    "sha256": "6dc8d6a623ce7e02eb35cc58ca61ef78e22b4f18ee1918fa5844bb6c7fc109b1",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00342.tiff",
+    "sha256": "eaf2cbede5f46c81434325954ddd4bf4df6ca3bf9b026b8efaf60d2fb879b082",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00343.tiff",
+    "sha256": "e4f931736bcf743a0af7da3c60ddb7f0abbc111bcfd302664ad529e56952e8f6",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00344.tiff",
+    "sha256": "cd20275445486e2ce386dab2e621b37117f9955578d6b79cffaa173c66ad86d4",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00345.tiff",
+    "sha256": "1ff6e271413133e298c43e9296c046a3f5c85ae979b6c6bb9f78bf3e4078dbc1",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00346.tiff",
+    "sha256": "e42fd0761a233d950100a6fc2e74f9ad3046ed717cd8b464be5a5761d54c6274",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00347.tiff",
+    "sha256": "a19e3b2d76c3958fdf6cdea960bc1007ec2c2f2f0ec8392a67992ff9776f38c2",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00348.tiff",
+    "sha256": "748ee81eb0cd98be494af19a4a8e12f10090a67a88c1054aee8df3963c2807db",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00349.tiff",
+    "sha256": "7b6b684d3e358312c26e1769bec5557e6fda04a043eef0e288e22be45f8894a9",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00350.tiff",
+    "sha256": "133e018e9f8c2aa43a7d8a72aefa89fd2d22729f910c73be20060f95ef63a9bb",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00351.tiff",
+    "sha256": "ca838bdef6b54c13a085ad205a58bbe11a67ea88ccc312aa12607bb4a249074b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00352.tiff",
+    "sha256": "cfc7d7f25294090832725a7f265f02770732fabe4497b6e0a8f86ed298491125",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00353.tiff",
+    "sha256": "96a57f476bdb3492a54455ba6c1c7af2272fbfb19aab3b63d16324147f0848de",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00354.tiff",
+    "sha256": "24d63463619cc9b0e137b0362796540a95980bef992ad053cbc721407f4ff746",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00355.tiff",
+    "sha256": "e3f4bf9063154c1a5c6d17c5aa7052374b17392d00ae5da73ba4071a5d4bc4c1",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00356.tiff",
+    "sha256": "2ec8c87d50b5640b7215c2739711de483f17cd125c98daffb9617f04e590082f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00357.tiff",
+    "sha256": "87f219c1a4d7988c182255d70992413e32726d04253e69b763d2311c4a91b07f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00358.tiff",
+    "sha256": "8db28c5ee899524904e9c0ae8a28c0c332e46536f9a2ef894d02a0865bcf3e60",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00359.tiff",
+    "sha256": "75b034f8c8ae0a9c548cf5bddf6e2837134b77c510c06fcafcda4da05018c71f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00360.tiff",
+    "sha256": "57a9a9f12802314ac941d08b420ff9417779baa5193986748c3ce0d260139429",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00361.tiff",
+    "sha256": "3c124efef15af3eb94ce47f17bf6e8f4ca7559a8168cbc955ffe44fda3353ebf",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00362.tiff",
+    "sha256": "2b5f50eaa33e72cb627929a85e893fbcedfc5230fde7605b28464b069ff409a4",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00363.tiff",
+    "sha256": "e39a259f4a373bb926440a0280cc7dcdbdf7948aa66e492c6de0c2f57b45adc9",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00364.tiff",
+    "sha256": "41d58d9475bf7a6b73234c76bc9c3a15110609a875cbf70aeb0f1c69bb3a5b35",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00365.tiff",
+    "sha256": "66d37855a79e327899bcfda0377e047122b56fcbf56d9df6e6dc26fed35e6d6b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00366.tiff",
+    "sha256": "b6a3a8874dea5e1fcac5d9c4ba375f373b57ef684e9d01e4e6bc427590cdda46",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00367.tiff",
+    "sha256": "580f7eaca666e2de9d18c88b16bea83e1dfd9349a5be6471d7b9156c549dd927",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00368.tiff",
+    "sha256": "0c35cd26e3b0f4eebf8400d0ac14a8bfc8c0e42ce0243595756f3b442d2dbe55",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00369.tiff",
+    "sha256": "7de82743085c618723713d3249c945711973ecc5a48c0849f1d0b94d8006c791",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00370.tiff",
+    "sha256": "758db06968b2ed239de69afcd80505f9a964ac46cdaf7d6852d9e07b0cb07cc3",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00371.tiff",
+    "sha256": "28e60c905f9a0568868d32eeea821460360ab5a8290e85d67e694a84c5dff718",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00372.tiff",
+    "sha256": "f1c8c12b66c1a211bfe0fa36860efb9a313374217e070dfef48fe9beddf2c885",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00373.tiff",
+    "sha256": "97ef120fb50349296a7ee86e4cc2ba6bdf85e79be9236915e4137697ce354dd6",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00374.tiff",
+    "sha256": "1db03cd85f51576b8eb8dbab19e41bb736f3d113fd6c2f2bbc2fc02a3a5461e8",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00375.tiff",
+    "sha256": "72306ed9f58624a0adfd5e1f8063a2e5740b3c38daea1afe85637398ccca6953",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00376.tiff",
+    "sha256": "5a4e0182123b35f1d7943864efbd703ccbfe8aa8f5ac4ad0b332b24d2138e294",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00377.tiff",
+    "sha256": "6c45851a8f71d115f2c09f86676852023ef42055bd982c37b3effa4fa7726702",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00378.tiff",
+    "sha256": "4e6b2cf81d1a1dbf5379c71383936c7774a3a6e00e303eecb242c622b89e7017",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00379.tiff",
+    "sha256": "34cf794453b93901a03c1b7d5183773563aed03f13699afddad4dce031eb8458",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00380.tiff",
+    "sha256": "c059b0ae2cffadf38aff1cfe3466366846b599a63258492b66a5b967b3861bad",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00381.tiff",
+    "sha256": "e4507c09cc4ffeb654d3893f86d7a0536cf4ec1af0072b4cbca5bd3bf97b1b0e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00382.tiff",
+    "sha256": "9191b0e5be03e89ea92d82c484c8825e9fd505dbd4dc8193f31cc638b033e04e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00383.tiff",
+    "sha256": "792458beaa4d9a71820d6ce19a4a62a8d9eb03ecc3e0377f3587cc9529d722f1",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00384.tiff",
+    "sha256": "d4acc46f677926e4e465870561e6123494de572823dc55d5e04ba36c48442a66",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00385.tiff",
+    "sha256": "96e6707623c6cf45ae9ba2b067da6e6648a64e634c2c9d5aab21cdb589fbf9f6",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00386.tiff",
+    "sha256": "5a1a9e01a9c500d85d8af1e38f143042bc05bf5af1a8f40b907b0aa57038d5e4",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00387.tiff",
+    "sha256": "eb0505e52708a2bc8b17aedf365fa87d39eabc09f0b611fcbfbd88ca658a02ce",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00388.tiff",
+    "sha256": "53eb469da2fdedade50668865071b546b8962fa67951cb24383372bb1c99e869",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00389.tiff",
+    "sha256": "0edf0a2edf6434f29f61e16da0e49845f98e1a72ebdede4372883884802a96e6",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00390.tiff",
+    "sha256": "dbbb2e091d7a52b83dc703fe95c5a1a84dc59cce53a7c5da2aaa8c8a0aeed920",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00391.tiff",
+    "sha256": "18379c38282f2c29ec3cac430d465ef47d33e37a6f182c397ea49e5e1ddc8072",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00392.tiff",
+    "sha256": "9e88cbff98a27171ba52c9c6d16a2616604574050dac163125dd3ed8157b4d5d",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00393.tiff",
+    "sha256": "733cf473803dd463fbe1829fd56803074c18ed722ba83d1f8a9cd5dad984625a",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00394.tiff",
+    "sha256": "44c55c7adad42737d39f3fdc60a844b3b853cb766bc784ef9b0dbe158e6e902e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00395.tiff",
+    "sha256": "c2273d0c83b96ab2dee2d20286bbf21e4d777b8a6127bd257494b9e462b1e1eb",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00396.tiff",
+    "sha256": "b063d898249c2db27d32ff3d877916fcf9e256dfa14677c9758f49e40c578bf1",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00397.tiff",
+    "sha256": "7df5e91840d8ce7dc4dd1675e36513ebeb7b9cdb83357902db10edb9112282c7",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00398.tiff",
+    "sha256": "c96d2eede5a84f58e3a647452e15715774bfeee910bd54e8994ba2e9d217e5c2",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00399.tiff",
+    "sha256": "f7ffa81cfbd512add4a1a765384065ccf4387ae01176085e5a264d5e33f32cfe",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00400.tiff",
+    "sha256": "fee10c8ab599ea2020c83d35687e9a5b6fb7a53d360c54e12e864cf37c296f82",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00401.tiff",
+    "sha256": "eebb25e354c6f313f12555886f3972cc0b220d8089c7060f1d692844e9af6382",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00402.tiff",
+    "sha256": "17a842e455e57b4b4f6a0180cecaf9ae7d4f302a0ba7d497a3aeab669b324cb5",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00403.tiff",
+    "sha256": "375affb27a09bc42cfa4f7b050d379cbfd84978ab9dc2dd58415147de80dba9f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00404.tiff",
+    "sha256": "7907ce7f0225d91a01f6ca9d59639b5efbbc7df7823cdfb87c30a8d5c88612f7",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00405.tiff",
+    "sha256": "0bb40b376c938f20395e3af1d37bb56d6f34a5d0b8bc79ab7bea28143bf0b264",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00406.tiff",
+    "sha256": "7b63dd3be487b471223413c26383b81487f29207d49daa44c42607c9fd599381",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00407.tiff",
+    "sha256": "d6cc5286d8eca390d3adcfb7ee6dfc72072af14bd4d1eac9afab682a987bf41e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00408.tiff",
+    "sha256": "2667e52e5c9cf27ff8448fd82b39406e34133099ee37a71e304e3411c864e803",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00409.tiff",
+    "sha256": "ac193766dbca5209f8b5039b8ea038fd5e65fb63ee50ab2e07fbcd239e083461",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00410.tiff",
+    "sha256": "6035d2fef06987733be4dc6bca38a5d053e3b29f5feea5d06b3b7d3741db6765",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00411.tiff",
+    "sha256": "5fc1cf3a6a8784b5b18ebe94b892cebc35327af7d0c70a2219f055152c88633b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00412.tiff",
+    "sha256": "fbe1b75d0304bea5cb998c21515cd0f7d077132d3bb5298c7c8e1c4f24b47a50",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00413.tiff",
+    "sha256": "fd56167bd93310a3ed917eebe2c7ed889127a7494fc8d2f7aac346a71f66b1f1",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00414.tiff",
+    "sha256": "a1c663d25a4170a75ef92c75af2649212f0b90d3c2c0313e2962d89a338b7a83",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00415.tiff",
+    "sha256": "adfa190bb06c3fe24494e8efb70c05d87e6560f378faf42e39c52f2e179c82d3",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00416.tiff",
+    "sha256": "7da51b758418eae492e4cda02cf83364ff769af404f5676e6ad297c75750f09d",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00417.tiff",
+    "sha256": "1598ed74461ce4ceb452bfd79adb2face508764d31bb351a03983db77137b3e5",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00418.tiff",
+    "sha256": "b7526b9f3660dd79272dde041a1582d4967d3e9b7787c871a2908583c4ea0bc3",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00419.tiff",
+    "sha256": "ce2990d5572597058c887e1c473b5a8fc154ef34459f3f0be0292aee4840105b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00420.tiff",
+    "sha256": "d765927e5ab879cf78460de247777e0d70899ec394143ef317f4a1a7c37b215a",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00421.tiff",
+    "sha256": "7c6f9e172764dcc1b8d20ad119d395f8ad54f19352e81b7a824acdd75001db8c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00422.tiff",
+    "sha256": "9d85063811f257c715afd24230157cc6300609c79c562e6138aa3df5fd77e123",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00423.tiff",
+    "sha256": "2656131f8a9c2a48c8361dd34543faf02f72e305f8588b42b855b5071ea7e9b0",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00424.tiff",
+    "sha256": "e6003655751e7f5567fe2b968f900c67919a956538264f9e2f89036866d59d70",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00425.tiff",
+    "sha256": "c4e5bdb67455a7ad64b46d60bc27e314c9c20a65270f065fa1ba01f0b2f67c42",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00426.tiff",
+    "sha256": "0cf03415284604998e094fec4c1ec8a555975e76f386adfc4c2abd53be1c447f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00427.tiff",
+    "sha256": "eddfbc5d543aea8f4cc3508c96289f6828b6e2ea4b76e939812be425c9e4bd06",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00428.tiff",
+    "sha256": "312da0566e90ce065b9ffb3987084ffed78c7666ac89175ade95e1a51b82375f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00429.tiff",
+    "sha256": "14395d5769e4753bfb16c62a6a19461709367891026985a8291158779f33d7c3",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00430.tiff",
+    "sha256": "657a1ce10fbf345dde56c3aadcc02263bbbe269af43db0ccac00cd667dd296b4",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00431.tiff",
+    "sha256": "a9e8a54d1ed018bed724e0e9033ebdd16499840c6195efe476c49a83ade28abb",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00432.tiff",
+    "sha256": "7a03e6decc44ec544f42e50e0ed5a69994acba133530d937d6facd16bccc9cca",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00433.tiff",
+    "sha256": "4533649bb543402fc52a4bfac1b6bdf7d0ad878f5078a5c168c9ee67a4beea05",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00434.tiff",
+    "sha256": "745bf5ee8cec2bca16c23101e1e8dc219863ac53fa1d42bf70b236e497121e6e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00435.tiff",
+    "sha256": "967cb4c6a7fc416bfba9988e67f8b80b23f2da65ab7f3ea5cb51d4d069c19aee",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00436.tiff",
+    "sha256": "82e2628a1f5518e4ebafcc1d832508f54879a9329d280d79168142883acfea8a",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00437.tiff",
+    "sha256": "ee41c319a40a07fa12253a0f076a0ace17b4ddd7ddff5130c112cf7f13ab77e0",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00438.tiff",
+    "sha256": "a9daab39d4a8d3c64f18a576d648d030aba3fafcb0c488290f0c0e9a9103358c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00439.tiff",
+    "sha256": "cac482f4046be50805e32b99a019154e699dc79a3eabbc55a63768425b835f04",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00440.tiff",
+    "sha256": "7fa4b78be0038c49656ec2cc395fc2d03e136289d90308dcccf689e764901d1a",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00441.tiff",
+    "sha256": "4466ae30c67846950e5cee773b9c8f5e796dc0737bf1afd0551379f50c404c6c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00442.tiff",
+    "sha256": "087d8af9bead84b090758cb06e04c15deb93b3a132ba77ef255656881b7c48f3",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00443.tiff",
+    "sha256": "0cff661d9f9ba316062567199e7dcc29f5ab5f466400f4452af37159d6ddb591",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00444.tiff",
+    "sha256": "8aae9837b4036f95e584ca07791a7838f50ed3b2bec84f8db1f9a4e91f6f0a8b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00445.tiff",
+    "sha256": "71ce4d3afa10bc049a33673865d0a2d3ce3b753235038d5704465f94b7872912",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00446.tiff",
+    "sha256": "75f0009db2d3fbf750e9c3e729f8e48799ba1aa1cc253160bab98fd2e2bd8093",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00447.tiff",
+    "sha256": "b96b2d1090ef5a6f2914b2ea4a057e57ad9f788dbf7780c5f65e6e077c8153f1",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00448.tiff",
+    "sha256": "542a0f7e88e753d57b579a0a87201c68b72a087adc2a98d529d6160ccefc4723",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00449.tiff",
+    "sha256": "11ca1f377b99400065244f12806fe4f0a2bac2a279f38c59be8149a1c84b2d90",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00450.tiff",
+    "sha256": "c9a4b8f45622f469fa49c97b8678e0baf3638bc71e0564447a36d405105e13a3",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00451.tiff",
+    "sha256": "3098e7e7ee5236a98033c3f2057cef0da65bed1040036b0009fe54f45a2e15b2",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00452.tiff",
+    "sha256": "19cbee979d36da2a1eb421bcad23bc3e91581e399017e18d9f7def80d84ca706",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00453.tiff",
+    "sha256": "c510b3df1d75cd45e740c5387ef2a5f7315ea3f8028ae18a609160d5192c5e40",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00454.tiff",
+    "sha256": "67cd2daf4d30416a90f8b23c801e92a02f126b27f2d0f269790aa72c43478180",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00455.tiff",
+    "sha256": "85e55e2e3b21bda3ea7744c10994e5795868b03c6b271fb212bac0d7c8db0014",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00456.tiff",
+    "sha256": "26d205544fd0f841d28fd366f7ff3a10496c7819630227ce7df22c246fe1c1ea",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00457.tiff",
+    "sha256": "05b740fa23ebb1d5aa8853431a51b8f66a4f579076b9a1e7a156f9e75c61be1a",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00458.tiff",
+    "sha256": "5bb7303c448b3df49836ba0728fc15a658cc5654b652ec964d16b7edaf55da08",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00459.tiff",
+    "sha256": "d25a995cc96dee66fbf325c6e4a85e1ee156f933d6bb9a0216f856159cdc5bb5",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00460.tiff",
+    "sha256": "854148fbf9b36026b0ad42fc9b602aca1dc4e0d4b36888d52b070e0568c8a582",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00461.tiff",
+    "sha256": "03b169de4f3e8d79cc0b5ee2823ae5cdabce65a13a205396ea8b83d39db94777",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00462.tiff",
+    "sha256": "191750e252c26dff07261f372af7d31a66aade2f6df24b23f91f978858347acb",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00463.tiff",
+    "sha256": "08f3502ec2a3fb65159390ebd5d3b947352aa2cbee81d0022eceeebd6db52c7c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00464.tiff",
+    "sha256": "6b433112cec85e7577ee6d3cc678b0518102a8f13b580a5bec326fbcaf5d2624",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00465.tiff",
+    "sha256": "11373f162ba099ce411b831441242e50c0d38417f18a659c25a4a6cc42786276",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00466.tiff",
+    "sha256": "069e3d415e6a718ce29db6828b40d90ff97ce065a0b9c36e849da49a5a45590f",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00467.tiff",
+    "sha256": "ea8a5671ffd519a672a6a960cc974e5461adc6b5a13997f6b1fe212d6bd215a1",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00468.tiff",
+    "sha256": "489e7d8ef79a4b61c7bfefea285f98173f2759db933faf034e9b67b4d1c45c9a",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00469.tiff",
+    "sha256": "27bfe7c4540cd5e8d725992ee0a088278044b8f2530690995ead1358ad995c3c",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00470.tiff",
+    "sha256": "f704821c5092effeb365f024ab3f49e648e0eff0d902c165a77815880d395721",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00471.tiff",
+    "sha256": "807e084924ed2328f47c56b79c3d4476f449ef881376fef941218431062fe51e",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00472.tiff",
+    "sha256": "fd654579f47f63364da400c50fa3097e0bc959094b9e5f91c2870e358da1ed46",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00473.tiff",
+    "sha256": "22087136acb67092a6746801f3c1ee30c44cf717abba546bcef993121b924cc7",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00474.tiff",
+    "sha256": "4029da39740f0f622dd8fc33d9a26a9e8a0778bbc827e9ee63309654f11e3f15",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00475.tiff",
+    "sha256": "bde2d352b86b0a0381d9c656789a17b784f82f66b666eacf91c3c33e5ef7c478",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00476.tiff",
+    "sha256": "b7385aff2a68f73a9f5c7e53eec0f021d3e6deb0d2ba3577c3bf564bf7eee054",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00477.tiff",
+    "sha256": "6a6e15f4cd3fb0cda8ddbaf0fb67a1f81d3926b64ee5fc7e0ff05886a7a658e2",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00478.tiff",
+    "sha256": "4b4ead0770b1827f5abdbdbb29ce896775840e764a66e30a528784f8f7cefe0b",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00479.tiff",
+    "sha256": "a22ee40b613e14cdbb17cc95ce19fc82e7849dbc0aa5d9b95c3c89a32b8b3cbe",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00480.tiff",
+    "sha256": "42fdeb22b193b1dda9383cdb8702b51dc3769c09e9a0203ca9da3a7c4609b330",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00481.tiff",
+    "sha256": "691a4134becd8653f889e75733802f2b50f9d620e412733ae118ee6279b53c31",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00482.tiff",
+    "sha256": "f37616b16daecdf69eea75e0f5652e611d5222b2d6f05256d4dc606ac5d2c28d",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00483.tiff",
+    "sha256": "2b1c03968c2ac671179989428386a81d44ca40bdac328b0031f6dbbfb64ed449",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00484.tiff",
+    "sha256": "7d93297ffa32adaac11175d3335baf1bb7a4d7ada0749c5f5ec812596a56c0bd",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00485.tiff",
+    "sha256": "326d9ce0941346dfa893d85ee940adcb7725cb2c5e5592dcdf6336f789f54832",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00486.tiff",
+    "sha256": "15250ea0c728148c7e3cf619ffe269bf66bb6c21701d97466e271a667373fd98",
+    "bytes": 197801326
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00487.tiff",
+    "sha256": "87e6cbdfcd3f07f7b50a39272dca78cda0ba7429100d76cf751af6784d8e0d16",
+    "bytes": 197801326
+  }
+]

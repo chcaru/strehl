@@ -1,0 +1,1574 @@
+{
+  "schema": 1,
+  "status": "FIXED_SOURCE_STRIPS_EXTRACTED",
+  "witnesses": [
+    {
+      "name": "surface-scratches",
+      "centre_native": [
+        5112,
+        1512
+      ],
+      "core_native_xywh": [
+        5048,
+        1448,
+        128,
+        128
+      ],
+      "support_native_xywh": [
+        5016,
+        1416,
+        192,
+        192
+      ],
+      "saved_curve_patch_index": 40,
+      "latent_front": 0.6966048824486663,
+      "sigma": 0.022441023376467556,
+      "source_ordinals": [
+        194,
+        200,
+        206,
+        213,
+        219,
+        225,
+        231
+      ],
+      "samples": [
+        {
+          "ordinal": 194,
+          "tiff_number": 195,
+          "fixed_sigma_offset": -3,
+          "source": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00195.tiff",
+            "bytes": 197801322,
+            "sha256": "37e312cfaca5a0e11bdb1c368d779d28804828541bf079a63cafe1962986ba57"
+          },
+          "original_identity_only": {
+            "index": 194,
+            "mtime_ns": 1789283168720000000,
+            "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00195.ARW",
+            "sha256": "a98841b1af29f9ec26d388ad3e424e1b024905cc7659acc8e58187e30646b753",
+            "bytes": 41934848
+          },
+          "mtime_ns": 1789900558169707600,
+          "source_metadata_unchanged": true,
+          "source_transform": [
+            0.9906907520384215,
+            0.0033148698171686806,
+            -6.207185411655676,
+            -12.50130579862951
+          ],
+          "source_transform_bits": [
+            "3fefb3bd178e8c9f",
+            "3f6b27c92e914d26",
+            "c018d428699d13e4",
+            "c02900ab2754d15c"
+          ],
+          "source_rectangle_xyxy": [
+            5253,
+            1580,
+            5447,
+            1774
+          ],
+          "latent_time": 0.6308560284256526,
+          "support": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-194-support.npy",
+            "bytes": 442496,
+            "sha256": "e9aa41ea08038493e7989460babae32b3a5bce7031acab7b8997140e18a827a1"
+          },
+          "support_shape": [
+            192,
+            192,
+            3
+          ],
+          "support_dtype": "float32",
+          "support_array_sha256": "425830f028dfd564cbe0eff4ebb5a576f10c139ee3e7568da58a28edb3c8cfc3",
+          "support_pre_display_range": {
+            "min": 0.07960858196020126,
+            "max": 0.4424093961715698,
+            "outside_unit_scalar_count": 0
+          },
+          "core": {
+            "master": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-194.tiff",
+              "bytes": 199584,
+              "sha256": "c1e0e19ab9c2cc5e8552da7cb54094d7f15097d0858bc6bc4d5aeac34994a477"
+            },
+            "display": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-194.png",
+              "bytes": 91245,
+              "sha256": "16729f6137366fefdfb3aa313bb12268e2579a8c2ecd7e0f787263d103efa3d9"
+            },
+            "shape": [
+              128,
+              128,
+              3
+            ],
+            "dtype": "float32",
+            "exact_array_sha256": "abc2a5cca4dd3cd94fa308f2946bb37161cf579a4d2d04db370c051aabac9864",
+            "display_rgb16_sha256": "36d30d46734e7ecc1febf8ed3e0caf0ae4ad263ffdcbd0cabd8a9aec57b84959",
+            "display_quantization": "nearest RGB16; fixed [0,1] display saturation only",
+            "pre_display_range": {
+              "min": 0.08015819638967514,
+              "max": 0.4390822947025299,
+              "outside_unit_scalar_count": 0
+            },
+            "spatial_resize": false
+          }
+        },
+        {
+          "ordinal": 200,
+          "tiff_number": 201,
+          "fixed_sigma_offset": -2,
+          "source": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00201.tiff",
+            "bytes": 197801322,
+            "sha256": "86fe1a0f256b7364cace4b4b33757b1ffd3bf150d4a6fcd1a66c09dab78b3023"
+          },
+          "original_identity_only": {
+            "index": 200,
+            "mtime_ns": 1789283183580000000,
+            "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00201.ARW",
+            "sha256": "c645f31603b54e5c593566bddd17d4a0ed2f627a97cd075e00e6039f828f1221",
+            "bytes": 41709568
+          },
+          "mtime_ns": 1789900561841626500,
+          "source_metadata_unchanged": true,
+          "source_transform": [
+            0.9894105921412005,
+            0.003664124975845509,
+            -6.901401247975375,
+            -14.557977460348283
+          ],
+          "source_transform_bits": [
+            "3fefa94066f1ff99",
+            "3f6e043a1e122186",
+            "c01b9b08edc282e4",
+            "c02d1daf38c033b8"
+          ],
+          "source_rectangle_xyxy": [
+            5250,
+            1578,
+            5444,
+            1771
+          ],
+          "latent_time": 0.651887839938277,
+          "support": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-200-support.npy",
+            "bytes": 442496,
+            "sha256": "29a3a8ff6aa90f7ab6f556c2f241b3b49f33b6914052190dcd21696eee1ec12f"
+          },
+          "support_shape": [
+            192,
+            192,
+            3
+          ],
+          "support_dtype": "float32",
+          "support_array_sha256": "0195e06bf4aef80fe9a879a697e6f7a5ac0e327dbb1c6fbc14ad216b764ae7f4",
+          "support_pre_display_range": {
+            "min": 0.074335478246212,
+            "max": 0.49169743061065674,
+            "outside_unit_scalar_count": 0
+          },
+          "core": {
+            "master": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-200.tiff",
+              "bytes": 199584,
+              "sha256": "c959f396f0607b8a7b5f94951f5c902f39e33019606f30869a18ef8ac77246d4"
+            },
+            "display": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-200.png",
+              "bytes": 91585,
+              "sha256": "4738633052a97198f0b4b44720c40038b568c5f2a180f926b98250e19317a1cc"
+            },
+            "shape": [
+              128,
+              128,
+              3
+            ],
+            "dtype": "float32",
+            "exact_array_sha256": "ccf2907bd0ac6582f81655cd299f6b4df6b0fef4c825168b8ac2bcbdc828e908",
+            "display_rgb16_sha256": "9c1e16fe84cf06965513c87ed0713c86f801367f037da2e4f6651feff370d7ab",
+            "display_quantization": "nearest RGB16; fixed [0,1] display saturation only",
+            "pre_display_range": {
+              "min": 0.07630088925361633,
+              "max": 0.4673286974430084,
+              "outside_unit_scalar_count": 0
+            },
+            "spatial_resize": false
+          }
+        },
+        {
+          "ordinal": 206,
+          "tiff_number": 207,
+          "fixed_sigma_offset": -1,
+          "source": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00207.tiff",
+            "bytes": 197801322,
+            "sha256": "eec706a08aa9de348e8da34e875e6bf0ddc48411a4a9605873721c5fc12a5d59"
+          },
+          "original_identity_only": {
+            "index": 206,
+            "mtime_ns": 1789283198450000000,
+            "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00207.ARW",
+            "sha256": "cd35cca34fd736232a90797a69a7c0b04528fef314f5fa3792cee45aa003dda2",
+            "bytes": 41467904
+          },
+          "mtime_ns": 1789900565427051700,
+          "source_metadata_unchanged": true,
+          "source_transform": [
+            0.9883185750490592,
+            0.004099132007841529,
+            -8.012134781236764,
+            -16.12918523307978
+          ],
+          "source_transform_bits": [
+            "3fefa04e46bbae55",
+            "3f70ca405ea69195",
+            "c020063687b11cae",
+            "c0302112488f342c"
+          ],
+          "source_rectangle_xyxy": [
+            5246,
+            1576,
+            5440,
+            1770
+          ],
+          "latent_time": 0.6733183733175976,
+          "support": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-206-support.npy",
+            "bytes": 442496,
+            "sha256": "99c1fc6b07f9e8f854f9e7bdee53c1c62fa58b4a56a90076d2d128140dd6a76f"
+          },
+          "support_shape": [
+            192,
+            192,
+            3
+          ],
+          "support_dtype": "float32",
+          "support_array_sha256": "886127e358007d789d89d379339120b9c2f1f712498f9eb6c4a8b39d53d276af",
+          "support_pre_display_range": {
+            "min": 0.028864655643701553,
+            "max": 0.6875779628753662,
+            "outside_unit_scalar_count": 0
+          },
+          "core": {
+            "master": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-206.tiff",
+              "bytes": 199584,
+              "sha256": "52a381ad25656e8f74faa0cbd06a4dfcb07087201e255d0803022311f528abab"
+            },
+            "display": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-206.png",
+              "bytes": 92078,
+              "sha256": "a13738c655240c9c37c68f2c3fdfa597a1e256b05409327353ebddcaa9cbb715"
+            },
+            "shape": [
+              128,
+              128,
+              3
+            ],
+            "dtype": "float32",
+            "exact_array_sha256": "0bf4bd99360c18f7932abf0d7388799cedac41e39c3a4c4eef556fe2cc6e4541",
+            "display_rgb16_sha256": "41a839397ad90c57e66bad3bf711f1e27469e110f736e4f0caba7d1639d035dc",
+            "display_quantization": "nearest RGB16; fixed [0,1] display saturation only",
+            "pre_display_range": {
+              "min": 0.028864655643701553,
+              "max": 0.5933429598808289,
+              "outside_unit_scalar_count": 0
+            },
+            "spatial_resize": false
+          }
+        },
+        {
+          "ordinal": 213,
+          "tiff_number": 214,
+          "fixed_sigma_offset": 0,
+          "source": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00214.tiff",
+            "bytes": 197801322,
+            "sha256": "c953b6b9a9ce91d5d6d503315c2ac3e62a9d18eaec7737966ddf05542101daf3"
+          },
+          "original_identity_only": {
+            "index": 213,
+            "mtime_ns": 1789283215760000000,
+            "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00214.ARW",
+            "sha256": "e235225432b6293d9b0c29c3d6ebb217777d3c0582d771e1a088462401bbcf05",
+            "bytes": 41164800
+          },
+          "mtime_ns": 1789900569594242900,
+          "source_metadata_unchanged": true,
+          "source_transform": [
+            0.9868659965939353,
+            0.004978815857089061,
+            -9.425975834412057,
+            -18.140529587260247
+          ],
+          "source_transform_bits": [
+            "3fef9467ff9cf908",
+            "3f7464aab476cc9d",
+            "c022da19812b5f48",
+            "c03223f9bf3d6734"
+          ],
+          "source_rectangle_xyxy": [
+            5241,
+            1575,
+            5435,
+            1768
+          ],
+          "latent_time": 0.6983206622601381,
+          "support": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-213-support.npy",
+            "bytes": 442496,
+            "sha256": "f1284531f4f79ec3107e836565148cd946dd73162c26faa74a4f2f32d87ac7c4"
+          },
+          "support_shape": [
+            192,
+            192,
+            3
+          ],
+          "support_dtype": "float32",
+          "support_array_sha256": "f13dd8ea0f7713a54b6c34dec513a8f1e80e071f12b6a7a3187e642bc1e1ec6e",
+          "support_pre_display_range": {
+            "min": 0.008851923979818821,
+            "max": 0.6732140779495239,
+            "outside_unit_scalar_count": 0
+          },
+          "core": {
+            "master": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-213.tiff",
+              "bytes": 199584,
+              "sha256": "c93384761b56d828a9ca2384bb3f045d098805b89a4bc4e6ed4890b25c1804f5"
+            },
+            "display": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-213.png",
+              "bytes": 92626,
+              "sha256": "da4041e62ea82e6972f0bf4a8e7f166b431485f1c923257cfcefd1adb9d2d791"
+            },
+            "shape": [
+              128,
+              128,
+              3
+            ],
+            "dtype": "float32",
+            "exact_array_sha256": "60f6b4273b52706c0d1710fe057540746f4021fe117a75bc1ac671d1abe7e1f9",
+            "display_rgb16_sha256": "9cd12e96df1632ba3e6232c247c192d9c6ddc55d67568e65353fcca9cdf654df",
+            "display_quantization": "nearest RGB16; fixed [0,1] display saturation only",
+            "pre_display_range": {
+              "min": 0.058715056627988815,
+              "max": 0.6732140779495239,
+              "outside_unit_scalar_count": 0
+            },
+            "spatial_resize": false
+          }
+        },
+        {
+          "ordinal": 219,
+          "tiff_number": 220,
+          "fixed_sigma_offset": 1,
+          "source": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00220.tiff",
+            "bytes": 197801322,
+            "sha256": "75b6744e418dc63d86a2bee2c3cfed9df4f2c6b2bccf8dab8aa334afd9d92f40"
+          },
+          "original_identity_only": {
+            "index": 219,
+            "mtime_ns": 1789283230630000000,
+            "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00220.ARW",
+            "sha256": "0ac92cca912ace91000e51c2fddea5a846ae5663e2ec9d1e1a5f04a10221dc08",
+            "bytes": 40902656
+          },
+          "mtime_ns": 1789900573196053200,
+          "source_metadata_unchanged": true,
+          "source_transform": [
+            0.9856390708393642,
+            0.005416911354094559,
+            -10.714945705435767,
+            -19.861508236807296
+          ],
+          "source_transform_bits": [
+            "3fef8a5af2dd46d5",
+            "3f76300b11c75744",
+            "c0256e0d5d0e8648",
+            "c033dc8bcdc6526c"
+          ],
+          "source_rectangle_xyxy": [
+            5237,
+            1573,
+            5430,
+            1766
+          ],
+          "latent_time": 0.7197511956394587,
+          "support": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-219-support.npy",
+            "bytes": 442496,
+            "sha256": "c78d8bf5d3f9da17edd4cc54f77226fd124f922f10ae1da38d08acce3db56c35"
+          },
+          "support_shape": [
+            192,
+            192,
+            3
+          ],
+          "support_dtype": "float32",
+          "support_array_sha256": "2c19a828a89105525674b60ea31bdb3237ac9ff9b235c74b6eb92a728abe1446",
+          "support_pre_display_range": {
+            "min": 0.05072242394089699,
+            "max": 0.5712833404541016,
+            "outside_unit_scalar_count": 0
+          },
+          "core": {
+            "master": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-219.tiff",
+              "bytes": 199584,
+              "sha256": "3ea276f475a7a2eec9ab99d6d7ceb62d1ea2345552f863bd2a546321df4afb6b"
+            },
+            "display": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-219.png",
+              "bytes": 92332,
+              "sha256": "34fc0746fada51fa9976dd82977927a143393d62069b043dc4bb22d992de09d8"
+            },
+            "shape": [
+              128,
+              128,
+              3
+            ],
+            "dtype": "float32",
+            "exact_array_sha256": "8ecef398f498d079f4cc9c3c34e41b8699ac055f4f05ec59d7c94df60353e331",
+            "display_rgb16_sha256": "8b2c22c7c8ebf0e9f4d1ed61b626211fd1b52abbd6e44dbf7564cb9d30546fbf",
+            "display_quantization": "nearest RGB16; fixed [0,1] display saturation only",
+            "pre_display_range": {
+              "min": 0.07785745710134506,
+              "max": 0.48129963874816895,
+              "outside_unit_scalar_count": 0
+            },
+            "spatial_resize": false
+          }
+        },
+        {
+          "ordinal": 225,
+          "tiff_number": 226,
+          "fixed_sigma_offset": 2,
+          "source": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00226.tiff",
+            "bytes": 197801322,
+            "sha256": "5f56ad5132efa928b78770765de7c8606a09236e96d19153ea2bf0840682dc65"
+          },
+          "original_identity_only": {
+            "index": 225,
+            "mtime_ns": 1789283245470000000,
+            "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00226.ARW",
+            "sha256": "ea310cfdac595f399c9aad679edba46287b533bedcf1245d718d26200bea0366",
+            "bytes": 40669184
+          },
+          "mtime_ns": 1789900576798262600,
+          "source_metadata_unchanged": true,
+          "source_transform": [
+            0.9844649739806359,
+            0.005808642386729074,
+            -12.058227245103048,
+            -21.17889381458336
+          ],
+          "source_transform_bits": [
+            "3fef80bcb069bd02",
+            "3f77cacd915cd187",
+            "c0281dcff622e854",
+            "c0352dcbfc2b179c"
+          ],
+          "source_rectangle_xyxy": [
+            5232,
+            1572,
+            5425,
+            1765
+          ],
+          "latent_time": 0.7411817290187791,
+          "support": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-225-support.npy",
+            "bytes": 442496,
+            "sha256": "07ad699cd0fdf795d9ab3d56bf8b3a7e71864e20f21672f9b84c1cc69f44b559"
+          },
+          "support_shape": [
+            192,
+            192,
+            3
+          ],
+          "support_dtype": "float32",
+          "support_array_sha256": "d0a91540289edb80a503f743a83d32df0a3f61f88efdfc56b700130661304d38",
+          "support_pre_display_range": {
+            "min": 0.07400321215391159,
+            "max": 0.4905533492565155,
+            "outside_unit_scalar_count": 0
+          },
+          "core": {
+            "master": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-225.tiff",
+              "bytes": 199584,
+              "sha256": "bc81fcdddaa4192e42025ff2e2d005f1877d3e30f57f2eff881f9aa9666fc0b9"
+            },
+            "display": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-225.png",
+              "bytes": 91913,
+              "sha256": "6d1154c9ce7ea9853bb4205c91bdf71e1d266348c9ffba024ecbcb8b46fef938"
+            },
+            "shape": [
+              128,
+              128,
+              3
+            ],
+            "dtype": "float32",
+            "exact_array_sha256": "0ffabdf12bf348beea199f04f2e45b8b7ac71be29bb7070f3fa0de2324a9a965",
+            "display_rgb16_sha256": "a847629348c9f7eeb7eec97eb8d883c8d9220fdfb1f3cc91876dfa7102c7afcd",
+            "display_quantization": "nearest RGB16; fixed [0,1] display saturation only",
+            "pre_display_range": {
+              "min": 0.07672014087438583,
+              "max": 0.45385414361953735,
+              "outside_unit_scalar_count": 0
+            },
+            "spatial_resize": false
+          }
+        },
+        {
+          "ordinal": 231,
+          "tiff_number": 232,
+          "fixed_sigma_offset": 3,
+          "source": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00232.tiff",
+            "bytes": 197801322,
+            "sha256": "73fef7e99b1899292ee85d9ee51270c57727aa57e9a97872ca47f985c2f6e069"
+          },
+          "original_identity_only": {
+            "index": 231,
+            "mtime_ns": 1789283260300000000,
+            "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00232.ARW",
+            "sha256": "a8130c554cda165f487bdf2cccf9e5049f2513c7154bd0df76905857d371c670",
+            "bytes": 40431616
+          },
+          "mtime_ns": 1789900580388775700,
+          "source_metadata_unchanged": true,
+          "source_transform": [
+            0.9828416249204109,
+            0.006625620386458626,
+            -13.79182406533797,
+            -22.72494371037439
+          ],
+          "source_transform_bits": [
+            "3fef73704785c7ff",
+            "3f7b23776e02416e",
+            "c02b9569f6c19fec",
+            "c036b995e9377fb8"
+          ],
+          "source_rectangle_xyxy": [
+            5226,
+            1572,
+            5419,
+            1765
+          ],
+          "latent_time": 0.7626122623980995,
+          "support": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-231-support.npy",
+            "bytes": 442496,
+            "sha256": "91a1a807ca10275ae2900e5db489efa0e002ea9a531ce64c665fa8655d071204"
+          },
+          "support_shape": [
+            192,
+            192,
+            3
+          ],
+          "support_dtype": "float32",
+          "support_array_sha256": "35478473cfcf4721ce8a3d80afe4fc6a308c645bfa5b59b662ff18279c79cbfb",
+          "support_pre_display_range": {
+            "min": 0.07603967189788818,
+            "max": 0.4592437148094177,
+            "outside_unit_scalar_count": 0
+          },
+          "core": {
+            "master": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-231.tiff",
+              "bytes": 199584,
+              "sha256": "b755299889aad1c44066706bd006c4c1cc52dec9d7bda30d4e1cd6cf524b4b56"
+            },
+            "display": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\source-231.png",
+              "bytes": 91746,
+              "sha256": "8a1831a928e6d48651f03279cf89f70e6101c3ed3c952afe8175a82db04a94d9"
+            },
+            "shape": [
+              128,
+              128,
+              3
+            ],
+            "dtype": "float32",
+            "exact_array_sha256": "3caac56bb3bb3b3aa128312875392382fe1fc1c2a477fd12b63f37a16732d08d",
+            "display_rgb16_sha256": "c379cfa8953fca7cdc04a7670b9ef626d6a8193c1a72b3b8045b6d8dc4fd7334",
+            "display_quantization": "nearest RGB16; fixed [0,1] display saturation only",
+            "pre_display_range": {
+              "min": 0.08133406937122345,
+              "max": 0.4305458664894104,
+              "outside_unit_scalar_count": 0
+            },
+            "spatial_resize": false
+          }
+        }
+      ],
+      "native_outputs": {
+        "current": {
+          "master": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\current.tiff",
+            "bytes": 101248,
+            "sha256": "c439cb58a6f3d0a05f8a6d3dcb6f656d7dddb5e7fcff607375432b9ce08ef754"
+          },
+          "display": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\current.png",
+            "bytes": 92251,
+            "sha256": "437f773dbe3360724764818f6564e69651f375c97014ffe7c95653e510bf210f"
+          },
+          "shape": [
+            128,
+            128,
+            3
+          ],
+          "dtype": "uint16",
+          "exact_array_sha256": "01eca4dcaf8565025e5c5753ab5fefa150e9b5f2b3433cb213abbd7d4f450af7",
+          "display_rgb16_sha256": "01eca4dcaf8565025e5c5753ab5fefa150e9b5f2b3433cb213abbd7d4f450af7",
+          "display_quantization": "exact RGB16",
+          "pre_display_range": null,
+          "spatial_resize": false
+        },
+        "gaussian": {
+          "master": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\gaussian.tiff",
+            "bytes": 101248,
+            "sha256": "5b2e26a8366a8c683e89f86a61e678a89391d81e5998f3c2836bbe34b68b784b"
+          },
+          "display": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\gaussian.png",
+            "bytes": 88604,
+            "sha256": "dc9c770f1837715d5183d2727a71486ea5d00ce20074f37112bf4f9102c658fb"
+          },
+          "shape": [
+            128,
+            128,
+            3
+          ],
+          "dtype": "uint16",
+          "exact_array_sha256": "d51f15eec7aa29d2d030616fe0804ea4d5ad4cac7ae16af9e893ba75fddfec30",
+          "display_rgb16_sha256": "d51f15eec7aa29d2d030616fe0804ea4d5ad4cac7ae16af9e893ba75fddfec30",
+          "display_quantization": "exact RGB16",
+          "pre_display_range": null,
+          "spatial_resize": false
+        },
+        "intercept": {
+          "master": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\intercept.tiff",
+            "bytes": 101248,
+            "sha256": "bf9255ecbdb05ccae251706e3f5f1ba2bd46bf1429d5a423124ef0e1ba4e3d77"
+          },
+          "display": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\surface-scratches\\intercept.png",
+            "bytes": 89451,
+            "sha256": "bc8c39fdd73295034c340107051a0382778aa598bd047f23a33150dad52d4c01"
+          },
+          "shape": [
+            128,
+            128,
+            3
+          ],
+          "dtype": "uint16",
+          "exact_array_sha256": "7ab516026862d41f9a5af4703823a6ed450b70d016edcc2f4b21cb78bc401d35",
+          "display_rgb16_sha256": "7ab516026862d41f9a5af4703823a6ed450b70d016edcc2f4b21cb78bc401d35",
+          "display_quantization": "exact RGB16",
+          "pre_display_range": null,
+          "spatial_resize": false
+        }
+      }
+    },
+    {
+      "name": "upper-left-contact-grid",
+      "centre_native": [
+        304,
+        592
+      ],
+      "core_native_xywh": [
+        240,
+        528,
+        128,
+        128
+      ],
+      "support_native_xywh": [
+        208,
+        496,
+        192,
+        192
+      ],
+      "saved_curve_patch_index": 41,
+      "latent_front": 0.4508651946969529,
+      "sigma": 0.022441023376467556,
+      "source_ordinals": [
+        124,
+        130,
+        136,
+        143,
+        149,
+        155,
+        162
+      ],
+      "samples": [
+        {
+          "ordinal": 124,
+          "tiff_number": 125,
+          "fixed_sigma_offset": -3,
+          "source": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00125.tiff",
+            "bytes": 197801322,
+            "sha256": "efbb4545f02b7d369a322492b68b72b39dc88aeeb4fcdceaf9069eb8ddcf0622"
+          },
+          "original_identity_only": {
+            "index": 124,
+            "mtime_ns": 1789282995410000000,
+            "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00125.ARW",
+            "sha256": "c0660d05afbc48761b3197f646995a71368f21736ace737c28d284f1363e0553",
+            "bytes": 42340352
+          },
+          "mtime_ns": 1789900515728237900,
+          "source_metadata_unchanged": true,
+          "source_transform": [
+            1.0053862841231997,
+            -0.001545861984577309,
+            2.8906691102413475,
+            6.335171887470075
+          ],
+          "source_transform_bits": [
+            "3ff0160feda27f6a",
+            "bf5953d0aabeb256",
+            "4007201720605a20",
+            "401957374c9ce3e8"
+          ],
+          "source_rectangle_xyxy": [
+            459,
+            681,
+            656,
+            877
+          ],
+          "latent_time": 0.38432471679695995,
+          "support": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-124-support.npy",
+            "bytes": 442496,
+            "sha256": "b520e90b93d6da322bff3e1315c67e895ce4baca400cb98ddfa94ae97cceac89"
+          },
+          "support_shape": [
+            192,
+            192,
+            3
+          ],
+          "support_dtype": "float32",
+          "support_array_sha256": "ced2b9ca2b6776693155cac5405703cfbca05bb5699d0843449e6e3227f76830",
+          "support_pre_display_range": {
+            "min": -0.05247800797224045,
+            "max": 1.0099167823791504,
+            "outside_unit_scalar_count": 1480
+          },
+          "core": {
+            "master": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-124.tiff",
+              "bytes": 199584,
+              "sha256": "0bc765289f2d1f395ab65aa6e2ac007200e360f55f0529a428d37a1f21d70f58"
+            },
+            "display": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-124.png",
+              "bytes": 99943,
+              "sha256": "fb43b1fa550819cb2e3292333cd461431b97941f05c26207d557392453b944ae"
+            },
+            "shape": [
+              128,
+              128,
+              3
+            ],
+            "dtype": "float32",
+            "exact_array_sha256": "626da1b07433e37e53a0d65eb256a0de8ad9a1634f563ecb13a1f5d2f3a026a5",
+            "display_rgb16_sha256": "9d09aa947c53927da11d7f523ace95398bc2a1c1811f05cb65420585bbe91c3f",
+            "display_quantization": "nearest RGB16; fixed [0,1] display saturation only",
+            "pre_display_range": {
+              "min": -0.05247800797224045,
+              "max": 1.009751319885254,
+              "outside_unit_scalar_count": 581
+            },
+            "spatial_resize": false
+          }
+        },
+        {
+          "ordinal": 130,
+          "tiff_number": 131,
+          "fixed_sigma_offset": -2,
+          "source": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00131.tiff",
+            "bytes": 197801322,
+            "sha256": "87f43d3ad00ba52fc570f5e0eddfa07a26df55102e127e7ecc362bd2752c1e23"
+          },
+          "original_identity_only": {
+            "index": 130,
+            "mtime_ns": 1789283010240000000,
+            "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00131.ARW",
+            "sha256": "fc44e3d597cfa21768fb54866444278c80a76d7c80eacc36bed6e1f4e4a44972",
+            "bytes": 42483712
+          },
+          "mtime_ns": 1789900519325210300,
+          "source_metadata_unchanged": true,
+          "source_transform": [
+            1.004217592498373,
+            -0.0013542508230854657,
+            2.2333547736554813,
+            5.03827992934098
+          ],
+          "source_transform_bits": [
+            "3ff01146775d92e9",
+            "bf563023bfba1790",
+            "4001dde91b89b9e8",
+            "40142732da927368"
+          ],
+          "source_rectangle_xyxy": [
+            462,
+            679,
+            658,
+            875
+          ],
+          "latent_time": 0.4058400278251373,
+          "support": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-130-support.npy",
+            "bytes": 442496,
+            "sha256": "7ea609371ad5157d28d223616bcf061daa76100104d46b00bf11c3266ec1be33"
+          },
+          "support_shape": [
+            192,
+            192,
+            3
+          ],
+          "support_dtype": "float32",
+          "support_array_sha256": "f363f33449830c2bc4d3512c21559547638b07e9f9fea00c7fa7c6a24ba35fe6",
+          "support_pre_display_range": {
+            "min": -0.0802370235323906,
+            "max": 1.0280466079711914,
+            "outside_unit_scalar_count": 1909
+          },
+          "core": {
+            "master": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-130.tiff",
+              "bytes": 199584,
+              "sha256": "546ab76e77512e6fcdf46aa71671f0f4f1f1e7ace65efdf8da9816f89edae625"
+            },
+            "display": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-130.png",
+              "bytes": 99129,
+              "sha256": "6877d69d5a9534a1db44eeba3bd910bd2f0b92689aba9b6bd9bbe768fcf86103"
+            },
+            "shape": [
+              128,
+              128,
+              3
+            ],
+            "dtype": "float32",
+            "exact_array_sha256": "9f9be42145024de0726b2b4be2b3e68004e66bee673d35c2d4c88faf055a8502",
+            "display_rgb16_sha256": "d698c22cf9a6eed766995af3f20bae8940b4401dd9581b36b92f5e6775c9c67d",
+            "display_quantization": "nearest RGB16; fixed [0,1] display saturation only",
+            "pre_display_range": {
+              "min": -0.0802370235323906,
+              "max": 1.0280466079711914,
+              "outside_unit_scalar_count": 1008
+            },
+            "spatial_resize": false
+          }
+        },
+        {
+          "ordinal": 136,
+          "tiff_number": 137,
+          "fixed_sigma_offset": -1,
+          "source": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00137.tiff",
+            "bytes": 197801322,
+            "sha256": "7904e39c036d9cee00504ff10c58fb45b9311a5dd836aafdefbde800a2c8a01e"
+          },
+          "original_identity_only": {
+            "index": 136,
+            "mtime_ns": 1789283025050000000,
+            "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00137.ARW",
+            "sha256": "e97109a886f79f832b9d2596b005abfc34bb7ffc7011f86a777900b1182173a2",
+            "bytes": 42557440
+          },
+          "mtime_ns": 1789900522963177800,
+          "source_metadata_unchanged": true,
+          "source_transform": [
+            1.0027804743494806,
+            -0.0011250932769669934,
+            1.2525966580680148,
+            3.562471448539114
+          ],
+          "source_transform_bits": [
+            "3ff00b6389e65fca",
+            "bf526efbb516e668",
+            "3ff40aa2cb17b240",
+            "400c7ff107e34620"
+          ],
+          "source_rectangle_xyxy": [
+            465,
+            678,
+            660,
+            874
+          ],
+          "latent_time": 0.42735533885331467,
+          "support": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-136-support.npy",
+            "bytes": 442496,
+            "sha256": "ea8a598cdf45a7dbb03b9ebdedc6a6360c34800627b6bef5b3c6355078a21f7d"
+          },
+          "support_shape": [
+            192,
+            192,
+            3
+          ],
+          "support_dtype": "float32",
+          "support_array_sha256": "d96f809dde90b1af75f17e61c7a23dda7f5238c57bbc9ef08f3e9b173ba5122e",
+          "support_pre_display_range": {
+            "min": -0.14045996963977814,
+            "max": 1.0810655355453491,
+            "outside_unit_scalar_count": 2569
+          },
+          "core": {
+            "master": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-136.tiff",
+              "bytes": 199584,
+              "sha256": "093ac3ef93c4036adbe74206e57d27fe2e35bd11a8ae86a485b0ae4423312c32"
+            },
+            "display": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-136.png",
+              "bytes": 98396,
+              "sha256": "c190e9995a4131a893d2cf41a898be8364cdee7a7f2f6f7e75f3d4101aac2d40"
+            },
+            "shape": [
+              128,
+              128,
+              3
+            ],
+            "dtype": "float32",
+            "exact_array_sha256": "5bf0ec3dcbc1ea5d58994373afbc54716e173c2edae7e44750e263545868a74d",
+            "display_rgb16_sha256": "a8927a06e8cc80c9d3a4f9b91ca48b73e834b2a16631b55a03a117b7963b9ff5",
+            "display_quantization": "nearest RGB16; fixed [0,1] display saturation only",
+            "pre_display_range": {
+              "min": -0.14045996963977814,
+              "max": 1.0810655355453491,
+              "outside_unit_scalar_count": 1179
+            },
+            "spatial_resize": false
+          }
+        },
+        {
+          "ordinal": 143,
+          "tiff_number": 144,
+          "fixed_sigma_offset": 0,
+          "source": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00144.tiff",
+            "bytes": 197801322,
+            "sha256": "905b4b9f9fd1a516cd2aac0d4a0e9ae0f5a4b77aae3172207513bbee67538394"
+          },
+          "original_identity_only": {
+            "index": 143,
+            "mtime_ns": 1789283042360000000,
+            "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00144.ARW",
+            "sha256": "7a9de61dc315256b00e15d6dc804f77cce23fccb90a49270505076990fff30aa",
+            "bytes": 42561536
+          },
+          "mtime_ns": 1789900527166143100,
+          "source_metadata_unchanged": true,
+          "source_transform": [
+            1.0011923622889076,
+            -0.0004019308969819774,
+            0.42873093793930295,
+            1.766502065274338
+          ],
+          "source_transform_bits": [
+            "3ff004e2485092cf",
+            "bf3a57480ecb4b90",
+            "3fdb7053e34ee4c0",
+            "3ffc4397ab6ab740"
+          ],
+          "source_rectangle_xyxy": [
+            469,
+            675,
+            664,
+            870
+          ],
+          "latent_time": 0.4524565350528549,
+          "support": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-143-support.npy",
+            "bytes": 442496,
+            "sha256": "76916f53c562198d169ecccc34662ee2d67bca2a9fac008331816af8ccb760d5"
+          },
+          "support_shape": [
+            192,
+            192,
+            3
+          ],
+          "support_dtype": "float32",
+          "support_array_sha256": "043973a04ae253e9e99d5a17294ed42eb997897a743005988c5f4dc38bad1296",
+          "support_pre_display_range": {
+            "min": -0.16680645942687988,
+            "max": 1.114401936531067,
+            "outside_unit_scalar_count": 2512
+          },
+          "core": {
+            "master": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-143.tiff",
+              "bytes": 199584,
+              "sha256": "fdad0063829fd04bf5643175df304bb316b76988039c1cd8087b4c45ade80702"
+            },
+            "display": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-143.png",
+              "bytes": 98940,
+              "sha256": "100c6f1571dc6f17d8efdf1ea77d572cd306b16912641aa2a52e263b558e3004"
+            },
+            "shape": [
+              128,
+              128,
+              3
+            ],
+            "dtype": "float32",
+            "exact_array_sha256": "44078aa7fa734af0503064547b8191bea8ff45bd9edbf83562b908bec2b1fa40",
+            "display_rgb16_sha256": "a2cf80c4c69f78106b88e109eac84d874aa869a8ade74465097ff45d5414e6a3",
+            "display_quantization": "nearest RGB16; fixed [0,1] display saturation only",
+            "pre_display_range": {
+              "min": -0.1264873892068863,
+              "max": 1.114401936531067,
+              "outside_unit_scalar_count": 680
+            },
+            "spatial_resize": false
+          }
+        },
+        {
+          "ordinal": 149,
+          "tiff_number": 150,
+          "fixed_sigma_offset": 1,
+          "source": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00150.tiff",
+            "bytes": 197801322,
+            "sha256": "f18c7dadea1bcc9073dc2b9f8a77875480a577e9389690601d2f35aee52f6397"
+          },
+          "original_identity_only": {
+            "index": 149,
+            "mtime_ns": 1789283057290000000,
+            "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00150.ARW",
+            "sha256": "a58ee774a6f95a5e2020ab2f83dd5422e2adc40a152372334987744860c38468",
+            "bytes": 42491904
+          },
+          "mtime_ns": 1789900530740792400,
+          "source_metadata_unchanged": true,
+          "source_transform": [
+            0.9999999999999999,
+            0.0,
+            0.0,
+            7.105427357601002e-15
+          ],
+          "source_transform_bits": [
+            "3fefffffffffffff",
+            "0000000000000000",
+            "0000000000000000",
+            "3d00000000000000"
+          ],
+          "source_rectangle_xyxy": [
+            473,
+            673,
+            668,
+            868
+          ],
+          "latent_time": 0.47397184608103227,
+          "support": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-149-support.npy",
+            "bytes": 442496,
+            "sha256": "40caa0be0b53cf447aa0b344d8b122b748a9afd2be44d643f92d2ad066133988"
+          },
+          "support_shape": [
+            192,
+            192,
+            3
+          ],
+          "support_dtype": "float32",
+          "support_array_sha256": "b9bb19e0f4e2622abbe035f9245084a3e1be6c877a9e15ce0c4c6d16c1f8a822",
+          "support_pre_display_range": {
+            "min": 0.0,
+            "max": 1.0,
+            "outside_unit_scalar_count": 0
+          },
+          "core": {
+            "master": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-149.tiff",
+              "bytes": 199584,
+              "sha256": "522eb142481d155d9d2e61d9f5d8ab395255243fd0f029ba7a2b025b87594af7"
+            },
+            "display": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-149.png",
+              "bytes": 99378,
+              "sha256": "21b8bb2d19f7c18be04031e76bdefd9cfbaaf1290175b630795f1038c5843d35"
+            },
+            "shape": [
+              128,
+              128,
+              3
+            ],
+            "dtype": "float32",
+            "exact_array_sha256": "b9fed90a8c349b9418fe20ce633705325619ea75a90c19f258f003629cd66d85",
+            "display_rgb16_sha256": "98e74f64e4b093644e26d1e34f4d359663d4d081ac3a189eb8ebad150c3cd5be",
+            "display_quantization": "nearest RGB16; fixed [0,1] display saturation only",
+            "pre_display_range": {
+              "min": 0.0,
+              "max": 1.0,
+              "outside_unit_scalar_count": 0
+            },
+            "spatial_resize": false
+          }
+        },
+        {
+          "ordinal": 155,
+          "tiff_number": 156,
+          "fixed_sigma_offset": 2,
+          "source": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00156.tiff",
+            "bytes": 197801322,
+            "sha256": "0a99412f2c660247730dd7935136f3beec0a767fdc8b16509fff58b3690cf2ec"
+          },
+          "original_identity_only": {
+            "index": 155,
+            "mtime_ns": 1789283072150000000,
+            "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00156.ARW",
+            "sha256": "5fd9fbfbee5a098650c2b2fad2b0ebc2aacc74488d994102ab692526cd831c69",
+            "bytes": 42381312
+          },
+          "mtime_ns": 1789900534365587100,
+          "source_metadata_unchanged": true,
+          "source_transform": [
+            0.9987928532025091,
+            0.00046619167888976073,
+            -0.671946885048115,
+            -1.5922743050212702
+          ],
+          "source_transform_bits": [
+            "3feff61c6dff773d",
+            "3f3e8d6603b63270",
+            "bfe58096c0fdc880",
+            "bff979f49f253d60"
+          ],
+          "source_rectangle_xyxy": [
+            476,
+            670,
+            670,
+            865
+          ],
+          "latent_time": 0.4948897370603149,
+          "support": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-155-support.npy",
+            "bytes": 442496,
+            "sha256": "2750302f91f280b702e9fa43e88a65222c8bf9bf317747eab81ff0601b6bc179"
+          },
+          "support_shape": [
+            192,
+            192,
+            3
+          ],
+          "support_dtype": "float32",
+          "support_array_sha256": "aaf32f38701460928c46e364d31e40d755bb6ef9b3839b0cee38778e833b5019",
+          "support_pre_display_range": {
+            "min": -0.07358891516923904,
+            "max": 1.026228666305542,
+            "outside_unit_scalar_count": 1384
+          },
+          "core": {
+            "master": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-155.tiff",
+              "bytes": 199584,
+              "sha256": "d8eac7a041876ddaf6d80c9ed3e9543463e325b1f2fb9ca3221eceb6f4616bda"
+            },
+            "display": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-155.png",
+              "bytes": 99472,
+              "sha256": "e222815ae3855afdeb59a91b1016b24d329cf1ab053bec8a523dfa6055b40bd4"
+            },
+            "shape": [
+              128,
+              128,
+              3
+            ],
+            "dtype": "float32",
+            "exact_array_sha256": "7d7ef3c6804d7dc76c8069f006caaaf3ab60fd40cf92e47690586d282415f293",
+            "display_rgb16_sha256": "b518b85154a946cd0ff4e9d5caf8b50eb81b24f98de464e9a5e3c19467330d30",
+            "display_quantization": "nearest RGB16; fixed [0,1] display saturation only",
+            "pre_display_range": {
+              "min": -0.024383191019296646,
+              "max": 1.026228666305542,
+              "outside_unit_scalar_count": 365
+            },
+            "spatial_resize": false
+          }
+        },
+        {
+          "ordinal": 162,
+          "tiff_number": 163,
+          "fixed_sigma_offset": 3,
+          "source": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00163.tiff",
+            "bytes": 197801322,
+            "sha256": "98ced66aaf0a2283e24a8140b562407d4ad906456b56ae64585df3660bf65272"
+          },
+          "original_identity_only": {
+            "index": 162,
+            "mtime_ns": 1789283089500000000,
+            "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00163.ARW",
+            "sha256": "d096a89bba957a33e84bba867532ed396068f608f1b4af78e51f109cdd41d4cd",
+            "bytes": 42262528
+          },
+          "mtime_ns": 1789900538814569400,
+          "source_metadata_unchanged": true,
+          "source_transform": [
+            0.9974740986299101,
+            0.0009590531824217128,
+            -1.5933883755685656,
+            -3.3436530697576075
+          ],
+          "source_transform_bits": [
+            "3fefeb4ecd071f11",
+            "3f4f6d1f06dd3750",
+            "bff97e84cf2e4c00",
+            "c00abfcd2e3e3b40"
+          ],
+          "source_rectangle_xyxy": [
+            478,
+            667,
+            673,
+            862
+          ],
+          "latent_time": 0.5192939432028114,
+          "support": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-162-support.npy",
+            "bytes": 442496,
+            "sha256": "27f130290a892498189b92d54721e3fc57528f625a22977283ebef615067a823"
+          },
+          "support_shape": [
+            192,
+            192,
+            3
+          ],
+          "support_dtype": "float32",
+          "support_array_sha256": "e1f0fc097c83f5e627490157e29e4a11ffc92cdeaca3b320a2d13567dfd138a6",
+          "support_pre_display_range": {
+            "min": -0.04769643768668175,
+            "max": 1.0087684392929077,
+            "outside_unit_scalar_count": 857
+          },
+          "core": {
+            "master": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-162.tiff",
+              "bytes": 199584,
+              "sha256": "688871e6e7b5cbb9d22f5b8d74da5f9f1c3b4f199557a43d54493435e23bf7e5"
+            },
+            "display": {
+              "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\source-162.png",
+              "bytes": 99291,
+              "sha256": "281a4805f1f1468bda39519dad60481ed06851bee128e6a1326f104d86e7109f"
+            },
+            "shape": [
+              128,
+              128,
+              3
+            ],
+            "dtype": "float32",
+            "exact_array_sha256": "217dd20271451ee7a46ff14e4bbb9b4908058592bf6fc311fae0edcec5d96c35",
+            "display_rgb16_sha256": "09c41d2abf9d2674af2804ee7e0b67b5053a90dd004454d3ea6660427bad2b5a",
+            "display_quantization": "nearest RGB16; fixed [0,1] display saturation only",
+            "pre_display_range": {
+              "min": -0.021163925528526306,
+              "max": 1.0087684392929077,
+              "outside_unit_scalar_count": 197
+            },
+            "spatial_resize": false
+          }
+        }
+      ],
+      "native_outputs": {
+        "current": {
+          "master": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\current.tiff",
+            "bytes": 101248,
+            "sha256": "1f37853c717e2a5c7970cd193f5b6f977ac4b828c38c7e40a332164df62148be"
+          },
+          "display": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\current.png",
+            "bytes": 98768,
+            "sha256": "bb34f44e6d7c679db1c020623032db5be6b785d9955c622851b9bb9e1c065589"
+          },
+          "shape": [
+            128,
+            128,
+            3
+          ],
+          "dtype": "uint16",
+          "exact_array_sha256": "91381835a7aadb557ac08ba80528475f5dc9968ba7e4d910401e0f480b16d090",
+          "display_rgb16_sha256": "91381835a7aadb557ac08ba80528475f5dc9968ba7e4d910401e0f480b16d090",
+          "display_quantization": "exact RGB16",
+          "pre_display_range": null,
+          "spatial_resize": false
+        },
+        "gaussian": {
+          "master": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\gaussian.tiff",
+            "bytes": 101248,
+            "sha256": "cae1af6e74b49edf6fb3b16dd91e25d3fea057195bb2f681ff803a4b60092038"
+          },
+          "display": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\gaussian.png",
+            "bytes": 98929,
+            "sha256": "9a944a4cfbc836246886503be1532c47df38c768a6030f35cbb4dfb59819b949"
+          },
+          "shape": [
+            128,
+            128,
+            3
+          ],
+          "dtype": "uint16",
+          "exact_array_sha256": "f02b7d5a88355df93170a5603c3d9c3cecd6872af244a75a112e0459bd8699ea",
+          "display_rgb16_sha256": "f02b7d5a88355df93170a5603c3d9c3cecd6872af244a75a112e0459bd8699ea",
+          "display_quantization": "exact RGB16",
+          "pre_display_range": null,
+          "spatial_resize": false
+        },
+        "intercept": {
+          "master": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\intercept.tiff",
+            "bytes": 101248,
+            "sha256": "cfba2bab3b5a3d44df641c2d4565c01c25284617511c6fa86d30cf77324ae8c1"
+          },
+          "display": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\upper-left-contact-grid\\intercept.png",
+            "bytes": 98446,
+            "sha256": "c472bf1e2db97833611d5fb3c30a6dc834b409c972188e38385d904fca8a6ffc"
+          },
+          "shape": [
+            128,
+            128,
+            3
+          ],
+          "dtype": "uint16",
+          "exact_array_sha256": "79d695c90dbc6b17df9a113ef0c725083939c97395551b2b1ce77d1ef9f1792d",
+          "display_rgb16_sha256": "79d695c90dbc6b17df9a113ef0c725083939c97395551b2b1ce77d1ef9f1792d",
+          "display_quantization": "exact RGB16",
+          "pre_display_range": null,
+          "spatial_resize": false
+        }
+      }
+    }
+  ],
+  "native_sources": [
+    {
+      "arm": "current",
+      "source": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\stack-master.tiff",
+        "bytes": 168952968,
+        "sha256": "8f0c70b2af0e8fc8dcf850395680d3038962c6e65920359d19671b96628c68ac"
+      },
+      "mtime_ns": 1790360502960657100,
+      "metadata_unchanged": true
+    },
+    {
+      "arm": "gaussian",
+      "source": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-radiance\\full-1\\output\\candidate.tiff",
+        "bytes": 168952968,
+        "sha256": "29e2f315b614d86f972d8d0d909289d591e9b5c16794142498623984fdcdfc17"
+      },
+      "mtime_ns": 1790401691222391300,
+      "metadata_unchanged": true
+    },
+    {
+      "arm": "intercept",
+      "source": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-full-1\\output\\candidate.tiff",
+        "bytes": 168952968,
+        "sha256": "1ee7fb09cb66e5360f1945d449e08dddb8d9c5e93d5944b93f2c608c871fcf71"
+      },
+      "mtime_ns": 1790404265230499100,
+      "metadata_unchanged": true
+    }
+  ],
+  "bindings": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\extract.py",
+      "bytes": 14721,
+      "sha256": "5f4cc046a754083fc3f5a063212aec973b46eb259e399d9d2a3c3d9f957031e5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\stage.py",
+      "bytes": 16784,
+      "sha256": "35bd5b4533a7748d4603cf10229c9190be4cda600f9d1c597c1d2a9b0c2d47a4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\independent-controls.py",
+      "bytes": 13614,
+      "sha256": "d8a9f3e95c88851a984246b506ebef3768052f2dbb285c7616228ecb0d84c38f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\intercept-next-discriminator.md",
+      "bytes": 5283,
+      "sha256": "84a6e9345566dea4fe473c2c3cdd61a6aa1b6404734bba8ef063395a364808bd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\fit-1\\model.json",
+      "bytes": 1671,
+      "sha256": "9aa704e4cbea5f9193aa98e8d63c5abec3a983202a48c84e8d6a6da75a39c8fd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\fit-1\\receipt.json",
+      "bytes": 2262,
+      "sha256": "858e147a238b2f16e49d620c6eed27213b5334f35a1651d8bcaafde0c4b22040"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\stage-1\\receipt.json",
+      "bytes": 3916,
+      "sha256": "d5d2fedaa85a29df40865228b6131c14ad40e689165d89afe8a389148d6d19f8"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\stage-1\\plan.json",
+      "bytes": 1248329,
+      "sha256": "e783886800e1c21d6d76e42188eb8715122f9eb1b09b6a92b483634b06b35ddc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\receipt.json",
+      "bytes": 293831,
+      "sha256": "97f198664496c18ebb7723450e240163983cf00a5499e1db0695bdd0f4c3bf9c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\development-complete.json",
+      "bytes": 556,
+      "sha256": "11a4893905448686dce6e114ff873d9354859645eda35f41ad36dafe8ac978c2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\helicon-c\\inputs-after.json",
+      "bytes": 74157,
+      "sha256": "261948f3bf18fb6a808f85040a086cf821e7d8cb8e24ead990aa0a5a61979635"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\input-order.json",
+      "bytes": 81522,
+      "sha256": "ca1d16d0ffab95372c3401c48e9da79b330d4d2c6a4dd76077e06aa74a39c364"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-radiance\\full-1\\output\\receipt.json",
+      "bytes": 167495,
+      "sha256": "2dd0919cbf4a8f29fa4aec091197447d3c2371bb03b9487b85e6991cc302b958"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-full-1\\output\\receipt.json",
+      "bytes": 168776,
+      "sha256": "993ef60b57057ddb954476f543d374966e7b52f2d41fd27456c3b5237ae93074"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-full-1\\config.json",
+      "bytes": 87508,
+      "sha256": "85a09469fac45135ba37a31f05ebb4a6641b770867cfbf162ab37950c5c2d81d"
+    }
+  ],
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+    "bytes": 41142,
+    "sha256": "ce8534c9e65c5c761373bad87df5352c1c46319b7eaf7f7c91477ea61b4f4922"
+  },
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "controls": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\stage-controls.json",
+    "bytes": 537,
+    "sha256": "42ae4892bee1a221b89c56a64d4ec7d3c86405388006f6a69f120123e220ce21"
+  },
+  "complete_temporal_curves": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-source-support\\run-1\\output\\temporal-curves.npz",
+    "bytes": 160676,
+    "sha256": "c3c19659a7dc098a23b3135cc36af5c24af108a39a8bb2652d1220b8d74160e7"
+  },
+  "selected_source_count": 14,
+  "selected_sources_fresh_content_hashed": true,
+  "all299_sources_rehashed": false,
+  "source_development": {
+    "levels": [
+      512.0,
+      15360.0
+    ],
+    "wb_bits": [
+      1070374912,
+      1065353216,
+      1076715520
+    ],
+    "tone_bits": [
+      999074891,
+      1064454645,
+      1057803469
+    ],
+    "xyz_to_cam_bits": [
+      [
+        1061091803,
+        3195153678,
+        3178289221
+      ],
+      [
+        3205600851,
+        1068240575,
+        1048401517
+      ],
+      [
+        3179255588,
+        1038925745,
+        1059622119
+      ]
+    ],
+    "matrix_source": "decoder color_matrix[D65]",
+    "scope": "Same product decoder, MHC and colour developer; no CA warp or alignment; tone before external merge, six-digit rounded baseline tone; not a pure merge comparison"
+  },
+  "native_resolved_development": {
+    "ceiling_bits": [
+      1071298858,
+      1065931176,
+      1077498362
+    ],
+    "exposure_gain_bits": 1065353216,
+    "matrix_bits": [
+      [
+        1070688889,
+        3202724187,
+        3191861519
+      ],
+      [
+        3186350977,
+        1069455000,
+        3200213889
+      ],
+      [
+        3147518954,
+        3198529296,
+        1068107544
+      ]
+    ],
+    "sensor_top_bits": 1064271804,
+    "srgb": true,
+    "tone_bits": [
+      999125585,
+      1064454600,
+      1057803469
+    ],
+    "wants_tone": true
+  },
+  "no_original_raw_reads": true,
+  "no_refit": true,
+  "no_source_ranking": true,
+  "no_recenter": true,
+  "no_spatial_resize": true,
+  "native_output_crops_unresampled": true,
+  "source_sampler": "OpenCV INTER_CUBIC, A=-.75, phase table1/32",
+  "display_policy": "fixed RGB16 quantization/saturation only; exact f32 support/core masters retained; no per-image normalization",
+  "limitations": [
+    "Sources are CA-off toned individually demosaiced RGB; native outputs use CA-on CFA gather then final MHC.",
+    "Source map interpolation is the existing proxy sampler, not an exact native gather counterfactual.",
+    "A structure obscured by fixed display saturation or unresolved in these7 samples makes diagnosis inconclusive."
+  ],
+  "elapsed_seconds": 2.1229467000011937,
+  "physical_cause_asserted": false,
+  "visual_verdict": null
+}

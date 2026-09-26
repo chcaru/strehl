@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\program\\HeliconFocus.exe",
+    "-silent",
+    "-noprogress",
+    "-i",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\helicon-b\\inputs.txt",
+    "-mp:1",
+    "-rp:8",
+    "-sp:4",
+    "-sort:asc",
+    "-tif:u",
+    "-save:C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\helicon-b\\whole-stack.tiff",
+    "-o",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\helicon-b\\saved-outputs.txt"
+  ],
+  "environment": {},
+  "removed_environment": []
+}

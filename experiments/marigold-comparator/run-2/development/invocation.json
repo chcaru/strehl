@@ -1,0 +1,10 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\build\\marigold-batch-develop.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\development\\config.json"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8"
+  },
+  "removed_environment": []
+}

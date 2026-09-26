@@ -1,0 +1,10 @@
+{
+  "differing": 0,
+  "fixture_cfa_sha256": "73b0677ed475541f5e5158117ac15b1b70662feed0455d2bb70b3dac93898fd8",
+  "fixture_tiff_sha256": "cd7b587d95648db2a05c3a63c78529e5dcc5f712b9c02b0ce58ea8c978103b19",
+  "normalized_f32_differences": 0,
+  "normalized_f32_samples": 112896,
+  "original_u16_sha256": "b966b02f4e27bdf386ff3d90f16fbd4772f1f2aaa95804e1c1e6aff1c3f9e357",
+  "rgb16_samples": 338688,
+  "status": "EXACT"
+}

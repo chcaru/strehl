@@ -1,0 +1,29 @@
+{
+  "complete_488_source_reference": true,
+  "prepared_inputs_unchanged": true,
+  "original_metadata_unchanged": true,
+  "views": {
+    "master": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\helicon-b\\whole-stack.tiff",
+      "sha256": "30740f1c0c9cd9c5d24112121117b76da8444da0951ba26408dd5f365385cee5",
+      "bytes": 197827122
+    },
+    "native_whole": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\helicon-b\\whole.png",
+      "sha256": "8e21bbb59d621c59c30ef0f4669913bb656640731d4d3a7d0f082e1c4a9e551e",
+      "bytes": 26508502
+    },
+    "overview": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\helicon-b\\overview.png",
+      "sha256": "fcf33a93df481388781618a185b1d6cbf34f8a05726b0fe7688a1ee24c6b16d7",
+      "bytes": 2059105
+    },
+    "rgb16_le_sha256": "4bc00a63663e49370b80d59ec4cc0db0c19918021a24ca8fd644c46aec3cfc42",
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "display": "round(u16/257); same sRGB ICC; overview only resized",
+    "watermark_visual_review": "pending; dimensions alone do not prove absence"
+  },
+  "photographic_review": "pending",
+  "quality_claim": false,
+  "scope": "Whole-workflow headroom reference, not mechanism or SOTA; no automated native correspondence claim"
+}

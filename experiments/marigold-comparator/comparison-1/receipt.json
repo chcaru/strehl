@@ -1,0 +1,246 @@
+{
+  "status": "SIX_FIXED_NATIVE_PANELS_EXTRACTED",
+  "choices": [
+    {
+      "name": "fan",
+      "current": [
+        3230,
+        3000,
+        384,
+        384
+      ],
+      "b": [
+        3690,
+        3400,
+        384,
+        384
+      ],
+      "landmark": "Hanging petal tip and rear hair fan; Current is the existing frozen fan core."
+    },
+    {
+      "name": "rounded-petal",
+      "current": [
+        1436,
+        1844,
+        384,
+        384
+      ],
+      "b": [
+        1566,
+        2113,
+        384,
+        384
+      ],
+      "landmark": "Rounded bright petal with the orange speck cluster."
+    },
+    {
+      "name": "upper-cup",
+      "current": [
+        1448,
+        273,
+        384,
+        384
+      ],
+      "b": [
+        1644,
+        339,
+        384,
+        384
+      ],
+      "landmark": "Upper-left folded cup and its diagonal interior."
+    }
+  ],
+  "masters": [
+    {
+      "arm": "current",
+      "source": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate.tiff",
+        "bytes": 157055880,
+        "sha256": "19e657e419d52adf567ec86472f917ad9b9abfc9b0812131e9bba0eacbae462f"
+      },
+      "native_wh": [
+        6268,
+        4176
+      ],
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "metadata_and_content_unchanged": true
+    },
+    {
+      "arm": "b",
+      "source": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\helicon-b\\whole-stack.tiff",
+        "bytes": 197827122,
+        "sha256": "30740f1c0c9cd9c5d24112121117b76da8444da0951ba26408dd5f365385cee5"
+      },
+      "native_wh": [
+        7032,
+        4688
+      ],
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "metadata_and_content_unchanged": true
+    }
+  ],
+  "panels": [
+    {
+      "arm": "current",
+      "name": "fan",
+      "native_xywh": [
+        3230,
+        3000,
+        384,
+        384
+      ],
+      "native_grid_wh": [
+        6268,
+        4176
+      ],
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\comparison-1\\current-fan.tiff",
+        "bytes": 887680,
+        "sha256": "978b9d8a7e42543c7f8eb097ac8c68bcfcc1b672ccbda8830e4e13ec15f4416d"
+      },
+      "display": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\comparison-1\\current-fan.png",
+        "bytes": 627463,
+        "sha256": "2fe4c8f0b0b920ebbea9050fc6d30148a8fc0a6ea08797d56a361c1bcc5f2234"
+      },
+      "rgb16_le_sha256": "be84a663d70a2ffe518dfc75f0e5328dfb58534978f8a84c99f1a41b8d066cfd"
+    },
+    {
+      "arm": "current",
+      "name": "rounded-petal",
+      "native_xywh": [
+        1436,
+        1844,
+        384,
+        384
+      ],
+      "native_grid_wh": [
+        6268,
+        4176
+      ],
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\comparison-1\\current-rounded-petal.tiff",
+        "bytes": 887680,
+        "sha256": "3496819ddac44a657d9e8babbbe77ef9aa695011a093b51126be163510ae0b5c"
+      },
+      "display": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\comparison-1\\current-rounded-petal.png",
+        "bytes": 618508,
+        "sha256": "623e933bb2d3fee7be8532069cf34ef68e2fb91c89375e356f042b2150464aed"
+      },
+      "rgb16_le_sha256": "65def1a4be35f0f25b36ec62b45530d1f6e1b48fa5e15014b71912ed979ca93d"
+    },
+    {
+      "arm": "current",
+      "name": "upper-cup",
+      "native_xywh": [
+        1448,
+        273,
+        384,
+        384
+      ],
+      "native_grid_wh": [
+        6268,
+        4176
+      ],
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\comparison-1\\current-upper-cup.tiff",
+        "bytes": 887680,
+        "sha256": "0f0741008810f88e461475e21bbbdacefd2ad0f4612c968bc03406e13def953a"
+      },
+      "display": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\comparison-1\\current-upper-cup.png",
+        "bytes": 638040,
+        "sha256": "86328a9858f6e6c596d5bf2361c9eceb38df34e919906dfd658375129c446f70"
+      },
+      "rgb16_le_sha256": "949a01a52e4025036b03262cd5cb782f086953464e87b59d03dbe5b6d898c48b"
+    },
+    {
+      "arm": "b",
+      "name": "fan",
+      "native_xywh": [
+        3690,
+        3400,
+        384,
+        384
+      ],
+      "native_grid_wh": [
+        7032,
+        4688
+      ],
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\comparison-1\\b-fan.tiff",
+        "bytes": 887680,
+        "sha256": "06c2b63d705daaefe15f9d6644ec807ed6f6887be697878fdc92592a477f227c"
+      },
+      "display": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\comparison-1\\b-fan.png",
+        "bytes": 689534,
+        "sha256": "ba53e245271d038d5af5d7ba5bea8fcaf5d9307c5dad15c349c13c7c25c481e9"
+      },
+      "rgb16_le_sha256": "f89e9bf7800ccb92c310fd3938099014ecc34fef6c9bbe002f15d6e5b94c3cb2"
+    },
+    {
+      "arm": "b",
+      "name": "rounded-petal",
+      "native_xywh": [
+        1566,
+        2113,
+        384,
+        384
+      ],
+      "native_grid_wh": [
+        7032,
+        4688
+      ],
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\comparison-1\\b-rounded-petal.tiff",
+        "bytes": 887680,
+        "sha256": "384ff2c5d764cc0b1b5b38e2c2fc0b5325c4e05b11d90f04a1a4c93ca2d6c536"
+      },
+      "display": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\comparison-1\\b-rounded-petal.png",
+        "bytes": 797227,
+        "sha256": "8b4ba322354dd3416b9e53d96d7474e73afb9cf6b801af1794014c68dd82af4d"
+      },
+      "rgb16_le_sha256": "86d43465956a0f5e81abd864ad04a0faf60f318509c2cf6cb37025899ee25357"
+    },
+    {
+      "arm": "b",
+      "name": "upper-cup",
+      "native_xywh": [
+        1644,
+        339,
+        384,
+        384
+      ],
+      "native_grid_wh": [
+        7032,
+        4688
+      ],
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\comparison-1\\b-upper-cup.tiff",
+        "bytes": 887680,
+        "sha256": "0469892b56bfbdd5ee3c9f1cd7dcfeda3cea00603176f44d5d77b6a18083c49e"
+      },
+      "display": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\comparison-1\\b-upper-cup.png",
+        "bytes": 836666,
+        "sha256": "b990fd457865b60ae3161394db89ebda935a1f79755406b7ab4353e1b0d38bd1"
+      },
+      "rgb16_le_sha256": "9399d074e88d06a931ad75d8ec8713a243983c8bf3c8fb58cf49fa78cb614538"
+    }
+  ],
+  "source": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\comparison-1\\extract.py",
+    "bytes": 4578,
+    "sha256": "a2eb9d647ef5f84653a1265c30f1504961d6cf6b5977638456770495d721d119"
+  },
+  "resampling": false,
+  "registration": false,
+  "display": "Exact RGB16 PNG with the original ICC; no resizing or tone change.",
+  "correspondence": "Manual recognizable anatomy from each full overview; not aligned pixel truth.",
+  "choice_policy": "No moving a window after viewing its panel; failed correspondence is uninformative.",
+  "quality_score": null
+}

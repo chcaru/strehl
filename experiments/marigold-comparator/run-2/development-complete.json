@@ -1,0 +1,12 @@
+{
+  "source_count": 488,
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\receipt.json",
+    "sha256": "5b606c6b4bbe8eb4684b323f14d96d38ea51307815e95f57419865e8c225b610",
+    "bytes": 589970
+  },
+  "current_pixels_icc_exact": true,
+  "original_metadata_unchanged": true,
+  "all_formats_icc_checked": true,
+  "scope": "CA-off unaligned fixed-developed inputs; vendor aligns, develops before fusion; workflow reference only"
+}

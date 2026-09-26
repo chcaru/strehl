@@ -5,6 +5,17 @@ quality actions in 2026-09-sota-program.md and the older SOTA proposal. Read
 the measured decision record in docs/research/SYNTHESIS.md before architectural
 changes; this plan does not promote any experimental default.
 
+**Current action, September 26:** screen a fixed learned-motion estimator for
+the existing marigold fan before any complete native counterfactual. The complete
+488-source Helicon B workflow reference does not provide an overall improvement
+or clean target: some hair tips are clearer, but bright interiors smear. The latest
+native chip Gaussian/intercept recipes and source-gradient target are rejected;
+the fixed source check cannot separate geometry from defocus. Do not restart
+those treatments or commission another generic pipeline audit. The concrete
+production gain remains the weighted-numerator overflow repair below; broad
+marigold ghosts, occlusion halos and mineral reflection recovery remain open.
+No SOTA claim is earned. The detailed entries below preserve the closed trials.
+
 September 25 checkpoint: the new marigold and mineral complaints now drive the
 queue. Complete 488-source marigold and 207-source ore trials of the unchanged
 coarse source prior show no convincing repair; the fixed rendering factorial
@@ -807,3 +818,26 @@ ranking, fitting or width change. The developed RGB sources cannot establish
 the exact native CFA counterfactual. Ambiguous support closes this family rather
 than initiating a search. In parallel, return to the actual marigold production
 path for a distinct implementation or input-consistency discriminator.
+
+That fixed source check now reaches its ambiguous-cause stop branch. All fourteen
+source cores and six native comparisons are present; centre-window scratch detail
+is visible, but stable mapped landmark placement is not established. Contact
+contours appear to move across the source sequence. This does not distinguish
+geometry from defocus or the proxy/native development difference. See
+chip-source-support/independent-results.md. No further intercept/front-width
+treatment follows. The bounded marigold audit likewise finds no new supported
+implementation defect. Next: one complete 488-source Helicon B workflow reference,
+using exact current development and explicit vendor-alignment/CA/order limits,
+to establish a concrete complete-image target for this difficult capture.
+
+That complete reference now finishes, with all 488 originals, exact Current
+development goldens and unchanged prepared-input hashes. Both complete images
+were shown to the owner. Independent whole and three native counterpart reviews
+find mixed hair structure and adverse milky bright-petal bands; a fine diagonal
+strand is strongly weakened/interrupted. No overall B improvement or clean
+target is established. See marigold-comparator/results.md and photographic-review.md.
+Next is a small RAFT translation-estimator pilot on the already fixed anchor112,
+sources108-116 and fan support. It estimates every pair directly and reduces
+flow to a fixed median translation for the existing RAW consumer. Actual-model
+shift, defocus, flat and competing-motion controls precede all real inference;
+no physical geometry or photographic gain is inferred from a lower residual.

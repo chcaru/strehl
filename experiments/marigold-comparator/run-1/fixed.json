@@ -1,0 +1,120 @@
+{
+  "cache": {
+    "arm": "candidate",
+    "binary": "candidate-planes.f32",
+    "binary_bytes": 104700672,
+    "binary_sha256": "fa394a59a1786e478c3ceff578924769c0162d0c1ecaaa2a602f401012523824",
+    "crop": [
+      191,
+      128,
+      3134,
+      2088
+    ],
+    "exposure_stops_bits": 3204448256,
+    "frames": 488,
+    "full_geometry": [
+      3516,
+      2344
+    ],
+    "input_order_sha256": "430b18343c545b26b3b3be32a5e0c2fa6afb82c9da5aac399cbb1d81e394aefc",
+    "levels_bits": [
+      1140850688,
+      1181745152
+    ],
+    "map_sha256": "d2eb0815191279f9d6fc529d76142e56989d4afdcbc052088ef4e7da530b58c1",
+    "phase": "full",
+    "plane_order": [
+      "R",
+      "G1",
+      "G2",
+      "B"
+    ],
+    "plane_sha256": [
+      "f14bb27a068860ef187e64bd89354989089c56d7018f147b62027c8ca3697060",
+      "5345cabc3ab815e5341f0d3d8f9d6411c14ac839e69dbbf9afd5e70febadea96",
+      "b4667e173665324fab1b91a84434653f3d3f579c8d97c991f8d97ff667e39675",
+      "3537e7e57acd666d729071ccec17ab70b2891368b88d398bdcc7c1fd2a467a0c"
+    ],
+    "reference": 244,
+    "schema": 1,
+    "tone_policy": "automatic-per-arm-current-writer",
+    "wb_gains_bits": [
+      1071144960,
+      1065353216,
+      1075924992
+    ],
+    "xyz_source": "decoder color_matrix[D65]",
+    "xyz_to_cam_bits": [
+      [
+        1061091803,
+        3195153678,
+        3178289221
+      ],
+      [
+        3205600851,
+        1068240575,
+        1048401517
+      ],
+      [
+        3179255588,
+        1038925745,
+        1059622119
+      ]
+    ]
+  },
+  "resolved": {
+    "ceiling_bits": [
+      1067682475,
+      1061256642,
+      1072945436
+    ],
+    "exposure_gain_bits": 1060439283,
+    "matrix_bits": [
+      [
+        1070688889,
+        3202724187,
+        3191861519
+      ],
+      [
+        3186350977,
+        1069455000,
+        3200213889
+      ],
+      [
+        3147518954,
+        3198529296,
+        1068107544
+      ]
+    ],
+    "sensor_top_bits": 1064271804,
+    "srgb": true,
+    "tone_bits": [
+      1008079930,
+      1049460607,
+      1057803469
+    ],
+    "wants_tone": true
+  },
+  "identities": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate.tiff",
+      "sha256": "19e657e419d52adf567ec86472f917ad9b9abfc9b0812131e9bba0eacbae462f",
+      "bytes": 157055880
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate-cache.json",
+      "sha256": "3af5e0a0d00b28e73083ce132ff495cd482020b600fecd4bddb2902b1273a95c",
+      "bytes": 1384
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\illuminant-aware-color\\cached-1\\output\\marigold4-receipt.json",
+      "sha256": "9d58ee7f6d232e78964cccce0c917bdabcc6d185f6cfbd3334a5f8d87d8bd99c",
+      "bytes": 5685
+    }
+  ],
+  "helicon": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\program\\HeliconFocus.exe",
+    "sha256": "29ca62df122163c1295e1e2a416a42acfdf52f20c83d0beed99c4af154d42089",
+    "bytes": 16249488
+  }
+}

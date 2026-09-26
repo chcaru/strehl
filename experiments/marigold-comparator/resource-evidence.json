@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "date": "2026-09-25",
+  "scope": "Read-only feasibility observations and retained chip receipts; no marigold job executed by author",
+  "source_count": 488,
+  "source_groups": [279, 209],
+  "source_raw_bytes": 18280849408,
+  "derived_rgb16_pixel_payload_bytes": 96524494848,
+  "required_predevelopment_free_bytes": 128849018880,
+  "required_prevendor_free_bytes": 21474836480,
+  "feasibility_snapshot": {
+    "free_workspace_volume_bytes": 602287620096,
+    "total_physical_bytes": 66094223360,
+    "available_physical_bytes": 53107245056,
+    "total_commit_bytes": 70254972928,
+    "available_commit_bytes": 53823741952,
+    "method": "GlobalMemoryStatusEx and filesystem free space; snapshot only, runner refreshes before vendor"
+  },
+  "vendor_preflight": {
+    "required_available_commit_bytes": 51539607552,
+    "required_available_physical_bytes": 49392123904,
+    "job_commit_cap_bytes": 42949672960,
+    "wall_seconds": 600,
+    "cpu_seconds": 12000,
+    "sequential_only": true
+  },
+  "retained_chip_299_measurements": {
+    "build_wall_seconds": 29.344,
+    "development_wall_seconds": 177.281,
+    "development_peak_commit_bytes": 421216256,
+    "b_wall_seconds": 45.625,
+    "b_peak_commit_bytes": 35461603328,
+    "source": "experiments/chip-competitor/run-1/{build,development,helicon-b}/process.json",
+    "scope": "Prior different-stack measurements, not marigold timing or capacity proof"
+  },
+  "vendor": {
+    "path": "experiments/helicon-current/program/HeliconFocus.exe",
+    "sha256": "29ca62df122163c1295e1e2a416a42acfdf52f20c83d0beed99c4af154d42089",
+    "bytes": 16249488,
+    "retained_recent_image_cache_mib": 31516,
+    "license_scope": "Retained logs describe a trial; no verified paid entitlement and no state changes"
+  }
+}

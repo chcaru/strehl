@@ -1,0 +1,12 @@
+{
+  "memory": {
+    "total_physical": 66094223360,
+    "available_physical": 54017355776,
+    "total_commit": 70254972928,
+    "available_commit": 54734151680
+  },
+  "free_bytes": 505054609408,
+  "required_available_commit_bytes": 51539607552,
+  "required_available_physical_bytes": 49392123904,
+  "job_commit_cap_bytes": 42949672960
+}
