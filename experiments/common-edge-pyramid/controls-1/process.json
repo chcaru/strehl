@@ -1,0 +1,89 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-edge-pyramid\\build-2\\cli-tests.exe",
+    "merge_cmd::common_edge_pyramid::independent_controls::",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 3.625,
+  "log_bytes": 18729,
+  "job_accounting": {
+    "total_user_100ns": 35000000,
+    "total_kernel_100ns": 7500000,
+    "total_cpu_100ns": 42500000,
+    "total_page_fault_count": 552397,
+    "total_processes": 2,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 646475776,
+    "peak_job_memory_used_bytes": 647745536
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 8589934592
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 35000000,
+      "total_kernel_100ns": 7500000,
+      "total_cpu_100ns": 42500000,
+      "total_page_fault_count": 552397,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 35000000,
+      "total_kernel_100ns": 7500000,
+      "total_cpu_100ns": 42500000,
+      "total_page_fault_count": 552397,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 3.625,
+        "accounting": {
+          "total_user_100ns": 35000000,
+          "total_kernel_100ns": 7500000,
+          "total_cpu_100ns": 42500000,
+          "total_page_fault_count": 552397,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 3.625,
+    "ended_wall_seconds": 3.625
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 300,
+    "cpu_seconds": 1800,
+    "log_bytes": 16777216,
+    "committed_bytes": 8589934592
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-edge-pyramid\\controls-1\\process.log",
+    "sha256": "5a3a4a6db0e158c01860dba17324b4e66ad25434a451ecd84c89c9402c7b4cf8",
+    "bytes": 18729
+  }
+}

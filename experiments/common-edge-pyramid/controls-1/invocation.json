@@ -1,0 +1,26 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-edge-pyramid\\build-2\\cli-tests.exe",
+    "merge_cmd::common_edge_pyramid::independent_controls::",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "STREHL_ALIGN": "1",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_GATHER_LOG": "off",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_DEFECT": "off",
+    "STREHL_FINE_SUPPORT": "off",
+    "STREHL_CA_BEFORE_MHC": "off",
+    "STREHL_COMMON_EDGE_PYRAMID_OUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-edge-pyramid\\controls-1\\output"
+  },
+  "removed_environment": []
+}

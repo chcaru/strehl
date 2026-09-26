@@ -1,0 +1,139 @@
+{
+  "domains": [
+    {
+      "actual_ac": 3,
+      "distance_to_wrong_weighted_dc_dn": 1999.99951171875,
+      "height": 72,
+      "roundtrips": [
+        {
+          "max_error_dn": 0.0,
+          "signal": "high-dn"
+        },
+        {
+          "max_error_dn": 2.4522798867110396e-6,
+          "signal": "impulse"
+        },
+        {
+          "max_error_dn": 0.0,
+          "signal": "false-guide-constant"
+        }
+      ],
+      "stencil_bytes": 461160,
+      "terminal_mean_error_dn": 0.00048828125,
+      "unequal_ac_weights_constant_error_dn": 0.00048828125,
+      "uniform_direct_mean_max_error_dn": 0.00390625,
+      "width": 80,
+      "zero_weight_fallback_max_error_dn": 0.00390625
+    },
+    {
+      "actual_ac": 3,
+      "distance_to_wrong_weighted_dc_dn": 1999.99951171875,
+      "height": 73,
+      "roundtrips": [
+        {
+          "max_error_dn": 0.0,
+          "signal": "high-dn"
+        },
+        {
+          "max_error_dn": 2.4522798867110396e-6,
+          "signal": "impulse"
+        },
+        {
+          "max_error_dn": 0.0,
+          "signal": "false-guide-constant"
+        }
+      ],
+      "stencil_bytes": 484444,
+      "terminal_mean_error_dn": 0.00048828125,
+      "unequal_ac_weights_constant_error_dn": 0.00048828125,
+      "uniform_direct_mean_max_error_dn": 0.004231770833939663,
+      "width": 81,
+      "zero_weight_fallback_max_error_dn": 0.004231770833939663
+    },
+    {
+      "actual_ac": 7,
+      "distance_to_wrong_weighted_dc_dn": 1999.998046875,
+      "height": 1024,
+      "roundtrips": [
+        {
+          "max_error_dn": 0.0,
+          "signal": "high-dn"
+        },
+        {
+          "max_error_dn": 2.6147099561057985e-6,
+          "signal": "impulse"
+        },
+        {
+          "max_error_dn": 0.0,
+          "signal": "false-guide-constant"
+        }
+      ],
+      "stencil_bytes": 85278976,
+      "terminal_mean_error_dn": 0.0009765625,
+      "unequal_ac_weights_constant_error_dn": 0.001953125,
+      "uniform_direct_mean_max_error_dn": 0.0068359375,
+      "width": 1024,
+      "zero_weight_fallback_max_error_dn": null
+    },
+    {
+      "actual_ac": 7,
+      "distance_to_wrong_weighted_dc_dn": 1999.998046875,
+      "height": 1029,
+      "roundtrips": [
+        {
+          "max_error_dn": 0.0,
+          "signal": "high-dn"
+        },
+        {
+          "max_error_dn": 8.672475814819336e-6,
+          "signal": "impulse"
+        },
+        {
+          "max_error_dn": 0.0,
+          "signal": "false-guide-constant"
+        }
+      ],
+      "stencil_bytes": 86418992,
+      "terminal_mean_error_dn": 0.0009765625,
+      "unequal_ac_weights_constant_error_dn": 0.001953125,
+      "uniform_direct_mean_max_error_dn": 0.005859375,
+      "width": 1031,
+      "zero_weight_fallback_max_error_dn": null
+    }
+  ],
+  "independent_support": {
+    "f64_levels": [
+      {
+        "constant_guide_expansion_error_dn": 0.0,
+        "constant_guide_restriction_error_dn": 0.0,
+        "expansion_error_dn": 0.0018786505443131318,
+        "level": 0,
+        "restriction_error_dn": 0.002013246676142444
+      },
+      {
+        "constant_guide_expansion_error_dn": 0.0,
+        "constant_guide_restriction_error_dn": 0.0,
+        "expansion_error_dn": 0.0016565270452701952,
+        "level": 1,
+        "restriction_error_dn": 0.0021210629147390136
+      },
+      {
+        "constant_guide_expansion_error_dn": 0.0,
+        "constant_guide_restriction_error_dn": 0.0,
+        "expansion_error_dn": 0.0016051080983743304,
+        "level": 2,
+        "restriction_error_dn": 0.002913032507422031
+      }
+    ],
+    "missing_band_rejected": true,
+    "reference_scope": "f64 taps independently enumerated from exact stored f32 guide levels; no calibration claim",
+    "wrong_expansion_parity_error_dn": 1213.8125,
+    "wrong_reflected_boundary_error_dn": 4648.4375,
+    "wrong_synthesis_guide_error_dn": 6124.38671875,
+    "zeroed_rich_band_error_dn": 2475.6904296875,
+    "zeroed_step_band_error_dn": 0.30548095703125
+  },
+  "max_error_allowance_dn": 0.02,
+  "passed": true,
+  "scope": "generated f32 operator arithmetic only; no seven-band occlusion, RAW or image-quality qualification"
+}
