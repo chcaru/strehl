@@ -1,0 +1,53 @@
+{
+  "status": "REGISTERED_FIT_EVALUATED",
+  "controls": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\controls-1.json",
+    "bytes": 84244,
+    "sha256": "a56112fe645ca445605b34ece04e5e1c2d5d4393754d28f53ba7d777cc83096b"
+  },
+  "stage_receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\stage-1\\receipt.json",
+    "bytes": 3916,
+    "sha256": "d5d2fedaa85a29df40865228b6131c14ad40e689165d89afe8a389148d6d19f8"
+  },
+  "controls_job_bindings": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\controls-job-1\\bindings.json",
+    "bytes": 2027,
+    "sha256": "58cb6769f1c92ca066e6eb1cbb0cfab9b043deee3526cf5953c93245b316994b"
+  },
+  "curves": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\stage-1\\curves.npz",
+    "bytes": 160676,
+    "sha256": "c3c19659a7dc098a23b3135cc36af5c24af108a39a8bb2652d1220b8d74160e7"
+  },
+  "model": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\fit-1\\model.json",
+    "bytes": 1671,
+    "sha256": "9aa704e4cbea5f9193aa98e8d63c5abec3a983202a48c84e8d6a6da75a39c8fd"
+  },
+  "judgment": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\fit-1\\judgment.json",
+    "bytes": 8050,
+    "sha256": "b30dc11332170ce916cebbcdf8fd767c8fa0f3c24de58e52fb4fa85a9dbc8bee"
+  },
+  "predictions": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\fit-1\\predictions.npz",
+    "bytes": 609346,
+    "sha256": "89dd8952c86e02fbf85211574d695e8cfc4f902cac0f7bdac90685de647caf89"
+  },
+  "elapsed_seconds": 0.47193739999966056,
+  "predictive_proxy_admitted": false,
+  "photographic_quality_admitted": false,
+  "fit_attempts": 1,
+  "command": [
+    "experiments/chip-focus-front/fit.py",
+    "--stage",
+    "experiments/chip-focus-front/stage-1",
+    "--controls",
+    "experiments/chip-focus-front/controls-1.json",
+    "--controls-job",
+    "experiments/chip-focus-front/controls-job-1",
+    "--out",
+    "experiments/chip-focus-front/fit-1"
+  ]
+}

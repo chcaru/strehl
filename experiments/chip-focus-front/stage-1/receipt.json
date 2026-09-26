@@ -1,0 +1,108 @@
+{
+  "status": "COMPLETE_FIXED_299_SOURCE_CURVES",
+  "schema": 1,
+  "plan": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\stage-1\\plan.json",
+    "bytes": 1248329,
+    "sha256": "e783886800e1c21d6d76e42188eb8715122f9eb1b09b6a92b483634b06b35ddc"
+  },
+  "controls": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\stage-1\\stage-controls.json",
+    "bytes": 537,
+    "sha256": "42ae4892bee1a221b89c56a64d4ec7d3c86405388006f6a69f120123e220ce21"
+  },
+  "curves": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\stage-1\\curves.npz",
+    "bytes": 160676,
+    "sha256": "c3c19659a7dc098a23b3135cc36af5c24af108a39a8bb2652d1220b8d74160e7"
+  },
+  "source_reads": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\stage-1\\source-reads.json",
+    "bytes": 157169,
+    "sha256": "1c699081614674283cee2a5812ee517eb480a7d345f9ff9a0e7b4c74dec4fe8f"
+  },
+  "developer_receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\receipt.json",
+    "bytes": 293831,
+    "sha256": "97f198664496c18ebb7723450e240163983cf00a5499e1db0695bdd0f4c3bf9c"
+  },
+  "development_completion": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\development-complete.json",
+    "bytes": 556,
+    "sha256": "11a4893905448686dce6e114ff873d9354859645eda35f41ad36dafe8ac978c2"
+  },
+  "retained_after_hashes": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\helicon-c\\inputs-after.json",
+    "bytes": 74157,
+    "sha256": "261948f3bf18fb6a808f85040a086cf821e7d8cb8e24ead990aa0a5a61979635"
+  },
+  "current_input_order": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\input-order.json",
+    "bytes": 81522,
+    "sha256": "ca1d16d0ffab95372c3401c48e9da79b330d4d2c6a4dd76077e06aa74a39c364"
+  },
+  "source_count": 299,
+  "patch_count": 42,
+  "train_sites": 19,
+  "heldout_sites": 23,
+  "all_ordered_sources": true,
+  "contrast_shape": [
+    299,
+    42,
+    2
+  ],
+  "contrast_dtype": "float32",
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "development": {
+    "levels": [
+      512.0,
+      15360.0
+    ],
+    "wb_bits": [
+      1070374912,
+      1065353216,
+      1076715520
+    ],
+    "tone_bits": [
+      999074891,
+      1064454645,
+      1057803469
+    ],
+    "xyz_to_cam_bits": [
+      [
+        1061091803,
+        3195153678,
+        3178289221
+      ],
+      [
+        3205600851,
+        1068240575,
+        1048401517
+      ],
+      [
+        3179255588,
+        1038925745,
+        1059622119
+      ]
+    ],
+    "matrix_source": "decoder color_matrix[D65]",
+    "scope": "Same product decoder, MHC and colour developer; no CA warp or alignment; tone before external merge, six-digit rounded baseline tone; not a pure merge comparison"
+  },
+  "current_tiff_metadata_unchanged": true,
+  "fresh_complete_tiff_content_hashes": false,
+  "sampled_values_hashed": true,
+  "no_original_raw_reads": true,
+  "no_temporal_filtering": true,
+  "full_aligned_frames_retained": 0,
+  "elapsed_seconds": 54.13169670000025,
+  "opencv_version": "4.13.0",
+  "numpy_version": "2.4.4",
+  "tifffile_version": "2026.5.2",
+  "limitations": [
+    "Toned RGB; no calibrated DN/noise sigma",
+    "Prepared sources CA-off; current native merge CA-on",
+    "Current full TIFF content not rehashed; retained hashes plus present metadata and actual sample hashes",
+    "Mapped interpolation can affect contrast; these curves are not geometric truth"
+  ],
+  "quality_qualification": false
+}

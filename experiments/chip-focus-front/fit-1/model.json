@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "status": "fit_completed",
+  "frames": 299,
+  "xy_center": [
+    3152.0,
+    2150.0
+  ],
+  "xy_scale": [
+    2848.0,
+    1800.0
+  ],
+  "plane": [
+    0.1767848258175986,
+    -0.10312601568814196,
+    0.5383887247133708
+  ],
+  "schedule_knots": [
+    0.0,
+    0.16666666666666666,
+    0.3333333333333333,
+    0.5,
+    0.6666666666666666,
+    0.8333333333333333,
+    1.0
+  ],
+  "schedule_values": [
+    0.0,
+    0.148951235014782,
+    0.2958728825700086,
+    0.47397184608103227,
+    0.6471254991873169,
+    0.824522692160581,
+    1.0
+  ],
+  "widths": [
+    0.022441023376467556,
+    0.05961571397285819
+  ],
+  "train_indices": [
+    0,
+    1,
+    4,
+    5,
+    6,
+    7,
+    10,
+    11,
+    14,
+    15,
+    20,
+    21,
+    24,
+    25,
+    28,
+    29,
+    30,
+    33,
+    34
+  ],
+  "fit": {
+    "primary_success": true,
+    "primary_status": 2,
+    "primary_message": "`ftol` termination condition is satisfied.",
+    "primary_nfev": 15,
+    "primary_njev": 15,
+    "primary_max_nfev": 300,
+    "primary_initial_relative_rmse": 0.5090127174875168,
+    "primary_final_relative_rmse": 0.28374281654260286,
+    "primary_optimality": 0.2701055504852084,
+    "primary_bound_flags": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "secondary_success": true,
+    "secondary_nfev": 10,
+    "secondary_relative_rmse": 0.5205477468606385,
+    "secondary_at_width_bound": false,
+    "converged": true,
+    "scope": "optimizer diagnostics only; no predictive or photographic qualification"
+  }
+}

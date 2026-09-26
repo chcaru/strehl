@@ -1,0 +1,47 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\decision.md",
+    "bytes": 2797,
+    "sha256": "a4908df629ddcd05515800f1d2baf84d22692e3db2dc97de0e2599bf7ae178ca"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\design.md",
+    "bytes": 4264,
+    "sha256": "2d8aec1563d2670b856d579da07db7581111c3e5b83c3ced4ed748fe405ca906"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\fit.py",
+    "bytes": 3195,
+    "sha256": "1f854338f01dfa950e036404af7d2e56ecfe83a222b1411c76726b80c1cbdd5b"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\independent-controls.py",
+    "bytes": 13614,
+    "sha256": "d8a9f3e95c88851a984246b506ebef3768052f2dbb285c7616228ecb0d84c38f"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\independent-plan.md",
+    "bytes": 5753,
+    "sha256": "3469b99497efe107b41a2b160db5c18cfe01c78de4e53796752f5a2e95e80395"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\model.py",
+    "bytes": 8908,
+    "sha256": "8ff86b2b8fa94ef6e6e181ae1db7afad7136e9a57f97680f47e1734bf9260945"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\run.py",
+    "bytes": 2128,
+    "sha256": "15bea0a3ca28e21c9120462991c0681723b09845216ea5e2f7f5a50a5158e86e"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\stage-plan.md",
+    "bytes": 5262,
+    "sha256": "c00068f51bb76dd66388f210150b04e4957dd05d0a12b808f5b6f2020f8a7761"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\stage.py",
+    "bytes": 16784,
+    "sha256": "35bd5b4533a7748d4603cf10229c9190be4cda600f9d1c597c1d2a9b0c2d47a4"
+  }
+]

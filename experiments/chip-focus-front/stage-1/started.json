@@ -1,0 +1,22 @@
+{
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\stage.py",
+    "bytes": 16784,
+    "sha256": "35bd5b4533a7748d4603cf10229c9190be4cda600f9d1c597c1d2a9b0c2d47a4"
+  },
+  "command": [
+    "experiments/chip-focus-front/stage.py",
+    "--out",
+    "experiments/chip-focus-front/stage-1"
+  ],
+  "stage_plan": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\stage-plan.md",
+    "bytes": 5262,
+    "sha256": "c00068f51bb76dd66388f210150b04e4957dd05d0a12b808f5b6f2020f8a7761"
+  },
+  "independent_controls": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-front\\independent-controls.py",
+    "bytes": 13614,
+    "sha256": "d8a9f3e95c88851a984246b506ebef3768052f2dbb285c7616228ecb0d84c38f"
+  }
+}

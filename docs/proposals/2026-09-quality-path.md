@@ -756,3 +756,22 @@ a bounded null, not a capture-resolution limit or a whole-stack retention
 claim. Neither repeated placement fits nor another descriptor campaign is
 justified by it. The current SOTA claim remains unproven; continue toward a
 reconstructive change whose complete photograph can earn promotion.
+
+The fixed chip focus-front test now extracts42disjoint sites across all299
+same-developer sources and passes its generated discrimination controls.
+Its original two-band admission fails: coarse-band p90/lower-colour prediction
+ratios are0.7954/0.8741 against0.75. Fine-band prediction passes every held
+region and named witness, aggregate0.2167 against the calibrated constant.
+These are toned/interpolated profile predictions, not image-quality scores or
+proof of calibrated depth. See chip-focus-front/results.md and independent
+review. Preserve the overall failure without a width/knot/site sweep.
+
+Root separately commissions one complete native chip focus-surface radiance
+observation. The fitted global front supplies common soft temporal weights
+for all four CFA planes; the actual native gather is held and the entire
+radiance is averaged, including DC. This is distinct from the rejected legacy
+Tenengrad coherent estimator by its spatially predicted front, not by the
+idea of coherent averaging. Whole-field extrapolation and lost noise/detail
+remain explicit risks. A fresh exact canonical baseline, pinned development,
+all25native comparisons and complete masters decide the observation. It cannot
+establish general multilayer performance. See chip-focus-radiance/charter.md.

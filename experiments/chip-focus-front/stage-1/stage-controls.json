@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "controls": 3,
+  "known_complex_native_gauge": true,
+  "missing_crop_rejected": true,
+  "missing_quad_factor_rejected": true,
+  "wrong_direction_rejected": true,
+  "integer_source_rgb_exact": true,
+  "axis_swap_rejected": true,
+  "omitted_shift_rejected": true,
+  "constant_power": [
+    0.0,
+    3.552713678800501e-15
+  ],
+  "two_band_signal_power": [
+    0.0004279809072613716,
+    0.00016472209244966507
+  ],
+  "scope": "Addressing and filter arithmetic only; no focus or quality evidence"
+}
