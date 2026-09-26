@@ -1,0 +1,68 @@
+{
+  "dir": "D:/personal/macro/requests/misc-diagnostic/high-res-calibration-slide-2-cpl",
+  "frames": 299,
+  "map": "C:/dev/blog/death-of-software/projects/strehl/experiments/quality-september20/slide2-baseline-1/slide2.warpmap.txt",
+  "tone": {
+    "black": 0.005475,
+    "white": 0.476094,
+    "contrast": 0.55
+  },
+  "regions": [
+    {
+      "name": "medium-bars-frame-139",
+      "frame": 139,
+      "x": 2592,
+      "y": 1584,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "medium-bars-frame-141",
+      "frame": 141,
+      "x": 2592,
+      "y": 1584,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "fine-bars-frame-126",
+      "frame": 126,
+      "x": 3576,
+      "y": 1710,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "fine-bars-frame-128",
+      "frame": 128,
+      "x": 3576,
+      "y": 1710,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "lettering-frame-152",
+      "frame": 152,
+      "x": 2772,
+      "y": 2106,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "lettering-frame-154",
+      "frame": 154,
+      "x": 2772,
+      "y": 2106,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "pale-control-frame-149",
+      "frame": 149,
+      "x": 792,
+      "y": 600,
+      "width": 384,
+      "height": 384
+    }
+  ]
+}

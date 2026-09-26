@@ -1,0 +1,37 @@
+[
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00127.ARW",
+    "sha256": "59e0107f60208b454eb7dd783a5a9db2cd9d20f7e24233081894e895b7999c0e",
+    "bytes": 38711296
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00129.ARW",
+    "sha256": "3361804b1b8a2982516395b1db9d65fabf399462f03499c203212c3b1d1c062b",
+    "bytes": 38739968
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00140.ARW",
+    "sha256": "143620457da9dfdd4b3314765f5aecb210ab48f27ca1b0e1aaf0f8b58ab281dc",
+    "bytes": 38916096
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00142.ARW",
+    "sha256": "b44d7b349bb4e27438f3bb14f966f25daf906b9b33c4d5d83a95bdda1ad98e5d",
+    "bytes": 38948864
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00150.ARW",
+    "sha256": "9bf27d6440b0577d04bd9a8a2290c936fd63c6b6882318828a4f1afcebd80c72",
+    "bytes": 39038976
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00153.ARW",
+    "sha256": "c764712b2a780f1cf41162241d3f2d90e04423670489babdf5993c93da2f28ff",
+    "bytes": 39063552
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00155.ARW",
+    "sha256": "011796ddcda5e2e88bbfaef346edd48a2e85f9321249a45c049bc5745d628c87",
+    "bytes": 39084032
+  }
+]

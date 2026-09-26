@@ -1,0 +1,20 @@
+{"stage": "locate", "frame": 0}
+{"stage": "locate", "frame": 25}
+{"stage": "locate", "frame": 50}
+{"stage": "locate", "frame": 75}
+{"stage": "locate", "frame": 100}
+{"stage": "locate", "frame": 125}
+{"stage": "locate", "frame": 150}
+{"stage": "locate", "frame": 175}
+{"stage": "locate", "frame": 200}
+{"stage": "locate", "frame": 225}
+{"stage": "locate", "frame": 250}
+{"stage": "locate", "frame": 275}
+{"stage": "locate", "frame": 298}
+{"stage": "selected_ready", "frame": 126, "regions": ["fine-bars"]}
+{"stage": "selected_ready", "frame": 128, "regions": ["fine-bars"]}
+{"stage": "selected_ready", "frame": 139, "regions": ["medium-bars"]}
+{"stage": "selected_ready", "frame": 141, "regions": ["medium-bars"]}
+{"stage": "selected_ready", "frame": 149, "regions": ["pale-control"]}
+{"stage": "selected_ready", "frame": 152, "regions": ["lettering"]}
+{"stage": "selected_ready", "frame": 154, "regions": ["lettering"]}

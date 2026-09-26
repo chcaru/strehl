@@ -1,0 +1,11 @@
+file      : D:\personal\macro\requests\misc-diagnostic\high-res-calibration-slide-2-cpl\DSC00142.ARW
+camera    : ILCE-7CM2
+stride    : 7168
+buffer h  : 5120
+active    : 7032x4688 at (0,0)
+levels    : black 512 white 15360
+plane R(even,even)  : n 8241504 mean 1562.4945
+plane G1(even,odd)  : n 8241504 mean 2563.5192
+plane G2(odd,even)  : n 8241504 mean 2563.8988
+plane B(odd,odd)    : n 8241504 mean 1476.6030
+wrote     : C:\dev\blog\death-of-software\projects\strehl\experiments\slide2-focus-witness\locate-1\rawler-141.bin

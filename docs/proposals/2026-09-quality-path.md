@@ -5,7 +5,26 @@ quality actions in 2026-09-sota-program.md and the older SOTA proposal. Read
 the measured decision record in docs/research/SYNTHESIS.md before architectural
 changes; this plan does not promote any experimental default.
 
-**Current checkpoint, September 26:** the fixed learned-motion estimator passes
+**Current execution, September 26:** the three-fit cross-scale learned guide is
+closed after its complete 70-source vitamin-C photograph replaces a dark
+boundary with pale colored spread. The distinct common-edge spatial pyramid
+also closes: correct arithmetic, but failed detail and boundary protections,
+including with truth guidance. Neither changes a production default. See
+`experiments/cross-scale-band-guide/photographic-review.md` and
+`experiments/common-edge-pyramid/independent-results.md`.
+
+`experiments/slide2-focus-witness` has now completed the all299 source locator
+and complete current observer-off/on pair. Those bar/lettering sites do not
+expose a lost or doubled stroke; the merge is clearer than the nominated
+sources. They do not exercise the broad gray spread now confirmed at native
+size around the larger QR/Siemens shapes. The next actual-photograph action is
+`experiments/slide2-bright-boundary`: apply the existing source comparison to
+those three new defect sites and reuse the exact complete baseline. Nomination
+scores are not quality evidence. A frozen-weight geometry counterfactual
+remains unimplemented and is not justified by the clean small-bar witnesses.
+Glare, ghosting and occlusion defects remain unresolved; no SOTA claim follows.
+
+**Earlier checkpoint, September 26:** the fixed learned-motion estimator passes
 its generated controls but produces only sub-threshold corrections on the
 eight near-focus marigold pairs. No native render follows this local proposal.
 This does not test registration across the full depth sweep. The complete

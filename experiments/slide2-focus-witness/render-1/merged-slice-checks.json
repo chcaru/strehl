@@ -1,0 +1,44 @@
+[
+  {
+    "name": "medium-bars-frame-139",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 433892
+  },
+  {
+    "name": "medium-bars-frame-141",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 433892
+  },
+  {
+    "name": "fine-bars-frame-126",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 441955
+  },
+  {
+    "name": "fine-bars-frame-128",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 441955
+  },
+  {
+    "name": "lettering-frame-152",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 436481
+  },
+  {
+    "name": "lettering-frame-154",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 436481
+  },
+  {
+    "name": "pale-control-frame-149",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 294609
+  }
+]

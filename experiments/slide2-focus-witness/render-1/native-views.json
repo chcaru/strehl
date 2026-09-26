@@ -1,0 +1,464 @@
+[
+  {
+    "name": "fine-bars-frame-126",
+    "stage": "raw",
+    "frame": 126,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\fine-bars-frame-126-frame126-raw-native.png",
+      "sha256": "30892769a8a034c92817d968bf8283168d347bf6339b4fdec6a83784d71337c3",
+      "bytes": 211393
+    },
+    "pixel_sha256": "447e36de31b282a370468b72722c3feb7a53faae73cb66d35618ec693590cedc",
+    "padded_origin_xy": [
+      3860,
+      1890
+    ],
+    "reference_output_xywh": [
+      3576,
+      1710,
+      384,
+      384
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction"
+  },
+  {
+    "name": "fine-bars-frame-126",
+    "stage": "gathered",
+    "frame": 126,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\fine-bars-frame-126-frame126-gathered-native.png",
+      "sha256": "046f1c16369c5b78c11a7831a2a1185064213f95e12f1b1b9a274cc7c1e0a9b8",
+      "bytes": 201754
+    },
+    "pixel_sha256": "621d75fb6788e1d531d372dcba473aa2fe130ba33baf11c574e660244613fbc2",
+    "padded_origin_xy": [
+      3572,
+      1706
+    ],
+    "reference_output_xywh": [
+      3576,
+      1710,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "fine-bars-frame-128",
+    "stage": "raw",
+    "frame": 128,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\fine-bars-frame-128-frame128-raw-native.png",
+      "sha256": "2f4322ce6489566fd6ef1bca1cbb144782b156baf7d81d48afd77dc03990c431",
+      "bytes": 207849
+    },
+    "pixel_sha256": "a1d7d7914e9eb1a00ec8211f9bd9b76c1ded2a22fac86a7d121cfa88aaa46358",
+    "padded_origin_xy": [
+      3860,
+      1890
+    ],
+    "reference_output_xywh": [
+      3576,
+      1710,
+      384,
+      384
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction"
+  },
+  {
+    "name": "fine-bars-frame-128",
+    "stage": "gathered",
+    "frame": 128,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\fine-bars-frame-128-frame128-gathered-native.png",
+      "sha256": "eab3ef3da088d2c368048f2f8337e0733a2c149164dc9b39237966d21ba9a27b",
+      "bytes": 198675
+    },
+    "pixel_sha256": "76619360539c1895d4b7c8c3fe375163b2a084c0b3766f98f294f8c54188bdf4",
+    "padded_origin_xy": [
+      3572,
+      1706
+    ],
+    "reference_output_xywh": [
+      3576,
+      1710,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "medium-bars-frame-139",
+    "stage": "raw",
+    "frame": 139,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\medium-bars-frame-139-frame139-raw-native.png",
+      "sha256": "2e70bf1c10a4023831ac211512dc6216aff0da7f1d2aa832b9c5e150ba3a1517",
+      "bytes": 223606
+    },
+    "pixel_sha256": "a5d81e02562d24a202d84c0f2675a803b8125d2790fd88f2fb353ec3dbcc5d9c",
+    "padded_origin_xy": [
+      2862,
+      1764
+    ],
+    "reference_output_xywh": [
+      2592,
+      1584,
+      384,
+      384
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction"
+  },
+  {
+    "name": "medium-bars-frame-139",
+    "stage": "gathered",
+    "frame": 139,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\medium-bars-frame-139-frame139-gathered-native.png",
+      "sha256": "dd3df855d8a6e5d2be2692e7380392a0052ce5e508a4e1bd522d85f5df66adbe",
+      "bytes": 215743
+    },
+    "pixel_sha256": "5eb6325af61fbd8e290b7554cf852a1ba6764eac8135e30b4d199152dfd0b008",
+    "padded_origin_xy": [
+      2588,
+      1580
+    ],
+    "reference_output_xywh": [
+      2592,
+      1584,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "medium-bars-frame-141",
+    "stage": "raw",
+    "frame": 141,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\medium-bars-frame-141-frame141-raw-native.png",
+      "sha256": "26f59b67bad3cdda5dfba7f1b42cb9a52691a8a579aa621d88dd3d749cbfe2a9",
+      "bytes": 226267
+    },
+    "pixel_sha256": "8344c9789df79aeb55a920b9b83ae32679a3c1317bf89e8d22462432a28020ad",
+    "padded_origin_xy": [
+      2864,
+      1764
+    ],
+    "reference_output_xywh": [
+      2592,
+      1584,
+      384,
+      384
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction"
+  },
+  {
+    "name": "medium-bars-frame-141",
+    "stage": "gathered",
+    "frame": 141,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\medium-bars-frame-141-frame141-gathered-native.png",
+      "sha256": "517af2d1541eaced2bdad24ff2cb5936b29db7fc881169df9e193b053564b439",
+      "bytes": 218174
+    },
+    "pixel_sha256": "3a0dae467e2eae9fe1e1453ec97f2929dc4b5f80821936be1d5ef5f350bfab29",
+    "padded_origin_xy": [
+      2588,
+      1580
+    ],
+    "reference_output_xywh": [
+      2592,
+      1584,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "pale-control-frame-149",
+    "stage": "raw",
+    "frame": 149,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\pale-control-frame-149-frame149-raw-native.png",
+      "sha256": "4f65911a1ad46b84de1c6fa3a27b355c73bea5106e87caec47183f8cb2a7f5ed",
+      "bytes": 95700
+    },
+    "pixel_sha256": "b4b29a897b3040f33d72379be04ed33f71c7ab497b3632f4cbf224aef6b54a18",
+    "padded_origin_xy": [
+      1066,
+      782
+    ],
+    "reference_output_xywh": [
+      792,
+      600,
+      384,
+      384
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction"
+  },
+  {
+    "name": "pale-control-frame-149",
+    "stage": "gathered",
+    "frame": 149,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\pale-control-frame-149-frame149-gathered-native.png",
+      "sha256": "ea6ef0cf79ac5f755f6e0d7fe7c91f17e5bbb566b82146018f085622acf03281",
+      "bytes": 95994
+    },
+    "pixel_sha256": "c4decb94b38097b120eaa72d2dfdaf2bd8ea5b8bf696f7e3ef2ebfcf7daeddad",
+    "padded_origin_xy": [
+      788,
+      596
+    ],
+    "reference_output_xywh": [
+      792,
+      600,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "lettering-frame-152",
+    "stage": "raw",
+    "frame": 152,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\lettering-frame-152-frame152-raw-native.png",
+      "sha256": "feecb85d05f353016237d161dc94427574e76425a4de51f82ba22f500e342e5d",
+      "bytes": 183451
+    },
+    "pixel_sha256": "66ea09cbbfd537844b7254bf533f96f48c4900f450adf83a43558ccd2235544a",
+    "padded_origin_xy": [
+      3044,
+      2288
+    ],
+    "reference_output_xywh": [
+      2772,
+      2106,
+      384,
+      384
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction"
+  },
+  {
+    "name": "lettering-frame-152",
+    "stage": "gathered",
+    "frame": 152,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\lettering-frame-152-frame152-gathered-native.png",
+      "sha256": "dd2268069bf4958bbb13e848e204eae5005bf0c23d6adbcb11b036912f98cf6d",
+      "bytes": 172312
+    },
+    "pixel_sha256": "3d456311e870ba4cfa558b64ca07a94b067295d8f6ba64c3fd2c6d68676722f0",
+    "padded_origin_xy": [
+      2768,
+      2102
+    ],
+    "reference_output_xywh": [
+      2772,
+      2106,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "lettering-frame-154",
+    "stage": "raw",
+    "frame": 154,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\lettering-frame-154-frame154-raw-native.png",
+      "sha256": "3b7fbca6ca5517891155c5a9073ad462241698800a9775ae3e0a4e5f58f1a29b",
+      "bytes": 184066
+    },
+    "pixel_sha256": "d9d1710ac11d088e2c60cff4cb7987af0f6e426dc609c0204868ea21bd56c57a",
+    "padded_origin_xy": [
+      3044,
+      2288
+    ],
+    "reference_output_xywh": [
+      2772,
+      2106,
+      384,
+      384
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction"
+  },
+  {
+    "name": "lettering-frame-154",
+    "stage": "gathered",
+    "frame": 154,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\lettering-frame-154-frame154-gathered-native.png",
+      "sha256": "6ab81ffe856d827726dc80340931748c02dbf5ae1c795f37346582012daae0d2",
+      "bytes": 170143
+    },
+    "pixel_sha256": "a8dd404ef66fe800507c1d530100d2a780faea976660b49eadc1b78e5f4e5f3f",
+    "padded_origin_xy": [
+      2768,
+      2102
+    ],
+    "reference_output_xywh": [
+      2772,
+      2106,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "medium-bars-frame-139",
+    "stage": "merged",
+    "frame": 139,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\medium-bars-frame-139-frame139-merged-native.png",
+      "sha256": "2e812e13716c8b9baaa72e8ba424d8d8242bc67f500fcdcdc973c16db64303d0",
+      "bytes": 221488
+    },
+    "pixel_sha256": "969c32effc55c0c72dac48ee1f7f606d4d232a98d131e993eace9aa22c6e59aa",
+    "padded_origin_xy": [
+      2588,
+      1580
+    ],
+    "reference_output_xywh": [
+      2592,
+      1584,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "medium-bars-frame-141",
+    "stage": "merged",
+    "frame": 141,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\medium-bars-frame-141-frame141-merged-native.png",
+      "sha256": "2e812e13716c8b9baaa72e8ba424d8d8242bc67f500fcdcdc973c16db64303d0",
+      "bytes": 221488
+    },
+    "pixel_sha256": "969c32effc55c0c72dac48ee1f7f606d4d232a98d131e993eace9aa22c6e59aa",
+    "padded_origin_xy": [
+      2588,
+      1580
+    ],
+    "reference_output_xywh": [
+      2592,
+      1584,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "fine-bars-frame-126",
+    "stage": "merged",
+    "frame": 126,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\fine-bars-frame-126-frame126-merged-native.png",
+      "sha256": "3f36e380b64fbf4cbe6dd79da76bf0c7184b7f0e93c6e2f008a696065aa78170",
+      "bytes": 209504
+    },
+    "pixel_sha256": "493cc838344d8a7d579728e8c793b859ba4d3bd4beeff410b96c155d14d1f104",
+    "padded_origin_xy": [
+      3572,
+      1706
+    ],
+    "reference_output_xywh": [
+      3576,
+      1710,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "fine-bars-frame-128",
+    "stage": "merged",
+    "frame": 128,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\fine-bars-frame-128-frame128-merged-native.png",
+      "sha256": "3f36e380b64fbf4cbe6dd79da76bf0c7184b7f0e93c6e2f008a696065aa78170",
+      "bytes": 209504
+    },
+    "pixel_sha256": "493cc838344d8a7d579728e8c793b859ba4d3bd4beeff410b96c155d14d1f104",
+    "padded_origin_xy": [
+      3572,
+      1706
+    ],
+    "reference_output_xywh": [
+      3576,
+      1710,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "lettering-frame-152",
+    "stage": "merged",
+    "frame": 152,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\lettering-frame-152-frame152-merged-native.png",
+      "sha256": "ec6d27dffd2cc22f447f890fbdf28c448ea0e458c5bcbc530984f00713c45353",
+      "bytes": 159478
+    },
+    "pixel_sha256": "3800ceded9ddb51b366c97fe8e948fb174cef4c2968ef5ed9456322bad377e84",
+    "padded_origin_xy": [
+      2768,
+      2102
+    ],
+    "reference_output_xywh": [
+      2772,
+      2106,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "lettering-frame-154",
+    "stage": "merged",
+    "frame": 154,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\lettering-frame-154-frame154-merged-native.png",
+      "sha256": "ec6d27dffd2cc22f447f890fbdf28c448ea0e458c5bcbc530984f00713c45353",
+      "bytes": 159478
+    },
+    "pixel_sha256": "3800ceded9ddb51b366c97fe8e948fb174cef4c2968ef5ed9456322bad377e84",
+    "padded_origin_xy": [
+      2768,
+      2102
+    ],
+    "reference_output_xywh": [
+      2772,
+      2106,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "pale-control-frame-149",
+    "stage": "merged",
+    "frame": 149,
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\pale-control-frame-149-frame149-merged-native.png",
+      "sha256": "424f54c8f3382350ca556208defc8fafd83c0cb21b6cc61cf69e3c0893c7cdaa",
+      "bytes": 93979
+    },
+    "pixel_sha256": "6184aab1c4192ef7084986801b301a78b637ab4a2bc53a87016b1ff1b9849de2",
+    "padded_origin_xy": [
+      788,
+      596
+    ],
+    "reference_output_xywh": [
+      792,
+      600,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  }
+]

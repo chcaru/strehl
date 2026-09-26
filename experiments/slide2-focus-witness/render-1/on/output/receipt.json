@@ -1,0 +1,690 @@
+{
+  "configuration": {
+    "dir": "D:/personal/macro/requests/misc-diagnostic/high-res-calibration-slide-2-cpl",
+    "frames": 299,
+    "map": "C:/dev/blog/death-of-software/projects/strehl/experiments/quality-september20/slide2-baseline-1/slide2.warpmap.txt",
+    "observe": true,
+    "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\on\\output",
+    "regions": [
+      {
+        "frame": 139,
+        "height": 384,
+        "name": "medium-bars-frame-139",
+        "width": 384,
+        "x": 2592,
+        "y": 1584
+      },
+      {
+        "frame": 141,
+        "height": 384,
+        "name": "medium-bars-frame-141",
+        "width": 384,
+        "x": 2592,
+        "y": 1584
+      },
+      {
+        "frame": 126,
+        "height": 384,
+        "name": "fine-bars-frame-126",
+        "width": 384,
+        "x": 3576,
+        "y": 1710
+      },
+      {
+        "frame": 128,
+        "height": 384,
+        "name": "fine-bars-frame-128",
+        "width": 384,
+        "x": 3576,
+        "y": 1710
+      },
+      {
+        "frame": 152,
+        "height": 384,
+        "name": "lettering-frame-152",
+        "width": 384,
+        "x": 2772,
+        "y": 2106
+      },
+      {
+        "frame": 154,
+        "height": 384,
+        "name": "lettering-frame-154",
+        "width": 384,
+        "x": 2772,
+        "y": 2106
+      },
+      {
+        "frame": 149,
+        "height": 384,
+        "name": "pale-control-frame-149",
+        "width": 384,
+        "x": 792,
+        "y": 600
+      }
+    ],
+    "tone": {
+      "black": 0.005475,
+      "contrast": 0.55,
+      "white": 0.476094
+    }
+  },
+  "crop_quad_xywh": [
+    139,
+    93,
+    3238,
+    2158
+  ],
+  "gathered_count": 7,
+  "levels": [
+    512.0,
+    15360.0
+  ],
+  "limits": "raw panels have no CA correction or geometric resampling; gathered and merged share the exact reference grid and production correction path; shared pinned tone differs slightly from prior automatic baseline; retain replay until independent pixel comparison",
+  "merged_count": 7,
+  "native_map_reference": 149,
+  "patches": [
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction",
+      "frame": 126,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "fine-bars-frame-126",
+      "padded_origin_xy": [
+        3860,
+        1890
+      ],
+      "reference_output_xywh": [
+        3576,
+        1710,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "raw",
+      "stem": "fine-bars-frame-126-frame126-raw",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 126,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "fine-bars-frame-126",
+      "padded_origin_xy": [
+        3572,
+        1706
+      ],
+      "reference_output_xywh": [
+        3576,
+        1710,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "gathered",
+      "stem": "fine-bars-frame-126-frame126-gathered",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction",
+      "frame": 128,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "fine-bars-frame-128",
+      "padded_origin_xy": [
+        3860,
+        1890
+      ],
+      "reference_output_xywh": [
+        3576,
+        1710,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "raw",
+      "stem": "fine-bars-frame-128-frame128-raw",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 128,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "fine-bars-frame-128",
+      "padded_origin_xy": [
+        3572,
+        1706
+      ],
+      "reference_output_xywh": [
+        3576,
+        1710,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "gathered",
+      "stem": "fine-bars-frame-128-frame128-gathered",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction",
+      "frame": 139,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "medium-bars-frame-139",
+      "padded_origin_xy": [
+        2862,
+        1764
+      ],
+      "reference_output_xywh": [
+        2592,
+        1584,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "raw",
+      "stem": "medium-bars-frame-139-frame139-raw",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 139,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "medium-bars-frame-139",
+      "padded_origin_xy": [
+        2588,
+        1580
+      ],
+      "reference_output_xywh": [
+        2592,
+        1584,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "gathered",
+      "stem": "medium-bars-frame-139-frame139-gathered",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction",
+      "frame": 141,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "medium-bars-frame-141",
+      "padded_origin_xy": [
+        2864,
+        1764
+      ],
+      "reference_output_xywh": [
+        2592,
+        1584,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "raw",
+      "stem": "medium-bars-frame-141-frame141-raw",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 141,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "medium-bars-frame-141",
+      "padded_origin_xy": [
+        2588,
+        1580
+      ],
+      "reference_output_xywh": [
+        2592,
+        1584,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "gathered",
+      "stem": "medium-bars-frame-141-frame141-gathered",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction",
+      "frame": 149,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "pale-control-frame-149",
+      "padded_origin_xy": [
+        1066,
+        782
+      ],
+      "reference_output_xywh": [
+        792,
+        600,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "raw",
+      "stem": "pale-control-frame-149-frame149-raw",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 149,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "pale-control-frame-149",
+      "padded_origin_xy": [
+        788,
+        596
+      ],
+      "reference_output_xywh": [
+        792,
+        600,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "gathered",
+      "stem": "pale-control-frame-149-frame149-gathered",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction",
+      "frame": 152,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "lettering-frame-152",
+      "padded_origin_xy": [
+        3044,
+        2288
+      ],
+      "reference_output_xywh": [
+        2772,
+        2106,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "raw",
+      "stem": "lettering-frame-152-frame152-raw",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 152,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "lettering-frame-152",
+      "padded_origin_xy": [
+        2768,
+        2102
+      ],
+      "reference_output_xywh": [
+        2772,
+        2106,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "gathered",
+      "stem": "lettering-frame-152-frame152-gathered",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction",
+      "frame": 154,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "lettering-frame-154",
+      "padded_origin_xy": [
+        3044,
+        2288
+      ],
+      "reference_output_xywh": [
+        2772,
+        2106,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "raw",
+      "stem": "lettering-frame-154-frame154-raw",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 154,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "lettering-frame-154",
+      "padded_origin_xy": [
+        2768,
+        2102
+      ],
+      "reference_output_xywh": [
+        2772,
+        2106,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "gathered",
+      "stem": "lettering-frame-154-frame154-gathered",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 139,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "medium-bars-frame-139",
+      "padded_origin_xy": [
+        2588,
+        1580
+      ],
+      "reference_output_xywh": [
+        2592,
+        1584,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "merged",
+      "stem": "medium-bars-frame-139-frame139-merged",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 141,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "medium-bars-frame-141",
+      "padded_origin_xy": [
+        2588,
+        1580
+      ],
+      "reference_output_xywh": [
+        2592,
+        1584,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "merged",
+      "stem": "medium-bars-frame-141-frame141-merged",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 126,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "fine-bars-frame-126",
+      "padded_origin_xy": [
+        3572,
+        1706
+      ],
+      "reference_output_xywh": [
+        3576,
+        1710,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "merged",
+      "stem": "fine-bars-frame-126-frame126-merged",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 128,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "fine-bars-frame-128",
+      "padded_origin_xy": [
+        3572,
+        1706
+      ],
+      "reference_output_xywh": [
+        3576,
+        1710,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "merged",
+      "stem": "fine-bars-frame-128-frame128-merged",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 152,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "lettering-frame-152",
+      "padded_origin_xy": [
+        2768,
+        2102
+      ],
+      "reference_output_xywh": [
+        2772,
+        2106,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "merged",
+      "stem": "lettering-frame-152-frame152-merged",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 154,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "lettering-frame-154",
+      "padded_origin_xy": [
+        2768,
+        2102
+      ],
+      "reference_output_xywh": [
+        2772,
+        2106,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "merged",
+      "stem": "lettering-frame-154-frame154-merged",
+      "trim": 4,
+      "width": 392
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 149,
+      "height": 392,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        384,
+        384
+      ],
+      "name": "pale-control-frame-149",
+      "padded_origin_xy": [
+        788,
+        596
+      ],
+      "reference_output_xywh": [
+        792,
+        600,
+        384,
+        384
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "merged",
+      "stem": "pale-control-frame-149-frame149-merged",
+      "trim": 4,
+      "width": 392
+    }
+  ],
+  "raw_count": 7,
+  "replay_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\on\\output\\replay.tiff",
+  "source_frame_count": 299,
+  "status": "MATCHED_SOURCE_CAPTURED",
+  "tone_bits": [
+    1001613217,
+    1056162456,
+    1057803469
+  ],
+  "wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ]
+}

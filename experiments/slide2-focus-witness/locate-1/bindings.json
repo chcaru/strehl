@@ -1,0 +1,77 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate.py",
+    "bytes": 16654,
+    "sha256": "f282e6d1b83e14ac3b44c18d0d73b3b2bb742d8151e67a34553c771f9cbb30bc"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\focus-locator.py",
+    "bytes": 11244,
+    "sha256": "8c75f1a14fd0024774954a31423f4bf5bcf6bedc9dc5b4840cb0e22d450edb03"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\src\\clib.py",
+    "bytes": 9274,
+    "sha256": "95d557d38855d720322d96edd57c2b654f6b8ea1af49fabb66df08ad5d93e0d2"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-config.json",
+    "bytes": 693,
+    "sha256": "01189dd3894ff37a39a75402f6d38636aed1db096668f1a0ef7de092038e62bb"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+    "bytes": 12664,
+    "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+    "bytes": 117908,
+    "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+    "bytes": 6846976,
+    "sha256": "ecf20e1b1e639fc3b86fe82d26a3e3ca02fd326549aa6353e80ad4480682d89d"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-baseline-1\\inputs.json",
+    "bytes": 108925,
+    "sha256": "39479774a2329436570b701590ec8651f0c1f8e77883fad5d866232ae7bb074c"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-baseline-1\\completion.json",
+    "bytes": 2765,
+    "sha256": "6917abbb34dd461b8ac716c40c2407d1989b3ad10b6a25b5efff29c851ca7627"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\on\\output\\receipt.json",
+    "bytes": 11166,
+    "sha256": "d8fe211c6255897a7d5db8ab85801a44b51e5ce9395a4f12b6825a8fe919c369"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-baseline-1\\slide2.warpmap.txt",
+    "bytes": 40987,
+    "sha256": "7712a5eb7f74001485bc69b9d9721fe1bde4c0aa8099e28ddf703ede8069c14a"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\on\\output\\fine-bars-frame149-raw-cfa.f32",
+    "bytes": 614656,
+    "sha256": "4356d405d17e444c159e66b7f2cc89535df3139bd21cad5c9336cfe19112654e"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\on\\output\\lettering-frame149-raw-cfa.f32",
+    "bytes": 614656,
+    "sha256": "f97099cc063c512f2c3fc4c72004e6124c1c9ddc6e9232f63e04db4af0470485"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\on\\output\\medium-bars-frame149-raw-cfa.f32",
+    "bytes": 614656,
+    "sha256": "f4ba09627ba68edbd957c591b7a9bfb3064cf71cfc88abf1a5b31d4b5d78bf2c"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\on\\output\\pale-control-frame149-raw-cfa.f32",
+    "bytes": 614656,
+    "sha256": "e1dfc431da405b6f1977d25f4134a9e19c040cfbf5855ac64402b94c4fca57ad"
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "status": "SLIDE2_FOCUS_SOURCE_ATTRIBUTION_READY",
+  "observer_pixel_and_byte_identical": true,
+  "selected_frames": [
+    126,
+    128,
+    139,
+    141,
+    149,
+    152,
+    154
+  ],
+  "regions": [
+    "medium-bars-frame-139",
+    "medium-bars-frame-141",
+    "fine-bars-frame-126",
+    "fine-bars-frame-128",
+    "lettering-frame-152",
+    "lettering-frame-154",
+    "pale-control-frame-149"
+  ],
+  "source_frame_count": 299,
+  "original_metadata_unchanged": true,
+  "selected_original_content_unchanged": true,
+  "photographically_reviewed": false,
+  "quality_gain_claim": false,
+  "full_image": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\off\\output\\replay.tiff",
+    "sha256": "24c66183ae94df908eb4a8662fc4b032532b7721655dfcc867e9a7d59b4f655b",
+    "bytes": 167707456
+  },
+  "full_png": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\matched-full.png",
+    "sha256": "9324581451ecb25c8b2273130ed10099c712c54e581723095aa9ebf53d887841",
+    "bytes": 33656909
+  },
+  "native_views": 21
+}

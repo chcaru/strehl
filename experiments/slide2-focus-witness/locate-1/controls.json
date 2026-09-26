@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "values": {
+    "flat": 0.0,
+    "flat_noise_sigma10": 2.781445113451055,
+    "flat_noise_sigma100": 275.26269744169576,
+    "sharp_texture": 892.3814760483905,
+    "blurred_texture": 0.9368846428048411
+  },
+  "old_locator_sha256": "8c75f1a14fd0024774954a31423f4bf5bcf6bedc9dc5b4840cb0e22d450edb03",
+  "failure_input": "A noisy flat must outrank blurred texture on this same score path.",
+  "interpretation": "Nomination only: noise, contrast, defocus and scale can change the score."
+}

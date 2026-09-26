@@ -1,0 +1,379 @@
+{
+  "status": "FOCUS_NEIGHBOURHOODS_READY",
+  "passed": true,
+  "controls_passed": true,
+  "original_metadata_unchanged": true,
+  "independent_decode_exact": true,
+  "config": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-config.json",
+    "bytes": 693,
+    "sha256": "01189dd3894ff37a39a75402f6d38636aed1db096668f1a0ef7de092038e62bb"
+  },
+  "locator": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\locator.json",
+    "bytes": 678945,
+    "sha256": "2310945649dd425f89bf15ccdd46a2bd82b8c30385cf18960f16002b1c4800d5"
+  },
+  "nominations": {
+    "medium-bars": [
+      139,
+      141
+    ],
+    "fine-bars": [
+      126,
+      128
+    ],
+    "lettering": [
+      152,
+      154
+    ]
+  },
+  "fixed_control": {
+    "name": "pale-control",
+    "frame": 149
+  },
+  "source_inventory": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\originals-before.json",
+    "bytes": 54722,
+    "sha256": "8891be1ad030093cba41fa4cea4730b6906d2be093366ee1e22847fa356a9eca"
+  },
+  "original_content_scope": "Retained baseline all299 original-content audit plus current metadata/order; no fresh all299 original-content hash. Selected copied sensels independently decoded.",
+  "independent_decode_checks": [
+    {
+      "frame_index": 126,
+      "region": "fine-bars",
+      "different_sensels": 0,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00127.ARW",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1",
+        "126",
+        "1890",
+        "3860",
+        "392",
+        "392"
+      ]
+    },
+    {
+      "frame_index": 128,
+      "region": "fine-bars",
+      "different_sensels": 0,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00129.ARW",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1",
+        "128",
+        "1890",
+        "3860",
+        "392",
+        "392"
+      ]
+    },
+    {
+      "frame_index": 139,
+      "region": "medium-bars",
+      "different_sensels": 0,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00140.ARW",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1",
+        "139",
+        "1764",
+        "2862",
+        "392",
+        "392"
+      ]
+    },
+    {
+      "frame_index": 141,
+      "region": "medium-bars",
+      "different_sensels": 0,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00142.ARW",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1",
+        "141",
+        "1764",
+        "2864",
+        "392",
+        "392"
+      ]
+    },
+    {
+      "frame_index": 149,
+      "region": "pale-control",
+      "different_sensels": 0,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00150.ARW",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1",
+        "149",
+        "782",
+        "1066",
+        "392",
+        "392"
+      ]
+    },
+    {
+      "frame_index": 152,
+      "region": "lettering",
+      "different_sensels": 0,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00153.ARW",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1",
+        "152",
+        "2288",
+        "3044",
+        "392",
+        "392"
+      ]
+    },
+    {
+      "frame_index": 154,
+      "region": "lettering",
+      "different_sensels": 0,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00155.ARW",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1",
+        "154",
+        "2288",
+        "3044",
+        "392",
+        "392"
+      ]
+    }
+  ],
+  "source149_golden_checks": [
+    {
+      "region": "medium-bars",
+      "different_cfa_f32_bits": 0
+    },
+    {
+      "region": "fine-bars",
+      "different_cfa_f32_bits": 0
+    },
+    {
+      "region": "lettering",
+      "different_cfa_f32_bits": 0
+    },
+    {
+      "region": "pale-control",
+      "different_cfa_f32_bits": 0
+    }
+  ],
+  "saved": [
+    {
+      "frame_index": 126,
+      "region": "fine-bars",
+      "source_xywh": [
+        3860,
+        1890,
+        392,
+        392
+      ],
+      "cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-126-fine-bars-cfa.npy",
+        "bytes": 307456,
+        "sha256": "378940f23b4b2a41c68fc55993fed6135efef6a86c3314018cb19eb586e25bb9"
+      },
+      "green_panels": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-126-fine-bars-g1.png",
+          "bytes": 20347,
+          "sha256": "5aba0955664e6a97c6c2ffbd6c7a6bfbe58ed24142c2d3cb278cd10a471ab5ab"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-126-fine-bars-g2.png",
+          "bytes": 20390,
+          "sha256": "57933485d412f3c61b90d3ea402243a8c7029f3788f643e1d538e7359e58cd18"
+        }
+      ]
+    },
+    {
+      "frame_index": 128,
+      "region": "fine-bars",
+      "source_xywh": [
+        3860,
+        1890,
+        392,
+        392
+      ],
+      "cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-128-fine-bars-cfa.npy",
+        "bytes": 307456,
+        "sha256": "7aa3fd36d153e131bba981af2aa54ff4a235e7394c814fd05faaeaa8c54e1e5f"
+      },
+      "green_panels": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-128-fine-bars-g1.png",
+          "bytes": 20116,
+          "sha256": "f84295406039a7f71fbb26295b906639807b5005173309330c0447ce6536a6fc"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-128-fine-bars-g2.png",
+          "bytes": 20189,
+          "sha256": "c485594f26260b6a2df241c6baf6a1d42ebfc4e5a8c0c6b6428f5e581a8ce614"
+        }
+      ]
+    },
+    {
+      "frame_index": 139,
+      "region": "medium-bars",
+      "source_xywh": [
+        2862,
+        1764,
+        392,
+        392
+      ],
+      "cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-139-medium-bars-cfa.npy",
+        "bytes": 307456,
+        "sha256": "65e40729dcdfe41223c661f238317dfc53668743c2779a484a0d76ceb517ccb6"
+      },
+      "green_panels": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-139-medium-bars-g1.png",
+          "bytes": 20529,
+          "sha256": "710b7b57794b36bd5e075d4a8961a25da43f92ee4f3365adfb1ae01f0730b3c6"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-139-medium-bars-g2.png",
+          "bytes": 20619,
+          "sha256": "46a2771d9b8090be2a4e77e81f9779bd85cdfb12360c09066729b08835683649"
+        }
+      ]
+    },
+    {
+      "frame_index": 141,
+      "region": "medium-bars",
+      "source_xywh": [
+        2864,
+        1764,
+        392,
+        392
+      ],
+      "cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-141-medium-bars-cfa.npy",
+        "bytes": 307456,
+        "sha256": "994891c60ac59970f11f753ea8585a932c39916bfe49f9322f33af61dc046bd8"
+      },
+      "green_panels": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-141-medium-bars-g1.png",
+          "bytes": 20988,
+          "sha256": "dc5f76a65b30176ad3dcb88a4c3e76ff67bc0633c5ce230451613fd5e0cf0184"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-141-medium-bars-g2.png",
+          "bytes": 20993,
+          "sha256": "56656c1257e8f920fb966fbeffe9b98a13e4edd4bd2c9682a5f9b099ffdc28bc"
+        }
+      ]
+    },
+    {
+      "frame_index": 149,
+      "region": "pale-control",
+      "source_xywh": [
+        1066,
+        782,
+        392,
+        392
+      ],
+      "cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-149-pale-control-cfa.npy",
+        "bytes": 307456,
+        "sha256": "428db20336e1e6d487ec08ffe33f0715345e512180d0208725e3e67869d4ac51"
+      },
+      "green_panels": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-149-pale-control-g1.png",
+          "bytes": 399,
+          "sha256": "f47fa022a2bbe9e40cc87ccd63cb6ef3af010d1706c2526f5a5a070a11de660a"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-149-pale-control-g2.png",
+          "bytes": 397,
+          "sha256": "7e07ab3feb6ce301de9989157afe59c4b383bd04b1f8ca9569cc261ce6d4cb4c"
+        }
+      ]
+    },
+    {
+      "frame_index": 152,
+      "region": "lettering",
+      "source_xywh": [
+        3044,
+        2288,
+        392,
+        392
+      ],
+      "cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-152-lettering-cfa.npy",
+        "bytes": 307456,
+        "sha256": "8fcf4fd7d2b3540853f6ab08dd7a9f4bdac6dd3c743656d8fdbb108fab59fbc9"
+      },
+      "green_panels": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-152-lettering-g1.png",
+          "bytes": 17791,
+          "sha256": "48ab3071409848d1b14f267ba8df4202db2f1fe7b7018e38d94f513544bf6a7a"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-152-lettering-g2.png",
+          "bytes": 17800,
+          "sha256": "55ff571588c2c03573a9fea9bddb5df85719ee0858067e1e7ab4f0e9b3dec08f"
+        }
+      ]
+    },
+    {
+      "frame_index": 154,
+      "region": "lettering",
+      "source_xywh": [
+        3044,
+        2288,
+        392,
+        392
+      ],
+      "cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-154-lettering-cfa.npy",
+        "bytes": 307456,
+        "sha256": "8ca00df1386adcd4ffda2951a0cc5b078b59d8521edf1e233f97aa58544ab51d"
+      },
+      "green_panels": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-154-lettering-g1.png",
+          "bytes": 17785,
+          "sha256": "697032409afd5f55a115ab1bbded6cce746b770c6358d612d56ecc5a9f1636fd"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\frame-154-lettering-g2.png",
+          "bytes": 17778,
+          "sha256": "83bff6d4f3961405f8c3807b5dcae415ab2bd856a12b0b23b15fd9169b3e9ed1"
+        }
+      ]
+    }
+  ],
+  "original_pass_decodes": 299,
+  "selected_redecodes": 6,
+  "full_rgb_postprocesses": 0,
+  "rawpy_version": "0.27.0",
+  "libraw_version": [
+    0,
+    22,
+    1
+  ],
+  "display": "G1/G2 separately192x192 original same-colour samples at native pitch2; fixed gain2.809 gamma1/2.2; no resize",
+  "limitation": "Source-centred, unaligned, CA-off, fixed monochrome display; actual product matched-source render still required.",
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\process.json",
+    "bytes": 2874,
+    "sha256": "13d9e3fcc9bf82f3353cd74113a978ee46dae3f50bea571739c166f901458653"
+  },
+  "sources": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate-1\\bindings.json",
+    "bytes": 3777,
+    "sha256": "c6c240dbfddd57476bde29e0ebe7c363946cad7888feb1557846d5e2ba2bace7"
+  },
+  "sources_unchanged": true
+}

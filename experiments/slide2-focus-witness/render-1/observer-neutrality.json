@@ -1,0 +1,16 @@
+{
+  "different_rgb16_samples": 0,
+  "off": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\off\\output\\replay.tiff",
+    "sha256": "24c66183ae94df908eb4a8662fc4b032532b7721655dfcc867e9a7d59b4f655b",
+    "bytes": 167707456
+  },
+  "on": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\on\\output\\replay.tiff",
+    "sha256": "24c66183ae94df908eb4a8662fc4b032532b7721655dfcc867e9a7d59b4f655b",
+    "bytes": 167707456
+  },
+  "off_pixel_sha256": "1398f855dee5767b36f4efe11b8999324449fb50baa1e32a57659a2987429fbb",
+  "on_pixel_sha256": "1398f855dee5767b36f4efe11b8999324449fb50baa1e32a57659a2987429fbb",
+  "identical_tiff_bytes": true
+}
