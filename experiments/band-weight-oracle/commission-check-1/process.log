@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\band-weight-oracle\independent-check.py", line 419, in <module>
+    main()
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\band-weight-oracle\independent-check.py", line 348, in main
+    cases,commissioned=load_cases(args.dataset,np)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\band-weight-oracle\independent-check.py", line 230, in load_cases
+    need(te<=2e-7,'independent analytic truth mismatch')
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\band-weight-oracle\independent-check.py", line 32, in need
+    raise RuntimeError(message)
+RuntimeError: independent analytic truth mismatch

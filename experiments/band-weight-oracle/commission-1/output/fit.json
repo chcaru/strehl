@@ -1,0 +1,215 @@
+{
+  "schema": 1,
+  "dataset": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\dataset.json",
+  "dataset_sha256": "0c8e7c457f971cc387fa06e7f5261e2b9ef15014c6591b6d7950ce0acdda9e19",
+  "consumer": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\train.py",
+  "consumer_sha256": "b5455f488a92ed75c2a8ae8d9dcfb31b054237805b7ded22893459ef4ea9b987",
+  "source_sha256": "cde46d1d725044373282eb594970e5765ae8cc00255f81b247968359b4f6e73d",
+  "native_commission": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\commission-1\\output\\commission.json",
+  "native_commission_sha256": "3ac4abaa78bdc259ff3960c52bce6396ddb739866d778edb665e4cfc1ba203b8",
+  "phase": "commission",
+  "target_kind": "prescribed-rgb",
+  "truth_assisted_oracle": false,
+  "generalization_claim": false,
+  "quality_claim": false,
+  "global_optimum_or_ceiling_claim": false,
+  "torch": "2.11.0+cu128",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "float32": true,
+  "deterministic": true,
+  "tf32": false,
+  "seed": 137,
+  "status": "FINAL_STEP_COMPLETE",
+  "steps": 1024,
+  "learning_rate": 0.03,
+  "adam_epsilon": 1e-15,
+  "start": "uniform-zero-logits",
+  "final_only": true,
+  "cap_seconds": 180.0,
+  "parameters": 105840,
+  "fit_seconds": 24.142526200001157,
+  "history": [
+    {
+      "step": 1,
+      "rgb_mse_before_update": 2.692369207579759e-07
+    },
+    {
+      "step": 128,
+      "rgb_mse_before_update": 2.6531157826248375e-10
+    },
+    {
+      "step": 256,
+      "rgb_mse_before_update": 9.547803520026932e-11
+    },
+    {
+      "step": 384,
+      "rgb_mse_before_update": 3.563950176643793e-11
+    },
+    {
+      "step": 512,
+      "rgb_mse_before_update": 1.8966481163396054e-11
+    },
+    {
+      "step": 640,
+      "rgb_mse_before_update": 3.038510762443103e-11
+    },
+    {
+      "step": 768,
+      "rgb_mse_before_update": 2.6498175875744323e-10
+    },
+    {
+      "step": 896,
+      "rgb_mse_before_update": 6.580431338720771e-11
+    },
+    {
+      "step": 1024,
+      "rgb_mse_before_update": 3.22002181862846e-11
+    }
+  ],
+  "cases": [
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\case.json",
+      "case_sha256": "025c01ca7ecf69c2379d1f8bf9aa574017ed82c36d46f16652beda3a2a077d2e",
+      "initial_mse": 5.1555574032136064e-08,
+      "final_mse": 4.246422481766869e-14,
+      "prediction": {
+        "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\case.json",
+        "case_sha256": "025c01ca7ecf69c2379d1f8bf9aa574017ed82c36d46f16652beda3a2a077d2e",
+        "arrays": {
+          "cfa": {
+            "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\commission-1\\output\\case-00\\cfa.f32",
+            "sha256": "ba646db852b07155485ef0df23d8f70ce5d865c5d07e69a1c5e2bcf65cd152bf",
+            "shape": [
+              4,
+              72,
+              80
+            ],
+            "dtype": "<f4"
+          },
+          "rgb": {
+            "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\commission-1\\output\\case-00\\rgb.f32",
+            "sha256": "65eebb17871eb87777e922441a524ed2ceae3fce778e2bebc81e90c2f41e21eb",
+            "shape": [
+              144,
+              160,
+              3
+            ],
+            "dtype": "<f4"
+          },
+          "weights-0": {
+            "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\commission-1\\output\\case-00\\weights-0.f32",
+            "sha256": "0145114f4ddc5dd77129cabb156610ea2405f9ea9928578f0f22b072c641f4ac",
+            "shape": [
+              5,
+              72,
+              80
+            ],
+            "dtype": "<f4"
+          },
+          "weights-1": {
+            "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\commission-1\\output\\case-00\\weights-1.f32",
+            "sha256": "14aa21cf90c4e19bc8d0b2b1d1e9d42ff2f837e35755a3c838b5b52f436f46af",
+            "shape": [
+              5,
+              36,
+              40
+            ],
+            "dtype": "<f4"
+          },
+          "weights-2": {
+            "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\commission-1\\output\\case-00\\weights-2.f32",
+            "sha256": "e6c339bf508c863fed166df93e882b4ad2da9271c76938405b7b782bd6c62271",
+            "shape": [
+              5,
+              18,
+              20
+            ],
+            "dtype": "<f4"
+          }
+        }
+      },
+      "directional": {
+        "objective0": 5.1555574032136064e-08,
+        "objective_plus": 5.0576179688732736e-08,
+        "objective_minus": 5.2548674744912205e-08,
+        "autograd_directional_derivative": -9.862412147629532e-08,
+        "epsilon": 0.01,
+        "direction": "-gradient/max_abs_gradient",
+        "max_abs_gradient": 1.8411763780257218e-10
+      }
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\case.json",
+      "case_sha256": "4c0612a905e3f3f2ae6529c7dcb0ebc8c581a647dcd7310089c607960f56caf3",
+      "initial_mse": 4.869182816946704e-07,
+      "final_mse": 8.897546588393368e-11,
+      "prediction": {
+        "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\case.json",
+        "case_sha256": "4c0612a905e3f3f2ae6529c7dcb0ebc8c581a647dcd7310089c607960f56caf3",
+        "arrays": {
+          "cfa": {
+            "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\commission-1\\output\\case-01\\cfa.f32",
+            "sha256": "c290a536f4c3f998bfb245063ddec83e17ed1f879d8002f45e4576f1d7dd1b71",
+            "shape": [
+              4,
+              72,
+              80
+            ],
+            "dtype": "<f4"
+          },
+          "rgb": {
+            "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\commission-1\\output\\case-01\\rgb.f32",
+            "sha256": "a80aeb7e8254afbe26fb21f33e76206e0dd54ffd5f694790d7e51cd4f8dab846",
+            "shape": [
+              144,
+              160,
+              3
+            ],
+            "dtype": "<f4"
+          },
+          "weights-0": {
+            "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\commission-1\\output\\case-01\\weights-0.f32",
+            "sha256": "58b61b13f36ed6577e41c8c6dfe28874ef5f543e3878fd17fe92cf31470a5783",
+            "shape": [
+              9,
+              72,
+              80
+            ],
+            "dtype": "<f4"
+          },
+          "weights-1": {
+            "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\commission-1\\output\\case-01\\weights-1.f32",
+            "sha256": "0f0fbea16820539e198972a926d6e1c6993a8ca703ddd4e8402b91f0d0e7a706",
+            "shape": [
+              9,
+              36,
+              40
+            ],
+            "dtype": "<f4"
+          },
+          "weights-2": {
+            "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\commission-1\\output\\case-01\\weights-2.f32",
+            "sha256": "065dd18ac413cfb6a1ef7fa90a49a0c64d8cf32b8ba4521b6b51c867f8e990ba",
+            "shape": [
+              9,
+              18,
+              20
+            ],
+            "dtype": "<f4"
+          }
+        }
+      },
+      "directional": {
+        "objective0": 4.869182816946704e-07,
+        "objective_plus": 4.606306163168483e-07,
+        "objective_minus": 5.143904218130047e-07,
+        "autograd_directional_derivative": -2.6879639903631916e-06,
+        "epsilon": 0.01,
+        "direction": "-gradient/max_abs_gradient",
+        "max_abs_gradient": 2.550462419037558e-08
+      }
+    }
+  ],
+  "predictions_sha256": "96b83d930e970b3289a094b07830cfadd61db3d1ac98917626eac948f3a5fc3f",
+  "peak_cuda_bytes": 24039936
+}

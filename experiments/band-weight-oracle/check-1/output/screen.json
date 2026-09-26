@@ -1,0 +1,3664 @@
+{
+  "schema": 1,
+  "dataset": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\dataset.json",
+  "dataset_sha256": "0c8e7c457f971cc387fa06e7f5261e2b9ef15014c6591b6d7950ce0acdda9e19",
+  "checker_sha256": "be05178c244e69ddcd5e4b29a9b9c7d9da3770fea1caebd1ee398fe36b3a4012",
+  "consumer_sha256": "b5455f488a92ed75c2a8ae8d9dcfb31b054237805b7ded22893459ef4ea9b987",
+  "oracle_fitted_truth_not_heldout": true,
+  "photographic_replay_admitted": false,
+  "native_score_port": {
+    "native_reference_parity": [
+      {
+        "id": "held-flat-n5",
+        "truth_max_abs": 0.0,
+        "errors_max_abs": 0.0,
+        "coefficients_max_abs": 0.0,
+        "template_sd_max_abs": 0.0
+      },
+      {
+        "id": "held-flat-n9",
+        "truth_max_abs": 0.0,
+        "errors_max_abs": 0.0,
+        "coefficients_max_abs": 0.0,
+        "template_sd_max_abs": 0.0
+      },
+      {
+        "id": "held-curved-bright-occlusion-n9",
+        "truth_max_abs": 1.1920928955078125e-07,
+        "errors_max_abs": 8.777700788442644e-15,
+        "coefficients_max_abs": 3.9493653525290995e-07,
+        "template_sd_max_abs": 7.645086569016413e-10
+      },
+      {
+        "id": "held-near-fine-far-coarse-n5",
+        "truth_max_abs": 2.9802322387695312e-08,
+        "errors_max_abs": 2.9906632725840154e-15,
+        "coefficients_max_abs": 1.4025651751126134e-09,
+        "template_sd_max_abs": 6.70460076346302e-11
+      },
+      {
+        "id": "held-unclipped-point-glint-n5",
+        "truth_max_abs": 5.960464477539063e-08,
+        "errors_max_abs": 2.473715676742927e-15,
+        "coefficients_max_abs": 2.663159692772865e-10,
+        "template_sd_max_abs": 1.6748352704709646e-11
+      },
+      {
+        "id": "held-clipped-point-glint-n5",
+        "truth_max_abs": 1.1920928955078125e-07,
+        "errors_max_abs": 0.0,
+        "coefficients_max_abs": 3.397282455352979e-14,
+        "template_sd_max_abs": 3.191891195797325e-16
+      },
+      {
+        "id": "held-weak-colour-dots-n5",
+        "truth_max_abs": 2.9802322387695312e-08,
+        "errors_max_abs": 0.0,
+        "coefficients_max_abs": 1.6587099138654082e-08,
+        "template_sd_max_abs": 7.676435789111258e-11
+      }
+    ],
+    "known_truth_pass": true,
+    "destroyers": {
+      "erased_near_detail": {
+        "id": "held-near-fine-far-coarse-n5",
+        "windows": [
+          {
+            "window": "interior",
+            "native_xyxy": [
+              30,
+              30,
+              162,
+              146
+            ],
+            "canonical": {
+              "rgb_rmse": 0.004108708174337063,
+              "green_rmse": 0.004233657786651857,
+              "chroma_rmse": 0.002384229716367427,
+              "signed_rgb_bias": -8.430839598941828e-05,
+              "near_far_coefficients": [
+                [
+                  0.919471431209519,
+                  0.9429793729602106
+                ],
+                [
+                  1.0086751858499308,
+                  0.942207095480054
+                ],
+                [
+                  0.9296514084810656,
+                  0.9461126616813885
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.016873685205869553,
+                  0.037520986786016376
+                ],
+                [
+                  0.013123975458188676,
+                  0.0443429828783094
+                ],
+                [
+                  0.014998829541430338,
+                  0.03410998870750682
+                ]
+              ],
+              "standardized_condition": [
+                1.0002640871484374,
+                1.0002640865189256,
+                1.0002640867103898
+              ]
+            },
+            "uniform": {
+              "rgb_rmse": 0.012868347506248235,
+              "green_rmse": 0.012074010996617552,
+              "chroma_rmse": 0.002714492302230719,
+              "signed_rgb_bias": 0.00017749652080302744,
+              "near_far_coefficients": [
+                [
+                  0.3465390337751203,
+                  0.9041378513475249
+                ],
+                [
+                  0.37825823301917183,
+                  0.9036013493835902
+                ],
+                [
+                  0.3560144315712717,
+                  0.9053261737315481
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.016873685205869553,
+                  0.037520986786016376
+                ],
+                [
+                  0.013123975458188676,
+                  0.0443429828783094
+                ],
+                [
+                  0.014998829541430338,
+                  0.03410998870750682
+                ]
+              ],
+              "standardized_condition": [
+                1.0002640871484374,
+                1.0002640865189256,
+                1.0002640867103898
+              ]
+            },
+            "candidate": {
+              "rgb_rmse": 0.015076747637931268,
+              "green_rmse": 0.013123976241923909,
+              "chroma_rmse": 0.002964405836428614,
+              "signed_rgb_bias": 5.2246857448784326e-06,
+              "near_far_coefficients": [
+                [
+                  -8.735004585498795e-08,
+                  1.0000000004641911
+                ],
+                [
+                  -2.4658888061227274e-07,
+                  1.0000000047005466
+                ],
+                [
+                  2.1344815618701927e-07,
+                  1.0000000055031812
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.016873685205869553,
+                  0.037520986786016376
+                ],
+                [
+                  0.013123975458188676,
+                  0.0443429828783094
+                ],
+                [
+                  0.014998829541430338,
+                  0.03410998870750682
+                ]
+              ],
+              "standardized_condition": [
+                1.0002640871484374,
+                1.0002640865189256,
+                1.0002640867103898
+              ]
+            },
+            "preservation_pass": false
+          },
+          {
+            "window": "near-fine-far-coarse-positive",
+            "native_xyxy": [
+              66,
+              42,
+              130,
+              138
+            ],
+            "canonical": {
+              "rgb_rmse": 0.005186297626183432,
+              "green_rmse": 0.00523117620497526,
+              "chroma_rmse": 0.0032156929998617997,
+              "signed_rgb_bias": -0.0004711484616564121,
+              "near_far_coefficients": [
+                [
+                  0.9209217387005931,
+                  0.9392777189443482
+                ],
+                [
+                  1.008548347164311,
+                  0.9371115375208521
+                ],
+                [
+                  0.9294486673930276,
+                  0.9450452909969902
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.024239927633502228,
+                  0.035210497620220105
+                ],
+                [
+                  0.018853274303450882,
+                  0.04161240473283976
+                ],
+                [
+                  0.02154659984712165,
+                  0.03200954380379287
+                ]
+              ],
+              "standardized_condition": [
+                1.0002706775107717,
+                1.0002706785400954,
+                1.0002706784013164
+              ]
+            },
+            "uniform": {
+              "rgb_rmse": 0.017205559079081376,
+              "green_rmse": 0.015666414266096662,
+              "chroma_rmse": 0.0037088317548356754,
+              "signed_rgb_bias": -0.00018152234123489406,
+              "near_far_coefficients": [
+                [
+                  0.3420159902290335,
+                  0.9081065945647061
+                ],
+                [
+                  0.3737648480050762,
+                  0.9060812317525682
+                ],
+                [
+                  0.3517197780510529,
+                  0.9122276887004798
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.024239927633502228,
+                  0.035210497620220105
+                ],
+                [
+                  0.018853274303450882,
+                  0.04161240473283976
+                ],
+                [
+                  0.02154659984712165,
+                  0.03200954380379287
+                ]
+              ],
+              "standardized_condition": [
+                1.0002706775107717,
+                1.0002706785400954,
+                1.0002706784013164
+              ]
+            },
+            "candidate": {
+              "rgb_rmse": 0.02165853583297247,
+              "green_rmse": 0.018853277677033962,
+              "chroma_rmse": 0.0042585238865887574,
+              "signed_rgb_bias": 1.3020916715807592e-05,
+              "near_far_coefficients": [
+                [
+                  -8.688150011375945e-08,
+                  0.9999999939756808
+                ],
+                [
+                  -2.437211293548791e-07,
+                  0.9999999946169897
+                ],
+                [
+                  2.1762455472284438e-07,
+                  0.9999999931066577
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.024239927633502228,
+                  0.035210497620220105
+                ],
+                [
+                  0.018853274303450882,
+                  0.04161240473283976
+                ],
+                [
+                  0.02154659984712165,
+                  0.03200954380379287
+                ]
+              ],
+              "standardized_condition": [
+                1.0002706775107717,
+                1.0002706785400954,
+                1.0002706784013164
+              ]
+            },
+            "preservation_pass": false
+          }
+        ],
+        "positive": {
+          "window": "near-fine-far-coarse-positive",
+          "candidate_rgb_rmse": 0.02165853583297247,
+          "better_reference_rgb_rmse": 0.005186297626183432,
+          "pass": false
+        },
+        "preservation_pass": false,
+        "positive_pass": false,
+        "pass": false,
+        "eligible_reference_components": 18,
+        "unqualified_reference_components": 6
+      },
+      "erased_far_depth": {
+        "id": "held-near-fine-far-coarse-n5",
+        "windows": [
+          {
+            "window": "interior",
+            "native_xyxy": [
+              30,
+              30,
+              162,
+              146
+            ],
+            "canonical": {
+              "rgb_rmse": 0.004108708174337063,
+              "green_rmse": 0.004233657786651857,
+              "chroma_rmse": 0.002384229716367427,
+              "signed_rgb_bias": -8.430839598941828e-05,
+              "near_far_coefficients": [
+                [
+                  0.919471431209519,
+                  0.9429793729602106
+                ],
+                [
+                  1.0086751858499308,
+                  0.942207095480054
+                ],
+                [
+                  0.9296514084810656,
+                  0.9461126616813885
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.016873685205869553,
+                  0.037520986786016376
+                ],
+                [
+                  0.013123975458188676,
+                  0.0443429828783094
+                ],
+                [
+                  0.014998829541430338,
+                  0.03410998870750682
+                ]
+              ],
+              "standardized_condition": [
+                1.0002640871484374,
+                1.0002640865189256,
+                1.0002640867103898
+              ]
+            },
+            "uniform": {
+              "rgb_rmse": 0.012868347506248235,
+              "green_rmse": 0.012074010996617552,
+              "chroma_rmse": 0.002714492302230719,
+              "signed_rgb_bias": 0.00017749652080302744,
+              "near_far_coefficients": [
+                [
+                  0.3465390337751203,
+                  0.9041378513475249
+                ],
+                [
+                  0.37825823301917183,
+                  0.9036013493835902
+                ],
+                [
+                  0.3560144315712717,
+                  0.9053261737315481
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.016873685205869553,
+                  0.037520986786016376
+                ],
+                [
+                  0.013123975458188676,
+                  0.0443429828783094
+                ],
+                [
+                  0.014998829541430338,
+                  0.03410998870750682
+                ]
+              ],
+              "standardized_condition": [
+                1.0002640871484374,
+                1.0002640865189256,
+                1.0002640867103898
+              ]
+            },
+            "candidate": {
+              "rgb_rmse": 0.03897318727746915,
+              "green_rmse": 0.04443626915558494,
+              "chroma_rmse": 0.008714667592031693,
+              "signed_rgb_bias": 0.002508879077203315,
+              "near_far_coefficients": [
+                [
+                  0.9999999098903389,
+                  3.305231811949044e-09
+                ],
+                [
+                  0.9999997562222604,
+                  1.1987823246537081e-08
+                ],
+                [
+                  1.000000222659652,
+                  8.34275245068838e-09
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.016873685205869553,
+                  0.037520986786016376
+                ],
+                [
+                  0.013123975458188676,
+                  0.0443429828783094
+                ],
+                [
+                  0.014998829541430338,
+                  0.03410998870750682
+                ]
+              ],
+              "standardized_condition": [
+                1.0002640871484374,
+                1.0002640865189256,
+                1.0002640867103898
+              ]
+            },
+            "preservation_pass": false
+          },
+          {
+            "window": "near-fine-far-coarse-positive",
+            "native_xyxy": [
+              66,
+              42,
+              130,
+              138
+            ],
+            "canonical": {
+              "rgb_rmse": 0.005186297626183432,
+              "green_rmse": 0.00523117620497526,
+              "chroma_rmse": 0.0032156929998617997,
+              "signed_rgb_bias": -0.0004711484616564121,
+              "near_far_coefficients": [
+                [
+                  0.9209217387005931,
+                  0.9392777189443482
+                ],
+                [
+                  1.008548347164311,
+                  0.9371115375208521
+                ],
+                [
+                  0.9294486673930276,
+                  0.9450452909969902
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.024239927633502228,
+                  0.035210497620220105
+                ],
+                [
+                  0.018853274303450882,
+                  0.04161240473283976
+                ],
+                [
+                  0.02154659984712165,
+                  0.03200954380379287
+                ]
+              ],
+              "standardized_condition": [
+                1.0002706775107717,
+                1.0002706785400954,
+                1.0002706784013164
+              ]
+            },
+            "uniform": {
+              "rgb_rmse": 0.017205559079081376,
+              "green_rmse": 0.015666414266096662,
+              "chroma_rmse": 0.0037088317548356754,
+              "signed_rgb_bias": -0.00018152234123489406,
+              "near_far_coefficients": [
+                [
+                  0.3420159902290335,
+                  0.9081065945647061
+                ],
+                [
+                  0.3737648480050762,
+                  0.9060812317525682
+                ],
+                [
+                  0.3517197780510529,
+                  0.9122276887004798
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.024239927633502228,
+                  0.035210497620220105
+                ],
+                [
+                  0.018853274303450882,
+                  0.04161240473283976
+                ],
+                [
+                  0.02154659984712165,
+                  0.03200954380379287
+                ]
+              ],
+              "standardized_condition": [
+                1.0002706775107717,
+                1.0002706785400954,
+                1.0002706784013164
+              ]
+            },
+            "candidate": {
+              "rgb_rmse": 0.0366054760985558,
+              "green_rmse": 0.04173666318582228,
+              "chroma_rmse": 0.008185231500416291,
+              "signed_rgb_bias": -0.00280561410222112,
+              "near_far_coefficients": [
+                [
+                  0.9999999080355145,
+                  -2.8297472123913773e-09
+                ],
+                [
+                  0.9999997544055992,
+                  -1.3540594763831287e-09
+                ],
+                [
+                  1.0000002246946431,
+                  -6.515151902202618e-09
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.024239927633502228,
+                  0.035210497620220105
+                ],
+                [
+                  0.018853274303450882,
+                  0.04161240473283976
+                ],
+                [
+                  0.02154659984712165,
+                  0.03200954380379287
+                ]
+              ],
+              "standardized_condition": [
+                1.0002706775107717,
+                1.0002706785400954,
+                1.0002706784013164
+              ]
+            },
+            "preservation_pass": false
+          }
+        ],
+        "positive": {
+          "window": "near-fine-far-coarse-positive",
+          "candidate_rgb_rmse": 0.0366054760985558,
+          "better_reference_rgb_rmse": 0.005186297626183432,
+          "pass": false
+        },
+        "preservation_pass": false,
+        "positive_pass": false,
+        "pass": false,
+        "eligible_reference_components": 18,
+        "unqualified_reference_components": 6
+      },
+      "added_noise": {
+        "id": "held-flat-n5",
+        "windows": [
+          {
+            "window": "interior",
+            "native_xyxy": [
+              30,
+              30,
+              162,
+              146
+            ],
+            "canonical": {
+              "rgb_rmse": 0.0011414866233087186,
+              "green_rmse": 0.000979987946376129,
+              "chroma_rmse": 0.0009592744658817137,
+              "signed_rgb_bias": -1.7327108903447744e-05,
+              "near_far_coefficients": [
+                [
+                  null,
+                  null
+                ],
+                [
+                  null,
+                  null
+                ],
+                [
+                  null,
+                  null
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "standardized_condition": [
+                null,
+                null,
+                null
+              ]
+            },
+            "uniform": {
+              "rgb_rmse": 0.001004142821691774,
+              "green_rmse": 0.0007954849274482939,
+              "chroma_rmse": 0.0008353059727380595,
+              "signed_rgb_bias": -6.995830478588491e-06,
+              "near_far_coefficients": [
+                [
+                  null,
+                  null
+                ],
+                [
+                  null,
+                  null
+                ],
+                [
+                  null,
+                  null
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "standardized_condition": [
+                null,
+                null,
+                null
+              ]
+            },
+            "candidate": {
+              "rgb_rmse": 0.09962333029340523,
+              "green_rmse": 0.09982982300392725,
+              "chroma_rmse": 0.14068165285216472,
+              "signed_rgb_bias": 0.00014101105859909934,
+              "near_far_coefficients": [
+                [
+                  null,
+                  null
+                ],
+                [
+                  null,
+                  null
+                ],
+                [
+                  null,
+                  null
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "standardized_condition": [
+                null,
+                null,
+                null
+              ]
+            },
+            "preservation_pass": false
+          }
+        ],
+        "positive": null,
+        "preservation_pass": false,
+        "positive_pass": true,
+        "pass": false,
+        "eligible_reference_components": 0,
+        "unqualified_reference_components": 0
+      },
+      "erased_image": {
+        "id": "held-weak-colour-dots-n5",
+        "windows": [
+          {
+            "window": "interior",
+            "native_xyxy": [
+              30,
+              30,
+              162,
+              146
+            ],
+            "canonical": {
+              "rgb_rmse": 0.0015373768032518305,
+              "green_rmse": 0.0010938982190725865,
+              "chroma_rmse": 0.0019109985534985416,
+              "signed_rgb_bias": -3.823302543483018e-05,
+              "near_far_coefficients": [
+                [
+                  0.857825717673327,
+                  0.954483661996938
+                ],
+                [
+                  null,
+                  1.2428757972977311
+                ],
+                [
+                  0.854296687601519,
+                  0.8634992019016244
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.004456584151817151,
+                  0.002555077448512089
+                ],
+                [
+                  0.0009723456125906798,
+                  0.0010220308761983113
+                ],
+                [
+                  0.003079094344466198,
+                  0.004599139607965623
+                ]
+              ],
+              "standardized_condition": [
+                1.0000000000000038,
+                1.0,
+                1.0000000000000038
+              ]
+            },
+            "uniform": {
+              "rgb_rmse": 0.002664586932939926,
+              "green_rmse": 0.0010483567499945624,
+              "chroma_rmse": 0.0031989218786909585,
+              "signed_rgb_bias": -5.931901647856907e-06,
+              "near_far_coefficients": [
+                [
+                  0.5668500607702249,
+                  0.4703735211229109
+                ],
+                [
+                  null,
+                  0.539504751545597
+                ],
+                [
+                  0.5704387511808873,
+                  0.4484550326936223
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.004456584151817151,
+                  0.002555077448512089
+                ],
+                [
+                  0.0009723456125906798,
+                  0.0010220308761983113
+                ],
+                [
+                  0.003079094344466198,
+                  0.004599139607965623
+                ]
+              ],
+              "standardized_condition": [
+                1.0000000000000038,
+                1.0,
+                1.0000000000000038
+              ]
+            },
+            "candidate": {
+              "rgb_rmse": 0.1804308105929286,
+              "green_rmse": 0.1801465918143215,
+              "chroma_rmse": 0.00553723400431317,
+              "signed_rgb_bias": -0.18037617827163252,
+              "near_far_coefficients": [
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  null,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.004456584151817151,
+                  0.002555077448512089
+                ],
+                [
+                  0.0009723456125906798,
+                  0.0010220308761983113
+                ],
+                [
+                  0.003079094344466198,
+                  0.004599139607965623
+                ]
+              ],
+              "standardized_condition": [
+                1.0000000000000038,
+                1.0,
+                1.0000000000000038
+              ]
+            },
+            "preservation_pass": false
+          },
+          {
+            "window": "weak-colour-components",
+            "native_xyxy": [
+              49,
+              43,
+              136,
+              128
+            ],
+            "canonical": {
+              "rgb_rmse": 0.0019689252444558573,
+              "green_rmse": 0.0013115698513769909,
+              "chroma_rmse": 0.0026089638363100826,
+              "signed_rgb_bias": -4.9057393990740845e-05,
+              "near_far_coefficients": [
+                [
+                  0.8578261520510829,
+                  0.9544219411559345
+                ],
+                [
+                  0.7237941865415386,
+                  1.2487819093866543
+                ],
+                [
+                  0.8542969174632401,
+                  0.8609714726182204
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.006412818751828788,
+                  0.003638951676845552
+                ],
+                [
+                  0.0013991604253983272,
+                  0.0014555805232387986
+                ],
+                [
+                  0.00443067454314568,
+                  0.006550113301962879
+                ]
+              ],
+              "standardized_condition": [
+                1.000000000000008,
+                1.000000000000008,
+                1.000000000000008
+              ]
+            },
+            "uniform": {
+              "rgb_rmse": 0.003733127060173385,
+              "green_rmse": 0.0013393104566514573,
+              "chroma_rmse": 0.0045433902344205,
+              "signed_rgb_bias": -1.1772075858985568e-05,
+              "near_far_coefficients": [
+                [
+                  0.5668506362325205,
+                  0.4595742811021196
+                ],
+                [
+                  0.49164543153213147,
+                  0.5312592855424099
+                ],
+                [
+                  0.5704391324488779,
+                  0.43708401530076885
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.006412818751828788,
+                  0.003638951676845552
+                ],
+                [
+                  0.0013991604253983272,
+                  0.0014555805232387986
+                ],
+                [
+                  0.00443067454314568,
+                  0.006550113301962879
+                ]
+              ],
+              "standardized_condition": [
+                1.000000000000008,
+                1.000000000000008,
+                1.000000000000008
+              ]
+            },
+            "candidate": {
+              "rgb_rmse": 0.18089088735197054,
+              "green_rmse": 0.18030339228179834,
+              "chroma_rmse": 0.007967824055365752,
+              "signed_rgb_bias": -0.18077890349181353,
+              "near_far_coefficients": [
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "template_sd": [
+                [
+                  0.006412818751828788,
+                  0.003638951676845552
+                ],
+                [
+                  0.0013991604253983272,
+                  0.0014555805232387986
+                ],
+                [
+                  0.00443067454314568,
+                  0.006550113301962879
+                ]
+              ],
+              "standardized_condition": [
+                1.000000000000008,
+                1.000000000000008,
+                1.000000000000008
+              ]
+            },
+            "preservation_pass": false
+          }
+        ],
+        "positive": null,
+        "preservation_pass": false,
+        "positive_pass": true,
+        "pass": false,
+        "eligible_reference_components": 17,
+        "unqualified_reference_components": 5
+      }
+    },
+    "destroyers_rejected": true,
+    "noise_destroyer_independent_seeded_numpy": true
+  },
+  "status": "ORACLE_SCREEN_COMPLETE",
+  "mechanical_pass": true,
+  "cases": [
+    {
+      "id": "held-flat-n5",
+      "windows": [
+        {
+          "window": "interior",
+          "native_xyxy": [
+            30,
+            30,
+            162,
+            146
+          ],
+          "canonical": {
+            "rgb_rmse": 0.0011414866233087186,
+            "green_rmse": 0.000979987946376129,
+            "chroma_rmse": 0.0009592744658817137,
+            "signed_rgb_bias": -1.7327108903447744e-05,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.001004142821691774,
+            "green_rmse": 0.0007954849274482939,
+            "chroma_rmse": 0.0008353059727380595,
+            "signed_rgb_bias": -6.995830478588491e-06,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.00042738146081693914,
+            "green_rmse": 0.000432424641131273,
+            "chroma_rmse": 0.00040243061849343367,
+            "signed_rgb_bias": -4.0950263337530937e-07,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "preservation_pass": true
+        }
+      ],
+      "positive": null,
+      "preservation_pass": true,
+      "positive_pass": true,
+      "pass": true,
+      "eligible_reference_components": 0,
+      "unqualified_reference_components": 0
+    },
+    {
+      "id": "held-flat-n9",
+      "windows": [
+        {
+          "window": "interior",
+          "native_xyxy": [
+            30,
+            30,
+            162,
+            146
+          ],
+          "canonical": {
+            "rgb_rmse": 0.0009952720573435615,
+            "green_rmse": 0.0009098154747711518,
+            "chroma_rmse": 0.0008158851544724547,
+            "signed_rgb_bias": -1.6692761774264076e-05,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.0007179410666192733,
+            "green_rmse": 0.0005762836585429006,
+            "chroma_rmse": 0.00057518217001306,
+            "signed_rgb_bias": -3.533563062481164e-07,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 8.704926089098265e-05,
+            "green_rmse": 9.415363258362116e-05,
+            "chroma_rmse": 8.652655424384661e-05,
+            "signed_rgb_bias": 2.0190333809349355e-07,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "preservation_pass": true
+        }
+      ],
+      "positive": null,
+      "preservation_pass": true,
+      "positive_pass": true,
+      "pass": true,
+      "eligible_reference_components": 0,
+      "unqualified_reference_components": 0
+    },
+    {
+      "id": "held-curved-bright-occlusion-n9",
+      "windows": [
+        {
+          "window": "interior",
+          "native_xyxy": [
+            30,
+            30,
+            162,
+            146
+          ],
+          "canonical": {
+            "rgb_rmse": 0.007797536047891533,
+            "green_rmse": 0.0078011253185011195,
+            "chroma_rmse": 0.0034498603414328637,
+            "signed_rgb_bias": -8.457206481258676e-05,
+            "near_far_coefficients": [
+              [
+                0.7252455567460261,
+                0.3198652335421017
+              ],
+              [
+                0.8243897579958716,
+                0.21020153777141962
+              ],
+              [
+                0.8378611893968066,
+                0.19240695693459853
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0033160146676601363,
+                0.002857227452804832
+              ],
+              [
+                0.002792433544902341,
+                0.002449052073725239
+              ],
+              [
+                0.0024433794004316543,
+                0.0020408767834507856
+              ]
+            ],
+            "standardized_condition": [
+              1.0490867252406109,
+              1.0490867262646624,
+              1.0490867257765604
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.0307021609349094,
+            "green_rmse": 0.030750013891423855,
+            "chroma_rmse": 0.0015594456136734816,
+            "signed_rgb_bias": 6.907306694581674e-05,
+            "near_far_coefficients": [
+              [
+                1.9832232985526494,
+                -1.2991826359441558
+              ],
+              [
+                2.290136532234246,
+                -1.6319967791833727
+              ],
+              [
+                2.562110649467656,
+                -2.053439582397708
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0033160146676601363,
+                0.002857227452804832
+              ],
+              [
+                0.002792433544902341,
+                0.002449052073725239
+              ],
+              [
+                0.0024433794004316543,
+                0.0020408767834507856
+              ]
+            ],
+            "standardized_condition": [
+              1.0490867252406109,
+              1.0490867262646624,
+              1.0490867257765604
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.005188190118432806,
+            "green_rmse": 0.005173084769406243,
+            "chroma_rmse": 0.003580760850196414,
+            "signed_rgb_bias": -8.375653319089348e-05,
+            "near_far_coefficients": [
+              [
+                0.9300964529143209,
+                0.6947042838358648
+              ],
+              [
+                1.0121478206280998,
+                0.6407471410748413
+              ],
+              [
+                1.0166093656088984,
+                0.8372975369527026
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0033160146676601363,
+                0.002857227452804832
+              ],
+              [
+                0.002792433544902341,
+                0.002449052073725239
+              ],
+              [
+                0.0024433794004316543,
+                0.0020408767834507856
+              ]
+            ],
+            "standardized_condition": [
+              1.0490867252406109,
+              1.0490867262646624,
+              1.0490867257765604
+            ]
+          },
+          "preservation_pass": false
+        },
+        {
+          "window": "curved-bright-boundary-positive",
+          "native_xyxy": [
+            55,
+            43,
+            135,
+            130
+          ],
+          "canonical": {
+            "rgb_rmse": 0.011364076704802677,
+            "green_rmse": 0.011413796264871058,
+            "chroma_rmse": 0.0048640000651613965,
+            "signed_rgb_bias": -0.0005617963262544624,
+            "near_far_coefficients": [
+              [
+                0.7180920888182334,
+                0.30998700938423773
+              ],
+              [
+                0.8237892655700878,
+                0.2005361020283153
+              ],
+              [
+                0.8448997182342687,
+                0.1879298535001513
+              ]
+            ],
+            "template_sd": [
+              [
+                0.00473057041876976,
+                0.004164949559347049
+              ],
+              [
+                0.003983638440940013,
+                0.003569956723981898
+              ],
+              [
+                0.0034856837105999667,
+                0.002974964016565612
+              ]
+            ],
+            "standardized_condition": [
+              1.1476351805527951,
+              1.1476351833415637,
+              1.147635181207873
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.04552056990257503,
+            "green_rmse": 0.0455979630732571,
+            "chroma_rmse": 0.0020609811614525292,
+            "signed_rgb_bias": 0.00015760729110789025,
+            "near_far_coefficients": [
+              [
+                1.9652423694718109,
+                -1.3328184266696113
+              ],
+              [
+                2.2830982738841734,
+                -1.6640923970618386
+              ],
+              [
+                2.563013583439277,
+                -2.0860517672163437
+              ]
+            ],
+            "template_sd": [
+              [
+                0.00473057041876976,
+                0.004164949559347049
+              ],
+              [
+                0.003983638440940013,
+                0.003569956723981898
+              ],
+              [
+                0.0034856837105999667,
+                0.002974964016565612
+              ]
+            ],
+            "standardized_condition": [
+              1.1476351805527951,
+              1.1476351833415637,
+              1.147635181207873
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.007693498216406175,
+            "green_rmse": 0.007670855396342258,
+            "chroma_rmse": 0.005308443362487465,
+            "signed_rgb_bias": -0.0001831791231629949,
+            "near_far_coefficients": [
+              [
+                0.9222930396339736,
+                0.6862427814775738
+              ],
+              [
+                1.0058952828793948,
+                0.6328192409316682
+              ],
+              [
+                1.0231724802860565,
+                0.8397471667204895
+              ]
+            ],
+            "template_sd": [
+              [
+                0.00473057041876976,
+                0.004164949559347049
+              ],
+              [
+                0.003983638440940013,
+                0.003569956723981898
+              ],
+              [
+                0.0034856837105999667,
+                0.002974964016565612
+              ]
+            ],
+            "standardized_condition": [
+              1.1476351805527951,
+              1.1476351833415637,
+              1.147635181207873
+            ]
+          },
+          "preservation_pass": false
+        }
+      ],
+      "positive": {
+        "window": "curved-bright-boundary-positive",
+        "candidate_rgb_rmse": 0.007693498216406175,
+        "better_reference_rgb_rmse": 0.011364076704802677,
+        "pass": true
+      },
+      "preservation_pass": false,
+      "positive_pass": true,
+      "pass": false,
+      "eligible_reference_components": 12,
+      "unqualified_reference_components": 12
+    },
+    {
+      "id": "held-near-fine-far-coarse-n5",
+      "windows": [
+        {
+          "window": "interior",
+          "native_xyxy": [
+            30,
+            30,
+            162,
+            146
+          ],
+          "canonical": {
+            "rgb_rmse": 0.004108708174337063,
+            "green_rmse": 0.004233657786651857,
+            "chroma_rmse": 0.002384229716367427,
+            "signed_rgb_bias": -8.430839598941828e-05,
+            "near_far_coefficients": [
+              [
+                0.919471431209519,
+                0.9429793729602106
+              ],
+              [
+                1.0086751858499308,
+                0.942207095480054
+              ],
+              [
+                0.9296514084810656,
+                0.9461126616813885
+              ]
+            ],
+            "template_sd": [
+              [
+                0.016873685205869553,
+                0.037520986786016376
+              ],
+              [
+                0.013123975458188676,
+                0.0443429828783094
+              ],
+              [
+                0.014998829541430338,
+                0.03410998870750682
+              ]
+            ],
+            "standardized_condition": [
+              1.0002640871484374,
+              1.0002640865189256,
+              1.0002640867103898
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.012868347506248235,
+            "green_rmse": 0.012074010996617552,
+            "chroma_rmse": 0.002714492302230719,
+            "signed_rgb_bias": 0.00017749652080302744,
+            "near_far_coefficients": [
+              [
+                0.3465390337751203,
+                0.9041378513475249
+              ],
+              [
+                0.37825823301917183,
+                0.9036013493835902
+              ],
+              [
+                0.3560144315712717,
+                0.9053261737315481
+              ]
+            ],
+            "template_sd": [
+              [
+                0.016873685205869553,
+                0.037520986786016376
+              ],
+              [
+                0.013123975458188676,
+                0.0443429828783094
+              ],
+              [
+                0.014998829541430338,
+                0.03410998870750682
+              ]
+            ],
+            "standardized_condition": [
+              1.0002640871484374,
+              1.0002640865189256,
+              1.0002640867103898
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0030128274623198543,
+            "green_rmse": 0.002985592141638805,
+            "chroma_rmse": 0.002221660567722208,
+            "signed_rgb_bias": 0.0002140040637212259,
+            "near_far_coefficients": [
+              [
+                0.9273596884313693,
+                0.986630103403434
+              ],
+              [
+                1.0196692067099649,
+                0.982379180544114
+              ],
+              [
+                0.9465525705426953,
+                0.9889106246129601
+              ]
+            ],
+            "template_sd": [
+              [
+                0.016873685205869553,
+                0.037520986786016376
+              ],
+              [
+                0.013123975458188676,
+                0.0443429828783094
+              ],
+              [
+                0.014998829541430338,
+                0.03410998870750682
+              ]
+            ],
+            "standardized_condition": [
+              1.0002640871484374,
+              1.0002640865189256,
+              1.0002640867103898
+            ]
+          },
+          "preservation_pass": true
+        },
+        {
+          "window": "near-fine-far-coarse-positive",
+          "native_xyxy": [
+            66,
+            42,
+            130,
+            138
+          ],
+          "canonical": {
+            "rgb_rmse": 0.005186297626183432,
+            "green_rmse": 0.00523117620497526,
+            "chroma_rmse": 0.0032156929998617997,
+            "signed_rgb_bias": -0.0004711484616564121,
+            "near_far_coefficients": [
+              [
+                0.9209217387005931,
+                0.9392777189443482
+              ],
+              [
+                1.008548347164311,
+                0.9371115375208521
+              ],
+              [
+                0.9294486673930276,
+                0.9450452909969902
+              ]
+            ],
+            "template_sd": [
+              [
+                0.024239927633502228,
+                0.035210497620220105
+              ],
+              [
+                0.018853274303450882,
+                0.04161240473283976
+              ],
+              [
+                0.02154659984712165,
+                0.03200954380379287
+              ]
+            ],
+            "standardized_condition": [
+              1.0002706775107717,
+              1.0002706785400954,
+              1.0002706784013164
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.017205559079081376,
+            "green_rmse": 0.015666414266096662,
+            "chroma_rmse": 0.0037088317548356754,
+            "signed_rgb_bias": -0.00018152234123489406,
+            "near_far_coefficients": [
+              [
+                0.3420159902290335,
+                0.9081065945647061
+              ],
+              [
+                0.3737648480050762,
+                0.9060812317525682
+              ],
+              [
+                0.3517197780510529,
+                0.9122276887004798
+              ]
+            ],
+            "template_sd": [
+              [
+                0.024239927633502228,
+                0.035210497620220105
+              ],
+              [
+                0.018853274303450882,
+                0.04161240473283976
+              ],
+              [
+                0.02154659984712165,
+                0.03200954380379287
+              ]
+            ],
+            "standardized_condition": [
+              1.0002706775107717,
+              1.0002706785400954,
+              1.0002706784013164
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.004075544783710019,
+            "green_rmse": 0.0039581460485137564,
+            "chroma_rmse": 0.003110170090454505,
+            "signed_rgb_bias": 0.00029297649032539793,
+            "near_far_coefficients": [
+              [
+                0.9262610435548981,
+                0.982120104918533
+              ],
+              [
+                1.019565418281213,
+                0.9770780029981789
+              ],
+              [
+                0.945563395132348,
+                0.9857935089139814
+              ]
+            ],
+            "template_sd": [
+              [
+                0.024239927633502228,
+                0.035210497620220105
+              ],
+              [
+                0.018853274303450882,
+                0.04161240473283976
+              ],
+              [
+                0.02154659984712165,
+                0.03200954380379287
+              ]
+            ],
+            "standardized_condition": [
+              1.0002706775107717,
+              1.0002706785400954,
+              1.0002706784013164
+            ]
+          },
+          "preservation_pass": true
+        }
+      ],
+      "positive": {
+        "window": "near-fine-far-coarse-positive",
+        "candidate_rgb_rmse": 0.004075544783710019,
+        "better_reference_rgb_rmse": 0.005186297626183432,
+        "pass": true
+      },
+      "preservation_pass": true,
+      "positive_pass": true,
+      "pass": true,
+      "eligible_reference_components": 18,
+      "unqualified_reference_components": 6
+    },
+    {
+      "id": "held-unclipped-point-glint-n5",
+      "windows": [
+        {
+          "window": "interior",
+          "native_xyxy": [
+            30,
+            30,
+            162,
+            146
+          ],
+          "canonical": {
+            "rgb_rmse": 0.002427028973843427,
+            "green_rmse": 0.002008741035104558,
+            "chroma_rmse": 0.002033879735337408,
+            "signed_rgb_bias": -0.00020747179913524965,
+            "near_far_coefficients": [
+              [
+                0.9767287669782253,
+                0.9718944611248779
+              ],
+              [
+                1.0040510542681216,
+                0.9784188914239775
+              ],
+              [
+                0.951034412086738,
+                0.9784329317609638
+              ]
+            ],
+            "template_sd": [
+              [
+                0.015533930414045317,
+                0.0136347468348803
+              ],
+              [
+                0.013807935951174128,
+                0.0136347468348803
+              ],
+              [
+                0.018985912191474903,
+                0.0136347468348803
+              ]
+            ],
+            "standardized_condition": [
+              1.056739339781949,
+              1.056739340061049,
+              1.0567393400231129
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.01228274468460636,
+            "green_rmse": 0.01132526284035401,
+            "chroma_rmse": 0.0023306005539499653,
+            "signed_rgb_bias": -5.292781968953011e-05,
+            "near_far_coefficients": [
+              [
+                0.6093536576993064,
+                0.4273106049156089
+              ],
+              [
+                0.6115618890183554,
+                0.4299090044624665
+              ],
+              [
+                0.6145824738791296,
+                0.4272575512995785
+              ]
+            ],
+            "template_sd": [
+              [
+                0.015533930414045317,
+                0.0136347468348803
+              ],
+              [
+                0.013807935951174128,
+                0.0136347468348803
+              ],
+              [
+                0.018985912191474903,
+                0.0136347468348803
+              ]
+            ],
+            "standardized_condition": [
+              1.056739339781949,
+              1.056739340061049,
+              1.0567393400231129
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.002100316408672525,
+            "green_rmse": 0.0016619210509540975,
+            "chroma_rmse": 0.0018914782433544827,
+            "signed_rgb_bias": 1.457051767502791e-05,
+            "near_far_coefficients": [
+              [
+                0.9708434977379949,
+                0.9883844386430694
+              ],
+              [
+                0.997719213230734,
+                0.9926111464708508
+              ],
+              [
+                0.9458751435389453,
+                0.9906635785323473
+              ]
+            ],
+            "template_sd": [
+              [
+                0.015533930414045317,
+                0.0136347468348803
+              ],
+              [
+                0.013807935951174128,
+                0.0136347468348803
+              ],
+              [
+                0.018985912191474903,
+                0.0136347468348803
+              ]
+            ],
+            "standardized_condition": [
+              1.056739339781949,
+              1.056739340061049,
+              1.0567393400231129
+            ]
+          },
+          "preservation_pass": true
+        },
+        {
+          "window": "genuine-unclipped-glint",
+          "native_xyxy": [
+            77,
+            73,
+            100,
+            96
+          ],
+          "canonical": {
+            "rgb_rmse": 0.003727112453713422,
+            "green_rmse": 0.003771058212304683,
+            "chroma_rmse": 0.0037201362405884187,
+            "signed_rgb_bias": -0.001294398963188479,
+            "near_far_coefficients": [
+              [
+                null,
+                0.9749725216139407
+              ],
+              [
+                null,
+                0.9810227339728278
+              ],
+              [
+                null,
+                0.9829477689970385
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.07073872110332857
+              ],
+              [
+                0.0,
+                0.07073872110332857
+              ],
+              [
+                0.0,
+                0.07073872110332857
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.04439547957974574,
+            "green_rmse": 0.0443723283418879,
+            "chroma_rmse": 0.0012054602221114236,
+            "signed_rgb_bias": -5.642919511861146e-05,
+            "near_far_coefficients": [
+              [
+                null,
+                0.3970756150624677
+              ],
+              [
+                null,
+                0.39897369861697846
+              ],
+              [
+                null,
+                0.39997296663155957
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.07073872110332857
+              ],
+              [
+                0.0,
+                0.07073872110332857
+              ],
+              [
+                0.0,
+                0.07073872110332857
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.002812679110662169,
+            "green_rmse": 0.0029931346352356607,
+            "chroma_rmse": 0.0036157015716565123,
+            "signed_rgb_bias": 4.291248982555099e-05,
+            "near_far_coefficients": [
+              [
+                null,
+                0.9881708889255809
+              ],
+              [
+                null,
+                0.9922107289687684
+              ],
+              [
+                null,
+                0.9920957871306867
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.07073872110332857
+              ],
+              [
+                0.0,
+                0.07073872110332857
+              ],
+              [
+                0.0,
+                0.07073872110332857
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "preservation_pass": false
+        },
+        {
+          "window": "glint-adjacent-near-detail",
+          "native_xyxy": [
+            127,
+            49,
+            156,
+            134
+          ],
+          "canonical": {
+            "rgb_rmse": 0.003476373094039417,
+            "green_rmse": 0.0027446368952651476,
+            "chroma_rmse": 0.0030761466210568467,
+            "signed_rgb_bias": -0.00018535947944764916,
+            "near_far_coefficients": [
+              [
+                0.9714834638151139,
+                null
+              ],
+              [
+                1.021528349737993,
+                null
+              ],
+              [
+                0.8863258512932592,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.017228585214230395,
+                0.0
+              ],
+              [
+                0.015314295422163665,
+                0.0
+              ],
+              [
+                0.021057156442952946,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.01410532701963515,
+            "green_rmse": 0.01168638581142663,
+            "chroma_rmse": 0.003882388877981992,
+            "signed_rgb_bias": 0.00028091323907670335,
+            "near_far_coefficients": [
+              [
+                0.22753732480190014,
+                null
+              ],
+              [
+                0.24108840355207808,
+                null
+              ],
+              [
+                0.20759503740118299,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.017228585214230395,
+                0.0
+              ],
+              [
+                0.015314295422163665,
+                0.0
+              ],
+              [
+                0.021057156442952946,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0032756008471525287,
+            "green_rmse": 0.0024488359289821025,
+            "chroma_rmse": 0.0029913300973799482,
+            "signed_rgb_bias": 2.2763549838217632e-05,
+            "near_far_coefficients": [
+              [
+                0.9448430924556716,
+                null
+              ],
+              [
+                0.9957230247584107,
+                null
+              ],
+              [
+                0.868273188205078,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.017228585214230395,
+                0.0
+              ],
+              [
+                0.015314295422163665,
+                0.0
+              ],
+              [
+                0.021057156442952946,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "preservation_pass": true
+        },
+        {
+          "window": "unclipped-spread-outside-core",
+          "native_xyxy": [
+            98,
+            69,
+            113,
+            110
+          ],
+          "canonical": {
+            "rgb_rmse": 0.001641993115175318,
+            "green_rmse": 0.001550727030552784,
+            "chroma_rmse": 0.0009611251445330576,
+            "signed_rgb_bias": -0.00045347760524853134,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0005829184811988124,
+                2.9216535140072623e-09
+              ],
+              [
+                0.0005181497373650735,
+                2.9216535140072623e-09
+              ],
+              [
+                0.000712455849696145,
+                2.9216535140072623e-09
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.004463507706375742,
+            "green_rmse": 0.004209018197209505,
+            "chroma_rmse": 0.0007666871885475261,
+            "signed_rgb_bias": 0.001934604665774317,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0005829184811988124,
+                2.9216535140072623e-09
+              ],
+              [
+                0.0005181497373650735,
+                2.9216535140072623e-09
+              ],
+              [
+                0.000712455849696145,
+                2.9216535140072623e-09
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0008106752829423891,
+            "green_rmse": 0.000795615244028589,
+            "chroma_rmse": 0.0005549148644063911,
+            "signed_rgb_bias": 1.0531042326433548e-05,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0005829184811988124,
+                2.9216535140072623e-09
+              ],
+              [
+                0.0005181497373650735,
+                2.9216535140072623e-09
+              ],
+              [
+                0.000712455849696145,
+                2.9216535140072623e-09
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "preservation_pass": true
+        }
+      ],
+      "positive": null,
+      "preservation_pass": false,
+      "positive_pass": true,
+      "pass": false,
+      "eligible_reference_components": 15,
+      "unqualified_reference_components": 9
+    },
+    {
+      "id": "held-clipped-point-glint-n5",
+      "windows": [
+        {
+          "window": "glint-adjacent-near-detail",
+          "native_xyxy": [
+            127,
+            49,
+            156,
+            134
+          ],
+          "canonical": {
+            "rgb_rmse": 0.0034769591471444095,
+            "green_rmse": 0.002745257136992345,
+            "chroma_rmse": 0.00307602843980772,
+            "signed_rgb_bias": -0.00018701989800644695,
+            "near_far_coefficients": [
+              [
+                0.9714150367529825,
+                null
+              ],
+              [
+                1.021494505414387,
+                null
+              ],
+              [
+                0.8862952856469082,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.017228585214230395,
+                0.0
+              ],
+              [
+                0.015314295422163665,
+                0.0
+              ],
+              [
+                0.021057156442952946,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.014105326653923212,
+            "green_rmse": 0.011686385664291655,
+            "chroma_rmse": 0.0038823886248390053,
+            "signed_rgb_bias": 0.00028091140942770214,
+            "near_far_coefficients": [
+              [
+                0.22753733727110415,
+                null
+              ],
+              [
+                0.2410884220438826,
+                null
+              ],
+              [
+                0.20759506911294062,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.017228585214230395,
+                0.0
+              ],
+              [
+                0.015314295422163665,
+                0.0
+              ],
+              [
+                0.021057156442952946,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.003276176225102136,
+            "green_rmse": 0.002449060834282842,
+            "chroma_rmse": 0.002991436573229385,
+            "signed_rgb_bias": 2.3111652650891162e-05,
+            "near_far_coefficients": [
+              [
+                0.9448303448758717,
+                null
+              ],
+              [
+                0.9956745444504425,
+                null
+              ],
+              [
+                0.8682149674425196,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.017228585214230395,
+                0.0
+              ],
+              [
+                0.015314295422163665,
+                0.0
+              ],
+              [
+                0.021057156442952946,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "preservation_pass": true
+        },
+        {
+          "window": "unclipped-spread-outside-core",
+          "native_xyxy": [
+            98,
+            69,
+            113,
+            110
+          ],
+          "canonical": {
+            "rgb_rmse": 0.0018521142864865914,
+            "green_rmse": 0.001664542468534683,
+            "chroma_rmse": 0.0010011749126270343,
+            "signed_rgb_bias": -0.000912464278823315,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0005829184811988124,
+                1.078764391695872e-08
+              ],
+              [
+                0.0005181497373650735,
+                1.078764391695872e-08
+              ],
+              [
+                0.000712455849696145,
+                1.078764391695872e-08
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.0050026212236178366,
+            "green_rmse": 0.004762188415411383,
+            "chroma_rmse": 0.0007801010494093354,
+            "signed_rgb_bias": 0.002300079962425439,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0005829184811988124,
+                1.078764391695872e-08
+              ],
+              [
+                0.0005181497373650735,
+                1.078764391695872e-08
+              ],
+              [
+                0.000712455849696145,
+                1.078764391695872e-08
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0008788766456836285,
+            "green_rmse": 0.0008816662693507571,
+            "chroma_rmse": 0.0006058932597939236,
+            "signed_rgb_bias": -5.968384303374665e-05,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0005829184811988124,
+                1.078764391695872e-08
+              ],
+              [
+                0.0005181497373650735,
+                1.078764391695872e-08
+              ],
+              [
+                0.000712455849696145,
+                1.078764391695872e-08
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "preservation_pass": true
+        }
+      ],
+      "positive": null,
+      "preservation_pass": true,
+      "positive_pass": true,
+      "pass": true,
+      "eligible_reference_components": 3,
+      "unqualified_reference_components": 3
+    },
+    {
+      "id": "held-weak-colour-dots-n5",
+      "windows": [
+        {
+          "window": "interior",
+          "native_xyxy": [
+            30,
+            30,
+            162,
+            146
+          ],
+          "canonical": {
+            "rgb_rmse": 0.0015373768032518305,
+            "green_rmse": 0.0010938982190725865,
+            "chroma_rmse": 0.0019109985534985416,
+            "signed_rgb_bias": -3.823302543483018e-05,
+            "near_far_coefficients": [
+              [
+                0.857825717673327,
+                0.954483661996938
+              ],
+              [
+                null,
+                1.2428757972977311
+              ],
+              [
+                0.854296687601519,
+                0.8634992019016244
+              ]
+            ],
+            "template_sd": [
+              [
+                0.004456584151817151,
+                0.002555077448512089
+              ],
+              [
+                0.0009723456125906798,
+                0.0010220308761983113
+              ],
+              [
+                0.003079094344466198,
+                0.004599139607965623
+              ]
+            ],
+            "standardized_condition": [
+              1.0000000000000038,
+              1.0,
+              1.0000000000000038
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.002664586932939926,
+            "green_rmse": 0.0010483567499945624,
+            "chroma_rmse": 0.0031989218786909585,
+            "signed_rgb_bias": -5.931901647856907e-06,
+            "near_far_coefficients": [
+              [
+                0.5668500607702249,
+                0.4703735211229109
+              ],
+              [
+                null,
+                0.539504751545597
+              ],
+              [
+                0.5704387511808873,
+                0.4484550326936223
+              ]
+            ],
+            "template_sd": [
+              [
+                0.004456584151817151,
+                0.002555077448512089
+              ],
+              [
+                0.0009723456125906798,
+                0.0010220308761983113
+              ],
+              [
+                0.003079094344466198,
+                0.004599139607965623
+              ]
+            ],
+            "standardized_condition": [
+              1.0000000000000038,
+              1.0,
+              1.0000000000000038
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0009829425741690679,
+            "green_rmse": 0.000775714238466444,
+            "chroma_rmse": 0.0014011477344586564,
+            "signed_rgb_bias": 7.579483296845442e-06,
+            "near_far_coefficients": [
+              [
+                0.9140182964461587,
+                0.9467586151884966
+              ],
+              [
+                null,
+                1.2206981436727424
+              ],
+              [
+                0.935199498223029,
+                0.862201951237996
+              ]
+            ],
+            "template_sd": [
+              [
+                0.004456584151817151,
+                0.002555077448512089
+              ],
+              [
+                0.0009723456125906798,
+                0.0010220308761983113
+              ],
+              [
+                0.003079094344466198,
+                0.004599139607965623
+              ]
+            ],
+            "standardized_condition": [
+              1.0000000000000038,
+              1.0,
+              1.0000000000000038
+            ]
+          },
+          "preservation_pass": true
+        },
+        {
+          "window": "weak-colour-components",
+          "native_xyxy": [
+            49,
+            43,
+            136,
+            128
+          ],
+          "canonical": {
+            "rgb_rmse": 0.0019689252444558573,
+            "green_rmse": 0.0013115698513769909,
+            "chroma_rmse": 0.0026089638363100826,
+            "signed_rgb_bias": -4.9057393990740845e-05,
+            "near_far_coefficients": [
+              [
+                0.8578261520510829,
+                0.9544219411559345
+              ],
+              [
+                0.7237941865415386,
+                1.2487819093866543
+              ],
+              [
+                0.8542969174632401,
+                0.8609714726182204
+              ]
+            ],
+            "template_sd": [
+              [
+                0.006412818751828788,
+                0.003638951676845552
+              ],
+              [
+                0.0013991604253983272,
+                0.0014555805232387986
+              ],
+              [
+                0.00443067454314568,
+                0.006550113301962879
+              ]
+            ],
+            "standardized_condition": [
+              1.000000000000008,
+              1.000000000000008,
+              1.000000000000008
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.003733127060173385,
+            "green_rmse": 0.0013393104566514573,
+            "chroma_rmse": 0.0045433902344205,
+            "signed_rgb_bias": -1.1772075858985568e-05,
+            "near_far_coefficients": [
+              [
+                0.5668506362325205,
+                0.4595742811021196
+              ],
+              [
+                0.49164543153213147,
+                0.5312592855424099
+              ],
+              [
+                0.5704391324488779,
+                0.43708401530076885
+              ]
+            ],
+            "template_sd": [
+              [
+                0.006412818751828788,
+                0.003638951676845552
+              ],
+              [
+                0.0013991604253983272,
+                0.0014555805232387986
+              ],
+              [
+                0.00443067454314568,
+                0.006550113301962879
+              ]
+            ],
+            "standardized_condition": [
+              1.000000000000008,
+              1.000000000000008,
+              1.000000000000008
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0013650518563397096,
+            "green_rmse": 0.0010510010497602454,
+            "chroma_rmse": 0.0019855576516163956,
+            "signed_rgb_bias": 1.7182216306836428e-05,
+            "near_far_coefficients": [
+              [
+                0.9140186879850482,
+                0.94515886362377
+              ],
+              [
+                0.6810251013950357,
+                1.2240022914286746
+              ],
+              [
+                0.9351991356591872,
+                0.8590105169018769
+              ]
+            ],
+            "template_sd": [
+              [
+                0.006412818751828788,
+                0.003638951676845552
+              ],
+              [
+                0.0013991604253983272,
+                0.0014555805232387986
+              ],
+              [
+                0.00443067454314568,
+                0.006550113301962879
+              ]
+            ],
+            "standardized_condition": [
+              1.000000000000008,
+              1.000000000000008,
+              1.000000000000008
+            ]
+          },
+          "preservation_pass": true
+        }
+      ],
+      "positive": null,
+      "preservation_pass": true,
+      "positive_pass": true,
+      "pass": true,
+      "eligible_reference_components": 17,
+      "unqualified_reference_components": 5
+    }
+  ],
+  "weight_replay": [
+    {
+      "id": "held-flat-n5",
+      "cfa_max_abs_dn": 0.0,
+      "rgb_max_abs": 0.0,
+      "all_boundaries_included": true
+    },
+    {
+      "id": "held-flat-n9",
+      "cfa_max_abs_dn": 0.0,
+      "rgb_max_abs": 0.0,
+      "all_boundaries_included": true
+    },
+    {
+      "id": "held-curved-bright-occlusion-n9",
+      "cfa_max_abs_dn": 0.0,
+      "rgb_max_abs": 0.0,
+      "all_boundaries_included": true
+    },
+    {
+      "id": "held-near-fine-far-coarse-n5",
+      "cfa_max_abs_dn": 0.0,
+      "rgb_max_abs": 0.0,
+      "all_boundaries_included": true
+    },
+    {
+      "id": "held-unclipped-point-glint-n5",
+      "cfa_max_abs_dn": 0.0,
+      "rgb_max_abs": 0.0,
+      "all_boundaries_included": true
+    },
+    {
+      "id": "held-clipped-point-glint-n5",
+      "cfa_max_abs_dn": 0.0,
+      "rgb_max_abs": 0.0,
+      "all_boundaries_included": true
+    },
+    {
+      "id": "held-weak-colour-dots-n5",
+      "cfa_max_abs_dn": 0.0,
+      "rgb_max_abs": 0.0,
+      "all_boundaries_included": true
+    }
+  ],
+  "predictions_sha256": "2ec2a8f7be32713284d8f842abd8d6b60f728725fbb38bb89752b335df5ddc89",
+  "all_fixed_screen_guards_pass": false,
+  "positive_cases_with_preservation": [
+    "held-near-fine-far-coarse-n5"
+  ],
+  "candidate_nominated": false,
+  "failed_search_proves_ceiling": false,
+  "inputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\independent-check.py",
+      "sha256": "be05178c244e69ddcd5e4b29a9b9c7d9da3770fea1caebd1ee398fe36b3a4012"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-00\\cfa.f32",
+      "sha256": "e373f693f180d443012c1db6e5374348e48541b6a791cd3ba1031f0f5c9d5cd6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-00\\rgb.f32",
+      "sha256": "e790a4fad030384b12a1d718c59e5ff26c9ccc4f8c75885cae76878e4685a1a2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-00\\weights-0.f32",
+      "sha256": "7d29c1a497d56c9e03bed36e5e89ed01eb685b2d055c2cba6f581e0b877b541c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-00\\weights-1.f32",
+      "sha256": "57f4c65e1c61a83263fad822c993507e5242084a90c67737a2d7aa0a48f4bd39"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-00\\weights-2.f32",
+      "sha256": "e94f7314d2cb5744d849425d40e888422b7cb9b02050b36f92bd07cde71ab6d2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-01\\cfa.f32",
+      "sha256": "0ecfde35175013f1d4209405ec54f45a6976349faac49cf03a4a71f0ad225d2c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-01\\rgb.f32",
+      "sha256": "355728321a2335dab8b96fd5d7b486975ddfc0424d76f425b82ca7ac24388ffe"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-01\\weights-0.f32",
+      "sha256": "eece0f4745ca95a83a776499017915924622703ab952219955498391b94a5bc9"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-01\\weights-1.f32",
+      "sha256": "30fa7c259437c081b490546db4955415f40ac3dd740662b00cdf887992f9d03b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-01\\weights-2.f32",
+      "sha256": "995a26e3a1d1d247f92e02807bc5ea026e61265331e624a04f23f3cc0735cada"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-02\\cfa.f32",
+      "sha256": "06821fc858321cb728d8d8a64be848261e9250cfd13797c526842fb1dba763af"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-02\\rgb.f32",
+      "sha256": "0cd52afeeb8429dbc24584dc77835290bf467d123cab62fe4f01857565a3cba7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-02\\weights-0.f32",
+      "sha256": "129810e6d022063a832c3ef393848e074dbe0dba17a7599b342d7d08ea0a0575"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-02\\weights-1.f32",
+      "sha256": "187a748da90dcfffb7e4923399edba27c4d34f2cbbdffe5fa5235cf72eaaa07a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-02\\weights-2.f32",
+      "sha256": "68bd069c340db638eb1d7a178f8352a598463d6a2fcd36842e2749514b431ff7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-03\\cfa.f32",
+      "sha256": "fcf79e998d9b67b589023ed7752317d36abed03b8b6ae38955e260cb38df753b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-03\\rgb.f32",
+      "sha256": "abe32d79bee281a59d95e43a3bc80b0fc39a754aa49dd58e1464010af261775f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-03\\weights-0.f32",
+      "sha256": "bed63476c0aeec61d15d58601b496a427426754f2ac455c89e9f22a1de1a06fd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-03\\weights-1.f32",
+      "sha256": "e7aa8570774a4c55edfe750b7b2fbbec8a90d7e938aaa000892012ee4b629a21"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-03\\weights-2.f32",
+      "sha256": "c8709fb0231e9a0ab02f26acd3b8a3defc490ed96917cfdbb472bef5706d52e4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-04\\cfa.f32",
+      "sha256": "7ca767276fda5836e35461b0f2842765ed9578d23351bf9f81cfc7c4d97d536a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-04\\rgb.f32",
+      "sha256": "a98b4bb2613154907d207b5c9fe4779b88647e56a171bcc14ba27c5896ee8bfe"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-04\\weights-0.f32",
+      "sha256": "49b021a8190387f633cfc458f2a13f9a06eae3448e29bc9e5c1a9ede97cc09b4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-04\\weights-1.f32",
+      "sha256": "484e60ad37bfecd1ebcd0d7672f49c48a643d5e32ba468b8d4d8c499130bb8b9"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-04\\weights-2.f32",
+      "sha256": "fa68395366499c1a630237291d93fdfa54c28c80b9bfb1343094a90f9334aed9"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-05\\cfa.f32",
+      "sha256": "f727bdceb37e3218a1d1f8ec55b28969f1645961cef3f553a23a55e924dcc56f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-05\\rgb.f32",
+      "sha256": "0e148b9c90fd2f59701cb2055afaebbdc2bf77917eaedb9f09092b2c5d3fd874"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-05\\weights-0.f32",
+      "sha256": "cb57818f8ec95e841f89f576c8029d3795dfa9b8d39214bc294f795a3403c31a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-05\\weights-1.f32",
+      "sha256": "2958d8f0fada89f45289e5945407e0f71631b7e83ee90a932df397df3f014f5d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-05\\weights-2.f32",
+      "sha256": "579a992a6d00cfaba9cd30ed05ee2216d5cea7d367866f59ad46317f03a2144e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-06\\cfa.f32",
+      "sha256": "d25b08543c4b9c712a36a5475716785a8b7c265df24f7b6366e801c841b97a5d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-06\\rgb.f32",
+      "sha256": "7fea6fea4ac381606bac9194dd8502c2de8be226bc0a579cc66980b2e9954843"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-06\\weights-0.f32",
+      "sha256": "25b7f67354e0f12e939ddad50f1eb854dbc849cc42656a7aeda012a6be93ed66"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-06\\weights-1.f32",
+      "sha256": "830a3952587be5e6517960a8c94d982d61711dc905a27b11879c79b61af775bb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-06\\weights-2.f32",
+      "sha256": "68a4ed39d948cb3477d97759e15cd79b843c34fac56cc81d9a968f8e6734212e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\fit.json",
+      "sha256": "b765534f7656624a77e343a3527c326c8afa6f83ec1824baec0629809ec35ffa"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\predictions.json",
+      "sha256": "2ec2a8f7be32713284d8f842abd8d6b60f728725fbb38bb89752b335df5ddc89"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve.py",
+      "sha256": "cde46d1d725044373282eb594970e5765ae8cc00255f81b247968359b4f6e73d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\dataset.json",
+      "sha256": "0c8e7c457f971cc387fa06e7f5261e2b9ef15014c6591b6d7950ce0acdda9e19"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\base.f32",
+      "sha256": "ca3f755e317ec1db747db8df8f1db0abfa99c6a5f3ddce4198231ba3aef63205"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\canonical-rgb.f32",
+      "sha256": "c6cab9787f4f243683995f4dbf53b127c361183101a4a0c024e666be7ede25e3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\case.json",
+      "sha256": "a884998c887f167774bd7d5e83bdddec51406bb208cd7a520c194b565ad41b9c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\coeff-0.f32",
+      "sha256": "ce4f26f3396ef5baba48d4c32bda089dd30542b53aecc2bd35f63656c6796d57"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\coeff-1.f32",
+      "sha256": "f96870dbe5a9b610ac6914ee84948284ec390c160fdaf7038577edcdbe332181"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\coeff-2.f32",
+      "sha256": "7a1fcb881d2b4eec315a2b6b9ec13bf7f9008882ffc58782d2730eef97512242"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\features-0.f32",
+      "sha256": "ad6f73aec4d2bf531d58e1b2cc4045e09dac2723ca414b8ab4b72cb4d45c6947"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\features-1.f32",
+      "sha256": "c2424fc9d732b28905422375fa1529cd5e42c9ed9dada502bf25a13ed6398c9a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\features-2.f32",
+      "sha256": "ecc23ef490b890d22034f9ba5c743e4669be7dd369da3555b9068d4a04d88ffb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\lower.f32",
+      "sha256": "76e1df8d48d361a5b80c85d74d96df6f783b93925befed1f3d9660cae76eab6f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\prescribed-cfa.f32",
+      "sha256": "ea090cd4609d323efdd511e342943cbee8bdb98a1bcacebaae4474cdca5e0f22"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\prescribed-rgb.f32",
+      "sha256": "9caff2a6f0f3d91627281eb8ee8ff00afe4e9ed638fd07e325e3714b22055540"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\prescribed-weights-0.f32",
+      "sha256": "6f0460228a07c744f071fa2cb1a65626c5353e13cb3b4541b3ab7b4f6de6604d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\prescribed-weights-1.f32",
+      "sha256": "245e4e48eeea7b4e2b89d586c1fadc18c5129cfb8440d832e030746b8cddfbff"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\prescribed-weights-2.f32",
+      "sha256": "c19babfd72d4bfad2f917ae5addf75118b1a8bf11247395eb34884add7cc8ff6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\truth-rgb.f32",
+      "sha256": "3fbd1f7207c1c9eb9f2c95c6db6fa9eef661d489d464216e6d2b86ad0789f6cb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\uniform-cfa.f32",
+      "sha256": "b61fbfdae53abfc1f05e211e1a6d8dd0ca2cb0ed14724da05a60b3ba2b5f017c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\uniform-rgb.f32",
+      "sha256": "b12cb0d5927ee988a7098e50aa7a34ad32bf654af347912b78ef838a04956729"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\upper.f32",
+      "sha256": "c4b179bfd4b8fea6b83699e84450a9c933636b769e8dc85e4780ec74213d50b0"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\zero-network-rgb.f32",
+      "sha256": "b12cb0d5927ee988a7098e50aa7a34ad32bf654af347912b78ef838a04956729"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\base.f32",
+      "sha256": "2245b33c2bf6cb660463f5397a327e2d59d87ce91bac08e0defcdf1ddeb518e4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\canonical-rgb.f32",
+      "sha256": "85652da84d707143264160f75f85b1aee25ee6250ab0dd3fbfbab8ecb2879b53"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\case.json",
+      "sha256": "4c0612a905e3f3f2ae6529c7dcb0ebc8c581a647dcd7310089c607960f56caf3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\coeff-0.f32",
+      "sha256": "19693aa30f3556e18aa38521db06c62a295a3338fcff8d8f8b1447cb57420c8e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\coeff-1.f32",
+      "sha256": "8d5d09ee5880d45b71bc85c849450493702627f8e7a6be5e3851da225c49da87"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\coeff-2.f32",
+      "sha256": "eaa57bd444774dd7a75f7beafcf31c0feb25a059698b5df980bab4c063571f09"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\features-0.f32",
+      "sha256": "e441bf49a60654f51286039c8906ebff7992d079f028fd35b8704a4bb0405989"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\features-1.f32",
+      "sha256": "09eab8466d033680d9736d8b24c0f0505e08486eec5de77489241d90a4e86c81"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\features-2.f32",
+      "sha256": "f869108eadb2dc76bb0478bfa203d97b8df19fc831184b5b9d965337a0f395db"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\lower.f32",
+      "sha256": "77f5ad319f4db52cc0d578b6e666b9a88fac2f20c33935522645fba30df3f693"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\prescribed-cfa.f32",
+      "sha256": "8efc2ab42220f3c014ce453ce49d8e15c8497763368db8a7b4324368c99a2d33"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\prescribed-rgb.f32",
+      "sha256": "6a4f8b88c1769f53431867ccbf0f25b609e63fce368a7580b3854bb28255b5dd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\prescribed-weights-0.f32",
+      "sha256": "dfcbe962e967dc718cc2093af0dcc0ea224c3ec341d799bc1df17dd12fc85867"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\prescribed-weights-1.f32",
+      "sha256": "4b8db06b8c83528346dba5bf6049ae5646734e0d8932752c26d4028b517a7241"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\prescribed-weights-2.f32",
+      "sha256": "560dad2c45db48ffa5c825cd60ab7594ed168606b1480cf8d9c361dca6312718"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\truth-rgb.f32",
+      "sha256": "2527ab8e6e8489ad705f06d5f4711292208b64480131b9559c16108549756bcb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\uniform-cfa.f32",
+      "sha256": "afb0c9ece33182ce761f5401cdb8eec69127131d30259ba95a7c97799148c60b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\uniform-rgb.f32",
+      "sha256": "be6157e8703a9293af0522f237be29db7e1fc5a51d388621ac3af6a1846b595e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\upper.f32",
+      "sha256": "6a61e666c0753e408f0806a169116a814c3d8a39039a4ae3a3649940b0384020"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\zero-network-rgb.f32",
+      "sha256": "be6157e8703a9293af0522f237be29db7e1fc5a51d388621ac3af6a1846b595e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\base.f32",
+      "sha256": "2633fe701d8e5efcf16c098252c5ce391a7e5ef4672debeb63f029b348d9f368"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\canonical-rgb.f32",
+      "sha256": "1377fa8d910e6f46b55fca8543dacb93d8426a006589eec0c9ddc1095e8ace89"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\case.json",
+      "sha256": "025c01ca7ecf69c2379d1f8bf9aa574017ed82c36d46f16652beda3a2a077d2e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\coeff-0.f32",
+      "sha256": "4ff4038194582988fea70b8f974b9aea6ac10a3b8333e65412b7d0da78c66fb5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\coeff-1.f32",
+      "sha256": "1c247946bd8be86d7f0aea9b62d283630ac647ca2d81064dc310fb997af5d0d8"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\coeff-2.f32",
+      "sha256": "875039e2f6e581b8400b440f6571f36eb11d16e6fd1c93e974f5a4d347827ff4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\features-0.f32",
+      "sha256": "57da40cfd23aa56418fbe619740e5853408e4b508052ebd975ec7aba0b2d032b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\features-1.f32",
+      "sha256": "7bff9bbe97a8b4aafdf86bc59e92a34325ce9fc7f934726be2fca21bfe87a92f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\features-2.f32",
+      "sha256": "c119a6b3cbf9f566d7cd3a5ab985915dee3002121516b094810d0f0eb71a3f30"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\lower.f32",
+      "sha256": "2c824c959047718e28b0e4b5191cc272599b14aaa3294e8bdf0b935021c95f7a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\prescribed-cfa.f32",
+      "sha256": "96609b117971fb639f45c0546b650aeb113a201339b3cc8f9d918691b8ec9e63"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\prescribed-rgb.f32",
+      "sha256": "a597151516c3b568a554aa0d1e78a798f2c1d690ac994e3da9cef73452907a9e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\prescribed-weights-0.f32",
+      "sha256": "6f0460228a07c744f071fa2cb1a65626c5353e13cb3b4541b3ab7b4f6de6604d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\prescribed-weights-1.f32",
+      "sha256": "245e4e48eeea7b4e2b89d586c1fadc18c5129cfb8440d832e030746b8cddfbff"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\prescribed-weights-2.f32",
+      "sha256": "c19babfd72d4bfad2f917ae5addf75118b1a8bf11247395eb34884add7cc8ff6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\truth-rgb.f32",
+      "sha256": "957435305c77e5ba6d903fbef5fa679da95f03bc47ae798e7574adedea5b782e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\uniform-cfa.f32",
+      "sha256": "039e1d95b04ae89685e09c674c1e18284d9bf53295566faed080573ba312ef11"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\uniform-rgb.f32",
+      "sha256": "d6c42819b840aa380459834858b47e40b2d182c9748e699eb5b7fe9a17e6a342"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\upper.f32",
+      "sha256": "0614bb540aa9083fab3e83af7da8f3ea5c9848fdcc8edc5593bdc45ead369c9b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\zero-network-rgb.f32",
+      "sha256": "d6c42819b840aa380459834858b47e40b2d182c9748e699eb5b7fe9a17e6a342"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\base.f32",
+      "sha256": "a4fa70137ca760b3c67ec31020395f71fd9e1c5d0cfc9d973181dcbf1f9b792a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\canonical-rgb.f32",
+      "sha256": "bd6d0f74395c11fdeadc8408ebe1b75c9c3af1a80cf966d354971517814b4e7f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\case.json",
+      "sha256": "53889b5ccbf424925f71acb81a585dcf2f7818cc81990253e52816000e7d3e7b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\coeff-0.f32",
+      "sha256": "9bc0a61195a9c8cf666b054eaa6d347c03ec4c70c7c5de4383d165f6a1b8ec32"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\coeff-1.f32",
+      "sha256": "5e976da0923a6db0bfb7d37ee1c5a65cdd68b9e3564e85781d600dd8b33d6ce6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\coeff-2.f32",
+      "sha256": "4d3b46109505f687b470d175244bb09b9dedb49febb1d48d6d54a95a2b7df855"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\features-0.f32",
+      "sha256": "2edb9dcfc3c7cd4113faacdc08845e4c95b69d343c0bc17884b67aa4ead019eb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\features-1.f32",
+      "sha256": "c7c4927ccc1beec83ca54d8d08a830adc4c507f0bae69ce8581853a40b5e74d5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\features-2.f32",
+      "sha256": "c4f073dd0d0e696af8c2e1eaae2418c09065ba5ca120871c64597150c5e9bf5a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\lower.f32",
+      "sha256": "7ba9cc632cec94d58efc950c97419b7f02ce5672c687d0cbf7b89b066e196da0"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\prescribed-cfa.f32",
+      "sha256": "5757748c55a000d381c06f2fe247f7b225ed57f8ee08a80eceafcc11afdf9f06"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\prescribed-rgb.f32",
+      "sha256": "ed4062d595dd66f418985714f2c693819fb24cb2b61b20d78065cbbb941a1023"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\prescribed-weights-0.f32",
+      "sha256": "dfcbe962e967dc718cc2093af0dcc0ea224c3ec341d799bc1df17dd12fc85867"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\prescribed-weights-1.f32",
+      "sha256": "4b8db06b8c83528346dba5bf6049ae5646734e0d8932752c26d4028b517a7241"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\prescribed-weights-2.f32",
+      "sha256": "560dad2c45db48ffa5c825cd60ab7594ed168606b1480cf8d9c361dca6312718"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\truth-rgb.f32",
+      "sha256": "957435305c77e5ba6d903fbef5fa679da95f03bc47ae798e7574adedea5b782e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\uniform-cfa.f32",
+      "sha256": "832e62d92e51b10eaf28ba6b394ab9c626eb784ffdb658f2027b7394d5f92b88"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\uniform-rgb.f32",
+      "sha256": "54183dcd83106e62c3c7a462f011de91d05ce821ae25eb9271ec694a24d0c536"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\upper.f32",
+      "sha256": "661bdc1391424242ffeee2869e3646c8a2d205a3853c1e41410dc5bf7d763471"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\zero-network-rgb.f32",
+      "sha256": "54183dcd83106e62c3c7a462f011de91d05ce821ae25eb9271ec694a24d0c536"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\base.f32",
+      "sha256": "f345847268863e946d0bd37bbccb3814f605e349bf08c0936432b8a853b04604"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\canonical-rgb.f32",
+      "sha256": "bc3e29b0d728c44a56dff4970e32e8ae6f310dcd03aff3f48646577dab1e6e39"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\case.json",
+      "sha256": "9f83de06e56608b320b2adf09663c8a81b567fa3cd81fe51d971e52b637151e4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\coeff-0.f32",
+      "sha256": "0fb3a9879f0121064e9ee03b87c7904fb161e0322a35b8f9d9ba57cdd029f2a5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\coeff-1.f32",
+      "sha256": "9ff2e6d455bebf25e4308a244549444dabe0e30e04003e5f148e1f623d96f96e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\coeff-2.f32",
+      "sha256": "7c12c7fbeeb3cac436d49d685f201d639c401d3cb3883a38ea63e9c88e195053"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\features-0.f32",
+      "sha256": "a2d2f8a9a0121557c6f53491c3864b50802d3027a1e7ed03ce597e9e57858b30"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\features-1.f32",
+      "sha256": "640f009db60473917231280b9e455b70531944a0b4ece143dd1cdfffd85c676c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\features-2.f32",
+      "sha256": "264d3365f1ea37f06b1475048fad8300d6f8c6ca5fe9f4e3a6f2596357044438"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\lower.f32",
+      "sha256": "331337ef01fb1267a05cfec728f5f7a5227367d61e017341a8cc23cd1d9feae2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\prescribed-cfa.f32",
+      "sha256": "7b9451068b59e13eceb316603b7f87070ed6e908d9c2fdd7fdab64e2945ba19c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\prescribed-rgb.f32",
+      "sha256": "44be41019a59deeeb015784a0ce8d50a3b8e75ba08090167e86e5305a1182c75"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\prescribed-weights-0.f32",
+      "sha256": "6f0460228a07c744f071fa2cb1a65626c5353e13cb3b4541b3ab7b4f6de6604d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\prescribed-weights-1.f32",
+      "sha256": "245e4e48eeea7b4e2b89d586c1fadc18c5129cfb8440d832e030746b8cddfbff"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\prescribed-weights-2.f32",
+      "sha256": "c19babfd72d4bfad2f917ae5addf75118b1a8bf11247395eb34884add7cc8ff6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\truth-rgb.f32",
+      "sha256": "09b20c9fbdc726a2ba533300050f1210ce45f28b1c70d38d5edd27d883719757"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\uniform-cfa.f32",
+      "sha256": "fd64c8165b14f80a57d1874d335d9f37b32870e7c44440adfa0ef589aea3f6a5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\uniform-rgb.f32",
+      "sha256": "2310da3bffb9f7f020d56986d8b371ada814f94e4261ff74254537f3506883fd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\upper.f32",
+      "sha256": "32d9142329591366f5d945bf79a1ac6536c5d6d45d893201ee15f21b7957a2de"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\zero-network-rgb.f32",
+      "sha256": "2310da3bffb9f7f020d56986d8b371ada814f94e4261ff74254537f3506883fd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\base.f32",
+      "sha256": "6471f42bb349bec652db1b8cae9e5f3da05db745b86805e8b97312daabc621b7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\canonical-rgb.f32",
+      "sha256": "362eef4ffba93f2ee386542c0e44188fc796654ed0b34fb907177f01c4aeee41"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\case.json",
+      "sha256": "c75f52bc2699ec33ab5a880aedc98a31fb667aaccbdc143b7d9c678d6843b4b0"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\coeff-0.f32",
+      "sha256": "db1f6cfe5dc9f63b71e37b02e65dcac9b368b932462a61ccec98414bf1916d9c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\coeff-1.f32",
+      "sha256": "63f686bd017da5dcd887e037833a408cfbff891c00a8c35a781c2decf883e959"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\coeff-2.f32",
+      "sha256": "2822c43f53f7fd47d129444241487de529b02fee1bd388412408d2723365fa00"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\features-0.f32",
+      "sha256": "3d654c250c6b2129e26a1bad26a1a75ea20dc18c451e91db14fc90abde6d4381"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\features-1.f32",
+      "sha256": "7eb8fefeb8d8f26e0e2aaa58b824cbd3a5a8b4b8fc3e56f68d4b8d3df6f8c301"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\features-2.f32",
+      "sha256": "0a1a1627267a5f61c6b5434bef7cf40b312eb46a35e79e85291455ef8a957a3b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\lower.f32",
+      "sha256": "5a668e3abe4a8bde9d9789b028c272dd0539c830666c6a24cdf22fc35d77082c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\prescribed-cfa.f32",
+      "sha256": "7420f4182d8d83d3de702e7fede001da67a71dc4cacff3e07329842cd45e1b6b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\prescribed-rgb.f32",
+      "sha256": "b0720628cf734dc26d5e544f3b9a0fe7236993aec4568a073ccc30ea32f9258d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\prescribed-weights-0.f32",
+      "sha256": "6f0460228a07c744f071fa2cb1a65626c5353e13cb3b4541b3ab7b4f6de6604d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\prescribed-weights-1.f32",
+      "sha256": "245e4e48eeea7b4e2b89d586c1fadc18c5129cfb8440d832e030746b8cddfbff"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\prescribed-weights-2.f32",
+      "sha256": "c19babfd72d4bfad2f917ae5addf75118b1a8bf11247395eb34884add7cc8ff6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\truth-rgb.f32",
+      "sha256": "403c60203c35713c646d8546448e2026fd1b10ff53193b62a0465ca3240b6ef3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\uniform-cfa.f32",
+      "sha256": "d25af04016bee8793a8ceadeb25245ad287e1136f948c0b744375669e5aa5fd2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\uniform-rgb.f32",
+      "sha256": "ea0e05a02c6593944ac2336b157fef2905937e1455490da4e8240f0aa6627f52"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\upper.f32",
+      "sha256": "1f0b31cf1197d069307e399366730bbb9e7e037067972eb46e805125f728f43d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\zero-network-rgb.f32",
+      "sha256": "ea0e05a02c6593944ac2336b157fef2905937e1455490da4e8240f0aa6627f52"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\base.f32",
+      "sha256": "19c15ae6da229aff41392f25123eeaeb62583abc661c67fccd641e0a3e8f196a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\canonical-rgb.f32",
+      "sha256": "67310c006378125ef9ac950b63fd46dd3fdc58c7566ac7c259ba121449ad9195"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\case.json",
+      "sha256": "77f8a5bd09aa59f8295e12426b2d205c9f02840e51a2366080aa5188885fa59d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\coeff-0.f32",
+      "sha256": "c7b1bb154c0d5b08479c73ac61d3ec6cced004c983ffac3c74180ce60ca8fca3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\coeff-1.f32",
+      "sha256": "e3c62f6c9eaeb0c020887ad8a808676fa2b681a570cedc7b4661078dc37783b1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\coeff-2.f32",
+      "sha256": "d846004cb105f3a5e9725c069fc95166e758624ad696953b28bda9187705eac6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\features-0.f32",
+      "sha256": "4576a1b24732990d1770103857ed321a0accc5acfe37df553f646d497b0bf9d5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\features-1.f32",
+      "sha256": "56b334fe061aa7e2f4a24f736213c0fa355892eb6d580b66123d826b53205c52"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\features-2.f32",
+      "sha256": "d5c281e0c6ada61633c9bc527bab6195d3e191de899f00f987cc28df8eb29e17"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\lower.f32",
+      "sha256": "70974ab5a86fdd0fde72873e5416f3ea62458d2f2c450b9dbc7ada540ed2164e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\prescribed-cfa.f32",
+      "sha256": "f1c36e54ece422218523f712faa2de8b84f00e91862b3cef3e58410fff02ecba"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\prescribed-rgb.f32",
+      "sha256": "853f7c4ccb11266999f3bd64af2b65f9149605f31c531ad9705f179f9bd80aa5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\prescribed-weights-0.f32",
+      "sha256": "6f0460228a07c744f071fa2cb1a65626c5353e13cb3b4541b3ab7b4f6de6604d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\prescribed-weights-1.f32",
+      "sha256": "245e4e48eeea7b4e2b89d586c1fadc18c5129cfb8440d832e030746b8cddfbff"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\prescribed-weights-2.f32",
+      "sha256": "c19babfd72d4bfad2f917ae5addf75118b1a8bf11247395eb34884add7cc8ff6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\truth-rgb.f32",
+      "sha256": "1996bf48f125c059d1ffce14a4e31ecb8b3ff0b20bcd1dc4277d824d75c2e308"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\uniform-cfa.f32",
+      "sha256": "20289f9b87b68570b1a8167c3acbd137f96821cf5c9a69d1ab1c5009a5a99070"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\uniform-rgb.f32",
+      "sha256": "bd8e16d97788f63c3cff50aa7ecb57f8443318225d22b8fdd15fd0779f723d6e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\upper.f32",
+      "sha256": "180d7acb2031f0a753e9b4fb768e326514a05c1d7c49a5903eccc6ec66799908"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\zero-network-rgb.f32",
+      "sha256": "bd8e16d97788f63c3cff50aa7ecb57f8443318225d22b8fdd15fd0779f723d6e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\independent-fixtures.rs",
+      "sha256": "a7d318631ec7702de190a3d309709f8819ce312136d6a4ae219f582acc0fb3ee"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\replay-1\\output\\screen.json",
+      "sha256": "1f3e67c0d20fbb7a3381d86ce8fc9de20267c56689da04fd3fb43ae5d0cb8c23"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\train.py",
+      "sha256": "b5455f488a92ed75c2a8ae8d9dcfb31b054237805b7ded22893459ef4ea9b987"
+    }
+  ]
+}

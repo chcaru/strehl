@@ -38,6 +38,17 @@ checkpoint is rejected without a photo or tuning; its gains over uniform are
 not gains over current. See `experiments/learned-band-guide/results.md` and the
 independent scientific and execution reviews. No real-image improvement follows.
 
+The subsequent free-band-weight oracle establishes one constructive distinction:
+with sharp truth supplied, the existing three-band test reconstruction can reduce
+near/far RGB error to.785829times current while preserving every registered
+component. Its mean base is therefore not an absolute limit for that tiny case.
+Curved-boundary and glint RGB errors also fall, but their colour protections
+versus uniform fail; overall qualification remains false. This is no deployable
+predictor, photograph, production seven-band conclusion or ceiling proof. The
+same fixed fit first recovers known-achievable targets; the independent reader's
+one-line scalar-exponential repair preserves the original refusal and all bars.
+See `experiments/band-weight-oracle/results.md` and its independent reviews.
+
 The separate stock PetteriAimonen reference on all299 prepared chip TIFFs now
 ends in resource refusal. Its24GiB attempt stops after46.922s and a single
 resource-only40GiB retry after124.828s; neither produces a photograph. Both

@@ -1,0 +1,418 @@
+{
+  "schema": 1,
+  "dataset": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\dataset.json",
+  "dataset_sha256": "0c8e7c457f971cc387fa06e7f5261e2b9ef15014c6591b6d7950ce0acdda9e19",
+  "consumer": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\train.py",
+  "consumer_sha256": "b5455f488a92ed75c2a8ae8d9dcfb31b054237805b7ded22893459ef4ea9b987",
+  "source_sha256": "cde46d1d725044373282eb594970e5765ae8cc00255f81b247968359b4f6e73d",
+  "native_commission": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\commission-1\\output\\commission.json",
+  "native_commission_sha256": "3ac4abaa78bdc259ff3960c52bce6396ddb739866d778edb665e4cfc1ba203b8",
+  "commission": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\commission-check-2\\output\\commission.json",
+  "commission_sha256": "f6ce53e7fa440057438b3f5917d18f5026c1f19929dfec1e3394fac877874d12",
+  "phase": "solve",
+  "target_kind": "truth-rgb",
+  "truth_assisted_oracle": true,
+  "generalization_claim": false,
+  "quality_claim": false,
+  "global_optimum_or_ceiling_claim": false,
+  "torch": "2.11.0+cu128",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "float32": true,
+  "deterministic": true,
+  "tf32": false,
+  "seed": 137,
+  "records": [
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\case.json",
+      "case_sha256": "025c01ca7ecf69c2379d1f8bf9aa574017ed82c36d46f16652beda3a2a077d2e",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-00\\cfa.f32",
+          "sha256": "e373f693f180d443012c1db6e5374348e48541b6a791cd3ba1031f0f5c9d5cd6",
+          "shape": [
+            4,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-00\\rgb.f32",
+          "sha256": "e790a4fad030384b12a1d718c59e5ff26c9ccc4f8c75885cae76878e4685a1a2",
+          "shape": [
+            144,
+            160,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-00\\weights-0.f32",
+          "sha256": "7d29c1a497d56c9e03bed36e5e89ed01eb685b2d055c2cba6f581e0b877b541c",
+          "shape": [
+            5,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-00\\weights-1.f32",
+          "sha256": "57f4c65e1c61a83263fad822c993507e5242084a90c67737a2d7aa0a48f4bd39",
+          "shape": [
+            5,
+            36,
+            40
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-00\\weights-2.f32",
+          "sha256": "e94f7314d2cb5744d849425d40e888422b7cb9b02050b36f92bd07cde71ab6d2",
+          "shape": [
+            5,
+            18,
+            20
+          ],
+          "dtype": "<f4"
+        }
+      }
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\case.json",
+      "case_sha256": "53889b5ccbf424925f71acb81a585dcf2f7818cc81990253e52816000e7d3e7b",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-01\\cfa.f32",
+          "sha256": "0ecfde35175013f1d4209405ec54f45a6976349faac49cf03a4a71f0ad225d2c",
+          "shape": [
+            4,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-01\\rgb.f32",
+          "sha256": "355728321a2335dab8b96fd5d7b486975ddfc0424d76f425b82ca7ac24388ffe",
+          "shape": [
+            144,
+            160,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-01\\weights-0.f32",
+          "sha256": "eece0f4745ca95a83a776499017915924622703ab952219955498391b94a5bc9",
+          "shape": [
+            9,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-01\\weights-1.f32",
+          "sha256": "30fa7c259437c081b490546db4955415f40ac3dd740662b00cdf887992f9d03b",
+          "shape": [
+            9,
+            36,
+            40
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-01\\weights-2.f32",
+          "sha256": "995a26e3a1d1d247f92e02807bc5ea026e61265331e624a04f23f3cc0735cada",
+          "shape": [
+            9,
+            18,
+            20
+          ],
+          "dtype": "<f4"
+        }
+      }
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\case.json",
+      "case_sha256": "4c0612a905e3f3f2ae6529c7dcb0ebc8c581a647dcd7310089c607960f56caf3",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-02\\cfa.f32",
+          "sha256": "06821fc858321cb728d8d8a64be848261e9250cfd13797c526842fb1dba763af",
+          "shape": [
+            4,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-02\\rgb.f32",
+          "sha256": "0cd52afeeb8429dbc24584dc77835290bf467d123cab62fe4f01857565a3cba7",
+          "shape": [
+            144,
+            160,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-02\\weights-0.f32",
+          "sha256": "129810e6d022063a832c3ef393848e074dbe0dba17a7599b342d7d08ea0a0575",
+          "shape": [
+            9,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-02\\weights-1.f32",
+          "sha256": "187a748da90dcfffb7e4923399edba27c4d34f2cbbdffe5fa5235cf72eaaa07a",
+          "shape": [
+            9,
+            36,
+            40
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-02\\weights-2.f32",
+          "sha256": "68bd069c340db638eb1d7a178f8352a598463d6a2fcd36842e2749514b431ff7",
+          "shape": [
+            9,
+            18,
+            20
+          ],
+          "dtype": "<f4"
+        }
+      }
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\case.json",
+      "case_sha256": "9f83de06e56608b320b2adf09663c8a81b567fa3cd81fe51d971e52b637151e4",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-03\\cfa.f32",
+          "sha256": "fcf79e998d9b67b589023ed7752317d36abed03b8b6ae38955e260cb38df753b",
+          "shape": [
+            4,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-03\\rgb.f32",
+          "sha256": "abe32d79bee281a59d95e43a3bc80b0fc39a754aa49dd58e1464010af261775f",
+          "shape": [
+            144,
+            160,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-03\\weights-0.f32",
+          "sha256": "bed63476c0aeec61d15d58601b496a427426754f2ac455c89e9f22a1de1a06fd",
+          "shape": [
+            5,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-03\\weights-1.f32",
+          "sha256": "e7aa8570774a4c55edfe750b7b2fbbec8a90d7e938aaa000892012ee4b629a21",
+          "shape": [
+            5,
+            36,
+            40
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-03\\weights-2.f32",
+          "sha256": "c8709fb0231e9a0ab02f26acd3b8a3defc490ed96917cfdbb472bef5706d52e4",
+          "shape": [
+            5,
+            18,
+            20
+          ],
+          "dtype": "<f4"
+        }
+      }
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\case.json",
+      "case_sha256": "c75f52bc2699ec33ab5a880aedc98a31fb667aaccbdc143b7d9c678d6843b4b0",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-04\\cfa.f32",
+          "sha256": "7ca767276fda5836e35461b0f2842765ed9578d23351bf9f81cfc7c4d97d536a",
+          "shape": [
+            4,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-04\\rgb.f32",
+          "sha256": "a98b4bb2613154907d207b5c9fe4779b88647e56a171bcc14ba27c5896ee8bfe",
+          "shape": [
+            144,
+            160,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-04\\weights-0.f32",
+          "sha256": "49b021a8190387f633cfc458f2a13f9a06eae3448e29bc9e5c1a9ede97cc09b4",
+          "shape": [
+            5,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-04\\weights-1.f32",
+          "sha256": "484e60ad37bfecd1ebcd0d7672f49c48a643d5e32ba468b8d4d8c499130bb8b9",
+          "shape": [
+            5,
+            36,
+            40
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-04\\weights-2.f32",
+          "sha256": "fa68395366499c1a630237291d93fdfa54c28c80b9bfb1343094a90f9334aed9",
+          "shape": [
+            5,
+            18,
+            20
+          ],
+          "dtype": "<f4"
+        }
+      }
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\case.json",
+      "case_sha256": "a884998c887f167774bd7d5e83bdddec51406bb208cd7a520c194b565ad41b9c",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-05\\cfa.f32",
+          "sha256": "f727bdceb37e3218a1d1f8ec55b28969f1645961cef3f553a23a55e924dcc56f",
+          "shape": [
+            4,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-05\\rgb.f32",
+          "sha256": "0e148b9c90fd2f59701cb2055afaebbdc2bf77917eaedb9f09092b2c5d3fd874",
+          "shape": [
+            144,
+            160,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-05\\weights-0.f32",
+          "sha256": "cb57818f8ec95e841f89f576c8029d3795dfa9b8d39214bc294f795a3403c31a",
+          "shape": [
+            5,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-05\\weights-1.f32",
+          "sha256": "2958d8f0fada89f45289e5945407e0f71631b7e83ee90a932df397df3f014f5d",
+          "shape": [
+            5,
+            36,
+            40
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-05\\weights-2.f32",
+          "sha256": "579a992a6d00cfaba9cd30ed05ee2216d5cea7d367866f59ad46317f03a2144e",
+          "shape": [
+            5,
+            18,
+            20
+          ],
+          "dtype": "<f4"
+        }
+      }
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\case.json",
+      "case_sha256": "77f8a5bd09aa59f8295e12426b2d205c9f02840e51a2366080aa5188885fa59d",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-06\\cfa.f32",
+          "sha256": "d25b08543c4b9c712a36a5475716785a8b7c265df24f7b6366e801c841b97a5d",
+          "shape": [
+            4,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-06\\rgb.f32",
+          "sha256": "7fea6fea4ac381606bac9194dd8502c2de8be226bc0a579cc66980b2e9954843",
+          "shape": [
+            144,
+            160,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-06\\weights-0.f32",
+          "sha256": "25b7f67354e0f12e939ddad50f1eb854dbc849cc42656a7aeda012a6be93ed66",
+          "shape": [
+            5,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-06\\weights-1.f32",
+          "sha256": "830a3952587be5e6517960a8c94d982d61711dc905a27b11879c79b61af775bb",
+          "shape": [
+            5,
+            36,
+            40
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\solve-1\\output\\case-06\\weights-2.f32",
+          "sha256": "68a4ed39d948cb3477d97759e15cd79b843c34fac56cc81d9a968f8e6734212e",
+          "shape": [
+            5,
+            18,
+            20
+          ],
+          "dtype": "<f4"
+        }
+      }
+    }
+  ]
+}
