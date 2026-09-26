@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "first_block_rgb16_mean": [
+    1216,
+    2432,
+    3648
+  ],
+  "output_shape": [
+    2,
+    3,
+    3
+  ],
+  "output_sha256": "509142519e692277857462af2ce2b285e89c5f7347bc160dc3e571a4ca82fd8d",
+  "constant_sha256": "a4c03fa2f79641722ed08af59a91c27f60993192b5a0b127f3319ed88cf9ede6",
+  "channel_destroyer_exercised": true,
+  "scope": "Integer4x area/normalization arithmetic; not real noninteger staging or native-gather commissioning"
+}

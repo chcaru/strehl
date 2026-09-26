@@ -1,0 +1,26 @@
+{
+  "phase": "controls",
+  "process_completed": true,
+  "sources_unchanged": true,
+  "upstream_manifest": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\upstream-2\\manifest.json",
+    "bytes": 5378,
+    "sha256": "c323cb791ed44cfaeb3e117fa3cded4cb2277c85e282a9e88edc73565f367244"
+  },
+  "prior_controls": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\controls-1\\completed.json",
+    "bytes": 666,
+    "sha256": "e099aa691a629d61099ec2699e1a95cf7cee00b6cd93ca26d55833cd4660fe79"
+  },
+  "staging_controls": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\controls-1\\output\\staging-controls.json",
+    "bytes": 476,
+    "sha256": "870b2b3fc617aabe7b0f535acb55a7bcf09dfbd3ac430731d0327767375e676d"
+  },
+  "result": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\controls-1\\output\\controls.json",
+    "bytes": 9195,
+    "sha256": "3564f929695d1e830d73e7e0fc3378b44eccb4dafee5eda1fa9f30111fce9fbb"
+  },
+  "photographic_quality_admitted": false
+}

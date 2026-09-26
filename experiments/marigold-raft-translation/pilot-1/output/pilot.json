@@ -1,0 +1,1918 @@
+{
+  "schema": 1,
+  "status": "FIXED_PILOT_REFUSED",
+  "all_eight_admitted": true,
+  "at_least_one_translation_ge_half_native": false,
+  "pilot_eligible_for_review": false,
+  "pairs": [
+    {
+      "index": 108,
+      "reduction": {
+        "native_median": [
+          -0.25059000746431676,
+          -0.12610408452692293
+        ],
+        "median_proxy": [
+          -0.03518174961209297,
+          -0.017695640213787556
+        ],
+        "source_native_translation": [
+          -0.26576890694219185,
+          -0.13308848765386957
+        ],
+        "interior_count": 2162,
+        "componentwise_unweighted_median": true,
+        "learned_spatial_variation_discarded": true
+      },
+      "judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          -0.25059000746431676,
+          -0.12610408452692295
+        ],
+        "reverse_native_median": [
+          0.06982992568307302,
+          -0.08818283473672314
+        ],
+        "source_native_translation": [
+          -0.26576890694219185,
+          -0.1330884876538696
+        ],
+        "forward": {
+          "p90_deviation_native": 0.08519234522171844,
+          "quadrant_medians_native": [
+            [
+              -0.24245783743363886,
+              -0.13547040715355924
+            ],
+            [
+              -0.21246632027693768,
+              -0.16093471870080603
+            ],
+            [
+              -0.2557896545495499,
+              -0.0694824745147505
+            ],
+            [
+              -0.2619504774666645,
+              -0.10536873861893047
+            ]
+          ],
+          "quadrant_max_distance_native": 0.10119498139316209
+        },
+        "reverse": {
+          "p90_deviation_native": 0.13440904313580276,
+          "quadrant_medians_native": [
+            [
+              0.06362367616966366,
+              -0.08803994966346657
+            ],
+            [
+              0.11425699092109094,
+              -0.08271699121584258
+            ],
+            [
+              0.04340951080772687,
+              -0.1398943955580936
+            ],
+            [
+              0.10618527249263768,
+              -0.03655715163402997
+            ]
+          ],
+          "quadrant_max_distance_native": 0.12091063740193475
+        },
+        "median_closure_native": 0.28034459319392324,
+        "cycle_p90_native": 0.3277891492704246,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "reverse_judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          0.06982992568307302,
+          -0.08818283473672314
+        ],
+        "reverse_native_median": [
+          -0.25059000746431676,
+          -0.12610408452692295
+        ],
+        "source_native_translation": [
+          0.0736677945670337,
+          -0.09340303406800067
+        ],
+        "forward": {
+          "p90_deviation_native": 0.13440904313580276,
+          "quadrant_medians_native": [
+            [
+              0.06362367616966366,
+              -0.08803994966346657
+            ],
+            [
+              0.11425699092109094,
+              -0.08271699121584258
+            ],
+            [
+              0.04340951080772687,
+              -0.1398943955580936
+            ],
+            [
+              0.10618527249263768,
+              -0.03655715163402997
+            ]
+          ],
+          "quadrant_max_distance_native": 0.12091063740193475
+        },
+        "reverse": {
+          "p90_deviation_native": 0.08519234522171844,
+          "quadrant_medians_native": [
+            [
+              -0.24245783743363886,
+              -0.13547040715355924
+            ],
+            [
+              -0.21246632027693768,
+              -0.16093471870080603
+            ],
+            [
+              -0.2557896545495499,
+              -0.0694824745147505
+            ],
+            [
+              -0.2619504774666645,
+              -0.10536873861893047
+            ]
+          ],
+          "quadrant_max_distance_native": 0.10119498139316209
+        },
+        "median_closure_native": 0.28034459319392324,
+        "cycle_p90_native": 0.3282464141543736,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "admitted": true,
+      "forward": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\flow-112-to-108.npy",
+        "bytes": 4125568,
+        "sha256": "937d2a3610ea00b18825a4278fb6369f19c51805aeb6f14dfade730b2f7e473a"
+      },
+      "reverse": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\flow-108-to-112.npy",
+        "bytes": 4125568,
+        "sha256": "72d768a244e4ac06779287a558da90b2c3d37df4f503a33961a1e44910017132"
+      }
+    },
+    {
+      "index": 109,
+      "reduction": {
+        "native_median": [
+          -0.16988490952009502,
+          0.054651826550173276
+        ],
+        "median_proxy": [
+          -0.023851104080677032,
+          0.007669054204598069
+        ],
+        "source_native_translation": [
+          -0.1797918772672035,
+          0.058231853735763554
+        ],
+        "interior_count": 2162,
+        "componentwise_unweighted_median": true,
+        "learned_spatial_variation_discarded": true
+      },
+      "judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          -0.16988490952009502,
+          0.054651826550173276
+        ],
+        "reverse_native_median": [
+          -0.011179801768792623,
+          -0.2597911460611194
+        ],
+        "source_native_translation": [
+          -0.1797918772672035,
+          0.058231853735763554
+        ],
+        "forward": {
+          "p90_deviation_native": 0.056263258502559706,
+          "quadrant_medians_native": [
+            [
+              -0.15635705753652884,
+              0.03739463609767245
+            ],
+            [
+              -0.17244651050899515,
+              0.05273608708239253
+            ],
+            [
+              -0.1684024555354633,
+              0.07860511135780364
+            ],
+            [
+              -0.17300261483443052,
+              0.08628671550201475
+            ]
+          ],
+          "quadrant_max_distance_native": 0.0516479429042265
+        },
+        "reverse": {
+          "p90_deviation_native": 0.10387014303682389,
+          "quadrant_medians_native": [
+            [
+              -0.01981909477141347,
+              -0.2722999248590079
+            ],
+            [
+              -0.025493796557103366,
+              -0.23878974149658413
+            ],
+            [
+              0.012384411718548191,
+              -0.34332368855997164
+            ],
+            [
+              -0.017367009657689114,
+              -0.2292217709912375
+            ]
+          ],
+          "quadrant_max_distance_native": 0.11791689729113734
+        },
+        "median_closure_native": 0.2736175617235529,
+        "cycle_p90_native": 0.3276887759560613,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "reverse_judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          -0.011179801768792623,
+          -0.2597911460611194
+        ],
+        "reverse_native_median": [
+          -0.16988490952009502,
+          0.054651826550173276
+        ],
+        "source_native_translation": [
+          -0.012359104765256389,
+          -0.27472282231770206
+        ],
+        "forward": {
+          "p90_deviation_native": 0.10387014303682389,
+          "quadrant_medians_native": [
+            [
+              -0.01981909477141347,
+              -0.2722999248590079
+            ],
+            [
+              -0.025493796557103366,
+              -0.23878974149658413
+            ],
+            [
+              0.012384411718548191,
+              -0.34332368855997164
+            ],
+            [
+              -0.017367009657689114,
+              -0.2292217709912375
+            ]
+          ],
+          "quadrant_max_distance_native": 0.11791689729113734
+        },
+        "reverse": {
+          "p90_deviation_native": 0.056263258502559706,
+          "quadrant_medians_native": [
+            [
+              -0.15635705753652884,
+              0.03739463609767245
+            ],
+            [
+              -0.17244651050899515,
+              0.05273608708239253
+            ],
+            [
+              -0.1684024555354633,
+              0.07860511135780364
+            ],
+            [
+              -0.17300261483443052,
+              0.08628671550201475
+            ]
+          ],
+          "quadrant_max_distance_native": 0.0516479429042265
+        },
+        "median_closure_native": 0.2736175617235529,
+        "cycle_p90_native": 0.3276602773180497,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "admitted": true,
+      "forward": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\flow-112-to-109.npy",
+        "bytes": 4125568,
+        "sha256": "91bc3257ff45141fb5750a33c4671076d21fe07701107c6045776d797f707b26"
+      },
+      "reverse": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\flow-109-to-112.npy",
+        "bytes": 4125568,
+        "sha256": "08bdf2af60de756a849ffe395890efaa13967d97d3091b010d2bb788e919b474"
+      }
+    },
+    {
+      "index": 110,
+      "reduction": {
+        "native_median": [
+          -0.15869581745514136,
+          0.0469395368592019
+        ],
+        "median_proxy": [
+          -0.022280204109847546,
+          0.006586821982637048
+        ],
+        "source_native_translation": [
+          -0.16788680989481006,
+          0.05002776043267708
+        ],
+        "interior_count": 2162,
+        "componentwise_unweighted_median": true,
+        "learned_spatial_variation_discarded": true
+      },
+      "judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          -0.15869581745514139,
+          0.046939536859201894
+        ],
+        "reverse_native_median": [
+          0.060595304963432926,
+          -0.15992547050372735
+        ],
+        "source_native_translation": [
+          -0.16788680989481009,
+          0.05002776043267707
+        ],
+        "forward": {
+          "p90_deviation_native": 0.05343727210817415,
+          "quadrant_medians_native": [
+            [
+              -0.15354597511362622,
+              0.014522362252500278
+            ],
+            [
+              -0.17212792731482873,
+              0.050907610778922516
+            ],
+            [
+              -0.15464766957712445,
+              0.053023538015045404
+            ],
+            [
+              -0.1578882548958063,
+              0.08718609039388826
+            ]
+          ],
+          "quadrant_max_distance_native": 0.07279335671002038
+        },
+        "reverse": {
+          "p90_deviation_native": 0.07027874973617754,
+          "quadrant_medians_native": [
+            [
+              0.06126838874452832,
+              -0.15848829714206297
+            ],
+            [
+              0.07065970402380281,
+              -0.12040423177208104
+            ],
+            [
+              0.06721742541359907,
+              -0.196252093939651
+            ],
+            [
+              0.03306560020216486,
+              -0.15959125787731732
+            ]
+          ],
+          "quadrant_max_distance_native": 0.07592593415573468
+        },
+        "median_closure_native": 0.14963131942431357,
+        "cycle_p90_native": 0.1985821420520917,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "reverse_judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          0.060595304963432926,
+          -0.15992547050372735
+        ],
+        "reverse_native_median": [
+          -0.15869581745514139,
+          0.046939536859201894
+        ],
+        "source_native_translation": [
+          0.06375363968846182,
+          -0.16925645062397637
+        ],
+        "forward": {
+          "p90_deviation_native": 0.07027874973617754,
+          "quadrant_medians_native": [
+            [
+              0.06126838874452832,
+              -0.15848829714206297
+            ],
+            [
+              0.07065970402380281,
+              -0.12040423177208104
+            ],
+            [
+              0.06721742541359907,
+              -0.196252093939651
+            ],
+            [
+              0.03306560020216486,
+              -0.15959125787731732
+            ]
+          ],
+          "quadrant_max_distance_native": 0.07592593415573468
+        },
+        "reverse": {
+          "p90_deviation_native": 0.05343727210817415,
+          "quadrant_medians_native": [
+            [
+              -0.15354597511362622,
+              0.014522362252500278
+            ],
+            [
+              -0.17212792731482873,
+              0.050907610778922516
+            ],
+            [
+              -0.15464766957712445,
+              0.053023538015045404
+            ],
+            [
+              -0.1578882548958063,
+              0.08718609039388826
+            ]
+          ],
+          "quadrant_max_distance_native": 0.07279335671002038
+        },
+        "median_closure_native": 0.14963131942431357,
+        "cycle_p90_native": 0.19862425289230032,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "admitted": true,
+      "forward": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\flow-112-to-110.npy",
+        "bytes": 4125568,
+        "sha256": "3d5d4fccc861338fc1c294d447c8ca38427ec0e040419125b655dd3aa2de4f59"
+      },
+      "reverse": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\flow-110-to-112.npy",
+        "bytes": 4125568,
+        "sha256": "ca668c72dbb2143d14563e2a68efe2033a299cf20ee5b81aa699476bd0ad3246"
+      }
+    },
+    {
+      "index": 111,
+      "reduction": {
+        "native_median": [
+          -0.04795388686999848,
+          0.1534542148939172
+        ],
+        "median_proxy": [
+          -0.006732517620548606,
+          0.02153356559574604
+        ],
+        "source_native_translation": [
+          -0.050408618714164445,
+          0.16245402627706212
+        ],
+        "interior_count": 2162,
+        "componentwise_unweighted_median": true,
+        "learned_spatial_variation_discarded": true
+      },
+      "judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          -0.04795388686999848,
+          0.1534542148939172
+        ],
+        "reverse_native_median": [
+          0.020380508429794147,
+          -0.2721435603123069
+        ],
+        "source_native_translation": [
+          -0.050408618714164445,
+          0.16245402627706212
+        ],
+        "forward": {
+          "p90_deviation_native": 0.05477864308836289,
+          "quadrant_medians_native": [
+            [
+              -0.05636423675936053,
+              0.10898750602131005
+            ],
+            [
+              -0.044989564312113955,
+              0.16964662649729148
+            ],
+            [
+              -0.05703978158999234,
+              0.13644726081106037
+            ],
+            [
+              -0.04601597785738042,
+              0.18684886370502643
+            ]
+          ],
+          "quadrant_max_distance_native": 0.07854602143109497
+        },
+        "reverse": {
+          "p90_deviation_native": 0.04804697799032936,
+          "quadrant_medians_native": [
+            [
+              0.003687174183538776,
+              -0.25278869566250173
+            ],
+            [
+              0.04378967662553557,
+              -0.26666332806743454
+            ],
+            [
+              0.012639590963160365,
+              -0.27210493375620337
+            ],
+            [
+              0.028258115722035817,
+              -0.29977637468344526
+            ]
+          ],
+          "quadrant_max_distance_native": 0.0530242694231939
+        },
+        "median_closure_native": 0.12185012069937622,
+        "cycle_p90_native": 0.17679652351155747,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "reverse_judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          0.020380508429794147,
+          -0.2721435603123069
+        ],
+        "reverse_native_median": [
+          -0.04795388686999848,
+          0.1534542148939172
+        ],
+        "source_native_translation": [
+          0.020992483681305733,
+          -0.2878513803532505
+        ],
+        "forward": {
+          "p90_deviation_native": 0.04804697799032936,
+          "quadrant_medians_native": [
+            [
+              0.003687174183538776,
+              -0.25278869566250173
+            ],
+            [
+              0.04378967662553557,
+              -0.26666332806743454
+            ],
+            [
+              0.012639590963160365,
+              -0.27210493375620337
+            ],
+            [
+              0.028258115722035817,
+              -0.29977637468344526
+            ]
+          ],
+          "quadrant_max_distance_native": 0.0530242694231939
+        },
+        "reverse": {
+          "p90_deviation_native": 0.05477864308836289,
+          "quadrant_medians_native": [
+            [
+              -0.05636423675936053,
+              0.10898750602131005
+            ],
+            [
+              -0.044989564312113955,
+              0.16964662649729148
+            ],
+            [
+              -0.05703978158999234,
+              0.13644726081106037
+            ],
+            [
+              -0.04601597785738042,
+              0.18684886370502643
+            ]
+          ],
+          "quadrant_max_distance_native": 0.07854602143109497
+        },
+        "median_closure_native": 0.12185012069937622,
+        "cycle_p90_native": 0.17682886423121774,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "admitted": true,
+      "forward": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\flow-112-to-111.npy",
+        "bytes": 4125568,
+        "sha256": "48ddf5d8bee6c7390e27742eaa6ba610ca22e90bf9f4c26df4d63f205249e050"
+      },
+      "reverse": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\flow-111-to-112.npy",
+        "bytes": 4125568,
+        "sha256": "d5e56d69e6ede4dddacbe2306b366f93d3ca719bc45e1046f075c2fde2b7fcaf"
+      }
+    },
+    {
+      "index": 113,
+      "reduction": {
+        "native_median": [
+          0.05248737394894388,
+          0.052897565333814754
+        ],
+        "median_proxy": [
+          0.007368999533355236,
+          0.007422886323183775
+        ],
+        "source_native_translation": [
+          0.05559332460584493,
+          0.055803607542968495
+        ],
+        "interior_count": 2162,
+        "componentwise_unweighted_median": true,
+        "learned_spatial_variation_discarded": true
+      },
+      "judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          0.052487373948943886,
+          0.052897565333814754
+        ],
+        "reverse_native_median": [
+          -0.018591380143665112,
+          -0.11372307202311507
+        ],
+        "source_native_translation": [
+          0.055593324605844936,
+          0.055803607542968495
+        ],
+        "forward": {
+          "p90_deviation_native": 0.04146612633085839,
+          "quadrant_medians_native": [
+            [
+              0.03847310149470683,
+              0.038054503112675386
+            ],
+            [
+              0.058169890893623226,
+              0.06996320589817426
+            ],
+            [
+              0.04354591497579928,
+              0.038180435972714186
+            ],
+            [
+              0.06513579541986639,
+              0.05778385454680733
+            ]
+          ],
+          "quadrant_max_distance_native": 0.03749838431290832
+        },
+        "reverse": {
+          "p90_deviation_native": 0.053964382228330124,
+          "quadrant_medians_native": [
+            [
+              -0.027057203150946983,
+              -0.10483449419051308
+            ],
+            [
+              -0.02137645073235035,
+              -0.13222881612517323
+            ],
+            [
+              -0.01721885414391925,
+              -0.09615221667920364
+            ],
+            [
+              -0.00194994394286451,
+              -0.14837520770448875
+            ]
+          ],
+          "quadrant_max_distance_native": 0.05440937796331514
+        },
+        "median_closure_native": 0.06963246843289138,
+        "cycle_p90_native": 0.1379018828721054,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "reverse_judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          -0.018591380143665112,
+          -0.11372307202311507
+        ],
+        "reverse_native_median": [
+          0.052487373948943886,
+          0.052897565333814754
+        ],
+        "source_native_translation": [
+          -0.01989610339169438,
+          -0.12023113743239465
+        ],
+        "forward": {
+          "p90_deviation_native": 0.053964382228330124,
+          "quadrant_medians_native": [
+            [
+              -0.027057203150946983,
+              -0.10483449419051308
+            ],
+            [
+              -0.02137645073235035,
+              -0.13222881612517323
+            ],
+            [
+              -0.01721885414391925,
+              -0.09615221667920364
+            ],
+            [
+              -0.00194994394286451,
+              -0.14837520770448875
+            ]
+          ],
+          "quadrant_max_distance_native": 0.05440937796331514
+        },
+        "reverse": {
+          "p90_deviation_native": 0.04146612633085839,
+          "quadrant_medians_native": [
+            [
+              0.03847310149470683,
+              0.038054503112675386
+            ],
+            [
+              0.058169890893623226,
+              0.06996320589817426
+            ],
+            [
+              0.04354591497579928,
+              0.038180435972714186
+            ],
+            [
+              0.06513579541986639,
+              0.05778385454680733
+            ]
+          ],
+          "quadrant_max_distance_native": 0.03749838431290832
+        },
+        "median_closure_native": 0.06963246843289138,
+        "cycle_p90_native": 0.13780542762031917,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "admitted": true,
+      "forward": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\flow-112-to-113.npy",
+        "bytes": 4125568,
+        "sha256": "9af6723f744d252a9618517342c23b965f9e9c77f0d228f43b9141716497f118"
+      },
+      "reverse": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\flow-113-to-112.npy",
+        "bytes": 4125568,
+        "sha256": "24c7abbc39c5ee1c1d9ba14677c94f380a72f58b112cec9be71c896e3b83f5d7"
+      }
+    },
+    {
+      "index": 114,
+      "reduction": {
+        "native_median": [
+          0.019001561147160825,
+          0.07081936484158242
+        ],
+        "median_proxy": [
+          0.002667736727744341,
+          0.00993777485564351
+        ],
+        "source_native_translation": [
+          0.02023486180681868,
+          0.07478912151238226
+        ],
+        "interior_count": 2162,
+        "componentwise_unweighted_median": true,
+        "learned_spatial_variation_discarded": true
+      },
+      "judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          0.019001561147160825,
+          0.07081936484158242
+        ],
+        "reverse_native_median": [
+          -0.039121830172371114,
+          -0.11321035426733031
+        ],
+        "source_native_translation": [
+          0.02023486180681868,
+          0.07478912151238226
+        ],
+        "forward": {
+          "p90_deviation_native": 0.07525938257215707,
+          "quadrant_medians_native": [
+            [
+              0.018400685289155012,
+              0.03576223436526878
+            ],
+            [
+              0.03875689997591755,
+              0.11282222374714276
+            ],
+            [
+              0.009540380419507114,
+              0.012072995999580054
+            ],
+            [
+              0.025692975730635222,
+              0.1100745548719839
+            ]
+          ],
+          "quadrant_max_distance_native": 0.10490000908827593
+        },
+        "reverse": {
+          "p90_deviation_native": 0.07511613286949274,
+          "quadrant_medians_native": [
+            [
+              -0.04666053900304673,
+              -0.08794779015177347
+            ],
+            [
+              -0.054130821037952866,
+              -0.15151520159871099
+            ],
+            [
+              -0.02728169266007502,
+              -0.08215438082509074
+            ],
+            [
+              -0.021129344111647116,
+              -0.17338679212148686
+            ]
+          ],
+          "quadrant_max_distance_native": 0.09143962086325669
+        },
+        "median_closure_native": 0.046923567747355975,
+        "cycle_p90_native": 0.0997579761078788,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "reverse_judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          -0.039121830172371114,
+          -0.11321035426733031
+        ],
+        "reverse_native_median": [
+          0.019001561147160825,
+          0.07081936484158242
+        ],
+        "source_native_translation": [
+          -0.04160731990941685,
+          -0.11964656726062667
+        ],
+        "forward": {
+          "p90_deviation_native": 0.07511613286949274,
+          "quadrant_medians_native": [
+            [
+              -0.04666053900304673,
+              -0.08794779015177347
+            ],
+            [
+              -0.054130821037952866,
+              -0.15151520159871099
+            ],
+            [
+              -0.02728169266007502,
+              -0.08215438082509074
+            ],
+            [
+              -0.021129344111647116,
+              -0.17338679212148686
+            ]
+          ],
+          "quadrant_max_distance_native": 0.09143962086325669
+        },
+        "reverse": {
+          "p90_deviation_native": 0.07525938257215707,
+          "quadrant_medians_native": [
+            [
+              0.018400685289155012,
+              0.03576223436526878
+            ],
+            [
+              0.03875689997591755,
+              0.11282222374714276
+            ],
+            [
+              0.009540380419507114,
+              0.012072995999580054
+            ],
+            [
+              0.025692975730635222,
+              0.1100745548719839
+            ]
+          ],
+          "quadrant_max_distance_native": 0.10490000908827593
+        },
+        "median_closure_native": 0.046923567747355975,
+        "cycle_p90_native": 0.09968085572093122,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "admitted": true,
+      "forward": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\flow-112-to-114.npy",
+        "bytes": 4125568,
+        "sha256": "cd089e89942287b33f24e8e8fe469479e6b937037e5bb5c3de2918a6f2dd1c3b"
+      },
+      "reverse": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\flow-114-to-112.npy",
+        "bytes": 4125568,
+        "sha256": "150fb5ddbedd9c3003493689d3209a86d42943e691064d42b50225b557b5a7d4"
+      }
+    },
+    {
+      "index": 115,
+      "reduction": {
+        "native_median": [
+          -0.12643726902844551,
+          0.2455735337307022
+        ],
+        "median_proxy": [
+          -0.017751243896782398,
+          0.034460270777344704
+        ],
+        "source_native_translation": [
+          -0.13301147296197618,
+          0.25963471186139714
+        ],
+        "interior_count": 2162,
+        "componentwise_unweighted_median": true,
+        "learned_spatial_variation_discarded": true
+      },
+      "judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          -0.12643726902844551,
+          0.2455735337307022
+        ],
+        "reverse_native_median": [
+          0.11922200247222048,
+          -0.35108725467232715
+        ],
+        "source_native_translation": [
+          -0.13301147296197618,
+          0.25963471186139714
+        ],
+        "forward": {
+          "p90_deviation_native": 0.07293294216621528,
+          "quadrant_medians_native": [
+            [
+              -0.14084051168862388,
+              0.21835642605511402
+            ],
+            [
+              -0.11355911422182212,
+              0.27197406804602303
+            ],
+            [
+              -0.13841795668175275,
+              0.19565999927476
+            ],
+            [
+              -0.1253403772599995,
+              0.2855208127571861
+            ]
+          ],
+          "quadrant_max_distance_native": 0.09080742746744695
+        },
+        "reverse": {
+          "p90_deviation_native": 0.1160827573827037,
+          "quadrant_medians_native": [
+            [
+              0.10630171131342649,
+              -0.3029301201625896
+            ],
+            [
+              0.11406697932292113,
+              -0.40323528230393707
+            ],
+            [
+              0.1262562127318233,
+              -0.25539965174914225
+            ],
+            [
+              0.13993665642020375,
+              -0.39828179151124926
+            ]
+          ],
+          "quadrant_max_distance_native": 0.14833728820708056
+        },
+        "median_closure_native": 0.10576013132756824,
+        "cycle_p90_native": 0.1544719525468724,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "reverse_judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          0.11922200247222048,
+          -0.35108725467232715
+        ],
+        "reverse_native_median": [
+          -0.12643726902844551,
+          0.2455735337307022
+        ],
+        "source_native_translation": [
+          0.1253609342910259,
+          -0.3715432560761735
+        ],
+        "forward": {
+          "p90_deviation_native": 0.1160827573827037,
+          "quadrant_medians_native": [
+            [
+              0.10630171131342649,
+              -0.3029301201625896
+            ],
+            [
+              0.11406697932292113,
+              -0.40323528230393707
+            ],
+            [
+              0.1262562127318233,
+              -0.25539965174914225
+            ],
+            [
+              0.13993665642020375,
+              -0.39828179151124926
+            ]
+          ],
+          "quadrant_max_distance_native": 0.14833728820708056
+        },
+        "reverse": {
+          "p90_deviation_native": 0.07293294216621528,
+          "quadrant_medians_native": [
+            [
+              -0.14084051168862388,
+              0.21835642605511402
+            ],
+            [
+              -0.11355911422182212,
+              0.27197406804602303
+            ],
+            [
+              -0.13841795668175275,
+              0.19565999927476
+            ],
+            [
+              -0.1253403772599995,
+              0.2855208127571861
+            ]
+          ],
+          "quadrant_max_distance_native": 0.09080742746744695
+        },
+        "median_closure_native": 0.10576013132756824,
+        "cycle_p90_native": 0.15454602672640444,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "admitted": true,
+      "forward": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\flow-112-to-115.npy",
+        "bytes": 4125568,
+        "sha256": "4fca9a24052571753ee966d727cf66bb526b8219d9bee2b39e53f08872735f19"
+      },
+      "reverse": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\flow-115-to-112.npy",
+        "bytes": 4125568,
+        "sha256": "c17e8039fd1b8119f4bffc23bd96502bdb4f48eeabc086828cb5f77b2a63b799"
+      }
+    },
+    {
+      "index": 116,
+      "reduction": {
+        "native_median": [
+          -0.307033097312193,
+          0.34792834571197173
+        ],
+        "median_proxy": [
+          -0.043106114491820335,
+          0.0488232783973217
+        ],
+        "source_native_translation": [
+          -0.32337512539823055,
+          0.36796870137055643
+        ],
+        "interior_count": 2162,
+        "componentwise_unweighted_median": true,
+        "learned_spatial_variation_discarded": true
+      },
+      "judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          -0.30703309731219297,
+          0.34792834571197173
+        ],
+        "reverse_native_median": [
+          0.25339317605407397,
+          -0.4539807544633391
+        ],
+        "source_native_translation": [
+          -0.3233751253982305,
+          0.36796870137055643
+        ],
+        "forward": {
+          "p90_deviation_native": 0.11939125781464272,
+          "quadrant_medians_native": [
+            [
+              -0.2920539292591539,
+              0.29696397646091904
+            ],
+            [
+              -0.3023438758809458,
+              0.3817916501300734
+            ],
+            [
+              -0.3361980335024947,
+              0.2505223256227507
+            ],
+            [
+              -0.3201165009967305,
+              0.40088800887605847
+            ]
+          ],
+          "quadrant_max_distance_native": 0.15122319394844178
+        },
+        "reverse": {
+          "p90_deviation_native": 0.13488004938495893,
+          "quadrant_medians_native": [
+            [
+              0.25040450668470426,
+              -0.40620976605106135
+            ],
+            [
+              0.2536733907562765,
+              -0.5331152852484797
+            ],
+            [
+              0.24858821232549166,
+              -0.3482360042402769
+            ],
+            [
+              0.26404140107333657,
+              -0.5187379766649761
+            ]
+          ],
+          "quadrant_max_distance_native": 0.18494920271734872
+        },
+        "median_closure_native": 0.11884592779958557,
+        "cycle_p90_native": 0.19061675076248843,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "reverse_judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          0.25339317605407397,
+          -0.4539807544633391
+        ],
+        "reverse_native_median": [
+          -0.30703309731219297,
+          0.34792834571197173
+        ],
+        "source_native_translation": [
+          0.2670434080563664,
+          -0.4806364515541743
+        ],
+        "forward": {
+          "p90_deviation_native": 0.13488004938495893,
+          "quadrant_medians_native": [
+            [
+              0.25040450668470426,
+              -0.40620976605106135
+            ],
+            [
+              0.2536733907562765,
+              -0.5331152852484797
+            ],
+            [
+              0.24858821232549166,
+              -0.3482360042402769
+            ],
+            [
+              0.26404140107333657,
+              -0.5187379766649761
+            ]
+          ],
+          "quadrant_max_distance_native": 0.18494920271734872
+        },
+        "reverse": {
+          "p90_deviation_native": 0.11939125781464272,
+          "quadrant_medians_native": [
+            [
+              -0.2920539292591539,
+              0.29696397646091904
+            ],
+            [
+              -0.3023438758809458,
+              0.3817916501300734
+            ],
+            [
+              -0.3361980335024947,
+              0.2505223256227507
+            ],
+            [
+              -0.3201165009967305,
+              0.40088800887605847
+            ]
+          ],
+          "quadrant_max_distance_native": 0.15122319394844178
+        },
+        "median_closure_native": 0.11884592779958557,
+        "cycle_p90_native": 0.19084348264249387,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "admitted": true,
+      "forward": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\flow-112-to-116.npy",
+        "bytes": 4125568,
+        "sha256": "ecc587e1b2082783e055b01fa96555bd2b30d1de5d9b5826954db5c568a9761f"
+      },
+      "reverse": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\flow-116-to-112.npy",
+        "bytes": 4125568,
+        "sha256": "5f809e6a1f513a0d91028e287e49a8d2864ccac18b44f299962181af7a493ec8"
+      }
+    }
+  ],
+  "frames": [
+    {
+      "index": 108,
+      "retained_tiff": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00108.tiff",
+        "bytes": 197801326,
+        "sha256": "60bd3abcb5d59afdae133de9cb3148a42f27d1e3f8fb33730e88a81d53876ca8"
+      },
+      "original_identity_only": {
+        "index": 108,
+        "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00129.ARW",
+        "identity_name": "frame-00108.ARW",
+        "bytes": 37433344,
+        "sha256": "b8d7b62cceb39b5bb2460fabf9b3e76b8f85d41060cdc958ed48bcb9d06da143",
+        "mtime_ns": 1790056957540000000
+      },
+      "transform_bits": [
+        "3ff0f3d00fd28343",
+        "bf610fa28dc3030a",
+        "c000d0e6597dbe1e",
+        "3ffaa73414233f3c"
+      ],
+      "transform": [
+        1.0595245950755305,
+        -0.0020826506498398166,
+        -2.1020018569468126,
+        1.6658211504581706
+      ],
+      "native_coordinate_sha256": "f4c983d7c9c9cd4cca230a2017480cb4fbd91394b5baa2dd5e187bc24f96e46c",
+      "remap_f32_coordinate_sha256": "2a978d7af3bd4cdf3fbd983c22ecc71a2df81ee1b6f38b09938206fdc48b7f47",
+      "proxy": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-108-rgb.npy",
+        "bytes": 6188288,
+        "sha256": "e7ddef208f330191fd23cf0de59f0861f6801709a4e9239b710617efc1601eff"
+      },
+      "display": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-108.png",
+        "bytes": 1796310,
+        "sha256": "a439e856b55de04b7a2b6d7452333532904eef126333b41dd32f48fa6a35e899"
+      },
+      "coordinates": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-108-coordinates.npz",
+        "bytes": 12376844,
+        "sha256": "63022d494534862409ad0edf700806d840ab1bbc111a9a934f3213e1602ce91e"
+      },
+      "coordinate_summary": {
+        "native_coordinate_sha256": "f4c983d7c9c9cd4cca230a2017480cb4fbd91394b5baa2dd5e187bc24f96e46c",
+        "remap_f32_coordinate_sha256": "2a978d7af3bd4cdf3fbd983c22ecc71a2df81ee1b6f38b09938206fdc48b7f47",
+        "native_min_xy": [
+          190.14731028009456,
+          131.7711911440646
+        ],
+        "native_max_xy": [
+          6832.383075046391,
+          4561.8346515133435
+        ],
+        "remap_min_xy": [
+          26.286054611206055,
+          18.06536865234375
+        ],
+        "remap_max_xy": [
+          959.5239868164062,
+          639.86181640625
+        ],
+        "all_bilinear_support_valid": true
+      },
+      "source_mtime_ns": 1790406306698255100,
+      "source_metadata_unchanged": true,
+      "display_scope": "RGB16 proxy only, no ICC transform or native quality claim"
+    },
+    {
+      "index": 109,
+      "retained_tiff": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00109.tiff",
+        "bytes": 197801326,
+        "sha256": "4810ff86bf509dcf02331986c63c1594b317d7ab5b0ffbaf797287162860eec7"
+      },
+      "original_identity_only": {
+        "index": 109,
+        "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00130.ARW",
+        "identity_name": "frame-00109.ARW",
+        "bytes": 37437440,
+        "sha256": "86bd14d41a4878e80ebc452bfed7f8a16e22b47b2d8c9127fcfcc2e88d64a2c5",
+        "mtime_ns": 1790056958790000000
+      },
+      "transform_bits": [
+        "3ff0f19f9aed4fbf",
+        "bf612c0545b56858",
+        "c001957b290de3ce",
+        "3ff7c5cca665b664"
+      ],
+      "transform": [
+        1.0589901019893515,
+        -0.002096185967883673,
+        -2.1979888160098886,
+        1.4857908725638476
+      ],
+      "native_coordinate_sha256": "438ae112653c5bcb3643ab1ef8c672cbae728271eb7a1165a8c24f88dbecc145",
+      "remap_f32_coordinate_sha256": "48859d80d7fcc98ba589229e943cc45d5b29b96cf55191c81639cce8685d9029",
+      "proxy": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-109-rgb.npy",
+        "bytes": 6188288,
+        "sha256": "76a201a458652f288dbe820327bd26de457ce4ebae8f2b6a118d11556d8ef324"
+      },
+      "display": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-109.png",
+        "bytes": 1797104,
+        "sha256": "fd000813e92ff71cd1d09a1afe3e2b6b8f8893b61045ca32cddacd430fa10f52"
+      },
+      "coordinates": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-109-coordinates.npz",
+        "bytes": 12376844,
+        "sha256": "38570aeada23bdb296548dcfdbee8e9cec42e179bd9e80421a83feb97c73abbf"
+      },
+      "coordinate_summary": {
+        "native_coordinate_sha256": "438ae112653c5bcb3643ab1ef8c672cbae728271eb7a1165a8c24f88dbecc145",
+        "remap_f32_coordinate_sha256": "48859d80d7fcc98ba589229e943cc45d5b29b96cf55191c81639cce8685d9029",
+        "native_min_xy": [
+          191.60058113285322,
+          132.48315021020136
+        ],
+        "native_max_xy": [
+          6830.54637731515,
+          4560.403119364034
+        ],
+        "remap_min_xy": [
+          26.4902400970459,
+          18.16529655456543
+        ],
+        "remap_max_xy": [
+          959.2659301757812,
+          639.660888671875
+        ],
+        "all_bilinear_support_valid": true
+      },
+      "source_mtime_ns": 1790406307208584200,
+      "source_metadata_unchanged": true,
+      "display_scope": "RGB16 proxy only, no ICC transform or native quality claim"
+    },
+    {
+      "index": 110,
+      "retained_tiff": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00110.tiff",
+        "bytes": 197801326,
+        "sha256": "4302a8db3fad8fc0a8f58675fb4134fa13a136c41889c3bb83e6abc953a4f284"
+      },
+      "original_identity_only": {
+        "index": 110,
+        "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00131.ARW",
+        "identity_name": "frame-00110.ARW",
+        "bytes": 37437440,
+        "sha256": "e47339f0339862fd419b13f26360fff9d0dc3476de5e1346ed38ad881e9dd087",
+        "mtime_ns": 1790056960050000000
+      },
+      "transform_bits": [
+        "3ff0efd1799631fb",
+        "bf618c50c5a8b3d0",
+        "c000a4fd1ec89a96",
+        "3ff51e626fe00700"
+      ],
+      "transform": [
+        1.0585493802528834,
+        -0.0021421029644188364,
+        -2.08056091355986,
+        1.3199180956002579
+      ],
+      "native_coordinate_sha256": "49fc201f296b76b94ab4ee8f93c8f768805b4623e8f63115539011bb48584952",
+      "remap_f32_coordinate_sha256": "74fc33ebcbda4e58dca1d0d2ac3aafe6584054ae6f96cdbf9210f63577b7fca6",
+      "proxy": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-110-rgb.npy",
+        "bytes": 6188288,
+        "sha256": "c2937d15f091ce6ef0cfcd68eb00f0629cf2f364e1de3cc6bb9c760ac16da3c6"
+      },
+      "display": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-110.png",
+        "bytes": 1797680,
+        "sha256": "2d0c82aaba8373cda7afa4ab06c808b07700f3d1d9794e5bfc866f35c1a3fcff"
+      },
+      "coordinates": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-110-coordinates.npz",
+        "bytes": 12376844,
+        "sha256": "e04f33ea24c249454bc96183bc57736f49ac505535ce5b81c830aeef1aa7e8eb"
+      },
+      "coordinate_summary": {
+        "native_coordinate_sha256": "49fc201f296b76b94ab4ee8f93c8f768805b4623e8f63115539011bb48584952",
+        "remap_f32_coordinate_sha256": "74fc33ebcbda4e58dca1d0d2ac3aafe6584054ae6f96cdbf9210f63577b7fca6",
+        "native_min_xy": [
+          193.1195756117671,
+          132.92656426814835
+        ],
+        "native_max_xy": [
+          6829.497489250775,
+          4559.296700836965
+        ],
+        "remap_min_xy": [
+          26.70366096496582,
+          18.2275333404541
+        ],
+        "remap_max_xy": [
+          959.1185302734375,
+          639.505615234375
+        ],
+        "all_bilinear_support_valid": true
+      },
+      "source_mtime_ns": 1790406307725266900,
+      "source_metadata_unchanged": true,
+      "display_scope": "RGB16 proxy only, no ICC transform or native quality claim"
+    },
+    {
+      "index": 111,
+      "retained_tiff": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00111.tiff",
+        "bytes": 197801326,
+        "sha256": "6287d8ff3b68c3454e1209c8df8597871e48c072ca13db539d60590dd1ba3ac4"
+      },
+      "original_identity_only": {
+        "index": 111,
+        "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00132.ARW",
+        "identity_name": "frame-00111.ARW",
+        "bytes": 37437440,
+        "sha256": "82287d0792212b57ba1b362552a469537b4c10564ea4e27f96a249386b5b27a0",
+        "mtime_ns": 1790056961290000000
+      },
+      "transform_bits": [
+        "3ff0ed81450c9342",
+        "bf61653dbb83acaa",
+        "c0014d5a353a1f72",
+        "3ff47d1c13f83f6c"
+      ],
+      "transform": [
+        1.0579846093398406,
+        -0.002123470851179106,
+        -2.162769714199322,
+        1.2805443553988551
+      ],
+      "native_coordinate_sha256": "f454579958eebeee35f257f31c051f7a79ff0686438677be496c6ab010c8fdb3",
+      "remap_f32_coordinate_sha256": "923341218cc7bda099f8f921c8477d6dc45be1a76a0e5528674cc08b55053a9f",
+      "proxy": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-111-rgb.npy",
+        "bytes": 6188288,
+        "sha256": "6d77181c2f0585a293260b850a06a96a858e3affe3c471da5df57ff320dfea50"
+      },
+      "display": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-111.png",
+        "bytes": 1797859,
+        "sha256": "5eaa19e655ee4f1df7413ded8263cf3e277036c620de7d605982bbbb7483e3ed"
+      },
+      "coordinates": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-111-coordinates.npz",
+        "bytes": 12376844,
+        "sha256": "ce9561af1afcd54e3a97a5ca8dcd0f91c6612c3677a9db14f3de6f5443cfe448"
+      },
+      "coordinate_summary": {
+        "native_coordinate_sha256": "f454579958eebeee35f257f31c051f7a79ff0686438677be496c6ab010c8fdb3",
+        "remap_f32_coordinate_sha256": "923341218cc7bda099f8f921c8477d6dc45be1a76a0e5528674cc08b55053a9f",
+        "native_min_xy": [
+          194.76226786250243,
+          134.0836458529488
+        ],
+        "native_max_xy": [
+          6827.526545200509,
+          4557.9826704301595
+        ],
+        "remap_min_xy": [
+          26.934459686279297,
+          18.38994026184082
+        ],
+        "remap_max_xy": [
+          958.8416137695312,
+          639.3211669921875
+        ],
+        "all_bilinear_support_valid": true
+      },
+      "source_mtime_ns": 1790406308229512000,
+      "source_metadata_unchanged": true,
+      "display_scope": "RGB16 proxy only, no ICC transform or native quality claim"
+    },
+    {
+      "index": 112,
+      "retained_tiff": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00112.tiff",
+        "bytes": 197801326,
+        "sha256": "6ab1f1d8a7148b7197e334344293a565d66ec60fb13b164deb881dfc24618819"
+      },
+      "original_identity_only": {
+        "index": 112,
+        "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00133.ARW",
+        "identity_name": "frame-00112.ARW",
+        "bytes": 37437440,
+        "sha256": "d61479b87463522b43dea20cddd94c7af15b4080545b993794e799f15da028c7",
+        "mtime_ns": 1790056962560000000
+      },
+      "transform_bits": [
+        "3ff0ebc8b0344b86",
+        "bf60e4c4bfb09998",
+        "c0011d7c76c58d7d",
+        "3ff6d43db865e718"
+      ],
+      "transform": [
+        1.0575644381503664,
+        -0.0020622103452467393,
+        -2.139397552398519,
+        1.4268166735695953
+      ],
+      "native_coordinate_sha256": "1d90f62ba1be72f0241c009ab2587dd204e6000ec8c2638029933edfa75ac041",
+      "remap_f32_coordinate_sha256": "81d245efcc54af2cd06a1a1290137d95f606c38d4b48057f5caa877617870421",
+      "proxy": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-112-rgb.npy",
+        "bytes": 6188288,
+        "sha256": "283d0ad656d2d1b3e12b8af9449a2ea09c685a0a5312bf945b16096638aa3b44"
+      },
+      "display": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-112.png",
+        "bytes": 1798075,
+        "sha256": "5d7a3114c8f74d165b1367715e08d9c0cec087fbd8c1ac107cc82ab73a1a094c"
+      },
+      "coordinates": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-112-coordinates.npz",
+        "bytes": 12376844,
+        "sha256": "c535ef2bcfcd408cff8de6c521972a255378d8f2ce23c91d60a59bbd0883480c"
+      },
+      "coordinate_summary": {
+        "native_coordinate_sha256": "1d90f62ba1be72f0241c009ab2587dd204e6000ec8c2638029933edfa75ac041",
+        "remap_f32_coordinate_sha256": "81d245efcc54af2cd06a1a1290137d95f606c38d4b48057f5caa877617870421",
+        "native_min_xy": [
+          196.25226668400057,
+          135.4439625141648
+        ],
+        "native_max_xy": [
+          6826.130516457909,
+          4557.20780195231
+        ],
+        "remap_min_xy": [
+          27.1438045501709,
+          18.58087158203125
+        ],
+        "remap_max_xy": [
+          958.6454467773438,
+          639.21240234375
+        ],
+        "all_bilinear_support_valid": true
+      },
+      "source_mtime_ns": 1790406308753322300,
+      "source_metadata_unchanged": true,
+      "display_scope": "RGB16 proxy only, no ICC transform or native quality claim"
+    },
+    {
+      "index": 113,
+      "retained_tiff": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00113.tiff",
+        "bytes": 197801326,
+        "sha256": "4288c7965c052b78fb42939dca7316817e912a1b7ee893105163b097cd05c98e"
+      },
+      "original_identity_only": {
+        "index": 113,
+        "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00134.ARW",
+        "identity_name": "frame-00113.ARW",
+        "bytes": 37437440,
+        "sha256": "7fab5825a3e7729d38aa9d807317ec296d213fffd8747ee049999c3db111015d",
+        "mtime_ns": 1790056963830000000
+      },
+      "transform_bits": [
+        "3ff0e9a271b99cb9",
+        "bf615bc3ba8f4118",
+        "c000aea60b968a44",
+        "3ff4caa5e2f56f00"
+      ],
+      "transform": [
+        1.0570396845230745,
+        -0.002118952067100232,
+        -2.085277643710727,
+        1.2994746079993433
+      ],
+      "native_coordinate_sha256": "e1c92f82465a7db1a2048962853764cfe55497a5e37302e63309afabbd9d2d19",
+      "remap_f32_coordinate_sha256": "2d3d444b447aaddb59f5f87eae4e64aa0c392b24e0bdaa1ae7240ae9073c9823",
+      "proxy": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-113-rgb.npy",
+        "bytes": 6188288,
+        "sha256": "8b8bb77aacce43a8cc5d2d8349ae9c1b3e4512f71874642ae011cdec33032697"
+      },
+      "display": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-113.png",
+        "bytes": 1798798,
+        "sha256": "2b2d8b974e3b01e98c2f5ca20baa1e16b504cdd4f6516d8d83577ad701036603"
+      },
+      "coordinates": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-113-coordinates.npz",
+        "bytes": 12376844,
+        "sha256": "11310052cbb5f79a8f1560d90725de5337970ea1a7eab75a78f2956af9dec88b"
+      },
+      "coordinate_summary": {
+        "native_coordinate_sha256": "e1c92f82465a7db1a2048962853764cfe55497a5e37302e63309afabbd9d2d19",
+        "remap_f32_coordinate_sha256": "2d3d444b447aaddb59f5f87eae4e64aa0c392b24e0bdaa1ae7240ae9073c9823",
+        "native_min_xy": [
+          197.88517500024022,
+          136.1057584554968
+        ],
+        "native_max_xy": [
+          6824.714555788325,
+          4556.037219244046
+        ],
+        "remap_min_xy": [
+          27.37322998046875,
+          18.67376136779785
+        ],
+        "remap_max_xy": [
+          958.446533203125,
+          639.048095703125
+        ],
+        "all_bilinear_support_valid": true
+      },
+      "source_mtime_ns": 1790406309250410400,
+      "source_metadata_unchanged": true,
+      "display_scope": "RGB16 proxy only, no ICC transform or native quality claim"
+    },
+    {
+      "index": 114,
+      "retained_tiff": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00114.tiff",
+        "bytes": 197801326,
+        "sha256": "14ebcf5fc157219d412dae6609ddaf8f89deaf071279fe1e2fb50789974538a8"
+      },
+      "original_identity_only": {
+        "index": 114,
+        "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00135.ARW",
+        "identity_name": "frame-00114.ARW",
+        "bytes": 37433344,
+        "sha256": "bb7fd8f095e18067e2249e4c5ddd57009055f1cec5b2067647f8780e8528574a",
+        "mtime_ns": 1790056965100000000
+      },
+      "transform_bits": [
+        "3ff0e808d3dac526",
+        "bf6225a69376cf53",
+        "bffdce6fc19fa984",
+        "3ff2032b2c039b40"
+      ],
+      "transform": [
+        1.0566490436143083,
+        -0.0022152188718908366,
+        -1.862899547903539,
+        1.1257735938358593
+      ],
+      "native_coordinate_sha256": "bd7150a7eea06bfba62c69e696247e2cbe777295798dfcb7c4af23eabaa0c17c",
+      "remap_f32_coordinate_sha256": "8b66f5ab013a11a6ce8cf6cb04f33fde7c60b31865276de23c0e0d59153f5c94",
+      "proxy": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-114-rgb.npy",
+        "bytes": 6188288,
+        "sha256": "a73d8b8b10784d2070a5b21a4d54d5d9c7c64ae2a860ada6fd813c12ee133e81"
+      },
+      "display": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-114.png",
+        "bytes": 1798941,
+        "sha256": "b264c7db4a82aa2341e28fb8d4b0a1cf128065ac66262e8ac79440d0984d23ab"
+      },
+      "coordinates": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-114-coordinates.npz",
+        "bytes": 12376844,
+        "sha256": "647139344fd9bb39ac1e5954f2e6757239c5ded83a553f117d4e59ba246f089f"
+      },
+      "coordinate_summary": {
+        "native_coordinate_sha256": "bd7150a7eea06bfba62c69e696247e2cbe777295798dfcb7c4af23eabaa0c17c",
+        "remap_f32_coordinate_sha256": "8b66f5ab013a11a6ce8cf6cb04f33fde7c60b31865276de23c0e0d59153f5c94",
+        "native_min_xy": [
+          199.3522936963457,
+          136.27150886519385
+        ],
+        "native_max_xy": [
+          6824.137243849554,
+          4555.177151685409
+        ],
+        "remap_min_xy": [
+          27.579360961914062,
+          18.697025299072266
+        ],
+        "remap_max_xy": [
+          958.3654174804688,
+          638.9273681640625
+        ],
+        "all_bilinear_support_valid": true
+      },
+      "source_mtime_ns": 1790406309783817200,
+      "source_metadata_unchanged": true,
+      "display_scope": "RGB16 proxy only, no ICC transform or native quality claim"
+    },
+    {
+      "index": 115,
+      "retained_tiff": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00115.tiff",
+        "bytes": 197801326,
+        "sha256": "5b19e049b0b1ed0d3eda64ffb164f03a187ff679ac12b729fa73494302824b0d"
+      },
+      "original_identity_only": {
+        "index": 115,
+        "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00136.ARW",
+        "identity_name": "frame-00115.ARW",
+        "bytes": 37437440,
+        "sha256": "bfc001c4e8d3598246c06d29ad6c2f2adc89afe7db77d4fdbe4fd2e9e6ca3604",
+        "mtime_ns": 1790056966370000000
+      },
+      "transform_bits": [
+        "3ff0e6039728a019",
+        "bf618bc0ed7b2b10",
+        "bffbd335d0bcceac",
+        "3ff1b2580335efe4"
+      ],
+      "transform": [
+        1.0561557678829614,
+        -0.0021418350332614924,
+        -1.7390649942216596,
+        1.1060409665506024
+      ],
+      "native_coordinate_sha256": "7db77b9e57e7157be836654edb597fe5245a6d3caf8d85ae26976abd62d1f365",
+      "remap_f32_coordinate_sha256": "dbc8741280d18c1a6ac7ac792a4e1cf0b6b84c4bfc272137961bf7fbf6c50570",
+      "proxy": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-115-rgb.npy",
+        "bytes": 6188288,
+        "sha256": "e9b9d6df60bb0b165bea98b0b0d9e429a567240b1b209c377086a233aad05258"
+      },
+      "display": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-115.png",
+        "bytes": 1799129,
+        "sha256": "ef42e820c2873d6d13acf520fb579d5b5cb4c42955b33313f41113e4865f61ab"
+      },
+      "coordinates": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-115-coordinates.npz",
+        "bytes": 12376844,
+        "sha256": "93bce63bd8c5691ed1b3b6eec9f7741ebe0d3beefab1bee26372b0c20c36f13c"
+      },
+      "coordinate_summary": {
+        "native_coordinate_sha256": "7db77b9e57e7157be836654edb597fe5245a6d3caf8d85ae26976abd62d1f365",
+        "remap_f32_coordinate_sha256": "dbc8741280d18c1a6ac7ac792a4e1cf0b6b84c4bfc272137961bf7fbf6c50570",
+        "native_min_xy": [
+          201.29737951945606,
+          137.49017927689601
+        ],
+        "native_max_xy": [
+          6822.68806290074,
+          4553.879970656457
+        ],
+        "remap_min_xy": [
+          27.852645874023438,
+          18.86807632446289
+        ],
+        "remap_max_xy": [
+          958.1618041992188,
+          638.7453002929688
+        ],
+        "all_bilinear_support_valid": true
+      },
+      "source_mtime_ns": 1790406310309985100,
+      "source_metadata_unchanged": true,
+      "display_scope": "RGB16 proxy only, no ICC transform or native quality claim"
+    },
+    {
+      "index": 116,
+      "retained_tiff": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00116.tiff",
+        "bytes": 197801326,
+        "sha256": "b945946a176f455ee404e3c29aa5b93189a326c7fd55c910377fdac42d7f1b07"
+      },
+      "original_identity_only": {
+        "index": 116,
+        "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00137.ARW",
+        "identity_name": "frame-00116.ARW",
+        "bytes": 37437440,
+        "sha256": "7c04af9edb19a7f01b78d2effc29d6531267c7621f4cdbbe35f1415f61966d57",
+        "mtime_ns": 1790056967620000000
+      },
+      "transform_bits": [
+        "3ff0e4154b953e6a",
+        "bf61c64aaaff0301",
+        "bffae7f3f042c572",
+        "3ff0aedab712d644"
+      ],
+      "transform": [
+        1.0556843712292001,
+        -0.0021697481497259257,
+        -1.6816291222752082,
+        1.0426890517532152
+      ],
+      "native_coordinate_sha256": "1c1d7de6e480d0253f2d17c5af184f036135155451d7647754acbae9b8a94763",
+      "remap_f32_coordinate_sha256": "6f6624e104c945334c4da40d1821bf4af3047bd3272cb35d275a479c2e9a5962",
+      "proxy": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-116-rgb.npy",
+        "bytes": 6188288,
+        "sha256": "6308e43052a98cb7dfc334a766e703f8a14641e6e4bae6dad9c3bba5fc8a55ce"
+      },
+      "display": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-116.png",
+        "bytes": 1799131,
+        "sha256": "5db14c0a8f8f84b4802611fae2543cf856ff016863a43ab9cdc6d5a729a9d889"
+      },
+      "coordinates": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\pilot-1\\output\\proxy-116-coordinates.npz",
+        "bytes": 12376844,
+        "sha256": "a6555051a257765d47bfce9edbcfc50f7be79cb5d87555a04a6ffcf9b840d346"
+      },
+      "coordinate_summary": {
+        "native_coordinate_sha256": "1c1d7de6e480d0253f2d17c5af184f036135155451d7647754acbae9b8a94763",
+        "remap_f32_coordinate_sha256": "6f6624e104c945334c4da40d1821bf4af3047bd3272cb35d275a479c2e9a5962",
+        "native_min_xy": [
+          202.82996817426636,
+          138.2589413647577
+        ],
+        "native_max_xy": [
+          6821.385661217252,
+          4552.858300219176
+        ],
+        "remap_min_xy": [
+          28.067975997924805,
+          18.975976943969727
+        ],
+        "remap_max_xy": [
+          957.9788208007812,
+          638.6019287109375
+        ],
+        "all_bilinear_support_valid": true
+      },
+      "source_mtime_ns": 1790406310825547400,
+      "source_metadata_unchanged": true,
+      "display_scope": "RGB16 proxy only, no ICC transform or native quality claim"
+    }
+  ],
+  "anchor_index": 112,
+  "anchor_applied_delta": [
+    0.0,
+    0.0
+  ],
+  "model_calls": 16,
+  "original_raw_read": false,
+  "native_hook_config_emitted": false,
+  "native_quality_admitted": false,
+  "all_selected_tiffs_freshly_content_hashed": true,
+  "all488_tiffs_rehashed": false,
+  "geometry_truth_claim": false,
+  "learned_spatial_variation_discarded": true,
+  "limitation": "CA-off developed RGB low-resolution proxies; this is not native CFA sample or quality commissioning"
+}

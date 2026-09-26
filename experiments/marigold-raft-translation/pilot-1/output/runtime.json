@@ -1,0 +1,213 @@
+{
+  "torch_version": "2.11.0+cu128",
+  "torchvision_version": "0.26.0+cu128",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "cuda_version": "12.8",
+  "checkpoint_sha256": "ff5fadd56d26b40647388883af1547351ea17868b765c05b27231e72dd16a322",
+  "strict_complete_load": true,
+  "weights_only": true,
+  "floating_dtype": "float32",
+  "updates": 12,
+  "preprocessing": "official weight transform; replicate bottom6 then remove output padding",
+  "calls": [
+    {
+      "index": 0,
+      "synchronized_seconds": 0.3085556000005454,
+      "inputs_sha256": [
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4",
+        "e5bb636f8f066eab4e36ee4fb3dcaf3d96b6ee6c41aeb215cdbf61fef7c24c49"
+      ],
+      "flow_sha256": "11251a62f7264aaf3d1f4bc8f2a4521003c974de9c27e321e624d0fdc280ddbd",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 777410048,
+      "gpu_peak_reserved_bytes": 922746880
+    },
+    {
+      "index": 1,
+      "synchronized_seconds": 0.057880299998942064,
+      "inputs_sha256": [
+        "e5bb636f8f066eab4e36ee4fb3dcaf3d96b6ee6c41aeb215cdbf61fef7c24c49",
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4"
+      ],
+      "flow_sha256": "337001699ff261047ada4ca05e4c43768b13caef4cc5d11500b3ced3e00a772e",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 965650432,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 2,
+      "synchronized_seconds": 0.05911819999892032,
+      "inputs_sha256": [
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4",
+        "c57687809fc325b220197b22af1f13ee17930023f188b004328d5d88de507d98"
+      ],
+      "flow_sha256": "326ab9d0c52396d235d16b925c57746a5d3b9f2eaacd67611ea17b6e1210df81",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 3,
+      "synchronized_seconds": 0.059895700000197394,
+      "inputs_sha256": [
+        "c57687809fc325b220197b22af1f13ee17930023f188b004328d5d88de507d98",
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4"
+      ],
+      "flow_sha256": "9e8e758564ede8bd5fa7edfec06a4507f2f7b4ec70ac30c2e1fed0c667a5975e",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 4,
+      "synchronized_seconds": 0.05974129999958677,
+      "inputs_sha256": [
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4",
+        "e4a958bc416a2ef6b66ac803453fcea5a1d7aa0cedf4216afc1596cac7b3c28d"
+      ],
+      "flow_sha256": "0e0cf107dd9da329c8aefd8bd670d1dc88d9d7c4b09f717147752ff2dceb83ee",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 5,
+      "synchronized_seconds": 0.057350099999894155,
+      "inputs_sha256": [
+        "e4a958bc416a2ef6b66ac803453fcea5a1d7aa0cedf4216afc1596cac7b3c28d",
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4"
+      ],
+      "flow_sha256": "2cfdd3eac7ebe8b867d3352d9e634c5752288a05ebb62f8f320ba85fe605a2ba",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 6,
+      "synchronized_seconds": 0.05860910000046715,
+      "inputs_sha256": [
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4",
+        "255dfcd22b54f2ed7ba4b564cc823e0b9c34f490dfe26ebf6e4b6ac6133c6714"
+      ],
+      "flow_sha256": "6bcdef1f5cf8525e454ac19c573a39adf97c4be4a7468f7b670975f406ddbfd4",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 7,
+      "synchronized_seconds": 0.05859810000038124,
+      "inputs_sha256": [
+        "255dfcd22b54f2ed7ba4b564cc823e0b9c34f490dfe26ebf6e4b6ac6133c6714",
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4"
+      ],
+      "flow_sha256": "dd0895039ab8cafd0904fb1d6210f0b5ad984dad6778b457d9c106c84cb1faa6",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 8,
+      "synchronized_seconds": 0.05830549999882351,
+      "inputs_sha256": [
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4",
+        "de83369bb1d93ac888e60aa39980f35a1d910199a0608b88736eed7c0f78107f"
+      ],
+      "flow_sha256": "68b836af0a4934765a60e39036bed858dab462780a91e72ec772102366c2cba6",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 9,
+      "synchronized_seconds": 0.05893319999813684,
+      "inputs_sha256": [
+        "de83369bb1d93ac888e60aa39980f35a1d910199a0608b88736eed7c0f78107f",
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4"
+      ],
+      "flow_sha256": "4eecfaddcbe7c5abc8dea40cf8bc0a927d0d8422052c25830ec96fb0786f4d17",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 10,
+      "synchronized_seconds": 0.05632530000002589,
+      "inputs_sha256": [
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4",
+        "5386b1197615b0b4dba4e8a8012aa6cf6392c43403b72b85db3a441c712bc052"
+      ],
+      "flow_sha256": "38c8219cf5e6610e6ca42937cda5ebb5ec5068c495cc833ed7aad5398ecbf954",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 11,
+      "synchronized_seconds": 0.05635409999740659,
+      "inputs_sha256": [
+        "5386b1197615b0b4dba4e8a8012aa6cf6392c43403b72b85db3a441c712bc052",
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4"
+      ],
+      "flow_sha256": "f2254c73bc9f9252c9bc799514326ae4e749ad66ec58c4dafed68edc1f8f22c4",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 12,
+      "synchronized_seconds": 0.05732540000099107,
+      "inputs_sha256": [
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4",
+        "ee6b1dc6695905525f57910a90c26e6955bc79f690b65cb8ca1af25104a08fa7"
+      ],
+      "flow_sha256": "1a80ca29548a1d5e6ad888b8eaa1de7d2f69d5e9aadabf9272e917ef725f68a7",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 13,
+      "synchronized_seconds": 0.05756669999755104,
+      "inputs_sha256": [
+        "ee6b1dc6695905525f57910a90c26e6955bc79f690b65cb8ca1af25104a08fa7",
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4"
+      ],
+      "flow_sha256": "e09ba6298330a06e67107ac57a75704dae4cd509a5dc9d557ea6036bde660a40",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 14,
+      "synchronized_seconds": 0.057289500000479165,
+      "inputs_sha256": [
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4",
+        "3a6f1d0de7cf12b4c8290f0db3f89395780997011ac2c158ef09a4d6034b0bb6"
+      ],
+      "flow_sha256": "a5958e47bf7842b4531989a81bff9e433eeafa271b689dec104e77fc1e31e8b7",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 15,
+      "synchronized_seconds": 0.05760469999950146,
+      "inputs_sha256": [
+        "3a6f1d0de7cf12b4c8290f0db3f89395780997011ac2c158ef09a4d6034b0bb6",
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4"
+      ],
+      "flow_sha256": "949bae3de9b0cb41f9aea87e8741c71b217c50c710eb66a8788a3b042a0fca1e",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    }
+  ],
+  "elapsed_seconds": 7.685975500000495,
+  "checkpoint": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\upstream-2\\raft-large-c-t-skht-v2.pth",
+    "bytes": 21106607,
+    "sha256": "ff5fadd56d26b40647388883af1547351ea17868b765c05b27231e72dd16a322"
+  },
+  "observational_result": "FIXED_PILOT_REFUSED"
+}

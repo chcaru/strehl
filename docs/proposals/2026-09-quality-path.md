@@ -5,8 +5,10 @@ quality actions in 2026-09-sota-program.md and the older SOTA proposal. Read
 the measured decision record in docs/research/SYNTHESIS.md before architectural
 changes; this plan does not promote any experimental default.
 
-**Current action, September 26:** screen a fixed learned-motion estimator for
-the existing marigold fan before any complete native counterfactual. The complete
+**Current checkpoint, September 26:** the fixed learned-motion estimator passes
+its generated controls but produces only sub-threshold corrections on the
+eight near-focus marigold pairs. No native render follows this local proposal.
+This does not test registration across the full depth sweep. The complete
 488-source Helicon B workflow reference does not provide an overall improvement
 or clean target: some hair tips are clearer, but bright interiors smear. The latest
 native chip Gaussian/intercept recipes and source-gradient target are rejected;
@@ -15,6 +17,33 @@ those treatments or commission another generic pipeline audit. The concrete
 production gain remains the weighted-numerator overflow repair below; broad
 marigold ghosts, occlusion halos and mineral reflection recovery remain open.
 No SOTA claim is earned. The detailed entries below preserve the closed trials.
+
+The RAFT-large pilot uses the official fixed checkpoint, float32 CUDA and the
+existing global reference244. Flat noise is safely refused, small independent
+translations and static defocus pass, and opposing motions are recovered and
+refused as a single translation. All eight real direct112-to-source pairs pass
+the consistency checks, but the largest source-native correction is
+0.4898698163 pixels, below the predeclared0.5 activity bar. This is a conservative
+stop, not a measured uncertainty interval or proof of correct geometry.
+The9 retained full TIFFs are freshly hashed; no original RAW or native gather is
+used. Generated controls take13.031s and the real proxy pilot8.344s including
+setup, operational readings rather than speed benchmarks. See
+`experiments/marigold-raft-translation/independent-results.md` and
+`independent-pilot-results.md`. No threshold, checkpoint, source-subset or mask
+rescue is authorized within that fixed proposal.
+
+The separate composite-reference question uses the current
+complete composite against fixed sources112,152,320 across the focus sweep.
+Earlier ORB/ECC composite registration failed on whole source sets; that is not
+evidence for learned residual registration after the current maps. A localized
+duplicate-edge control now passes by recovering its known translation, rather
+than by refusal: clean forward/reverse errors0.01430/0.23425 native pixels,
+contaminated0.02638/0.25095. All three real pairs then fail both directional
+consistency judges. Their forward cycle errors are1.970,1.615,14.010 native
+pixels; source320 also exceeds the4-pixel translation bound. No native render,
+subset selection or dense-field rescue follows. This closes the fixed constant
+translation proposal, not learned dense registration in general. See
+`experiments/marigold-composite-registration/independent-results.md`.
 
 September 25 checkpoint: the new marigold and mineral complaints now drive the
 queue. Complete 488-source marigold and 207-source ore trials of the unchanged

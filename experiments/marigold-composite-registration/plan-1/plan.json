@@ -1,0 +1,212 @@
+{
+  "schema": 1,
+  "indices": [
+    112,
+    152,
+    320
+  ],
+  "anchor": null,
+  "global_reference": 244,
+  "source_count": 488,
+  "native_wh": [
+    6268,
+    4176
+  ],
+  "proxy_wh": [
+    880,
+    586
+  ],
+  "source_proxy_wh": [
+    988,
+    658
+  ],
+  "native_support": [
+    3226,
+    2996,
+    392,
+    392
+  ],
+  "native_interior": [
+    3258,
+    3028,
+    328,
+    328
+  ],
+  "frames": [
+    {
+      "index": 112,
+      "retained_tiff": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00112.tiff",
+        "bytes": 197801326,
+        "sha256": "6ab1f1d8a7148b7197e334344293a565d66ec60fb13b164deb881dfc24618819"
+      },
+      "original_identity_only": {
+        "index": 112,
+        "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00133.ARW",
+        "identity_name": "frame-00112.ARW",
+        "bytes": 37437440,
+        "sha256": "d61479b87463522b43dea20cddd94c7af15b4080545b993794e799f15da028c7",
+        "mtime_ns": 1790056962560000000
+      },
+      "transform_bits": [
+        "3ff0ebc8b0344b86",
+        "bf60e4c4bfb09998",
+        "c0011d7c76c58d7d",
+        "3ff6d43db865e718"
+      ],
+      "transform": [
+        1.0575644381503664,
+        -0.0020622103452467393,
+        -2.139397552398519,
+        1.4268166735695953
+      ],
+      "native_coordinate_sha256": "1d90f62ba1be72f0241c009ab2587dd204e6000ec8c2638029933edfa75ac041",
+      "remap_f32_coordinate_sha256": "81d245efcc54af2cd06a1a1290137d95f606c38d4b48057f5caa877617870421"
+    },
+    {
+      "index": 152,
+      "retained_tiff": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00152.tiff",
+        "bytes": 197801326,
+        "sha256": "4ec51a3083f355a6fa0edc0048a35b274141c3dc17b5b09e4c629bb0977e2249"
+      },
+      "original_identity_only": {
+        "index": 152,
+        "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00173.ARW",
+        "identity_name": "frame-00152.ARW",
+        "bytes": 37449728,
+        "sha256": "fc268680728e15ee76c2fb117046a5a3282e1f4fc12b3c928a8c7456ef012d38",
+        "mtime_ns": 1790057012970000000
+      },
+      "transform_bits": [
+        "3ff0a199768e5eaa",
+        "bf579bfed092f247",
+        "bff8bd6336391f2c",
+        "3fb1a9eeb08ab180"
+      ],
+      "transform": [
+        1.0394529944514184,
+        -0.0014410007882325203,
+        -1.5462371938792314,
+        0.0689992123613532
+      ],
+      "native_coordinate_sha256": "442130d1b76378bff4ccb907103262cf980e529fb6eacaf28035df88040182a1",
+      "remap_f32_coordinate_sha256": "023545ffd8aa155d9563ac16c0dcd2fc3ec7c4074ba44b933aeb928fd9f158cf"
+    },
+    {
+      "index": 320,
+      "retained_tiff": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00320.tiff",
+        "bytes": 197801326,
+        "sha256": "7a0ed765b0afddee9db61c176115b1786f387ffe86038f951c03198ed6ca90e7"
+      },
+      "original_identity_only": {
+        "index": 320,
+        "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00042.ARW",
+        "identity_name": "frame-00320.ARW",
+        "bytes": 37552128,
+        "sha256": "ff52e26157c3ed95d7a2a14ffd1e215538f5b030e915c82fd198523e55b5485f",
+        "mtime_ns": 1790057311440000000
+      },
+      "transform_bits": [
+        "3feef9d8c83c680c",
+        "3f506e661f3e449c",
+        "bfde8b70f9401718",
+        "3fc3bf501efa47a0"
+      ],
+      "transform": [
+        0.9679988776072164,
+        0.0010028836522660073,
+        -0.4772608217320893,
+        0.15427590859013396
+      ],
+      "native_coordinate_sha256": "b6eae97dc208ae97b722479a9828153ff32596e67c05e84a57df67a455456043",
+      "remap_f32_coordinate_sha256": "67934e8c5f2ac2e336e87ec14a5847ec4f08d7953fa5c295b7000c020203523a"
+    }
+  ],
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\flower-marigold-cpl\\stack-4\\alignment.txt",
+    "bytes": 66293,
+    "sha256": "d2eb0815191279f9d6fc529d76142e56989d4afdcbc052088ef4e7da530b58c1"
+  },
+  "recipe": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\recipes\\marigold-4.json",
+    "bytes": 142365,
+    "sha256": "c98f715ee16352e0f5591768bfdf6506fcf22cdbd58764bf3d57a938cf8b0f08"
+  },
+  "development": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\receipt.json",
+    "bytes": 589970,
+    "sha256": "5b606c6b4bbe8eb4684b323f14d96d38ea51307815e95f57419865e8c225b610"
+  },
+  "completion": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\development-complete.json",
+    "bytes": 520,
+    "sha256": "d874d0e77dd1f677284e150f76b44909a656271ece182cb4d1e7578f9c042dd9"
+  },
+  "fixed": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\fixed.json",
+    "bytes": 3264,
+    "sha256": "817592e810e3bf8cd25d5b7f7c48098835b6469536f65a40e79a412629f4b202"
+  },
+  "original_order": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\inputs.json",
+    "bytes": 153127,
+    "sha256": "f908ae9b66514cea9a4503d50eb97843a37869a37bdbe53b1ec090b922ac5e57"
+  },
+  "retained_after": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\helicon-b\\inputs-after.json",
+    "bytes": 124445,
+    "sha256": "fe7f5681ac2518d2047dcb708d4174a0e34ad72d6d4720fc2c0161a7427568e6"
+  },
+  "no_original_raw_reads": true,
+  "original_metadata_not_rechecked": true,
+  "no_native_quality_claim": true,
+  "reference_kind": "current_complete_composite",
+  "current": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate.tiff",
+    "sha256": "19e657e419d52adf567ec86472f917ad9b9abfc9b0812131e9bba0eacbae462f",
+    "bytes": 157055880
+  },
+  "current_remapping": false,
+  "current_proxy": "RGB16 INTER_AREA directly to880x586, then f32/65535",
+  "reference_destination_linear_map": [
+    1.0,
+    0.0
+  ],
+  "current_and_source_development_resolved": {
+    "ceiling_bits": [
+      1067682475,
+      1061256642,
+      1072945436
+    ],
+    "exposure_gain_bits": 1060439283,
+    "matrix_bits": [
+      [
+        1070688889,
+        3202724187,
+        3191861519
+      ],
+      [
+        3186350977,
+        1069455000,
+        3200213889
+      ],
+      [
+        3147518954,
+        3198529296,
+        1068107544
+      ]
+    ],
+    "sensor_top_bits": 1064271804,
+    "srgb": true,
+    "tone_bits": [
+      1008079930,
+      1049460607,
+      1057803469
+    ],
+    "wants_tone": true
+  },
+  "all_three_or_stop": true,
+  "previous_local_activity_refusal_preserved": true
+}

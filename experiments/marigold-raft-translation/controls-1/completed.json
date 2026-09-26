@@ -1,0 +1,16 @@
+{
+  "phase": "controls",
+  "process_completed": true,
+  "sources_unchanged": true,
+  "upstream_manifest": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\upstream-2\\manifest.json",
+    "bytes": 5378,
+    "sha256": "c323cb791ed44cfaeb3e117fa3cded4cb2277c85e282a9e88edc73565f367244"
+  },
+  "result": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\controls-1\\output\\controls.json",
+    "bytes": 11386,
+    "sha256": "e67b6a91f65a29c3004b03eed153428e87256ab8a462d40ab1c9f611449796b7"
+  },
+  "photographic_quality_admitted": false
+}

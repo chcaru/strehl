@@ -1,0 +1,785 @@
+{
+  "schema": 1,
+  "status": "COMPOSITE_PILOT_REFUSED",
+  "all_three_admitted": false,
+  "at_least_one_translation_ge_half_native": true,
+  "pilot_eligible_for_review": false,
+  "pairs": [
+    {
+      "index": 112,
+      "source_a": [
+        1.0575644381503664,
+        -0.0020622103452467393
+      ],
+      "reverse_destination_a": [
+        1.0,
+        0.0
+      ],
+      "reduction": {
+        "native_median": [
+          -1.6806653487750074,
+          -2.8719516113756463
+        ],
+        "median_proxy": [
+          -0.23595812171697617,
+          -0.4030085355043411
+        ],
+        "source_native_translation": [
+          -1.7833344736200571,
+          -3.0338080068103834
+        ],
+        "interior_count": 2162,
+        "componentwise_unweighted_median": true,
+        "learned_spatial_variation_discarded": true
+      },
+      "judge": {
+        "admitted": false,
+        "reasons": [
+          "within_field_spread",
+          "quadrant_disagreement",
+          "median_forward_backward_closure",
+          "sampled_forward_backward_cycle"
+        ],
+        "native_median": [
+          -1.6806653487750074,
+          -2.8719516113756463
+        ],
+        "reverse_native_median": [
+          1.1101023108783092,
+          3.701205844358373
+        ],
+        "source_native_translation": [
+          -1.7833344736200571,
+          -3.0338080068103834
+        ],
+        "forward": {
+          "p90_deviation_native": 0.2496068135471449,
+          "quadrant_medians_native": [
+            [
+              -1.6641832953826947,
+              -2.7531404662050893
+            ],
+            [
+              -1.6852456339380957,
+              -3.0064273515252125
+            ],
+            [
+              -1.8022297330877997,
+              -2.8713703281643452
+            ],
+            [
+              -1.5846915280277079,
+              -2.9293284269729982
+            ]
+          ],
+          "quadrant_max_distance_native": 0.25416110713598866
+        },
+        "reverse": {
+          "p90_deviation_native": 1.128372683111897,
+          "quadrant_medians_native": [
+            [
+              1.145255968990651,
+              3.862625664818409
+            ],
+            [
+              0.7364405362104827,
+              3.5849445297449525
+            ],
+            [
+              1.36824106706137,
+              4.646915613180949
+            ],
+            [
+              1.0544110550799153,
+              3.577717248897097
+            ]
+          ],
+          "quadrant_max_distance_native": 1.23570000114821
+        },
+        "median_closure_native": 1.0065807285725668,
+        "cycle_p90_native": 1.9699000746043847,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "reverse_judge": {
+        "admitted": false,
+        "reasons": [
+          "within_field_spread",
+          "quadrant_disagreement",
+          "median_forward_backward_closure",
+          "sampled_forward_backward_cycle"
+        ],
+        "native_median": [
+          1.1101023108783092,
+          3.701205844358373
+        ],
+        "reverse_native_median": [
+          -1.6806653487750074,
+          -2.8719516113756463
+        ],
+        "source_native_translation": [
+          1.1101023108783092,
+          3.701205844358373
+        ],
+        "forward": {
+          "p90_deviation_native": 1.128372683111897,
+          "quadrant_medians_native": [
+            [
+              1.145255968990651,
+              3.862625664818409
+            ],
+            [
+              0.7364405362104827,
+              3.5849445297449525
+            ],
+            [
+              1.36824106706137,
+              4.646915613180949
+            ],
+            [
+              1.0544110550799153,
+              3.577717248897097
+            ]
+          ],
+          "quadrant_max_distance_native": 1.23570000114821
+        },
+        "reverse": {
+          "p90_deviation_native": 0.2496068135471449,
+          "quadrant_medians_native": [
+            [
+              -1.6641832953826947,
+              -2.7531404662050893
+            ],
+            [
+              -1.6852456339380957,
+              -3.0064273515252125
+            ],
+            [
+              -1.8022297330877997,
+              -2.8713703281643452
+            ],
+            [
+              -1.5846915280277079,
+              -2.9293284269729982
+            ]
+          ],
+          "quadrant_max_distance_native": 0.25416110713598866
+        },
+        "median_closure_native": 1.0065807285725668,
+        "cycle_p90_native": 1.9644065065044143,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "admitted": false,
+      "forward": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\flow-current-to-112.npy",
+        "bytes": 4125568,
+        "sha256": "405304e9583cfc64745249e49184ea9df468a6fcd5c6be1854d720675e6b4844"
+      },
+      "reverse": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\flow-112-to-current.npy",
+        "bytes": 4125568,
+        "sha256": "b1caf739a8edf6b02456327f1d21597aeb39792256ab8f7ccea191819db3e051"
+      }
+    },
+    {
+      "index": 152,
+      "source_a": [
+        1.0394529944514184,
+        -0.0014410007882325203
+      ],
+      "reverse_destination_a": [
+        1.0,
+        0.0
+      ],
+      "reduction": {
+        "native_median": [
+          -0.5014920043674382,
+          -0.1579624583035606
+        ],
+        "median_proxy": [
+          -0.07040730118751526,
+          -0.02216618787497282
+        ],
+        "source_native_translation": [
+          -0.5215049896601041,
+          -0.1634718999209576
+        ],
+        "interior_count": 2162,
+        "componentwise_unweighted_median": true,
+        "learned_spatial_variation_discarded": true
+      },
+      "judge": {
+        "admitted": false,
+        "reasons": [
+          "within_field_spread",
+          "quadrant_disagreement",
+          "median_forward_backward_closure",
+          "sampled_forward_backward_cycle"
+        ],
+        "native_median": [
+          -0.5014920043674382,
+          -0.1579624583035606
+        ],
+        "reverse_native_median": [
+          0.1264382242606106,
+          0.7102370529654898
+        ],
+        "source_native_translation": [
+          -0.5215049896601041,
+          -0.1634718999209576
+        ],
+        "forward": {
+          "p90_deviation_native": 0.7013842186191216,
+          "quadrant_medians_native": [
+            [
+              0.09142845462669025,
+              0.017179281949844378
+            ],
+            [
+              -0.7163213832811876,
+              -0.1187784519720403
+            ],
+            [
+              -0.3877099230377511,
+              -0.18873416484927968
+            ],
+            [
+              -0.6686592783778905,
+              -0.2352983786791258
+            ]
+          ],
+          "quadrant_max_distance_native": 0.8191119008129334
+        },
+        "reverse": {
+          "p90_deviation_native": 1.3666268334648006,
+          "quadrant_medians_native": [
+            [
+              0.011609817106827076,
+              1.04744702048676
+            ],
+            [
+              -0.5005903713405132,
+              0.939400499184384
+            ],
+            [
+              0.8601447201757267,
+              0.16857619967578624
+            ],
+            [
+              0.3682628820734945,
+              0.4481980271713726
+            ]
+          ],
+          "quadrant_max_distance_native": 1.563895805351696
+        },
+        "median_closure_native": 0.6675871223154465,
+        "cycle_p90_native": 1.6152321933971259,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "reverse_judge": {
+        "admitted": false,
+        "reasons": [
+          "within_field_spread",
+          "quadrant_disagreement",
+          "median_forward_backward_closure",
+          "sampled_forward_backward_cycle"
+        ],
+        "native_median": [
+          0.1264382242606106,
+          0.7102370529654898
+        ],
+        "reverse_native_median": [
+          -0.5014920043674382,
+          -0.1579624583035606
+        ],
+        "source_native_translation": [
+          0.1264382242606106,
+          0.7102370529654898
+        ],
+        "forward": {
+          "p90_deviation_native": 1.3666268334648006,
+          "quadrant_medians_native": [
+            [
+              0.011609817106827076,
+              1.04744702048676
+            ],
+            [
+              -0.5005903713405132,
+              0.939400499184384
+            ],
+            [
+              0.8601447201757267,
+              0.16857619967578624
+            ],
+            [
+              0.3682628820734945,
+              0.4481980271713726
+            ]
+          ],
+          "quadrant_max_distance_native": 1.563895805351696
+        },
+        "reverse": {
+          "p90_deviation_native": 0.7013842186191216,
+          "quadrant_medians_native": [
+            [
+              0.09142845462669025,
+              0.017179281949844378
+            ],
+            [
+              -0.7163213832811876,
+              -0.1187784519720403
+            ],
+            [
+              -0.3877099230377511,
+              -0.18873416484927968
+            ],
+            [
+              -0.6686592783778905,
+              -0.2352983786791258
+            ]
+          ],
+          "quadrant_max_distance_native": 0.8191119008129334
+        },
+        "median_closure_native": 0.6675871223154465,
+        "cycle_p90_native": 1.6108388634882975,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "admitted": false,
+      "forward": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\flow-current-to-152.npy",
+        "bytes": 4125568,
+        "sha256": "8a85ee421d29ced24b3a7e36aea722dd61989207b5f00faac5b4b48e10296fc0"
+      },
+      "reverse": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\flow-152-to-current.npy",
+        "bytes": 4125568,
+        "sha256": "1f0e9efd473a400e703c8846eb67074df92adab365e340903464c722e10e79b8"
+      }
+    },
+    {
+      "index": 320,
+      "source_a": [
+        0.9679988776072164,
+        0.0010028836522660073
+      ],
+      "reverse_destination_a": [
+        1.0,
+        0.0
+      ],
+      "reduction": {
+        "native_median": [
+          -4.791598438539288,
+          -0.12505285815675918
+        ],
+        "median_proxy": [
+          -0.6727196276187897,
+          -0.01754812616854906
+        ],
+        "source_native_translation": [
+          -4.638136496983407,
+          -0.1258564420795517
+        ],
+        "interior_count": 2162,
+        "componentwise_unweighted_median": true,
+        "learned_spatial_variation_discarded": true
+      },
+      "judge": {
+        "admitted": false,
+        "reasons": [
+          "source_translation_bound",
+          "within_field_spread",
+          "quadrant_disagreement",
+          "median_forward_backward_closure",
+          "sampled_forward_backward_cycle"
+        ],
+        "native_median": [
+          -4.791598438539287,
+          -0.12505285815675918
+        ],
+        "reverse_native_median": [
+          1.9078756509856742,
+          7.551465276972019
+        ],
+        "source_native_translation": [
+          -4.638136496983406,
+          -0.12585644207955168
+        ],
+        "forward": {
+          "p90_deviation_native": 14.52814944221621,
+          "quadrant_medians_native": [
+            [
+              -5.203629129718649,
+              1.2943349588446242
+            ],
+            [
+              7.445717165145006,
+              0.10735681825937265
+            ],
+            [
+              -7.004000193287025,
+              -0.9679431083259322
+            ],
+            [
+              -5.014146093346856,
+              -0.6271451186808303
+            ]
+          ],
+          "quadrant_max_distance_native": 14.489672241658413
+        },
+        "reverse": {
+          "p90_deviation_native": 6.2815622876746655,
+          "quadrant_medians_native": [
+            [
+              2.687102044170553,
+              8.042637060119837
+            ],
+            [
+              2.2410468323664228,
+              5.58930673696889
+            ],
+            [
+              -1.6829287183217025,
+              7.970783913908559
+            ],
+            [
+              2.7250179683620277,
+              6.758573738788176
+            ]
+          ],
+          "quadrant_max_distance_native": 4.590099962602417
+        },
+        "median_closure_native": 7.96664663015685,
+        "cycle_p90_native": 14.01030287946473,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "reverse_judge": {
+        "admitted": false,
+        "reasons": [
+          "source_translation_bound",
+          "within_field_spread",
+          "quadrant_disagreement",
+          "median_forward_backward_closure",
+          "sampled_forward_backward_cycle"
+        ],
+        "native_median": [
+          1.9078756509856742,
+          7.551465276972019
+        ],
+        "reverse_native_median": [
+          -4.791598438539287,
+          -0.12505285815675918
+        ],
+        "source_native_translation": [
+          1.9078756509856742,
+          7.551465276972019
+        ],
+        "forward": {
+          "p90_deviation_native": 6.2815622876746655,
+          "quadrant_medians_native": [
+            [
+              2.687102044170553,
+              8.042637060119837
+            ],
+            [
+              2.2410468323664228,
+              5.58930673696889
+            ],
+            [
+              -1.6829287183217025,
+              7.970783913908559
+            ],
+            [
+              2.7250179683620277,
+              6.758573738788176
+            ]
+          ],
+          "quadrant_max_distance_native": 4.590099962602417
+        },
+        "reverse": {
+          "p90_deviation_native": 14.52814944221621,
+          "quadrant_medians_native": [
+            [
+              -5.203629129718649,
+              1.2943349588446242
+            ],
+            [
+              7.445717165145006,
+              0.10735681825937265
+            ],
+            [
+              -7.004000193287025,
+              -0.9679431083259322
+            ],
+            [
+              -5.014146093346856,
+              -0.6271451186808303
+            ]
+          ],
+          "quadrant_max_distance_native": 14.489672241658413
+        },
+        "median_closure_native": 7.96664663015685,
+        "cycle_p90_native": 14.218607234078167,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "admitted": false,
+      "forward": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\flow-current-to-320.npy",
+        "bytes": 4125568,
+        "sha256": "872331beadfb9cbb091dddc9173422de2ff3084a70325db10e494e8181781fee"
+      },
+      "reverse": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\flow-320-to-current.npy",
+        "bytes": 4125568,
+        "sha256": "866028223fa0b35a4eb4cac1d4dd78a2618f5fdf174275adea6fc6552ffa05e7"
+      }
+    }
+  ],
+  "frames": [
+    {
+      "index": 112,
+      "retained_tiff": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00112.tiff",
+        "bytes": 197801326,
+        "sha256": "6ab1f1d8a7148b7197e334344293a565d66ec60fb13b164deb881dfc24618819"
+      },
+      "original_identity_only": {
+        "index": 112,
+        "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00133.ARW",
+        "identity_name": "frame-00112.ARW",
+        "bytes": 37437440,
+        "sha256": "d61479b87463522b43dea20cddd94c7af15b4080545b993794e799f15da028c7",
+        "mtime_ns": 1790056962560000000
+      },
+      "transform_bits": [
+        "3ff0ebc8b0344b86",
+        "bf60e4c4bfb09998",
+        "c0011d7c76c58d7d",
+        "3ff6d43db865e718"
+      ],
+      "transform": [
+        1.0575644381503664,
+        -0.0020622103452467393,
+        -2.139397552398519,
+        1.4268166735695953
+      ],
+      "native_coordinate_sha256": "1d90f62ba1be72f0241c009ab2587dd204e6000ec8c2638029933edfa75ac041",
+      "remap_f32_coordinate_sha256": "81d245efcc54af2cd06a1a1290137d95f606c38d4b48057f5caa877617870421",
+      "proxy": {
+        "array": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\proxy-112-rgb.npy",
+          "bytes": 6188288,
+          "sha256": "283d0ad656d2d1b3e12b8af9449a2ea09c685a0a5312bf945b16096638aa3b44"
+        },
+        "display": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\proxy-112.png",
+          "bytes": 1798075,
+          "sha256": "5d7a3114c8f74d165b1367715e08d9c0cec087fbd8c1ac107cc82ab73a1a094c"
+        }
+      },
+      "coordinates": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\proxy-112-coordinates.npz",
+        "bytes": 12376844,
+        "sha256": "c535ef2bcfcd408cff8de6c521972a255378d8f2ce23c91d60a59bbd0883480c"
+      },
+      "coordinate_summary": {
+        "native_coordinate_sha256": "1d90f62ba1be72f0241c009ab2587dd204e6000ec8c2638029933edfa75ac041",
+        "remap_f32_coordinate_sha256": "81d245efcc54af2cd06a1a1290137d95f606c38d4b48057f5caa877617870421",
+        "native_min_xy": [
+          196.25226668400057,
+          135.4439625141648
+        ],
+        "native_max_xy": [
+          6826.130516457909,
+          4557.20780195231
+        ],
+        "remap_min_xy": [
+          27.1438045501709,
+          18.58087158203125
+        ],
+        "remap_max_xy": [
+          958.6454467773438,
+          639.21240234375
+        ],
+        "all_bilinear_support_valid": true
+      },
+      "source_metadata_unchanged": true,
+      "source_mtime_ns": 1790406308753322300
+    },
+    {
+      "index": 152,
+      "retained_tiff": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00152.tiff",
+        "bytes": 197801326,
+        "sha256": "4ec51a3083f355a6fa0edc0048a35b274141c3dc17b5b09e4c629bb0977e2249"
+      },
+      "original_identity_only": {
+        "index": 152,
+        "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00173.ARW",
+        "identity_name": "frame-00152.ARW",
+        "bytes": 37449728,
+        "sha256": "fc268680728e15ee76c2fb117046a5a3282e1f4fc12b3c928a8c7456ef012d38",
+        "mtime_ns": 1790057012970000000
+      },
+      "transform_bits": [
+        "3ff0a199768e5eaa",
+        "bf579bfed092f247",
+        "bff8bd6336391f2c",
+        "3fb1a9eeb08ab180"
+      ],
+      "transform": [
+        1.0394529944514184,
+        -0.0014410007882325203,
+        -1.5462371938792314,
+        0.0689992123613532
+      ],
+      "native_coordinate_sha256": "442130d1b76378bff4ccb907103262cf980e529fb6eacaf28035df88040182a1",
+      "remap_f32_coordinate_sha256": "023545ffd8aa155d9563ac16c0dcd2fc3ec7c4074ba44b933aeb928fd9f158cf",
+      "proxy": {
+        "array": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\proxy-152-rgb.npy",
+          "bytes": 6188288,
+          "sha256": "599fda5f9c2660ed4b4d4d53dc0c41085c947215d8b8e77e55a3d07c00957849"
+        },
+        "display": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\proxy-152.png",
+          "bytes": 1809533,
+          "sha256": "21bf430f2d67560e0957e0706b2bfa0ab68ac27c73b928d89786725029f1b6a8"
+        }
+      },
+      "coordinates": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\proxy-152-coordinates.npz",
+        "bytes": 12376844,
+        "sha256": "d1d3a403a2f17a3d58671a196c33e184ef1c7d7073833c16f333715091f5c286"
+      },
+      "coordinate_summary": {
+        "native_coordinate_sha256": "442130d1b76378bff4ccb907103262cf980e529fb6eacaf28035df88040182a1",
+        "remap_f32_coordinate_sha256": "023545ffd8aa155d9563ac16c0dcd2fc3ec7c4074ba44b933aeb928fd9f158cf",
+        "native_min_xy": [
+          255.439588941646,
+          172.43389194251347
+        ],
+        "native_max_xy": [
+          6769.334568287597,
+          4514.804092913269
+        ],
+        "remap_min_xy": [
+          35.459659576416016,
+          23.77271842956543
+        ],
+        "remap_max_xy": [
+          950.6655883789062,
+          633.2606811523438
+        ],
+        "all_bilinear_support_valid": true
+      },
+      "source_metadata_unchanged": true,
+      "source_mtime_ns": 1790406329401322900
+    },
+    {
+      "index": 320,
+      "retained_tiff": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00320.tiff",
+        "bytes": 197801326,
+        "sha256": "7a0ed765b0afddee9db61c176115b1786f387ffe86038f951c03198ed6ca90e7"
+      },
+      "original_identity_only": {
+        "index": 320,
+        "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00042.ARW",
+        "identity_name": "frame-00320.ARW",
+        "bytes": 37552128,
+        "sha256": "ff52e26157c3ed95d7a2a14ffd1e215538f5b030e915c82fd198523e55b5485f",
+        "mtime_ns": 1790057311440000000
+      },
+      "transform_bits": [
+        "3feef9d8c83c680c",
+        "3f506e661f3e449c",
+        "bfde8b70f9401718",
+        "3fc3bf501efa47a0"
+      ],
+      "transform": [
+        0.9679988776072164,
+        0.0010028836522660073,
+        -0.4772608217320893,
+        0.15427590859013396
+      ],
+      "native_coordinate_sha256": "b6eae97dc208ae97b722479a9828153ff32596e67c05e84a57df67a455456043",
+      "remap_f32_coordinate_sha256": "67934e8c5f2ac2e336e87ec14a5847ec4f08d7953fa5c295b7000c020203523a",
+      "proxy": {
+        "array": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\proxy-320-rgb.npy",
+          "bytes": 6188288,
+          "sha256": "c28191d0f4e2504c5de4dd887e39f3b4d1489661c78635e9de9447f6fefffd7f"
+        },
+        "display": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\proxy-320.png",
+          "bytes": 1821770,
+          "sha256": "b12b2df368ecf84877e1bf39ca789a3a29a80b8f08b25bf78871d40966874e22"
+        }
+      },
+      "coordinates": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\proxy-320-coordinates.npz",
+        "bytes": 12376844,
+        "sha256": "5b676d4f675421a8da9b73fc0f43d875145d850b05e7259997bcfb5d268003fd"
+      },
+      "coordinate_summary": {
+        "native_coordinate_sha256": "b6eae97dc208ae97b722479a9828153ff32596e67c05e84a57df67a455456043",
+        "remap_f32_coordinate_sha256": "67934e8c5f2ac2e336e87ec14a5847ec4f08d7953fa5c295b7000c020203523a",
+        "native_min_xy": [
+          482.21044629015006,
+          322.95204421453434
+        ],
+        "native_max_xy": [
+          6546.913514428965,
+          4364.696057658567
+        ],
+        "remap_min_xy": [
+          67.32109069824219,
+          44.899200439453125
+        ],
+        "remap_max_xy": [
+          919.4153442382812,
+          612.1917724609375
+        ],
+        "all_bilinear_support_valid": true
+      },
+      "source_metadata_unchanged": true,
+      "source_mtime_ns": 1790406417069086100
+    }
+  ],
+  "current": {
+    "identity": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate.tiff",
+      "sha256": "19e657e419d52adf567ec86472f917ad9b9abfc9b0812131e9bba0eacbae462f",
+      "bytes": 157055880
+    },
+    "proxy": {
+      "array": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\current-rgb.npy",
+        "bytes": 6188288,
+        "sha256": "2680b34f7b756c98e5a6d53e3053720712584b31ae90bb031ffac441458f8748"
+      },
+      "display": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-composite-registration\\pilot-1\\output\\current.png",
+        "bytes": 1979795,
+        "sha256": "09d119f1b38f924a2e4d6e2f4813d6af6f300cd39103a15c11f7996944ddfc45"
+      }
+    },
+    "source_metadata_unchanged": true,
+    "mtime_ns": 1790359680358405800,
+    "no_mapping_or_crop_applied": true
+  },
+  "model_calls": 6,
+  "original_raw_read": false,
+  "native_hook_config_emitted": false,
+  "native_quality_admitted": false,
+  "all_selected_tiffs_freshly_content_hashed": true,
+  "all488_tiffs_rehashed": false,
+  "geometry_truth_claim": false,
+  "learned_spatial_variation_discarded": true,
+  "limitation": "Current CA-on composite versus CA-off source RGB proxies; composite artifacts can contaminate matching; no native quality claim"
+}

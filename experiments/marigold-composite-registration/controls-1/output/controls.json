@@ -1,0 +1,323 @@
+{
+  "schema": 1,
+  "mechanical_pass": true,
+  "passed": true,
+  "inference_calls": 4,
+  "cases": [
+    {
+      "name": "clean",
+      "passed": true,
+      "forward_judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          2.2357699176127257,
+          -1.7486167084234974
+        ],
+        "reverse_native_median": [
+          -2.043845944648439,
+          1.6387719151916764
+        ],
+        "source_native_translation": [
+          2.4132572123466987,
+          -1.8441906390017897
+        ],
+        "forward": {
+          "p90_deviation_native": 0.055374127183335564,
+          "quadrant_medians_native": [
+            [
+              2.2552040098743005,
+              -1.764706859206177
+            ],
+            [
+              2.2592941017313435,
+              -1.7557759215807347
+            ],
+            [
+              2.198687486553734,
+              -1.7279422889390497
+            ],
+            [
+              2.2261632538654585,
+              -1.735929251937736
+            ]
+          ],
+          "quadrant_max_distance_native": 0.06742218503705363
+        },
+        "reverse": {
+          "p90_deviation_native": 0.04449522661638682,
+          "quadrant_medians_native": [
+            [
+              -2.043294881826097,
+              1.6402219906195032
+            ],
+            [
+              -2.0237446757880124,
+              1.6282508377329075
+            ],
+            [
+              -2.0589549579403617,
+              1.670194658403104
+            ],
+            [
+              -2.0465961641886015,
+              1.635124824966587
+            ]
+          ],
+          "quadrant_max_distance_native": 0.05476356509269322
+        },
+        "median_closure_native": 0.22113500401007907,
+        "cycle_p90_native": 0.2930801933936104,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "reverse_judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          -2.043845944648439,
+          1.6387719151916764
+        ],
+        "reverse_native_median": [
+          2.2357699176127257,
+          -1.7486167084234974
+        ],
+        "source_native_translation": [
+          -2.043845944648439,
+          1.6387719151916764
+        ],
+        "forward": {
+          "p90_deviation_native": 0.04449522661638682,
+          "quadrant_medians_native": [
+            [
+              -2.043294881826097,
+              1.6402219906195032
+            ],
+            [
+              -2.0237446757880124,
+              1.6282508377329075
+            ],
+            [
+              -2.0589549579403617,
+              1.670194658403104
+            ],
+            [
+              -2.0465961641886015,
+              1.635124824966587
+            ]
+          ],
+          "quadrant_max_distance_native": 0.05476356509269322
+        },
+        "reverse": {
+          "p90_deviation_native": 0.055374127183335564,
+          "quadrant_medians_native": [
+            [
+              2.2552040098743005,
+              -1.764706859206177
+            ],
+            [
+              2.2592941017313435,
+              -1.7557759215807347
+            ],
+            [
+              2.198687486553734,
+              -1.7279422889390497
+            ],
+            [
+              2.2261632538654585,
+              -1.735929251937736
+            ]
+          ],
+          "quadrant_max_distance_native": 0.06742218503705363
+        },
+        "median_closure_native": 0.22113500401007907,
+        "cycle_p90_native": 0.29293883479263055,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "truth_output_native": [
+        2.25,
+        -1.75
+      ],
+      "truth_source_native": [
+        2.4285,
+        -1.8455
+      ],
+      "truth_error_native": [
+        0.01429715847062756,
+        0.2342459847852723
+      ],
+      "inputs_sha256": [
+        "3d24e19f002d3e60f70eab7fdcf8306db40980d37362f31ca7e2681854196f34",
+        "8eec7d0bddfe992e8f8ad0ac1775e3b35fdafbada7eb6f91999f428139fff2b4"
+      ],
+      "flows_sha256": [
+        "98fcb413267a010451b030addfc9ca6780132169f4ce4334a8a495cf429122f6",
+        "8915e3329bc7292a775f1b1cade97a5693da497bebf1248f699fc3b5daf5f2cd"
+      ]
+    },
+    {
+      "name": "contaminated",
+      "passed": true,
+      "forward_judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          2.227259966527874,
+          -1.763371681190595
+        ],
+        "reverse_native_median": [
+          -2.0277867937629868,
+          1.633386815774156
+        ],
+        "source_native_translation": [
+          2.4043286243591124,
+          -1.8600805792756023
+        ],
+        "forward": {
+          "p90_deviation_native": 0.06363875525205007,
+          "quadrant_medians_native": [
+            [
+              2.2476199971681288,
+              -1.7948439088697727
+            ],
+            [
+              2.2384254630316387,
+              -1.77213754670205
+            ],
+            [
+              2.1902365475893015,
+              -1.7510767554667215
+            ],
+            [
+              2.210244203697551,
+              -1.7280017552522264
+            ]
+          ],
+          "quadrant_max_distance_native": 0.07658213523914655
+        },
+        "reverse": {
+          "p90_deviation_native": 0.053214000871471975,
+          "quadrant_medians_native": [
+            [
+              -2.0276209017769853,
+              1.625089035099277
+            ],
+            [
+              -1.9957716570659116,
+              1.6172987356934532
+            ],
+            [
+              -2.0368506733666765,
+              1.6641778886928495
+            ],
+            [
+              -2.031603052399375,
+              1.635473021468205
+            ]
+          ],
+          "quadrant_max_distance_native": 0.06233089575948124
+        },
+        "median_closure_native": 0.23808740388819452,
+        "cycle_p90_native": 0.31225400614563903,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "reverse_judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          -2.0277867937629868,
+          1.633386815774156
+        ],
+        "reverse_native_median": [
+          2.227259966527874,
+          -1.763371681190595
+        ],
+        "source_native_translation": [
+          -2.0277867937629868,
+          1.633386815774156
+        ],
+        "forward": {
+          "p90_deviation_native": 0.053214000871471975,
+          "quadrant_medians_native": [
+            [
+              -2.0276209017769853,
+              1.625089035099277
+            ],
+            [
+              -1.9957716570659116,
+              1.6172987356934532
+            ],
+            [
+              -2.0368506733666765,
+              1.6641778886928495
+            ],
+            [
+              -2.031603052399375,
+              1.635473021468205
+            ]
+          ],
+          "quadrant_max_distance_native": 0.06233089575948124
+        },
+        "reverse": {
+          "p90_deviation_native": 0.06363875525205007,
+          "quadrant_medians_native": [
+            [
+              2.2476199971681288,
+              -1.7948439088697727
+            ],
+            [
+              2.2384254630316387,
+              -1.77213754670205
+            ],
+            [
+              2.1902365475893015,
+              -1.7510767554667215
+            ],
+            [
+              2.210244203697551,
+              -1.7280017552522264
+            ]
+          ],
+          "quadrant_max_distance_native": 0.07658213523914655
+        },
+        "median_closure_native": 0.23808740388819452,
+        "cycle_p90_native": 0.31101938144663593,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "truth_output_native": [
+        2.25,
+        -1.75
+      ],
+      "truth_source_native": [
+        2.4285,
+        -1.8455
+      ],
+      "truth_error_native": [
+        0.026380124718741044,
+        0.2509528715942976
+      ],
+      "inputs_sha256": [
+        "b3944b029d0b2a15e52e987edbc28a73b5795f9c617b9ebfb8c3593ec2c5c712",
+        "8eec7d0bddfe992e8f8ad0ac1775e3b35fdafbada7eb6f91999f428139fff2b4"
+      ],
+      "flows_sha256": [
+        "750080da92793d5b0a4800d448e605051a7c59b1d293a89dbf16aebadc40cfb4",
+        "f9d3a0822f3b60c96932cea2795326028492019e0944587e3d00dc4d528214f9"
+      ]
+    }
+  ],
+  "contamination": {
+    "interior_rgb_rms": 0.015597379674986688,
+    "maximum": 0.10366803407669067,
+    "fraction_changed_ge_001": 0.04717853839037928,
+    "unchanged_context_fraction": 0.41720629047178537,
+    "unchanged_context_exact": true
+  },
+  "scoring_destroyers_exercised": true,
+  "actual_consumer_commissioned": false,
+  "photographic_quality_admitted": false,
+  "scope": "Localized synthetic composite contamination; generated images bypass actual TIFF staging"
+}

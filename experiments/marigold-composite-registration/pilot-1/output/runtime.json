@@ -1,0 +1,93 @@
+{
+  "torch_version": "2.11.0+cu128",
+  "torchvision_version": "0.26.0+cu128",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "cuda_version": "12.8",
+  "checkpoint_sha256": "ff5fadd56d26b40647388883af1547351ea17868b765c05b27231e72dd16a322",
+  "strict_complete_load": true,
+  "weights_only": true,
+  "floating_dtype": "float32",
+  "updates": 12,
+  "preprocessing": "official weight transform; replicate bottom6 then remove output padding",
+  "calls": [
+    {
+      "index": 0,
+      "synchronized_seconds": 0.26928179999958957,
+      "inputs_sha256": [
+        "df7496ee371170dbb1da9da09cf7f67598bf1782ec123147884cb142c1e91a13",
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4"
+      ],
+      "flow_sha256": "f77ef34acbb8a39b8db017ebcce15407895346075bd8b2d1538559f3512de307",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 777410048,
+      "gpu_peak_reserved_bytes": 922746880
+    },
+    {
+      "index": 1,
+      "synchronized_seconds": 0.05765840000094613,
+      "inputs_sha256": [
+        "698aa04587f7c4da3db64812af47cc5307085a31e531306b574d67ac7c5d2ab4",
+        "df7496ee371170dbb1da9da09cf7f67598bf1782ec123147884cb142c1e91a13"
+      ],
+      "flow_sha256": "0d397f11b21104897a87a330e11da5ee5eb7fc38f5c8f8b53175489211e54d01",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 965650432,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 2,
+      "synchronized_seconds": 0.058416899999429006,
+      "inputs_sha256": [
+        "df7496ee371170dbb1da9da09cf7f67598bf1782ec123147884cb142c1e91a13",
+        "8d6165cc04e1120f70d07fd25a6c086913cb3fc63295487c946dc7f2f0885034"
+      ],
+      "flow_sha256": "f9aeda61f869750f6e5330070a0e43d7c7ea59b31494c26312092ac31a8b050c",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 3,
+      "synchronized_seconds": 0.05837520000204677,
+      "inputs_sha256": [
+        "8d6165cc04e1120f70d07fd25a6c086913cb3fc63295487c946dc7f2f0885034",
+        "df7496ee371170dbb1da9da09cf7f67598bf1782ec123147884cb142c1e91a13"
+      ],
+      "flow_sha256": "3cfbf70c38fa84063ed0a1caed99b866ae288ad73f6df436df81299599e672ce",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 4,
+      "synchronized_seconds": 0.05885660000058124,
+      "inputs_sha256": [
+        "df7496ee371170dbb1da9da09cf7f67598bf1782ec123147884cb142c1e91a13",
+        "42c261ff66c0704e0bfaaba0f5c17e06085aa3f8e62c8575517fe0cba86a9881"
+      ],
+      "flow_sha256": "15f0e208206e02275205daea7d588cb1bfba78aadf98281c1d2525fecfe59c4b",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    },
+    {
+      "index": 5,
+      "synchronized_seconds": 0.05857109999851673,
+      "inputs_sha256": [
+        "42c261ff66c0704e0bfaaba0f5c17e06085aa3f8e62c8575517fe0cba86a9881",
+        "df7496ee371170dbb1da9da09cf7f67598bf1782ec123147884cb142c1e91a13"
+      ],
+      "flow_sha256": "b4481070c73a7ccfc282559ee11a1ecfe59d1f94e3da362c27d75c9e0f102382",
+      "input_arrays_unchanged": true,
+      "gpu_peak_allocated_bytes": 966496768,
+      "gpu_peak_reserved_bytes": 1189085184
+    }
+  ],
+  "elapsed_seconds": 5.176438199996483,
+  "checkpoint": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\upstream-2\\raft-large-c-t-skht-v2.pth",
+    "bytes": 21106607,
+    "sha256": "ff5fadd56d26b40647388883af1547351ea17868b765c05b27231e72dd16a322"
+  },
+  "observational_result": "COMPOSITE_PILOT_REFUSED"
+}

@@ -1,0 +1,97 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\operator.py",
+    "bytes": 8187,
+    "sha256": "ea6ff2af67de442d94e4561ad05514c23cf5e8e23e14ba6e7b9ee76d7d0f536e"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\run.py",
+    "bytes": 16729,
+    "sha256": "9c5f30780b9114512aed1358a7a55722ef94315f15addf3b582c481e51a6ba64"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\design.md",
+    "bytes": 5595,
+    "sha256": "1a23347f503a2a096cd3a715b72c893af5568c72be5a088935a5dae4c6d49694"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\independent-controls.py",
+    "bytes": 9605,
+    "sha256": "f404a009362532970326991e5a917ecb394ff9191ac903fa37b5d77c8899d632"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\independent-plan.md",
+    "bytes": 5136,
+    "sha256": "facd5f14e525fabbf452343ef28ae336efbcb119325a23ac3f38bdf9883b6151"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-raft-translation\\independent-review.md",
+    "bytes": 4943,
+    "sha256": "77cdb6182705580a51838c73b4bab5913d709b73084a5a6fe61a3de87af33590"
+  },
+  {
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\torchvision\\models\\optical_flow\\raft.py",
+    "bytes": 40938,
+    "sha256": "1fde82a6c39c51de67c97f241723b24cb581eac23bb71b1650c82a8c7d6376e3"
+  },
+  {
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\torchvision\\models\\optical_flow\\_utils.py",
+    "bytes": 2125,
+    "sha256": "3d172e53e201e842f784038b8b20b9abe341ce5bc829f85217f04ca651dbcdf6"
+  },
+  {
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\torchvision\\ops\\misc.py",
+    "bytes": 13907,
+    "sha256": "5630394eb6f04575d9c4b7340130199cc347f285d98f41a7d173bcbbfd97f04d"
+  },
+  {
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\torchvision\\transforms\\_presets.py",
+    "bytes": 8721,
+    "sha256": "897e4bafca99bc703e5313808c11fe8938aee66ea5da1411c0944eb31603b3fc"
+  },
+  {
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\torchvision\\transforms\\functional.py",
+    "bytes": 69447,
+    "sha256": "2ca977a68caf8ab085e4b98164983668777ee7f3601db5e5e451c483a6ebf9a9"
+  },
+  {
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\torchvision\\transforms\\_functional_tensor.py",
+    "bytes": 34888,
+    "sha256": "b59dad3c84fc96b9d4c1c16dc3feab2fd64b09b6352e4d815cf88612e3454f1b"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\run.py",
+    "bytes": 18717,
+    "sha256": "64022f1c05f4c769184cd529dac7f2e993713d1522e87f4a028d8f86e88b07c5"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\run.py",
+    "bytes": 7134,
+    "sha256": "8bb539359b1d712c5894ce43d7c7ee66f636fefa1432cdc5d53d7777c75860b0"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\run.py",
+    "bytes": 7707,
+    "sha256": "17451d237bf256004ca8853ef4c2a9e1c582012d43ad33fd687606e68a5fb76f"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run.py",
+    "bytes": 10148,
+    "sha256": "89e5939a4f9da3938f04bcb7b0f2327c4bb0cfae9da9527a5a947e69b64c08ff"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\base-band-transfer\\run.py",
+    "bytes": 10345,
+    "sha256": "eae95b4f8b5a35de6909ea7b46b0abeda3a98707949155ea722e6a393aeace0f"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+    "bytes": 12664,
+    "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+    "bytes": 117908,
+    "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+  }
+]

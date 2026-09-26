@@ -1,0 +1,403 @@
+{
+  "schema": 1,
+  "mechanical_pass": true,
+  "address_controls": {
+    "passed": true,
+    "identity_native": [
+      [
+        3516.0,
+        2344.0
+      ],
+      [
+        3616.0,
+        2544.0
+      ]
+    ],
+    "nonidentity_native": [
+      [
+        3522.0,
+        2336.0
+      ],
+      [
+        3628.25,
+        2564.125
+      ]
+    ],
+    "expected_source_vector": [
+      2.4285,
+      -1.8455
+    ],
+    "observed_source_vector": [
+      2.4284998989140965,
+      -1.8455000477206642
+    ],
+    "scope": "Coordinate/vector arithmetic only; not TIFF filtering/remap or native-gather commissioning"
+  },
+  "passed": true,
+  "controls_pass": true,
+  "inference_calls": 8,
+  "cases": [
+    {
+      "name": "flat_noise",
+      "passed": true,
+      "input_hashes": [
+        "0523e18cc7a3ab9cb79795d19f61669aaac80a653cddc35d273f8b9fdcd34afc",
+        "aa1e6700bc60ebc366a2198c02576f9691b8bbd322de1a735e9fa77cb6a609b7"
+      ],
+      "flow_hashes": [
+        "4c7ab185e6f353528c09a5f6f8c2135646ffb7f567c945a57e57cb9f2b15551b",
+        "1287f12a6c1064ce62834ef4244d513114e8ae9f64ad708596969fcc8389983d"
+      ],
+      "judge": {
+        "admitted": false,
+        "reasons": [
+          "source_translation_bound",
+          "within_field_spread",
+          "quadrant_disagreement",
+          "median_forward_backward_closure",
+          "sampled_forward_backward_cycle"
+        ],
+        "native_median": [
+          -1435.7829110232265,
+          800.8501153626946
+        ],
+        "reverse_native_median": [
+          -1378.0893200614235,
+          867.4342811766746
+        ],
+        "source_native_translation": [
+          -1545.897916179205,
+          839.6802285058045
+        ],
+        "forward": {
+          "p90_deviation_native": 209.2742263053101,
+          "quadrant_medians_native": [
+            [
+              -1356.768687577681,
+              685.8909532983148
+            ],
+            [
+              -1470.316606903076,
+              790.5899947755573
+            ],
+            [
+              -1424.127672507546,
+              804.4301369312274
+            ],
+            [
+              -1485.5400018171829,
+              865.6130216943527
+            ]
+          ],
+          "quadrant_max_distance_native": 221.0929063527789
+        },
+        "reverse": {
+          "p90_deviation_native": 228.6305171805872,
+          "quadrant_medians_native": [
+            [
+              -1191.7482604980469,
+              791.1172672831565
+            ],
+            [
+              -1554.7469440806994,
+              878.4124014271812
+            ],
+            [
+              -1262.950698887218,
+              838.8505166740549
+            ],
+            [
+              -1535.6535224220968,
+              955.7344299941341
+            ]
+          ],
+          "quadrant_max_distance_native": 381.2737067226926
+        },
+        "median_closure_native": 3271.245903414482,
+        "cycle_p90_native": null,
+        "reverse_sample_coverage": false,
+        "interior_count": 2162
+      },
+      "false_movement_native": 1759.222343363899,
+      "reverse_admitted": false,
+      "flat_registration_information_claim": false
+    },
+    {
+      "name": "fractional",
+      "passed": true,
+      "input_hashes": [
+        "30d6aaf5a364bdbfa31abe5b38751cc513c4c16471d8323ca8db9993c1f0acee",
+        "04983d43dddbe3def2c058570ebfd19fd92a7c57a113a46a031de895617f9230"
+      ],
+      "flow_hashes": [
+        "0ad6b704426ed85b3132a72732ec4c120198f9e1a9c42ff37f1e9d0d1220a0c4",
+        "03eec42d84b8bdc920901b48bd6042f05e1cf5725dd0211c0156422e3c7e20a9"
+      ],
+      "judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          2.2736189755526457,
+          -1.7674386991575717
+        ],
+        "reverse_native_median": [
+          -1.9653281956911086,
+          1.594299661218103
+        ],
+        "source_native_translation": [
+          2.453981568231222,
+          -1.86387598039197
+        ],
+        "forward": {
+          "p90_deviation_native": 0.045536315240837455,
+          "quadrant_medians_native": [
+            [
+              2.2663438212465152,
+              -1.7637547079613594
+            ],
+            [
+              2.286247144774957,
+              -1.8071676651365522
+            ],
+            [
+              2.2599051319062706,
+              -1.7663473861209362
+            ],
+            [
+              2.2773492632941763,
+              -1.7494710057261862
+            ]
+          ],
+          "quadrant_max_distance_native": 0.05837873587156371
+        },
+        "reverse": {
+          "p90_deviation_native": 0.031211450436961906,
+          "quadrant_medians_native": [
+            [
+              -1.961628050831231,
+              1.6048712319481495
+            ],
+            [
+              -1.9498581046407872,
+              1.5876212225839141
+            ],
+            [
+              -1.9697103763168506,
+              1.600040231141621
+            ],
+            [
+              -1.9807889466935937,
+              1.5826814833761482
+            ]
+          ],
+          "quadrant_max_distance_native": 0.03132280341119553
+        },
+        "median_closure_native": 0.353582142374639,
+        "cycle_p90_native": 0.40740913510520654,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "truth_output_native": [
+        2.25,
+        -1.75
+      ],
+      "truth_source_native": [
+        2.4285,
+        -1.8455
+      ],
+      "source_vector_error_native": 0.03141634884719224,
+      "truth_error_native": [
+        0.029359227416006134,
+        0.32446977003301436
+      ],
+      "reverse_admitted": true
+    },
+    {
+      "name": "static_defocus",
+      "passed": true,
+      "input_hashes": [
+        "30d6aaf5a364bdbfa31abe5b38751cc513c4c16471d8323ca8db9993c1f0acee",
+        "581ca8cb354f42c2fb2f0040f6f39cb9ea903bfe38cc3ea50b0a9535ae65f24d"
+      ],
+      "flow_hashes": [
+        "47673dcbf81689ed93d6a89535a6e2bcb1318e5c357a70621a4fe395188abcd5",
+        "f37a55fad3f1f38e09a42275502320f97ed25e15c8ba9dbfe627974a39bf23f1"
+      ],
+      "judge": {
+        "admitted": true,
+        "reasons": [],
+        "native_median": [
+          -0.031083926299205894,
+          0.05587250038778009
+        ],
+        "reverse_native_median": [
+          0.028343803032343698,
+          0.14086493091981972
+        ],
+        "source_native_translation": [
+          -0.03393027114480367,
+          0.059410568299334235
+        ],
+        "forward": {
+          "p90_deviation_native": 0.02911438302641662,
+          "quadrant_medians_native": [
+            [
+              -0.04523811538978903,
+              0.04988475866717487
+            ],
+            [
+              -0.02429503159999678,
+              0.057714479393723074
+            ],
+            [
+              -0.038657036754937674,
+              0.04706069947229921
+            ],
+            [
+              -0.01648806007790633,
+              0.07002899050712585
+            ]
+          ],
+          "quadrant_max_distance_native": 0.03510492496585072
+        },
+        "reverse": {
+          "p90_deviation_native": 0.02487291264428036,
+          "quadrant_medians_native": [
+            [
+              0.022986681115369056,
+              0.12450542959540371
+            ],
+            [
+              0.03840770623435012,
+              0.14956364462806912
+            ],
+            [
+              0.027272433873308313,
+              0.13874522896655184
+            ],
+            [
+              0.02372063026678833,
+              0.14433314435107716
+            ]
+          ],
+          "quadrant_max_distance_native": 0.029423156804522923
+        },
+        "median_closure_native": 0.19675651235227296,
+        "cycle_p90_native": 0.21721666662528097,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "false_movement_native": 0.15375604658327854,
+      "reverse_admitted": true,
+      "flat_registration_information_claim": false
+    },
+    {
+      "name": "two_depths",
+      "passed": true,
+      "input_hashes": [
+        "ae5dea1b2ea345505ba4fbe0c7bde0b30865e863443d32d4cb1b660e8fe95041",
+        "6ccc06913fb9d382b7cb16c3cc843158ccbb6df22a120163ed024d3be3ffd1fc"
+      ],
+      "flow_hashes": [
+        "89ff7cc0bcf1a27de8dc0e8dd557d0f9c6ad8778d6d36263e2fcc13055f718a8",
+        "99205a59d054182c034eca3a0f3341f27923b0b23a0b5ee563d2f233bea842f1"
+      ],
+      "judge": {
+        "admitted": false,
+        "reasons": [
+          "within_field_spread",
+          "quadrant_disagreement",
+          "median_forward_backward_closure"
+        ],
+        "native_median": [
+          0.2664780391210859,
+          0.15275263849887427
+        ],
+        "reverse_native_median": [
+          -0.8471752146597613,
+          0.029344684269546242
+        ],
+        "source_native_translation": [
+          0.2832984701975754,
+          0.16664305966324852
+        ],
+        "forward": {
+          "p90_deviation_native": 2.6239714333888164,
+          "quadrant_medians_native": [
+            [
+              2.6992645907808432,
+              0.022405912104752488
+            ],
+            [
+              -2.3077311652627857,
+              0.17195567158098515
+            ],
+            [
+              2.6011235074563457,
+              -0.01780029841453956
+            ],
+            [
+              -2.312418383359909,
+              0.17753138177020558
+            ]
+          ],
+          "quadrant_max_distance_native": 5.014083180864795
+        },
+        "reverse": {
+          "p90_deviation_native": 3.1177522419188,
+          "quadrant_medians_native": [
+            [
+              -2.0575569225983186,
+              0.011063060472137693
+            ],
+            [
+              2.194343196803873,
+              0.018612322203636983
+            ],
+            [
+              -2.080709202994,
+              0.04278509976157963
+            ],
+            [
+              2.1985566197471185,
+              0.03377915560283759
+            ]
+          ],
+          "quadrant_max_distance_native": 4.279275299476584
+        },
+        "median_closure_native": 0.6085792016147294,
+        "cycle_p90_native": 0.7018368682717735,
+        "reverse_sample_coverage": true,
+        "interior_count": 2162
+      },
+      "half_truth_native": [
+        [
+          2.5,
+          0.0
+        ],
+        [
+          -2.5,
+          0.0
+        ]
+      ],
+      "half_medians_native": [
+        [
+          2.677655222605575,
+          -0.006950194002590031
+        ],
+        [
+          -2.3203001100908622,
+          0.17506903173471883
+        ]
+      ],
+      "half_error_native": [
+        0.17779112271345282,
+        0.2508808807101255
+      ],
+      "mixed_motion_exercised": true
+    }
+  ],
+  "photographic_quality_admitted": false,
+  "actual_consumer_commissioned": false,
+  "scope": "Generated880x586 inputs bypass actual TIFF INTER_AREA/map staging; no staging/native-gather, RAW calibration or photographic-truth claim"
+}
