@@ -1,0 +1,37 @@
+{
+  "commit": "d104b3f51fc3933c7dbb2da27a21816b574914f3",
+  "repository": "https://github.com/Xinzhe99/GMFF",
+  "licence": "Official pinned README declares MIT; research-only files",
+  "files": {
+    "README.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\upstream-2\\README.md",
+      "bytes": 10384,
+      "sha256": "192673a14809c5fcddaf2796f335b1b5e13f4946f07c3bfb3039c393685a708b",
+      "url": "https://raw.githubusercontent.com/Xinzhe99/GMFF/d104b3f51fc3933c7dbb2da27a21816b574914f3/README.md",
+      "git_blob": "051077c2fb839fbac640b3c60591f5a4a091e4ac"
+    },
+    "inference_stage1.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\upstream-2\\inference_stage1.py",
+      "bytes": 10888,
+      "sha256": "115336b198d5297700e10d16a43cc93431980cb70a1012af26da71c3545a0c15",
+      "url": "https://raw.githubusercontent.com/Xinzhe99/GMFF/d104b3f51fc3933c7dbb2da27a21816b574914f3/inference_stage1.py",
+      "git_blob": "ced133fe8a8e4cac0f972efb7bd633a0fd6786ee"
+    },
+    "stackmffv4/network.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\upstream-2\\stackmffv4\\network.py",
+      "bytes": 25187,
+      "sha256": "b73636a2b09cad696e9b4ff76a936a951cbc808d1e0ad7464e51fcf00c119527",
+      "url": "https://raw.githubusercontent.com/Xinzhe99/GMFF/d104b3f51fc3933c7dbb2da27a21816b574914f3/stackmffv4/network.py",
+      "git_blob": "f59f61dd549caa9c7e34505a8e58ded8e397641c"
+    },
+    "weights/stackmffv4.pth": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\upstream-2\\weights\\stackmffv4.pth",
+      "bytes": 3972415,
+      "sha256": "4e9f0e6a1d54712d9a970508d44d382aab71828983a1e57661a351b7c93353bf",
+      "url": "https://raw.githubusercontent.com/Xinzhe99/GMFF/d104b3f51fc3933c7dbb2da27a21816b574914f3/weights/stackmffv4.pth",
+      "git_blob": "a452536a934e8cb4c72270f8738db060556a72d5"
+    }
+  },
+  "status": "FETCHED_PINNED_RESEARCH_FILES_ONLY",
+  "seconds": 1.0307814000007056
+}

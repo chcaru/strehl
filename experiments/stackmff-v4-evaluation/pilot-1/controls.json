@@ -1,0 +1,77 @@
+{
+  "mixed_mapping": {
+    "mixed_source_identity": true,
+    "swapped_source_rejected": true,
+    "index_shift_rejected": true,
+    "all_three_labels_exercised": true
+  },
+  "duplicate": {
+    "grayscale_exact": true,
+    "rgb16_exact": true
+  },
+  "constant": {
+    "grayscale_exact": true,
+    "rgb16_exact": true
+  },
+  "permutation": {
+    "map_disagreement_pixels": 0,
+    "rgb_disagreement_pixels": 0,
+    "max_rgb16_difference": 0,
+    "grayscale_disagreement_pixels": 0,
+    "authoritative_order": [
+      112,
+      152,
+      320
+    ],
+    "quality_authority": false
+  },
+  "logit_observer": {
+    "calls": [
+      {
+        "shape": [
+          1,
+          3,
+          384,
+          384
+        ],
+        "finite": true
+      },
+      {
+        "shape": [
+          1,
+          3,
+          384,
+          384
+        ],
+        "finite": true
+      },
+      {
+        "shape": [
+          1,
+          3,
+          384,
+          384
+        ],
+        "finite": true
+      },
+      {
+        "shape": [
+          1,
+          3,
+          384,
+          384
+        ],
+        "finite": true
+      }
+    ],
+    "on_off_grayscale_exact": true,
+    "on_off_indices_exact": true,
+    "on_off_rgb16_exact": true,
+    "on_grayscale_sha256": "f735bf66e221e32573a5021ffeeeba99c59fa3ca7897d5facebf9ee2af08b81a",
+    "off_grayscale_sha256": "f735bf66e221e32573a5021ffeeeba99c59fa3ca7897d5facebf9ee2af08b81a",
+    "on_indices_sha256": "60c28b0d4ab682f0a223974ae103fc9e5945f66fb2ffe645d33198f2342ca668",
+    "off_indices_sha256": "60c28b0d4ab682f0a223974ae103fc9e5945f66fb2ffe645d33198f2342ca668",
+    "on_rgb16_sha256": "24927c1615197630d9d949dd798f2f792c86b66df3fab344b3d36654581c3006",
+    "off_rgb16_sha256": "24927c1615197630d9d949dd798f2f792c86b66df3fab344b3d36654581c3006"
+  }
+}

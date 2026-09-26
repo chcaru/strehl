@@ -1,0 +1,389 @@
+{
+  "status": "COMPLETE_FIXED_THREE_SOURCE_OBSERVATION",
+  "schema": 1,
+  "commit": "d104b3f51fc3933c7dbb2da27a21816b574914f3",
+  "upstream_manifest": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\upstream-2\\manifest.json",
+    "bytes": 2174,
+    "sha256": "3b4924a85a74cca5b5d15545ac8d7200dc5211ccea08e02145252ebeb443b927"
+  },
+  "upstream_files": {
+    "README.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\upstream-2\\README.md",
+      "bytes": 10384,
+      "sha256": "192673a14809c5fcddaf2796f335b1b5e13f4946f07c3bfb3039c393685a708b",
+      "url": "https://raw.githubusercontent.com/Xinzhe99/GMFF/d104b3f51fc3933c7dbb2da27a21816b574914f3/README.md",
+      "git_blob": "051077c2fb839fbac640b3c60591f5a4a091e4ac"
+    },
+    "inference_stage1.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\upstream-2\\inference_stage1.py",
+      "bytes": 10888,
+      "sha256": "115336b198d5297700e10d16a43cc93431980cb70a1012af26da71c3545a0c15",
+      "url": "https://raw.githubusercontent.com/Xinzhe99/GMFF/d104b3f51fc3933c7dbb2da27a21816b574914f3/inference_stage1.py",
+      "git_blob": "ced133fe8a8e4cac0f972efb7bd633a0fd6786ee"
+    },
+    "stackmffv4/network.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\upstream-2\\stackmffv4\\network.py",
+      "bytes": 25187,
+      "sha256": "b73636a2b09cad696e9b4ff76a936a951cbc808d1e0ad7464e51fcf00c119527",
+      "url": "https://raw.githubusercontent.com/Xinzhe99/GMFF/d104b3f51fc3933c7dbb2da27a21816b574914f3/stackmffv4/network.py",
+      "git_blob": "f59f61dd549caa9c7e34505a8e58ded8e397641c"
+    },
+    "weights/stackmffv4.pth": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\upstream-2\\weights\\stackmffv4.pth",
+      "bytes": 3972415,
+      "sha256": "4e9f0e6a1d54712d9a970508d44d382aab71828983a1e57661a351b7c93353bf",
+      "url": "https://raw.githubusercontent.com/Xinzhe99/GMFF/d104b3f51fc3933c7dbb2da27a21816b574914f3/weights/stackmffv4.pth",
+      "git_blob": "a452536a934e8cb4c72270f8738db060556a72d5"
+    }
+  },
+  "source_receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\run-1\\output\\receipt.json",
+    "bytes": 5650,
+    "sha256": "7c4c464bf275a77f7ec18b3336f2da05fb25cfa9d350d58988aa0d1f0a553c24"
+  },
+  "input_files": {
+    "baseline": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\run-1\\output\\baseline.tiff",
+      "bytes": 157055880,
+      "sha256": "19e657e419d52adf567ec86472f917ad9b9abfc9b0812131e9bba0eacbae462f",
+      "crop_rgb16_sha256": "be84a663d70a2ffe518dfc75f0e5328dfb58534978f8a84c99f1a41b8d066cfd"
+    },
+    "donor-112": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\run-1\\output\\donor-112.tiff",
+      "bytes": 157055880,
+      "sha256": "cefa0e089713e45233c1e4c86de85ed6b47c4ff53110c843a182032bf4467236",
+      "crop_rgb16_sha256": "3bd9b1a24109d3c010e05c848bc8c1906d6e76a25b689c701395b071649ba3e2"
+    },
+    "donor-152": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\run-1\\output\\donor-152.tiff",
+      "bytes": 157055880,
+      "sha256": "4a070033b76391386d3704cb17d4acb441d6f12be7721d3cb5639a70174542fc",
+      "crop_rgb16_sha256": "8af97e63e0a3c5e0af2829e66b7a953bbf28ab03130609a96de9725792c4c06a"
+    },
+    "donor-320": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\run-1\\output\\donor-320.tiff",
+      "bytes": 157055880,
+      "sha256": "54f3c192b44dc4c0572100656d5eade6defb4994808a3e1e64de71315cf7de48",
+      "crop_rgb16_sha256": "5221d0ac5960064704f71165068670a1faecb43c50c0f7bb209f2d4fd49dd561"
+    }
+  },
+  "crop_native_xywh": [
+    3230,
+    3000,
+    384,
+    384
+  ],
+  "source_pure_rgb_interior_xywh": [
+    2,
+    2,
+    380,
+    380
+  ],
+  "reference_ordinal": 244,
+  "source_ordinals": [
+    112,
+    152,
+    320
+  ],
+  "source_stack_count": 488,
+  "model_input_count": 3,
+  "precision": "float32; no autocast or TF32",
+  "grayscale": "RGB16 /65535 then cv2.COLOR_RGB2GRAY; official 8-bit loader quantization intentionally omitted",
+  "resizing": false,
+  "additional_tone": false,
+  "source_reconstruction": "exact RGB16 vector copy at the same pixel",
+  "resolved_development": {
+    "ceiling_bits": [
+      1067682475,
+      1061256642,
+      1072945436
+    ],
+    "exposure_gain_bits": 1060439283,
+    "matrix_bits": [
+      [
+        1070688889,
+        3202724187,
+        3191861519
+      ],
+      [
+        3186350977,
+        1069455000,
+        3200213889
+      ],
+      [
+        3147518954,
+        3198529296,
+        1068107544
+      ]
+    ],
+    "sensor_top_bits": 1064271804,
+    "srgb": true,
+    "tone_bits": [
+      1008079930,
+      1049460607,
+      1057803469
+    ],
+    "wants_tone": true
+  },
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "safe_load_weights_only": true,
+  "strict_complete_state_load": true,
+  "checkpoint_state_keys": 439,
+  "checkpoint_finite": true,
+  "initialization_suppression": [
+    {
+      "pretrained": true,
+      "substituted_weights": null
+    }
+  ],
+  "constructor_restored": true,
+  "torch_version": "2.11.0+cu128",
+  "torchvision_version": "0.26.0+cu128",
+  "opencv_version": "4.13.0",
+  "numpy_version": "2.4.4",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "cuda_version": "12.8",
+  "cpu_threads": 8,
+  "gpu_peak_allocated_bytes": 126810112,
+  "gpu_peak_reserved_bytes": 144703488,
+  "calls": [
+    {
+      "name": "duplicate-donor-112",
+      "synchronized_forward_seconds": 0.4965754000004381,
+      "selected_grayscale_exact": true,
+      "map_dtype": "int64",
+      "map_min": 0,
+      "map_max": 0
+    },
+    {
+      "name": "constant",
+      "synchronized_forward_seconds": 0.00518009999905189,
+      "selected_grayscale_exact": true,
+      "map_dtype": "int64",
+      "map_min": 0,
+      "map_max": 0
+    },
+    {
+      "name": "fixed-112-152-320",
+      "synchronized_forward_seconds": 0.004463400000531692,
+      "selected_grayscale_exact": true,
+      "map_dtype": "int64",
+      "map_min": 0,
+      "map_max": 2
+    },
+    {
+      "name": "fixed-reversal-320-152-112",
+      "synchronized_forward_seconds": 0.004942800000208081,
+      "selected_grayscale_exact": true,
+      "map_dtype": "int64",
+      "map_min": 0,
+      "map_max": 2
+    },
+    {
+      "name": "fixed-primary-logit-observer-off",
+      "synchronized_forward_seconds": 0.004723400001239497,
+      "selected_grayscale_exact": true,
+      "map_dtype": "int64",
+      "map_min": 0,
+      "map_max": 2
+    }
+  ],
+  "controls": {
+    "mixed_mapping": {
+      "mixed_source_identity": true,
+      "swapped_source_rejected": true,
+      "index_shift_rejected": true,
+      "all_three_labels_exercised": true
+    },
+    "duplicate": {
+      "grayscale_exact": true,
+      "rgb16_exact": true
+    },
+    "constant": {
+      "grayscale_exact": true,
+      "rgb16_exact": true
+    },
+    "permutation": {
+      "map_disagreement_pixels": 0,
+      "rgb_disagreement_pixels": 0,
+      "max_rgb16_difference": 0,
+      "grayscale_disagreement_pixels": 0,
+      "authoritative_order": [
+        112,
+        152,
+        320
+      ],
+      "quality_authority": false
+    },
+    "logit_observer": {
+      "calls": [
+        {
+          "shape": [
+            1,
+            3,
+            384,
+            384
+          ],
+          "finite": true
+        },
+        {
+          "shape": [
+            1,
+            3,
+            384,
+            384
+          ],
+          "finite": true
+        },
+        {
+          "shape": [
+            1,
+            3,
+            384,
+            384
+          ],
+          "finite": true
+        },
+        {
+          "shape": [
+            1,
+            3,
+            384,
+            384
+          ],
+          "finite": true
+        }
+      ],
+      "on_off_grayscale_exact": true,
+      "on_off_indices_exact": true,
+      "on_off_rgb16_exact": true,
+      "on_grayscale_sha256": "f735bf66e221e32573a5021ffeeeba99c59fa3ca7897d5facebf9ee2af08b81a",
+      "off_grayscale_sha256": "f735bf66e221e32573a5021ffeeeba99c59fa3ca7897d5facebf9ee2af08b81a",
+      "on_indices_sha256": "60c28b0d4ab682f0a223974ae103fc9e5945f66fb2ffe645d33198f2342ca668",
+      "off_indices_sha256": "60c28b0d4ab682f0a223974ae103fc9e5945f66fb2ffe645d33198f2342ca668",
+      "on_rgb16_sha256": "24927c1615197630d9d949dd798f2f792c86b66df3fab344b3d36654581c3006",
+      "off_rgb16_sha256": "24927c1615197630d9d949dd798f2f792c86b66df3fab344b3d36654581c3006"
+    }
+  },
+  "outputs": {
+    "baseline.png": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\baseline.png",
+      "bytes": 118261,
+      "sha256": "e9d1f10ef79e6332513b97b83dbba906c2a18f29b92b62a0bab121970c989b43"
+    },
+    "baseline.tiff": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\baseline.tiff",
+      "bytes": 887680,
+      "sha256": "978b9d8a7e42543c7f8eb097ac8c68bcfcc1b672ccbda8830e4e13ec15f4416d"
+    },
+    "candidate.png": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\candidate.png",
+      "bytes": 108571,
+      "sha256": "4f1920880001a7e24c5b57655983942953018f6207d65d766266eeb9dc39728f"
+    },
+    "candidate.tiff": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\candidate.tiff",
+      "bytes": 887680,
+      "sha256": "bd5167c8cb347e195379b6614de5dcac5e19118c504f8d33218733be8fdbedab"
+    },
+    "controls.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\controls.json",
+      "bytes": 1872,
+      "sha256": "08c55a50e371365e3e77e54780f25f639e195f2fbe466522fb780f0f6d9eea15"
+    },
+    "donor-112.png": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\donor-112.png",
+      "bytes": 104116,
+      "sha256": "ae1a34a2c75191fcdd604e8d8a255a5b29c6a56e8ab6d855382be24cacdeaf5b"
+    },
+    "donor-112.tiff": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\donor-112.tiff",
+      "bytes": 887680,
+      "sha256": "0c1dbe5e5b62a0fcc2e8fc68fafcb04d3f5c35e672806ac9361fd559e56dc4dc"
+    },
+    "donor-152.png": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\donor-152.png",
+      "bytes": 100310,
+      "sha256": "f941132105e71a589ea0c0296d7294dbcd354432e357f712b33cbf521f345f28"
+    },
+    "donor-152.tiff": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\donor-152.tiff",
+      "bytes": 887680,
+      "sha256": "af78367c7490b3a5b14260df58d5cca98b911e14108c4ebf24a82ed59599ef36"
+    },
+    "donor-320.png": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\donor-320.png",
+      "bytes": 89942,
+      "sha256": "345c18ea536ae6941c66d080a41b31b8ac8e00f6e88d9b1971958c319576a201"
+    },
+    "donor-320.tiff": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\donor-320.tiff",
+      "bytes": 887680,
+      "sha256": "0f96d46f688e82e03d5417d6ab6c5b3a2b5a35649d3d5f70420f3a5c704ac508"
+    },
+    "model_grayscale.npy": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\model_grayscale.npy",
+      "bytes": 589952,
+      "sha256": "e2ca32fb7786089077e417b9479f991c88e6a9c2306d0d3a4dc2bbec71a821d5"
+    },
+    "model_input_grayscale.npy": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\model_input_grayscale.npy",
+      "bytes": 1769600,
+      "sha256": "a97b69adabcfa0a76a781e9ff45d513334e4d7f80000eb55c2989d29589ab327"
+    },
+    "reversed_candidate.png": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\reversed_candidate.png",
+      "bytes": 108571,
+      "sha256": "4f1920880001a7e24c5b57655983942953018f6207d65d766266eeb9dc39728f"
+    },
+    "reversed_candidate.tiff": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\reversed_candidate.tiff",
+      "bytes": 887680,
+      "sha256": "bd5167c8cb347e195379b6614de5dcac5e19118c504f8d33218733be8fdbedab"
+    },
+    "reversed_model_grayscale.npy": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\reversed_model_grayscale.npy",
+      "bytes": 589952,
+      "sha256": "e2ca32fb7786089077e417b9479f991c88e6a9c2306d0d3a4dc2bbec71a821d5"
+    },
+    "reversed_source_indices.npy": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\reversed_source_indices.npy",
+      "bytes": 1179776,
+      "sha256": "76491ad266cf40fed117457906603b0d1f1dfd10f9ec77310e8a0fb6cd69dc08"
+    },
+    "reversed_source_indices_original_order.npy": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\reversed_source_indices_original_order.npy",
+      "bytes": 1179776,
+      "sha256": "be80ef02379edb7f691820cb839dfc88c0d921042f54033d624f8974c1c3e8d7"
+    },
+    "source-map.png": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\source-map.png",
+      "bytes": 3751,
+      "sha256": "5a5e8a73397d25474e27a75448a6a09f0b50e6a65c2317d3dc75aedb81ee863c"
+    },
+    "source_indices.npy": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\source_indices.npy",
+      "bytes": 1179776,
+      "sha256": "be80ef02379edb7f691820cb839dfc88c0d921042f54033d624f8974c1c3e8d7"
+    },
+    "source_ordinals.npy": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\source_ordinals.npy",
+      "bytes": 1179776,
+      "sha256": "a1a9c5d36b4a5478f2344bdca1cf7bcc2d95e375215079bdf3dd674bb882b735"
+    },
+    "started.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot-1\\started.json",
+      "bytes": 1275,
+      "sha256": "29642fe8d6a1a67ea57fb579325767be82cb1f05e2756938f7c03d9e8b530eda"
+    }
+  },
+  "total_seconds": 4.041395099999136,
+  "limitations": [
+    "Three selected sources, not all488; no full output or SOTA claim",
+    "Outer2 RGB border may contain MHC blend-ring support",
+    "Crop boundary lacks full-image model context; inner380 is not an exact model-context boundary",
+    "Hard source selection may increase grain/seams; controls do not establish photographic quality"
+  ],
+  "visual_verdict": null
+}

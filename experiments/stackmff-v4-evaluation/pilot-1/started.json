@@ -1,0 +1,32 @@
+{
+  "phase": "run",
+  "utc": "2026-09-26T04:52:01.204237+00:00",
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\pilot.py",
+    "bytes": 19890,
+    "sha256": "3f417f40883e5e20de834e05afa965be94212828cd668bc07a38072b0631c23d"
+  },
+  "command": [
+    "experiments/stackmff-v4-evaluation/pilot.py",
+    "run",
+    "--upstream",
+    "experiments/stackmff-v4-evaluation/upstream-2",
+    "--out",
+    "experiments/stackmff-v4-evaluation/pilot-1"
+  ],
+  "independent_plan": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\independent-plan.md",
+    "bytes": 4888,
+    "sha256": "300247d2a8a8ca0700dd1b16b4d6019faedc54981c26a464398e50d0280e54f7"
+  },
+  "decision": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\decision.md",
+    "bytes": 3515,
+    "sha256": "4e14256b7065af14594d8a6a5ac8e17ee71825b6c3c4b8cba622abdde6a0452e"
+  },
+  "readiness": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\stackmff-v4-evaluation\\readiness.md",
+    "bytes": 5957,
+    "sha256": "58fca669e130825216cb3c351b8c80099707f13365ecb223a49c69bfd9320949"
+  }
+}

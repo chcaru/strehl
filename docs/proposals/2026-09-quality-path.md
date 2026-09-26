@@ -193,6 +193,23 @@ Inspect the pinned implementation for focus-map access and bounded native-size
 execution before staging a comparison. This is a conventional-image research
 comparator, not yet a CFA-native implementation, source-fidelity result or SOTA
 claim. No diffusion or training campaign is authorized by this decision.
+That frozen three-source model now executes successfully with exact source
+pixel copying, permutation and observer controls. It co-retains the two supplied
+hair groups but introduces conspicuous interior switching seams. Independent
+review rejects the direct output. Missing detail from the other485 sources is
+a separate coverage limitation. See `experiments/stackmff-v4-evaluation/results.md`.
+The obvious learned-prior integration repeats previously harmful weighting
+choices and is not implemented. A subsequent read-only restoration-stage
+readiness check cannot verify the required checkpoint release, and automatic
+approval review blocks its implementation read; that route closes without setup.
+The next actual bounded experiment tests a shared planar focus front on the
+chip, with a fitted monotone nonuniform source schedule and withheld spatial/
+frequency predictions. Existing299 same-developer TIFFs make a proxy test cheap.
+No local argmax, global source replacement or depth-dilution claim is used.
+Generated wrong-front, curved-surface and occluding-depth controls must show
+rejection power before interpreting the real fit. No native consumer or full
+render is licensed by model smoothness or fitting success alone; see
+`experiments/chip-focus-front/decision.md`.
 Do not repeat donor, prior-strength or base-weighting sweeps. The bounded
 FocusDeep readiness check found no verified licensed checkpoint/inference route
 and does not justify a training campaign; see
