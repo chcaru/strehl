@@ -1,0 +1,12 @@
+{
+  "dir": "D:/personal/macro/requests/misc-diagnostic/high-res-calibration-slide-2-cpl",
+  "frames": 299,
+  "map": "C:/dev/blog/death-of-software/projects/strehl/experiments/quality-september20/slide2-baseline-1/slide2.warpmap.txt",
+  "tone": {"black": 0.005475, "white": 0.476094, "contrast": 0.55},
+  "regions": [
+    {"name": "qr-upper", "frame": 149, "x": 3700, "y": 490, "width": 384, "height": 384},
+    {"name": "qr-lower", "frame": 149, "x": 3900, "y": 900, "width": 384, "height": 384},
+    {"name": "siemens-contact", "frame": 149, "x": 5260, "y": 750, "width": 384, "height": 384},
+    {"name": "pale-control", "frame": 149, "x": 792, "y": 600, "width": 384, "height": 384}
+  ]
+}

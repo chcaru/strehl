@@ -1,0 +1,70 @@
+{
+  "dir": "D:/personal/macro/requests/misc-diagnostic/high-res-calibration-slide-2-cpl",
+  "frames": 299,
+  "map": "C:/dev/blog/death-of-software/projects/strehl/experiments/quality-september20/slide2-baseline-1/slide2.warpmap.txt",
+  "tone": {
+    "black": 0.005475,
+    "white": 0.476094,
+    "contrast": 0.55
+  },
+  "regions": [
+    {
+      "name": "qr-upper-frame-083",
+      "frame": 83,
+      "x": 3700,
+      "y": 490,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "qr-upper-frame-085",
+      "frame": 85,
+      "x": 3700,
+      "y": 490,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "qr-lower-frame-092",
+      "frame": 92,
+      "x": 3900,
+      "y": 900,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "qr-lower-frame-094",
+      "frame": 94,
+      "x": 3900,
+      "y": 900,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "siemens-contact-frame-058",
+      "frame": 58,
+      "x": 5260,
+      "y": 750,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "siemens-contact-frame-060",
+      "frame": 60,
+      "x": 5260,
+      "y": 750,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "pale-control-frame-149",
+      "frame": 149,
+      "x": 792,
+      "y": 600,
+      "width": 384,
+      "height": 384
+    }
+  ],
+  "observe": false,
+  "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\coarse-1\\output"
+}

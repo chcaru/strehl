@@ -1,0 +1,380 @@
+{
+  "status": "FOCUS_NEIGHBOURHOODS_READY",
+  "passed": true,
+  "controls_passed": true,
+  "original_metadata_unchanged": true,
+  "independent_decode_exact": true,
+  "config": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\config.json",
+    "bytes": 692,
+    "sha256": "9607ee4a966cbea5266cd519a9a7399ef8238c8277300f480915d1c5e60f300b"
+  },
+  "locator": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\locator.json",
+    "bytes": 678750,
+    "sha256": "b8aa6975ce871c216e6506c7f55fb3d6dbecba6182f5aad64e32d1d3ea85da2a"
+  },
+  "nominations": {
+    "qr-upper": [
+      83,
+      85
+    ],
+    "qr-lower": [
+      92,
+      94
+    ],
+    "siemens-contact": [
+      58,
+      60
+    ]
+  },
+  "fixed_control": {
+    "name": "pale-control",
+    "frame": 149
+  },
+  "source_inventory": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\originals-before.json",
+    "bytes": 54722,
+    "sha256": "8891be1ad030093cba41fa4cea4730b6906d2be093366ee1e22847fa356a9eca"
+  },
+  "original_content_scope": "Retained baseline all299 original-content audit plus current metadata/order; no fresh all299 original-content hash. Selected copied sensels independently decoded.",
+  "independent_decode_checks": [
+    {
+      "frame_index": 58,
+      "region": "siemens-contact",
+      "different_sensels": 0,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00059.ARW",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1",
+        "58",
+        "882",
+        "5656",
+        "392",
+        "392"
+      ]
+    },
+    {
+      "frame_index": 60,
+      "region": "siemens-contact",
+      "different_sensels": 0,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00061.ARW",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1",
+        "60",
+        "882",
+        "5652",
+        "392",
+        "392"
+      ]
+    },
+    {
+      "frame_index": 83,
+      "region": "qr-upper",
+      "different_sensels": 0,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00084.ARW",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1",
+        "83",
+        "628",
+        "4014",
+        "392",
+        "392"
+      ]
+    },
+    {
+      "frame_index": 85,
+      "region": "qr-upper",
+      "different_sensels": 0,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00086.ARW",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1",
+        "85",
+        "630",
+        "4014",
+        "392",
+        "392"
+      ]
+    },
+    {
+      "frame_index": 92,
+      "region": "qr-lower",
+      "different_sensels": 0,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00093.ARW",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1",
+        "92",
+        "1058",
+        "4214",
+        "392",
+        "392"
+      ]
+    },
+    {
+      "frame_index": 94,
+      "region": "qr-lower",
+      "different_sensels": 0,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00095.ARW",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1",
+        "94",
+        "1060",
+        "4212",
+        "392",
+        "392"
+      ]
+    },
+    {
+      "frame_index": 149,
+      "region": "pale-control",
+      "different_sensels": 0,
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00150.ARW",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1",
+        "149",
+        "782",
+        "1066",
+        "392",
+        "392"
+      ]
+    }
+  ],
+  "source149_golden_checks": [
+    {
+      "region": "pale-control",
+      "different_cfa_f32_bits": 0
+    }
+  ],
+  "saved": [
+    {
+      "frame_index": 58,
+      "region": "siemens-contact",
+      "source_xywh": [
+        5656,
+        882,
+        392,
+        392
+      ],
+      "cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-58-siemens-contact-cfa.npy",
+        "bytes": 307456,
+        "sha256": "9244bb0a131c2606b07b73aaf8c6cd0a69890c96755bf52f41cde6935ecb880a"
+      },
+      "green_panels": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-58-siemens-contact-g1.png",
+          "bytes": 14207,
+          "sha256": "a28632716db1fa0864a8ceb815f169b49b3af690b0d6cd6944dd418a562497f5"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-58-siemens-contact-g2.png",
+          "bytes": 14186,
+          "sha256": "5fe9f34fdeec98f383138efeb7da964223fabb64f9c1189fb8309fc4dea8c94c"
+        }
+      ]
+    },
+    {
+      "frame_index": 60,
+      "region": "siemens-contact",
+      "source_xywh": [
+        5652,
+        882,
+        392,
+        392
+      ],
+      "cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-60-siemens-contact-cfa.npy",
+        "bytes": 307456,
+        "sha256": "c0f19ca69b7c0d2a14931522026d14b4aa674c5986fa92581d91af82b717d90f"
+      },
+      "green_panels": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-60-siemens-contact-g1.png",
+          "bytes": 14178,
+          "sha256": "2cd9059726ea00a9f0b4ddf01a224da6a5c21a505947debae986e086ba20ec73"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-60-siemens-contact-g2.png",
+          "bytes": 14139,
+          "sha256": "7ff6df276d21a59a440f6c180ec26fbc9181d8e597bdff1b32de3a15426b6193"
+        }
+      ]
+    },
+    {
+      "frame_index": 83,
+      "region": "qr-upper",
+      "source_xywh": [
+        4014,
+        628,
+        392,
+        392
+      ],
+      "cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-83-qr-upper-cfa.npy",
+        "bytes": 307456,
+        "sha256": "f451c4059a9bcbb8655a0edb44badc8ee1ee95fa6139cc0077db8e20c47d701d"
+      },
+      "green_panels": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-83-qr-upper-g1.png",
+          "bytes": 14299,
+          "sha256": "d757d7f1acb6ece7de6df61747b1e191e8dde31096a85ab16a7b364a81722971"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-83-qr-upper-g2.png",
+          "bytes": 14249,
+          "sha256": "e06c69fe8d22f7483b5c428ab2f1c0ad20767f72f64f2e9a4bd419b5663ba01e"
+        }
+      ]
+    },
+    {
+      "frame_index": 85,
+      "region": "qr-upper",
+      "source_xywh": [
+        4014,
+        630,
+        392,
+        392
+      ],
+      "cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-85-qr-upper-cfa.npy",
+        "bytes": 307456,
+        "sha256": "1fb8a2a7d7194bbabb118704c403e3835e7a0daf019f9d07a68da322b6fcf55e"
+      },
+      "green_panels": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-85-qr-upper-g1.png",
+          "bytes": 14272,
+          "sha256": "5f1abf9779d163f676c4b6b075a37dba856908c362d0491a4d3ae36f0ee4b9cc"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-85-qr-upper-g2.png",
+          "bytes": 14288,
+          "sha256": "a83d2c185ec6ed9e58b22550df72fc85aec8a56cbf910c51ff71fae5b72b08ce"
+        }
+      ]
+    },
+    {
+      "frame_index": 92,
+      "region": "qr-lower",
+      "source_xywh": [
+        4214,
+        1058,
+        392,
+        392
+      ],
+      "cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-92-qr-lower-cfa.npy",
+        "bytes": 307456,
+        "sha256": "71b5fdbea1eadb289316236867b619b09aa9fc3bb431109a62b0c5cdb0fef71d"
+      },
+      "green_panels": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-92-qr-lower-g1.png",
+          "bytes": 13650,
+          "sha256": "b362af6088c25e886dba5e9912a0934cc2ed3a51c86318a9bf2d81df364a2b03"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-92-qr-lower-g2.png",
+          "bytes": 13666,
+          "sha256": "468f4eeb9d4f15dd67f5ac289c705b1241fc420efeea34baadfef78dfabbdb81"
+        }
+      ]
+    },
+    {
+      "frame_index": 94,
+      "region": "qr-lower",
+      "source_xywh": [
+        4212,
+        1060,
+        392,
+        392
+      ],
+      "cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-94-qr-lower-cfa.npy",
+        "bytes": 307456,
+        "sha256": "6abf2766f26b44cabff070815feb4f9c6ae9287867b220c366606430900a1f19"
+      },
+      "green_panels": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-94-qr-lower-g1.png",
+          "bytes": 13702,
+          "sha256": "5160d45f775c6062d7247ba1e64aee5831046f640977464ff82076d6c1af90e8"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-94-qr-lower-g2.png",
+          "bytes": 13719,
+          "sha256": "8f7e939d11136a07cb13b120eb4078ed40c9c226398ac3904e3b5701b4b8ed33"
+        }
+      ]
+    },
+    {
+      "frame_index": 149,
+      "region": "pale-control",
+      "source_xywh": [
+        1066,
+        782,
+        392,
+        392
+      ],
+      "cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-149-pale-control-cfa.npy",
+        "bytes": 307456,
+        "sha256": "428db20336e1e6d487ec08ffe33f0715345e512180d0208725e3e67869d4ac51"
+      },
+      "green_panels": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-149-pale-control-g1.png",
+          "bytes": 399,
+          "sha256": "f47fa022a2bbe9e40cc87ccd63cb6ef3af010d1706c2526f5a5a070a11de660a"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-149-pale-control-g2.png",
+          "bytes": 397,
+          "sha256": "7e07ab3feb6ce301de9989157afe59c4b383bd04b1f8ca9569cc261ce6d4cb4c"
+        }
+      ]
+    }
+  ],
+  "original_pass_decodes": 299,
+  "selected_redecodes": 6,
+  "full_rgb_postprocesses": 0,
+  "rawpy_version": "0.27.0",
+  "libraw_version": [
+    0,
+    22,
+    1
+  ],
+  "adaptation": {
+    "prior_locator": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\locate.py",
+      "bytes": 16654,
+      "sha256": "f282e6d1b83e14ac3b44c18d0d73b3b2bb742d8151e67a34553c771f9cbb30bc"
+    },
+    "current_only_sites": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\broad-artifact-inspection\\coordinates.json",
+      "bytes": 201,
+      "sha256": "b071a2f6cd3ca7d697cd771c793ac5671ca3bdce4affd51e0b75f7b6d054b553"
+    },
+    "changes": "Three fixed site coordinates/names and config binding; old source149 golden only at unchanged pale-control; nomination/decoder/display unchanged"
+  },
+  "display": "G1/G2 separately192x192 original same-colour samples at native pitch2; fixed gain2.809 gamma1/2.2; no resize",
+  "limitation": "Source-centred, unaligned, CA-off, fixed monochrome display; actual product matched-source render still required.",
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\process.json",
+    "bytes": 2880,
+    "sha256": "08336c6023893cf3f8c82256bc2270bd080d40450c2588d8f43efb9aa6dd81f6"
+  },
+  "sources": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\bindings.json",
+    "bytes": 3897,
+    "sha256": "86bd9c59b6abe1e7b99f0b28a1586afeb46422f4c002723d0acdea789120d39e"
+  },
+  "sources_unchanged": true
+}

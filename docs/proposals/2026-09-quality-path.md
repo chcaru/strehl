@@ -17,11 +17,26 @@ including with truth guidance. Neither changes a production default. See
 and complete current observer-off/on pair. Those bar/lettering sites do not
 expose a lost or doubled stroke; the merge is clearer than the nominated
 sources. They do not exercise the broad gray spread now confirmed at native
-size around the larger QR/Siemens shapes. The next actual-photograph action is
-`experiments/slide2-bright-boundary`: apply the existing source comparison to
-those three new defect sites and reuse the exact complete baseline. Nomination
-scores are not quality evidence. A frozen-weight geometry counterfactual
-remains unimplemented and is not justified by the clean small-bar witnesses.
+size around the larger QR/Siemens shapes. `experiments/slide2-bright-boundary`
+now confirms cleaner dark gaps in both neighboring focused originals and
+actual gathered witnesses at all three sites, while the whole merge adds
+broad gray surrounds/fans. The complete observer-on master is byte-identical
+to the prior observer-off baseline. One complete `mean_coarse=1` ablation
+leaves that spread and is independently rejected; no additional level sweep
+or default change follows. Nomination scores are not quality evidence.
+
+The next implementation is `experiments/ordered-focus-support`: infer a
+contiguous temporal interval agreed across resolved scales, use that interval
+for whole-CFA radiance, and retain canonical reconstruction for conflicting
+or ambiguous depth evidence. This differs from the failed unconditional
+winner/gate, coarse source prior and single planar front. It is currently
+unverified; half-height support is empirical and can blur genuine detail.
+Independent controls and one all299 slide2 observation precede any claim.
+Ore100 is the next mineral target if this earns a visible gain: inspected
+originals contain real texture within reflections and sparse clipping, so
+white-area reduction alone is not recovery. A frozen-weight geometry
+counterfactual remains unimplemented and is not justified by the clean
+small-bar witnesses.
 Glare, ghosting and occlusion defects remain unresolved; no SOTA claim follows.
 
 **Earlier checkpoint, September 26:** the fixed learned-motion estimator passes

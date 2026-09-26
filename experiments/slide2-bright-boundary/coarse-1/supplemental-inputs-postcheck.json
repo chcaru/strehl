@@ -1,0 +1,31 @@
+{
+  "captured_at": "2026-09-26T19:33:48.9969547Z",
+  "scope": "Post-terminal check against the explicit during-run supplement, not a pre-run binding claim",
+  "inputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\coarse-1\\config.json",
+      "expected": "2b8704f1351a7742d5d9f34f5c40961669856ca49bcf176c25743e498691e715",
+      "actual": "2b8704f1351a7742d5d9f34f5c40961669856ca49bcf176c25743e498691e715",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\render-1\\on\\output\\receipt.json",
+      "expected": "ec9674f3ea61596e4b38301116c811899e0c9ddd74a2e35653defa5aa1b2917f",
+      "actual": "ec9674f3ea61596e4b38301116c811899e0c9ddd74a2e35653defa5aa1b2917f",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-config.json",
+      "expected": "01189dd3894ff37a39a75402f6d38636aed1db096668f1a0ef7de092038e62bb",
+      "actual": "01189dd3894ff37a39a75402f6d38636aed1db096668f1a0ef7de092038e62bb",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-focus-witness\\render-1\\broad-artifact-inspection\\coordinates.json",
+      "expected": "b071a2f6cd3ca7d697cd771c793ac5671ca3bdce4affd51e0b75f7b6d054b553",
+      "actual": "b071a2f6cd3ca7d697cd771c793ac5671ca3bdce4affd51e0b75f7b6d054b553",
+      "unchanged": true
+    }
+  ],
+  "all_unchanged": true
+}

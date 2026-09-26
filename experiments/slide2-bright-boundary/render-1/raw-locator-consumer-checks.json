@@ -1,0 +1,149 @@
+[
+  {
+    "name": "siemens-contact-frame-058",
+    "frame": 58,
+    "source_xywh": [
+      5656,
+      882,
+      392,
+      392
+    ],
+    "locator_u16": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-58-siemens-contact-cfa.npy",
+      "bytes": 307456,
+      "sha256": "9244bb0a131c2606b07b73aaf8c6cd0a69890c96755bf52f41cde6935ecb880a"
+    },
+    "actual_cfa": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\render-1\\on\\output\\siemens-contact-frame-058-frame58-raw-cfa.f32",
+      "sha256": "e76c11b6fdd51d3fe6a2d438e6c30e29050a8fed0e385da3ef73ca4cc21b3df4",
+      "bytes": 614656
+    },
+    "different_cfa_f32_bits": 0
+  },
+  {
+    "name": "siemens-contact-frame-060",
+    "frame": 60,
+    "source_xywh": [
+      5652,
+      882,
+      392,
+      392
+    ],
+    "locator_u16": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-60-siemens-contact-cfa.npy",
+      "bytes": 307456,
+      "sha256": "c0f19ca69b7c0d2a14931522026d14b4aa674c5986fa92581d91af82b717d90f"
+    },
+    "actual_cfa": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\render-1\\on\\output\\siemens-contact-frame-060-frame60-raw-cfa.f32",
+      "sha256": "068ad22fceaf5cabc8dea54d2bf01f6c7d8d75d995da9b3a171c4f47b57e1ff1",
+      "bytes": 614656
+    },
+    "different_cfa_f32_bits": 0
+  },
+  {
+    "name": "qr-upper-frame-083",
+    "frame": 83,
+    "source_xywh": [
+      4014,
+      628,
+      392,
+      392
+    ],
+    "locator_u16": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-83-qr-upper-cfa.npy",
+      "bytes": 307456,
+      "sha256": "f451c4059a9bcbb8655a0edb44badc8ee1ee95fa6139cc0077db8e20c47d701d"
+    },
+    "actual_cfa": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\render-1\\on\\output\\qr-upper-frame-083-frame83-raw-cfa.f32",
+      "sha256": "e5bf37c089c663ba5dcd6934221e2b056aa150fe34a8605274935cb45e32c891",
+      "bytes": 614656
+    },
+    "different_cfa_f32_bits": 0
+  },
+  {
+    "name": "qr-upper-frame-085",
+    "frame": 85,
+    "source_xywh": [
+      4014,
+      630,
+      392,
+      392
+    ],
+    "locator_u16": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-85-qr-upper-cfa.npy",
+      "bytes": 307456,
+      "sha256": "1fb8a2a7d7194bbabb118704c403e3835e7a0daf019f9d07a68da322b6fcf55e"
+    },
+    "actual_cfa": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\render-1\\on\\output\\qr-upper-frame-085-frame85-raw-cfa.f32",
+      "sha256": "ab3d0613d0243adc84a8149e1380b1f33368fa1e78ea0a33fb3d8d93bc058bc9",
+      "bytes": 614656
+    },
+    "different_cfa_f32_bits": 0
+  },
+  {
+    "name": "qr-lower-frame-092",
+    "frame": 92,
+    "source_xywh": [
+      4214,
+      1058,
+      392,
+      392
+    ],
+    "locator_u16": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-92-qr-lower-cfa.npy",
+      "bytes": 307456,
+      "sha256": "71b5fdbea1eadb289316236867b619b09aa9fc3bb431109a62b0c5cdb0fef71d"
+    },
+    "actual_cfa": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\render-1\\on\\output\\qr-lower-frame-092-frame92-raw-cfa.f32",
+      "sha256": "1b8a7f8e66b510478375498a19127f4d9f3579488e233111af2f0bc5b1043579",
+      "bytes": 614656
+    },
+    "different_cfa_f32_bits": 0
+  },
+  {
+    "name": "qr-lower-frame-094",
+    "frame": 94,
+    "source_xywh": [
+      4212,
+      1060,
+      392,
+      392
+    ],
+    "locator_u16": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-94-qr-lower-cfa.npy",
+      "bytes": 307456,
+      "sha256": "6abf2766f26b44cabff070815feb4f9c6ae9287867b220c366606430900a1f19"
+    },
+    "actual_cfa": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\render-1\\on\\output\\qr-lower-frame-094-frame94-raw-cfa.f32",
+      "sha256": "0d2c914a5f3193fa00bea7100301cb7d749b139c9b937a40bf813945bcfe0809",
+      "bytes": 614656
+    },
+    "different_cfa_f32_bits": 0
+  },
+  {
+    "name": "pale-control-frame-149",
+    "frame": 149,
+    "source_xywh": [
+      1066,
+      782,
+      392,
+      392
+    ],
+    "locator_u16": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\locate-1\\frame-149-pale-control-cfa.npy",
+      "bytes": 307456,
+      "sha256": "428db20336e1e6d487ec08ffe33f0715345e512180d0208725e3e67869d4ac51"
+    },
+    "actual_cfa": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\render-1\\on\\output\\pale-control-frame-149-frame149-raw-cfa.f32",
+      "sha256": "e1dfc431da405b6f1977d25f4134a9e19c040cfbf5855ac64402b94c4fca57ad",
+      "bytes": 614656
+    },
+    "different_cfa_f32_bits": 0
+  }
+]

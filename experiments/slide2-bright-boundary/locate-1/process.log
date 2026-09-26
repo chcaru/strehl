@@ -1,0 +1,20 @@
+{"stage": "locate", "frame": 0}
+{"stage": "locate", "frame": 25}
+{"stage": "locate", "frame": 50}
+{"stage": "locate", "frame": 75}
+{"stage": "locate", "frame": 100}
+{"stage": "locate", "frame": 125}
+{"stage": "locate", "frame": 150}
+{"stage": "locate", "frame": 175}
+{"stage": "locate", "frame": 200}
+{"stage": "locate", "frame": 225}
+{"stage": "locate", "frame": 250}
+{"stage": "locate", "frame": 275}
+{"stage": "locate", "frame": 298}
+{"stage": "selected_ready", "frame": 58, "regions": ["siemens-contact"]}
+{"stage": "selected_ready", "frame": 60, "regions": ["siemens-contact"]}
+{"stage": "selected_ready", "frame": 83, "regions": ["qr-upper"]}
+{"stage": "selected_ready", "frame": 85, "regions": ["qr-upper"]}
+{"stage": "selected_ready", "frame": 92, "regions": ["qr-lower"]}
+{"stage": "selected_ready", "frame": 94, "regions": ["qr-lower"]}
+{"stage": "selected_ready", "frame": 149, "regions": ["pale-control"]}

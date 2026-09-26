@@ -1,0 +1,64 @@
+{
+  "status": "FIXED_COARSE_ABLATION_RENDERED",
+  "quality_gain_claim": false,
+  "baseline": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\render-1\\on\\output\\replay.tiff",
+    "sha256": "24c66183ae94df908eb4a8662fc4b032532b7721655dfcc867e9a7d59b4f655b",
+    "bytes": 167707456
+  },
+  "candidate": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\slide2-bright-boundary\\coarse-1\\output\\replay.tiff",
+    "sha256": "a514f8aaa47e47d97696f0c0e4cac8610f8c3be36e001b1a07e0c0431a1a9928",
+    "bytes": 167707456
+  },
+  "baseline_rgb16_sha256": "1398f855dee5767b36f4efe11b8999324449fb50baa1e32a57659a2987429fbb",
+  "candidate_rgb16_sha256": "860bae32a2ee9dc45ded5e7e344d1ec6a9b5357499b896ac8dbe606c73080f8b",
+  "different_rgb16_samples": 50311363,
+  "sites": {
+    "medium-bars": [
+      2592,
+      1584,
+      384,
+      384
+    ],
+    "fine-bars": [
+      3576,
+      1710,
+      384,
+      384
+    ],
+    "lettering": [
+      2772,
+      2106,
+      384,
+      384
+    ],
+    "pale-control": [
+      792,
+      600,
+      384,
+      384
+    ],
+    "qr-upper": [
+      3700,
+      490,
+      384,
+      384
+    ],
+    "qr-lower": [
+      3900,
+      900,
+      384,
+      384
+    ],
+    "siemens-contact": [
+      5260,
+      750,
+      384,
+      384
+    ]
+  },
+  "original_metadata_unchanged": true,
+  "bound_files_unchanged": true,
+  "interpretation": "One fixed mean_coarse=1 observation. Fine AC and terminal policy held by code path, not measured coefficient hashes; final hull can couple the change. No sweep or default admission."
+}

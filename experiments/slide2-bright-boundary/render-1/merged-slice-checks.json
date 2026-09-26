@@ -1,0 +1,44 @@
+[
+  {
+    "name": "qr-upper-frame-083",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 392299
+  },
+  {
+    "name": "qr-upper-frame-085",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 392299
+  },
+  {
+    "name": "qr-lower-frame-092",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 381615
+  },
+  {
+    "name": "qr-lower-frame-094",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 381615
+  },
+  {
+    "name": "siemens-contact-frame-058",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 377552
+  },
+  {
+    "name": "siemens-contact-frame-060",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 377552
+  },
+  {
+    "name": "pale-control-frame-149",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 294609
+  }
+]
