@@ -1,0 +1,17 @@
+{
+  "admitted": false,
+  "converged": false,
+  "correction_objective": 353916634099.32855,
+  "correction_residual_norm": 0.10695968312791916,
+  "correction_rhs_norm": 78250.15452357102,
+  "error_bound_rms": 0.02817946353965758,
+  "final_rounding_bound": 0.00007158188107453395,
+  "initial_objective": 373944274994.83167,
+  "iterations": 32,
+  "last_iterate_sha256": "d3da5a3dfad165828751fa660be4c8a010a59823d65830d32ea986f88eaa0251",
+  "objective": 353916635889.02826,
+  "plane": 1,
+  "refusal": "iteration-cap",
+  "relative_residual": 1.3668942097194207e-6,
+  "seconds": 6.7289295
+}

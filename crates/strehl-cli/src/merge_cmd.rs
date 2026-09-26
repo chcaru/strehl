@@ -5025,6 +5025,16 @@ pub(crate) mod chromatic_source_evidence {
 }
 
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+pub(crate) mod consistent_reconstruction {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/consistent-reconstruction/implementation.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+mod consistent_reconstruction_full {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/consistent-reconstruction/full-adapter.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
 mod marigold_source_pure {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/marigold-source-pure/oracle.rs"));
 }

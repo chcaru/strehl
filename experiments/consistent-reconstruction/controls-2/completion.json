@@ -1,0 +1,25 @@
+{
+  "instrument_completed": true,
+  "controls_executed": 4,
+  "cases_executed": 12,
+  "sources_unchanged": true,
+  "screen": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\consistent-reconstruction\\controls-2\\output\\screen.json",
+    "sha256": "63ea41b7eb9be8bc6e8e4450c0649fddff87865773fdd69f76a1844203c59ac0",
+    "bytes": 356468
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\consistent-reconstruction\\controls-2\\process.json",
+    "sha256": "bfb5b90b39c6b920d4cc24169bfde52f266cf8734b03137622c4aaaf63745531",
+    "bytes": 2715
+  },
+  "photographic_replay_admitted": false,
+  "root_review_required": true,
+  "full_render_available": false,
+  "scope": "Generated native consumer only. Numerical consistency is not photographic quality, and a capped unconverged iterate cannot qualify a full render.",
+  "numerical_pass": true,
+  "preservation_pass": false,
+  "contact_positive": true,
+  "wrong_source_destroyer_exercised": true,
+  "candidate_qualified": false
+}

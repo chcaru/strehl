@@ -1,0 +1,286 @@
+
+running 4 tests
+test merge_cmd::consistent_reconstruction::independent_controls::independent_adjoint_dense_controls ... ok
+test merge_cmd::consistent_reconstruction::independent_controls::independent_quality_screen ...   GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CONSISTENT_RECONSTRUCTION_CASE {"contact_positive":false,"iso":100.0,"numerical_valid":true,"preservation_pass":true,"scene":"flat"}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CONSISTENT_RECONSTRUCTION_CASE {"contact_positive":true,"iso":100.0,"numerical_valid":true,"preservation_pass":true,"scene":"broad-bright-contact"}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CONSISTENT_RECONSTRUCTION_CASE {"contact_positive":false,"iso":100.0,"numerical_valid":true,"preservation_pass":false,"scene":"neutral-glint-depth"}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CONSISTENT_RECONSTRUCTION_CASE {"contact_positive":false,"iso":100.0,"numerical_valid":true,"preservation_pass":false,"scene":"chromatic-glint-depth"}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CONSISTENT_RECONSTRUCTION_CASE {"contact_positive":false,"iso":100.0,"numerical_valid":true,"preservation_pass":false,"scene":"near-fine-far-coarse"}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CONSISTENT_RECONSTRUCTION_CASE {"contact_positive":false,"iso":100.0,"numerical_valid":true,"preservation_pass":true,"scene":"true-coloured-thin-rays"}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CONSISTENT_RECONSTRUCTION_CASE {"contact_positive":false,"iso":400.0,"numerical_valid":true,"preservation_pass":true,"scene":"flat"}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CONSISTENT_RECONSTRUCTION_CASE {"contact_positive":true,"iso":400.0,"numerical_valid":true,"preservation_pass":true,"scene":"broad-bright-contact"}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CONSISTENT_RECONSTRUCTION_CASE {"contact_positive":false,"iso":400.0,"numerical_valid":true,"preservation_pass":false,"scene":"neutral-glint-depth"}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CONSISTENT_RECONSTRUCTION_CASE {"contact_positive":false,"iso":400.0,"numerical_valid":true,"preservation_pass":false,"scene":"chromatic-glint-depth"}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CONSISTENT_RECONSTRUCTION_CASE {"contact_positive":false,"iso":400.0,"numerical_valid":true,"preservation_pass":false,"scene":"near-fine-far-coarse"}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CONSISTENT_RECONSTRUCTION_CASE {"contact_positive":false,"iso":400.0,"numerical_valid":true,"preservation_pass":true,"scene":"true-coloured-thin-rays"}
+CONSISTENT_RECONSTRUCTION {"candidate_qualified":false,"numerical_pass":true,"photographic_replay_admitted":false}
+ok
+test merge_cmd::consistent_reconstruction::independent_controls::independent_refusal_controls ... ok
+test merge_cmd::consistent_reconstruction::independent_controls::independent_solver_controls ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 275 filtered out; finished in 1.75s
+

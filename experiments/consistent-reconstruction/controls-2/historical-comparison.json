@@ -1,0 +1,15 @@
+{
+  "exact": true,
+  "historical": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\consistent-reconstruction\\controls-1\\output\\screen.json",
+    "sha256": "63ea41b7eb9be8bc6e8e4450c0649fddff87865773fdd69f76a1844203c59ac0",
+    "bytes": 356468
+  },
+  "current": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\consistent-reconstruction\\controls-2\\output\\screen.json",
+    "sha256": "63ea41b7eb9be8bc6e8e4450c0649fddff87865773fdd69f76a1844203c59ac0",
+    "bytes": 356468
+  },
+  "disposition": "RETAINED",
+  "scope": "One separately authorized complete chip observation of unchanged reconstruction. Generated glint and coarse-detail harms remain; no general qualification or default promotion."
+}

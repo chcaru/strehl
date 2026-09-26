@@ -1,0 +1,14 @@
+{
+  "actual_finish_planes_exact": true,
+  "coefficient_cache": {
+    "binary_bytes": 150194784,
+    "binary_sha256": "fd441cdb71515f423292b38a3ba055d677a835803b7d0bc19edb29a288ada9e2",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\consistent-reconstruction\\full-1\\output\\canonical-coefficients.json",
+    "sha256": "728f0c323cc298753b7238faf5e5d9861c583d712314a2331c8f6eff93b740f8"
+  },
+  "off_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\consistent-reconstruction\\full-1\\output\\baseline-pinned-rewrite.tiff",
+  "off_sha256": "84fbf88efe111f1b36d75fc5df80a8bdfd00cee98c8fb4f2cd804248e36cfefb",
+  "on_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\consistent-reconstruction\\full-1\\output\\baseline-observer-on.tiff",
+  "on_sha256": "84fbf88efe111f1b36d75fc5df80a8bdfd00cee98c8fb4f2cd804248e36cfefb",
+  "whole_tiff_byte_exact": true
+}

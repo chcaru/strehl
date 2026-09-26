@@ -137,8 +137,35 @@ Lower chroma error conceals that damage. The exercised outside-positive also
 fails to improve, and clipped-neutral texture retention fails despite reduced
 RGB error. See `experiments/chromatic-source-evidence/results.md` and independent
 review. No full render or deep-source-count campaign is justified for this rule.
-Next work is a bounded production-defect audit and selection of a different
-reconstruction mechanism from the real-photo evidence and prior failed models.
+The bounded production audit finds no new demonstrated defect in the checked
+coordinate, source-inclusion, accumulator or final CFA paths; it is not a
+correctness certificate. See `experiments/quality-september25/production-audit.md`.
+
+The fixed consistent-reconstruction screen now completes with all numerical
+controls passing. It retains actual fused coefficient targets and changes only
+their synthesis. Contact-edge RGB error improves18-19% in generated scenes,
+but glint-core errors increase and genuine far-coarse recovery loses4.8-5.5%.
+This fails general preservation despite the exercised contact gain. Lower
+coefficient residual and stronger near-fine detail cannot erase that failure.
+See `experiments/consistent-reconstruction/results.md` and independent review.
+Root separately authorizes one complete299-source chip observation of this
+unchanged operator, with exact current baseline, pinned tone, all25 fixed
+native pairs and full images. The measured contact gain changes scheduling
+scope; it does not pass the old gate. No norm/iteration sweep or mineral/
+marigold transfer follows. Numerical refusal of any plane blocks candidate
+output. The prior decision and `full-plan.md` record that distinction.
+That complete observation now finishes with numerical refusal: both green
+planes reach32 iterations with recorded RMS bounds0.02818/0.02781DN against
+the fixed0.02DN bar. R/B pass, but no partial candidate is rendered. All299
+sources and exact production baseline/observer identities pass. There is no
+photographic improvement verdict; close this recipe without a cap or norm
+sweep. See `experiments/consistent-reconstruction/full-results.md`.
+The next distinct route is illuminant-aware final colour development for the
+documented3000K mineral/marigold captures, reusing complete current CFA caches.
+It tests a known daylight-only approximation, not a proven cause of glare or
+ghosting. Primary-standard arithmetic and actual capture matrix availability
+must pass before full writer comparisons. See the September25
+`next-after-reconstruction.md` decision; no default changes are implied.
 Do not repeat donor, prior-strength or base-weighting sweeps. The bounded
 FocusDeep readiness check found no verified licensed checkpoint/inference route
 and does not justify a training campaign; see

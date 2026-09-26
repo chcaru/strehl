@@ -1,0 +1,2121 @@
+
+running 1 test
+test merge_cmd::consistent_reconstruction_full::complete_pair ...   GPU gather: NVIDIA GeForce RTX 5090 / Vulkan / DiscreteGpu; schedule Device256; initialization 332.954 ms; {"no_contraction":true,"max_storage_buffer_binding_size":2147483644,"max_buffer_size":4294967295,"original_sha256":"41658a89bd9b17c73b0f452b48bde689679e4ecc50774872ebfff0171cdb6560","decorated_sha256":"a7dce2107ce7713ac4d9cd961dd44e303bd69b37c2d2ca7029f20aa1f131de9d","submitted_sha256":"a7dce2107ce7713ac4d9cd961dd44e303bd69b37c2d2ca7029f20aa1f131de9d","arithmetic_results":30,"added_decorations":30,"float_operations":{"FAdd":8,"FMul":17,"FSub":5},"entry_points":["mhc","gather","quantize_vector"],"group_zero_bindings":[0,1,2,3,4,5],"bounds_policy":"Restrict indices/buffers/images/binding-arrays; integer division checks and loop bounds enabled","validation":"embedded WGSL+IR; Naga SPIR-V parse+IR; structural decoration/removal identity; NOT spirv-val"}
+  GPU device coordinates: {"hardware":{"vulkan_api":4211029,"shader_f64":true,"signed_zero_inf_nan_preserve_f64":true,"denorm_preserve_f64":false,"rounding_rte_f32":true,"rounding_rte_f64":true,"denorm_independence":1,"rounding_independence":1},"original_sha256":"95eb96b66b3e680303fe461954a898cc7f6db199225f67d32eb1f249cd0be3eb","submitted_sha256":"232804bc0de39feb6d50d271d0ff83d10d650a890c9e215b3f21eef6feee4947","original_extensions":["SPV_KHR_storage_buffer_storage_class"],"arithmetic_results":24,"added_capabilities":["SignedZeroInfNanPreserve","RoundingModeRTE"],"execution_modes":["SignedZeroInfNanPreserve 64","RoundingModeRTE 32","RoundingModeRTE 64"],"coefficient_guard":"every finite nonzero pull coefficient abs>=2^-900; unsafe actual frames use Parallel256; direct descriptor helper refuses","entry_point":"main","bindings":[0,1,2],"validation":"owned GLSL+Naga IR and original SPIR-V parse+IR; final fixed additions structurally checked with exact removal identity; final patched SPIR-V NOT fully Naga-validated and NOT spirv-val"}
+  GPU gather RGB Device256: 7032x4688, covered 30818117/32966016, library call 47.090 ms, pack 12.479, CPU coordinates 0.001, submit/wait/readback 34.590; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15406864/16483008, library call 42.934 ms, pack 12.275, CPU coordinates 0.001, submit/wait/readback 30.636; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 1/299 source0 0.858s
+  GPU gather RGB Device256: 7032x4688, covered 30839822/32966016, library call 46.395 ms, pack 11.936, CPU coordinates 0.002, submit/wait/readback 34.435; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15417686/16483008, library call 44.138 ms, pack 12.644, CPU coordinates 0.001, submit/wait/readback 31.470; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 2/299 source1 0.566s
+  GPU gather RGB Device256: 7032x4688, covered 30858000/32966016, library call 46.917 ms, pack 12.462, CPU coordinates 0.002, submit/wait/readback 34.430; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15426791/16483008, library call 42.724 ms, pack 12.242, CPU coordinates 0.001, submit/wait/readback 30.458; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 3/299 source2 0.558s
+  GPU gather RGB Device256: 7032x4688, covered 30876442/32966016, library call 45.508 ms, pack 12.126, CPU coordinates 0.001, submit/wait/readback 33.361; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15436011/16483008, library call 42.196 ms, pack 12.133, CPU coordinates 0.001, submit/wait/readback 30.040; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 4/299 source3 0.564s
+  GPU gather RGB Device256: 7032x4688, covered 30892812/32966016, library call 45.945 ms, pack 11.879, CPU coordinates 0.001, submit/wait/readback 34.045; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15444172/16483008, library call 42.314 ms, pack 12.175, CPU coordinates 0.001, submit/wait/readback 30.117; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 5/299 source4 0.556s
+  GPU gather RGB Device256: 7032x4688, covered 30909169/32966016, library call 48.884 ms, pack 11.848, CPU coordinates 0.001, submit/wait/readback 37.014; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15452361/16483008, library call 44.971 ms, pack 12.517, CPU coordinates 0.001, submit/wait/readback 32.428; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 6/299 source5 0.562s
+  GPU gather RGB Device256: 7032x4688, covered 30926310/32966016, library call 48.607 ms, pack 11.825, CPU coordinates 0.001, submit/wait/readback 36.761; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15460890/16483008, library call 44.591 ms, pack 12.288, CPU coordinates 0.001, submit/wait/readback 32.283; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 7/299 source6 0.575s
+  GPU gather RGB Device256: 7032x4688, covered 30942439/32966016, library call 50.911 ms, pack 12.255, CPU coordinates 0.002, submit/wait/readback 38.629; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15468997/16483008, library call 44.340 ms, pack 12.265, CPU coordinates 0.001, submit/wait/readback 32.054; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 8/299 source7 0.574s
+  GPU gather RGB Device256: 7032x4688, covered 30957839/32966016, library call 49.922 ms, pack 12.130, CPU coordinates 0.003, submit/wait/readback 37.764; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15476670/16483008, library call 57.399 ms, pack 23.672, CPU coordinates 0.001, submit/wait/readback 33.699; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 9/299 source8 0.583s
+  GPU gather RGB Device256: 7032x4688, covered 30975304/32966016, library call 45.568 ms, pack 11.737, CPU coordinates 0.001, submit/wait/readback 33.806; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15485399/16483008, library call 48.221 ms, pack 15.928, CPU coordinates 0.002, submit/wait/readback 32.269; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 10/299 source9 0.563s
+  GPU gather RGB Device256: 7032x4688, covered 30994043/32966016, library call 46.964 ms, pack 11.741, CPU coordinates 0.001, submit/wait/readback 35.201; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15494793/16483008, library call 42.668 ms, pack 12.037, CPU coordinates 0.001, submit/wait/readback 30.604; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 11/299 source10 0.565s
+  GPU gather RGB Device256: 7032x4688, covered 31013772/32966016, library call 48.231 ms, pack 11.747, CPU coordinates 0.002, submit/wait/readback 36.450; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15504652/16483008, library call 43.614 ms, pack 12.455, CPU coordinates 0.001, submit/wait/readback 31.137; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 12/299 source11 0.566s
+  GPU gather RGB Device256: 7032x4688, covered 31033688/32966016, library call 49.310 ms, pack 11.982, CPU coordinates 0.001, submit/wait/readback 37.305; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15514599/16483008, library call 43.964 ms, pack 12.144, CPU coordinates 0.001, submit/wait/readback 31.796; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 13/299 source12 0.561s
+  GPU gather RGB Device256: 7032x4688, covered 31056350/32966016, library call 47.400 ms, pack 11.717, CPU coordinates 0.001, submit/wait/readback 35.661; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15525897/16483008, library call 44.572 ms, pack 12.235, CPU coordinates 0.001, submit/wait/readback 32.312; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 14/299 source13 0.576s
+  GPU gather RGB Device256: 7032x4688, covered 31074834/32966016, library call 46.453 ms, pack 11.983, CPU coordinates 0.001, submit/wait/readback 34.449; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15535152/16483008, library call 44.803 ms, pack 12.146, CPU coordinates 0.001, submit/wait/readback 32.624; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 15/299 source14 0.561s
+  GPU gather RGB Device256: 7032x4688, covered 31092702/32966016, library call 46.798 ms, pack 11.660, CPU coordinates 0.002, submit/wait/readback 35.116; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15544115/16483008, library call 43.468 ms, pack 12.332, CPU coordinates 0.001, submit/wait/readback 31.110; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 16/299 source15 0.559s
+  GPU gather RGB Device256: 7032x4688, covered 31108791/32966016, library call 47.902 ms, pack 11.938, CPU coordinates 0.002, submit/wait/readback 35.935; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15552146/16483008, library call 44.021 ms, pack 11.998, CPU coordinates 0.002, submit/wait/readback 31.993; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 17/299 source16 0.566s
+  GPU gather RGB Device256: 7032x4688, covered 31125472/32966016, library call 46.595 ms, pack 11.596, CPU coordinates 0.001, submit/wait/readback 34.977; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15560467/16483008, library call 42.934 ms, pack 11.979, CPU coordinates 0.001, submit/wait/readback 30.931; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 18/299 source17 0.565s
+  GPU gather RGB Device256: 7032x4688, covered 31141381/32966016, library call 46.905 ms, pack 11.698, CPU coordinates 0.001, submit/wait/readback 35.179; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15568418/16483008, library call 43.422 ms, pack 12.262, CPU coordinates 0.001, submit/wait/readback 31.129; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 19/299 source18 0.559s
+  GPU gather RGB Device256: 7032x4688, covered 31159295/32966016, library call 46.913 ms, pack 11.720, CPU coordinates 0.001, submit/wait/readback 35.166; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15577368/16483008, library call 42.536 ms, pack 11.894, CPU coordinates 0.001, submit/wait/readback 30.620; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 20/299 source19 0.556s
+  GPU gather RGB Device256: 7032x4688, covered 31176727/32966016, library call 47.518 ms, pack 11.686, CPU coordinates 0.001, submit/wait/readback 35.802; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15586093/16483008, library call 43.591 ms, pack 12.029, CPU coordinates 0.001, submit/wait/readback 31.530; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 21/299 source20 0.572s
+  GPU gather RGB Device256: 7032x4688, covered 31195651/32966016, library call 47.984 ms, pack 11.966, CPU coordinates 0.001, submit/wait/readback 35.994; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15595544/16483008, library call 44.556 ms, pack 12.213, CPU coordinates 0.001, submit/wait/readback 32.316; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 22/299 source21 0.562s
+  GPU gather RGB Device256: 7032x4688, covered 31210133/32966016, library call 46.578 ms, pack 11.726, CPU coordinates 0.001, submit/wait/readback 34.822; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15602777/16483008, library call 43.945 ms, pack 12.480, CPU coordinates 0.001, submit/wait/readback 31.437; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 23/299 source22 0.557s
+  GPU gather RGB Device256: 7032x4688, covered 31225209/32966016, library call 48.306 ms, pack 11.758, CPU coordinates 0.001, submit/wait/readback 36.514; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15610305/16483008, library call 43.539 ms, pack 12.065, CPU coordinates 0.001, submit/wait/readback 31.449; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 24/299 source23 0.559s
+  GPU gather RGB Device256: 7032x4688, covered 31238692/32966016, library call 47.303 ms, pack 11.642, CPU coordinates 0.001, submit/wait/readback 35.638; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15617063/16483008, library call 44.240 ms, pack 12.094, CPU coordinates 0.001, submit/wait/readback 32.123; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 25/299 source24 0.565s
+  GPU gather RGB Device256: 7032x4688, covered 31252652/32966016, library call 49.065 ms, pack 11.719, CPU coordinates 0.001, submit/wait/readback 37.323; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15624039/16483008, library call 43.905 ms, pack 12.051, CPU coordinates 0.001, submit/wait/readback 31.829; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 26/299 source25 0.563s
+  GPU gather RGB Device256: 7032x4688, covered 31267659/32966016, library call 47.059 ms, pack 11.686, CPU coordinates 0.001, submit/wait/readback 35.342; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15631568/16483008, library call 42.561 ms, pack 12.015, CPU coordinates 0.001, submit/wait/readback 30.522; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 27/299 source26 0.554s
+  GPU gather RGB Device256: 7032x4688, covered 31284302/32966016, library call 46.748 ms, pack 11.951, CPU coordinates 0.000, submit/wait/readback 34.774; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15639839/16483008, library call 42.805 ms, pack 12.114, CPU coordinates 0.001, submit/wait/readback 30.666; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 28/299 source27 0.563s
+  GPU gather RGB Device256: 7032x4688, covered 31300300/32966016, library call 47.195 ms, pack 11.734, CPU coordinates 0.001, submit/wait/readback 35.438; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15647844/16483008, library call 44.039 ms, pack 12.027, CPU coordinates 0.001, submit/wait/readback 31.991; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 29/299 source28 0.561s
+  GPU gather RGB Device256: 7032x4688, covered 31319046/32966016, library call 47.416 ms, pack 11.682, CPU coordinates 0.002, submit/wait/readback 35.703; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15657233/16483008, library call 49.784 ms, pack 15.495, CPU coordinates 0.002, submit/wait/readback 34.251; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 30/299 source29 0.566s
+  GPU gather RGB Device256: 7032x4688, covered 31334266/32966016, library call 47.385 ms, pack 11.676, CPU coordinates 0.001, submit/wait/readback 35.686; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15664836/16483008, library call 43.659 ms, pack 12.143, CPU coordinates 0.001, submit/wait/readback 31.497; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 31/299 source30 0.560s
+  GPU gather RGB Device256: 7032x4688, covered 31346018/32966016, library call 48.465 ms, pack 12.308, CPU coordinates 0.001, submit/wait/readback 36.133; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15670698/16483008, library call 44.248 ms, pack 12.073, CPU coordinates 0.001, submit/wait/readback 32.150; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 32/299 source31 0.565s
+  GPU gather RGB Device256: 7032x4688, covered 31362445/32966016, library call 49.346 ms, pack 13.391, CPU coordinates 0.002, submit/wait/readback 35.918; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15678920/16483008, library call 42.400 ms, pack 12.210, CPU coordinates 0.001, submit/wait/readback 30.165; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 33/299 source32 0.572s
+  GPU gather RGB Device256: 7032x4688, covered 31376453/32966016, library call 46.438 ms, pack 11.771, CPU coordinates 0.001, submit/wait/readback 34.643; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15685903/16483008, library call 43.007 ms, pack 12.147, CPU coordinates 0.001, submit/wait/readback 30.836; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 34/299 source33 0.558s
+  GPU gather RGB Device256: 7032x4688, covered 31393630/32966016, library call 46.967 ms, pack 11.685, CPU coordinates 0.001, submit/wait/readback 35.256; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15694481/16483008, library call 44.915 ms, pack 12.699, CPU coordinates 0.001, submit/wait/readback 32.187; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 35/299 source34 0.565s
+  GPU gather RGB Device256: 7032x4688, covered 31409276/32966016, library call 47.195 ms, pack 12.133, CPU coordinates 0.001, submit/wait/readback 35.042; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15702298/16483008, library call 45.110 ms, pack 12.287, CPU coordinates 0.002, submit/wait/readback 32.798; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 36/299 source35 0.569s
+  GPU gather RGB Device256: 7032x4688, covered 31427474/32966016, library call 48.715 ms, pack 11.832, CPU coordinates 0.001, submit/wait/readback 36.857; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15711435/16483008, library call 51.606 ms, pack 17.764, CPU coordinates 0.002, submit/wait/readback 33.802; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 37/299 source36 0.570s
+  GPU gather RGB Device256: 7032x4688, covered 31443730/32966016, library call 46.903 ms, pack 11.934, CPU coordinates 0.002, submit/wait/readback 34.945; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15719512/16483008, library call 43.103 ms, pack 11.945, CPU coordinates 0.001, submit/wait/readback 31.136; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 38/299 source37 0.570s
+  GPU gather RGB Device256: 7032x4688, covered 31458414/32966016, library call 49.322 ms, pack 12.732, CPU coordinates 0.004, submit/wait/readback 36.561; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15726869/16483008, library call 44.841 ms, pack 12.719, CPU coordinates 0.001, submit/wait/readback 32.099; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 39/299 source38 0.575s
+  GPU gather RGB Device256: 7032x4688, covered 31473957/32966016, library call 47.882 ms, pack 11.981, CPU coordinates 0.001, submit/wait/readback 35.879; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15734636/16483008, library call 44.082 ms, pack 12.177, CPU coordinates 0.001, submit/wait/readback 31.885; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 40/299 source39 0.566s
+  GPU gather RGB Device256: 7032x4688, covered 31489800/32966016, library call 46.898 ms, pack 11.730, CPU coordinates 0.001, submit/wait/readback 35.138; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15742552/16483008, library call 43.203 ms, pack 12.058, CPU coordinates 0.001, submit/wait/readback 31.125; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 41/299 source40 0.561s
+  GPU gather RGB Device256: 7032x4688, covered 31505330/32966016, library call 47.430 ms, pack 11.743, CPU coordinates 0.002, submit/wait/readback 35.655; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15750295/16483008, library call 44.176 ms, pack 12.520, CPU coordinates 0.002, submit/wait/readback 31.635; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 42/299 source41 0.577s
+  GPU gather RGB Device256: 7032x4688, covered 31521080/32966016, library call 47.404 ms, pack 12.008, CPU coordinates 0.001, submit/wait/readback 35.363; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15758217/16483008, library call 44.173 ms, pack 12.157, CPU coordinates 0.001, submit/wait/readback 31.996; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 43/299 source42 0.565s
+  GPU gather RGB Device256: 7032x4688, covered 31536578/32966016, library call 47.270 ms, pack 11.895, CPU coordinates 0.001, submit/wait/readback 35.337; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15765963/16483008, library call 49.053 ms, pack 15.751, CPU coordinates 0.002, submit/wait/readback 33.268; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 44/299 source43 0.585s
+  GPU gather RGB Device256: 7032x4688, covered 31548890/32966016, library call 47.360 ms, pack 12.497, CPU coordinates 0.002, submit/wait/readback 34.829; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15772119/16483008, library call 44.343 ms, pack 12.207, CPU coordinates 0.002, submit/wait/readback 32.112; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 45/299 source44 0.574s
+  GPU gather RGB Device256: 7032x4688, covered 31559243/32966016, library call 48.957 ms, pack 11.979, CPU coordinates 0.002, submit/wait/readback 36.945; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15777260/16483008, library call 43.233 ms, pack 12.182, CPU coordinates 0.001, submit/wait/readback 31.032; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 46/299 source45 0.576s
+  GPU gather RGB Device256: 7032x4688, covered 31571189/32966016, library call 47.228 ms, pack 11.762, CPU coordinates 0.001, submit/wait/readback 35.445; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15783250/16483008, library call 43.830 ms, pack 12.169, CPU coordinates 0.001, submit/wait/readback 31.623; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 47/299 source46 0.566s
+  GPU gather RGB Device256: 7032x4688, covered 31586294/32966016, library call 47.671 ms, pack 11.713, CPU coordinates 0.001, submit/wait/readback 35.937; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15790797/16483008, library call 43.278 ms, pack 12.020, CPU coordinates 0.001, submit/wait/readback 31.232; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 48/299 source47 0.561s
+  GPU gather RGB Device256: 7032x4688, covered 31602019/32966016, library call 48.577 ms, pack 11.770, CPU coordinates 0.002, submit/wait/readback 36.774; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15798646/16483008, library call 44.331 ms, pack 12.104, CPU coordinates 0.002, submit/wait/readback 32.201; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 49/299 source48 0.587s
+  GPU gather RGB Device256: 7032x4688, covered 31617170/32966016, library call 47.687 ms, pack 11.660, CPU coordinates 0.001, submit/wait/readback 36.003; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15806231/16483008, library call 44.130 ms, pack 12.138, CPU coordinates 0.001, submit/wait/readback 31.966; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 50/299 source49 0.565s
+  GPU gather RGB Device256: 7032x4688, covered 31633012/32966016, library call 50.342 ms, pack 11.777, CPU coordinates 0.002, submit/wait/readback 38.524; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15814153/16483008, library call 43.781 ms, pack 12.238, CPU coordinates 0.001, submit/wait/readback 31.512; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 51/299 source50 0.577s
+  GPU gather RGB Device256: 7032x4688, covered 31646934/32966016, library call 50.596 ms, pack 12.208, CPU coordinates 0.002, submit/wait/readback 38.362; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15821118/16483008, library call 45.164 ms, pack 12.409, CPU coordinates 0.002, submit/wait/readback 32.730; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 52/299 source51 0.577s
+  GPU gather RGB Device256: 7032x4688, covered 31657607/32966016, library call 47.469 ms, pack 11.667, CPU coordinates 0.001, submit/wait/readback 35.772; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15826457/16483008, library call 43.768 ms, pack 12.150, CPU coordinates 0.001, submit/wait/readback 31.594; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 53/299 source52 0.565s
+  GPU gather RGB Device256: 7032x4688, covered 31668736/32966016, library call 48.169 ms, pack 11.971, CPU coordinates 0.001, submit/wait/readback 36.172; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15832043/16483008, library call 43.917 ms, pack 12.085, CPU coordinates 0.001, submit/wait/readback 31.806; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 54/299 source53 0.566s
+  GPU gather RGB Device256: 7032x4688, covered 31681480/32966016, library call 47.821 ms, pack 11.937, CPU coordinates 0.001, submit/wait/readback 35.861; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15838393/16483008, library call 45.415 ms, pack 12.241, CPU coordinates 0.002, submit/wait/readback 33.137; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 55/299 source54 0.565s
+  GPU gather RGB Device256: 7032x4688, covered 31698116/32966016, library call 46.796 ms, pack 11.868, CPU coordinates 0.001, submit/wait/readback 34.905; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15846697/16483008, library call 45.777 ms, pack 12.013, CPU coordinates 0.001, submit/wait/readback 33.738; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 56/299 source55 0.570s
+  GPU gather RGB Device256: 7032x4688, covered 31715361/32966016, library call 46.158 ms, pack 11.649, CPU coordinates 0.001, submit/wait/readback 34.479; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15855329/16483008, library call 42.221 ms, pack 12.046, CPU coordinates 0.001, submit/wait/readback 30.149; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 57/299 source56 0.561s
+  GPU gather RGB Device256: 7032x4688, covered 31734382/32966016, library call 54.096 ms, pack 17.652, CPU coordinates 0.001, submit/wait/readback 36.406; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15864823/16483008, library call 44.473 ms, pack 12.036, CPU coordinates 0.001, submit/wait/readback 32.412; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 58/299 source57 0.573s
+  GPU gather RGB Device256: 7032x4688, covered 31748551/32966016, library call 46.730 ms, pack 11.688, CPU coordinates 0.001, submit/wait/readback 35.019; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15871886/16483008, library call 43.199 ms, pack 12.096, CPU coordinates 0.001, submit/wait/readback 31.077; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 59/299 source58 0.564s
+  GPU gather RGB Device256: 7032x4688, covered 31767214/32966016, library call 47.973 ms, pack 11.733, CPU coordinates 0.001, submit/wait/readback 36.214; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15881257/16483008, library call 43.335 ms, pack 12.079, CPU coordinates 0.001, submit/wait/readback 31.231; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 60/299 source59 0.561s
+  GPU gather RGB Device256: 7032x4688, covered 31785497/32966016, library call 46.184 ms, pack 11.632, CPU coordinates 0.001, submit/wait/readback 34.527; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15890340/16483008, library call 44.392 ms, pack 12.393, CPU coordinates 0.001, submit/wait/readback 31.974; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 61/299 source60 0.564s
+  GPU gather RGB Device256: 7032x4688, covered 31796416/32966016, library call 48.535 ms, pack 11.646, CPU coordinates 0.002, submit/wait/readback 36.865; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15895845/16483008, library call 43.911 ms, pack 12.128, CPU coordinates 0.001, submit/wait/readback 31.758; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 62/299 source61 0.563s
+  GPU gather RGB Device256: 7032x4688, covered 31808171/32966016, library call 46.905 ms, pack 11.630, CPU coordinates 0.001, submit/wait/readback 35.243; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15901689/16483008, library call 45.849 ms, pack 12.063, CPU coordinates 0.001, submit/wait/readback 33.761; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 63/299 source62 0.570s
+  GPU gather RGB Device256: 7032x4688, covered 31826876/32966016, library call 46.174 ms, pack 11.687, CPU coordinates 0.001, submit/wait/readback 34.463; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15911080/16483008, library call 44.018 ms, pack 11.981, CPU coordinates 0.001, submit/wait/readback 32.011; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 64/299 source63 0.565s
+  GPU gather RGB Device256: 7032x4688, covered 31840653/32966016, library call 55.155 ms, pack 16.076, CPU coordinates 0.004, submit/wait/readback 39.046; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15917959/16483008, library call 46.545 ms, pack 12.303, CPU coordinates 0.003, submit/wait/readback 34.212; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 65/299 source64 0.585s
+  GPU gather RGB Device256: 7032x4688, covered 31858455/32966016, library call 46.808 ms, pack 11.680, CPU coordinates 0.001, submit/wait/readback 35.099; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15926864/16483008, library call 43.173 ms, pack 12.046, CPU coordinates 0.001, submit/wait/readback 31.100; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 66/299 source65 0.562s
+  GPU gather RGB Device256: 7032x4688, covered 31874081/32966016, library call 48.708 ms, pack 12.071, CPU coordinates 0.001, submit/wait/readback 36.613; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15934651/16483008, library call 43.550 ms, pack 12.109, CPU coordinates 0.002, submit/wait/readback 31.417; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 67/299 source66 0.573s
+  GPU gather RGB Device256: 7032x4688, covered 31886126/32966016, library call 48.792 ms, pack 12.032, CPU coordinates 0.001, submit/wait/readback 36.738; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15940652/16483008, library call 44.345 ms, pack 12.288, CPU coordinates 0.002, submit/wait/readback 32.031; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 68/299 source67 0.576s
+  GPU gather RGB Device256: 7032x4688, covered 31900065/32966016, library call 47.647 ms, pack 11.753, CPU coordinates 0.001, submit/wait/readback 35.868; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15947691/16483008, library call 43.832 ms, pack 12.193, CPU coordinates 0.001, submit/wait/readback 31.620; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 69/299 source68 0.564s
+  GPU gather RGB Device256: 7032x4688, covered 31909773/32966016, library call 47.584 ms, pack 12.032, CPU coordinates 0.001, submit/wait/readback 35.530; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15952477/16483008, library call 55.356 ms, pack 22.664, CPU coordinates 0.002, submit/wait/readback 32.666; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 70/299 source69 0.575s
+  GPU gather RGB Device256: 7032x4688, covered 31921186/32966016, library call 48.987 ms, pack 12.488, CPU coordinates 0.001, submit/wait/readback 36.473; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15958221/16483008, library call 45.242 ms, pack 12.738, CPU coordinates 0.002, submit/wait/readback 32.478; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 71/299 source70 0.567s
+  GPU gather RGB Device256: 7032x4688, covered 31936014/32966016, library call 48.613 ms, pack 11.796, CPU coordinates 0.002, submit/wait/readback 36.784; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15965576/16483008, library call 44.792 ms, pack 12.741, CPU coordinates 0.001, submit/wait/readback 32.029; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 72/299 source71 0.573s
+  GPU gather RGB Device256: 7032x4688, covered 31947673/32966016, library call 47.861 ms, pack 12.224, CPU coordinates 0.001, submit/wait/readback 35.609; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15971431/16483008, library call 47.924 ms, pack 13.754, CPU coordinates 0.003, submit/wait/readback 34.138; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 73/299 source72 0.582s
+  GPU gather RGB Device256: 7032x4688, covered 31958950/32966016, library call 48.707 ms, pack 12.089, CPU coordinates 0.001, submit/wait/readback 36.589; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15977057/16483008, library call 43.992 ms, pack 12.358, CPU coordinates 0.002, submit/wait/readback 31.610; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 74/299 source73 0.575s
+  GPU gather RGB Device256: 7032x4688, covered 31967762/32966016, library call 46.025 ms, pack 12.207, CPU coordinates 0.002, submit/wait/readback 33.799; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15981471/16483008, library call 44.703 ms, pack 12.229, CPU coordinates 0.001, submit/wait/readback 32.453; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 75/299 source74 0.647s
+  GPU gather RGB Device256: 7032x4688, covered 31980821/32966016, library call 47.615 ms, pack 11.810, CPU coordinates 0.001, submit/wait/readback 35.782; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15987971/16483008, library call 44.232 ms, pack 12.723, CPU coordinates 0.001, submit/wait/readback 31.488; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 76/299 source75 0.565s
+  GPU gather RGB Device256: 7032x4688, covered 31993950/32966016, library call 47.842 ms, pack 12.035, CPU coordinates 0.001, submit/wait/readback 35.775; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 15994575/16483008, library call 44.951 ms, pack 12.038, CPU coordinates 0.001, submit/wait/readback 32.887; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 77/299 source76 0.570s
+  GPU gather RGB Device256: 7032x4688, covered 32009723/32966016, library call 45.928 ms, pack 11.750, CPU coordinates 0.002, submit/wait/readback 34.156; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16002437/16483008, library call 44.524 ms, pack 12.216, CPU coordinates 0.001, submit/wait/readback 32.287; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 78/299 source77 0.568s
+  GPU gather RGB Device256: 7032x4688, covered 32022545/32966016, library call 48.695 ms, pack 11.785, CPU coordinates 0.002, submit/wait/readback 36.881; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16008835/16483008, library call 43.095 ms, pack 12.112, CPU coordinates 0.001, submit/wait/readback 30.958; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 79/299 source78 0.564s
+  GPU gather RGB Device256: 7032x4688, covered 32036804/32966016, library call 47.533 ms, pack 11.943, CPU coordinates 0.001, submit/wait/readback 35.560; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16015923/16483008, library call 43.102 ms, pack 11.957, CPU coordinates 0.001, submit/wait/readback 31.114; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 80/299 source79 0.576s
+  GPU gather RGB Device256: 7032x4688, covered 32050743/32966016, library call 48.724 ms, pack 11.699, CPU coordinates 0.001, submit/wait/readback 37.000; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16022904/16483008, library call 43.623 ms, pack 12.065, CPU coordinates 0.001, submit/wait/readback 31.531; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 81/299 source80 0.566s
+  GPU gather RGB Device256: 7032x4688, covered 32059869/32966016, library call 44.419 ms, pack 11.722, CPU coordinates 0.001, submit/wait/readback 32.674; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16027472/16483008, library call 50.724 ms, pack 18.793, CPU coordinates 0.001, submit/wait/readback 31.905; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 82/299 source81 0.569s
+  GPU gather RGB Device256: 7032x4688, covered 32072034/32966016, library call 47.651 ms, pack 11.746, CPU coordinates 0.001, submit/wait/readback 35.877; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16033611/16483008, library call 43.924 ms, pack 12.039, CPU coordinates 0.001, submit/wait/readback 31.858; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 83/299 source82 0.566s
+  GPU gather RGB Device256: 7032x4688, covered 32084874/32966016, library call 47.300 ms, pack 11.684, CPU coordinates 0.001, submit/wait/readback 35.593; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16039922/16483008, library call 44.095 ms, pack 12.088, CPU coordinates 0.002, submit/wait/readback 31.980; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 84/299 source83 0.566s
+  GPU gather RGB Device256: 7032x4688, covered 32100392/32966016, library call 47.178 ms, pack 11.694, CPU coordinates 0.001, submit/wait/readback 35.453; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16047747/16483008, library call 44.559 ms, pack 12.075, CPU coordinates 0.001, submit/wait/readback 32.458; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 85/299 source84 0.566s
+  GPU gather RGB Device256: 7032x4688, covered 32111387/32966016, library call 47.710 ms, pack 11.729, CPU coordinates 0.001, submit/wait/readback 35.957; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16053255/16483008, library call 44.056 ms, pack 12.216, CPU coordinates 0.001, submit/wait/readback 31.816; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 86/299 source85 0.567s
+  GPU gather RGB Device256: 7032x4688, covered 32123921/32966016, library call 45.996 ms, pack 11.993, CPU coordinates 0.001, submit/wait/readback 33.980; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16059491/16483008, library call 44.178 ms, pack 12.029, CPU coordinates 0.001, submit/wait/readback 32.128; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 87/299 source86 0.577s
+  GPU gather RGB Device256: 7032x4688, covered 32132044/32966016, library call 46.572 ms, pack 11.731, CPU coordinates 0.001, submit/wait/readback 34.817; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16063494/16483008, library call 42.923 ms, pack 11.987, CPU coordinates 0.001, submit/wait/readback 30.912; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 88/299 source87 0.564s
+  GPU gather RGB Device256: 7032x4688, covered 32142481/32966016, library call 47.801 ms, pack 11.989, CPU coordinates 0.001, submit/wait/readback 35.788; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16068726/16483008, library call 44.069 ms, pack 12.522, CPU coordinates 0.001, submit/wait/readback 31.522; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 89/299 source88 0.566s
+  GPU gather RGB Device256: 7032x4688, covered 32155136/32966016, library call 47.160 ms, pack 11.644, CPU coordinates 0.001, submit/wait/readback 35.493; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16075107/16483008, library call 43.105 ms, pack 12.041, CPU coordinates 0.001, submit/wait/readback 31.036; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 90/299 source89 0.563s
+  GPU gather RGB Device256: 7032x4688, covered 32166782/32966016, library call 47.853 ms, pack 11.630, CPU coordinates 0.001, submit/wait/readback 36.197; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16080931/16483008, library call 43.345 ms, pack 12.056, CPU coordinates 0.001, submit/wait/readback 31.263; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 91/299 source90 0.569s
+  GPU gather RGB Device256: 7032x4688, covered 32174728/32966016, library call 45.588 ms, pack 11.720, CPU coordinates 0.001, submit/wait/readback 33.835; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16084845/16483008, library call 42.557 ms, pack 12.215, CPU coordinates 0.001, submit/wait/readback 30.316; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 92/299 source91 0.565s
+  GPU gather RGB Device256: 7032x4688, covered 32184641/32966016, library call 48.904 ms, pack 12.191, CPU coordinates 0.001, submit/wait/readback 36.689; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16089871/16483008, library call 44.155 ms, pack 12.158, CPU coordinates 0.002, submit/wait/readback 31.969; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 93/299 source92 0.568s
+  GPU gather RGB Device256: 7032x4688, covered 32199825/32966016, library call 47.699 ms, pack 11.775, CPU coordinates 0.001, submit/wait/readback 35.899; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16097370/16483008, library call 44.053 ms, pack 12.216, CPU coordinates 0.001, submit/wait/readback 31.811; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 94/299 source93 0.584s
+  GPU gather RGB Device256: 7032x4688, covered 32217782/32966016, library call 46.521 ms, pack 11.713, CPU coordinates 0.001, submit/wait/readback 34.788; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16106449/16483008, library call 42.746 ms, pack 11.999, CPU coordinates 0.001, submit/wait/readback 30.725; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 95/299 source94 0.565s
+  GPU gather RGB Device256: 7032x4688, covered 32222868/32966016, library call 49.461 ms, pack 11.979, CPU coordinates 0.001, submit/wait/readback 37.448; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16108914/16483008, library call 44.860 ms, pack 12.404, CPU coordinates 0.001, submit/wait/readback 32.427; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 96/299 source95 0.577s
+  GPU gather RGB Device256: 7032x4688, covered 32232052/32966016, library call 47.338 ms, pack 11.791, CPU coordinates 0.001, submit/wait/readback 35.516; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16113488/16483008, library call 43.095 ms, pack 12.092, CPU coordinates 0.001, submit/wait/readback 30.978; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 97/299 source96 0.569s
+  GPU gather RGB Device256: 7032x4688, covered 32240249/32966016, library call 48.187 ms, pack 11.876, CPU coordinates 0.001, submit/wait/readback 36.281; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16117633/16483008, library call 44.048 ms, pack 12.118, CPU coordinates 0.002, submit/wait/readback 31.904; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 98/299 source97 0.571s
+  GPU gather RGB Device256: 7032x4688, covered 32253145/32966016, library call 46.861 ms, pack 11.733, CPU coordinates 0.001, submit/wait/readback 35.102; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16124125/16483008, library call 43.661 ms, pack 12.213, CPU coordinates 0.001, submit/wait/readback 31.423; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 99/299 source98 0.570s
+  GPU gather RGB Device256: 7032x4688, covered 32265965/32966016, library call 45.706 ms, pack 11.651, CPU coordinates 0.001, submit/wait/readback 34.034; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16130484/16483008, library call 44.055 ms, pack 12.249, CPU coordinates 0.001, submit/wait/readback 31.781; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 100/299 source99 0.567s
+  GPU gather RGB Device256: 7032x4688, covered 32274680/32966016, library call 50.857 ms, pack 16.047, CPU coordinates 0.002, submit/wait/readback 34.789; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16134891/16483008, library call 43.009 ms, pack 12.440, CPU coordinates 0.002, submit/wait/readback 30.547; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 101/299 source100 0.591s
+  GPU gather RGB Device256: 7032x4688, covered 32286103/32966016, library call 47.720 ms, pack 11.774, CPU coordinates 0.002, submit/wait/readback 35.925; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16140516/16483008, library call 44.558 ms, pack 12.169, CPU coordinates 0.001, submit/wait/readback 32.366; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 102/299 source101 0.572s
+  GPU gather RGB Device256: 7032x4688, covered 32298484/32966016, library call 56.753 ms, pack 18.410, CPU coordinates 0.001, submit/wait/readback 38.311; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16146739/16483008, library call 43.610 ms, pack 12.125, CPU coordinates 0.001, submit/wait/readback 31.464; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 103/299 source102 0.582s
+  GPU gather RGB Device256: 7032x4688, covered 32306891/32966016, library call 47.432 ms, pack 11.776, CPU coordinates 0.002, submit/wait/readback 35.624; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16150963/16483008, library call 44.845 ms, pack 12.684, CPU coordinates 0.001, submit/wait/readback 32.132; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 104/299 source103 0.571s
+  GPU gather RGB Device256: 7032x4688, covered 32320803/32966016, library call 47.524 ms, pack 11.788, CPU coordinates 0.001, submit/wait/readback 35.715; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16157840/16483008, library call 44.872 ms, pack 12.150, CPU coordinates 0.001, submit/wait/readback 32.696; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 105/299 source104 0.576s
+  GPU gather RGB Device256: 7032x4688, covered 32334206/32966016, library call 48.023 ms, pack 12.041, CPU coordinates 0.001, submit/wait/readback 35.960; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16164639/16483008, library call 43.639 ms, pack 12.522, CPU coordinates 0.001, submit/wait/readback 31.093; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 106/299 source105 0.584s
+  GPU gather RGB Device256: 7032x4688, covered 32347622/32966016, library call 48.543 ms, pack 12.323, CPU coordinates 0.002, submit/wait/readback 36.184; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16171333/16483008, library call 44.895 ms, pack 12.291, CPU coordinates 0.001, submit/wait/readback 32.582; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 107/299 source106 0.587s
+  GPU gather RGB Device256: 7032x4688, covered 32356780/32966016, library call 46.042 ms, pack 11.743, CPU coordinates 0.001, submit/wait/readback 34.266; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16175831/16483008, library call 45.821 ms, pack 12.598, CPU coordinates 0.001, submit/wait/readback 33.199; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 108/299 source107 0.581s
+  GPU gather RGB Device256: 7032x4688, covered 32369256/32966016, library call 47.178 ms, pack 11.816, CPU coordinates 0.001, submit/wait/readback 35.336; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16182167/16483008, library call 43.845 ms, pack 12.271, CPU coordinates 0.002, submit/wait/readback 31.550; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 109/299 source108 0.576s
+  GPU gather RGB Device256: 7032x4688, covered 32378734/32966016, library call 46.378 ms, pack 11.678, CPU coordinates 0.001, submit/wait/readback 34.673; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16186892/16483008, library call 43.846 ms, pack 12.375, CPU coordinates 0.000, submit/wait/readback 31.399; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 110/299 source109 0.568s
+  GPU gather RGB Device256: 7032x4688, covered 32390929/32966016, library call 47.723 ms, pack 11.740, CPU coordinates 0.001, submit/wait/readback 35.954; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16192949/16483008, library call 44.189 ms, pack 12.265, CPU coordinates 0.001, submit/wait/readback 31.899; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 111/299 source110 0.579s
+  GPU gather RGB Device256: 7032x4688, covered 32399013/32966016, library call 45.825 ms, pack 11.979, CPU coordinates 0.001, submit/wait/readback 33.822; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16197049/16483008, library call 44.382 ms, pack 12.524, CPU coordinates 0.002, submit/wait/readback 31.834; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 112/299 source111 0.571s
+  GPU gather RGB Device256: 7032x4688, covered 32410735/32966016, library call 47.043 ms, pack 11.720, CPU coordinates 0.001, submit/wait/readback 35.297; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16202870/16483008, library call 43.333 ms, pack 12.132, CPU coordinates 0.001, submit/wait/readback 31.180; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 113/299 source112 0.578s
+  GPU gather RGB Device256: 7032x4688, covered 32426858/32966016, library call 48.398 ms, pack 11.869, CPU coordinates 0.002, submit/wait/readback 36.498; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16210898/16483008, library call 44.593 ms, pack 12.070, CPU coordinates 0.002, submit/wait/readback 32.498; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 114/299 source113 0.572s
+  GPU gather RGB Device256: 7032x4688, covered 32436578/32966016, library call 50.201 ms, pack 14.032, CPU coordinates 0.001, submit/wait/readback 36.141; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16215803/16483008, library call 42.755 ms, pack 12.095, CPU coordinates 0.001, submit/wait/readback 30.639; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 115/299 source114 0.574s
+  GPU gather RGB Device256: 7032x4688, covered 32447320/32966016, library call 47.939 ms, pack 11.733, CPU coordinates 0.001, submit/wait/readback 36.178; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16221171/16483008, library call 43.950 ms, pack 12.335, CPU coordinates 0.001, submit/wait/readback 31.594; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 116/299 source115 0.572s
+  GPU gather RGB Device256: 7032x4688, covered 32457638/32966016, library call 47.732 ms, pack 11.705, CPU coordinates 0.001, submit/wait/readback 36.004; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16226335/16483008, library call 43.753 ms, pack 12.043, CPU coordinates 0.001, submit/wait/readback 31.676; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 117/299 source116 0.570s
+  GPU gather RGB Device256: 7032x4688, covered 32474237/32966016, library call 48.192 ms, pack 11.736, CPU coordinates 0.001, submit/wait/readback 36.427; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16234618/16483008, library call 43.580 ms, pack 12.008, CPU coordinates 0.001, submit/wait/readback 31.548; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 118/299 source117 0.576s
+  GPU gather RGB Device256: 7032x4688, covered 32490536/32966016, library call 47.669 ms, pack 11.722, CPU coordinates 0.001, submit/wait/readback 35.914; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16242814/16483008, library call 43.803 ms, pack 12.134, CPU coordinates 0.001, submit/wait/readback 31.644; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 119/299 source118 0.572s
+  GPU gather RGB Device256: 7032x4688, covered 32504715/32966016, library call 46.337 ms, pack 11.668, CPU coordinates 0.001, submit/wait/readback 34.642; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16249926/16483008, library call 49.187 ms, pack 17.382, CPU coordinates 0.001, submit/wait/readback 31.778; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 120/299 source119 0.576s
+  GPU gather RGB Device256: 7032x4688, covered 32519917/32966016, library call 47.487 ms, pack 11.819, CPU coordinates 0.002, submit/wait/readback 35.642; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16257456/16483008, library call 43.629 ms, pack 12.157, CPU coordinates 0.001, submit/wait/readback 31.446; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 121/299 source120 0.571s
+  GPU gather RGB Device256: 7032x4688, covered 32531689/32966016, library call 47.399 ms, pack 11.678, CPU coordinates 0.001, submit/wait/readback 35.693; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16263367/16483008, library call 43.194 ms, pack 12.093, CPU coordinates 0.001, submit/wait/readback 31.078; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 122/299 source121 0.576s
+  GPU gather RGB Device256: 7032x4688, covered 32547744/32966016, library call 46.944 ms, pack 11.708, CPU coordinates 0.001, submit/wait/readback 35.213; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16271313/16483008, library call 44.333 ms, pack 12.438, CPU coordinates 0.001, submit/wait/readback 31.869; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 123/299 source122 0.574s
+  GPU gather RGB Device256: 7032x4688, covered 32558876/32966016, library call 46.352 ms, pack 11.657, CPU coordinates 0.001, submit/wait/readback 34.675; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16276918/16483008, library call 44.032 ms, pack 12.348, CPU coordinates 0.001, submit/wait/readback 31.660; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 124/299 source123 0.572s
+  GPU gather RGB Device256: 7032x4688, covered 32568665/32966016, library call 47.646 ms, pack 11.755, CPU coordinates 0.001, submit/wait/readback 35.861; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16281761/16483008, library call 44.376 ms, pack 11.987, CPU coordinates 0.001, submit/wait/readback 32.366; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 125/299 source124 0.588s
+  GPU gather RGB Device256: 7032x4688, covered 32581992/32966016, library call 48.128 ms, pack 11.701, CPU coordinates 0.001, submit/wait/readback 36.400; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16288459/16483008, library call 44.100 ms, pack 12.103, CPU coordinates 0.001, submit/wait/readback 31.972; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 126/299 source125 0.573s
+  GPU gather RGB Device256: 7032x4688, covered 32592699/32966016, library call 50.390 ms, pack 12.023, CPU coordinates 0.002, submit/wait/readback 38.329; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16293881/16483008, library call 45.017 ms, pack 12.067, CPU coordinates 0.001, submit/wait/readback 32.929; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 127/299 source126 0.577s
+  GPU gather RGB Device256: 7032x4688, covered 32605977/32966016, library call 48.153 ms, pack 11.863, CPU coordinates 0.001, submit/wait/readback 36.258; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16300423/16483008, library call 44.557 ms, pack 11.899, CPU coordinates 0.001, submit/wait/readback 32.636; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 128/299 source127 0.574s
+  GPU gather RGB Device256: 7032x4688, covered 32619249/32966016, library call 46.309 ms, pack 11.604, CPU coordinates 0.001, submit/wait/readback 34.674; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16307174/16483008, library call 41.760 ms, pack 12.025, CPU coordinates 0.001, submit/wait/readback 29.710; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 129/299 source128 0.571s
+  GPU gather RGB Device256: 7032x4688, covered 32633920/32966016, library call 48.309 ms, pack 12.083, CPU coordinates 0.001, submit/wait/readback 36.202; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16314477/16483008, library call 44.148 ms, pack 12.217, CPU coordinates 0.001, submit/wait/readback 31.909; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 130/299 source129 0.582s
+  GPU gather RGB Device256: 7032x4688, covered 32645146/32966016, library call 45.027 ms, pack 11.711, CPU coordinates 0.001, submit/wait/readback 33.285; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16320128/16483008, library call 44.429 ms, pack 12.275, CPU coordinates 0.002, submit/wait/readback 32.129; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 131/299 source130 0.572s
+  GPU gather RGB Device256: 7032x4688, covered 32659893/32966016, library call 47.181 ms, pack 11.713, CPU coordinates 0.001, submit/wait/readback 35.439; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16327494/16483008, library call 49.007 ms, pack 15.457, CPU coordinates 0.001, submit/wait/readback 33.506; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 132/299 source131 0.579s
+  GPU gather RGB Device256: 7032x4688, covered 32678812/32966016, library call 46.126 ms, pack 11.761, CPU coordinates 0.001, submit/wait/readback 34.339; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16336884/16483008, library call 43.937 ms, pack 12.464, CPU coordinates 0.002, submit/wait/readback 31.441; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 133/299 source132 0.573s
+  GPU gather RGB Device256: 7032x4688, covered 32697294/32966016, library call 47.418 ms, pack 11.734, CPU coordinates 0.001, submit/wait/readback 35.657; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16346100/16483008, library call 43.346 ms, pack 12.089, CPU coordinates 0.001, submit/wait/readback 31.231; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 134/299 source133 0.576s
+  GPU gather RGB Device256: 7032x4688, covered 32712235/32966016, library call 48.417 ms, pack 11.779, CPU coordinates 0.001, submit/wait/readback 36.612; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16353548/16483008, library call 44.824 ms, pack 12.264, CPU coordinates 0.001, submit/wait/readback 32.536; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 135/299 source134 0.578s
+  GPU gather RGB Device256: 7032x4688, covered 32725895/32966016, library call 47.142 ms, pack 11.734, CPU coordinates 0.001, submit/wait/readback 35.378; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16360371/16483008, library call 44.139 ms, pack 12.125, CPU coordinates 0.001, submit/wait/readback 31.992; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 136/299 source135 0.574s
+  GPU gather RGB Device256: 7032x4688, covered 32738856/32966016, library call 47.224 ms, pack 11.846, CPU coordinates 0.001, submit/wait/readback 35.354; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16366957/16483008, library call 46.188 ms, pack 12.631, CPU coordinates 0.002, submit/wait/readback 33.533; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 137/299 source136 0.590s
+  GPU gather RGB Device256: 7032x4688, covered 32753489/32966016, library call 48.192 ms, pack 11.779, CPU coordinates 0.001, submit/wait/readback 36.388; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16374166/16483008, library call 43.976 ms, pack 12.058, CPU coordinates 0.001, submit/wait/readback 31.886; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 138/299 source137 0.577s
+  GPU gather RGB Device256: 7032x4688, covered 32767989/32966016, library call 47.918 ms, pack 11.824, CPU coordinates 0.002, submit/wait/readback 36.048; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16381501/16483008, library call 43.016 ms, pack 12.061, CPU coordinates 0.001, submit/wait/readback 30.932; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 139/299 source138 0.576s
+  GPU gather RGB Device256: 7032x4688, covered 32784996/32966016, library call 48.960 ms, pack 11.835, CPU coordinates 0.001, submit/wait/readback 37.101; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16389956/16483008, library call 44.539 ms, pack 12.040, CPU coordinates 0.001, submit/wait/readback 32.474; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 140/299 source139 0.581s
+  GPU gather RGB Device256: 7032x4688, covered 32800113/32966016, library call 46.802 ms, pack 11.709, CPU coordinates 0.002, submit/wait/readback 35.062; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16397268/16483008, library call 44.373 ms, pack 12.074, CPU coordinates 0.001, submit/wait/readback 32.272; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 141/299 source140 0.577s
+  GPU gather RGB Device256: 7032x4688, covered 32813073/32966016, library call 48.414 ms, pack 11.727, CPU coordinates 0.001, submit/wait/readback 36.665; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16403988/16483008, library call 43.991 ms, pack 12.013, CPU coordinates 0.001, submit/wait/readback 31.955; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 142/299 source141 0.579s
+  GPU gather RGB Device256: 7032x4688, covered 32829000/32966016, library call 46.644 ms, pack 11.609, CPU coordinates 0.001, submit/wait/readback 35.009; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16411853/16483008, library call 43.156 ms, pack 12.310, CPU coordinates 0.001, submit/wait/readback 30.822; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 143/299 source142 0.575s
+  GPU gather RGB Device256: 7032x4688, covered 32846209/32966016, library call 47.568 ms, pack 11.812, CPU coordinates 0.001, submit/wait/readback 35.728; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16420430/16483008, library call 53.517 ms, pack 21.695, CPU coordinates 0.001, submit/wait/readback 31.797; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 144/299 source143 0.587s
+  GPU gather RGB Device256: 7032x4688, covered 32860134/32966016, library call 47.605 ms, pack 11.883, CPU coordinates 0.001, submit/wait/readback 35.693; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16427484/16483008, library call 43.057 ms, pack 12.103, CPU coordinates 0.001, submit/wait/readback 30.930; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 145/299 source144 0.576s
+  GPU gather RGB Device256: 7032x4688, covered 32872589/32966016, library call 46.730 ms, pack 11.706, CPU coordinates 0.001, submit/wait/readback 35.005; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16433562/16483008, library call 42.566 ms, pack 12.041, CPU coordinates 0.001, submit/wait/readback 30.504; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 146/299 source145 0.584s
+  GPU gather RGB Device256: 7032x4688, covered 32887837/32966016, library call 48.920 ms, pack 11.660, CPU coordinates 0.001, submit/wait/readback 37.229; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16441304/16483008, library call 43.458 ms, pack 12.187, CPU coordinates 0.001, submit/wait/readback 31.249; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 147/299 source146 0.581s
+  GPU gather RGB Device256: 7032x4688, covered 32899639/32966016, library call 48.210 ms, pack 11.804, CPU coordinates 0.001, submit/wait/readback 36.381; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16447178/16483008, library call 43.387 ms, pack 12.149, CPU coordinates 0.001, submit/wait/readback 31.214; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 148/299 source147 0.582s
+  GPU gather RGB Device256: 7032x4688, covered 32910189/32966016, library call 46.078 ms, pack 11.788, CPU coordinates 0.001, submit/wait/readback 34.257; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16452781/16483008, library call 44.041 ms, pack 12.036, CPU coordinates 0.001, submit/wait/readback 31.980; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 149/299 source148 0.589s
+  GPU gather RGB Device256: 7032x4688, covered 32925010/32966016, library call 49.118 ms, pack 11.732, CPU coordinates 0.001, submit/wait/readback 37.360; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16459576/16483008, library call 43.356 ms, pack 12.320, CPU coordinates 0.001, submit/wait/readback 31.012; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 150/299 source149 0.625s
+  GPU gather RGB Device256: 7032x4688, covered 32935470/32966016, library call 46.747 ms, pack 11.642, CPU coordinates 0.001, submit/wait/readback 35.082; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16466651/16483008, library call 44.339 ms, pack 12.178, CPU coordinates 0.001, submit/wait/readback 32.133; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 151/299 source150 0.581s
+  GPU gather RGB Device256: 7032x4688, covered 32948249/32966016, library call 48.482 ms, pack 11.916, CPU coordinates 0.001, submit/wait/readback 36.541; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16474262/16483008, library call 44.197 ms, pack 12.228, CPU coordinates 0.001, submit/wait/readback 31.944; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 152/299 source151 0.580s
+  GPU gather RGB Device256: 7032x4688, covered 32952151/32966016, library call 45.895 ms, pack 11.713, CPU coordinates 0.001, submit/wait/readback 34.159; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16475197/16483008, library call 43.112 ms, pack 12.202, CPU coordinates 0.001, submit/wait/readback 30.886; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 153/299 source152 0.577s
+  GPU gather RGB Device256: 7032x4688, covered 32951517/32966016, library call 49.737 ms, pack 11.861, CPU coordinates 0.001, submit/wait/readback 37.853; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16474895/16483008, library call 43.166 ms, pack 12.079, CPU coordinates 0.001, submit/wait/readback 31.064; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 154/299 source153 0.590s
+  GPU gather RGB Device256: 7032x4688, covered 32952021/32966016, library call 48.061 ms, pack 12.469, CPU coordinates 0.001, submit/wait/readback 35.568; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16475370/16483008, library call 43.502 ms, pack 12.140, CPU coordinates 0.001, submit/wait/readback 31.337; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 155/299 source154 0.579s
+  GPU gather RGB Device256: 7032x4688, covered 32950800/32966016, library call 52.495 ms, pack 17.264, CPU coordinates 0.002, submit/wait/readback 35.203; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16474676/16483008, library call 43.707 ms, pack 12.330, CPU coordinates 0.001, submit/wait/readback 31.355; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 156/299 source155 0.587s
+  GPU gather RGB Device256: 7032x4688, covered 32948930/32966016, library call 46.530 ms, pack 11.687, CPU coordinates 0.001, submit/wait/readback 34.819; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16473847/16483008, library call 43.646 ms, pack 12.089, CPU coordinates 0.001, submit/wait/readback 31.531; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 157/299 source156 0.580s
+  GPU gather RGB Device256: 7032x4688, covered 32948249/32966016, library call 47.071 ms, pack 11.725, CPU coordinates 0.001, submit/wait/readback 35.313; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16473417/16483008, library call 43.952 ms, pack 12.306, CPU coordinates 0.001, submit/wait/readback 31.614; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 158/299 source157 0.581s
+  GPU gather RGB Device256: 7032x4688, covered 32947644/32966016, library call 48.772 ms, pack 11.979, CPU coordinates 0.001, submit/wait/readback 36.757; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16473134/16483008, library call 44.390 ms, pack 11.881, CPU coordinates 0.001, submit/wait/readback 32.485; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 159/299 source158 0.595s
+  GPU gather RGB Device256: 7032x4688, covered 32948160/32966016, library call 47.598 ms, pack 11.900, CPU coordinates 0.001, submit/wait/readback 35.677; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16473289/16483008, library call 44.303 ms, pack 12.077, CPU coordinates 0.001, submit/wait/readback 32.200; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 160/299 source159 0.582s
+  GPU gather RGB Device256: 7032x4688, covered 32948118/32966016, library call 49.092 ms, pack 11.886, CPU coordinates 0.002, submit/wait/readback 37.177; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16473346/16483008, library call 43.333 ms, pack 12.138, CPU coordinates 0.001, submit/wait/readback 31.174; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 161/299 source160 0.586s
+  GPU gather RGB Device256: 7032x4688, covered 32947350/32966016, library call 46.789 ms, pack 12.099, CPU coordinates 0.001, submit/wait/readback 34.665; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16472992/16483008, library call 43.738 ms, pack 12.198, CPU coordinates 0.001, submit/wait/readback 31.516; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 162/299 source161 0.580s
+  GPU gather RGB Device256: 7032x4688, covered 32947561/32966016, library call 46.936 ms, pack 11.686, CPU coordinates 0.001, submit/wait/readback 35.218; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16473168/16483008, library call 44.529 ms, pack 12.438, CPU coordinates 0.001, submit/wait/readback 32.067; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 163/299 source162 0.581s
+  GPU gather RGB Device256: 7032x4688, covered 32947406/32966016, library call 48.562 ms, pack 11.931, CPU coordinates 0.001, submit/wait/readback 36.602; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16473102/16483008, library call 43.889 ms, pack 12.062, CPU coordinates 0.001, submit/wait/readback 31.801; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 164/299 source163 0.585s
+  GPU gather RGB Device256: 7032x4688, covered 32947039/32966016, library call 48.097 ms, pack 11.725, CPU coordinates 0.001, submit/wait/readback 36.332; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16472949/16483008, library call 44.090 ms, pack 12.137, CPU coordinates 0.001, submit/wait/readback 31.927; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 165/299 source164 0.581s
+  GPU gather RGB Device256: 7032x4688, covered 32945552/32966016, library call 48.419 ms, pack 11.921, CPU coordinates 0.001, submit/wait/readback 36.469; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16472139/16483008, library call 50.249 ms, pack 18.611, CPU coordinates 0.002, submit/wait/readback 31.614; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 166/299 source165 0.588s
+  GPU gather RGB Device256: 7032x4688, covered 32944849/32966016, library call 46.194 ms, pack 11.961, CPU coordinates 0.001, submit/wait/readback 34.195; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16471792/16483008, library call 43.928 ms, pack 12.158, CPU coordinates 0.001, submit/wait/readback 31.743; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 167/299 source166 0.579s
+  GPU gather RGB Device256: 7032x4688, covered 32944471/32966016, library call 47.305 ms, pack 11.852, CPU coordinates 0.001, submit/wait/readback 35.425; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16471626/16483008, library call 43.289 ms, pack 12.037, CPU coordinates 0.001, submit/wait/readback 31.229; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 168/299 source167 0.587s
+  GPU gather RGB Device256: 7032x4688, covered 32944618/32966016, library call 47.255 ms, pack 11.672, CPU coordinates 0.001, submit/wait/readback 35.562; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16471712/16483008, library call 44.096 ms, pack 12.130, CPU coordinates 0.001, submit/wait/readback 31.942; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 169/299 source168 0.584s
+  GPU gather RGB Device256: 7032x4688, covered 32943666/32966016, library call 47.361 ms, pack 11.691, CPU coordinates 0.001, submit/wait/readback 35.639; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16471275/16483008, library call 43.931 ms, pack 12.176, CPU coordinates 0.001, submit/wait/readback 31.730; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 170/299 source169 0.580s
+  GPU gather RGB Device256: 7032x4688, covered 32943005/32966016, library call 47.649 ms, pack 11.759, CPU coordinates 0.001, submit/wait/readback 35.860; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16470960/16483008, library call 43.680 ms, pack 12.141, CPU coordinates 0.001, submit/wait/readback 31.510; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 171/299 source170 0.587s
+  GPU gather RGB Device256: 7032x4688, covered 32942262/32966016, library call 48.581 ms, pack 11.951, CPU coordinates 0.002, submit/wait/readback 36.593; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16470586/16483008, library call 44.413 ms, pack 12.182, CPU coordinates 0.002, submit/wait/readback 32.207; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 172/299 source171 0.587s
+  GPU gather RGB Device256: 7032x4688, covered 32942631/32966016, library call 45.066 ms, pack 11.801, CPU coordinates 0.001, submit/wait/readback 33.241; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16470779/16483008, library call 43.528 ms, pack 12.029, CPU coordinates 0.001, submit/wait/readback 31.474; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 173/299 source172 0.580s
+  GPU gather RGB Device256: 7032x4688, covered 32941566/32966016, library call 46.909 ms, pack 11.772, CPU coordinates 0.001, submit/wait/readback 35.113; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16470213/16483008, library call 44.130 ms, pack 12.234, CPU coordinates 0.001, submit/wait/readback 31.872; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 174/299 source173 0.587s
+  GPU gather RGB Device256: 7032x4688, covered 32940522/32966016, library call 47.658 ms, pack 12.068, CPU coordinates 0.003, submit/wait/readback 35.565; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16469659/16483008, library call 45.901 ms, pack 12.438, CPU coordinates 0.002, submit/wait/readback 33.440; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 175/299 source174 0.593s
+  GPU gather RGB Device256: 7032x4688, covered 32940201/32966016, library call 48.461 ms, pack 11.914, CPU coordinates 0.002, submit/wait/readback 36.525; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16469501/16483008, library call 46.055 ms, pack 12.199, CPU coordinates 0.001, submit/wait/readback 33.831; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 176/299 source175 0.606s
+  GPU gather RGB Device256: 7032x4688, covered 32938392/32966016, library call 47.867 ms, pack 12.261, CPU coordinates 0.002, submit/wait/readback 35.575; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16468608/16483008, library call 45.060 ms, pack 12.553, CPU coordinates 0.001, submit/wait/readback 32.484; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 177/299 source176 0.584s
+  GPU gather RGB Device256: 7032x4688, covered 32936480/32966016, library call 48.625 ms, pack 12.293, CPU coordinates 0.001, submit/wait/readback 36.309; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16467678/16483008, library call 44.542 ms, pack 12.175, CPU coordinates 0.001, submit/wait/readback 32.344; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 178/299 source177 0.586s
+  GPU gather RGB Device256: 7032x4688, covered 32935839/32966016, library call 46.270 ms, pack 11.922, CPU coordinates 0.001, submit/wait/readback 34.326; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16467354/16483008, library call 44.725 ms, pack 12.212, CPU coordinates 0.001, submit/wait/readback 32.487; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 179/299 source178 0.587s
+  GPU gather RGB Device256: 7032x4688, covered 32935433/32966016, library call 48.345 ms, pack 11.774, CPU coordinates 0.001, submit/wait/readback 36.550; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16467134/16483008, library call 43.748 ms, pack 12.602, CPU coordinates 0.001, submit/wait/readback 31.124; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 180/299 source179 0.599s
+  GPU gather RGB Device256: 7032x4688, covered 32935906/32966016, library call 49.047 ms, pack 12.131, CPU coordinates 0.002, submit/wait/readback 36.881; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16467390/16483008, library call 46.185 ms, pack 12.373, CPU coordinates 0.002, submit/wait/readback 33.785; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 181/299 source180 0.610s
+  GPU gather RGB Device256: 7032x4688, covered 32935304/32966016, library call 49.227 ms, pack 11.833, CPU coordinates 0.002, submit/wait/readback 37.359; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16467105/16483008, library call 47.653 ms, pack 12.329, CPU coordinates 0.004, submit/wait/readback 35.289; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 182/299 source181 0.590s
+  GPU gather RGB Device256: 7032x4688, covered 32934546/32966016, library call 50.031 ms, pack 14.215, CPU coordinates 0.002, submit/wait/readback 35.788; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16466730/16483008, library call 44.376 ms, pack 12.126, CPU coordinates 0.001, submit/wait/readback 32.225; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 183/299 source182 0.589s
+  GPU gather RGB Device256: 7032x4688, covered 32933475/32966016, library call 47.648 ms, pack 11.750, CPU coordinates 0.001, submit/wait/readback 35.867; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16466223/16483008, library call 44.086 ms, pack 12.461, CPU coordinates 0.001, submit/wait/readback 31.597; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 184/299 source183 0.585s
+  GPU gather RGB Device256: 7032x4688, covered 32933393/32966016, library call 47.106 ms, pack 11.711, CPU coordinates 0.001, submit/wait/readback 35.374; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16466183/16483008, library call 44.692 ms, pack 12.304, CPU coordinates 0.002, submit/wait/readback 32.364; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 185/299 source184 0.587s
+  GPU gather RGB Device256: 7032x4688, covered 32933170/32966016, library call 46.105 ms, pack 11.831, CPU coordinates 0.001, submit/wait/readback 34.252; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16466062/16483008, library call 43.609 ms, pack 12.220, CPU coordinates 0.001, submit/wait/readback 31.360; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 186/299 source185 0.597s
+  GPU gather RGB Device256: 7032x4688, covered 32932782/32966016, library call 46.784 ms, pack 11.735, CPU coordinates 0.001, submit/wait/readback 35.025; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16465867/16483008, library call 43.121 ms, pack 12.062, CPU coordinates 0.001, submit/wait/readback 31.038; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 187/299 source186 0.585s
+  GPU gather RGB Device256: 7032x4688, covered 32932752/32966016, library call 55.474 ms, pack 19.068, CPU coordinates 0.002, submit/wait/readback 36.379; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16465866/16483008, library call 44.042 ms, pack 12.125, CPU coordinates 0.001, submit/wait/readback 31.893; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 188/299 source187 0.595s
+  GPU gather RGB Device256: 7032x4688, covered 32932408/32966016, library call 47.781 ms, pack 11.777, CPU coordinates 0.001, submit/wait/readback 35.975; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16465695/16483008, library call 43.548 ms, pack 12.040, CPU coordinates 0.001, submit/wait/readback 31.481; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 189/299 source188 0.580s
+  GPU gather RGB Device256: 7032x4688, covered 32931406/32966016, library call 47.181 ms, pack 11.796, CPU coordinates 0.001, submit/wait/readback 35.354; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16465200/16483008, library call 44.737 ms, pack 12.329, CPU coordinates 0.001, submit/wait/readback 32.384; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 190/299 source189 0.581s
+  GPU gather RGB Device256: 7032x4688, covered 32929145/32966016, library call 45.662 ms, pack 11.738, CPU coordinates 0.001, submit/wait/readback 33.894; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16464070/16483008, library call 44.814 ms, pack 11.935, CPU coordinates 0.002, submit/wait/readback 32.851; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 191/299 source190 0.590s
+  GPU gather RGB Device256: 7032x4688, covered 32929075/32966016, library call 47.042 ms, pack 11.683, CPU coordinates 0.001, submit/wait/readback 35.325; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16464027/16483008, library call 43.552 ms, pack 12.067, CPU coordinates 0.000, submit/wait/readback 31.462; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 192/299 source191 0.581s
+  GPU gather RGB Device256: 7032x4688, covered 32928138/32966016, library call 50.312 ms, pack 11.858, CPU coordinates 0.001, submit/wait/readback 38.424; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16463573/16483008, library call 43.209 ms, pack 12.287, CPU coordinates 0.001, submit/wait/readback 30.899; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 193/299 source192 0.586s
+  GPU gather RGB Device256: 7032x4688, covered 32925444/32966016, library call 48.655 ms, pack 12.100, CPU coordinates 0.001, submit/wait/readback 36.520; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16462228/16483008, library call 43.446 ms, pack 12.122, CPU coordinates 0.001, submit/wait/readback 31.300; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 194/299 source193 0.586s
+  GPU gather RGB Device256: 7032x4688, covered 32923891/32966016, library call 46.801 ms, pack 11.727, CPU coordinates 0.001, submit/wait/readback 35.043; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16461436/16483008, library call 43.238 ms, pack 12.188, CPU coordinates 0.002, submit/wait/readback 31.022; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 195/299 source194 0.581s
+  GPU gather RGB Device256: 7032x4688, covered 32922690/32966016, library call 46.949 ms, pack 11.686, CPU coordinates 0.001, submit/wait/readback 35.234; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16460836/16483008, library call 43.761 ms, pack 12.068, CPU coordinates 0.001, submit/wait/readback 31.667; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 196/299 source195 0.583s
+  GPU gather RGB Device256: 7032x4688, covered 32922258/32966016, library call 47.690 ms, pack 11.943, CPU coordinates 0.001, submit/wait/readback 35.713; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16460623/16483008, library call 44.456 ms, pack 12.028, CPU coordinates 0.001, submit/wait/readback 32.403; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 197/299 source196 0.583s
+  GPU gather RGB Device256: 7032x4688, covered 32920843/32966016, library call 45.827 ms, pack 11.727, CPU coordinates 0.001, submit/wait/readback 34.072; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16459902/16483008, library call 50.624 ms, pack 18.462, CPU coordinates 0.001, submit/wait/readback 32.134; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 198/299 source197 0.584s
+  GPU gather RGB Device256: 7032x4688, covered 32919162/32966016, library call 46.795 ms, pack 11.639, CPU coordinates 0.001, submit/wait/readback 35.132; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16459063/16483008, library call 43.941 ms, pack 12.013, CPU coordinates 0.001, submit/wait/readback 31.903; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 199/299 source198 0.577s
+  GPU gather RGB Device256: 7032x4688, covered 32917083/32966016, library call 47.123 ms, pack 11.825, CPU coordinates 0.001, submit/wait/readback 35.271; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16458015/16483008, library call 43.887 ms, pack 12.108, CPU coordinates 0.001, submit/wait/readback 31.755; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 200/299 source199 0.588s
+  GPU gather RGB Device256: 7032x4688, covered 32916374/32966016, library call 45.846 ms, pack 11.871, CPU coordinates 0.001, submit/wait/readback 33.952; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16457664/16483008, library call 42.898 ms, pack 12.002, CPU coordinates 0.001, submit/wait/readback 30.871; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 201/299 source200 0.579s
+  GPU gather RGB Device256: 7032x4688, covered 32914572/32966016, library call 47.813 ms, pack 11.688, CPU coordinates 0.001, submit/wait/readback 36.098; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16456762/16483008, library call 43.320 ms, pack 12.083, CPU coordinates 0.001, submit/wait/readback 31.212; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 202/299 source201 0.578s
+  GPU gather RGB Device256: 7032x4688, covered 32912906/32966016, library call 47.725 ms, pack 11.818, CPU coordinates 0.002, submit/wait/readback 35.888; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16455938/16483008, library call 43.077 ms, pack 12.042, CPU coordinates 0.001, submit/wait/readback 31.011; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 203/299 source202 0.593s
+  GPU gather RGB Device256: 7032x4688, covered 32911631/32966016, library call 51.203 ms, pack 14.571, CPU coordinates 0.003, submit/wait/readback 36.603; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16455283/16483008, library call 44.563 ms, pack 12.103, CPU coordinates 0.001, submit/wait/readback 32.439; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 204/299 source203 0.592s
+  GPU gather RGB Device256: 7032x4688, covered 32911274/32966016, library call 46.383 ms, pack 11.870, CPU coordinates 0.001, submit/wait/readback 34.488; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16455101/16483008, library call 44.102 ms, pack 12.424, CPU coordinates 0.001, submit/wait/readback 31.653; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 205/299 source204 0.581s
+  GPU gather RGB Device256: 7032x4688, covered 32910684/32966016, library call 48.721 ms, pack 11.900, CPU coordinates 0.002, submit/wait/readback 36.794; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16454816/16483008, library call 44.764 ms, pack 12.347, CPU coordinates 0.002, submit/wait/readback 32.395; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 206/299 source205 0.594s
+  GPU gather RGB Device256: 7032x4688, covered 32911153/32966016, library call 48.971 ms, pack 12.053, CPU coordinates 0.001, submit/wait/readback 36.893; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16455061/16483008, library call 45.192 ms, pack 12.508, CPU coordinates 0.002, submit/wait/readback 32.653; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 207/299 source206 0.587s
+  GPU gather RGB Device256: 7032x4688, covered 32910386/32966016, library call 47.618 ms, pack 11.992, CPU coordinates 0.001, submit/wait/readback 35.603; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16454688/16483008, library call 44.531 ms, pack 12.379, CPU coordinates 0.002, submit/wait/readback 32.127; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 208/299 source207 0.597s
+  GPU gather RGB Device256: 7032x4688, covered 32909368/32966016, library call 48.308 ms, pack 12.144, CPU coordinates 0.001, submit/wait/readback 36.140; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16454184/16483008, library call 44.918 ms, pack 12.196, CPU coordinates 0.001, submit/wait/readback 32.701; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 209/299 source208 0.582s
+  GPU gather RGB Device256: 7032x4688, covered 32907861/32966016, library call 48.542 ms, pack 12.303, CPU coordinates 0.001, submit/wait/readback 36.215; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16453431/16483008, library call 45.598 ms, pack 12.382, CPU coordinates 0.002, submit/wait/readback 33.186; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 210/299 source209 0.590s
+  GPU gather RGB Device256: 7032x4688, covered 32906254/32966016, library call 48.594 ms, pack 12.164, CPU coordinates 0.001, submit/wait/readback 36.402; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16452635/16483008, library call 44.628 ms, pack 12.495, CPU coordinates 0.001, submit/wait/readback 32.111; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 211/299 source210 0.586s
+  GPU gather RGB Device256: 7032x4688, covered 32906298/32966016, library call 49.701 ms, pack 13.384, CPU coordinates 0.002, submit/wait/readback 36.291; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16452667/16483008, library call 46.027 ms, pack 13.027, CPU coordinates 0.002, submit/wait/readback 32.976; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 212/299 source211 0.599s
+  GPU gather RGB Device256: 7032x4688, covered 32905012/32966016, library call 51.849 ms, pack 12.861, CPU coordinates 0.003, submit/wait/readback 38.955; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16452010/16483008, library call 44.662 ms, pack 12.281, CPU coordinates 0.002, submit/wait/readback 32.357; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 213/299 source212 0.608s
+  GPU gather RGB Device256: 7032x4688, covered 32903447/32966016, library call 48.321 ms, pack 12.091, CPU coordinates 0.002, submit/wait/readback 36.208; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16451222/16483008, library call 43.768 ms, pack 12.232, CPU coordinates 0.002, submit/wait/readback 31.502; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 214/299 source213 0.584s
+  GPU gather RGB Device256: 7032x4688, covered 32902802/32966016, library call 49.637 ms, pack 13.142, CPU coordinates 0.001, submit/wait/readback 36.471; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16450902/16483008, library call 42.967 ms, pack 12.100, CPU coordinates 0.001, submit/wait/readback 30.841; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 215/299 source214 0.582s
+  GPU gather RGB Device256: 7032x4688, covered 32902652/32966016, library call 46.805 ms, pack 11.913, CPU coordinates 0.001, submit/wait/readback 34.870; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16450829/16483008, library call 44.264 ms, pack 12.081, CPU coordinates 0.002, submit/wait/readback 32.158; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 216/299 source215 0.582s
+  GPU gather RGB Device256: 7032x4688, covered 32901217/32966016, library call 48.308 ms, pack 11.816, CPU coordinates 0.002, submit/wait/readback 36.470; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16450118/16483008, library call 44.457 ms, pack 12.089, CPU coordinates 0.001, submit/wait/readback 32.342; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 217/299 source216 0.580s
+  GPU gather RGB Device256: 7032x4688, covered 32899979/32966016, library call 46.367 ms, pack 11.781, CPU coordinates 0.001, submit/wait/readback 34.556; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16449494/16483008, library call 42.097 ms, pack 12.018, CPU coordinates 0.001, submit/wait/readback 30.051; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 218/299 source217 0.586s
+  GPU gather RGB Device256: 7032x4688, covered 32897900/32966016, library call 47.465 ms, pack 11.814, CPU coordinates 0.001, submit/wait/readback 35.632; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16448447/16483008, library call 43.821 ms, pack 12.095, CPU coordinates 0.001, submit/wait/readback 31.693; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 219/299 source218 0.577s
+  GPU gather RGB Device256: 7032x4688, covered 32898241/32966016, library call 48.470 ms, pack 11.758, CPU coordinates 0.001, submit/wait/readback 36.683; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16448626/16483008, library call 44.489 ms, pack 12.105, CPU coordinates 0.001, submit/wait/readback 32.357; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 220/299 source219 0.584s
+  GPU gather RGB Device256: 7032x4688, covered 32898038/32966016, library call 46.099 ms, pack 11.741, CPU coordinates 0.001, submit/wait/readback 34.338; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16448520/16483008, library call 44.567 ms, pack 12.191, CPU coordinates 0.001, submit/wait/readback 32.350; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 221/299 source220 0.574s
+  GPU gather RGB Device256: 7032x4688, covered 32897434/32966016, library call 45.560 ms, pack 11.834, CPU coordinates 0.002, submit/wait/readback 33.695; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16448220/16483008, library call 43.637 ms, pack 12.091, CPU coordinates 0.001, submit/wait/readback 31.511; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 222/299 source221 0.574s
+  GPU gather RGB Device256: 7032x4688, covered 32897085/32966016, library call 48.127 ms, pack 11.927, CPU coordinates 0.001, submit/wait/readback 36.168; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16448055/16483008, library call 43.025 ms, pack 12.047, CPU coordinates 0.001, submit/wait/readback 30.955; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 223/299 source222 0.576s
+  GPU gather RGB Device256: 7032x4688, covered 32896594/32966016, library call 47.666 ms, pack 11.852, CPU coordinates 0.001, submit/wait/readback 35.784; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16447814/16483008, library call 43.094 ms, pack 12.204, CPU coordinates 0.001, submit/wait/readback 30.861; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 224/299 source223 0.574s
+  GPU gather RGB Device256: 7032x4688, covered 32896298/32966016, library call 47.725 ms, pack 11.871, CPU coordinates 0.002, submit/wait/readback 35.823; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16447663/16483008, library call 45.615 ms, pack 12.132, CPU coordinates 0.001, submit/wait/readback 33.455; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 225/299 source224 0.621s
+  GPU gather RGB Device256: 7032x4688, covered 32896655/32966016, library call 47.484 ms, pack 11.824, CPU coordinates 0.001, submit/wait/readback 35.630; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16447842/16483008, library call 44.442 ms, pack 12.274, CPU coordinates 0.001, submit/wait/readback 32.142; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 226/299 source225 0.575s
+  GPU gather RGB Device256: 7032x4688, covered 32896626/32966016, library call 45.495 ms, pack 11.683, CPU coordinates 0.001, submit/wait/readback 33.782; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16447826/16483008, library call 42.769 ms, pack 12.049, CPU coordinates 0.001, submit/wait/readback 30.696; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 227/299 source226 0.577s
+  GPU gather RGB Device256: 7032x4688, covered 32896564/32966016, library call 46.870 ms, pack 11.742, CPU coordinates 0.001, submit/wait/readback 35.101; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16447805/16483008, library call 44.478 ms, pack 12.606, CPU coordinates 0.001, submit/wait/readback 31.850; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 228/299 source227 0.580s
+  GPU gather RGB Device256: 7032x4688, covered 32896102/32966016, library call 47.301 ms, pack 11.820, CPU coordinates 0.002, submit/wait/readback 35.454; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16447574/16483008, library call 44.081 ms, pack 12.160, CPU coordinates 0.002, submit/wait/readback 31.893; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 229/299 source228 0.578s
+  GPU gather RGB Device256: 7032x4688, covered 32896384/32966016, library call 48.407 ms, pack 11.968, CPU coordinates 0.001, submit/wait/readback 36.405; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16447728/16483008, library call 45.411 ms, pack 12.595, CPU coordinates 0.001, submit/wait/readback 32.789; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 230/299 source229 0.594s
+  GPU gather RGB Device256: 7032x4688, covered 32896167/32966016, library call 49.732 ms, pack 11.991, CPU coordinates 0.002, submit/wait/readback 37.717; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16447629/16483008, library call 45.052 ms, pack 12.481, CPU coordinates 0.001, submit/wait/readback 32.543; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 231/299 source230 0.580s
+  GPU gather RGB Device256: 7032x4688, covered 32895414/32966016, library call 49.943 ms, pack 13.485, CPU coordinates 0.002, submit/wait/readback 36.430; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16447242/16483008, library call 45.687 ms, pack 12.480, CPU coordinates 0.002, submit/wait/readback 33.177; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 232/299 source231 0.589s
+  GPU gather RGB Device256: 7032x4688, covered 32894450/32966016, library call 49.092 ms, pack 12.107, CPU coordinates 0.001, submit/wait/readback 36.956; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16446768/16483008, library call 45.065 ms, pack 12.297, CPU coordinates 0.001, submit/wait/readback 32.744; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 233/299 source232 0.584s
+  GPU gather RGB Device256: 7032x4688, covered 32893501/32966016, library call 47.893 ms, pack 11.936, CPU coordinates 0.001, submit/wait/readback 35.934; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16446289/16483008, library call 45.570 ms, pack 12.199, CPU coordinates 0.001, submit/wait/readback 33.341; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 234/299 source233 0.578s
+  GPU gather RGB Device256: 7032x4688, covered 32893004/32966016, library call 49.819 ms, pack 12.160, CPU coordinates 0.002, submit/wait/readback 37.628; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16446048/16483008, library call 45.188 ms, pack 12.612, CPU coordinates 0.002, submit/wait/readback 32.548; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 235/299 source234 0.596s
+  GPU gather RGB Device256: 7032x4688, covered 32893367/32966016, library call 48.051 ms, pack 11.759, CPU coordinates 0.003, submit/wait/readback 36.257; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16446234/16483008, library call 46.288 ms, pack 12.631, CPU coordinates 0.001, submit/wait/readback 33.631; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 236/299 source235 0.579s
+  GPU gather RGB Device256: 7032x4688, covered 32892637/32966016, library call 50.837 ms, pack 11.777, CPU coordinates 0.003, submit/wait/readback 39.028; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16445868/16483008, library call 42.738 ms, pack 12.135, CPU coordinates 0.001, submit/wait/readback 30.582; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 237/299 source236 0.578s
+  GPU gather RGB Device256: 7032x4688, covered 32891858/32966016, library call 46.236 ms, pack 11.915, CPU coordinates 0.001, submit/wait/readback 34.295; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16445479/16483008, library call 43.940 ms, pack 12.169, CPU coordinates 0.001, submit/wait/readback 31.739; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 238/299 source237 0.570s
+  GPU gather RGB Device256: 7032x4688, covered 32892024/32966016, library call 47.150 ms, pack 12.036, CPU coordinates 0.002, submit/wait/readback 35.091; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16445565/16483008, library call 43.592 ms, pack 12.332, CPU coordinates 0.001, submit/wait/readback 31.238; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 239/299 source238 0.582s
+  GPU gather RGB Device256: 7032x4688, covered 32891812/32966016, library call 49.019 ms, pack 11.912, CPU coordinates 0.001, submit/wait/readback 37.078; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16445464/16483008, library call 45.479 ms, pack 12.142, CPU coordinates 0.001, submit/wait/readback 33.311; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 240/299 source239 0.580s
+  GPU gather RGB Device256: 7032x4688, covered 32891309/32966016, library call 49.507 ms, pack 12.241, CPU coordinates 0.001, submit/wait/readback 37.245; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16445217/16483008, library call 44.250 ms, pack 12.143, CPU coordinates 0.001, submit/wait/readback 32.083; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 241/299 source240 0.573s
+  GPU gather RGB Device256: 7032x4688, covered 32891445/32966016, library call 48.299 ms, pack 11.916, CPU coordinates 0.001, submit/wait/readback 36.360; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16445287/16483008, library call 50.067 ms, pack 12.456, CPU coordinates 0.002, submit/wait/readback 37.576; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 242/299 source241 0.576s
+  GPU gather RGB Device256: 7032x4688, covered 32891861/32966016, library call 48.525 ms, pack 12.149, CPU coordinates 0.001, submit/wait/readback 36.352; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16445497/16483008, library call 43.892 ms, pack 12.488, CPU coordinates 0.001, submit/wait/readback 31.383; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 243/299 source242 0.569s
+  GPU gather RGB Device256: 7032x4688, covered 32891377/32966016, library call 46.651 ms, pack 12.415, CPU coordinates 0.001, submit/wait/readback 34.208; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16445257/16483008, library call 42.726 ms, pack 12.254, CPU coordinates 0.001, submit/wait/readback 30.451; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 244/299 source243 0.574s
+  GPU gather RGB Device256: 7032x4688, covered 32890038/32966016, library call 54.035 ms, pack 15.771, CPU coordinates 0.003, submit/wait/readback 38.233; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16444582/16483008, library call 46.268 ms, pack 12.769, CPU coordinates 0.001, submit/wait/readback 33.471; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 245/299 source244 0.589s
+  GPU gather RGB Device256: 7032x4688, covered 32888737/32966016, library call 48.891 ms, pack 12.074, CPU coordinates 0.001, submit/wait/readback 36.790; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16443935/16483008, library call 44.926 ms, pack 12.530, CPU coordinates 0.001, submit/wait/readback 32.369; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 246/299 source245 0.576s
+  GPU gather RGB Device256: 7032x4688, covered 32888184/32966016, library call 48.119 ms, pack 11.870, CPU coordinates 0.002, submit/wait/readback 36.221; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16443660/16483008, library call 45.456 ms, pack 12.178, CPU coordinates 0.001, submit/wait/readback 33.254; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 247/299 source246 0.593s
+  GPU gather RGB Device256: 7032x4688, covered 32887715/32966016, library call 48.332 ms, pack 11.998, CPU coordinates 0.001, submit/wait/readback 36.300; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16443430/16483008, library call 44.424 ms, pack 12.295, CPU coordinates 0.001, submit/wait/readback 32.107; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 248/299 source247 0.568s
+  GPU gather RGB Device256: 7032x4688, covered 32887003/32966016, library call 50.811 ms, pack 11.780, CPU coordinates 0.002, submit/wait/readback 38.990; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16443067/16483008, library call 42.496 ms, pack 12.016, CPU coordinates 0.001, submit/wait/readback 30.455; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 249/299 source248 0.573s
+  GPU gather RGB Device256: 7032x4688, covered 32886406/32966016, library call 48.041 ms, pack 11.849, CPU coordinates 0.001, submit/wait/readback 36.170; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16442773/16483008, library call 43.727 ms, pack 12.268, CPU coordinates 0.001, submit/wait/readback 31.427; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 250/299 source249 0.570s
+  GPU gather RGB Device256: 7032x4688, covered 32885836/32966016, library call 47.789 ms, pack 11.794, CPU coordinates 0.001, submit/wait/readback 35.964; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16442484/16483008, library call 43.512 ms, pack 12.380, CPU coordinates 0.001, submit/wait/readback 31.107; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 251/299 source250 0.565s
+  GPU gather RGB Device256: 7032x4688, covered 32885104/32966016, library call 47.619 ms, pack 12.354, CPU coordinates 0.001, submit/wait/readback 35.235; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16442125/16483008, library call 44.493 ms, pack 12.109, CPU coordinates 0.002, submit/wait/readback 32.360; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 252/299 source251 0.570s
+  GPU gather RGB Device256: 7032x4688, covered 32884111/32966016, library call 45.572 ms, pack 11.673, CPU coordinates 0.001, submit/wait/readback 33.874; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16441630/16483008, library call 43.958 ms, pack 12.008, CPU coordinates 0.001, submit/wait/readback 31.927; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 253/299 source252 0.566s
+  GPU gather RGB Device256: 7032x4688, covered 32884071/32966016, library call 48.522 ms, pack 11.757, CPU coordinates 0.002, submit/wait/readback 36.733; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16441608/16483008, library call 46.115 ms, pack 13.280, CPU coordinates 0.002, submit/wait/readback 32.808; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 254/299 source253 0.592s
+  GPU gather RGB Device256: 7032x4688, covered 32883752/32966016, library call 48.267 ms, pack 12.204, CPU coordinates 0.002, submit/wait/readback 36.035; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16441446/16483008, library call 43.526 ms, pack 12.173, CPU coordinates 0.001, submit/wait/readback 31.327; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 255/299 source254 0.572s
+  GPU gather RGB Device256: 7032x4688, covered 32883666/32966016, library call 49.388 ms, pack 13.133, CPU coordinates 0.001, submit/wait/readback 36.229; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16441405/16483008, library call 47.942 ms, pack 12.985, CPU coordinates 0.002, submit/wait/readback 34.931; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 256/299 source255 0.585s
+  GPU gather RGB Device256: 7032x4688, covered 32883162/32966016, library call 47.756 ms, pack 11.769, CPU coordinates 0.001, submit/wait/readback 35.956; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16441156/16483008, library call 45.035 ms, pack 12.570, CPU coordinates 0.003, submit/wait/readback 32.440; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 257/299 source256 0.573s
+  GPU gather RGB Device256: 7032x4688, covered 32883430/32966016, library call 47.836 ms, pack 12.007, CPU coordinates 0.001, submit/wait/readback 35.808; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16441291/16483008, library call 43.793 ms, pack 12.129, CPU coordinates 0.001, submit/wait/readback 31.638; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 258/299 source257 0.568s
+  GPU gather RGB Device256: 7032x4688, covered 32882880/32966016, library call 46.804 ms, pack 11.850, CPU coordinates 0.001, submit/wait/readback 34.924; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16441013/16483008, library call 44.510 ms, pack 12.440, CPU coordinates 0.001, submit/wait/readback 32.050; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 259/299 source258 0.577s
+  GPU gather RGB Device256: 7032x4688, covered 32881630/32966016, library call 48.863 ms, pack 12.187, CPU coordinates 0.001, submit/wait/readback 36.654; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16440391/16483008, library call 43.627 ms, pack 12.189, CPU coordinates 0.001, submit/wait/readback 31.415; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 260/299 source259 0.563s
+  GPU gather RGB Device256: 7032x4688, covered 32880054/32966016, library call 48.446 ms, pack 11.851, CPU coordinates 0.001, submit/wait/readback 36.572; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16439602/16483008, library call 44.143 ms, pack 12.664, CPU coordinates 0.001, submit/wait/readback 31.456; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 261/299 source260 0.566s
+  GPU gather RGB Device256: 7032x4688, covered 32878893/32966016, library call 49.432 ms, pack 12.058, CPU coordinates 0.001, submit/wait/readback 37.345; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16439015/16483008, library call 46.114 ms, pack 12.736, CPU coordinates 0.002, submit/wait/readback 33.356; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 262/299 source261 0.569s
+  GPU gather RGB Device256: 7032x4688, covered 32878352/32966016, library call 46.465 ms, pack 12.077, CPU coordinates 0.001, submit/wait/readback 34.365; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16438748/16483008, library call 44.906 ms, pack 12.755, CPU coordinates 0.002, submit/wait/readback 32.124; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 263/299 source262 0.578s
+  GPU gather RGB Device256: 7032x4688, covered 32878232/32966016, library call 49.550 ms, pack 12.275, CPU coordinates 0.001, submit/wait/readback 37.246; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16438688/16483008, library call 48.722 ms, pack 16.178, CPU coordinates 0.001, submit/wait/readback 32.520; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 264/299 source263 0.575s
+  GPU gather RGB Device256: 7032x4688, covered 32877273/32966016, library call 47.506 ms, pack 12.316, CPU coordinates 0.001, submit/wait/readback 35.165; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16438212/16483008, library call 43.167 ms, pack 12.143, CPU coordinates 0.001, submit/wait/readback 30.999; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 265/299 source264 0.571s
+  GPU gather RGB Device256: 7032x4688, covered 32876623/32966016, library call 52.685 ms, pack 16.182, CPU coordinates 0.002, submit/wait/readback 36.480; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16437890/16483008, library call 44.013 ms, pack 12.189, CPU coordinates 0.001, submit/wait/readback 31.803; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 266/299 source265 0.580s
+  GPU gather RGB Device256: 7032x4688, covered 32875976/32966016, library call 48.642 ms, pack 11.902, CPU coordinates 0.002, submit/wait/readback 36.716; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16437561/16483008, library call 44.583 ms, pack 13.339, CPU coordinates 0.003, submit/wait/readback 31.213; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 267/299 source266 0.567s
+  GPU gather RGB Device256: 7032x4688, covered 32875368/32966016, library call 49.386 ms, pack 11.750, CPU coordinates 0.002, submit/wait/readback 37.597; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16437258/16483008, library call 42.222 ms, pack 12.199, CPU coordinates 0.001, submit/wait/readback 29.999; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 268/299 source267 0.562s
+  GPU gather RGB Device256: 7032x4688, covered 32873776/32966016, library call 46.699 ms, pack 11.758, CPU coordinates 0.002, submit/wait/readback 34.914; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16436461/16483008, library call 42.972 ms, pack 12.101, CPU coordinates 0.001, submit/wait/readback 30.846; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 269/299 source268 0.563s
+  GPU gather RGB Device256: 7032x4688, covered 32872232/32966016, library call 46.796 ms, pack 11.702, CPU coordinates 0.001, submit/wait/readback 35.065; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16435694/16483008, library call 44.433 ms, pack 12.130, CPU coordinates 0.001, submit/wait/readback 32.275; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 270/299 source269 0.562s
+  GPU gather RGB Device256: 7032x4688, covered 32869267/32966016, library call 47.861 ms, pack 11.702, CPU coordinates 0.001, submit/wait/readback 36.133; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16434202/16483008, library call 42.850 ms, pack 12.105, CPU coordinates 0.001, submit/wait/readback 30.725; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 271/299 source270 0.562s
+  GPU gather RGB Device256: 7032x4688, covered 32867496/32966016, library call 46.992 ms, pack 11.871, CPU coordinates 0.001, submit/wait/readback 35.098; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16433314/16483008, library call 44.493 ms, pack 12.198, CPU coordinates 0.001, submit/wait/readback 32.270; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 272/299 source271 0.564s
+  GPU gather RGB Device256: 7032x4688, covered 32867190/32966016, library call 47.561 ms, pack 11.782, CPU coordinates 0.001, submit/wait/readback 35.750; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16433162/16483008, library call 44.526 ms, pack 12.023, CPU coordinates 0.002, submit/wait/readback 32.477; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 273/299 source272 0.574s
+  GPU gather RGB Device256: 7032x4688, covered 32866159/32966016, library call 48.321 ms, pack 12.044, CPU coordinates 0.002, submit/wait/readback 36.254; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16432648/16483008, library call 44.515 ms, pack 12.438, CPU coordinates 0.001, submit/wait/readback 32.055; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 274/299 source273 0.563s
+  GPU gather RGB Device256: 7032x4688, covered 32864179/32966016, library call 50.424 ms, pack 11.842, CPU coordinates 0.002, submit/wait/readback 38.549; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16431656/16483008, library call 43.768 ms, pack 11.960, CPU coordinates 0.001, submit/wait/readback 31.775; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 275/299 source274 0.564s
+  GPU gather RGB Device256: 7032x4688, covered 32862675/32966016, library call 49.344 ms, pack 13.351, CPU coordinates 0.002, submit/wait/readback 35.968; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16430905/16483008, library call 43.087 ms, pack 12.078, CPU coordinates 0.001, submit/wait/readback 30.988; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 276/299 source275 0.570s
+  GPU gather RGB Device256: 7032x4688, covered 32862047/32966016, library call 47.293 ms, pack 12.272, CPU coordinates 0.001, submit/wait/readback 34.990; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16430592/16483008, library call 45.162 ms, pack 12.379, CPU coordinates 0.001, submit/wait/readback 32.759; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 277/299 source276 0.569s
+  GPU gather RGB Device256: 7032x4688, covered 32861142/32966016, library call 47.897 ms, pack 11.919, CPU coordinates 0.001, submit/wait/readback 35.948; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16430134/16483008, library call 44.419 ms, pack 12.492, CPU coordinates 0.001, submit/wait/readback 31.907; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 278/299 source277 0.568s
+  GPU gather RGB Device256: 7032x4688, covered 32859435/32966016, library call 47.883 ms, pack 11.816, CPU coordinates 0.001, submit/wait/readback 36.046; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16429283/16483008, library call 44.590 ms, pack 12.381, CPU coordinates 0.001, submit/wait/readback 32.185; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 279/299 source278 0.563s
+  GPU gather RGB Device256: 7032x4688, covered 32857846/32966016, library call 48.712 ms, pack 12.023, CPU coordinates 0.001, submit/wait/readback 36.665; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16428492/16483008, library call 44.074 ms, pack 12.597, CPU coordinates 0.001, submit/wait/readback 31.456; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 280/299 source279 0.579s
+  GPU gather RGB Device256: 7032x4688, covered 32856727/32966016, library call 48.063 ms, pack 12.176, CPU coordinates 0.002, submit/wait/readback 35.861; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16427925/16483008, library call 44.687 ms, pack 12.197, CPU coordinates 0.001, submit/wait/readback 32.470; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 281/299 source280 0.562s
+  GPU gather RGB Device256: 7032x4688, covered 32856333/32966016, library call 55.558 ms, pack 14.074, CPU coordinates 0.002, submit/wait/readback 41.437; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16427731/16483008, library call 43.804 ms, pack 12.096, CPU coordinates 0.001, submit/wait/readback 31.683; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 282/299 source281 0.585s
+  GPU gather RGB Device256: 7032x4688, covered 32856181/32966016, library call 47.721 ms, pack 11.899, CPU coordinates 0.001, submit/wait/readback 35.793; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16427659/16483008, library call 43.895 ms, pack 12.389, CPU coordinates 0.002, submit/wait/readback 31.482; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 283/299 source282 0.574s
+  GPU gather RGB Device256: 7032x4688, covered 32853908/32966016, library call 49.670 ms, pack 11.999, CPU coordinates 0.002, submit/wait/readback 37.633; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16426523/16483008, library call 43.483 ms, pack 12.101, CPU coordinates 0.001, submit/wait/readback 31.360; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 284/299 source283 0.569s
+  GPU gather RGB Device256: 7032x4688, covered 32852373/32966016, library call 48.270 ms, pack 11.928, CPU coordinates 0.001, submit/wait/readback 36.319; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16425754/16483008, library call 44.799 ms, pack 12.264, CPU coordinates 0.001, submit/wait/readback 32.511; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 285/299 source284 0.570s
+  GPU gather RGB Device256: 7032x4688, covered 32850729/32966016, library call 45.495 ms, pack 11.936, CPU coordinates 0.002, submit/wait/readback 33.538; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16424933/16483008, library call 43.971 ms, pack 12.191, CPU coordinates 0.002, submit/wait/readback 31.753; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 286/299 source285 0.560s
+  GPU gather RGB Device256: 7032x4688, covered 32849107/32966016, library call 45.244 ms, pack 11.679, CPU coordinates 0.001, submit/wait/readback 33.541; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16424119/16483008, library call 46.937 ms, pack 12.184, CPU coordinates 0.001, submit/wait/readback 34.722; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 287/299 source286 0.570s
+  GPU gather RGB Device256: 7032x4688, covered 32847237/32966016, library call 47.783 ms, pack 11.799, CPU coordinates 0.001, submit/wait/readback 35.960; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16423183/16483008, library call 44.472 ms, pack 12.717, CPU coordinates 0.001, submit/wait/readback 31.729; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 288/299 source287 0.561s
+  GPU gather RGB Device256: 7032x4688, covered 32846120/32966016, library call 48.593 ms, pack 12.891, CPU coordinates 0.001, submit/wait/readback 35.672; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16422627/16483008, library call 43.638 ms, pack 12.314, CPU coordinates 0.001, submit/wait/readback 31.300; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 289/299 source288 0.564s
+  GPU gather RGB Device256: 7032x4688, covered 32845114/32966016, library call 47.935 ms, pack 11.972, CPU coordinates 0.001, submit/wait/readback 35.943; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16422127/16483008, library call 43.489 ms, pack 12.245, CPU coordinates 0.001, submit/wait/readback 31.220; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 290/299 source289 0.563s
+  GPU gather RGB Device256: 7032x4688, covered 32843559/32966016, library call 47.617 ms, pack 12.046, CPU coordinates 0.001, submit/wait/readback 35.548; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16421345/16483008, library call 44.538 ms, pack 12.483, CPU coordinates 0.001, submit/wait/readback 32.030; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 291/299 source290 0.560s
+  GPU gather RGB Device256: 7032x4688, covered 32842413/32966016, library call 53.108 ms, pack 15.159, CPU coordinates 0.002, submit/wait/readback 37.919; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16420774/16483008, library call 44.254 ms, pack 12.302, CPU coordinates 0.002, submit/wait/readback 31.930; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 292/299 source291 0.575s
+  GPU gather RGB Device256: 7032x4688, covered 32841266/32966016, library call 46.487 ms, pack 11.832, CPU coordinates 0.001, submit/wait/readback 34.624; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16420202/16483008, library call 43.824 ms, pack 12.249, CPU coordinates 0.001, submit/wait/readback 31.553; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 293/299 source292 0.559s
+  GPU gather RGB Device256: 7032x4688, covered 32840583/32966016, library call 48.514 ms, pack 11.933, CPU coordinates 0.001, submit/wait/readback 36.550; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16419858/16483008, library call 49.363 ms, pack 12.371, CPU coordinates 0.002, submit/wait/readback 36.965; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 294/299 source293 0.571s
+  GPU gather RGB Device256: 7032x4688, covered 32839567/32966016, library call 48.806 ms, pack 12.029, CPU coordinates 0.001, submit/wait/readback 36.746; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16419351/16483008, library call 43.843 ms, pack 12.164, CPU coordinates 0.001, submit/wait/readback 31.656; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 295/299 source294 0.559s
+  GPU gather RGB Device256: 7032x4688, covered 32838349/32966016, library call 51.487 ms, pack 15.410, CPU coordinates 0.001, submit/wait/readback 36.047; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16418741/16483008, library call 44.115 ms, pack 12.108, CPU coordinates 0.001, submit/wait/readback 31.984; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 296/299 source295 0.568s
+  GPU gather RGB Device256: 7032x4688, covered 32837039/32966016, library call 47.793 ms, pack 12.169, CPU coordinates 0.001, submit/wait/readback 35.605; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16418088/16483008, library call 44.830 ms, pack 12.458, CPU coordinates 0.001, submit/wait/readback 32.352; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 297/299 source296 0.563s
+  GPU gather RGB Device256: 7032x4688, covered 32836827/32966016, library call 48.872 ms, pack 12.191, CPU coordinates 0.001, submit/wait/readback 36.645; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16417982/16483008, library call 44.631 ms, pack 12.442, CPU coordinates 0.001, submit/wait/readback 32.163; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 298/299 source297 0.576s
+  GPU gather RGB Device256: 7032x4688, covered 32836854/32966016, library call 50.226 ms, pack 13.757, CPU coordinates 0.002, submit/wait/readback 36.434; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16417994/16483008, library call 44.702 ms, pack 12.341, CPU coordinates 0.001, submit/wait/readback 32.339; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+consistent reconstruction canonical 299/299 source298 0.609s
+output domain    : compact Crop 3250x2166 from full-plane origin (133, 89); collapsed plane written directly (no second crop)
+colour          : camera RGB -> sRGB (BT.709 primaries, D65 white)
+                  characterisation: decoder color_matrix[D65]
+                  XYZ->cam rows: [0.7460 -0.2365 -0.0588] [-0.5687 1.3442 0.2474] [-0.0624 0.1156 0.6584]
+                  implied daylight WB R 2.6266 B 1.3878, against as-shot R 1.5986 B 2.7090
+                  Order: black, as-shot WB, demosaic, matrix, clamp, sRGB curve.
+exposure        : none -- this is a FAITHFUL render of the capture, which is not the same
+                  thing as a flattering one. --auto-exposure would choose +0.07 stops (gain 1.050x).
+                  Nothing was applied. Pass --exposure=0.07 to apply it. (--auto-exposure is
+                  superseded by the tone rendering on this path and applies
+                  nothing -- see the M100/M109 guard above.)
+tone            : black 0.00432, white 0.94644 (linear), contrast 0.55
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\experiments\consistent-reconstruction\full-1\output\baseline.tiff (6500 x 4332, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+consistent reconstruction plane0: admitted=true iterations=6 error_bound_rms=0.012866996418741743 1.538s
+consistent reconstruction plane1: admitted=false iterations=32 error_bound_rms=0.02817946353965758 6.741s
+consistent reconstruction plane2: admitted=false iterations=32 error_bound_rms=0.027811805144494994 6.777s
+consistent reconstruction plane3: admitted=true iterations=6 error_bound_rms=0.009975242304973861 1.519s
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 279 filtered out; finished in 202.06s
+

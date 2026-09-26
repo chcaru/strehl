@@ -1,0 +1,25 @@
+{
+  "status": "NUMERICAL_REFUSAL",
+  "phase": "full",
+  "source_count": 299,
+  "reference": 149,
+  "sources_unchanged": true,
+  "baseline_current_production_pixels_and_icc_exact": true,
+  "actual_tone_pinned": true,
+  "original_metadata_unchanged": true,
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\consistent-reconstruction\\full-1\\output\\receipt.json",
+    "sha256": "bddc33398cdcb945f1f5201d60cf7bd43983c4151f6d09034ce59edec40d443a",
+    "bytes": 1565380
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\consistent-reconstruction\\full-1\\process.json",
+    "sha256": "4c048eb7a4e2cef5ab48d2ce0b5e397d941f5bed5138cb7ca4b669b91d91ae14",
+    "bytes": 2782
+  },
+  "candidate_valid": false,
+  "generated_general_qualification": false,
+  "photographic_replay_admitted": false,
+  "visual_verdict": null,
+  "scope": "One separately authorized complete chip observation of unchanged reconstruction. Generated glint and coarse-detail harms remain; no general qualification or default promotion."
+}
