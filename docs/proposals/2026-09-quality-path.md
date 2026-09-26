@@ -18,6 +18,15 @@ production gain remains the weighted-numerator overflow repair below; broad
 marigold ghosts, occlusion halos and mineral reflection recovery remain open.
 No SOTA claim is earned. The detailed entries below preserve the closed trials.
 
+The fixed variance-stabilized decision guide now also closes at its generated
+actual-consumer screen. All four mechanical tests pass, but the exercised
+ISO100 bright-spill error rises to1.02747times canonical and1.01013times the
+matched-linear control. Flat and genuine bright-edge guards fail. No original
+RAW or full photograph follows, and no transform/floor tuning is commissioned.
+The low core-texture recovery of both references leaves that separate protection
+unqualified; it is not credited as candidate-induced damage. See
+`experiments/variance-stabilized-guide/results.md` and its independent review.
+
 The separate stock PetteriAimonen reference on all299 prepared chip TIFFs now
 ends in resource refusal. Its24GiB attempt stops after46.922s and a single
 resource-only40GiB retry after124.828s; neither produces a photograph. Both

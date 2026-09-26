@@ -4950,6 +4950,11 @@ pub(crate) mod rb_own_guide {
 }
 
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+pub(crate) mod variance_stabilized_guide {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/variance-stabilized-guide/implementation.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
 pub(crate) mod rb_residual_guard {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/rb-residual-guard/implementation.rs"));
 }
