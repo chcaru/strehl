@@ -1,0 +1,25 @@
+{
+  "status": "COMPLETE_AWAITING_INDEPENDENT_PHOTOGRAPHIC_REVIEW",
+  "phase": "full",
+  "source_count": 299,
+  "reference": 149,
+  "sources_unchanged": true,
+  "baseline_current_production_pixels_and_icc_exact": true,
+  "actual_tone_pinned": true,
+  "candidate_pixels_changed": true,
+  "original_metadata_unchanged": true,
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\run-1\\output\\receipt.json",
+    "sha256": "3c0d72f31662757b76267e93ccbd5dc11cac45349bde39b9b905a5f1fc94aa61",
+    "bytes": 380273
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\run-1\\process.json",
+    "sha256": "978cd428a6929bbe7d3d8b0a0acf7f30895672c973bade31d9149405c5284170",
+    "bytes": 2803
+  },
+  "generated_general_qualification": false,
+  "photographic_replay_admitted": false,
+  "visual_verdict": null,
+  "scope": "One separately authorized complete chip observation of the unchanged shared-source field. Its prior generated harm and failed qualification remain; no general/default promotion."
+}

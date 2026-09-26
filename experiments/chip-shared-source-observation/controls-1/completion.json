@@ -1,0 +1,26 @@
+{
+  "instrument_completed": true,
+  "capacity_controls_executed": 3,
+  "retained_controls_executed": 2,
+  "capacity_passed": true,
+  "retained_screen_exact": true,
+  "prior_screen": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\shared-source-field\\controls-1\\output\\screen.json",
+    "sha256": "460ed3045c650ac1a8bf3a9819ccc8999b2b1a2e9bcee1ad7fd4abb2ea053d0f",
+    "bytes": 89116
+  },
+  "current_screen": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\controls-1\\retained\\output\\screen.json",
+    "sha256": "460ed3045c650ac1a8bf3a9819ccc8999b2b1a2e9bcee1ad7fd4abb2ea053d0f",
+    "bytes": 89116
+  },
+  "screen_comparison": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\controls-1\\screen-comparison.json",
+    "sha256": "a819140698dfcad17a7a616a9de9797ccedfc7a1e5c6d64448fd0cee041fa243",
+    "bytes": 794
+  },
+  "photographic_replay_admitted": false,
+  "legacy_general_qualification": false,
+  "sources_unchanged": true,
+  "scope": "One separately authorized complete chip observation of the unchanged shared-source field. Its prior generated harm and failed qualification remain; no general/default promotion."
+}

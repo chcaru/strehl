@@ -5015,6 +5015,16 @@ mod band_source_agreement_full {
 }
 
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+mod chip_shared_source_observation {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/chip-shared-source-observation/implementation.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+pub(crate) mod chromatic_source_evidence {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/chromatic-source-evidence/implementation.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
 mod marigold_source_pure {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/marigold-source-pure/oracle.rs"));
 }

@@ -1,0 +1,12 @@
+{
+  "strehl": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\build-1\\strehl.exe",
+    "sha256": "7da7c223f5276b64c0ee5dab66899c541f025c58ec6cf2ceca90eb6d8d120a24",
+    "bytes": 17950720
+  },
+  "cli-tests": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\build-1\\cli-tests.exe",
+    "sha256": "d4b133bb24a6e7596b9651ab5c3ff48468e099ad0a1f2f44df1be9cf37c75bc2",
+    "bytes": 31374336
+  }
+}

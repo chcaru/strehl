@@ -1,0 +1,25 @@
+{
+  "instrument_completed": true,
+  "controls_executed": 4,
+  "cases_executed": 8,
+  "sources_unchanged": true,
+  "screen": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chromatic-source-evidence\\controls-1\\output\\screen.json",
+    "sha256": "d6a19bb6230a13f2bab0aa1a4a8191d92634ae537a6111ae9f3e3765049d3e32",
+    "bytes": 711624
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chromatic-source-evidence\\controls-1\\process.json",
+    "sha256": "d75bc4f27e31cd102526100a743578f6b613948dc1c95cc5c5f1573e1cc93e2d",
+    "bytes": 2681
+  },
+  "photographic_replay_admitted": false,
+  "mechanical_pass": true,
+  "quality_pass": false,
+  "positive_exercised": false,
+  "wrong_source_destroyer_exercised": true,
+  "candidate_qualified": false,
+  "root_review_required": true,
+  "full_render_available": false,
+  "scope": "Generated RAW colour-evidence controls only. Successful execution is not photographic admission, a default change or a speed/quality claim."
+}

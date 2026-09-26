@@ -1,0 +1,9 @@
+
+running 3 tests
+test merge_cmd::chip_shared_source_observation::independent_controls::independent_299_labels_and_checked_resource_extent ... SHARED_SOURCE_CAPACITY scalar_pair_bytes=16838484000; this excludes gather/replay/writer and is not peak memory
+ok
+test merge_cmd::chip_shared_source_observation::independent_controls::independent_actual_replay_common_and_299_sources ... ok
+test merge_cmd::chip_shared_source_observation::independent_controls::independent_common_capacity_costs_are_bit_exact ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 268 filtered out; finished in 0.02s
+

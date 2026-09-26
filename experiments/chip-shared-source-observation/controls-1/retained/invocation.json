@@ -1,0 +1,35 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\build-1\\cli-tests.exe",
+    "merge_cmd::shared_source_field::independent_controls::",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "STREHL_ALIGN": "1",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "off",
+    "STREHL_DEFECT": "off",
+    "STREHL_FINE_SUPPORT": "off",
+    "STREHL_CA_BEFORE_MHC": "off",
+    "STREHL_SHARED_SOURCE_FIELD_OUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\controls-1\\retained\\output"
+  },
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\run.py",
+    "sha256": "0522d60bdbcd21e12c26958695b168433549901fe09547f4034c9d7040c39dfb",
+    "bytes": 23986
+  },
+  "limits": {
+    "wall_seconds": 180,
+    "cpu_seconds": 900,
+    "committed_bytes": 4294967296
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\build-1\\cli-tests.exe",
+    "merge_cmd::chip_shared_source_observation::full::complete_pair",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "on",
+    "STREHL_DEFECT": "off",
+    "STREHL_FINE_SUPPORT": "off",
+    "STREHL_CA_BEFORE_MHC": "off",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+    "STREHL_CHIP_SHARED_SOURCE_CONFIG": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\run-1\\config.json"
+  },
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\run.py",
+    "sha256": "0522d60bdbcd21e12c26958695b168433549901fe09547f4034c9d7040c39dfb",
+    "bytes": 23986
+  },
+  "limits": {
+    "wall_seconds": 1800,
+    "cpu_seconds": 12000,
+    "committed_bytes": 34359738368
+  }
+}

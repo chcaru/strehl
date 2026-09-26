@@ -131,6 +131,11 @@ pub mod band_source_agreement_diagnostic {
 }
 
 #[cfg(feature = "native-correction-variance")]
+pub mod chip_shared_source_observation_diagnostic {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/chip-shared-source-observation/core-bridge.rs"));
+}
+
+#[cfg(feature = "native-correction-variance")]
 pub mod rb_residual_guard_diagnostic {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/rb-residual-guard/core-bridge.rs"));
 }

@@ -1,0 +1,30 @@
+[
+  {
+    "original": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\shared-source-field\\costs.rs",
+      "sha256": "1ee7a2c7c6b652c3620583eafebac169345bf7fb8741f4aab0369ac3772eb879",
+      "bytes": 6561
+    },
+    "extended": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\costs.rs",
+      "sha256": "905fd67d1fbc04ee95d6202fce4e454421e82dcd116da75e2e944fb959b7d613",
+      "bytes": 6562
+    },
+    "old": "(1..=70).contains(&frames)",
+    "new": "(1..=299).contains(&frames)"
+  },
+  {
+    "original": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\shared-source-field\\core-bridge.rs",
+      "sha256": "5ecabd9e80e0eea748654073a59d4a51a9401e301d17c5fda319b7c967b629c7",
+      "bytes": 4463
+    },
+    "extended": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\core-bridge.rs",
+      "sha256": "b6795da91004333ae6e3eb52415a9909ba9140b3a04d0dbff52aa369ffb2a153",
+      "bytes": 4464
+    },
+    "old": "self.sources<70",
+    "new": "self.sources<299"
+  }
+]

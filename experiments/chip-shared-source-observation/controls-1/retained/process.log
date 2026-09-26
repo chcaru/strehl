@@ -1,0 +1,798 @@
+
+running 2 tests
+test merge_cmd::shared_source_field::independent_controls::independent_shared_source_mechanical ... SHARED_SOURCE_MECHANICAL {"categorical":{"equal_best_two_plus_bad_third_activates":true,"interpretation":"Arithmetic controls; activation is not ambiguity recognition","label_permutation":true,"local_equal_and_low_evidence_exact_fallback":true,"membership_oracle_max_error":0.0,"path_oracle_max_error":0.0,"strong_ratio_separated":true},"replay":{"actual_replay_max_error_dn":0.0,"allones_shared_base_error_dn":0.000732421875,"changed_samples":14899,"clamp_signs":[4,4],"exact_zero_samples":11084,"inputs_unchanged":true,"mean_base_exact":true,"wrong_source_live":true},"status":"PASS"}
+ok
+test merge_cmd::shared_source_field::independent_controls::independent_shared_source_quality_screen ...   GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+SHARED_SOURCE_CASE {"consumer":{"alpha_one":0,"alpha_positive":0,"alpha_zero":18125,"baseline_averaged_fraction":[0.9494620689655172,0.8236573168080017,0.7035472972972973,0.47368421052631576,1.0],"level_sizes":[[145,125],[73,63],[37,32],[19,16],[10,8]],"source_evidence":[{"beta":[0.7602105140686035,0.04723541438579559,0.010332784615457058],"guide_sha256":"2b9484d8108c8905d9c4307def2b46995763097e7c0d3f50ca44e966ae568b0e","source_sha256":"c003ee704e1611ad26d4e0cb78c11cada8ce95af08c36adf15d30054be664598","variance_sha256":"098003a22acdb5c7ef6b772b99c16d495e8899288d703eacdacc40c41b0de68e"},{"beta":[0.7586994171142578,0.05005893483757973,0.010839625261723995],"guide_sha256":"8a6253bdfe3afabfa992ddd60ac7a9473caa257b35d16d1b98d0cc55dedfe475","source_sha256":"1795ff3e13d43ab263f7ca83d39abb5b345f4fb292b363e6801cbed9fea7c485","variance_sha256":"aefed758f22a7ea0b1da8358426f0da3c8acb56980555296e7c49a0ea972c930"},{"beta":[0.8639586567878723,0.053427569568157196,0.010240265168249607],"guide_sha256":"3f0cb08dc531c09e19943759d4d7d33a04093a040aab7ceae0d0bb6e61ed56a2","source_sha256":"280175839a56c9ed312a7314781f5efaeece005bfcc9342818e0e82d425af132","variance_sha256":"ec906911d958b45df2900ef278ce8ce83f44e130f14d49c92bca423188f8d906"},{"beta":[0.9106155037879944,0.04763959348201752,0.010014733299612999],"guide_sha256":"0bb40da5b72bbf95dcc3206796f8c6a575f44100c14be8c63e6d7a8e81b8f35e","source_sha256":"31e27d8b080dbfb17426293c23d2368841da0e5cdf5987b6fed3ecc77f80cd10","variance_sha256":"ea08269494fecb56f22ac122bac699a96b130a5cc262ab1d33f71f7cab35d84f"},{"beta":[0.8802531361579895,0.04831283167004585,0.00937198381870985],"guide_sha256":"c7690f65939627baff12ae3e5096953ad552590a2435a836011d872c33308ed5","source_sha256":"33203c2066cc2476fefea9557bc9c59ed5658485641d4c20ebb43ff92cbc44a4","variance_sha256":"95d59153df515fcf82be747c1bbcffb06765e9872e829729b28782a635474b42"}]},"fixture_exercised":true,"iso":100.0,"placebo":null,"quality_pass":true,"scene":"flat","sources":5,"warp":"fixed fractional similarity","windows":[{"active_native_bounds":[38,42,280,244],"baseline":{"chroma_rg_bg_rmse":0.0009223195793755463,"rgb_rmse":0.0011098913245796978,"truth_template_recovery":[0.0,0.0,0.0],"truth_template_sd":[0.0,0.0,0.0]},"candidate":{"chroma_rg_bg_rmse":0.0009223195793755463,"rgb_rmse":0.0011098913245796978,"truth_template_recovery":[0.0,0.0,0.0],"truth_template_sd":[0.0,0.0,0.0]},"chroma_ratio":1.0,"name":"flat-interior","quality_pass":true,"rgb_ratio":1.0}]}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+SHARED_SOURCE_CASE {"consumer":{"alpha_one":8768,"alpha_positive":8984,"alpha_zero":9141,"baseline_averaged_fraction":[0.43702068965517243,0.0,0.07601351351351351,0.0,1.0],"level_sizes":[[145,125],[73,63],[37,32],[19,16],[10,8]],"source_evidence":[{"beta":[0.7602105140686035,0.04723541438579559,0.010332784615457058],"guide_sha256":"e09362d51fed04a7f164fd43443bcbea8860b7997bdb7a54d658a9829c6fcdcc","source_sha256":"5830fe96e397d621051d798e4d23ac2fbbb5af89fce34577a4c75a9a7a990d3e","variance_sha256":"3474d08d9ade4aa996c15a80c16ea826c4bdfeeb0c690bc0da15debf19cdd516"},{"beta":[0.7586994171142578,0.05005893483757973,0.010839625261723995],"guide_sha256":"81a95d336bc8fe614573fab2e91d6fe3ed26261986e380bff98e4337bb134b69","source_sha256":"89ae65f67434fc00a401400e730c75ca027739abb429239666e553eb355fc408","variance_sha256":"d57b7d5f73dca9c7770e23c8684bc9ccb3ce7591cf4472195e9e4a046d0ba80b"},{"beta":[0.8639586567878723,0.053427569568157196,0.010240265168249607],"guide_sha256":"2ada4382590c316de9eb8037f0a3b3856f6438e39ccc7d1ca4d0c91c29e5386d","source_sha256":"bd574c9bd6bb47baccbe452b65fd2ec1f03001063747a0fa4e18971b44a502c1","variance_sha256":"6922bfddc1451403f3754a537f48f315ff21e80ba7ddb0667961e7c087e9c882"},{"beta":[0.9106155037879944,0.04763959348201752,0.010014733299612999],"guide_sha256":"4f9b99f11754d8cbe3c0d50ede32f060fb475f0bf193466813b241b29b4001f4","source_sha256":"5f1c0ed78289af482f7f1431f94c0c9a93f56668f1436d3c9ed7589d7676feb3","variance_sha256":"eb6e6b4202f14b22aa7f6ad23e43b62c3d3b050331f1381048cf45a89206ff7a"},{"beta":[0.8802531361579895,0.04831283167004585,0.00937198381870985],"guide_sha256":"8d7267547ffb0ab657be2b8464b3180c284651549c3f31a6425843b312154e92","source_sha256":"da73864d9588dca3008b466154c94924d4fb1737dc87c47194a785096d3a540d","variance_sha256":"da582f8dd9ef28e54d02853953d081715eb6d47ac0112b2950c05d12fa655ffb"}]},"fixture_exercised":true,"iso":100.0,"placebo":{"forced_core":{"chroma_rg_bg_rmse":0.00574839321192173,"rgb_rmse":0.06944047527047954,"truth_template_recovery":[0.03998195301102659,0.03968560646054635,0.03671680779408809],"truth_template_sd":[0.0702536563430525,0.07308570678936346,0.06742183755596477]},"forced_fan":{"chroma_rg_bg_rmse":0.0046166578484036535,"rgb_rmse":0.003888004020343234,"truth_template_recovery":[0.9536602113507145,1.0084341103809604,0.9741001882616418],"truth_template_sd":[0.0068338701747547755,0.006833870174754311,0.00683387017475269]},"forced_last_source":4,"off_exact":true,"unmerged_wrong_fan_truth_rmse":0.0037014708033989894,"wrong_source_destroyer_exercised":true},"quality_pass":false,"scene":"glint-depth-step","sources":5,"warp":"fixed fractional similarity","windows":[{"active_native_bounds":[138,133,171,167],"baseline":{"chroma_rg_bg_rmse":0.0037905635407293526,"rgb_rmse":0.002749244069904629,"truth_template_recovery":[0.9914434800721504,1.1260951462107252,1.027636142936459],"truth_template_sd":[0.0068338701747547755,0.006833870174754311,0.00683387017475269]},"candidate":{"chroma_rg_bg_rmse":0.004040263674628556,"rgb_rmse":0.0030474963875204543,"truth_template_recovery":[1.0121005135648469,1.159798533269923,1.0471011593315946],"truth_template_sd":[0.0068338701747547755,0.006833870174754311,0.00683387017475269]},"chroma_ratio":1.0658741454182714,"name":"fan","quality_pass":false,"rgb_ratio":1.1084852090364503},{"active_native_bounds":[112,110,133,132],"baseline":{"chroma_rg_bg_rmse":0.005473493866913214,"rgb_rmse":0.00673594542279073,"truth_template_recovery":[1.0438356447228567,1.0342244118658148,1.0530864869715266],"truth_template_sd":[0.0702536563430525,0.07308570678936346,0.06742183755596477]},"candidate":{"chroma_rg_bg_rmse":0.008068676539410763,"rgb_rmse":0.012533352895869003,"truth_template_recovery":[1.0432167884087933,1.0317893046867468,1.0503671436610154],"truth_template_sd":[0.0702536563430525,0.07308570678936346,0.06742183755596477]},"chroma_ratio":1.474136399089656,"name":"core","quality_pass":false,"rgb_ratio":1.8606672277158065},{"active_native_bounds":[160,80,192,208],"baseline":{"chroma_rg_bg_rmse":0.01480722374485636,"rgb_rmse":0.011598607962926985,"truth_template_recovery":[0.9215078371878053,0.9434438508848111,0.9506292409659274],"truth_template_sd":[0.04736747193117171,0.05543015900196193,0.057968344041297824]},"candidate":{"chroma_rg_bg_rmse":0.014503250000153001,"rgb_rmse":0.011515404266701931,"truth_template_recovery":[0.9336278423190231,0.9530279565719326,0.9616062228996013],"truth_template_sd":[0.04736747193117171,0.05543015900196193,0.057968344041297824]},"chroma_ratio":0.9794712533597697,"name":"depth-boundary","quality_pass":true,"rgb_ratio":0.9928264067126847},{"active_native_bounds":[180,96,224,192],"baseline":{"chroma_rg_bg_rmse":0.01999943241438441,"rgb_rmse":0.01551080129510214,"truth_template_recovery":[0.7782787499441128,0.8564738582452514,0.7638697938171984],"truth_template_sd":[0.039077379855128866,0.04521535404296994,0.03305599524293764]},"candidate":{"chroma_rg_bg_rmse":0.019921943964131897,"rgb_rmse":0.01548087743908858,"truth_template_recovery":[0.780537872734933,0.8562546514713717,0.767413867642187],"truth_template_sd":[0.039077379855128866,0.04521535404296994,0.03305599524293764]},"chroma_ratio":0.9961254675309296,"name":"nearer-real-texture","quality_pass":true,"rgb_ratio":0.9980707730410415}]}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+SHARED_SOURCE_CASE {"consumer":{"alpha_one":383,"alpha_positive":496,"alpha_zero":17629,"baseline_averaged_fraction":[0.9185103448275862,0.7379865188084366,0.5464527027027027,0.1611842105263158,1.0],"level_sizes":[[145,125],[73,63],[37,32],[19,16],[10,8]],"source_evidence":[{"beta":[0.7602105140686035,0.04723541438579559,0.010332784615457058],"guide_sha256":"5c3c89121f07d5e606d2beac5e7d41ccb451d6877dbd04cc4e713bbb1b04d5a7","source_sha256":"9fa9e6af80272fb55bb0a3bb006528807cac19b41a50c514dbf2960f14d438f2","variance_sha256":"7afbfc3914068c2cb4cdd991cac87d401b0d580fb274b194e4d7a9a23320150a"},{"beta":[0.7586994171142578,0.05005893483757973,0.010839625261723995],"guide_sha256":"22fc4b6565764ac1643fc609a51994c2711cb0ff9549806ba0ffd729a9f4ace2","source_sha256":"41226f5abed3e96c57143d0b89ec1aaad72b457e0c7fd277edb8c5475f42f65b","variance_sha256":"2bf38af3fce372f1c4c59277da61d74459ea8e205d931b69ebe5eac9e50eaab9"},{"beta":[0.8639586567878723,0.053427569568157196,0.010240265168249607],"guide_sha256":"5cb603c3f3b199df5e31a104b467934c99aa0f0831140b7b7e1c46d855eccd70","source_sha256":"e6bf831a05b92175c9022bfc679223cea3ac397eb1febbe344d01c10251311ea","variance_sha256":"3f5fd0937ca948d54f5f0243d4748a171681864205e40693cc3a3064c3d442a6"},{"beta":[0.9106155037879944,0.04763959348201752,0.010014733299612999],"guide_sha256":"d9cb7124a6492334c1503eee49274f63e2e8d9adef5120639731ae5055ed986f","source_sha256":"a23b193e2a9c5da7589fa055da428c9d73fe2e332075944693b8e8ced2498725","variance_sha256":"5f1acd1beb204f2df3bc322a2fb5ee29af1f30683588df48066bd8c6f4ae6a4b"},{"beta":[0.8802531361579895,0.04831283167004585,0.00937198381870985],"guide_sha256":"31f556069c957bc99f6327fa684f755ac276143bcf5ce6e555064d23a10411de","source_sha256":"93d3eef416419a2f20b9f047d63ad097ef3b5d2242374c0f31c71679d8b05126","variance_sha256":"611cd01456e1aa91d9618a77f42242889cc0c07da33d847e2e94ec6a431381c2"}]},"fixture_exercised":true,"iso":100.0,"placebo":null,"quality_pass":true,"scene":"true-coloured-radial","sources":5,"warp":"fixed fractional similarity","windows":[{"active_native_bounds":[84,72,232,216],"baseline":{"chroma_rg_bg_rmse":0.0033595366300743167,"rgb_rmse":0.0026659375287968546,"truth_template_recovery":[0.8202420164680305,0.9390558469416577,0.861255073934357],"truth_template_sd":[0.010012502699632142,0.010012092818908242,0.010012092821949975]},"candidate":{"chroma_rg_bg_rmse":0.003215821848892679,"rgb_rmse":0.002626561439702589,"truth_template_recovery":[0.836520426003151,0.9632709125884488,0.8820976263564309],"truth_template_sd":[0.010012502699632142,0.010012092818908242,0.010012092821949975]},"chroma_ratio":0.9572218442581891,"name":"real-coloured-rays","quality_pass":true,"rgb_ratio":0.985229928057603}]}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+SHARED_SOURCE_CASE {"consumer":{"alpha_one":1137,"alpha_positive":1373,"alpha_zero":16752,"baseline_averaged_fraction":[0.8608,0.6542726679712981,0.41469594594594594,0.07894736842105263,1.0],"level_sizes":[[145,125],[73,63],[37,32],[19,16],[10,8]],"source_evidence":[{"beta":[0.7602105140686035,0.04723541438579559,0.010332784615457058],"guide_sha256":"30b5425743234b1f1397aea36ebb8e1504e999060242691fa3ae758f6a08d50f","source_sha256":"b925ee86de79d5c794b623d94838e01c949bc01de34cc6bdcb832597f4f7bdd7","variance_sha256":"cc94bab03432c215299130dad9be7daebf19a5449aa2829b72c987c21be10d3a"},{"beta":[0.7586994171142578,0.05005893483757973,0.010839625261723995],"guide_sha256":"93ae73e86a264105d35b46c991c4179ca8cbf4deb460e0015f31d102dcfaed89","source_sha256":"965de29a496dee7be33da85d8db9e32d94a6508a9e4ad819a3097aee4a041aa5","variance_sha256":"565685915da52e592e1d68f6bf61e917fe148b100508766436352d50f11e7b12"},{"beta":[0.8639586567878723,0.053427569568157196,0.010240265168249607],"guide_sha256":"6fd2fa094e98453b8c979b7666c1ff804e8dfc1e8969ae7523459bd108a6894b","source_sha256":"df0c4a4c21b7c4e37a2a20cab3d52aaf2381abe7e73371c38dac8b85fce61fac","variance_sha256":"eefc7a00f805be6d2e1a075879a052efadbcb66dc65e22acba05321265e83af4"},{"beta":[0.9106155037879944,0.04763959348201752,0.010014733299612999],"guide_sha256":"eefcfe9e7a9b0444c5ed705359f48c9e780a57e0ca9d0031931a816a590fb1ca","source_sha256":"cea9cae47375a14959693ddeb03688d5945f20e6da3970d3b484fa26d62f166e","variance_sha256":"e34f10419d96d0b034381a968478d61ca54dc056a8e93ae9fa79ac99aadae5f6"},{"beta":[0.8802531361579895,0.04831283167004585,0.00937198381870985],"guide_sha256":"4fbb8f43b0ceb620045d84de37c5cb580cd8d77f961c77408bb3b3c8f901d6e4","source_sha256":"e98af63992b73a5aadcec46f987886b959973d5f9c123ba0132e781aac998f46","variance_sha256":"1e78ee8a545bd826f08f9f7ceff780f0260f18f209150d991188ce1c75a597be"}]},"fixture_exercised":true,"iso":100.0,"placebo":null,"quality_pass":false,"scene":"equal-mean-thin-depth","sources":5,"warp":"fixed fractional similarity","windows":[{"active_native_bounds":[141,92,163,188],"baseline":{"chroma_rg_bg_rmse":0.0023029874164968342,"rgb_rmse":0.0024557445924548896,"truth_template_recovery":[1.0235619245793537,0.9856400002310585,1.0413612661134235],"truth_template_sd":[0.019993487336128955,0.023992199888537284,0.017994131066910637]},"candidate":{"chroma_rg_bg_rmse":0.0023699304864115874,"rgb_rmse":0.0026698621081892217,"truth_template_recovery":[1.0510665263693022,1.0126057265093094,1.0705474090422333],"truth_template_sd":[0.019993487336128955,0.023992199888537284,0.017994131066910637]},"chroma_ratio":1.0290679269175438,"name":"thin-far","quality_pass":true,"rgb_ratio":1.0871904661389438},{"active_native_bounds":[168,130,222,147],"baseline":{"chroma_rg_bg_rmse":0.0032598556210702324,"rgb_rmse":0.0031555966247274036,"truth_template_recovery":[1.038432607475523,1.0055186222192656,1.0570078014637545],"truth_template_sd":[0.03400857568443953,0.03967667163184957,0.031174527710737213]},"candidate":{"chroma_rg_bg_rmse":0.0032926551654150417,"rgb_rmse":0.003510773341762911,"truth_template_recovery":[1.0598773042851402,1.025581847678122,1.0779019064411632],"truth_template_sd":[0.03400857568443953,0.03967667163184957,0.031174527710737213]},"chroma_ratio":1.0100616555324744,"name":"thin-near","quality_pass":false,"rgb_ratio":1.112554536993837},{"active_native_bounds":[148,112,184,166],"baseline":{"chroma_rg_bg_rmse":0.002496701417712632,"rgb_rmse":0.002463440244508746,"truth_template_recovery":[1.021538015440786,0.9901176780347253,1.0415428229348849],"truth_template_sd":[0.024911154988790263,0.029539858429976168,0.0225996576347936]},"candidate":{"chroma_rg_bg_rmse":0.0025313962081794164,"rgb_rmse":0.0027032507425077514,"truth_template_recovery":[1.0481198062755657,1.014653521457867,1.0686085160876906],"truth_template_sd":[0.024911154988790263,0.029539858429976168,0.0225996576347936]},"chroma_ratio":1.0138962513581502,"name":"thin-junction","quality_pass":true,"rgb_ratio":1.0973478039638132}]}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+SHARED_SOURCE_CASE {"consumer":{"alpha_one":0,"alpha_positive":0,"alpha_zero":18125,"baseline_averaged_fraction":[0.9492413793103448,0.8251793868232224,0.706081081081081,0.47368421052631576,1.0],"level_sizes":[[145,125],[73,63],[37,32],[19,16],[10,8]],"source_evidence":[{"beta":[0.7602105140686035,0.04723541438579559,0.010332784615457058],"guide_sha256":"be734588fb5b0891223b2915d22f6dab0581640f0dc963b710d0364579ade92b","source_sha256":"46d5866df78608078d786ee285ebd6d947768b8687d5e770ddc65462bf67f1be","variance_sha256":"51df891d951c6f212007549d9f61fcb9706915eac5a34db847b08ec930996c15"},{"beta":[0.7586994171142578,0.05005893483757973,0.010839625261723995],"guide_sha256":"c6ead8abc261627547c29f5b6dc6c241abb01302a458303f50f3033dbfb042f6","source_sha256":"4fcde534b56ea846396d963eaf215f2315d0db21e6f501a33700d9a410a9ad86","variance_sha256":"147e69f5b56993868fedb7585c87eb22d88968056d4fff752aa01061fea6a5f2"},{"beta":[0.8639586567878723,0.053427569568157196,0.010240265168249607],"guide_sha256":"8ebfec82863b8355489867db139997938efcafd003a93a11ff6450bdfe9ebb05","source_sha256":"9dd2dd3ad11c6e3c64090ab4448c42ea9760c9abb888504b62ad034f1092f178","variance_sha256":"ef754a7a09e45eef31a3f9e16195a6044f919511509b7bc29c907edfa21be152"},{"beta":[0.9106155037879944,0.04763959348201752,0.010014733299612999],"guide_sha256":"644b046f7344ec7531fa8be02b13ce476bb2d014f2118c7e6687c035b641243d","source_sha256":"664cc43cc88a46955fe71afcafb577cbcdec1240c4e55c73b349abfcc793a931","variance_sha256":"e604a77e4aa557a5e587bdff512d05153bf38f5e271f196ec933aa62afd4eecb"},{"beta":[0.8802531361579895,0.04831283167004585,0.00937198381870985],"guide_sha256":"a6ab43537f65fa3c8861b8c4c74cb23a310a6823c00d5a73ab25144b165cdb86","source_sha256":"fbe20cc89e4c81c9f59a853d4a9f14c0290edeb2522b1afaa0ec11c89a51227c","variance_sha256":"59216a6bd18ce8571617a5370daebc1ce202ac9b0272c5cb02f564b8ce724f7e"}]},"fixture_exercised":true,"iso":400.0,"placebo":null,"quality_pass":true,"scene":"flat","sources":5,"warp":"fixed fractional similarity","windows":[{"active_native_bounds":[38,42,280,244],"baseline":{"chroma_rg_bg_rmse":0.001847227374486053,"rgb_rmse":0.0022207832190160293,"truth_template_recovery":[0.0,0.0,0.0],"truth_template_sd":[0.0,0.0,0.0]},"candidate":{"chroma_rg_bg_rmse":0.001847227374486053,"rgb_rmse":0.0022207832190160293,"truth_template_recovery":[0.0,0.0,0.0],"truth_template_sd":[0.0,0.0,0.0]},"chroma_ratio":1.0,"name":"flat-interior","quality_pass":true,"rgb_ratio":1.0}]}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+SHARED_SOURCE_CASE {"consumer":{"alpha_one":8524,"alpha_positive":8722,"alpha_zero":9403,"baseline_averaged_fraction":[0.47911724137931033,0.0,0.10472972972972973,0.0,1.0],"level_sizes":[[145,125],[73,63],[37,32],[19,16],[10,8]],"source_evidence":[{"beta":[0.7602105140686035,0.04723541438579559,0.010332784615457058],"guide_sha256":"1c7f9c0c09fad515985a11fd461ed627681db8032336226834ad0eaf783c44b6","source_sha256":"a96b29fa837249c304a23eb330d49a2afc3078ae34ef186fc92a87e499bb417b","variance_sha256":"2a31bf4eb0f669428af22300a9c778f6b9bac99ca5c7c9a7a89218628143b5c9"},{"beta":[0.7586994171142578,0.05005893483757973,0.010839625261723995],"guide_sha256":"7826af9a3b20b5d9704a40248c86c88b2a9ae537b4e1a0723b0f3c1f7f04cc8d","source_sha256":"25148ff6371d525eebfe7ff5f3418aed14aff96ba55f970a34af1e454aa714bf","variance_sha256":"6b48596cc495ea544b96ced9361dd57b55862d2257a95ea0138220d2b7729f54"},{"beta":[0.8639586567878723,0.053427569568157196,0.010240265168249607],"guide_sha256":"3650714dbdc617e5814c6dd36ab215d140d4eebd6015c0f88a89649f16d36d67","source_sha256":"3575c54f5f376f1e11c8c84303cf7aed4a7e3b1418fb731c66ab4b2f575618d7","variance_sha256":"9e67ca6d06195286a14ce8127d48452649d4c68e1e3be099cd6533a2f325e013"},{"beta":[0.9106155037879944,0.04763959348201752,0.010014733299612999],"guide_sha256":"abda4671c1451fadc0dca5f50c10ccc02cd5fde46331204a12e730831766e56c","source_sha256":"996d98fb7cc91f07ffd97d6727efdf0cb94e1a37e709e7d49fc815cbcaefff35","variance_sha256":"383a943e0f8dce8850fc4a66193c7b09f109420a9e3ef6acaf8b4e1f0fc05e9e"},{"beta":[0.8802531361579895,0.04831283167004585,0.00937198381870985],"guide_sha256":"9e49d9252c2116d5d2f626b3f65897f2e5f940b476b521b7800712ec77b4e2d8","source_sha256":"415d94c313e446aa1536fbda0c7cadb120d9fa9c3d6b049094c03eadab9410d4","variance_sha256":"070d129fec4ddeb862ef5d1f1631058d8549ba2a24431193d6694891c1de80c5"}]},"fixture_exercised":false,"iso":400.0,"placebo":{"unmerged_wrong_fan_truth_rmse":0.0037014708033989894},"quality_pass":false,"scene":"glint-depth-step","sources":5,"warp":"fixed fractional similarity","windows":[{"active_native_bounds":[138,133,171,167],"baseline":{"chroma_rg_bg_rmse":0.004152870437217488,"rgb_rmse":0.0034005730575280557,"truth_template_recovery":[0.9783340194322218,1.1337494742864367,1.0132494180621716],"truth_template_sd":[0.0068338701747547755,0.006833870174754311,0.00683387017475269]},"candidate":{"chroma_rg_bg_rmse":0.004205841585162067,"rgb_rmse":0.003466149478495005,"truth_template_recovery":[0.9755339350596598,1.133181877396865,1.0228427200177312],"truth_template_sd":[0.0068338701747547755,0.006833870174754311,0.00683387017475269]},"chroma_ratio":1.0127553095492356,"name":"fan","quality_pass":false,"rgb_ratio":1.0192839324012695},{"active_native_bounds":[112,110,133,132],"baseline":{"chroma_rg_bg_rmse":0.005981743626325871,"rgb_rmse":0.007207707604058486,"truth_template_recovery":[1.0450610622116008,1.0316881583090305,1.0541139394214785],"truth_template_sd":[0.0702536563430525,0.07308570678936346,0.06742183755596477]},"candidate":{"chroma_rg_bg_rmse":0.008283777141040779,"rgb_rmse":0.012627550310710623,"truth_template_recovery":[1.0439520339671662,1.0286075461854078,1.05091029847291],"truth_template_sd":[0.0702536563430525,0.07308570678936346,0.06742183755596477]},"chroma_ratio":1.3848432260760182,"name":"core","quality_pass":false,"rgb_ratio":1.7519509675448481},{"active_native_bounds":[160,80,192,208],"baseline":{"chroma_rg_bg_rmse":0.01501855098201107,"rgb_rmse":0.012020799363511631,"truth_template_recovery":[0.9208829250352322,0.9432673432635874,0.9504861438168105],"truth_template_sd":[0.04736747193117171,0.05543015900196193,0.057968344041297824]},"candidate":{"chroma_rg_bg_rmse":0.014737198838815047,"rgb_rmse":0.011958021757380264,"truth_template_recovery":[0.9332265093035769,0.9527164531811111,0.9615268342092163],"truth_template_sd":[0.04736747193117171,0.05543015900196193,0.057968344041297824]},"chroma_ratio":0.9812663589494738,"name":"depth-boundary","quality_pass":true,"rgb_ratio":0.9947775847318503},{"active_native_bounds":[180,96,224,192],"baseline":{"chroma_rg_bg_rmse":0.020292869970066334,"rgb_rmse":0.016014882566984134,"truth_template_recovery":[0.7762268255476763,0.8555798481959299,0.7649774183246668],"truth_template_sd":[0.039077379855128866,0.04521535404296994,0.03305599524293764]},"candidate":{"chroma_rg_bg_rmse":0.020182219477927588,"rgb_rmse":0.01598761329335261,"truth_template_recovery":[0.7798817545579843,0.8560916680923898,0.7705581601911936],"truth_template_sd":[0.039077379855128866,0.04521535404296994,0.03305599524293764]},"chroma_ratio":0.9945473216798824,"name":"nearer-real-texture","quality_pass":true,"rgb_ratio":0.9982972542247833}]}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+SHARED_SOURCE_CASE {"consumer":{"alpha_one":245,"alpha_positive":354,"alpha_zero":17771,"baseline_averaged_fraction":[0.9273931034482759,0.7551641661230702,0.5692567567567568,0.21052631578947367,1.0],"level_sizes":[[145,125],[73,63],[37,32],[19,16],[10,8]],"source_evidence":[{"beta":[0.7602105140686035,0.04723541438579559,0.010332784615457058],"guide_sha256":"c5d7cd22cccb3e773e111f071917d1e2f3334ce4bc4b2841dceced7cc1eedbad","source_sha256":"5a85009e86a10f23d5698ef4fb71590c51b8ddcd990ee79b0e37d9472db13cd2","variance_sha256":"98aba87e3342b0bf60e49a5d4ef22f46d8bb83ea9ec2a3d92b3e91a314e66685"},{"beta":[0.7586994171142578,0.05005893483757973,0.010839625261723995],"guide_sha256":"824ebfe2a13d549dda682b6e46a53866e6435135742c1b816d4334fc04f4fc67","source_sha256":"3fcf6730a10359e076283b372911fdf284f5b8fc0fd0f2fd6b9ac44ab3740028","variance_sha256":"2045d10cbd82646a0ecfadc9ef7ab941422eafb7597e9b0661332f48cb817a0d"},{"beta":[0.8639586567878723,0.053427569568157196,0.010240265168249607],"guide_sha256":"4e2afd4b38ace3c1c1d95a6099d1b4eaad15d77b2b3152538c7cbbff5ed4d28b","source_sha256":"e3c9956f7a9f173c3156effc5f011ad6ef93693373244bd80b07b021e8d83e5b","variance_sha256":"e711f6204d218b43f845af0f7088fd6c3f583fedde9cd5cffb94a2812eb5580f"},{"beta":[0.9106155037879944,0.04763959348201752,0.010014733299612999],"guide_sha256":"83e64aa5334e753cf5c7e1a1b466c7f2aee63bc4535a1cc860f7e462c18a7b58","source_sha256":"2098823e8de5903e8389fdc8c82dce0107f0f984153b320983c8bca1b8e38d16","variance_sha256":"0e70dc3aac965ab4ecc3f79efcf6351a9a3a6f5edb408ee134ad9e784e5e73a2"},{"beta":[0.8802531361579895,0.04831283167004585,0.00937198381870985],"guide_sha256":"d6ef9db28261f96f80826f58a4c9346ffca8cd6602919308a20712ef7e37f8b1","source_sha256":"fbcb500d4f22dad9c74169f5e93577806fdc3d6e962ef4186cc257c128f4f6ea","variance_sha256":"6623704dc5d72fc512f6d8efab994f7d03100c311df78d3e2b13f8fdf15d79b2"}]},"fixture_exercised":true,"iso":400.0,"placebo":null,"quality_pass":true,"scene":"true-coloured-radial","sources":5,"warp":"fixed fractional similarity","windows":[{"active_native_bounds":[84,72,232,216],"baseline":{"chroma_rg_bg_rmse":0.003704057882562277,"rgb_rmse":0.0033076267611985457,"truth_template_recovery":[0.8337449412805128,0.9396096352553444,0.8520665870536014],"truth_template_sd":[0.010012502699632142,0.010012092818908242,0.010012092821949975]},"candidate":{"chroma_rg_bg_rmse":0.0036181235907863695,"rgb_rmse":0.0032968040139857427,"truth_template_recovery":[0.8480782059588485,0.9619259769800529,0.8632999733762665],"truth_template_sd":[0.010012502699632142,0.010012092818908242,0.010012092821949975]},"chroma_ratio":0.9767999598007193,"name":"real-coloured-rays","quality_pass":true,"rgb_ratio":0.99672794181624}]}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+SHARED_SOURCE_CASE {"consumer":{"alpha_one":864,"alpha_positive":1088,"alpha_zero":17037,"baseline_averaged_fraction":[0.8772965517241379,0.6753642096107849,0.44510135135135137,0.10197368421052631,1.0],"level_sizes":[[145,125],[73,63],[37,32],[19,16],[10,8]],"source_evidence":[{"beta":[0.7602105140686035,0.04723541438579559,0.010332784615457058],"guide_sha256":"72b7473eb24171adaa206b39ced8b6c86e852b9ea426742db2b6c6eac591b96e","source_sha256":"8ef5aa2b49cb74d412ef62dd5335d1b0bf88c21742badf1fe640f9676df816b6","variance_sha256":"67abf1e74b09e8aa3a1e2491c76a639912600457cca701eec75a903eba3b407c"},{"beta":[0.7586994171142578,0.05005893483757973,0.010839625261723995],"guide_sha256":"cd07f7a04166f8301358453f974e29f62619f58b9d37741843cf042762509ad5","source_sha256":"7e8f8450355ebb7b5e74cbb1bfab0697a08721e45405e69c8a829e1ef1171895","variance_sha256":"4130894815fb1b9b8b2039520a6e3eda735986d4093b4b0797a336bb708a6115"},{"beta":[0.8639586567878723,0.053427569568157196,0.010240265168249607],"guide_sha256":"cd335a681e4b9bbd07e22e12036b008885e60edfdff172fa61d84ae299233849","source_sha256":"de9331cf672a2589d6c769153fb494dacc8880f2002f78d34e038d88163ed502","variance_sha256":"a7a057c4f7d53c525f23cd8da0ab161f52fbf8913fa9561524f4a3a4d29ac24a"},{"beta":[0.9106155037879944,0.04763959348201752,0.010014733299612999],"guide_sha256":"21709fb6c368b34e65257f80d31ead33228a161ad7a6c80aa66f6b0a6c3566ac","source_sha256":"85b385a75664502ebddd1880774bf04b0376fbbf1332c25ee95a6c8a92da30fe","variance_sha256":"94bfaf55b57e3baf4547a89a6d4b5bdeab3a4a6d3037ae6a9207688f54bde4e1"},{"beta":[0.8802531361579895,0.04831283167004585,0.00937198381870985],"guide_sha256":"9ab33b7469f9e50548abedb42af4e66083bae4ae3647cceaf7d92cbbcdf44d3c","source_sha256":"38d86825941b67551a136d792c01943bc0d8e2a9e05b2669485d28ff77e8c199","variance_sha256":"5ccd1e9b6129d12a237e891eddfbc0ec4890399e6cf7d5711382a396981e8d9c"}]},"fixture_exercised":true,"iso":400.0,"placebo":null,"quality_pass":true,"scene":"equal-mean-thin-depth","sources":5,"warp":"fixed fractional similarity","windows":[{"active_native_bounds":[141,92,163,188],"baseline":{"chroma_rg_bg_rmse":0.003512268831966248,"rgb_rmse":0.004168745002052206,"truth_template_recovery":[1.0220565243470143,0.9852112031215519,1.0419417236109771],"truth_template_sd":[0.019993487336128955,0.023992199888537284,0.017994131066910637]},"candidate":{"chroma_rg_bg_rmse":0.0036683530997432432,"rgb_rmse":0.00437661652429648,"truth_template_recovery":[1.0484163475084738,1.010208507744113,1.071109727528739],"truth_template_sd":[0.019993487336128955,0.023992199888537284,0.017994131066910637]},"chroma_ratio":1.0444397269242103,"name":"thin-far","quality_pass":true,"rgb_ratio":1.0498642930047153},{"active_native_bounds":[168,130,222,147],"baseline":{"chroma_rg_bg_rmse":0.004334614898446471,"rgb_rmse":0.004831364790627287,"truth_template_recovery":[1.0382592558810413,1.0090447680731822,1.0586666444977006],"truth_template_sd":[0.03400857568443953,0.03967667163184957,0.031174527710737213]},"candidate":{"chroma_rg_bg_rmse":0.004462424802652741,"rgb_rmse":0.005150750280263717,"truth_template_recovery":[1.059759996642159,1.0290830038370944,1.0813853573193963],"truth_template_sd":[0.03400857568443953,0.03967667163184957,0.031174527710737213]},"chroma_ratio":1.0294858729554213,"name":"thin-near","quality_pass":true,"rgb_ratio":1.066106680715981},{"active_native_bounds":[148,112,184,166],"baseline":{"chroma_rg_bg_rmse":0.003477205031244947,"rgb_rmse":0.0038359180663344486,"truth_template_recovery":[1.0186798757829838,0.9894324120607847,1.0412638732302704],"truth_template_sd":[0.024911154988790263,0.029539858429976168,0.0225996576347936]},"candidate":{"chroma_rg_bg_rmse":0.003584495878471168,"rgb_rmse":0.004037214291501849,"truth_template_recovery":[1.0458664527734094,1.0131998261329547,1.070486487192364],"truth_template_sd":[0.024911154988790263,0.029539858429976168,0.0225996576347936]},"chroma_ratio":1.0308554848684914,"name":"thin-junction","quality_pass":true,"rgb_ratio":1.052476674862807}]}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+SHARED_SOURCE_CASE {"baseline":{"chroma_rg_bg_rmse":0.0020443832319092642,"rgb_rmse":0.002314381327298779,"truth_template_recovery":[0.0,0.0,0.0],"truth_template_sd":[0.0,0.0,0.0]},"candidate":{"chroma_rg_bg_rmse":0.0020443905721445376,"rgb_rmse":0.0023143867811744713,"truth_template_recovery":[0.0,0.0,0.0],"truth_template_sd":[0.0,0.0,0.0]},"chroma_ratio":1.0000035904399718,"consumer":{"alpha_one":0,"alpha_positive":35,"alpha_zero":18090,"baseline_averaged_fraction":[0.2128551724137931,0.08849749945640356,0.04222972972972973,0.039473684210526314,1.0],"level_sizes":[[145,125],[73,63],[37,32],[19,16],[10,8]],"source_evidence":[{"beta":[0.8925266861915588,0.051431696861982346,0.01048602070659399],"guide_sha256":"08e3998b73e03ba671e6fed2ba11d03a853443d0a8e6cc5c874d07bd5aeee3bb","source_sha256":"c003ee704e1611ad26d4e0cb78c11cada8ce95af08c36adf15d30054be664598","variance_sha256":"281d2e865f23f6f0390e2e64152cf97e4b4177f8ffedf1748b03caed64dcdc1b"},{"beta":[0.8766778111457825,0.05338786542415619,0.01099222432821989],"guide_sha256":"10c374e43973b7971d2b6ec08bd933f1413eb0b637fc5e82d8c4baf26a1781a5","source_sha256":"1795ff3e13d43ab263f7ca83d39abb5b345f4fb292b363e6801cbed9fea7c485","variance_sha256":"8179b0791e92482e0d4238490c9e87390412d3dbbf64b05d70049f43e3c00989"},{"beta":[0.8639586567878723,0.053427569568157196,0.010240265168249607],"guide_sha256":"3f0cb08dc531c09e19943759d4d7d33a04093a040aab7ceae0d0bb6e61ed56a2","source_sha256":"280175839a56c9ed312a7314781f5efaeece005bfcc9342818e0e82d425af132","variance_sha256":"ec906911d958b45df2900ef278ce8ce83f44e130f14d49c92bca423188f8d906"},{"beta":[0.8950760364532471,0.05195978656411171,0.010240789502859116],"guide_sha256":"87d81628d834cf0516b47940c3688baf0ebc8cb3880870090eecadeafc8da6f9","source_sha256":"31e27d8b080dbfb17426293c23d2368841da0e5cdf5987b6fed3ecc77f80cd10","variance_sha256":"36994d0e95d8b0ed44b659a2f9a528ef3bf6e5fea0d1214fe906c493fbf39bd0"},{"beta":[0.8829028606414795,0.05254238471388817,0.00959097407758236],"guide_sha256":"abc51bea2f4172959dddd1d178556203c0e495a49a44b036f0bbb6714821db59","source_sha256":"33203c2066cc2476fefea9557bc9c59ed5658485641d4c20ebb43ff92cbc44a4","variance_sha256":"52628b721997b74ce4fc844101158399ab3f5217df17124ccfe504eeb1b0f6f7"},{"beta":[0.8997353315353394,0.052636805921792984,0.010423718951642513],"guide_sha256":"7456d23faf7d1eeb7de34c289b38ccdd6425fa60a12c6ebadaf1f9b2016f9a32","source_sha256":"5b1b3c2d79449faaf754bb888416291c34fe20ca7a017c2c869b68372437c0d5","variance_sha256":"1e06ad34d54b1b514a911416f20db627f1820020ef53caf2f6f0fba0b0fd98b3"},{"beta":[0.9100835919380188,0.05479776859283447,0.011276193894445896],"guide_sha256":"448a3ad68e55e9533a04370e470d5730bef62167a9c063452e781d691db22dbb","source_sha256":"1a65cec63795fcd7317418ee3e75654e7cc2d4bc46fdacd94ac9e184c7307124","variance_sha256":"8636458451cc79add64fc3eee0f9496bcae0076afb3e562fa703f43775a4322b"},{"beta":[0.8757094740867615,0.05145702511072159,0.009679972194135189],"guide_sha256":"a545306b33a33ac1109f51e1a08c9e1492cd179d029f769df4e68d21d6a25e23","source_sha256":"0a5b4822f1d9496fee0fba83a405e71261c741b44986e6331505c104cf0ca9d8","variance_sha256":"8d70fb927c4cfd4637f501024c9d881a8a569e0bf369bee8ff13c1356293ff70"},{"beta":[0.8771567940711975,0.05353754758834839,0.010099787265062332],"guide_sha256":"813c421a2d7d389b45c970717bec418cd84177c9ecc90bf50a5c69a964e4cd14","source_sha256":"01398d70b65e16a4d785df352a7878f52515847e290a6561324235351cc10ccd","variance_sha256":"0a71df0e1685bf19b8a6d025874e67b771900748b375d25128426509f813fc3d"},{"beta":[0.8808842301368713,0.05394807085394859,0.010276677086949348],"guide_sha256":"b17b6ef6c7a1da88a5b9a3001f52de8ba7314130f56c0afc6cf8d9168970b01a","source_sha256":"72e831fc5a62ee3d6596902491425e7afd45a19694cdc090854f148d32868f33","variance_sha256":"917aa29d1d27b5b8a5c5b1915cd0fddc0669e556db89b0f5d418d6a021aaa24f"},{"beta":[0.8926414847373962,0.054846301674842834,0.009957704693078995],"guide_sha256":"8a30c1fe1f61208d6772f8d3bfe7b5c64dc21e1fea94564d23f8ed8657295fc9","source_sha256":"15b91b3e67958cd992b237d887d6e2b5d8fb3d23effa61363e25b546afe2b0ff","variance_sha256":"c0d2abfcc9da2910274db9bba398d6e47de6c9ccd2b703b2ed87f36480a85d4f"},{"beta":[0.8771348595619202,0.05196837708353996,0.008973629213869572],"guide_sha256":"7c10a90d51df082d68168c3df5d9e3a09dc4945fd52303458ef71257600f2c76","source_sha256":"e1856cb987bef8cadcc3f958e5ee538f236de928793489d7d80dbc2a6332ae5c","variance_sha256":"41aa0a6d05ba3a5f6614b677f31a55b0eb5504c02778d217df08cc3a50dc2f36"},{"beta":[0.8774061799049377,0.05025921016931534,0.0092726806178689],"guide_sha256":"ded1c8b94f04bec531c51ed48111ced6204b655c65cabc6fcca821a5c6ae063a","source_sha256":"d89786f5375eae52c96c53be54cfa4a92d4cbb34f45eebed2c23c8134a09f8de","variance_sha256":"5c8411edc7a4b77dd195c97f9e352f6c09e29c7279d510dd8a37c6f46fe8cdae"},{"beta":[0.887617826461792,0.052621740847826004,0.010032827965915203],"guide_sha256":"3a1e5bc8ac78eaffb7087ef208b517e33061a414bae1286a154776a2611e0f69","source_sha256":"5c4ce8a3bc45dbb06b6c4039f59e59a703e9eb74f4aa5be0b802123cd2df9fa2","variance_sha256":"bb75dd3cca58eed1d97f370371d2db83df6e886d4f78a12920af18caf021031b"},{"beta":[0.8557555079460144,0.050729066133499146,0.009508669376373291],"guide_sha256":"a2efdcafd5af2fd24e8759ec0919c2c3d2dfee1f0820276867ef01c6d6b2f1e1","source_sha256":"eadfc37897d8a03b5dae8d2652fb4981b5868152c9a34d83338f7a1ac47560c4","variance_sha256":"4eeca0531c4deea421eab9eb79faa0d40a783e992a5765c8a96f4402f2d1dd13"},{"beta":[0.8866949081420898,0.05466464161872864,0.010497287847101688],"guide_sha256":"6c00c519544d33e7d37a684226e9f2883f9268f4829a5d8582583c1443954726","source_sha256":"1261c7a228b9d4952244a4e1592927172a5d6bd74b4022e24b5c43bad0a42c0c","variance_sha256":"d57482a1377d86c23a9d8376427ce365f1b99907d25bc63e2e8bf8d1c8c67bd9"},{"beta":[0.9180325865745544,0.05550467222929001,0.011152030900120735],"guide_sha256":"7f156137a8e20d4b8b568eb2f3c5ffe64a01b1820c72845c2b7d3a59b6e67c7f","source_sha256":"4e9a3894d710f8bc4cef535f67551a1339d5f67c9c2274cc7a95b14d545b80b0","variance_sha256":"4718f9f16fd9618ab5c7b08888414fcaf159f75cfd184b0e9d3a7759d0607d28"},{"beta":[0.8932453989982605,0.05527093634009361,0.011011429131031036],"guide_sha256":"9b688d5644f0995f4d860917475b581436af9d228c81dc12a1650548e690af5f","source_sha256":"ef653705cfc81b117f1281bc91cd42a40df0904ccc5b07ed6216f7c768cb1053","variance_sha256":"c94488dc3a805a888908f0277836342eb83bad5b0507999269361590b764be30"},{"beta":[0.8852061033248901,0.0544128380715847,0.010066179558634758],"guide_sha256":"8313610c0e391e9543dffcc42ea7000f99108c33ab21db04571406c9a1bae8ac","source_sha256":"8edc26ec7fc7620cd3fd6c1703142401b1071bba1d4a4f8e36a0b521722d5b48","variance_sha256":"e5f7d977642713f4d300a5d8d5f56accb5e66b7e5cf21d2bfdaebbd32188642c"},{"beta":[0.8861841559410095,0.04952571168541908,0.00971098430454731],"guide_sha256":"4ab512615c3fe97aba8a1435357a95fe993745e2e35d6c5976b65a30228c8cff","source_sha256":"176194d6d382ec24357d178c2b05e56e20c674b187f65fe9f5d1245a5dd4c7f3","variance_sha256":"be120a0592d881fce4cd0453ea3e0e996529d9235ef811bbb0af7dec124779e5"},{"beta":[0.9065765738487244,0.05519866198301315,0.010047304444015026],"guide_sha256":"c1f562bbb6734fa005f5c0fb2b3bc12b227cf0e4baa5fd7bbe14470b215e4422","source_sha256":"0bbe010e1c42749dda03e4e75782d4e2001eebb4a63ee3f3ba1aa8ef81704cb7","variance_sha256":"1a9a19c87fa17f762732abe55099c206cb203ebdfacc850337c42b9ad60b2b1a"},{"beta":[0.8836737871170044,0.05347278341650963,0.009108638390898705],"guide_sha256":"86fafa7bdec6d8cb9a102dcd6bdd93ef604e6455b4c2bde6e410d2029ec1146a","source_sha256":"06bbc274f6122edbc4063674c0165a8ee06e8ddcb3a2fe0684ac34d9934bfe91","variance_sha256":"6d2e9927cb475aa675e5c0b103c2b61984c088e2c88d306aff2e2d0421b94321"},{"beta":[0.8944444060325623,0.05548815056681633,0.010055839084088802],"guide_sha256":"8e26d796e485899e1737dfbfbf00ba45a4323a50ab069ffd09d41aec8dd424f3","source_sha256":"22f8f0c1b3b3eeb7471eace713ea46bc61bf86a10aeddd0ca76342ea25194b80","variance_sha256":"d135aac0e271db56ea75cd0f6b7ad71e2f7a48c8f31f51b407a82291906d5d7b"},{"beta":[0.8791681528091431,0.05069924518465996,0.008842307142913342],"guide_sha256":"1ffcb25bdd9a58142ea6abb1c5ce4cd667f414ce802f1b66b5445dd4c12a1f43","source_sha256":"978c66b0c9436e97b878433344ddeaab23f5462dee794c8dfcedd536c02895e8","variance_sha256":"1904873c233ced523785c88f5630820b2dc49a9cbff1b4dc51e479cea73f88f4"},{"beta":[0.9050753116607666,0.05368474870920181,0.01089971698820591],"guide_sha256":"37fabcc763b8a0861d5cc53f61f829a5c5b9ad46be9ce61dd8174b7b6a0c60a7","source_sha256":"1ca8df3903492aac053fd1eb195c49838fd57a7303600c41d3a090c8f238076e","variance_sha256":"291568bc17bb67ff290e09067598c6e0b783c1a8a5a51f42345fa0a4b71582dd"},{"beta":[0.9050413370132446,0.055509600788354874,0.009742366150021553],"guide_sha256":"c4a73bb9c18e15b93f67868c7af2762c889141acfd58f5ae456d86be1bb137bd","source_sha256":"29ab445dc76f32a5d3e0233c0d00f2e2fa6f4beb40bae7af9965bbf91b33bc4b","variance_sha256":"1e0c19adcb749d19a61a9bd573df0564bd63bee3a59a97864862e8ba00e72922"},{"beta":[0.8757951855659485,0.0536637008190155,0.009756726212799549],"guide_sha256":"5b5e8f5c772e30c0673b8bdf91fc0d9ea8873f9b1c91fc3eb2acb7b8e18869df","source_sha256":"8116486665a4439d1379f7dfa5001c14a9b0d31580c24b4a3c4d945c3c4e027a","variance_sha256":"fe322c76cb570fdc75c13d876d3909f848ceb2db2416ad5a28ca4fdb4c62994b"},{"beta":[0.8951074481010437,0.05335317179560661,0.010608064942061901],"guide_sha256":"9f8e251890b2b081d99c865dd0baf7174c6a20984119e834e6b17f48fcd2f96a","source_sha256":"1494f632b2d7346b8e9e5f4eea27497d187c4d8089ef595eae0f0ff81e8b55b5","variance_sha256":"06a4c6c9c76800247112a736d5c4391240c9a749927aeab9bb2316483e9974ad"},{"beta":[0.9002848863601685,0.05345011129975319,0.00894885417073965],"guide_sha256":"b4ac53e9d5a898a39ace378ccd80ec09c94e878629720588e5bd1e3c94838dde","source_sha256":"75550cff4107719759bef81f1e20e035f5b7289c8184298af4a733caf9e3adb6","variance_sha256":"8a18bcd599a351ce3a7f45eade48a27859d87b84d155a88a0492e4870b45cc4f"},{"beta":[0.9165678024291992,0.05379738286137581,0.010471237823367119],"guide_sha256":"0f0bdb443b5824dddd2038c26f419bcc5bbf6789770e0d85752accace9597395","source_sha256":"c36aeeb990191b066fa34f8bd713c8a6942725ed08146f39d79f455565d0cef7","variance_sha256":"09bcb00f01057a2fc83f3ae1b939f4e3e490a1d361a010c8fb657db14ee3325f"},{"beta":[0.8907920718193054,0.054017890244722366,0.01002283114939928],"guide_sha256":"c3f2a37e999d7693b5d04018d0d377998d4a6678ca053471be92d387aa6519a6","source_sha256":"76873928137aecc709da9f45c37e2195112c89f0a459b596983fa619d43deb2a","variance_sha256":"156471c801f195ca332f74ecf82da7f538617ca3ace9be62caeb54ee0ee08852"},{"beta":[0.8799603581428528,0.05113212391734123,0.009352465160191059],"guide_sha256":"7be86b43dd0b793e2449343f594e3e4b380d117e1926698bbd159106d5932c44","source_sha256":"1370dbcc85c3c76cfa032f9f1aedd5b42bcd6d2c2593d7ab8707ccbddf43e1d0","variance_sha256":"733ad63a9cc4a3e54838dd33f7e5b1957b1729f5ce51e5a98c1f074e6ae3a2c9"},{"beta":[0.8817752003669739,0.05479390174150467,0.011230319738388062],"guide_sha256":"98e803451a8908a53f72723e1e023fbe438f888ceb7ea0db3dcf92e27a2cf335","source_sha256":"4460df071c4d0fdae2317903d05193eef3eab23903522b67552944474f65abe7","variance_sha256":"08c8ca0b336b9c13ab7f82163898d3c740277fe8b6d4cdaea9b540930c46aaf4"},{"beta":[0.8690767884254456,0.05077165365219116,0.009649048559367657],"guide_sha256":"de4b1a743bdb6f2af9cea407a3f466c7d0fb47a0b0a8787c9213916f831bb3f7","source_sha256":"075255b5997be7a0623a567cdef0cd541f61e8e8cc2660cb854ca64a982b79af","variance_sha256":"434b4daa420bde215f80d04500833ce869959500b4f21ff144d5e8ba4f0be6d2"},{"beta":[0.874485194683075,0.05363921448588371,0.009053375571966171],"guide_sha256":"661338c15b815cdc8669aa252e834e0a58b0daa3fa79eee7114909694845d136","source_sha256":"aec402c342b43a3b3ca610a60273242335bfcfee33c13bff30d2cae6caed36bd","variance_sha256":"ef1fdb68d3e51b63904e2fdb33a42871c041acd798756f54771780d965f15e70"},{"beta":[0.8787515759468079,0.052856553345918655,0.011549560353159904],"guide_sha256":"f25eeda6cb41f15ff5e52c78de981582ead64e0b5356b53d6fcf070186105730","source_sha256":"17785a3d9ce004ce771d6004f9cba459903f494ae8a6886de7cde8cc3d7ce5b7","variance_sha256":"51f4184699572ed9fe7400be24ab69853cd0efb6e2a0a3eb71a3f223dd87d053"},{"beta":[0.8748666048049927,0.05394149571657181,0.008752117864787579],"guide_sha256":"bd1672869c412d7b62c0872562634f91fd4808327a6100a500e0369aa576232e","source_sha256":"60163900345dc50d91d2fba68e10241a84c1edf3cf22376edac436da39900515","variance_sha256":"4d0388a540d8feea8f40e6f727b96c836e3d6cf3745e18362bab4845a2c69fb4"},{"beta":[0.9018245339393616,0.05655944347381592,0.0093613900244236],"guide_sha256":"044928aa3b18f679828913bd3b0fd887dcfd8c4e107f9a9ae9917a3bbba5ac17","source_sha256":"08ee8c6ddddcda19fd5fe7e146254e8fecbf2f15a0dfa83f97014a2d08c066a8","variance_sha256":"2ee1c057a944bf3eeba74f9854197d55d0a69362b26d01d32fb000ad6d1dd665"},{"beta":[0.8901916146278381,0.049579720944166183,0.008657368831336498],"guide_sha256":"4813168fb13b14223caac6801a0a200ebce6eff60afda6361552602b85367b91","source_sha256":"325b69878f34f147a9f3de17b4f38957408a3080dc6427bf21975f2cf74e1e59","variance_sha256":"fdfd559f6286c583cc84f5254d2f9119071c162e58a61d55f43ffda9a05408cc"},{"beta":[0.909694492816925,0.053302373737096786,0.009659145027399063],"guide_sha256":"0eb3e0434295b45128bbf4ab98e2868cca66e5cf20058a320572f9b202453cd0","source_sha256":"8b54abbbf51e1be3968b076a3805691c228b5b47fed32b58d23a5af12b3f9e0e","variance_sha256":"cbaefb3bbcdd26ee256cf62f6ac9f6e4ca7aa590665eb400c319801b1f2a4a34"},{"beta":[0.8836994767189026,0.05165517330169678,0.00999926682561636],"guide_sha256":"68358b8820800bc7df8b78c8fa04593b63c23639c58020ed9087e55d24e0d06d","source_sha256":"36f977e2426da002bb759ff16d1547d4a028062fe6c0450e61cad7847e9503e2","variance_sha256":"e5ac912592ff78ab03758c4d93562d94808635f417ebc2e812557b3cb8110835"},{"beta":[0.9008804559707642,0.05208592489361763,0.009221275337040424],"guide_sha256":"21dd9e2bfb215ea6edd59fffb9b007e2f7f0f1c56bb135d2d8227858252f1876","source_sha256":"a33af315804f0a16404572c408bcca9d295459953be471d671ea87a3393b0670","variance_sha256":"7fed058ce75366d2e198269a8aa6cc5ac27d7c20fa892a099bb4648db36295f9"},{"beta":[0.8815465569496155,0.0540919192135334,0.010547978803515434],"guide_sha256":"9411d29fb8287752e51e22b20991592cc24eb4fde775b24f0aa5aff3f3890b2f","source_sha256":"581a9ee991fc5c5bc426c0eead445879e2763dc87a203d694c05942278f2a7f1","variance_sha256":"9d0c6e125bcca9a70911cd81f4c0d05fbdc0ab8642a344cd5d61018cc3b288a6"},{"beta":[0.8756186962127686,0.05150466039776802,0.009528121910989285],"guide_sha256":"02014926c4e28664e9d7dc02a4363c4946eea6c9ee722d41b2f8f71e41755d88","source_sha256":"d8a6800c74083dbf3ba6b3d3e68ab240ba3da300e9f93f27822858979b25a63f","variance_sha256":"18f3936e66988809c45680b7549481e40750ebdb4404c5bceb66b738f675cc7d"},{"beta":[0.9053747057914734,0.05399731919169426,0.009418236091732979],"guide_sha256":"7e3bc9959bcf321283aa3c6d6769d05ae42b047c27a51a624bbc78e9c74f0bb1","source_sha256":"62adc7a6e752b2360e6ec95cfe83f9a919e1f00d8091e7ff9ed75295a95aea28","variance_sha256":"a586f7613a2f97cbc25043de7bc125f0d57a2197a4af468408bb8639a8c0089a"},{"beta":[0.8653787970542908,0.05630990490317345,0.010359412059187889],"guide_sha256":"b909c9ef28a26d269c5605400b2342151c98996ed00147043cf6be9d20b78027","source_sha256":"135a494df812e2ca383a65e5a2973656b946f9801e7efcdbb15b789d9ccc453d","variance_sha256":"104086a4e1894154c08a886de41830cd44d2dac554f860755cd3b0e459b4b0fa"},{"beta":[0.8783746361732483,0.05032482370734215,0.011181283742189407],"guide_sha256":"074f742902c6272769f5f4a0306c403fb0506a45c3c1845ac1a68c2d42378e6f","source_sha256":"1fb2744184da6a2ef5d91f3e4666bb0595eb0d183bd56f81d090c93ab3e5d176","variance_sha256":"baa40cdb89e6d16757390b0522049ec8f43bab8957807bda67d0881198a0367c"},{"beta":[0.8946080207824707,0.05357518047094345,0.01009857002645731],"guide_sha256":"9d9a429b47e4509f711c1a70d6e02032d3046fe0c78e8f9a2cd8b998f19001f4","source_sha256":"5bc75cccd9e29573c2e09e25ad97e60bdf8cbde7c0f2b9ce3d692ac38d94de3a","variance_sha256":"77178f77114572b6adc95e77d4ac07dc4184bc32cfc8e9579962b65b2ef3ae86"},{"beta":[0.9162681698799133,0.05200141295790672,0.009968504309654236],"guide_sha256":"7c75eba97936c85729007a184ec0cac699d300ddd741b5d095a62cf951c0eb8c","source_sha256":"46fd60e78b7a66bd828aa03e01b00821d1d1c8b05e31428fd06d565c64829638","variance_sha256":"a6cd3486d8e2cb3ac34c7b48a26df5bc6b6bc93065d3cbd6516150410909805c"},{"beta":[0.8965775370597839,0.05334113910794258,0.010615553706884384],"guide_sha256":"1c4beda0112d79e041488d0e4df5e2ee12131e1dc6185e0d9d14fee711acf932","source_sha256":"5d8ea89178a6caf908521d6f66215d03addb414292ed379f5edccc4ae42ac67f","variance_sha256":"6c0a828b4c346729524235d7b448c464057b2178496e35a61407014971c945cc"},{"beta":[0.8820156455039978,0.05221359431743622,0.010598612017929554],"guide_sha256":"d3028755a1fee24a1fbc070093dac8198dc6846fd013b23106dcd689bfebe964","source_sha256":"d693d816a1dc8121d4584c8c0e6b39d926105ee9dd5540cfcf705ef5b07462e0","variance_sha256":"f4e88697f9ea320ab24e3d1711f8dd9100a8f16c94856baa6564d1c868d5b72a"},{"beta":[0.8892920613288879,0.05188918858766556,0.01017673034220934],"guide_sha256":"041240aa60b40914fcff0137515aa04f087bc497334934ec81f83d90015128a0","source_sha256":"32be8ed636bd66696b635f098329c49ce18a65faea23310c98e186da50d75267","variance_sha256":"a6c73375878178ab06245f4a796ea26c7054bd1935e97c47faa13707716346ff"},{"beta":[0.8934190273284912,0.052128683775663376,0.010101592168211937],"guide_sha256":"11441752f02fdfe6224f0ed2afafe3f86a83a97011d95cd6a81823745b11875a","source_sha256":"9b6d99d294e9c001f405588e3862f30dc1df3d42f34d78fa25421c1a6577bcd7","variance_sha256":"e5c1c1a911923a3334f0f23f018fde8ce1c63a0988a43433e443d004f2ab7267"},{"beta":[0.8696522116661072,0.05259505286812782,0.01015106774866581],"guide_sha256":"57e285059ae25ab10c93598b83ce8cc5c6be91c29f14a786663e7b73c01baab4","source_sha256":"0ea9a595ac868e58585d18106dc099cf210b21e4a3af9b26a3e4b083ee5ab4f6","variance_sha256":"049a2ab9b3ebf7b634152854f8c5a334cfa695435f2badbae0af0a6b1cf565e9"},{"beta":[0.8603693842887878,0.050768740475177765,0.009292998351156712],"guide_sha256":"089ddd395d7e0f8181460cb195ba6f146e28884073a7f318ebdc80f801f6c348","source_sha256":"cb804c371fe88b7085fe7d0c9f274b91ad49ee84957e4e6edbc06db5a818f0b7","variance_sha256":"18435a3d6656c87fa667dce1c6b7e6e70bd575fb0f10dbcf9a74215a4ee5f5dd"},{"beta":[0.9000082015991211,0.05237795412540436,0.010142281651496887],"guide_sha256":"2b02b3f85a2e76b7f55e303c8c2ea49328423a658e485f97e0d1fbc6e23e8124","source_sha256":"8922f6ad024b0bd411f5916be95e8915bfb49d2dbc3fdbe8765e83fbced08a36","variance_sha256":"1a24cd43ac651db9a941d96d531d1f8831c47f5a3081be0aa2f93c14ef0bafc3"},{"beta":[0.8866114020347595,0.0526740700006485,0.009913425892591476],"guide_sha256":"7b52feae249cc885a5d614183391853961ed0d0314837aeea052118c18bd81b8","source_sha256":"ae01f7063b7557d6f8b5c15c8f5f48a4c06cc1a899a85f9564f4e4881bedd3e9","variance_sha256":"9f6646f9a584eb9c5c1b4ccfe8785b6c6616b07e61a2c9deeef8ecdc3271f159"},{"beta":[0.8768170475959778,0.051790568977594376,0.010856054723262787],"guide_sha256":"ede89693a64e16cdcdfcb9cee171db0ae9fac5f6703ed5bd1a3774a33bf64f2a","source_sha256":"2c90eaad2557a149220fc697f2aa7fa70730c51ea9577936c819ee6c7871ef71","variance_sha256":"252d37e742efda58c70c17f57561c55f4ba228a5eb687f174465d73e1748b3f7"},{"beta":[0.8914097547531128,0.051212210208177567,0.011957542970776558],"guide_sha256":"34929d36911d00561ec8e0e285292e8eb847499333542a37b68d94443a7e1188","source_sha256":"14ac9a6d1051f6b9aac9a90fe93adb2106b6b3a90629ea48d56edf95fe5d92d9","variance_sha256":"bfde9ceece48cdb9dbe51404eca7a9aba94d384354ce27548bfeef3ee030009c"},{"beta":[0.89565110206604,0.051705460995435715,0.009220680221915245],"guide_sha256":"e3216d235e2cda677ee4059e0d0f97b1da434c73a8c9ffc4f6e60f530cb4afa7","source_sha256":"453e1592150fcb84ca2de4f63be464e666d0753a9c29474616d7980b2b93279c","variance_sha256":"4ed7946db966cbd27825d8f0ee90b61871ab5c0ccb5fa9121c8b81ccbe6a24cd"},{"beta":[0.9077882170677185,0.05402651056647301,0.009994126856327057],"guide_sha256":"20a05c8241d2b80a6a2711b25dee6d4a2c97b466318bd585bb5a9b07ed238b13","source_sha256":"e9cd5cd148b19977e833cb7e172f144a352bc09b98519ebe5fa01d4a34ec500e","variance_sha256":"f8808adf229a47f812db8df6c814d0f24a999b8952dd257a08fc13c48e7376bc"},{"beta":[0.8773471117019653,0.05207643657922745,0.011037490330636501],"guide_sha256":"1a08b909ab82f3c652c8e0ed32aca03acfb4f711f6e5832710ace2c473865d46","source_sha256":"78b9f4396edf1151c41c886f6d3f4804aecdf835a107668859cf0ba899d67f52","variance_sha256":"c177b1c1eea0831ec0b3ea02d836d1397e83720abb8ace554a9326c4e874ffca"},{"beta":[0.887221097946167,0.054468315094709396,0.010027752257883549],"guide_sha256":"c20e68f5fa1aebf7b4fed356b652a25ec10e7a49223375cd2dfa108337a0fc2b","source_sha256":"6d10add1bc3b26db8d58e8c807b3f6bf002077aa8a638746a382abf89f683722","variance_sha256":"025d2b6a497c9c08dbd65b86a6f9bfadcf62cea621a1ca8f31b9eb0309a32f11"},{"beta":[0.8839834928512573,0.05229152739048004,0.008968454785645008],"guide_sha256":"f52dbbe4a0caa656a08fd9eb5ccaaac7021bedeb715c971c3aeb114f1d034c6b","source_sha256":"e9b2f87678cf34717587812d586411db0c8c5697800156405970617622b6d7f2","variance_sha256":"fbbc38c0d277d3a1f4514c583f795d245b87561ce9a56dc34acaf2c566648815"},{"beta":[0.8876504302024841,0.056219931691884995,0.011257484555244446],"guide_sha256":"bb986aa85ee850117c8a2b9e4841f53ae7136b76b7d1faf3875881b813a2cd15","source_sha256":"713cf5f664fd34a4167260355f5217a298548acf6ff26fe89e0af7f723ae93f6","variance_sha256":"da6e757bd8cc587faf9474b209102189cb542b40f45ff383653c68a3be8d0d90"},{"beta":[0.9020650386810303,0.05409451201558113,0.010125492699444294],"guide_sha256":"0fbecf7efc79da7a354e0028fec1ad53ce96426ca8982da28128e0909f7eb1cb","source_sha256":"7e52972a16511a740d6b6b8af1a1ec89f4a7e9ae37b5228515d1172facba3f7b","variance_sha256":"1cf50e9c620679fc40afe63c6e9fcdc42ea9b0566c21c73832bab84cfcf1b6c3"},{"beta":[0.8694151639938354,0.050343986600637436,0.010745442472398281],"guide_sha256":"a9fa3a09a7b6fa12c939344460df46f3dfec953ca5747f03f5fbd8b3edd2af79","source_sha256":"4a75451660cb0d397d5fe86526c6e8d521c1da6647fe2441d5c2d2f2d90ed9cb","variance_sha256":"544fe3c8659846b5cfe309993663af5b3e1fd885fca2360ca8fe835a6d056b31"},{"beta":[0.8954358696937561,0.053247854113578796,0.009491165168583393],"guide_sha256":"a997d15f86e9939dc7ced821ad0775bbff73d900613173d70788e366e42e59f1","source_sha256":"e3b6ad91ef3fa1be79d6957aa8f89705153798a74ec690315e98573f9cb2da35","variance_sha256":"43071f6069abec01bbaa66dc83b318434700886f84fa1ed52f6370167d28d97d"},{"beta":[0.8990370631217957,0.052738748490810394,0.00932870153337717],"guide_sha256":"82f19f7dbfc4f0f0306158ed068c6134dfb4cb4e87f57ed10af4d23d990fc5d5","source_sha256":"2f9d0ac9292a4e3bd6789085a4ea4c0115ab21967f3ea4f6da629a24f7ab3bb5","variance_sha256":"a979ce20aa88fe6016fb78a78a1fc92b0c492230473a818d7c2a668fc95e4eda"},{"beta":[0.867763102054596,0.053525570780038834,0.009793073870241642],"guide_sha256":"777fa69ebcfbe933915a978aa3eed38f3644091b7382fb9a8b8c25b7d9bf7262","source_sha256":"9e3fc323d98f63429e25b8a8ba726f54ab76cd3be44fdfd8fbf96afbd2ad2387","variance_sha256":"e3683a337d8b2231171d9127aab202a265cdb990335bed3424ddd10da9490826"}]},"iso":100.0,"quality_pass":true,"rgb_ratio":1.0000023565155958,"scene":"flat70","sources":70,"warp":"identity"}
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+SHARED_SOURCE_DECISION {"photographic_replay_admitted":false}
+ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 269 filtered out; finished in 1.55s
+

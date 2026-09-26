@@ -1,0 +1,17 @@
+{
+  "exact": true,
+  "historical_screen": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\controls-1\\historical-screen.json",
+    "sha256": "460ed3045c650ac1a8bf3a9819ccc8999b2b1a2e9bcee1ad7fd4abb2ea053d0f",
+    "bytes": 89116
+  },
+  "fresh_screen": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\controls-1\\retained\\output\\screen.json",
+    "sha256": "460ed3045c650ac1a8bf3a9819ccc8999b2b1a2e9bcee1ad7fd4abb2ea053d0f",
+    "bytes": 89116
+  },
+  "first_differences": [],
+  "difference_limit": 20,
+  "disposition": "RETAINED",
+  "explanation": "Core numeric drift can change the old screen; it is recorded and refused, never silently waived."
+}

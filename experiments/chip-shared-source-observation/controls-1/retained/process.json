@@ -1,0 +1,88 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\build-1\\cli-tests.exe",
+    "merge_cmd::shared_source_field::independent_controls::",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 1.6869999999998981,
+  "log_bytes": 80133,
+  "job_accounting": {
+    "total_user_100ns": 13593750,
+    "total_kernel_100ns": 2656250,
+    "total_cpu_100ns": 16250000,
+    "total_page_fault_count": 149031,
+    "total_processes": 2,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 394088448,
+    "peak_job_memory_used_bytes": 395354112
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 4294967296
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 13593750,
+      "total_kernel_100ns": 2656250,
+      "total_cpu_100ns": 16250000,
+      "total_page_fault_count": 149031,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 13593750,
+      "total_kernel_100ns": 2656250,
+      "total_cpu_100ns": 16250000,
+      "total_page_fault_count": 149031,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 1.6869999999998981,
+        "accounting": {
+          "total_user_100ns": 13593750,
+          "total_kernel_100ns": 2656250,
+          "total_cpu_100ns": 16250000,
+          "total_page_fault_count": 149031,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 1.6869999999998981,
+    "ended_wall_seconds": 1.6869999999998981
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 180,
+    "cpu_seconds": 900,
+    "log_bytes": 16777216,
+    "committed_bytes": 4294967296
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-shared-source-observation\\controls-1\\retained\\process.log",
+    "sha256": "f29820c4ea36d1a163f6c12a790e177c913e0fdaa18bab8ff982d078ba2dee80",
+    "bytes": 80133
+  }
+}

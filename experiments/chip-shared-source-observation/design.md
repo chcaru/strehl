@@ -19,8 +19,10 @@ Own copies of `shared-source-field/costs.rs` and `core-bridge.rs` change only
 their explicit70-source capacity bounds to299. The runner requires exact text
 identity after reversing these two single substitutions. Independent controls
 compare the original and extended arithmetic on common source counts, exercise
-299 small inputs, and retain the old generated outcome unchanged. Capacity and
-mechanical tests cannot confer safety or erase the old image failure.
+299 small inputs, and compare the old generated outcome unchanged. Save both
+complete screens and the first differing paths if current consumer arithmetic
+changes it; refuse for root review instead of silently waiving that difference.
+Capacity and mechanical tests cannot confer safety or erase the old image failure.
 
 The actual source seam is `BandWorker::fold` followed immediately by retained
 `finest_evidence`; the baseline still uses its actual canonical chunk plan.

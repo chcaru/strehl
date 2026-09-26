@@ -43,9 +43,10 @@ complete-chip benefit and failed star-sand transfer; repeating that experiment
 or globalizing its offsets is not justified. The bounded translation-plus-blur
 discriminator now fails its first independent synthetic control: a pure
 translation produces a blur coefficient outside the predeclared near-zero
-range. Execution stops before opening any saved photographic patches. The
-real-data phase/support stability comparison is unmeasured, and no alignment
-change follows. See `experiments/chip-differential-blur/results.md`.
+range. That initial execution stops before opening any saved photographic
+patches; its subsequent sampler correction and completed photographic refusal
+are recorded below. No alignment change follows. See
+`experiments/chip-differential-blur/results.md`.
 
 The fixed generated optical-support veto now executes on the actual native
 consumer, with independent ray/filter-footprint checks, all-one/no-clean identity,
@@ -120,16 +121,24 @@ duplicated rails. No tuning sweep or transfer follows. See
 `experiments/band-source-agreement/results.md` and its independent photographic
 review. The complete candidate was shown to the owner.
 
-Next are two distinct bounded experiments. First, observe the existing shared
-source field's complete-AC reconstruction on the whole chip, with its original
-costs/penalties and only explicit source-capacity extension. Its prior generated
-glint/near-detail failures remain; no photographic pair was previously run.
-The chip-specific vendor gap and earlier contact improvement justify changing
-the scheduling scope, not passing the old gate or promoting it generally. See
-`experiments/chip-shared-source-observation/design.md`. Second, test shared
-coarse source weights from co-sited RAW colour differences, retaining original
-CFA coefficients and covariance-aware injected-noise probes, first on fixed
-generated controls; see `experiments/chromatic-source-evidence/design.md`.
+Both next experiments are now rejected. The existing shared source field's
+complete299-source chip reconstruction introduces extensive patchy colour and
+broken shadow transitions. Root review and independent review of all25 native
+pairs agree;
+the exact production baseline and pinned development isolate the intervention.
+Its prior generated glint/near-detail failures also remain. See
+`experiments/chip-shared-source-observation/results.md` and independent review.
+The complete candidate was shown to the owner. No penalty sweep follows.
+
+The separate co-sited RAW chromatic-evidence rule passes its mechanical controls
+and several detail scenes, but fails the actual focused-highlight protection:
+ISO100 core RGB error rises1.50691x while the genuine highlight loses amplitude.
+Lower chroma error conceals that damage. The exercised outside-positive also
+fails to improve, and clipped-neutral texture retention fails despite reduced
+RGB error. See `experiments/chromatic-source-evidence/results.md` and independent
+review. No full render or deep-source-count campaign is justified for this rule.
+Next work is a bounded production-defect audit and selection of a different
+reconstruction mechanism from the real-photo evidence and prior failed models.
 Do not repeat donor, prior-strength or base-weighting sweeps. The bounded
 FocusDeep readiness check found no verified licensed checkpoint/inference route
 and does not justify a training campaign; see
