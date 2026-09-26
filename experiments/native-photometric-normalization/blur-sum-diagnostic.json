@@ -1,0 +1,72 @@
+{
+  "scope": "Fixture-only f64 summation diagnostic, no candidate or RAW run",
+  "fixed_tolerance": 1e-12,
+  "rows": [
+    {
+      "channel": 0,
+      "radius": 32,
+      "naive_source": 40238.40000002593,
+      "naive_output": 40238.40000004534,
+      "naive_relative_difference": 4.822502623616915e-13,
+      "fsum_source": 40238.4,
+      "fsum_output": 40238.400000000074,
+      "fsum_relative_difference": 1.8082124573003462e-15,
+      "analytic_source": 40238.4
+    },
+    {
+      "channel": 0,
+      "radius": 80,
+      "naive_source": 40238.40000002593,
+      "naive_output": 40238.40000003005,
+      "naive_relative_difference": 1.0234482508313365e-13,
+      "fsum_source": 40238.4,
+      "fsum_output": 40238.399999999856,
+      "fsum_relative_difference": 3.6164249146006924e-15,
+      "analytic_source": 40238.4
+    },
+    {
+      "channel": 1,
+      "radius": 32,
+      "naive_source": 37569.89999995417,
+      "naive_output": 37569.89999995039,
+      "naive_relative_difference": 1.0070556374597741e-13,
+      "fsum_source": 37569.9,
+      "fsum_output": 37569.89999999999,
+      "fsum_relative_difference": 3.8732909133020984e-16,
+      "analytic_source": 37569.9
+    },
+    {
+      "channel": 1,
+      "radius": 80,
+      "naive_source": 37569.89999995417,
+      "naive_output": 37569.89999997495,
+      "naive_relative_difference": 5.531059424202144e-13,
+      "fsum_source": 37569.9,
+      "fsum_output": 37569.9000000001,
+      "fsum_relative_difference": 2.711303639311469e-15,
+      "analytic_source": 37569.9
+    },
+    {
+      "channel": 2,
+      "radius": 32,
+      "naive_source": 31811.100000068152,
+      "naive_output": 31811.10000006423,
+      "naive_relative_difference": 1.2328216107071005e-13,
+      "fsum_source": 31811.1,
+      "fsum_output": 31811.100000000013,
+      "fsum_relative_difference": 4.574477219702196e-16,
+      "analytic_source": 31811.1
+    },
+    {
+      "channel": 2,
+      "radius": 80,
+      "naive_source": 31811.100000068152,
+      "naive_output": 31811.100000035436,
+      "naive_relative_difference": 1.0284568409173429e-12,
+      "fsum_source": 31811.1,
+      "fsum_output": 31811.09999999996,
+      "fsum_relative_difference": 1.257981235418104e-15,
+      "analytic_source": 31811.1
+    }
+  ]
+}

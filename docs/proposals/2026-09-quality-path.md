@@ -176,6 +176,23 @@ See `experiments/illuminant-aware-color/results.md`. The next bounded candidate
 tests existing gain-only photometric normalization in the actual native
 consumer, requiring rejection of pure-defocus and spatially varying changes
 before any photographic run; no geometric scale-law correction is revived.
+That fixed photometric screen is now rejected. All noisy scenes, including
+the required uniform-brightness positive, produce no eligible fitting mask and
+therefore unity correction. The broad-defocus null has a small false gain but
+fails its flat-region preservation bar. Mechanical controls pass; they do not
+qualify the image operator. Two instrument repairs (stable summation and a JSON
+field) leave the final scientific refusal intact. No photographic replay or
+parameter rescue follows; see `experiments/native-photometric-normalization/results.md`.
+The independent nine-source marigold placement trial also stops before rendering:
+four of eight corrections worsen held-out guide prediction. This does not
+establish the original geometry as accurate. See
+`experiments/marigold-local-placement/results.md`; no favorable subset is retained.
+The next distinct lead is the published deterministic StackMFF V4 checkpoint.
+Its official README declares MIT and documents standalone first-stage inference.
+Inspect the pinned implementation for focus-map access and bounded native-size
+execution before staging a comparison. This is a conventional-image research
+comparator, not yet a CFA-native implementation, source-fidelity result or SOTA
+claim. No diffusion or training campaign is authorized by this decision.
 Do not repeat donor, prior-strength or base-weighting sweeps. The bounded
 FocusDeep readiness check found no verified licensed checkpoint/inference route
 and does not justify a training campaign; see

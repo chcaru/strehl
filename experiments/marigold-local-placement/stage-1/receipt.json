@@ -1,0 +1,342 @@
+{
+  "schema": 1,
+  "plan": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-local-placement\\stage-1\\plan.json",
+    "bytes": 8319,
+    "sha256": "c7b91f29c03aea3759bd2e6c436d345c13e03037f82f16ee9133b29337a66ceb"
+  },
+  "frames": [
+    {
+      "index": 108,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00129.ARW",
+      "identity_name": "frame-00108.ARW",
+      "source_bytes": 37433344,
+      "source_sha256": "b8d7b62cceb39b5bb2460fabf9b3e76b8f85d41060cdc958ed48bcb9d06da143",
+      "source_xywh": [
+        3602,
+        3300,
+        434,
+        434
+      ],
+      "transform_bits": [
+        "3ff0f3d00fd28343",
+        "bf610fa28dc3030a",
+        "c000d0e6597dbe1e",
+        "3ffaa73414233f3c"
+      ],
+      "a": [
+        1.0595245950755305,
+        -0.0020826506498398166
+      ],
+      "b_plane": [
+        -2.1020018569468126,
+        1.6658211504581706
+      ],
+      "mtime_ns": 1790056957540000000,
+      "patch": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-local-placement\\stage-1\\patches\\frame-108-cfa.npy",
+        "bytes": 376840,
+        "sha256": "6deb598dacb0854751fb8b91ab9b8d37d2c759b3e0414b9b70bacc2a59236392"
+      },
+      "raw_u16_sha256": "304ada5509c063c7cf7c00b4ccb7634e115cedeefc39d8ca21aedccadaab4060",
+      "independently_decoded_different_sensels": null,
+      "exact_16383": 0
+    },
+    {
+      "index": 109,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00130.ARW",
+      "identity_name": "frame-00109.ARW",
+      "source_bytes": 37437440,
+      "source_sha256": "86bd14d41a4878e80ebc452bfed7f8a16e22b47b2d8c9127fcfcc2e88d64a2c5",
+      "source_xywh": [
+        3602,
+        3298,
+        434,
+        434
+      ],
+      "transform_bits": [
+        "3ff0f19f9aed4fbf",
+        "bf612c0545b56858",
+        "c001957b290de3ce",
+        "3ff7c5cca665b664"
+      ],
+      "a": [
+        1.0589901019893515,
+        -0.002096185967883673
+      ],
+      "b_plane": [
+        -2.1979888160098886,
+        1.4857908725638476
+      ],
+      "mtime_ns": 1790056958790000000,
+      "patch": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-local-placement\\stage-1\\patches\\frame-109-cfa.npy",
+        "bytes": 376840,
+        "sha256": "5e763846dbe0c99940da6286421a25ee54ff3a2e934b959f939bfa0ee3a81294"
+      },
+      "raw_u16_sha256": "45584b7761e242290c3797c5a2174ec6624df53522ba730fd1f01b7dd274838b",
+      "independently_decoded_different_sensels": null,
+      "exact_16383": 0
+    },
+    {
+      "index": 110,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00131.ARW",
+      "identity_name": "frame-00110.ARW",
+      "source_bytes": 37437440,
+      "source_sha256": "e47339f0339862fd419b13f26360fff9d0dc3476de5e1346ed38ad881e9dd087",
+      "source_xywh": [
+        3602,
+        3298,
+        434,
+        434
+      ],
+      "transform_bits": [
+        "3ff0efd1799631fb",
+        "bf618c50c5a8b3d0",
+        "c000a4fd1ec89a96",
+        "3ff51e626fe00700"
+      ],
+      "a": [
+        1.0585493802528834,
+        -0.0021421029644188364
+      ],
+      "b_plane": [
+        -2.08056091355986,
+        1.3199180956002579
+      ],
+      "mtime_ns": 1790056960050000000,
+      "patch": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-local-placement\\stage-1\\patches\\frame-110-cfa.npy",
+        "bytes": 376840,
+        "sha256": "7601913bf95fde22028ec449035fc18ffd3535a382788452f2420e707b1d86bb"
+      },
+      "raw_u16_sha256": "bb759e4cb8204977ac89d32db646e0fa2d1a0c179c561cd9bce029081f9c7001",
+      "independently_decoded_different_sensels": null,
+      "exact_16383": 0
+    },
+    {
+      "index": 111,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00132.ARW",
+      "identity_name": "frame-00111.ARW",
+      "source_bytes": 37437440,
+      "source_sha256": "82287d0792212b57ba1b362552a469537b4c10564ea4e27f96a249386b5b27a0",
+      "source_xywh": [
+        3602,
+        3298,
+        434,
+        432
+      ],
+      "transform_bits": [
+        "3ff0ed81450c9342",
+        "bf61653dbb83acaa",
+        "c0014d5a353a1f72",
+        "3ff47d1c13f83f6c"
+      ],
+      "a": [
+        1.0579846093398406,
+        -0.002123470851179106
+      ],
+      "b_plane": [
+        -2.162769714199322,
+        1.2805443553988551
+      ],
+      "mtime_ns": 1790056961290000000,
+      "patch": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-local-placement\\stage-1\\patches\\frame-111-cfa.npy",
+        "bytes": 375104,
+        "sha256": "73ad3618b116c691b6f8aefdca67f861a60f3f633d2262123e9a34cbb6f6d95f"
+      },
+      "raw_u16_sha256": "9e1320d79c67be654ca002d15649012d6c94f0d7330c32321bc777061015a6ad",
+      "independently_decoded_different_sensels": null,
+      "exact_16383": 0
+    },
+    {
+      "index": 112,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00133.ARW",
+      "identity_name": "frame-00112.ARW",
+      "source_bytes": 37437440,
+      "source_sha256": "d61479b87463522b43dea20cddd94c7af15b4080545b993794e799f15da028c7",
+      "source_xywh": [
+        3602,
+        3298,
+        434,
+        432
+      ],
+      "transform_bits": [
+        "3ff0ebc8b0344b86",
+        "bf60e4c4bfb09998",
+        "c0011d7c76c58d7d",
+        "3ff6d43db865e718"
+      ],
+      "a": [
+        1.0575644381503664,
+        -0.0020622103452467393
+      ],
+      "b_plane": [
+        -2.139397552398519,
+        1.4268166735695953
+      ],
+      "mtime_ns": 1790056962560000000,
+      "patch": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-local-placement\\stage-1\\patches\\frame-112-cfa.npy",
+        "bytes": 375104,
+        "sha256": "cd47f9ee6c69e75614b7dc0f51950fe9d13875f708eba7a98511597b6d98a173"
+      },
+      "raw_u16_sha256": "306a45dd74d9b04b7e1c496d513e8f70561e6d82180a37b5f9552daefdcadaae",
+      "independently_decoded_different_sensels": 0,
+      "exact_16383": 0
+    },
+    {
+      "index": 113,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00134.ARW",
+      "identity_name": "frame-00113.ARW",
+      "source_bytes": 37437440,
+      "source_sha256": "7fab5825a3e7729d38aa9d807317ec296d213fffd8747ee049999c3db111015d",
+      "source_xywh": [
+        3602,
+        3296,
+        434,
+        434
+      ],
+      "transform_bits": [
+        "3ff0e9a271b99cb9",
+        "bf615bc3ba8f4118",
+        "c000aea60b968a44",
+        "3ff4caa5e2f56f00"
+      ],
+      "a": [
+        1.0570396845230745,
+        -0.002118952067100232
+      ],
+      "b_plane": [
+        -2.085277643710727,
+        1.2994746079993433
+      ],
+      "mtime_ns": 1790056963830000000,
+      "patch": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-local-placement\\stage-1\\patches\\frame-113-cfa.npy",
+        "bytes": 376840,
+        "sha256": "6ea9c8b9d7101c245e0fc333247ea6ac1e37db0291735a75f35bb3021f9ed89b"
+      },
+      "raw_u16_sha256": "d14cd5e2f0f97acddd0f8918498c3e7e1a7c2ad7150059c91433c293b02c74ff",
+      "independently_decoded_different_sensels": null,
+      "exact_16383": 0
+    },
+    {
+      "index": 114,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00135.ARW",
+      "identity_name": "frame-00114.ARW",
+      "source_bytes": 37433344,
+      "source_sha256": "bb7fd8f095e18067e2249e4c5ddd57009055f1cec5b2067647f8780e8528574a",
+      "source_xywh": [
+        3602,
+        3296,
+        434,
+        432
+      ],
+      "transform_bits": [
+        "3ff0e808d3dac526",
+        "bf6225a69376cf53",
+        "bffdce6fc19fa984",
+        "3ff2032b2c039b40"
+      ],
+      "a": [
+        1.0566490436143083,
+        -0.0022152188718908366
+      ],
+      "b_plane": [
+        -1.862899547903539,
+        1.1257735938358593
+      ],
+      "mtime_ns": 1790056965100000000,
+      "patch": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-local-placement\\stage-1\\patches\\frame-114-cfa.npy",
+        "bytes": 375104,
+        "sha256": "08770618a2c063b902141aaeb468db24012a892f5fdf84641195c8fbd350b5c8"
+      },
+      "raw_u16_sha256": "aaf80e427603f73366d9260f53370326a8ac6beaacb98712a177d5e21f8fa8d8",
+      "independently_decoded_different_sensels": null,
+      "exact_16383": 0
+    },
+    {
+      "index": 115,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00136.ARW",
+      "identity_name": "frame-00115.ARW",
+      "source_bytes": 37437440,
+      "source_sha256": "bfc001c4e8d3598246c06d29ad6c2f2adc89afe7db77d4fdbe4fd2e9e6ca3604",
+      "source_xywh": [
+        3602,
+        3296,
+        434,
+        432
+      ],
+      "transform_bits": [
+        "3ff0e6039728a019",
+        "bf618bc0ed7b2b10",
+        "bffbd335d0bcceac",
+        "3ff1b2580335efe4"
+      ],
+      "a": [
+        1.0561557678829614,
+        -0.0021418350332614924
+      ],
+      "b_plane": [
+        -1.7390649942216596,
+        1.1060409665506024
+      ],
+      "mtime_ns": 1790056966370000000,
+      "patch": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-local-placement\\stage-1\\patches\\frame-115-cfa.npy",
+        "bytes": 375104,
+        "sha256": "24ad0b5fa2267d3cade343d91f91be18433cac70ce96d1f46c4895d3cdd37a88"
+      },
+      "raw_u16_sha256": "532ae4e155456e5833c66ae16ebdf699962dfb7100103a23fd2bd425c2413cf5",
+      "independently_decoded_different_sensels": null,
+      "exact_16383": 0
+    },
+    {
+      "index": 116,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00137.ARW",
+      "identity_name": "frame-00116.ARW",
+      "source_bytes": 37437440,
+      "source_sha256": "7c04af9edb19a7f01b78d2effc29d6531267c7621f4cdbbe35f1415f61966d57",
+      "source_xywh": [
+        3602,
+        3294,
+        434,
+        434
+      ],
+      "transform_bits": [
+        "3ff0e4154b953e6a",
+        "bf61c64aaaff0301",
+        "bffae7f3f042c572",
+        "3ff0aedab712d644"
+      ],
+      "a": [
+        1.0556843712292001,
+        -0.0021697481497259257
+      ],
+      "b_plane": [
+        -1.6816291222752082,
+        1.0426890517532152
+      ],
+      "mtime_ns": 1790056967620000000,
+      "patch": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-local-placement\\stage-1\\patches\\frame-116-cfa.npy",
+        "bytes": 376840,
+        "sha256": "6b4a6e77b0227af2e70b14acab7196c8ede4da94beb99050730f71af08ad35dc"
+      },
+      "raw_u16_sha256": "8e763aec121906421830621e0cbf32a1ec0aebe59274b3fd04746ba247d910e9",
+      "independently_decoded_different_sensels": null,
+      "exact_16383": 0
+    }
+  ],
+  "rawpy": "0.27.0",
+  "libraw": [
+    0,
+    22,
+    1
+  ],
+  "original_metadata_unchanged": true,
+  "independent_decode_scope": "Anchor112 patch only; other eight originals not independently decoded."
+}

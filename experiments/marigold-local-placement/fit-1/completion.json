@@ -1,0 +1,10 @@
+{
+  "instrument_completed": true,
+  "phase": "fit",
+  "sources_unchanged": true,
+  "result": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-local-placement\\fit-1\\result.json",
+    "bytes": 14986,
+    "sha256": "2dd4ee4d6b6b783d6d0e383d9945a90a196714352e62038cfdeea95a64a21ebd"
+  }
+}

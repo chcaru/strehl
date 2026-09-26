@@ -5040,6 +5040,11 @@ mod illuminant_aware_color {
 }
 
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+mod native_photometric_normalization {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-photometric-normalization/implementation.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
 mod marigold_source_pure {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/marigold-source-pure/oracle.rs"));
 }

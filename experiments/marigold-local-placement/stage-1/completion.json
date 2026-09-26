@@ -1,0 +1,10 @@
+{
+  "instrument_completed": true,
+  "phase": "stage",
+  "sources_unchanged": true,
+  "result": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-local-placement\\stage-1\\receipt.json",
+    "bytes": 11495,
+    "sha256": "9cf8ead82969e6e3bd2da8ef4f7b139666df1fa7979e5e77152535bd3e100782"
+  }
+}

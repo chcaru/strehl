@@ -1,0 +1,11 @@
+file      : D:\personal\macro\flower-marigold-cpl\stack4.1-offcenter-sw5-cpl\DSC00133.ARW
+camera    : ILCE-7CM2
+stride    : 7168
+buffer h  : 5120
+active    : 7032x4688 at (0,0)
+levels    : black 512 white 15360
+plane R(even,even)  : n 8241504 mean 2698.9434
+plane G1(even,odd)  : n 8241504 mean 2252.7769
+plane G2(odd,even)  : n 8241504 mean 2259.7466
+plane B(odd,odd)    : n 8241504 mean 626.8841
+wrote     : C:\dev\blog\death-of-software\projects\strehl\experiments\marigold-local-placement\stage-1\patches\rawler-112.bin

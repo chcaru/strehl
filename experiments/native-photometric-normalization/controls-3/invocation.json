@@ -1,0 +1,35 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-photometric-normalization\\build-3\\cli-tests.exe",
+    "merge_cmd::native_photometric_normalization::independent_controls::",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "STREHL_ALIGN": "1",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "off",
+    "STREHL_DEFECT": "off",
+    "STREHL_FINE_SUPPORT": "off",
+    "STREHL_CA_BEFORE_MHC": "off",
+    "STREHL_NATIVE_PHOTOMETRIC_OUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-photometric-normalization\\controls-3\\output"
+  },
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\run.py",
+    "sha256": "64022f1c05f4c769184cd529dac7f2e993713d1522e87f4a028d8f86e88b07c5",
+    "bytes": 18717
+  },
+  "limits": {
+    "wall_seconds": 240,
+    "cpu_seconds": 1200,
+    "committed_bytes": 4294967296
+  }
+}

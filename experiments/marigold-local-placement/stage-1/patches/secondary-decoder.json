@@ -1,0 +1,18 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+    "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00133.ARW",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-local-placement\\stage-1\\patches",
+    "112",
+    "3298",
+    "3602",
+    "432",
+    "434"
+  ],
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+    "bytes": 6846976,
+    "sha256": "ecf20e1b1e639fc3b86fe82d26a3e3ca02fd326549aa6353e80ad4480682d89d"
+  },
+  "different_sensels": 0
+}

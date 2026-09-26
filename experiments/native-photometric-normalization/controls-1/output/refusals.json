@@ -1,0 +1,163 @@
+{
+  "cases": [
+    {
+      "exact_unity": true,
+      "fit": {
+        "flux": [
+          {
+            "clipped_fraction": 0.0,
+            "count": 0,
+            "mean": null
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 0,
+            "mean": null
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 0,
+            "mean": null
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 0,
+            "mean": null
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 0,
+            "mean": null
+          }
+        ],
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mask_count": 0,
+        "mask_sha256": "1d54e0d121e0338cc5269fbce7a54d4a77c4594a2e136721a0cb8cad69bfa861",
+        "reason": "eroded region 0 below existing minimum 1024",
+        "reference": 2,
+        "refusals": [
+          "eroded region 0 below existing minimum 1024",
+          "eroded region 0 below existing minimum 1024",
+          "eroded region 0 below existing minimum 1024",
+          "eroded region 0 below existing minimum 1024",
+          "eroded region 0 below existing minimum 1024"
+        ],
+        "status": "UNAVAILABLE"
+      },
+      "name": "insufficient-eroded-support"
+    },
+    {
+      "exact_unity": true,
+      "fit": {
+        "flux": [
+          {
+            "clipped_fraction": 1.0,
+            "count": 18240,
+            "mean": 15871.0
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 18240,
+            "mean": 4157.0
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 18240,
+            "mean": 4157.0
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 18240,
+            "mean": 4157.0
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 18240,
+            "mean": 4157.0
+          }
+        ],
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mask_count": 18240,
+        "mask_sha256": "3c3c2c768b8e97dfc4861f754d611add2bc2c0fb0e4155d559eca2ccde00f876",
+        "reason": null,
+        "reference": 2,
+        "refusals": [
+          "clipped fraction 1.000e0 exceeds 1.000e-4; the flux is biased low",
+          null,
+          null,
+          null,
+          null
+        ],
+        "status": "PARTIAL_REFUSAL"
+      },
+      "name": "clipped-nonreference"
+    },
+    {
+      "exact_unity": true,
+      "fit": {
+        "flux": [
+          {
+            "clipped_fraction": 0.0,
+            "count": 18240,
+            "mean": 32.0
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 18240,
+            "mean": 4157.0
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 18240,
+            "mean": 4157.0
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 18240,
+            "mean": 4157.0
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 18240,
+            "mean": 4157.0
+          }
+        ],
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mask_count": 18240,
+        "mask_sha256": "3c3c2c768b8e97dfc4861f754d611add2bc2c0fb0e4155d559eca2ccde00f876",
+        "reason": null,
+        "reference": 2,
+        "refusals": [
+          "gain 129.9062 is outside the plausible band (0.5, 2.0)",
+          null,
+          null,
+          null,
+          null
+        ],
+        "status": "PARTIAL_REFUSAL"
+      },
+      "name": "implausibly-dim-nonreference"
+    }
+  ],
+  "mechanical_pass": true,
+  "schema": 1,
+  "scope": "Existing support/clipping/gain-band refusals; no spatial-nonuniformity detector or clipped-reference repair."
+}

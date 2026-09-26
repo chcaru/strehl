@@ -1,0 +1,310 @@
+{
+  "schema": 1,
+  "status": "FIXED_PLAN_NO_RAW_DECODE",
+  "anchor": 112,
+  "global_reference": 244,
+  "indices": [
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116
+  ],
+  "source_count": 488,
+  "support_native": [
+    3608,
+    3252,
+    392,
+    392
+  ],
+  "taper_native": 32,
+  "output_support_native": [
+    3226,
+    2996,
+    392,
+    392
+  ],
+  "native_sensor_shape": [
+    4688,
+    7032
+  ],
+  "libraw_visible_shape": [
+    4688,
+    7028
+  ],
+  "levels": [
+    512,
+    15360
+  ],
+  "frames": [
+    {
+      "index": 108,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00129.ARW",
+      "identity_name": "frame-00108.ARW",
+      "source_bytes": 37433344,
+      "source_sha256": "b8d7b62cceb39b5bb2460fabf9b3e76b8f85d41060cdc958ed48bcb9d06da143",
+      "source_xywh": [
+        3602,
+        3300,
+        434,
+        434
+      ],
+      "transform_bits": [
+        "3ff0f3d00fd28343",
+        "bf610fa28dc3030a",
+        "c000d0e6597dbe1e",
+        "3ffaa73414233f3c"
+      ],
+      "a": [
+        1.0595245950755305,
+        -0.0020826506498398166
+      ],
+      "b_plane": [
+        -2.1020018569468126,
+        1.6658211504581706
+      ]
+    },
+    {
+      "index": 109,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00130.ARW",
+      "identity_name": "frame-00109.ARW",
+      "source_bytes": 37437440,
+      "source_sha256": "86bd14d41a4878e80ebc452bfed7f8a16e22b47b2d8c9127fcfcc2e88d64a2c5",
+      "source_xywh": [
+        3602,
+        3298,
+        434,
+        434
+      ],
+      "transform_bits": [
+        "3ff0f19f9aed4fbf",
+        "bf612c0545b56858",
+        "c001957b290de3ce",
+        "3ff7c5cca665b664"
+      ],
+      "a": [
+        1.0589901019893515,
+        -0.002096185967883673
+      ],
+      "b_plane": [
+        -2.1979888160098886,
+        1.4857908725638476
+      ]
+    },
+    {
+      "index": 110,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00131.ARW",
+      "identity_name": "frame-00110.ARW",
+      "source_bytes": 37437440,
+      "source_sha256": "e47339f0339862fd419b13f26360fff9d0dc3476de5e1346ed38ad881e9dd087",
+      "source_xywh": [
+        3602,
+        3298,
+        434,
+        434
+      ],
+      "transform_bits": [
+        "3ff0efd1799631fb",
+        "bf618c50c5a8b3d0",
+        "c000a4fd1ec89a96",
+        "3ff51e626fe00700"
+      ],
+      "a": [
+        1.0585493802528834,
+        -0.0021421029644188364
+      ],
+      "b_plane": [
+        -2.08056091355986,
+        1.3199180956002579
+      ]
+    },
+    {
+      "index": 111,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00132.ARW",
+      "identity_name": "frame-00111.ARW",
+      "source_bytes": 37437440,
+      "source_sha256": "82287d0792212b57ba1b362552a469537b4c10564ea4e27f96a249386b5b27a0",
+      "source_xywh": [
+        3602,
+        3298,
+        434,
+        432
+      ],
+      "transform_bits": [
+        "3ff0ed81450c9342",
+        "bf61653dbb83acaa",
+        "c0014d5a353a1f72",
+        "3ff47d1c13f83f6c"
+      ],
+      "a": [
+        1.0579846093398406,
+        -0.002123470851179106
+      ],
+      "b_plane": [
+        -2.162769714199322,
+        1.2805443553988551
+      ]
+    },
+    {
+      "index": 112,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00133.ARW",
+      "identity_name": "frame-00112.ARW",
+      "source_bytes": 37437440,
+      "source_sha256": "d61479b87463522b43dea20cddd94c7af15b4080545b993794e799f15da028c7",
+      "source_xywh": [
+        3602,
+        3298,
+        434,
+        432
+      ],
+      "transform_bits": [
+        "3ff0ebc8b0344b86",
+        "bf60e4c4bfb09998",
+        "c0011d7c76c58d7d",
+        "3ff6d43db865e718"
+      ],
+      "a": [
+        1.0575644381503664,
+        -0.0020622103452467393
+      ],
+      "b_plane": [
+        -2.139397552398519,
+        1.4268166735695953
+      ]
+    },
+    {
+      "index": 113,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00134.ARW",
+      "identity_name": "frame-00113.ARW",
+      "source_bytes": 37437440,
+      "source_sha256": "7fab5825a3e7729d38aa9d807317ec296d213fffd8747ee049999c3db111015d",
+      "source_xywh": [
+        3602,
+        3296,
+        434,
+        434
+      ],
+      "transform_bits": [
+        "3ff0e9a271b99cb9",
+        "bf615bc3ba8f4118",
+        "c000aea60b968a44",
+        "3ff4caa5e2f56f00"
+      ],
+      "a": [
+        1.0570396845230745,
+        -0.002118952067100232
+      ],
+      "b_plane": [
+        -2.085277643710727,
+        1.2994746079993433
+      ]
+    },
+    {
+      "index": 114,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00135.ARW",
+      "identity_name": "frame-00114.ARW",
+      "source_bytes": 37433344,
+      "source_sha256": "bb7fd8f095e18067e2249e4c5ddd57009055f1cec5b2067647f8780e8528574a",
+      "source_xywh": [
+        3602,
+        3296,
+        434,
+        432
+      ],
+      "transform_bits": [
+        "3ff0e808d3dac526",
+        "bf6225a69376cf53",
+        "bffdce6fc19fa984",
+        "3ff2032b2c039b40"
+      ],
+      "a": [
+        1.0566490436143083,
+        -0.0022152188718908366
+      ],
+      "b_plane": [
+        -1.862899547903539,
+        1.1257735938358593
+      ]
+    },
+    {
+      "index": 115,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00136.ARW",
+      "identity_name": "frame-00115.ARW",
+      "source_bytes": 37437440,
+      "source_sha256": "bfc001c4e8d3598246c06d29ad6c2f2adc89afe7db77d4fdbe4fd2e9e6ca3604",
+      "source_xywh": [
+        3602,
+        3296,
+        434,
+        432
+      ],
+      "transform_bits": [
+        "3ff0e6039728a019",
+        "bf618bc0ed7b2b10",
+        "bffbd335d0bcceac",
+        "3ff1b2580335efe4"
+      ],
+      "a": [
+        1.0561557678829614,
+        -0.0021418350332614924
+      ],
+      "b_plane": [
+        -1.7390649942216596,
+        1.1060409665506024
+      ]
+    },
+    {
+      "index": 116,
+      "source": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00137.ARW",
+      "identity_name": "frame-00116.ARW",
+      "source_bytes": 37437440,
+      "source_sha256": "7c04af9edb19a7f01b78d2effc29d6531267c7621f4cdbbe35f1415f61966d57",
+      "source_xywh": [
+        3602,
+        3294,
+        434,
+        434
+      ],
+      "transform_bits": [
+        "3ff0e4154b953e6a",
+        "bf61c64aaaff0301",
+        "bffae7f3f042c572",
+        "3ff0aedab712d644"
+      ],
+      "a": [
+        1.0556843712292001,
+        -0.0021697481497259257
+      ],
+      "b_plane": [
+        -1.6816291222752082,
+        1.0426890517532152
+      ]
+    }
+  ],
+  "recipe": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\recipes\\marigold-4.json",
+    "bytes": 142365,
+    "sha256": "c98f715ee16352e0f5591768bfdf6506fcf22cdbd58764bf3d57a938cf8b0f08"
+  },
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\flower-marigold-cpl\\stack-4\\alignment.txt",
+    "bytes": 66293,
+    "sha256": "d2eb0815191279f9d6fc529d76142e56989d4afdcbc052088ef4e7da530b58c1"
+  },
+  "registrar": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\local-green-translation.py",
+    "bytes": 9763,
+    "sha256": "5b64f7e612fd94cd8a22515bffb67addcee71021f6338f10a249c63864420196"
+  },
+  "decoder": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+    "bytes": 6846976,
+    "sha256": "ecf20e1b1e639fc3b86fe82d26a3e3ca02fd326549aa6353e80ad4480682d89d"
+  },
+  "choice": "All eight non-anchor fits pass unchanged bars or stop; no subsets or altered interval.",
+  "limitation": "Guide prediction is not geometric truth; a complete photograph decides practical utility."
+}

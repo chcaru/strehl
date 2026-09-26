@@ -1,0 +1,41 @@
+{
+  "instrument_completed": true,
+  "controls_executed": 4,
+  "cases_executed": 7,
+  "sources_unchanged": true,
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-photometric-normalization\\controls-3\\process.json",
+    "sha256": "a1a0cb200b3131d3be1586eb928d9bf51f6f0b253a163088df3b4b6d32fd9378",
+    "bytes": 2685
+  },
+  "receipts": {
+    "mechanical": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-photometric-normalization\\controls-3\\output\\mechanical.json",
+      "sha256": "abf786b3bc56178026e15db9c21007225c77294cabaef565e2847fd9b108454a",
+      "bytes": 16569
+    },
+    "estimator": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-photometric-normalization\\controls-3\\output\\estimator.json",
+      "sha256": "475a2dd5ab4a366190895ae13b0624edf8f9b808bebdf96d9b8211ba1d1f657a",
+      "bytes": 7590
+    },
+    "refusals": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-photometric-normalization\\controls-3\\output\\refusals.json",
+      "sha256": "9c57a11e6c131c72b074acb97eab6b7ef9e0b2ea7cce85bec8b0feaba22f14d1",
+      "bytes": 3923
+    },
+    "screen": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-photometric-normalization\\controls-3\\output\\screen.json",
+      "sha256": "1a6e7944de93df55f501b3eea400aba6031675aee87f4d198b5a1f4e82b7a71f",
+      "bytes": 168608
+    }
+  },
+  "quality_pass": false,
+  "estimator_pass": false,
+  "positive_exercised": false,
+  "brightness_destroyer_exercised": true,
+  "candidate_qualified": false,
+  "photographic_replay_admitted": false,
+  "full_render_available": false,
+  "scope": "Existing fixed-window scalar estimator on generated actual native consumer; no physical drift attribution or photographic qualification."
+}

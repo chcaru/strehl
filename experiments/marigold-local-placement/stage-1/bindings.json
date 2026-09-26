@@ -1,0 +1,27 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-local-placement\\stage-fit.py",
+    "bytes": 11137,
+    "sha256": "46bb44293293a190c7a86b5f7e285f7bbcadc41a61ad01d59b6cc42bab55dab3"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-local-placement\\design.md",
+    "bytes": 3161,
+    "sha256": "8c7ba1264985eadadb1340c05a0a6eb2ba3a780c0e90e5b30cd7f5ca2f5c5849"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\local-green-translation.py",
+    "bytes": 9763,
+    "sha256": "5b64f7e612fd94cd8a22515bffb67addcee71021f6338f10a249c63864420196"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\recipes\\marigold-4.json",
+    "bytes": 142365,
+    "sha256": "c98f715ee16352e0f5591768bfdf6506fcf22cdbd58764bf3d57a938cf8b0f08"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+    "bytes": 6846976,
+    "sha256": "ecf20e1b1e639fc3b86fe82d26a3e3ca02fd326549aa6353e80ad4480682d89d"
+  }
+]

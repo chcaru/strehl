@@ -1,0 +1,206 @@
+{
+  "cases": [
+    {
+      "estimator_pass": false,
+      "expected_correction_gains": [
+        1.1764705882352942,
+        1.075268817204301,
+        1.0,
+        0.9345794392523364,
+        0.8695652173913044
+      ],
+      "max_false_gain": 0.0,
+      "max_raw_cfa_flux_drift": 0.00039511807009029454,
+      "max_relative_uniform_gain_error": 0.15000000000000002,
+      "null": null,
+      "raw_cfa_mean_above_black_rggb": [
+        [
+          2227.1887369791666,
+          4161.322298177083,
+          4156.06044921875,
+          2376.77353515625
+        ],
+        [
+          2226.8069010416666,
+          4161.134212239584,
+          4155.947135416666,
+          2377.03193359375
+        ],
+        [
+          2226.30908203125,
+          4161.1173828125,
+          4155.9365234375,
+          2377.4405598958333
+        ],
+        [
+          2225.88447265625,
+          4161.441796875,
+          4156.133333333333,
+          2377.9015299479165
+        ],
+        [
+          2225.626399739583,
+          4161.842838541666,
+          4156.376139322917,
+          2378.24599609375
+        ]
+      ],
+      "raw_flux_within_0_02_percent": false,
+      "reference_gain": 1.0,
+      "same_data_noiseless_twin": true,
+      "scene": "two-depth-colour-texture",
+      "scope": "Uniform-scaling covariance alone is arithmetic; null gain must independently stay at unity.",
+      "uniform": {
+        "flux": [
+          {
+            "clipped_fraction": 0.0,
+            "count": 0,
+            "mean": null
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 0,
+            "mean": null
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 0,
+            "mean": null
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 0,
+            "mean": null
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 0,
+            "mean": null
+          }
+        ],
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mask_count": 0,
+        "mask_sha256": "1d54e0d121e0338cc5269fbce7a54d4a77c4594a2e136721a0cb8cad69bfa861",
+        "reason": "eroded region 0 below existing minimum 1024",
+        "reference": 2,
+        "refusals": [
+          "eroded region 0 below existing minimum 1024",
+          "eroded region 0 below existing minimum 1024",
+          "eroded region 0 below existing minimum 1024",
+          "eroded region 0 below existing minimum 1024",
+          "eroded region 0 below existing minimum 1024"
+        ],
+        "status": "UNAVAILABLE"
+      }
+    },
+    {
+      "estimator_pass": true,
+      "expected_correction_gains": [
+        1.1764705882352942,
+        1.075268817204301,
+        1.0,
+        0.9345794392523364,
+        0.8695652173913044
+      ],
+      "max_false_gain": 0.00037592649459838867,
+      "max_raw_cfa_flux_drift": 0.0006478101612736875,
+      "max_relative_uniform_gain_error": 0.00045202076435102434,
+      "null": null,
+      "raw_cfa_mean_above_black_rggb": [
+        [
+          2430.982389322917,
+          4539.527604166667,
+          4539.527604166667,
+          2562.707942708333
+        ],
+        [
+          2430.901302083333,
+          4539.361783854167,
+          4539.361783854167,
+          2562.81328125
+        ],
+        [
+          2429.40859375,
+          4540.1416015625,
+          4540.1416015625,
+          2563.3694010416666
+        ],
+        [
+          2430.901302083333,
+          4539.361783854167,
+          4539.361783854167,
+          2562.81328125
+        ],
+        [
+          2430.982389322917,
+          4539.527604166667,
+          4539.527604166667,
+          2562.707942708333
+        ]
+      ],
+      "raw_flux_within_0_02_percent": false,
+      "reference_gain": 1.0,
+      "same_data_noiseless_twin": true,
+      "scene": "flux-conserving-broad-defocus",
+      "scope": "Uniform-scaling covariance alone is arithmetic; null gain must independently stay at unity.",
+      "uniform": {
+        "flux": [
+          {
+            "clipped_fraction": 0.0,
+            "count": 2410,
+            "mean": 3534.415145228216
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 2410,
+            "mean": 3866.0
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 2410,
+            "mean": 4157.0
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 2410,
+            "mean": 4448.0
+          },
+          {
+            "clipped_fraction": 0.0,
+            "count": 2410,
+            "mean": 4782.711825726141
+          }
+        ],
+        "gains": [
+          1.1761493682861328,
+          1.0752716064453125,
+          1.0,
+          0.9345773458480835,
+          0.8691721558570862
+        ],
+        "mask_count": 2410,
+        "mask_sha256": "4b8e6cac6728ceeafd08e8c86fca1b09a26026d099aa12aabc218929c28e86c7",
+        "reason": null,
+        "reference": 2,
+        "refusals": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "status": "AVAILABLE"
+      }
+    }
+  ],
+  "estimator_pass": false,
+  "gain_tolerance": 0.002,
+  "mechanical_pass": true,
+  "schema": 1
+}
