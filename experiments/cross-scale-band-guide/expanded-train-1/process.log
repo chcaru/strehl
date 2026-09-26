@@ -1,0 +1,5 @@
+{"checkpoint": 0, "developer_loss": 4.766302107740092e-05, "seconds": 8.01216569999815}
+{"checkpoint": 32, "developer_loss": 3.919959078493141e-05, "seconds": 188.54539549999754}
+{"checkpoint": 64, "developer_loss": 3.796110468366076e-05, "seconds": 367.6747006000005}
+{"checkpoint": 96, "developer_loss": 3.745780767805923e-05, "seconds": 547.9037534999952}
+{"checkpoint": 102, "developer_loss": 3.7399787513179965e-05, "seconds": 584.0559083999979}

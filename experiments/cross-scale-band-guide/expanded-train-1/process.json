@@ -1,0 +1,105 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\develop.py",
+    "train",
+    "--dataset",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\dataset.json",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\expanded-train-1\\output",
+    "--commission",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\expanded-cost-1\\output\\cost.json",
+    "--qualification",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\develop-qualify-1\\output\\qualification.json",
+    "--weights",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\train-1\\output\\model.json",
+    "--annotations",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\training-annotations.json",
+    "--schedule",
+    "full43"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 584.7190000000046,
+  "log_bytes": 456,
+  "job_accounting": {
+    "total_user_100ns": 4058593750,
+    "total_kernel_100ns": 1996718750,
+    "total_cpu_100ns": 6055312500,
+    "total_page_fault_count": 41390762,
+    "total_processes": 3,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 7282446336,
+    "peak_job_memory_used_bytes": 7283683328
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 17179869184
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 4058593750,
+      "total_kernel_100ns": 1996718750,
+      "total_cpu_100ns": 6055312500,
+      "total_page_fault_count": 41390762,
+      "total_processes": 3,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 4058593750,
+      "total_kernel_100ns": 1996718750,
+      "total_cpu_100ns": 6055312500,
+      "total_page_fault_count": 41390762,
+      "total_processes": 3,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 584.7190000000046,
+        "accounting": {
+          "total_user_100ns": 4058593750,
+          "total_kernel_100ns": 1996718750,
+          "total_cpu_100ns": 6055312500,
+          "total_page_fault_count": 41390762,
+          "total_processes": 3,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 584.7190000000046,
+    "ended_wall_seconds": 584.7190000000046
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 660,
+    "cpu_seconds": 1800,
+    "log_bytes": 16777216,
+    "committed_bytes": 17179869184
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\expanded-train-1\\process.log",
+    "sha256": "234bf91c343dceae0f1d435ea11dcdbb79e7120ab80fff062508b7ad91d86cea",
+    "bytes": 456
+  }
+}

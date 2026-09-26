@@ -1,0 +1,530 @@
+{
+  "schema": 1,
+  "phase": "cost",
+  "mode": "learned-guide",
+  "stack_name": "crystalized-vitamin-c-cpl",
+  "inputs": [
+    {
+      "index": 0,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00094.ARW",
+      "identity_name": "DSC00094.ARW",
+      "bytes": 38887424,
+      "sha256": "847db3cd07af2438414e0a0dccb6cddbeab0b28f3e46b5e23246435c8b997ef1"
+    },
+    {
+      "index": 1,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00095.ARW",
+      "identity_name": "DSC00095.ARW",
+      "bytes": 38920192,
+      "sha256": "eca282769faca0c3e032ec9ae30998507a576f8e569a01f4bdb6d5c1807ef612"
+    },
+    {
+      "index": 2,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00096.ARW",
+      "identity_name": "DSC00096.ARW",
+      "bytes": 38944768,
+      "sha256": "aa7809e0b6dc7f06a1e982a20fce75f84fd2be4131b2c5823d377ee1886bfb5b"
+    },
+    {
+      "index": 3,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00097.ARW",
+      "identity_name": "DSC00097.ARW",
+      "bytes": 38977536,
+      "sha256": "77ebec9e3f505bea0a8aa7d65f107f0a6cb0434151ba3b75a48bdefaff1637db"
+    },
+    {
+      "index": 4,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00098.ARW",
+      "identity_name": "DSC00098.ARW",
+      "bytes": 39006208,
+      "sha256": "ef1e5011cb45fe39581e709117edc5d71e2073daadc60b952b1fc1ff9893a107"
+    },
+    {
+      "index": 5,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00099.ARW",
+      "identity_name": "DSC00099.ARW",
+      "bytes": 39047168,
+      "sha256": "f825f6addb06fc1e6fa31b97c0b6cda11209f2e737e4890805b0db3d357e93f0"
+    },
+    {
+      "index": 6,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00100.ARW",
+      "identity_name": "DSC00100.ARW",
+      "bytes": 39084032,
+      "sha256": "8456aec9f5111648598669790279b175bb2b5185e5c9e21ca9b3add96aa242b0"
+    },
+    {
+      "index": 7,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00101.ARW",
+      "identity_name": "DSC00101.ARW",
+      "bytes": 39133184,
+      "sha256": "a304be508d7ca3310bb68adb6e2ab5123577da492ac23ee8a60723ca6950f250"
+    },
+    {
+      "index": 8,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00102.ARW",
+      "identity_name": "DSC00102.ARW",
+      "bytes": 39170048,
+      "sha256": "69d5c1655f7b234f1ec5a35ad48b3bc8025d6f35b72f2b7afa272e134c54e676"
+    },
+    {
+      "index": 9,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00103.ARW",
+      "identity_name": "DSC00103.ARW",
+      "bytes": 39227392,
+      "sha256": "cd2e075b7c0347a88ccb0488633bc9af4683db1de1f6ff2984037b62fff40d75"
+    },
+    {
+      "index": 10,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00104.ARW",
+      "identity_name": "DSC00104.ARW",
+      "bytes": 39284736,
+      "sha256": "2433144c9c8aca6075c95f9ed0474b45e1f42b5023e360fd14492cd30fab8ff1"
+    },
+    {
+      "index": 11,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00105.ARW",
+      "identity_name": "DSC00105.ARW",
+      "bytes": 39342080,
+      "sha256": "5b7c15bf52d5b94221d7e738db9bcf530c32bb8dd25facd643c819a8bc1564c9"
+    },
+    {
+      "index": 12,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00106.ARW",
+      "identity_name": "DSC00106.ARW",
+      "bytes": 39411712,
+      "sha256": "004acf75852788d205558e9b01b6a440f462b45cf24b9b90b71792443e235e84"
+    },
+    {
+      "index": 13,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00107.ARW",
+      "identity_name": "DSC00107.ARW",
+      "bytes": 39489536,
+      "sha256": "f0ea2dee53b57fbc6739070d76828c768ae66c33249c63cce3ec711f0b32e925"
+    },
+    {
+      "index": 14,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00108.ARW",
+      "identity_name": "DSC00108.ARW",
+      "bytes": 39571456,
+      "sha256": "b998c07f3e37f09d01631a838719897e3a75a0f628a051a4c03f7ce93715bfea"
+    },
+    {
+      "index": 15,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00109.ARW",
+      "identity_name": "DSC00109.ARW",
+      "bytes": 39657472,
+      "sha256": "a5db815d59c0f5de746a2be60c6754267cb592a844b8ce7734b9077aff0b3960"
+    },
+    {
+      "index": 16,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00110.ARW",
+      "identity_name": "DSC00110.ARW",
+      "bytes": 39763968,
+      "sha256": "ed1885d98102b08fedaef3284e9516d8893a9bdca21b4b7fa2e668a977379919"
+    },
+    {
+      "index": 17,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00111.ARW",
+      "identity_name": "DSC00111.ARW",
+      "bytes": 39874560,
+      "sha256": "5ad68895af1e4d8d82730119e067dbece600643341bc21bb4d363b8debbf9517"
+    },
+    {
+      "index": 18,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00112.ARW",
+      "identity_name": "DSC00112.ARW",
+      "bytes": 39993344,
+      "sha256": "7d8f5edb230b36f5af68b919ac4c9d3d2331d0646da29fc3cf5fefdd40cf58d1"
+    },
+    {
+      "index": 19,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00113.ARW",
+      "identity_name": "DSC00113.ARW",
+      "bytes": 40112128,
+      "sha256": "67770ad43678c6cb0fdb1427c89530218123e79babfef00820640fda522dcdca"
+    },
+    {
+      "index": 20,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00114.ARW",
+      "identity_name": "DSC00114.ARW",
+      "bytes": 40243200,
+      "sha256": "d65bd88ea6cb4d282eba0e228271a6fb0504ae50d90149abb6cbc6b654c4b99d"
+    },
+    {
+      "index": 21,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00115.ARW",
+      "identity_name": "DSC00115.ARW",
+      "bytes": 40370176,
+      "sha256": "fe971dcc275a2f8fecedd6a79ea46a0681fcd1c864dc830d5757dcae937d55fb"
+    },
+    {
+      "index": 22,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00116.ARW",
+      "identity_name": "DSC00116.ARW",
+      "bytes": 40480768,
+      "sha256": "f3b10b68bb123cbea1d6cb05763291565bf9fb476e02ca183abb243ea6c5569f"
+    },
+    {
+      "index": 23,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00117.ARW",
+      "identity_name": "DSC00117.ARW",
+      "bytes": 40599552,
+      "sha256": "3ccf57540b17d0a896a3c5d3581181d934f9035873a332b7dac2e0e5e422a533"
+    },
+    {
+      "index": 24,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00118.ARW",
+      "identity_name": "DSC00118.ARW",
+      "bytes": 40706048,
+      "sha256": "51412b261bc2757f0bfb2f43689ed3cf344f0d2747881ea8655a748b158b587c"
+    },
+    {
+      "index": 25,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00119.ARW",
+      "identity_name": "DSC00119.ARW",
+      "bytes": 40792064,
+      "sha256": "15c5ace6ffd79a1e4f3df10fd4bd7fc76720f44fc8a8ab41e7d895af2b2b25e3"
+    },
+    {
+      "index": 26,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00120.ARW",
+      "identity_name": "DSC00120.ARW",
+      "bytes": 40865792,
+      "sha256": "48b96cd1692b781892cf1a9cf23243f6ada21c8e6c3e3d461198d4504380a9d2"
+    },
+    {
+      "index": 27,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00121.ARW",
+      "identity_name": "DSC00121.ARW",
+      "bytes": 40923136,
+      "sha256": "11d461fc2d08f10294c3f5b596244468aa19b5b6a49e5240eb121497acc18639"
+    },
+    {
+      "index": 28,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00122.ARW",
+      "identity_name": "DSC00122.ARW",
+      "bytes": 40968192,
+      "sha256": "287d3aa660954d638e9147355b7018aaa18eeed6c9431753bc748eccfa045d7e"
+    },
+    {
+      "index": 29,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00123.ARW",
+      "identity_name": "DSC00123.ARW",
+      "bytes": 41009152,
+      "sha256": "4d254e7dc829c25c02549c6c03b38de176775fc5e16983a39bbf370e9cb87a8a"
+    },
+    {
+      "index": 30,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00124.ARW",
+      "identity_name": "DSC00124.ARW",
+      "bytes": 41037824,
+      "sha256": "7a378f0c78af37d338542616c72d6f589769cf59c2fa7ffb400a0e6b648b81bf"
+    },
+    {
+      "index": 31,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00125.ARW",
+      "identity_name": "DSC00125.ARW",
+      "bytes": 41050112,
+      "sha256": "a1f9e00bae4de4a6a8b2cca50b72db945935492fb6eb5e3d2d7adf907410f457"
+    },
+    {
+      "index": 32,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00126.ARW",
+      "identity_name": "DSC00126.ARW",
+      "bytes": 41062400,
+      "sha256": "b1320c09dc671bb905678812d49f6b11a37a3d536541c1f8aad8f4011f75d599"
+    },
+    {
+      "index": 33,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00127.ARW",
+      "identity_name": "DSC00127.ARW",
+      "bytes": 41074688,
+      "sha256": "a5b1e70f61339850fd2945fd82701ee3464913743ceec241c702fb230c2f0fa0"
+    },
+    {
+      "index": 34,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00128.ARW",
+      "identity_name": "DSC00128.ARW",
+      "bytes": 41070592,
+      "sha256": "401171ccdc2288c1345d1636246d2925e26de089144b073f77fc8b4814669bf9"
+    },
+    {
+      "index": 35,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00129.ARW",
+      "identity_name": "DSC00129.ARW",
+      "bytes": 41074688,
+      "sha256": "0454d0fc91d763a8dd051236c5ef53cf9b5d3b4989738a3e207c75a56e2f9711"
+    },
+    {
+      "index": 36,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00130.ARW",
+      "identity_name": "DSC00130.ARW",
+      "bytes": 41062400,
+      "sha256": "c8362824654d3014b9d496283e9925d1eabc7fc550fb436dbe34a0024e1e867b"
+    },
+    {
+      "index": 37,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00131.ARW",
+      "identity_name": "DSC00131.ARW",
+      "bytes": 41037824,
+      "sha256": "fa9c48485151df310e1ea54b8f85cc69406a1eba3abfe4f468ad2b7995425915"
+    },
+    {
+      "index": 38,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00132.ARW",
+      "identity_name": "DSC00132.ARW",
+      "bytes": 41017344,
+      "sha256": "232e291fc6421533bfb641100dcd28648e132f0d2781cb545e6f347b47d9a325"
+    },
+    {
+      "index": 39,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00133.ARW",
+      "identity_name": "DSC00133.ARW",
+      "bytes": 41009152,
+      "sha256": "e6f0b24870c4f30e042618424e41b808795900cbfea584e437be56cdfec4e249"
+    },
+    {
+      "index": 40,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00134.ARW",
+      "identity_name": "DSC00134.ARW",
+      "bytes": 40972288,
+      "sha256": "1cba62057255b10f599a9a921bbe1eba26e5d0e3fcbca6869a1b89a312f390fa"
+    },
+    {
+      "index": 41,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00135.ARW",
+      "identity_name": "DSC00135.ARW",
+      "bytes": 40931328,
+      "sha256": "d8864594e181ebf5558e4f1d8467e53eba8ab1e648f22d5e2a64eedb422a006d"
+    },
+    {
+      "index": 42,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00136.ARW",
+      "identity_name": "DSC00136.ARW",
+      "bytes": 40886272,
+      "sha256": "3c0ac5978075d2e60afb1bfaaf99d937e6ae75e77590589be2941ed7eb29d50b"
+    },
+    {
+      "index": 43,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00137.ARW",
+      "identity_name": "DSC00137.ARW",
+      "bytes": 40824832,
+      "sha256": "da208837514528758ae51f644df1b09c3e9f1ff1f417675811be6a1ec6529acc"
+    },
+    {
+      "index": 44,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00138.ARW",
+      "identity_name": "DSC00138.ARW",
+      "bytes": 40775680,
+      "sha256": "1bfa6fc981fd5c412e1777ac42add9ba92c2560d62580a0d13de668353604e1c"
+    },
+    {
+      "index": 45,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00139.ARW",
+      "identity_name": "DSC00139.ARW",
+      "bytes": 40697856,
+      "sha256": "293737f35136d20a22068381d46ee5bcfb639d742497ee2fe35a64e9b7e2c769"
+    },
+    {
+      "index": 46,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00140.ARW",
+      "identity_name": "DSC00140.ARW",
+      "bytes": 40615936,
+      "sha256": "740e0ef923b47aa489c2caea3b92525bc0225d726a0cd2c5e005b567558e4865"
+    },
+    {
+      "index": 47,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00141.ARW",
+      "identity_name": "DSC00141.ARW",
+      "bytes": 40534016,
+      "sha256": "9f34033f3c1d267c0b1f2dce9c9c27da30b86a156b29a800c9955a6f87a76f76"
+    },
+    {
+      "index": 48,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00142.ARW",
+      "identity_name": "DSC00142.ARW",
+      "bytes": 40443904,
+      "sha256": "ba3d0190ee2158b48f9650a3e8720944e0384590f195f9b1bbbc2eab375fd7b3"
+    },
+    {
+      "index": 49,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00143.ARW",
+      "identity_name": "DSC00143.ARW",
+      "bytes": 40337408,
+      "sha256": "ae3fffbc1bdaead134c549c5f217557cf50b0a797648aa1b195497d647b1440b"
+    },
+    {
+      "index": 50,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00144.ARW",
+      "identity_name": "DSC00144.ARW",
+      "bytes": 40230912,
+      "sha256": "d157da52e9487e8535fb6bd85af7c1fd5a28f3ff0c0cbc4a25a484bf703968df"
+    },
+    {
+      "index": 51,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00145.ARW",
+      "identity_name": "DSC00145.ARW",
+      "bytes": 40124416,
+      "sha256": "6991b93063ea3b25bf99a5d163349cad53ea4c46afd3394ddaba5d153af0bd39"
+    },
+    {
+      "index": 52,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00146.ARW",
+      "identity_name": "DSC00146.ARW",
+      "bytes": 40013824,
+      "sha256": "3c82cc21f4a6f85d4d3a3f1f13ff5a9a5ac7960ad381ea21b7a676905e4298c9"
+    },
+    {
+      "index": 53,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00147.ARW",
+      "identity_name": "DSC00147.ARW",
+      "bytes": 39919616,
+      "sha256": "ed8b565c589f1e87d94dd469301f57199c4cc5ef5e03d4853735ee10b09447b3"
+    },
+    {
+      "index": 54,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00148.ARW",
+      "identity_name": "DSC00148.ARW",
+      "bytes": 39833600,
+      "sha256": "a5449fec86ff75ad57c653c3290fa9df377819e9d06ac2865785ecebf0d61243"
+    },
+    {
+      "index": 55,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00149.ARW",
+      "identity_name": "DSC00149.ARW",
+      "bytes": 39751680,
+      "sha256": "2b728bb3db811892a751eed92ce658c7c09fde160bf824530628899c46e18059"
+    },
+    {
+      "index": 56,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00150.ARW",
+      "identity_name": "DSC00150.ARW",
+      "bytes": 39677952,
+      "sha256": "08fc876067919aa560e63452097d37c66d51eacd16a9a9d724b9e2f3d991bd33"
+    },
+    {
+      "index": 57,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00151.ARW",
+      "identity_name": "DSC00151.ARW",
+      "bytes": 39608320,
+      "sha256": "815d674228313c4817395098094c9a17656da4fdea0a44dc65ced352d63d8cdb"
+    },
+    {
+      "index": 58,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00152.ARW",
+      "identity_name": "DSC00152.ARW",
+      "bytes": 39555072,
+      "sha256": "6e85a51848336b4103bfc299088c40d85b7eb47a367adebc7439dd4569b24e69"
+    },
+    {
+      "index": 59,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00153.ARW",
+      "identity_name": "DSC00153.ARW",
+      "bytes": 39489536,
+      "sha256": "d840ece6c4d35b45c2be162a0b8b4e59b93a193b4b79ff3bdb1286e913b736b9"
+    },
+    {
+      "index": 60,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00154.ARW",
+      "identity_name": "DSC00154.ARW",
+      "bytes": 39436288,
+      "sha256": "71480ba830418c063f6b0462c72da4c9c523346f710afca3522a0e26aaee9e5b"
+    },
+    {
+      "index": 61,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00155.ARW",
+      "identity_name": "DSC00155.ARW",
+      "bytes": 39395328,
+      "sha256": "c73ecc6ad929a59361dcb9550dde580d56c2f4f636c05baff725e1b8e06b8058"
+    },
+    {
+      "index": 62,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00156.ARW",
+      "identity_name": "DSC00156.ARW",
+      "bytes": 39354368,
+      "sha256": "6ad806e70a1bbe9144a21af5074eaa70b56c7fbec370928faf9d839a09f09943"
+    },
+    {
+      "index": 63,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00157.ARW",
+      "identity_name": "DSC00157.ARW",
+      "bytes": 39313408,
+      "sha256": "862b8397cc55fa156a8c7055b663d0b4645d82eb215eb4519d8bcbf23302b53a"
+    },
+    {
+      "index": 64,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00158.ARW",
+      "identity_name": "DSC00158.ARW",
+      "bytes": 39276544,
+      "sha256": "66f3c0620738e4457bce19e648bedead2850e8115584ae73845f5ab806a59c88"
+    },
+    {
+      "index": 65,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00159.ARW",
+      "identity_name": "DSC00159.ARW",
+      "bytes": 39243776,
+      "sha256": "d7b16cb17045ebb48e4bdac11475e39e8a53aca1b7135c1a118b3c7c5df23e6e"
+    },
+    {
+      "index": 66,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00160.ARW",
+      "identity_name": "DSC00160.ARW",
+      "bytes": 39211008,
+      "sha256": "8392e7ad0ae05d1a47cf56145b9f3b1cbf006bac60f8908f2995c8ced7f9577d"
+    },
+    {
+      "index": 67,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00161.ARW",
+      "identity_name": "DSC00161.ARW",
+      "bytes": 39182336,
+      "sha256": "147919c4fa4ff66be5d7564386b0eaef584f17f0118ded39031ab06d6e0fa67c"
+    },
+    {
+      "index": 68,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00162.ARW",
+      "identity_name": "DSC00162.ARW",
+      "bytes": 39161856,
+      "sha256": "aa3fbac2127dbf8bd2184b5b3281cbf5fafa19ecb76a022d354839e5dad36089"
+    },
+    {
+      "index": 69,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00163.ARW",
+      "identity_name": "DSC00163.ARW",
+      "bytes": 39133184,
+      "sha256": "de6ee812348df02283ac76a027aba96d40545b1d4d4de77b39af0a8ff5f066e9"
+    }
+  ],
+  "warp_map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-baseline-1\\vitamin-c.warpmap.txt",
+  "warp_map_sha256": "84275850a032dc8beb88945b00514a58ebca433e267c8e10342ac55986cf830f",
+  "out_dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-cost-2\\output",
+  "expected_reference": 35,
+  "expected_full_geometry": [
+    3516,
+    2344
+  ],
+  "expected_crop": [
+    28,
+    19,
+    3460,
+    2306
+  ],
+  "expected_baseline": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-cost-1\\output\\baseline-historical-tone.tiff",
+  "expected_baseline_sha256": "de1e5dccc0a0c92a4d1f3c93cee6109fb0ea123dbae990a1759b92203d4a70ef",
+  "expected_baseline_pixels_sha256": "e870e3ec57f9d2819fee58d049f5de839c1e05584929afccbefc2b00dc9253b9",
+  "expected_camera": "ILCE-7CM2",
+  "expected_iso": 100.0,
+  "exposure_stops": 0.0,
+  "tone_policy": "automatic-baseline-then-exact-pinned-candidate",
+  "historical_tone": [
+    0.09042,
+    0.914606,
+    0.55
+  ],
+  "python": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "score_server": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\score-server.py",
+  "score_server_sha256": "5b9de1e811e85b176a12edccf88d74686dbf6ea37001476c2579605ab4e2b09f",
+  "weights": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\preserve-train-1\\output\\model.json",
+  "weights_sha256": "02f5d9fbfa16efa18207b82884a83f232cd8ab2355995dba04c11a91dd1fa02a",
+  "generic_consumer_sha256": "587e373f6d6afb81e120ca74c4c0094a86b1abd4a020724de38e1b4397ba8003"
+}

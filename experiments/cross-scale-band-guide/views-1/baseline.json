@@ -1,0 +1,13 @@
+{
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\output\\baseline.tiff",
+  "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\baseline.png",
+  "shape": [
+    4612,
+    6920,
+    3
+  ],
+  "conversion": "rounded division by 257; full extent; no resampling",
+  "source_sha256": "50da15bf7d86839ac04f642623bdd5e9033a9342026767dfdd0f04dd27d05434",
+  "png_sha256": "1606ad4ac47eb84642b4a4a8e55a56a83b1d1cc099a48661545e607a8dcc62f6",
+  "icc_preserved": true
+}

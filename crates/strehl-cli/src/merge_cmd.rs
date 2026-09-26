@@ -4965,6 +4965,11 @@ pub(crate) mod cross_scale_band_export {
 }
 
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+pub(crate) mod cross_scale_band_full {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/cross-scale-band-guide/full-adapter.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
 pub(crate) mod rb_residual_guard {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/rb-residual-guard/implementation.rs"));
 }

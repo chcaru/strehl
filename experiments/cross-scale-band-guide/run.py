@@ -18,7 +18,7 @@ c = old.c
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument('phase', choices=['build', 'export-train', 'export-held', 'texture-train', 'texture-held', 'generic-controls', 'commission', 'check-commission', 'train', 'infer', 'check', 'generic-commission', 'expanded-cost', 'expanded-train', 'expanded-infer', 'develop-qualify', 'transfer-qualify', 'transfer-check'])
+    p.add_argument('phase', choices=['build', 'export-train', 'export-held', 'texture-train', 'texture-held', 'generic-controls', 'commission', 'check-commission', 'train', 'infer', 'check', 'generic-commission', 'expanded-cost', 'expanded-train', 'expanded-infer', 'develop-qualify', 'transfer-qualify', 'transfer-check', 'training-diagnosis', 'preserve-cost', 'preserve-qualify', 'preserve-train', 'preserve-infer'])
     p.add_argument('--out', type=Path, required=True)
     p.add_argument('--dataset', type=Path, default=ROOT / 'experiments/learned-band-guide/export-1/output/dataset.json')
     p.add_argument('--commission', type=Path)
@@ -33,17 +33,33 @@ def main():
     args = p.parse_args()
     out = args.out.resolve()
     assert out.is_relative_to(HERE) and not out.exists()
-    if args.phase == 'generic-commission' or args.phase.startswith(('expanded-', 'transfer-', 'develop-')):
+    if args.phase == 'training-diagnosis':
+        inputs = [c.ref(HERE / name) for name in ('independent-training-diagnosis.py',
+            'independent-transfer-check.py', 'independent-develop-check.py', 'run.py')]
+        out.mkdir()
+        c.save(out / 'inputs.json', inputs)
+        command = [sys.executable, '-I', '-B', '-X', 'faulthandler',
+            str(HERE / 'independent-training-diagnosis.py'), '--out', str(out / 'output')]
+        old.run_job(command, {}, out, 180, 600, 8 << 30)
+        assert all(c.ref(Path(row['path'])) == row for row in inputs)
+        result = json.loads((out / 'output/diagnosis.json').read_text())
+        assert all(c.ref(Path(row['path']))['sha256'] == row['sha256'] for row in result['inputs'])
+        c.save(out / 'completion.json', dict(process_completed=True, inputs_unchanged=True,
+            scope='Training-only preservation diagnosis; no fit or new quality claim.'))
+        return
+    if args.phase == 'generic-commission' or args.phase.startswith(('expanded-', 'transfer-', 'develop-', 'preserve-')):
         transfer = args.phase.startswith('transfer-')
-        phase = args.phase.split('-', 1)[1] if args.phase.startswith(('expanded-', 'transfer-', 'develop-')) else args.phase
-        script = HERE / ('independent-develop-check.py' if args.phase == 'develop-qualify' else 'independent-transfer-check.py' if transfer else 'develop.py')
+        phase = args.phase.split('-', 1)[1] if args.phase.startswith(('expanded-', 'transfer-', 'develop-', 'preserve-')) else args.phase
+        script = HERE / ('independent-preserve-check.py' if args.phase == 'preserve-qualify' else 'preserve.py' if args.phase.startswith('preserve-') else 'independent-develop-check.py' if args.phase == 'develop-qualify' else 'independent-transfer-check.py' if transfer else 'develop.py')
         paths = {script, Path(__file__), HERE / 'develop.py', HERE / 'generic-consumer.py', HERE / 'train.py',
             ROOT / 'experiments/learned-band-guide/train.py',
             ROOT / 'experiments/band-weight-oracle/independent-check.py'}
         if transfer:
             paths.add(HERE / 'transfer-plan.md')
+        if args.phase.startswith('preserve-'):
+            paths.add(HERE / 'preserve.py')
         datasets = [args.dataset.resolve()]
-        if args.phase in ('expanded-cost', 'expanded-train', 'develop-qualify'):
+        if args.phase in ('expanded-cost', 'expanded-train', 'develop-qualify', 'preserve-cost', 'preserve-train', 'preserve-qualify'):
             datasets.append(ROOT / 'experiments/learned-band-guide/export-1/output/dataset.json')
         for dataset in datasets:
             paths.add(dataset)

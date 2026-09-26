@@ -1,0 +1,1211 @@
+{
+  "schema": 1,
+  "training_revision": 3,
+  "source_sha256": "d5f7c3b6ccec073a2bfff5e9261c523e84ea0b25d98110d516d9f6ddba16481f",
+  "copied_driver_sha256": "214fe31dec8939a1aae260554cfbe63206922ea920d5e7b2be6b9394cd095a10",
+  "contrast_contract": {
+    "window": 32,
+    "stride": 16,
+    "minimum_valid": 16,
+    "minimum_target_sd": 0.001,
+    "coefficient": 0.001,
+    "target": "canonical projection capped[0,1], lower bound only",
+    "anchor": "first valid per-channel sample",
+    "trailing_windows": "zero validity padding",
+    "flat_loss": "exact zero",
+    "scope": "training only; no inference veto"
+  },
+  "generic_consumer_sha256": "587e373f6d6afb81e120ca74c4c0094a86b1abd4a020724de38e1b4397ba8003",
+  "consumer_sha256": "b5455f488a92ed75c2a8ae8d9dcfb31b054237805b7ded22893459ef4ea9b987",
+  "scorer_sha256": "03ddcab38c492557244638d93694b66473a749aaac6f7785fb129be98dfce96f",
+  "dataset": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\dataset.json",
+  "dataset_sha256": "06a41b155508d223151c32035d0992c1433548b52c5430df07c3abf8f465537f",
+  "float32": true,
+  "tf32": false,
+  "deterministic": true,
+  "seed": 137,
+  "gpu_budget_bytes": 8589934592,
+  "gpu_budget_scope": "expanded generated training/inference; not a production-memory claim",
+  "torch": "2.11.0+cu128",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "photographic_admission": false,
+  "model": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\preserve-train-1\\output\\model.json",
+  "model_sha256": "02f5d9fbfa16efa18207b82884a83f232cd8ab2355995dba04c11a91dd1fa02a",
+  "truth_read": false,
+  "records": [
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\case.json",
+      "case_sha256": "50749d0258da3ffd272faf7b0668f5795dc6c42daa40505a90b30d997fbecdba",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-00\\cfa.f32",
+          "sha256": "6ea8b04c227f1774b133eb2752a83ea4613d6726fd9dd2f015b9f74d987abc32",
+          "shape": [
+            4,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-00\\rgb.f32",
+          "sha256": "fa32763e12ec69b03b2ddae38793b181ae761b90177cf1a098432428dd8112ec",
+          "shape": [
+            144,
+            160,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-00\\weights-0.f32",
+          "sha256": "a67245413c46b8091a4a78ddf6f06f48b2737197c69615042195f65d3d26025c",
+          "shape": [
+            17,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-00\\weights-1.f32",
+          "sha256": "b1f0633de6921d848397409cb3c224411ca3ad5d1ee9345f7a569c56b6e4c177",
+          "shape": [
+            17,
+            36,
+            40
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-00\\weights-2.f32",
+          "sha256": "f72642778ccfc5068d2505f94af9aa7ae36e726faadec84230386f2e19ee6fcb",
+          "shape": [
+            17,
+            18,
+            20
+          ],
+          "dtype": "<f4"
+        }
+      }
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\case.json",
+      "case_sha256": "b94ae831be19b5c2ac70a130e7de85220ac317b955262621d2216bbd67fb03cc",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-01\\cfa.f32",
+          "sha256": "1b516a747d979828fa5463903e4073821fb50694228a65ecac328735b9f8fd98",
+          "shape": [
+            4,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-01\\rgb.f32",
+          "sha256": "140a184f3dc1853bfe2ebe0f7961a37e6c9a1d3a1316a04c695e03cdf183d508",
+          "shape": [
+            144,
+            160,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-01\\weights-0.f32",
+          "sha256": "6c1242f9c9d5a9e6f5d441496895b45f05713407c392843fd3e36f98e6115889",
+          "shape": [
+            65,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-01\\weights-1.f32",
+          "sha256": "15d5fa93ddc873f9ffb0203b0eedf8f5807e29700ef4dd9852864b58c3c5fbbe",
+          "shape": [
+            65,
+            36,
+            40
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-01\\weights-2.f32",
+          "sha256": "f9a8a3da61237204d56859ab68180035b81b5300ac6a6bb07bb920a9b502b0a9",
+          "shape": [
+            65,
+            18,
+            20
+          ],
+          "dtype": "<f4"
+        }
+      }
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\case.json",
+      "case_sha256": "38e5a70101740232f8c56c4469f1b06c9b44a359ea945bccb06a8ab9ba74d57b",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-02\\cfa.f32",
+          "sha256": "a38f2841586f91d4cb93441c8579bf09f026b0d9ce9f81c80f40638489c16019",
+          "shape": [
+            4,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-02\\rgb.f32",
+          "sha256": "1d5590686877905ec20598358976cf8560fcae2518ae95568a9c26c6810adc75",
+          "shape": [
+            144,
+            160,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-02\\weights-0.f32",
+          "sha256": "2839d2179ae71eab5ef6c281c44afeb5fc6fe84a48ae6a4ad1d5eb53b976b22a",
+          "shape": [
+            33,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-02\\weights-1.f32",
+          "sha256": "db79ee0a6e7884db5dd65b62712ff1914fd2fce64cab73bbc1bc649bbe945e08",
+          "shape": [
+            33,
+            36,
+            40
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-02\\weights-2.f32",
+          "sha256": "af0a1e5f37d664abb917c479a9d9be16604ca71ddd0870f19dcc95a899dbf99e",
+          "shape": [
+            33,
+            18,
+            20
+          ],
+          "dtype": "<f4"
+        }
+      }
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\case.json",
+      "case_sha256": "03efb17ae5be4d91264e28cb746888af91c4bab795b2d7f3fe51aa28a721beda",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-03\\cfa.f32",
+          "sha256": "6e46caf409a2d1fb9ec429d16afeb1a035eed1e65553c1570da43ea4ba4ea5a8",
+          "shape": [
+            4,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-03\\rgb.f32",
+          "sha256": "f85753580e96cf5bad68fd037d498ebab77245971c3098ab455b4f02b909d503",
+          "shape": [
+            144,
+            160,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-03\\weights-0.f32",
+          "sha256": "418546ccdb4fa5ab0bfc2b1b5ddee9ad5f5804fca27e5cf48897b90b0d1ac517",
+          "shape": [
+            17,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-03\\weights-1.f32",
+          "sha256": "21ca19b62fcf0b2f0374130956bfeed3e9da5171ac10a4aa67761efa7a194788",
+          "shape": [
+            17,
+            36,
+            40
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-03\\weights-2.f32",
+          "sha256": "de4afac4be99a958ff2acd4825d66a23c3175a7f013c33984df64aa4e8d9cd1e",
+          "shape": [
+            17,
+            18,
+            20
+          ],
+          "dtype": "<f4"
+        }
+      }
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\case.json",
+      "case_sha256": "ff75edb3ff996decf6bc788b4501cdc6da8fdb3dbf97e1662bd272c3f0eb39f0",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-04\\cfa.f32",
+          "sha256": "4e8793e9da31e3785e08d150a15262ec754f7eea37577ce4b0e6522b51fa9ca0",
+          "shape": [
+            4,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-04\\rgb.f32",
+          "sha256": "9e1bd51e656cf0c5481e962c96dac452df5da7ae3d42a006a885293a2a724206",
+          "shape": [
+            144,
+            160,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-04\\weights-0.f32",
+          "sha256": "d181ac4344d04cbd88ccf25fed4102526dfad2f89fdfbf3bb583c37a96a6d995",
+          "shape": [
+            17,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-04\\weights-1.f32",
+          "sha256": "166e1a89d1887d7f9b0e94c41c2902ce7fad3f64360a1db68f13add9698a3178",
+          "shape": [
+            17,
+            36,
+            40
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-04\\weights-2.f32",
+          "sha256": "fe3215f786878a8e41be23e1046a2de6455be697f2c30b76f0e2ec0842103ef1",
+          "shape": [
+            17,
+            18,
+            20
+          ],
+          "dtype": "<f4"
+        }
+      }
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\case.json",
+      "case_sha256": "406e356287ad4f73e39de1d2f736747ae485d82835a47bc8e17b7dfc770be370",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-05\\cfa.f32",
+          "sha256": "61dcc95031797193ff22d74b4454a85db0d0ed3442d9d9240b638dc487add0bd",
+          "shape": [
+            4,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-05\\rgb.f32",
+          "sha256": "4435c3a0df7fca71b9aa1228a6a7e562f25133f33a58dc847211ed717d1e81e4",
+          "shape": [
+            144,
+            160,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-05\\weights-0.f32",
+          "sha256": "5e92afccf2664aa8d88a090920f37ba70f61a2c73a29ec401569c7dc2737f7a2",
+          "shape": [
+            17,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-05\\weights-1.f32",
+          "sha256": "06f7ea881caea850adaddf1d8418ee1a50331f556748ce9df11b56c28ab55bfc",
+          "shape": [
+            17,
+            36,
+            40
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-05\\weights-2.f32",
+          "sha256": "a68f6ba5ad23cf3fe2e32f4a8473d979c331b436ccb64bf90277addf88376944",
+          "shape": [
+            17,
+            18,
+            20
+          ],
+          "dtype": "<f4"
+        }
+      }
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\case.json",
+      "case_sha256": "609e981117c4c45431df21174507717b80f8a0377da51cbda2187b7fde017df7",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-06\\cfa.f32",
+          "sha256": "0ddcf458972e4eb7cd0f9fa771464c34678ed57c9cfe8afd6230b7491e8aa397",
+          "shape": [
+            4,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-06\\rgb.f32",
+          "sha256": "98327c3a903f51255a916aab2bc3f80bb20f26f73f759d2d13acee27288589a9",
+          "shape": [
+            144,
+            160,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-06\\weights-0.f32",
+          "sha256": "366564c4a77f58847079d9ac9056499ffe50f21b878529df686b7eebeac077a6",
+          "shape": [
+            9,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-06\\weights-1.f32",
+          "sha256": "f14562ac056d242e98c5d6d7462fcba08df366c69a80209eeb7564e5da0153c3",
+          "shape": [
+            9,
+            36,
+            40
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-06\\weights-2.f32",
+          "sha256": "0d6afd02bdea4e78eb45898a0d5021e70732f879054dbf3b101553dab6fbc2a2",
+          "shape": [
+            9,
+            18,
+            20
+          ],
+          "dtype": "<f4"
+        }
+      }
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\case.json",
+      "case_sha256": "76b1aa676f2aeabfd4f030f549dcabb5f704750ea15b61bd7d38659a8b9998f0",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-07\\cfa.f32",
+          "sha256": "0da0ef0f33002ac7f4a0a014e2e042e506113f501c9697fcf1236d21e3c91956",
+          "shape": [
+            4,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-07\\rgb.f32",
+          "sha256": "5d394372573b7a42ae3e79ccf05a1985eddb123f1bc48320a8b2c3697810df27",
+          "shape": [
+            144,
+            160,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-07\\weights-0.f32",
+          "sha256": "992ebdbdabe3fc54450703d07f948d8250475ca3c64d1149d58e96945351b52c",
+          "shape": [
+            65,
+            72,
+            80
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-07\\weights-1.f32",
+          "sha256": "a85738883ea7dd1eca7d26c965ac5aedabb91a99db022dace7e36d9fdfb01b70",
+          "shape": [
+            65,
+            36,
+            40
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-07\\weights-2.f32",
+          "sha256": "8b3a689db85559d838584a30411a579c87f8c42e733dbca744072a9f745620ed",
+          "shape": [
+            65,
+            18,
+            20
+          ],
+          "dtype": "<f4"
+        }
+      }
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\case.json",
+      "case_sha256": "5f9e3a0ffd2541147688f512a329f953c3c12df15a4f4ed7a4f066a0fe0b8510",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-08\\cfa.f32",
+          "sha256": "4017db7ebe81bc0198011524a541a7cf2f26dd9d17ec223711237711c2ec0c8b",
+          "shape": [
+            4,
+            1029,
+            1031
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-08\\rgb.f32",
+          "sha256": "8b789844f33720e902b0f0fba145bc5997bd76a1adeca2d3755c364847ef59a9",
+          "shape": [
+            2058,
+            2062,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-08\\weights-0.f32",
+          "sha256": "536565b7fabc4791f13527618ec019218f26aa8aed348d51f188b1075522eb9d",
+          "shape": [
+            5,
+            1029,
+            1031
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-08\\weights-1.f32",
+          "sha256": "5d99bd650f14218216423f3172b3ade02d925126f8e40e1ca00991de477619b6",
+          "shape": [
+            5,
+            515,
+            516
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-08\\weights-2.f32",
+          "sha256": "deed3ae6bd08f1167040f6d2699fd0ecec1bbdadd39e57734b7132ab5d350bb3",
+          "shape": [
+            5,
+            258,
+            258
+          ],
+          "dtype": "<f4"
+        },
+        "weights-3": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-08\\weights-3.f32",
+          "sha256": "113f115a0560dd792266597d240aad248a0dfe86dfb814f69facf102e6157783",
+          "shape": [
+            5,
+            129,
+            129
+          ],
+          "dtype": "<f4"
+        },
+        "weights-4": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-08\\weights-4.f32",
+          "sha256": "772dbc10446486a35d1a2b2b7d20f2c226727d53f872e83f37b063daa7b9c6b1",
+          "shape": [
+            5,
+            65,
+            65
+          ],
+          "dtype": "<f4"
+        },
+        "weights-5": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-08\\weights-5.f32",
+          "sha256": "7f6a059838e6df88edce6b4b2322b5c119969d1a88bf339e6ee7eb4c6140422a",
+          "shape": [
+            5,
+            33,
+            33
+          ],
+          "dtype": "<f4"
+        },
+        "weights-6": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-08\\weights-6.f32",
+          "sha256": "c57fd2abe7d759240913323f8f4700592c069d683798d807635977fd5f550256",
+          "shape": [
+            5,
+            17,
+            17
+          ],
+          "dtype": "<f4"
+        }
+      }
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\case.json",
+      "case_sha256": "8b0d9dc829d81408cdd89cff191f7b77e47ff749c85ea0e31131da683b52773c",
+      "arrays": {
+        "cfa": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-09\\cfa.f32",
+          "sha256": "350fb046abcc7e527ad419d2412e56f7933eeb934ae90d561b6c93cc45ca0232",
+          "shape": [
+            4,
+            1029,
+            1031
+          ],
+          "dtype": "<f4"
+        },
+        "rgb": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-09\\rgb.f32",
+          "sha256": "adaedfd3be9fe143551ca031ddf114356b934e4922e5501562aa876bdc19b870",
+          "shape": [
+            2058,
+            2062,
+            3
+          ],
+          "dtype": "<f4"
+        },
+        "weights-0": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-09\\weights-0.f32",
+          "sha256": "399358036b60e4c2789d6a57ccfb05a9f00b2fad426d166ff6e5d2a210473a06",
+          "shape": [
+            5,
+            1029,
+            1031
+          ],
+          "dtype": "<f4"
+        },
+        "weights-1": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-09\\weights-1.f32",
+          "sha256": "4f8a1ff161480e60dfedccb6669e8b9d8b176f27f03a14dbb0ae471cbb88579f",
+          "shape": [
+            5,
+            515,
+            516
+          ],
+          "dtype": "<f4"
+        },
+        "weights-2": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-09\\weights-2.f32",
+          "sha256": "85f489177efddcd7a7425900756cafb8e773535a017ef35a02a97a2ef6e39995",
+          "shape": [
+            5,
+            258,
+            258
+          ],
+          "dtype": "<f4"
+        },
+        "weights-3": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-09\\weights-3.f32",
+          "sha256": "5b1dd67d7c3de33a2d48559193784013aaf6bd1d9bc76c1fbc6fd96e0ea104ae",
+          "shape": [
+            5,
+            129,
+            129
+          ],
+          "dtype": "<f4"
+        },
+        "weights-4": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-09\\weights-4.f32",
+          "sha256": "c8599ffc48b8c2e4f14627e68a8575f83b25af5e75ac6239bc3b0d5c15f6ca51",
+          "shape": [
+            5,
+            65,
+            65
+          ],
+          "dtype": "<f4"
+        },
+        "weights-5": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-09\\weights-5.f32",
+          "sha256": "b1e237697b73d285f0b8c930323363d64d252eab34bf6bffaf945b194d79ffbd",
+          "shape": [
+            5,
+            33,
+            33
+          ],
+          "dtype": "<f4"
+        },
+        "weights-6": {
+          "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\reused-regression-infer-1\\output\\case-09\\weights-6.f32",
+          "sha256": "60095c7a00b48ee699209181ca5589adf73063cfefa6a618aeae1e6f1df98688",
+          "shape": [
+            5,
+            17,
+            17
+          ],
+          "dtype": "<f4"
+        }
+      }
+    }
+  ],
+  "input_tensor_bindings": [
+    {
+      "key": "base",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\base.f32",
+      "sha256": "3cc677037024adb75c7d8f41f7fdd14e09e19112f2e149f2be8a8ad073f594e8"
+    },
+    {
+      "key": "lower",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\lower.f32",
+      "sha256": "3c2cb67c93c14bf6a47ba8801945f5c11c194e14adeac0988175b831e0b85ca9"
+    },
+    {
+      "key": "upper",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\upper.f32",
+      "sha256": "e1d5f621eafb03b850e1644c733c09539fedf770c0ba3bc61ddac0b9b9ec0f45"
+    },
+    {
+      "key": "coeff-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\coeff-0.f32",
+      "sha256": "f28068fa812958117d7edf3de945081bb61d871c10ff9f8318ad8d431ac8a763"
+    },
+    {
+      "key": "features-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\features-0.f32",
+      "sha256": "e316fa7f2bdced6aaba4e0440b063fb88e0bfa08082a263fb30e29502c10b8d8"
+    },
+    {
+      "key": "coeff-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\coeff-1.f32",
+      "sha256": "fd1801ee1b10f9dc14d5da2aeeea344b4513ce306abcfc502a575c283fe1e4bf"
+    },
+    {
+      "key": "features-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\features-1.f32",
+      "sha256": "d74142f055d0e083d97875c841d856bb3e519a472baf65c91654a6be452ce1e9"
+    },
+    {
+      "key": "coeff-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\coeff-2.f32",
+      "sha256": "2d7bbf2cc239df15a87390158cb382f06e186509e7364210bf136036c5bb7388"
+    },
+    {
+      "key": "features-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\features-2.f32",
+      "sha256": "804f5d82e80257043da688a516850a8ebdcdf285a7c4cb23547d7a3dffd39e3c"
+    },
+    {
+      "key": "base",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\base.f32",
+      "sha256": "20633a8ed68e8ca033370f19f2ad86528fb03396bbf7cdf2eda819d56fb82be6"
+    },
+    {
+      "key": "lower",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\lower.f32",
+      "sha256": "f663e3933b4cf813662309ada0008644ac9b887d32332029bbee4b5eefc0ce07"
+    },
+    {
+      "key": "upper",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\upper.f32",
+      "sha256": "d6fe586ded75c63a46e3420bd7d937381e8b95645667213f7d69fe8039cfd1bd"
+    },
+    {
+      "key": "coeff-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\coeff-0.f32",
+      "sha256": "080ae0bb801da7ba2c83a08188de9d5cea4e1f4ca10e0286c17e0d2385d33632"
+    },
+    {
+      "key": "features-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\features-0.f32",
+      "sha256": "a73b7dcde4bd3ad0b2e3b1f534f50cfa9ba8d9a80c1a87724edb086d834e55a8"
+    },
+    {
+      "key": "coeff-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\coeff-1.f32",
+      "sha256": "8645383c9e89e86d60f367be599af4d7a4f5ddf6fa3e907433ae2b134d85c1e1"
+    },
+    {
+      "key": "features-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\features-1.f32",
+      "sha256": "d826a7b76c7c9cf24313c7cf462cd72e20e09de2150275841b2160c676c7aeab"
+    },
+    {
+      "key": "coeff-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\coeff-2.f32",
+      "sha256": "cbb0c67605fc8e97693273d3c3a6f9854ed868328f2a55ea24c2cc7f38ebb96c"
+    },
+    {
+      "key": "features-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\features-2.f32",
+      "sha256": "66e53865d771bd3f3288c8c032b846687aa385d8e3147cebee5de124c73d3af4"
+    },
+    {
+      "key": "base",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\base.f32",
+      "sha256": "39a0550b8ea94ed77ece5f3d235e63aa227914bf81699a0e2237530f7afd79b7"
+    },
+    {
+      "key": "lower",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\lower.f32",
+      "sha256": "753978cdaa514d1297e9e3f2fdf96cd2b074361538c22b573c4577f71fa2cdab"
+    },
+    {
+      "key": "upper",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\upper.f32",
+      "sha256": "54acaa9389dc6a254fa0a134b50d4fb3b26ddf8888b4ef0de54a4150e0229261"
+    },
+    {
+      "key": "coeff-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\coeff-0.f32",
+      "sha256": "3ac434127e9fa6ecab19f5d5d0c68c2fad47202ab5bd4a2a193b8f3e86934db2"
+    },
+    {
+      "key": "features-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\features-0.f32",
+      "sha256": "69df25b10d79cd197704d3f3434cebef53d4665f28ba1c7750542b9cf17d9851"
+    },
+    {
+      "key": "coeff-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\coeff-1.f32",
+      "sha256": "bf141ea2c51e7a8985561d1a019adfa2993809f279bf9652186b2725e620c813"
+    },
+    {
+      "key": "features-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\features-1.f32",
+      "sha256": "a8ee1311c442c05894d5d9739b9783558b6be7bbb8ba51b3d9447c2a7ef3751d"
+    },
+    {
+      "key": "coeff-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\coeff-2.f32",
+      "sha256": "9857799fdff59ccdfc6a8d62f25b1837a94294141ff5e7d2fbfee652e7f266a9"
+    },
+    {
+      "key": "features-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\features-2.f32",
+      "sha256": "174e3f823eefd8794715884df6868254fd60c43a81af85bb2ccc288aa376980b"
+    },
+    {
+      "key": "base",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\base.f32",
+      "sha256": "dc480826da1176908ca806b31d01b2ed5f81512747f9cc114ec0ffe7f2de6e79"
+    },
+    {
+      "key": "lower",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\lower.f32",
+      "sha256": "659fbb6320c115c57f7b79f0c3e8f351edbb042f7645cd8987fd9b1f85e80b79"
+    },
+    {
+      "key": "upper",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\upper.f32",
+      "sha256": "2c64f07267b4724fdad3130b5f7de7498cd61b043157075991544bd5049ec87d"
+    },
+    {
+      "key": "coeff-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\coeff-0.f32",
+      "sha256": "8095da6220a42f94318f1faa3cf71d1973b1dde4a1b538ca38bd19d12d1b84f2"
+    },
+    {
+      "key": "features-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\features-0.f32",
+      "sha256": "d2215d3ca4f349a359905774b2ec65ef6dae3c4ba270894252006dc3065b0435"
+    },
+    {
+      "key": "coeff-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\coeff-1.f32",
+      "sha256": "8ef109dbb9c78f1d295d03fe9b99bbcdab1566079b70710d442b42776109135f"
+    },
+    {
+      "key": "features-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\features-1.f32",
+      "sha256": "74c81b3f5de8137e95f19053bfbda0176e3ec8b6b864519867e530860dd17f46"
+    },
+    {
+      "key": "coeff-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\coeff-2.f32",
+      "sha256": "75020d6f8154af3c5fbe065d014b64c4ae1fa453b01a0afb9cbc1328d0d4452b"
+    },
+    {
+      "key": "features-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\features-2.f32",
+      "sha256": "ba191781ee1fc18488adb77131c165a147428d3eb8b04df5ed751aced14971a1"
+    },
+    {
+      "key": "base",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\base.f32",
+      "sha256": "d30435d9abfb7003b3293034ea23c8e9ef4d76f3dc3d72b2a5b8756ae6bc3356"
+    },
+    {
+      "key": "lower",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\lower.f32",
+      "sha256": "1939ec674529ca7117333973ce9ed94f741c00dcdbf4a57182388cd71ab9575f"
+    },
+    {
+      "key": "upper",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\upper.f32",
+      "sha256": "62c33466d6fe3a5c521e8f3d966af39be1caa29debec6879a8da803e5a8b44a8"
+    },
+    {
+      "key": "coeff-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\coeff-0.f32",
+      "sha256": "e8e985d5997cffcb6a11c7ec58f2de1733c44d22e666c5d3d94a40fe64814e01"
+    },
+    {
+      "key": "features-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\features-0.f32",
+      "sha256": "2ee17636d7150192b484e4ac3444f8a71440bd0ae73f9875a7ac498f02f5e84e"
+    },
+    {
+      "key": "coeff-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\coeff-1.f32",
+      "sha256": "ee00058359a2bed0e5d506bdf35f4959eb5c234a117205cb28d0505a1cfc41ea"
+    },
+    {
+      "key": "features-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\features-1.f32",
+      "sha256": "2b68a4bb328f240bea4d30e263cb4b32b12e9c39e769d5fcd95e6ed0ced3e50f"
+    },
+    {
+      "key": "coeff-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\coeff-2.f32",
+      "sha256": "8d9ad80a3aa07ed018665f45e9f908028218ee421a60f5ea1ff5c32a4d53ef31"
+    },
+    {
+      "key": "features-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\features-2.f32",
+      "sha256": "f6a5138a7ead78b3cfce65931be510db7aace8d226d0a00ad7c15cc9008ece24"
+    },
+    {
+      "key": "base",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\base.f32",
+      "sha256": "a0078ffbf866eff173fbb15df1a660308de5bf557e3462bcacefee0293629569"
+    },
+    {
+      "key": "lower",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\lower.f32",
+      "sha256": "9c8b676c6c627dc1c9001cb0c6a28f3f6dd0d861981ef4be40ab146462f5fdf7"
+    },
+    {
+      "key": "upper",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\upper.f32",
+      "sha256": "0e5d60a95c5ce41b96b7e8c46d83d6a99c8e10ae4a8b6b579c5742039af31238"
+    },
+    {
+      "key": "coeff-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\coeff-0.f32",
+      "sha256": "653377f38ea7cbd2043f7143124a8fc53289589b6421fa90ecad20387b5466d5"
+    },
+    {
+      "key": "features-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\features-0.f32",
+      "sha256": "30d8db84edb61d8c9213e0da66a9c10a362c3650a4ae7c8a222c2d48f7086269"
+    },
+    {
+      "key": "coeff-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\coeff-1.f32",
+      "sha256": "984d103642aefad4bac055067a4fc78a6f43bab64eee3e8b5ecd9f5b90a46d57"
+    },
+    {
+      "key": "features-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\features-1.f32",
+      "sha256": "3184f6154771d5c734e87124e5a98cab217366a6d9371256916137eb1ca8a111"
+    },
+    {
+      "key": "coeff-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\coeff-2.f32",
+      "sha256": "732c616b73b4a3dc63c3eb53cf70cac1e2b18a608fa174aa3cde476207f12a76"
+    },
+    {
+      "key": "features-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\features-2.f32",
+      "sha256": "10512b516f365e393700736e0dd6aec907c08629163056977ad9c3fb40fed0df"
+    },
+    {
+      "key": "base",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\base.f32",
+      "sha256": "739b72090eadf16b74bf531095869e1291b8979edbf050ee28c49e79413af855"
+    },
+    {
+      "key": "lower",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\lower.f32",
+      "sha256": "29f70e4e04d3eae8b579cb166d855f42049265cd8a3fdd85f4aeeac0f90d9cd8"
+    },
+    {
+      "key": "upper",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\upper.f32",
+      "sha256": "112771c156a63ad73a58996b5ed16eda613e4f39553badd9483ad8d239fb72ed"
+    },
+    {
+      "key": "coeff-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\coeff-0.f32",
+      "sha256": "a4823116c2501d5ce021c221967af62d06f727949bb4ae26398e7e0a934d9ab3"
+    },
+    {
+      "key": "features-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\features-0.f32",
+      "sha256": "010757f4efe71e023dbac04040e3f8834fadb0ace70942875d3109c8e106c113"
+    },
+    {
+      "key": "coeff-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\coeff-1.f32",
+      "sha256": "a500bb38f4c8cc679e0102d747d0943040c557df95627f82aa0fc10c8fa30f5a"
+    },
+    {
+      "key": "features-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\features-1.f32",
+      "sha256": "99b4ae234b92335f681ead13561cb19b64f7ab35372e6b07547124a4a241a54e"
+    },
+    {
+      "key": "coeff-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\coeff-2.f32",
+      "sha256": "9cfb2be5a22cfba3edaf64c81670df9abd7a8e74b640f3d1485ea472cd52381e"
+    },
+    {
+      "key": "features-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\features-2.f32",
+      "sha256": "5d5727a3438bf6332ddce6796bc4ca2aba2078de4576012447d2429cd997ccb0"
+    },
+    {
+      "key": "base",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\base.f32",
+      "sha256": "61e0459bac7d071247f27cba4191cb7511a26a2b2d46893d115cb55ca67fcb3a"
+    },
+    {
+      "key": "lower",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\lower.f32",
+      "sha256": "44c0e049f1201a48addcba15b03a0a1ce31e8121219ef94cfdeec1cdc4d33fae"
+    },
+    {
+      "key": "upper",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\upper.f32",
+      "sha256": "20a9b753420617e5f0fb02291c3ca48e8853c827cf04c966d1b406f367853c0a"
+    },
+    {
+      "key": "coeff-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\coeff-0.f32",
+      "sha256": "89e3cbc2d5c7d955abf7c988e6ae7198889b6c556962f12a9df6ab26a3deaf5b"
+    },
+    {
+      "key": "features-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\features-0.f32",
+      "sha256": "a1cdea7452b946a4ce0a79fe4242707a2c30d3f28dfdc6c6388650bbc5663e62"
+    },
+    {
+      "key": "coeff-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\coeff-1.f32",
+      "sha256": "088982cc76cd8e40e78e437890be1155fd99dc103726d81a41629b6e37305278"
+    },
+    {
+      "key": "features-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\features-1.f32",
+      "sha256": "6b5b6fbb4cf62260375ac67e0d3afeb6b1dfffec3b7e039b440eaec01674db92"
+    },
+    {
+      "key": "coeff-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\coeff-2.f32",
+      "sha256": "52ae9faeaf9836ab22426794f9aa171048328744dbc244b6f5712dead1452e9e"
+    },
+    {
+      "key": "features-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\features-2.f32",
+      "sha256": "75ca4df0f69ba66c328997604d00bcffa09d69176fe2d594ee610318d3533088"
+    },
+    {
+      "key": "base",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\base.f32",
+      "sha256": "a10bfbf1b2c1142113c0420ca3f41e82f37562c3582aace08e403a3210b27962"
+    },
+    {
+      "key": "lower",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\lower.f32",
+      "sha256": "552113f5a09e7d6ae172d00b1cf5c3026b178280d0dfe2e023a6ca4b92818d81"
+    },
+    {
+      "key": "upper",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\upper.f32",
+      "sha256": "e39afcc4717654f6bd88ecd33a3f0201ae2730071576d4a401b8d192f2593a55"
+    },
+    {
+      "key": "coeff-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\coeff-0.f32",
+      "sha256": "0b2ce5e3ffabfb7beef30b773c2823e6235ee643c5d7d38267138492962a31ee"
+    },
+    {
+      "key": "features-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\features-0.f32",
+      "sha256": "89983929e8063f68aef588225badd2ba036cae4f999879d146a9cf5f1e8edfe5"
+    },
+    {
+      "key": "coeff-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\coeff-1.f32",
+      "sha256": "fd05cfcffc59c131c15ab83753ede22647c7e6d7e5d8bbfa0f4de80cb8f496c3"
+    },
+    {
+      "key": "features-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\features-1.f32",
+      "sha256": "127aead22960f88052ff992da9c886ff19bf64a8227a24370f6014585af5c2d6"
+    },
+    {
+      "key": "coeff-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\coeff-2.f32",
+      "sha256": "48249d2ca62908853efcf08a8465f3f0cf5acfb553534c4c54c0bca9fce7ac78"
+    },
+    {
+      "key": "features-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\features-2.f32",
+      "sha256": "82fdde735a41a298f272d36e39aa90d624197dbfe25ff3a807933f3b159e8c5d"
+    },
+    {
+      "key": "coeff-3",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\coeff-3.f32",
+      "sha256": "d31a8c4e679c8c26571f63f2d2728bcf62fe02dd1a2a9095322c939d572b454b"
+    },
+    {
+      "key": "features-3",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\features-3.f32",
+      "sha256": "e7a7bbd2074c9255cdb6da9b3ba4a6ad0b885820428a7a2b90493111a0d2514b"
+    },
+    {
+      "key": "coeff-4",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\coeff-4.f32",
+      "sha256": "262ae49c620f836ddab844622d4703e312fa8961bf57eac3dfea0853fe53c070"
+    },
+    {
+      "key": "features-4",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\features-4.f32",
+      "sha256": "7d35ee9a5fec48d5255652b9f14d2e487c809f612296cc59ead4aa549aa40925"
+    },
+    {
+      "key": "coeff-5",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\coeff-5.f32",
+      "sha256": "692db775633b97df6a0590124345a699d38514f95a58c3d1036973383b3346aa"
+    },
+    {
+      "key": "features-5",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\features-5.f32",
+      "sha256": "7f02334b45695148f9a38c6d606331fb37bad092ef54c70df35e78669756ab80"
+    },
+    {
+      "key": "coeff-6",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\coeff-6.f32",
+      "sha256": "c4974c28c8f2d5489ed6839ed6278005989da620a72ebcccef997ee2b5457046"
+    },
+    {
+      "key": "features-6",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\features-6.f32",
+      "sha256": "2ca7a2a72063c8d940659eeeb2b1efa9d7bdebdef32235f8faa68576a824ed95"
+    },
+    {
+      "key": "base",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\base.f32",
+      "sha256": "9dc533a5f0db89a075a5ed53765b7059fa2d4621090eb5d2d99499cee4c49596"
+    },
+    {
+      "key": "lower",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\lower.f32",
+      "sha256": "e97e73cb0e46a10d1e8fc9ca5542262e08a87bb2fe40f8f70fdb2d6d066fb7c2"
+    },
+    {
+      "key": "upper",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\upper.f32",
+      "sha256": "614122142ac565712ad0cf711acb6d762171dacc02a4790db33adb5ce995c2e3"
+    },
+    {
+      "key": "coeff-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\coeff-0.f32",
+      "sha256": "eedfd21e4a1c499f4c0d2e18a0fe36e2d6c916c5617b4b181c21f13b2c284fb5"
+    },
+    {
+      "key": "features-0",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\features-0.f32",
+      "sha256": "fc10644d60947c52ca315eeec4d81f030d265512c31ca7018eb67ef033ea0680"
+    },
+    {
+      "key": "coeff-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\coeff-1.f32",
+      "sha256": "ea2de67fdc667a1252ae4f5315ad09ddb69a171cc4202533657db229755642a9"
+    },
+    {
+      "key": "features-1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\features-1.f32",
+      "sha256": "3a5d13d99a73dd52b16d00f59f503cce52c78e8e017ec0cae84a878dfc1508cf"
+    },
+    {
+      "key": "coeff-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\coeff-2.f32",
+      "sha256": "ebc8e9cc7801fa3f55a78c58e997cce7145e1e2a3bdaabe10be27ec2cc0f1c24"
+    },
+    {
+      "key": "features-2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\features-2.f32",
+      "sha256": "28492d15a36a0489dbe719315830d0896e685db04338173b5b701fe3dc4ed69b"
+    },
+    {
+      "key": "coeff-3",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\coeff-3.f32",
+      "sha256": "5718f47dc7bff9ca76cdc3466ef0aafc0ed64667631069c9bbfd81022af829f9"
+    },
+    {
+      "key": "features-3",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\features-3.f32",
+      "sha256": "d19403537f2357493cced0cde9292dfedb5c6c80ad19fec2933f099f657ee51b"
+    },
+    {
+      "key": "coeff-4",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\coeff-4.f32",
+      "sha256": "7dc394589ca5fd111f34a229e0f3be3a7efed91304d8ed6ec30cebd9fcd4a9fb"
+    },
+    {
+      "key": "features-4",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\features-4.f32",
+      "sha256": "0ff5ebabc8c95adca7fb6ae47ba4ccbcec5492d9b3b237493598b0568958bc0c"
+    },
+    {
+      "key": "coeff-5",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\coeff-5.f32",
+      "sha256": "cf9e1a4e94c33644133c696c68823c2568bd1a74dfaead25225d6542b224948a"
+    },
+    {
+      "key": "features-5",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\features-5.f32",
+      "sha256": "0fd65e8b3cabb5f343b824b42da07db420075c5cbf5d61c4e3e44815767715fe"
+    },
+    {
+      "key": "coeff-6",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\coeff-6.f32",
+      "sha256": "3405ea3cb3aaa85227917afa83a6ac63befda80836fc77fa66af7a8d3ee43d10"
+    },
+    {
+      "key": "features-6",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\features-6.f32",
+      "sha256": "24078e65911001dcdccc50b2ce5c59202da1a15e297be9d54f0a49c263c038a6"
+    }
+  ],
+  "checkpoint_selection": false,
+  "validation_result": false
+}

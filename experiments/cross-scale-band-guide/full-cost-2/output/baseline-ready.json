@@ -1,0 +1,78 @@
+{
+  "actual_tone": {
+    "ceiling_bits": [
+      1071298858,
+      1065931176,
+      1077498362
+    ],
+    "exposure_gain_bits": 1065353216,
+    "matrix_bits": [
+      [
+        1070688889,
+        3202724187,
+        3191861519
+      ],
+      [
+        3186350977,
+        1069455000,
+        3200213889
+      ],
+      [
+        3147518954,
+        3198529296,
+        1068107544
+      ]
+    ],
+    "sensor_top_bits": 1064271804,
+    "srgb": true,
+    "tone_bits": [
+      1035546164,
+      1063920548,
+      1057803469
+    ],
+    "wants_tone": true
+  },
+  "automatic_historical_rgb_match": false,
+  "baseline_planes_sha256": [
+    "b13618dde4691b814a94d4ca9b55671459a4477bc306a564082e7b6b70ca97f9",
+    "d0dc820e75c708d70466996fdca5190ad541d66eb47e36a59eea3999fd946e25",
+    "dd8b0c6d9bd80bf8c30705cff8fdfe4723123cc741ab26e7ae6245973e6aaeed",
+    "ffc4fe95ea45ed171724ec0d1da5236d12a819f976286c28a5705067ad71df66"
+  ],
+  "baseline_rgb16_le_sha256": "821a954488c1b949e34ca38729b31f78248a2dacfa15ae71370eb8e7fd00b9dd",
+  "baseline_sha256": "50da15bf7d86839ac04f642623bdd5e9033a9342026767dfdd0f04dd27d05434",
+  "historical_tone": {
+    "ceiling_bits": [
+      1071298858,
+      1065931176,
+      1077498362
+    ],
+    "exposure_gain_bits": 1065353216,
+    "matrix_bits": [
+      [
+        1070688889,
+        3202724187,
+        3191861519
+      ],
+      [
+        3186350977,
+        1069455000,
+        3200213889
+      ],
+      [
+        3147518954,
+        3198529296,
+        1068107544
+      ]
+    ],
+    "sensor_top_bits": 1064271804,
+    "srgb": true,
+    "tone_bits": [
+      1035546143,
+      1063920542,
+      1057803469
+    ],
+    "wants_tone": true
+  },
+  "historical_tone_rgb_icc_exact": true
+}

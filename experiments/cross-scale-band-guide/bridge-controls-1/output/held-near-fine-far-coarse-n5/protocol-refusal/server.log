@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\cross-scale-band-guide\score-server.py", line 178, in <module>
+    serve(args)
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\cross-scale-band-guide\score-server.py", line 105, in serve
+    need(statistics is None and seen < n and command['index'] == seen
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\cross-scale-band-guide\score-server.py", line 22, in need
+    raise RuntimeError(message)
+RuntimeError: statistics order/length differs

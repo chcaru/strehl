@@ -1,0 +1,697 @@
+{
+  "schema": 1,
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\photo-compare.py",
+    "bytes": 12923,
+    "sha256": "dc20b6c7bc62cea052415fcdae946e751faed0f11cb755633218a33602fd1ce2"
+  },
+  "full_output_helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\full-output-views.py",
+    "bytes": 1503,
+    "sha256": "8b51a9eacfa5aeae00e51501882d73dd6496c24cc05898494d5c22902078d955"
+  },
+  "completion": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\completion.json",
+    "bytes": 347,
+    "sha256": "a2a44c34b86770a618e5c157f032aa30f76bd74379dbc69c70a2bde8ce1a2c58"
+  },
+  "config": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\config.json",
+    "bytes": 22245,
+    "sha256": "480a9d9b43b129e99bf235bacfa8abdde816b7ecf488561cb59ec4522ff5621b"
+  },
+  "merge_receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\output\\receipt.json",
+    "bytes": 276487,
+    "sha256": "9a6fb091fdf55310d6b4ec5ac0b3a8b5222ef1d2c3b731f0175bd1312cc47a0d"
+  },
+  "inputs": {
+    "baseline": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\output\\baseline.tiff",
+      "bytes": 191495352,
+      "sha256": "50da15bf7d86839ac04f642623bdd5e9033a9342026767dfdd0f04dd27d05434"
+    },
+    "candidate": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\output\\candidate.tiff",
+      "bytes": 191495352,
+      "sha256": "331eb89a86e8bcf77c0f81f64cbacec07e2ef7871ae15365541292bfbc7aa879"
+    },
+    "helicon-b": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\vitamin-c-b-2\\whole-stack.tiff",
+      "bytes": 197827122,
+      "sha256": "f08335d17083789fa2bd60ee17ecbaba921bbc7aa20c9fdfdfa0cf0e1ca1d2d8"
+    }
+  },
+  "frozen_regions": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-review-1\\regions.json",
+    "bytes": 1068,
+    "sha256": "ff55ed297385ff8fef5d2badce07729537e2e867701d96d328be1eaf7bcb0f4f"
+  },
+  "helicon_registration": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\coordinate-receipt.json",
+    "bytes": 30865,
+    "sha256": "9323b01478a6b70905dca18aa6802cd55f31d270a66fa1015b198308d77deaab"
+  },
+  "registration_baseline": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\full-2\\photo-comparison-1\\baseline.png",
+    "bytes": 37540366,
+    "sha256": "68b2f4533e14eefb6e8b2473cc4312fe0d330cd70c83569148270fba12491326"
+  },
+  "registration_baseline_historical_tone_rgb8_exact": true,
+  "fresh_automatic_baseline_historical_rgb16_exact": false,
+  "historical_tone_pixels_sha256": "e870e3ec57f9d2819fee58d049f5de839c1e05584929afccbefc2b00dc9253b9",
+  "baseline_tone": {
+    "ceiling_bits": [
+      1071298858,
+      1065931176,
+      1077498362
+    ],
+    "exposure_gain_bits": 1065353216,
+    "matrix_bits": [
+      [
+        1070688889,
+        3202724187,
+        3191861519
+      ],
+      [
+        3186350977,
+        1069455000,
+        3200213889
+      ],
+      [
+        3147518954,
+        3198529296,
+        1068107544
+      ]
+    ],
+    "sensor_top_bits": 1064271804,
+    "srgb": true,
+    "tone_bits": [
+      1035546164,
+      1063920548,
+      1057803469
+    ],
+    "wants_tone": true
+  },
+  "source_bindings": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\completion.json",
+      "bytes": 347,
+      "sha256": "a2a44c34b86770a618e5c157f032aa30f76bd74379dbc69c70a2bde8ce1a2c58"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\config.json",
+      "bytes": 22245,
+      "sha256": "480a9d9b43b129e99bf235bacfa8abdde816b7ecf488561cb59ec4522ff5621b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\output\\receipt.json",
+      "bytes": 276487,
+      "sha256": "9a6fb091fdf55310d6b4ec5ac0b3a8b5222ef1d2c3b731f0175bd1312cc47a0d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\bindings.json",
+      "bytes": 28038,
+      "sha256": "179a5eaffdb1e1f08dc1c99ada9386994945b2b33845e1f7e9d83ca0d83d488a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\input-metadata.json",
+      "bytes": 12325,
+      "sha256": "7357319ae58d1a724ff0fba5e5d83a7d339ccca0f64900641842966622b7554a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\process.json",
+      "bytes": 2722,
+      "sha256": "8da94b5c7eb3788899f2c3e5a3f479ecc3dd56e0e43dc40682c36cca0a9ccb98"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\invocation.json",
+      "bytes": 1209,
+      "sha256": "98edfc3f336b8620803a9a4e0d99a33a90f558be1fb3e0e04e5b360136698201"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\output\\baseline-ready.json",
+      "bytes": 1708,
+      "sha256": "ae30f0d863d9b2e1527a0876482da55c1f67f3be3e7644a009e2451de08eb7db"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\output\\server-receipt.json",
+      "bytes": 6699,
+      "sha256": "ed8813fc54a681f379e8bbe89b79a3cbfb9826f5b33e3870b537c39d5e2584ac"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\photo-compare.py",
+      "bytes": 12923,
+      "sha256": "dc20b6c7bc62cea052415fcdae946e751faed0f11cb755633218a33602fd1ce2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\full-output-views.py",
+      "bytes": 1503,
+      "sha256": "8b51a9eacfa5aeae00e51501882d73dd6496c24cc05898494d5c22902078d955"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-review-1\\regions.json",
+      "bytes": 1068,
+      "sha256": "ff55ed297385ff8fef5d2badce07729537e2e867701d96d328be1eaf7bcb0f4f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\coordinate-receipt.json",
+      "bytes": 30865,
+      "sha256": "9323b01478a6b70905dca18aa6802cd55f31d270a66fa1015b198308d77deaab"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\full-2\\photo-comparison-1\\baseline.png",
+      "bytes": 37540366,
+      "sha256": "68b2f4533e14eefb6e8b2473cc4312fe0d330cd70c83569148270fba12491326"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\output\\baseline-historical-tone.tiff",
+      "bytes": 191495352,
+      "sha256": "de1e5dccc0a0c92a4d1f3c93cee6109fb0ea123dbae990a1759b92203d4a70ef"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-cost-1\\output\\baseline-historical-tone.tiff",
+      "bytes": 191495352,
+      "sha256": "de1e5dccc0a0c92a4d1f3c93cee6109fb0ea123dbae990a1759b92203d4a70ef"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\output\\baseline.tiff",
+      "bytes": 191495352,
+      "sha256": "50da15bf7d86839ac04f642623bdd5e9033a9342026767dfdd0f04dd27d05434"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\output\\candidate.tiff",
+      "bytes": 191495352,
+      "sha256": "331eb89a86e8bcf77c0f81f64cbacec07e2ef7871ae15365541292bfbc7aa879"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\vitamin-c-b-2\\whole-stack.tiff",
+      "bytes": 197827122,
+      "sha256": "f08335d17083789fa2bd60ee17ecbaba921bbc7aa20c9fdfdfa0cf0e1ca1d2d8"
+    }
+  ],
+  "fresh_baseline_rgb8_equality_required": false,
+  "original_crop_quads": [
+    28,
+    19,
+    3460,
+    2306
+  ],
+  "native_shape": [
+    4612,
+    6920,
+    3
+  ],
+  "matrix_baseline_to_helicon_b": [
+    [
+      1.0107248408247895,
+      0.00010157169086644213,
+      18.587361174977467
+    ],
+    [
+      -0.00010157169086644213,
+      1.0107248408247895,
+      13.668897785409621
+    ]
+  ],
+  "helicon_native_scale": 1.0107248459284577,
+  "regions": [
+    {
+      "name": "facet-edges",
+      "baseline_xywh": [
+        2500,
+        2700,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "candidate": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "helicon-b": [
+          2548,
+          2744,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "pale-background",
+      "baseline_xywh": [
+        400,
+        1150,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "candidate": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "helicon-b": [
+          425,
+          1178,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "fine-crystals",
+      "baseline_xywh": [
+        4200,
+        1700,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "candidate": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "helicon-b": [
+          4266,
+          1734,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "bright-facet",
+      "baseline_xywh": [
+        1150,
+        3850,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "candidate": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "helicon-b": [
+          1183,
+          3907,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "dark-inclusion",
+      "baseline_xywh": [
+        3050,
+        1850,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "candidate": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "helicon-b": [
+          3104,
+          1885,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "facet-core-boundary",
+      "baseline_xywh": [
+        2533,
+        2846,
+        160,
+        160
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "candidate": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "helicon-b": [
+          2580,
+          2891,
+          160,
+          160
+        ]
+      }
+    },
+    {
+      "name": "dark-core-boundary",
+      "baseline_xywh": [
+        3011,
+        2097,
+        160,
+        160
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "candidate": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "helicon-b": [
+          3063,
+          2134,
+          160,
+          160
+        ]
+      }
+    },
+    {
+      "name": "competing-structure",
+      "baseline_xywh": [
+        3180,
+        2010,
+        120,
+        120
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "candidate": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "helicon-b": [
+          3234,
+          2046,
+          120,
+          120
+        ]
+      }
+    }
+  ],
+  "icc": {
+    "bytes": 2716,
+    "sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "all_exact": true
+  },
+  "commands": [
+    {
+      "argv": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-I",
+        "-B",
+        "-X",
+        "faulthandler",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\full-output-views.py",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\output\\baseline.tiff",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\baseline.png"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-I",
+        "-B",
+        "-X",
+        "faulthandler",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\full-output-views.py",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-1\\output\\candidate.tiff",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\candidate.png"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "outputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\baseline.png",
+      "bytes": 37540433,
+      "sha256": "1606ad4ac47eb84642b4a4a8e55a56a83b1d1cc099a48661545e607a8dcc62f6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\baseline.json",
+      "bytes": 587,
+      "sha256": "12621c839a1c56b29f266b83a74e27ab010849cc63f68c26e486f26ac46b1619"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\baseline-overview.jpg",
+      "bytes": 569911,
+      "sha256": "2c8ba6bb61265f05cf369c2ba3b95bab135c7e5752c2c115ef1a68453d020ae0"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\baseline-full-conversion.log",
+      "bytes": 543,
+      "sha256": "0d99f93d5c0c5d79d95bb96bf1063e356f9eb4714233c9dab0b51303cb107726"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\candidate.png",
+      "bytes": 30289102,
+      "sha256": "35c26976f2088d2b57a48cd1c96c05d86c2d8d26355f7a4518ae34574edc36ab"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\candidate.json",
+      "bytes": 589,
+      "sha256": "fd19c642d79a126b38e07d5601cbb22739435eea650bf92a87bc1266fd3c5b3b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\candidate-overview.jpg",
+      "bytes": 549623,
+      "sha256": "efe965f5839b71cbb76b091d491abcf9c802a786b51d2201d077788ed076a028"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\candidate-full-conversion.log",
+      "bytes": 545,
+      "sha256": "41a9f010c6375780daae17530f6dbbbb00a96191ab898044d7266d6d42614a01"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\facet-edges-baseline.png",
+      "bytes": 192708,
+      "sha256": "1999fc6513c91e958e9a9edc603644c7b4b7092c7106071d89bf4fa6011ef636"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\facet-edges-candidate.png",
+      "bytes": 163396,
+      "sha256": "a13fde352f9cd1f20108e500476c73dfbcbc2e8f1cca8cdf2bc1f2f8675f4324"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\facet-edges-helicon-b.png",
+      "bytes": 193627,
+      "sha256": "dbbfeb121b91052da1c660ed132204ef7dd4a7f22edff6663f66dc2ae3ee3d17"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\facet-edges-board.png",
+      "bytes": 558755,
+      "sha256": "018832c11dda312f705343182502290eb3199986647512e4f1d061a69ae734e8"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\pale-background-baseline.png",
+      "bytes": 138466,
+      "sha256": "e03156134f0752a16773561798280c427d93b6171b9cdc9f6a5170bbb70c7961"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\pale-background-candidate.png",
+      "bytes": 72598,
+      "sha256": "77d2046e0915e72587fcb36364d5e4c111d912f428d2c3ed0b1a30792c1c5ce2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\pale-background-helicon-b.png",
+      "bytes": 141801,
+      "sha256": "cc904dd5284a11023060c842ca4a76864fb373ec35f8989295b195bbda55f336"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\pale-background-board.png",
+      "bytes": 377540,
+      "sha256": "3625f73bf3fa3fa73b7d6ae95a648bc40a65451b0798e9fba4e03b9f05e600be"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\fine-crystals-baseline.png",
+      "bytes": 200538,
+      "sha256": "c2f7597675e64fb3a1edb80bc0d59c95a0714d9c69c5ec8445cb23217d10463c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\fine-crystals-candidate.png",
+      "bytes": 180178,
+      "sha256": "a5fd560623a85102f71d4936d7f2511598d6394eccbb1bd6ab3e0e3a1d866b5d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\fine-crystals-helicon-b.png",
+      "bytes": 201169,
+      "sha256": "ce9ce0d5b0b6c735109a029f65254269591e5b427837215289725754720c62b4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\fine-crystals-board.png",
+      "bytes": 590432,
+      "sha256": "f2c8d54c95bd0a92cad35ab86196c6295816a61f42f30add06d3a33961a4afff"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\bright-facet-baseline.png",
+      "bytes": 144694,
+      "sha256": "f112a7a95a0c17617ac533aafe21b11155cc3490e993cf2cb2c00b8972e11a47"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\bright-facet-candidate.png",
+      "bytes": 81280,
+      "sha256": "a1aeb3ffd3278b7b714906745cb214068cdffb2e92f2085aa4c0354855534ea4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\bright-facet-helicon-b.png",
+      "bytes": 146313,
+      "sha256": "edaad39178479b58bfed94721499a219d11299bbb3e7c5bfdc534ba0d7ebc871"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\bright-facet-board.png",
+      "bytes": 393904,
+      "sha256": "2759fa9e523b00b15bab3c5af4d5a312b4452762269f0735d287fef8fe573170"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\dark-inclusion-baseline.png",
+      "bytes": 187933,
+      "sha256": "d50d3cdc48ef8b1e833f2b13e0af0cb8357dc7278a7416251363b5489032cf2e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\dark-inclusion-candidate.png",
+      "bytes": 155705,
+      "sha256": "a139580db89c6b36f5250ee582a0a7dde14825bcdefebd59d66ef1a75143716a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\dark-inclusion-helicon-b.png",
+      "bytes": 186747,
+      "sha256": "9084a40c390b0586c8edfc3196b7785731e8ecc5146d81a5ef6486e588ab75b2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\dark-inclusion-board.png",
+      "bytes": 540780,
+      "sha256": "010c4276bb9d9c79f0fba2df94973ad9813d43b07ee7ba0d98bafade1bb5942e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\facet-core-boundary-baseline.png",
+      "bytes": 36801,
+      "sha256": "27592eecb6b995d318d4b0dfb0c1a6460d0fdd101a32bc2674f4ae250cc3de58"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\facet-core-boundary-candidate.png",
+      "bytes": 33699,
+      "sha256": "577da12b1afc02527e2e56d28ffdc7b530c2a47109fc952fdf0204107562320e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\facet-core-boundary-helicon-b.png",
+      "bytes": 36666,
+      "sha256": "6439ca75d571025306f084bf7041bc4cba5fc07585ac747790ea05a090af016c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\facet-core-boundary-board.png",
+      "bytes": 110813,
+      "sha256": "7721e131dcbb9424347e9355abaac1e1e8a5c204f80e04a8d1ce92e5b01cb4f8"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\dark-core-boundary-baseline.png",
+      "bytes": 41901,
+      "sha256": "6bad112d09168190a96f9fd30c92b7533038732c441f02497fed5eaf09af395f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\dark-core-boundary-candidate.png",
+      "bytes": 35398,
+      "sha256": "8d46ba5edb0546d47854ad95509ca32c1d9a8af3232542f01ad12c71a684a1e9"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\dark-core-boundary-helicon-b.png",
+      "bytes": 40067,
+      "sha256": "20b6a7401b7c98ca38ce56a2400f282c2fe36adc251d63991422255a9aabd08a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\dark-core-boundary-board.png",
+      "bytes": 120237,
+      "sha256": "e9ba0e8f1e7cfa328077519e1f86197c6ea1b787c6bad94d6006e978fde7e142"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\competing-structure-baseline.png",
+      "bytes": 20083,
+      "sha256": "616abc242df97c47fb9fe3a80852026534e785f809a7a35c86197c6940895066"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\competing-structure-candidate.png",
+      "bytes": 16530,
+      "sha256": "85f6ffa306f4aae12305f2e38449b2434eee741ae16eab402274c55aa1cca74e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\competing-structure-helicon-b.png",
+      "bytes": 20617,
+      "sha256": "81663fa1420368a6114c9ecb904a6013da6736ebb75bc416c760eed64cf00109"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\views-1\\competing-structure-board.png",
+      "bytes": 60546,
+      "sha256": "3daa7c09194623da9874e783fb0db5d4cf63d07d2e45bdb00db7126578462689"
+    }
+  ],
+  "display": "Full PNG and native crops: rounded RGB16 division by257, no tone/normalization. Three smaller centred views remain unresampled120/160px samples; no integer enlargement. OverviewJPEG is resized for orientation only. Helicon crops use mapped centres rounded to integer origins; native scale mismatch is retained.",
+  "scope": "Completed saved outputs only; no RAW, merge, registration fit, score or photographic admission. Fresh automatic tone may differ from the historical registration reference; geometry is linked by the separately exact historical-tone image. Candidate uses the fresh baseline tone. This complete70-subject observation does not establish488-source marigold or mineral quality."
+}

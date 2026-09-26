@@ -1,0 +1,4 @@
+{"checkpoint": 0, "developer_loss": 3.959895865707865e-05, "previous_objective": 3.7399787513179965e-05, "contrast_penalty": 2.1991713533631355e-06, "seconds": 8.64743610000005}
+{"checkpoint": 32, "developer_loss": 3.93054261293887e-05, "previous_objective": 3.798470775532329e-05, "contrast_penalty": 1.3207185536027935e-06, "seconds": 192.60387700000138}
+{"checkpoint": 64, "developer_loss": 3.828005138836679e-05, "previous_objective": 3.7270653933774156e-05, "contrast_penalty": 1.009397171928054e-06, "seconds": 377.10256970000046}
+{"checkpoint": 82, "developer_loss": 3.7954796682221735e-05, "previous_objective": 3.7046008790026084e-05, "contrast_penalty": 9.087879060138957e-07, "seconds": 481.27585009999893}

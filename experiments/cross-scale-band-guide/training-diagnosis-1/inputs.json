@@ -1,0 +1,22 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\independent-training-diagnosis.py",
+    "sha256": "182b0c40b0e7e292f8f21e979007b32543e25c9af37e751dce9e94d6451adf11",
+    "bytes": 8033
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\independent-transfer-check.py",
+    "sha256": "7ba41b1437bd70809efedbe020e17912551cf46108bd8c468814e40df08ba4fa",
+    "bytes": 19840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\independent-develop-check.py",
+    "sha256": "a7c83695e405e11b00f7e405add3882d8203a593f6786a14f120875cd7fa8973",
+    "bytes": 14417
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\run.py",
+    "sha256": "f4c0a8af1e89e5c55c3f9bd68e24b2f142f0d198b326d499c80baa2c146a7a6d",
+    "bytes": 13657
+  }
+]

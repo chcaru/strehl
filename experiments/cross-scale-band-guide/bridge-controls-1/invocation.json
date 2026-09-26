@@ -1,0 +1,29 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\build-4\\cli-tests.exe",
+    "merge_cmd::cross_scale_band_full::independent_controls::independent_bridge_controls",
+    "--exact",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_GATHER_LOG": "off",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_DEFECT": "off",
+    "STREHL_FINE_SUPPORT": "off",
+    "STREHL_CA_BEFORE_MHC": "off",
+    "CUDA_VISIBLE_DEVICES": "0",
+    "PYTHONHASHSEED": "137",
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+    "STREHL_CROSS_SCALE_BRIDGE_CONFIG": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-controls-1\\config.json"
+  },
+  "removed_environment": []
+}

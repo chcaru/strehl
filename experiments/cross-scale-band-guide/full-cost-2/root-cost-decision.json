@@ -1,0 +1,12 @@
+{
+  "full_observation_feasible": true,
+  "model_sha256": "02f5d9fbfa16efa18207b82884a83f232cd8ab2355995dba04c11a91dd1fa02a",
+  "measured_cost_process_seconds": 63.46800000000076,
+  "measured_one_source_phase_seconds": 1.9898679000000001,
+  "measured_peak_cuda_reserved_bytes": 4173332480,
+  "measured_peak_host_commit_bytes": 13046624256,
+  "derived_full_seconds_with_35s_writer_allowance": 235.76888510000077,
+  "allowance_seconds": 1800,
+  "scope": "One diagnostic complete70 photograph only, all fixed scientific failures retained. Linear one-source extrapolation is an operational estimate, not a benchmark or guaranteed bound. Same worker count and O(image) live state.",
+  "canonical_reference": "Exact corrected current CFA and pinned historical-tone reference; old four-code mismatch preserved."
+}

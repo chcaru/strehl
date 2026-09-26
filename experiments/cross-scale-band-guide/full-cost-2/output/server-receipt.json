@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "source_count": 70,
+  "sizes": [
+    [
+      3460,
+      2306
+    ],
+    [
+      1730,
+      1153
+    ],
+    [
+      865,
+      577
+    ],
+    [
+      433,
+      289
+    ],
+    [
+      217,
+      145
+    ],
+    [
+      109,
+      73
+    ],
+    [
+      55,
+      37
+    ],
+    [
+      28,
+      19
+    ]
+  ],
+  "scored_indices": [
+    35
+  ],
+  "model_sha256": "02f5d9fbfa16efa18207b82884a83f232cd8ab2355995dba04c11a91dd1fa02a",
+  "generic_consumer_sha256": "587e373f6d6afb81e120ca74c4c0094a86b1abd4a020724de38e1b4397ba8003",
+  "scorer_sha256": "03ddcab38c492557244638d93694b66473a749aaac6f7785fb129be98dfce96f",
+  "consumer_sha256": "b5455f488a92ed75c2a8ae8d9dcfb31b054237805b7ded22893459ef4ea9b987",
+  "source_chunk": 1,
+  "network_tile": 256,
+  "truth_read": false,
+  "statistics": "sequential-f32-sums-and-squares",
+  "scores": [
+    {
+      "index": 35,
+      "seconds": 0.5470000000059372
+    }
+  ],
+  "peak_cuda_allocated_bytes": 3883719680,
+  "peak_cuda_reserved_bytes": 4173332480,
+  "seconds": 58.2190000000046
+}

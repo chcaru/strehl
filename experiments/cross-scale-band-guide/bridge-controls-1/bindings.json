@@ -1,0 +1,884 @@
+{
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\Cargo.lock",
+      "sha256": "ea23b6dc6afc5fb9f1b12d08f065083ba77a75425b2a0b000d3f3a8466696efa",
+      "bytes": 64738
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\Cargo.toml",
+      "sha256": "c5dfa69451015a18f3e50b15a109cdf01c153108cf5200caf973755655ec662f",
+      "bytes": 1887
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\image_out.rs",
+      "sha256": "0bcec8b83039cf7863b6c8555891ce4c1ba55917aca8da9e8793ec6d7f6ecbbb",
+      "bytes": 133330
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\main.rs",
+      "sha256": "176b95f4669ac9c40e70a0498db4233c4695fda80f3f6b8e1d80a9763101627d",
+      "bytes": 88555
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\merge_cmd.rs",
+      "sha256": "ea6173899567c4af3b852d57d5138b82837375ab848da8a209df388b9b199958",
+      "bytes": 461625
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\Cargo.toml",
+      "sha256": "722149ae720fc5e376d3b7b1cfead95ee61c6ba3e1628ddb5c05d0f0621fa4c8",
+      "bytes": 955
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\boxfilter.rs",
+      "sha256": "5cf6dab36c8ddb7499acbec140df509b4e1e5fe0b0ace3a13f8d7cf68f979b8e",
+      "bytes": 7986
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\demosaic.rs",
+      "sha256": "91f736847c55f9f0658c92de4c3d0065f76fa03126f600e4f8468f61a3564784",
+      "bytes": 52295
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\pyramid.rs",
+      "sha256": "af800015a8e2063d75ac090e430e009638cd577246352dede3e1405ec700e740",
+      "bytes": 217827
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\all-cfa-wavelet\\implementation.rs",
+      "sha256": "02993079671a30aa80d41238d388f0f16211514bfe1edbca3dbd0fb2462e21df",
+      "bytes": 16676
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\all-cfa-wavelet\\independent-controls.rs",
+      "sha256": "c6805ccf00a913da5b7f4333d6c8f724ddf2173c4fe40bc80af121829a843bfe",
+      "bytes": 28171
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\boundary-cfa-wavelet\\full-stack.rs",
+      "sha256": "0ec23f1fdbe88116eb4c4991f246c96ac6a52cbe3e7663dc09cb302d8ef5a7d4",
+      "bytes": 24151
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\boundary-cfa-wavelet\\gatefloor-bridge.rs",
+      "sha256": "7bc766e727270ed2f2fec947117d1b629dc6c932a7098e545025d8184ca27b45",
+      "bytes": 260
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\boundary-cfa-wavelet\\implementation.rs",
+      "sha256": "fa72265ca9c472aa191b82a54e7ba83c0d75e3127276afa3b0b7a1e78c5cd11e",
+      "bytes": 13399
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\boundary-cfa-wavelet\\independent-controls.rs",
+      "sha256": "0bc076751d0caca7cbda2c15514094c71509fdb9762d57493903d9f94de8631f",
+      "bytes": 26208
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\boundary-cfa-wavelet\\independent-full-controls.rs",
+      "sha256": "99de27d70051d671e5a57d669c230fca1d4435b00de3e3e4ee63a85766caf8c4",
+      "bytes": 12511
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\boundary-cfa-wavelet\\probe.rs",
+      "sha256": "e7e878b861d4aa644ba83a0cae407046514ae199771e34f896b4a3e9b03b6669",
+      "bytes": 8821
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\boundary-cfa-wavelet\\transform.rs",
+      "sha256": "8becec3fb8c88992cb6494821c93941e5738c4f09e7e616fcf9d6430a6345510",
+      "bytes": 8009
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\complete-cfa-wavelet\\implementation.rs",
+      "sha256": "188e024fbe6fa162d67dc865a974230507259364250ff0b34e49256f53b9ab25",
+      "bytes": 20532
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\complete-cfa-wavelet\\independent-controls.rs",
+      "sha256": "731aeb039650c1fd91567e6fbf11642ca9cd0fdf5ce7ee0a25fe02937a716d5e",
+      "bytes": 32815
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\complex-wavelet-merge\\implementation.rs",
+      "sha256": "24d2befc4b8fdfa9a6acec0b15cb7d0cff3c1a270e2e97db2fc98b12474ffe31",
+      "bytes": 19596
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\complex-wavelet-merge\\independent-controls.rs",
+      "sha256": "b4624d1eda99d5e487774660783ca25e749ffa46e4ac442b230390fa8f90b1f2",
+      "bytes": 24172
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\core-lineage\\implementation.rs",
+      "sha256": "a263c2e263e38cfac2a161e14ef8a941529b6231f3809694691b2b6d7f903fc1",
+      "bytes": 6550
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\core-lineage\\independent-controls.rs",
+      "sha256": "f1e3230d24d04f1d67707fc229f40abc6629ceed99c4926bb76e843b911fd5cc",
+      "bytes": 13433
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\core-lineage\\independent-fixtures.rs",
+      "sha256": "6e93b7818ea596389ca16d0995346cff985550fef07a700bef3b6be802c1d08e",
+      "bytes": 11640
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\core-lineage\\lineage.rs",
+      "sha256": "2f7776d12a25652ac7bf8a56b1f14d835b05690c2d314d8c31a0af6c5a566943",
+      "bytes": 13611
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-consumer.rs",
+      "sha256": "c21f4f5e47a75500a7c95333373536f521e3c24d447294d3f591534f20ca68e4",
+      "bytes": 12607
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-adapter.rs",
+      "sha256": "ac8aa3aa3a76b2e3fa66d823c2878916afc66de564e2a1d3ddf561892fb1413f",
+      "bytes": 33036
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\independent-bridge-controls.rs",
+      "sha256": "dba4826ae0241802ecf12fdf84ea82771a62c7d21d2e097de37527ef4fb84a2a",
+      "bytes": 13505
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\independent-export.rs",
+      "sha256": "7c4f2a9cc05b055c3b4f4f9719993bf49f450946055940c72dc1de4ae05811b8",
+      "bytes": 4628
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\independent-fixtures.rs",
+      "sha256": "61777f322a1edd1ae5427296b0851dcd4bd5e63f4eec29502b58a53cf0c61b0c",
+      "bytes": 16507
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\attribution.rs",
+      "sha256": "82e2ca350cb97cf36048d6ea59e8379d2dbe1ba30f70f46900a343da6b84b976",
+      "bytes": 6781
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\core-attribution.rs",
+      "sha256": "34a2209debf47b4c97225b034d487fc6d6f319a9fc6790a877110b08468941ed",
+      "bytes": 5805
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\core-bridge.rs",
+      "sha256": "097ab4996d56a514e8eaeb8cddde29e6adab0db2536d45a34d64c4c39fe02234",
+      "bytes": 6255
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-stack.rs",
+      "sha256": "8516b12a2ac375591398f7cd6e031aa68136cee419120ed44ca5437a056335a8",
+      "bytes": 23732
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\implementation.rs",
+      "sha256": "7afc4778dbcd4811d72b02ebbf6ac3c0ebbf1fc016be37c701dcaa134e8f9bd0",
+      "bytes": 2758
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\independent-attribution-controls.rs",
+      "sha256": "4343a9328920fc8c885c7f6e9ed8f7f588f8aee834683724b67b3c15a6951afa",
+      "bytes": 10884
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\independent-controls.rs",
+      "sha256": "bd18ccb20c5f0a1a89dc239b3c0a822990baa5a188fecd4d76feb18f304a86bc",
+      "bytes": 16132
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\independent-corrected-target-controls.rs",
+      "sha256": "393d6e7465b7cc27a21eb3347a6f5cc65a75868a7b95456a0e2854b839c1c91d",
+      "bytes": 3827
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\independent-spatial-controls.rs",
+      "sha256": "6771b7ad8b284b44ff74d085bb33522eb32ceb0e060680ff24aec97d6721e073",
+      "bytes": 8419
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\independent-spatial-witness-controls.rs",
+      "sha256": "f43530d2d27c1b9d3e53567438295ed1a5fa902d223fb242bfebe3354a072a80",
+      "bytes": 10012
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-donor.rs",
+      "sha256": "ccb35717b934af22fb7ec95d6d44bf561502944632850473e9e0d7d54df78831",
+      "bytes": 4110
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-witness-core.rs",
+      "sha256": "551aea3dcd8376a3b0b63aa009d4bf6b89775e8fc42a668fcda35d3ffc9507b6",
+      "bytes": 6463
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-witness.rs",
+      "sha256": "7a81a1adfec12f40315e05d1987587d85909fa52e48a9b809a32ec7ae1b59b06",
+      "bytes": 9612
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\candidate-adapter.rs",
+      "sha256": "7da635ab31c823bc62a7f43c58c192e63aa86f95552ade31a3db0258bdd41648",
+      "bytes": 5656
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\candidate-independent-controls.rs",
+      "sha256": "bdd0a7e1bf90ab9ad89849c3e05bda76ed4c15f691c680ab29ed13b793cfd30e",
+      "bytes": 16842
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\core-candidate.rs",
+      "sha256": "998329a36397436a4d67d303a71615faf6d66f15ffa72f707aab9b91b95f2c10",
+      "bytes": 4121
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\independent-controls.rs",
+      "sha256": "f9c00c454222ba923d372405ea89b11121e5dc07be4f8cedf81ac74b8950f2e6",
+      "bytes": 5010
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\measure.rs",
+      "sha256": "d9cebcc5b581a44d6dd5378c052a04199fe9f514dbe5c9768b99c11a89668cd6",
+      "bytes": 15584
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\implementation.rs",
+      "sha256": "fb123d6f37bb68add6ef0ca290ce7e473b8fdaaf7783dd176f9c98ac3ae6203c",
+      "bytes": 14894
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\independent-controls.rs",
+      "sha256": "3d3acd2ad2751be810d3bd2d1d552b41f77ced52988d961115abecec4c84531b",
+      "bytes": 17408
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\full-stack.rs",
+      "sha256": "2511ae67eb151e196ce40830754faddb65de89ca682b603fbd3204bb9e22bc5d",
+      "bytes": 20441
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\implementation.rs",
+      "sha256": "0638ac4cbacf3b366b699f5c9b2d50adbd3f7c1f4cf7463be06010cdc27841c5",
+      "bytes": 11934
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\independent-controls.rs",
+      "sha256": "5e41c7988d410756ccbaae227945057caa43e602adbe22848413233c8d639e6c",
+      "bytes": 18980
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\implementation.rs",
+      "sha256": "bff6ca372b8513e7166a414485f2fba983c4963716f1e42d601f78470c21e3ef",
+      "bytes": 15839
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\independent-arithmetic.rs",
+      "sha256": "c38095d04b05b387fd0f8b5bdfce1bb694bc1601759c65d363f46b74c98d9804",
+      "bytes": 9266
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\independent-controls.rs",
+      "sha256": "03b1f39d93c4ff1abbc6d7fb2ef0cf2e24d3fc708c2a93d0291fe22145f6b0a9",
+      "bytes": 13123
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\independent-fixtures.rs",
+      "sha256": "a7d318631ec7702de190a3d309709f8819ce312136d6a4ae219f582acc0fb3ee",
+      "bytes": 14051
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-correction-variance\\core-bridge.rs",
+      "sha256": "b70090a51a95bfb19cb8d3207c12437cb82aaf21efac2cd1e5760e9860b6d9f4",
+      "bytes": 1262
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\implementation.rs",
+      "sha256": "2fcd38747b8352cd4d3f01e2d9a57c286a4bd65dc304af2dcff6f31ab6917059",
+      "bytes": 6529
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-stack.rs",
+      "sha256": "815b4b1d705811513aece4f92840aa812e5ff5e9853dcec5bca8515dafd84ed9",
+      "bytes": 24689
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\implementation.rs",
+      "sha256": "5f1bea55b13b1fc05166351dfdf37d4ea289c2df56bb0b2b091734507149a042",
+      "bytes": 14937
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\independent-controls.rs",
+      "sha256": "1698535c374481f90d66cddf2dcc2d27607a0281299017a81fd35ddd4c369e3a",
+      "bytes": 8563
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\independent-full-controls.rs",
+      "sha256": "7548752d4092d7422294f4a072ff293d5989a35612c4efdca6e7e3941b7ecde9",
+      "bytes": 14850
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\transform.rs",
+      "sha256": "f9218cee4cb841505a99c490dfbc93ced07d70dcc21a9cf129e7b9b0bcafc1c3",
+      "bytes": 8564
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-stack.rs",
+      "sha256": "a5f9f7d63d5337751b9e531badbbf4ed65a4c130b7ff17a343b0da5e68d6ff2c",
+      "bytes": 17652
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\implementation.rs",
+      "sha256": "ebef117ce5837140647b2d828ebfcf80d04912c2b32248faa33f06f84d051e91",
+      "bytes": 12603
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\independent-controls.rs",
+      "sha256": "572d028a0d83214f9df8ac47634f04e703c855a93d96439a9c8534a5f0b240f9",
+      "bytes": 30884
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-source-tests.rs",
+      "sha256": "093e25703bd86a303c95edbc557c253359365557d396364baa7dbdb9b6782111",
+      "bytes": 11457
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-own-guide\\core-bridge.rs",
+      "sha256": "4594cf7a5a0bd3c2fe02d50032e921d6b211a5906cb10603096f828bbb1e291d",
+      "bytes": 3795
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-own-guide\\implementation.rs",
+      "sha256": "1769722875899ee419163f2e95558e903cb2742547110645cde56e1a5b3fb6c6",
+      "bytes": 10087
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-own-guide\\independent-controls.rs",
+      "sha256": "3f273694488f9dd4b681774ec10ba03349b274ce3de2c3ca4c16a14744b17db4",
+      "bytes": 10725
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-own-guide\\independent-fixtures.rs",
+      "sha256": "d54317dbc12a9660811ff7d6c5abe53c41fa14d6b949a88bcb63fcbfae00d427",
+      "bytes": 10044
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-own-guide\\independent-noise-controls.rs",
+      "sha256": "c9ec4ffd8aff18cf8fc1fa353926a6d36aa6d3937f3861b5e8ea8f6db9b97937",
+      "bytes": 7769
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-own-guide\\probe.rs",
+      "sha256": "ecd4044b8d23f520a0fede5686b9fc50350c13fa18f97de6e5143b1eefa21f0b",
+      "bytes": 4741
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\source-witness.rs",
+      "sha256": "94d21d6cdead1c357d05fdad4f7ae51fb12dd2c84281b0d7eaece39e78f685af",
+      "bytes": 14104
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\shared-source-field\\core-bridge.rs",
+      "sha256": "5ecabd9e80e0eea748654073a59d4a51a9401e301d17c5fda319b7c967b629c7",
+      "bytes": 4463
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\shared-source-field\\costs.rs",
+      "sha256": "1ee7a2c7c6b652c3620583eafebac169345bf7fb8741f4aab0369ac3772eb879",
+      "bytes": 6561
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\shared-source-field\\full-stack.rs",
+      "sha256": "f834b0010a51581e8756b7295f497a4d2ffe77520d44e4234b2f665b37c6388e",
+      "bytes": 22142
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\shared-source-field\\implementation.rs",
+      "sha256": "c8ed6cf75f69d10a407a7abac0c83dd5bda90ea3d4b2edb6b6288dd5029ceb55",
+      "bytes": 9800
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\shared-source-field\\independent-controls.rs",
+      "sha256": "4ff37ed97c11cc42b0cf0116e54802ea01f09030cfd34ee0883b9e1f475f16e0",
+      "bytes": 31331
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\variance-stabilized-guide\\implementation.rs",
+      "sha256": "dbc74b2a9b6b39c3d1d5e68b631f4bbced4637b2bee3a084746a6e0f736c0fb0",
+      "bytes": 13026
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\variance-stabilized-guide\\independent-controls.rs",
+      "sha256": "ad06cb17ad4f3b24e32847c407bc9f37ab1b9c1ec85c135d97ae01bd36495028",
+      "bytes": 13531
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\variance-stabilized-guide\\independent-fixtures.rs",
+      "sha256": "ae448be25d53a198ef28b8e14a1f922d33835264d8e92f56737b6ef88c4f6b7c",
+      "bytes": 8789
+    }
+  ],
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\build-4\\cli-tests.exe",
+    "sha256": "9082758e0901d03e48c2a2fbe3b5c2c50a09e32edf8ac26d0e5f30abffb9e31a",
+    "bytes": 34658304
+  },
+  "inputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\full-run.py",
+      "sha256": "6105482b039ea0735e8daa108c73be76e5e90640b46858823473cfe13fb76260",
+      "bytes": 9037
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\score-server.py",
+      "sha256": "5b9de1e811e85b176a12edccf88d74686dbf6ea37001476c2579605ab4e2b09f",
+      "bytes": 8912
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\generic-consumer.py",
+      "sha256": "587e373f6d6afb81e120ca74c4c0094a86b1abd4a020724de38e1b4397ba8003",
+      "bytes": 18570
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\train.py",
+      "sha256": "03ddcab38c492557244638d93694b66473a749aaac6f7785fb129be98dfce96f",
+      "bytes": 23412
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\preserve-train-1\\output\\model.json",
+      "sha256": "02f5d9fbfa16efa18207b82884a83f232cd8ab2355995dba04c11a91dd1fa02a",
+      "bytes": 841114
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\run.py",
+      "sha256": "201bb348f6a7bba15c4c14217e3d53f89e3aabf32852543fb4ff155d05b76c79",
+      "bytes": 14032
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\run.py",
+      "sha256": "230d5d31c477be1f7673bf2d80fd61fd0ec8dc7110385653d588bf6e0846cff3",
+      "bytes": 6913
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\train.py",
+      "sha256": "b5455f488a92ed75c2a8ae8d9dcfb31b054237805b7ded22893459ef4ea9b987",
+      "bytes": 15527
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\run.py",
+      "sha256": "17451d237bf256004ca8853ef4c2a9e1c582012d43ad33fd687606e68a5fb76f",
+      "bytes": 7707
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+      "bytes": 12664
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+      "bytes": 117908
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-reference-1\\output\\predictions.json",
+      "sha256": "81dc46dc17718ae1c5ee781b09cd66ce8608ca7b7d2dad68e2310aae0e1432f7",
+      "bytes": 15655
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-bridge-dataset.json",
+      "sha256": "fd1a8c07d09b2235e4aca49b712dbb38be5b9399b63c93ceded6995ca613fd1b",
+      "bytes": 233
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\case.json",
+      "sha256": "9f83de06e56608b320b2adf09663c8a81b567fa3cd81fe51d971e52b637151e4",
+      "bytes": 9039
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\base.f32",
+      "sha256": "f345847268863e946d0bd37bbccb3814f605e349bf08c0936432b8a853b04604",
+      "bytes": 1440
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\canonical-rgb.f32",
+      "sha256": "bc3e29b0d728c44a56dff4970e32e8ae6f310dcd03aff3f48646577dab1e6e39",
+      "bytes": 276480
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\canonical-weights-0.f32",
+      "sha256": "d4e19c342f10c476c6d5f54f4882ad6b946268c0b056bef34464d2b5273226e1",
+      "bytes": 115200
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\canonical-weights-1.f32",
+      "sha256": "8b113fdbc461b478c16e9fe4d1f43793c8b8103db536386c253cb6770a389b0e",
+      "bytes": 28800
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\canonical-weights-2.f32",
+      "sha256": "a50be4d89b84562086fd27865453b8e98df0dfe22d37fe76f095646c288ad91c",
+      "bytes": 7200
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\coeff-0.f32",
+      "sha256": "0fb3a9879f0121064e9ee03b87c7904fb161e0322a35b8f9d9ba57cdd029f2a5",
+      "bytes": 460800
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\coeff-1.f32",
+      "sha256": "9ff2e6d455bebf25e4308a244549444dabe0e30e04003e5f148e1f623d96f96e",
+      "bytes": 115200
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\coeff-2.f32",
+      "sha256": "7c12c7fbeeb3cac436d49d685f201d639c401d3cb3883a38ea63e9c88e195053",
+      "bytes": 28800
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\features-0.f32",
+      "sha256": "a2d2f8a9a0121557c6f53491c3864b50802d3027a1e7ed03ce597e9e57858b30",
+      "bytes": 1152000
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\features-1.f32",
+      "sha256": "640f009db60473917231280b9e455b70531944a0b4ece143dd1cdfffd85c676c",
+      "bytes": 288000
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\features-2.f32",
+      "sha256": "264d3365f1ea37f06b1475048fad8300d6f8c6ca5fe9f4e3a6f2596357044438",
+      "bytes": 72000
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\lower.f32",
+      "sha256": "331337ef01fb1267a05cfec728f5f7a5227367d61e017341a8cc23cd1d9feae2",
+      "bytes": 92160
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\prescribed-cfa.f32",
+      "sha256": "7b9451068b59e13eceb316603b7f87070ed6e908d9c2fdd7fdab64e2945ba19c",
+      "bytes": 92160
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\prescribed-rgb.f32",
+      "sha256": "44be41019a59deeeb015784a0ce8d50a3b8e75ba08090167e86e5305a1182c75",
+      "bytes": 276480
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\prescribed-weights-0.f32",
+      "sha256": "6f0460228a07c744f071fa2cb1a65626c5353e13cb3b4541b3ab7b4f6de6604d",
+      "bytes": 115200
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\prescribed-weights-1.f32",
+      "sha256": "245e4e48eeea7b4e2b89d586c1fadc18c5129cfb8440d832e030746b8cddfbff",
+      "bytes": 28800
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\prescribed-weights-2.f32",
+      "sha256": "c19babfd72d4bfad2f917ae5addf75118b1a8bf11247395eb34884add7cc8ff6",
+      "bytes": 7200
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\truth-rgb.f32",
+      "sha256": "09b20c9fbdc726a2ba533300050f1210ce45f28b1c70d38d5edd27d883719757",
+      "bytes": 276480
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\uniform-cfa.f32",
+      "sha256": "fd64c8165b14f80a57d1874d335d9f37b32870e7c44440adfa0ef589aea3f6a5",
+      "bytes": 92160
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\uniform-rgb.f32",
+      "sha256": "2310da3bffb9f7f020d56986d8b371ada814f94e4261ff74254537f3506883fd",
+      "bytes": 276480
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\upper.f32",
+      "sha256": "32d9142329591366f5d945bf79a1ac6536c5d6d45d893201ee15f21b7957a2de",
+      "bytes": 92160
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\zero-network-rgb.f32",
+      "sha256": "2310da3bffb9f7f020d56986d8b371ada814f94e4261ff74254537f3506883fd",
+      "bytes": 276480
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-reference-1\\output\\case-00\\cfa.f32",
+      "sha256": "c4f80c03ab2b2d6e70b412929069377cf35a79c4a47001c5fd5b8d9a05aee8da",
+      "bytes": 92160
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-reference-1\\output\\case-00\\rgb.f32",
+      "sha256": "58007234bb363b38616c2f6c084e385d87b48913ad363aec954930f871006262",
+      "bytes": 276480
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-reference-1\\output\\case-00\\weights-0.f32",
+      "sha256": "80040d01f53825c53bf34a1f3d932589c1b0858337ff709c04b0fb7fba679da1",
+      "bytes": 115200
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-reference-1\\output\\case-00\\weights-1.f32",
+      "sha256": "ca15fe3320d36ec1919feda1fa2e4a1be09c632c24867190cded8a4608810f83",
+      "bytes": 28800
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-reference-1\\output\\case-00\\weights-2.f32",
+      "sha256": "735139b55db3f8802ab388e089d1e9ceaf1cd7ae3f1531a3003fc544504fa150",
+      "bytes": 7200
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\case.json",
+      "sha256": "62615fdb27b46439419092c8eabecccfdb2763fa9d4055623174a363d11e9ab8",
+      "bytes": 13459
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\base.f32",
+      "sha256": "c16984945d042f2a4b6442a64cdf5c81493d54ba4260e5ea8179b7df153d4b2e",
+      "bytes": 1024
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\canonical-rgb.f32",
+      "sha256": "313532e7fc5125b6aa515715dcbdb70b4d975bc3f98af040050833e2b03959f1",
+      "bytes": 50331648
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\canonical-weights-0.f32",
+      "sha256": "fcbf3481ef7fc1905e650f7c28473d9ee864dfa35df8b703e398307bf92856b9",
+      "bytes": 20971520
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\canonical-weights-1.f32",
+      "sha256": "f54377d20e7efb0de8f3557918ba347c83af5c5dcf9615b18fd0b5c71481a445",
+      "bytes": 5242880
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\canonical-weights-2.f32",
+      "sha256": "6c45528c033c26bc7ade151b401601d49431db969a531ea9691db9547b0ad104",
+      "bytes": 1310720
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\canonical-weights-3.f32",
+      "sha256": "8bc53ec2025624ea33f72f2de32e669f2b4e33466e1601c59c16c39aee0e7960",
+      "bytes": 327680
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\canonical-weights-4.f32",
+      "sha256": "922f310eb17c3222ee30dc99318722b8d893f92e5cc0476b754b46aefcb863ce",
+      "bytes": 81920
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\canonical-weights-5.f32",
+      "sha256": "a40889ec91ca31069724876299bb0b914d80c66fc8ec35860c879263ee6ead1f",
+      "bytes": 20480
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\canonical-weights-6.f32",
+      "sha256": "2ae221e0b6c5d89c1368cbce1a2f4cf18b15f7342565bee212a7b768148a12ef",
+      "bytes": 5120
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\coeff-0.f32",
+      "sha256": "37f22cb2c80946de7f9386c15fbabf1ca4f04dbc16567db0b027405af60bb370",
+      "bytes": 83886080
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\coeff-1.f32",
+      "sha256": "8f9eded38288ab7b7d03a03d1833cbe820fcb4ad1a9029ec7ffff1caf0ea7615",
+      "bytes": 20971520
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\coeff-2.f32",
+      "sha256": "8a5fba1fa7791d5a200371da0d4fa05b9ef83777528df8c179e9302418aa08dd",
+      "bytes": 5242880
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\coeff-3.f32",
+      "sha256": "b72c3c665943c0dec81c66ea773dec27f4853d30fa281bd1eae5cfbd6a3886fe",
+      "bytes": 1310720
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\coeff-4.f32",
+      "sha256": "838ace03fe4be321b230545ace6a60f52b8e1d60aa22fdd5c29d5fd0dc7d0230",
+      "bytes": 327680
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\coeff-5.f32",
+      "sha256": "24f84cf50c2a433f8768a773391e9fee0121ac304f9fbd51828df9f061e29da2",
+      "bytes": 81920
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\coeff-6.f32",
+      "sha256": "afffa5cec1d539c21478bab99bbb0709f5e3a1fec2454b30e2c041634c8279da",
+      "bytes": 20480
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\features-0.f32",
+      "sha256": "cb4730f9eb5c206da4be391127e4a5866663833d64a6dd085440a60850a8759a",
+      "bytes": 209715200
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\features-1.f32",
+      "sha256": "30c94137475a3d20863366633ba322731d8205aec96958841ec8d8d39c0ac5a2",
+      "bytes": 52428800
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\features-2.f32",
+      "sha256": "dd1bbdfc9b5ebf1da9e801dc52bfeceb66eacddbc9aa45f44198f04d109e1f11",
+      "bytes": 13107200
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\features-3.f32",
+      "sha256": "59f50900548c9bda28e21bff626a46ae59352a8a8295298c3cf6dd6742d3d5dd",
+      "bytes": 3276800
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\features-4.f32",
+      "sha256": "149e0cdbc308c9b95095b0447a9dd12a82a63e3248e9559e68363c4d4558d717",
+      "bytes": 819200
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\features-5.f32",
+      "sha256": "e65487390a1da7be8872509455e302155e807c596b8f12cc535d8b679e28e934",
+      "bytes": 204800
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\features-6.f32",
+      "sha256": "64c46db3644537adbc850d2f2c3516c70702475946b7e920f01c9ce2084f3c90",
+      "bytes": 51200
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\lower.f32",
+      "sha256": "d348ff0bb5684262017bc7e349c03ed4767c073e5964561f39affea38797eefb",
+      "bytes": 16777216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-cfa.f32",
+      "sha256": "171a3285d47c765925bf6eb025fe66a9f634218f09fb65d486fc85f9cd02e466",
+      "bytes": 16777216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-rgb.f32",
+      "sha256": "4f45597942250b3a57cefcd8561bf20f204db285708b25a3c18bcede1196eabc",
+      "bytes": 50331648
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-weights-0.f32",
+      "sha256": "0549741e9921945dd56c57d2b29e8e1934811feaf82940f1f0c0a9f2f9246240",
+      "bytes": 20971520
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-weights-1.f32",
+      "sha256": "97300a25a034da68d10b83220f5c3324bcea55aed9c1785ccd79179147dafec7",
+      "bytes": 5242880
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-weights-2.f32",
+      "sha256": "062d3bdb4d271e0d0c6be23243f544a97e7cd085a6bb4d3870717077d8b0a71e",
+      "bytes": 1310720
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-weights-3.f32",
+      "sha256": "71b42a40daaf2416ff6f129d82fe857e56c16f094715fe8c3a23d2a69c843451",
+      "bytes": 327680
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-weights-4.f32",
+      "sha256": "b6a689865076303d9720417bc710be290aa06e6c0e84aed396610d6c66cc9ed8",
+      "bytes": 81920
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-weights-5.f32",
+      "sha256": "5dce59eb5404821c7656bf67399568c234bd8df472c1dfa724ed8ebd39342378",
+      "bytes": 20480
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-weights-6.f32",
+      "sha256": "e83c491770a7759851a58c32dcdb7a826a6c9b2f487d9f6aef63f62d7ff84a00",
+      "bytes": 5120
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\truth-rgb.f32",
+      "sha256": "96ff36939eb85c935f5b81b76973927c3bfaf02ab94d5c1ae16692fd079b1388",
+      "bytes": 50331648
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\uniform-cfa.f32",
+      "sha256": "a7815a82779e97946fc05e0b757d5ad98a7238cb7f8ad2cdaaf83810d32fa228",
+      "bytes": 16777216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\uniform-rgb.f32",
+      "sha256": "31baecb8df940100a60c76ec702cb30d009170c4f77724df95ca2b989a60d902",
+      "bytes": 50331648
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\upper.f32",
+      "sha256": "9875d6cbb63194aebba796235aae4766ef3e41a7509e92c37999699fb7a3218e",
+      "bytes": 16777216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\zero-network-rgb.f32",
+      "sha256": "31baecb8df940100a60c76ec702cb30d009170c4f77724df95ca2b989a60d902",
+      "bytes": 50331648
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-reference-1\\output\\case-01\\cfa.f32",
+      "sha256": "0479978a54be3a8ef5c4cef88044d299c6d86845e9a8b7ab16577ba8d8c16e21",
+      "bytes": 16777216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-reference-1\\output\\case-01\\rgb.f32",
+      "sha256": "216b230233459a80f3f696e9e768ae6be8999ac80af4e7335b5fa8459db48d2d",
+      "bytes": 50331648
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-reference-1\\output\\case-01\\weights-0.f32",
+      "sha256": "e7cd0c5ff4e9ec47a3fcdfe19e686f2e341bcd79598159f7a6f954135f485004",
+      "bytes": 20971520
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-reference-1\\output\\case-01\\weights-1.f32",
+      "sha256": "0109fa5b149dd8e290860cb33a029bac0115499e0d1cf30d38a09a25ef5190d0",
+      "bytes": 5242880
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-reference-1\\output\\case-01\\weights-2.f32",
+      "sha256": "83ea5b60457e8e62527d9f71e2a618f1a8a2c94548491907b68dd4a52488ddb9",
+      "bytes": 1310720
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-reference-1\\output\\case-01\\weights-3.f32",
+      "sha256": "029ad284d231d78a035e8a2550f153be8207d7e840d2de72dc0ac7c1ace0f89e",
+      "bytes": 327680
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-reference-1\\output\\case-01\\weights-4.f32",
+      "sha256": "7e8c1ab9f56657fe99e84e3b54960b6f74d2dd31a882d57b7def95fc29e1a22f",
+      "bytes": 81920
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-reference-1\\output\\case-01\\weights-5.f32",
+      "sha256": "cfcdec264ae03dae09738d3aaaa679b1f3c8dfeac56f9278c8f532ee8ae0437c",
+      "bytes": 20480
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-reference-1\\output\\case-01\\weights-6.f32",
+      "sha256": "18603ebd7657b04500933f7dc4bb60ade1fafa7f9ff86d2cb77d530e54907e30",
+      "bytes": 5120
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-controls-1\\config.json",
+      "sha256": "73a82cf9674191ba2e74aed1c048615c03759b5afcfab97e9181d813b33f3b7a",
+      "bytes": 1433
+    }
+  ],
+  "model_sha256": "02f5d9fbfa16efa18207b82884a83f232cd8ab2355995dba04c11a91dd1fa02a",
+  "phase": "controls",
+  "photographic_improvement": false
+}

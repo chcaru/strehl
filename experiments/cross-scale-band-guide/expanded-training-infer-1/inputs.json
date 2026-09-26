@@ -1,0 +1,2962 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-weight-oracle\\independent-check.py",
+    "sha256": "be05178c244e69ddcd5e4b29a9b9c7d9da3770fea1caebd1ee398fe36b3a4012",
+    "bytes": 21285
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\develop.py",
+    "sha256": "214fe31dec8939a1aae260554cfbe63206922ea920d5e7b2be6b9394cd095a10",
+    "bytes": 18357
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\expanded-train-1\\output\\model.json",
+    "sha256": "882532f9d735e1955d75f28679715b4ba4b0dc4829e2d8dba7ed36bb4767a705",
+    "bytes": 841188
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\dataset.json",
+    "sha256": "e2de95447af5161ec573aad6f6fc6290096654f2d72cc14df8c17f0aa58f2685",
+    "bytes": 4012
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\base.f32",
+    "sha256": "76095fee7e4e6dbc9b518d8bcd0147bb052365bd36d4114b7ed38074b548e0a1",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\canonical-rgb.f32",
+    "sha256": "c20215f8001763889520d00bf1b3b49c25ca15e26998b86d16fb95c62b7b41f3",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\canonical-weights-0.f32",
+    "sha256": "30c57c1433f4012e08fe3da80930db8d75f39e29c01f1f8475720c649f2f9d08",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\canonical-weights-1.f32",
+    "sha256": "3a0edfcb4c8ea31605f8c7f4c57ac7fbb7b23f0da012789fa73eef927f066eef",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\canonical-weights-2.f32",
+    "sha256": "df9336db2db4e56b79c18bcefe4116cb3ae805252872cdcd60e31501b020c94f",
+    "bytes": 12960
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\case.json",
+    "sha256": "5b471bcc464349210067ef09e2142de3d542abe74ba8f9e777d753cd4749830d",
+    "bytes": 11965
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\coeff-0.f32",
+    "sha256": "c5a58385caf20f2e4d13faaf94cfa773360e370f9622f62068532f9877f1ca0b",
+    "bytes": 829440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\coeff-1.f32",
+    "sha256": "a0bc8043262118b5409d69509d9f0a615faa87ecbf40c71c9d66b1668783c991",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\coeff-2.f32",
+    "sha256": "91fe782314e61b0c01ade8e05e14c177c4ca399265cc92fba65627a687806a2d",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\features-0.f32",
+    "sha256": "f1095891c39cd6bd983948ea9bca752af63370eb727ba75644b45ca1e871e957",
+    "bytes": 2073600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\features-1.f32",
+    "sha256": "df2e2da08dc3be98e0e6753919a5922f06fbd4696da7d1a27a04752802fd9b0b",
+    "bytes": 518400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\features-2.f32",
+    "sha256": "1a923cc4243f09417a523e1ed6ece2d17d5de4befca53aa43a1df5d4bebbcadb",
+    "bytes": 129600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\lower.f32",
+    "sha256": "9ac515e5a3c466cf186ee94348829b98ff6eeacf878cad707cd18b677e701ee7",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\prescribed-cfa.f32",
+    "sha256": "b318ef01f56e2b8fc319d6e14da71405972ecc788a3b2e10931c7f148b9dd504",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\prescribed-rgb.f32",
+    "sha256": "e892247abccef9a5a1d97be9f9ccd7e68c0296404067f9027469ea9c7cbc93b4",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\prescribed-weights-0.f32",
+    "sha256": "dfcbe962e967dc718cc2093af0dcc0ea224c3ec341d799bc1df17dd12fc85867",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\prescribed-weights-1.f32",
+    "sha256": "4b8db06b8c83528346dba5bf6049ae5646734e0d8932752c26d4028b517a7241",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\prescribed-weights-2.f32",
+    "sha256": "560dad2c45db48ffa5c825cd60ab7594ed168606b1480cf8d9c361dca6312718",
+    "bytes": 12960
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\truth-rgb.f32",
+    "sha256": "7f3c0205f7dca364d882bfffb0bf5002f1d5770aa244bdb704ff509f97dcb152",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\uniform-cfa.f32",
+    "sha256": "83cdf44a8b8ebef59dd9fba4059988b5f5a940fd05872762bb34dd4dfe2c827c",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\uniform-rgb.f32",
+    "sha256": "096bea857a5796b7ab12b289348d3641cd371bf801615696cbab4285a80871b4",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\upper.f32",
+    "sha256": "f379734be6bcb19c9bf2ea0015218ce363d86c13e1a051970ea7acad96fcef0f",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-clipped-glint-v0-n9-b3\\zero-network-rgb.f32",
+    "sha256": "096bea857a5796b7ab12b289348d3641cd371bf801615696cbab4285a80871b4",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\base.f32",
+    "sha256": "33ded32bf460ab1d183d7dbd7ff4062ae9b42d519dda0191f704e9c9c5ff8a8a",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\canonical-rgb.f32",
+    "sha256": "2447db24c7669ef65d69aadb59f3f2ffabe7a464be5b681d0d354ee667adba28",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\canonical-weights-0.f32",
+    "sha256": "7fb77ffb65a8105d49e7fedce3304a7e48f87a50d91d5ef62ca656312509f05e",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\canonical-weights-1.f32",
+    "sha256": "9f75f6a54e2df1ce25ecc97247ca2326dd1a20b36942c3d47f3c4aab84b6f15b",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\canonical-weights-2.f32",
+    "sha256": "0f120f3d83c115a451253e25d2641020c0cb90bb88e86503f9ca93c7ade19757",
+    "bytes": 7200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\case.json",
+    "sha256": "7de1afbd021f4d76124b833cd0a42941c0479df5863f2ac2770bf8506bee035f",
+    "bytes": 9147
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\coeff-0.f32",
+    "sha256": "c5298103dee4e389862b024a4673b76d3094f6d44f2e79fd43e862e61e806883",
+    "bytes": 460800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\coeff-1.f32",
+    "sha256": "aab406ce283035ad85fe1cb864a61925f060a15c7bdb445a1c53fe0a5d40908e",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\coeff-2.f32",
+    "sha256": "cef2a06b243c7db577469d84821a48aacbec07b41480d73512b7b54ec7abf0c9",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\features-0.f32",
+    "sha256": "57e8a483df4488d25b9cbc88d2f25a7a0778785a9a6c5d9b768a7e9cc9d8734c",
+    "bytes": 1152000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\features-1.f32",
+    "sha256": "995898df59dba6d16cc732a4ca4f8d8440c52e798f1245d6f61b7b33e401771f",
+    "bytes": 288000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\features-2.f32",
+    "sha256": "fe9fdbaececf91197ebe4fc3999b5f08fe8b01cb596e6d1d6a7f865a6d76bc81",
+    "bytes": 72000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\lower.f32",
+    "sha256": "0c3082d481878e5584d7c67495b7e6c65a751df82c72ea79f2ac09e09b253e5d",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\prescribed-cfa.f32",
+    "sha256": "2a823f825f67786618664c101c2877e4c48453009368f09ca5473406c57d104d",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\prescribed-rgb.f32",
+    "sha256": "f7e3a1b3e95b2cadf8da854ea6c374703b11a3024711d8d6124c68601b975e43",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\prescribed-weights-0.f32",
+    "sha256": "6f0460228a07c744f071fa2cb1a65626c5353e13cb3b4541b3ab7b4f6de6604d",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\prescribed-weights-1.f32",
+    "sha256": "245e4e48eeea7b4e2b89d586c1fadc18c5129cfb8440d832e030746b8cddfbff",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\prescribed-weights-2.f32",
+    "sha256": "c19babfd72d4bfad2f917ae5addf75118b1a8bf11247395eb34884add7cc8ff6",
+    "bytes": 7200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\truth-rgb.f32",
+    "sha256": "882c1e991a868ee0dcfd539300ec3fdbf42bf777e562c5cfa95b287f419f1bbf",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\uniform-cfa.f32",
+    "sha256": "4111b1f465187aec892b05e7b8c9fbf6972ad5be2903a27c165bcdd398f17ab6",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\uniform-rgb.f32",
+    "sha256": "968bbdb595828a6e2d9503c31b3b0739d2ac7082a3573ac9be914bde96c99591",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\upper.f32",
+    "sha256": "80453bdad5960ec694d540c43c25ce875186e332a5a7e3195659d6b789c19742",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v0-n5-b3\\zero-network-rgb.f32",
+    "sha256": "968bbdb595828a6e2d9503c31b3b0739d2ac7082a3573ac9be914bde96c99591",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\base.f32",
+    "sha256": "26246f2fb4d1b1101c3bed4aba000b7552266e47e9a52b85b271ff630096a54c",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\canonical-rgb.f32",
+    "sha256": "a96a1b1eb53267e34133d3047d87cb9c0a619ec1343653310c67abaca1431ee6",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\canonical-weights-0.f32",
+    "sha256": "a0cb324386205273809f3f77dfb71f459ba9b076d458dc0d2d5f986e9c019078",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\canonical-weights-1.f32",
+    "sha256": "6c865cb258a092c399a7380ef0d8eeaabc64e6d3485451a8ebe727630abcf192",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\canonical-weights-2.f32",
+    "sha256": "e0dc1d337123c664eda8e2c7c204d89807605f0527bffabadfb4712f1667c6f5",
+    "bytes": 12960
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\case.json",
+    "sha256": "2453c8fa086741ae99459cbd3ecc20635016e5a0f84f0556aade419bcaaa56a2",
+    "bytes": 11965
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\coeff-0.f32",
+    "sha256": "de018f936e7964529e9c2181e3073f862ae1ef5d104964fb47791f9d2165c353",
+    "bytes": 829440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\coeff-1.f32",
+    "sha256": "69c6284583c6b5ad6699cf37db034ff846b056ae1bd2a7534158b2bc6ba2c0a5",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\coeff-2.f32",
+    "sha256": "10c21a58df9bf5adaaa46115871ab94c6adef72becebdecbf78ac29f1553058f",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\features-0.f32",
+    "sha256": "1ee260deaba3c0097ab9dddfcf95a468f7e8c110b133569a08f087c4d2c0db66",
+    "bytes": 2073600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\features-1.f32",
+    "sha256": "3b5ca519f154455cb5091274ca55a395d89a93cf3d3af9f09c8e01d6f50db630",
+    "bytes": 518400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\features-2.f32",
+    "sha256": "5f756720f3382b3014d14f2cb48ba0024a5edf37f383c8cb767352d7a8de193f",
+    "bytes": 129600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\lower.f32",
+    "sha256": "080205ad9f980cbb30b363345003ba77dfe9dd7443ff6f08b36b5405fc01522e",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\prescribed-cfa.f32",
+    "sha256": "01f88de85ef2e40dd874ebd54587e424bca53d413e10ad6ae78b22d90abf018a",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\prescribed-rgb.f32",
+    "sha256": "ecbbe24f2eda1ba859a5290c1b0b1e60e92dc917d7b74aac2b327242344412a5",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\prescribed-weights-0.f32",
+    "sha256": "dfcbe962e967dc718cc2093af0dcc0ea224c3ec341d799bc1df17dd12fc85867",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\prescribed-weights-1.f32",
+    "sha256": "4b8db06b8c83528346dba5bf6049ae5646734e0d8932752c26d4028b517a7241",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\prescribed-weights-2.f32",
+    "sha256": "560dad2c45db48ffa5c825cd60ab7594ed168606b1480cf8d9c361dca6312718",
+    "bytes": 12960
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\truth-rgb.f32",
+    "sha256": "2ad0a5cd47d2cf659625a0112f1f077190d6f374b2c7485a676008fad3d23389",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\uniform-cfa.f32",
+    "sha256": "f26655dc53ec3b7bea114403f91157e9b71a51f61df6be654466f6e87aa3592b",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\uniform-rgb.f32",
+    "sha256": "7e447a81b80410a2ff4426782c68de37061c99db0229741b382765b1e22b296a",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\upper.f32",
+    "sha256": "f46b7a5e4a39fd6460ad9eee6a973aa234058b317855f870ec07832ad662bcf8",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v1-n9-b3\\zero-network-rgb.f32",
+    "sha256": "7e447a81b80410a2ff4426782c68de37061c99db0229741b382765b1e22b296a",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\base.f32",
+    "sha256": "1fc8fa8eb7c4f562294c103afc7d6ee0191063a3eea27459f1bb1a99366641f9",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\canonical-rgb.f32",
+    "sha256": "80e18ec46b58527636403ed37282d8a5a027c63362d630ae161e168e6d4997e9",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\canonical-weights-0.f32",
+    "sha256": "13a84b6c986581b838a3651eed661e921b38e6593c54b6b418cbc3a33cd4aef9",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\canonical-weights-1.f32",
+    "sha256": "a52a78fd0766aebf811fdb9ba74e1f202e4e05b9d26c422a7567f3894cfd2622",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\canonical-weights-2.f32",
+    "sha256": "88ae5df74ea43e5d0741a2c9ef3417aa4f2d385f0b20cd33a6b9c49cef2ce217",
+    "bytes": 7200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\case.json",
+    "sha256": "8f42c755b17f15fff1b23903e43b02294f255d60914b7c6e2ad029dcf16f522e",
+    "bytes": 9147
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\coeff-0.f32",
+    "sha256": "ddd8317038d685d03bd74538454310447cc38d824518e47835e6c7fadab39135",
+    "bytes": 460800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\coeff-1.f32",
+    "sha256": "773159dc1485ef0db77ae58e8aef492a36ef3ea6925f54d6b08601751d7c6ace",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\coeff-2.f32",
+    "sha256": "c5a589f5f72ea483a876ab9856f923a902a3a1af977b98fe3ee1fcc633962f22",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\features-0.f32",
+    "sha256": "6da7b6033671dbad625a4084472fe74564c0386c9e34fd7af747930c81b6f823",
+    "bytes": 1152000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\features-1.f32",
+    "sha256": "0cbfa440026f32054494492f990f3062f8fe7596930e7e11498bdc499325c7eb",
+    "bytes": 288000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\features-2.f32",
+    "sha256": "4283ee92b14caa36b5f45b8b07ba1635495232d79c6984cb12f507d623777352",
+    "bytes": 72000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\lower.f32",
+    "sha256": "ede5f2356d80f72164577eb4cfbfd80f0848eb6f8727fc2177b0bad35ece7412",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\prescribed-cfa.f32",
+    "sha256": "c3c1fefaeb88b2af8c955e5fd03b6459e1320960dcd8d77dcbec3d70487912fb",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\prescribed-rgb.f32",
+    "sha256": "3a36cbf44251247de2b59d3eb897a129da8b929e1e3a61bd7de06a1f41cdd7f4",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\prescribed-weights-0.f32",
+    "sha256": "6f0460228a07c744f071fa2cb1a65626c5353e13cb3b4541b3ab7b4f6de6604d",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\prescribed-weights-1.f32",
+    "sha256": "245e4e48eeea7b4e2b89d586c1fadc18c5129cfb8440d832e030746b8cddfbff",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\prescribed-weights-2.f32",
+    "sha256": "c19babfd72d4bfad2f917ae5addf75118b1a8bf11247395eb34884add7cc8ff6",
+    "bytes": 7200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\truth-rgb.f32",
+    "sha256": "55cfdfb56f8d30d18a4eb665c2b96665b0b67713e70c2f04be3602185c16bbce",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\uniform-cfa.f32",
+    "sha256": "4ab5d49635147e3f1f45d274b79010dd3224485b49594819786d804c088797e7",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\uniform-rgb.f32",
+    "sha256": "1f8c82458ac742f54844289b80dbcf3cbe97f3740973d8368b75109f5c91972b",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\upper.f32",
+    "sha256": "b848cc194bcf90ccfe9725eff41ba47fddcf6e853859d9297fa3d7db4e6d59eb",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v2-n5-b3\\zero-network-rgb.f32",
+    "sha256": "1f8c82458ac742f54844289b80dbcf3cbe97f3740973d8368b75109f5c91972b",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\base.f32",
+    "sha256": "fda77263f3e3357126b8ac5ae7b3816d8d3a5d02ab0d2e86352667536bc7e820",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\canonical-rgb.f32",
+    "sha256": "7b938d17daf89681abb17f854ebadf560f02e9044b5ba92493cc185a9fb8b520",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\canonical-weights-0.f32",
+    "sha256": "a3b9547d125af50c67156328086607eb04765923f38a9964e8dcb3299320cb5b",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\canonical-weights-1.f32",
+    "sha256": "0d8309921afb1d756ff870cb49da0282b11484c6c7e651477d69da57dee39ed6",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\canonical-weights-2.f32",
+    "sha256": "3b6b2ed77fdbdaefe6c47210042183d99d4533bac3c835ff115ee9cbe6ea0d1d",
+    "bytes": 12960
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\case.json",
+    "sha256": "0f435f0296c97a2a05476adc30bfdfde196d407ffa865d6cb9f9bbf194a70c85",
+    "bytes": 11965
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\coeff-0.f32",
+    "sha256": "3ad3e98a2c55c7e548234c56f572c07c46487fc84887200cd35bee3c1def3fd0",
+    "bytes": 829440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\coeff-1.f32",
+    "sha256": "9217908ab47d4c1aa7a326b29aa9e05c41125cd2a784dcf0f8544d340a8aef28",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\coeff-2.f32",
+    "sha256": "706fc63f7db1d472da7c29c1ae91e79c00740d95e6f2c22fafd3c6df228b716d",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\features-0.f32",
+    "sha256": "20834009f3447ff2d8397fefcac45653b5960b3d67ea57facfac5b9c3887fdd5",
+    "bytes": 2073600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\features-1.f32",
+    "sha256": "eda303edcc2a348db8db74a0423eceb9d0272e405d7761cb2fcb8daae3b90ddd",
+    "bytes": 518400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\features-2.f32",
+    "sha256": "24db1e7fcaf41a6a30e3838e36c950602adbc6bbff9a9b82ced30ecc025d0d71",
+    "bytes": 129600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\lower.f32",
+    "sha256": "333e8508eb55ce0ef9a3b00c0e0f588c5cf945d5f84ecfc2c4fcde36d483964a",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\prescribed-cfa.f32",
+    "sha256": "23690350578e99b4d7ea9f0a7ee1ed29c0594a82f3fe0359d74be7a0543f59e0",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\prescribed-rgb.f32",
+    "sha256": "9ff471486062d159c3bd1f5e1c755d78c20513b7db201d967391c8bb2b542c66",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\prescribed-weights-0.f32",
+    "sha256": "dfcbe962e967dc718cc2093af0dcc0ea224c3ec341d799bc1df17dd12fc85867",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\prescribed-weights-1.f32",
+    "sha256": "4b8db06b8c83528346dba5bf6049ae5646734e0d8932752c26d4028b517a7241",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\prescribed-weights-2.f32",
+    "sha256": "560dad2c45db48ffa5c825cd60ab7594ed168606b1480cf8d9c361dca6312718",
+    "bytes": 12960
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\truth-rgb.f32",
+    "sha256": "4f95a67e43f6f42b0551d1919b9a9654fa361522407d2b0ec24ca6fa349cfe4a",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\uniform-cfa.f32",
+    "sha256": "4f0b1c0da4950c065b482e950d934fcd7197126f231a0ce875774470632f82f3",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\uniform-rgb.f32",
+    "sha256": "0fc40fed2de6791a8050f6ccea649373f051e840c678ad1334208cd545d735ea",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\upper.f32",
+    "sha256": "fe316b9fb5c6dffef46305683df59ab285a524bf786a66eca9f7d8ca63fda267",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-compound-texture-v3-n9-b3\\zero-network-rgb.f32",
+    "sha256": "0fc40fed2de6791a8050f6ccea649373f051e840c678ad1334208cd545d735ea",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\base.f32",
+    "sha256": "a59f9df10be2ebc3eab06edcee8ba26e9b598e2569847cf1a6e49e52b3694b04",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\canonical-rgb.f32",
+    "sha256": "4bf3bb61f26ed89ff0651877150941509150fcbe6ba065bcbacff7e4956fc177",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\canonical-weights-0.f32",
+    "sha256": "21efeb2bcee5454140edb092f29fae3b75351a473cae5baaaf549a6e2c730b7f",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\canonical-weights-1.f32",
+    "sha256": "027acd79370f38964c437bdc0373d5a257619cf190c54d4a47bca45eb7afc268",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\canonical-weights-2.f32",
+    "sha256": "e139d51cbd85a0d966dfb6bdd9a44dcc16a16bbc324aee91dec6e31ff89090fb",
+    "bytes": 7200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\case.json",
+    "sha256": "97996fa68ab9cc258569a03ac78a4fb994a979bf9c681be8fba33fccbc91a873",
+    "bytes": 9147
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\coeff-0.f32",
+    "sha256": "220832e162e8f395b8a9d14a9453a031757908317e8710050031cb0d4dadf1ed",
+    "bytes": 460800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\coeff-1.f32",
+    "sha256": "1b5ca1e999e5411c78899947e07c9436a047a910adc6616c5bc7878b6e98c261",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\coeff-2.f32",
+    "sha256": "030ce66c9b31861410e53f3019d73ba7779fccb20c8daccc803e5e61f805887f",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\features-0.f32",
+    "sha256": "ffd4b4ab47e1432db4b6687b7e11d6e999737501c2fdf83b55cbefb904b9dfc0",
+    "bytes": 1152000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\features-1.f32",
+    "sha256": "d862b9f5044cc8ad2fa29300314f5a0518cdef9705d8ce83f390f7ad0fd90ed1",
+    "bytes": 288000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\features-2.f32",
+    "sha256": "d1cdc6ecaa8ff50bcfd1fa186d42d3b4dba25b9b40ee82425ddbc2f116be465c",
+    "bytes": 72000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\lower.f32",
+    "sha256": "a167612620972a77845983236dd25a0b90bb3b854aff3e0d7e69541e0c601a6f",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\prescribed-cfa.f32",
+    "sha256": "ed3695e26b904176d187103eb45759ea9adcfccb10753200ba7d3b4a3deecc36",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\prescribed-rgb.f32",
+    "sha256": "f65356b9ca75b140b073a539c378e0d202091957af18ec2b5e341dcc22affe50",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\prescribed-weights-0.f32",
+    "sha256": "6f0460228a07c744f071fa2cb1a65626c5353e13cb3b4541b3ab7b4f6de6604d",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\prescribed-weights-1.f32",
+    "sha256": "245e4e48eeea7b4e2b89d586c1fadc18c5129cfb8440d832e030746b8cddfbff",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\prescribed-weights-2.f32",
+    "sha256": "c19babfd72d4bfad2f917ae5addf75118b1a8bf11247395eb34884add7cc8ff6",
+    "bytes": 7200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\truth-rgb.f32",
+    "sha256": "ecf2898c3b64200d7ceb7ae787edf150279dca68038534d10af344d005768b4a",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\uniform-cfa.f32",
+    "sha256": "e1fc67c4455e84070d7b4b8e1c70f7f5398324b1bff018a7692c411354964530",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\uniform-rgb.f32",
+    "sha256": "beaab50d4edd0c109e526acb95f9fa238c7e8836ad185ced9646987e7960c07a",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\upper.f32",
+    "sha256": "18348a19a29bba0c6120c0149143337f61373bfc4ff2d24568d9a1c37bb4d4ef",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v0-n5-b3\\zero-network-rgb.f32",
+    "sha256": "beaab50d4edd0c109e526acb95f9fa238c7e8836ad185ced9646987e7960c07a",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\base.f32",
+    "sha256": "7c791139c18d7c56e3365c5c46983077385ca79acd93f52c647209faf0d2b83a",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\canonical-rgb.f32",
+    "sha256": "1ccec517d1d5c832b0c4d767e4a58c0624e3e7ce81f927f7821a9b0354c5104f",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\canonical-weights-0.f32",
+    "sha256": "4a2cf2413a0f6c1d05d4f761f80b98cafd13d3f6389962b7c0767bd442434195",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\canonical-weights-1.f32",
+    "sha256": "43a7417f2d0fdf7dee74bd2a4fe0b28a0af3531a358a644595fb72fe99936f04",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\canonical-weights-2.f32",
+    "sha256": "b8dcf2c2c7d0bdc4e373e27db1bf5c0e20af79e37eb9c3ceee792a9601f9ff12",
+    "bytes": 12960
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\case.json",
+    "sha256": "e886147229f076b52857c401276ce42bee461db202289a673db71a508c0e32ca",
+    "bytes": 11965
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\coeff-0.f32",
+    "sha256": "0ac87a79f06b60bb040c4c0f82e246832c42efc8e965626147a3bf203c6d1395",
+    "bytes": 829440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\coeff-1.f32",
+    "sha256": "ee138bc49db44c75666af7fbf48c56a0dbf4f8d93a9f0ebe064a5743e3009485",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\coeff-2.f32",
+    "sha256": "fd25b723e05c4ea1087dc543c53722069a60a2529b646eb4266a11e52fc35af7",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\features-0.f32",
+    "sha256": "659b29609495f63a9700410431e4fbdc46d1125b97e42d8e2fe0f8d0143f62c8",
+    "bytes": 2073600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\features-1.f32",
+    "sha256": "647540fdb259408d0705ceda5d84b9f3bde857d16b81ac8025fbb474a7cb9264",
+    "bytes": 518400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\features-2.f32",
+    "sha256": "81390a984f8b717201c39caff00d996e773c310cbd6c55ddf0c58a8601ee5ed9",
+    "bytes": 129600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\lower.f32",
+    "sha256": "15adac4c338635dddb9d22ec6c810c7deb02e4346c7401192fbf11e7b94359fe",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\prescribed-cfa.f32",
+    "sha256": "dcf038136538b6c7e4d7b4e1b3fb15d06edcd109f1b8d75eb20421a0f178fef9",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\prescribed-rgb.f32",
+    "sha256": "b92b4664ec564b627cf322882e87429a379f680c3a3a0d7e786d25263a78f4fe",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\prescribed-weights-0.f32",
+    "sha256": "dfcbe962e967dc718cc2093af0dcc0ea224c3ec341d799bc1df17dd12fc85867",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\prescribed-weights-1.f32",
+    "sha256": "4b8db06b8c83528346dba5bf6049ae5646734e0d8932752c26d4028b517a7241",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\prescribed-weights-2.f32",
+    "sha256": "560dad2c45db48ffa5c825cd60ab7594ed168606b1480cf8d9c361dca6312718",
+    "bytes": 12960
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\truth-rgb.f32",
+    "sha256": "ae578868c684114ac5d9e82e5fc1616f81ff55423aa34084faa7d2cd278b2ee0",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\uniform-cfa.f32",
+    "sha256": "47b68ccbfba0448d23b33ec99b5980392af245afb444ac6c5141d257353d9aa9",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\uniform-rgb.f32",
+    "sha256": "04cc039538650e343eec568af91fd5ead966ff6a30fa2f71aade21ea33e4cdc6",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\upper.f32",
+    "sha256": "722b8d46cb89519d6bc75d81d4de123c69366e4dcaeec8c78f72ba095ee10716",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v1-n9-b3\\zero-network-rgb.f32",
+    "sha256": "04cc039538650e343eec568af91fd5ead966ff6a30fa2f71aade21ea33e4cdc6",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\base.f32",
+    "sha256": "e80811bc5523b251fcfded01eb980fb926f548145ca3659c44cdffd1a70ced2e",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\canonical-rgb.f32",
+    "sha256": "f84b4f04d4e00cb0e4744d9d2fc3c905be0f80496ede887c1c0b9c9aac5ef02d",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\canonical-weights-0.f32",
+    "sha256": "9a75a330889d6933796dd6c0178686ebaa469a40e5aff54af0a10d1d8dd2efb1",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\canonical-weights-1.f32",
+    "sha256": "fa8b263d6b6f310ef1fefd48300b62448220f906104bc6725c9df0d926b1f163",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\canonical-weights-2.f32",
+    "sha256": "8a5489038e8e4e007be8b6b22df6a9e37f5e65852cc17fd7c957cbf92123dc9c",
+    "bytes": 24480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\case.json",
+    "sha256": "23106ca514daa4f57c21ce022085e43dd8ad0bbebd2a609ef014731f12fd870a",
+    "bytes": 17609
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\coeff-0.f32",
+    "sha256": "240a90bf663c0203f981efc81eb95bf9d206eb6875de8094750f9994652cf323",
+    "bytes": 1566720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\coeff-1.f32",
+    "sha256": "ccd7addd65c6f19b0f473ee17e23fc49a1afad4b472aabab4495d786afc77723",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\coeff-2.f32",
+    "sha256": "aa95d0a685a01a17efbc851df107c1c586d3773484485836acf7cbae33fe272b",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\features-0.f32",
+    "sha256": "05d9542d263ef6b21077d72f22a35b453e7bb4f131b45efa8a09f459b1a1008b",
+    "bytes": 3916800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\features-1.f32",
+    "sha256": "ed0a6c7117404ac26a508e4a54fe73292b25887f909871ae34b1e43da55e6c01",
+    "bytes": 979200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\features-2.f32",
+    "sha256": "89e2dfe6556f25d461c29247730f3fcfa6a01e085aa7e1e269f3e1b8b619627f",
+    "bytes": 244800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\lower.f32",
+    "sha256": "0383319b22c0a72fed97430e3554b06c30fbfb6b6cc22c82ab26d22f7758d5fc",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\prescribed-cfa.f32",
+    "sha256": "b748a51ad6137a5a2110555b04676cb95656ca4fba5877c150f515e9a2becc85",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\prescribed-rgb.f32",
+    "sha256": "8efdba2233dc6934453e9bd63a2851c845fe9ec2d764d03540de59316c8b4002",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\prescribed-weights-0.f32",
+    "sha256": "6a9f95e0fd0fa29b635a3c8553385511e68468e01972a8ffaea2f35e25a62b85",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\prescribed-weights-1.f32",
+    "sha256": "e4639b842fcf02d5a89fbaac9e9e818c9e7416e5614f4a37680143b550628d18",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\prescribed-weights-2.f32",
+    "sha256": "62982148e761d8b73b7d2e2f9795d4bbb1799000569f993831b565dc51a945ca",
+    "bytes": 24480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\truth-rgb.f32",
+    "sha256": "85b687cc4d6815374d57dc83a4e88c7cabf2d8e3c979b987087f41309b80a08d",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\uniform-cfa.f32",
+    "sha256": "c77d55bed40cdc6ef9d200e75f38947c4d689cde26cc456661ba32e5b5992053",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\uniform-rgb.f32",
+    "sha256": "f061a54c478bc3510847ac60c3255082b4cadbf13b2f15afe2585cbdbb8e9883",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\upper.f32",
+    "sha256": "ad79f3a7136a79d96092d3e1d7a8ef7063601ec24f26a555a64a3cd9e3eb72f9",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v2-n17-b3\\zero-network-rgb.f32",
+    "sha256": "f061a54c478bc3510847ac60c3255082b4cadbf13b2f15afe2585cbdbb8e9883",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\base.f32",
+    "sha256": "66fa243ec65bc6c55951bc4f112f52dbc00190ccc5dd7e625bc22b7385a721bf",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\canonical-rgb.f32",
+    "sha256": "46aa665b98a13e66f7b8ad183d1617dbb4bb78ee40ac7c584c96dfffccaa19bc",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\canonical-weights-0.f32",
+    "sha256": "5627b9cf666e7fef3055009f17b45cbec7df7f7efd547fbdd980b4dc847517bf",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\canonical-weights-1.f32",
+    "sha256": "90bbbd2fbd0b179d6ef8a6384e4261da75b40efa78ac23095f10100f7b7487d1",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\canonical-weights-2.f32",
+    "sha256": "8bd5bf6704544004779151092334e16fc0ad48814df0aa884c3af366330ed923",
+    "bytes": 7200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\case.json",
+    "sha256": "813346b6d242b75b1c0e4a3347a950c1313bbc23b0e72696d0e0878615c8faa0",
+    "bytes": 9147
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\coeff-0.f32",
+    "sha256": "ae5eeec986e8e1e85b59a800753ff67e5fdb068a3cd51b8b67bd24a15b07c0c5",
+    "bytes": 460800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\coeff-1.f32",
+    "sha256": "ae3cdc3d07562e2bdc3d24d20135ae17cdb3f4896bde723a315d1dc377b679c8",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\coeff-2.f32",
+    "sha256": "b129fa67e098d44977983e3d425c7366fda6237d918bc36c68abced450e273fe",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\features-0.f32",
+    "sha256": "bea6aba5c9d45ee239966dba968d295952b9f22c34b946a9e9364c54a89814ef",
+    "bytes": 1152000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\features-1.f32",
+    "sha256": "2da5b3ee3178a3032e2c8f02519127616c6ac0ac3860b2b01198269f4b4d6674",
+    "bytes": 288000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\features-2.f32",
+    "sha256": "da5d794d61aa1440c225d127aebb10cda3f2568e562c04bcecc562f43c537ba7",
+    "bytes": 72000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\lower.f32",
+    "sha256": "527536a4fac362b4e6037673e8f4fed814b411be7005e8c53e6f9196689b0ff1",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\prescribed-cfa.f32",
+    "sha256": "d3808c30f51c44902c54cc31c38c2483e503a19735ee826ed19df8e5e813ebc1",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\prescribed-rgb.f32",
+    "sha256": "37db2f3e0f2cd8fcd63c5c9fd59e153525728c0f99b903cb8e74882f3209d960",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\prescribed-weights-0.f32",
+    "sha256": "6f0460228a07c744f071fa2cb1a65626c5353e13cb3b4541b3ab7b4f6de6604d",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\prescribed-weights-1.f32",
+    "sha256": "245e4e48eeea7b4e2b89d586c1fadc18c5129cfb8440d832e030746b8cddfbff",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\prescribed-weights-2.f32",
+    "sha256": "c19babfd72d4bfad2f917ae5addf75118b1a8bf11247395eb34884add7cc8ff6",
+    "bytes": 7200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\truth-rgb.f32",
+    "sha256": "159be95b7c15f4158ea10682eb0e807aaf3d216519dd3b02f804ea80ae7ead09",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\uniform-cfa.f32",
+    "sha256": "ebac56751f4e6d6685b1fb55f0c81df7c23cd1d197211499c61cd1c89ba37219",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\uniform-rgb.f32",
+    "sha256": "eb90925e158f6fdd6b3e98f2bd3892ab771bcab98635a43d150ffff1248f3358",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\upper.f32",
+    "sha256": "d5697cc6346d9eceaf9a91226d57dcff50a44ea9e294438bfb00ceb23deefd59",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v3-n5-b3\\zero-network-rgb.f32",
+    "sha256": "eb90925e158f6fdd6b3e98f2bd3892ab771bcab98635a43d150ffff1248f3358",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\base.f32",
+    "sha256": "96dca3bf04b6421fb9c185eb1b153a015fa77c7a6002772d7d91a1d47acd85d4",
+    "bytes": 1024
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\canonical-rgb.f32",
+    "sha256": "b50dea3074b7e203669595019dea593232bb089e4c44b65d7d6e51db119fb4cd",
+    "bytes": 50331648
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\canonical-weights-0.f32",
+    "sha256": "c20ab1330f100a6368294d6089e5207b429314d2140c646499fde2015cd67a13",
+    "bytes": 20971520
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\canonical-weights-1.f32",
+    "sha256": "b0e783457d5d9435497f7c661b2a39209a477d6569df670f6ff70b1f82a84f43",
+    "bytes": 5242880
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\canonical-weights-2.f32",
+    "sha256": "64c524e448aa104baef2dbdbb5d5d685ae9baf7522c33e9d6ab16fd23157af28",
+    "bytes": 1310720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\canonical-weights-3.f32",
+    "sha256": "d80ad2993e720e5caf92dc3c5feb599469296edcbebe82b46bea54becf535d2a",
+    "bytes": 327680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\canonical-weights-4.f32",
+    "sha256": "6a57f7325f47f0ff07883ddbd31e7365166b50b9fe572b30c15400e96d5c9a98",
+    "bytes": 81920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\canonical-weights-5.f32",
+    "sha256": "97ad7144fbbfa6574784f1a46657aa0a86a4cb15d92342b1b92b730bec6299fe",
+    "bytes": 20480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\canonical-weights-6.f32",
+    "sha256": "e0689a2dc1396a79a997955b42060cd23bf19ad4eb370321fe27d75b9c1d8977",
+    "bytes": 5120
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\case.json",
+    "sha256": "0e49f6a3beb17bc7d26cb8b366112a80f011166f061c24e2461aab18e291cd70",
+    "bytes": 13459
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\coeff-0.f32",
+    "sha256": "a8553159cdf38a554a58d8494d0b8fd790d39627d7f1c8119f54671997a24ac8",
+    "bytes": 83886080
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\coeff-1.f32",
+    "sha256": "a079285a444868883ba47eb9bc703ae5432fd75dba31eccc758bb0557dce4403",
+    "bytes": 20971520
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\coeff-2.f32",
+    "sha256": "e5f4714d1d62f7addd0b2605e1668de0d18579706c9f81a5ca02d883cb8ed8f8",
+    "bytes": 5242880
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\coeff-3.f32",
+    "sha256": "dfd6275b4fb24f693021c0ea83433127bfe85149b4205c6a80cddd0206cbb06d",
+    "bytes": 1310720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\coeff-4.f32",
+    "sha256": "0668d3f0f09ebde5620246ad25f50af889e33646f7952f55c4ae4c2b9441b733",
+    "bytes": 327680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\coeff-5.f32",
+    "sha256": "20b9c0c613371406149381a8bcb6f9a1e3f68bc6113048b3356511a46cbcc7e6",
+    "bytes": 81920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\coeff-6.f32",
+    "sha256": "ccfc011b5e07f90f7e7ab44cbee4415bb6b230aa391f1cedf7e5176236b8b2fe",
+    "bytes": 20480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\features-0.f32",
+    "sha256": "73615f239f1a53a94d9bfc4ee16b46a7e432038797f0ed26c63b22b3f080bddc",
+    "bytes": 209715200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\features-1.f32",
+    "sha256": "c3c984a8d6a44bb20a44a326588dfc9b3cf8748617212ea7c8b9eff1fb2d1415",
+    "bytes": 52428800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\features-2.f32",
+    "sha256": "35ead2c3b6c09836297eb1cc0df0763706367cc5e569cbe1b1b8000e7329a95d",
+    "bytes": 13107200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\features-3.f32",
+    "sha256": "e3e72769fe6e1b80752c7aefe92560dbffd15ad4e21d2341f6ab3a7187fa75c7",
+    "bytes": 3276800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\features-4.f32",
+    "sha256": "9c20f1bf83debfbe013cb75c24b6d77b47ac8d3c254e022faa1a1fb2bc9bc098",
+    "bytes": 819200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\features-5.f32",
+    "sha256": "39e4fb2695ef06054a7811c75c53c2db1eeb8de0e3b29957fe6bcd53752ebb9e",
+    "bytes": 204800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\features-6.f32",
+    "sha256": "440b93bb3f3ab6ba39c18adf52d6b1798e92f7556f5edac277c0de63783199f2",
+    "bytes": 51200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\lower.f32",
+    "sha256": "e3c8b20978c3d4a45bb930925e07b8462a291d16e0cd79e4fb440c79ba6aaeac",
+    "bytes": 16777216
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\prescribed-cfa.f32",
+    "sha256": "f5d204ccc57a8cec412043c56c8c5c49cabc013a340078c98ab409932ad02755",
+    "bytes": 16777216
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\prescribed-rgb.f32",
+    "sha256": "c5ab1c66b699abe4fb3bb1dee45099b45033e8f6ddc25e40430e9266a367b475",
+    "bytes": 50331648
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\prescribed-weights-0.f32",
+    "sha256": "0549741e9921945dd56c57d2b29e8e1934811feaf82940f1f0c0a9f2f9246240",
+    "bytes": 20971520
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\prescribed-weights-1.f32",
+    "sha256": "97300a25a034da68d10b83220f5c3324bcea55aed9c1785ccd79179147dafec7",
+    "bytes": 5242880
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\prescribed-weights-2.f32",
+    "sha256": "062d3bdb4d271e0d0c6be23243f544a97e7cd085a6bb4d3870717077d8b0a71e",
+    "bytes": 1310720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\prescribed-weights-3.f32",
+    "sha256": "71b42a40daaf2416ff6f129d82fe857e56c16f094715fe8c3a23d2a69c843451",
+    "bytes": 327680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\prescribed-weights-4.f32",
+    "sha256": "b6a689865076303d9720417bc710be290aa06e6c0e84aed396610d6c66cc9ed8",
+    "bytes": 81920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\prescribed-weights-5.f32",
+    "sha256": "5dce59eb5404821c7656bf67399568c234bd8df472c1dfa724ed8ebd39342378",
+    "bytes": 20480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\prescribed-weights-6.f32",
+    "sha256": "e83c491770a7759851a58c32dcdb7a826a6c9b2f487d9f6aef63f62d7ff84a00",
+    "bytes": 5120
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\truth-rgb.f32",
+    "sha256": "4802b0dfbd380b773b814e17a9cb867d7254269a684df50a8a410f9e898eee4c",
+    "bytes": 50331648
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\uniform-cfa.f32",
+    "sha256": "501c14ee46f29b621a0dc660c6cf162ad63f8e163f128cea91d8d87dc645e02f",
+    "bytes": 16777216
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\uniform-rgb.f32",
+    "sha256": "0b46391206d8e0b916e4013e4ebcccb336c3b6a1341f3448357329cb90beb3d7",
+    "bytes": 50331648
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\upper.f32",
+    "sha256": "ea321876327454bcbfe3e4b70d54cb1210e35676c7730c0325420f2b3ace578a",
+    "bytes": 16777216
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-flat-v4-n5-b7\\zero-network-rgb.f32",
+    "sha256": "0b46391206d8e0b916e4013e4ebcccb336c3b6a1341f3448357329cb90beb3d7",
+    "bytes": 50331648
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\base.f32",
+    "sha256": "c16984945d042f2a4b6442a64cdf5c81493d54ba4260e5ea8179b7df153d4b2e",
+    "bytes": 1024
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\canonical-rgb.f32",
+    "sha256": "313532e7fc5125b6aa515715dcbdb70b4d975bc3f98af040050833e2b03959f1",
+    "bytes": 50331648
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\canonical-weights-0.f32",
+    "sha256": "fcbf3481ef7fc1905e650f7c28473d9ee864dfa35df8b703e398307bf92856b9",
+    "bytes": 20971520
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\canonical-weights-1.f32",
+    "sha256": "f54377d20e7efb0de8f3557918ba347c83af5c5dcf9615b18fd0b5c71481a445",
+    "bytes": 5242880
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\canonical-weights-2.f32",
+    "sha256": "6c45528c033c26bc7ade151b401601d49431db969a531ea9691db9547b0ad104",
+    "bytes": 1310720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\canonical-weights-3.f32",
+    "sha256": "8bc53ec2025624ea33f72f2de32e669f2b4e33466e1601c59c16c39aee0e7960",
+    "bytes": 327680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\canonical-weights-4.f32",
+    "sha256": "922f310eb17c3222ee30dc99318722b8d893f92e5cc0476b754b46aefcb863ce",
+    "bytes": 81920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\canonical-weights-5.f32",
+    "sha256": "a40889ec91ca31069724876299bb0b914d80c66fc8ec35860c879263ee6ead1f",
+    "bytes": 20480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\canonical-weights-6.f32",
+    "sha256": "2ae221e0b6c5d89c1368cbce1a2f4cf18b15f7342565bee212a7b768148a12ef",
+    "bytes": 5120
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\case.json",
+    "sha256": "62615fdb27b46439419092c8eabecccfdb2763fa9d4055623174a363d11e9ab8",
+    "bytes": 13459
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\coeff-0.f32",
+    "sha256": "37f22cb2c80946de7f9386c15fbabf1ca4f04dbc16567db0b027405af60bb370",
+    "bytes": 83886080
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\coeff-1.f32",
+    "sha256": "8f9eded38288ab7b7d03a03d1833cbe820fcb4ad1a9029ec7ffff1caf0ea7615",
+    "bytes": 20971520
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\coeff-2.f32",
+    "sha256": "8a5fba1fa7791d5a200371da0d4fa05b9ef83777528df8c179e9302418aa08dd",
+    "bytes": 5242880
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\coeff-3.f32",
+    "sha256": "b72c3c665943c0dec81c66ea773dec27f4853d30fa281bd1eae5cfbd6a3886fe",
+    "bytes": 1310720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\coeff-4.f32",
+    "sha256": "838ace03fe4be321b230545ace6a60f52b8e1d60aa22fdd5c29d5fd0dc7d0230",
+    "bytes": 327680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\coeff-5.f32",
+    "sha256": "24f84cf50c2a433f8768a773391e9fee0121ac304f9fbd51828df9f061e29da2",
+    "bytes": 81920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\coeff-6.f32",
+    "sha256": "afffa5cec1d539c21478bab99bbb0709f5e3a1fec2454b30e2c041634c8279da",
+    "bytes": 20480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\features-0.f32",
+    "sha256": "cb4730f9eb5c206da4be391127e4a5866663833d64a6dd085440a60850a8759a",
+    "bytes": 209715200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\features-1.f32",
+    "sha256": "30c94137475a3d20863366633ba322731d8205aec96958841ec8d8d39c0ac5a2",
+    "bytes": 52428800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\features-2.f32",
+    "sha256": "dd1bbdfc9b5ebf1da9e801dc52bfeceb66eacddbc9aa45f44198f04d109e1f11",
+    "bytes": 13107200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\features-3.f32",
+    "sha256": "59f50900548c9bda28e21bff626a46ae59352a8a8295298c3cf6dd6742d3d5dd",
+    "bytes": 3276800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\features-4.f32",
+    "sha256": "149e0cdbc308c9b95095b0447a9dd12a82a63e3248e9559e68363c4d4558d717",
+    "bytes": 819200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\features-5.f32",
+    "sha256": "e65487390a1da7be8872509455e302155e807c596b8f12cc535d8b679e28e934",
+    "bytes": 204800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\features-6.f32",
+    "sha256": "64c46db3644537adbc850d2f2c3516c70702475946b7e920f01c9ce2084f3c90",
+    "bytes": 51200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\lower.f32",
+    "sha256": "d348ff0bb5684262017bc7e349c03ed4767c073e5964561f39affea38797eefb",
+    "bytes": 16777216
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-cfa.f32",
+    "sha256": "171a3285d47c765925bf6eb025fe66a9f634218f09fb65d486fc85f9cd02e466",
+    "bytes": 16777216
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-rgb.f32",
+    "sha256": "4f45597942250b3a57cefcd8561bf20f204db285708b25a3c18bcede1196eabc",
+    "bytes": 50331648
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-weights-0.f32",
+    "sha256": "0549741e9921945dd56c57d2b29e8e1934811feaf82940f1f0c0a9f2f9246240",
+    "bytes": 20971520
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-weights-1.f32",
+    "sha256": "97300a25a034da68d10b83220f5c3324bcea55aed9c1785ccd79179147dafec7",
+    "bytes": 5242880
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-weights-2.f32",
+    "sha256": "062d3bdb4d271e0d0c6be23243f544a97e7cd085a6bb4d3870717077d8b0a71e",
+    "bytes": 1310720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-weights-3.f32",
+    "sha256": "71b42a40daaf2416ff6f129d82fe857e56c16f094715fe8c3a23d2a69c843451",
+    "bytes": 327680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-weights-4.f32",
+    "sha256": "b6a689865076303d9720417bc710be290aa06e6c0e84aed396610d6c66cc9ed8",
+    "bytes": 81920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-weights-5.f32",
+    "sha256": "5dce59eb5404821c7656bf67399568c234bd8df472c1dfa724ed8ebd39342378",
+    "bytes": 20480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\prescribed-weights-6.f32",
+    "sha256": "e83c491770a7759851a58c32dcdb7a826a6c9b2f487d9f6aef63f62d7ff84a00",
+    "bytes": 5120
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\truth-rgb.f32",
+    "sha256": "96ff36939eb85c935f5b81b76973927c3bfaf02ab94d5c1ae16692fd079b1388",
+    "bytes": 50331648
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\uniform-cfa.f32",
+    "sha256": "a7815a82779e97946fc05e0b757d5ad98a7238cb7f8ad2cdaaf83810d32fa228",
+    "bytes": 16777216
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\uniform-rgb.f32",
+    "sha256": "31baecb8df940100a60c76ec702cb30d009170c4f77724df95ca2b989a60d902",
+    "bytes": 50331648
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\upper.f32",
+    "sha256": "9875d6cbb63194aebba796235aae4766ef3e41a7509e92c37999699fb7a3218e",
+    "bytes": 16777216
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\zero-network-rgb.f32",
+    "sha256": "31baecb8df940100a60c76ec702cb30d009170c4f77724df95ca2b989a60d902",
+    "bytes": 50331648
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\base.f32",
+    "sha256": "b1bd89e6ac1d6035d1cda0a9128926fa2a0414e600de455dcf0e21225e7730fb",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\canonical-rgb.f32",
+    "sha256": "8097f6db27e98109ca2fca881bcc3e6a483e1003323e2fbd657352fc99f08036",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\canonical-weights-0.f32",
+    "sha256": "67d400e72c607b23bcc5e2da182cd71b34bb5cec6d028f8eff5a1d8fd1f463b9",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\canonical-weights-1.f32",
+    "sha256": "37d163c5c92fa261c5f6a039806968eac330d19c7bcf1b7b5afd05c56c7673ce",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\canonical-weights-2.f32",
+    "sha256": "05995f9db9d5615d78a890221ae412ca54f0f4f5a4f3b5c35fb006dc05f08780",
+    "bytes": 7200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\case.json",
+    "sha256": "8bf0c3b54f3e314aad4d3e5d0f8b70497eb1d0572a5ea5bc0b74545d32bbfe9d",
+    "bytes": 9147
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\coeff-0.f32",
+    "sha256": "735d7d2cc89ae499cf6d2d925f1788174c502dc92b19c69f111292ab2f64f191",
+    "bytes": 460800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\coeff-1.f32",
+    "sha256": "7b7a7f760d4c7a861f79163127c3e1ae4f5abfe07fb343a4811ee91132525c55",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\coeff-2.f32",
+    "sha256": "3df31ff3f05f8228aad103e9f35f0312ef722dfd8f2dc7a2c42370599ffdca3b",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\features-0.f32",
+    "sha256": "f71a25840ada0236c3266be7c07b00164357cbfa26340c9a5b0b8d72a8eb6844",
+    "bytes": 1152000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\features-1.f32",
+    "sha256": "315ae72aa0c6f297e72e5c687aadedaa92fed81222246323a25385483f1a8bfd",
+    "bytes": 288000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\features-2.f32",
+    "sha256": "b73ad61f4e1ad93fdb86d3aa2bbfa0db2c76b6e082b0a9693456eaec4cf73cee",
+    "bytes": 72000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\lower.f32",
+    "sha256": "22b2a916cb7160864d8a7befad90ae3acd2ae6499d756ab44d3a33b389fb37ee",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\prescribed-cfa.f32",
+    "sha256": "e1ae61a8efa2f4970fee7f3fb355cc4e79f328691f0c2483c76b938efdda8243",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\prescribed-rgb.f32",
+    "sha256": "91699991cdbccce4d70a7a8bcfdda01aaa20f1195f0a70c574477770acf7f352",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\prescribed-weights-0.f32",
+    "sha256": "6f0460228a07c744f071fa2cb1a65626c5353e13cb3b4541b3ab7b4f6de6604d",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\prescribed-weights-1.f32",
+    "sha256": "245e4e48eeea7b4e2b89d586c1fadc18c5129cfb8440d832e030746b8cddfbff",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\prescribed-weights-2.f32",
+    "sha256": "c19babfd72d4bfad2f917ae5addf75118b1a8bf11247395eb34884add7cc8ff6",
+    "bytes": 7200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\truth-rgb.f32",
+    "sha256": "0300f34d69cf947e633e82b89554fea24fdc9046d6b594eb7d4d48affd77b382",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\uniform-cfa.f32",
+    "sha256": "4d8119b12507015bae59528aa7f35eca12800aa20161767f384794a8191fe085",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\uniform-rgb.f32",
+    "sha256": "ef44a7a39be13ca169a3c52757e9e4f96ed65eb94b2d2806bbc96072507f4178",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\upper.f32",
+    "sha256": "8d0766f2ad18dcdebda3cb239e31c3ae3aeb88f65de7d3cf38f2d9dc7fdda724",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v0-n5-b3\\zero-network-rgb.f32",
+    "sha256": "ef44a7a39be13ca169a3c52757e9e4f96ed65eb94b2d2806bbc96072507f4178",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\base.f32",
+    "sha256": "42e49ec8e8793a3f29e702f99fd56e77c002b8d3fd0e644c07cfc5f168f046f8",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\canonical-rgb.f32",
+    "sha256": "c7f5e9d09b4037f71a2824041e40293aadab1dcf5e0d5f098dfa579ce2ec91d4",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\canonical-weights-0.f32",
+    "sha256": "2255661b7be0d20fd1081450445c271153abec326952b372f548a654d5f91985",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\canonical-weights-1.f32",
+    "sha256": "737e459b289a974385b473497d376eee54c5e528feeaaaaec397c84c8e77e015",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\canonical-weights-2.f32",
+    "sha256": "6d3f747d68f8b291c46898dc60c0c07a991247293e549ec784e77f56c90dd4b5",
+    "bytes": 12960
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\case.json",
+    "sha256": "3048b9dfb9683c1865f3999ac53b9ad082ca590d2f679d742fe096ec6555f79a",
+    "bytes": 11965
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\coeff-0.f32",
+    "sha256": "ac3b5580b0eb268da228415311cd482d35e997d3e92756419802511726496710",
+    "bytes": 829440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\coeff-1.f32",
+    "sha256": "7ec1276faaecc6f023572351bd4d76ff73ade4a0fe42b2e29e3a5931a3b51922",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\coeff-2.f32",
+    "sha256": "9064e74dca6d9259b0ba6cd8608299ce7deb04636e730b05ce7ba13b7c072c32",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\features-0.f32",
+    "sha256": "75e97bc60018def50ca1943a6bbc8742dd4ccd1b86dbfd65e22d2e711d5beb7a",
+    "bytes": 2073600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\features-1.f32",
+    "sha256": "9df69b3bd219c6115927be03993ddf67c3f941c12c725ee47b44a733097340c9",
+    "bytes": 518400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\features-2.f32",
+    "sha256": "aec21993ba58dd8b4030ee667ed610a88c75447f7f31997339d1f83f47544f05",
+    "bytes": 129600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\lower.f32",
+    "sha256": "a6ab278df825d21333195682da8e8cf32b58be60602710d6c41d1361ad9b7130",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\prescribed-cfa.f32",
+    "sha256": "b203217c6be7324221b50013ee6bc4d061edb01f2fd33eb2ace89f56f5d5b72e",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\prescribed-rgb.f32",
+    "sha256": "1fa15185b1807fe79b7ec0c95239de4749a8c7122922346c63c99182d3f92578",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\prescribed-weights-0.f32",
+    "sha256": "dfcbe962e967dc718cc2093af0dcc0ea224c3ec341d799bc1df17dd12fc85867",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\prescribed-weights-1.f32",
+    "sha256": "4b8db06b8c83528346dba5bf6049ae5646734e0d8932752c26d4028b517a7241",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\prescribed-weights-2.f32",
+    "sha256": "560dad2c45db48ffa5c825cd60ab7594ed168606b1480cf8d9c361dca6312718",
+    "bytes": 12960
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\truth-rgb.f32",
+    "sha256": "695b06d07f841b9a67438155b7243d7a1c90bb114c54435eb212df4c0aee17b2",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\uniform-cfa.f32",
+    "sha256": "bc2265bf6c5f89829a2bf814e8c98686c7ae0a94bdf1a87363c0eea6c994c488",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\uniform-rgb.f32",
+    "sha256": "875e88ccf98be323659b052587851bacf3ed23d2b35e197d697343a2c7ff6748",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\upper.f32",
+    "sha256": "dea4020acda209844870c2e0190ea53d01047dda538c7b593d2f6969e11d9b41",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v1-n9-b3\\zero-network-rgb.f32",
+    "sha256": "875e88ccf98be323659b052587851bacf3ed23d2b35e197d697343a2c7ff6748",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\base.f32",
+    "sha256": "7c40fdfc42469ed6af74ed91454a0b555b49680063c3363eefbf7a0cdb1f83ae",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\canonical-rgb.f32",
+    "sha256": "4a262533a437e21278a59f3438f2e6857443cba7b38a264f42d9262bdfab8faf",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\canonical-weights-0.f32",
+    "sha256": "e6ead3f033a0fafc659eb4ec0ee15aa306d87ae2e4bef5ae05882b38861a6e53",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\canonical-weights-1.f32",
+    "sha256": "9e758b4f63c11804d894f8fb53ade8c8ed2e5933f902e75f2d61d441dec8abc0",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\canonical-weights-2.f32",
+    "sha256": "9aa36bf8cf5fc6f8f897d584454f6c0fdfc4d787b6fe439c5ea3cad6651d6b1e",
+    "bytes": 24480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\case.json",
+    "sha256": "1296103efe8d007bfdf8b827d4aa5f3685507c9dc7688396c1f6ff4c6f161dee",
+    "bytes": 17609
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\coeff-0.f32",
+    "sha256": "bed12ff4fe04980f64b2c39ca5a9fe1bfb57729eccae99a6b0a8a4a63da99409",
+    "bytes": 1566720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\coeff-1.f32",
+    "sha256": "5fedaa1a559469a16c6aac71bb3a4199406d14dd963dc6efd5ea25f554169b1e",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\coeff-2.f32",
+    "sha256": "0fc7fa843222db85134ead719ba5c3df53c5ed7e4c712b62dcdd2f0b061b0c2e",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\features-0.f32",
+    "sha256": "b678c43fb2ddd4e2d7e6609ebe1d3642bccfbdb01c9732516f99d8363d1f524b",
+    "bytes": 3916800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\features-1.f32",
+    "sha256": "1553c7bf61652867fb6d691ebfd852ba8d7a94b4184793c1fa1bc021e2c788ce",
+    "bytes": 979200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\features-2.f32",
+    "sha256": "5aa42b69e0486e38eded3e270c6b7f6df9246bc32ed98042ae36f46885fcf2f2",
+    "bytes": 244800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\lower.f32",
+    "sha256": "43eb154f6300ef7955c258dd078f51601a9d0125c7e3857fb3ee9785a5bbbbcd",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\prescribed-cfa.f32",
+    "sha256": "a27c6a33f2c819773d50621472df2d9d4b206959aa1b6a69ddb8e8c1b5cc74d8",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\prescribed-rgb.f32",
+    "sha256": "afd18642934fee11d9eec5e1b9808ba76e82779ca5b4b062e6fc76bc2a431565",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\prescribed-weights-0.f32",
+    "sha256": "6a9f95e0fd0fa29b635a3c8553385511e68468e01972a8ffaea2f35e25a62b85",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\prescribed-weights-1.f32",
+    "sha256": "e4639b842fcf02d5a89fbaac9e9e818c9e7416e5614f4a37680143b550628d18",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\prescribed-weights-2.f32",
+    "sha256": "62982148e761d8b73b7d2e2f9795d4bbb1799000569f993831b565dc51a945ca",
+    "bytes": 24480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\truth-rgb.f32",
+    "sha256": "861d6b10fc8751b6d2a2c12ba2c68af716e7f0ec827326e7f78bcec9b957d17c",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\uniform-cfa.f32",
+    "sha256": "6245bf68f5b7c2dfce96461f1e29afc6204cbdc6a9e59fb17d8bcbc9454ef84c",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\uniform-rgb.f32",
+    "sha256": "63fa6db1fc48713ead589eefb3b0acbb721a05af6ad0f6d3e5bfecae1fb94fbe",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\upper.f32",
+    "sha256": "cf61bb93df6c676977b2f3f2b5708e2bd30ef54a06d74509897f0d32172d504e",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v2-n17-b3\\zero-network-rgb.f32",
+    "sha256": "63fa6db1fc48713ead589eefb3b0acbb721a05af6ad0f6d3e5bfecae1fb94fbe",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\base.f32",
+    "sha256": "aa4f402e29565b5da93d95a21e188e42afd1e1b27a29d64239d7e0645456583b",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\canonical-rgb.f32",
+    "sha256": "0c5022d3688897afe63bc550ef3a4377f6f36df93b6fbac503ede9f93498b8ae",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\canonical-weights-0.f32",
+    "sha256": "0bcc72b45195c3db1ad1886a548cbd92786bab19327be1e8152266109b40b5f7",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\canonical-weights-1.f32",
+    "sha256": "b237e56b18501559d193d1bd77ec9e2f51e607f96f6764cc1c55b7526d2c4f7f",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\canonical-weights-2.f32",
+    "sha256": "b8f485b767048c986fb5676e90cefa8fdbaeeba88dba2e10ea6892da89aa6414",
+    "bytes": 7200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\case.json",
+    "sha256": "09ea2382bed3095b28e919ea84f02020a7d283b8264e4ba3b468ed526335a5aa",
+    "bytes": 9147
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\coeff-0.f32",
+    "sha256": "d953c07512c86ca51637c128decc1c2b513664c70fd812e750b6d25c061df9fd",
+    "bytes": 460800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\coeff-1.f32",
+    "sha256": "55bf11f95f748cef8bfd33e23fbc50bcba2f5f483c62e19ab000bc086ea0a044",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\coeff-2.f32",
+    "sha256": "78e4c7b421d02c77643be24781de26359c331d17fb2415609f7307eb52989e3e",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\features-0.f32",
+    "sha256": "af186bb0044157233d27d8ed917a51638fc24ed6b02fd0ac1a51cc7bfd7d330a",
+    "bytes": 1152000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\features-1.f32",
+    "sha256": "2e81d9763e50e3ed50181a66b77f6cb7df099b1602d0c3118582cc84d4b6f952",
+    "bytes": 288000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\features-2.f32",
+    "sha256": "d2a89a0b399706eb47fca083ae94a4e16d8ea211d2b7c6073e0c3f497a3b4ed9",
+    "bytes": 72000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\lower.f32",
+    "sha256": "401004f0ac3064bcc267147865b9d5ef74c0787bac8dce5ba37b97f7e8c2693e",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\prescribed-cfa.f32",
+    "sha256": "87af78fc98059744aa785b5b559653387504f51a1c89d05e941321a1edff392c",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\prescribed-rgb.f32",
+    "sha256": "4ee3082cf2bc551c20ee4807ae12679ab49f454245e49a8ebf3af45bb9bef329",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\prescribed-weights-0.f32",
+    "sha256": "6f0460228a07c744f071fa2cb1a65626c5353e13cb3b4541b3ab7b4f6de6604d",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\prescribed-weights-1.f32",
+    "sha256": "245e4e48eeea7b4e2b89d586c1fadc18c5129cfb8440d832e030746b8cddfbff",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\prescribed-weights-2.f32",
+    "sha256": "c19babfd72d4bfad2f917ae5addf75118b1a8bf11247395eb34884add7cc8ff6",
+    "bytes": 7200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\truth-rgb.f32",
+    "sha256": "fcf37190cd2354b6a5e297f9076e3cd00b2d90244fc3a9aa7e24ae633a341368",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\uniform-cfa.f32",
+    "sha256": "e7747325a2b8d7450ee1493dd453922b9691e21fec5b567be5f999505d06e678",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\uniform-rgb.f32",
+    "sha256": "cf8ef0aec58ded6b5f17929cd5e9a9223a3a69afe70eed8bbc1d613f921e405c",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\upper.f32",
+    "sha256": "634071e3bac6ec42c2d8db591a732eb9e637de612ef51e65f28efcb10ac17af1",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v3-n5-b3\\zero-network-rgb.f32",
+    "sha256": "cf8ef0aec58ded6b5f17929cd5e9a9223a3a69afe70eed8bbc1d613f921e405c",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\base.f32",
+    "sha256": "27c88da70de6990fdea3b64a0d0fc3552e90adbc232796401328893f555ea9cb",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\canonical-rgb.f32",
+    "sha256": "49dc912312472486a8c9ec79000c0d0e9340374b538b39333970bce81603c9f9",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\canonical-weights-0.f32",
+    "sha256": "7dd1a1a3d0bc9898b38cea321995a57b506e46216fad966ca0ba3f4fbe8ed924",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\canonical-weights-1.f32",
+    "sha256": "d9c80f2804d26a2e73ac6133f0f8ed28a93c116b167042fedcd0a69d644db6e7",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\canonical-weights-2.f32",
+    "sha256": "b795ffe659d63c811f9b36c01ae724b704fe38cdb8f0c3e326c790a08122682e",
+    "bytes": 12960
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\case.json",
+    "sha256": "80766c170bded9844567ca6b2d2b3e50d06e55fd979ee1008096387f9a2296de",
+    "bytes": 11965
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\coeff-0.f32",
+    "sha256": "5ec5b0e7c0c5607a779d87fb231820c17949f1c478ab7250f187d70955cd5d1a",
+    "bytes": 829440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\coeff-1.f32",
+    "sha256": "204c40bd838db820a37325873782a46b66503f382d7a6c917f50631a1d2971e0",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\coeff-2.f32",
+    "sha256": "59ed415dfc010a641b1cdd67bdfbd6b83b687f602f140ef7091ac42d33f0ace2",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\features-0.f32",
+    "sha256": "2ab83f0e88edffe04d97213a07fdbaa6116b580967b6feeb7277f8a3d653dae1",
+    "bytes": 2073600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\features-1.f32",
+    "sha256": "a488aa31593e15806898d36d948d167eb1bc1533e8bdcadff3a1acf2385805f1",
+    "bytes": 518400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\features-2.f32",
+    "sha256": "7863cb168a2eeee01b31b2b27f27fd6e51d730bdd0534e087f7cf62765baf9ff",
+    "bytes": 129600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\lower.f32",
+    "sha256": "3df9e4f1af1a267893b755587748a23662000a574c9980925dd5bf3626a2b8be",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\prescribed-cfa.f32",
+    "sha256": "fd6fa51e2dbee7f928579f8374cb9006366d91d7972d67b878d5888772d3a549",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\prescribed-rgb.f32",
+    "sha256": "9d5c3dba534070500b456b6d7211fe006a52a6d366820fde37508565181e8214",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\prescribed-weights-0.f32",
+    "sha256": "dfcbe962e967dc718cc2093af0dcc0ea224c3ec341d799bc1df17dd12fc85867",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\prescribed-weights-1.f32",
+    "sha256": "4b8db06b8c83528346dba5bf6049ae5646734e0d8932752c26d4028b517a7241",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\prescribed-weights-2.f32",
+    "sha256": "560dad2c45db48ffa5c825cd60ab7594ed168606b1480cf8d9c361dca6312718",
+    "bytes": 12960
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\truth-rgb.f32",
+    "sha256": "92a71da2280af711b74acce6cb8b6ea14083e5615d131493f6c62e4a1c81fc3c",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\uniform-cfa.f32",
+    "sha256": "12c8ef45f29b04e5b5e467750332562b6beeb0acaaa4fdfb110bbc9a20eccdf3",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\uniform-rgb.f32",
+    "sha256": "4ab3e64e80a767d68b7168290b506578ad6a280c96f1271a66e8b72c1a2be15f",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\upper.f32",
+    "sha256": "2102f1c08abe10522c208497c6ae7d672ea77dbe7c13341266b6647abfc5c16c",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v4-n9-b3\\zero-network-rgb.f32",
+    "sha256": "4ab3e64e80a767d68b7168290b506578ad6a280c96f1271a66e8b72c1a2be15f",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\base.f32",
+    "sha256": "d1f7f06d342806a4a9b5105dbebcec2c7daf1bc5d1f1d46309b5bd291d4c8513",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\canonical-rgb.f32",
+    "sha256": "e7aa4903157d00aed979edbb5898ad902fb4ec0c18563f9328327bd2dcd8edf5",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\canonical-weights-0.f32",
+    "sha256": "77bbe578e44285f0c6a4234092267c1271cb387ce91bf7e9a69f91f049332bd3",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\canonical-weights-1.f32",
+    "sha256": "b3b888bd42b61309036db4bd8053c4c56fcf08b8597174bebbaed93d5f4d64ee",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\canonical-weights-2.f32",
+    "sha256": "74850e174aba91f63e5269e8fe9076394c550cbc84692ada3982cc3ca50b4921",
+    "bytes": 24480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\case.json",
+    "sha256": "241af9f6fae0dd810889035d09a18917be86916ae15b71ac70ee11c31cc3c5f2",
+    "bytes": 17609
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\coeff-0.f32",
+    "sha256": "5e29e2cfe4ea1fc905607e4ec46a93ef26dcc64a545f86e2024db23882a1bb63",
+    "bytes": 1566720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\coeff-1.f32",
+    "sha256": "4855b9bf430152afb9cc9970c4312d9a954d019db591477074b2d3db243edfda",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\coeff-2.f32",
+    "sha256": "49d9bb327752959ec029d681b544f7471dbc2e730dec7289d5adeab2af34238e",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\features-0.f32",
+    "sha256": "ccdb877ae210b9a201a35b5e19d231ffb903651bb4edf80a5d5467fe4603628e",
+    "bytes": 3916800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\features-1.f32",
+    "sha256": "a677286913f05788fe29ae2321c6c0a4b5bb7d2aafc3a83a7265d213ece813cf",
+    "bytes": 979200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\features-2.f32",
+    "sha256": "e2b7563cc145376d4c1ebb972dcc326ce19f8fa002ca3a5282121c521159373b",
+    "bytes": 244800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\lower.f32",
+    "sha256": "cbc9c4f5f2836c01e35875f05673870107856d1ec5a952ed09ba7027fcaa16b1",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\prescribed-cfa.f32",
+    "sha256": "2cbe4e814837956de9e3af1502784192451c4e28ea19bcd23e183f0b48503c46",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\prescribed-rgb.f32",
+    "sha256": "57bf48b9a15e55d5cf5eb9797cee23842666103753f75de62a001c92d2f4a7af",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\prescribed-weights-0.f32",
+    "sha256": "6a9f95e0fd0fa29b635a3c8553385511e68468e01972a8ffaea2f35e25a62b85",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\prescribed-weights-1.f32",
+    "sha256": "e4639b842fcf02d5a89fbaac9e9e818c9e7416e5614f4a37680143b550628d18",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\prescribed-weights-2.f32",
+    "sha256": "62982148e761d8b73b7d2e2f9795d4bbb1799000569f993831b565dc51a945ca",
+    "bytes": 24480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\truth-rgb.f32",
+    "sha256": "efeb4f112cd0d914dd77b72146c2f97e22214d4924a2ef72f528eea6aa861d05",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\uniform-cfa.f32",
+    "sha256": "af2f42ce77d2bc4d310b35648836119e3f8b1833e1f6c1bc0f4df378a2cb76a1",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\uniform-rgb.f32",
+    "sha256": "9ab56482757435bc41d4c8120313174c0725d127a94041cbd48e62182e2da350",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\upper.f32",
+    "sha256": "0e15ad7b2d27d59b34882f35d97f6cda8dc29712e9d89dc733a97a5fad534f29",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v5-n17-b3\\zero-network-rgb.f32",
+    "sha256": "9ab56482757435bc41d4c8120313174c0725d127a94041cbd48e62182e2da350",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\base.f32",
+    "sha256": "f8f56965f0954b9150392b59c1571734854ecde1f60e1dc02208821e2deb85c1",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\canonical-rgb.f32",
+    "sha256": "f71220e2517b13078465b0ba40f03b9a391635f80f8598f46dc547fea0dabc1a",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\canonical-weights-0.f32",
+    "sha256": "732206ee5c1c89e3841bb93dea6d876da84d1b85993463f5e8b62836433ad3df",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\canonical-weights-1.f32",
+    "sha256": "020333d572bbe6e3f216851d877aa245a062ffd3eff9ca0c72b854293129a922",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\canonical-weights-2.f32",
+    "sha256": "33fafcc13b98892cf9b9e13efcc32620cf25083de055d39e6843618df9ab0de8",
+    "bytes": 7200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\case.json",
+    "sha256": "30095365e12c3e8745a5cd24ede477403003abca6178fe7839d2eb9fa88105db",
+    "bytes": 9147
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\coeff-0.f32",
+    "sha256": "3f1b1bd73c87bbafe3bba6a9dd70333d982d7c3717611a8e8e345d87f267c012",
+    "bytes": 460800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\coeff-1.f32",
+    "sha256": "cde36a45af094c9b0c765175ecdda57089123579bf945364c4db86aec5fe3fa3",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\coeff-2.f32",
+    "sha256": "6dfa94accaf7290d492332a9e80bc5c69e765eb3ecf617d13a17d17f2f1c365b",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\features-0.f32",
+    "sha256": "302ff08b2db4447d42651f3ba38ea43d7935d18866cb11e55720fff9b195e7f2",
+    "bytes": 1152000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\features-1.f32",
+    "sha256": "74d7948705f490869d3b4e2eee060d7ec0bb315b63ebd903c59c952757654046",
+    "bytes": 288000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\features-2.f32",
+    "sha256": "244d518df6fa8f916064047fdaedc425e791794186521bc3414da9565091a1a9",
+    "bytes": 72000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\lower.f32",
+    "sha256": "55db6d8e42d4f93372053cf3931a68da6c8f03bb465b106ff593090ee8a08a90",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\prescribed-cfa.f32",
+    "sha256": "4428f4c14570be310849db776988c06530c29c477f207998bef1c6373353bc54",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\prescribed-rgb.f32",
+    "sha256": "a5cf2fa5e96b6d0319d4e5f93f77e2805020c56d836a3aa765f2bbea73a89335",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\prescribed-weights-0.f32",
+    "sha256": "6f0460228a07c744f071fa2cb1a65626c5353e13cb3b4541b3ab7b4f6de6604d",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\prescribed-weights-1.f32",
+    "sha256": "245e4e48eeea7b4e2b89d586c1fadc18c5129cfb8440d832e030746b8cddfbff",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\prescribed-weights-2.f32",
+    "sha256": "c19babfd72d4bfad2f917ae5addf75118b1a8bf11247395eb34884add7cc8ff6",
+    "bytes": 7200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\truth-rgb.f32",
+    "sha256": "c9b6fbb366dfdd7a44565cad5daff6d4a38e57fe7a2ef3a1dbf97368df57bc61",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\uniform-cfa.f32",
+    "sha256": "d7b94f78a278159d12daa64cb8bab285be8e258feace854b132f6582d2f7b85b",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\uniform-rgb.f32",
+    "sha256": "5a9a1284b963c94601a5fa10f6bf39b08bca67e0cef44a5788e55c020618fd6a",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\upper.f32",
+    "sha256": "2cc70d9a1086c04dbcee2e9938f929d8925740a3943b34189e877e1b83ef58f0",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v6-n5-b3\\zero-network-rgb.f32",
+    "sha256": "5a9a1284b963c94601a5fa10f6bf39b08bca67e0cef44a5788e55c020618fd6a",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\base.f32",
+    "sha256": "a80529faac5b64ea1d6857a975ac6742649b8f3464a298dd2b0c7707157f7a2a",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\canonical-rgb.f32",
+    "sha256": "f35d9cc16d4aad8f9588d4e276bf0a140e32daf15ac1c28211759e808ee09edb",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\canonical-weights-0.f32",
+    "sha256": "06811999675968777a8bfbf0b4e0d887fe3c3f581b48ac627fd77743cb2dee9b",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\canonical-weights-1.f32",
+    "sha256": "19689551ff2f6d2c6fe8121ea28810e4106ef88841c1af543a2e257d3876b6ce",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\canonical-weights-2.f32",
+    "sha256": "a5788fa8797270dc168a8c2e37b73e5d7de81e9509ee6d4c2df9b0e2db0a75da",
+    "bytes": 12960
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\case.json",
+    "sha256": "2ec5ec6924492755160712b7667c9fd1f97b257fbc8c7d53022aa6c52623392e",
+    "bytes": 11965
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\coeff-0.f32",
+    "sha256": "26e52e757070d3c2e8b160e9845bb4b889195f72afc421cec1ead1ce331d8b01",
+    "bytes": 829440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\coeff-1.f32",
+    "sha256": "c37117c39d58a166a9b2ec6ea49a2be301cc33fb2679a5fdec26efc568e971c1",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\coeff-2.f32",
+    "sha256": "d4951c9c483730d2243186f765b450ffd8da1740661c6a2d4b8ebc657e33b565",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\features-0.f32",
+    "sha256": "f2180a52317c0a8623856fc626e75f660df2768b5a47ff89970cbc3f7e30a64b",
+    "bytes": 2073600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\features-1.f32",
+    "sha256": "a341765f8569cc1aaf4ffc1ad1f50f724a9aebb5c79b80be643976e98cc3eff0",
+    "bytes": 518400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\features-2.f32",
+    "sha256": "792ca7246b9c0af7316070bf97ded53da6b2be5aaa8a0159ef4b5f83fbee7d4e",
+    "bytes": 129600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\lower.f32",
+    "sha256": "80128ac137180ed3f7b94c17e4bbfc620da73938a01fbb8e3758cfc53d40a467",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\prescribed-cfa.f32",
+    "sha256": "6fa1f59fe79eae12129919f2e9a73f3fa25f50a2596df61b2bad9e24e31266c0",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\prescribed-rgb.f32",
+    "sha256": "26efe2268fe112081fa6496c2ff641bfd4158f9365d8e32feb8c12e295d5a70e",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\prescribed-weights-0.f32",
+    "sha256": "dfcbe962e967dc718cc2093af0dcc0ea224c3ec341d799bc1df17dd12fc85867",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\prescribed-weights-1.f32",
+    "sha256": "4b8db06b8c83528346dba5bf6049ae5646734e0d8932752c26d4028b517a7241",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\prescribed-weights-2.f32",
+    "sha256": "560dad2c45db48ffa5c825cd60ab7594ed168606b1480cf8d9c361dca6312718",
+    "bytes": 12960
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\truth-rgb.f32",
+    "sha256": "5f616e626d7bcbc13243e9f28e18e8550026f13aa7ae93fa6be29f3bcb71ee82",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\uniform-cfa.f32",
+    "sha256": "7baf4ab6b6dabcb70ff77e5baab45491a66caa98e1905dca798f62b44be6ae11",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\uniform-rgb.f32",
+    "sha256": "79d482d7ca23cbba0e96ff8c7314b5858c91125f883094d40ff230de66f96601",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\upper.f32",
+    "sha256": "c6fec12db091d74a8085b33a408633f56e22ac4fa50609e8fd09274f401129e1",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v7-n9-b3\\zero-network-rgb.f32",
+    "sha256": "79d482d7ca23cbba0e96ff8c7314b5858c91125f883094d40ff230de66f96601",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\base.f32",
+    "sha256": "4171bc52331ae402b971f9a09c045e73290becee3cfca0edda19656580a80bf4",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\canonical-rgb.f32",
+    "sha256": "f10c0e455793f7dd48230d3e60707f44129c43dedb36125a72789724ccb1ffe1",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\canonical-weights-0.f32",
+    "sha256": "760a6995cefeb22c81b603f16d47bb56f86f6fc95b5d2de554acf6f2298c1a98",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\canonical-weights-1.f32",
+    "sha256": "7dd41a077d33acd0a238906afdf932b6feafa72fd4c4eaa4bfaeb74487ce9913",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\canonical-weights-2.f32",
+    "sha256": "a5a442c29f991b809211fcd6ff89942a6d5ca14cbcde9fdd0fbadf14bbb46308",
+    "bytes": 24480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\case.json",
+    "sha256": "812e94527576ec02658daa6689ec1fa106ca119b65cf647e7801dddf6f0c7987",
+    "bytes": 17609
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\coeff-0.f32",
+    "sha256": "b619636e9be93875e77c23e1277ea60291262455716e7f015defde02e4532da5",
+    "bytes": 1566720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\coeff-1.f32",
+    "sha256": "c8501e855c30cf48fb8936d2c3317d9330dbbdf4f4b43f70c3950a71e35f9255",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\coeff-2.f32",
+    "sha256": "e84ab6198b6b139633ea012890e3c9818264f040983d536ea8c4628eaf3be0e8",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\features-0.f32",
+    "sha256": "712da44b3d8c662e5bc1487db633c0a0d8043908c2448d6d299ca82524973576",
+    "bytes": 3916800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\features-1.f32",
+    "sha256": "a0218f445114bfbc3684ef5f5486ebef9345614d638be76893dfb3f87d3a783e",
+    "bytes": 979200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\features-2.f32",
+    "sha256": "575ac73e37072851a410871635938f3ca6e5cdfcb8c8411c0c47cad3e03a5cfa",
+    "bytes": 244800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\lower.f32",
+    "sha256": "c499a6a4062cb1c43aa54eb084369aa1e9025f263d2317c5ef72fcdaf01dea24",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\prescribed-cfa.f32",
+    "sha256": "195e0b8f52a476c105fd14bde5a07559abb5ce3dcd3429bfa7e9349c7bb1654b",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\prescribed-rgb.f32",
+    "sha256": "de9cb814298ec6383e46063320d6f00e1428c640bbbd5f25b3895490f0d36151",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\prescribed-weights-0.f32",
+    "sha256": "6a9f95e0fd0fa29b635a3c8553385511e68468e01972a8ffaea2f35e25a62b85",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\prescribed-weights-1.f32",
+    "sha256": "e4639b842fcf02d5a89fbaac9e9e818c9e7416e5614f4a37680143b550628d18",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\prescribed-weights-2.f32",
+    "sha256": "62982148e761d8b73b7d2e2f9795d4bbb1799000569f993831b565dc51a945ca",
+    "bytes": 24480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\truth-rgb.f32",
+    "sha256": "dcb040c3e22268ef6d5db2fcc60caf142531c46312e1c67c4fe22724ffa6a8e6",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\uniform-cfa.f32",
+    "sha256": "a1401d528828870491e4cdc57518b12752c73cf5dbdcef9ed15929d409e53eec",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\uniform-rgb.f32",
+    "sha256": "772630fbc6991251a3a3db0a0e087f8ab92860598f935dfb4ffb59a938b58ebf",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\upper.f32",
+    "sha256": "c826fe637926cbe22820b52cea1316fcf45bb07c6f16b7962533596f08c8cf18",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v8-n17-b3\\zero-network-rgb.f32",
+    "sha256": "772630fbc6991251a3a3db0a0e087f8ab92860598f935dfb4ffb59a938b58ebf",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\base.f32",
+    "sha256": "e399033bbad65c7d48c630c1ecce57a2918944a47af9a71978d80d7c9dd06a19",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\canonical-rgb.f32",
+    "sha256": "e89520bab1c5b02f0bc53a2f88827627c331df0fe7d7865505f6b1156d18e15d",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\canonical-weights-0.f32",
+    "sha256": "92b3261c9a9f1906b9598c6ef1526a3cf60e46700c09c12881ae135fed949421",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\canonical-weights-1.f32",
+    "sha256": "e36097bfffda1f93f8422315fa8f3c0c97ac6f8f59ca27ffac0eb3f37e8ce5ce",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\canonical-weights-2.f32",
+    "sha256": "09bc4a49c7a14a43a5cadf892f05b0a481f97c33cfdb9f4c0cabfa528623af5f",
+    "bytes": 7200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\case.json",
+    "sha256": "6e05fce5b5b3f5c502e7f558624c03a03ed627ca412a57764bce8fc55b744312",
+    "bytes": 9147
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\coeff-0.f32",
+    "sha256": "7ce6a114290de39540d36d2de2584db125a47db5c211519c012e1ec698faddee",
+    "bytes": 460800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\coeff-1.f32",
+    "sha256": "fa5647c3eeb38e8405022b3771684794b2f7e62641f0685699e4c532c141a301",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\coeff-2.f32",
+    "sha256": "a86b7a4103d4453783e12b90118308acf22e32632360d16902b296a072083742",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\features-0.f32",
+    "sha256": "182cf52ca53f765302b79882f527510e73cbcabb47c67ab206a2e1d3ac8f3f1c",
+    "bytes": 1152000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\features-1.f32",
+    "sha256": "fea56b3cf238e1d7aa94a79d86879d1bd96d7a7f5cde51ef50f4834b526166bc",
+    "bytes": 288000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\features-2.f32",
+    "sha256": "7e23e98664c23775bd439faa607726426adaa14767e0099bb929ea9846fcdcb3",
+    "bytes": 72000
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\lower.f32",
+    "sha256": "1b0d4503024fc0c5f9fb2532613a82cd5763bb3dc39d4404c731c64e935e2bcf",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\prescribed-cfa.f32",
+    "sha256": "eba72cc90a470023bd195cca0fd28035a1d04ce5eb027da9dcedb4dcaec74818",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\prescribed-rgb.f32",
+    "sha256": "dd1655ea828bc1e62fe2eacc763c100ce7d3b13483401444f2526002012c07c4",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\prescribed-weights-0.f32",
+    "sha256": "6f0460228a07c744f071fa2cb1a65626c5353e13cb3b4541b3ab7b4f6de6604d",
+    "bytes": 115200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\prescribed-weights-1.f32",
+    "sha256": "245e4e48eeea7b4e2b89d586c1fadc18c5129cfb8440d832e030746b8cddfbff",
+    "bytes": 28800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\prescribed-weights-2.f32",
+    "sha256": "c19babfd72d4bfad2f917ae5addf75118b1a8bf11247395eb34884add7cc8ff6",
+    "bytes": 7200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\truth-rgb.f32",
+    "sha256": "0c1c8243da9398960a91e017d5d2850c56ec20c5826fc254945b2eb26ef6ad48",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\uniform-cfa.f32",
+    "sha256": "f16b5a64f59f511896d50820d3cc8d16cf5cccd4aef21ba0e302ac699f415734",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\uniform-rgb.f32",
+    "sha256": "80de4bffba9767efae82e6cc436a5d383df0ebca978e6fa603c9eeb1d7188ced",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\upper.f32",
+    "sha256": "ed2c3dad849f83c40813f9df640d10f589299626ead2b2a32c42068a24515229",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-natural-layers-v9-n5-b3\\zero-network-rgb.f32",
+    "sha256": "80de4bffba9767efae82e6cc436a5d383df0ebca978e6fa603c9eeb1d7188ced",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\base.f32",
+    "sha256": "844857cf41c610b63bc6d2ae39edc03f899ac6b597015784bef6484762bb9bfb",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\canonical-rgb.f32",
+    "sha256": "bb0eab0588f7060ecdea736ff07a70002ffefb06e126650e42cea87d30fe8450",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\canonical-weights-0.f32",
+    "sha256": "4cedaf820521e3e900b4e62b2731c4142041ad225c1b3f97c50101689785483b",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\canonical-weights-1.f32",
+    "sha256": "f00d0371c534dfec9d82c6d828ab7c3d1b80aa5858d35ea4c74a80bca97cd53a",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\canonical-weights-2.f32",
+    "sha256": "7e5a4df00386d217313adde9bd3811d9be1c241ecb265285dfc45bfe71b6e5fb",
+    "bytes": 24480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\case.json",
+    "sha256": "ffb54eed6b8d2fba9c8fac0137282717634ec64f65d1f9fbc0a76109c9806aa2",
+    "bytes": 17609
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\coeff-0.f32",
+    "sha256": "933be8ff4dd0d035058e43d3401af749a9211e05c1c0c468e42698db483913f3",
+    "bytes": 1566720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\coeff-1.f32",
+    "sha256": "6b0eb4500452792a5e85e16b1d343722193b3769fe77da01df692cc954375377",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\coeff-2.f32",
+    "sha256": "1a3b403825a7b2f228e307c819fcbb1a92d37c87ccc946415a9e73c8d67e3c23",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\features-0.f32",
+    "sha256": "48b7ae2fe457f2883efb7685e45ea2c7894ae8246b2583fd6e14d112d7246b4c",
+    "bytes": 3916800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\features-1.f32",
+    "sha256": "353dc5d6544ce5a6add681a9b4415ab15d342d4c4eafca9b0370ef91ad3a18b2",
+    "bytes": 979200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\features-2.f32",
+    "sha256": "5646e78f300660c7fea1f09c7587bc2f58224640df8b346b93b7e8b966db9ae1",
+    "bytes": 244800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\lower.f32",
+    "sha256": "95ee3ce38c88ebadf9c6c31b30bcef6b25201088df23b82e9b8395a9d3207e52",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\prescribed-cfa.f32",
+    "sha256": "d6acbc9ac274b76e6997f79ef85019dafc1681ee0f6bcaa2aead08f9b0e2ce61",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\prescribed-rgb.f32",
+    "sha256": "ab6dba9752098198ab1e0d8cc1966264f5c9a68b8b0f2d53a30b9286961a53d9",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\prescribed-weights-0.f32",
+    "sha256": "6a9f95e0fd0fa29b635a3c8553385511e68468e01972a8ffaea2f35e25a62b85",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\prescribed-weights-1.f32",
+    "sha256": "e4639b842fcf02d5a89fbaac9e9e818c9e7416e5614f4a37680143b550628d18",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\prescribed-weights-2.f32",
+    "sha256": "62982148e761d8b73b7d2e2f9795d4bbb1799000569f993831b565dc51a945ca",
+    "bytes": 24480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\truth-rgb.f32",
+    "sha256": "8af801b1a682e0829a88b58ca4503855cca8c4e91d28c2451631f3e800baea8c",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\uniform-cfa.f32",
+    "sha256": "f591da4cee13e660b4f03b805f5e233d589761d885de72990e88aafd4e133d5e",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\uniform-rgb.f32",
+    "sha256": "607d470e059130c2458c917c8dc61a6686c39d00730d79604f505d14d2836610",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\upper.f32",
+    "sha256": "9ce94d284b81435ef5e011416f9dad0e7ea8b85693f435604d9921a7dcbd9614",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-near-fine-far-coarse-v0-n17-b3\\zero-network-rgb.f32",
+    "sha256": "607d470e059130c2458c917c8dc61a6686c39d00730d79604f505d14d2836610",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\base.f32",
+    "sha256": "cac9848775b5607231ed0c886b6c62c2e5e70a8de61f715f16a9c8562a4e0402",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\canonical-rgb.f32",
+    "sha256": "d600e511804e54af607068cb69914c21e5b1e74ccf31e73f08adc2ce63c890b0",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\canonical-weights-0.f32",
+    "sha256": "1da469f8590afa0e6f064dc403d15063c54241103ec67097541c695d8b11a808",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\canonical-weights-1.f32",
+    "sha256": "43ea760c84cd99e631a03f449591a63eed0af01fd9d968741f678dad360e02ef",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\canonical-weights-2.f32",
+    "sha256": "2b5f10732d751b5039391977eed7d3ae71cff6b13632a6fa7f53a97142b31181",
+    "bytes": 12960
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\case.json",
+    "sha256": "aebedd22bc2be30c262d00b97854916278ea0081566f5b4e2f871f3e8e660cfd",
+    "bytes": 11965
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\coeff-0.f32",
+    "sha256": "801b1284fcdfad71c4c317e5b1c9bed704c463f71c7063d99401eeea14006b79",
+    "bytes": 829440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\coeff-1.f32",
+    "sha256": "76c606ff31651887efe6a8924034ffa5f028e8a154edfe2032559a35b42eb1c0",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\coeff-2.f32",
+    "sha256": "796be488e71e1721a8f27e71d2a8058fe6885f7b58766e34f592f891b68990a6",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\features-0.f32",
+    "sha256": "bbd6655d4ea627e4e13eac9dbbd2ea51ccaf21b394025103c66f6955bb199c71",
+    "bytes": 2073600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\features-1.f32",
+    "sha256": "84c24863a21878a8557d42a09ca3c6f42c897b541b4e861519f9ca3adaed60ba",
+    "bytes": 518400
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\features-2.f32",
+    "sha256": "12d114dbee9584f0113c6c126b170412f9a6d797e46b02a1af32deb17f031eee",
+    "bytes": 129600
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\lower.f32",
+    "sha256": "7d22b87199417abd8d0025115e078506cb2f13ae08b473c9593b4acf415a7133",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\prescribed-cfa.f32",
+    "sha256": "95c68df068a9201e4b74b44573939f05ca8003d6971c83ef8cb42085538957ca",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\prescribed-rgb.f32",
+    "sha256": "613af12f8c1d26963b0737a36bdc1e9be2ad7b80954d2ff67f9793efc97ecfc6",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\prescribed-weights-0.f32",
+    "sha256": "dfcbe962e967dc718cc2093af0dcc0ea224c3ec341d799bc1df17dd12fc85867",
+    "bytes": 207360
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\prescribed-weights-1.f32",
+    "sha256": "4b8db06b8c83528346dba5bf6049ae5646734e0d8932752c26d4028b517a7241",
+    "bytes": 51840
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\prescribed-weights-2.f32",
+    "sha256": "560dad2c45db48ffa5c825cd60ab7594ed168606b1480cf8d9c361dca6312718",
+    "bytes": 12960
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\truth-rgb.f32",
+    "sha256": "ba6cf155565297588df375d8769f734aef596e198c5ad79eee63ec62e4b0b986",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\uniform-cfa.f32",
+    "sha256": "51df2136729230d94bd897993b428a2e1b2970c2f292e03af567f4b14af36ea6",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\uniform-rgb.f32",
+    "sha256": "d3f10b853e85f47ed72b135bbddd83ba22679ce70b444092d3ff11e10a6396d3",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\upper.f32",
+    "sha256": "13fa9613e8bd90029ffdd87c5366272b04bd0136149db9e28bb13482233e9fdb",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-unclipped-glint-v0-n9-b3\\zero-network-rgb.f32",
+    "sha256": "d3f10b853e85f47ed72b135bbddd83ba22679ce70b444092d3ff11e10a6396d3",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\base.f32",
+    "sha256": "c859e759f2beba502a6adbbb1b9278b07113a32642f06661f9c5c07d4d9fdd32",
+    "bytes": 1440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\canonical-rgb.f32",
+    "sha256": "2b0dcdbf3b7691c8e35aed0a9a6b36dddee9c5beb0e26d16375cc16e7321d104",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\canonical-weights-0.f32",
+    "sha256": "35f1d6293e4cb1edf1684d61482c9f2019c4e18dfdf74cb4c02234d33fb7d10a",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\canonical-weights-1.f32",
+    "sha256": "ec8e70dc8e097dafdc65529715a10fc7d1e21e4fa46e5d943b4684ec7c9845a2",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\canonical-weights-2.f32",
+    "sha256": "657b4d09fbdaf1f2edb1da19f58ac4a2edc77f6f23b3368f3f0b6bfd618bd6cf",
+    "bytes": 24480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\case.json",
+    "sha256": "89693ff4ca7592196fa7d952f3f438ca96dc05a653d5fc816a146b1d1684eca9",
+    "bytes": 17609
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\coeff-0.f32",
+    "sha256": "95f07d61f6ccdb32717b7b6eb4638a04c85e207b1775ff082f15bebe9777a080",
+    "bytes": 1566720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\coeff-1.f32",
+    "sha256": "147367a487b28dd2ab3216e1b40e18c4074563beb1428ce58a74457df074b69a",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\coeff-2.f32",
+    "sha256": "48b4eeddcb521e631f771625224c7840294e1eb311640486668bbcaa5f3561a5",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\features-0.f32",
+    "sha256": "595522e789057d940e1a4f30cb64b1bb79c1c45f2edc4ab926565484470ee812",
+    "bytes": 3916800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\features-1.f32",
+    "sha256": "debfb696eb9e431cdffc2dbc6b2fd9c5a3b68306f4d6223a0c8b33cc7f0d0f13",
+    "bytes": 979200
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\features-2.f32",
+    "sha256": "a0ca550750daaf26baad009af082ef7692fa4f060c16702fb1e65e3e7810679d",
+    "bytes": 244800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\lower.f32",
+    "sha256": "6e008b456bbbc10c17fb0df0e7bdff0ab5ae15f59e73c65c441d8aca7cf3807b",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\prescribed-cfa.f32",
+    "sha256": "000fdf883ae4496513e98976b3e40c0760d57478868a5b8ecf45d8e806ae8c90",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\prescribed-rgb.f32",
+    "sha256": "885cc96404e810e2b939ebcb1f8effbd29dd968c49105f4a6c406b41f89b0228",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\prescribed-weights-0.f32",
+    "sha256": "6a9f95e0fd0fa29b635a3c8553385511e68468e01972a8ffaea2f35e25a62b85",
+    "bytes": 391680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\prescribed-weights-1.f32",
+    "sha256": "e4639b842fcf02d5a89fbaac9e9e818c9e7416e5614f4a37680143b550628d18",
+    "bytes": 97920
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\prescribed-weights-2.f32",
+    "sha256": "62982148e761d8b73b7d2e2f9795d4bbb1799000569f993831b565dc51a945ca",
+    "bytes": 24480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\truth-rgb.f32",
+    "sha256": "733283fe7c847024a5e5c42fa3c41d1a8ef75c9aa6dedc00a1b315d595a3e121",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\uniform-cfa.f32",
+    "sha256": "d7eba1beeb348aaec700596f786e70f01605913e1af9161a7d98eb35c5e2765a",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\uniform-rgb.f32",
+    "sha256": "27bc64f5008e5af39a4ed70462803856183293950ca682dc9355c1262fdffe55",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\upper.f32",
+    "sha256": "745718be107ce9620bd7e0e6b7855d0dfbeabd5a5a117ff4070f18fcc8d28863",
+    "bytes": 92160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\zero-network-rgb.f32",
+    "sha256": "27bc64f5008e5af39a4ed70462803856183293950ca682dc9355c1262fdffe55",
+    "bytes": 276480
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\generic-consumer.py",
+    "sha256": "587e373f6d6afb81e120ca74c4c0094a86b1abd4a020724de38e1b4397ba8003",
+    "bytes": 18570
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\run.py",
+    "sha256": "2706f83c19a2cb30059bb580f3c8054b24e43bca3a71b8a095b8ccd2c6d91e0a",
+    "bytes": 12697
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\train.py",
+    "sha256": "03ddcab38c492557244638d93694b66473a749aaac6f7785fb129be98dfce96f",
+    "bytes": 23412
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\train.py",
+    "sha256": "b5455f488a92ed75c2a8ae8d9dcfb31b054237805b7ded22893459ef4ea9b987",
+    "bytes": 15527
+  }
+]

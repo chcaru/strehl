@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "split": "training",
+  "cases": [
+    "learned-band-guide/export-1/output/held-near-fine-far-coarse-n5/case.json",
+    "cross-scale-band-guide/export-train-1/output/train-multiscale-gabor-v0-n5-b7/case.json"
+  ]
+}

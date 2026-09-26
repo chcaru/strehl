@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "source_count": 5,
+  "sizes": [
+    [
+      80,
+      72
+    ],
+    [
+      40,
+      36
+    ],
+    [
+      20,
+      18
+    ],
+    [
+      10,
+      9
+    ]
+  ],
+  "scored_indices": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "model_sha256": "37ca21a3dc57710e2b1d3f3eb1a6d72aa088306e98f0388556841b8d0f13924b",
+  "generic_consumer_sha256": "587e373f6d6afb81e120ca74c4c0094a86b1abd4a020724de38e1b4397ba8003",
+  "scorer_sha256": "03ddcab38c492557244638d93694b66473a749aaac6f7785fb129be98dfce96f",
+  "consumer_sha256": "b5455f488a92ed75c2a8ae8d9dcfb31b054237805b7ded22893459ef4ea9b987",
+  "source_chunk": 1,
+  "network_tile": 256,
+  "truth_read": false,
+  "statistics": "sequential-f32-sums-and-squares",
+  "scores": [
+    {
+      "index": 0,
+      "seconds": 0.17199999999866122
+    },
+    {
+      "index": 1,
+      "seconds": 0.01599999999598367
+    },
+    {
+      "index": 2,
+      "seconds": 0.0
+    },
+    {
+      "index": 3,
+      "seconds": 0.0
+    },
+    {
+      "index": 4,
+      "seconds": 0.014999999999417923
+    }
+  ],
+  "peak_cuda_allocated_bytes": 10050560,
+  "peak_cuda_reserved_bytes": 27262976,
+  "seconds": 0.2649999999994179
+}

@@ -1,0 +1,55 @@
+{
+  "cases": [
+    {
+      "all_boundary_pixels_included": true,
+      "bands": 3,
+      "canonical_off_stats_score_exact": true,
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\case.json",
+      "case_sha256": "9f83de06e56608b320b2adf09663c8a81b567fa3cd81fe51d971e52b637151e4",
+      "cfa_max_abs_error_dn": 0.0,
+      "mean_hull_exact": true,
+      "nonzero_weight_activity": 1.0,
+      "original_u16_unchanged": true,
+      "payload_exact": true,
+      "phase_and_source_destroyers_live": true,
+      "rgb_max_abs_error": 0.0,
+      "server": {
+        "ok": true,
+        "op": "finish",
+        "receipt_sha256": "4e642432b6a766e59d1e618cb9603ed649d33d64ec87dc636977b852f4303df4"
+      },
+      "server_order_refusal": true,
+      "source_count": 5,
+      "weight_max_abs_error": 0.0,
+      "zero_head_uniform_exact": true
+    },
+    {
+      "all_boundary_pixels_included": true,
+      "bands": 7,
+      "canonical_off_stats_score_exact": true,
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\case.json",
+      "case_sha256": "62615fdb27b46439419092c8eabecccfdb2763fa9d4055623174a363d11e9ab8",
+      "cfa_max_abs_error_dn": 0.0,
+      "mean_hull_exact": true,
+      "nonzero_weight_activity": 1.0,
+      "original_u16_unchanged": true,
+      "payload_exact": true,
+      "phase_and_source_destroyers_live": true,
+      "rgb_max_abs_error": 0.0,
+      "server": {
+        "ok": true,
+        "op": "finish",
+        "receipt_sha256": "fa27a2eb8c6b604207cb36322f143e2d9933c369928c2050be9898ef5da08ac1"
+      },
+      "server_order_refusal": false,
+      "source_count": 5,
+      "weight_max_abs_error": 0.0,
+      "zero_head_uniform_exact": false
+    }
+  ],
+  "model_sha256": "02f5d9fbfa16efa18207b82884a83f232cd8ab2355995dba04c11a91dd1fa02a",
+  "passed": true,
+  "photographic_admission": false,
+  "predictions_sha256": "81dc46dc17718ae1c5ee781b09cd66ce8608ca7b7d2dad68e2310aae0e1432f7",
+  "status": "BRIDGE_CONTROLS_COMPLETE"
+}

@@ -1,0 +1,15 @@
+{
+  "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-controls-1\\output",
+  "bridge": {
+    "python": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "score_server": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\score-server.py",
+    "score_server_sha256": "5b9de1e811e85b176a12edccf88d74686dbf6ea37001476c2579605ab4e2b09f",
+    "weights": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\preserve-train-1\\output\\model.json",
+    "weights_sha256": "02f5d9fbfa16efa18207b82884a83f232cd8ab2355995dba04c11a91dd1fa02a",
+    "generic_consumer_sha256": "587e373f6d6afb81e120ca74c4c0094a86b1abd4a020724de38e1b4397ba8003",
+    "out_dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-controls-1\\output"
+  },
+  "predictions": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\bridge-reference-1\\output\\predictions.json",
+  "thin_case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\case.json",
+  "scale_case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-multiscale-gabor-v0-n5-b7\\case.json"
+}

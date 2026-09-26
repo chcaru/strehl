@@ -1,0 +1,46 @@
+{
+  "current_master_sha256": "de1e5dccc0a0c92a4d1f3c93cee6109fb0ea123dbae990a1759b92203d4a70ef",
+  "prior_master_sha256": "b7617f42537487fbecf9d88e47bf99b571ee7f6faeae2ccd9b34ba619995decb",
+  "current_rgb16_sha256": "e870e3ec57f9d2819fee58d049f5de839c1e05584929afccbefc2b00dc9253b9",
+  "prior_rgb16_sha256": "2a19cd9b7236a13bf90e81b87e85b1058e071aa19f4a5af82b97f453687d0dda",
+  "shape": [
+    4612,
+    6920,
+    3
+  ],
+  "changed_channel_samples": 4,
+  "maximum_absolute_code_difference": 1,
+  "differences": [
+    {
+      "y": 1057,
+      "x": 2997,
+      "channel": 2,
+      "prior": 39509,
+      "current": 39510
+    },
+    {
+      "y": 1610,
+      "x": 3651,
+      "channel": 2,
+      "prior": 40730,
+      "current": 40731
+    },
+    {
+      "y": 3074,
+      "x": 2209,
+      "channel": 1,
+      "prior": 31891,
+      "current": 31892
+    },
+    {
+      "y": 3510,
+      "x": 1780,
+      "channel": 0,
+      "prior": 23805,
+      "current": 23806
+    }
+  ],
+  "rgb8_rounding_exact": true,
+  "icc_exact": true,
+  "scope": "Exhaustive saved-output comparison after historical identity refusal. No attribution or candidate quality claim."
+}
