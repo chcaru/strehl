@@ -1,0 +1,294 @@
+{
+  "schema": 1,
+  "passed": true,
+  "source_sha256": "587e373f6d6afb81e120ca74c4c0094a86b1abd4a020724de38e1b4397ba8003",
+  "consumer_sha256": "b5455f488a92ed75c2a8ae8d9dcfb31b054237805b7ded22893459ef4ea9b987",
+  "scorer_sha256": "03ddcab38c492557244638d93694b66473a749aaac6f7785fb129be98dfce96f",
+  "dataset": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\dataset.json",
+  "dataset_sha256": "06a41b155508d223151c32035d0992c1433548b52c5430df07c3abf8f465537f",
+  "truth_read": false,
+  "independent_validation": false,
+  "photographic_admission": false,
+  "saw_odd_seven": true,
+  "saw_input_hull_clamp": true,
+  "conventions": {
+    "maximum_feature_error": 7.152557373046875e-07,
+    "maximum_nonzero_score_error": 1.1920928955078125e-07,
+    "source_chunk": 1,
+    "tile": 32,
+    "f32_moment_association_difference_explicit": true
+  },
+  "records": [
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\case.json",
+      "case_sha256": "50749d0258da3ffd272faf7b0668f5795dc6c42daa40505a90b30d997fbecdba",
+      "bands": 3,
+      "source_count": 17,
+      "native_size": [
+        80,
+        72
+      ],
+      "truth_read": false,
+      "arms": [
+        {
+          "mode": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        },
+        {
+          "mode": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\case.json",
+      "case_sha256": "b94ae831be19b5c2ac70a130e7de85220ac317b955262621d2216bbd67fb03cc",
+      "bands": 3,
+      "source_count": 65,
+      "native_size": [
+        80,
+        72
+      ],
+      "truth_read": false,
+      "arms": [
+        {
+          "mode": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        },
+        {
+          "mode": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\case.json",
+      "case_sha256": "38e5a70101740232f8c56c4469f1b06c9b44a359ea945bccb06a8ab9ba74d57b",
+      "bands": 3,
+      "source_count": 33,
+      "native_size": [
+        80,
+        72
+      ],
+      "truth_read": false,
+      "arms": [
+        {
+          "mode": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        },
+        {
+          "mode": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\case.json",
+      "case_sha256": "03efb17ae5be4d91264e28cb746888af91c4bab795b2d7f3fe51aa28a721beda",
+      "bands": 3,
+      "source_count": 17,
+      "native_size": [
+        80,
+        72
+      ],
+      "truth_read": false,
+      "arms": [
+        {
+          "mode": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        },
+        {
+          "mode": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\case.json",
+      "case_sha256": "ff75edb3ff996decf6bc788b4501cdc6da8fdb3dbf97e1662bd272c3f0eb39f0",
+      "bands": 3,
+      "source_count": 17,
+      "native_size": [
+        80,
+        72
+      ],
+      "truth_read": false,
+      "arms": [
+        {
+          "mode": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        },
+        {
+          "mode": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\case.json",
+      "case_sha256": "406e356287ad4f73e39de1d2f736747ae485d82835a47bc8e17b7dfc770be370",
+      "bands": 3,
+      "source_count": 17,
+      "native_size": [
+        80,
+        72
+      ],
+      "truth_read": false,
+      "arms": [
+        {
+          "mode": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        },
+        {
+          "mode": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\case.json",
+      "case_sha256": "609e981117c4c45431df21174507717b80f8a0377da51cbda2187b7fde017df7",
+      "bands": 3,
+      "source_count": 9,
+      "native_size": [
+        80,
+        72
+      ],
+      "truth_read": false,
+      "arms": [
+        {
+          "mode": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        },
+        {
+          "mode": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\case.json",
+      "case_sha256": "76b1aa676f2aeabfd4f030f549dcabb5f704750ea15b61bd7d38659a8b9998f0",
+      "bands": 3,
+      "source_count": 65,
+      "native_size": [
+        80,
+        72
+      ],
+      "truth_read": false,
+      "arms": [
+        {
+          "mode": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        },
+        {
+          "mode": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\case.json",
+      "case_sha256": "5f9e3a0ffd2541147688f512a329f953c3c12df15a4f4ed7a4f066a0fe0b8510",
+      "bands": 7,
+      "source_count": 5,
+      "native_size": [
+        1031,
+        1029
+      ],
+      "truth_read": false,
+      "arms": [
+        {
+          "mode": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        },
+        {
+          "mode": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 8
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\case.json",
+      "case_sha256": "8b0d9dc829d81408cdd89cff191f7b77e47ff749c85ea0e31131da683b52773c",
+      "bands": 7,
+      "source_count": 5,
+      "native_size": [
+        1031,
+        1029
+      ],
+      "truth_read": false,
+      "arms": [
+        {
+          "mode": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 0
+        },
+        {
+          "mode": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "all_boundary_pixels_included": true,
+          "clamped_sites": 40
+        }
+      ]
+    }
+  ],
+  "peak_cuda_bytes": 342973440
+}

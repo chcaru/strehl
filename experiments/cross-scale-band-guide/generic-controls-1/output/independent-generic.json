@@ -1,0 +1,317 @@
+{
+  "schema": 1,
+  "status": "INDEPENDENT_GENERIC_COMPLETE",
+  "passed": true,
+  "dataset": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\dataset.json",
+  "dataset_sha256": "0c8e7c457f971cc387fa06e7f5261e2b9ef15014c6591b6d7950ce0acdda9e19",
+  "generic_sha256": "587e373f6d6afb81e120ca74c4c0094a86b1abd4a020724de38e1b4397ba8003",
+  "source_sha256": "14f0a579227cdcc1baef9eae05fcb419750668207dc35a734e8e4fa71adfff2b",
+  "consumer_sha256": "b5455f488a92ed75c2a8ae8d9dcfb31b054237805b7ded22893459ef4ea9b987",
+  "scorer_sha256": "03ddcab38c492557244638d93694b66473a749aaac6f7785fb129be98dfce96f",
+  "known_developer_cases_only": true,
+  "fresh_validation_read": false,
+  "arbitrary_nonzero_model": "four fixed asymmetric signed/parent/child/set-SD paths",
+  "cases": [
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\case.json",
+      "case_sha256": "58f237f11d2d74345c3684a43de9225b00bdfef1dc6f4393ec43b9c68cb5d584",
+      "source_count": 5,
+      "maximum_feature_error": 7.152557373046875e-07,
+      "nonzero_weight_delta": 0.09522759914398193,
+      "source_weight_variation": 0.06232118606567383,
+      "uniform_rgb_delta": 5.511939525604248e-05,
+      "comparisons": [
+        {
+          "tile": 19,
+          "weights_max_abs": 2.384185791015625e-07,
+          "cfa_max_abs_dn": 0.000244140625,
+          "rgb_max_abs": 2.9802322387695312e-08
+        },
+        {
+          "tile": 31,
+          "weights_max_abs": 2.384185791015625e-07,
+          "cfa_max_abs_dn": 0.000244140625,
+          "rgb_max_abs": 2.9802322387695312e-08
+        }
+      ],
+      "all_boundary_pixels_included": true,
+      "truth_read": false
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\case.json",
+      "case_sha256": "9f83de06e56608b320b2adf09663c8a81b567fa3cd81fe51d971e52b637151e4",
+      "source_count": 5,
+      "maximum_feature_error": 2.015708014369011e-05,
+      "nonzero_weight_delta": 0.07848262786865234,
+      "source_weight_variation": 0.04632985591888428,
+      "uniform_rgb_delta": 0.0008195638656616211,
+      "comparisons": [
+        {
+          "tile": 19,
+          "weights_max_abs": 2.384185791015625e-07,
+          "cfa_max_abs_dn": 0.00048828125,
+          "rgb_max_abs": 5.960464477539063e-08
+        },
+        {
+          "tile": 31,
+          "weights_max_abs": 2.384185791015625e-07,
+          "cfa_max_abs_dn": 0.00048828125,
+          "rgb_max_abs": 5.960464477539063e-08
+        }
+      ],
+      "all_boundary_pixels_included": true,
+      "truth_read": false
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\case.json",
+      "case_sha256": "4c0612a905e3f3f2ae6529c7dcb0ebc8c581a647dcd7310089c607960f56caf3",
+      "source_count": 9,
+      "maximum_feature_error": 0.00010775309056043625,
+      "nonzero_weight_delta": 0.10017549991607666,
+      "source_weight_variation": 0.072501540184021,
+      "uniform_rgb_delta": 0.0007550716400146484,
+      "comparisons": [
+        {
+          "tile": 19,
+          "weights_max_abs": 2.384185791015625e-07,
+          "cfa_max_abs_dn": 0.001953125,
+          "rgb_max_abs": 2.384185791015625e-07
+        },
+        {
+          "tile": 31,
+          "weights_max_abs": 2.384185791015625e-07,
+          "cfa_max_abs_dn": 0.001953125,
+          "rgb_max_abs": 2.384185791015625e-07
+        }
+      ],
+      "all_boundary_pixels_included": true,
+      "truth_read": false
+    }
+  ],
+  "odd_grid_shape": [
+    73,
+    81
+  ],
+  "tile_controls": [
+    {
+      "tile": 19,
+      "correct_max_abs": 2.384185791015625e-07,
+      "missing_context_max_abs": 0.0065343379974365234,
+      "missing_context_rejected": true
+    },
+    {
+      "tile": 31,
+      "correct_max_abs": 2.384185791015625e-07,
+      "missing_context_max_abs": 0.0054094791412353516,
+      "missing_context_rejected": true
+    }
+  ],
+  "input_tensor_bindings": [
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\coeff-0.f32",
+      "sha256": "bf9f3075d1427a180a983528f6cf4e9c2eca4ba4c500763173dc957e936fa902"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\coeff-1.f32",
+      "sha256": "078b06690f4064c390290976e3c5b780167d9a65f4a4c13daeec9a2ad28a451f"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\coeff-2.f32",
+      "sha256": "9a3ff6cf031950b5310dc714e72067287c73ceb9c3a3f8f1f962e9ab19821c5f"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\features-0.f32",
+      "sha256": "37d6a8bebde1134301c1c0b4a64e1e2f5feb5260dabf341ad521d172d143fd7c"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\features-1.f32",
+      "sha256": "e5f94cd37bb7c550e0073b020300b26ee6b81af9bf4ea739415a84bb1acf9c2a"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\features-2.f32",
+      "sha256": "3cce6be440a6fa206d50c628523b336abd3ffd5ac5893e136aa3972bda45d63e"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\base.f32",
+      "sha256": "753de6872be911688c99e4427b4c5a08383e75a6470b5b1a17efa0875e738319"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\lower.f32",
+      "sha256": "b8c538092ad9e7f73d3d1b661e227f960df9670997a6f491ea5e20e1e0b047e2"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\upper.f32",
+      "sha256": "a521540378f79c6aa55a5e5ea7bad3fd5a4c25767be3bbd234e9c57c6a32f04e"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\prescribed-weights-0.f32",
+      "sha256": "6f0460228a07c744f071fa2cb1a65626c5353e13cb3b4541b3ab7b4f6de6604d"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\prescribed-weights-1.f32",
+      "sha256": "245e4e48eeea7b4e2b89d586c1fadc18c5129cfb8440d832e030746b8cddfbff"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\prescribed-weights-2.f32",
+      "sha256": "c19babfd72d4bfad2f917ae5addf75118b1a8bf11247395eb34884add7cc8ff6"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\uniform-cfa.f32",
+      "sha256": "dc961d57ff3da51c6c2e8509bb3b0933bafecad5858557ea377f76068c537fc7"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\uniform-rgb.f32",
+      "sha256": "6342352e28dc22e57112eefa705f0fe6eac8a45d313492303a4ef1250dbb271e"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\prescribed-cfa.f32",
+      "sha256": "ba4813059c3c9247a9366155850e0fe1d7bebe585e2fa51ec6c409ad20c203d9"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\prescribed-rgb.f32",
+      "sha256": "0fbff968df73cabfd6ab2a5030057d8f11f31ff7555d615cfa0448548ffd5aa6"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\zero-network-rgb.f32",
+      "sha256": "6342352e28dc22e57112eefa705f0fe6eac8a45d313492303a4ef1250dbb271e"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\coeff-0.f32",
+      "sha256": "0fb3a9879f0121064e9ee03b87c7904fb161e0322a35b8f9d9ba57cdd029f2a5"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\coeff-1.f32",
+      "sha256": "9ff2e6d455bebf25e4308a244549444dabe0e30e04003e5f148e1f623d96f96e"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\coeff-2.f32",
+      "sha256": "7c12c7fbeeb3cac436d49d685f201d639c401d3cb3883a38ea63e9c88e195053"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\features-0.f32",
+      "sha256": "a2d2f8a9a0121557c6f53491c3864b50802d3027a1e7ed03ce597e9e57858b30"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\features-1.f32",
+      "sha256": "640f009db60473917231280b9e455b70531944a0b4ece143dd1cdfffd85c676c"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\features-2.f32",
+      "sha256": "264d3365f1ea37f06b1475048fad8300d6f8c6ca5fe9f4e3a6f2596357044438"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\base.f32",
+      "sha256": "f345847268863e946d0bd37bbccb3814f605e349bf08c0936432b8a853b04604"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\lower.f32",
+      "sha256": "331337ef01fb1267a05cfec728f5f7a5227367d61e017341a8cc23cd1d9feae2"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\upper.f32",
+      "sha256": "32d9142329591366f5d945bf79a1ac6536c5d6d45d893201ee15f21b7957a2de"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\prescribed-weights-0.f32",
+      "sha256": "6f0460228a07c744f071fa2cb1a65626c5353e13cb3b4541b3ab7b4f6de6604d"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\prescribed-weights-1.f32",
+      "sha256": "245e4e48eeea7b4e2b89d586c1fadc18c5129cfb8440d832e030746b8cddfbff"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\prescribed-weights-2.f32",
+      "sha256": "c19babfd72d4bfad2f917ae5addf75118b1a8bf11247395eb34884add7cc8ff6"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\uniform-cfa.f32",
+      "sha256": "fd64c8165b14f80a57d1874d335d9f37b32870e7c44440adfa0ef589aea3f6a5"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\uniform-rgb.f32",
+      "sha256": "2310da3bffb9f7f020d56986d8b371ada814f94e4261ff74254537f3506883fd"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\prescribed-cfa.f32",
+      "sha256": "7b9451068b59e13eceb316603b7f87070ed6e908d9c2fdd7fdab64e2945ba19c"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\prescribed-rgb.f32",
+      "sha256": "44be41019a59deeeb015784a0ce8d50a3b8e75ba08090167e86e5305a1182c75"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\zero-network-rgb.f32",
+      "sha256": "2310da3bffb9f7f020d56986d8b371ada814f94e4261ff74254537f3506883fd"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\coeff-0.f32",
+      "sha256": "19693aa30f3556e18aa38521db06c62a295a3338fcff8d8f8b1447cb57420c8e"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\coeff-1.f32",
+      "sha256": "8d5d09ee5880d45b71bc85c849450493702627f8e7a6be5e3851da225c49da87"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\coeff-2.f32",
+      "sha256": "eaa57bd444774dd7a75f7beafcf31c0feb25a059698b5df980bab4c063571f09"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\features-0.f32",
+      "sha256": "e441bf49a60654f51286039c8906ebff7992d079f028fd35b8704a4bb0405989"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\features-1.f32",
+      "sha256": "09eab8466d033680d9736d8b24c0f0505e08486eec5de77489241d90a4e86c81"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\features-2.f32",
+      "sha256": "f869108eadb2dc76bb0478bfa203d97b8df19fc831184b5b9d965337a0f395db"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\base.f32",
+      "sha256": "2245b33c2bf6cb660463f5397a327e2d59d87ce91bac08e0defcdf1ddeb518e4"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\lower.f32",
+      "sha256": "77f5ad319f4db52cc0d578b6e666b9a88fac2f20c33935522645fba30df3f693"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\upper.f32",
+      "sha256": "6a61e666c0753e408f0806a169116a814c3d8a39039a4ae3a3649940b0384020"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\prescribed-weights-0.f32",
+      "sha256": "dfcbe962e967dc718cc2093af0dcc0ea224c3ec341d799bc1df17dd12fc85867"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\prescribed-weights-1.f32",
+      "sha256": "4b8db06b8c83528346dba5bf6049ae5646734e0d8932752c26d4028b517a7241"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\prescribed-weights-2.f32",
+      "sha256": "560dad2c45db48ffa5c825cd60ab7594ed168606b1480cf8d9c361dca6312718"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\uniform-cfa.f32",
+      "sha256": "afb0c9ece33182ce761f5401cdb8eec69127131d30259ba95a7c97799148c60b"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\uniform-rgb.f32",
+      "sha256": "be6157e8703a9293af0522f237be29db7e1fc5a51d388621ac3af6a1846b595e"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\prescribed-cfa.f32",
+      "sha256": "8efc2ab42220f3c014ce453ce49d8e15c8497763368db8a7b4324368c99a2d33"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\prescribed-rgb.f32",
+      "sha256": "6a4f8b88c1769f53431867ccbf0f25b609e63fce368a7580b3854bb28255b5dd"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\zero-network-rgb.f32",
+      "sha256": "be6157e8703a9293af0522f237be29db7e1fc5a51d388621ac3af6a1846b595e"
+    }
+  ],
+  "photographic_admission": false,
+  "scope": "Changed statistics, cross-scale features, CNN tiling and final consumer arithmetic; no quality judgment or noise calibration."
+}

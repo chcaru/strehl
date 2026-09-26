@@ -1,0 +1,19 @@
+{
+  "cases": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\case.json",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\case.json",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\case.json",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\case.json",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\case.json",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\case.json",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\case.json",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\case.json",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\case.json",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\case.json"
+  ],
+  "heldout_candidate_scores_read": false,
+  "old19_are_developer_visible": true,
+  "photographic_replay_admitted": false,
+  "schema": 1,
+  "split": "heldout"
+}

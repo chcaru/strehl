@@ -1,0 +1,541 @@
+{
+  "schema": 1,
+  "source_sha256": "214fe31dec8939a1aae260554cfbe63206922ea920d5e7b2be6b9394cd095a10",
+  "dataset_sha256": "e2de95447af5161ec573aad6f6fc6290096654f2d72cc14df8c17f0aa58f2685",
+  "annotations_sha256": "2945bd5facd5f7a43fc38ab5547f004f9bf6488be5ae79a041cca9a33db54027",
+  "checker_sha256": "a7c83695e405e11b00f7e405add3882d8203a593f6786a14f120875cd7fa8973",
+  "passed": true,
+  "status": "INDEPENDENT_REVISION2_LOSS_QUALIFIED",
+  "generic_consumer_sha256": "587e373f6d6afb81e120ca74c4c0094a86b1abd4a020724de38e1b4397ba8003",
+  "old_dataset_sha256": "0c8e7c457f971cc387fa06e7f5261e2b9ef15014c6591b6d7950ce0acdda9e19",
+  "all43_are_training_cases": true,
+  "fresh_validation_read": false,
+  "photographic_admission": false,
+  "annotation_controls": [
+    {
+      "id": "train-flat-0",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "train-flat-1",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "train-single-depth-cosine-0",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "train-single-depth-cosine-1",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "train-single-depth-cosine-2",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "train-single-depth-cosine-3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "train-straight-checker-layers-0",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "train-straight-checker-layers-1",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "train-straight-checker-layers-2",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "train-straight-checker-layers-3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "train-gaussian-blobs-0",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "train-gaussian-blobs-1",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "held-flat-n5",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "held-flat-n9",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "held-curved-bright-occlusion-n9",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        6960
+      ],
+      "roi_mass": 0.9999999962747097,
+      "roi_max_abs_error": 5.352428569804779e-13
+    },
+    {
+      "id": "held-near-fine-far-coarse-n5",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        6144
+      ],
+      "roi_mass": 1.0000000298023224,
+      "roi_max_abs_error": 4.850638418490635e-12
+    },
+    {
+      "id": "held-unclipped-point-glint-n5",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        529
+      ],
+      "roi_mass": 1.0000000239815563,
+      "roi_max_abs_error": 4.533375476227508e-11
+    },
+    {
+      "id": "held-clipped-point-glint-n5",
+      "excluded_pixels": 529,
+      "roi_areas_after_exclusion": [
+        2465,
+        569
+      ],
+      "roi_mass": 1.0000000071304385,
+      "roi_max_abs_error": 8.388450307636464e-12
+    },
+    {
+      "id": "held-weak-colour-dots-n5",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        7395
+      ],
+      "roi_mass": 1.0000000405852916,
+      "roi_max_abs_error": 5.48820711099296e-12
+    },
+    {
+      "id": "train-flat-v0-n5-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "train-flat-v1-n9-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "train-flat-v2-n17-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "train-flat-v3-n5-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "train-natural-layers-v0-n5-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        7544
+      ],
+      "roi_mass": 1.0000000534346327,
+      "roi_max_abs_error": 7.0830637091245235e-12
+    },
+    {
+      "id": "train-natural-layers-v1-n9-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        7544
+      ],
+      "roi_mass": 1.0000000534346327,
+      "roi_max_abs_error": 7.0830637091245235e-12
+    },
+    {
+      "id": "train-natural-layers-v2-n17-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        7544
+      ],
+      "roi_mass": 1.0000000534346327,
+      "roi_max_abs_error": 7.0830637091245235e-12
+    },
+    {
+      "id": "train-natural-layers-v3-n5-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        7544
+      ],
+      "roi_mass": 1.0000000534346327,
+      "roi_max_abs_error": 7.0830637091245235e-12
+    },
+    {
+      "id": "train-natural-layers-v4-n9-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        7544
+      ],
+      "roi_mass": 1.0000000534346327,
+      "roi_max_abs_error": 7.0830637091245235e-12
+    },
+    {
+      "id": "train-natural-layers-v5-n17-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        7544
+      ],
+      "roi_mass": 1.0000000534346327,
+      "roi_max_abs_error": 7.0830637091245235e-12
+    },
+    {
+      "id": "train-natural-layers-v6-n5-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        7544
+      ],
+      "roi_mass": 1.0000000534346327,
+      "roi_max_abs_error": 7.0830637091245235e-12
+    },
+    {
+      "id": "train-natural-layers-v7-n9-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        7544
+      ],
+      "roi_mass": 1.0000000534346327,
+      "roi_max_abs_error": 7.0830637091245235e-12
+    },
+    {
+      "id": "train-natural-layers-v8-n17-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        7544
+      ],
+      "roi_mass": 1.0000000534346327,
+      "roi_max_abs_error": 7.0830637091245235e-12
+    },
+    {
+      "id": "train-natural-layers-v9-n5-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        7544
+      ],
+      "roi_mass": 1.0000000534346327,
+      "roi_max_abs_error": 7.0830637091245235e-12
+    },
+    {
+      "id": "train-compound-texture-v0-n5-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        7544
+      ],
+      "roi_mass": 1.0000000534346327,
+      "roi_max_abs_error": 7.0830637091245235e-12
+    },
+    {
+      "id": "train-compound-texture-v1-n9-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        7544
+      ],
+      "roi_mass": 1.0000000534346327,
+      "roi_max_abs_error": 7.0830637091245235e-12
+    },
+    {
+      "id": "train-compound-texture-v2-n5-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        7544
+      ],
+      "roi_mass": 1.0000000534346327,
+      "roi_max_abs_error": 7.0830637091245235e-12
+    },
+    {
+      "id": "train-compound-texture-v3-n9-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        7544
+      ],
+      "roi_mass": 1.0000000534346327,
+      "roi_max_abs_error": 7.0830637091245235e-12
+    },
+    {
+      "id": "train-unclipped-glint-v0-n9-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        552
+      ],
+      "roi_mass": 1.0000000186264515,
+      "roi_max_abs_error": 3.374357152204077e-11
+    },
+    {
+      "id": "train-clipped-glint-v0-n9-b3",
+      "excluded_pixels": 552,
+      "roi_areas_after_exclusion": [
+        2465,
+        621
+      ],
+      "roi_mass": 1.0000000076543074,
+      "roi_max_abs_error": 8.529625031457322e-12
+    },
+    {
+      "id": "train-weak-colour-v0-n17-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        7395
+      ],
+      "roi_mass": 1.0000000405852916,
+      "roi_max_abs_error": 5.48820711099296e-12
+    },
+    {
+      "id": "train-near-fine-far-coarse-v0-n17-b3",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        6800
+      ],
+      "roi_mass": 0.9999999601859599,
+      "roi_max_abs_error": 5.855005879001202e-12
+    },
+    {
+      "id": "train-flat-v4-n5-b7",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [],
+      "roi_mass": 0.0,
+      "roi_max_abs_error": 0.0
+    },
+    {
+      "id": "train-multiscale-gabor-v0-n5-b7",
+      "excluded_pixels": 0,
+      "roi_areas_after_exclusion": [
+        44100,
+        44310,
+        44310,
+        44310,
+        260100,
+        260610,
+        260610,
+        260610
+      ],
+      "roi_mass": 0.9999999980840357,
+      "roi_max_abs_error": 5.962244417525697e-14
+    }
+  ],
+  "loss_controls": {
+    "float64_reference": [
+      {
+        "id": "train-flat-v0-n5-b3",
+        "actual": 0.004024943336844444,
+        "independent": 0.0040249424128239964,
+        "components": {
+          "rgb_mse": 0.00048363528912886977,
+          "chroma_mse": 0.0011261249892413616,
+          "green_gradient_mse": 1.63683871505782e-05,
+          "flat_kl": 0.12849658727645874,
+          "roi_rgb_chroma_mse": 0.0,
+          "roi_chroma_mse": 0.0
+        },
+        "maximum_component_error": 8.195703810054411e-08
+      },
+      {
+        "id": "train-clipped-glint-v0-n9-b3",
+        "actual": 0.0034031413961201906,
+        "independent": 0.0034031411165318147,
+        "components": {
+          "rgb_mse": 0.00048351637087762356,
+          "chroma_mse": 0.0011258957674726844,
+          "green_gradient_mse": 1.638185312913265e-05,
+          "flat_kl": 0.0,
+          "roi_rgb_chroma_mse": 0.0026549515314400196,
+          "roi_chroma_mse": 0.0010896074818447232
+        },
+        "maximum_component_error": 6.679484417827786e-11
+      },
+      {
+        "id": "train-unclipped-glint-v0-n9-b3",
+        "actual": 0.00342983053997159,
+        "independent": 0.0034298302776094164,
+        "components": {
+          "rgb_mse": 0.00048363528912886977,
+          "chroma_mse": 0.0011261249892413616,
+          "green_gradient_mse": 1.63683871505782e-05,
+          "flat_kl": 0.0,
+          "roi_rgb_chroma_mse": 0.002759411698207259,
+          "roi_chroma_mse": 0.0011354659218341112
+        },
+        "maximum_component_error": 2.6288755027026323e-11
+      },
+      {
+        "id": "train-weak-colour-v0-n17-b3",
+        "actual": 0.0034222682006657124,
+        "independent": 0.0034222680082189143,
+        "components": {
+          "rgb_mse": 0.00048363528912886977,
+          "chroma_mse": 0.0011261249892413616,
+          "green_gradient_mse": 1.63683871505782e-05,
+          "flat_kl": 0.0,
+          "roi_rgb_chroma_mse": 0.002729162573814392,
+          "roi_chroma_mse": 0.0011228648945689201
+        },
+        "maximum_component_error": 3.2465535468317874e-11
+      }
+    ],
+    "boundary_mutations": [
+      {
+        "point": [
+          59,
+          55
+        ],
+        "kind": "inside-corner",
+        "clipped_loss": 0.0,
+        "genuine_loss": 0.0007617417722940445
+      },
+      {
+        "point": [
+          81,
+          78
+        ],
+        "kind": "inside-opposite",
+        "clipped_loss": 0.0,
+        "genuine_loss": 0.0007617417722940445
+      },
+      {
+        "point": [
+          58,
+          55
+        ],
+        "kind": "outside-left",
+        "clipped_loss": 7.775620906613767e-05,
+        "genuine_loss": 7.937464397400618e-05
+      },
+      {
+        "point": [
+          82,
+          78
+        ],
+        "kind": "outside-right",
+        "clipped_loss": 0.000381030491553247,
+        "genuine_loss": 7.937464397400618e-05
+      }
+    ],
+    "excluded_core_arbitrary_error_invariant": true,
+    "failure_inputs": "Wrong chroma multiplier, pixel/edge denominator, ROI area weighting, clipped corner or crossing-stencil inclusion fail these comparisons."
+  },
+  "direction": {
+    "case": "train-weak-colour-v0-n17-b3",
+    "case_sha256": "89693ff4ca7592196fa7d952f3f438ca96dc05a653d5fc816a146b1d1684eca9",
+    "direction": "unit full-head gradient; conditioning only, no case/quality selection",
+    "epsilon": 0.01,
+    "relative_tolerance": 0.05,
+    "autograd": 4.8211727943225924e-08,
+    "central_difference": 4.802132025361061e-08,
+    "relative_error": 0.003949406041607485,
+    "objective": 3.350514089106582e-05,
+    "descent": 3.350466431584209e-05,
+    "ascent": 3.3505624742247164e-05,
+    "source_inputs": [
+      {
+        "key": "base",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\base.f32",
+        "sha256": "c859e759f2beba502a6adbbb1b9278b07113a32642f06661f9c5c07d4d9fdd32"
+      },
+      {
+        "key": "lower",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\lower.f32",
+        "sha256": "6e008b456bbbc10c17fb0df0e7bdff0ab5ae15f59e73c65c441d8aca7cf3807b"
+      },
+      {
+        "key": "upper",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\upper.f32",
+        "sha256": "745718be107ce9620bd7e0e6b7855d0dfbeabd5a5a117ff4070f18fcc8d28863"
+      },
+      {
+        "key": "coeff-0",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\coeff-0.f32",
+        "sha256": "95f07d61f6ccdb32717b7b6eb4638a04c85e207b1775ff082f15bebe9777a080"
+      },
+      {
+        "key": "features-0",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\features-0.f32",
+        "sha256": "595522e789057d940e1a4f30cb64b1bb79c1c45f2edc4ab926565484470ee812"
+      },
+      {
+        "key": "coeff-1",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\coeff-1.f32",
+        "sha256": "147367a487b28dd2ab3216e1b40e18c4074563beb1428ce58a74457df074b69a"
+      },
+      {
+        "key": "features-1",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\features-1.f32",
+        "sha256": "debfb696eb9e431cdffc2dbc6b2fd9c5a3b68306f4d6223a0c8b33cc7f0d0f13"
+      },
+      {
+        "key": "coeff-2",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\coeff-2.f32",
+        "sha256": "48b4eeddcb521e631f771625224c7840294e1eb311640486668bbcaa5f3561a5"
+      },
+      {
+        "key": "features-2",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\features-2.f32",
+        "sha256": "a0ca550750daaf26baad009af082ef7692fa4f060c16702fb1e65e3e7810679d"
+      },
+      {
+        "key": "truth-rgb",
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output\\train-weak-colour-v0-n17-b3\\truth-rgb.f32",
+        "sha256": "733283fe7c847024a5e5c42fa3c41d1a8ef75c9aa6dedc00a1b315d595a3e121"
+      }
+    ],
+    "fresh_validation_read": false
+  },
+  "limitation": "Loss/source commissioning only; native reconstruction, cost, fresh preservation and photographic evidence remain separate."
+}

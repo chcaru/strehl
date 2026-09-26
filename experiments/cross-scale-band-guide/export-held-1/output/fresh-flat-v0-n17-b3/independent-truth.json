@@ -1,0 +1,109 @@
+{
+  "label": {
+    "bands": 3,
+    "calibration_validation": false,
+    "clipped_original_samples": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "crop_quad_xywh": [
+      8,
+      8,
+      80,
+      72
+    ],
+    "family": "flat",
+    "focus_schedule": [
+      0.0,
+      0.0625,
+      0.125,
+      0.1875,
+      0.25,
+      0.3125,
+      0.375,
+      0.4375,
+      0.5,
+      0.5625,
+      0.625,
+      0.6875,
+      0.75,
+      0.8125,
+      0.875,
+      0.9375,
+      1.0
+    ],
+    "id": "fresh-flat-v0-n17-b3",
+    "iso": 1600.0,
+    "large": false,
+    "n": 17,
+    "noise_after_signal": true,
+    "noise_salt": 1779817465,
+    "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+    "original_source_sha256": [
+      "2615145c13cec22272c6892514405a8d457d8c09210da468634927d8ae0b51d3",
+      "9e200e38d2845c4ba875671495e42dca29d50ad528a2116db04330d3e5c8f8cd",
+      "d2684bc01d2e0426eacc4b13668e56987dd430298e98d00583e6bb336716c24a",
+      "3e9d0f6f6030099bdccb1e263428c41f44a462ab5993c4fec61bddfb1fe7cb78",
+      "d85a18aadf3cb44d8e46735183e136e04a8cbb65280503a1a4e3bb8f2eae8acc",
+      "9b1b261f578c34d7d21c365a8a488fb327482455410dccef7f1f62a5d2c43ad4",
+      "8bb94fa1beb9cc3a270cf4ab564688d7eef79d5986d6a4dc1e4a9d92fe54bc9b",
+      "a59dbd3d8784acee62519681583912ffcd08bd17d13fc3576bb5c7e9eae55c37",
+      "ca8e7d5370c3d6c5352882292be7f241fddfb052331d55ac3be86ce5e7302f9a",
+      "7fd3b479fe98b59f8e232c2c246afcbf8c4132b1739fe34783e64e3b4be53a5c",
+      "4f18e667b8f9f39df59acc62b63e8fb9021615b1dc47952610700f5b11c62c0b",
+      "656a12871f971914ee461f5e49a22cbb79f0a8c9e0899a73e8966dea9fd118dd",
+      "8a1c7e38e158086c31e411017354c9263602de65f018bf8c2002f1f512fbdb53",
+      "b688c303f77a69949d3f610803de556b9a2e86e51e5fab43f8e02cf2a88ea47c",
+      "19db8cb7a0ce7658a6cdee5f331000122aadc63d03e83879155066302790c94b",
+      "38e78b7c853bbe6ef8955f446ecb7f4d6cec4371ae10adbf6b056d75fba5864f",
+      "7621346ebbb9e5bf489314df17ca70cb1c9c42b9dc6e9ddaccfedd2441987639"
+    ],
+    "pupil": "clipped disk x<=.45",
+    "pupil_samples": 50,
+    "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+    "source_active_wh": [
+      192,
+      176
+    ],
+    "synthetic_texture_manifest_sha256": "b84ebb20b6c7f91bbbd703be9fc5d4a31817f97974a121cbeea9385ec1e4affb",
+    "training": false,
+    "truth_sha256": "ecf2898c3b64200d7ceb7ae787edf150279dca68038534d10af344d005768b4a",
+    "variant": 0
+  },
+  "schema": 1,
+  "scope": "Independent fixture truth/components only. Predictor must not read this file or truth arrays during inference.",
+  "templates": {
+    "base": {
+      "dtype": "<f4",
+      "file": "truth-base.f32",
+      "sha256": "ecf2898c3b64200d7ceb7ae787edf150279dca68038534d10af344d005768b4a",
+      "shape": [
+        144,
+        160,
+        3
+      ]
+    },
+    "far": {
+      "dtype": "<f4",
+      "file": "truth-far.f32",
+      "sha256": "33adbc02ff11ffc118c4e927132c8b7839e372b66bffad14e2dd3b9106c475dd",
+      "shape": [
+        144,
+        160,
+        3
+      ]
+    },
+    "near": {
+      "dtype": "<f4",
+      "file": "truth-near.f32",
+      "sha256": "33adbc02ff11ffc118c4e927132c8b7839e372b66bffad14e2dd3b9106c475dd",
+      "shape": [
+        144,
+        160,
+        3
+      ]
+    }
+  }
+}

@@ -1,0 +1,1082 @@
+{
+  "schema": 1,
+  "revision": 1,
+  "source_sha256": "03ddcab38c492557244638d93694b66473a749aaac6f7785fb129be98dfce96f",
+  "consumer_sha256": "b5455f488a92ed75c2a8ae8d9dcfb31b054237805b7ded22893459ef4ea9b987",
+  "dataset": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\dataset.json",
+  "dataset_sha256": "0c8e7c457f971cc387fa06e7f5261e2b9ef15014c6591b6d7950ce0acdda9e19",
+  "retained_native_commission_sha256": "3ac4abaa78bdc259ff3960c52bce6396ddb739866d778edb665e4cfc1ba203b8",
+  "feature_names": [
+    "signed-r",
+    "signed-g1",
+    "signed-g2",
+    "signed-b",
+    "set-mean-r",
+    "set-mean-g1",
+    "set-mean-g2",
+    "set-mean-b",
+    "set-sd-r",
+    "set-sd-g1",
+    "set-sd-g2",
+    "set-sd-b",
+    "parent-r",
+    "parent-g1",
+    "parent-g2",
+    "parent-b",
+    "child-r",
+    "child-g1",
+    "child-g2",
+    "child-b",
+    "gaussian-g",
+    "gaussian-r-minus-g",
+    "gaussian-b-minus-g",
+    "log-energy-over-floor",
+    "log-floor",
+    "gaussian-headroom",
+    "parent-present",
+    "child-present",
+    "band-over-six",
+    "log-scene-scale"
+  ],
+  "parameters": 27201,
+  "seed": 137,
+  "torch": "2.11.0+cu128",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "float32": true,
+  "tf32": false,
+  "deterministic": true,
+  "all19_are_developer_cases": true,
+  "heldout_claim": false,
+  "photographic_admission": false,
+  "passed": true,
+  "cases": [
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-0\\case.json",
+      "case_sha256": "58f237f11d2d74345c3684a43de9225b00bdfef1dc6f4393ec43b9c68cb5d584",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-00\\scale-0.f32",
+          "sha256": "60971c6c88dcc289f4bb17bbeb91738d056796caa10ad39b9155698a8807024c",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-00\\scale-1.f32",
+          "sha256": "a921f7ec1bfd5e614ea441c33aaa4552b0aaea8e7804c0209c2429845bc5e359",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-00\\scale-2.f32",
+          "sha256": "ad079ccc0820fb347dd1edfeca335f9ea0619f42cca8301eecebf07737decfaf",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-flat-1\\case.json",
+      "case_sha256": "ef52547b1cb4b64a9a495d8eb6e0e2cdcb419131e7aeb71a8a252024aaae37b9",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-01\\scale-0.f32",
+          "sha256": "d44aa8ea8803277559109d9af1efb2e5f7e41657ca1092c7d7efb22daf7c3c65",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-01\\scale-1.f32",
+          "sha256": "d9200a4a304dc6a9d11e3ce09032988f092ae0d770fcaa928e027ce76f66c606",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-01\\scale-2.f32",
+          "sha256": "ee264582b0bf76cdc74e036f8860a8b4990a918bbdb59a6a2cf16d3d133e463c",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-single-depth-cosine-0\\case.json",
+      "case_sha256": "f3ca31208e4eb36f3a3cf62bff5d396b6a816b221689cd0c4ebc53b1ebb98bde",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 5
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-02\\scale-0.f32",
+          "sha256": "b661b05b96b4395feb83866064c0dccb1ea26adb0c944fa660cf77142601b4a4",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-02\\scale-1.f32",
+          "sha256": "44cb45591f6eba10b2a0953be99bae9741efbc529a676e0b92278a554b5055df",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-02\\scale-2.f32",
+          "sha256": "34e76354969d8e2c7c7c8c6e3c240429d0207e178fde5c5e7d8f23d52d760646",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-single-depth-cosine-1\\case.json",
+      "case_sha256": "df0206ae8595a54a7db52cfd48e4da9f5ff3adb10324b28251c683210e4121a2",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 4
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-03\\scale-0.f32",
+          "sha256": "3cc15d6365cb3e3b2ae6c1bd2bf65c50e5caf2978a029bb63479ef8f6c7dcbe1",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-03\\scale-1.f32",
+          "sha256": "48f6d226a3b4ee72db1b79cfa9376209dbc2fe2c5efdcc6e29b110401c43b335",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-03\\scale-2.f32",
+          "sha256": "ed034690cbf01b9ee1837900fd6e93a18a3cdbfe3f1f3d6b1c83bd8f40a7c186",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-single-depth-cosine-2\\case.json",
+      "case_sha256": "cffbac836a321896b018a9871b8cd97d6594480b11262343cf6e12f8ea7cc19c",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 27
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-04\\scale-0.f32",
+          "sha256": "7d1a09c10e9bbf78134543fb51fafa621a78822b865a6666d94afeda49ca2e29",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-04\\scale-1.f32",
+          "sha256": "5724d0a4d419e483f6a433ec9bb4672ab1579d72ac97d55e18ace75533e5bf38",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-04\\scale-2.f32",
+          "sha256": "34d94113f6ee276ee4299d39cb2e027ae60c84f2e5b200115d50080ea91a9936",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-single-depth-cosine-3\\case.json",
+      "case_sha256": "61527c27db279e88a1eb4b124383edb46d13dba5e5aa74e854a524a00e6be265",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 1
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-05\\scale-0.f32",
+          "sha256": "796b4e0d1c2b8703d859b3fe8afc53698a9e053ea67a2339c94ddfd632476494",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-05\\scale-1.f32",
+          "sha256": "34917b5f6f217c2552a9eb30552a689ae492baf03349cfd25422cc48d95e1d28",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-05\\scale-2.f32",
+          "sha256": "d3168c53c5a860163937a7eca59ba49811efd92e4e184627058c22228a5e4dc1",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-straight-checker-layers-0\\case.json",
+      "case_sha256": "e15776a0ff1be1bb2319c5e392391c3680b2cc450290667714e4531685884240",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 8
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-06\\scale-0.f32",
+          "sha256": "0c2dee7b2fd33bcf8f0a56ebb9ad4d6ae458975db2718134875f213a51ccbbbd",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-06\\scale-1.f32",
+          "sha256": "eea7b2f3a227f54a161c5ac429fefd2c8fb39d555c374474e95b773c669653f1",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-06\\scale-2.f32",
+          "sha256": "2f686c9edc0fa8cd64b22a9e14a7e732d5bf63096c51f7cfd4841a71b0117d02",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-straight-checker-layers-1\\case.json",
+      "case_sha256": "198300a440187dfe82ce115295792cb25ae1b248c712de0421e3a40fd1ab93e7",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 2
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-07\\scale-0.f32",
+          "sha256": "6dfa1c83f23676523b7f0616094a8c202aa7e623ce9b20b2978f059afef21db5",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-07\\scale-1.f32",
+          "sha256": "6ea9c62f24cbcb1c6654c2b30000866390a614f4d6cc07dba9088a11f3a566aa",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-07\\scale-2.f32",
+          "sha256": "01df9a1d3dc1e0bd4a6b81445da57cc645bce5c6833b5396d12a855355e6af9d",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-straight-checker-layers-2\\case.json",
+      "case_sha256": "b35be0dcba8ca13a0c0f416611c2a922bffeb4e6be00540b2ae292562cfc2d45",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 30
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-08\\scale-0.f32",
+          "sha256": "e3ace807bd441b91213e4fd9015e388aad82e87baaf12a27bc82069a2aa45ecc",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-08\\scale-1.f32",
+          "sha256": "705e81b39f37f8ed10c2a82eedb745fb2a2cc3a2022e4241679409ec768cc230",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-08\\scale-2.f32",
+          "sha256": "84ba3c5e23f25e89365d8626dfccca7891b27ed6ec26914d1a8aec289d6f39db",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-straight-checker-layers-3\\case.json",
+      "case_sha256": "b51e443820cf5d1c866579a55f0bfb8acfb47427760af07f3784dadb8db3bc61",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-09\\scale-0.f32",
+          "sha256": "0f5689b6a64c9dbdf23cdae86723fb593e7e604e6ecfe3fcfe789e3b7851eb80",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-09\\scale-1.f32",
+          "sha256": "bc143113ee4b80fb6fc72a1c83903fce1e53161e20d4298524f1e61c11f1fe8e",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-09\\scale-2.f32",
+          "sha256": "71aef336294ebd2297ba0c2f30e735c8d2ddd5fb50c9bbb6175f5e2e1e6c8a6d",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-gaussian-blobs-0\\case.json",
+      "case_sha256": "6a1e02b3fb7c03287c45826394713f51ca8767ccd64fa885ab342a4fab12f877",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-10\\scale-0.f32",
+          "sha256": "937de139b3d309447b5794e3ba4272f0a6b6904e6a10587d686db13676da2408",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-10\\scale-1.f32",
+          "sha256": "7c04cf7d0f52a1b5e4198f3e8d522c208639634652392b1eb13427f8d5d8607d",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-10\\scale-2.f32",
+          "sha256": "b24b388455a6b4f26f3e40aa911fdc4eff11b9aa499a798c62ba8393c2fc3e1d",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\train-gaussian-blobs-1\\case.json",
+      "case_sha256": "5065b9a2309adc53dd813817040782ba36b1ef3401b5e3d8b4f6123577ddb975",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-11\\scale-0.f32",
+          "sha256": "dd710aeec12aee37066a4af09b8c6678b4efd1cf6bdf0639e205a4bc16e588c0",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-11\\scale-1.f32",
+          "sha256": "d4bf1ccf48c3702ef24faf1a4daa6f6a762b3dcfd9ff5f6132aa8176180cf97e",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-11\\scale-2.f32",
+          "sha256": "8e1bc3f2975eac05c3810f1651b3c86e74ba8db20fc195e5c5e7ac00775771d6",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n5\\case.json",
+      "case_sha256": "025c01ca7ecf69c2379d1f8bf9aa574017ed82c36d46f16652beda3a2a077d2e",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-12\\scale-0.f32",
+          "sha256": "e7c3225efe59e3c51e1b19a7abb9fd499c975a7330da6f22bc5905776d96a126",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-12\\scale-1.f32",
+          "sha256": "e0484222b4fd3b9d29b04a9a16a81abd890dee44a85c091371e59abdb184084e",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-12\\scale-2.f32",
+          "sha256": "01092d752ac443accf2fcc1d7bc0ffb2f9d578dd569355fd01b06db11d266a17",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-flat-n9\\case.json",
+      "case_sha256": "53889b5ccbf424925f71acb81a585dcf2f7818cc81990253e52816000e7d3e7b",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-13\\scale-0.f32",
+          "sha256": "925da135c12de24ecfa9f68cb821e7894f5095e0da7cfe8f1b9d8c2f31a66148",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-13\\scale-1.f32",
+          "sha256": "30df0dba0821bbaa18aefef2f1294054319ce7da6e6d63c30dcfb67bb6101ecc",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-13\\scale-2.f32",
+          "sha256": "a33a61aab301dd5ad7896d438e96cd4f9fe556344c78981b587607b395a2fb0d",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-curved-bright-occlusion-n9\\case.json",
+      "case_sha256": "4c0612a905e3f3f2ae6529c7dcb0ebc8c581a647dcd7310089c607960f56caf3",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-14\\scale-0.f32",
+          "sha256": "5e0fd89b23b6343940e05670fd416bc4eb75112960293d388eebedd47844eaf8",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-14\\scale-1.f32",
+          "sha256": "815b9663619d38b12c83648165a198d7e30d4a4ee16d5eea0a6206bfc3fadf97",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-14\\scale-2.f32",
+          "sha256": "46bb5296e84ca3673b58564f90f3827abb0b4f68719660dbbc9a0d7b8fd48368",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-near-fine-far-coarse-n5\\case.json",
+      "case_sha256": "9f83de06e56608b320b2adf09663c8a81b567fa3cd81fe51d971e52b637151e4",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 5
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-15\\scale-0.f32",
+          "sha256": "4edab1bdae5692725b35648a96e6c2a004122a2664068f27651033fae8ee2271",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-15\\scale-1.f32",
+          "sha256": "7cc7c8baba2750be86328a4ac15ac978f8dbc85ebf7ed6c6b783235ff6ef81e7",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-15\\scale-2.f32",
+          "sha256": "bfe323ea742843785a783142b0b1238679f46d130d59cbcdf34b09dc79104856",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-unclipped-point-glint-n5\\case.json",
+      "case_sha256": "c75f52bc2699ec33ab5a880aedc98a31fb667aaccbdc143b7d9c678d6843b4b0",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 3
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-16\\scale-0.f32",
+          "sha256": "833eb88485d5d11fab7186e1f64dda554b7d36f4e6ed987ba5ba1ca5b2761f59",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-16\\scale-1.f32",
+          "sha256": "6d6ce5de70a184c22b882d120231c13ef722146839869f1ea5a3365c6a641901",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-16\\scale-2.f32",
+          "sha256": "bf15147116bd2d2eee0a9b3b49ef3fd57d4ede7e764eb0425b28a00fe4fc13e9",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-clipped-point-glint-n5\\case.json",
+      "case_sha256": "a884998c887f167774bd7d5e83bdddec51406bb208cd7a520c194b565ad41b9c",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 28
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-17\\scale-0.f32",
+          "sha256": "52d12841d0b43961be65655830b3ed7d5c97720950c2d2dfb2533530e6c703af",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-17\\scale-1.f32",
+          "sha256": "6318b649b0075ce1dc03c92c562840f52e10c45db50b5a5e442887000504ca63",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-17\\scale-2.f32",
+          "sha256": "bb529c31c787244341b753d3b706c11af8cdc5476384b9f3f3bab935697d387b",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "case": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\export-1\\output\\held-weak-colour-dots-n5\\case.json",
+      "case_sha256": "77f8a5bd09aa59f8295e12426b2d205c9f02840e51a2366080aa5188885fa59d",
+      "arms": [
+        {
+          "arm": "uniform",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        },
+        {
+          "arm": "prescribed",
+          "maximum_cfa_error_dn": 0.0,
+          "maximum_rgb_error": 0.0,
+          "clamped_sites": 0
+        }
+      ],
+      "scene_scales": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-18\\scale-0.f32",
+          "sha256": "59fc15df106d9ed10e7f665cbed9c16dae421cab61c9546bc6a9d0c99774a66b",
+          "shape": [
+            1,
+            1,
+            1,
+            72,
+            80
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-18\\scale-1.f32",
+          "sha256": "4858d25edfeb213d68a694a710062a67241bc9fd0d24e069462e9392859b31de",
+          "shape": [
+            1,
+            1,
+            1,
+            36,
+            40
+          ]
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\commission-1\\output\\case-18\\scale-2.f32",
+          "sha256": "625805f448cd7d765a7c6d600369b8b8912fb873c4f3c3ef6aebbf01a9b7fe8b",
+          "shape": [
+            1,
+            1,
+            1,
+            18,
+            20
+          ]
+        }
+      ]
+    }
+  ],
+  "odd_reduce_exact": true,
+  "odd_expand_exact": true,
+  "extreme_weights": [
+    1.871524717969239e-13,
+    1.871524717969239e-13,
+    1.0,
+    2.0,
+    2.0
+  ],
+  "source_permutation_max": 2.384185791015625e-07,
+  "source_replication_max": 1.1920928955078125e-07,
+  "nonzero_scorer_sign_delta": 0.022884368896484375,
+  "nonzero_scorer_context_deltas": [
+    0.0033762454986572266,
+    0.004123330116271973
+  ],
+  "clipped_mask_mutation_losses": [
+    0.0,
+    0.2734625041484833
+  ],
+  "commission_is_arithmetic_not_photographic_quality": true
+}

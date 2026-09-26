@@ -1,0 +1,93 @@
+{
+  "label": {
+    "bands": 3,
+    "calibration_validation": false,
+    "clipped_original_samples": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "crop_quad_xywh": [
+      8,
+      8,
+      80,
+      72
+    ],
+    "family": "natural-layers",
+    "focus_schedule": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "id": "train-natural-layers-v4-n9-b3",
+    "iso": 400.0,
+    "large": false,
+    "n": 9,
+    "noise_after_signal": true,
+    "noise_salt": 3713404366,
+    "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+    "original_source_sha256": [
+      "27361552abdc3f549c7308c1463448e9eae6ab8d18d5b6738481345d06189e32",
+      "33c557b938625e8112fffc5a49b794745e5d15b7122523da58336cc404addf89",
+      "add644062db769d6bd8cd848dc57400534e8205055b0f6e12d96306cee174974",
+      "66f1d4a60c13e899a9f3a272e33291905712deb0f0ec947d29bc645e448337ce",
+      "0b921e47edf4cb538d92c63b64276443e53ba7e45c28915ffba5c063fe972fbc",
+      "4856b1ed406d31706151a43884f9d46821967e0ae5a8324a96a4e672ea0cbf61",
+      "6b4ee25856c260bba44f3429e51404fed59c75f64a0e5849e2c491e8f53981f3",
+      "0ded6530b45151ec22ed17a50c4f9e5fcf4a9b05587c26554176eb3c1018279d",
+      "8e5e2f3b1e1dac18931ce91451f4abb5f8f6b61f72b311622f182f2736c13012"
+    ],
+    "pupil": "rotated ellipse",
+    "pupil_samples": 64,
+    "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+    "source_active_wh": [
+      192,
+      176
+    ],
+    "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+    "training": true,
+    "truth_sha256": "92a71da2280af711b74acce6cb8b6ea14083e5615d131493f6c62e4a1c81fc3c",
+    "variant": 4
+  },
+  "schema": 1,
+  "scope": "Independent fixture truth/components only. Predictor must not read this file or truth arrays during inference.",
+  "templates": {
+    "base": {
+      "dtype": "<f4",
+      "file": "truth-base.f32",
+      "sha256": "2d07ced92dd02c07f38313fb78303c35dc023816ab1af863f5bcb64983921d59",
+      "shape": [
+        144,
+        160,
+        3
+      ]
+    },
+    "far": {
+      "dtype": "<f4",
+      "file": "truth-far.f32",
+      "sha256": "9fb99e0fe575163bfceea2f7a76342456e2e34c24fc610323cf98edeb068dd5b",
+      "shape": [
+        144,
+        160,
+        3
+      ]
+    },
+    "near": {
+      "dtype": "<f4",
+      "file": "truth-near.f32",
+      "sha256": "30c69e630f47bb8f601dc0bee2dcefeab04a99180a5b6d8feaed82fc457438bc",
+      "shape": [
+        144,
+        160,
+        3
+      ]
+    }
+  }
+}

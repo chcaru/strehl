@@ -1,0 +1,85 @@
+{
+  "label": {
+    "bands": 7,
+    "calibration_validation": false,
+    "clipped_original_samples": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "crop_quad_xywh": [
+      8,
+      8,
+      1024,
+      1024
+    ],
+    "family": "multiscale-gabor",
+    "focus_schedule": [
+      0.0,
+      0.2199999988079071,
+      0.5,
+      0.7799999713897705,
+      1.0
+    ],
+    "id": "train-multiscale-gabor-v0-n5-b7",
+    "iso": 400.0,
+    "large": true,
+    "n": 5,
+    "noise_after_signal": true,
+    "noise_salt": 3702577653,
+    "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+    "original_source_sha256": [
+      "4dab628c731580ddbd2557de7060351af86bec33d49afeaf2d0832f2eb0d3e2e",
+      "eef043679a39b5fff06712da69dfd509e22c7d9c8f7e3349db4e31b80cce7b7d",
+      "c374757d3eb1d7995255a0b586a6ac965e3e888fb81f4191e2738c736f3f731e",
+      "5431aae2da65edb4f16596c2616850567e4d1d1884da5c77392027272707f6af",
+      "c741d8a71db7bfabc836a0ed85d02f3457ac74dc7202c4f977b87450757bd484"
+    ],
+    "pupil": "analytic Gaussian, no finite pupil",
+    "pupil_samples": 0,
+    "seven_band_scope": "analytic planar multiscale support test; no occlusion/optical calibration claim",
+    "source_active_wh": [
+      2080,
+      2080
+    ],
+    "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+    "training": true,
+    "truth_sha256": "96ff36939eb85c935f5b81b76973927c3bfaf02ab94d5c1ae16692fd079b1388",
+    "variant": 0
+  },
+  "schema": 1,
+  "scope": "Independent fixture truth/components only. Predictor must not read this file or truth arrays during inference.",
+  "templates": {
+    "base": {
+      "dtype": "<f4",
+      "file": "truth-base.f32",
+      "sha256": "4802b0dfbd380b773b814e17a9cb867d7254269a684df50a8a410f9e898eee4c",
+      "shape": [
+        2048,
+        2048,
+        3
+      ]
+    },
+    "far": {
+      "dtype": "<f4",
+      "file": "truth-far.f32",
+      "sha256": "a756913c3e907659716332e42a95d3cd9416c967361430f89a1932c5ecdb85b8",
+      "shape": [
+        2048,
+        2048,
+        3
+      ]
+    },
+    "near": {
+      "dtype": "<f4",
+      "file": "truth-near.f32",
+      "sha256": "08b6a371292df4bf61aba5b3fd35d5290326dc08bd78b4290d36abb461ae2686",
+      "shape": [
+        2048,
+        2048,
+        3
+      ]
+    }
+  }
+}

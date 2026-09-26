@@ -1,0 +1,5 @@
+{
+  "split": "training",
+  "textures": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-train-1\\output\\textures.json",
+  "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-train-1\\output"
+}

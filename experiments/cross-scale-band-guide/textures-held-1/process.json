@@ -1,0 +1,94 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\texture-stage.py",
+    "--split",
+    "heldout",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-held-1\\output"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 0.4850000000005821,
+  "log_bytes": 0,
+  "job_accounting": {
+    "total_user_100ns": 2656250,
+    "total_kernel_100ns": 1562500,
+    "total_cpu_100ns": 4218750,
+    "total_page_fault_count": 142230,
+    "total_processes": 2,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 817319936,
+    "peak_job_memory_used_bytes": 818581504
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 4294967296
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 2656250,
+      "total_kernel_100ns": 1562500,
+      "total_cpu_100ns": 4218750,
+      "total_page_fault_count": 142230,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 2656250,
+      "total_kernel_100ns": 1562500,
+      "total_cpu_100ns": 4218750,
+      "total_page_fault_count": 142230,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 0.4850000000005821,
+        "accounting": {
+          "total_user_100ns": 2656250,
+          "total_kernel_100ns": 1562500,
+          "total_cpu_100ns": 4218750,
+          "total_page_fault_count": 142230,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 0.4850000000005821,
+    "ended_wall_seconds": 0.4850000000005821
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 120,
+    "cpu_seconds": 240,
+    "log_bytes": 16777216,
+    "committed_bytes": 4294967296
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-held-1\\process.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  }
+}

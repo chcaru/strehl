@@ -1,0 +1,85 @@
+{
+  "label": {
+    "bands": 3,
+    "calibration_validation": false,
+    "clipped_original_samples": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "crop_quad_xywh": [
+      8,
+      8,
+      80,
+      72
+    ],
+    "family": "natural-layers",
+    "focus_schedule": [
+      0.0,
+      0.15625,
+      0.5,
+      0.84375,
+      1.0
+    ],
+    "id": "train-natural-layers-v9-n5-b3",
+    "iso": 100.0,
+    "large": false,
+    "n": 5,
+    "noise_after_signal": true,
+    "noise_salt": 3396248322,
+    "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+    "original_source_sha256": [
+      "4c0bd4f919783ddce6de38310e856fd7934057265e0b34bdc7fb1e1d2e356c89",
+      "387394436ab097104ef48c87b163e1dce57efcb0a4dad83b710bd8b34cac222d",
+      "3a4eb8b0d504038d7fe98a6bb26e2fa8d70b3a35525c7750a1f0af906f03c06a",
+      "5d6afb3f8669925067b220c2d8f9accaa219a026eb67862d8cae2b17fd5aa872",
+      "c23f3023871d87045a6391fcd8490f1cdeecd2d6383a85aa762d6cdb94b474ce"
+    ],
+    "pupil": "circular disk",
+    "pupil_samples": 64,
+    "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+    "source_active_wh": [
+      192,
+      176
+    ],
+    "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+    "training": true,
+    "truth_sha256": "0c1c8243da9398960a91e017d5d2850c56ec20c5826fc254945b2eb26ef6ad48",
+    "variant": 9
+  },
+  "schema": 1,
+  "scope": "Independent fixture truth/components only. Predictor must not read this file or truth arrays during inference.",
+  "templates": {
+    "base": {
+      "dtype": "<f4",
+      "file": "truth-base.f32",
+      "sha256": "409c1e1a19c27773b71c70926bcb1abcb2ee024ac6b3ed3df1cfdff47585b9ad",
+      "shape": [
+        144,
+        160,
+        3
+      ]
+    },
+    "far": {
+      "dtype": "<f4",
+      "file": "truth-far.f32",
+      "sha256": "c058b9824856c89dff46792c7c076c18aaef4d121e59fc3ccc4da15fa2c2c86e",
+      "shape": [
+        144,
+        160,
+        3
+      ]
+    },
+    "near": {
+      "dtype": "<f4",
+      "file": "truth-near.f32",
+      "sha256": "81e12a3322eeef5ec2d575e869f17a74b922bc4aa8746a1fd1de91e6a2c74baf",
+      "shape": [
+        144,
+        160,
+        3
+      ]
+    }
+  }
+}

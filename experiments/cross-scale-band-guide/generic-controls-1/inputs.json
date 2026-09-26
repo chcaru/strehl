@@ -1,0 +1,27 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\generic-consumer.py",
+    "sha256": "587e373f6d6afb81e120ca74c4c0094a86b1abd4a020724de38e1b4397ba8003",
+    "bytes": 18570
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\train.py",
+    "sha256": "03ddcab38c492557244638d93694b66473a749aaac6f7785fb129be98dfce96f",
+    "bytes": 23412
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\independent-generic-controls.py",
+    "sha256": "14f0a579227cdcc1baef9eae05fcb419750668207dc35a734e8e4fa71adfff2b",
+    "bytes": 8151
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\run.py",
+    "sha256": "b37f71cbb01291619ee1c411a574260da4f8da3a84283dd375320b4e9058e52a",
+    "bytes": 9406
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\learned-band-guide\\train.py",
+    "sha256": "b5455f488a92ed75c2a8ae8d9dcfb31b054237805b7ded22893459ef4ea9b987",
+    "bytes": 15527
+  }
+]

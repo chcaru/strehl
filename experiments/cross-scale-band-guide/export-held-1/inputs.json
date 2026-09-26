@@ -1,0 +1,27 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-held-1\\output\\textures.json",
+    "sha256": "b84ebb20b6c7f91bbbd703be9fc5d4a31817f97974a121cbeea9385ec1e4affb",
+    "bytes": 3261
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-held-1\\output\\heldout-149-0.f32",
+    "sha256": "bd98b2342c04d414d7006f94a9fae34ace205c6e20ddd04608dfa54e48d230b7",
+    "bytes": 405504
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-held-1\\output\\heldout-149-1.f32",
+    "sha256": "e9d173e9aa7434e5a47eedf4b2ade20e055d795b13d067fae9ff63ca9fdd081f",
+    "bytes": 405504
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-held-1\\output\\heldout-149-2.f32",
+    "sha256": "ab442080f347c6d5478585554fe3da49bc0e2e258c3ea4a41868ccfaf710231a",
+    "bytes": 405504
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-held-1\\output\\heldout-149-3.f32",
+    "sha256": "3b227e4c330f808e0f509742234562bfe6ff5a605d771e96853729908b50c660",
+    "bytes": 405504
+  }
+]

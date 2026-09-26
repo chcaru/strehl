@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "split": "heldout",
+  "tiles": [
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-held-1\\output\\heldout-149-0.f32",
+      "sha256": "bd98b2342c04d414d7006f94a9fae34ace205c6e20ddd04608dfa54e48d230b7",
+      "shape": [
+        176,
+        192,
+        3
+      ],
+      "dtype": "<f4",
+      "source_ordinal": 149,
+      "native_xywh": [
+        1460,
+        1240,
+        192,
+        176
+      ],
+      "original_rgb16_sha256": "a61a840635f0b1d9bbf95a828eff966bf34586aad10c8149ff861dcd69a3de59"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-held-1\\output\\heldout-149-1.f32",
+      "sha256": "e9d173e9aa7434e5a47eedf4b2ade20e055d795b13d067fae9ff63ca9fdd081f",
+      "shape": [
+        176,
+        192,
+        3
+      ],
+      "dtype": "<f4",
+      "source_ordinal": 149,
+      "native_xywh": [
+        462,
+        682,
+        192,
+        176
+      ],
+      "original_rgb16_sha256": "77deec53a5b3dc9b20145367256d72ad225a557e8ed1964fafe76c2270a7ebf8"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-held-1\\output\\heldout-149-2.f32",
+      "sha256": "ab442080f347c6d5478585554fe3da49bc0e2e258c3ea4a41868ccfaf710231a",
+      "shape": [
+        176,
+        192,
+        3
+      ],
+      "dtype": "<f4",
+      "source_ordinal": 149,
+      "native_xywh": [
+        3402,
+        1652,
+        192,
+        176
+      ],
+      "original_rgb16_sha256": "5e7beac04360a7d4094c9af7849781e4217178ff32382e30da435ca7c6e45f67"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-held-1\\output\\heldout-149-3.f32",
+      "sha256": "3b227e4c330f808e0f509742234562bfe6ff5a605d771e96853729908b50c660",
+      "shape": [
+        176,
+        192,
+        3
+      ],
+      "dtype": "<f4",
+      "source_ordinal": 149,
+      "native_xywh": [
+        5092,
+        3362,
+        192,
+        176
+      ],
+      "original_rgb16_sha256": "f85131291e5cfdd1885a1e22f191732972d606ff4ccf155ecec7114e0a5f7ef7"
+    }
+  ],
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00150.tiff",
+      "sha256": "f18c7dadea1bcc9073dc2b9f8a77875480a577e9389690601d2f35aee52f6397",
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b"
+    }
+  ],
+  "development_receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\receipt.json",
+  "development_receipt_sha256": "97f198664496c18ebb7723450e240163983cf00a5499e1db0695bdd0f4c3bf9c",
+  "source_sha256": "78614edced2dd200c75eef7e51d7e763ef0eebc9b72ea9c210baa2985f414ec2",
+  "resized": false,
+  "registration_applied": false,
+  "raw_reads": false,
+  "transfer": "piecewise IEC sRGB decode to display-linear f32",
+  "scope": "Arbitrary synthetic latent texture. Tone/matrix/rolloff are not inverted; no original physical radiance or real-photo truth claim."
+}

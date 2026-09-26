@@ -1,0 +1,67 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-train-1\\output\\textures.json",
+    "sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+    "bytes": 8430
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-train-1\\output\\training-112-0.f32",
+    "sha256": "785400884e9901ae145885f8f7758b3b53578a109dfccbfb911a4ebef45b561b",
+    "bytes": 405504
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-train-1\\output\\training-112-1.f32",
+    "sha256": "788b7361211451ca7dee5b313bafd2ba7961eb7e15238f37cfed699faf0f36ca",
+    "bytes": 405504
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-train-1\\output\\training-112-2.f32",
+    "sha256": "03c29ec5c4db592a6acf3260db358fd191919ee6d42c0e32a4fc9435fe82052c",
+    "bytes": 405504
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-train-1\\output\\training-112-3.f32",
+    "sha256": "26b5e821bd001d6eab2f6e207c3cd87b0fe81d84e691c1387d3a92450c7ba2a4",
+    "bytes": 405504
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-train-1\\output\\training-152-0.f32",
+    "sha256": "21f3b913f97d806b141807ba09baccccc7bd41240560b0b5929281532a9331c1",
+    "bytes": 405504
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-train-1\\output\\training-152-1.f32",
+    "sha256": "f84c95fa7528858fb8d710f215d9e975ef6af8b3cf0ee1df4c6887b67d314dc1",
+    "bytes": 405504
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-train-1\\output\\training-152-2.f32",
+    "sha256": "ec221fd6b5a0e42c8802c1dfc201004fc6612ebb503b648c0e121327e732d5a9",
+    "bytes": 405504
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-train-1\\output\\training-152-3.f32",
+    "sha256": "725d341e9dc5d0f8dc2c4dcbe56ce578e7e48cb61ca57082706a740d7c81f32b",
+    "bytes": 405504
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-train-1\\output\\training-320-0.f32",
+    "sha256": "eb3f58117d8ef43de35a4dce09b2a8666586e381d5ed9882912f80791ddf9d5b",
+    "bytes": 405504
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-train-1\\output\\training-320-1.f32",
+    "sha256": "5708caf12a903598b028695b131ead888d5c13829f3d1e28003eff09da0aaf5a",
+    "bytes": 405504
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-train-1\\output\\training-320-2.f32",
+    "sha256": "8c19fad448b9c5dcd4af679a81bfae523736f4923e4c2a510c4c0990d8ea2e97",
+    "bytes": 405504
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\textures-train-1\\output\\training-320-3.f32",
+    "sha256": "0432275a085656b337b30f80f2ee6d6d498feac0efcee4c993d94f48aae2ed93",
+    "bytes": 405504
+  }
+]

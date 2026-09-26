@@ -1,0 +1,1409 @@
+{
+  "calibration_validation": false,
+  "cases": [
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "flat",
+      "focus_schedule": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "id": "train-flat-v0-n5-b3",
+      "iso": 100.0,
+      "large": false,
+      "n": 5,
+      "noise_after_signal": true,
+      "noise_salt": 65286462,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "e3063bb1db91bd6be6ad647cf85b5b5aef58e00ed139d0a902a53bd214d9bd3f",
+        "c133565570902fd14186c4da349336f1c1aba02bbc0885192ff926d89a45c0b0",
+        "6c7f9ef81b60727d86a640bfa507cc87b5d9daecf954d33b21022b77075d9947",
+        "792baa60dcddfc47c1cfb5b8dabfd12c76aa9d8e14b1b3ac38e2b75fdf0f723d",
+        "052baa9642993b1e56ca4d3afd63f05fbe1894aa87933002eaeb8b3a2e83a2bf"
+      ],
+      "pupil": "circular disk",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "ecf2898c3b64200d7ceb7ae787edf150279dca68038534d10af344d005768b4a",
+      "variant": 0
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "flat",
+      "focus_schedule": [
+        0.0,
+        0.04296875,
+        0.15625,
+        0.31640625,
+        0.5,
+        0.68359375,
+        0.84375,
+        0.95703125,
+        1.0
+      ],
+      "id": "train-flat-v1-n9-b3",
+      "iso": 400.0,
+      "large": false,
+      "n": 9,
+      "noise_after_signal": true,
+      "noise_salt": 1947222625,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "bb3ab4ab320e018747e0224313770415718804073e727ce303d2640519a6141d",
+        "08166c1611a2643d11681b532f66435fae82a95d640c55cf9087fd8aed7d58db",
+        "b26d5b559328ce750ab3dbdc36ae8be94673fe974b559c2639be4aca562192d4",
+        "accf0f32057287563a7b61e738af73f6c35047b651f4d8ac376228753519ca33",
+        "7212f00390eb95d740b32f53b73e2a86fe8c5ed0e0f20dcd23dd5df5b5569473",
+        "2e10f4d8a8844519719f0fe582a6e87018e3f927daaafe7460fffadd71167188",
+        "3dcb65ccdb300008c40777efeda6932b0345e8fb653c2710de7c23c815a3bcd3",
+        "25d2c57658be86f49358ff21e765e8810b2c704a9e3160042fafc42a16ab17dc",
+        "66d31d68f6b11a350d7212d89e79dc6c01efd2390bb276a2f8748f3a79399f52"
+      ],
+      "pupil": "rotated ellipse",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "ae578868c684114ac5d9e82e5fc1616f81ff55423aa34084faa7d2cd278b2ee0",
+      "variant": 1
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "flat",
+      "focus_schedule": [
+        0.0,
+        0.0625,
+        0.125,
+        0.1875,
+        0.25,
+        0.3125,
+        0.375,
+        0.4375,
+        0.5,
+        0.5625,
+        0.625,
+        0.6875,
+        0.75,
+        0.8125,
+        0.875,
+        0.9375,
+        1.0
+      ],
+      "id": "train-flat-v2-n17-b3",
+      "iso": 1600.0,
+      "large": false,
+      "n": 17,
+      "noise_after_signal": true,
+      "noise_salt": 3538014078,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "032518b4c8df261ff44b8898d7713c4faef91a20749e7ec4e08d5d91c29f8e7b",
+        "6c6b01460065d20566be826741bbbbbe45d8de6b21b720392d132e7bad13a216",
+        "d30a857b732845ab3556bed6bb9796765cecd2b14274740bd8036e2d8fce553c",
+        "1e87b4a685522aa18c376bc0db44e851503e9ef356a34ac9441ce9d9ef85aec7",
+        "cd066b4ad68c848e924c744b05c9eea10e10a7d51b171acf704325de82aefd37",
+        "d8b5eac065f5daec7730462197da7f5cbc3773871c2997b79b81fb0c31ba7aa9",
+        "331dd5bb3b2f55d952098b02895cf7d0a0c2eaec29a11f873b4d73b885ca70d5",
+        "50cfae323a650f199b21990fe7743c6ab7e1c001da9887d547e36d1e8da92981",
+        "711828984e1e1e4c2be8f5d07a26309d884fb13fe4678a4a746ccbad35855583",
+        "613e29db60b0f30d5b3923ebdde1e065e03f26cf27dd879dc96f6d3d95337d9d",
+        "ef13f6461e63ddeb3ab0ae44d8ecbb30dc048265c29c571d6f3a1f508c3af355",
+        "d72a21745687fdab308b23be0344522721b6dc590bf79e62f94575fdd46f6962",
+        "463759e7c56b1be390a96634b3de52facc18bd0e630eb54002796070a3ff0405",
+        "2bf79f4130145ac187483080999622e292ff8dda0970fe172e7a4d546d776af5",
+        "c43dcb0da6513cbe6d8ad9f5a7609c1771da27c26272c1a08e455cd7e7af6462",
+        "63effef96adc1bf073f9a1c1d8a1e1a7bd65e04c8b7f6aa47fe3b0701610d41f",
+        "ee4869a619594a73df58b219494ecc0cd8f3c13e5a4ddc1e357773de5cc97c66"
+      ],
+      "pupil": "annulus",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "85b687cc4d6815374d57dc83a4e88c7cabf2d8e3c979b987087f41309b80a08d",
+      "variant": 2
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "flat",
+      "focus_schedule": [
+        0.0,
+        0.15625,
+        0.5,
+        0.84375,
+        1.0
+      ],
+      "id": "train-flat-v3-n5-b3",
+      "iso": 400.0,
+      "large": false,
+      "n": 5,
+      "noise_after_signal": true,
+      "noise_salt": 4021823637,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "770a152f3d4a4bcd19b743b0c08ce5f6aa85570537e71e0dc0b5004e583bfe89",
+        "c7be1648ea6ea066f543624434b09f5acee916455f087a1eed9f5bc37a4ec11e",
+        "72e43fcde879b017c1cf43ada5d28f42b114ab6effbd5faa7114ce58ed685cc1",
+        "42f0f86123abb23e4e9900c1a47d67d7762f069da18e6d982866d9171cbf313f",
+        "6d6f21891c84b4d369fbc69c7157fe84004d0e8dbaf48129ced8a9720cc6bef3"
+      ],
+      "pupil": "circular disk",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "159be95b7c15f4158ea10682eb0e807aaf3d216519dd3b02f804ea80ae7ead09",
+      "variant": 3
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "natural-layers",
+      "focus_schedule": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "id": "train-natural-layers-v0-n5-b3",
+      "iso": 100.0,
+      "large": false,
+      "n": 5,
+      "noise_after_signal": true,
+      "noise_salt": 2504085330,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "e714c1d8f13ac3e7b0ffe19dbc8c3000d4b323a653d93393f026471666bd386d",
+        "0ea806d2d2a2079e2ce49ab9ce6a007c72e99249d9cba15ab41e6ad498a02f06",
+        "542901ab89d36e3abd40551d930495ee6adc937fdfc22445044214118607a5d4",
+        "0a34ee2c9bd5dbb934739f12b0afc350219168bfaacbe58d2fa11b5f52f5010d",
+        "a660cf560ece8359324c0cd1732854a7f65af188111d0f1a005e44a606690d7c"
+      ],
+      "pupil": "circular disk",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "0300f34d69cf947e633e82b89554fea24fdc9046d6b594eb7d4d48affd77b382",
+      "variant": 0
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "natural-layers",
+      "focus_schedule": [
+        0.0,
+        0.04296875,
+        0.15625,
+        0.31640625,
+        0.5,
+        0.68359375,
+        0.84375,
+        0.95703125,
+        1.0
+      ],
+      "id": "train-natural-layers-v1-n9-b3",
+      "iso": 400.0,
+      "large": false,
+      "n": 9,
+      "noise_after_signal": true,
+      "noise_salt": 2217148555,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "1f7f621845710a3887d9268618d5dedd7556b94da9aa5ab502feff7d93272104",
+        "967e0c6f93f443067c5bdd042200b4f0b66b551f37ce628d497a056598d7a775",
+        "a690192d94fa573d6b219c0c471ba79944c91f19fd203daa0dfcf9cefe5286dc",
+        "7add88f55762555e95330de059b84da0df8029d858b7d9ca3d0fbf9b91f6b187",
+        "9003fd0989f31b3fdaa7f0457ba85ae18f53fb5c78d02e8e388bd461907b4b18",
+        "5f1e184107e61ded1e1d1bd98109f6c9d50a3970ac65e1c5477c50340490e3f9",
+        "7e78c703c3b103341c56ccac074c370370ff41d0bc22fa1a37bf558fe4eec56a",
+        "c57e117b8c97dfcd8b633e36d1cb13833f75692c9c581efff9f274b04952c82b",
+        "1d951e6340cc092fd7db418410f95f6f219b4391fbb8d26b8754cfc1104c55ac"
+      ],
+      "pupil": "rotated ellipse",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "695b06d07f841b9a67438155b7243d7a1c90bb114c54435eb212df4c0aee17b2",
+      "variant": 1
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "natural-layers",
+      "focus_schedule": [
+        0.0,
+        0.0625,
+        0.125,
+        0.1875,
+        0.25,
+        0.3125,
+        0.375,
+        0.4375,
+        0.5,
+        0.5625,
+        0.625,
+        0.6875,
+        0.75,
+        0.8125,
+        0.875,
+        0.9375,
+        1.0
+      ],
+      "id": "train-natural-layers-v2-n17-b3",
+      "iso": 1600.0,
+      "large": false,
+      "n": 17,
+      "noise_after_signal": true,
+      "noise_salt": 2603879074,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "024e098bc6281727dbb1fd76568be4f0654da3ebaa9d33b84619d20a1a2c4063",
+        "11d3ba2190af0762080b45ec3f8da0c81b1e0a6da6319256a304b7f381731c9d",
+        "b77f20622d1b98ab91f1395bf8f29c7fdb2165f730e4b64f4762e4aeca3d1bfa",
+        "1ec4a9de5bffb74dc2c33fa296026a821219e1f39f06c20db97997dfec436cc0",
+        "15158c76cd12c5a9e70aea88ac85400da38242473a47c344234233490db5df0d",
+        "6dcd862940d3fc4db62f931f3a6c266aa2956247c934103faae0c23b8419d98c",
+        "345a74287139c47ec4a6c023dee6392a0f69ee899be1d7af5bd3f49dfc963872",
+        "9da46a281c7d4a4b8ff28ed86472525d6caf6f0684f580c5a0cb218610955bb8",
+        "390a142423821697e32772237f4fd3aac82a27dc653e41165e5ea47b075c8992",
+        "98f198f34db0a299eb472c7b58c09baec569673087f8eabb448e876173a1e2e8",
+        "2b902f93fb89bf9d4954a13014ef0fa22e63ac667629c36994a1d7322199c81a",
+        "abf3a7c1406a15630acb91658d1927cf8d2a3900b658672dd887a71175ae716c",
+        "af7ee32493421134c87f171ad5b9dd98566f6f2ae183ef37f8b9efe08c92fe19",
+        "1e3568840de57d66db8d5b6f9e2b9d200d602c064622f2bc0b2e8248dbd570a6",
+        "50a569015307ec1ce809dd2fd030b9a401adce47d9c2108c74b17d03a029db66",
+        "71502246ea1d270d2aa3af2e9a77afe52c9c9784c1519622a7916900b630a5c5",
+        "e6a47a11e7bfb16e0cc417c18804ab337ddf471397346340b6a94ec9ccffff58"
+      ],
+      "pupil": "annulus",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "861d6b10fc8751b6d2a2c12ba2c68af716e7f0ec827326e7f78bcec9b957d17c",
+      "variant": 2
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "natural-layers",
+      "focus_schedule": [
+        0.0,
+        0.15625,
+        0.5,
+        0.84375,
+        1.0
+      ],
+      "id": "train-natural-layers-v3-n5-b3",
+      "iso": 100.0,
+      "large": false,
+      "n": 5,
+      "noise_after_signal": true,
+      "noise_salt": 563752459,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "fcce8a910371524c5e9eb057d58526b75553364df898742e0970a693e3c1d982",
+        "61cabea65c19d3cb8a7c5febcd7cc192d8663532fda97fc4000a4efce55ffe85",
+        "1d1b4109679705b44454510fc45b3174e4b59090cb60857b59adfa18e46431cb",
+        "34851cf105f6572dc291e4546e69027310c56f2c5e91b396d33a7b13a5f2773e",
+        "4b6e8b38bdf57a976458cbb5804c775b1db80357d7d72d1fbe33761d0ae4a0ff"
+      ],
+      "pupil": "circular disk",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "fcf37190cd2354b6a5e297f9076e3cd00b2d90244fc3a9aa7e24ae633a341368",
+      "variant": 3
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "natural-layers",
+      "focus_schedule": [
+        0.0,
+        0.125,
+        0.25,
+        0.375,
+        0.5,
+        0.625,
+        0.75,
+        0.875,
+        1.0
+      ],
+      "id": "train-natural-layers-v4-n9-b3",
+      "iso": 400.0,
+      "large": false,
+      "n": 9,
+      "noise_after_signal": true,
+      "noise_salt": 3713404366,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "27361552abdc3f549c7308c1463448e9eae6ab8d18d5b6738481345d06189e32",
+        "33c557b938625e8112fffc5a49b794745e5d15b7122523da58336cc404addf89",
+        "add644062db769d6bd8cd848dc57400534e8205055b0f6e12d96306cee174974",
+        "66f1d4a60c13e899a9f3a272e33291905712deb0f0ec947d29bc645e448337ce",
+        "0b921e47edf4cb538d92c63b64276443e53ba7e45c28915ffba5c063fe972fbc",
+        "4856b1ed406d31706151a43884f9d46821967e0ae5a8324a96a4e672ea0cbf61",
+        "6b4ee25856c260bba44f3429e51404fed59c75f64a0e5849e2c491e8f53981f3",
+        "0ded6530b45151ec22ed17a50c4f9e5fcf4a9b05587c26554176eb3c1018279d",
+        "8e5e2f3b1e1dac18931ce91451f4abb5f8f6b61f72b311622f182f2736c13012"
+      ],
+      "pupil": "rotated ellipse",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "92a71da2280af711b74acce6cb8b6ea14083e5615d131493f6c62e4a1c81fc3c",
+      "variant": 4
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "natural-layers",
+      "focus_schedule": [
+        0.0,
+        0.01123046875,
+        0.04296875,
+        0.09228515625,
+        0.15625,
+        0.23193359375,
+        0.31640625,
+        0.40673828125,
+        0.5,
+        0.59326171875,
+        0.68359375,
+        0.76806640625,
+        0.84375,
+        0.90771484375,
+        0.95703125,
+        0.98876953125,
+        1.0
+      ],
+      "id": "train-natural-layers-v5-n17-b3",
+      "iso": 1600.0,
+      "large": false,
+      "n": 17,
+      "noise_after_signal": true,
+      "noise_salt": 2787222695,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "2b5dbe7536d949c032143774a43657464b52d02a8136dd27e2fc1c8fb3342acd",
+        "4ee1fecbfdebb77db9d4e5777352a49c9413343446dfbb52ec9156a4c59e8907",
+        "d27edb93fcb23104f45ea732b881ba9c8d4d0e87678d5739caf2634a7ac8ec93",
+        "da4f95f1f1f564c5f29849e65aca4d55d37b4f2039af50b1192eb988d8297d20",
+        "082be41265b4485ec376f9744073a7c368b9c7e0b85b28c2fe9756bed15455ea",
+        "8fdaeb232d16b915464bb29aeebeebab0fed36edd315fb313c3095e2137008d3",
+        "783580ef9f658a542c304a56f66d293ff47e1555982c179e6f1b57a53f99663a",
+        "d6bb86605b06c093836a6f3d66c1a2258615e837274cec45f2efcefb5457c7e4",
+        "eb342f6375e19219422a8d1bb722ca946dc5d6844031b66d53ea4274f2117ebc",
+        "2216de29ecbecd4fdaccffa80a9b8f281182a6052d82776f86efaa91acc856d5",
+        "47c64ad752e4a023c762ea85379f4886ede9749526607de9c11663710cadfbee",
+        "eac8e868d5a25219afec66d12c817ed217d8f816aec2e1848880e317ab71caff",
+        "c0d588de6d7c13b66a9a13e3f3ed0c18d7429e3f2ee84f53c69df389609f395d",
+        "9dcf5e43311323bda0f50fc758789d203e90b52ba23d9581be9d45f6840a7bfe",
+        "f5d5bd0590acc040b7505d6d0deec1eae02773727d2490eb76130e73bb4206c4",
+        "536b614f8a4a03bcc5ae47b7de052316eab40cf6e85fe06b82f897950c6d7859",
+        "2248d67437cc1db9cbfe67267f387a20af993ef5bb2dbafeacbda6a7d28db4ee"
+      ],
+      "pupil": "annulus",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "efeb4f112cd0d914dd77b72146c2f97e22214d4924a2ef72f528eea6aa861d05",
+      "variant": 5
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "natural-layers",
+      "focus_schedule": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "id": "train-natural-layers-v6-n5-b3",
+      "iso": 100.0,
+      "large": false,
+      "n": 5,
+      "noise_after_signal": true,
+      "noise_salt": 1799231827,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "9b8ec5f3c349bc903f8457877bc61b42f56d3846d9bdea1660e0d01aeff12f4f",
+        "888292d6ccd26b7288111af0406caddcf62af96dceebcfa18f7a3db488338e94",
+        "a76cddbdedcac4e107030427d14257c9a9284977b0b1e014e1cef7c33a3f5fda",
+        "4a1742307d7d2df75e0999c4c00a3fd9901c2b2082290d02df225e70bf6144c9",
+        "30de8008ee9ffb0da8e7c456902f41002efeaa37a60e77c7e9778af782454a57"
+      ],
+      "pupil": "circular disk",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "c9b6fbb366dfdd7a44565cad5daff6d4a38e57fe7a2ef3a1dbf97368df57bc61",
+      "variant": 6
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "natural-layers",
+      "focus_schedule": [
+        0.0,
+        0.04296875,
+        0.15625,
+        0.31640625,
+        0.5,
+        0.68359375,
+        0.84375,
+        0.95703125,
+        1.0
+      ],
+      "id": "train-natural-layers-v7-n9-b3",
+      "iso": 400.0,
+      "large": false,
+      "n": 9,
+      "noise_after_signal": true,
+      "noise_salt": 2225752430,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "b70052e6b20520fb5ecdd96864e791b8d3bb390c685ce04224e80f2cc33d544f",
+        "659142b4094a6eca8d7e60743db79d36d8d37aaffe052e1e6b6f0cc17a280425",
+        "b7826c51c16957c1e9928442df9b989abc8db392213171579f54bbbc4d3355e7",
+        "b4e89eb30edac206eab1b610474242686b0050af115357b6f225ffd78b679d68",
+        "c87bb0b214958e75082c3055a82a5c645e59d2340101ee55b1fd33cf3d2d29b7",
+        "8afee77ec75a993d153cab6959387a0ee766ce014d32ccba104d108692f63d58",
+        "bd9efc5e996e0d797934b5d495eff79f91f83893b29e44c60a6000a8d8df33dd",
+        "f870f819989a911d91cf16f6ea54671394f867a0db31e39fb015c1814c750bec",
+        "b25cf9efe9b26744491358e692ce025099f96d0a807edff11e70ac686ac18751"
+      ],
+      "pupil": "rotated ellipse",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "5f616e626d7bcbc13243e9f28e18e8550026f13aa7ae93fa6be29f3bcb71ee82",
+      "variant": 7
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "natural-layers",
+      "focus_schedule": [
+        0.0,
+        0.0625,
+        0.125,
+        0.1875,
+        0.25,
+        0.3125,
+        0.375,
+        0.4375,
+        0.5,
+        0.5625,
+        0.625,
+        0.6875,
+        0.75,
+        0.8125,
+        0.875,
+        0.9375,
+        1.0
+      ],
+      "id": "train-natural-layers-v8-n17-b3",
+      "iso": 1600.0,
+      "large": false,
+      "n": 17,
+      "noise_after_signal": true,
+      "noise_salt": 1559139357,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "3e1bfacb7e6b994967a572db09b70ebd853690c7dadc4e8bd97b83b3923d3300",
+        "70158be4ea347a905f1dcae5d239ffb075fdbf69de89fd59bab4e73054997ec7",
+        "786c79253895a53368ddf47fc9bde08638808b6b8b7d4f6cf89e11f1816f8c59",
+        "c27f6605ae5e01ed420b464272d1b5a56b3e1390e48638870df438ae6b77ad17",
+        "910319b1fe15f50692ab9db9b824b6294fae3c7bc87b07dedd520dbb064fb0e4",
+        "74c130e3fe73785ce0fd92cb25f98037ceade117ffc56b7701386cb7f42a8dbf",
+        "77a42798a54669ae33914594db071379b0eeedce5ee0131feeab87db80df86bb",
+        "1ca48a8e17b495c605e7c01c11f43190c1ec54dd48aa8ac33654d16e182e9dad",
+        "80a8c70b3f319a92e0ffcfb3d74383e6d23e9e789fa2a4355c3696fd28eed736",
+        "51968380b3eb91659fd0daa76fe05b07a2a35a49cda744d5616af86c2c19e181",
+        "40e44c7cfd0e69c8b1c228258ba3034982cee942362e0c95ffd92e3645ad06fb",
+        "03f61ee571e0f69f1b3254538d41c5bed09ee63d635d18d947a66074f7ea6de3",
+        "eca5f27cc206243bad322d7119fdd8c4bb8688d88c91bdca947a82dc8a083f99",
+        "7a65ad30b12d7e3f549b7faf037934f22e9bda3fbd81db3564cd130b8dbc0923",
+        "7390d5271fb06b99c32e4e3ea647d5be4b94e2afe5a36914bf062037e21ca024",
+        "14125841f60aea76cef92f2b944363ffb445e180f641abbc1359060a901d66b2",
+        "b28ac9d2ea58cfaf1118c14742eee2f1f3e77bd94cd42969af66f40f72a581f5"
+      ],
+      "pupil": "annulus",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "dcb040c3e22268ef6d5db2fcc60caf142531c46312e1c67c4fe22724ffa6a8e6",
+      "variant": 8
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "natural-layers",
+      "focus_schedule": [
+        0.0,
+        0.15625,
+        0.5,
+        0.84375,
+        1.0
+      ],
+      "id": "train-natural-layers-v9-n5-b3",
+      "iso": 100.0,
+      "large": false,
+      "n": 5,
+      "noise_after_signal": true,
+      "noise_salt": 3396248322,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "4c0bd4f919783ddce6de38310e856fd7934057265e0b34bdc7fb1e1d2e356c89",
+        "387394436ab097104ef48c87b163e1dce57efcb0a4dad83b710bd8b34cac222d",
+        "3a4eb8b0d504038d7fe98a6bb26e2fa8d70b3a35525c7750a1f0af906f03c06a",
+        "5d6afb3f8669925067b220c2d8f9accaa219a026eb67862d8cae2b17fd5aa872",
+        "c23f3023871d87045a6391fcd8490f1cdeecd2d6383a85aa762d6cdb94b474ce"
+      ],
+      "pupil": "circular disk",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "0c1c8243da9398960a91e017d5d2850c56ec20c5826fc254945b2eb26ef6ad48",
+      "variant": 9
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "compound-texture",
+      "focus_schedule": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "id": "train-compound-texture-v0-n5-b3",
+      "iso": 100.0,
+      "large": false,
+      "n": 5,
+      "noise_after_signal": true,
+      "noise_salt": 209268246,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "c1c85ef5b1ab117508deefd2b60b1598cf37fee871f863c58e9edee478fcf346",
+        "0e0acfeadf2a75882759a486ebe607e58ccac97e3e72719fe2f6629804f6745b",
+        "fe51580bf710161a2ff593c02d5edef6d466793c9592983dd41f25802c7e4b4c",
+        "8b772cbc970e3b5b8d447325776377938cf02ef4026a29518ea41abb406a8d48",
+        "0f754f7d70edaa168294bd2cb89935cfc709a862a9d9afb114bdabbb3cdba59a"
+      ],
+      "pupil": "circular disk",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "882c1e991a868ee0dcfd539300ec3fdbf42bf777e562c5cfa95b287f419f1bbf",
+      "variant": 0
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "compound-texture",
+      "focus_schedule": [
+        0.0,
+        0.04296875,
+        0.15625,
+        0.31640625,
+        0.5,
+        0.68359375,
+        0.84375,
+        0.95703125,
+        1.0
+      ],
+      "id": "train-compound-texture-v1-n9-b3",
+      "iso": 400.0,
+      "large": false,
+      "n": 9,
+      "noise_after_signal": true,
+      "noise_salt": 3712235735,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "160044fa3047ca58246fdd920f66854241be21507b5fc6f6777a811a7d9f7ea5",
+        "c0394852a53df89857f3b452b9f33283489ce6d20c964c3cc04455bd7a57cad2",
+        "0ee42221c6c0da74f95132d57d3298dde0aa69aea914980318c19a294ac942a4",
+        "d2d441570e19260a9ab95111763ff57f09d4effa2ac9e2e192d5ec2a1a7f13f9",
+        "052a3e6e707fbf64785c4cd0c404eaf256fb59207daa7e305b092016a399cfcc",
+        "5e6236d5b571da3d618a2a62d92a041a04c1fed249c1c1641071db52c9637331",
+        "578398b8f84fb79f4e4bd45d0d96b28cfe8b8ab816e3b00079dfb9d5bcaa1827",
+        "a34c4fac26d1ea83cf64aedbe6341bb5dceffdec750d1f52f4516384b555e4f5",
+        "813e0c5e2fb972e95d97804f41c486bb1253ff27df03bb45a840a8076498a8bc"
+      ],
+      "pupil": "rotated ellipse",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "2ad0a5cd47d2cf659625a0112f1f077190d6f374b2c7485a676008fad3d23389",
+      "variant": 1
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "compound-texture",
+      "focus_schedule": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "id": "train-compound-texture-v2-n5-b3",
+      "iso": 100.0,
+      "large": false,
+      "n": 5,
+      "noise_after_signal": true,
+      "noise_salt": 877459999,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "05102308fae7607156bc9af4df8b453c9232c41e06d1b55dee445fd7d902c376",
+        "29e48334a71a49d8e8496e79a3c04f575c39bce12e6c0e2c23324b9bccca3fda",
+        "9b69303169388e5a234ab5d52fc64fe9827d2c11684faefe03f9b85c7d0f7922",
+        "0b90dedb7ec0ac483ac9c081e80f421d7210927ad6471fb4d9a45b7e083b8757",
+        "9cb79834d45ac6d52fae784ff389e3793de81c2a44827cd25d1b28505a3122e5"
+      ],
+      "pupil": "annulus",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "55cfdfb56f8d30d18a4eb665c2b96665b0b67713e70c2f04be3602185c16bbce",
+      "variant": 2
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "compound-texture",
+      "focus_schedule": [
+        0.0,
+        0.04296875,
+        0.15625,
+        0.31640625,
+        0.5,
+        0.68359375,
+        0.84375,
+        0.95703125,
+        1.0
+      ],
+      "id": "train-compound-texture-v3-n9-b3",
+      "iso": 400.0,
+      "large": false,
+      "n": 9,
+      "noise_after_signal": true,
+      "noise_salt": 3972846095,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "e31ba80622605bfe739aecbfcf0f061ef7865eb8758b349bac311e57bc6f4ef6",
+        "196d79250e7710af86a5d7694f85d4316cfb2fbad79161b47a9900091ceb3ed0",
+        "06c66ff641ea742408ea28312e907ef2af3ba0cc402657616b26dda8e311aeaa",
+        "53c6c4ca6652853128cb467dcf4c5d69d05e3dbb8c79af37b88668fb4803d7a1",
+        "b2ef0f057f0da14fccf809e072ee81e007a315e5b79de36d7a58f754f35c8af3",
+        "6b76c043bc3d29c5c28838fb0f045ef8e0793e1753666261e445a769e4fda9f7",
+        "9bd71ca122dba8b12761d1a3c9af66646977d6064f9cac506f3b19fbd995c7c5",
+        "ae5f32cb08a71994155d70aa3243b5fbdbbf791e317dda24252f16d1dc8dd7fd",
+        "5ea9e7a784763b62391b42cea969e301c5af9bdc7a8ffcaa86b90153bad38a11"
+      ],
+      "pupil": "circular disk",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "4f95a67e43f6f42b0551d1919b9a9654fa361522407d2b0ec24ca6fa349cfe4a",
+      "variant": 3
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "unclipped-glint",
+      "focus_schedule": [
+        0.0,
+        0.125,
+        0.25,
+        0.375,
+        0.5,
+        0.625,
+        0.75,
+        0.875,
+        1.0
+      ],
+      "id": "train-unclipped-glint-v0-n9-b3",
+      "iso": 100.0,
+      "large": false,
+      "n": 9,
+      "noise_after_signal": true,
+      "noise_salt": 2978762693,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "62f712bc9efb6140285dc042c58177d0ed26eca38f362ad8e5e813650b79c970",
+        "9fe0589104212acae98e12194b84aa9fc2664d9d0abef80eb3fe94c55800a3cb",
+        "58a42b8cb6d293ff779ced43556c40ec37c5f3b96a78190e8c8bfad526b501ca",
+        "4b02d3df179318421ec5bd75e8f68df5d40b2eb3f07aeca745f6d18e42fa3b08",
+        "88d93a429614cfc22694eeedba8f148ccef9bcb4b9cce3d256d836ae497c6bb0",
+        "2304cd22babfdb8321f1e59f12b3d2c36715385872988466b4db519bb389d31f",
+        "79dba9e37c78097b16f79d2f7d271901373ed995d97aa7d9be9dbc3e800e8337",
+        "5540e24c2ce0fce21e3c72f48b0f831429f0e3b7f9bbbabc4bb64d4ab1d59964",
+        "5e8976bef79e8dd9e4959557c6ac6e6e57669650870401923c2a22b5e324286e"
+      ],
+      "pupil": "circular disk",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "ba6cf155565297588df375d8769f734aef596e198c5ad79eee63ec62e4b0b986",
+      "variant": 0
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        4,
+        16,
+        16,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "clipped-glint",
+      "focus_schedule": [
+        0.0,
+        0.125,
+        0.25,
+        0.375,
+        0.5,
+        0.625,
+        0.75,
+        0.875,
+        1.0
+      ],
+      "id": "train-clipped-glint-v0-n9-b3",
+      "iso": 400.0,
+      "large": false,
+      "n": 9,
+      "noise_after_signal": true,
+      "noise_salt": 1318092117,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "5c8523ddf0228c6e1ca971be942eb759580c84fc50d574f7dfc3ac7f6e2d9a6c",
+        "1ca48495c7387cacb177b41f8de2c7724e61f7066ea979d70de4fc5f016bb5b5",
+        "c13c05e3a8cdc2057e33dc6d1e6435983070f779b6e6434ed0a7fc80c709f4be",
+        "809a852899d16ce53bea90c384a5190d758600a0b677958b31ca7b5920481d5d",
+        "18b81237b97ca64883ba22bf5a2814f6d276581bb7dd9151bdadfe911b6969c6",
+        "ecdb4192bfa17830afd4e8fb4ad652727716f4a0326eb59eb5aacc28a00c4e17",
+        "fe8f1f71e737e4d8e6e2e269748e9e27f542132006cb51d6faa9db01ae128207",
+        "c7a1f247d896ed8f8d093e4ea3a44636efe74e507f31a5aaf43786fb49b11aa9",
+        "8c2602d380d1990e18d7a0dbb665012b9873ae9015e51f616e778fb20683e977"
+      ],
+      "pupil": "circular disk",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "7f3c0205f7dca364d882bfffb0bf5002f1d5770aa244bdb704ff509f97dcb152",
+      "variant": 0
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "weak-colour",
+      "focus_schedule": [
+        0.0,
+        0.0625,
+        0.125,
+        0.1875,
+        0.25,
+        0.3125,
+        0.375,
+        0.4375,
+        0.5,
+        0.5625,
+        0.625,
+        0.6875,
+        0.75,
+        0.8125,
+        0.875,
+        0.9375,
+        1.0
+      ],
+      "id": "train-weak-colour-v0-n17-b3",
+      "iso": 1600.0,
+      "large": false,
+      "n": 17,
+      "noise_after_signal": true,
+      "noise_salt": 1782702858,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "d53f1fa8bd863ffcfe1c1bfb74eece9694854ad7d57c906ee7c3adaed802c20b",
+        "03d90651457615fa1174549dd241f85518a9ec4c42893464a5f7324015790c80",
+        "759e4eabdb7ed2112d42ef55c19fe4760e48b7001cd85711e2b2aa425d8c8d8a",
+        "09cdc647b23f04471d81fc189152430ec791b0539dde944938bfa4d7e7f8d467",
+        "aa2541c43d6cb24d41a9a0fb79640a09e6ff10c5d261efb33284195e2528a67c",
+        "0704909d26265c98d6a111309f3b5fbdb2ae625357e20ec43b8d8746c0e6ce05",
+        "31a8f016c87e287ebd82739d1d69c4568a7e2bca723cd7bd1b6fb1a36846b893",
+        "63247565425e39fa099c5ba4152060da78c02cb32a2af1b373014bb1633af1f3",
+        "6d5ac49ac3a93a2b751c7d7469eb451bc3a039fb50313d30b0744d52d0f0b342",
+        "e9c2d32cfc35b7505d80bbf8605babb32305e6c7b535999e1ff69c18c11faf37",
+        "fc895737296433965f98ef4dc90c998ec640e9b27ada9bd1346e56e5fbfb2b2b",
+        "3fffde27f4352e6201e976d396ac7578a5c104e9b20401aff16e8ec8297cc7a0",
+        "9097f0f90bdd8527e70ae2f4e965f2adf86a4a95e1c8fae8e864ec2527e12440",
+        "40064e86ecd1a38fa8f8c885f9ea9eab8390e2c712fa73d874c67352af6b63c7",
+        "e7711e786036d53e7fec33c606f8378d0602185886f452eef332a53a42e186ab",
+        "b043389f72efdff08559a0f812a367d07a4a54ec9a281277ec56b80256ce2a72",
+        "0422e91390ed6b43423346c5598616fc8a407d573c3a90b6c392996359cbdc02"
+      ],
+      "pupil": "circular disk",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "733283fe7c847024a5e5c42fa3c41d1a8ef75c9aa6dedc00a1b315d595a3e121",
+      "variant": 0
+    },
+    {
+      "bands": 3,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        80,
+        72
+      ],
+      "family": "near-fine-far-coarse",
+      "focus_schedule": [
+        0.0,
+        0.0625,
+        0.125,
+        0.1875,
+        0.25,
+        0.3125,
+        0.375,
+        0.4375,
+        0.5,
+        0.5625,
+        0.625,
+        0.6875,
+        0.75,
+        0.8125,
+        0.875,
+        0.9375,
+        1.0
+      ],
+      "id": "train-near-fine-far-coarse-v0-n17-b3",
+      "iso": 400.0,
+      "large": false,
+      "n": 17,
+      "noise_after_signal": true,
+      "noise_salt": 2966731476,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "f340ec79505ea35e6befc61d2e903690e2b2dc56677e304b3d97218001d8b203",
+        "fafa57dac0c02326ccec6f59b56f71ef32bcd7de572d334a38b02ea991161b77",
+        "fe4f364ace4eeb44161b489c953a663f8680cfbd0157fdc66fa599953c991ed3",
+        "a22b9403634651811e0d1d1cf47f843ce7a14671d2570c6cf7fbee2b85df7758",
+        "83a1c22aedd6a0a6ed6b5dc04bbcc8ea4ccc2479e64e2442576c29b75a859301",
+        "83529308ee3fbf9760f915335c2d9b4bfeac8c27306f113a136e19c2ee9bfff2",
+        "ec8155a92ba9ef81d2a9d24406257aa0e9090abfb1daceea5abac1b929b608d2",
+        "bff2478335c048fb0989106ce466d74397dfa19d8485499389aee18bb49697d8",
+        "712d50b36bc92add887decc4856cf3662ef5b662c4501f7a055a49b1879a062e",
+        "b3bff005db7c4b7ae1f488f5842ec2ea8ff71a616ae68586e16c9dcee8f5e983",
+        "0a69c54511d9f55479263f73f366eda3232f14e7a0e01f01f57f550eaacb70b8",
+        "7bf0f7520241b09262902e664bfac869713da85a522f900a950d2f9f50ebe1a9",
+        "4025703b2fd3a5258004e07a3590e6149d3286617746861af502720e47d44753",
+        "8eaa8f8e06d29db0a62f125741b7d9a7f6639f5a7090c142bb72d0019f05cbb1",
+        "e9d205e844ce605da478b94458b2f3e629b972d1d3a00a7469c29520f0bf1b58",
+        "4964951a02113943304cac86928b705232eafa1882adadd788b5b61c2b59e6a9",
+        "0148d65fa2df24070c1ec25e254cbb6bb99b1eeba2ae6c173f58adaa88b139af"
+      ],
+      "pupil": "circular disk",
+      "pupil_samples": 64,
+      "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+      "source_active_wh": [
+        192,
+        176
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "8af801b1a682e0829a88b58ca4503855cca8c4e91d28c2451631f3e800baea8c",
+      "variant": 0
+    },
+    {
+      "bands": 7,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        1024,
+        1024
+      ],
+      "family": "flat",
+      "focus_schedule": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "id": "train-flat-v4-n5-b7",
+      "iso": 100.0,
+      "large": true,
+      "n": 5,
+      "noise_after_signal": true,
+      "noise_salt": 2837313338,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "58368e3811aa299a0cace879a3a0899783c163e740df2d0f64c06d79ce6d5af2",
+        "d801210707432c5a10432feb52e5582de346fdb9258b5eea52e1471f178db0f3",
+        "58f458cd51e54a296f9f42dba2a269eaf1a76a2634952c41c61ca57cc26e2bec",
+        "e8d4d19c5e80dbf1c3b7d53f4b9dbfcf8f7dc2df99864b087a5e900c66fbf61c",
+        "941cdd47633a4fb7149282329aa3a0a2becd18f438c1840258091d3110ce658a"
+      ],
+      "pupil": "analytic Gaussian, no finite pupil",
+      "pupil_samples": 0,
+      "seven_band_scope": "analytic planar multiscale support test; no occlusion/optical calibration claim",
+      "source_active_wh": [
+        2080,
+        2080
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "4802b0dfbd380b773b814e17a9cb867d7254269a684df50a8a410f9e898eee4c",
+      "variant": 4
+    },
+    {
+      "bands": 7,
+      "calibration_validation": false,
+      "clipped_original_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "crop_quad_xywh": [
+        8,
+        8,
+        1024,
+        1024
+      ],
+      "family": "multiscale-gabor",
+      "focus_schedule": [
+        0.0,
+        0.2199999988079071,
+        0.5,
+        0.7799999713897705,
+        1.0
+      ],
+      "id": "train-multiscale-gabor-v0-n5-b7",
+      "iso": 400.0,
+      "large": true,
+      "n": 5,
+      "noise_after_signal": true,
+      "noise_salt": 3702577653,
+      "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+      "original_source_sha256": [
+        "4dab628c731580ddbd2557de7060351af86bec33d49afeaf2d0832f2eb0d3e2e",
+        "eef043679a39b5fff06712da69dfd509e22c7d9c8f7e3349db4e31b80cce7b7d",
+        "c374757d3eb1d7995255a0b586a6ac965e3e888fb81f4191e2738c736f3f731e",
+        "5431aae2da65edb4f16596c2616850567e4d1d1884da5c77392027272707f6af",
+        "c741d8a71db7bfabc836a0ed85d02f3457ac74dc7202c4f977b87450757bd484"
+      ],
+      "pupil": "analytic Gaussian, no finite pupil",
+      "pupil_samples": 0,
+      "seven_band_scope": "analytic planar multiscale support test; no occlusion/optical calibration claim",
+      "source_active_wh": [
+        2080,
+        2080
+      ],
+      "synthetic_texture_manifest_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95",
+      "training": true,
+      "truth_sha256": "96ff36939eb85c935f5b81b76973927c3bfaf02ab94d5c1ae16692fd079b1388",
+      "variant": 0
+    }
+  ],
+  "original_raw_reads": false,
+  "original_texture_sources": [
+    {
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00112.tiff",
+      "sha256": "6ab1f1d8a7148b7197e334344293a565d66ec60fb13b164deb881dfc24618819"
+    },
+    {
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00152.tiff",
+      "sha256": "4ec51a3083f355a6fa0edc0048a35b274141c3dc17b5b09e4c629bb0977e2249"
+    },
+    {
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-comparator\\run-2\\developed\\frame-00320.tiff",
+      "sha256": "7a0ed765b0afddee9db61c176115b1786f387ffe86038f951c03198ed6ca90e7"
+    }
+  ],
+  "schema": 1,
+  "textures_sha256": "42716246aa495c69cb887b089268c2eff37fa7f50de5bfc57e35869fa459cd95"
+}

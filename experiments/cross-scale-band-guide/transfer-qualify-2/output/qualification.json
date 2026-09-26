@@ -1,0 +1,6480 @@
+{
+  "schema": 1,
+  "dataset_sha256": "06a41b155508d223151c32035d0992c1433548b52c5430df07c3abf8f465537f",
+  "plan_sha256": "7dbb23d99a07fd7d529f86ef2c7cf87e4358e0c6616a7f0bcad9525d49c67e49",
+  "checker_sha256": "7ba41b1437bd70809efedbe020e17912551cf46108bd8c468814e40df08ba4fa",
+  "known19_scores_separate": true,
+  "fresh_case_count": 10,
+  "photographic_replay_admitted": false,
+  "status": "FRESH_QUALIFICATION_COMPLETE",
+  "mechanical_pass": true,
+  "qualification_complete": true,
+  "all_required_evidence_qualified": true,
+  "required_protections": [
+    [
+      "fresh-unclipped-glint-v2-n17-b3",
+      "genuine-core",
+      {
+        "required": true,
+        "any_channel_suffices": false,
+        "components": [
+          {
+            "channel": 1,
+            "component": 1,
+            "qualified": true
+          }
+        ],
+        "qualified": true
+      }
+    ],
+    [
+      "fresh-weak-colour-v2-n9-b3",
+      "colour-near",
+      {
+        "required": true,
+        "any_channel_suffices": false,
+        "components": [
+          {
+            "channel": 0,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 2,
+            "component": 0,
+            "qualified": true
+          }
+        ],
+        "qualified": true
+      }
+    ],
+    [
+      "fresh-near-fine-far-coarse-v2-n65-b3",
+      "thin-positive",
+      {
+        "required": true,
+        "any_channel_suffices": false,
+        "components": [
+          {
+            "channel": 1,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 1,
+            "component": 1,
+            "qualified": true
+          }
+        ],
+        "qualified": true
+      }
+    ],
+    [
+      "fresh-multiscale-gabor-v3-n5-b7",
+      "carrier-0",
+      {
+        "required": true,
+        "any_channel_suffices": true,
+        "components": [
+          {
+            "channel": 0,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 1,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 2,
+            "component": 0,
+            "qualified": true
+          }
+        ],
+        "qualified": true
+      }
+    ],
+    [
+      "fresh-multiscale-gabor-v3-n5-b7",
+      "carrier-1",
+      {
+        "required": true,
+        "any_channel_suffices": true,
+        "components": [
+          {
+            "channel": 0,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 1,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 2,
+            "component": 0,
+            "qualified": true
+          }
+        ],
+        "qualified": true
+      }
+    ],
+    [
+      "fresh-multiscale-gabor-v3-n5-b7",
+      "carrier-2",
+      {
+        "required": true,
+        "any_channel_suffices": true,
+        "components": [
+          {
+            "channel": 0,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 1,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 2,
+            "component": 0,
+            "qualified": true
+          }
+        ],
+        "qualified": true
+      }
+    ],
+    [
+      "fresh-multiscale-gabor-v3-n5-b7",
+      "carrier-3",
+      {
+        "required": true,
+        "any_channel_suffices": true,
+        "components": [
+          {
+            "channel": 0,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 1,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 2,
+            "component": 0,
+            "qualified": true
+          }
+        ],
+        "qualified": true
+      }
+    ],
+    [
+      "fresh-multiscale-gabor-v3-n5-b7",
+      "carrier-4",
+      {
+        "required": true,
+        "any_channel_suffices": true,
+        "components": [
+          {
+            "channel": 0,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 1,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 2,
+            "component": 0,
+            "qualified": true
+          }
+        ],
+        "qualified": true
+      }
+    ],
+    [
+      "fresh-multiscale-gabor-v3-n5-b7",
+      "carrier-5",
+      {
+        "required": true,
+        "any_channel_suffices": true,
+        "components": [
+          {
+            "channel": 0,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 1,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 2,
+            "component": 0,
+            "qualified": true
+          }
+        ],
+        "qualified": true
+      }
+    ],
+    [
+      "fresh-multiscale-gabor-v3-n5-b7",
+      "carrier-6",
+      {
+        "required": true,
+        "any_channel_suffices": true,
+        "components": [
+          {
+            "channel": 0,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 1,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 2,
+            "component": 0,
+            "qualified": true
+          }
+        ],
+        "qualified": true
+      }
+    ],
+    [
+      "fresh-multiscale-gabor-v3-n5-b7",
+      "carrier-7",
+      {
+        "required": true,
+        "any_channel_suffices": true,
+        "components": [
+          {
+            "channel": 0,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 1,
+            "component": 0,
+            "qualified": true
+          },
+          {
+            "channel": 2,
+            "component": 0,
+            "qualified": true
+          }
+        ],
+        "qualified": true
+      }
+    ]
+  ],
+  "positive_qualification": [
+    [
+      "fresh-forked-filaments-v0-n33-b3",
+      "fork-positive",
+      true
+    ],
+    [
+      "fresh-near-fine-far-coarse-v2-n65-b3",
+      "thin-positive",
+      true
+    ]
+  ],
+  "cases": [
+    {
+      "id": "fresh-flat-v0-n17-b3",
+      "family": "flat",
+      "source_count": 17,
+      "bands": 3,
+      "decomposition_max_abs": 0.0,
+      "regions": [
+        {
+          "name": "interior",
+          "xyxy": [
+            14,
+            14,
+            146,
+            130
+          ],
+          "current": {
+            "rgb_rmse": 0.002249643594625495,
+            "green_rmse": 0.002242470421171486,
+            "chroma_rmse": 0.0020018627906693703,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.0008929894825222324,
+            "green_rmse": 0.0007076849598516839,
+            "chroma_rmse": 0.0007486837406667804,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [],
+            "unqualified_components": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": false,
+            "any_channel_suffices": false,
+            "components": [],
+            "qualified": true
+          },
+          "destroyers": [
+            {
+              "name": "added-noise",
+              "maximum_mutation": 0.4440296685318469,
+              "judgment": {
+                "pass": false,
+                "failures": [
+                  "rgb_rmse>1.1*current",
+                  "green_rmse>1.1*current",
+                  "chroma_rmse>1.1*current",
+                  "rgb_rmse>1.1*uniform",
+                  "green_rmse>1.1*uniform",
+                  "chroma_rmse>1.1*uniform"
+                ],
+                "eligible_components": [],
+                "unqualified_components": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    0
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "ratios": {
+                  "current": {
+                    "rgb_rmse": 44.35432234853271,
+                    "green_rmse": 44.258858697825,
+                    "chroma_rmse": 70.54744138977031
+                  },
+                  "uniform": {
+                    "rgb_rmse": 111.73862527865421,
+                    "green_rmse": 140.24486478486344,
+                    "chroma_rmse": 188.63278340909713
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "fresh-flat-v3-n65-b3",
+      "family": "flat",
+      "source_count": 65,
+      "bands": 3,
+      "decomposition_max_abs": 0.0,
+      "regions": [
+        {
+          "name": "interior",
+          "xyxy": [
+            14,
+            14,
+            146,
+            130
+          ],
+          "current": {
+            "rgb_rmse": 0.007561531370231364,
+            "green_rmse": 0.007577621758193648,
+            "chroma_rmse": 0.006278609768988503,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.001017629196819246,
+            "green_rmse": 0.0008017474150349925,
+            "chroma_rmse": 0.0008405615890995053,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [],
+            "unqualified_components": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": false,
+            "any_channel_suffices": false,
+            "components": [],
+            "qualified": true
+          },
+          "destroyers": [
+            {
+              "name": "added-noise",
+              "maximum_mutation": 0.4440296685318468,
+              "judgment": {
+                "pass": false,
+                "failures": [
+                  "rgb_rmse>1.1*current",
+                  "green_rmse>1.1*current",
+                  "chroma_rmse>1.1*current",
+                  "rgb_rmse>1.1*uniform",
+                  "green_rmse>1.1*uniform",
+                  "chroma_rmse>1.1*uniform"
+                ],
+                "eligible_components": [],
+                "unqualified_components": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    0
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "ratios": {
+                  "current": {
+                    "rgb_rmse": 13.195927158109246,
+                    "green_rmse": 13.097668987946413,
+                    "chroma_rmse": 22.493243423513686
+                  },
+                  "uniform": {
+                    "rgb_rmse": 98.05282462139745,
+                    "green_rmse": 123.79108387939006,
+                    "chroma_rmse": 168.0142177879022
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "fresh-flat-v4-n5-b7",
+      "family": "flat",
+      "source_count": 5,
+      "bands": 7,
+      "decomposition_max_abs": 0.0,
+      "regions": [
+        {
+          "name": "interior",
+          "xyxy": [
+            515,
+            514,
+            1546,
+            1543
+          ],
+          "current": {
+            "rgb_rmse": 0.0023551517683451447,
+            "green_rmse": 0.002025687572740406,
+            "chroma_rmse": 0.0019886285274868377,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.002023048344572397,
+            "green_rmse": 0.001597786867464071,
+            "chroma_rmse": 0.001682355322911201,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              null
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [],
+            "unqualified_components": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": false,
+            "any_channel_suffices": false,
+            "components": [],
+            "qualified": true
+          },
+          "destroyers": [
+            {
+              "name": "added-noise",
+              "maximum_mutation": 0.5228015323366287,
+              "judgment": {
+                "pass": false,
+                "failures": [
+                  "rgb_rmse>1.1*current",
+                  "green_rmse>1.1*current",
+                  "chroma_rmse>1.1*current",
+                  "rgb_rmse>1.1*uniform",
+                  "green_rmse>1.1*uniform",
+                  "chroma_rmse>1.1*uniform"
+                ],
+                "eligible_components": [],
+                "unqualified_components": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    0
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "ratios": {
+                  "current": {
+                    "rgb_rmse": 42.448515897588564,
+                    "green_rmse": 49.31840517249898,
+                    "chroma_rmse": 71.08646372405282
+                  },
+                  "uniform": {
+                    "rgb_rmse": 49.41686022879671,
+                    "green_rmse": 62.52628714108131,
+                    "chroma_rmse": 84.02777210891927
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "fresh-forked-filaments-v0-n33-b3",
+      "family": "forked-filaments",
+      "source_count": 33,
+      "bands": 3,
+      "decomposition_max_abs": 1.7881393432617188e-07,
+      "regions": [
+        {
+          "name": "interior",
+          "xyxy": [
+            14,
+            14,
+            146,
+            130
+          ],
+          "current": {
+            "rgb_rmse": 0.018206624733544743,
+            "green_rmse": 0.019326474538453244,
+            "chroma_rmse": 0.015465956119374609,
+            "near_far_coefficients": [
+              [
+                1.0208968247838603,
+                0.9102181091416627
+              ],
+              [
+                1.024654245030152,
+                0.9076409869606364
+              ],
+              [
+                0.8715398709405178,
+                0.8250716132847069
+              ]
+            ],
+            "template_sd": [
+              [
+                0.030304110943761568,
+                0.07123258512048466
+              ],
+              [
+                0.03603988890432444,
+                0.07886952937752176
+              ],
+              [
+                0.026127675559468853,
+                0.03734956120490979
+              ]
+            ],
+            "standardized_condition": [
+              1.5719816252398437,
+              2.143853873991081,
+              1.5855974420184824
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.04230985272332756,
+            "green_rmse": 0.04596597360359762,
+            "chroma_rmse": 0.020991837472581033,
+            "near_far_coefficients": [
+              [
+                1.4732181757139378,
+                0.7793377015534092
+              ],
+              [
+                1.4892444433647525,
+                0.7501949928870157
+              ],
+              [
+                1.2040946392725205,
+                0.5790101491097458
+              ]
+            ],
+            "template_sd": [
+              [
+                0.030304110943761568,
+                0.07123258512048466
+              ],
+              [
+                0.03603988890432444,
+                0.07886952937752176
+              ],
+              [
+                0.026127675559468853,
+                0.03734956120490979
+              ]
+            ],
+            "standardized_condition": [
+              1.5719816252398437,
+              2.143853873991081,
+              1.5855974420184824
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                1.0000000119486976,
+                1.0000000195964467
+              ],
+              [
+                1.0000000120793746,
+                1.0000000177529127
+              ],
+              [
+                0.999999988248845,
+                0.9999999960800271
+              ]
+            ],
+            "template_sd": [
+              [
+                0.030304110943761568,
+                0.07123258512048466
+              ],
+              [
+                0.03603988890432444,
+                0.07886952937752176
+              ],
+              [
+                0.026127675559468853,
+                0.03734956120490979
+              ]
+            ],
+            "standardized_condition": [
+              1.5719816252398437,
+              2.143853873991081,
+              1.5855974420184824
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "unqualified_components": [],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": false,
+            "any_channel_suffices": false,
+            "components": [],
+            "qualified": true
+          },
+          "destroyers": []
+        },
+        {
+          "name": "fork-positive",
+          "xyxy": [
+            47,
+            27,
+            118,
+            121
+          ],
+          "source_native_xyxy": [
+            63,
+            43,
+            134,
+            137
+          ],
+          "current": {
+            "rgb_rmse": 0.02361424383316421,
+            "green_rmse": 0.02515818107697665,
+            "chroma_rmse": 0.01920111502005036,
+            "near_far_coefficients": [
+              [
+                1.0023897105847857,
+                0.8073376402462044
+              ],
+              [
+                0.9607651276694871,
+                0.820087066846796
+              ],
+              [
+                0.8452080163945828,
+                0.7636737554223197
+              ]
+            ],
+            "template_sd": [
+              [
+                0.03953227164990648,
+                0.06045118038257059
+              ],
+              [
+                0.04623244532216313,
+                0.07353409228109653
+              ],
+              [
+                0.03446963024496991,
+                0.03774057616048625
+              ]
+            ],
+            "standardized_condition": [
+              1.726806281365946,
+              2.9092096859587153,
+              1.9225875318452306
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.0550374360392855,
+            "green_rmse": 0.0589601302623312,
+            "chroma_rmse": 0.023250958093937,
+            "near_far_coefficients": [
+              [
+                1.4306970427917187,
+                0.5480331759773811
+              ],
+              [
+                1.4040970268600637,
+                0.5773382750252136
+              ],
+              [
+                1.1382835812249559,
+                0.4177169548629809
+              ]
+            ],
+            "template_sd": [
+              [
+                0.03953227164990648,
+                0.06045118038257059
+              ],
+              [
+                0.04623244532216313,
+                0.07353409228109653
+              ],
+              [
+                0.03446963024496991,
+                0.03774057616048625
+              ]
+            ],
+            "standardized_condition": [
+              1.726806281365946,
+              2.9092096859587153,
+              1.9225875318452306
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                1.0000000113705225,
+                1.0000000392901605
+              ],
+              [
+                1.000000018661282,
+                1.000000041566404
+              ],
+              [
+                0.9999999829349802,
+                0.99999999821767
+              ]
+            ],
+            "template_sd": [
+              [
+                0.03953227164990648,
+                0.06045118038257059
+              ],
+              [
+                0.04623244532216313,
+                0.07353409228109653
+              ],
+              [
+                0.03446963024496991,
+                0.03774057616048625
+              ]
+            ],
+            "standardized_condition": [
+              1.726806281365946,
+              2.9092096859587153,
+              1.9225875318452306
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "unqualified_components": [],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": false,
+            "any_channel_suffices": false,
+            "components": [],
+            "qualified": true
+          },
+          "positive_qualified": true,
+          "destroyers": []
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "fresh-serrated-polygon-v0-n17-b3",
+      "family": "serrated-polygon",
+      "source_count": 17,
+      "bands": 3,
+      "decomposition_max_abs": 1.7881393432617188e-07,
+      "regions": [
+        {
+          "name": "interior",
+          "xyxy": [
+            14,
+            14,
+            146,
+            130
+          ],
+          "current": {
+            "rgb_rmse": 0.013220913818158481,
+            "green_rmse": 0.01239174577911004,
+            "chroma_rmse": 0.01140967566235372,
+            "near_far_coefficients": [
+              [
+                0.9609989349209556,
+                0.9354046425572209
+              ],
+              [
+                0.9660149731822764,
+                0.9366066249390529
+              ],
+              [
+                0.8913264992028683,
+                0.875885514312797
+              ]
+            ],
+            "template_sd": [
+              [
+                0.06362370672526528,
+                0.07290430630916696
+              ],
+              [
+                0.07475440916237752,
+                0.0888193758613885
+              ],
+              [
+                0.03441293844039286,
+                0.03562048789919038
+              ]
+            ],
+            "standardized_condition": [
+              3.2216586431561374,
+              5.13692269419365,
+              1.6280387021423715
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.032715031441949975,
+            "green_rmse": 0.033813860832122476,
+            "chroma_rmse": 0.01609919304547509,
+            "near_far_coefficients": [
+              [
+                0.9990580701813792,
+                0.8225819311812179
+              ],
+              [
+                0.9500482908662283,
+                0.791785143560002
+              ],
+              [
+                0.7803308540559813,
+                0.6677831211680153
+              ]
+            ],
+            "template_sd": [
+              [
+                0.06362370672526528,
+                0.07290430630916696
+              ],
+              [
+                0.07475440916237752,
+                0.0888193758613885
+              ],
+              [
+                0.03441293844039286,
+                0.03562048789919038
+              ]
+            ],
+            "standardized_condition": [
+              3.2216586431561374,
+              5.13692269419365,
+              1.6280387021423715
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                1.0000000292054025,
+                1.0000000126267976
+              ],
+              [
+                1.0000000288880826,
+                1.0000000067211994
+              ],
+              [
+                1.0000000061129088,
+                0.9999999555222061
+              ]
+            ],
+            "template_sd": [
+              [
+                0.06362370672526528,
+                0.07290430630916696
+              ],
+              [
+                0.07475440916237752,
+                0.0888193758613885
+              ],
+              [
+                0.03441293844039286,
+                0.03562048789919038
+              ]
+            ],
+            "standardized_condition": [
+              3.2216586431561374,
+              5.13692269419365,
+              1.6280387021423715
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "unqualified_components": [],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": false,
+            "any_channel_suffices": false,
+            "components": [],
+            "qualified": true
+          },
+          "destroyers": []
+        },
+        {
+          "name": "polygon-contact",
+          "xyxy": [
+            67,
+            27,
+            106,
+            121
+          ],
+          "source_native_xyxy": [
+            83,
+            43,
+            122,
+            137
+          ],
+          "current": {
+            "rgb_rmse": 0.017473502448993497,
+            "green_rmse": 0.017923253546359593,
+            "chroma_rmse": 0.0079896654917913,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                0.9432965000059783,
+                0.802633261367542
+              ]
+            ],
+            "template_sd": [
+              [
+                0.06743545750722238,
+                0.07651661407017465
+              ],
+              [
+                0.07888069739093205,
+                0.10102226723837955
+              ],
+              [
+                0.002644807353966509,
+                0.01843362262247397
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              3.451193935328968
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.046028816424713646,
+            "green_rmse": 0.048534234993979054,
+            "chroma_rmse": 0.009625603984293275,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                5.882268461010918,
+                0.31945616603465116
+              ]
+            ],
+            "template_sd": [
+              [
+                0.06743545750722238,
+                0.07651661407017465
+              ],
+              [
+                0.07888069739093205,
+                0.10102226723837955
+              ],
+              [
+                0.002644807353966509,
+                0.01843362262247397
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              3.451193935328968
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                null,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                1.0000002341472707,
+                0.9999999795157024
+              ]
+            ],
+            "template_sd": [
+              [
+                0.06743545750722238,
+                0.07651661407017465
+              ],
+              [
+                0.07888069739093205,
+                0.10102226723837955
+              ],
+              [
+                0.002644807353966509,
+                0.01843362262247397
+              ]
+            ],
+            "standardized_condition": [
+              null,
+              null,
+              3.451193935328968
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "unqualified_components": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": false,
+            "any_channel_suffices": false,
+            "components": [],
+            "qualified": true
+          },
+          "destroyers": []
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "fresh-unclipped-glint-v2-n17-b3",
+      "family": "unclipped-glint",
+      "source_count": 17,
+      "bands": 3,
+      "decomposition_max_abs": 8.940696716308594e-08,
+      "regions": [
+        {
+          "name": "interior",
+          "xyxy": [
+            14,
+            14,
+            146,
+            130
+          ],
+          "current": {
+            "rgb_rmse": 0.005665343694534917,
+            "green_rmse": 0.005032325886321646,
+            "chroma_rmse": 0.004499070219420823,
+            "near_far_coefficients": [
+              [
+                0.961077122695489,
+                0.9265914032433972
+              ],
+              [
+                1.0166430135455922,
+                0.9364002008629254
+              ],
+              [
+                0.9333274880980539,
+                0.9381691072764037
+              ]
+            ],
+            "template_sd": [
+              [
+                0.015433124643778388,
+                0.014583907527402311
+              ],
+              [
+                0.013718330822495045,
+                0.014583907527402311
+              ],
+              [
+                0.0188627051777658,
+                0.014583907527402311
+              ]
+            ],
+            "standardized_condition": [
+              1.0595074070586128,
+              1.059507407367547,
+              1.0595074073006965
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.010470383717818185,
+            "green_rmse": 0.009603096429831306,
+            "chroma_rmse": 0.0025188802001089032,
+            "near_far_coefficients": [
+              [
+                0.6878272816816323,
+                0.5522704214557504
+              ],
+              [
+                0.6898097430201945,
+                0.557293503192512
+              ],
+              [
+                0.6851698260905351,
+                0.5577884629098129
+              ]
+            ],
+            "template_sd": [
+              [
+                0.015433124643778388,
+                0.014583907527402311
+              ],
+              [
+                0.013718330822495045,
+                0.014583907527402311
+              ],
+              [
+                0.0188627051777658,
+                0.014583907527402311
+              ]
+            ],
+            "standardized_condition": [
+              1.0595074070586128,
+              1.059507407367547,
+              1.0595074073006965
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                0.9999999876288338,
+                0.9999999583893988
+              ],
+              [
+                1.0000010912055919,
+                0.9999999650391699
+              ],
+              [
+                1.0000005132488026,
+                0.9999999611429345
+              ]
+            ],
+            "template_sd": [
+              [
+                0.015433124643778388,
+                0.014583907527402311
+              ],
+              [
+                0.013718330822495045,
+                0.014583907527402311
+              ],
+              [
+                0.0188627051777658,
+                0.014583907527402311
+              ]
+            ],
+            "standardized_condition": [
+              1.0595074070586128,
+              1.059507407367547,
+              1.0595074073006965
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "unqualified_components": [],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": false,
+            "any_channel_suffices": false,
+            "components": [],
+            "qualified": true
+          },
+          "destroyers": []
+        },
+        {
+          "name": "genuine-core",
+          "xyxy": [
+            63,
+            59,
+            88,
+            83
+          ],
+          "source_native_xyxy": [
+            79,
+            75,
+            104,
+            99
+          ],
+          "current": {
+            "rgb_rmse": 0.00851862044095892,
+            "green_rmse": 0.00822159660799099,
+            "chroma_rmse": 0.005093738716379442,
+            "near_far_coefficients": [
+              [
+                null,
+                0.9305402771456796
+              ],
+              [
+                null,
+                0.9396301407778787
+              ],
+              [
+                null,
+                0.9410769505766392
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.07112396329924137
+              ],
+              [
+                0.0,
+                0.07112396329924137
+              ],
+              [
+                0.0,
+                0.07112396329924137
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.03571287767651118,
+            "green_rmse": 0.03564071488514614,
+            "chroma_rmse": 0.0020793386750645867,
+            "near_far_coefficients": [
+              [
+                null,
+                0.5313554696236096
+              ],
+              [
+                null,
+                0.5359277903683124
+              ],
+              [
+                null,
+                0.5395475029536769
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.07112396329924137
+              ],
+              [
+                0.0,
+                0.07112396329924137
+              ],
+              [
+                0.0,
+                0.07112396329924137
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                null,
+                1.0000000007826229
+              ],
+              [
+                null,
+                1.0000000007826229
+              ],
+              [
+                null,
+                1.0000000007826229
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.07112396329924137
+              ],
+              [
+                0.0,
+                0.07112396329924137
+              ],
+              [
+                0.0,
+                0.07112396329924137
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "unqualified_components": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": true,
+            "any_channel_suffices": false,
+            "components": [
+              {
+                "channel": 1,
+                "component": 1,
+                "qualified": true
+              }
+            ],
+            "qualified": true
+          },
+          "destroyers": [
+            {
+              "name": "erased-component-1",
+              "maximum_mutation": 0.5554510354995728,
+              "judgment": {
+                "pass": false,
+                "failures": [
+                  "rgb_rmse>1.05*current",
+                  "green_rmse>1.05*current",
+                  "component-0-1<0.90*capped-current",
+                  "component-1-1<0.90*capped-current",
+                  "component-2-1<0.90*capped-current"
+                ],
+                "eligible_components": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "unqualified_components": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ],
+                "ratios": {
+                  "current": {
+                    "rgb_rmse": 8.660571965773084,
+                    "green_rmse": 8.973454779613437,
+                    "chroma_rmse": 0.0
+                  },
+                  "uniform": {
+                    "rgb_rmse": 2.0658129553797866,
+                    "green_rmse": 2.069995666915699,
+                    "chroma_rmse": 0.0
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "adjacent",
+          "xyxy": [
+            112,
+            33,
+            140,
+            118
+          ],
+          "source_native_xyxy": [
+            128,
+            49,
+            156,
+            134
+          ],
+          "current": {
+            "rgb_rmse": 0.006568672361111611,
+            "green_rmse": 0.005234725399305903,
+            "chroma_rmse": 0.005366661800107363,
+            "near_far_coefficients": [
+              [
+                0.9098181558059624,
+                null
+              ],
+              [
+                0.9982069799635774,
+                null
+              ],
+              [
+                0.8637709799259399,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.017520985527812626,
+                0.0
+              ],
+              [
+                0.015574206815758246,
+                0.0
+              ],
+              [
+                0.021414534656513738,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.012020845490565925,
+            "green_rmse": 0.009929653832371583,
+            "chroma_rmse": 0.0037264594022888434,
+            "near_far_coefficients": [
+              [
+                0.3720558002651132,
+                null
+              ],
+              [
+                0.38108911939430723,
+                null
+              ],
+              [
+                0.3481625538397368,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.017520985527812626,
+                0.0
+              ],
+              [
+                0.015574206815758246,
+                0.0
+              ],
+              [
+                0.021414534656513738,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                0.9999993888675764,
+                null
+              ],
+              [
+                1.0000007852354695,
+                null
+              ],
+              [
+                1.0000001447649989,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.017520985527812626,
+                0.0
+              ],
+              [
+                0.015574206815758246,
+                0.0
+              ],
+              [
+                0.021414534656513738,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "unqualified_components": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": false,
+            "any_channel_suffices": false,
+            "components": [],
+            "qualified": true
+          },
+          "destroyers": []
+        },
+        {
+          "name": "spread",
+          "xyxy": [
+            87,
+            55,
+            101,
+            96
+          ],
+          "source_native_xyxy": [
+            103,
+            71,
+            117,
+            112
+          ],
+          "current": {
+            "rgb_rmse": 0.005913169887362449,
+            "green_rmse": 0.00557881407030479,
+            "chroma_rmse": 0.00446537334948563,
+            "near_far_coefficients": [
+              [
+                0.9060301173531817,
+                null
+              ],
+              [
+                1.0979749759225783,
+                null
+              ],
+              [
+                0.9523135669819112,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.004799302932763377,
+                3.9295576297610406e-14
+              ],
+              [
+                0.004266046410755112,
+                3.9295576297610406e-14
+              ],
+              [
+                0.005865814050923211,
+                3.9295576297610406e-14
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.006878502724926893,
+            "green_rmse": 0.0063472108179744805,
+            "chroma_rmse": 0.0017264699765609914,
+            "near_far_coefficients": [
+              [
+                0.6188122226933723,
+                null
+              ],
+              [
+                0.6497933736523774,
+                null
+              ],
+              [
+                0.6389612880246419,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.004799302932763377,
+                3.9295576297610406e-14
+              ],
+              [
+                0.004266046410755112,
+                3.9295576297610406e-14
+              ],
+              [
+                0.005865814050923211,
+                3.9295576297610406e-14
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                0.9999997806428682,
+                null
+              ],
+              [
+                1.0000004335468136,
+                null
+              ],
+              [
+                1.0000002091668416,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.004799302932763377,
+                3.9295576297610406e-14
+              ],
+              [
+                0.004266046410755112,
+                3.9295576297610406e-14
+              ],
+              [
+                0.005865814050923211,
+                3.9295576297610406e-14
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "unqualified_components": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": false,
+            "any_channel_suffices": false,
+            "components": [],
+            "qualified": true
+          },
+          "destroyers": []
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "fresh-clipped-glint-v2-n17-b3",
+      "family": "clipped-glint",
+      "source_count": 17,
+      "bands": 3,
+      "decomposition_max_abs": 4.76837158203125e-07,
+      "regions": [
+        {
+          "name": "adjacent",
+          "xyxy": [
+            112,
+            33,
+            140,
+            118
+          ],
+          "source_native_xyxy": [
+            128,
+            49,
+            156,
+            134
+          ],
+          "current": {
+            "rgb_rmse": 0.004197268282498577,
+            "green_rmse": 0.0030708691936958323,
+            "chroma_rmse": 0.0031463090552672746,
+            "near_far_coefficients": [
+              [
+                0.8917984173689371,
+                null
+              ],
+              [
+                0.9394217556131259,
+                null
+              ],
+              [
+                0.8335825252880319,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.017520985527812626,
+                0.0
+              ],
+              [
+                0.015574206815758246,
+                0.0
+              ],
+              [
+                0.021414534656513738,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.011951642281415611,
+            "green_rmse": 0.009822417593115166,
+            "chroma_rmse": 0.0034834118867428632,
+            "near_far_coefficients": [
+              [
+                0.36520050832262374,
+                null
+              ],
+              [
+                0.38028575750563115,
+                null
+              ],
+              [
+                0.3423278185888528,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.017520985527812626,
+                0.0
+              ],
+              [
+                0.015574206815758246,
+                0.0
+              ],
+              [
+                0.021414534656513738,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                0.9999993888675764,
+                null
+              ],
+              [
+                1.0000007852354695,
+                null
+              ],
+              [
+                1.0000001447649989,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.017520985527812626,
+                0.0
+              ],
+              [
+                0.015574206815758246,
+                0.0
+              ],
+              [
+                0.021414534656513738,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "unqualified_components": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": false,
+            "any_channel_suffices": false,
+            "components": [],
+            "qualified": true
+          },
+          "destroyers": []
+        },
+        {
+          "name": "spread",
+          "xyxy": [
+            87,
+            55,
+            101,
+            96
+          ],
+          "source_native_xyxy": [
+            103,
+            71,
+            117,
+            112
+          ],
+          "current": {
+            "rgb_rmse": 0.004026713384126826,
+            "green_rmse": 0.003380607910491147,
+            "chroma_rmse": 0.0022480155898512507,
+            "near_far_coefficients": [
+              [
+                0.9641877275883804,
+                null
+              ],
+              [
+                1.0050196692900222,
+                null
+              ],
+              [
+                0.8977838814048295,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.004799302932763377,
+                1.4509136583112198e-13
+              ],
+              [
+                0.004266046410755112,
+                1.4509136583112198e-13
+              ],
+              [
+                0.005865814050923211,
+                1.4509136583112198e-13
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.006688858790242798,
+            "green_rmse": 0.006263147176639486,
+            "chroma_rmse": 0.0011269604361646044,
+            "near_far_coefficients": [
+              [
+                0.6095262713980508,
+                null
+              ],
+              [
+                0.6096346316992177,
+                null
+              ],
+              [
+                0.618357542109708,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.004799302932763377,
+                1.4509136583112198e-13
+              ],
+              [
+                0.004266046410755112,
+                1.4509136583112198e-13
+              ],
+              [
+                0.005865814050923211,
+                1.4509136583112198e-13
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                0.9999997806428682,
+                null
+              ],
+              [
+                1.0000004335468136,
+                null
+              ],
+              [
+                1.0000002091668416,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.004799302932763377,
+                1.4509136583112198e-13
+              ],
+              [
+                0.004266046410755112,
+                1.4509136583112198e-13
+              ],
+              [
+                0.005865814050923211,
+                1.4509136583112198e-13
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "unqualified_components": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": false,
+            "any_channel_suffices": false,
+            "components": [],
+            "qualified": true
+          },
+          "destroyers": []
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "fresh-weak-colour-v2-n9-b3",
+      "family": "weak-colour",
+      "source_count": 9,
+      "bands": 3,
+      "decomposition_max_abs": 5.960464477539063e-08,
+      "regions": [
+        {
+          "name": "interior",
+          "xyxy": [
+            14,
+            14,
+            146,
+            130
+          ],
+          "current": {
+            "rgb_rmse": 0.0018521535777550782,
+            "green_rmse": 0.0010921488178391536,
+            "chroma_rmse": 0.0022729339295179266,
+            "near_far_coefficients": [
+              [
+                0.7770626890828249,
+                0.8845507160771523
+              ],
+              [
+                null,
+                1.136963737342456
+              ],
+              [
+                0.7874437585764725,
+                0.8344170156745815
+              ]
+            ],
+            "template_sd": [
+              [
+                0.005266729195182694,
+                0.002555077448512089
+              ],
+              [
+                0.00032410643923456056,
+                0.0010220308761983113
+              ],
+              [
+                0.004051330384969368,
+                0.004599139607965623
+              ]
+            ],
+            "standardized_condition": [
+              1.0000397319578804,
+              1.0,
+              1.0000397319279908
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.002308119739425833,
+            "green_rmse": 0.0007199906370729174,
+            "chroma_rmse": 0.0027085208698975215,
+            "near_far_coefficients": [
+              [
+                0.667048324162583,
+                0.5811836066142323
+              ],
+              [
+                null,
+                0.6750089736864966
+              ],
+              [
+                0.6734428467589518,
+                0.5672373164986584
+              ]
+            ],
+            "template_sd": [
+              [
+                0.005266729195182694,
+                0.002555077448512089
+              ],
+              [
+                0.00032410643923456056,
+                0.0010220308761983113
+              ],
+              [
+                0.004051330384969368,
+                0.004599139607965623
+              ]
+            ],
+            "standardized_condition": [
+              1.0000397319578804,
+              1.0,
+              1.0000397319279908
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                0.9999999736454955,
+                0.9999992769100648
+              ],
+              [
+                null,
+                0.9999931786829981
+              ],
+              [
+                0.9999999375098597,
+                0.9999998021619195
+              ]
+            ],
+            "template_sd": [
+              [
+                0.005266729195182694,
+                0.002555077448512089
+              ],
+              [
+                0.00032410643923456056,
+                0.0010220308761983113
+              ],
+              [
+                0.004051330384969368,
+                0.004599139607965623
+              ]
+            ],
+            "standardized_condition": [
+              1.0000397319578804,
+              1.0,
+              1.0000397319279908
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "unqualified_components": [
+              [
+                1,
+                0
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": false,
+            "any_channel_suffices": false,
+            "components": [],
+            "qualified": true
+          },
+          "destroyers": []
+        },
+        {
+          "name": "colour-near",
+          "xyxy": [
+            27,
+            20,
+            94,
+            128
+          ],
+          "source_native_xyxy": [
+            43,
+            36,
+            110,
+            144
+          ],
+          "current": {
+            "rgb_rmse": 0.0021131502544251054,
+            "green_rmse": 0.0010915029640177322,
+            "chroma_rmse": 0.002757713749417831,
+            "near_far_coefficients": [
+              [
+                0.7770043957609332,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                0.7875118373870755,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.007659686566445534,
+                0.0
+              ],
+              [
+                0.0004713653667572417,
+                0.0
+              ],
+              [
+                0.005892066931049644,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              null,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.0023617832834543586,
+            "green_rmse": 0.0006662870428929352,
+            "chroma_rmse": 0.0032048329685586316,
+            "near_far_coefficients": [
+              [
+                0.6670015178709285,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                0.6733798562832762,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.007659686566445534,
+                0.0
+              ],
+              [
+                0.0004713653667572417,
+                0.0
+              ],
+              [
+                0.005892066931049644,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              null,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                0.9999999743758491,
+                null
+              ],
+              [
+                null,
+                null
+              ],
+              [
+                0.99999993943726,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.007659686566445534,
+                0.0
+              ],
+              [
+                0.0004713653667572417,
+                0.0
+              ],
+              [
+                0.005892066931049644,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              null,
+              1.0
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "unqualified_components": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": true,
+            "any_channel_suffices": false,
+            "components": [
+              {
+                "channel": 0,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 2,
+                "component": 0,
+                "qualified": true
+              }
+            ],
+            "qualified": true
+          },
+          "destroyers": [
+            {
+              "name": "erased-component-0",
+              "maximum_mutation": 0.059099771082401276,
+              "judgment": {
+                "pass": false,
+                "failures": [
+                  "rgb_rmse>1.05*current",
+                  "chroma_rmse>1.05*current",
+                  "component-0-0<0.90*capped-current",
+                  "component-2-0<0.90*capped-current"
+                ],
+                "eligible_components": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ],
+                "unqualified_components": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "ratios": {
+                  "current": {
+                    "rgb_rmse": 2.643438455191388,
+                    "green_rmse": 0.43185021960662073,
+                    "chroma_rmse": 2.6474613926241806
+                  },
+                  "uniform": {
+                    "rgb_rmse": 2.3651546199339237,
+                    "green_rmse": 0.7074515402036391,
+                    "chroma_rmse": 2.278103338027057
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "colour-far",
+          "xyxy": [
+            102,
+            31,
+            115,
+            113
+          ],
+          "source_native_xyxy": [
+            118,
+            47,
+            131,
+            129
+          ],
+          "current": {
+            "rgb_rmse": 0.003436309680528292,
+            "green_rmse": 0.0016649435364145988,
+            "chroma_rmse": 0.004171627818564464,
+            "near_far_coefficients": [
+              [
+                null,
+                0.8447065104351447
+              ],
+              [
+                null,
+                1.1899419264431894
+              ],
+              [
+                null,
+                0.7628937951865444
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.008360598176259934
+              ],
+              [
+                0.0,
+                0.003344238913488814
+              ],
+              [
+                0.0,
+                0.015049077294017723
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.005963720697074041,
+            "green_rmse": 0.001641014713069867,
+            "chroma_rmse": 0.0057797418655690805,
+            "near_far_coefficients": [
+              [
+                null,
+                0.4625444368351405
+              ],
+              [
+                null,
+                0.5826103825443727
+              ],
+              [
+                null,
+                0.4406539617877354
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.008360598176259934
+              ],
+              [
+                0.0,
+                0.003344238913488814
+              ],
+              [
+                0.0,
+                0.015049077294017723
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                null,
+                0.9999990928393482
+              ],
+              [
+                null,
+                1.000000128506898
+              ],
+              [
+                null,
+                0.9999997091157231
+              ]
+            ],
+            "template_sd": [
+              [
+                0.0,
+                0.008360598176259934
+              ],
+              [
+                0.0,
+                0.003344238913488814
+              ],
+              [
+                0.0,
+                0.015049077294017723
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "unqualified_components": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": false,
+            "any_channel_suffices": false,
+            "components": [],
+            "qualified": true
+          },
+          "destroyers": []
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "fresh-near-fine-far-coarse-v2-n65-b3",
+      "family": "near-fine-far-coarse",
+      "source_count": 65,
+      "bands": 3,
+      "decomposition_max_abs": 1.1920928955078125e-07,
+      "regions": [
+        {
+          "name": "interior",
+          "xyxy": [
+            14,
+            14,
+            146,
+            130
+          ],
+          "current": {
+            "rgb_rmse": 0.005397276075593486,
+            "green_rmse": 0.005573878045823021,
+            "chroma_rmse": 0.00202835215936856,
+            "near_far_coefficients": [
+              [
+                0.829318055184148,
+                0.9393298938490957
+              ],
+              [
+                0.9048303743560118,
+                0.9397387871085771
+              ],
+              [
+                0.8608953905757856,
+                0.9424070443216517
+              ]
+            ],
+            "template_sd": [
+              [
+                0.015834546960940523,
+                0.037427347164080735
+              ],
+              [
+                0.012315757027483111,
+                0.04423231781927474
+              ],
+              [
+                0.01407515125953846,
+                0.03402486184538477
+              ]
+            ],
+            "standardized_condition": [
+              1.0007428592183514,
+              1.0007428590886784,
+              1.0007428591719874
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.01339917957316656,
+            "green_rmse": 0.012907423428728164,
+            "chroma_rmse": 0.0026707414272018897,
+            "near_far_coefficients": [
+              [
+                0.30801891698517736,
+                0.8919230079106607
+              ],
+              [
+                0.33476854076310286,
+                0.8909346772922195
+              ],
+              [
+                0.31899203964720785,
+                0.8929657726786175
+              ]
+            ],
+            "template_sd": [
+              [
+                0.015834546960940523,
+                0.037427347164080735
+              ],
+              [
+                0.012315757027483111,
+                0.04423231781927474
+              ],
+              [
+                0.01407515125953846,
+                0.03402486184538477
+              ]
+            ],
+            "standardized_condition": [
+              1.0007428592183514,
+              1.0007428590886784,
+              1.0007428591719874
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                0.9999999410637593,
+                1.0000000103778697
+              ],
+              [
+                0.9999997948028988,
+                0.9999999945620275
+              ],
+              [
+                1.0000002121497107,
+                0.9999999951347899
+              ]
+            ],
+            "template_sd": [
+              [
+                0.015834546960940523,
+                0.037427347164080735
+              ],
+              [
+                0.012315757027483111,
+                0.04423231781927474
+              ],
+              [
+                0.01407515125953846,
+                0.03402486184538477
+              ]
+            ],
+            "standardized_condition": [
+              1.0007428592183514,
+              1.0007428590886784,
+              1.0007428591719874
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "unqualified_components": [],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": false,
+            "any_channel_suffices": false,
+            "components": [],
+            "qualified": true
+          },
+          "destroyers": []
+        },
+        {
+          "name": "thin-positive",
+          "xyxy": [
+            48,
+            26,
+            115,
+            122
+          ],
+          "source_native_xyxy": [
+            64,
+            42,
+            131,
+            138
+          ],
+          "current": {
+            "rgb_rmse": 0.006763295142484066,
+            "green_rmse": 0.006787593079091084,
+            "chroma_rmse": 0.002733928151772225,
+            "near_far_coefficients": [
+              [
+                0.8283189099340156,
+                0.9324818928548843
+              ],
+              [
+                0.9031089847881316,
+                0.9312267383791601
+              ],
+              [
+                0.8597704404555915,
+                0.9361860793417719
+              ]
+            ],
+            "template_sd": [
+              [
+                0.022256466705631663,
+                0.03637667927228386
+              ],
+              [
+                0.017310582796857595,
+                0.042990619345755654
+              ],
+              [
+                0.019783523718021695,
+                0.03306970924274607
+              ]
+            ],
+            "standardized_condition": [
+              1.0020557363885934,
+              1.0020557367109426,
+              1.0020557365157086
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.017851627161087243,
+            "green_rmse": 0.016797326270010012,
+            "chroma_rmse": 0.0035271317339479824,
+            "near_far_coefficients": [
+              [
+                0.30023607495255866,
+                0.8813570497550114
+              ],
+              [
+                0.323992534735174,
+                0.8799639745433583
+              ],
+              [
+                0.31019300136580025,
+                0.8831546458982574
+              ]
+            ],
+            "template_sd": [
+              [
+                0.022256466705631663,
+                0.03637667927228386
+              ],
+              [
+                0.017310582796857595,
+                0.042990619345755654
+              ],
+              [
+                0.019783523718021695,
+                0.03306970924274607
+              ]
+            ],
+            "standardized_condition": [
+              1.0020557363885934,
+              1.0020557367109426,
+              1.0020557365157086
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                0.999999952480893,
+                1.0000000099603172
+              ],
+              [
+                0.9999998066011118,
+                0.9999999877953665
+              ],
+              [
+                1.0000002325844122,
+                0.9999999783740907
+              ]
+            ],
+            "template_sd": [
+              [
+                0.022256466705631663,
+                0.03637667927228386
+              ],
+              [
+                0.017310582796857595,
+                0.042990619345755654
+              ],
+              [
+                0.019783523718021695,
+                0.03306970924274607
+              ]
+            ],
+            "standardized_condition": [
+              1.0020557363885934,
+              1.0020557367109426,
+              1.0020557365157086
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "unqualified_components": [],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": true,
+            "any_channel_suffices": false,
+            "components": [
+              {
+                "channel": 1,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 1,
+                "component": 1,
+                "qualified": true
+              }
+            ],
+            "qualified": true
+          },
+          "positive_qualified": true,
+          "destroyers": [
+            {
+              "name": "erased-component-0",
+              "maximum_mutation": 0.08997888118028641,
+              "judgment": {
+                "pass": false,
+                "failures": [
+                  "rgb_rmse>1.05*current",
+                  "green_rmse>1.05*current",
+                  "chroma_rmse>1.05*current",
+                  "component-0-0<0.90*capped-current",
+                  "component-1-0<0.90*capped-current",
+                  "component-2-0<0.90*capped-current"
+                ],
+                "eligible_components": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    0
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "unqualified_components": [],
+                "ratios": {
+                  "current": {
+                    "rgb_rmse": 2.9407777415616265,
+                    "green_rmse": 2.5507184155660045,
+                    "chroma_rmse": 1.4304194930665164
+                  },
+                  "uniform": {
+                    "rgb_rmse": 1.1141476143969424,
+                    "green_rmse": 1.0307139592279686,
+                    "chroma_rmse": 1.1087377551847282
+                  }
+                }
+              }
+            },
+            {
+              "name": "erased-component-1",
+              "maximum_mutation": 0.06460936367511749,
+              "judgment": {
+                "pass": false,
+                "failures": [
+                  "rgb_rmse>1.05*current",
+                  "green_rmse>1.05*current",
+                  "chroma_rmse>1.05*current",
+                  "component-0-1<0.90*capped-current",
+                  "component-1-1<0.90*capped-current",
+                  "component-2-1<0.90*capped-current"
+                ],
+                "eligible_components": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    0
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "unqualified_components": [],
+                "ratios": {
+                  "current": {
+                    "rgb_rmse": 5.58036443651578,
+                    "green_rmse": 6.33981767474393,
+                    "chroma_rmse": 3.086872599636061
+                  },
+                  "uniform": {
+                    "rgb_rmse": 2.1141855219252395,
+                    "green_rmse": 2.561842395632979,
+                    "chroma_rmse": 2.3926772623355044
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "fresh-multiscale-gabor-v3-n5-b7",
+      "family": "multiscale-gabor",
+      "source_count": 5,
+      "bands": 7,
+      "decomposition_max_abs": 2.9802322387695312e-08,
+      "regions": [
+        {
+          "name": "interior",
+          "xyxy": [
+            515,
+            514,
+            1546,
+            1543
+          ],
+          "current": {
+            "rgb_rmse": 0.002936096614521169,
+            "green_rmse": 0.002475733929911464,
+            "chroma_rmse": 0.0022786312948271594,
+            "near_far_coefficients": [
+              [
+                0.9397292779232395,
+                0.9365881542568417
+              ],
+              [
+                0.9528607238920529,
+                0.9481000116778423
+              ],
+              [
+                0.9385657152311169,
+                0.9307912173722483
+              ]
+            ],
+            "template_sd": [
+              [
+                0.008242463302162117,
+                0.008017141874152738
+              ],
+              [
+                0.0070060943444318225,
+                0.006814571116106168
+              ],
+              [
+                0.00906670978535701,
+                0.008818856213035162
+              ]
+            ],
+            "standardized_condition": [
+              1.039541661551914,
+              1.039541661490633,
+              1.0395416614707456
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.005649445462015965,
+            "green_rmse": 0.004796345462733596,
+            "chroma_rmse": 0.00202083473185801,
+            "near_far_coefficients": [
+              [
+                0.6576218734274923,
+                0.4906213543342272
+              ],
+              [
+                0.6587595468682256,
+                0.4920085560305916
+              ],
+              [
+                0.6577814472293977,
+                0.4902412572092846
+              ]
+            ],
+            "template_sd": [
+              [
+                0.008242463302162117,
+                0.008017141874152738
+              ],
+              [
+                0.0070060943444318225,
+                0.006814571116106168
+              ],
+              [
+                0.00906670978535701,
+                0.008818856213035162
+              ]
+            ],
+            "standardized_condition": [
+              1.039541661551914,
+              1.039541661490633,
+              1.0395416614707456
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                0.9999999999127802,
+                0.9999999989003923
+              ],
+              [
+                0.9999999984937905,
+                1.000000001855891
+              ],
+              [
+                1.0000000006080945,
+                0.9999999994609035
+              ]
+            ],
+            "template_sd": [
+              [
+                0.008242463302162117,
+                0.008017141874152738
+              ],
+              [
+                0.0070060943444318225,
+                0.006814571116106168
+              ],
+              [
+                0.00906670978535701,
+                0.008818856213035162
+              ]
+            ],
+            "standardized_condition": [
+              1.039541661551914,
+              1.039541661490633,
+              1.0395416614707456
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "unqualified_components": [],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": false,
+            "any_channel_suffices": false,
+            "components": [],
+            "qualified": true
+          },
+          "destroyers": []
+        },
+        {
+          "name": "carrier-0",
+          "carrier": 0,
+          "xyxy": [
+            138,
+            451,
+            459,
+            771
+          ],
+          "current": {
+            "rgb_rmse": 0.0036503292110884747,
+            "green_rmse": 0.003046423866521284,
+            "chroma_rmse": 0.0029866532621018772,
+            "near_far_coefficients": [
+              [
+                0.9576049454157611,
+                null
+              ],
+              [
+                1.0601935862231238,
+                null
+              ],
+              [
+                0.891169253233647,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.005974944386836598,
+                0.0
+              ],
+              [
+                0.005078702728811109,
+                0.0
+              ],
+              [
+                0.006572438825520256,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.005116911693159594,
+            "green_rmse": 0.004253101385641206,
+            "chroma_rmse": 0.001992366408602347,
+            "near_far_coefficients": [
+              [
+                0.20299697576203524,
+                null
+              ],
+              [
+                0.22247525989456204,
+                null
+              ],
+              [
+                0.1882866673902662,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.005974944386836598,
+                0.0
+              ],
+              [
+                0.005078702728811109,
+                0.0
+              ],
+              [
+                0.006572438825520256,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                0.9999999999999999,
+                null
+              ],
+              [
+                1.0,
+                null
+              ],
+              [
+                1.0,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.005974944386836598,
+                0.0
+              ],
+              [
+                0.005078702728811109,
+                0.0
+              ],
+              [
+                0.006572438825520256,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "unqualified_components": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": true,
+            "any_channel_suffices": true,
+            "components": [
+              {
+                "channel": 0,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 1,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 2,
+                "component": 0,
+                "qualified": true
+              }
+            ],
+            "qualified": true
+          },
+          "analytic_truth_max_abs": 3.3943437424688305e-07,
+          "destroyers": [
+            {
+              "name": "erased-component-0",
+              "maximum_mutation": 0.02402179820467959,
+              "judgment": {
+                "pass": false,
+                "failures": [
+                  "rgb_rmse>1.05*current",
+                  "green_rmse>1.05*current",
+                  "component-0-0<0.90*capped-current",
+                  "component-1-0<0.90*capped-current",
+                  "component-2-0<0.90*capped-current"
+                ],
+                "eligible_components": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ],
+                "unqualified_components": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "ratios": {
+                  "current": {
+                    "rgb_rmse": 1.618304406125497,
+                    "green_rmse": 1.6671031187168674,
+                    "chroma_rmse": 0.4124236168744519
+                  },
+                  "uniform": {
+                    "rgb_rmse": 1.154474456537947,
+                    "green_rmse": 1.1941174847035665,
+                    "chroma_rmse": 0.618242877107141
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "carrier-1",
+          "carrier": 1,
+          "xyxy": [
+            619,
+            451,
+            940,
+            771
+          ],
+          "current": {
+            "rgb_rmse": 0.0039889665574981215,
+            "green_rmse": 0.0033506789805823854,
+            "chroma_rmse": 0.0032689174388683684,
+            "near_far_coefficients": [
+              [
+                1.0440382485709983,
+                null
+              ],
+              [
+                1.0996881733568138,
+                null
+              ],
+              [
+                1.0066837927205163,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.009401917964607995,
+                0.0
+              ],
+              [
+                0.007991630269916795,
+                0.0
+              ],
+              [
+                0.010342109761068792,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.007576825662062194,
+            "green_rmse": 0.006397186827126142,
+            "chroma_rmse": 0.002318915939666856,
+            "near_far_coefficients": [
+              [
+                0.21206281391808213,
+                null
+              ],
+              [
+                0.22401281527310088,
+                null
+              ],
+              [
+                0.20797146955532578,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.009401917964607995,
+                0.0
+              ],
+              [
+                0.007991630269916795,
+                0.0
+              ],
+              [
+                0.010342109761068792,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                0.9999999999999998,
+                null
+              ],
+              [
+                1.0000000000000002,
+                null
+              ],
+              [
+                1.0,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.009401917964607995,
+                0.0
+              ],
+              [
+                0.007991630269916795,
+                0.0
+              ],
+              [
+                0.010342109761068792,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "unqualified_components": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": true,
+            "any_channel_suffices": true,
+            "components": [
+              {
+                "channel": 0,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 1,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 2,
+                "component": 0,
+                "qualified": true
+              }
+            ],
+            "qualified": true
+          },
+          "analytic_truth_max_abs": 7.966370811351986e-07,
+          "destroyers": [
+            {
+              "name": "erased-component-0",
+              "maximum_mutation": 0.03779838794914642,
+              "judgment": {
+                "pass": false,
+                "failures": [
+                  "rgb_rmse>1.05*current",
+                  "green_rmse>1.05*current",
+                  "component-0-0<0.90*capped-current",
+                  "component-1-0<0.90*capped-current",
+                  "component-2-0<0.90*capped-current"
+                ],
+                "eligible_components": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ],
+                "unqualified_components": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "ratios": {
+                  "current": {
+                    "rgb_rmse": 2.330314004744202,
+                    "green_rmse": 2.3850778651817697,
+                    "chroma_rmse": 0.5929348412190392
+                  },
+                  "uniform": {
+                    "rgb_rmse": 1.2268389227876415,
+                    "green_rmse": 1.2492413440279353,
+                    "chroma_rmse": 0.8358453229883016
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "carrier-2",
+          "carrier": 2,
+          "xyxy": [
+            1101,
+            451,
+            1422,
+            771
+          ],
+          "current": {
+            "rgb_rmse": 0.003559024021408595,
+            "green_rmse": 0.0029041047565603437,
+            "chroma_rmse": 0.002865675975058708,
+            "near_far_coefficients": [
+              [
+                0.9947490327560627,
+                null
+              ],
+              [
+                1.0169435995011593,
+                null
+              ],
+              [
+                0.9864499862331672,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.010530219508885018,
+                0.0
+              ],
+              [
+                0.008950686582552264,
+                0.0
+              ],
+              [
+                0.011583241459773515,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.008494496256479862,
+            "green_rmse": 0.007265637414494398,
+            "chroma_rmse": 0.0023683834672886643,
+            "near_far_coefficients": [
+              [
+                0.20579300360863673,
+                null
+              ],
+              [
+                0.20717819195836606,
+                null
+              ],
+              [
+                0.20599677409419997,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.010530219508885018,
+                0.0
+              ],
+              [
+                0.008950686582552264,
+                0.0
+              ],
+              [
+                0.011583241459773515,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                1.0,
+                null
+              ],
+              [
+                1.0,
+                null
+              ],
+              [
+                1.0,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.010530219508885018,
+                0.0
+              ],
+              [
+                0.008950686582552264,
+                0.0
+              ],
+              [
+                0.011583241459773515,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "unqualified_components": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": true,
+            "any_channel_suffices": true,
+            "components": [
+              {
+                "channel": 0,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 1,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 2,
+                "component": 0,
+                "qualified": true
+              }
+            ],
+            "qualified": true
+          },
+          "analytic_truth_max_abs": 1.0383190196805447e-06,
+          "destroyers": [
+            {
+              "name": "erased-component-0",
+              "maximum_mutation": 0.04233430747918626,
+              "judgment": {
+                "pass": false,
+                "failures": [
+                  "rgb_rmse>1.05*current",
+                  "green_rmse>1.05*current",
+                  "component-0-0<0.90*capped-current",
+                  "component-1-0<0.90*capped-current",
+                  "component-2-0<0.90*capped-current"
+                ],
+                "eligible_components": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ],
+                "unqualified_components": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "ratios": {
+                  "current": {
+                    "rgb_rmse": 2.925262798906973,
+                    "green_rmse": 3.0820811688487324,
+                    "chroma_rmse": 0.7575386693049659
+                  },
+                  "uniform": {
+                    "rgb_rmse": 1.2256266005533838,
+                    "green_rmse": 1.2319203494386775,
+                    "chroma_rmse": 0.9166000332245161
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "carrier-3",
+          "carrier": 3,
+          "xyxy": [
+            1582,
+            451,
+            1903,
+            771
+          ],
+          "current": {
+            "rgb_rmse": 0.002995630117648827,
+            "green_rmse": 0.0024908478791994685,
+            "chroma_rmse": 0.0023303407100368446,
+            "near_far_coefficients": [
+              [
+                0.9291654629794002,
+                null
+              ],
+              [
+                0.943988967262494,
+                null
+              ],
+              [
+                0.9289766094763839,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.010832834802088942,
+                0.0
+              ],
+              [
+                0.009207909581775598,
+                0.0
+              ],
+              [
+                0.011916118282297833,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.008746434015770844,
+            "green_rmse": 0.00748133611679324,
+            "chroma_rmse": 0.002399335222353582,
+            "near_far_coefficients": [
+              [
+                0.20286447444892017,
+                null
+              ],
+              [
+                0.20588647423876955,
+                null
+              ],
+              [
+                0.2049615474954623,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.010832834802088942,
+                0.0
+              ],
+              [
+                0.009207909581775598,
+                0.0
+              ],
+              [
+                0.011916118282297833,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                1.0000000000000002,
+                null
+              ],
+              [
+                1.0,
+                null
+              ],
+              [
+                1.0000000000000002,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.010832834802088942,
+                0.0
+              ],
+              [
+                0.009207909581775598,
+                0.0
+              ],
+              [
+                0.011916118282297833,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "unqualified_components": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": true,
+            "any_channel_suffices": true,
+            "components": [
+              {
+                "channel": 0,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 1,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 2,
+                "component": 0,
+                "qualified": true
+              }
+            ],
+            "qualified": true
+          },
+          "analytic_truth_max_abs": 3.8814397063102746e-07,
+          "destroyers": [
+            {
+              "name": "erased-component-0",
+              "maximum_mutation": 0.043466355043982774,
+              "judgment": {
+                "pass": false,
+                "failures": [
+                  "rgb_rmse>1.05*current",
+                  "green_rmse>1.05*current",
+                  "component-0-0<0.90*capped-current",
+                  "component-1-0<0.90*capped-current",
+                  "component-2-0<0.90*capped-current"
+                ],
+                "eligible_components": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ],
+                "unqualified_components": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "ratios": {
+                  "current": {
+                    "rgb_rmse": 3.575298569415325,
+                    "green_rmse": 3.6966968796592607,
+                    "chroma_rmse": 0.9583345887190877
+                  },
+                  "uniform": {
+                    "rgb_rmse": 1.2245301404910207,
+                    "green_rmse": 1.230784105806142,
+                    "chroma_rmse": 0.9307770273708758
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "carrier-4",
+          "carrier": 4,
+          "xyxy": [
+            0,
+            1147,
+            599,
+            1747
+          ],
+          "current": {
+            "rgb_rmse": 0.00347565602365234,
+            "green_rmse": 0.002911710786135819,
+            "chroma_rmse": 0.002519407132050083,
+            "near_far_coefficients": [
+              [
+                0.9098320248552086,
+                null
+              ],
+              [
+                0.9159141359030837,
+                null
+              ],
+              [
+                0.9060216300404698,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.014003031389122525,
+                0.0
+              ],
+              [
+                0.011902576680754146,
+                0.0
+              ],
+              [
+                0.015403334528034775,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.010119474328143625,
+            "green_rmse": 0.008665392546693913,
+            "chroma_rmse": 0.0027259495641038835,
+            "near_far_coefficients": [
+              [
+                0.29492744518716996,
+                null
+              ],
+              [
+                0.29645670334079915,
+                null
+              ],
+              [
+                0.2967730758247695,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.014003031389122525,
+                0.0
+              ],
+              [
+                0.011902576680754146,
+                0.0
+              ],
+              [
+                0.015403334528034775,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                0.9999999999999998,
+                null
+              ],
+              [
+                1.0000000000000002,
+                null
+              ],
+              [
+                1.0,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.014003031389122525,
+                0.0
+              ],
+              [
+                0.011902576680754146,
+                0.0
+              ],
+              [
+                0.015403334528034775,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "unqualified_components": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": true,
+            "any_channel_suffices": true,
+            "components": [
+              {
+                "channel": 0,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 1,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 2,
+                "component": 0,
+                "qualified": true
+              }
+            ],
+            "qualified": true
+          },
+          "analytic_truth_max_abs": 6.918062755989496e-08,
+          "destroyers": [
+            {
+              "name": "erased-component-0",
+              "maximum_mutation": 0.04377300107073839,
+              "judgment": {
+                "pass": false,
+                "failures": [
+                  "rgb_rmse>1.05*current",
+                  "green_rmse>1.05*current",
+                  "chroma_rmse>1.05*current",
+                  "component-0-0<0.90*capped-current",
+                  "component-1-0<0.90*capped-current",
+                  "component-2-0<0.90*capped-current"
+                ],
+                "eligible_components": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ],
+                "unqualified_components": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "ratios": {
+                  "current": {
+                    "rgb_rmse": 3.983305873464852,
+                    "green_rmse": 4.087829307843766,
+                    "chroma_rmse": 1.1458246822156664
+                  },
+                  "uniform": {
+                    "rgb_rmse": 1.368114647482642,
+                    "green_rmse": 1.3735761678877403,
+                    "chroma_rmse": 1.0590067088795032
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "carrier-5",
+          "carrier": 5,
+          "xyxy": [
+            479,
+            1147,
+            1080,
+            1747
+          ],
+          "current": {
+            "rgb_rmse": 0.003326551450898594,
+            "green_rmse": 0.0028176803412470726,
+            "chroma_rmse": 0.002277084949097531,
+            "near_far_coefficients": [
+              [
+                0.9197890052725923,
+                null
+              ],
+              [
+                0.9250599316506795,
+                null
+              ],
+              [
+                0.9186464480041602,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.014015733329844,
+                0.0
+              ],
+              [
+                0.011913373330367403,
+                0.0
+              ],
+              [
+                0.015417306662828404,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.007549239197466368,
+            "green_rmse": 0.006449127071112841,
+            "chroma_rmse": 0.002323730818012396,
+            "near_far_coefficients": [
+              [
+                0.5137261950157563,
+                null
+              ],
+              [
+                0.51359316439025,
+                null
+              ],
+              [
+                0.5138426862792501,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.014015733329844,
+                0.0
+              ],
+              [
+                0.011913373330367403,
+                0.0
+              ],
+              [
+                0.015417306662828404,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                1.0,
+                null
+              ],
+              [
+                1.0,
+                null
+              ],
+              [
+                0.9999999999999999,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.014015733329844,
+                0.0
+              ],
+              [
+                0.011913373330367403,
+                0.0
+              ],
+              [
+                0.015417306662828404,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "unqualified_components": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": true,
+            "any_channel_suffices": true,
+            "components": [
+              {
+                "channel": 0,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 1,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 2,
+                "component": 0,
+                "qualified": true
+              }
+            ],
+            "qualified": true
+          },
+          "analytic_truth_max_abs": 5.224017474159126e-08,
+          "destroyers": [
+            {
+              "name": "erased-component-0",
+              "maximum_mutation": 0.043231770793092955,
+              "judgment": {
+                "pass": false,
+                "failures": [
+                  "rgb_rmse>1.05*current",
+                  "green_rmse>1.05*current",
+                  "chroma_rmse>1.05*current",
+                  "component-0-0<0.90*capped-current",
+                  "component-1-0<0.90*capped-current",
+                  "component-2-0<0.90*capped-current"
+                ],
+                "eligible_components": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ],
+                "unqualified_components": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "ratios": {
+                  "current": {
+                    "rgb_rmse": 4.165624749710364,
+                    "green_rmse": 4.228080142450964,
+                    "chroma_rmse": 1.2689112248933354
+                  },
+                  "uniform": {
+                    "rgb_rmse": 1.8355710678367123,
+                    "green_rmse": 1.847285402696441,
+                    "chroma_rmse": 1.243439485136661
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "carrier-6",
+          "carrier": 6,
+          "xyxy": [
+            961,
+            1147,
+            1562,
+            1747
+          ],
+          "current": {
+            "rgb_rmse": 0.00277791594152283,
+            "green_rmse": 0.0023445589658362548,
+            "chroma_rmse": 0.0021103429793115067,
+            "near_far_coefficients": [
+              [
+                0.9424352953528321,
+                null
+              ],
+              [
+                0.9541992406857371,
+                null
+              ],
+              [
+                0.942456969533767,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.013987445135214984,
+                0.0
+              ],
+              [
+                0.011889328364932736,
+                0.0
+              ],
+              [
+                0.01538618964873648,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.004250366393521751,
+            "green_rmse": 0.003581245689561633,
+            "chroma_rmse": 0.0018929319528861936,
+            "near_far_coefficients": [
+              [
+                0.7692836299858975,
+                null
+              ],
+              [
+                0.7703923236884982,
+                null
+              ],
+              [
+                0.7691524760517221,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.013987445135214984,
+                0.0
+              ],
+              [
+                0.011889328364932736,
+                0.0
+              ],
+              [
+                0.01538618964873648,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                1.0,
+                null
+              ],
+              [
+                1.0000000000000002,
+                null
+              ],
+              [
+                1.0,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.013987445135214984,
+                0.0
+              ],
+              [
+                0.011889328364932736,
+                0.0
+              ],
+              [
+                0.01538618964873648,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "unqualified_components": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": true,
+            "any_channel_suffices": true,
+            "components": [
+              {
+                "channel": 0,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 1,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 2,
+                "component": 0,
+                "qualified": true
+              }
+            ],
+            "qualified": true
+          },
+          "analytic_truth_max_abs": 4.281815108031495e-08,
+          "destroyers": [
+            {
+              "name": "erased-component-0",
+              "maximum_mutation": 0.042073041930191735,
+              "judgment": {
+                "pass": false,
+                "failures": [
+                  "rgb_rmse>1.05*current",
+                  "green_rmse>1.05*current",
+                  "chroma_rmse>1.05*current",
+                  "component-0-0<0.90*capped-current",
+                  "component-1-0<0.90*capped-current",
+                  "component-2-0<0.90*capped-current"
+                ],
+                "eligible_components": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ],
+                "unqualified_components": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "ratios": {
+                  "current": {
+                    "rgb_rmse": 4.97836821775432,
+                    "green_rmse": 5.071138809259365,
+                    "chroma_rmse": 1.366435553829671
+                  },
+                  "uniform": {
+                    "rgb_rmse": 3.2537167750876046,
+                    "green_rmse": 3.31995763287176,
+                    "chroma_rmse": 1.523376301672819
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "carrier-7",
+          "carrier": 7,
+          "xyxy": [
+            1442,
+            1147,
+            2043,
+            1747
+          ],
+          "current": {
+            "rgb_rmse": 0.002504557949013571,
+            "green_rmse": 0.0021455165078491504,
+            "chroma_rmse": 0.0020145644854260665,
+            "near_far_coefficients": [
+              [
+                0.9590496683010806,
+                null
+              ],
+              [
+                0.9678164007090115,
+                null
+              ],
+              [
+                0.9583447705369896,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.013891833821285908,
+                0.0
+              ],
+              [
+                0.011808058748093021,
+                0.0
+              ],
+              [
+                0.015281017203414496,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "uniform": {
+            "rgb_rmse": 0.0025135169449665633,
+            "green_rmse": 0.002054483584098117,
+            "chroma_rmse": 0.0017036323892245695,
+            "near_far_coefficients": [
+              [
+                0.9160265407917256,
+                null
+              ],
+              [
+                0.9154476364161215,
+                null
+              ],
+              [
+                0.9159263196095262,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.013891833821285908,
+                0.0
+              ],
+              [
+                0.011808058748093021,
+                0.0
+              ],
+              [
+                0.015281017203414496,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "candidate": {
+            "rgb_rmse": 0.0,
+            "green_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "near_far_coefficients": [
+              [
+                1.0000000000000002,
+                null
+              ],
+              [
+                1.0,
+                null
+              ],
+              [
+                0.9999999999999998,
+                null
+              ]
+            ],
+            "template_sd": [
+              [
+                0.013891833821285908,
+                0.0
+              ],
+              [
+                0.011808058748093021,
+                0.0
+              ],
+              [
+                0.015281017203414496,
+                0.0
+              ]
+            ],
+            "standardized_condition": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "judgment": {
+            "pass": true,
+            "failures": [],
+            "eligible_components": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "unqualified_components": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "ratios": {
+              "current": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              },
+              "uniform": {
+                "rgb_rmse": 0.0,
+                "green_rmse": 0.0,
+                "chroma_rmse": 0.0
+              }
+            }
+          },
+          "required_protection": {
+            "required": true,
+            "any_channel_suffices": true,
+            "components": [
+              {
+                "channel": 0,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 1,
+                "component": 0,
+                "qualified": true
+              },
+              {
+                "channel": 2,
+                "component": 0,
+                "qualified": true
+              }
+            ],
+            "qualified": true
+          },
+          "analytic_truth_max_abs": 4.0352732599835406e-08,
+          "destroyers": [
+            {
+              "name": "erased-component-0",
+              "maximum_mutation": 0.04027984239374319,
+              "judgment": {
+                "pass": false,
+                "failures": [
+                  "rgb_rmse>1.05*current",
+                  "green_rmse>1.05*current",
+                  "chroma_rmse>1.05*current",
+                  "component-0-0<0.90*capped-current",
+                  "component-1-0<0.90*capped-current",
+                  "component-2-0<0.90*capped-current"
+                ],
+                "eligible_components": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ],
+                "unqualified_components": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "ratios": {
+                  "current": {
+                    "rgb_rmse": 5.519792133954482,
+                    "green_rmse": 5.539652087311243,
+                    "chroma_rmse": 1.4308981305656245
+                  },
+                  "uniform": {
+                    "rgb_rmse": 5.500117790605221,
+                    "green_rmse": 5.785110717389728,
+                    "chroma_rmse": 1.6920531532111383
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "pass": true
+    }
+  ],
+  "all_prospective_scientific_guards_pass": null,
+  "weight_replay": [],
+  "inputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\dataset.json",
+      "sha256": "06a41b155508d223151c32035d0992c1433548b52c5430df07c3abf8f465537f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\canonical-rgb.f32",
+      "sha256": "fdca1d201bdb8c7dbd51d98618556f69bc752c766d70302bdf892af14fbd8ea1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\case.json",
+      "sha256": "406e356287ad4f73e39de1d2f736747ae485d82835a47bc8e17b7dfc770be370"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\independent-truth.json",
+      "sha256": "22fb46bbf209d528331c087ec18e918e9189d6a89e8b5f1e46a7d4fde1ed46e6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\truth-base.f32",
+      "sha256": "6afa836cbac91d7d5a1995dc348a25a15db5964c393e35c897ca07b494ea033b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\truth-far.f32",
+      "sha256": "e33d2f903c12247f553c8298c2b782fbd79808926d19115544beba998589f76e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\truth-near.f32",
+      "sha256": "97de41b87f589b803bb027f085352c11b6659213be3d34c2d5ccdd4cb34e753a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\truth-rgb.f32",
+      "sha256": "ef44acc6d948ed037f3b34bb5b86077b86d63593b9ac493eb2aa5cc0fb772295"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-clipped-glint-v2-n17-b3\\uniform-rgb.f32",
+      "sha256": "cabba0da84620b1e6554b0dbc71387af3b2a6438e19b5c89eac61fe5e4c1fad6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\canonical-rgb.f32",
+      "sha256": "50d4d25ec559e57593e74ca5c9162c0de1db4665fd082dc34613823437bd27cf"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\case.json",
+      "sha256": "50749d0258da3ffd272faf7b0668f5795dc6c42daa40505a90b30d997fbecdba"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\independent-truth.json",
+      "sha256": "9165fc07ccc0c63b63b161776481d79e8f339e475d6b7326b5ae9f79d527d961"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\truth-base.f32",
+      "sha256": "ecf2898c3b64200d7ceb7ae787edf150279dca68038534d10af344d005768b4a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\truth-far.f32",
+      "sha256": "33adbc02ff11ffc118c4e927132c8b7839e372b66bffad14e2dd3b9106c475dd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\truth-near.f32",
+      "sha256": "33adbc02ff11ffc118c4e927132c8b7839e372b66bffad14e2dd3b9106c475dd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\truth-rgb.f32",
+      "sha256": "ecf2898c3b64200d7ceb7ae787edf150279dca68038534d10af344d005768b4a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v0-n17-b3\\uniform-rgb.f32",
+      "sha256": "cd8cc6df2b6b17ae98b8ae0d25022b9e6e4fb027baff9e47671d02c947125f39"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\canonical-rgb.f32",
+      "sha256": "d34eb22f6d953a9fe098b90e3f42af3266882c68f48db7507263b56610d226f7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\case.json",
+      "sha256": "b94ae831be19b5c2ac70a130e7de85220ac317b955262621d2216bbd67fb03cc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\independent-truth.json",
+      "sha256": "9a72ffa18eabe20cf00e99ba0b18a3e5989cfd68642422d600c90e9d393291a8"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\truth-base.f32",
+      "sha256": "159be95b7c15f4158ea10682eb0e807aaf3d216519dd3b02f804ea80ae7ead09"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\truth-far.f32",
+      "sha256": "33adbc02ff11ffc118c4e927132c8b7839e372b66bffad14e2dd3b9106c475dd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\truth-near.f32",
+      "sha256": "33adbc02ff11ffc118c4e927132c8b7839e372b66bffad14e2dd3b9106c475dd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\truth-rgb.f32",
+      "sha256": "159be95b7c15f4158ea10682eb0e807aaf3d216519dd3b02f804ea80ae7ead09"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v3-n65-b3\\uniform-rgb.f32",
+      "sha256": "1c546e9343a1c0685ac17a371c7901afa749a1cf781b5e398f1f038e16a73921"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\canonical-rgb.f32",
+      "sha256": "4e10f8654075b5e18df8db5dcd0d33f3dc978a281109e7563e70a7d0cce13dc5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\case.json",
+      "sha256": "5f9e3a0ffd2541147688f512a329f953c3c12df15a4f4ed7a4f066a0fe0b8510"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\independent-truth.json",
+      "sha256": "164b2b5585d489111c90c5c57f8aef658828aa95fd3aa0e97a351e5879718900"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\truth-base.f32",
+      "sha256": "0b508b43e6319737b4fbba61424d5c8ec701b6c2c2328618f05413a56376cdcc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\truth-far.f32",
+      "sha256": "37e2acc2a38c40dd6b8217e9eb1e3653625e5f00d80f887c707d03134238c13c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\truth-near.f32",
+      "sha256": "37e2acc2a38c40dd6b8217e9eb1e3653625e5f00d80f887c707d03134238c13c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\truth-rgb.f32",
+      "sha256": "0b508b43e6319737b4fbba61424d5c8ec701b6c2c2328618f05413a56376cdcc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-flat-v4-n5-b7\\uniform-rgb.f32",
+      "sha256": "654415e7c7dd78f1360f1814e9c7a1cbc65b3c6a3b35be6b3a24f3badc52c6c6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\canonical-rgb.f32",
+      "sha256": "8b9d8df228ae8ce83455d14e1745d1450cdf0e44c76993314b1d7378e701cefb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\case.json",
+      "sha256": "38e5a70101740232f8c56c4469f1b06c9b44a359ea945bccb06a8ab9ba74d57b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\independent-truth.json",
+      "sha256": "3bcc26274549808434592861fce945e108f74bb5e43b545cf7d82493f8bf6bdc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\truth-base.f32",
+      "sha256": "a3d8f2a17f474b3d67e4094b0fc2c58f06a6b2e0bc967443742a86513ab7049d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\truth-far.f32",
+      "sha256": "a69bf7dacbfedb66e8900bec6c019623bc2f9ffcbc17017493f83b18093900b5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\truth-near.f32",
+      "sha256": "f0ae7fe4312d0e76e2c631ae7dd625ac471b09c705250414d39a6989c6e2af2d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\truth-rgb.f32",
+      "sha256": "79e17527685fba9986f8c3a120ca6f620ce76d1825304445bd2f74b9d5190b45"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-forked-filaments-v0-n33-b3\\uniform-rgb.f32",
+      "sha256": "de429663db3b5b631b939d6350c4ac17faa61408c09020304a8131042891c899"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\canonical-rgb.f32",
+      "sha256": "dde3917666f360d3873afca6b9684bdac01c56aa26fb2ab0afec18de6076743e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\case.json",
+      "sha256": "8b0d9dc829d81408cdd89cff191f7b77e47ff749c85ea0e31131da683b52773c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\independent-truth.json",
+      "sha256": "313cab9eac04d17d57364e1dcb318511318dbb483e2aa85b8bae006ebacb217e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\truth-base.f32",
+      "sha256": "0b508b43e6319737b4fbba61424d5c8ec701b6c2c2328618f05413a56376cdcc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\truth-far.f32",
+      "sha256": "8060358dcc2842ac426b90fe240a5f69192e2f132c230a5a97177feb3a613cba"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\truth-near.f32",
+      "sha256": "8bf8637b5eb601410d4b73ec0c9cbf0f94eca4d21d7c602058e267174ee9837a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\truth-rgb.f32",
+      "sha256": "46c550b173594692eb094cb1ce30d5d2ae1249cb1c8986918dd2213fe48cd508"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-multiscale-gabor-v3-n5-b7\\uniform-rgb.f32",
+      "sha256": "6ef9546d9f6964d43db2c39662b10f3bbf99f76d9bc6aeed17010c2b866c7bdc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\canonical-rgb.f32",
+      "sha256": "5045323c16b5dfe219ae83bf80e3b6139783eecdd8b0d8871e41d09489bc1cbf"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\case.json",
+      "sha256": "76b1aa676f2aeabfd4f030f549dcabb5f704750ea15b61bd7d38659a8b9998f0"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\independent-truth.json",
+      "sha256": "5cc950f82920c906c36bdedc313dec67da9062534818a316685013ee3adfc817"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\truth-base.f32",
+      "sha256": "faafdf8eea6eef0e244b752d71cae10b92aaa08ee579b6682421b7de16826598"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\truth-far.f32",
+      "sha256": "3188ab565a117f05ebaee8995ba1b93eb6bb5ae79fada222e73d58858f6bea63"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\truth-near.f32",
+      "sha256": "777853106732e67b97dbb6a6876155ace6c1b642aa4dacd45c5f6b3129fa6cb4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\truth-rgb.f32",
+      "sha256": "bab27aca8dc6dd3016c5197ff22bfad1c5f8d0fa2d14628714b84ac369cdaaed"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-near-fine-far-coarse-v2-n65-b3\\uniform-rgb.f32",
+      "sha256": "6615c079461e41506edce1c527779ec340a27344cd6e991e5a98e0589347a87b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\canonical-rgb.f32",
+      "sha256": "b2be2b14d42c417442dc04280232c74327afe57721a04c1d81cf00c6c8a7d4e0"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\case.json",
+      "sha256": "03efb17ae5be4d91264e28cb746888af91c4bab795b2d7f3fe51aa28a721beda"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\independent-truth.json",
+      "sha256": "84b476189626f5a02d257eb478ac0738b92b99434bd840c6f98f11691b8cbd4a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\truth-base.f32",
+      "sha256": "5f68105269f6ab6e5116d44aa2d2f9282bff616b0faf204e9095145cac699fd6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\truth-far.f32",
+      "sha256": "eb876cff074052867e69f8784781451db50f6e32ea1480d81aae2b49f4606018"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\truth-near.f32",
+      "sha256": "9fac8837da0a70edad6af6b81340f492d9020efa518a736ed6fc8bc35a8ef4ac"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\truth-rgb.f32",
+      "sha256": "bb6e129db67b65a414984d727d89c2c501f5a2ebfe4b4fed01a631d44201a0a4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-serrated-polygon-v0-n17-b3\\uniform-rgb.f32",
+      "sha256": "40fe1af27b7996b6739855b9736b887527f7cedf87244ef525189901d147777a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\canonical-rgb.f32",
+      "sha256": "ee9830f881d959be8bce353afc49b2d41542e513bddda04d9a2ff3789f341496"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\case.json",
+      "sha256": "ff75edb3ff996decf6bc788b4501cdc6da8fdb3dbf97e1662bd272c3f0eb39f0"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\independent-truth.json",
+      "sha256": "0a01f62ca375241f4bd034628964bea6d5213a5f916c896a3fb59e9b60d9412e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\truth-base.f32",
+      "sha256": "6afa836cbac91d7d5a1995dc348a25a15db5964c393e35c897ca07b494ea033b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\truth-far.f32",
+      "sha256": "2f77f57585cd10840a6cea84907436acf01ad8f5316a48677eb385f27187beee"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\truth-near.f32",
+      "sha256": "97de41b87f589b803bb027f085352c11b6659213be3d34c2d5ccdd4cb34e753a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\truth-rgb.f32",
+      "sha256": "23645e4a99378759029ca9d4d41b7149e7f149690c743adffd67b8b0c735b7a8"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-unclipped-glint-v2-n17-b3\\uniform-rgb.f32",
+      "sha256": "c22fda355f7971fb639e3a492a29fb481990ce3af976b006b8254635c604010b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\canonical-rgb.f32",
+      "sha256": "53c32408344a11b8cc3274b5c3021874f8eda687bb645034145db754607d6ad5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\case.json",
+      "sha256": "609e981117c4c45431df21174507717b80f8a0377da51cbda2187b7fde017df7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\independent-truth.json",
+      "sha256": "b4736744b951dbb87f4a14a9ce9896c84f65117d9e8fa4d0afa50e4e76284027"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\truth-base.f32",
+      "sha256": "a05863e93e1e24c664213bb2d46052f0125232cefab34baec2d91c012d9d0c22"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\truth-far.f32",
+      "sha256": "e1bfb71fd35b788a26d987cd088cca77dfc3e40c001aa30b737569b5829d7add"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\truth-near.f32",
+      "sha256": "699ac0cafa018cc341fe5c32679bf1851ae71696ae657d1e37fc19fbf6a6e22a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\truth-rgb.f32",
+      "sha256": "4a0d33c936ad64fa26e549d206035855cfc27593d52540b3df4a6d11cb2d2df6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\export-held-1\\output\\fresh-weak-colour-v2-n9-b3\\uniform-rgb.f32",
+      "sha256": "422442999bb1a2ef35b523efa1481fd81977e3a9e05e78d96f24d69137c24cbb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\independent-transfer-check.py",
+      "sha256": "7ba41b1437bd70809efedbe020e17912551cf46108bd8c468814e40df08ba4fa"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-band-guide\\transfer-plan.md",
+      "sha256": "7dbb23d99a07fd7d529f86ef2c7cf87e4358e0c6616a7f0bcad9525d49c67e49"
+    }
+  ]
+}

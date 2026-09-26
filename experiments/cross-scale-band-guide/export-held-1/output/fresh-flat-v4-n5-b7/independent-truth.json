@@ -1,0 +1,85 @@
+{
+  "label": {
+    "bands": 7,
+    "calibration_validation": false,
+    "clipped_original_samples": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "crop_quad_xywh": [
+      8,
+      8,
+      1031,
+      1029
+    ],
+    "family": "flat",
+    "focus_schedule": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "id": "fresh-flat-v4-n5-b7",
+    "iso": 400.0,
+    "large": true,
+    "n": 5,
+    "noise_after_signal": true,
+    "noise_salt": 2894800318,
+    "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+    "original_source_sha256": [
+      "6d3c1bf70f70ee432c94091f225e38846ba117e2eb0e9143744a7e5c1d7ff60a",
+      "4cc32b0380191a1555ed16ba0fd86b550645ad655e0793bb48cf1e0ba8b4e465",
+      "cdd658aa012fdba33238042eb4258185711d50e3dd4e7f75a411eee32edc427b",
+      "a9e63eb7fabefb1e1b64874e3c9c473eba3683903678f320c72f8254c7e91ac3",
+      "a81fb9e6d4d4322139a2868d6dcd1526793f8a1f4a0d48cc4a92306d529b4fe3"
+    ],
+    "pupil": "analytic Gaussian, no finite pupil",
+    "pupil_samples": 0,
+    "seven_band_scope": "analytic planar multiscale support test; no occlusion/optical calibration claim",
+    "source_active_wh": [
+      2094,
+      2090
+    ],
+    "synthetic_texture_manifest_sha256": "b84ebb20b6c7f91bbbd703be9fc5d4a31817f97974a121cbeea9385ec1e4affb",
+    "training": false,
+    "truth_sha256": "0b508b43e6319737b4fbba61424d5c8ec701b6c2c2328618f05413a56376cdcc",
+    "variant": 4
+  },
+  "schema": 1,
+  "scope": "Independent fixture truth/components only. Predictor must not read this file or truth arrays during inference.",
+  "templates": {
+    "base": {
+      "dtype": "<f4",
+      "file": "truth-base.f32",
+      "sha256": "0b508b43e6319737b4fbba61424d5c8ec701b6c2c2328618f05413a56376cdcc",
+      "shape": [
+        2058,
+        2062,
+        3
+      ]
+    },
+    "far": {
+      "dtype": "<f4",
+      "file": "truth-far.f32",
+      "sha256": "37e2acc2a38c40dd6b8217e9eb1e3653625e5f00d80f887c707d03134238c13c",
+      "shape": [
+        2058,
+        2062,
+        3
+      ]
+    },
+    "near": {
+      "dtype": "<f4",
+      "file": "truth-near.f32",
+      "sha256": "37e2acc2a38c40dd6b8217e9eb1e3653625e5f00d80f887c707d03134238c13c",
+      "shape": [
+        2058,
+        2062,
+        3
+      ]
+    }
+  }
+}

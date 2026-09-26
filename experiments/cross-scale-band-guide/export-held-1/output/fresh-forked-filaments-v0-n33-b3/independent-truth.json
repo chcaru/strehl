@@ -1,0 +1,141 @@
+{
+  "label": {
+    "bands": 3,
+    "calibration_validation": false,
+    "clipped_original_samples": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "crop_quad_xywh": [
+      8,
+      8,
+      80,
+      72
+    ],
+    "family": "forked-filaments",
+    "focus_schedule": [
+      0.0,
+      0.03125,
+      0.0625,
+      0.09375,
+      0.125,
+      0.15625,
+      0.1875,
+      0.21875,
+      0.25,
+      0.28125,
+      0.3125,
+      0.34375,
+      0.375,
+      0.40625,
+      0.4375,
+      0.46875,
+      0.5,
+      0.53125,
+      0.5625,
+      0.59375,
+      0.625,
+      0.65625,
+      0.6875,
+      0.71875,
+      0.75,
+      0.78125,
+      0.8125,
+      0.84375,
+      0.875,
+      0.90625,
+      0.9375,
+      0.96875,
+      1.0
+    ],
+    "id": "fresh-forked-filaments-v0-n33-b3",
+    "iso": 100.0,
+    "large": false,
+    "n": 33,
+    "noise_after_signal": true,
+    "noise_salt": 1330664523,
+    "noise_salt_rule": "first four SHA256(case ID) bytes as little-endian u32",
+    "original_source_sha256": [
+      "0758aaf23f040c8c36c6e52c2d987ac60aad8ff51b23265dd4efa0800384169b",
+      "8d59b7db9c9f9e2a9444b4d29d9bed78047da42509d1ba330abf7895a5e447b8",
+      "b3ee709aa0e39f2c3616e64053be5cc586b2873d1cf36afe2c89fba583a9aac8",
+      "4798217cfbf72511eefcc6e61703d72ce3c839e99b4e9f9e1dafe44e0042e6a8",
+      "d61272adb93690fc865a0c444231ca38c2916711d92a921ae961158cf16caeca",
+      "15605025d24f8ea88cfa7e300674b163b36e2b300acb5b7d4a42995f0d9e53f7",
+      "69bbe9bf864f48dff9743539d62ea00402a9fa7d0eb7bcf5bcd77c45c0ff7561",
+      "31bb8f8d233b9936ffcec588b6f3cf212703849156c5db91bd872a8759101e17",
+      "271a16acf53b03ba76b72b169e7b36d248377982731170cf2ab23e2984def588",
+      "a7323fa716adf395aea169df2c2992c1198ca8c08639ce18506f29ccde0014ae",
+      "fc552f6813c3929bbabe1fee5a139480d57303d5a7401db94c09210a8b4c1bf0",
+      "6aaccecee2f23e1bface1a3e3a576cb4f82d1502175beec1b756ebbfed2f0a9a",
+      "d73c6046b0bba66b344b93f17a7eab3696f15387239343ef95ff18cb6ac8a4e4",
+      "f0f3fe9a3966da3aabdbd22a3991d885099ab335e7ea96907b11120e66dbb357",
+      "5da64139706b23c4c0c020936ce5ed25a6569df144456b53dd2f3a8e94441c31",
+      "52a17576fe751431068bb9dc341ed67d8050bc4613bbec6caaa226cf2fe9d5b3",
+      "4a5a851ccc5077cb49b9d54509bb7273cad4bf580e13f100737df59ae5d53b85",
+      "c2cad3102368e5a626b46b29d21562f03f3a9de4b0baf28ad67ac6c121b9bbaa",
+      "d9fc26083121413e98c162b43811fc46238565b024fc0d46d86e948addff5ca0",
+      "eae32e2418dbae5e9fc8eef077e6d5c296a4557fd2031c633e3407c858c6beca",
+      "b51d5e922b6905f2b7fce1fb838450d0c9ac4b3d53d57a302877ac5b2b7f0e82",
+      "0620ab020b084adecd2f964253ab3eff49c6e6e2cbd6aeb4f9208d26fb6a52e0",
+      "028fd88a43ce2158de06aa86bf794d1c53e5b0cdc8a190889a316ba9357ba5c4",
+      "f1d8a46d4331acca5e13ef5d13961c471a6296cb24709725aa51fb9a9cfbc230",
+      "c9ea404200a802b4f3868b814088a0d43ea228fd0eb8c09b98e733151e816016",
+      "214d3d2415e42d6d56e19477c2f7c2cb2ef77271ab1a3828d7eff32d8a69899c",
+      "121f4b587465b2b983af7757052e6b9a3b42df00d87c1aef3153e3964d274a76",
+      "6f82001a01970e8364fd1a4f3e3980ac840adfbfd4f1fd794d87acdb37c51172",
+      "8a60a26ae9edd9b78be88457ad6b73c354643109652ea7db6edd9ae61c6a02b4",
+      "e5ae7c6912a2dbe0bdd8cd59f9b5d2f6839933ccff48f7660568b325cf1af535",
+      "2d91f92a3e7f86f174ef66dacccd4e68f10d2c4dd2c510cc21eb5364b0bfb940",
+      "5f66e9997862a877f018a120ba6db41d51c05a99e7bbd7dbb6f57bd5596b3026",
+      "a6c4261813b85ead5e8422610f849d00482bd133e412a14f241cb829606d4f2c"
+    ],
+    "pupil": "clipped disk x<=.45",
+    "pupil_samples": 50,
+    "seven_band_scope": "compact finite-pupil layered radiance; discretization is an augmentation, not calibrated optics",
+    "source_active_wh": [
+      192,
+      176
+    ],
+    "synthetic_texture_manifest_sha256": "b84ebb20b6c7f91bbbd703be9fc5d4a31817f97974a121cbeea9385ec1e4affb",
+    "training": false,
+    "truth_sha256": "79e17527685fba9986f8c3a120ca6f620ce76d1825304445bd2f74b9d5190b45",
+    "variant": 0
+  },
+  "schema": 1,
+  "scope": "Independent fixture truth/components only. Predictor must not read this file or truth arrays during inference.",
+  "templates": {
+    "base": {
+      "dtype": "<f4",
+      "file": "truth-base.f32",
+      "sha256": "a3d8f2a17f474b3d67e4094b0fc2c58f06a6b2e0bc967443742a86513ab7049d",
+      "shape": [
+        144,
+        160,
+        3
+      ]
+    },
+    "far": {
+      "dtype": "<f4",
+      "file": "truth-far.f32",
+      "sha256": "a69bf7dacbfedb66e8900bec6c019623bc2f9ffcbc17017493f83b18093900b5",
+      "shape": [
+        144,
+        160,
+        3
+      ]
+    },
+    "near": {
+      "dtype": "<f4",
+      "file": "truth-near.f32",
+      "sha256": "f0ae7fe4312d0e76e2c631ae7dd625ac471b09c705250414d39a6989c6e2af2d",
+      "shape": [
+        144,
+        160,
+        3
+      ]
+    }
+  }
+}

@@ -1,0 +1,462 @@
+{
+  "schema": 1,
+  "split": "training",
+  "cases": [
+    {
+      "id": "train-flat-v0-n5-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": true,
+      "excluded_xyxy": [],
+      "roi_xyxy": [],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-flat-v1-n9-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": true,
+      "excluded_xyxy": [],
+      "roi_xyxy": [],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-flat-v2-n17-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": true,
+      "excluded_xyxy": [],
+      "roi_xyxy": [],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-flat-v3-n5-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": true,
+      "excluded_xyxy": [],
+      "roi_xyxy": [],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-natural-layers-v0-n5-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          39,
+          27,
+          121,
+          119
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-natural-layers-v1-n9-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          39,
+          27,
+          121,
+          119
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-natural-layers-v2-n17-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          39,
+          27,
+          121,
+          119
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-natural-layers-v3-n5-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          39,
+          27,
+          121,
+          119
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-natural-layers-v4-n9-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          39,
+          27,
+          121,
+          119
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-natural-layers-v5-n17-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          39,
+          27,
+          121,
+          119
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-natural-layers-v6-n5-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          39,
+          27,
+          121,
+          119
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-natural-layers-v7-n9-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          39,
+          27,
+          121,
+          119
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-natural-layers-v8-n17-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          39,
+          27,
+          121,
+          119
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-natural-layers-v9-n5-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          39,
+          27,
+          121,
+          119
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-compound-texture-v0-n5-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          39,
+          27,
+          121,
+          119
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-compound-texture-v1-n9-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          39,
+          27,
+          121,
+          119
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-compound-texture-v2-n5-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          39,
+          27,
+          121,
+          119
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-compound-texture-v3-n9-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          39,
+          27,
+          121,
+          119
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-unclipped-glint-v0-n9-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          59,
+          55,
+          82,
+          79
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-clipped-glint-v0-n9-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [
+        [
+          59,
+          55,
+          82,
+          79
+        ]
+      ],
+      "roi_xyxy": [
+        [
+          111,
+          33,
+          140,
+          118
+        ],
+        [
+          81,
+          53,
+          96,
+          96
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-weak-colour-v0-n17-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          33,
+          27,
+          120,
+          112
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-near-fine-far-coarse-v0-n17-b3",
+      "native_shape": [
+        144,
+        160
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          46,
+          24,
+          114,
+          124
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-flat-v4-n5-b7",
+      "native_shape": [
+        2048,
+        2048
+      ],
+      "flat": true,
+      "excluded_xyxy": [],
+      "roi_xyxy": [],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    },
+    {
+      "id": "train-multiscale-gabor-v0-n5-b7",
+      "native_shape": [
+        2048,
+        2048
+      ],
+      "flat": false,
+      "excluded_xyxy": [],
+      "roi_xyxy": [
+        [
+          191,
+          503,
+          401,
+          713
+        ],
+        [
+          669,
+          503,
+          880,
+          713
+        ],
+        [
+          1147,
+          503,
+          1358,
+          713
+        ],
+        [
+          1626,
+          503,
+          1837,
+          713
+        ],
+        [
+          41,
+          1185,
+          551,
+          1695
+        ],
+        [
+          519,
+          1185,
+          1030,
+          1695
+        ],
+        [
+          997,
+          1185,
+          1508,
+          1695
+        ],
+        [
+          1476,
+          1185,
+          1987,
+          1695
+        ]
+      ],
+      "coordinate_gauge": "output-native xyxy; original-active crop origin [16,16] subtracted exactly once"
+    }
+  ],
+  "selection": "Construction-only, before new training export or candidate evaluation; no observed-image selection.",
+  "clipped_core_scope": "Excluded from bounded-source training target; no claim of fundamental physical irrecoverability.",
+  "fixture_source_sha256": "61777f322a1edd1ae5427296b0851dcd4bd5e63f4eec29502b58a53cf0c61b0c",
+  "fresh_validation_included": false
+}
