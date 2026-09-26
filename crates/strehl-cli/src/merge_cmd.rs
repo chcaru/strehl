@@ -5000,6 +5000,11 @@ pub(crate) mod full_stack_source_prior {
 }
 
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+mod real_source_contributions {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/real-source-contributions/observer.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
 mod marigold_source_pure {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/marigold-source-pure/oracle.rs"));
 }

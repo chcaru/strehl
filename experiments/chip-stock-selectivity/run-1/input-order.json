@@ -1,0 +1,2095 @@
+[
+  {
+    "index": 0,
+    "mtime_ns": 1789282688680000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00001.ARW",
+    "bytes": 38256640,
+    "sha256": "1fc57322b0405a76726c81816a0e8a112120a1f56a5f1a766f61759a653f5aea"
+  },
+  {
+    "index": 1,
+    "mtime_ns": 1789282691090000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00002.ARW",
+    "bytes": 38264832,
+    "sha256": "adeaf9851b2e66c167cda2a68eb6358b0175027a15fc2274a4f44dc318f29fc6"
+  },
+  {
+    "index": 2,
+    "mtime_ns": 1789282693590000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00003.ARW",
+    "bytes": 38277120,
+    "sha256": "0ff8c982ea2a94ee0462aafb99792c770460d24422e5a6c9a55a00573dd03b20"
+  },
+  {
+    "index": 3,
+    "mtime_ns": 1789282696060000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00004.ARW",
+    "bytes": 38289408,
+    "sha256": "f77bf2450544ca895817e65f8892e63e8dd756ff4785bc4303e839e31273ca42"
+  },
+  {
+    "index": 4,
+    "mtime_ns": 1789282698550000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00005.ARW",
+    "bytes": 38297600,
+    "sha256": "fca8dbf4d0090ac25d4563f45b61ab6d701fb575e1e4153bc4c375c02f60523f"
+  },
+  {
+    "index": 5,
+    "mtime_ns": 1789282701020000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00006.ARW",
+    "bytes": 38309888,
+    "sha256": "aa03a7abee6e546e9751d7d66aea297f72b9e038c9779ce52501f4e3b3ae173b"
+  },
+  {
+    "index": 6,
+    "mtime_ns": 1789282703500000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00007.ARW",
+    "bytes": 38322176,
+    "sha256": "27adae30a0038d8e2d608bcc522f66bca899c8fba6adafd859ee78b6b9f3a093"
+  },
+  {
+    "index": 7,
+    "mtime_ns": 1789282705970000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00008.ARW",
+    "bytes": 38330368,
+    "sha256": "69ebc19ab18603e66f01267e8290bfe8841ee9d69007a3056749e57c4efb912c"
+  },
+  {
+    "index": 8,
+    "mtime_ns": 1789282708430000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00009.ARW",
+    "bytes": 38346752,
+    "sha256": "8e9952b838b45d09a78257b3e180086bebd959e3374acd78658f985ba6e0521e"
+  },
+  {
+    "index": 9,
+    "mtime_ns": 1789282710880000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00010.ARW",
+    "bytes": 38359040,
+    "sha256": "299e05df48dcdb32bddf4aa1bc6280bb325af1152d45425178d8de683abdeda3"
+  },
+  {
+    "index": 10,
+    "mtime_ns": 1789282713380000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00011.ARW",
+    "bytes": 38371328,
+    "sha256": "e2c5785d63e17ed22fb1904a72d66a583a3380715170fefbc9cc4a3a424eee0a"
+  },
+  {
+    "index": 11,
+    "mtime_ns": 1789282715870000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00012.ARW",
+    "bytes": 38383616,
+    "sha256": "ef2c75bdadf6fd7e4b282a5f9836a083a9a9e3014f794249e8b3f577a8abe60c"
+  },
+  {
+    "index": 12,
+    "mtime_ns": 1789282718350000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00013.ARW",
+    "bytes": 38395904,
+    "sha256": "5b13d7d01c2a64565732897e1c697cdcc460c9da4bcf7590b92c2011ec0c1a25"
+  },
+  {
+    "index": 13,
+    "mtime_ns": 1789282720820000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00014.ARW",
+    "bytes": 38408192,
+    "sha256": "0c312eac09d217576b4a5340839e41fb667ddaaaecfaee7a167e4ae587751b58"
+  },
+  {
+    "index": 14,
+    "mtime_ns": 1789282723300000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00015.ARW",
+    "bytes": 38420480,
+    "sha256": "b0673854f8985a9b1b0f967ac92dbf766820e2cbd41efe9bf0a65ea146a857d0"
+  },
+  {
+    "index": 15,
+    "mtime_ns": 1789282725770000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00016.ARW",
+    "bytes": 38440960,
+    "sha256": "c164ac51419246631ae91d24c4618f9cb2837aa71a5862c3f61874e661657a87"
+  },
+  {
+    "index": 16,
+    "mtime_ns": 1789282728230000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00017.ARW",
+    "bytes": 38453248,
+    "sha256": "d7bc76a119f1354b1ec952803df381dbb3aa9a7d2b733d4cb51981fed0c739dc"
+  },
+  {
+    "index": 17,
+    "mtime_ns": 1789282730690000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00018.ARW",
+    "bytes": 38465536,
+    "sha256": "d6ecb4128adff62d6ab283df7e6f537e153c29b69ee4b94329003a05688c2406"
+  },
+  {
+    "index": 18,
+    "mtime_ns": 1789282733180000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00019.ARW",
+    "bytes": 38477824,
+    "sha256": "be5fb719b9c0dc8907ddc408864309a71782625664f93e148853a34e1c91567b"
+  },
+  {
+    "index": 19,
+    "mtime_ns": 1789282735660000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00020.ARW",
+    "bytes": 38494208,
+    "sha256": "cc06ae097e5d5591e7cbbb6128b5a3b4d0011137d7816b2d372110587f056750"
+  },
+  {
+    "index": 20,
+    "mtime_ns": 1789282738120000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00021.ARW",
+    "bytes": 38506496,
+    "sha256": "712716f8ea909774aaa8eb21eee5dcee44adaaeac4d328c636769d160cbaec75"
+  },
+  {
+    "index": 21,
+    "mtime_ns": 1789282740580000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00022.ARW",
+    "bytes": 38522880,
+    "sha256": "846c1f58236290559de482b15a6f53f0db7199cda437ceadbb37d1244bdd27d9"
+  },
+  {
+    "index": 22,
+    "mtime_ns": 1789282743050000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00023.ARW",
+    "bytes": 38539264,
+    "sha256": "9240f571e71d957c71d53b564a6239b36a2c9639b033b644e644c7c61bdb319c"
+  },
+  {
+    "index": 23,
+    "mtime_ns": 1789282745510000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00024.ARW",
+    "bytes": 38535168,
+    "sha256": "98db6539af9fb270fe90136da8afbe23e7614d8f29749cbdc518b667a323c570"
+  },
+  {
+    "index": 24,
+    "mtime_ns": 1789282747990000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00025.ARW",
+    "bytes": 38572032,
+    "sha256": "1b755a6cea1c04ee23e71b650bc10baa4e64f5ef975c12129136621a4ecf8d17"
+  },
+  {
+    "index": 25,
+    "mtime_ns": 1789282750460000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00026.ARW",
+    "bytes": 38584320,
+    "sha256": "e2a3b2151120eeda5e07ad47d3e4a7afeb1848d4c1a51a0bfaa8a173ecdf3742"
+  },
+  {
+    "index": 26,
+    "mtime_ns": 1789282752930000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00027.ARW",
+    "bytes": 38604800,
+    "sha256": "f7c85a2578da3541ee296df79e922bdb651aac589006ebdd85e70b80f0b7d703"
+  },
+  {
+    "index": 27,
+    "mtime_ns": 1789282755390000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00028.ARW",
+    "bytes": 38621184,
+    "sha256": "6eff50e8b7c134fa74627a349c7279ae1915c960cdd3025bf470699e3650ee1e"
+  },
+  {
+    "index": 28,
+    "mtime_ns": 1789282757850000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00029.ARW",
+    "bytes": 38641664,
+    "sha256": "737b965ba6ed30dd1b926bbdfc516073bc3b88b62eae8caab761f32348a6f28a"
+  },
+  {
+    "index": 29,
+    "mtime_ns": 1789282760340000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00030.ARW",
+    "bytes": 38653952,
+    "sha256": "f17fe380be563ac8c2c700d34d137da0abfc954ce157c936d0fd97fcdaae6c0e"
+  },
+  {
+    "index": 30,
+    "mtime_ns": 1789282762810000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00031.ARW",
+    "bytes": 38678528,
+    "sha256": "df2745db88739f4b8aa14ebeb2dc3a4d4a9604d988309e274068227e81f3ef74"
+  },
+  {
+    "index": 31,
+    "mtime_ns": 1789282765300000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00032.ARW",
+    "bytes": 38699008,
+    "sha256": "c70a0ff9f9e32abdfa98aa55f7d24763c8a8d946a53bf577fe938b5f04067c13"
+  },
+  {
+    "index": 32,
+    "mtime_ns": 1789282767780000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00033.ARW",
+    "bytes": 38715392,
+    "sha256": "e29f0981c38e5254ff67d3d91a9f5156746c6e7df361945080edc4ba28804a27"
+  },
+  {
+    "index": 33,
+    "mtime_ns": 1789282770230000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00034.ARW",
+    "bytes": 38735872,
+    "sha256": "4aae521f27f2ec79fecd09a519352f024d7589e6c93ecd4c20e72953770a01da"
+  },
+  {
+    "index": 34,
+    "mtime_ns": 1789282772690000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00035.ARW",
+    "bytes": 38756352,
+    "sha256": "1739d576bbdb5f7d2bff275b940c45e57e4cecff1c3a1d36c99cfc6676352c12"
+  },
+  {
+    "index": 35,
+    "mtime_ns": 1789282775150000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00036.ARW",
+    "bytes": 38776832,
+    "sha256": "d7cc61464dcda83c2324b123530f61805d1b88f013ce88a5843954e03fb98ed7"
+  },
+  {
+    "index": 36,
+    "mtime_ns": 1789282777640000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00037.ARW",
+    "bytes": 38797312,
+    "sha256": "72da3108450d625f44237566cd4b760a08454fc1f5a2ded0678bacc5895c586f"
+  },
+  {
+    "index": 37,
+    "mtime_ns": 1789282780120000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00038.ARW",
+    "bytes": 38817792,
+    "sha256": "3a1f84bce3516121259c3760c876903a05cce3f67ecfc0d35818a5761bcaa448"
+  },
+  {
+    "index": 38,
+    "mtime_ns": 1789282782610000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00039.ARW",
+    "bytes": 38842368,
+    "sha256": "c7c99c8c6d59d52a9ad94ca84c2a69b2397987f56b119cff0ad6a7a96e2e102a"
+  },
+  {
+    "index": 39,
+    "mtime_ns": 1789282785090000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00040.ARW",
+    "bytes": 38866944,
+    "sha256": "b832e68829b950fb38be154046a01140c9eaed35e6c6a6c06496d21f267e356e"
+  },
+  {
+    "index": 40,
+    "mtime_ns": 1789282787550000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00041.ARW",
+    "bytes": 38887424,
+    "sha256": "f648cd043a475625a851ba967cd9fb42ed94682136761731050741aac298e0c6"
+  },
+  {
+    "index": 41,
+    "mtime_ns": 1789282790010000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00042.ARW",
+    "bytes": 38907904,
+    "sha256": "7b7ab79ef9839216f1e1ed0c3c1d6ba32167c16814b59371b49a1116c927ba87"
+  },
+  {
+    "index": 42,
+    "mtime_ns": 1789282792470000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00043.ARW",
+    "bytes": 38932480,
+    "sha256": "31ecbce926258bd9aaa5c15ec457b54372b3e6f02402da8f4927fbada0d72321"
+  },
+  {
+    "index": 43,
+    "mtime_ns": 1789282794970000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00044.ARW",
+    "bytes": 38957056,
+    "sha256": "e67df3434b7f210b6edcb6fe6e0ebac559b93b1fb2beab212e0294b5174e0032"
+  },
+  {
+    "index": 44,
+    "mtime_ns": 1789282797440000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00045.ARW",
+    "bytes": 38981632,
+    "sha256": "1c787b7d6d1c70028f1673405595e0496e3fe86c8ad7f0bb2c4696309de67555"
+  },
+  {
+    "index": 45,
+    "mtime_ns": 1789282799930000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00046.ARW",
+    "bytes": 39010304,
+    "sha256": "25415103f8e0eb4ae293be7f760b6494146f24c00c68e4491e13a12cd0376937"
+  },
+  {
+    "index": 46,
+    "mtime_ns": 1789282802400000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00047.ARW",
+    "bytes": 39038976,
+    "sha256": "82407eed3eff7b0f0f245ac73b38917767d5a5cfbcfbd99952ab0d8f69a65676"
+  },
+  {
+    "index": 47,
+    "mtime_ns": 1789282804860000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00048.ARW",
+    "bytes": 39059456,
+    "sha256": "99ccaf610ae0ab7e3bb727b98e2d3e6647791db8083a6a8f1c89489c67f02a80"
+  },
+  {
+    "index": 48,
+    "mtime_ns": 1789282807330000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00049.ARW",
+    "bytes": 39084032,
+    "sha256": "31cc7aa8ae8f40072aa0e7eb228d3e032a37c2cd6364e3acaecbe4c4f0bd2099"
+  },
+  {
+    "index": 49,
+    "mtime_ns": 1789282809790000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00050.ARW",
+    "bytes": 39112704,
+    "sha256": "58e44fdf167c9af9277efd7969a837e65dabd77419c1631814bd98a5091582ab"
+  },
+  {
+    "index": 50,
+    "mtime_ns": 1789282812280000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00051.ARW",
+    "bytes": 39141376,
+    "sha256": "e185656878397afb6e55d3626fd6ffd513d6cc12c06ad5fdf402870c4fc18449"
+  },
+  {
+    "index": 51,
+    "mtime_ns": 1789282814760000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00052.ARW",
+    "bytes": 39161856,
+    "sha256": "3cd1de015980ff4555b9f3a6d7d9e10e299001166c8c890466dc0ea599e017b2"
+  },
+  {
+    "index": 52,
+    "mtime_ns": 1789282817230000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00053.ARW",
+    "bytes": 39182336,
+    "sha256": "3e9ae0d962926359472efd4c8cd0cca15cc54016f32e4fdc329fd42ebc6d663c"
+  },
+  {
+    "index": 53,
+    "mtime_ns": 1789282819690000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00054.ARW",
+    "bytes": 39211008,
+    "sha256": "6884fcd50c2b7fb1daf159443c1d60fa8142d6fcf4f3067182ed90cb66048982"
+  },
+  {
+    "index": 54,
+    "mtime_ns": 1789282822150000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00055.ARW",
+    "bytes": 39239680,
+    "sha256": "65a69ff8f9713ec18914fcd99d727e34f5c1574696937479534671e74f93c345"
+  },
+  {
+    "index": 55,
+    "mtime_ns": 1789282824610000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00056.ARW",
+    "bytes": 39276544,
+    "sha256": "85aa2c93690bc9999df97f449f0bc6e4c241e27776bba4d74fdb30d83cc72328"
+  },
+  {
+    "index": 56,
+    "mtime_ns": 1789282827100000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00057.ARW",
+    "bytes": 39309312,
+    "sha256": "44d109dec6208f85431265fa300c1ce19aae6dd32e453fcf81db45e4febdf8e4"
+  },
+  {
+    "index": 57,
+    "mtime_ns": 1789282829570000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00058.ARW",
+    "bytes": 39346176,
+    "sha256": "067adad2d05947cc68c08569a24252f35513b3654887ff9cf456a9b7aa2bb448"
+  },
+  {
+    "index": 58,
+    "mtime_ns": 1789282832060000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00059.ARW",
+    "bytes": 39366656,
+    "sha256": "9edfa3a489d57f9fb484c6362611b35948ac48d0f0f6ca829b27c1fa14b2815e"
+  },
+  {
+    "index": 59,
+    "mtime_ns": 1789282834540000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00060.ARW",
+    "bytes": 39395328,
+    "sha256": "2159bce72fcab512d67bd7739758f2b06497a2b5523b1e136987044a03c90bc9"
+  },
+  {
+    "index": 60,
+    "mtime_ns": 1789282837020000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00061.ARW",
+    "bytes": 39424000,
+    "sha256": "b0c3b300c71e063b9556666ea1d56a238db8a226b9a81c0883e993a1115f24d2"
+  },
+  {
+    "index": 61,
+    "mtime_ns": 1789282839490000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00062.ARW",
+    "bytes": 39456768,
+    "sha256": "a78d523775be58e5a25f5fd2b5e7ce3ffab8114205231ad5b98a8dcfd70aae2c"
+  },
+  {
+    "index": 62,
+    "mtime_ns": 1789282841950000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00063.ARW",
+    "bytes": 39497728,
+    "sha256": "f7ef1608e74cb27ce5b0d85a347746ea4644e403f44683c78111fc59463bdae9"
+  },
+  {
+    "index": 63,
+    "mtime_ns": 1789282844400000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00064.ARW",
+    "bytes": 39526400,
+    "sha256": "c8dc69bdfa6735b382a4603127ca5f114c7732516c12272a7f5050aca07ee5c1"
+  },
+  {
+    "index": 64,
+    "mtime_ns": 1789282846890000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00065.ARW",
+    "bytes": 39559168,
+    "sha256": "15d75f95c971945d80efebe5161573ce30a19b775d4d5ae1823c7c55a00ddd97"
+  },
+  {
+    "index": 65,
+    "mtime_ns": 1789282849380000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00066.ARW",
+    "bytes": 39591936,
+    "sha256": "391cb054075a20fd1a014b794ff9ee62d5980e91fc6b2dec142007bf9bc35327"
+  },
+  {
+    "index": 66,
+    "mtime_ns": 1789282851860000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00067.ARW",
+    "bytes": 39624704,
+    "sha256": "9cb64180f458a356a6f8f22457094f01b953e17162705a42c7b250bf46bea788"
+  },
+  {
+    "index": 67,
+    "mtime_ns": 1789282854330000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00068.ARW",
+    "bytes": 39661568,
+    "sha256": "e5b62a1ec4421a6a2fdf20c149a8b6abac8d314df69318a05993948e1da94773"
+  },
+  {
+    "index": 68,
+    "mtime_ns": 1789282856790000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00069.ARW",
+    "bytes": 39694336,
+    "sha256": "d79780303c4cfe12397f34581d4d80832b926964ffb7d08bd44b5815d2a5bdd4"
+  },
+  {
+    "index": 69,
+    "mtime_ns": 1789282859250000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00070.ARW",
+    "bytes": 39731200,
+    "sha256": "064485c22b8778de67e437f976a8e1ae08fb110fa9ee6d0aa1d5f9a17744b22e"
+  },
+  {
+    "index": 70,
+    "mtime_ns": 1789282861740000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00071.ARW",
+    "bytes": 39772160,
+    "sha256": "6bfc2ba2ad680e452d0710d836684f47f57dadc4d5e648557d542e14d3de13fa"
+  },
+  {
+    "index": 71,
+    "mtime_ns": 1789282864220000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00072.ARW",
+    "bytes": 39813120,
+    "sha256": "59b69054f2d6d079860682a77ed50caecc01207b10a7241b23000b77aea54eaf"
+  },
+  {
+    "index": 72,
+    "mtime_ns": 1789282866690000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00073.ARW",
+    "bytes": 39845888,
+    "sha256": "7e48d0c33ce380a357bcf4a6366e58f1a23be14929e5f094641b2bab10dfcfd4"
+  },
+  {
+    "index": 73,
+    "mtime_ns": 1789282869160000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00074.ARW",
+    "bytes": 39890944,
+    "sha256": "5081d2e321620b568f9c4d9d4320afb11038d128f05e88e68bb28b017667daa4"
+  },
+  {
+    "index": 74,
+    "mtime_ns": 1789282871630000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00075.ARW",
+    "bytes": 39931904,
+    "sha256": "45dbcea2adafca6026e59e79644953b7ed186c57047e9459e00a4734cc892ebf"
+  },
+  {
+    "index": 75,
+    "mtime_ns": 1789282874090000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00076.ARW",
+    "bytes": 39972864,
+    "sha256": "0e10936c07735b03262fce0dfaafe5615a3519324735c1c720b36d5e2a63af89"
+  },
+  {
+    "index": 76,
+    "mtime_ns": 1789282876550000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00077.ARW",
+    "bytes": 40022016,
+    "sha256": "6dd7b83da82d12f304671799d967a296185e205449418934e2bf0ec2fe00fd59"
+  },
+  {
+    "index": 77,
+    "mtime_ns": 1789282879020000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00078.ARW",
+    "bytes": 40067072,
+    "sha256": "eec36040d4e4714d6fd04a3d4c266f98cc0e1628800de51e5ae4cd95b5404914"
+  },
+  {
+    "index": 78,
+    "mtime_ns": 1789282881520000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00079.ARW",
+    "bytes": 40112128,
+    "sha256": "c2e92052401d9398b5a928ea8b68a2d76b412f277771ffcd7a9c249949e09823"
+  },
+  {
+    "index": 79,
+    "mtime_ns": 1789282884000000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00080.ARW",
+    "bytes": 40157184,
+    "sha256": "5de35a2743d934eb72adc740a8f65bf959406340b489c850e4a35899bfe10f3d"
+  },
+  {
+    "index": 80,
+    "mtime_ns": 1789282886470000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00081.ARW",
+    "bytes": 40210432,
+    "sha256": "e8ca3048cadaf43460891c6e97ca2d4b5fcdd8751fcce0f4ff2586066aeb5777"
+  },
+  {
+    "index": 81,
+    "mtime_ns": 1789282888930000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00082.ARW",
+    "bytes": 40263680,
+    "sha256": "650e329cbfc9275a4e185a209149d2c7793a59037500833c8980968f5d0b807f"
+  },
+  {
+    "index": 82,
+    "mtime_ns": 1789282891410000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00083.ARW",
+    "bytes": 40321024,
+    "sha256": "aeeafad22fe661774347825506ae0320518665e6c669dcc7a1c6138d3cb6e18b"
+  },
+  {
+    "index": 83,
+    "mtime_ns": 1789282893870000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00084.ARW",
+    "bytes": 40374272,
+    "sha256": "3ce84e19ab116398e9ab997618022fc921ab9cc389baa5d05512930c5fc42f34"
+  },
+  {
+    "index": 84,
+    "mtime_ns": 1789282896360000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00085.ARW",
+    "bytes": 40423424,
+    "sha256": "dea8d58f5e5cb5d5b145a7146032e357f8cab0a0d3f237c268258d16da88c1ab"
+  },
+  {
+    "index": 85,
+    "mtime_ns": 1789282898840000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00086.ARW",
+    "bytes": 40480768,
+    "sha256": "558538917b9bbe2016dc20dd96efbd6affad33dd66c053ce6a77acf7470077db"
+  },
+  {
+    "index": 86,
+    "mtime_ns": 1789282901330000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00087.ARW",
+    "bytes": 40534016,
+    "sha256": "5f7de5fa37ce96ebb21fb085deebeb18bd983d6f4556d254d2a130b453b65977"
+  },
+  {
+    "index": 87,
+    "mtime_ns": 1789282903830000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00088.ARW",
+    "bytes": 40591360,
+    "sha256": "fe6396b3a852b0e2916b342ced65dcb917d940576e5bb747d7b8f0ac5a56a655"
+  },
+  {
+    "index": 88,
+    "mtime_ns": 1789282906310000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00089.ARW",
+    "bytes": 40644608,
+    "sha256": "f631078b4657e3b3398cc09eb63adba4a6d4094bad6ef4892c5ab56491a06e1f"
+  },
+  {
+    "index": 89,
+    "mtime_ns": 1789282908770000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00090.ARW",
+    "bytes": 40701952,
+    "sha256": "97d3213c6e61a2acc062b4b0839fed16c7c7974112a68e7d9af671e7cc3a5f4f"
+  },
+  {
+    "index": 90,
+    "mtime_ns": 1789282911230000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00091.ARW",
+    "bytes": 40755200,
+    "sha256": "4292e029a8b1667d2aad9200321df2dbdb372f42b9d1cd6e2a41ccf34e7dec9d"
+  },
+  {
+    "index": 91,
+    "mtime_ns": 1789282913690000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00092.ARW",
+    "bytes": 40816640,
+    "sha256": "9b9c98ccfc1a5af5ea3ea5682414cd5252237effe5d392182c338af5d2f26340"
+  },
+  {
+    "index": 92,
+    "mtime_ns": 1789282916180000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00093.ARW",
+    "bytes": 40865792,
+    "sha256": "fe300aeab97c3c1c2cb3af8173275a070fc1d6814e12867eacaecd085434c52a"
+  },
+  {
+    "index": 93,
+    "mtime_ns": 1789282918670000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00094.ARW",
+    "bytes": 40923136,
+    "sha256": "8714ee2de1fcd88be4aea2d4e2ff8f84dd652e7002e70deb899206b6b85915d9"
+  },
+  {
+    "index": 94,
+    "mtime_ns": 1789282921150000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00095.ARW",
+    "bytes": 40976384,
+    "sha256": "43e94602a1d7463dac299a76903abdd7722dc1489a8f3a9b80e7c7cc8ffb0434"
+  },
+  {
+    "index": 95,
+    "mtime_ns": 1789282923630000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00096.ARW",
+    "bytes": 40935424,
+    "sha256": "30937bb7932d3d01e6ac45f7df27e3475b2f2b8c357eeb684ff23835e85854ca"
+  },
+  {
+    "index": 96,
+    "mtime_ns": 1789282926090000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00097.ARW",
+    "bytes": 40665088,
+    "sha256": "77d5a588d182b9fcefb173b63304283ab422a6b33ccc55da9da6ac901b17802d"
+  },
+  {
+    "index": 97,
+    "mtime_ns": 1789282928550000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00098.ARW",
+    "bytes": 41082880,
+    "sha256": "06949c742813384c2b16f229e91899b5469fc1903f3aca8299cea598a755e91d"
+  },
+  {
+    "index": 98,
+    "mtime_ns": 1789282931010000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00099.ARW",
+    "bytes": 41181184,
+    "sha256": "90f65cccccd1187f74026cce8471e3a0c698bf90ddaa8c83fd4d1faf2d81a0c6"
+  },
+  {
+    "index": 99,
+    "mtime_ns": 1789282933500000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00100.ARW",
+    "bytes": 41254912,
+    "sha256": "f4653a317d419452e2916fa717809a209af2b7bed3b6624b0fc9548d51cdb8c8"
+  },
+  {
+    "index": 100,
+    "mtime_ns": 1789282935990000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00101.ARW",
+    "bytes": 41299968,
+    "sha256": "9e9b62b680895fbac10d0c3bdfe391c0777836ad77600ef78f5163b1654abd94"
+  },
+  {
+    "index": 101,
+    "mtime_ns": 1789282938490000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00102.ARW",
+    "bytes": 41361408,
+    "sha256": "06ba84bbd10c1fe86aac2b98e60d98f1118dca6d083fcf21a45e791328e2a2fa"
+  },
+  {
+    "index": 102,
+    "mtime_ns": 1789282940960000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00103.ARW",
+    "bytes": 41410560,
+    "sha256": "3ea69f4399a49b706640ee432ac9a2e4af1fe3d7505866f00af0b39f37249433"
+  },
+  {
+    "index": 103,
+    "mtime_ns": 1789282943460000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00104.ARW",
+    "bytes": 41476096,
+    "sha256": "29ec60b6507bd5943906b2ad0ec123ecf936b2208c2c2bf01a45261414659bba"
+  },
+  {
+    "index": 104,
+    "mtime_ns": 1789282945940000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00105.ARW",
+    "bytes": 41517056,
+    "sha256": "71ef7f7f0219e2e8886e3a907feaacdf205ff155236ad2de74ee8d5cb809ac70"
+  },
+  {
+    "index": 105,
+    "mtime_ns": 1789282948420000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00106.ARW",
+    "bytes": 41570304,
+    "sha256": "17585164f933bc41dfa344d3b133e9ec10a6a70a8e3ac964abef9c7231f4aaaf"
+  },
+  {
+    "index": 106,
+    "mtime_ns": 1789282950880000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00107.ARW",
+    "bytes": 41627648,
+    "sha256": "8a783cf4a6a1c0da372a037435ab77130b2719e2fa8d6cc583dd6d76608dd434"
+  },
+  {
+    "index": 107,
+    "mtime_ns": 1789282953350000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00108.ARW",
+    "bytes": 41664512,
+    "sha256": "beb21f6fd53c6ec0e6d6d39d3921a44c70c467baa8d0c97640a77746c7491a85"
+  },
+  {
+    "index": 108,
+    "mtime_ns": 1789282955820000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00109.ARW",
+    "bytes": 41574400,
+    "sha256": "6f4cee34106e911bf16fcc7a68ac22921527d455059709d004bfa35183676c8c"
+  },
+  {
+    "index": 109,
+    "mtime_ns": 1789282958270000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00110.ARW",
+    "bytes": 41537536,
+    "sha256": "ac9fdfff4af64cfbb22f5f95587dc9f26bc4cf7afc168e92231ca45a01734e30"
+  },
+  {
+    "index": 110,
+    "mtime_ns": 1789282960750000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00111.ARW",
+    "bytes": 41779200,
+    "sha256": "5b92d783cddc127ea713c83396ec561ec218d62cf361b230a2ab9fc71d6aa843"
+  },
+  {
+    "index": 111,
+    "mtime_ns": 1789282963220000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00112.ARW",
+    "bytes": 41865216,
+    "sha256": "69dc075e9c43b72f0f52c6f0f43c0482c5e75c05701228054d4ede450d9d819f"
+  },
+  {
+    "index": 112,
+    "mtime_ns": 1789282965690000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00113.ARW",
+    "bytes": 41918464,
+    "sha256": "613bd4645a7da0e1c60b7890b8c4575fabf9db98cffbff07fcd927ba916214c6"
+  },
+  {
+    "index": 113,
+    "mtime_ns": 1789282968150000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00114.ARW",
+    "bytes": 41959424,
+    "sha256": "3d83ffc2fd0015d77df4c322a872e7ff5c55015886d1caaea9eeaa02d4e08d2d"
+  },
+  {
+    "index": 114,
+    "mtime_ns": 1789282970640000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00115.ARW",
+    "bytes": 42000384,
+    "sha256": "5424536450b8553b840a51f2b94e03af9f53daca435942798adcd9b35ddb3d2c"
+  },
+  {
+    "index": 115,
+    "mtime_ns": 1789282973110000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00116.ARW",
+    "bytes": 42041344,
+    "sha256": "939c9240108331fc805be77ebd4431a78bcd3d9f40abdfb0944e96fa6c64a2cd"
+  },
+  {
+    "index": 116,
+    "mtime_ns": 1789282975610000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00117.ARW",
+    "bytes": 42078208,
+    "sha256": "3b2ff2f726cf677c38875d4c263a1e9663183538bb002f7cb0f03cbcddd55c6f"
+  },
+  {
+    "index": 117,
+    "mtime_ns": 1789282978080000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00118.ARW",
+    "bytes": 42110976,
+    "sha256": "51fb349cab35a2618da468fe1197144989f2a358cef34b3be27a94adbfbfdda8"
+  },
+  {
+    "index": 118,
+    "mtime_ns": 1789282980580000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00119.ARW",
+    "bytes": 42143744,
+    "sha256": "816faf7e4a9b26f77ff16b7dda692e4e178e776ece8830368202d43614bd04ba"
+  },
+  {
+    "index": 119,
+    "mtime_ns": 1789282983060000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00120.ARW",
+    "bytes": 42180608,
+    "sha256": "ac99dd46e3decc4a9c74b9e3fda0604b5032b91cadcec15e505efb753f215c01"
+  },
+  {
+    "index": 120,
+    "mtime_ns": 1789282985540000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00121.ARW",
+    "bytes": 42213376,
+    "sha256": "7e669b9f16687ef2fcebe6c839a3ad7c1e6952e536a6f99f590e506492b2bda4"
+  },
+  {
+    "index": 121,
+    "mtime_ns": 1789282988010000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00122.ARW",
+    "bytes": 42246144,
+    "sha256": "33633c2676111fda319d3ff46d489529c8c4a01334b74a3b26e7a15fbc4ecaf6"
+  },
+  {
+    "index": 122,
+    "mtime_ns": 1789282990470000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00123.ARW",
+    "bytes": 42283008,
+    "sha256": "738a674411cb5739be7a0dd304eebc4e16fba749c14d5e97f7c5c1e8021a33db"
+  },
+  {
+    "index": 123,
+    "mtime_ns": 1789282992920000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00124.ARW",
+    "bytes": 42311680,
+    "sha256": "0a241545546e0d8f79540850ba2077a52a9b33fea8231a7bdaf3a11d1fb37a3b"
+  },
+  {
+    "index": 124,
+    "mtime_ns": 1789282995410000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00125.ARW",
+    "bytes": 42340352,
+    "sha256": "c0660d05afbc48761b3197f646995a71368f21736ace737c28d284f1363e0553"
+  },
+  {
+    "index": 125,
+    "mtime_ns": 1789282997880000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00126.ARW",
+    "bytes": 42373120,
+    "sha256": "a47ddeb8f2776f7279b072a5040ef8d0a0622bc1d074bef47e1c88716a481fb6"
+  },
+  {
+    "index": 126,
+    "mtime_ns": 1789283000360000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00127.ARW",
+    "bytes": 42397696,
+    "sha256": "38373f8227af7101bb205cbed506be5cfd9c051b693494d5e5e41692eb60da0a"
+  },
+  {
+    "index": 127,
+    "mtime_ns": 1789283002830000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00128.ARW",
+    "bytes": 42422272,
+    "sha256": "5f86ae14d18993a154776ac7acd9bbc2de2e6b760cb121e7e89b3c7cd2cf3dc2"
+  },
+  {
+    "index": 128,
+    "mtime_ns": 1789283005300000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00129.ARW",
+    "bytes": 42442752,
+    "sha256": "edde181a21f03338df4c6b0f96c50f198bdc9453d6d88b2e388a885bf95b23f3"
+  },
+  {
+    "index": 129,
+    "mtime_ns": 1789283007750000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00130.ARW",
+    "bytes": 42463232,
+    "sha256": "6cc3a47df4aa702bc5774e3d69d02a8a11dede2c2a86f4b5f2bd5da8b94f0842"
+  },
+  {
+    "index": 130,
+    "mtime_ns": 1789283010240000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00131.ARW",
+    "bytes": 42483712,
+    "sha256": "fc44e3d597cfa21768fb54866444278c80a76d7c80eacc36bed6e1f4e4a44972"
+  },
+  {
+    "index": 131,
+    "mtime_ns": 1789283012720000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00132.ARW",
+    "bytes": 42504192,
+    "sha256": "084208860ea09dccb7883f5b2842b7619f800d50e47a49f09a1ab8ddb007a87e"
+  },
+  {
+    "index": 132,
+    "mtime_ns": 1789283015190000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00133.ARW",
+    "bytes": 42516480,
+    "sha256": "6e9880de9b598400d2117a5d0a3c6ffd324548dadfc095ed17d538695323e963"
+  },
+  {
+    "index": 133,
+    "mtime_ns": 1789283017660000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00134.ARW",
+    "bytes": 42528768,
+    "sha256": "5a4ce28d7f477815471e9c6618d6ecc692412d732486a359c5324ee026943567"
+  },
+  {
+    "index": 134,
+    "mtime_ns": 1789283020110000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00135.ARW",
+    "bytes": 42541056,
+    "sha256": "af2e5a22d63e96a6d9fb588a30af06569595a233147b4a36da653f6f7bfbf76d"
+  },
+  {
+    "index": 135,
+    "mtime_ns": 1789283022570000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00136.ARW",
+    "bytes": 42557440,
+    "sha256": "e3d8b802ae6fabf1a8a4f737950e82fbb092d29a1f7b711c64029a616cb57524"
+  },
+  {
+    "index": 136,
+    "mtime_ns": 1789283025050000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00137.ARW",
+    "bytes": 42557440,
+    "sha256": "e97109a886f79f832b9d2596b005abfc34bb7ffc7011f86a777900b1182173a2"
+  },
+  {
+    "index": 137,
+    "mtime_ns": 1789283027530000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00138.ARW",
+    "bytes": 42577920,
+    "sha256": "4fe5089a0f00beeee735ff5c1fa2b653fdec2a4eaa183184473939b8ce8cf2fe"
+  },
+  {
+    "index": 138,
+    "mtime_ns": 1789283030010000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00139.ARW",
+    "bytes": 42577920,
+    "sha256": "3b2cb40d17dcf4772f16a809ad6f5331c65d577be259529593f3e964f55f1b42"
+  },
+  {
+    "index": 139,
+    "mtime_ns": 1789283032470000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00140.ARW",
+    "bytes": 42577920,
+    "sha256": "59cf4d874b03bb3cf125d8e89e4d703db26e4ae25d4a8198efdc3aff042d2e86"
+  },
+  {
+    "index": 140,
+    "mtime_ns": 1789283034930000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00141.ARW",
+    "bytes": 42582016,
+    "sha256": "9d1a857ff98964e284e7d8e19fd88d33e558ecf9ed3112712320514c61ae3334"
+  },
+  {
+    "index": 141,
+    "mtime_ns": 1789283037380000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00142.ARW",
+    "bytes": 42582016,
+    "sha256": "d1daa573e8cc8fc4d9d093c6e971af2eedaf5c8b4827e4a6dd53d662181befd9"
+  },
+  {
+    "index": 142,
+    "mtime_ns": 1789283039880000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00143.ARW",
+    "bytes": 42573824,
+    "sha256": "b8c02bedf3f0c54b08b62338ed9baa04bc6edce9d708caa8c95bfc134a0484aa"
+  },
+  {
+    "index": 143,
+    "mtime_ns": 1789283042360000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00144.ARW",
+    "bytes": 42561536,
+    "sha256": "7a9de61dc315256b00e15d6dc804f77cce23fccb90a49270505076990fff30aa"
+  },
+  {
+    "index": 144,
+    "mtime_ns": 1789283044850000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00145.ARW",
+    "bytes": 42561536,
+    "sha256": "43a51db0df6d0a1f4145d11e5eb86487e82a54d01334120abf8c7d60f2b2091a"
+  },
+  {
+    "index": 145,
+    "mtime_ns": 1789283047350000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00146.ARW",
+    "bytes": 42553344,
+    "sha256": "11fa06e11b95309079823d2fa6684f6d0039011bd413a2611fd508b9c4994c01"
+  },
+  {
+    "index": 146,
+    "mtime_ns": 1789283049860000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00147.ARW",
+    "bytes": 42532864,
+    "sha256": "e3ab9eca9af02f6bdf2d435c46092174c1beb11e80fcfe3187a6174ff8b8e94c"
+  },
+  {
+    "index": 147,
+    "mtime_ns": 1789283052340000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00148.ARW",
+    "bytes": 42516480,
+    "sha256": "b84815bc9d71ab10d38c50e9ab593e9dde67215664569be91406900edf389e74"
+  },
+  {
+    "index": 148,
+    "mtime_ns": 1789283054800000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00149.ARW",
+    "bytes": 42504192,
+    "sha256": "d3460cde8e1c3aa23f40c6b24bd382e1ac1c467fa02dc139a57f76071d9b431d"
+  },
+  {
+    "index": 149,
+    "mtime_ns": 1789283057290000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00150.ARW",
+    "bytes": 42491904,
+    "sha256": "a58ee774a6f95a5e2020ab2f83dd5422e2adc40a152372334987744860c38468"
+  },
+  {
+    "index": 150,
+    "mtime_ns": 1789283059750000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00151.ARW",
+    "bytes": 42467328,
+    "sha256": "2b69faa6d3e6d14cda4338fab12b50cc125bed9ffaef4a3e89679caf07ac8fec"
+  },
+  {
+    "index": 151,
+    "mtime_ns": 1789283062250000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00152.ARW",
+    "bytes": 42463232,
+    "sha256": "15adb9a0725f6d1f1ee8445a75032d739a3642ea82ea151ef9c57dfb49304d8a"
+  },
+  {
+    "index": 152,
+    "mtime_ns": 1789283064710000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00153.ARW",
+    "bytes": 42438656,
+    "sha256": "9b58ec0a580afdd9f365797c991e6676c8051f9691b93ab23446812989c91049"
+  },
+  {
+    "index": 153,
+    "mtime_ns": 1789283067180000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00154.ARW",
+    "bytes": 42422272,
+    "sha256": "106e9d078671c02223b5fb2981ac2c2b3d899d4bb377f90986a93d7f3d66693a"
+  },
+  {
+    "index": 154,
+    "mtime_ns": 1789283069680000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00155.ARW",
+    "bytes": 42397696,
+    "sha256": "442693f1365c29ae22ea6647cf6f9877d9cc9157a24a2ea3d8d524e8033c2fcc"
+  },
+  {
+    "index": 155,
+    "mtime_ns": 1789283072150000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00156.ARW",
+    "bytes": 42381312,
+    "sha256": "5fd9fbfbee5a098650c2b2fad2b0ebc2aacc74488d994102ab692526cd831c69"
+  },
+  {
+    "index": 156,
+    "mtime_ns": 1789283074650000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00157.ARW",
+    "bytes": 42364928,
+    "sha256": "0a188e4b711b69e8125f4d3fdb0f63a35907bbc09a421fef15fe3f97d4d8055f"
+  },
+  {
+    "index": 157,
+    "mtime_ns": 1789283077130000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00158.ARW",
+    "bytes": 42344448,
+    "sha256": "82241e7ebfa79ee87619ecd4664493305defe2483c7f9025ea6f6329a9b79233"
+  },
+  {
+    "index": 158,
+    "mtime_ns": 1789283079590000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00159.ARW",
+    "bytes": 42328064,
+    "sha256": "ed1bc24d9da7cfe6e61af1351e96e171dee44001da144c8c84255ea28d14d755"
+  },
+  {
+    "index": 159,
+    "mtime_ns": 1789283082050000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00160.ARW",
+    "bytes": 42311680,
+    "sha256": "8b7dab16893c3fc66eac5ba67246eb43060594a8bfc7e5810610b15ef260b3bd"
+  },
+  {
+    "index": 160,
+    "mtime_ns": 1789283084510000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00161.ARW",
+    "bytes": 42287104,
+    "sha256": "cf4f4a30df0a1b02c1162f1f77ff79de43cd10680363cae5330b0d7b42c75bb9"
+  },
+  {
+    "index": 161,
+    "mtime_ns": 1789283087000000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00162.ARW",
+    "bytes": 42278912,
+    "sha256": "a50a2e1e4dd40aa74c1bc985a66e0895971bfc96e3871d69cad37739f20f5729"
+  },
+  {
+    "index": 162,
+    "mtime_ns": 1789283089500000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00163.ARW",
+    "bytes": 42262528,
+    "sha256": "d096a89bba957a33e84bba867532ed396068f608f1b4af78e51f109cdd41d4cd"
+  },
+  {
+    "index": 163,
+    "mtime_ns": 1789283091980000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00164.ARW",
+    "bytes": 42246144,
+    "sha256": "9b406e70c0cadea80a7b1e8eec1f43dbbc293e49db3cc27b6aa6631782d0bf53"
+  },
+  {
+    "index": 164,
+    "mtime_ns": 1789283094470000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00165.ARW",
+    "bytes": 42233856,
+    "sha256": "f2d8e0f3f158a0e95ccba72585df142738421d0660968a56f0f4beb6cef906af"
+  },
+  {
+    "index": 165,
+    "mtime_ns": 1789283096950000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00166.ARW",
+    "bytes": 42225664,
+    "sha256": "041d35657fb2885f31df33fabc4ea3fed8a901465e1c658a7b6fef1dbb5b8d32"
+  },
+  {
+    "index": 166,
+    "mtime_ns": 1789283099430000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00167.ARW",
+    "bytes": 42221568,
+    "sha256": "8b627c26fb264a8492ee51df3f0cd13c13ab0091cd41be3cd824bcc18b59f5d1"
+  },
+  {
+    "index": 167,
+    "mtime_ns": 1789283101910000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00168.ARW",
+    "bytes": 42205184,
+    "sha256": "b8557d027780aeafa0b3e3af7c8ee3c0c706f183491bf829318de87c04cc500d"
+  },
+  {
+    "index": 168,
+    "mtime_ns": 1789283104380000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00169.ARW",
+    "bytes": 42196992,
+    "sha256": "a1e151040a75045e6f3cf35f5a76db2c1cea0ad7d7017787c42c1ed65dc5814c"
+  },
+  {
+    "index": 169,
+    "mtime_ns": 1789283106850000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00170.ARW",
+    "bytes": 42188800,
+    "sha256": "cd748c264007af1d6f70b5285344be86a448309c1faa71a94470ba9546f322f6"
+  },
+  {
+    "index": 170,
+    "mtime_ns": 1789283109310000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00171.ARW",
+    "bytes": 42172416,
+    "sha256": "f7fc1fa252ff31224f162c788cb904ed162b2a8187ae03996b7777be75feefb6"
+  },
+  {
+    "index": 171,
+    "mtime_ns": 1789283111810000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00172.ARW",
+    "bytes": 42160128,
+    "sha256": "d6f37910b1f25c536bb56a26d392d4317500b1bb8f073bc6ff35e64b6fa77b68"
+  },
+  {
+    "index": 172,
+    "mtime_ns": 1789283114290000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00173.ARW",
+    "bytes": 42151936,
+    "sha256": "4f9ae7309a89111badb3214ac15e2d4d5e8adbce6eade4e15e40de6ef4cb6e79"
+  },
+  {
+    "index": 173,
+    "mtime_ns": 1789283116760000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00174.ARW",
+    "bytes": 42164224,
+    "sha256": "d1817a9a40c40c80797fb8b9564cec75c2984685bd3961c2ce41956fb5f5ab8a"
+  },
+  {
+    "index": 174,
+    "mtime_ns": 1789283119240000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00175.ARW",
+    "bytes": 42151936,
+    "sha256": "e628436d655bed404d70563b35a3ac42e8e7276c6f5b5c762123a08e3b09102f"
+  },
+  {
+    "index": 175,
+    "mtime_ns": 1789283121720000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00176.ARW",
+    "bytes": 42151936,
+    "sha256": "cbc45f26dfbd588186678649aa0e71856a87eb4a00584b45963b60ab663e4f57"
+  },
+  {
+    "index": 176,
+    "mtime_ns": 1789283124180000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00177.ARW",
+    "bytes": 42147840,
+    "sha256": "2c3c717837ee72748a2a643b58bc269765ed210a4042fa91f251a81b6453ca39"
+  },
+  {
+    "index": 177,
+    "mtime_ns": 1789283126650000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00178.ARW",
+    "bytes": 42147840,
+    "sha256": "f3dd9520a5cde5f9028be931df03ff7d37c8c72e99d16eaac67a5337b382a080"
+  },
+  {
+    "index": 178,
+    "mtime_ns": 1789283129110000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00179.ARW",
+    "bytes": 42127360,
+    "sha256": "c44a532812c06650a7b1015396d6220ef2826545a4ea19f5f5d58b57b33ae410"
+  },
+  {
+    "index": 179,
+    "mtime_ns": 1789283131610000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00180.ARW",
+    "bytes": 42135552,
+    "sha256": "b569b421afb7e198f703158c7339c20191ea231df845fad2daa43e56a9e4c92d"
+  },
+  {
+    "index": 180,
+    "mtime_ns": 1789283134080000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00181.ARW",
+    "bytes": 42127360,
+    "sha256": "161a29c7aef7ca12aa4239811045681c036d82c8c3dc85b4aec67c4af1e80f77"
+  },
+  {
+    "index": 181,
+    "mtime_ns": 1789283136560000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00182.ARW",
+    "bytes": 42123264,
+    "sha256": "99fac0db6e648d16cc7a1e9332d534add7343b041f4630dd6c7376b8d9b5e2d1"
+  },
+  {
+    "index": 182,
+    "mtime_ns": 1789283139030000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00183.ARW",
+    "bytes": 42110976,
+    "sha256": "81e212a0df7bbf068d1931560bee67e839ede44d18793cca3ea7254053a6f3c7"
+  },
+  {
+    "index": 183,
+    "mtime_ns": 1789283141520000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00184.ARW",
+    "bytes": 42106880,
+    "sha256": "3f498b36cb0e6c8ef9a900abd6746654815432aa13b40cb70dbcf3cde2a1baa6"
+  },
+  {
+    "index": 184,
+    "mtime_ns": 1789283143990000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00185.ARW",
+    "bytes": 42102784,
+    "sha256": "917d5a5c5e695c1377a6ca33ed4bda382a0d32aa0269c9523f638c499b4dbe85"
+  },
+  {
+    "index": 185,
+    "mtime_ns": 1789283146450000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00186.ARW",
+    "bytes": 42078208,
+    "sha256": "171d619f3643040c5632cc9933084ca5271d426dfca013289298128835dbcbf3"
+  },
+  {
+    "index": 186,
+    "mtime_ns": 1789283148940000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00187.ARW",
+    "bytes": 42078208,
+    "sha256": "00412666dac9c71583c063e2d47896464aad43922560950691432fe4e1bee13e"
+  },
+  {
+    "index": 187,
+    "mtime_ns": 1789283151420000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00188.ARW",
+    "bytes": 42070016,
+    "sha256": "38bccbc9bf9fb00121a3828ec21201642a17b74cb47a392e9f5ecce6d0a398e1"
+  },
+  {
+    "index": 188,
+    "mtime_ns": 1789283153890000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00189.ARW",
+    "bytes": 42053632,
+    "sha256": "35c9ee02c74c6a2ef2733ef267e752e072bac31c30bc6db00a1f899c0e22be82"
+  },
+  {
+    "index": 189,
+    "mtime_ns": 1789283156380000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00190.ARW",
+    "bytes": 42045440,
+    "sha256": "5132e3853a816b32673a42ccae311291d96f5cb1e4d5667dc1441f7af419e615"
+  },
+  {
+    "index": 190,
+    "mtime_ns": 1789283158860000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00191.ARW",
+    "bytes": 42029056,
+    "sha256": "9701e86be49a0d7c336d7293f56192844194555bd959aea0cd5e5f8640705921"
+  },
+  {
+    "index": 191,
+    "mtime_ns": 1789283161330000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00192.ARW",
+    "bytes": 42004480,
+    "sha256": "3234a4e6f589fc6b9e06fc7e10fee3bd553eb56084a5d969d2944d4443b4ec99"
+  },
+  {
+    "index": 192,
+    "mtime_ns": 1789283163780000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00193.ARW",
+    "bytes": 41979904,
+    "sha256": "11581e2b4b6e9d2edfe9aab1781199f2762686d2f79c75c0ac049674f60c6fef"
+  },
+  {
+    "index": 193,
+    "mtime_ns": 1789283166250000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00194.ARW",
+    "bytes": 41959424,
+    "sha256": "7453ed884a693d1e6b5fb6560b7f0e3c7f2ff602e0c3105ccaa6ec1e9b9aeba7"
+  },
+  {
+    "index": 194,
+    "mtime_ns": 1789283168720000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00195.ARW",
+    "bytes": 41934848,
+    "sha256": "a98841b1af29f9ec26d388ad3e424e1b024905cc7659acc8e58187e30646b753"
+  },
+  {
+    "index": 195,
+    "mtime_ns": 1789283171220000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00196.ARW",
+    "bytes": 41889792,
+    "sha256": "819cb90ec274d882c88eafe8ad5752869ec7e67f2642b39450cfabae3cc0bab0"
+  },
+  {
+    "index": 196,
+    "mtime_ns": 1789283173700000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00197.ARW",
+    "bytes": 41697280,
+    "sha256": "a4d30108b82ffa11625569f5052503432ee96e8b5136ab77127033d70bfc669a"
+  },
+  {
+    "index": 197,
+    "mtime_ns": 1789283176150000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00198.ARW",
+    "bytes": 41570304,
+    "sha256": "24236d9d55dccfde42421b44bd2c8e836ec9d29f92480b1aa36e975769ca27f4"
+  },
+  {
+    "index": 198,
+    "mtime_ns": 1789283178620000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00199.ARW",
+    "bytes": 41291776,
+    "sha256": "840ab8e4e0dfb8af651a5b7157fcf8a846c9e05bff756365f7f92657b85ef140"
+  },
+  {
+    "index": 199,
+    "mtime_ns": 1789283181100000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00200.ARW",
+    "bytes": 41578496,
+    "sha256": "5c22a73d1c4882cf890ddbce3aaca399b97fcb46bfb2eabda3fe228c1388ac62"
+  },
+  {
+    "index": 200,
+    "mtime_ns": 1789283183580000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00201.ARW",
+    "bytes": 41709568,
+    "sha256": "c645f31603b54e5c593566bddd17d4a0ed2f627a97cd075e00e6039f828f1221"
+  },
+  {
+    "index": 201,
+    "mtime_ns": 1789283186050000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00202.ARW",
+    "bytes": 41676800,
+    "sha256": "8ab3850ab7b77347d1b5530e87d61bfdb88616aad60e509bdec618e9fddf0eee"
+  },
+  {
+    "index": 202,
+    "mtime_ns": 1789283188530000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00203.ARW",
+    "bytes": 41644032,
+    "sha256": "7a8c9d670b36c4f4bf4865449da74cb2ce1584cef45b04775f086147d5dd73f7"
+  },
+  {
+    "index": 203,
+    "mtime_ns": 1789283191040000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00204.ARW",
+    "bytes": 41590784,
+    "sha256": "75a4bf16978f38de30911635d6ee0095d50418d9087105f696cf5d6e6f3d9795"
+  },
+  {
+    "index": 204,
+    "mtime_ns": 1789283193510000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00205.ARW",
+    "bytes": 41549824,
+    "sha256": "e4822f1bfc9de8c04e048ae6386426d6cb389de984194ec876cb3c3e4ea6817d"
+  },
+  {
+    "index": 205,
+    "mtime_ns": 1789283195980000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00206.ARW",
+    "bytes": 41504768,
+    "sha256": "29a9834eafdcfb1d98aebdeaeebfd200849fe9f9b30a99a6c1234f19dba6ef87"
+  },
+  {
+    "index": 206,
+    "mtime_ns": 1789283198450000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00207.ARW",
+    "bytes": 41467904,
+    "sha256": "cd35cca34fd736232a90797a69a7c0b04528fef314f5fa3792cee45aa003dda2"
+  },
+  {
+    "index": 207,
+    "mtime_ns": 1789283200910000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00208.ARW",
+    "bytes": 41414656,
+    "sha256": "f3b6bd6921400b3f253133e4ee84667194ff3917aa375f1271629638f2effa54"
+  },
+  {
+    "index": 208,
+    "mtime_ns": 1789283203370000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00209.ARW",
+    "bytes": 41377792,
+    "sha256": "226bef5f4cd662a24f7cf1f251c80d0a8d56176e13cf59cffd8236420528f2f7"
+  },
+  {
+    "index": 209,
+    "mtime_ns": 1789283205850000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00210.ARW",
+    "bytes": 41230336,
+    "sha256": "813e9886049034c6e44b49f9f6db84af5110566942eeaa652150118f73b3925c"
+  },
+  {
+    "index": 210,
+    "mtime_ns": 1789283208340000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00211.ARW",
+    "bytes": 41242624,
+    "sha256": "2ed47ac2208e2d0113062320ea121f3c726e182faaa4ab3fec9ae488a0778a00"
+  },
+  {
+    "index": 211,
+    "mtime_ns": 1789283210820000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00212.ARW",
+    "bytes": 41246720,
+    "sha256": "bca3cfae05f069def1747b61f6e1d6d29c9bfcb67a0656424a2def0fb8080e46"
+  },
+  {
+    "index": 212,
+    "mtime_ns": 1789283213280000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00213.ARW",
+    "bytes": 41181184,
+    "sha256": "bf99617c0d55bdaee3145bd66e61abb095540add1a09d609270d0d66244c6c5f"
+  },
+  {
+    "index": 213,
+    "mtime_ns": 1789283215760000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00214.ARW",
+    "bytes": 41164800,
+    "sha256": "e235225432b6293d9b0c29c3d6ebb217777d3c0582d771e1a088462401bbcf05"
+  },
+  {
+    "index": 214,
+    "mtime_ns": 1789283218220000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00215.ARW",
+    "bytes": 41123840,
+    "sha256": "acbbd725effcd992075d5aecaddc66b8172be816d9f02fb8bf8a8d2f81b86a09"
+  },
+  {
+    "index": 215,
+    "mtime_ns": 1789283220680000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00216.ARW",
+    "bytes": 41082880,
+    "sha256": "a2495847bfe9138d2617bdb55d5870bcb03fa1ebb254bb7944fb4a415fdc10cb"
+  },
+  {
+    "index": 216,
+    "mtime_ns": 1789283223160000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00217.ARW",
+    "bytes": 41037824,
+    "sha256": "3e6b563917ab23d7e9dba8849bd0eb07dfe12d44ccd68cae55bfb775c8028736"
+  },
+  {
+    "index": 217,
+    "mtime_ns": 1789283225670000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00218.ARW",
+    "bytes": 40988672,
+    "sha256": "d772c49f5b714fffec7de688bb06c516c01a9f2d24548bbc0471b16a81dcb075"
+  },
+  {
+    "index": 218,
+    "mtime_ns": 1789283228140000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00219.ARW",
+    "bytes": 40943616,
+    "sha256": "3d0bcffd74511e59bbe9ab805a70d7f33690df719b1669e64becb9314d569809"
+  },
+  {
+    "index": 219,
+    "mtime_ns": 1789283230630000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00220.ARW",
+    "bytes": 40902656,
+    "sha256": "0ac92cca912ace91000e51c2fddea5a846ae5663e2ec9d1e1a5f04a10221dc08"
+  },
+  {
+    "index": 220,
+    "mtime_ns": 1789283233100000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00221.ARW",
+    "bytes": 40865792,
+    "sha256": "e2cd3376dd0d82ce6a8dfaa84e8b9fff6527d30707577cc985d180cba326e276"
+  },
+  {
+    "index": 221,
+    "mtime_ns": 1789283235550000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00222.ARW",
+    "bytes": 40833024,
+    "sha256": "d4580518cf33d7215cdb6f426c65f4600a5614701ec48d2886b36c059517c563"
+  },
+  {
+    "index": 222,
+    "mtime_ns": 1789283238020000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00223.ARW",
+    "bytes": 40792064,
+    "sha256": "dbafa8f39fa4e6c47a0e73fa2503122ff3c60675dd24007348823e70381be66c"
+  },
+  {
+    "index": 223,
+    "mtime_ns": 1789283240490000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00224.ARW",
+    "bytes": 40747008,
+    "sha256": "60b16393ca66c353655091936f7e225de95ccfe179bcf796cdbb8bdc15631a51"
+  },
+  {
+    "index": 224,
+    "mtime_ns": 1789283242980000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00225.ARW",
+    "bytes": 40710144,
+    "sha256": "72312998dbb4ee232c83e16bb1c7b2549f2600bb9c5a9f19ccef3bae80c8495f"
+  },
+  {
+    "index": 225,
+    "mtime_ns": 1789283245470000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00226.ARW",
+    "bytes": 40669184,
+    "sha256": "ea310cfdac595f399c9aad679edba46287b533bedcf1245d718d26200bea0366"
+  },
+  {
+    "index": 226,
+    "mtime_ns": 1789283247960000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00227.ARW",
+    "bytes": 40620032,
+    "sha256": "36826af08341d950b3de4f1bfebd1ad0117436c1f0a3fd95eb7e0c9a4a06a5ac"
+  },
+  {
+    "index": 227,
+    "mtime_ns": 1789283250430000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00228.ARW",
+    "bytes": 40583168,
+    "sha256": "ac24acb96f53b1966003c3d4ca4ff79b94336eba2e879ae0542891dd1c676abd"
+  },
+  {
+    "index": 228,
+    "mtime_ns": 1789283252890000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00229.ARW",
+    "bytes": 40538112,
+    "sha256": "02f9337e3e167fbf7ad1cba21d0877333e511f6750d4580b82c472dc66c59cb4"
+  },
+  {
+    "index": 229,
+    "mtime_ns": 1789283255360000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00230.ARW",
+    "bytes": 40505344,
+    "sha256": "32068d1e35cfebf527799b77f72e161aa0874d1d140f9f98ddb1bce077c3cfa1"
+  },
+  {
+    "index": 230,
+    "mtime_ns": 1789283257810000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00231.ARW",
+    "bytes": 40468480,
+    "sha256": "37b2d18775bb0f5c2e2054431ab50fe8a2aa99c2f630669e6a94da1e4c307682"
+  },
+  {
+    "index": 231,
+    "mtime_ns": 1789283260300000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00232.ARW",
+    "bytes": 40431616,
+    "sha256": "a8130c554cda165f487bdf2cccf9e5049f2513c7154bd0df76905857d371c670"
+  },
+  {
+    "index": 232,
+    "mtime_ns": 1789283262780000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00233.ARW",
+    "bytes": 40394752,
+    "sha256": "42b702b4edb896851c46fbf00293d8fa339b0161a55801d73286bcf8e94808ae"
+  },
+  {
+    "index": 233,
+    "mtime_ns": 1789283265280000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00234.ARW",
+    "bytes": 40361984,
+    "sha256": "9e7585eff3b7257cd1a6a1f0b876f344e98d013751b5e3b3241960136a64591a"
+  },
+  {
+    "index": 234,
+    "mtime_ns": 1789283267780000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00235.ARW",
+    "bytes": 40312832,
+    "sha256": "faf4c52b80b63c99577bad318e9a8e5763d8d7e898c0cee3af84307c5ee7effa"
+  },
+  {
+    "index": 235,
+    "mtime_ns": 1789283270260000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00236.ARW",
+    "bytes": 40275968,
+    "sha256": "00a86a5a27f89e7f0bfc5a7e6e956e9923221e3cdd961356f3248fd4f595ce68"
+  },
+  {
+    "index": 236,
+    "mtime_ns": 1789283272720000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00237.ARW",
+    "bytes": 40243200,
+    "sha256": "53cec7644d166b504a5cb9588e6ef2afbe343c78eacfdcc43efa62c02c139594"
+  },
+  {
+    "index": 237,
+    "mtime_ns": 1789283275200000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00238.ARW",
+    "bytes": 40218624,
+    "sha256": "b87d81767f92e9b671457c7ffffb4aee9e206e900bd929207578cab7d4be35b5"
+  },
+  {
+    "index": 238,
+    "mtime_ns": 1789283277670000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00239.ARW",
+    "bytes": 40177664,
+    "sha256": "f2e3e7bc4cc71079cf939da39ba5d5c0402b10982700f56c31c6ce64fe6a4082"
+  },
+  {
+    "index": 239,
+    "mtime_ns": 1789283280130000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00240.ARW",
+    "bytes": 40140800,
+    "sha256": "49b7959172e4974c9e1abdf7f4b72c84f50ec76af01ca579d57d7db96921bd93"
+  },
+  {
+    "index": 240,
+    "mtime_ns": 1789283282600000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00241.ARW",
+    "bytes": 40103936,
+    "sha256": "f729c917fa016baedc4b47ce03bcdc0c72a7dacaedb144c247203ea2bca3b2bf"
+  },
+  {
+    "index": 241,
+    "mtime_ns": 1789283285080000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00242.ARW",
+    "bytes": 40054784,
+    "sha256": "93878d74576890b9f823f976c0cbc8edb94c422c8d39ad7414150ffae6d827dd"
+  },
+  {
+    "index": 242,
+    "mtime_ns": 1789283287530000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00243.ARW",
+    "bytes": 40022016,
+    "sha256": "6f5a25c6a74d5f874d83e997664b66170fbf7aae4e5f7d7d7d3a66a57d7e4237"
+  },
+  {
+    "index": 243,
+    "mtime_ns": 1789283290000000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00244.ARW",
+    "bytes": 39976960,
+    "sha256": "1099b1c676f98058445f46d8a2dbef71693fa0a5dbf116ecb9b83e1caa4af0ed"
+  },
+  {
+    "index": 244,
+    "mtime_ns": 1789283292480000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00245.ARW",
+    "bytes": 39936000,
+    "sha256": "4be22fe0181b22dc9d46dbc126f2c56e2f7c3ec3343c88e802cd9dbc7f1e22b0"
+  },
+  {
+    "index": 245,
+    "mtime_ns": 1789283294960000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00246.ARW",
+    "bytes": 39899136,
+    "sha256": "836707cb54db14a38e83014f6b2858d2f98213d91012d096358e8cb68f417b68"
+  },
+  {
+    "index": 246,
+    "mtime_ns": 1789283297440000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00247.ARW",
+    "bytes": 39862272,
+    "sha256": "a1c85180a5091ae8b214faddc0de8af00ce255a3ade27f2793d6f25468a7e7fe"
+  },
+  {
+    "index": 247,
+    "mtime_ns": 1789283299930000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00248.ARW",
+    "bytes": 39817216,
+    "sha256": "f69bf7a6225d7192ba9f84cd963cf9524d567fa243855cd8dc477395a654d2b8"
+  },
+  {
+    "index": 248,
+    "mtime_ns": 1789283302400000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00249.ARW",
+    "bytes": 39780352,
+    "sha256": "f79c27cb1c5e4cd1009cb5b17e521f6ad2182cd8b7d6c09e41c2c37a77ee6f60"
+  },
+  {
+    "index": 249,
+    "mtime_ns": 1789283304880000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00250.ARW",
+    "bytes": 39743488,
+    "sha256": "881931bed4143a808916fec40fdc283ae3d2941e4ad7faebd4d2b0364b3f2b03"
+  },
+  {
+    "index": 250,
+    "mtime_ns": 1789283307360000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00251.ARW",
+    "bytes": 39714816,
+    "sha256": "34fa892441d265ec406baa172c6b49e675f140e4302919de61193274286d3d3b"
+  },
+  {
+    "index": 251,
+    "mtime_ns": 1789283309830000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00252.ARW",
+    "bytes": 39673856,
+    "sha256": "1036cfaca50cabd37a73d5c271872143ad5850d4946f545de35374fb4b491113"
+  },
+  {
+    "index": 252,
+    "mtime_ns": 1789283312290000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00253.ARW",
+    "bytes": 39641088,
+    "sha256": "706c28432310585ce397e3944f553835736022ebd9d7e3cdc465cc90c5cca744"
+  },
+  {
+    "index": 253,
+    "mtime_ns": 1789283314750000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00254.ARW",
+    "bytes": 39604224,
+    "sha256": "d7e4f6ecc6061a5d9155f99d722aaf104f27aa5ca28b65f002afceaf6d31a729"
+  },
+  {
+    "index": 254,
+    "mtime_ns": 1789283317240000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00255.ARW",
+    "bytes": 39567360,
+    "sha256": "60b58a9b09a078c5c051fdd10d12fae34b87d47d7c75d2b97a69cf2f8d2b652f"
+  },
+  {
+    "index": 255,
+    "mtime_ns": 1789283319720000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00256.ARW",
+    "bytes": 39530496,
+    "sha256": "b99299ca538612b888bc144a47d4e1ae8b3d4c5eee8764fb0eba5ad00f8f71cb"
+  },
+  {
+    "index": 256,
+    "mtime_ns": 1789283322210000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00257.ARW",
+    "bytes": 39497728,
+    "sha256": "ac4bb83ee6e4daa0ab06bc16cc8ad4333d344df3ae05b952429104c97c023cd8"
+  },
+  {
+    "index": 257,
+    "mtime_ns": 1789283324670000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00258.ARW",
+    "bytes": 39460864,
+    "sha256": "e205c7065d2621c3dc226d03ee086affb676a829314ebafb51be4fe8bbc5ab27"
+  },
+  {
+    "index": 258,
+    "mtime_ns": 1789283327130000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00259.ARW",
+    "bytes": 39432192,
+    "sha256": "b6b42bd100b7f19ca29f1916422b63034c654f69e360992c3f59d664763ebdda"
+  },
+  {
+    "index": 259,
+    "mtime_ns": 1789283329590000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00260.ARW",
+    "bytes": 39395328,
+    "sha256": "219cb985b2ade3f8e45a2c7b55e8ceefd10b57d86e12a70e22050a3fd709eb1f"
+  },
+  {
+    "index": 260,
+    "mtime_ns": 1789283332070000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00261.ARW",
+    "bytes": 39362560,
+    "sha256": "f980c8ee48728896c15d4908bd5db98435c6c7ecb260f9b2e8f759e33b09c47d"
+  },
+  {
+    "index": 261,
+    "mtime_ns": 1789283334550000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00262.ARW",
+    "bytes": 39325696,
+    "sha256": "91c4a33b2df8205de1fe69692e5c5ed28008c35abc7ea2c65566162885b9857c"
+  },
+  {
+    "index": 262,
+    "mtime_ns": 1789283337020000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00263.ARW",
+    "bytes": 39297024,
+    "sha256": "bb08e4821797b21958c43390f0e8a989ab36584153494144e597ef2df4acd419"
+  },
+  {
+    "index": 263,
+    "mtime_ns": 1789283339520000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00264.ARW",
+    "bytes": 39260160,
+    "sha256": "4ccc3c8e66ec8f6f425b73eb1e5b3e68942f6d26a53964980fde0036490648f8"
+  },
+  {
+    "index": 264,
+    "mtime_ns": 1789283341970000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00265.ARW",
+    "bytes": 39231488,
+    "sha256": "4fd067f7ba548a4cc395d948212846db0379970cdaa552c2f65517c096d1df83"
+  },
+  {
+    "index": 265,
+    "mtime_ns": 1789283344430000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00266.ARW",
+    "bytes": 39198720,
+    "sha256": "c2ac3805e3f6882ad975136abfa57e3ea8c9029bf3d1bcea7626b67244c58609"
+  },
+  {
+    "index": 266,
+    "mtime_ns": 1789283346910000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00267.ARW",
+    "bytes": 39170048,
+    "sha256": "ffbc817886314047657a48ba8108361c943f907a9361326e7e9b2b11f1a70c33"
+  },
+  {
+    "index": 267,
+    "mtime_ns": 1789283349400000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00268.ARW",
+    "bytes": 39141376,
+    "sha256": "811769aa7ede9e0b7407ea1f9e1ea9ba4af64c3f9d43e3f7fb10c2c549870896"
+  },
+  {
+    "index": 268,
+    "mtime_ns": 1789283351880000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00269.ARW",
+    "bytes": 39108608,
+    "sha256": "68e4c931d460cb40ce04ead9b707d08fbf4ae9be510e4bd826d932bff7fc6d0d"
+  },
+  {
+    "index": 269,
+    "mtime_ns": 1789283354360000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00270.ARW",
+    "bytes": 39084032,
+    "sha256": "5d9710f862cbde178e678ea8fa1185942b419a803e53dfc069b51617619a5061"
+  },
+  {
+    "index": 270,
+    "mtime_ns": 1789283356850000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00271.ARW",
+    "bytes": 39055360,
+    "sha256": "d83424842e4c18d11cbcd6cd98bf12baedc0abfa3662e17d97adef7c792f24d6"
+  },
+  {
+    "index": 271,
+    "mtime_ns": 1789283359330000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00272.ARW",
+    "bytes": 39026688,
+    "sha256": "7667bb5bf859d9390e3df36ad6f4f0d8ffb71c15f6358d5567d398732380a77a"
+  },
+  {
+    "index": 272,
+    "mtime_ns": 1789283361790000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00273.ARW",
+    "bytes": 39006208,
+    "sha256": "1246d08d04c912f32febe7a2fe20cde96fb94a18da380d03683dddc5f954e59c"
+  },
+  {
+    "index": 273,
+    "mtime_ns": 1789283364280000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00274.ARW",
+    "bytes": 38977536,
+    "sha256": "04f5df93a92451257d24708736f6b4db841bad714b539117de820310c7fd961c"
+  },
+  {
+    "index": 274,
+    "mtime_ns": 1789283366760000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00275.ARW",
+    "bytes": 38957056,
+    "sha256": "0e8f3905ae3fd1545a5496e3b8dae5c22f9de0e0e32ec9066980e4708c81f866"
+  },
+  {
+    "index": 275,
+    "mtime_ns": 1789283369230000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00276.ARW",
+    "bytes": 38936576,
+    "sha256": "1898c996ad695e9c22e3fc6ac654bd351e0175133b1fc775129f3f6d87ef33c6"
+  },
+  {
+    "index": 276,
+    "mtime_ns": 1789283371690000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00277.ARW",
+    "bytes": 38916096,
+    "sha256": "0db232becd000f4da2fd6ea16f2e4c271563ed1aa9964302ec52ef0be449f4b4"
+  },
+  {
+    "index": 277,
+    "mtime_ns": 1789283374170000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00278.ARW",
+    "bytes": 38895616,
+    "sha256": "62fcb342b883ee83d35d5e79a0146a02b850652ec2e72fc8983691fe04b8dbe1"
+  },
+  {
+    "index": 278,
+    "mtime_ns": 1789283376640000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00279.ARW",
+    "bytes": 38871040,
+    "sha256": "7666d34f0f6be3444f194d7245e8843e9f304ead4d0156b0759fcfbe96032f12"
+  },
+  {
+    "index": 279,
+    "mtime_ns": 1789283379090000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00280.ARW",
+    "bytes": 38854656,
+    "sha256": "e3ea4c3c8fe9562c409d2127c4ebb46b2c4fd7c0bffcc14f95d7b708f4e911d8"
+  },
+  {
+    "index": 280,
+    "mtime_ns": 1789283381550000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00281.ARW",
+    "bytes": 38838272,
+    "sha256": "d8c6d715662fae8d922246131fba9498e3aa2f78256231b61d15201537d1ec85"
+  },
+  {
+    "index": 281,
+    "mtime_ns": 1789283384010000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00282.ARW",
+    "bytes": 38809600,
+    "sha256": "76aab9e0731dae3ab31c91427523276f54ae6c7bca06076d48c7e1a9a27702a5"
+  },
+  {
+    "index": 282,
+    "mtime_ns": 1789283386490000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00283.ARW",
+    "bytes": 38793216,
+    "sha256": "cd1d0c423ba4e56d8deab4f9462355bbdac3e08b3af839b62362e60844c44cd5"
+  },
+  {
+    "index": 283,
+    "mtime_ns": 1789283388980000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00284.ARW",
+    "bytes": 38785024,
+    "sha256": "c23bd73e79134ddde7a37c334ef35ab13496c5420dafa9dd45fead5687c8b3d4"
+  },
+  {
+    "index": 284,
+    "mtime_ns": 1789283391440000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00285.ARW",
+    "bytes": 38768640,
+    "sha256": "72e674cd97f1a7940722882992617c96080215d69c2ea7dc5e22f7b5b914fa9f"
+  },
+  {
+    "index": 285,
+    "mtime_ns": 1789283393890000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00286.ARW",
+    "bytes": 38752256,
+    "sha256": "a11ed93251c087b27736cf412ee018687725d513d48a0f701dc9c2e3d10f14ad"
+  },
+  {
+    "index": 286,
+    "mtime_ns": 1789283396350000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00287.ARW",
+    "bytes": 38731776,
+    "sha256": "41a5814be1c03b0ea4b801f80d3ed1f69277f49e2c2b2a1cdc55655c233cc468"
+  },
+  {
+    "index": 287,
+    "mtime_ns": 1789283398840000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00288.ARW",
+    "bytes": 38715392,
+    "sha256": "52ac9fa3c67e6b75416937c8af99a25611a7afc20c3a590f18c51c707b051e53"
+  },
+  {
+    "index": 288,
+    "mtime_ns": 1789283401320000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00289.ARW",
+    "bytes": 38699008,
+    "sha256": "1e0efba9218f76f8c87942f7d9d87732b1d825a08cba2cedd6a404c8c0d05311"
+  },
+  {
+    "index": 289,
+    "mtime_ns": 1789283403790000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00290.ARW",
+    "bytes": 38682624,
+    "sha256": "feaa05da6cea2db26011c5dc22277c4f7f35658d901b71eb0e7354ebbe1fbf51"
+  },
+  {
+    "index": 290,
+    "mtime_ns": 1789283406290000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00291.ARW",
+    "bytes": 38662144,
+    "sha256": "3a1430919fd3320bbada1a607bc76f11fd5301955e34d7928b7c081c2997bb72"
+  },
+  {
+    "index": 291,
+    "mtime_ns": 1789283408760000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00292.ARW",
+    "bytes": 38645760,
+    "sha256": "47d729ef3de317c9a726c01ed910b4cc533447afd55b8f3986400244509bcfa7"
+  },
+  {
+    "index": 292,
+    "mtime_ns": 1789283411210000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00293.ARW",
+    "bytes": 38637568,
+    "sha256": "2913090f8d41096375cd1baa39e5a4cb9a0a63f3c8368cb274397e9ba5fc9b5c"
+  },
+  {
+    "index": 293,
+    "mtime_ns": 1789283413710000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00294.ARW",
+    "bytes": 38625280,
+    "sha256": "77bb070bbac0be0727ec01a5ab61ce145731e36bd16a4996dfe7fb59eabe84c2"
+  },
+  {
+    "index": 294,
+    "mtime_ns": 1789283416170000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00295.ARW",
+    "bytes": 38608896,
+    "sha256": "770572a2df3d53eeb9b05cc67df6945495da1e528fcf00e82af5dc19edde7dda"
+  },
+  {
+    "index": 295,
+    "mtime_ns": 1789283418660000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00296.ARW",
+    "bytes": 38608896,
+    "sha256": "db99ab6d889feb5bb5bc2b1f831bfa6794e8b0bb78d74f9b99a9ccf4f2e6077b"
+  },
+  {
+    "index": 296,
+    "mtime_ns": 1789283421130000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00297.ARW",
+    "bytes": 38592512,
+    "sha256": "53e967c55dfe2ab1b75694f25624314ca7b8080e275dba075a60fb64069e5682"
+  },
+  {
+    "index": 297,
+    "mtime_ns": 1789283423610000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00298.ARW",
+    "bytes": 38580224,
+    "sha256": "23b6c65cd84d3eb5dfa490c14a68af2e1799ea1baeccbed0620dfa1daa33de90"
+  },
+  {
+    "index": 298,
+    "mtime_ns": 1789283426070000000,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00299.ARW",
+    "bytes": 38563840,
+    "sha256": "48b8f6b363f37ef931b1c878fdb9f6baadf3896c87d3720e377bc11564f0503d"
+  }
+]

@@ -1,0 +1,57 @@
+{
+  "code": "105",
+  "inputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\inventory.json",
+      "bytes": 4758,
+      "sha256": "a926adb0a1c3b24fc48ae0ad1c1f9559df54e479ef4863b327cd24e9546218c7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\minerals-september24\\final\\rutile-star-on-hematite-105msdcf-master.tiff",
+      "bytes": 182849555,
+      "sha256": "173417ec71c6bf78bc2d73d2b4bf7cfe1fc7b53ff3fd1c797c769e7dadd922b4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\rutile-105\\stack-master.tiff",
+      "bytes": 182849561,
+      "sha256": "1b42365ae7adbbc43de792121ad197235c9f554017b773d396a5e37ea9b50d94"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\rutile-105\\completion.json",
+      "bytes": 1661,
+      "sha256": "33afa873cb192bdb9a5ea4c1363a1ab7d71db8275a0c8d64fd27db83e661daed"
+    }
+  ],
+  "full_shape": [
+    4508,
+    6760,
+    3
+  ],
+  "pixels_changed": 214195,
+  "pixels_max_channel_change_gt_32": 28624,
+  "max_channel_change": 65535,
+  "selected_peak_native_xy": [
+    1205,
+    884
+  ],
+  "diagnostic_crop_native_xywh": [
+    1013,
+    692,
+    384,
+    384
+  ],
+  "views": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\rutile105-delivery-1\\before-largest-change-native.png",
+      "bytes": 183631,
+      "sha256": "839fe4ee04a3f9567e5abf8e3e1cfd7972208a81d1831772f92955514ff2cdbc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\rutile105-delivery-1\\corrected-largest-change-native.png",
+      "bytes": 183618,
+      "sha256": "90f3247bcf014a233b3f5e465f0348cf16f87837b9581fe7fb8d50da2d3a03db"
+    }
+  ],
+  "scope": "Whole delivered RGB comparison. Differences include automatic-tone changes. Change counts are not quality metrics; view location is deliberately selected by change.",
+  "photographic_verdict": null
+}

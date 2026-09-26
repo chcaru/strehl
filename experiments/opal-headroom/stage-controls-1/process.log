@@ -1,0 +1,9 @@
+
+running 4 tests
+test image_out::opal_stage_observer::controls::actual_stage_controls_exercise_pin_rolloff_and_display_loss ... ok
+test image_out::opal_stage_observer::controls::mhc_can_create_a_pin_from_entirely_below_ceiling_merged_support ... ok
+test image_out::opal_stage_observer::independent_controls::independent_pin_predicate_differs_from_changed_count_and_support_obeys_phase ... ok
+test image_out::opal_stage_observer::opal_cached_stage_trace ... ignored, root-owned current opal stage observer; exact complete cache/factorial required
+
+test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 258 filtered out; finished in 0.00s
+

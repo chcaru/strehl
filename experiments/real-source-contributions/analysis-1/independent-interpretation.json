@@ -1,0 +1,5136 @@
+{
+  "inputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\analysis-1\\attribution.json",
+      "bytes": 523137,
+      "sha256": "d6c312ef2c048567920532c7f874de6687cc7a57fd740ee6e64f8ff5cad414f2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\analysis-1\\source-contributions.npz",
+      "bytes": 5000576,
+      "sha256": "e26a426f2156463e952cc3f9be0219641fa31fa0ce46c6e16766a06fca30e1f1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\on-1\\output\\source-trace\\receipt.json",
+      "bytes": 20491,
+      "sha256": "33111f484f260def66061e14c1d7f8e65625e58784f101e2fac859dee9e051c1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\independent-plan.json",
+      "bytes": 1353,
+      "sha256": "726141ed126a67ebb80e4948b5c688426ba5d4f4cceebbb36f2265fad0324c92"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\independent-interpret.py",
+      "bytes": 5675,
+      "sha256": "86f5fecefa88fb9050eb171350cf91bb79a007ca2e933d34f92b80f97b8eb2bb"
+    }
+  ],
+  "frozen_neighbourhoods": {
+    "near-hair": [
+      108,
+      112,
+      116
+    ],
+    "far-hair": [
+      148,
+      152,
+      156
+    ]
+  },
+  "frozen_defocused_control": [
+    316,
+    320,
+    324
+  ],
+  "profiles": [
+    {
+      "name": "near-hair",
+      "native_centre": [
+        3510,
+        3262
+      ],
+      "axis": "y",
+      "offsets": [
+        -8,
+        -4,
+        0,
+        4,
+        8
+      ],
+      "post_hull_five_points_dn": [
+        [
+          2481.2255859375,
+          1858.869873046875,
+          1878.415771484375,
+          114.39398956298828
+        ],
+        [
+          2316.417236328125,
+          1665.11328125,
+          1730.96435546875,
+          95.46406555175781
+        ],
+        [
+          2487.535888671875,
+          1910.41845703125,
+          1988.6829833984375,
+          124.00605773925781
+        ],
+        [
+          2643.999755859375,
+          1986.2900390625,
+          2009.6986083984375,
+          112.8371353149414
+        ],
+        [
+          2611.524169921875,
+          2024.807373046875,
+          2065.474365234375,
+          143.8343048095703
+        ]
+      ],
+      "post_hull_shape": {
+        "centre_above_both_outer_flanks": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "ordered_rise_then_fall": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "signed_contrast_dn": [
+          -58.8389892578125,
+          -31.420166015625,
+          16.7379150390625,
+          -5.108089447021484
+        ],
+        "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+      },
+      "arithmetic_residual_contrast_dn": [
+        -0.0001606911180260795,
+        -9.536470361126703e-05,
+        3.018859956682718e-05,
+        -3.2365129811751103e-06
+      ],
+      "clamp_residual_contrast_dn": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fixed_sources": [
+        {
+          "source_index": 108,
+          "gathered_five_points_dn": [
+            [
+              2269.0,
+              1642.0,
+              1657.0,
+              89.0
+            ],
+            [
+              2273.0,
+              1731.0,
+              1706.0,
+              103.0
+            ],
+            [
+              2290.0,
+              1721.0,
+              1697.0,
+              106.0
+            ],
+            [
+              2344.0,
+              1775.0,
+              1739.0,
+              117.0
+            ],
+            [
+              2287.0,
+              1670.0,
+              1662.0,
+              90.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              12.0,
+              65.0,
+              37.5,
+              16.5
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -70.8389892578125,
+            -96.420166015625,
+            -20.7620849609375,
+            -21.608089447021484
+          ]
+        },
+        {
+          "source_index": 112,
+          "gathered_five_points_dn": [
+            [
+              2225.0,
+              1630.0,
+              1633.0,
+              95.0
+            ],
+            [
+              2230.0,
+              1665.0,
+              1679.0,
+              98.0
+            ],
+            [
+              2297.0,
+              1704.0,
+              1723.0,
+              95.0
+            ],
+            [
+              2279.0,
+              1792.0,
+              1823.0,
+              107.0
+            ],
+            [
+              2369.0,
+              1800.0,
+              1772.0,
+              99.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              -11.0,
+              20.5,
+              -2.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -58.8389892578125,
+            -20.420166015625,
+            -3.7620849609375,
+            -3.1080894470214844
+          ]
+        },
+        {
+          "source_index": 116,
+          "gathered_five_points_dn": [
+            [
+              2241.0,
+              1619.0,
+              1659.0,
+              93.0
+            ],
+            [
+              2219.0,
+              1641.0,
+              1638.0,
+              86.0
+            ],
+            [
+              2267.0,
+              1660.0,
+              1715.0,
+              126.0
+            ],
+            [
+              2313.0,
+              1686.0,
+              1701.0,
+              85.0
+            ],
+            [
+              2350.0,
+              1836.0,
+              1883.0,
+              124.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              true
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              -28.5,
+              -67.5,
+              -56.0,
+              17.5
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -30.3389892578125,
+            36.079833984375,
+            72.7379150390625,
+            -22.608089447021484
+          ]
+        },
+        {
+          "source_index": 316,
+          "gathered_five_points_dn": [
+            [
+              2352.0,
+              1771.0,
+              1783.0,
+              117.0
+            ],
+            [
+              2314.0,
+              1733.0,
+              1750.0,
+              100.0
+            ],
+            [
+              2309.0,
+              1748.0,
+              1735.0,
+              99.0
+            ],
+            [
+              2299.0,
+              1711.0,
+              1704.0,
+              95.0
+            ],
+            [
+              2231.0,
+              1712.0,
+              1726.0,
+              105.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              17.5,
+              6.5,
+              -19.5,
+              -12.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -76.3389892578125,
+            -37.920166015625,
+            36.2379150390625,
+            6.891910552978516
+          ]
+        },
+        {
+          "source_index": 320,
+          "gathered_five_points_dn": [
+            [
+              2357.0,
+              1789.0,
+              1796.0,
+              107.0
+            ],
+            [
+              2343.0,
+              1781.0,
+              1790.0,
+              115.0
+            ],
+            [
+              2328.0,
+              1765.0,
+              1761.0,
+              111.0
+            ],
+            [
+              2319.0,
+              1740.0,
+              1735.0,
+              103.0
+            ],
+            [
+              2263.0,
+              1734.0,
+              1704.0,
+              108.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              true
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              18.0,
+              3.5,
+              11.0,
+              3.5
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -76.8389892578125,
+            -34.920166015625,
+            5.7379150390625,
+            -8.608089447021484
+          ]
+        },
+        {
+          "source_index": 324,
+          "gathered_five_points_dn": [
+            [
+              2359.0,
+              1835.0,
+              1801.0,
+              116.0
+            ],
+            [
+              2352.0,
+              1796.0,
+              1769.0,
+              99.0
+            ],
+            [
+              2343.0,
+              1792.0,
+              1783.0,
+              106.0
+            ],
+            [
+              2300.0,
+              1774.0,
+              1767.0,
+              107.0
+            ],
+            [
+              2321.0,
+              1776.0,
+              1703.0,
+              112.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              3.0,
+              -13.5,
+              31.0,
+              -8.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -61.8389892578125,
+            -17.920166015625,
+            -14.2620849609375,
+            2.8919105529785156
+          ]
+        }
+      ],
+      "signed_contrast_by_band_and_bin": [
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            6.913563247457132e-15,
+            -9.575444285853053e-15,
+            -6.294339724459206e-16,
+            2.918939911800189e-15
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -10.634791924072225,
+            -11.862515026933952,
+            5.69228048453193,
+            -5.540123398951953
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            7.825840161153207e-11,
+            1.5158251532012003e-10,
+            1.0279721353039727e-10,
+            4.051908387661727e-12
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -4.297714896796974e-11,
+            9.317399808160432e-11,
+            1.0136154823083738e-10,
+            -2.0094409597892557e-12
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            -2.39859212164248e-15,
+            -9.727468432128481e-16,
+            -1.4900864217536078e-15,
+            -3.489087217309028e-16
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -53.22644098093887,
+            -29.800756195896582,
+            -7.431224918290876,
+            -0.7892867485155448
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -1.9909924641440547e-11,
+            -2.029313768753761e-11,
+            -2.3447538852416356e-11,
+            -3.0123616685209643e-13
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            1.544020906127352e-17,
+            8.844081018225385e-18,
+            1.629769579677542e-17,
+            1.468780911082275e-18
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            6.208928866326268e-21,
+            1.3126666081138706e-20,
+            9.484161197214354e-21,
+            2.001906327666485e-21
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            4.323878669214993e-13,
+            2.5261040040193425e-13,
+            8.227441104572837e-13,
+            5.89543509701993e-14
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -1.1545868272022923,
+            3.9320516476765244,
+            10.792510674452593,
+            0.7329388193576328
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -2.338548605215073e-07,
+            -1.5807318965464597e-07,
+            -1.6926295133029457e-07,
+            -9.524357899571884e-09
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -6.690652590272037e-18,
+            -4.594049168001663e-18,
+            -6.341043219636432e-18,
+            -5.378554429573902e-19
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -1.8527369863727892e-25,
+            6.204952059872248e-25,
+            2.134160775991156e-24,
+            -1.6911160687305564e-25
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            -0.019638509992057667,
+            -0.016221075166482163,
+            -0.016191563314518896,
+            -0.0007518653199333935
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            4.279978748525849,
+            4.904508505919858,
+            6.239500801024904,
+            0.4070231378515303
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.16182546841444687,
+            0.11327487963311557,
+            0.11802733145779264,
+            0.00735208134189249
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            3.696651099888257e-05,
+            3.829759044447542e-05,
+            3.7723685090913556e-05,
+            2.7179463123516836e-06
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            1.8029424621591008e-09,
+            1.6461977826491e-09,
+            1.5641193669056717e-09,
+            8.916224247105579e-11
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.020698758912092798,
+            0.015035125862266793,
+            0.015374811046269619,
+            0.00019668710667126288
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -1.2907453907514956,
+            -0.8549026349223128,
+            -0.8599555603404211,
+            -0.042346856446933666
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            1.1510738001085143,
+            0.8347806519652179,
+            0.8756151163449496,
+            0.05015796776583794
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -0.053196602506408966,
+            -0.05137081230596628,
+            -0.05207521545355789,
+            -0.0038213642944415495
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            1.1341791974003765e-05,
+            9.953173295321665e-06,
+            1.000418606949918e-05,
+            6.959646568713864e-07
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.07813209084915833,
+            0.13825684461584337,
+            0.13433329924966853,
+            0.012287501469172884
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.47414428453152857,
+            0.4107048095547006,
+            0.40628713267180266,
+            0.024418552241480304
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            1.0387580854057559,
+            0.6492568029089334,
+            0.6501657085622832,
+            0.029288567655509072
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -0.03785762538103559,
+            -0.0400712512140501,
+            -0.04030730046700699,
+            -0.00299226437643593
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -1.8618810451903176e-05,
+            -2.3313786993795377e-05,
+            -2.3069518252494202e-05,
+            -1.6193336826399576e-06
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.054284375858250855,
+            0.02950259736153793,
+            0.031489341845851615,
+            0.0012412046743152036
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.22723284849833192,
+            0.1642284831745715,
+            0.16699267076332913,
+            0.008863393902866931
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.12925179054499616,
+            0.07295826098754343,
+            0.07337255567520207,
+            0.0024170716951862955
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -0.003914169479368301,
+            -0.004897934092807759,
+            -0.004927765099333809,
+            -0.0004065842460935081
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -0.001088808606662953,
+            -0.0011034337712367782,
+            -0.0011049552437370205,
+            -7.127504891653525e-05
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            -0.011158539522055477,
+            -0.01571966495033772,
+            -0.015536759002537703,
+            -0.0012593658517711381
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -0.011180647773712415,
+            -0.017445744525958595,
+            -0.017257108781497887,
+            -0.001446813709957917
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -0.012796576753263622,
+            -0.021414816714970364,
+            -0.021236806515712026,
+            -0.0018152670278613614
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -0.0014372121516288416,
+            -0.003116951580090621,
+            -0.003114813933994931,
+            -0.0002863830501732556
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.00459553932842649,
+            0.004881500719646326,
+            0.004843198446545571,
+            0.00033520612566556585
+          ]
+        }
+      ]
+    },
+    {
+      "name": "far-hair",
+      "native_centre": [
+        3508,
+        3170
+      ],
+      "axis": "x",
+      "offsets": [
+        -8,
+        -4,
+        0,
+        4,
+        8
+      ],
+      "post_hull_five_points_dn": [
+        [
+          2742.66796875,
+          2096.5703125,
+          2113.21728515625,
+          177.0115966796875
+        ],
+        [
+          2926.96875,
+          2280.85888671875,
+          2274.53271484375,
+          112.40835571289062
+        ],
+        [
+          2653.9169921875,
+          2031.4002685546875,
+          2025.5968017578125,
+          130.49293518066406
+        ],
+        [
+          2601.985595703125,
+          1951.046142578125,
+          1954.256591796875,
+          117.76859283447266
+        ],
+        [
+          2589.251220703125,
+          1902.1868896484375,
+          1923.0841064453125,
+          116.57765197753906
+        ]
+      ],
+      "post_hull_shape": {
+        "centre_above_both_outer_flanks": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "ordered_rise_then_fall": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "signed_contrast_dn": [
+          -12.0426025390625,
+          32.02166748046875,
+          7.44610595703125,
+          -16.30168914794922
+        ],
+        "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+      },
+      "arithmetic_residual_contrast_dn": [
+        0.00015044618407955568,
+        -1.0242077678412898e-05,
+        -1.7380416920786956e-05,
+        9.394794204808932e-06
+      ],
+      "clamp_residual_contrast_dn": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fixed_sources": [
+        {
+          "source_index": 148,
+          "gathered_five_points_dn": [
+            [
+              2569.0,
+              2104.0,
+              2089.0,
+              161.0
+            ],
+            [
+              2758.0,
+              1965.0,
+              1987.0,
+              101.0
+            ],
+            [
+              2563.0,
+              1902.0,
+              1929.0,
+              116.0
+            ],
+            [
+              2477.0,
+              1871.0,
+              1882.0,
+              104.0
+            ],
+            [
+              2444.0,
+              1811.0,
+              1847.0,
+              116.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              56.5,
+              -55.5,
+              -39.0,
+              -22.5
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -68.5426025390625,
+            87.52166748046875,
+            46.44610595703125,
+            6.198310852050781
+          ]
+        },
+        {
+          "source_index": 152,
+          "gathered_five_points_dn": [
+            [
+              2580.0,
+              1966.0,
+              1999.0,
+              159.0
+            ],
+            [
+              2766.0,
+              2152.0,
+              2124.0,
+              107.0
+            ],
+            [
+              2523.0,
+              1887.0,
+              1888.0,
+              116.0
+            ],
+            [
+              2459.0,
+              1845.0,
+              1832.0,
+              96.0
+            ],
+            [
+              2453.0,
+              1793.0,
+              1797.0,
+              95.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              6.5,
+              7.5,
+              -10.0,
+              -11.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -18.5426025390625,
+            24.52166748046875,
+            17.44610595703125,
+            -5.301689147949219
+          ]
+        },
+        {
+          "source_index": 156,
+          "gathered_five_points_dn": [
+            [
+              2635.0,
+              1996.0,
+              2022.0,
+              123.0
+            ],
+            [
+              2655.0,
+              2051.0,
+              2039.0,
+              127.0
+            ],
+            [
+              2535.0,
+              1928.0,
+              1899.0,
+              113.0
+            ],
+            [
+              2489.0,
+              1823.0,
+              1827.0,
+              103.0
+            ],
+            [
+              2455.0,
+              1807.0,
+              1807.0,
+              103.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              -10.0,
+              26.5,
+              -15.5,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -2.0426025390625,
+            5.52166748046875,
+            22.94610595703125,
+            -16.30168914794922
+          ]
+        },
+        {
+          "source_index": 316,
+          "gathered_five_points_dn": [
+            [
+              2817.0,
+              2231.0,
+              2248.0,
+              149.0
+            ],
+            [
+              2814.0,
+              2210.0,
+              2217.0,
+              135.0
+            ],
+            [
+              2825.0,
+              2262.0,
+              2202.0,
+              136.0
+            ],
+            [
+              2800.0,
+              2193.0,
+              2205.0,
+              136.0
+            ],
+            [
+              2813.0,
+              2173.0,
+              2215.0,
+              137.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              true,
+              true,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              10.0,
+              60.0,
+              -29.5,
+              -7.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -22.0426025390625,
+            -27.97833251953125,
+            36.94610595703125,
+            -9.301689147949219
+          ]
+        },
+        {
+          "source_index": 320,
+          "gathered_five_points_dn": [
+            [
+              2830.0,
+              2207.0,
+              2241.0,
+              148.0
+            ],
+            [
+              2845.0,
+              2155.0,
+              2197.0,
+              146.0
+            ],
+            [
+              2828.0,
+              2229.0,
+              2204.0,
+              139.0
+            ],
+            [
+              2823.0,
+              2201.0,
+              2241.0,
+              144.0
+            ],
+            [
+              2782.0,
+              2158.0,
+              2192.0,
+              132.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              true,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              22.0,
+              46.5,
+              -12.5,
+              -1.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -34.0426025390625,
+            -14.47833251953125,
+            19.94610595703125,
+            -15.301689147949219
+          ]
+        },
+        {
+          "source_index": 324,
+          "gathered_five_points_dn": [
+            [
+              2811.0,
+              2220.0,
+              2217.0,
+              138.0
+            ],
+            [
+              2816.0,
+              2208.0,
+              2208.0,
+              135.0
+            ],
+            [
+              2821.0,
+              2224.0,
+              2215.0,
+              147.0
+            ],
+            [
+              2828.0,
+              2244.0,
+              2208.0,
+              152.0
+            ],
+            [
+              2806.0,
+              2246.0,
+              2207.0,
+              144.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              true,
+              false,
+              false,
+              true
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              12.5,
+              -9.0,
+              3.0,
+              6.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -24.5426025390625,
+            41.02166748046875,
+            4.44610595703125,
+            -22.30168914794922
+          ]
+        }
+      ],
+      "signed_contrast_by_band_and_bin": [
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -29.86534930587227,
+            34.69229012564902,
+            8.322064574507417,
+            -13.277737270149903
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -3.87008629051313e-07,
+            -4.674553629053979e-06,
+            -1.1965015951851215e-05,
+            2.129583451176639e-06
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            4.3028178881865443e-19,
+            -8.257271606376038e-19,
+            1.1476770508057853e-18,
+            6.990943206527619e-21
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            1.0130559447928683e-07,
+            -2.472464726986135e-07,
+            -9.610837581384747e-08,
+            1.4054610130676318e-08
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            1.970100508026428e-18,
+            -3.685219544251575e-18,
+            -2.9028479136402437e-18,
+            9.932675939156008e-19
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -5.927670893764246,
+            -24.4718927877746,
+            -22.74556880791911,
+            -4.104173069531866
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            1.6080521091014812e-06,
+            1.941694995197128e-06,
+            1.8344099915829515e-06,
+            8.930367491407645e-08
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -5.536407113266827e-17,
+            2.2246279326621065e-16,
+            3.6528051413321753e-16,
+            9.012621067936584e-18
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -4.3683664921272114e-17,
+            -9.282509601116148e-18,
+            1.0602564083021356e-18,
+            1.6411910033563643e-17
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            -1.1847067497008258e-12,
+            -5.063321479537606e-13,
+            -1.178713387824913e-12,
+            -1.5817277935361066e-14
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            18.909827865695824,
+            16.147478141592106,
+            16.64519122425197,
+            0.6861794259891274
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -0.0007137390258387563,
+            -0.0006104522652561078,
+            -0.0005976691858181112,
+            -2.736045455049987e-05
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            2.0549917013678357e-12,
+            2.8008161129527723e-12,
+            2.240378063311144e-12,
+            -2.71381735123656e-14
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -2.770673260025985e-18,
+            -2.4148217478929358e-18,
+            -1.3680024758336576e-18,
+            2.3023769631465046e-19
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            5.000519998660841e-08,
+            6.942894878129122e-08,
+            6.778540568482118e-08,
+            4.3669205122214924e-09
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            4.074794338604321,
+            5.045410898273872,
+            4.609047163044589,
+            0.3580804300031144
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -0.27295393112314315,
+            -0.18338432410530842,
+            -0.1792270509996451,
+            -0.006686668289102009
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            2.442316712845832e-07,
+            2.3450856379389892e-07,
+            2.5675341532316585e-07,
+            1.3673066015810233e-08
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            4.110304064954134e-11,
+            3.664379083573192e-11,
+            3.6991139574487835e-11,
+            4.472743197840401e-12
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0758497332239615,
+            0.09545915612647282,
+            0.09379415147949569,
+            0.007279971090523389
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.7054442412656573,
+            0.5163439176747788,
+            0.5141195900124427,
+            0.027307483691564598
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0385700067431617,
+            0.039688079894859715,
+            0.03867566612489649,
+            0.0024251135137209495
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.000844582485791368,
+            0.0008841034644268347,
+            0.000904789278886318,
+            6.654173279418509e-05
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            4.57981778377329e-06,
+            4.16979855729438e-06,
+            4.286834039513779e-06,
+            3.599995917917764e-07
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.028965251929171848,
+            0.02277605876320063,
+            0.026272485946814444,
+            0.0014500845415857215
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.23130470601160918,
+            0.1706017579433726,
+            0.1783421597685449,
+            0.009266091387111455
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.022767475155495747,
+            0.0414527387249722,
+            0.04116322425901087,
+            0.0037560990297502853
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -0.005356395306387712,
+            -0.006585118837671113,
+            -0.006663002929510599,
+            -0.0005344759536391775
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -6.498246316885544e-05,
+            -6.652068664926229e-05,
+            -6.662029915806758e-05,
+            -4.883468034794499e-06
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.003399934680638428,
+            0.0046833213354815495,
+            0.004197345930731511,
+            0.0002729124415170661
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.020840097441603866,
+            0.021594908817650138,
+            0.020800526130813513,
+            0.0015291409944786089
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0032453299073174208,
+            -0.00759868430330829,
+            -0.008403889950181695,
+            -0.0009178626123242592
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -0.007400955808768235,
+            -0.008513425487375196,
+            -0.008579787831862955,
+            -0.0006108333110266199
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -0.0034960518078635226,
+            -0.003522487213732061,
+            -0.0035197427136179284,
+            -0.00023426200008976376
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            -0.014319332338762258,
+            -0.02050802849217881,
+            -0.020691428811717927,
+            -0.0018790869799534815
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -0.016691520198767407,
+            -0.023548722728689686,
+            -0.023810832855868824,
+            -0.0021396895227878965
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -0.030414649593786258,
+            -0.038416529470144845,
+            -0.038827306014824536,
+            -0.003338951338247853
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -0.011445780371127867,
+            -0.012018502047881796,
+            -0.012128184641198025,
+            -0.001000807914080526
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -0.002735207165734721,
+            -0.00032139597356373173,
+            -0.00035962383108412155,
+            -2.9226618381839042e-05
+          ]
+        }
+      ]
+    },
+    {
+      "name": "fan-haze-context",
+      "native_centre": [
+        3310,
+        3120
+      ],
+      "axis": "x",
+      "offsets": [
+        -8,
+        -4,
+        0,
+        4,
+        8
+      ],
+      "post_hull_five_points_dn": [
+        [
+          2331.135986328125,
+          1639.607666015625,
+          1685.50390625,
+          97.12320709228516
+        ],
+        [
+          2355.3583984375,
+          1698.629638671875,
+          1707.9058837890625,
+          101.78195190429688
+        ],
+        [
+          2418.30810546875,
+          1750.986328125,
+          1696.271728515625,
+          103.4518814086914
+        ],
+        [
+          2405.482421875,
+          1770.51904296875,
+          1736.48046875,
+          110.8397216796875
+        ],
+        [
+          2418.252197265625,
+          1796.1864013671875,
+          1858.2117919921875,
+          128.7566680908203
+        ]
+      ],
+      "post_hull_shape": {
+        "centre_above_both_outer_flanks": [
+          true,
+          false,
+          false,
+          false
+        ],
+        "ordered_rise_then_fall": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "signed_contrast_dn": [
+          43.614013671875,
+          33.08929443359375,
+          -75.58612060546875,
+          -9.488056182861328
+        ],
+        "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+      },
+      "arithmetic_residual_contrast_dn": [
+        5.795276570097485e-05,
+        -0.0001226050077320906,
+        9.77235292793921e-05,
+        -3.8775492541276435e-06
+      ],
+      "clamp_residual_contrast_dn": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fixed_sources": [
+        {
+          "source_index": 112,
+          "gathered_five_points_dn": [
+            [
+              2210.0,
+              1641.0,
+              1668.0,
+              107.0
+            ],
+            [
+              2215.0,
+              1641.0,
+              1651.0,
+              101.0
+            ],
+            [
+              2212.0,
+              1603.0,
+              1618.0,
+              102.0
+            ],
+            [
+              2203.0,
+              1628.0,
+              1626.0,
+              104.0
+            ],
+            [
+              2194.0,
+              1636.0,
+              1622.0,
+              102.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              true,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              10.0,
+              -35.5,
+              -27.0,
+              -2.5
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            33.614013671875,
+            68.58929443359375,
+            -48.58612060546875,
+            -6.988056182861328
+          ]
+        },
+        {
+          "source_index": 152,
+          "gathered_five_points_dn": [
+            [
+              2146.0,
+              1549.0,
+              1557.0,
+              89.0
+            ],
+            [
+              2154.0,
+              1560.0,
+              1568.0,
+              88.0
+            ],
+            [
+              2135.0,
+              1557.0,
+              1555.0,
+              95.0
+            ],
+            [
+              2163.0,
+              1569.0,
+              1573.0,
+              86.0
+            ],
+            [
+              2139.0,
+              1542.0,
+              1516.0,
+              72.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              true,
+              false,
+              true
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              -7.5,
+              11.5,
+              18.5,
+              14.5
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            51.114013671875,
+            21.58929443359375,
+            -94.08612060546875,
+            -23.988056182861328
+          ]
+        },
+        {
+          "source_index": 320,
+          "gathered_five_points_dn": [
+            [
+              3239.0,
+              2675.0,
+              2693.0,
+              167.0
+            ],
+            [
+              3177.0,
+              2647.0,
+              2619.0,
+              177.0
+            ],
+            [
+              3232.0,
+              2645.0,
+              2655.0,
+              178.0
+            ],
+            [
+              3187.0,
+              2652.0,
+              2677.0,
+              173.0
+            ],
+            [
+              3185.0,
+              2633.0,
+              2650.0,
+              162.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              true
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              true
+            ],
+            "signed_contrast_dn": [
+              20.0,
+              -9.0,
+              -16.5,
+              13.5
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            23.614013671875,
+            42.08929443359375,
+            -59.08612060546875,
+            -22.988056182861328
+          ]
+        },
+        {
+          "source_index": 316,
+          "gathered_five_points_dn": [
+            [
+              3212.0,
+              2640.0,
+              2623.0,
+              157.0
+            ],
+            [
+              3164.0,
+              2635.0,
+              2657.0,
+              173.0
+            ],
+            [
+              3151.0,
+              2627.0,
+              2593.0,
+              173.0
+            ],
+            [
+              3168.0,
+              2656.0,
+              2619.0,
+              185.0
+            ],
+            [
+              3163.0,
+              2656.0,
+              2630.0,
+              179.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              -36.5,
+              -21.0,
+              -33.5,
+              5.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            80.114013671875,
+            54.08929443359375,
+            -42.08612060546875,
+            -14.488056182861328
+          ]
+        },
+        {
+          "source_index": 320,
+          "gathered_five_points_dn": [
+            [
+              3239.0,
+              2675.0,
+              2693.0,
+              167.0
+            ],
+            [
+              3177.0,
+              2647.0,
+              2619.0,
+              177.0
+            ],
+            [
+              3232.0,
+              2645.0,
+              2655.0,
+              178.0
+            ],
+            [
+              3187.0,
+              2652.0,
+              2677.0,
+              173.0
+            ],
+            [
+              3185.0,
+              2633.0,
+              2650.0,
+              162.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              true
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              true
+            ],
+            "signed_contrast_dn": [
+              20.0,
+              -9.0,
+              -16.5,
+              13.5
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            23.614013671875,
+            42.08929443359375,
+            -59.08612060546875,
+            -22.988056182861328
+          ]
+        },
+        {
+          "source_index": 324,
+          "gathered_five_points_dn": [
+            [
+              3195.0,
+              2681.0,
+              2701.0,
+              184.0
+            ],
+            [
+              3245.0,
+              2680.0,
+              2712.0,
+              170.0
+            ],
+            [
+              3176.0,
+              2691.0,
+              2664.0,
+              176.0
+            ],
+            [
+              3224.0,
+              2668.0,
+              2681.0,
+              173.0
+            ],
+            [
+              3170.0,
+              2652.0,
+              2692.0,
+              182.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              true,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              -6.5,
+              24.5,
+              -32.5,
+              -7.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            50.114013671875,
+            8.58929443359375,
+            -43.08612060546875,
+            -2.488056182861328
+          ]
+        }
+      ],
+      "signed_contrast_by_band_and_bin": [
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            -7.661910710415148e-06,
+            0.0013577129484277845,
+            0.001625801526394544,
+            1.997689420262986e-05
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            29.736572265625,
+            -7.272705078125,
+            -66.3876953125,
+            -4.41162109375
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            19.081266406159177,
+            50.633016825534476,
+            29.427678416307373,
+            4.391928466424152
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -6.558885216033243e-10,
+            1.199726041012383e-09,
+            -1.9195649101833624e-10,
+            2.0419660701016676e-10
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -5.801495631930871,
+            -7.110893757935195,
+            -36.079877788449025,
+            -10.464545326328844
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            -5.654814529658457e-08,
+            -3.023223402845196e-08,
+            -1.5608204990740577e-09,
+            -1.8727447031870703e-08
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -1.570585374317723e-06,
+            1.6923536641697235e-06,
+            3.7916518681072983e-06,
+            -2.1423587564269388e-07
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            1.0269754906910071,
+            -2.114064948424121,
+            -0.7694603403439161,
+            1.1812977120020953
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -5.935761755617607e-08,
+            -1.8449460108038964e-07,
+            -1.1108571754092849e-07,
+            -1.4775484990055592e-08
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -9.691988507054312e-08,
+            -1.4858882763192982e-07,
+            -2.40353665855822e-07,
+            -4.996993096293889e-10
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            2.788699619390068e-10,
+            1.1551919920325517e-09,
+            8.783490308805042e-10,
+            1.875233003967579e-10
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.01013612119111745,
+            0.012749013911826508,
+            0.012960333205280783,
+            0.001966078150346993
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.5807288548486812,
+            0.3800404388470753,
+            -0.050622146210093893,
+            -0.06398608579153596
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -4.7180487995980447e-07,
+            -6.275126852967985e-07,
+            -6.954161266025238e-07,
+            -1.23253681622681e-08
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            7.694763820678424e-10,
+            1.1857863834674025e-09,
+            2.61155639522516e-09,
+            1.5598899230369764e-10
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            1.870274427936573e-07,
+            2.990953157927585e-07,
+            2.8498779865347805e-07,
+            2.428087248165263e-08
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.17128164648700062,
+            0.18359410501696788,
+            0.2024115206880553,
+            0.013530372706445285
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -0.06471272315870905,
+            -0.008996071690638222,
+            -0.30264906613425474,
+            0.0022194460261645865
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -6.393448148437616e-06,
+            -6.235036814261275e-06,
+            -5.938446347628907e-06,
+            -3.655924296499464e-07
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -3.256185885912098e-08,
+            -2.8825932442940264e-08,
+            -3.239000218831256e-08,
+            -2.1934487972230738e-09
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0035565524186800777,
+            0.0043874685479868515,
+            0.004291209121261673,
+            0.00035526827173582904
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.18731826333959153,
+            0.233625502530922,
+            0.22830220902081214,
+            0.016654938138670163
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -0.2911393859187498,
+            -0.503101473407511,
+            -0.5145248574099585,
+            -0.03988159785551329
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -4.3774316859365905e-05,
+            -3.991173209156345e-05,
+            -3.96519228746474e-05,
+            -2.7028401016200517e-06
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -1.4016219210247722e-06,
+            -1.2892085053566923e-06,
+            -1.275731976412955e-06,
+            -8.668943630510476e-08
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.04669275586092847,
+            0.05783950737566311,
+            0.05620120700429454,
+            0.003688511782198243
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -0.21358669852074558,
+            -0.2561485611241864,
+            -0.2627959224640094,
+            -0.023173446757618447
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -0.46177988101956413,
+            -0.5925521491594694,
+            -0.5923802055386576,
+            -0.04730483156782911
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -0.0005984700423377117,
+            -0.0005585126386288446,
+            -0.0005619227288921919,
+            -3.506842321729884e-05
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -0.0006052596202472248,
+            -0.0005415709753059439,
+            -0.0005413541641948012,
+            -3.4729058118851134e-05
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            -0.03586875837924608,
+            -0.06508490510780499,
+            -0.06537710305937888,
+            -0.006132686541260708
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -0.21895894381115544,
+            -0.29843756971795066,
+            -0.2992715859840497,
+            -0.024989507614607595
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -0.20350144377167134,
+            -0.25085232987793915,
+            -0.2511069941696267,
+            -0.020135666369136867
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -0.001750654883572414,
+            -0.0008909240605883897,
+            -0.0008520985025014596,
+            -0.00011272084220694456
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.010623038730522366,
+            0.010926073595492039,
+            0.010923397217938287,
+            0.0007249141956924424
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.005557654189159322,
+            0.002305212239494203,
+            0.0024064847430409486,
+            -0.00030189150823528577
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0018725601374454115,
+            -0.002075938163454971,
+            -0.001939723576842134,
+            -0.0006924983486391034
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.009747919218725087,
+            0.008023471159589235,
+            0.008214584139896175,
+            -3.001066235808203e-05
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.01579837575396592,
+            0.017212139664694703,
+            0.01724097164303906,
+            0.0010936746715164425
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.019886997174509702,
+            0.02128981827725518,
+            0.021225824588900544,
+            0.001448889894615557
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rim-hair-control",
+      "native_centre": [
+        1596,
+        1796
+      ],
+      "axis": "x",
+      "offsets": [
+        -8,
+        -4,
+        0,
+        4,
+        8
+      ],
+      "post_hull_five_points_dn": [
+        [
+          3845.89208984375,
+          3305.491943359375,
+          3364.53515625,
+          254.0
+        ],
+        [
+          3824.64111328125,
+          3309.695556640625,
+          3310.97998046875,
+          248.45816040039062
+        ],
+        [
+          3775.29638671875,
+          3243.233154296875,
+          3279.466552734375,
+          240.65884399414062
+        ],
+        [
+          3820.37646484375,
+          3240.02685546875,
+          3233.192138671875,
+          233.7311553955078
+        ],
+        [
+          3786.38623046875,
+          3239.620361328125,
+          3243.271728515625,
+          214.4453125
+        ]
+      ],
+      "post_hull_shape": {
+        "centre_above_both_outer_flanks": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "ordered_rise_then_fall": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "signed_contrast_dn": [
+          -40.8427734375,
+          -29.322998046875,
+          -24.4368896484375,
+          6.436187744140625
+        ],
+        "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+      },
+      "arithmetic_residual_contrast_dn": [
+        4.7147259010671405e-05,
+        -0.0002556024626301223,
+        -0.00011495987905618676,
+        9.725523213433007e-06
+      ],
+      "clamp_residual_contrast_dn": [
+        0.0,
+        0.0,
+        0.0,
+        10.824295043945312
+      ],
+      "fixed_sources": [
+        {
+          "source_index": 112,
+          "gathered_five_points_dn": [
+            [
+              3439.0,
+              3011.0,
+              2999.0,
+              195.0
+            ],
+            [
+              3442.0,
+              2963.0,
+              3016.0,
+              201.0
+            ],
+            [
+              3478.0,
+              2976.0,
+              2993.0,
+              212.0
+            ],
+            [
+              3511.0,
+              3008.0,
+              2972.0,
+              209.0
+            ],
+            [
+              3498.0,
+              2977.0,
+              2952.0,
+              199.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              true
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              true
+            ],
+            "signed_contrast_dn": [
+              9.5,
+              -18.0,
+              17.5,
+              15.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -50.3427734375,
+            -11.322998046875,
+            -41.9368896484375,
+            -8.563812255859375
+          ]
+        },
+        {
+          "source_index": 152,
+          "gathered_five_points_dn": [
+            [
+              3530.0,
+              3023.0,
+              3033.0,
+              229.0
+            ],
+            [
+              3538.0,
+              3059.0,
+              3001.0,
+              200.0
+            ],
+            [
+              3528.0,
+              3010.0,
+              2995.0,
+              207.0
+            ],
+            [
+              3511.0,
+              2990.0,
+              3009.0,
+              201.0
+            ],
+            [
+              3504.0,
+              3013.0,
+              2998.0,
+              208.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              11.0,
+              -8.0,
+              -20.5,
+              -11.5
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -51.8427734375,
+            -21.322998046875,
+            -3.9368896484375,
+            17.936187744140625
+          ]
+        },
+        {
+          "source_index": 320,
+          "gathered_five_points_dn": [
+            [
+              3962.0,
+              3356.0,
+              3291.0,
+              221.0
+            ],
+            [
+              3934.0,
+              3333.0,
+              3290.0,
+              221.0
+            ],
+            [
+              3938.0,
+              3292.0,
+              3349.0,
+              219.0
+            ],
+            [
+              3937.0,
+              3337.0,
+              3315.0,
+              223.0
+            ],
+            [
+              3944.0,
+              3297.0,
+              3317.0,
+              210.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              true,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              -15.0,
+              -34.5,
+              45.0,
+              3.5
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -25.8427734375,
+            5.177001953125,
+            -69.4368896484375,
+            2.936187744140625
+          ]
+        },
+        {
+          "source_index": 316,
+          "gathered_five_points_dn": [
+            [
+              3933.0,
+              3338.0,
+              3324.0,
+              225.0
+            ],
+            [
+              3906.0,
+              3320.0,
+              3322.0,
+              221.0
+            ],
+            [
+              3945.0,
+              3302.0,
+              3334.0,
+              206.0
+            ],
+            [
+              3962.0,
+              3319.0,
+              3352.0,
+              222.0
+            ],
+            [
+              3899.0,
+              3254.0,
+              3280.0,
+              217.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              true,
+              false,
+              true,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              29.0,
+              6.0,
+              32.0,
+              -15.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -69.8427734375,
+            -35.322998046875,
+            -56.4368896484375,
+            21.436187744140625
+          ]
+        },
+        {
+          "source_index": 320,
+          "gathered_five_points_dn": [
+            [
+              3962.0,
+              3356.0,
+              3291.0,
+              221.0
+            ],
+            [
+              3934.0,
+              3333.0,
+              3290.0,
+              221.0
+            ],
+            [
+              3938.0,
+              3292.0,
+              3349.0,
+              219.0
+            ],
+            [
+              3937.0,
+              3337.0,
+              3315.0,
+              223.0
+            ],
+            [
+              3944.0,
+              3297.0,
+              3317.0,
+              210.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              true,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              -15.0,
+              -34.5,
+              45.0,
+              3.5
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -25.8427734375,
+            5.177001953125,
+            -69.4368896484375,
+            2.936187744140625
+          ]
+        },
+        {
+          "source_index": 324,
+          "gathered_five_points_dn": [
+            [
+              3966.0,
+              3333.0,
+              3336.0,
+              216.0
+            ],
+            [
+              3944.0,
+              3321.0,
+              3353.0,
+              209.0
+            ],
+            [
+              3926.0,
+              3275.0,
+              3348.0,
+              204.0
+            ],
+            [
+              3995.0,
+              3366.0,
+              3314.0,
+              217.0
+            ],
+            [
+              3978.0,
+              3346.0,
+              3271.0,
+              210.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              true,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              -46.0,
+              -64.5,
+              44.5,
+              -9.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            5.1572265625,
+            35.177001953125,
+            -68.9368896484375,
+            15.436187744140625
+          ]
+        }
+      ],
+      "signed_contrast_by_band_and_bin": [
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            25.896998205462687,
+            14.458192375319221,
+            12.38349004794557,
+            9.687920311647936
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -61.075764339094796,
+            -55.9987042188069,
+            -22.689741236805546,
+            -2.696022472694244
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            8.439920029811042e-05,
+            0.00011901673055019014,
+            4.103141117943474e-05,
+            9.124953475993781e-06
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -16.64081883927554,
+            1.787173603170585,
+            -27.047464448503394,
+            -11.947001028831
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            1.539016531441869,
+            4.0150665992802725,
+            5.3130491782155,
+            2.516044965471833
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -2.035628689545127,
+            2.5753812502025992,
+            1.7669513337034446,
+            -1.0906996036411631
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            1.3513635737825754e-07,
+            1.4530881735696041e-06,
+            1.096493577817698e-06,
+            2.7304200727981097e-07
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            1.050868043714981e-09,
+            -1.4845379284705479e-08,
+            -1.2484828866745052e-08,
+            -1.212840492213189e-09
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            1.301052759829803e-08,
+            -1.1937954164266313e-08,
+            -1.693368608939593e-08,
+            5.029057929156336e-09
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            1.1898875854386826,
+            1.8646727606973776,
+            1.5147986447824886,
+            0.42470381075462027
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            2.190087462291267,
+            -3.5533755362299106,
+            -1.4660262327414018,
+            -1.731657656325686
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            7.689818918737724e-12,
+            1.2500290784637951e-11,
+            1.3392143208812095e-11,
+            -7.534512805833589e-13
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -5.80946660251023e-14,
+            -1.5347474693855803e-12,
+            -1.7793685925305741e-12,
+            7.021681755564839e-15
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -7.981396349862752e-14,
+            -1.639097301592444e-13,
+            -3.093296822700069e-13,
+            -1.9384664044723672e-14
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            1.4858204068306544,
+            1.296513176300526,
+            1.293547943328219,
+            0.1977325331765059
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            5.921863586961787,
+            3.889288033648041,
+            4.17648320756922,
+            0.2140053569074746
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -3.582421706901712e-07,
+            -7.606445924729499e-07,
+            -7.068131313303303e-07,
+            -4.134011421931361e-08
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -9.64255654247307e-09,
+            -9.29437540312269e-09,
+            -1.1010132093709834e-08,
+            -1.05314133275728e-09
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            1.0304808890774607e-13,
+            3.621641862708602e-14,
+            2.99259056191705e-14,
+            4.006659074497288e-15
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.6434413250158011,
+            0.5273678326478515,
+            0.5188999087009106,
+            0.04749602695246774
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.3889593534874284,
+            0.11260006787612649,
+            0.10048911360688512,
+            -0.0015890327235342158
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -0.009536469788655787,
+            -0.015157064319436827,
+            -0.015044886870536655,
+            -0.0008776518722652797
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.009912563028830841,
+            0.009701083670506535,
+            0.009766984120618136,
+            0.0005183388427092783
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -1.6327453689735275e-06,
+            -1.5045823354548664e-06,
+            -1.5126410324337176e-06,
+            -9.056627928877171e-08
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0053447263628884495,
+            -0.005820999654167269,
+            -0.0071021463363002,
+            0.0010680485839513684
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -0.42345895760043717,
+            -0.3865825175887492,
+            -0.3905950998836891,
+            -0.01974902368200537
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -0.05315585416614092,
+            -0.052870535005967056,
+            -0.05301059175515897,
+            -0.0032835063490305356
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.014864692578743972,
+            0.015453142719061442,
+            0.0154997208061319,
+            0.0009913238513051012
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -0.00027485582534384227,
+            -0.00023418533200254713,
+            -0.00023995342749371913,
+            -1.625397806501713e-05
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            -0.0015514346191869421,
+            -0.009185859748004455,
+            -0.008951180565266226,
+            -0.00025854433655905437
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -0.0305866259706844,
+            -0.042826999797109466,
+            -0.04263788672648117,
+            -0.0026563843834049652
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.015814719586374357,
+            0.018140349205672243,
+            0.018489836469658683,
+            0.0018390223591680018
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0020365929609497853,
+            0.003530373475006232,
+            0.0035430947227637483,
+            0.0002951429473598986
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -0.0014328205807400737,
+            -0.0006768181545500863,
+            -0.0006918607602765412,
+            -2.4339214100407174e-05
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.025571436706570694,
+            0.03344000610866438,
+            0.03350985248559013,
+            0.0026733778596590985
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.03000930498477583,
+            0.03917089723129408,
+            0.03926407393195053,
+            0.0031055931178916585
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.043909617358487196,
+            0.058693172631239854,
+            0.058781834702340774,
+            0.004515198448671542
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.015452485825710127,
+            0.022150569744404436,
+            0.02213665635265727,
+            0.001638961460398991
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.010315157611407777,
+            0.01603882777496235,
+            0.015989536345307975,
+            0.0011611914711031068
+          ]
+        }
+      ]
+    },
+    {
+      "name": "inner-bud-control",
+      "native_centre": [
+        4512,
+        1732
+      ],
+      "axis": "x",
+      "offsets": [
+        -8,
+        -4,
+        0,
+        4,
+        8
+      ],
+      "post_hull_five_points_dn": [
+        [
+          1983.798095703125,
+          1677.9549560546875,
+          1661.70166015625,
+          107.37966918945312
+        ],
+        [
+          2048.49169921875,
+          1719.7537841796875,
+          1757.8533935546875,
+          126.60916900634766
+        ],
+        [
+          2025.4072265625,
+          1681.230712890625,
+          1681.829833984375,
+          111.88204956054688
+        ],
+        [
+          2062.336669921875,
+          1811.2618408203125,
+          1826.8702392578125,
+          127.41545867919922
+        ],
+        [
+          2071.210693359375,
+          1765.2657470703125,
+          1754.93310546875,
+          118.58585357666016
+        ]
+      ],
+      "post_hull_shape": {
+        "centre_above_both_outer_flanks": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "ordered_rise_then_fall": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "signed_contrast_dn": [
+          -2.09716796875,
+          -40.379638671875,
+          -26.487548828125,
+          -1.1007118225097656
+        ],
+        "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+      },
+      "arithmetic_residual_contrast_dn": [
+        0.00024041558162934962,
+        -0.00016378018028717634,
+        -8.791991069756477e-05,
+        -2.385035358543064e-06
+      ],
+      "clamp_residual_contrast_dn": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fixed_sources": [
+        {
+          "source_index": 112,
+          "gathered_five_points_dn": [
+            [
+              1374.0,
+              1144.0,
+              1159.0,
+              77.0
+            ],
+            [
+              1377.0,
+              1139.0,
+              1159.0,
+              81.0
+            ],
+            [
+              1377.0,
+              1143.0,
+              1141.0,
+              79.0
+            ],
+            [
+              1362.0,
+              1137.0,
+              1137.0,
+              71.0
+            ],
+            [
+              1380.0,
+              1158.0,
+              1158.0,
+              74.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              true
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              -8.0,
+              -17.5,
+              3.5
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -2.09716796875,
+            -32.379638671875,
+            -8.987548828125,
+            -4.600711822509766
+          ]
+        },
+        {
+          "source_index": 152,
+          "gathered_five_points_dn": [
+            [
+              1402.0,
+              1189.0,
+              1192.0,
+              76.0
+            ],
+            [
+              1435.0,
+              1167.0,
+              1192.0,
+              80.0
+            ],
+            [
+              1428.0,
+              1151.0,
+              1178.0,
+              79.0
+            ],
+            [
+              1430.0,
+              1169.0,
+              1196.0,
+              86.0
+            ],
+            [
+              1432.0,
+              1188.0,
+              1199.0,
+              78.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              true
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              11.0,
+              -37.5,
+              -17.5,
+              2.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -13.09716796875,
+            -2.879638671875,
+            -8.987548828125,
+            -3.1007118225097656
+          ]
+        },
+        {
+          "source_index": 320,
+          "gathered_five_points_dn": [
+            [
+              2063.0,
+              1721.0,
+              1743.0,
+              112.0
+            ],
+            [
+              2093.0,
+              1717.0,
+              1733.0,
+              102.0
+            ],
+            [
+              2113.0,
+              1785.0,
+              1722.0,
+              106.0
+            ],
+            [
+              2092.0,
+              1776.0,
+              1735.0,
+              104.0
+            ],
+            [
+              2140.0,
+              1822.0,
+              1803.0,
+              145.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              11.5,
+              13.5,
+              -51.0,
+              -22.5
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -13.59716796875,
+            -53.879638671875,
+            24.512451171875,
+            21.399288177490234
+          ]
+        },
+        {
+          "source_index": 316,
+          "gathered_five_points_dn": [
+            [
+              2067.0,
+              1727.0,
+              1703.0,
+              107.0
+            ],
+            [
+              2098.0,
+              1712.0,
+              1756.0,
+              110.0
+            ],
+            [
+              2121.0,
+              1754.0,
+              1791.0,
+              113.0
+            ],
+            [
+              2106.0,
+              1790.0,
+              1774.0,
+              115.0
+            ],
+            [
+              2147.0,
+              1765.0,
+              1795.0,
+              104.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              true
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              14.0,
+              8.0,
+              42.0,
+              7.5
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -16.09716796875,
+            -48.379638671875,
+            -68.487548828125,
+            -8.600711822509766
+          ]
+        },
+        {
+          "source_index": 320,
+          "gathered_five_points_dn": [
+            [
+              2063.0,
+              1721.0,
+              1743.0,
+              112.0
+            ],
+            [
+              2093.0,
+              1717.0,
+              1733.0,
+              102.0
+            ],
+            [
+              2113.0,
+              1785.0,
+              1722.0,
+              106.0
+            ],
+            [
+              2092.0,
+              1776.0,
+              1735.0,
+              104.0
+            ],
+            [
+              2140.0,
+              1822.0,
+              1803.0,
+              145.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "signed_contrast_dn": [
+              11.5,
+              13.5,
+              -51.0,
+              -22.5
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -13.59716796875,
+            -53.879638671875,
+            24.512451171875,
+            21.399288177490234
+          ]
+        },
+        {
+          "source_index": 324,
+          "gathered_five_points_dn": [
+            [
+              2044.0,
+              1678.0,
+              1689.0,
+              104.0
+            ],
+            [
+              2106.0,
+              1706.0,
+              1728.0,
+              110.0
+            ],
+            [
+              2090.0,
+              1759.0,
+              1721.0,
+              126.0
+            ],
+            [
+              2116.0,
+              1758.0,
+              1774.0,
+              119.0
+            ],
+            [
+              2109.0,
+              1773.0,
+              1770.0,
+              114.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              true
+            ],
+            "ordered_rise_then_fall": [
+              false,
+              false,
+              false,
+              true
+            ],
+            "signed_contrast_dn": [
+              13.5,
+              33.5,
+              -8.5,
+              17.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            -15.59716796875,
+            -73.879638671875,
+            -17.987548828125,
+            -18.100711822509766
+          ]
+        }
+      ],
+      "signed_contrast_by_band_and_bin": [
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            -0.002606008492943958,
+            -0.0017026066722890276,
+            -0.0002356277865035033,
+            -0.0002491728992682425
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            1.574941377427171,
+            -7.956699151452496,
+            -12.35843661372772,
+            0.5756440718722419
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -10.343157713826216,
+            -33.825145008561044,
+            -12.819992924545254,
+            -0.6370261708683365
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            2.4121281391655166e-11,
+            -4.2934824196738705e-11,
+            -3.283295823780663e-11,
+            8.135267068871718e-13
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -4.0715930450640197e-11,
+            1.8360704489153502e-11,
+            2.3678701020416035e-11,
+            1.5101883984253832e-13
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            5.234906246547917,
+            0.642236278920441,
+            -1.4274076580401822,
+            -0.7493560808344739
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -0.5865760193813021,
+            -0.7357647222882315,
+            -0.7279017741729115,
+            0.02680715806879947
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -7.698581369653182e-10,
+            1.6797858746181158e-08,
+            2.633045786203054e-09,
+            2.6683363334134893e-09
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            -6.343270867745852e-19,
+            3.4009551690855306e-18,
+            6.0570008887526316e-18,
+            2.505953668548155e-18
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -7.960072864598586e-16,
+            -1.0217868980452825e-15,
+            -4.952344458186536e-16,
+            -2.699512265782549e-17
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -0.34488147547556935,
+            -0.2860686869455816,
+            -0.2628574782099564,
+            0.03415496492272836
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            1.0804170591484736,
+            1.08830077246281,
+            0.4061516404827974,
+            -0.2612461214458775
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -0.004537715118721819,
+            -0.004455344487799942,
+            -0.004363534686631858,
+            -0.00023045931303275615
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            -5.174159799697264e-23,
+            -4.115342788833076e-23,
+            -5.211986095218735e-23,
+            1.2333173814118244e-24
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            2.6734195815016947e-14,
+            3.397187194239106e-14,
+            3.03538844255603e-14,
+            -6.7057342195877e-17
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -2.147091973429871,
+            -2.1149927427536377,
+            -2.0611400579842822,
+            -0.24925185480020368
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            2.4876598862885193,
+            2.2326237169146834,
+            2.222676593322114,
+            0.14461719427078648
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -0.028706358534555863,
+            -0.02673340791614459,
+            -0.027076952768000043,
+            -0.0018918014953590713
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            3.043393324485819e-16,
+            2.8109740245070556e-16,
+            2.8934191052708805e-16,
+            2.2791123767580182e-17
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            8.485397085920505e-09,
+            8.79016982315205e-09,
+            9.005376479340356e-09,
+            6.430113346384421e-10
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -1.0303348465189204,
+            -1.163819043517441,
+            -1.1631594510284713,
+            -0.10078953024706055
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.5090007396329365,
+            0.42764416778144304,
+            0.40822746230046775,
+            0.03130083503736057
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.007977175619366951,
+            0.008501276708451149,
+            0.008369254250420975,
+            0.0006153828254715588
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            1.7393420945416602e-08,
+            1.7417636621843806e-08,
+            1.75530475556187e-08,
+            1.9449840400270416e-09
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            2.2308388071455786e-05,
+            2.4951596192160347e-05,
+            2.527390755828714e-05,
+            2.493012136226922e-06
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.3315536700319608,
+            0.26329146653808744,
+            0.25532883662296096,
+            0.013446074336540605
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.5769519127364464,
+            0.5085584629941936,
+            0.502313800666694,
+            0.03163142841810439
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.005021496956155726,
+            0.005681191770021288,
+            0.005638286941298527,
+            0.0004572173642597137
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0006234474688126644,
+            0.000647094135934573,
+            0.0006493374842524005,
+            5.644606404716271e-05
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.007225237755111148,
+            0.00726583929427012,
+            0.007288462778225487,
+            0.0006032966958714239
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.2595092883947184,
+            0.24602021664560408,
+            0.24468189251414726,
+            0.017283604697803472
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.20308430977603745,
+            0.19475891472138018,
+            0.19341469471935796,
+            0.013758402714320942
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.04185600063687113,
+            0.041329503181852176,
+            0.041235670184651005,
+            0.0031291346920682105
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0017103394910313874,
+            0.0019395301825877453,
+            0.0019233269959566535,
+            0.00023076553259682164
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.00918060975426993,
+            0.009025294996532374,
+            0.009024155253945398,
+            0.0007733999585922691
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.032024226271520906,
+            0.03108137885767137,
+            0.031133542791078384,
+            0.0025102823333095214
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.017581428210363015,
+            0.017239650355020508,
+            0.017267960689567374,
+            0.0014090152543174417
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.009236940817503925,
+            0.009736071865854345,
+            0.00976094364891722,
+            0.000900581100701292
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation_limits": [
+    "The near/far fixed neighbourhoods were prescribed before reading actual trace values; no recentering or source maximization.",
+    "Full five-point profiles expose displaced peaks, monotone backgrounds and unequal flanks that scalar contrast hides.",
+    "The two middle-offset samples are not independent replications of the central contrast.",
+    "An ordered ridge shape can still be noise or another structure; this aid cannot establish sensor-noise significance.",
+    "No interval counterfactual or image-quality pass is calculated. A negative group contribution may be necessary to cancel captured blur.",
+    "If fixed witnesses do not demonstrate coherent captured structure lost by the consumer, move to the actual complete-chip versus HeliconB gap; do not expand this source search."
+  ]
+}

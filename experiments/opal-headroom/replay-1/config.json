@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "cache": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\cache-1\\output\\baseline-cache.json",
+  "expected_current_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\opal-103\\stack-master.tiff",
+  "expected_current_file_sha256": "91398502a5ed369a91f25a0a3818d060e4e49e97449b661938e22acb608e7c74",
+  "out_dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\replay-1\\output"
+}

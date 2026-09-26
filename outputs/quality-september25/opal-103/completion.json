@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "status": "RENDERED_AWAITING_INDEPENDENT_VISUAL_REVIEW",
+  "frames": 155,
+  "native_dimensions": [
+    6792,
+    4528
+  ],
+  "crop_quad_xywh": [
+    60,
+    40,
+    3396,
+    2264
+  ],
+  "master": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\opal-103\\stack-master.tiff",
+    "sha256": "91398502a5ed369a91f25a0a3818d060e4e49e97449b661938e22acb608e7c74",
+    "bytes": 184530145
+  },
+  "full_jpeg": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\opal-103\\stack-full.jpg",
+    "sha256": "676c82a852d34e651eb69959ba6b4c73007d3245d2fbc390cb0571649a345dbb",
+    "bytes": 9001237
+  },
+  "overview": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\opal-103\\overview.jpg",
+    "sha256": "72605cd80de197d60e760bd47c6edf6304aa2ef85abe234bf0ca1c794b03f7f0",
+    "bytes": 387917
+  },
+  "warp_map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\minerals-september24\\103msdcf\\alignment.txt",
+    "sha256": "e9fdd5cc287d625d9f7c5ca06ecc7a44451b281787ef6b910eac6d613206b035",
+    "bytes": 21315
+  },
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\build-fixed-2\\strehl.exe",
+    "sha256": "bec4c357836ad1383800a6c933460ee7ef072c525b5957a6f5deb5194b203314",
+    "bytes": 17950720
+  },
+  "original_bytes_and_metadata_unchanged": true,
+  "viewing_note": "Full JPEG and RGB16 master contain the entire stack output. Overview is resampled for orientation."
+}

@@ -1,0 +1,57 @@
+{
+  "code": "103",
+  "inputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\inventory.json",
+      "bytes": 4758,
+      "sha256": "a926adb0a1c3b24fc48ae0ad1c1f9559df54e479ef4863b327cd24e9546218c7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\minerals-september24\\final\\rainbow-opal-cabochon-103msdcf-master.tiff",
+      "bytes": 184530139,
+      "sha256": "f80aa668366038aafc113c8adbfac31ed62a729a0b246fb8b0ddc6585e09aff3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\opal-103\\stack-master.tiff",
+      "bytes": 184530145,
+      "sha256": "91398502a5ed369a91f25a0a3818d060e4e49e97449b661938e22acb608e7c74"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\opal-103\\completion.json",
+      "bytes": 1654,
+      "sha256": "06c6b1a9aa6e4d84c8d00de77f119c40123a45665b4533560c945b390c5b033a"
+    }
+  ],
+  "full_shape": [
+    4528,
+    6792,
+    3
+  ],
+  "pixels_changed": 12,
+  "pixels_max_channel_change_gt_32": 0,
+  "max_channel_change": 1,
+  "selected_peak_native_xy": [
+    3284,
+    1039
+  ],
+  "diagnostic_crop_native_xywh": [
+    3092,
+    847,
+    384,
+    384
+  ],
+  "views": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\opal103-delivery-1\\before-largest-change-native.png",
+      "bytes": 172496,
+      "sha256": "9230ea5de6b8ada943bbc5a4c0af2dfcf5f6a258261c0647f6ffe1e195417436"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\opal103-delivery-1\\corrected-largest-change-native.png",
+      "bytes": 172496,
+      "sha256": "9230ea5de6b8ada943bbc5a4c0af2dfcf5f6a258261c0647f6ffe1e195417436"
+    }
+  ],
+  "scope": "Whole delivered RGB comparison. Differences include automatic-tone changes. Change counts are not quality metrics; view location is deliberately selected by change.",
+  "photographic_verdict": null
+}

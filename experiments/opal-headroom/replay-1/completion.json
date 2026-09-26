@@ -1,0 +1,16 @@
+{
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\replay-1\\output\\receipt.json",
+    "sha256": "108a1214aeaeec9f84f450480ddf6667754f5634ed5c29553b800c36f2fb4c78",
+    "bytes": 4874
+  },
+  "sources_unchanged": true,
+  "inputs_unchanged": true,
+  "whole_output_arms": [
+    "current",
+    "sensor-rolloff-off",
+    "shoulder",
+    "both"
+  ],
+  "visual_verdict": null
+}

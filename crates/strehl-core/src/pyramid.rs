@@ -121,6 +121,11 @@ pub mod rb_own_guide_diagnostic {
 }
 
 #[cfg(feature = "native-correction-variance")]
+pub mod real_source_contributions {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/real-source-contributions/core-bridge.rs"));
+}
+
+#[cfg(feature = "native-correction-variance")]
 pub mod rb_residual_guard_diagnostic {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/rb-residual-guard/core-bridge.rs"));
 }

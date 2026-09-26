@@ -1,0 +1,90 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\build-1\\cli-tests.exe",
+    "merge_cmd::full_stack_source_prior::complete_pair",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 89.9849999999999,
+  "log_bytes": 94702,
+  "job_accounting": {
+    "total_user_100ns": 2186250000,
+    "total_kernel_100ns": 150625000,
+    "total_cpu_100ns": 2336875000,
+    "total_page_fault_count": 31388579,
+    "total_processes": 2,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 3516633088,
+    "peak_job_memory_used_bytes": 3517853696
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 12884901888
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 2186250000,
+      "total_kernel_100ns": 150625000,
+      "total_cpu_100ns": 2336875000,
+      "total_page_fault_count": 31388579,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 2186250000,
+      "total_kernel_100ns": 150625000,
+      "total_cpu_100ns": 2336875000,
+      "total_page_fault_count": 31388579,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 89.96899999999994,
+        "accounting": {
+          "total_user_100ns": 2186250000,
+          "total_kernel_100ns": 150625000,
+          "total_cpu_100ns": 2336875000,
+          "total_page_fault_count": 31388579,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 89.96899999999994,
+    "ended_wall_seconds": 89.96899999999994
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 900,
+    "cpu_seconds": 6000,
+    "log_bytes": 16777216,
+    "committed_bytes": 12884901888
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\cache-1\\process.log",
+    "sha256": "9baa5faed5224b42a323ebf5bfd3cabf5520930c49e1c0b8b03e3d708c43d7ca",
+    "bytes": 94702
+  }
+}

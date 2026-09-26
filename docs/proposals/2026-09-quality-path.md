@@ -59,13 +59,51 @@ identified photographic benefit from weighted versus mean base. Retain mean;
 do not credit the slight automatic-tone change as glare recovery. See
 `experiments/base-band-transfer/independent-results.md`.
 
-Next priority is a source-contribution trace on the remaining corrected real
-image defects, distinguishing captured structure that the merge discards from
-spill already present in its contributing sources. Use the actual CFA consumer,
-held geometry/development and complete-image observer identity. A new treatment
-must address that measured loss and preserve both real depths. Do not start
-another generic visibility plant, donor substitution, source-prior strength or
-base-weighting sweep on the strength of the closed studies above.
+The corrected production binary now also removes artificial coloured rectangles
+in complete216-source ore102 and228-source rutile105 deliveries. Independent
+whole/native review confirms the local repairs and retained protected features;
+the broad reflections remain. The ore automatic tone changes slightly, so
+whole-image difference counts are not evidence of widespread repair. Complete
+corrected images were shown to the owner. See
+`experiments/quality-september25/mineral-repair-review/review.md`.
+
+The omitted155-source opal rendering factorial is now closed without useful
+photographic recovery. Its actual writer observer finds zero pin-protection,
+clip or sensor-rolloff changes over the whole image. Shoulder mapping reduces
+exact-white pixels but does not restore identifiable useful gradation. All
+three observer controls pass and complete TIFF on/off identity holds. See
+`experiments/opal-headroom/factorial-results.md` and `stage-results.md`.
+
+The actual488-source marigold contribution trace has now executed. The saved
+observer-on/off TIFFs and all merged planes are byte-identical. Both original
+wrappers refused a historical cross-build file hash; a separate saved-result
+verification confines the difference to twelve Software-tag bytes and proves
+historical pixels, ICC and planes exact. Preserve those original refusals.
+Independent interpretation finds the fixed near/far five-point profiles
+inadequate as lost-hair witnesses: focused neighbouring sources change the
+contrast sign, and the presumed hair centres are not stable. This does not
+exonerate the merge or establish a capture limit. It rules out the proposed
+source-interval filter on this evidence. See
+`experiments/real-source-contributions/independent-results.md` and
+`saved-pair-verification-1/comparison.json`.
+
+One complete299-source chip comparison with constant exponent2 in place of
+the current coarse-to-fine ramp also fails independent photographic review.
+It softens small marks while the broad plumes and duplicated coloured rails
+remain. No ramp sweep or marigold transfer follows. Automatic tone differs,
+so brightness is not attributed solely to source weights. See
+`experiments/chip-stock-selectivity/independent-photographic-review.md`.
+
+Next is a bounded correction of the failed alignment discriminator's numerical
+model, not relaxation of its old bar. Source review identifies fractional
+bilinear interpolation applied only to the fitted source as a concrete
+confound of the physical blur coefficient. Generated exact-evaluation and
+sampling controls must establish its contribution before any photographic
+patch is reopened. The original failed control remains failed. See
+`experiments/chip-differential-blur/resampling-audit.md` and the separately
+scoped `experiments/alignment-sampling-control/` continuation. In parallel,
+review the remaining real source/depth alternatives against prior closures;
+do not repeat donor, source-prior-strength or base-weighting sweeps.
 
 Use `scripts/render-native.py` and its checked `scripts/native-build.json`
 for current native renders; `docs/native-rendering.md` documents the entry

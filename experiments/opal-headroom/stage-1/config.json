@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "cache": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\cache-1\\output\\baseline-cache.json",
+  "cache_sha256": "35584ce30352e4fe9e75cbeba36cc0fd6e2f79cba509bbe90b7dbf1ff6cb856f",
+  "expected_current_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\replay-1\\output\\current.tiff",
+  "expected_current_file_sha256": "a0105e044012f52457358a1277bebc6cca1e936089a2c5d180e4ff4e6407895a",
+  "expected_shoulder_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\replay-1\\output\\shoulder.tiff",
+  "expected_shoulder_file_sha256": "3e6c5cc859eb0382447a01b34d7ae5349917ef8e031b50ef7ccd6cc12fb1393b",
+  "out_dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\stage-1\\output"
+}

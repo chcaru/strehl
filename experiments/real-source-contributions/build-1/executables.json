@@ -1,0 +1,17 @@
+{
+  "core-tests": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\build-1\\core-tests.exe",
+    "sha256": "0fb392fbea4e3d01b63f16add0734b64bf3aa93467cd1acca4510c2897222fe8",
+    "bytes": 3695616
+  },
+  "strehl": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\build-1\\strehl.exe",
+    "sha256": "6e70a889ffc5a6658021fe4ab241b45d4d7733805a8135ce9bb314642f0de293",
+    "bytes": 17950720
+  },
+  "cli-tests": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\build-1\\cli-tests.exe",
+    "sha256": "77ec91581e5db5d526045a03a1f1fadc3c4e8f695f03cfcf6b0faff5a37770a8",
+    "bytes": 30657024
+  }
+}

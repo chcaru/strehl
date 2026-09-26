@@ -1,0 +1,5136 @@
+{
+  "inputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\independent-analysis-controls-1\\result\\attribution.json",
+      "bytes": 418366,
+      "sha256": "4729555bc9bd42aaded062fcd36febc95efec9a7238e9a4711f4c23d80f671d7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\independent-analysis-controls-1\\result\\source-contributions.npz",
+      "bytes": 5000576,
+      "sha256": "9d393ce0c66d1efbfbf9411806b4d30fcca75e5946b32ed51ff4eb0a88bf8d8e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\independent-analysis-controls-1\\fixture\\receipt.json",
+      "bytes": 10358,
+      "sha256": "bf9bf142accd7bd80397dda053fa601897682aa3bc9ad771b9c4c8857b6eacdb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\independent-plan.json",
+      "bytes": 1353,
+      "sha256": "726141ed126a67ebb80e4948b5c688426ba5d4f4cceebbb36f2265fad0324c92"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\independent-interpret.py",
+      "bytes": 5675,
+      "sha256": "86f5fecefa88fb9050eb171350cf91bb79a007ca2e933d34f92b80f97b8eb2bb"
+    }
+  ],
+  "frozen_neighbourhoods": {
+    "near-hair": [
+      108,
+      112,
+      116
+    ],
+    "far-hair": [
+      148,
+      152,
+      156
+    ]
+  },
+  "frozen_defocused_control": [
+    316,
+    320,
+    324
+  ],
+  "profiles": [
+    {
+      "name": "near-hair",
+      "native_centre": [
+        3510,
+        3262
+      ],
+      "axis": "y",
+      "offsets": [
+        -8,
+        -4,
+        0,
+        4,
+        8
+      ],
+      "post_hull_five_points_dn": [
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ]
+      ],
+      "post_hull_shape": {
+        "centre_above_both_outer_flanks": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "ordered_rise_then_fall": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "signed_contrast_dn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+      },
+      "arithmetic_residual_contrast_dn": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "clamp_residual_contrast_dn": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fixed_sources": [
+        {
+          "source_index": 108,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 112,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 116,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 316,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 320,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 324,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "signed_contrast_by_band_and_bin": [
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            1.1102230246251565e-15,
+            1.1102230246251565e-15,
+            1.1102230246251565e-15,
+            1.1102230246251565e-15
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            1.2212453270876722e-15,
+            1.2212453270876722e-15,
+            1.2212453270876722e-15,
+            1.2212453270876722e-15
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            2.1094237467877974e-15,
+            2.1094237467877974e-15,
+            2.1094237467877974e-15,
+            2.1094237467877974e-15
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            1.1102230246251565e-15,
+            1.1102230246251565e-15,
+            1.1102230246251565e-15,
+            1.1102230246251565e-15
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            1.2212453270876722e-15,
+            1.2212453270876722e-15,
+            1.2212453270876722e-15,
+            1.2212453270876722e-15
+          ]
+        }
+      ]
+    },
+    {
+      "name": "far-hair",
+      "native_centre": [
+        3508,
+        3170
+      ],
+      "axis": "x",
+      "offsets": [
+        -8,
+        -4,
+        0,
+        4,
+        8
+      ],
+      "post_hull_five_points_dn": [
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ]
+      ],
+      "post_hull_shape": {
+        "centre_above_both_outer_flanks": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "ordered_rise_then_fall": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "signed_contrast_dn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+      },
+      "arithmetic_residual_contrast_dn": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "clamp_residual_contrast_dn": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fixed_sources": [
+        {
+          "source_index": 148,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 152,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 156,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 316,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 320,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 324,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "signed_contrast_by_band_and_bin": [
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            5.551115123125783e-16,
+            5.551115123125783e-16,
+            5.551115123125783e-16,
+            5.551115123125783e-16
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            6.106226635438361e-16,
+            6.106226635438361e-16,
+            6.106226635438361e-16,
+            6.106226635438361e-16
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            1.0547118733938987e-15,
+            1.0547118733938987e-15,
+            1.0547118733938987e-15,
+            1.0547118733938987e-15
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            5.551115123125783e-16,
+            5.551115123125783e-16,
+            5.551115123125783e-16,
+            5.551115123125783e-16
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            6.106226635438361e-16,
+            6.106226635438361e-16,
+            6.106226635438361e-16,
+            6.106226635438361e-16
+          ]
+        }
+      ]
+    },
+    {
+      "name": "fan-haze-context",
+      "native_centre": [
+        3310,
+        3120
+      ],
+      "axis": "x",
+      "offsets": [
+        -8,
+        -4,
+        0,
+        4,
+        8
+      ],
+      "post_hull_five_points_dn": [
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ]
+      ],
+      "post_hull_shape": {
+        "centre_above_both_outer_flanks": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "ordered_rise_then_fall": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "signed_contrast_dn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+      },
+      "arithmetic_residual_contrast_dn": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "clamp_residual_contrast_dn": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fixed_sources": [
+        {
+          "source_index": 112,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 152,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 320,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 316,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 320,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 324,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "signed_contrast_by_band_and_bin": [
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -2.7755575615628914e-17,
+            -2.7755575615628914e-17,
+            -2.7755575615628914e-17,
+            -2.7755575615628914e-17
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            2.7755575615628914e-17,
+            2.7755575615628914e-17,
+            2.7755575615628914e-17,
+            2.7755575615628914e-17
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -2.7755575615628914e-17,
+            -2.7755575615628914e-17,
+            -2.7755575615628914e-17,
+            -2.7755575615628914e-17
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            2.7755575615628914e-17,
+            2.7755575615628914e-17,
+            2.7755575615628914e-17,
+            2.7755575615628914e-17
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rim-hair-control",
+      "native_centre": [
+        1596,
+        1796
+      ],
+      "axis": "x",
+      "offsets": [
+        -8,
+        -4,
+        0,
+        4,
+        8
+      ],
+      "post_hull_five_points_dn": [
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ]
+      ],
+      "post_hull_shape": {
+        "centre_above_both_outer_flanks": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "ordered_rise_then_fall": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "signed_contrast_dn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+      },
+      "arithmetic_residual_contrast_dn": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "clamp_residual_contrast_dn": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fixed_sources": [
+        {
+          "source_index": 112,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 152,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 320,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 316,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 320,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 324,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "signed_contrast_by_band_and_bin": [
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            2.220446049250313e-15,
+            2.220446049250313e-15,
+            2.220446049250313e-15,
+            2.220446049250313e-15
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            2.4980018054066022e-15,
+            2.4980018054066022e-15,
+            2.4980018054066022e-15,
+            2.4980018054066022e-15
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            4.163336342344337e-15,
+            4.163336342344337e-15,
+            4.163336342344337e-15,
+            4.163336342344337e-15
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            2.275957200481571e-15,
+            2.275957200481571e-15,
+            2.275957200481571e-15,
+            2.275957200481571e-15
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            2.3869795029440866e-15,
+            2.3869795029440866e-15,
+            2.3869795029440866e-15,
+            2.3869795029440866e-15
+          ]
+        }
+      ]
+    },
+    {
+      "name": "inner-bud-control",
+      "native_centre": [
+        4512,
+        1732
+      ],
+      "axis": "x",
+      "offsets": [
+        -8,
+        -4,
+        0,
+        4,
+        8
+      ],
+      "post_hull_five_points_dn": [
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ],
+        [
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547,
+          97.49999237060547
+        ]
+      ],
+      "post_hull_shape": {
+        "centre_above_both_outer_flanks": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "ordered_rise_then_fall": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "signed_contrast_dn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+      },
+      "arithmetic_residual_contrast_dn": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "clamp_residual_contrast_dn": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fixed_sources": [
+        {
+          "source_index": 112,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 152,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 320,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 316,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 320,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source_index": 324,
+          "gathered_five_points_dn": [
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ],
+            [
+              96.0,
+              96.0,
+              96.0,
+              96.0
+            ]
+          ],
+          "shape": {
+            "centre_above_both_outer_flanks": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "ordered_rise_then_fall": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "signed_contrast_dn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "caution": "Shape statements only: no noise-significance, source truth or quality classification."
+          },
+          "post_minus_source_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "signed_contrast_by_band_and_bin": [
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 0,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 1,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 2,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 3,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 4,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 5,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 6,
+          "role": "AC",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            0,
+            79
+          ],
+          "signed_contrast_dn": [
+            -1.1102230246251565e-15,
+            -1.1102230246251565e-15,
+            -1.1102230246251565e-15,
+            -1.1102230246251565e-15
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            80,
+            168
+          ],
+          "signed_contrast_dn": [
+            -1.2212453270876722e-15,
+            -1.2212453270876722e-15,
+            -1.2212453270876722e-15,
+            -1.2212453270876722e-15
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            169,
+            319
+          ],
+          "signed_contrast_dn": [
+            -2.1094237467877974e-15,
+            -2.1094237467877974e-15,
+            -2.1094237467877974e-15,
+            -2.1094237467877974e-15
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            320,
+            400
+          ],
+          "signed_contrast_dn": [
+            -1.1102230246251565e-15,
+            -1.1102230246251565e-15,
+            -1.1102230246251565e-15,
+            -1.1102230246251565e-15
+          ]
+        },
+        {
+          "band": 7,
+          "role": "terminal mean base",
+          "group_inclusive": [
+            401,
+            487
+          ],
+          "signed_contrast_dn": [
+            -1.2212453270876722e-15,
+            -1.2212453270876722e-15,
+            -1.2212453270876722e-15,
+            -1.2212453270876722e-15
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation_limits": [
+    "The near/far fixed neighbourhoods were prescribed before reading actual trace values; no recentering or source maximization.",
+    "Full five-point profiles expose displaced peaks, monotone backgrounds and unequal flanks that scalar contrast hides.",
+    "The two middle-offset samples are not independent replications of the central contrast.",
+    "An ordered ridge shape can still be noise or another structure; this aid cannot establish sensor-noise significance.",
+    "No interval counterfactual or image-quality pass is calculated. A negative group contribution may be necessary to cancel captured blur.",
+    "If fixed witnesses do not demonstrate coherent captured structure lost by the consumer, move to the actual complete-chip versus HeliconB gap; do not expand this source search."
+  ]
+}

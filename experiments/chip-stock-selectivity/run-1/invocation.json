@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "baseline": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\invocation.json",
+      "bytes": 2952,
+      "sha256": "49b6277016ff71da05c144690b765130bac9ab31f3bc9c3a3dc20927bc7e8037"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\input-order.json",
+      "bytes": 81522,
+      "sha256": "ca1d16d0ffab95372c3401c48e9da79b330d4d2c6a4dd76077e06aa74a39c364"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\completion.json",
+      "bytes": 1676,
+      "sha256": "d03e75a7d8fef4234317c90b5eca48ec4092fbb8eb0c257e109466302fdf4239"
+    }
+  ],
+  "baseline_master": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\stack-master.tiff",
+    "sha256": "8f0c70b2af0e8fc8dcf850395680d3038962c6e65920359d19671b96628c68ac",
+    "bytes": 168952968
+  },
+  "baseline_render_log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\render.log",
+    "bytes": 264824,
+    "sha256": "d978bdb8939a9d18bc86a9196cedbff8c22c7937a33e45d2822211bf76a160dd"
+  },
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\build-fixed-2\\strehl.exe",
+    "bytes": 17950720,
+    "sha256": "bec4c357836ad1383800a6c933460ee7ef072c525b5957a6f5deb5194b203314"
+  },
+  "warp_map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+    "bytes": 41142,
+    "sha256": "ce8534c9e65c5c761373bad87df5352c1c46319b7eaf7f7c91477ea61b4f4922"
+  },
+  "reference": 149,
+  "frames": 299,
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\build-fixed-2\\strehl.exe",
+    "stack",
+    "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl",
+    "--merge",
+    "pyramid",
+    "--pyramid-bands",
+    "7",
+    "--pyramid-gate",
+    "2",
+    "--pyramid-exponent",
+    "2",
+    "--pyramid-sharpen",
+    "1.0",
+    "--pyramid-select",
+    "soft",
+    "--pyramid-base",
+    "mean",
+    "--srgb",
+    "--demosaic",
+    "--resampler",
+    "catmull-rom",
+    "--cover",
+    "crop",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\stack-master.tiff"
+  ],
+  "baseline_command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\build-fixed-2\\strehl.exe",
+    "stack",
+    "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl",
+    "--merge",
+    "pyramid",
+    "--pyramid-bands",
+    "7",
+    "--pyramid-gate",
+    "2",
+    "--pyramid-exponent",
+    "2",
+    "--pyramid-sharpen",
+    "1.4",
+    "--pyramid-select",
+    "soft",
+    "--pyramid-base",
+    "mean",
+    "--srgb",
+    "--demosaic",
+    "--resampler",
+    "catmull-rom",
+    "--cover",
+    "crop",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\stack-master.tiff"
+  ],
+  "command_differences": [
+    {
+      "index": 12,
+      "baseline": "1.4",
+      "candidate": "1.0"
+    },
+    {
+      "index": 24,
+      "baseline": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\stack-master.tiff",
+      "candidate": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\stack-master.tiff"
+    }
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "on",
+    "STREHL_DEFECT": "off",
+    "STREHL_FINE_SUPPORT": "off",
+    "STREHL_CA_BEFORE_MHC": "off"
+  },
+  "removed_environment": [],
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run.py",
+      "bytes": 10148,
+      "sha256": "89e5939a4f9da3938f04bcb7b0f2327c4bb0cfae9da9527a5a947e69b64c08ff"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\design.md",
+      "bytes": 4553,
+      "sha256": "f84b24dd2251033cf9decd46f5ae44142a848e71dad222c0444020ee808900ad"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\targets.json",
+      "bytes": 15337,
+      "sha256": "60f1075e914dd754dd7113ae6749f438170669db71d8c0fbebfb8e69e2023888"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\base-band-transfer\\run.py",
+      "bytes": 10345,
+      "sha256": "eae95b4f8b5a35de6909ea7b46b0abeda3a98707949155ea722e6a393aeace0f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+      "bytes": 12664,
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+      "bytes": 117908,
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+    }
+  ],
+  "limits": {
+    "wall_seconds": 300,
+    "cpu_seconds": 1500,
+    "committed_bytes": 8589934592
+  },
+  "tone_policy": "Independent production automatic tone in each arm. Logs are rounded descriptions, not held exact f32 anchors.",
+  "scope": "One complete fixed flat2 ramp counterfactual. No search, default change or claim of improvement."
+}

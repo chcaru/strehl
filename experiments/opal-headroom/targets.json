@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "native_dimensions": [6792, 4528],
+  "crop_quad_xywh": [60, 40, 3396, 2264],
+  "source": "experiments/quality-september25/minerals/native-tiles.json",
+  "targets": [
+    {
+      "name": "reflection",
+      "native_xywh": [3628, 1658, 384, 384],
+      "witness": "experiments/quality-september25/minerals/103-reflection-native384.png",
+      "sha256": "8760b24e569922592999d9b39845360820f9abe5a154bbdbd394f01b7290cbe2",
+      "protection": "Preserve fine slanted bright bands, physical reflection, and cyan surroundings. Require distinct additional gradation rather than a darker patch."
+    },
+    {
+      "name": "colour-control",
+      "native_xywh": [2128, 2228, 384, 384],
+      "witness": "experiments/quality-september25/minerals/103-colour-control-native384.png",
+      "sha256": "ee845c059da2d974b9768a5ceaad74291f0c31b7b116c593eebc39fd82993b02",
+      "protection": "Preserve blue/pink variation, fine irregular texture and small dark marks. This textured region is not a flat-noise control."
+    }
+  ],
+  "decision": "Independent complete-image plus native-target review; no quality score from clipping counts or global dimming; no sweep after no clear gain."
+}

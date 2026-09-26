@@ -1,0 +1,195 @@
+{
+  "schema": 1,
+  "status": "SAVED_RUST_RESULTS_VERIFIED_WITH_EXPLICIT_HISTORICAL_METADATA_EXCEPTION",
+  "verifier": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\verify-saved-pair.py",
+    "sha256": "ec57adcddaab2e01707d81efee632c160427a8ee116b2c384bd04f5b97ed4fb0",
+    "bytes": 10129
+  },
+  "original_wrapper_failures_preserved": true,
+  "superseded_gate": "Literal cross-build candidate_sha256 identity against marigold4-fixed-1",
+  "replacement": "Actual decoded RGB16, ICC and all merged planes exact; raw TIFF changes confined to Software tag305 build string.",
+  "same_binary_observer_full_tiff_byte_exact": true,
+  "all_complete_planes_exact": true,
+  "corrected_reference_pixels_and_icc_exact": true,
+  "historical_metadata_exception": {
+    "old": {
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate.tiff",
+        "sha256": "19e657e419d52adf567ec86472f917ad9b9abfc9b0812131e9bba0eacbae462f",
+        "bytes": 157055880
+      },
+      "rgb16_le_sha256": "6d26d2cc00f6eb76500d4574a7f0d3ba7eb35b364e100daac8eeb96422c13c11",
+      "encoded_strip_sha256": "6d26d2cc00f6eb76500d4574a7f0d3ba7eb35b364e100daac8eeb96422c13c11",
+      "software": "strehl 0.0.0 (3386cd48430a-dirty)",
+      "software_valueoffset": 3360,
+      "software_count": 34
+    },
+    "new": {
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\on-1\\output\\candidate.tiff",
+        "sha256": "8e06960edb3a99bd03b99af180c6e3fcd6e89c9f21af10f6ea06dfd86c8e0b0f",
+        "bytes": 157055880
+      },
+      "rgb16_le_sha256": "6d26d2cc00f6eb76500d4574a7f0d3ba7eb35b364e100daac8eeb96422c13c11",
+      "encoded_strip_sha256": "6d26d2cc00f6eb76500d4574a7f0d3ba7eb35b364e100daac8eeb96422c13c11",
+      "software": "strehl 0.0.0 (1693275a3411-dirty)",
+      "software_valueoffset": 3360,
+      "software_count": 34
+    },
+    "decoded_rgb16_exact": true,
+    "icc_exact": true,
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "only_changed_tag": 305,
+    "changed_bytes": 12,
+    "changed_offsets": [
+      3374,
+      3375,
+      3376,
+      3377,
+      3378,
+      3379,
+      3380,
+      3381,
+      3382,
+      3383,
+      3384,
+      3385
+    ],
+    "zero_different_bytes_outside_software_payload": true
+  },
+  "runs": [
+    {
+      "run": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\on-1",
+      "original_wrapper_completion_present": false,
+      "rust_process": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\on-1\\process.json",
+        "sha256": "93b8bc9d52e76d4e762ec6ae54726a456c99420590d5342223fb923f5cb79adc",
+        "bytes": 2779
+      },
+      "rust_receipt": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\on-1\\output\\receipt.json",
+        "sha256": "6056562b6dd72f8cb6d493a964738dcb01a271a4bc727d9f1b51ec88b1f4dcd1",
+        "bytes": 1343070
+      },
+      "rust_full_test_passed": true,
+      "original_wrapper_gate": "REFUSED cross-build candidate_sha256",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\on-1\\output\\candidate.tiff",
+        "sha256": "8e06960edb3a99bd03b99af180c6e3fcd6e89c9f21af10f6ea06dfd86c8e0b0f",
+        "bytes": 157055880
+      }
+    },
+    {
+      "run": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\off-1",
+      "original_wrapper_completion_present": false,
+      "rust_process": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\off-1\\process.json",
+        "sha256": "970a278b1f074c20ee0573fe3409e5ed6d4e8538358d8b781a18d8b21aa09c7f",
+        "bytes": 2776
+      },
+      "rust_receipt": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\off-1\\output\\receipt.json",
+        "sha256": "78cbbaa4168b71364a2e92bf5d5efcee92d0d76ab67c032340a1a45ef4e1d92f",
+        "bytes": 1343075
+      },
+      "rust_full_test_passed": true,
+      "original_wrapper_gate": "REFUSED cross-build candidate_sha256",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\off-1\\output\\candidate.tiff",
+        "sha256": "8e06960edb3a99bd03b99af180c6e3fcd6e89c9f21af10f6ea06dfd86c8e0b0f",
+        "bytes": 157055880
+      }
+    }
+  ],
+  "caches": [
+    {
+      "metadata": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\on-1\\output\\candidate-cache.json",
+        "sha256": "3af5e0a0d00b28e73083ce132ff495cd482020b600fecd4bddb2902b1273a95c",
+        "bytes": 1384
+      },
+      "binary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\on-1\\output\\candidate-planes.f32",
+        "sha256": "fa394a59a1786e478c3ceff578924769c0162d0c1ecaaa2a602f401012523824",
+        "bytes": 104700672
+      },
+      "actual_plane_sha256": [
+        "f14bb27a068860ef187e64bd89354989089c56d7018f147b62027c8ca3697060",
+        "5345cabc3ab815e5341f0d3d8f9d6411c14ac839e69dbbf9afd5e70febadea96",
+        "b4667e173665324fab1b91a84434653f3d3f579c8d97c991f8d97ff667e39675",
+        "3537e7e57acd666d729071ccec17ab70b2891368b88d398bdcc7c1fd2a467a0c"
+      ]
+    },
+    {
+      "metadata": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\off-1\\output\\candidate-cache.json",
+        "sha256": "3af5e0a0d00b28e73083ce132ff495cd482020b600fecd4bddb2902b1273a95c",
+        "bytes": 1384
+      },
+      "binary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\off-1\\output\\candidate-planes.f32",
+        "sha256": "fa394a59a1786e478c3ceff578924769c0162d0c1ecaaa2a602f401012523824",
+        "bytes": 104700672
+      },
+      "actual_plane_sha256": [
+        "f14bb27a068860ef187e64bd89354989089c56d7018f147b62027c8ca3697060",
+        "5345cabc3ab815e5341f0d3d8f9d6411c14ac839e69dbbf9afd5e70febadea96",
+        "b4667e173665324fab1b91a84434653f3d3f579c8d97c991f8d97ff667e39675",
+        "3537e7e57acd666d729071ccec17ab70b2891368b88d398bdcc7c1fd2a467a0c"
+      ]
+    }
+  ],
+  "historical_cache": {
+    "metadata": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate-cache.json",
+      "sha256": "3af5e0a0d00b28e73083ce132ff495cd482020b600fecd4bddb2902b1273a95c",
+      "bytes": 1384
+    },
+    "binary": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate-planes.f32",
+      "sha256": "fa394a59a1786e478c3ceff578924769c0162d0c1ecaaa2a602f401012523824",
+      "bytes": 104700672
+    },
+    "actual_plane_sha256": [
+      "f14bb27a068860ef187e64bd89354989089c56d7018f147b62027c8ca3697060",
+      "5345cabc3ab815e5341f0d3d8f9d6411c14ac839e69dbbf9afd5e70febadea96",
+      "b4667e173665324fab1b91a84434653f3d3f579c8d97c991f8d97ff667e39675",
+      "3537e7e57acd666d729071ccec17ab70b2891368b88d398bdcc7c1fd2a467a0c"
+    ]
+  },
+  "source_bindings_unchanged": true,
+  "build_bindings": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\on-1\\bindings.json",
+    "sha256": "9b7bf0602e55b98380697e79c8109f21586d6e8c94760d8cba0add17d539e9fb",
+    "bytes": 74568
+  },
+  "controls": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\controls-1\\completion.json",
+    "sha256": "1248b1c02a27adc0ff33fc26af11276ded2daca1fd0cf682a456ef4e6219b8c5",
+    "bytes": 203
+  },
+  "trace_files": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\on-1\\output\\source-trace\\layout.json",
+      "sha256": "fb7db6605998d560abfdc8a638dec30f1d9c8a048728c289f447105d5cf9d108",
+      "bytes": 10023
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\on-1\\output\\source-trace\\receipt.json",
+      "sha256": "33111f484f260def66061e14c1d7f8e65625e58784f101e2fac859dee9e051c1",
+      "bytes": 20491
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\on-1\\output\\source-trace\\sources.f32",
+      "sha256": "2868da52c8826debfc2ed9015f2c7128b59263e0776c45ca300f7a6fc6ebe42e",
+      "bytes": 7874368
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\on-1\\output\\source-trace\\final-states.f32",
+      "sha256": "1e1a3e65c398b9d42ca79a60a23637769023154a2843837644bc9577789f0379",
+      "bytes": 29224
+    }
+  ],
+  "scope": "Read-only saved-result verification, no original RAW reads or rerender. No source-trace witness adequacy or quality conclusion."
+}

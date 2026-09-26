@@ -1,0 +1,9 @@
+
+running 4 tests
+test image_out::highlight_rendering::independent_controls::independent_color_ratios_and_grey_destroyer ... ok
+test image_out::highlight_rendering::independent_controls::independent_flat_first_and_actual_current_identity ... ok
+test image_out::highlight_rendering::independent_controls::independent_sensor_pinning_is_not_disabled_with_rolloff ... ok
+test image_out::highlight_rendering::independent_controls::independent_shoulder_neutral_order_detail_and_destroyer ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 249 filtered out; finished in 0.00s
+

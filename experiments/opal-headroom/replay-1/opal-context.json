@@ -1,0 +1,17 @@
+{
+  "cache_completion": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\cache-1\\completion.json",
+    "sha256": "edb62e839f6dd875721bc5204370f282c16f0e82d44de08ef5f118af521d4579",
+    "bytes": 786
+  },
+  "cache_recipe": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\cache-1\\recipe.json",
+    "sha256": "71d6b5cb5aa24feab47f0d1c932d5c05a0146e54b3ae9be6583dbacd9b624804",
+    "bytes": 44390
+  },
+  "targets": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\targets.json",
+    "sha256": "5f2dcbbdc363fe82282399ff382efc91a7696640a1e2d5becd1bdfff42d73176",
+    "bytes": 1191
+  }
+}

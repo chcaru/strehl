@@ -1,0 +1,57 @@
+{
+  "code": "102",
+  "inputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\inventory.json",
+      "bytes": 4758,
+      "sha256": "a926adb0a1c3b24fc48ae0ad1c1f9559df54e479ef4863b327cd24e9546218c7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\peacock-ore\\final\\peacock-ore-102msdcf-master.tiff",
+      "bytes": 179216827,
+      "sha256": "12ebe04a43623e547a81ff8d58159fd18bd140145906fe908cc6e70ae57aec9c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\ore-102\\stack-master.tiff",
+      "bytes": 179216833,
+      "sha256": "a1dd0143f6aeb90175c15a7506c9a34b6ea60c5e8c80bea144fe6729ea7a4518"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\ore-102\\completion.json",
+      "bytes": 1644,
+      "sha256": "8b74e0099a1233d06bb36976c9c994a35313137ead905d340616f2ee56cbb91c"
+    }
+  ],
+  "full_shape": [
+    4462,
+    6694,
+    3
+  ],
+  "pixels_changed": 29511522,
+  "pixels_max_channel_change_gt_32": 28351029,
+  "max_channel_change": 65535,
+  "selected_peak_native_xy": [
+    2709,
+    46
+  ],
+  "diagnostic_crop_native_xywh": [
+    2517,
+    0,
+    384,
+    384
+  ],
+  "views": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\ore102-delivery-1\\before-largest-change-native.png",
+      "bytes": 239193,
+      "sha256": "be434109d56707f665c05fd1a8dffe289df9571bba9b02f7de9dd357d3a91a3b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\ore102-delivery-1\\corrected-largest-change-native.png",
+      "bytes": 239284,
+      "sha256": "e80c10ce2536a84217396e7bae449c02a41af6edb8bed3a413e08023eb61bb12"
+    }
+  ],
+  "scope": "Whole delivered RGB comparison. Differences include automatic-tone changes. Change counts are not quality metrics; view location is deliberately selected by change.",
+  "photographic_verdict": null
+}

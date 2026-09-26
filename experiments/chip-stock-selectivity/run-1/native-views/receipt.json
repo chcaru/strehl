@@ -1,0 +1,770 @@
+{
+  "native_size": [
+    6500,
+    4332
+  ],
+  "crop": [
+    133,
+    89,
+    3250,
+    2166
+  ],
+  "targets": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\targets.json",
+    "bytes": 15337,
+    "sha256": "60f1075e914dd754dd7113ae6749f438170669db71d8c0fbebfb8e69e2023888"
+  },
+  "tiles": [
+    {
+      "arm": "baseline",
+      "region": "rail-crossing",
+      "native_xywh": [
+        1098,
+        958,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-rail-crossing-1098-958.png",
+        "bytes": 308439,
+        "sha256": "bdd4ac7ed25cd02081ef4dce96634d08fae1fb36c8642ffb9f00872fae16fb22"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-colour",
+      "native_xywh": [
+        1036,
+        196,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-upper-colour-1036-196.png",
+        "bytes": 113160,
+        "sha256": "e22ecfe3c366a5004371174288ce52cc831343bce84a770542dcf3994c5e88a3"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-colour",
+      "native_xywh": [
+        1292,
+        196,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-upper-colour-1292-196.png",
+        "bytes": 117680,
+        "sha256": "39aa01d1e5bed2d8873aad0431fd44d2f6c1aceb3c57a16667bf834db8b3a95c"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-colour",
+      "native_xywh": [
+        1036,
+        452,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-upper-colour-1036-452.png",
+        "bytes": 132184,
+        "sha256": "7a536b647be25c2d01d272f8b95925e77ca1447821900e9871b8e68c5293ecef"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-colour",
+      "native_xywh": [
+        1292,
+        452,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-upper-colour-1292-452.png",
+        "bytes": 130109,
+        "sha256": "5ebd536b3aea2de34b4062c5ef4e3b616cf9c853063299932d3ede8de6da7a19"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "central-stipple",
+      "native_xywh": [
+        2976,
+        1306,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-central-stipple-2976-1306.png",
+        "bytes": 125123,
+        "sha256": "9f420533f0778a59443a31e032051894979760d621abe2205e9ae5fcb8bf4561"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "central-stipple",
+      "native_xywh": [
+        3232,
+        1306,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-central-stipple-3232-1306.png",
+        "bytes": 113415,
+        "sha256": "e1102c1d1b4464aaba6f74e4b556efa3f33ec774ba1e3a364f4d8e30365d8662"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "central-stipple",
+      "native_xywh": [
+        2976,
+        1562,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-central-stipple-2976-1562.png",
+        "bytes": 135601,
+        "sha256": "55260d39ac5ca78d019d9278064e4631015ca675a06449562643060471c4e8fb"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "central-stipple",
+      "native_xywh": [
+        3232,
+        1562,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-central-stipple-3232-1562.png",
+        "bytes": 103938,
+        "sha256": "fa605242353e34a54174c660a1d8b90aea6483605f2f03f2c8754db81facf84c"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-array",
+      "native_xywh": [
+        566,
+        2796,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-lower-array-566-2796.png",
+        "bytes": 144155,
+        "sha256": "4c18b814f2044f000bb374dad4b2b67efde2116ccc3f7ceb5487befc83d4a695"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-array",
+      "native_xywh": [
+        822,
+        2796,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-lower-array-822-2796.png",
+        "bytes": 136232,
+        "sha256": "2a47033f4707bba7318f7bd5a7796f7833fe22b2562d4be9ee2305bcc8bb63c5"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-array",
+      "native_xywh": [
+        566,
+        3052,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-lower-array-566-3052.png",
+        "bytes": 141376,
+        "sha256": "6507a5b28b3ce3a989be8074fad63ce0781d0cfd978d2834c5f9f044afac26a4"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-array",
+      "native_xywh": [
+        822,
+        3052,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-lower-array-822-3052.png",
+        "bytes": 135588,
+        "sha256": "1d9541de4bb88edfd397f7a7bb739fbea9bfa05fdfeae236a7ecc7bf146408d1"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-colour",
+      "native_xywh": [
+        4666,
+        3016,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-lower-colour-4666-3016.png",
+        "bytes": 78701,
+        "sha256": "5eed295ab1d397c6513486946ffaa9e6c218a275e7e5433f170f1115b0097dff"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-colour",
+      "native_xywh": [
+        4922,
+        3016,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-lower-colour-4922-3016.png",
+        "bytes": 84403,
+        "sha256": "aca70668a71393f310613c391cb2458c0d561470bf88df6814d547e88be8bc5e"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-colour",
+      "native_xywh": [
+        4666,
+        3272,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-lower-colour-4666-3272.png",
+        "bytes": 79753,
+        "sha256": "fc256da9260cff1d99bc1f52db721c40a75d574e2b31c9ff9f35c65ad7163329"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-colour",
+      "native_xywh": [
+        4922,
+        3272,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-lower-colour-4922-3272.png",
+        "bytes": 85747,
+        "sha256": "80d1a25d13ec5e463d6a25e1fbb8292c41c5324a3d0036a8c51bdcd2b046a9bc"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "surface-scratches",
+      "native_xywh": [
+        4856,
+        1256,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-surface-scratches-4856-1256.png",
+        "bytes": 83261,
+        "sha256": "ebc6e685b2e9864db380576f006030e04ffdc7e2c1f20a38493051571f57b201"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "surface-scratches",
+      "native_xywh": [
+        5112,
+        1256,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-surface-scratches-5112-1256.png",
+        "bytes": 86377,
+        "sha256": "1a1b41f3b7fe58a1544ede45b8baca45e6946dc374f697007d95d293e5ed3b23"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "surface-scratches",
+      "native_xywh": [
+        4856,
+        1512,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-surface-scratches-4856-1512.png",
+        "bytes": 82102,
+        "sha256": "d8d6bd69d9ac343a2deba217784b1860a5206af953b7672f2f8e84a8098a318c"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "surface-scratches",
+      "native_xywh": [
+        5112,
+        1512,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-surface-scratches-5112-1512.png",
+        "bytes": 86545,
+        "sha256": "c13dabf5aaff8db872b1e74c3515b08b381933b22dd058858ee3173225d8026e"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        48,
+        336,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-upper-left-contact-grid-48-336.png",
+        "bytes": 142279,
+        "sha256": "23e4fdeb848d8c7446b20dde30216305f65a2aeff3d872459889a9f85ec5d152"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        304,
+        336,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-upper-left-contact-grid-304-336.png",
+        "bytes": 129608,
+        "sha256": "7c50ff4c9484252b6411ccecfaa28fe8c423b613b2218bcd0988e6ae110a012c"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        48,
+        592,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-upper-left-contact-grid-48-592.png",
+        "bytes": 138148,
+        "sha256": "aadaab7b7c42ff7a3d962f504cbe43d3c78876ff69b04f0ac450d3e1f43aed48"
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        304,
+        592,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\baseline-upper-left-contact-grid-304-592.png",
+        "bytes": 126487,
+        "sha256": "409964314454fe89d7dc0ad8fc1e94920f82c72ca7186c1fb07b1814b7de6ebd"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "rail-crossing",
+      "native_xywh": [
+        1098,
+        958,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-rail-crossing-1098-958.png",
+        "bytes": 276702,
+        "sha256": "29159e9d124a44ac8f090ed6c3182af80eda5e51f7ff98359106d24786ac10ca"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "upper-colour",
+      "native_xywh": [
+        1036,
+        196,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-upper-colour-1036-196.png",
+        "bytes": 102582,
+        "sha256": "af8af5fdce6fe36e0f60c48290e324bee2a93f069362414296f8c6187e1f7bde"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "upper-colour",
+      "native_xywh": [
+        1292,
+        196,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-upper-colour-1292-196.png",
+        "bytes": 107501,
+        "sha256": "f947aae2741eed149102f13bf5157b929d4e42aff321379098db0e49edda7b75"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "upper-colour",
+      "native_xywh": [
+        1036,
+        452,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-upper-colour-1036-452.png",
+        "bytes": 120601,
+        "sha256": "a744e15ed2f2f6f1057839d6376b2063dbbb9b1683b92d4445f37f48079c92c6"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "upper-colour",
+      "native_xywh": [
+        1292,
+        452,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-upper-colour-1292-452.png",
+        "bytes": 118215,
+        "sha256": "095ca196843debb667521af658d9894be176ba25f4be72258b85dce2eb24f3f0"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "central-stipple",
+      "native_xywh": [
+        2976,
+        1306,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-central-stipple-2976-1306.png",
+        "bytes": 113735,
+        "sha256": "9e418837cf52bb634b2efd11fe6f8563f71e37f13795b7663450e56f82d7f5d4"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "central-stipple",
+      "native_xywh": [
+        3232,
+        1306,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-central-stipple-3232-1306.png",
+        "bytes": 101579,
+        "sha256": "7d9c76d2f7c48bc66a5c3a67baf244a8eb927d1cb2a9dc7cd25ed404a5c1ea72"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "central-stipple",
+      "native_xywh": [
+        2976,
+        1562,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-central-stipple-2976-1562.png",
+        "bytes": 124070,
+        "sha256": "65930e6b03b5b354a738a290aa84347ba381465da6232f2cf7197807e3adbab3"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "central-stipple",
+      "native_xywh": [
+        3232,
+        1562,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-central-stipple-3232-1562.png",
+        "bytes": 92723,
+        "sha256": "64c7a83219ce47e3a5d8866fa61c14bcfc4fd7afeaa935b1bf0894a7974e63ab"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "lower-array",
+      "native_xywh": [
+        566,
+        2796,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-lower-array-566-2796.png",
+        "bytes": 135447,
+        "sha256": "31a05eaabcd899027d151e6f85c5319783e6123c72dcc231d579412304f54104"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "lower-array",
+      "native_xywh": [
+        822,
+        2796,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-lower-array-822-2796.png",
+        "bytes": 125991,
+        "sha256": "fdcee244fd8a5bfef32caaba9a5759f0f4557c40f6cc0b6850bfa50daa3fbb01"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "lower-array",
+      "native_xywh": [
+        566,
+        3052,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-lower-array-566-3052.png",
+        "bytes": 133782,
+        "sha256": "171291c2d81296098df0fd63fff6d978f9acdc1e6235e771945a0612c489a658"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "lower-array",
+      "native_xywh": [
+        822,
+        3052,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-lower-array-822-3052.png",
+        "bytes": 126602,
+        "sha256": "321a6423243fd40bb89be6a2dd9422698a9a33bca441202ab53a20d4dee66f49"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "lower-colour",
+      "native_xywh": [
+        4666,
+        3016,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-lower-colour-4666-3016.png",
+        "bytes": 67372,
+        "sha256": "3c4e9cb8ca75a5be1e02b8722ce0541c2fedec7c063f96d998dc2fc25ab0ea75"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "lower-colour",
+      "native_xywh": [
+        4922,
+        3016,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-lower-colour-4922-3016.png",
+        "bytes": 71878,
+        "sha256": "2cebd899a8bc6b232426ab10a30307e129b89643566b9abf3bcca2168dfa8457"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "lower-colour",
+      "native_xywh": [
+        4666,
+        3272,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-lower-colour-4666-3272.png",
+        "bytes": 69880,
+        "sha256": "af0099abb3c2bf0dc3a2c22ac38cec5963d7abac283b78784762a2594ca47927"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "lower-colour",
+      "native_xywh": [
+        4922,
+        3272,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-lower-colour-4922-3272.png",
+        "bytes": 73197,
+        "sha256": "cb4424f8554833c75e56cc1187232d9eca54056f9de276577b01b4d40400aa58"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "surface-scratches",
+      "native_xywh": [
+        4856,
+        1256,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-surface-scratches-4856-1256.png",
+        "bytes": 73052,
+        "sha256": "174f4da7fc18f3b3af19aa3177e5e6b5238c3521ea9a39e98a5a4a381b1bae22"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "surface-scratches",
+      "native_xywh": [
+        5112,
+        1256,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-surface-scratches-5112-1256.png",
+        "bytes": 73102,
+        "sha256": "68593c986ef0d336c2f44d4fac3db444731eba83f0e3eb9c37acdb7235d4126b"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "surface-scratches",
+      "native_xywh": [
+        4856,
+        1512,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-surface-scratches-4856-1512.png",
+        "bytes": 72099,
+        "sha256": "aca3d0f2acca44fcde3a8711f4cad3ec7b523f404b902d82a6ed1dcc60257fc7"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "surface-scratches",
+      "native_xywh": [
+        5112,
+        1512,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-surface-scratches-5112-1512.png",
+        "bytes": 73775,
+        "sha256": "e190e2e198efe706a0c9445373092c3339b03cec61eadd2dacf686a9a5ea68f0"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        48,
+        336,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-upper-left-contact-grid-48-336.png",
+        "bytes": 130902,
+        "sha256": "46f93a52396860c71f5f4350460690cea3ccbf48ace6ca0a8498ce3335d84061"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        304,
+        336,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-upper-left-contact-grid-304-336.png",
+        "bytes": 115128,
+        "sha256": "313706c68426ef5cb748fe516fe4c252992739cab4b0310492cd2df4b42d2d41"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        48,
+        592,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-upper-left-contact-grid-48-592.png",
+        "bytes": 125090,
+        "sha256": "be3e90eec52957e8b5ec9dfa8a872618c7225e193aad28bcfd93330a6e9a8912"
+      }
+    },
+    {
+      "arm": "flat2",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        304,
+        592,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\flat2-upper-left-contact-grid-304-592.png",
+        "bytes": 112770,
+        "sha256": "76cedcf72ba46ba6ef92da5a00249af23e5fc2f5139705e860ec8ca0cf874b40"
+      }
+    }
+  ],
+  "conversion": "Identical (RGB16+128)//257 with retained ICC; native tiles never resampled."
+}

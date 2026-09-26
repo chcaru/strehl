@@ -1,0 +1,1112 @@
+{
+  "schema": 1,
+  "mode": "current",
+  "stack_name": "103MSDCF",
+  "inputs": [
+    {
+      "index": 0,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00046.ARW",
+      "identity_name": "DSC00046.ARW",
+      "bytes": 34349056,
+      "sha256": "7e90a3d476b9abadc5f9002e39463869dec51cf151813324d7add090bb31da9f"
+    },
+    {
+      "index": 1,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00047.ARW",
+      "identity_name": "DSC00047.ARW",
+      "bytes": 34340864,
+      "sha256": "17d6c2157223efba73be9f534d6f38391fc2d97585f5763cc88241792c675491"
+    },
+    {
+      "index": 2,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00048.ARW",
+      "identity_name": "DSC00048.ARW",
+      "bytes": 34357248,
+      "sha256": "d04d1e1d5480d104364d5ff4b85cf6c20b7528a26a95b9391e071e1cc0d757e3"
+    },
+    {
+      "index": 3,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00049.ARW",
+      "identity_name": "DSC00049.ARW",
+      "bytes": 34357248,
+      "sha256": "872b99be7bddd5232f2bd3a5d118ae72dbced258e14b74d40ea10574f1a0b0dc"
+    },
+    {
+      "index": 4,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00050.ARW",
+      "identity_name": "DSC00050.ARW",
+      "bytes": 34357248,
+      "sha256": "e66097644d8003bc76d0c04c3e0393082baacd159bf248e9fb580ac952cf5713"
+    },
+    {
+      "index": 5,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00051.ARW",
+      "identity_name": "DSC00051.ARW",
+      "bytes": 34357248,
+      "sha256": "f06ee785cd361e3db1c65b7dc14429e8912a82ab2f9d8e05494b04154f6187d4"
+    },
+    {
+      "index": 6,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00052.ARW",
+      "identity_name": "DSC00052.ARW",
+      "bytes": 34353152,
+      "sha256": "750a2f2d6b203c1731526b7479f97b9e6d964c635f92bc555cf2a61e96846165"
+    },
+    {
+      "index": 7,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00053.ARW",
+      "identity_name": "DSC00053.ARW",
+      "bytes": 34357248,
+      "sha256": "90f7e5e88e5e9433d695189b252d319ae101c4a9a864548deae0b1d39eb4cecf"
+    },
+    {
+      "index": 8,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00054.ARW",
+      "identity_name": "DSC00054.ARW",
+      "bytes": 34344960,
+      "sha256": "29f7f1f5db7dc0742d522eee9ca3ebc8284fb705684bb44fd913fd116b4b0c7d"
+    },
+    {
+      "index": 9,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00055.ARW",
+      "identity_name": "DSC00055.ARW",
+      "bytes": 34357248,
+      "sha256": "0d91b80c96f3854fb164653e272638c68a6b48528f95a3d860bdd1649de50624"
+    },
+    {
+      "index": 10,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00056.ARW",
+      "identity_name": "DSC00056.ARW",
+      "bytes": 34357248,
+      "sha256": "473339f3736b69168f50ed02d574b767b21288fda83ddfc75f1bc7d17a543557"
+    },
+    {
+      "index": 11,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00057.ARW",
+      "identity_name": "DSC00057.ARW",
+      "bytes": 34357248,
+      "sha256": "a9eb95f31aeffd834dbd6dd95598c6315d2c06b9a81fe974b0ecf1ecea35e63a"
+    },
+    {
+      "index": 12,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00058.ARW",
+      "identity_name": "DSC00058.ARW",
+      "bytes": 34357248,
+      "sha256": "2f1bba74d49106ac2c8e6590f979a59b36c112b52b5e427f10eb9e4b279ac7e5"
+    },
+    {
+      "index": 13,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00059.ARW",
+      "identity_name": "DSC00059.ARW",
+      "bytes": 34353152,
+      "sha256": "865e816577418477a1ef3665dc79e83f37085c66e3dca95b985421d06e258c70"
+    },
+    {
+      "index": 14,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00060.ARW",
+      "identity_name": "DSC00060.ARW",
+      "bytes": 34357248,
+      "sha256": "8c4ad185e8725fe4a05d821574f8f3c3717233cf86cda1509cdc027d4008ad6b"
+    },
+    {
+      "index": 15,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00061.ARW",
+      "identity_name": "DSC00061.ARW",
+      "bytes": 34353152,
+      "sha256": "6155e1004f30f093f5c2085058ed839a0c864d1cd80e7dd7ca10108f3c734138"
+    },
+    {
+      "index": 16,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00062.ARW",
+      "identity_name": "DSC00062.ARW",
+      "bytes": 34353152,
+      "sha256": "6375bf21386e3cf2884c4b8ebfbeed9b2a4f9279d8d88075ace798092e1a636f"
+    },
+    {
+      "index": 17,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00063.ARW",
+      "identity_name": "DSC00063.ARW",
+      "bytes": 34353152,
+      "sha256": "6e31b24d3449c98890d35527a83f13e188644e7c95f64d0df13b4a8c90cc4dee"
+    },
+    {
+      "index": 18,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00064.ARW",
+      "identity_name": "DSC00064.ARW",
+      "bytes": 34349056,
+      "sha256": "f3e009e7188098f74fd3cb2c7a1a4091baa3b3c58c6927a82c1ad818e366b446"
+    },
+    {
+      "index": 19,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00065.ARW",
+      "identity_name": "DSC00065.ARW",
+      "bytes": 34353152,
+      "sha256": "e0358d1dfdf76b53128ca6b2ea7bbdfae82b65bc8065aa03ce50cb8898700a6a"
+    },
+    {
+      "index": 20,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00066.ARW",
+      "identity_name": "DSC00066.ARW",
+      "bytes": 34353152,
+      "sha256": "1bb885203c40869923e5872cb34b08351419ed3855074215040c2ce9f0efe2b2"
+    },
+    {
+      "index": 21,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00067.ARW",
+      "identity_name": "DSC00067.ARW",
+      "bytes": 34353152,
+      "sha256": "4fc0696e79c9b5b02230ec273d75e7840a04018230b5f1db326e9f1821924b6e"
+    },
+    {
+      "index": 22,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00068.ARW",
+      "identity_name": "DSC00068.ARW",
+      "bytes": 34336768,
+      "sha256": "7c2ba36d91afb9872783de60ab0f32fa08b54a57d0117ec3f3c8d1e6e407954e"
+    },
+    {
+      "index": 23,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00069.ARW",
+      "identity_name": "DSC00069.ARW",
+      "bytes": 34349056,
+      "sha256": "29e83f62487852cf0bf75b3c4efb197917a17b1f809ff71c75775fa78100f3ad"
+    },
+    {
+      "index": 24,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00070.ARW",
+      "identity_name": "DSC00070.ARW",
+      "bytes": 34344960,
+      "sha256": "77b6ee7ba9d3e250ebfd5550b2dbfbcefc52084d4d4dcbae5b28252ba9344d5f"
+    },
+    {
+      "index": 25,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00071.ARW",
+      "identity_name": "DSC00071.ARW",
+      "bytes": 34349056,
+      "sha256": "c617a7fa66922d752e5a57e4c82a8873bb6b5e0354926a95e22c7e5f12a031bc"
+    },
+    {
+      "index": 26,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00072.ARW",
+      "identity_name": "DSC00072.ARW",
+      "bytes": 34344960,
+      "sha256": "7c3a6aba65dcb9c92ae702cd3b4fa22fffcab7a5c44006f250126c57322c9176"
+    },
+    {
+      "index": 27,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00073.ARW",
+      "identity_name": "DSC00073.ARW",
+      "bytes": 34344960,
+      "sha256": "9800da52656cc1740514e97bfb9af4cde2e59ff8b4b3c20d769fc8a4039e0663"
+    },
+    {
+      "index": 28,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00074.ARW",
+      "identity_name": "DSC00074.ARW",
+      "bytes": 34344960,
+      "sha256": "a1bf84c318f40c6f5c3c1b88588e983f21e5e53ff1092723e0397aa5245e9f1a"
+    },
+    {
+      "index": 29,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00075.ARW",
+      "identity_name": "DSC00075.ARW",
+      "bytes": 34332672,
+      "sha256": "baf278585977f8ca37c2fc07a4affc28e685e520694030833a0f57cf14589877"
+    },
+    {
+      "index": 30,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00076.ARW",
+      "identity_name": "DSC00076.ARW",
+      "bytes": 34344960,
+      "sha256": "684f688924c8d8d83ffd3659f8b80b9a0d04a21e28676b6a5e033a4dc11bde6c"
+    },
+    {
+      "index": 31,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00077.ARW",
+      "identity_name": "DSC00077.ARW",
+      "bytes": 34344960,
+      "sha256": "d16818189989934ef42f765d8b16b4bf9179b1dc8a19bf3454f48320ac86a09d"
+    },
+    {
+      "index": 32,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00078.ARW",
+      "identity_name": "DSC00078.ARW",
+      "bytes": 34340864,
+      "sha256": "a51e1ee753eeeed7dc9d1cf7a4b949c90076d0fc43a4ef2dcfae1dda6c81b767"
+    },
+    {
+      "index": 33,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00079.ARW",
+      "identity_name": "DSC00079.ARW",
+      "bytes": 34336768,
+      "sha256": "39716f4fdd570358d90eb25384e02205b590fb2bac9857b6bfee86b10debcca7"
+    },
+    {
+      "index": 34,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00080.ARW",
+      "identity_name": "DSC00080.ARW",
+      "bytes": 34344960,
+      "sha256": "10fb13eb54121f7d2d0c7cb53ac945c1857b0b8d6f216d412ebbaada450d585a"
+    },
+    {
+      "index": 35,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00081.ARW",
+      "identity_name": "DSC00081.ARW",
+      "bytes": 34324480,
+      "sha256": "76f04e4f42ae0ff2106865755809a1118402ae25924d769d0cb8d610a26740a0"
+    },
+    {
+      "index": 36,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00082.ARW",
+      "identity_name": "DSC00082.ARW",
+      "bytes": 34336768,
+      "sha256": "cec0c4260b4496f3d14784ed21890e221a7e113f8d704446bb2c216983ce3c7e"
+    },
+    {
+      "index": 37,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00083.ARW",
+      "identity_name": "DSC00083.ARW",
+      "bytes": 34344960,
+      "sha256": "b655ce25a73088b987ab1f985753222fe78cd743e46eb5237e8dcc388c6e8203"
+    },
+    {
+      "index": 38,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00084.ARW",
+      "identity_name": "DSC00084.ARW",
+      "bytes": 34340864,
+      "sha256": "e6cce61cbb24dcee271150f15136a878375c4c8bb5d17618de6522089400b236"
+    },
+    {
+      "index": 39,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00085.ARW",
+      "identity_name": "DSC00085.ARW",
+      "bytes": 34344960,
+      "sha256": "66d5aa0d27f9d0816f657a34f5d6e012475af407b2e6b9e8182e9c6966cd73c2"
+    },
+    {
+      "index": 40,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00086.ARW",
+      "identity_name": "DSC00086.ARW",
+      "bytes": 34344960,
+      "sha256": "d0606157b64e8ed0e5726987a0c108205d38df7726b0ddac36932629d8572f27"
+    },
+    {
+      "index": 41,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00087.ARW",
+      "identity_name": "DSC00087.ARW",
+      "bytes": 34349056,
+      "sha256": "d80a4b0b1a038707ff03b4c9b9605237afda1f4a49d5e3d26d6746ec37629ada"
+    },
+    {
+      "index": 42,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00088.ARW",
+      "identity_name": "DSC00088.ARW",
+      "bytes": 34353152,
+      "sha256": "be78d70cf5cce70710d5b046fd3b4a08f00525983684fb964cce75d22023c530"
+    },
+    {
+      "index": 43,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00089.ARW",
+      "identity_name": "DSC00089.ARW",
+      "bytes": 34353152,
+      "sha256": "f639a3a56e22ea576a55056efc368dadc1c7224e7c5beca7ad4efb78090ae809"
+    },
+    {
+      "index": 44,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00090.ARW",
+      "identity_name": "DSC00090.ARW",
+      "bytes": 34357248,
+      "sha256": "93dd6aebc6400c29bb67bd27438ab1884bf0697501a58ce7a3094a1e867b357b"
+    },
+    {
+      "index": 45,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00091.ARW",
+      "identity_name": "DSC00091.ARW",
+      "bytes": 34353152,
+      "sha256": "056e962885d1867e5d47bdd613f35f40d885e7c4f9a279652f0ff2aa5b1fc65c"
+    },
+    {
+      "index": 46,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00092.ARW",
+      "identity_name": "DSC00092.ARW",
+      "bytes": 34361344,
+      "sha256": "e7c61981acc03db06de7f9de97b9a5a56a89a951a8ec2c837219f76e35836ad7"
+    },
+    {
+      "index": 47,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00093.ARW",
+      "identity_name": "DSC00093.ARW",
+      "bytes": 34365440,
+      "sha256": "9043062edc8b2226dde01e118378b26623814edd47a25d23edf1a35ecb0363ae"
+    },
+    {
+      "index": 48,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00094.ARW",
+      "identity_name": "DSC00094.ARW",
+      "bytes": 34353152,
+      "sha256": "dca21a66ded7322c3e9a4c5f3ab1ef99ba9d9c635b6f8636a741e75075b27628"
+    },
+    {
+      "index": 49,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00095.ARW",
+      "identity_name": "DSC00095.ARW",
+      "bytes": 34365440,
+      "sha256": "605561fb673f5cd6c4618e7d62bbc668d306831c4dd81d48a02728ce9528b1a9"
+    },
+    {
+      "index": 50,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00096.ARW",
+      "identity_name": "DSC00096.ARW",
+      "bytes": 34369536,
+      "sha256": "d6584297c7c26ed4ae8603bf276a8463da27c3a7a6c1834437cb826609f52b81"
+    },
+    {
+      "index": 51,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00097.ARW",
+      "identity_name": "DSC00097.ARW",
+      "bytes": 34373632,
+      "sha256": "12cc79aa80444d36fe1202e3f99d6f2be8dda2ae4f4694ed4811aae267ca7421"
+    },
+    {
+      "index": 52,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00098.ARW",
+      "identity_name": "DSC00098.ARW",
+      "bytes": 34373632,
+      "sha256": "3e9d4a7924fc4e3b833a9426dc4468dcfd65975113732c684208b559bc2da72a"
+    },
+    {
+      "index": 53,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00099.ARW",
+      "identity_name": "DSC00099.ARW",
+      "bytes": 34369536,
+      "sha256": "2c2f5665558ac208cfaf8f4eb4e17cf7923d9bfa5d9852245dd06e06abf1880f"
+    },
+    {
+      "index": 54,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00100.ARW",
+      "identity_name": "DSC00100.ARW",
+      "bytes": 34369536,
+      "sha256": "ce74e877725c59d3fab4a3fda38b7437cea57d7371d02418b133cc27911ec2d2"
+    },
+    {
+      "index": 55,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00101.ARW",
+      "identity_name": "DSC00101.ARW",
+      "bytes": 34369536,
+      "sha256": "f047b91114d1d8b603c5077d3d6b4c197c762ed74287c6a19c118ed577b3c08c"
+    },
+    {
+      "index": 56,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00102.ARW",
+      "identity_name": "DSC00102.ARW",
+      "bytes": 34369536,
+      "sha256": "bbaef4edcbdcd2bba317a88bc06ba0b80419e29d3d1ae9491a1e6eec59d9cf15"
+    },
+    {
+      "index": 57,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00103.ARW",
+      "identity_name": "DSC00103.ARW",
+      "bytes": 34373632,
+      "sha256": "2ebb564f9363c3c09b00f8fa4fd491581a078589380b2dcc66253182d6d3f778"
+    },
+    {
+      "index": 58,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00104.ARW",
+      "identity_name": "DSC00104.ARW",
+      "bytes": 34365440,
+      "sha256": "8197e9360c1e095a35f3448f660c2320278bc1af73f6780b6bac59eb9fa46a3c"
+    },
+    {
+      "index": 59,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00105.ARW",
+      "identity_name": "DSC00105.ARW",
+      "bytes": 34369536,
+      "sha256": "68335a64c1fe169443ed89bbc87f86837d1204a22a6f71e9c6d711241f424c32"
+    },
+    {
+      "index": 60,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00106.ARW",
+      "identity_name": "DSC00106.ARW",
+      "bytes": 34369536,
+      "sha256": "27a36a34aee9d165a34726e48d7c9aaa6c67badb26c460a1769902c867096e30"
+    },
+    {
+      "index": 61,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00107.ARW",
+      "identity_name": "DSC00107.ARW",
+      "bytes": 34369536,
+      "sha256": "69d2e2422ecf2d507688b2ca106dda567f4c400fc1f4cc1f4e0d39355b2a2d2e"
+    },
+    {
+      "index": 62,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00108.ARW",
+      "identity_name": "DSC00108.ARW",
+      "bytes": 34365440,
+      "sha256": "e8bdbdc1a9b5b4fd2cddc2b86b982a7e0f65bed44859584ba9ecfd597f077a0b"
+    },
+    {
+      "index": 63,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00109.ARW",
+      "identity_name": "DSC00109.ARW",
+      "bytes": 34369536,
+      "sha256": "1c6db863461be96b4c43ae02352cf5337fe6e0e6aa4062a3bdf064a66c4622b7"
+    },
+    {
+      "index": 64,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00110.ARW",
+      "identity_name": "DSC00110.ARW",
+      "bytes": 34365440,
+      "sha256": "004d5061045ef5f82738580109b21af4563491d4639b46899fa4242305582aa3"
+    },
+    {
+      "index": 65,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00111.ARW",
+      "identity_name": "DSC00111.ARW",
+      "bytes": 34357248,
+      "sha256": "538685a4d3c304712f0fdb19f35b2dac7d0afb9f5f8edc0f3c1bc9f7919a304e"
+    },
+    {
+      "index": 66,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00112.ARW",
+      "identity_name": "DSC00112.ARW",
+      "bytes": 34365440,
+      "sha256": "66270aa97ac59afc682023e09dbd0568f580b18e1cd70282d377c379bcb7aca7"
+    },
+    {
+      "index": 67,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00113.ARW",
+      "identity_name": "DSC00113.ARW",
+      "bytes": 34365440,
+      "sha256": "839dcded0e53abe4135f8493304582e018b663e8ccd80f766e4559b92f6469f3"
+    },
+    {
+      "index": 68,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00114.ARW",
+      "identity_name": "DSC00114.ARW",
+      "bytes": 34361344,
+      "sha256": "5d9b9fff789f5a79e22acfed817804ca6dd260b9eaa890ae4d878956e37f44d7"
+    },
+    {
+      "index": 69,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00115.ARW",
+      "identity_name": "DSC00115.ARW",
+      "bytes": 34353152,
+      "sha256": "e9aa2b0e29a658bda2dc0bf6fad3cdbcad33ec7ca5215c2a986e61d982179fd4"
+    },
+    {
+      "index": 70,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00116.ARW",
+      "identity_name": "DSC00116.ARW",
+      "bytes": 34349056,
+      "sha256": "c6c980b5b4c2541d9ffaf9678848c2716bb5c596a517b067ea7310d0856dc87a"
+    },
+    {
+      "index": 71,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00117.ARW",
+      "identity_name": "DSC00117.ARW",
+      "bytes": 34357248,
+      "sha256": "bb2211ecc7497cfb8e3f05226dfcf3b876c73f279a51cf2049fd82e8cca1797b"
+    },
+    {
+      "index": 72,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00118.ARW",
+      "identity_name": "DSC00118.ARW",
+      "bytes": 34353152,
+      "sha256": "5a2d429d327a189a89a0d84f9087517b5681734033e3b66905bb7930a92aa305"
+    },
+    {
+      "index": 73,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00119.ARW",
+      "identity_name": "DSC00119.ARW",
+      "bytes": 34344960,
+      "sha256": "94ad78151b13f9c1b75812fe905eaaf66e25242dbb68e7d2b317bba0feea894f"
+    },
+    {
+      "index": 74,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00120.ARW",
+      "identity_name": "DSC00120.ARW",
+      "bytes": 34349056,
+      "sha256": "ec05dd4a5e0cb4b76b57d3c65d659683315fa310c553deb2b7dcb15c5295788a"
+    },
+    {
+      "index": 75,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00121.ARW",
+      "identity_name": "DSC00121.ARW",
+      "bytes": 34353152,
+      "sha256": "92b87f531bac630a83ed04beb57075115201046f3fc09d77bc9cb31e64e9f997"
+    },
+    {
+      "index": 76,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00122.ARW",
+      "identity_name": "DSC00122.ARW",
+      "bytes": 34349056,
+      "sha256": "4c94c7ed12b113101ee0eed47cd00ac9f0a376c7d754857d6c36e1bfd05bd7cb"
+    },
+    {
+      "index": 77,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00123.ARW",
+      "identity_name": "DSC00123.ARW",
+      "bytes": 34349056,
+      "sha256": "c3104c8519fe9bd14d813891ad15f922624816b0c95a6e405c0d1d842572a472"
+    },
+    {
+      "index": 78,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00124.ARW",
+      "identity_name": "DSC00124.ARW",
+      "bytes": 34344960,
+      "sha256": "d764595fe315fbb91370b32b4e8730d6f9101e04ae2d7f84849803c32bb9d34c"
+    },
+    {
+      "index": 79,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00125.ARW",
+      "identity_name": "DSC00125.ARW",
+      "bytes": 34344960,
+      "sha256": "84a16c65d863896d6ea6f6aeb732c6700f16907b4b19747256cc3ef9292fd393"
+    },
+    {
+      "index": 80,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00126.ARW",
+      "identity_name": "DSC00126.ARW",
+      "bytes": 34340864,
+      "sha256": "b38014bdba7af4cae344a003ded228b33c76e9d2ed18e30c7eb6da794c04cf31"
+    },
+    {
+      "index": 81,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00127.ARW",
+      "identity_name": "DSC00127.ARW",
+      "bytes": 34340864,
+      "sha256": "1b6b777ca8f3e851fe3d7d46e9cb94aaf9548471b0dbe35be5d8f57d660047c5"
+    },
+    {
+      "index": 82,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00128.ARW",
+      "identity_name": "DSC00128.ARW",
+      "bytes": 34336768,
+      "sha256": "73344715af6565a336cadf69d5ebb7c0926f2753b83df7e9abe4efa1e435cb4f"
+    },
+    {
+      "index": 83,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00129.ARW",
+      "identity_name": "DSC00129.ARW",
+      "bytes": 34328576,
+      "sha256": "30c3829af0344d185be5799ed8b25a9b99d0a488977f206fa85d700b01b409c4"
+    },
+    {
+      "index": 84,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00130.ARW",
+      "identity_name": "DSC00130.ARW",
+      "bytes": 34332672,
+      "sha256": "57e7e9031a56a4aaa73954d28879c73869a66c844d66e2782475156cb5615b7e"
+    },
+    {
+      "index": 85,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00131.ARW",
+      "identity_name": "DSC00131.ARW",
+      "bytes": 34332672,
+      "sha256": "3ab2f5bf7bb352594465f492ecf75dfdb088019a32dafa35a997f54752d8a9d3"
+    },
+    {
+      "index": 86,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00132.ARW",
+      "identity_name": "DSC00132.ARW",
+      "bytes": 34328576,
+      "sha256": "e99b503b1a846cb48f740875d3f600e682469507915ecfdc604535770c907048"
+    },
+    {
+      "index": 87,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00133.ARW",
+      "identity_name": "DSC00133.ARW",
+      "bytes": 34328576,
+      "sha256": "619f4bf01f6a7e2f128ca9ca981ae3ab681308177560c984407eeef1ab8425a5"
+    },
+    {
+      "index": 88,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00134.ARW",
+      "identity_name": "DSC00134.ARW",
+      "bytes": 34324480,
+      "sha256": "a04d6e512e106f39f6abee0cf1e466c426083ed549d7cee986e6f39ced9229d5"
+    },
+    {
+      "index": 89,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00135.ARW",
+      "identity_name": "DSC00135.ARW",
+      "bytes": 34320384,
+      "sha256": "1348db113eeef3767c2e742c8c6e4ef9890f0c6e7af03a89376c963c5b14a8cf"
+    },
+    {
+      "index": 90,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00136.ARW",
+      "identity_name": "DSC00136.ARW",
+      "bytes": 34320384,
+      "sha256": "2c64938113af9540d8b6f41dae487fc4a751b24e7550af0fb367c797dc6c1bff"
+    },
+    {
+      "index": 91,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00137.ARW",
+      "identity_name": "DSC00137.ARW",
+      "bytes": 34320384,
+      "sha256": "46840f080d0727a9c79e681b0a665b4f63e9151f1a09351ad442a0293a69bcae"
+    },
+    {
+      "index": 92,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00138.ARW",
+      "identity_name": "DSC00138.ARW",
+      "bytes": 34316288,
+      "sha256": "768aca9d022ea80b1db57b2cb6f7a01950ed5f574517856851bc5abb9b83951e"
+    },
+    {
+      "index": 93,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00139.ARW",
+      "identity_name": "DSC00139.ARW",
+      "bytes": 34320384,
+      "sha256": "bc0df7d9f05134bf72c5c55d8fd721a8814a44b396e87ade6a226a533d7f4d43"
+    },
+    {
+      "index": 94,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00140.ARW",
+      "identity_name": "DSC00140.ARW",
+      "bytes": 34312192,
+      "sha256": "fb198e37952f00d4fa0eb49c64d37da95f10660a8d50e5e3fd36bbdb313dbc39"
+    },
+    {
+      "index": 95,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00141.ARW",
+      "identity_name": "DSC00141.ARW",
+      "bytes": 34312192,
+      "sha256": "b756149b833eb3877f5cd386bc8e0ad045920ae53b2d2e6a5610af155fcd4a28"
+    },
+    {
+      "index": 96,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00142.ARW",
+      "identity_name": "DSC00142.ARW",
+      "bytes": 34304000,
+      "sha256": "d1df89aff60a8f3af9defc16aa4a3afa88ce0a90a26fa49511a63397771ff539"
+    },
+    {
+      "index": 97,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00143.ARW",
+      "identity_name": "DSC00143.ARW",
+      "bytes": 34304000,
+      "sha256": "595859798a927a674775ab6cea0032115d02a3041277192a6685f05d2ece6b2e"
+    },
+    {
+      "index": 98,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00144.ARW",
+      "identity_name": "DSC00144.ARW",
+      "bytes": 34312192,
+      "sha256": "a4c1c98e219518befb0340067587c8c7cb358e84eb54adf13f8bf03e6c12d849"
+    },
+    {
+      "index": 99,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00145.ARW",
+      "identity_name": "DSC00145.ARW",
+      "bytes": 34312192,
+      "sha256": "2b30224b051522d9fbe6bf3d16d0471a85efc3dcb2a83b56573a71561c54012e"
+    },
+    {
+      "index": 100,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00146.ARW",
+      "identity_name": "DSC00146.ARW",
+      "bytes": 34304000,
+      "sha256": "e3debd0e4602fbfe456c1bee8282780e4d7f70e6648c3274514ead2bc8ad53e3"
+    },
+    {
+      "index": 101,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00147.ARW",
+      "identity_name": "DSC00147.ARW",
+      "bytes": 34287616,
+      "sha256": "156dbc768ab92b4ea963729a218cc1020363b3d05ac144adcbd10509a743795c"
+    },
+    {
+      "index": 102,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00148.ARW",
+      "identity_name": "DSC00148.ARW",
+      "bytes": 34299904,
+      "sha256": "d1bceadc01c9b74e7f81587be2e2f3146ae75926e73251696deb73756084aa9e"
+    },
+    {
+      "index": 103,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00149.ARW",
+      "identity_name": "DSC00149.ARW",
+      "bytes": 34295808,
+      "sha256": "41584e7dd9d1a36d3dd5fc9a43aa70640f40e7763c4dd8685f363654a5c6ebcf"
+    },
+    {
+      "index": 104,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00150.ARW",
+      "identity_name": "DSC00150.ARW",
+      "bytes": 34295808,
+      "sha256": "f30874463de99b55a7286aad8089fccddb83a699449410de77bc9cafbaf7e10d"
+    },
+    {
+      "index": 105,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00151.ARW",
+      "identity_name": "DSC00151.ARW",
+      "bytes": 34295808,
+      "sha256": "d3d9b8a7c3302f978921ab78a108b13f9e5567d001a961f3557a46a6208d6b8c"
+    },
+    {
+      "index": 106,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00152.ARW",
+      "identity_name": "DSC00152.ARW",
+      "bytes": 34291712,
+      "sha256": "b55f29b8f4c81d19b9e1f2419d38629a8084186f9214eef32dab4543f01b6bd9"
+    },
+    {
+      "index": 107,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00153.ARW",
+      "identity_name": "DSC00153.ARW",
+      "bytes": 34291712,
+      "sha256": "7b6517e2df77c7cb8e3c572b8e3b2390afe50e6c63dd23c780c905acd5461523"
+    },
+    {
+      "index": 108,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00154.ARW",
+      "identity_name": "DSC00154.ARW",
+      "bytes": 34291712,
+      "sha256": "8a76ac7e3e8dca3d65623a9c282d582e701404fbb59cf0a381f9c24865d5233d"
+    },
+    {
+      "index": 109,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00155.ARW",
+      "identity_name": "DSC00155.ARW",
+      "bytes": 34291712,
+      "sha256": "3ad0a6e93f381c8e2f830c9ae7146c85f6779ea2c3e9c16b19d3bdd140a3172c"
+    },
+    {
+      "index": 110,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00156.ARW",
+      "identity_name": "DSC00156.ARW",
+      "bytes": 34283520,
+      "sha256": "605dc537e8042fc72d5613df87559a70ddac3db8fd266a284ca2d5bbbe36c030"
+    },
+    {
+      "index": 111,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00157.ARW",
+      "identity_name": "DSC00157.ARW",
+      "bytes": 34291712,
+      "sha256": "c11d882e709f5e6205b2ba3eb52f60cf1591fa0839dba5e189c431c690d0ca17"
+    },
+    {
+      "index": 112,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00158.ARW",
+      "identity_name": "DSC00158.ARW",
+      "bytes": 34279424,
+      "sha256": "3786c545b545f800fe7cdb6ac7878360674986431fb3ee5598013b034d2dd940"
+    },
+    {
+      "index": 113,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00159.ARW",
+      "identity_name": "DSC00159.ARW",
+      "bytes": 34283520,
+      "sha256": "6923f08d5bd12572f5020389149440f2065a0ebd889f8a892c09e0bd29df1703"
+    },
+    {
+      "index": 114,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00160.ARW",
+      "identity_name": "DSC00160.ARW",
+      "bytes": 34283520,
+      "sha256": "cce48b631df518366e57872a24778553bbd899dfde92346e182feff2c1770ec9"
+    },
+    {
+      "index": 115,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00161.ARW",
+      "identity_name": "DSC00161.ARW",
+      "bytes": 34283520,
+      "sha256": "1d18601cfbf6e8f7f17d7f68417db7b665f63463bd45fa1bb39c34bcd6445fbe"
+    },
+    {
+      "index": 116,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00162.ARW",
+      "identity_name": "DSC00162.ARW",
+      "bytes": 34275328,
+      "sha256": "9074315f738b697ecaf26441aa54c73b75e0bd0a8951e8a2b69fb0794ceb6dc3"
+    },
+    {
+      "index": 117,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00163.ARW",
+      "identity_name": "DSC00163.ARW",
+      "bytes": 34271232,
+      "sha256": "f83cd616ff30db7be12eabbfa71a1828a900b13fa2a59842a86ea6d71b9a4a1b"
+    },
+    {
+      "index": 118,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00164.ARW",
+      "identity_name": "DSC00164.ARW",
+      "bytes": 34279424,
+      "sha256": "f4bd489c81e6cd0b53e1d969ed095d8266d94b1d6186db695952f0de81606135"
+    },
+    {
+      "index": 119,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00165.ARW",
+      "identity_name": "DSC00165.ARW",
+      "bytes": 34275328,
+      "sha256": "e539ab062337333deae97417833842d8d064c3443672cc7b204aed779d3c2eeb"
+    },
+    {
+      "index": 120,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00166.ARW",
+      "identity_name": "DSC00166.ARW",
+      "bytes": 34275328,
+      "sha256": "2f984befc80259c2f4eda0f26417ca23c0581cb303ebfe6068bb4ea17e0bfdf4"
+    },
+    {
+      "index": 121,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00167.ARW",
+      "identity_name": "DSC00167.ARW",
+      "bytes": 34267136,
+      "sha256": "c79829300eeb95c9daee81cd67d786c0e57dd52dece8ec91a8ef2c9360edc45b"
+    },
+    {
+      "index": 122,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00168.ARW",
+      "identity_name": "DSC00168.ARW",
+      "bytes": 34271232,
+      "sha256": "d1d53b82cc756db4b477ef3d25c4b67b25f88fb5890be078153e593df878ee95"
+    },
+    {
+      "index": 123,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00169.ARW",
+      "identity_name": "DSC00169.ARW",
+      "bytes": 34267136,
+      "sha256": "e0eeab4b78d854423582ce941a55be9ed27c280904029020b225b28466c8d170"
+    },
+    {
+      "index": 124,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00170.ARW",
+      "identity_name": "DSC00170.ARW",
+      "bytes": 34271232,
+      "sha256": "9c290539b6308e4c484f90f47190fd58b0abf8b87c6aff87a7c9a9525e86da2d"
+    },
+    {
+      "index": 125,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00171.ARW",
+      "identity_name": "DSC00171.ARW",
+      "bytes": 34267136,
+      "sha256": "07a4147d3e010c98b5ff4eaead8e33070d4515e998d2d9655fb4858c18830631"
+    },
+    {
+      "index": 126,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00172.ARW",
+      "identity_name": "DSC00172.ARW",
+      "bytes": 34258944,
+      "sha256": "dc41873c923aeaf50222c67e6488a05e10a43d540be41d3b8786e7abf4fc7174"
+    },
+    {
+      "index": 127,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00173.ARW",
+      "identity_name": "DSC00173.ARW",
+      "bytes": 34258944,
+      "sha256": "44c7296f90c8223be640d845a3efdca6596159e5fc9b2b77620e52fd86d00159"
+    },
+    {
+      "index": 128,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00174.ARW",
+      "identity_name": "DSC00174.ARW",
+      "bytes": 34267136,
+      "sha256": "cc162c3facbf664c33886116eaced812c012fc9551a469fff3727762a39aaa7f"
+    },
+    {
+      "index": 129,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00175.ARW",
+      "identity_name": "DSC00175.ARW",
+      "bytes": 34267136,
+      "sha256": "ddd6018bde7c788bd8352829dc61bc52724b57f6bbf04f1a997f93f465bb7ef9"
+    },
+    {
+      "index": 130,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00176.ARW",
+      "identity_name": "DSC00176.ARW",
+      "bytes": 34254848,
+      "sha256": "b0eb8b764f6bf612c76ffe2e7a2a2caea039f3992d77ac2cc4aa0fc6df317c9c"
+    },
+    {
+      "index": 131,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00177.ARW",
+      "identity_name": "DSC00177.ARW",
+      "bytes": 34258944,
+      "sha256": "474bfd475e5ed0b040defe1b083a8b6127ab2cf24d816993dfbf5c280a428e0d"
+    },
+    {
+      "index": 132,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00178.ARW",
+      "identity_name": "DSC00178.ARW",
+      "bytes": 34250752,
+      "sha256": "94bed20cf02b0f3811bef0ba860eb43092409aaacd313a94ac76537d8ae0bf3d"
+    },
+    {
+      "index": 133,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00179.ARW",
+      "identity_name": "DSC00179.ARW",
+      "bytes": 34246656,
+      "sha256": "c499734a74f306610913e8b8c97f2d6536bf8e3b5a282d36daa37d66ef53b83f"
+    },
+    {
+      "index": 134,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00180.ARW",
+      "identity_name": "DSC00180.ARW",
+      "bytes": 34254848,
+      "sha256": "ffc9244b1656579eebbb2372af3b5c51c2878432a58ef7fcc6a1e304eddf0b65"
+    },
+    {
+      "index": 135,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00181.ARW",
+      "identity_name": "DSC00181.ARW",
+      "bytes": 34254848,
+      "sha256": "524caf87cdd6769745e6414075971044fe3225dfe927e290fc1fc576070649d9"
+    },
+    {
+      "index": 136,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00182.ARW",
+      "identity_name": "DSC00182.ARW",
+      "bytes": 34254848,
+      "sha256": "acbd0dad58a3d4c9d41884c2b7bc37bf2b96e816e27591f6ca94bb4d49554968"
+    },
+    {
+      "index": 137,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00183.ARW",
+      "identity_name": "DSC00183.ARW",
+      "bytes": 34250752,
+      "sha256": "69f8d92f80af555aaf373565fb6ade17850c52cbe241726c12c80ccc829a9b7e"
+    },
+    {
+      "index": 138,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00184.ARW",
+      "identity_name": "DSC00184.ARW",
+      "bytes": 34246656,
+      "sha256": "fcc4b4a65e4d250782806131ea8ce9d2943cbe497d0459ce867a406f3a734fbc"
+    },
+    {
+      "index": 139,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00185.ARW",
+      "identity_name": "DSC00185.ARW",
+      "bytes": 34258944,
+      "sha256": "d5aa5482b378c6d7c2b33749316daec230a0b60619ee6fbef5d413ced890864d"
+    },
+    {
+      "index": 140,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00186.ARW",
+      "identity_name": "DSC00186.ARW",
+      "bytes": 34250752,
+      "sha256": "edffc4eeacf6d86551ee902b486b6fb7ab48fdca613582788b0bd1224c1ddb8c"
+    },
+    {
+      "index": 141,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00187.ARW",
+      "identity_name": "DSC00187.ARW",
+      "bytes": 34250752,
+      "sha256": "68cc0fcb60318756a26cd080ea2c423cd20ca2e4af7846025bde4fb6d82518da"
+    },
+    {
+      "index": 142,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00188.ARW",
+      "identity_name": "DSC00188.ARW",
+      "bytes": 34254848,
+      "sha256": "f357833051c35715c1aed42be837784486dc993d2e029f74eda11271e10dcca9"
+    },
+    {
+      "index": 143,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00189.ARW",
+      "identity_name": "DSC00189.ARW",
+      "bytes": 34258944,
+      "sha256": "10a6c9b0eb13b7768aa87574243a6f0639740a2449508d1b30577b7df203c0e4"
+    },
+    {
+      "index": 144,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00190.ARW",
+      "identity_name": "DSC00190.ARW",
+      "bytes": 34271232,
+      "sha256": "53b311a4a96b9bc019e665628357d9b0cb8535156e411a08cff2d1676bd42335"
+    },
+    {
+      "index": 145,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00191.ARW",
+      "identity_name": "DSC00191.ARW",
+      "bytes": 34275328,
+      "sha256": "e627459eed1d8f10d00b69b0e3e645caade9fb668725ac445906707590c68509"
+    },
+    {
+      "index": 146,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00192.ARW",
+      "identity_name": "DSC00192.ARW",
+      "bytes": 34283520,
+      "sha256": "3625ec6c8a4f3204caaeee9329ba184047c94e90b4c47187daf95baa755c1757"
+    },
+    {
+      "index": 147,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00193.ARW",
+      "identity_name": "DSC00193.ARW",
+      "bytes": 34279424,
+      "sha256": "b4119ee6708333820c0239edfc21314240d0196127809d211f0afb414c1e4264"
+    },
+    {
+      "index": 148,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00194.ARW",
+      "identity_name": "DSC00194.ARW",
+      "bytes": 34295808,
+      "sha256": "ac4d7121a9e3d655c75824290c43432ff7e7eb575313ab2b333f73d3d0cac345"
+    },
+    {
+      "index": 149,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00195.ARW",
+      "identity_name": "DSC00195.ARW",
+      "bytes": 34312192,
+      "sha256": "90ad61fe3c04888822169b9cf8c5d45b18f04cf2482c2b6a5aac6914e6682a36"
+    },
+    {
+      "index": 150,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00196.ARW",
+      "identity_name": "DSC00196.ARW",
+      "bytes": 34336768,
+      "sha256": "93a1e802281715dd792ae43f78d3961d6697be88e4735abbbb16861355d68d1e"
+    },
+    {
+      "index": 151,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00197.ARW",
+      "identity_name": "DSC00197.ARW",
+      "bytes": 34344960,
+      "sha256": "050a8128eb2be2db9a81a2fa1ec72de94fff0d9b190f9f4126c764e407e4d936"
+    },
+    {
+      "index": 152,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00198.ARW",
+      "identity_name": "DSC00198.ARW",
+      "bytes": 34361344,
+      "sha256": "815692d5155443b61c947af342882cfddf106a14b267354d9143752ee8991e4d"
+    },
+    {
+      "index": 153,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00199.ARW",
+      "identity_name": "DSC00199.ARW",
+      "bytes": 34377728,
+      "sha256": "df5404fb46a57f1f92fffe41560f72ca7ca1262caa3c05094a5d2b5d2b388f32"
+    },
+    {
+      "index": 154,
+      "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00200.ARW",
+      "identity_name": "DSC00200.ARW",
+      "bytes": 34381824,
+      "sha256": "1fb9f534da4be6172be1247eee80cf479738717b230140b5ef5a2e8448e28432"
+    }
+  ],
+  "warp_map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\minerals-september24\\103msdcf\\alignment.txt",
+  "warp_map_sha256": "e9fdd5cc287d625d9f7c5ca06ecc7a44451b281787ef6b910eac6d613206b035",
+  "expected_reference": 77,
+  "expected_full_geometry": [
+    3516,
+    2344
+  ],
+  "expected_crop": [
+    60,
+    40,
+    3396,
+    2264
+  ],
+  "expected_baseline": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\opal-103\\stack-master.tiff",
+  "expected_baseline_sha256": "91398502a5ed369a91f25a0a3818d060e4e49e97449b661938e22acb608e7c74",
+  "expected_baseline_pixels_sha256": "a8d1b7844f90861b2df863d0316808ee48036847ec9a4c35551003e1472f5a7b",
+  "expected_camera": "ILCE-7CM2",
+  "expected_iso": 100.0,
+  "exposure_stops": -0.3,
+  "tone_policy": "automatic-per-arm-current-writer"
+}

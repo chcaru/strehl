@@ -1,0 +1,21 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\independent-controls.py",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\controls-1\\python\\commission.json",
+    "--analysis-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\real-source-contributions\\controls-1\\python\\analysis"
+  ],
+  "environment": {},
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\run.py",
+    "sha256": "8bb539359b1d712c5894ce43d7c7ee66f636fefa1432cdc5d53d7777c75860b0",
+    "bytes": 7134
+  }
+}

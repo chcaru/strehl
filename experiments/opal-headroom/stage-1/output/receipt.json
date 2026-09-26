@@ -1,0 +1,384 @@
+{
+  "causal_verdict": null,
+  "current_rgb16_sha256": "a8d1b7844f90861b2df863d0316808ee48036847ec9a4c35551003e1472f5a7b",
+  "merged_planes_unchanged": true,
+  "native_dimensions": [
+    6792,
+    4528
+  ],
+  "observer_on_off_file_exact": true,
+  "observer_on_off_file_sha256": "a7cd321d3ec7d49934828e0575b17db807556b9dd082e2bf74fa8521ecb03f6f",
+  "raw_reads": 0,
+  "regions": [
+    {
+      "artifacts": [
+        {
+          "dtype": "f32-le",
+          "file": "mhc-camera-rgb.f32",
+          "layout": "row-major interleaved",
+          "sha256": "d2af39403a037f710be8b44265321cb63f90d1ce7593f9d4534d2d51fc73bad4",
+          "shape": [
+            384,
+            384,
+            3
+          ]
+        },
+        {
+          "dtype": "f32-le",
+          "file": "post-clip-camera-rgb.f32",
+          "layout": "row-major interleaved",
+          "sha256": "d2af39403a037f710be8b44265321cb63f90d1ce7593f9d4534d2d51fc73bad4",
+          "shape": [
+            384,
+            384,
+            3
+          ]
+        },
+        {
+          "dtype": "f32-le",
+          "file": "post-rolloff-camera-rgb.f32",
+          "layout": "row-major interleaved",
+          "sha256": "d2af39403a037f710be8b44265321cb63f90d1ce7593f9d4534d2d51fc73bad4",
+          "shape": [
+            384,
+            384,
+            3
+          ]
+        },
+        {
+          "dtype": "f32-le",
+          "file": "post-develop-linear-srgb.f32",
+          "layout": "row-major interleaved",
+          "sha256": "76c7661b6edbc154990dc27be459549364e50520ee433740af8b35de00447da9",
+          "shape": [
+            384,
+            384,
+            3
+          ]
+        },
+        {
+          "dtype": "f32-le",
+          "file": "post-tone-linear-srgb.f32",
+          "layout": "row-major interleaved",
+          "sha256": "ca5fe5f08812c4b9111935a2b341bded7173216273b151087d7fd14016dcfb09",
+          "shape": [
+            384,
+            384,
+            3
+          ]
+        },
+        {
+          "dtype": "f32-le",
+          "file": "post-shoulder-linear-srgb.f32",
+          "layout": "row-major interleaved",
+          "sha256": "8bda75074ef932e6f4a66d15a82590b3ad431df0135603770722e48e8db3b8e3",
+          "shape": [
+            384,
+            384,
+            3
+          ]
+        },
+        {
+          "dtype": "f32-le",
+          "file": "post-gamut-linear-srgb.f32",
+          "layout": "row-major interleaved",
+          "sha256": "a03c0e5f3f5ed02dbcbc116bbbfb5d5a0bd6dec2e4f21a7f6d6739fe4a37a4cc",
+          "shape": [
+            384,
+            384,
+            3
+          ]
+        },
+        {
+          "dtype": "f32-le",
+          "file": "post-shoulder-gamut-linear-srgb.f32",
+          "layout": "row-major interleaved",
+          "sha256": "10e930264c95ff0bc05f49dce2be52bec0a41890ec8681c87df5f7ee8bd3b2a3",
+          "shape": [
+            384,
+            384,
+            3
+          ]
+        },
+        {
+          "dtype": "u8",
+          "file": "pin-channels.u8",
+          "meaning": "bit0 R>=ceiling_R,bit1 G>=ceiling_G,bit2 B>=ceiling_B; actual post-MHC camera predicate",
+          "sha256": "8123c216413f82bbaa0339c27a43d9822c2a043e20662b27c97874429b996e9a",
+          "shape": [
+            384,
+            384
+          ]
+        },
+        {
+          "dtype": "f32-le",
+          "file": "pin-cfa-support.f32",
+          "layout": "pin record order,dy=-2..2,dx=-2..2",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            0,
+            5,
+            5
+          ],
+          "space": "actual merged normalized full mosaic; not original RAW samples"
+        },
+        {
+          "file": "pin-support.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        }
+      ],
+      "counts": {
+        "clip_changed": 0,
+        "developed_nonpositive_luma": 0,
+        "gamut_changed": 5945,
+        "gamut_exact_white": 71,
+        "mhc_has_negative": 0,
+        "pin_channels": [
+          0,
+          0,
+          0
+        ],
+        "pin_pixels": 0,
+        "pixels": 147456,
+        "post_tone_any_negative": 0,
+        "post_tone_any_over_one": 5945,
+        "post_tone_luma_ge_one": 71,
+        "rolloff_changed": 0,
+        "shoulder_changed": 16273,
+        "shoulder_gamut_changed": 5583,
+        "shoulder_gamut_exact_white": 0
+      },
+      "current_rgb16_sha256": "ac26f597c395c2e32003c13a881c6142dad4d575d4fba2ae21c055ad6cbd6444",
+      "full_active_native_xywh": [
+        3748,
+        1738,
+        384,
+        384
+      ],
+      "name": "reflection",
+      "output_native_xywh": [
+        3628,
+        1658,
+        384,
+        384
+      ],
+      "pins_with_all_merged_cfa_support_below_own_ceiling": 0,
+      "shoulder_rgb16_sha256": "1432774688a07cd427eca239cbd6247c8a7176c63ce39f37053329cf162f3e4c"
+    },
+    {
+      "artifacts": [
+        {
+          "dtype": "f32-le",
+          "file": "mhc-camera-rgb.f32",
+          "layout": "row-major interleaved",
+          "sha256": "9a8ce844b5b5738b04e820c4d5ed693a00d5e4ba7b945ef5b30db348b717cba0",
+          "shape": [
+            384,
+            384,
+            3
+          ]
+        },
+        {
+          "dtype": "f32-le",
+          "file": "post-clip-camera-rgb.f32",
+          "layout": "row-major interleaved",
+          "sha256": "9a8ce844b5b5738b04e820c4d5ed693a00d5e4ba7b945ef5b30db348b717cba0",
+          "shape": [
+            384,
+            384,
+            3
+          ]
+        },
+        {
+          "dtype": "f32-le",
+          "file": "post-rolloff-camera-rgb.f32",
+          "layout": "row-major interleaved",
+          "sha256": "9a8ce844b5b5738b04e820c4d5ed693a00d5e4ba7b945ef5b30db348b717cba0",
+          "shape": [
+            384,
+            384,
+            3
+          ]
+        },
+        {
+          "dtype": "f32-le",
+          "file": "post-develop-linear-srgb.f32",
+          "layout": "row-major interleaved",
+          "sha256": "1e2a58ed488cd34af52aa2199c2789cf2f9b391867afaee144bd7a85f68de4bb",
+          "shape": [
+            384,
+            384,
+            3
+          ]
+        },
+        {
+          "dtype": "f32-le",
+          "file": "post-tone-linear-srgb.f32",
+          "layout": "row-major interleaved",
+          "sha256": "5c9608bd78b36e28692f9d2069e2caccbcf2ff17523362c0aaaface545c7fdd4",
+          "shape": [
+            384,
+            384,
+            3
+          ]
+        },
+        {
+          "dtype": "f32-le",
+          "file": "post-shoulder-linear-srgb.f32",
+          "layout": "row-major interleaved",
+          "sha256": "5c9608bd78b36e28692f9d2069e2caccbcf2ff17523362c0aaaface545c7fdd4",
+          "shape": [
+            384,
+            384,
+            3
+          ]
+        },
+        {
+          "dtype": "f32-le",
+          "file": "post-gamut-linear-srgb.f32",
+          "layout": "row-major interleaved",
+          "sha256": "720fb67c10bba7de0f4e12ce9885f2ce5680edbfa7fb0fc14ffb3b931db42369",
+          "shape": [
+            384,
+            384,
+            3
+          ]
+        },
+        {
+          "dtype": "f32-le",
+          "file": "post-shoulder-gamut-linear-srgb.f32",
+          "layout": "row-major interleaved",
+          "sha256": "720fb67c10bba7de0f4e12ce9885f2ce5680edbfa7fb0fc14ffb3b931db42369",
+          "shape": [
+            384,
+            384,
+            3
+          ]
+        },
+        {
+          "dtype": "u8",
+          "file": "pin-channels.u8",
+          "meaning": "bit0 R>=ceiling_R,bit1 G>=ceiling_G,bit2 B>=ceiling_B; actual post-MHC camera predicate",
+          "sha256": "8123c216413f82bbaa0339c27a43d9822c2a043e20662b27c97874429b996e9a",
+          "shape": [
+            384,
+            384
+          ]
+        },
+        {
+          "dtype": "f32-le",
+          "file": "pin-cfa-support.f32",
+          "layout": "pin record order,dy=-2..2,dx=-2..2",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            0,
+            5,
+            5
+          ],
+          "space": "actual merged normalized full mosaic; not original RAW samples"
+        },
+        {
+          "file": "pin-support.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        }
+      ],
+      "counts": {
+        "clip_changed": 0,
+        "developed_nonpositive_luma": 0,
+        "gamut_changed": 521,
+        "gamut_exact_white": 0,
+        "mhc_has_negative": 0,
+        "pin_channels": [
+          0,
+          0,
+          0
+        ],
+        "pin_pixels": 0,
+        "pixels": 147456,
+        "post_tone_any_negative": 7,
+        "post_tone_any_over_one": 521,
+        "post_tone_luma_ge_one": 0,
+        "rolloff_changed": 0,
+        "shoulder_changed": 0,
+        "shoulder_gamut_changed": 521,
+        "shoulder_gamut_exact_white": 0
+      },
+      "current_rgb16_sha256": "1a45497350949a5529cfb36d8086705291a62b44722ae211346e043bd1fc035e",
+      "full_active_native_xywh": [
+        2248,
+        2308,
+        384,
+        384
+      ],
+      "name": "colour-control",
+      "output_native_xywh": [
+        2128,
+        2228,
+        384,
+        384
+      ],
+      "pins_with_all_merged_cfa_support_below_own_ceiling": 0,
+      "shoulder_rgb16_sha256": "1a45497350949a5529cfb36d8086705291a62b44722ae211346e043bd1fc035e"
+    }
+  ],
+  "resolved_development": {
+    "ceiling_bits": [
+      1069276204,
+      1063142233,
+      1074531792
+    ],
+    "exposure_gain_bits": 1062203334,
+    "matrix_bits": [
+      [
+        1070688889,
+        3202724187,
+        3191861519
+      ],
+      [
+        3186350977,
+        1069455000,
+        3200213889
+      ],
+      [
+        3147518954,
+        3198529296,
+        1068107544
+      ]
+    ],
+    "sensor_top_bits": 1064271804,
+    "srgb": true,
+    "tone_bits": [
+      3107251800,
+      1045876117,
+      1057803469
+    ],
+    "wants_tone": true
+  },
+  "retained_current_pixels_and_icc_exact": true,
+  "schema": 1,
+  "scope": "Read-only stage attribution. Counts are not quality scores or original RAW clipping estimates.",
+  "shoulder_rgb16_sha256": "f309fd1b59b90c45384b1960fcf34977e41d3db55a9d789a1947d9d234bf69ef",
+  "status": "OPAL_STAGE_TRACE_COMPLETE",
+  "whole_counts": {
+    "clip_changed": 0,
+    "developed_nonpositive_luma": 5427822,
+    "gamut_changed": 7866819,
+    "gamut_exact_white": 310,
+    "mhc_has_negative": 3621245,
+    "pin_channels": [
+      0,
+      0,
+      0
+    ],
+    "pin_pixels": 0,
+    "pixels": 30754176,
+    "post_tone_any_negative": 7793430,
+    "post_tone_any_over_one": 102015,
+    "post_tone_luma_ge_one": 310,
+    "rolloff_changed": 0,
+    "shoulder_changed": 24181,
+    "shoulder_gamut_changed": 7866245,
+    "shoulder_gamut_exact_white": 0
+  },
+  "whole_current_and_shoulder_pixels_exact": true
+}

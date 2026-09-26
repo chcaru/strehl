@@ -1,0 +1,19 @@
+{
+  "phase": "full",
+  "source_count": 155,
+  "current_production_rgb16_icc_exact": true,
+  "canonical_chunk_count_and_threads_exact": true,
+  "actual_per_source_fields_retained": true,
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\cache-1\\output\\receipt.json",
+    "sha256": "12f6baf7f782774adce8eef4c98f336217dcd79d802645669416ee086afa795e",
+    "bytes": 427657
+  },
+  "production_completion": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\opal-103\\completion.json",
+    "sha256": "06c6b1a9aa6e4d84c8d00de77f119c40123a45665b4533560c945b390c5b033a",
+    "bytes": 1654
+  },
+  "sources_and_production_unchanged": true,
+  "photographic_verdict": null
+}

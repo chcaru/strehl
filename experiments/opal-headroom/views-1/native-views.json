@@ -1,0 +1,131 @@
+{
+  "targets": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\targets.json",
+    "sha256": "5f2dcbbdc363fe82282399ff382efc91a7696640a1e2d5becd1bdfff42d73176",
+    "bytes": 1191
+  },
+  "views": [
+    {
+      "arm": "current",
+      "target": "reflection",
+      "native_xywh": [
+        3628,
+        1658,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\views-1\\current-reflection-native.png",
+        "sha256": "8760b24e569922592999d9b39845360820f9abe5a154bbdbd394f01b7290cbe2",
+        "bytes": 160571
+      }
+    },
+    {
+      "arm": "current",
+      "target": "colour-control",
+      "native_xywh": [
+        2128,
+        2228,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\views-1\\current-colour-control-native.png",
+        "sha256": "ee845c059da2d974b9768a5ceaad74291f0c31b7b116c593eebc39fd82993b02",
+        "bytes": 191481
+      }
+    },
+    {
+      "arm": "sensor-rolloff-off",
+      "target": "reflection",
+      "native_xywh": [
+        3628,
+        1658,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\views-1\\sensor-rolloff-off-reflection-native.png",
+        "sha256": "8760b24e569922592999d9b39845360820f9abe5a154bbdbd394f01b7290cbe2",
+        "bytes": 160571
+      }
+    },
+    {
+      "arm": "sensor-rolloff-off",
+      "target": "colour-control",
+      "native_xywh": [
+        2128,
+        2228,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\views-1\\sensor-rolloff-off-colour-control-native.png",
+        "sha256": "ee845c059da2d974b9768a5ceaad74291f0c31b7b116c593eebc39fd82993b02",
+        "bytes": 191481
+      }
+    },
+    {
+      "arm": "shoulder",
+      "target": "reflection",
+      "native_xywh": [
+        3628,
+        1658,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\views-1\\shoulder-reflection-native.png",
+        "sha256": "e62b0ee5dcc1ff60835240db29ee49bbff50c4b505da5a3e516901ec023cf37e",
+        "bytes": 159315
+      }
+    },
+    {
+      "arm": "shoulder",
+      "target": "colour-control",
+      "native_xywh": [
+        2128,
+        2228,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\views-1\\shoulder-colour-control-native.png",
+        "sha256": "ee845c059da2d974b9768a5ceaad74291f0c31b7b116c593eebc39fd82993b02",
+        "bytes": 191481
+      }
+    },
+    {
+      "arm": "both",
+      "target": "reflection",
+      "native_xywh": [
+        3628,
+        1658,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\views-1\\both-reflection-native.png",
+        "sha256": "e62b0ee5dcc1ff60835240db29ee49bbff50c4b505da5a3e516901ec023cf37e",
+        "bytes": 159315
+      }
+    },
+    {
+      "arm": "both",
+      "target": "colour-control",
+      "native_xywh": [
+        2128,
+        2228,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\views-1\\both-colour-control-native.png",
+        "sha256": "ee845c059da2d974b9768a5ceaad74291f0c31b7b116c593eebc39fd82993b02",
+        "bytes": 191481
+      }
+    }
+  ],
+  "display": "Exact native crop; rounded u16/257, shared ICC, no resampling or contrast normalization.",
+  "visual_verdict": null
+}

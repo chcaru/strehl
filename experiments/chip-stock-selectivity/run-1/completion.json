@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "status": "COMPLETE_AWAITING_INDEPENDENT_PHOTOGRAPHIC_REVIEW",
+  "frames": 299,
+  "reference": 149,
+  "crop_quad_xywh": [
+    133,
+    89,
+    3250,
+    2166
+  ],
+  "native_dimensions": [
+    6500,
+    4332
+  ],
+  "master": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\stack-master.tiff",
+    "bytes": 168952968,
+    "sha256": "d5342cef36fc70946ba0f09855880f6eaf3086574c15feec42d5243e6a4b07ee"
+  },
+  "full_jpeg": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\stack-full.jpg",
+    "bytes": 19719544,
+    "sha256": "1997adfb8db4145006f73ba4f3a2aacd3cc457ad9fe86f58725548806dcb0e18"
+  },
+  "overview": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\overview.jpg",
+    "bytes": 1185893,
+    "sha256": "4c31f705ec98d7ff8110069b4268b4773fcd38c78148ae8ce35b04c5830327cd"
+  },
+  "baseline_master": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\stack-master.tiff",
+    "sha256": "8f0c70b2af0e8fc8dcf850395680d3038962c6e65920359d19671b96628c68ac",
+    "bytes": 168952968
+  },
+  "baseline_full_jpeg": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\stack-full.jpg",
+    "sha256": "f88275aba4c07371b147915e38e98d8a54e70b9509dfd0bec686d174b48b7e45",
+    "bytes": 23962478
+  },
+  "baseline_overview": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\overview.jpg",
+    "sha256": "3ece980730542faa2c2a3de2d86344dd9da470ac9f2a6d224734bec5fde091c5",
+    "bytes": 1262458
+  },
+  "rgb16_le_sha256": {
+    "baseline": "fbeeda70e45be91086e5d6400b642054df908a87ae4021815ad493940960298c",
+    "flat2": "7bbdb01b959613fc852d2aa5bf9f10fae527cde83500394435d79a1814a7e289"
+  },
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "command_differences": [
+    {
+      "index": 12,
+      "baseline": "1.4",
+      "candidate": "1.0"
+    },
+    {
+      "index": 24,
+      "baseline": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\stack-master.tiff",
+      "candidate": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\stack-master.tiff"
+    }
+  ],
+  "tone_log_lines": {
+    "baseline": [
+      "tone            : black 0.00432, white 0.94644 (linear), contrast 0.55"
+    ],
+    "flat2": [
+      "tone            : black 0.00463, white 0.86036 (linear), contrast 0.55"
+    ]
+  },
+  "tone_anchors_exactly_pinned": false,
+  "original_bytes_and_metadata_unchanged": true,
+  "native_views": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run-1\\native-views\\receipt.json",
+    "bytes": 23968,
+    "sha256": "ead2816e42febe30b049434c38711caa0b8d57e5e038e98ac343279898ebf07c"
+  },
+  "total_wrapper_wall_seconds": 111.38306639999996,
+  "resource_scope": "Owned render job only; original hash audits and full-image/native PNG preparation lie outside child timing.",
+  "visual_verdict": null,
+  "scope": "Reject smoothing, brightness-only change, lost tracks/scratches or colour damage. No sweep/default change."
+}

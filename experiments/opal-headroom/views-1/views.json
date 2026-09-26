@@ -1,0 +1,86 @@
+{
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\replay-1\\output\\receipt.json",
+    "sha256": "108a1214aeaeec9f84f450480ddf6667754f5634ed5c29553b800c36f2fb4c78",
+    "bytes": 4874
+  },
+  "whole_outputs": [
+    {
+      "arm": "current",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\replay-1\\output\\current.tiff",
+        "sha256": "a0105e044012f52457358a1277bebc6cca1e936089a2c5d180e4ff4e6407895a",
+        "bytes": 184530145
+      },
+      "native_png": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\views-1\\current-full.png",
+        "sha256": "ef6f1cdaed874b98668e1f8ed124ca05a7ab3bd71cc8da56e8a615391c03210c",
+        "bytes": 28781913
+      },
+      "whole_overview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\views-1\\current-overview.png",
+        "sha256": "950bc29f5ff9aae3f5204961552c744e82239e5a7c13d8c7c731825a2a05df7d",
+        "bytes": 1657425
+      },
+      "display": "rounded u16/257, shared ICC, no contrast normalization"
+    },
+    {
+      "arm": "sensor-rolloff-off",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\replay-1\\output\\sensor-rolloff-off.tiff",
+        "sha256": "a0105e044012f52457358a1277bebc6cca1e936089a2c5d180e4ff4e6407895a",
+        "bytes": 184530145
+      },
+      "native_png": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\views-1\\sensor-rolloff-off-full.png",
+        "sha256": "ef6f1cdaed874b98668e1f8ed124ca05a7ab3bd71cc8da56e8a615391c03210c",
+        "bytes": 28781913
+      },
+      "whole_overview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\views-1\\sensor-rolloff-off-overview.png",
+        "sha256": "950bc29f5ff9aae3f5204961552c744e82239e5a7c13d8c7c731825a2a05df7d",
+        "bytes": 1657425
+      },
+      "display": "rounded u16/257, shared ICC, no contrast normalization"
+    },
+    {
+      "arm": "shoulder",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\replay-1\\output\\shoulder.tiff",
+        "sha256": "3e6c5cc859eb0382447a01b34d7ae5349917ef8e031b50ef7ccd6cc12fb1393b",
+        "bytes": 184530145
+      },
+      "native_png": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\views-1\\shoulder-full.png",
+        "sha256": "264a8a4916ea5e0c84881ededab55e309139483332c0d83fd7c21ec047073b49",
+        "bytes": 28778358
+      },
+      "whole_overview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\views-1\\shoulder-overview.png",
+        "sha256": "8c1cf53d3a7f7cc0adf923e3c8ac2b052fcb0f0988970a211edeb9eef694dbfd",
+        "bytes": 1657196
+      },
+      "display": "rounded u16/257, shared ICC, no contrast normalization"
+    },
+    {
+      "arm": "both",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\replay-1\\output\\both.tiff",
+        "sha256": "3e6c5cc859eb0382447a01b34d7ae5349917ef8e031b50ef7ccd6cc12fb1393b",
+        "bytes": 184530145
+      },
+      "native_png": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\views-1\\both-full.png",
+        "sha256": "264a8a4916ea5e0c84881ededab55e309139483332c0d83fd7c21ec047073b49",
+        "bytes": 28778358
+      },
+      "whole_overview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\views-1\\both-overview.png",
+        "sha256": "8c1cf53d3a7f7cc0adf923e3c8ac2b052fcb0f0988970a211edeb9eef694dbfd",
+        "bytes": 1657196
+      },
+      "display": "rounded u16/257, shared ICC, no contrast normalization"
+    }
+  ],
+  "visual_verdict": null
+}

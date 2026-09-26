@@ -1,0 +1,10 @@
+
+running 5 tests
+test merge_cmd::real_source_contributions::independent_controls::independent_actual_live_clamp_requires_nonzero_residual ... ok
+test merge_cmd::real_source_contributions::independent_controls::independent_actual_signed_coefficients_cancel_without_losing_dc ... ok
+test merge_cmd::real_source_contributions::independent_controls::independent_actual_zero_weight_fallback_keeps_nonzero_mean_base ... ok
+test merge_cmd::real_source_contributions::independent_controls::independent_noncentral_tap_has_known_effect ... ok
+test merge_cmd::real_source_contributions::sparse_footprint_controls ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 257 filtered out; finished in 0.09s
+

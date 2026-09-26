@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\build-fixed-2\\strehl.exe",
+    "sha256": "bec4c357836ad1383800a6c933460ee7ef072c525b5957a6f5deb5194b203314",
+    "bytes": 17950720
+  },
+  "build_manifest": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\scripts\\native-build.json",
+    "sha256": "79a3b35f743c25395d384eaa034a02eaa4dcdd0d967d076ac3bfccbde9361e09",
+    "bytes": 571
+  },
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\scripts\\render-native.py",
+    "sha256": "e8ce03f59f2e9f029f81ccc399392afade3f8f11fedf874358183b1fa1e255df",
+    "bytes": 7194
+  },
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+    "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+    "bytes": 12664
+  },
+  "harness": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+    "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+    "bytes": 117908
+  },
+  "commands": [
+    [
+      "render",
+      [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\build-fixed-2\\strehl.exe",
+        "stack",
+        "D:\\personal\\macro\\minerals\\rutile-star-on-hematite\\105MSDCF",
+        "--merge",
+        "pyramid",
+        "--pyramid-bands",
+        "7",
+        "--pyramid-gate",
+        "2",
+        "--pyramid-exponent",
+        "2",
+        "--pyramid-sharpen",
+        "1.4",
+        "--pyramid-select",
+        "soft",
+        "--pyramid-base",
+        "mean",
+        "--srgb",
+        "--demosaic",
+        "--resampler",
+        "catmull-rom",
+        "--cover",
+        "crop",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\rutile-105\\stack-master.tiff",
+        "--exposure=0.0"
+      ]
+    ]
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\minerals-september24\\105msdcf\\alignment.txt",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "on",
+    "STREHL_DEFECT": "off",
+    "STREHL_FINE_SUPPORT": "off",
+    "STREHL_CA_BEFORE_MHC": "off"
+  },
+  "removed_environment": [],
+  "existing_map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\minerals-september24\\105msdcf\\alignment.txt",
+    "sha256": "2d8bc1d4aaab420216be177eb68f4e546aed33114c014a0ecc0ac9f9d6c6038e",
+    "bytes": 31218
+  },
+  "frames": 228,
+  "settings": "Native rounded GPU gather, matching camera/lens profile, as-shot WB, automatic tone; explicit exposure only when supplied."
+}

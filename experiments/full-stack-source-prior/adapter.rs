@@ -110,7 +110,7 @@ pub(crate) fn read_cache(path:&Path)->Result<(CacheMetadata,Vec<Vec<f32>>)> {
         &&m.xyz().is_some_and(|(v,_)|v.iter().flatten().all(|x|x.is_finite())),"cache camera metadata invalid");m.exposure()?;
     Ok((m,output))
 }
-fn write_current(path:&Path,planes:&[Vec<f32>],m:&CacheMetadata)->Result<()>{
+pub(crate) fn write_current(path:&Path,planes:&[Vec<f32>],m:&CacheMetadata)->Result<()>{
     write_merged(Merged::Bands{domain:m.domain()?,planes},m.levels(),m.wb(),m.xyz().as_ref(),
         image_out::OutputSpace::Srgb,true,m.exposure()?,None,path)
 }
@@ -224,6 +224,8 @@ fn run_complete(numerical_candidate:bool)->Result<()> {
         plane_order:["R","G1","G2","B"].map(String::from),binary:String::new(),binary_bytes:0,binary_sha256:String::new(),
         plane_sha256:vec![],arm:String::new(),phase:config.phase.clone()};cache_template.exposure()?;
     std::fs::create_dir(&config.out_dir)?;
+    let mut real_trace = real_source_contributions::Session::start(
+        &config.out_dir, &sizes, count, plan.per_chunk)?;
     let historical=if numerical_candidate{Some(historical_replay(&config,&cache_template,native)?)}else{None};
     if let Some(old)=&historical{ensure!(old["plan"]==json!(plan)&&old["threads"]==json!(threads),"historical canonical chunk plan/threads changed");}
     save(&config.out_dir.join("started.json"),&json!({"schema":1,"phase":config.phase,"mode":config.mode,"map_sha256":config.warp_map_sha256,
@@ -242,6 +244,9 @@ fn run_complete(numerical_candidate:bool)->Result<()> {
         let active_u16_sha256=source_hash(&frame);let source=OneFrame{frame:&frame,index:i,count:paths.len()};
         ensure!(base.fold(&source,i,levels,&noise,Some(&map),None)?,"first-pass source{i} refused");
         let fields=core::canonical_fields(&base.merge,&base.fws,(!base.beta.is_empty()).then_some(base.beta.as_slice()));sum.add(&fields.weights[0])?;
+        if let Some(trace) = real_trace.as_mut() {
+            trace.source(i, &base.merge, &base.fws, &fields, &base.planes)?;
+        }
         ensure!(source_hash(&frame)==active_u16_sha256,"original active CFA changed");
         evidence.push(Evidence{index:i,active_u16_sha256,known4_sha256:hashes(&base.planes),guide_sha256:field_hash(&base.luma),
             variance_sha256:field_hash(&base.var),beta:base.beta.clone(),energy_sha256:hashes(&fields.energy),floor_sha256:hashes(&fields.floor),
@@ -259,6 +264,7 @@ fn run_complete(numerical_candidate:bool)->Result<()> {
     let pass1_seconds=source_clock.elapsed().as_secs_f64();drop(base);let prior=pool.install(||sum.finish())?;
     let base_total=base_total.context("no baseline")?;let baseline_averaged_fraction=base_total.averaged_fraction();
     let finish_clock=Instant::now();let baseline=pool.install(||base_total.finish(&mut Workspace::new(&sizes)));
+    if let Some(trace) = real_trace.take() { trace.finish(&base_total, &baseline)?; }
     let arm=if numerical_candidate{"candidate"}else{"baseline"};
     let baseline_planes_sha256=hashes(&baseline);let base_path=config.out_dir.join(format!("{arm}.tiff"));
     let baseline_cache=write_cache(&config.out_dir,arm,&baseline,&cache_template)?;

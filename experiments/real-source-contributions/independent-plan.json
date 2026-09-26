@@ -1,0 +1,20 @@
+{
+  "status": "pre-execution; independently selected fixed witnesses",
+  "native_size": [6268, 4176],
+  "native_origin": [382, 256],
+  "reference_index": 244,
+  "cfa_plane_crop": [191, 128, 3134, 2088],
+  "source_count": 488,
+  "offsets_native": [-8, -4, 0, 4, 8],
+  "primary_contrast": "value(offset0)-0.5*(value(offset-8)+value(offset8)); separately for each CFA plane",
+  "profiles": [
+    {"name": "near-hair", "centre_native": [3510, 3262], "axis": "y", "parent_roi": [3230, 3000, 384, 384]},
+    {"name": "far-hair", "centre_native": [3508, 3170], "axis": "x", "parent_roi": [3230, 3000, 384, 384]},
+    {"name": "fan-haze-context", "centre_native": [3310, 3120], "axis": "x", "parent_roi": [3230, 3000, 384, 384]},
+    {"name": "rim-hair-control", "centre_native": [1596, 1796], "axis": "x", "parent_roi": [1436, 1596, 384, 384]},
+    {"name": "inner-bud-control", "centre_native": [4512, 1732], "axis": "x", "parent_roi": [4320, 1540, 384, 384]}
+  ],
+  "source_bins_inclusive": [[0, 79], [80, 168], [169, 319], [320, 400], [401, 487]],
+  "prescribed_sources": {"near": 112, "far": 152, "defocused_control": 320},
+  "interpretation": "Candidate witnesses, not truth. Missed centres or unresolved source profiles invalidate a contrast claim without selecting replacement addresses. No argmax, sharpness quality score or noise-neutrality claim."
+}

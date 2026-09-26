@@ -1,0 +1,418 @@
+{
+  "scope": "Independent plan arithmetic and signed-profile commissioning only; no RAW, quality, noise or trace-result claim",
+  "sites": [
+    {
+      "profile": "near-hair",
+      "offset": -8,
+      "native_xy": [
+        3510,
+        3254
+      ],
+      "output_quad_xy": [
+        1755,
+        1627
+      ],
+      "reference_quad_xy": [
+        1946,
+        1755
+      ]
+    },
+    {
+      "profile": "near-hair",
+      "offset": -4,
+      "native_xy": [
+        3510,
+        3258
+      ],
+      "output_quad_xy": [
+        1755,
+        1629
+      ],
+      "reference_quad_xy": [
+        1946,
+        1757
+      ]
+    },
+    {
+      "profile": "near-hair",
+      "offset": 0,
+      "native_xy": [
+        3510,
+        3262
+      ],
+      "output_quad_xy": [
+        1755,
+        1631
+      ],
+      "reference_quad_xy": [
+        1946,
+        1759
+      ]
+    },
+    {
+      "profile": "near-hair",
+      "offset": 4,
+      "native_xy": [
+        3510,
+        3266
+      ],
+      "output_quad_xy": [
+        1755,
+        1633
+      ],
+      "reference_quad_xy": [
+        1946,
+        1761
+      ]
+    },
+    {
+      "profile": "near-hair",
+      "offset": 8,
+      "native_xy": [
+        3510,
+        3270
+      ],
+      "output_quad_xy": [
+        1755,
+        1635
+      ],
+      "reference_quad_xy": [
+        1946,
+        1763
+      ]
+    },
+    {
+      "profile": "far-hair",
+      "offset": -8,
+      "native_xy": [
+        3500,
+        3170
+      ],
+      "output_quad_xy": [
+        1750,
+        1585
+      ],
+      "reference_quad_xy": [
+        1941,
+        1713
+      ]
+    },
+    {
+      "profile": "far-hair",
+      "offset": -4,
+      "native_xy": [
+        3504,
+        3170
+      ],
+      "output_quad_xy": [
+        1752,
+        1585
+      ],
+      "reference_quad_xy": [
+        1943,
+        1713
+      ]
+    },
+    {
+      "profile": "far-hair",
+      "offset": 0,
+      "native_xy": [
+        3508,
+        3170
+      ],
+      "output_quad_xy": [
+        1754,
+        1585
+      ],
+      "reference_quad_xy": [
+        1945,
+        1713
+      ]
+    },
+    {
+      "profile": "far-hair",
+      "offset": 4,
+      "native_xy": [
+        3512,
+        3170
+      ],
+      "output_quad_xy": [
+        1756,
+        1585
+      ],
+      "reference_quad_xy": [
+        1947,
+        1713
+      ]
+    },
+    {
+      "profile": "far-hair",
+      "offset": 8,
+      "native_xy": [
+        3516,
+        3170
+      ],
+      "output_quad_xy": [
+        1758,
+        1585
+      ],
+      "reference_quad_xy": [
+        1949,
+        1713
+      ]
+    },
+    {
+      "profile": "fan-haze-context",
+      "offset": -8,
+      "native_xy": [
+        3302,
+        3120
+      ],
+      "output_quad_xy": [
+        1651,
+        1560
+      ],
+      "reference_quad_xy": [
+        1842,
+        1688
+      ]
+    },
+    {
+      "profile": "fan-haze-context",
+      "offset": -4,
+      "native_xy": [
+        3306,
+        3120
+      ],
+      "output_quad_xy": [
+        1653,
+        1560
+      ],
+      "reference_quad_xy": [
+        1844,
+        1688
+      ]
+    },
+    {
+      "profile": "fan-haze-context",
+      "offset": 0,
+      "native_xy": [
+        3310,
+        3120
+      ],
+      "output_quad_xy": [
+        1655,
+        1560
+      ],
+      "reference_quad_xy": [
+        1846,
+        1688
+      ]
+    },
+    {
+      "profile": "fan-haze-context",
+      "offset": 4,
+      "native_xy": [
+        3314,
+        3120
+      ],
+      "output_quad_xy": [
+        1657,
+        1560
+      ],
+      "reference_quad_xy": [
+        1848,
+        1688
+      ]
+    },
+    {
+      "profile": "fan-haze-context",
+      "offset": 8,
+      "native_xy": [
+        3318,
+        3120
+      ],
+      "output_quad_xy": [
+        1659,
+        1560
+      ],
+      "reference_quad_xy": [
+        1850,
+        1688
+      ]
+    },
+    {
+      "profile": "rim-hair-control",
+      "offset": -8,
+      "native_xy": [
+        1588,
+        1796
+      ],
+      "output_quad_xy": [
+        794,
+        898
+      ],
+      "reference_quad_xy": [
+        985,
+        1026
+      ]
+    },
+    {
+      "profile": "rim-hair-control",
+      "offset": -4,
+      "native_xy": [
+        1592,
+        1796
+      ],
+      "output_quad_xy": [
+        796,
+        898
+      ],
+      "reference_quad_xy": [
+        987,
+        1026
+      ]
+    },
+    {
+      "profile": "rim-hair-control",
+      "offset": 0,
+      "native_xy": [
+        1596,
+        1796
+      ],
+      "output_quad_xy": [
+        798,
+        898
+      ],
+      "reference_quad_xy": [
+        989,
+        1026
+      ]
+    },
+    {
+      "profile": "rim-hair-control",
+      "offset": 4,
+      "native_xy": [
+        1600,
+        1796
+      ],
+      "output_quad_xy": [
+        800,
+        898
+      ],
+      "reference_quad_xy": [
+        991,
+        1026
+      ]
+    },
+    {
+      "profile": "rim-hair-control",
+      "offset": 8,
+      "native_xy": [
+        1604,
+        1796
+      ],
+      "output_quad_xy": [
+        802,
+        898
+      ],
+      "reference_quad_xy": [
+        993,
+        1026
+      ]
+    },
+    {
+      "profile": "inner-bud-control",
+      "offset": -8,
+      "native_xy": [
+        4504,
+        1732
+      ],
+      "output_quad_xy": [
+        2252,
+        866
+      ],
+      "reference_quad_xy": [
+        2443,
+        994
+      ]
+    },
+    {
+      "profile": "inner-bud-control",
+      "offset": -4,
+      "native_xy": [
+        4508,
+        1732
+      ],
+      "output_quad_xy": [
+        2254,
+        866
+      ],
+      "reference_quad_xy": [
+        2445,
+        994
+      ]
+    },
+    {
+      "profile": "inner-bud-control",
+      "offset": 0,
+      "native_xy": [
+        4512,
+        1732
+      ],
+      "output_quad_xy": [
+        2256,
+        866
+      ],
+      "reference_quad_xy": [
+        2447,
+        994
+      ]
+    },
+    {
+      "profile": "inner-bud-control",
+      "offset": 4,
+      "native_xy": [
+        4516,
+        1732
+      ],
+      "output_quad_xy": [
+        2258,
+        866
+      ],
+      "reference_quad_xy": [
+        2449,
+        994
+      ]
+    },
+    {
+      "profile": "inner-bud-control",
+      "offset": 8,
+      "native_xy": [
+        4520,
+        1732
+      ],
+      "output_quad_xy": [
+        2260,
+        866
+      ],
+      "reference_quad_xy": [
+        2451,
+        994
+      ]
+    }
+  ],
+  "rejected_mutants": [
+    "duplicate-temporal-membership",
+    "missing-temporal-member",
+    "wrong-native-gauge",
+    "outside-registered-witness",
+    "wrong-quad-phase"
+  ],
+  "profile_contrast": 40.0,
+  "uniform_offset_contrast": 40.0,
+  "reversed_contrast": -40.0,
+  "translated_contrast": -20.0,
+  "flat_contrast": 0.0,
+  "passed": true
+}

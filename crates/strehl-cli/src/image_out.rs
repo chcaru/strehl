@@ -104,6 +104,11 @@ pub(crate) mod highlight_rendering {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/highlight-rendering/image-out-bridge.rs"));
 }
 
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+pub(crate) mod opal_stage_observer {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/opal-headroom/stage-observer.rs"));
+}
+
 fn writer(path: &Path) -> Result<TiffEncoder<BufWriter<File>>> {
     if let Some(parent) = path.parent()
         && !parent.as_os_str().is_empty()
@@ -1396,6 +1401,8 @@ pub fn write_demosaiced(
     let dev = &resolve_tone(dev, || tone_from_mosaic(&m, dev));
     #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
     highlight_rendering::record_resolved(dev);
+    #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+    opal_stage_observer::observe_mosaic(&m, dev)?;
     let mut rgb = vec![0u16; width * height * 3];
     rgb.par_chunks_mut(width * 3).enumerate().for_each_init(
         || vec![0.0f32; width * 3],

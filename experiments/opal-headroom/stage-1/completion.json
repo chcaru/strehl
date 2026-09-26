@@ -1,0 +1,12 @@
+{
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\opal-headroom\\stage-1\\output\\receipt.json",
+    "sha256": "da419f053a4d17e32ef19edfc32e55d8546ee1c8d409819fcde51636aeb36090",
+    "bytes": 10802
+  },
+  "raw_reads": 0,
+  "actual_stage_scan_matches_whole_current_and_shoulder": true,
+  "observer_on_off_file_exact": true,
+  "sources_and_inputs_unchanged": true,
+  "causal_verdict": null
+}
