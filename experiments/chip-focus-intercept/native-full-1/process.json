@@ -1,0 +1,90 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-build-1\\cli-tests.exe",
+    "merge_cmd::chip_focus_intercept_full::complete_pair",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 134.01499999999942,
+  "log_bytes": 179428,
+  "job_accounting": {
+    "total_user_100ns": 4178125000,
+    "total_kernel_100ns": 227656250,
+    "total_cpu_100ns": 4405781250,
+    "total_page_fault_count": 46835052,
+    "total_processes": 2,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 4010266624,
+    "peak_job_memory_used_bytes": 4011499520
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 17179869184
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 4178125000,
+      "total_kernel_100ns": 227656250,
+      "total_cpu_100ns": 4405781250,
+      "total_page_fault_count": 46835052,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 4178125000,
+      "total_kernel_100ns": 227656250,
+      "total_cpu_100ns": 4405781250,
+      "total_page_fault_count": 46835052,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 134.01499999999942,
+        "accounting": {
+          "total_user_100ns": 4178125000,
+          "total_kernel_100ns": 227656250,
+          "total_cpu_100ns": 4405781250,
+          "total_page_fault_count": 46835052,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 134.01499999999942,
+    "ended_wall_seconds": 134.01499999999942
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 1200,
+    "cpu_seconds": 7200,
+    "log_bytes": 16777216,
+    "committed_bytes": 17179869184
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-full-1\\process.log",
+    "sha256": "81c5acce2b8e04268f7385bfeb02af47ee8bc51e5ccdc59c40f0c045bcdd718f",
+    "bytes": 179428
+  }
+}

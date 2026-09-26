@@ -1,0 +1,97 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\run.py",
+    "sha256": "64022f1c05f4c769184cd529dac7f2e993713d1522e87f4a028d8f86e88b07c5",
+    "bytes": 18717
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\base-band-transfer\\run.py",
+    "sha256": "eae95b4f8b5a35de6909ea7b46b0abeda3a98707949155ea722e6a393aeace0f",
+    "bytes": 10345
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\Cargo.lock",
+    "sha256": "2606ad5e106abcd8853c06133a7a1cddf5553775844c825a51ba07cf208f3fbb",
+    "bytes": 4274
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\Cargo.toml",
+    "sha256": "90ac1de81b0ae299301dfe9292cd1e1a191089a0ee63d362b328675437a9b1b1",
+    "bytes": 378
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\charter.md",
+    "sha256": "5086c1fd10d2e9aac3bb4319c6cb6b192c82f4efe050a9499f613eb0f9ec6b46",
+    "bytes": 2330
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\independent-controls.rs",
+    "sha256": "170de9655b73c0861e3701ebd481e5934a767a04fe2281b8af99955ad38ce17b",
+    "bytes": 16831
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\lib.rs",
+    "sha256": "94623df78f4f810afd0f7acf88568fd61b74a3129251b853712a517c475e62ea",
+    "bytes": 131
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\operator.rs",
+    "sha256": "6b3458ab653e2c666eedfa78a9a36585a9072caf17dc6840a05267829566b2c3",
+    "bytes": 7384
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\preregistration.md",
+    "sha256": "3706d05f1fd08e0898d96448befc2d0b1382a6295a552a881d41e51117c297dc",
+    "bytes": 6498
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\run.py",
+    "sha256": "9ebd3d4b7d977c63e1084cc69f45667dca9f7a0e2801ab8da2a1c9356d09d5b3",
+    "bytes": 5627
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-radiance\\independent-controls.rs",
+    "sha256": "e694289f624eecd4b9f68adbec406ad893bdfba51332ee879bc7b6b65eccf4b7",
+    "bytes": 9725
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-radiance\\operator.rs",
+    "sha256": "106a443c95821d68c1591964311b0b411a5f0dfeae4403d7860433b8d6c9de84",
+    "bytes": 6029
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\run.py",
+    "sha256": "89e5939a4f9da3938f04bcb7b0f2327c4bb0cfae9da9527a5a947e69b64c08ff",
+    "bytes": 10148
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\chip-run.py",
+    "sha256": "1748eaa15c21b46059a934cfbfc34fecf96912091a1b9270a538f03682c564cc",
+    "bytes": 17740
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\run.py",
+    "sha256": "8bb539359b1d712c5894ce43d7c7ee66f636fefa1432cdc5d53d7777c75860b0",
+    "bytes": 7134
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\run.py",
+    "sha256": "17451d237bf256004ca8853ef4c2a9e1c582012d43ad33fd687606e68a5fb76f",
+    "bytes": 7707
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+    "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+    "bytes": 117908
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+    "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+    "bytes": 12664
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\run.py",
+    "sha256": "95e0cfd019487e93f84ae75dbb9e9c82aa720cb84fcdcd19a56fb93069a6cfed",
+    "bytes": 15350
+  }
+]

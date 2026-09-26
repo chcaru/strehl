@@ -1,0 +1,28 @@
+{
+  "status": "COMPLETE_AWAITING_INDEPENDENT_PHOTOGRAPHIC_REVIEW",
+  "candidate_valid": true,
+  "phase": "full",
+  "source_count": 299,
+  "reference": 149,
+  "sources_unchanged": true,
+  "baseline_current_production_pixels_and_icc_exact": true,
+  "actual_tone_pinned": true,
+  "candidate_pixels_changed": true,
+  "original_metadata_unchanged": true,
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-full-1\\output\\receipt.json",
+    "sha256": "993ef60b57057ddb954476f543d374966e7b52f2d41fd27456c3b5237ae93074",
+    "bytes": 168776
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-full-1\\process.json",
+    "sha256": "a68309a489f18c1aa6452425c10660e6f2672b7081c44a64145fadad9b4714a2",
+    "bytes": 2784
+  },
+  "generated_general_qualification": false,
+  "general_screen_pass": false,
+  "exploratory_single_surface_observation": true,
+  "photographic_replay_admitted": false,
+  "visual_verdict": null,
+  "scope": "One separately authorized exploratory single-surface intercept observation; original proxy and general intercept screen remain refused."
+}

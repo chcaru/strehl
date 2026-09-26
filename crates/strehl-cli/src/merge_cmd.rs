@@ -5059,6 +5059,16 @@ mod chip_focus_radiance_full {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/chip-focus-radiance/full-adapter.rs"));
 }
 
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+mod chip_focus_intercept {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/chip-focus-intercept/operator.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+mod chip_focus_intercept_full {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/chip-focus-intercept/full-adapter.rs"));
+}
+
 #[cfg(all(test, feature = "native-correction-variance", feature = "native-gpu-gather", feature = "native-direct-planes"))]
 mod optical_support_veto {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/optical-support-veto/implementation.rs"));

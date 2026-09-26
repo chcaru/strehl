@@ -1,0 +1,8 @@
+{
+  "invalid_input_refused": true,
+  "mechanical_pass": true,
+  "negligible_opposite_mass_refused": true,
+  "one_sided_refused": true,
+  "order_and_missing_refused": true,
+  "rank_deficient_refused": true
+}

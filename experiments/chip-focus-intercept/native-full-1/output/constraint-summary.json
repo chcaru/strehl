@@ -1,0 +1,21 @@
+{
+  "condition_max": 8.937809944152832,
+  "left_fraction_min": 0.46153539419174194,
+  "noise_gain_max": 0.07604542374610901,
+  "noise_policy_pass": true,
+  "noise_ratio_max": 1.7322851419448853,
+  "right_fraction_min": 0.425163209438324,
+  "summary_cfa_after_sha256": [
+    "1657716f1e58da8106e1468a161c737b2d6b34ebf1ddfcfb480f386ef9f9c4da",
+    "5efc715e24d78336f43975e2f4330ef502156c4ea47dde35d9ff5cf2d63c5535",
+    "5de38f695f1647a17a7fa26f49f30ad84748c1fab84a1ba6218c8cdd2aefe92a",
+    "aaf42f44505fd7089a652d3212877097d7e09348eb36bf40b2e58fdda991fc2a"
+  ],
+  "summary_cfa_before_sha256": [
+    "1657716f1e58da8106e1468a161c737b2d6b34ebf1ddfcfb480f386ef9f9c4da",
+    "5efc715e24d78336f43975e2f4330ef502156c4ea47dde35d9ff5cf2d63c5535",
+    "5de38f695f1647a17a7fa26f49f30ad84748c1fab84a1ba6218c8cdd2aefe92a",
+    "aaf42f44505fd7089a652d3212877097d7e09348eb36bf40b2e58fdda991fc2a"
+  ],
+  "summary_cfa_unchanged": true
+}

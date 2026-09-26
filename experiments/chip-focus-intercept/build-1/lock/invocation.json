@@ -1,0 +1,23 @@
+{
+  "command": [
+    "cargo",
+    "generate-lockfile",
+    "--manifest-path",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\Cargo.toml",
+    "--offline"
+  ],
+  "environment": {
+    "CARGO_INCREMENTAL": "0"
+  },
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\run.py",
+    "sha256": "64022f1c05f4c769184cd529dac7f2e993713d1522e87f4a028d8f86e88b07c5",
+    "bytes": 18717
+  },
+  "limits": {
+    "wall_seconds": 60,
+    "cpu_seconds": 120,
+    "committed_bytes": 2147483648
+  }
+}

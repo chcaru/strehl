@@ -781,3 +781,29 @@ Independent review of all25native pairs confirms conspicuous broad coloured
 spill reduction but rejects the candidate for lost fine subdivisions, stipple
 and scratch branches. Keep this tradeoff explicit; no width/source sweep or
 default promotion. See chip-focus-radiance/results.md and photographic-review.md.
+
+The fixed quadratic focus intercept also fails general admission: its generated
+far component retains about 96.8% against the frozen 98% requirement. A separate
+single-surface observation, explicitly retaining that failure, completes all
+299 native sources in 134.015s. It reproduces the current baseline pixels and
+every earlier source/gather hash. All numerical support bounds pass. Independent
+review of both complete outputs and all 25 native pairs still rejects it:
+definition improves over the Gaussian trial, but fine contacts, stipple and
+scratch branches remain softer than current production. Complete views and
+masters were shown to the owner. See chip-focus-intercept/native-results.md
+and photographic-review.md; neither a default change nor a SOTA claim follows.
+
+The independent source-gradient target screen also closes before reconstruction.
+It preserves flat/noise and near/far controls, but damages fixed contact-interior
+coarse targets in all four planes, with and without noise. Some fine spill targets
+improve; that does not excuse the coarse harm. Four passing mechanical tests do
+not change scientific admission=false. See source-gradient-target/results.md,
+independent-results.md and root-decision.md. No solver or photo run is warranted.
+
+Before another chip treatment, a fixed retained-source observation will test
+whether the fitted front already includes the protected detail. This uses two
+existing witnesses and seven model-selected sources each, with no recentering,
+ranking, fitting or width change. The developed RGB sources cannot establish
+the exact native CFA counterfactual. Ambiguous support closes this family rather
+than initiating a search. In parallel, return to the actual marigold production
+path for a distinct implementation or input-consistency discriminator.

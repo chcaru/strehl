@@ -1,0 +1,9 @@
+{
+  "dense_oracle_max_error_dn": 0.004035627627672511,
+  "exact_family_is_arithmetic_only": true,
+  "mechanical_pass": true,
+  "moment_max_error": 5.422443007278771e-7,
+  "negative_weights_exercised": true,
+  "quadratic_max_error_dn": 0.00390625,
+  "wrong_row_rejected": true
+}

@@ -1,0 +1,934 @@
+{
+  "canonical_consumer_qualified": false,
+  "cases": [
+    {
+      "benefit_pass": false,
+      "core": [
+        {
+          "baseline_rmse_dn": 15.957650869465656,
+          "candidate_rmse_dn": 9.575531556264183,
+          "channel": 0,
+          "edge_count": 448,
+          "level": 0,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 81.33755144347383,
+          "candidate_rmse_dn": 43.43135211739274,
+          "channel": 0,
+          "edge_count": 104,
+          "level": 1,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 27.84665183794308,
+          "candidate_rmse_dn": 37.242735322647476,
+          "channel": 0,
+          "edge_count": 22,
+          "level": 2,
+          "no_harm": false,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 53.7147741309669,
+          "candidate_rmse_dn": 54.13847893525377,
+          "channel": 0,
+          "edge_count": 4,
+          "level": 3,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 31.73695550322466,
+          "candidate_rmse_dn": 22.901632477273413,
+          "channel": 1,
+          "edge_count": 448,
+          "level": 0,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 125.27851259489535,
+          "candidate_rmse_dn": 113.68155600397002,
+          "channel": 1,
+          "edge_count": 104,
+          "level": 1,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 85.76204736994966,
+          "candidate_rmse_dn": 97.79278438488754,
+          "channel": 1,
+          "edge_count": 22,
+          "level": 2,
+          "no_harm": false,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 75.40854630074412,
+          "candidate_rmse_dn": 76.21514605878971,
+          "channel": 1,
+          "edge_count": 4,
+          "level": 3,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 32.431813682606915,
+          "candidate_rmse_dn": 22.66101659670649,
+          "channel": 2,
+          "edge_count": 448,
+          "level": 0,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 124.51414835532934,
+          "candidate_rmse_dn": 112.66909432902119,
+          "channel": 2,
+          "edge_count": 104,
+          "level": 1,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 76.63469027548902,
+          "candidate_rmse_dn": 93.10732390456465,
+          "channel": 2,
+          "edge_count": 22,
+          "level": 2,
+          "no_harm": false,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 102.37078729373967,
+          "candidate_rmse_dn": 103.16956312614047,
+          "channel": 2,
+          "edge_count": 4,
+          "level": 3,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 18.116477916834587,
+          "candidate_rmse_dn": 6.930097651402407,
+          "channel": 3,
+          "edge_count": 448,
+          "level": 0,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 55.83300883114696,
+          "candidate_rmse_dn": 47.228272384679585,
+          "channel": 3,
+          "edge_count": 104,
+          "level": 1,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 32.85964310039686,
+          "candidate_rmse_dn": 37.73373170455058,
+          "channel": 3,
+          "edge_count": 22,
+          "level": 2,
+          "no_harm": false,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 26.470827490474253,
+          "candidate_rmse_dn": 26.74970520503447,
+          "channel": 3,
+          "edge_count": 4,
+          "level": 3,
+          "no_harm": true,
+          "window": "contact-interior"
+        }
+      ],
+      "joins": [
+        {
+          "baseline_error_dn": 0.2901326155772258,
+          "benefit_pass": true,
+          "candidate_error_dn": 0.1175740059636947,
+          "channel": 0,
+          "edge_count": 451,
+          "join_error_alignment": 0.9151502791926835,
+          "join_rms_dn": 0.253477592994698,
+          "level": 0,
+          "spurious_join_exercised": true
+        },
+        {
+          "baseline_error_dn": 4.300896137783184,
+          "benefit_pass": true,
+          "candidate_error_dn": 3.7160814317280937,
+          "channel": 0,
+          "edge_count": 94,
+          "join_error_alignment": 0.5113551255081072,
+          "join_rms_dn": 1.8140459027514486,
+          "level": 1,
+          "spurious_join_exercised": true
+        },
+        {
+          "baseline_error_dn": 0.3185647986833632,
+          "benefit_pass": true,
+          "candidate_error_dn": 0.2755445434513677,
+          "channel": 1,
+          "edge_count": 451,
+          "join_error_alignment": 0.5519351566625053,
+          "join_rms_dn": 0.24901480095112988,
+          "level": 0,
+          "spurious_join_exercised": true
+        },
+        {
+          "baseline_error_dn": 8.79919779146078,
+          "benefit_pass": false,
+          "candidate_error_dn": 9.197874219050536,
+          "channel": 1,
+          "edge_count": 94,
+          "join_error_alignment": 0.21820997506214912,
+          "join_rms_dn": 5.2157801914426125,
+          "level": 1,
+          "spurious_join_exercised": true
+        },
+        {
+          "baseline_error_dn": 0.3104193366248021,
+          "benefit_pass": true,
+          "candidate_error_dn": 0.25320371744168985,
+          "channel": 2,
+          "edge_count": 451,
+          "join_error_alignment": 0.6069243041875346,
+          "join_rms_dn": 0.24538270190549996,
+          "level": 0,
+          "spurious_join_exercised": true
+        },
+        {
+          "baseline_error_dn": 8.457644639429946,
+          "benefit_pass": false,
+          "candidate_error_dn": 9.094431951433474,
+          "channel": 2,
+          "edge_count": 94,
+          "join_error_alignment": 0.1751649133097158,
+          "join_rms_dn": 5.1382202532142704,
+          "level": 1,
+          "spurious_join_exercised": false
+        },
+        {
+          "baseline_error_dn": 0.20153917250393252,
+          "benefit_pass": true,
+          "candidate_error_dn": 0.07266545423800536,
+          "channel": 3,
+          "edge_count": 451,
+          "join_error_alignment": 0.9341718938582917,
+          "join_rms_dn": 0.17784807821261991,
+          "level": 0,
+          "spurious_join_exercised": true
+        },
+        {
+          "baseline_error_dn": 3.879074948709576,
+          "benefit_pass": true,
+          "candidate_error_dn": 3.652635619549169,
+          "channel": 3,
+          "edge_count": 94,
+          "join_error_alignment": 0.3751692909570278,
+          "join_rms_dn": 2.097533372753399,
+          "level": 1,
+          "spurious_join_exercised": true
+        }
+      ],
+      "noise_sigma_dn": 0.0,
+      "positive_exercised": false,
+      "preservation_pass": false,
+      "recoveries": [
+        {
+          "baseline": 0.9765633197876056,
+          "candidate": 0.9838941893704919,
+          "channel": 0,
+          "level": 0,
+          "live": true,
+          "retention_pass": true,
+          "truth_sd_dn": 108.88718469392218
+        },
+        {
+          "baseline": 0.8264424062075715,
+          "candidate": 0.8708569469480983,
+          "channel": 0,
+          "level": 1,
+          "live": true,
+          "retention_pass": true,
+          "truth_sd_dn": 254.53862580040635
+        },
+        {
+          "baseline": 0.9826469193512154,
+          "candidate": 0.9776232289555731,
+          "channel": 1,
+          "level": 0,
+          "live": true,
+          "retention_pass": true,
+          "truth_sd_dn": 230.49388492425476
+        },
+        {
+          "baseline": 0.8719714915203256,
+          "candidate": 0.8805280041573155,
+          "channel": 1,
+          "level": 1,
+          "live": true,
+          "retention_pass": true,
+          "truth_sd_dn": 546.9858978630591
+        },
+        {
+          "baseline": 0.9812297390533692,
+          "candidate": 0.9788913018743178,
+          "channel": 2,
+          "level": 0,
+          "live": true,
+          "retention_pass": true,
+          "truth_sd_dn": 232.41598923333814
+        },
+        {
+          "baseline": 0.8719741031182366,
+          "candidate": 0.884313882053549,
+          "channel": 2,
+          "level": 1,
+          "live": true,
+          "retention_pass": true,
+          "truth_sd_dn": 542.9437356420808
+        },
+        {
+          "baseline": 0.9660760106801841,
+          "candidate": 0.9822589518521516,
+          "channel": 3,
+          "level": 0,
+          "live": true,
+          "retention_pass": true,
+          "truth_sd_dn": 89.44353296273479
+        },
+        {
+          "baseline": 0.8500849096293359,
+          "candidate": 0.8629868452187227,
+          "channel": 3,
+          "level": 1,
+          "live": true,
+          "retention_pass": true,
+          "truth_sd_dn": 207.16374630277798
+        }
+      ],
+      "scientific_pass": false,
+      "whole": [
+        {
+          "baseline_rmse_dn": 2.1710493855849773,
+          "candidate_rmse_dn": 1.3042773758550785,
+          "channel": 0,
+          "edge_count": 24220,
+          "level": 0,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 10.858728639175647,
+          "candidate_rmse_dn": 5.887973223981435,
+          "channel": 0,
+          "edge_count": 5890,
+          "level": 1,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 17.140161609035673,
+          "candidate_rmse_dn": 18.144826216055556,
+          "channel": 0,
+          "edge_count": 1445,
+          "level": 2,
+          "no_harm": false,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 29.098316708133236,
+          "candidate_rmse_dn": 29.379956403018287,
+          "channel": 0,
+          "edge_count": 362,
+          "level": 3,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 4.321356338915641,
+          "candidate_rmse_dn": 3.125267456984131,
+          "channel": 1,
+          "edge_count": 24220,
+          "level": 0,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 16.79669554675015,
+          "candidate_rmse_dn": 15.38189349376737,
+          "channel": 1,
+          "edge_count": 5890,
+          "level": 1,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 40.881249828783396,
+          "candidate_rmse_dn": 42.33384165509974,
+          "channel": 1,
+          "edge_count": 1445,
+          "level": 2,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 56.34066979435666,
+          "candidate_rmse_dn": 56.90079486490804,
+          "channel": 1,
+          "edge_count": 362,
+          "level": 3,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 4.416567539918337,
+          "candidate_rmse_dn": 3.0872033946850346,
+          "channel": 2,
+          "edge_count": 24220,
+          "level": 0,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 16.690422799407212,
+          "candidate_rmse_dn": 15.256462098002542,
+          "channel": 2,
+          "edge_count": 5890,
+          "level": 1,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 40.9301038314545,
+          "candidate_rmse_dn": 42.50622452753131,
+          "channel": 2,
+          "edge_count": 1445,
+          "level": 2,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 54.495860130644076,
+          "candidate_rmse_dn": 55.05128203823239,
+          "channel": 2,
+          "edge_count": 362,
+          "level": 3,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 2.465681219275941,
+          "candidate_rmse_dn": 0.9497818691677522,
+          "channel": 3,
+          "edge_count": 24220,
+          "level": 0,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 7.475987757496092,
+          "candidate_rmse_dn": 6.364001902701094,
+          "channel": 3,
+          "edge_count": 5890,
+          "level": 1,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 14.903220667109876,
+          "candidate_rmse_dn": 15.468705990527956,
+          "channel": 3,
+          "edge_count": 1445,
+          "level": 2,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 19.434104990910154,
+          "candidate_rmse_dn": 19.638707352178383,
+          "channel": 3,
+          "edge_count": 362,
+          "level": 3,
+          "no_harm": true,
+          "window": "whole-interior"
+        }
+      ]
+    },
+    {
+      "benefit_pass": false,
+      "core": [
+        {
+          "baseline_rmse_dn": 32.409728479214195,
+          "candidate_rmse_dn": 29.4827547759178,
+          "channel": 0,
+          "edge_count": 448,
+          "level": 0,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 81.69015567604342,
+          "candidate_rmse_dn": 43.068537290785265,
+          "channel": 0,
+          "edge_count": 104,
+          "level": 1,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 27.727890578646736,
+          "candidate_rmse_dn": 37.03859838883555,
+          "channel": 0,
+          "edge_count": 22,
+          "level": 2,
+          "no_harm": false,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 53.53133720783965,
+          "candidate_rmse_dn": 53.96850882012695,
+          "channel": 0,
+          "edge_count": 4,
+          "level": 3,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 41.826667138602694,
+          "candidate_rmse_dn": 34.393841681483316,
+          "channel": 1,
+          "edge_count": 448,
+          "level": 0,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 124.87038618932255,
+          "candidate_rmse_dn": 113.13409154013159,
+          "channel": 1,
+          "edge_count": 104,
+          "level": 1,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 85.73848164654252,
+          "candidate_rmse_dn": 97.92767714634783,
+          "channel": 1,
+          "edge_count": 22,
+          "level": 2,
+          "no_harm": false,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 75.65812660427308,
+          "candidate_rmse_dn": 76.47353893287614,
+          "channel": 1,
+          "edge_count": 4,
+          "level": 3,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 41.83351503620126,
+          "candidate_rmse_dn": 33.942668095639654,
+          "channel": 2,
+          "edge_count": 448,
+          "level": 0,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 124.32279433905035,
+          "candidate_rmse_dn": 112.27508793256064,
+          "channel": 2,
+          "edge_count": 104,
+          "level": 1,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 76.43467283564529,
+          "candidate_rmse_dn": 92.82270790468424,
+          "channel": 2,
+          "edge_count": 22,
+          "level": 2,
+          "no_harm": false,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 102.94522857850768,
+          "candidate_rmse_dn": 103.7550908622218,
+          "channel": 2,
+          "edge_count": 4,
+          "level": 3,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 31.89819841925977,
+          "candidate_rmse_dn": 26.1209397420008,
+          "channel": 3,
+          "edge_count": 448,
+          "level": 0,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 55.88600107506027,
+          "candidate_rmse_dn": 47.08507647609791,
+          "channel": 3,
+          "edge_count": 104,
+          "level": 1,
+          "no_harm": true,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 32.95196381556775,
+          "candidate_rmse_dn": 37.85528885593624,
+          "channel": 3,
+          "edge_count": 22,
+          "level": 2,
+          "no_harm": false,
+          "window": "contact-interior"
+        },
+        {
+          "baseline_rmse_dn": 26.9270258509945,
+          "candidate_rmse_dn": 27.21718898677773,
+          "channel": 3,
+          "edge_count": 4,
+          "level": 3,
+          "no_harm": true,
+          "window": "contact-interior"
+        }
+      ],
+      "joins": [
+        {
+          "baseline_error_dn": 26.274557537264226,
+          "benefit_pass": false,
+          "candidate_error_dn": 26.258666594165337,
+          "channel": 0,
+          "edge_count": 451,
+          "join_error_alignment": 0.06703024103236538,
+          "join_rms_dn": 0.25553808067597694,
+          "level": 0,
+          "spurious_join_exercised": false
+        },
+        {
+          "baseline_error_dn": 7.371370845676434,
+          "benefit_pass": true,
+          "candidate_error_dn": 6.732937470650797,
+          "channel": 0,
+          "edge_count": 94,
+          "join_error_alignment": 0.45789272510124995,
+          "join_rms_dn": 1.8299915331749341,
+          "level": 1,
+          "spurious_join_exercised": true
+        },
+        {
+          "baseline_error_dn": 27.47436992614131,
+          "benefit_pass": false,
+          "candidate_error_dn": 27.462871640751096,
+          "channel": 1,
+          "edge_count": 451,
+          "join_error_alignment": 0.047755709004665484,
+          "join_rms_dn": 0.26811733048362674,
+          "level": 0,
+          "spurious_join_exercised": false
+        },
+        {
+          "baseline_error_dn": 10.909792992089741,
+          "benefit_pass": false,
+          "candidate_error_dn": 11.15542970589861,
+          "channel": 1,
+          "edge_count": 94,
+          "join_error_alignment": 0.19694946240532898,
+          "join_rms_dn": 5.316775931321407,
+          "level": 1,
+          "spurious_join_exercised": false
+        },
+        {
+          "baseline_error_dn": 29.784799002606114,
+          "benefit_pass": false,
+          "candidate_error_dn": 29.775807306947854,
+          "channel": 2,
+          "edge_count": 451,
+          "join_error_alignment": 0.042232011393781986,
+          "join_rms_dn": 0.2347927706467376,
+          "level": 0,
+          "spurious_join_exercised": false
+        },
+        {
+          "baseline_error_dn": 10.683908218608535,
+          "benefit_pass": false,
+          "candidate_error_dn": 11.105565771623766,
+          "channel": 2,
+          "edge_count": 94,
+          "join_error_alignment": 0.16071663551223883,
+          "join_rms_dn": 5.200767494124153,
+          "level": 1,
+          "spurious_join_exercised": false
+        },
+        {
+          "baseline_error_dn": 27.878641910013272,
+          "benefit_pass": false,
+          "candidate_error_dn": 27.86981579121169,
+          "channel": 3,
+          "edge_count": 451,
+          "join_error_alignment": 0.050292908551683314,
+          "join_rms_dn": 0.18808140766629158,
+          "level": 0,
+          "spurious_join_exercised": false
+        },
+        {
+          "baseline_error_dn": 7.323262537839982,
+          "benefit_pass": false,
+          "candidate_error_dn": 7.109101520810048,
+          "channel": 3,
+          "edge_count": 94,
+          "join_error_alignment": 0.2444310193213983,
+          "join_rms_dn": 2.1267322185222883,
+          "level": 1,
+          "spurious_join_exercised": true
+        }
+      ],
+      "noise_sigma_dn": 20.0,
+      "positive_exercised": false,
+      "preservation_pass": false,
+      "recoveries": [
+        {
+          "baseline": 0.9780184478782639,
+          "candidate": 0.9871630737781873,
+          "channel": 0,
+          "level": 0,
+          "live": true,
+          "retention_pass": true,
+          "truth_sd_dn": 108.88718469392218
+        },
+        {
+          "baseline": 0.8313726077053689,
+          "candidate": 0.8756563487756007,
+          "channel": 0,
+          "level": 1,
+          "live": true,
+          "retention_pass": true,
+          "truth_sd_dn": 254.53862580040635
+        },
+        {
+          "baseline": 0.9903036187253702,
+          "candidate": 0.9848409445975096,
+          "channel": 1,
+          "level": 0,
+          "live": true,
+          "retention_pass": true,
+          "truth_sd_dn": 230.49388492425476
+        },
+        {
+          "baseline": 0.8727943455366798,
+          "candidate": 0.8813736756731231,
+          "channel": 1,
+          "level": 1,
+          "live": true,
+          "retention_pass": true,
+          "truth_sd_dn": 546.9858978630591
+        },
+        {
+          "baseline": 0.9825593565593765,
+          "candidate": 0.9801839314343277,
+          "channel": 2,
+          "level": 0,
+          "live": true,
+          "retention_pass": true,
+          "truth_sd_dn": 232.41598923333814
+        },
+        {
+          "baseline": 0.8733513720571346,
+          "candidate": 0.8857828627113589,
+          "channel": 2,
+          "level": 1,
+          "live": true,
+          "retention_pass": true,
+          "truth_sd_dn": 542.9437356420808
+        },
+        {
+          "baseline": 0.9678834395483319,
+          "candidate": 0.9858091309644949,
+          "channel": 3,
+          "level": 0,
+          "live": true,
+          "retention_pass": true,
+          "truth_sd_dn": 89.44353296273479
+        },
+        {
+          "baseline": 0.8503752611769414,
+          "candidate": 0.8633388294412105,
+          "channel": 3,
+          "level": 1,
+          "live": true,
+          "retention_pass": true,
+          "truth_sd_dn": 207.16374630277798
+        }
+      ],
+      "scientific_pass": false,
+      "whole": [
+        {
+          "baseline_rmse_dn": 27.938975792323983,
+          "candidate_rmse_dn": 27.87884528515182,
+          "channel": 0,
+          "edge_count": 24220,
+          "level": 0,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 12.287370366203625,
+          "candidate_rmse_dn": 8.115254657885998,
+          "channel": 0,
+          "edge_count": 5890,
+          "level": 1,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 17.114414604525358,
+          "candidate_rmse_dn": 18.104609818675012,
+          "channel": 0,
+          "edge_count": 1445,
+          "level": 2,
+          "no_harm": false,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 29.027122157764353,
+          "candidate_rmse_dn": 29.309157772041218,
+          "channel": 0,
+          "edge_count": 362,
+          "level": 3,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 28.1325898622716,
+          "candidate_rmse_dn": 27.946925382425103,
+          "channel": 1,
+          "edge_count": 24220,
+          "level": 0,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 17.664841184469708,
+          "candidate_rmse_dn": 16.308036081236327,
+          "channel": 1,
+          "edge_count": 5890,
+          "level": 1,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 40.84996103928449,
+          "candidate_rmse_dn": 42.29744120602885,
+          "channel": 1,
+          "edge_count": 1445,
+          "level": 2,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 56.38564924357423,
+          "candidate_rmse_dn": 56.948738454033446,
+          "channel": 1,
+          "edge_count": 362,
+          "level": 3,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 28.281007444843148,
+          "candidate_rmse_dn": 28.084978470435885,
+          "channel": 2,
+          "edge_count": 24220,
+          "level": 0,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 17.628014476158118,
+          "candidate_rmse_dn": 16.254495940038062,
+          "channel": 2,
+          "edge_count": 5890,
+          "level": 1,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 41.000917713109935,
+          "candidate_rmse_dn": 42.55681195237405,
+          "channel": 2,
+          "edge_count": 1445,
+          "level": 2,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 54.504358697286335,
+          "candidate_rmse_dn": 55.06496728661901,
+          "channel": 2,
+          "edge_count": 362,
+          "level": 3,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 28.261251498037993,
+          "candidate_rmse_dn": 28.151044080535918,
+          "channel": 3,
+          "edge_count": 24220,
+          "level": 0,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 9.472857043762799,
+          "candidate_rmse_dn": 8.593211631362786,
+          "channel": 3,
+          "edge_count": 5890,
+          "level": 1,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 14.949287704767075,
+          "candidate_rmse_dn": 15.541789367809544,
+          "channel": 3,
+          "edge_count": 1445,
+          "level": 2,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 19.463602121640697,
+          "candidate_rmse_dn": 19.669039172572806,
+          "channel": 3,
+          "edge_count": 362,
+          "level": 3,
+          "no_harm": true,
+          "window": "whole-interior"
+        }
+      ]
+    }
+  ],
+  "mechanical_pass": true,
+  "photographic_quality_admitted": false,
+  "scientific_pass": false
+}

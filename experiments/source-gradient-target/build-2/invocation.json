@@ -1,0 +1,33 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\source-gradient-target\\Cargo.toml",
+    "--lib",
+    "--no-run",
+    "--release",
+    "--jobs",
+    "2",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\source-gradient-target",
+    "--message-format=json-render-diagnostics",
+    "--locked",
+    "--offline"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\run.py",
+    "sha256": "64022f1c05f4c769184cd529dac7f2e993713d1522e87f4a028d8f86e88b07c5",
+    "bytes": 18717
+  },
+  "limits": {
+    "wall_seconds": 240,
+    "cpu_seconds": 900,
+    "committed_bytes": 8589934592
+  }
+}

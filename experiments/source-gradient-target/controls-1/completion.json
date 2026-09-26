@@ -1,0 +1,37 @@
+{
+  "test_status": "ok",
+  "passed": 4,
+  "failed": 0,
+  "sources_unchanged": true,
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\source-gradient-target\\controls-1\\process.json",
+    "sha256": "fba7846fd915f4e2550917e6e1d63ebc70a82bbcb1a798af701a86f4e0b98d88",
+    "bytes": 2664
+  },
+  "scientific_screen_pass": false,
+  "canonical_consumer_qualified": false,
+  "records": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\source-gradient-target\\controls-1\\output\\arithmetic.json",
+      "sha256": "bf704a2b17f99c8bee46d33d56497fa3baea67f3bb832f8500bfc1f352a810d2",
+      "bytes": 376
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\source-gradient-target\\controls-1\\output\\contact.json",
+      "sha256": "9e0c1a4f4bf5184f9a278f1abe52f3f9281e5c832e7669d848a5369eeec31f39",
+      "bytes": 27441
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\source-gradient-target\\controls-1\\output\\depth.json",
+      "sha256": "a088ed31a8f4a1e20bbcdbb9438a6970831bd44017c08eeeea0c4f7ddffd17c7",
+      "bytes": 20128
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\source-gradient-target\\controls-1\\output\\flat.json",
+      "sha256": "c71d1a97ba46e208804665106c5dc52506d0738a3ccfd51a3dc88891e211b0cd",
+      "bytes": 8364
+    }
+  ],
+  "photographic_quality_admitted": false,
+  "scope": "Core target-only falsifier; no reconstructed candidate, RAW gather or real image tested."
+}

@@ -1,0 +1,825 @@
+{
+  "full_images": [
+    {
+      "arm": "baseline",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-full-1\\output\\baseline.tiff",
+        "sha256": "d49ca25157dd474c54f94f9c0d27b908a2b82fc0718496323f1b99ccb5554611",
+        "bytes": 168952968
+      },
+      "full_jpeg": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-full.jpg",
+        "sha256": "f88275aba4c07371b147915e38e98d8a54e70b9509dfd0bec686d174b48b7e45",
+        "bytes": 23962478
+      },
+      "overview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-overview.png",
+        "sha256": "1c2b7029773b9033b3e283378b045a7d1b65259fb57bc02f1cd8863fa293de3d",
+        "bytes": 3222297
+      },
+      "native_dimensions": [
+        6500,
+        4332
+      ],
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b"
+    },
+    {
+      "arm": "candidate",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-full-1\\output\\candidate.tiff",
+        "sha256": "1ee7fb09cb66e5360f1945d449e08dddb8d9c5e93d5944b93f2c608c871fcf71",
+        "bytes": 168952968
+      },
+      "full_jpeg": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-full.jpg",
+        "sha256": "9c12cb82750c80037bb03978f8e6b228ba9533ae46f5a1ff924e697ad1f15583",
+        "bytes": 17444760
+      },
+      "overview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-overview.png",
+        "sha256": "cad5cbe6a989c2b78438d4325eb71f6e951fc0046bb492b2c5d02ff6bd7bee24",
+        "bytes": 2909137
+      },
+      "native_dimensions": [
+        6500,
+        4332
+      ],
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b"
+    }
+  ],
+  "native_tiles": [
+    {
+      "arm": "baseline",
+      "region": "rail-crossing",
+      "native_xywh": [
+        1098,
+        958,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-rail-crossing-1098-958.png",
+        "sha256": "bdd4ac7ed25cd02081ef4dce96634d08fae1fb36c8642ffb9f00872fae16fb22",
+        "bytes": 308439
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-colour",
+      "native_xywh": [
+        1036,
+        196,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-upper-colour-1036-196.png",
+        "sha256": "e22ecfe3c366a5004371174288ce52cc831343bce84a770542dcf3994c5e88a3",
+        "bytes": 113160
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-colour",
+      "native_xywh": [
+        1292,
+        196,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-upper-colour-1292-196.png",
+        "sha256": "39aa01d1e5bed2d8873aad0431fd44d2f6c1aceb3c57a16667bf834db8b3a95c",
+        "bytes": 117680
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-colour",
+      "native_xywh": [
+        1036,
+        452,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-upper-colour-1036-452.png",
+        "sha256": "7a536b647be25c2d01d272f8b95925e77ca1447821900e9871b8e68c5293ecef",
+        "bytes": 132184
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-colour",
+      "native_xywh": [
+        1292,
+        452,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-upper-colour-1292-452.png",
+        "sha256": "5ebd536b3aea2de34b4062c5ef4e3b616cf9c853063299932d3ede8de6da7a19",
+        "bytes": 130109
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "central-stipple",
+      "native_xywh": [
+        2976,
+        1306,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-central-stipple-2976-1306.png",
+        "sha256": "9f420533f0778a59443a31e032051894979760d621abe2205e9ae5fcb8bf4561",
+        "bytes": 125123
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "central-stipple",
+      "native_xywh": [
+        3232,
+        1306,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-central-stipple-3232-1306.png",
+        "sha256": "e1102c1d1b4464aaba6f74e4b556efa3f33ec774ba1e3a364f4d8e30365d8662",
+        "bytes": 113415
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "central-stipple",
+      "native_xywh": [
+        2976,
+        1562,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-central-stipple-2976-1562.png",
+        "sha256": "55260d39ac5ca78d019d9278064e4631015ca675a06449562643060471c4e8fb",
+        "bytes": 135601
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "central-stipple",
+      "native_xywh": [
+        3232,
+        1562,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-central-stipple-3232-1562.png",
+        "sha256": "fa605242353e34a54174c660a1d8b90aea6483605f2f03f2c8754db81facf84c",
+        "bytes": 103938
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-array",
+      "native_xywh": [
+        566,
+        2796,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-lower-array-566-2796.png",
+        "sha256": "4c18b814f2044f000bb374dad4b2b67efde2116ccc3f7ceb5487befc83d4a695",
+        "bytes": 144155
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-array",
+      "native_xywh": [
+        822,
+        2796,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-lower-array-822-2796.png",
+        "sha256": "2a47033f4707bba7318f7bd5a7796f7833fe22b2562d4be9ee2305bcc8bb63c5",
+        "bytes": 136232
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-array",
+      "native_xywh": [
+        566,
+        3052,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-lower-array-566-3052.png",
+        "sha256": "6507a5b28b3ce3a989be8074fad63ce0781d0cfd978d2834c5f9f044afac26a4",
+        "bytes": 141376
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-array",
+      "native_xywh": [
+        822,
+        3052,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-lower-array-822-3052.png",
+        "sha256": "1d9541de4bb88edfd397f7a7bb739fbea9bfa05fdfeae236a7ecc7bf146408d1",
+        "bytes": 135588
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-colour",
+      "native_xywh": [
+        4666,
+        3016,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-lower-colour-4666-3016.png",
+        "sha256": "5eed295ab1d397c6513486946ffaa9e6c218a275e7e5433f170f1115b0097dff",
+        "bytes": 78701
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-colour",
+      "native_xywh": [
+        4922,
+        3016,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-lower-colour-4922-3016.png",
+        "sha256": "aca70668a71393f310613c391cb2458c0d561470bf88df6814d547e88be8bc5e",
+        "bytes": 84403
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-colour",
+      "native_xywh": [
+        4666,
+        3272,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-lower-colour-4666-3272.png",
+        "sha256": "fc256da9260cff1d99bc1f52db721c40a75d574e2b31c9ff9f35c65ad7163329",
+        "bytes": 79753
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "lower-colour",
+      "native_xywh": [
+        4922,
+        3272,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-lower-colour-4922-3272.png",
+        "sha256": "80d1a25d13ec5e463d6a25e1fbb8292c41c5324a3d0036a8c51bdcd2b046a9bc",
+        "bytes": 85747
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "surface-scratches",
+      "native_xywh": [
+        4856,
+        1256,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-surface-scratches-4856-1256.png",
+        "sha256": "ebc6e685b2e9864db380576f006030e04ffdc7e2c1f20a38493051571f57b201",
+        "bytes": 83261
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "surface-scratches",
+      "native_xywh": [
+        5112,
+        1256,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-surface-scratches-5112-1256.png",
+        "sha256": "1a1b41f3b7fe58a1544ede45b8baca45e6946dc374f697007d95d293e5ed3b23",
+        "bytes": 86377
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "surface-scratches",
+      "native_xywh": [
+        4856,
+        1512,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-surface-scratches-4856-1512.png",
+        "sha256": "d8d6bd69d9ac343a2deba217784b1860a5206af953b7672f2f8e84a8098a318c",
+        "bytes": 82102
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "surface-scratches",
+      "native_xywh": [
+        5112,
+        1512,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-surface-scratches-5112-1512.png",
+        "sha256": "c13dabf5aaff8db872b1e74c3515b08b381933b22dd058858ee3173225d8026e",
+        "bytes": 86545
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        48,
+        336,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-upper-left-contact-grid-48-336.png",
+        "sha256": "23e4fdeb848d8c7446b20dde30216305f65a2aeff3d872459889a9f85ec5d152",
+        "bytes": 142279
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        304,
+        336,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-upper-left-contact-grid-304-336.png",
+        "sha256": "7c50ff4c9484252b6411ccecfaa28fe8c423b613b2218bcd0988e6ae110a012c",
+        "bytes": 129608
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        48,
+        592,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-upper-left-contact-grid-48-592.png",
+        "sha256": "aadaab7b7c42ff7a3d962f504cbe43d3c78876ff69b04f0ac450d3e1f43aed48",
+        "bytes": 138148
+      }
+    },
+    {
+      "arm": "baseline",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        304,
+        592,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\baseline-upper-left-contact-grid-304-592.png",
+        "sha256": "409964314454fe89d7dc0ad8fc1e94920f82c72ca7186c1fb07b1814b7de6ebd",
+        "bytes": 126487
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "rail-crossing",
+      "native_xywh": [
+        1098,
+        958,
+        384,
+        384
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-rail-crossing-1098-958.png",
+        "sha256": "5892435bf37859bf668c56e811f4d21435b9f292aa878d51357b3c6d84fabe98",
+        "bytes": 262960
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "upper-colour",
+      "native_xywh": [
+        1036,
+        196,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-upper-colour-1036-196.png",
+        "sha256": "66fce040b6ac83474862e1fc23405a71d8b74200a782381f40b3a2cb2c35f3f9",
+        "bytes": 97064
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "upper-colour",
+      "native_xywh": [
+        1292,
+        196,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-upper-colour-1292-196.png",
+        "sha256": "ad97d595eef0c7dfa98056336a7a0290c0b1a3067027739d26787e0e6b2e81fe",
+        "bytes": 101247
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "upper-colour",
+      "native_xywh": [
+        1036,
+        452,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-upper-colour-1036-452.png",
+        "sha256": "6920d297b9a73f388660469f3f805cc1849721673f8eae2667af9215da5ae78c",
+        "bytes": 111011
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "upper-colour",
+      "native_xywh": [
+        1292,
+        452,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-upper-colour-1292-452.png",
+        "sha256": "27355cc07185df1f76062e2608850f584cf65a7367cdddb177151065f6d2b13d",
+        "bytes": 111865
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "central-stipple",
+      "native_xywh": [
+        2976,
+        1306,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-central-stipple-2976-1306.png",
+        "sha256": "93567c80376ad544aaa5e1dfd985dd5270d134010f019847a5b624dec2a6a113",
+        "bytes": 105821
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "central-stipple",
+      "native_xywh": [
+        3232,
+        1306,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-central-stipple-3232-1306.png",
+        "sha256": "23a18821eacaa88f24cb494b0b4d8c9c5c344edd7c44c927e0c576878de5484d",
+        "bytes": 93599
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "central-stipple",
+      "native_xywh": [
+        2976,
+        1562,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-central-stipple-2976-1562.png",
+        "sha256": "32410493509e101bcc81378a687e8ce66efbd91a4d0a2015c911c72436a5b214",
+        "bytes": 114260
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "central-stipple",
+      "native_xywh": [
+        3232,
+        1562,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-central-stipple-3232-1562.png",
+        "sha256": "a1f0df1703312dd2d4463d002d85954d32346c047ad2d95b9d3806a4bd6c4912",
+        "bytes": 83839
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "lower-array",
+      "native_xywh": [
+        566,
+        2796,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-lower-array-566-2796.png",
+        "sha256": "c9bea421db76caf8de764dde30ace99b1e3c3224664b60d6954c628fdac588c7",
+        "bytes": 133072
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "lower-array",
+      "native_xywh": [
+        822,
+        2796,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-lower-array-822-2796.png",
+        "sha256": "2e07e56db80246e78727a5bc931482c26fb2c4533d24637f420082865000b204",
+        "bytes": 127009
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "lower-array",
+      "native_xywh": [
+        566,
+        3052,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-lower-array-566-3052.png",
+        "sha256": "4e292aee1c4bf66c2657a21509267fb636c8748ffdfc88f921187a0fbfc94a1a",
+        "bytes": 131199
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "lower-array",
+      "native_xywh": [
+        822,
+        3052,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-lower-array-822-3052.png",
+        "sha256": "7e7291e45baffd7e5c4c74f845ff3eef09a6ccc159e808fcf26cf45f0c85ad7c",
+        "bytes": 125576
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "lower-colour",
+      "native_xywh": [
+        4666,
+        3016,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-lower-colour-4666-3016.png",
+        "sha256": "bd6ac743f6842153cc3a34a70c877f94a825cc2b3ff2aa4d16f229231a5f3330",
+        "bytes": 55943
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "lower-colour",
+      "native_xywh": [
+        4922,
+        3016,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-lower-colour-4922-3016.png",
+        "sha256": "8dbfa6bee747a41d0d1ee8d79c8148bc096e7d561627ae8feed2d9ab5c195eba",
+        "bytes": 60742
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "lower-colour",
+      "native_xywh": [
+        4666,
+        3272,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-lower-colour-4666-3272.png",
+        "sha256": "48ff6aabadb302ad9ac3b2dad04d11e61578ce8a00eb5011122b782d40649972",
+        "bytes": 61317
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "lower-colour",
+      "native_xywh": [
+        4922,
+        3272,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-lower-colour-4922-3272.png",
+        "sha256": "ae9497cfe03633860186fa04dbc611876a9987cfe48774376c728818b684dbec",
+        "bytes": 62931
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "surface-scratches",
+      "native_xywh": [
+        4856,
+        1256,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-surface-scratches-4856-1256.png",
+        "sha256": "80c370d82c51aafe26e9dec101d2bb3912d348af4d6a9339bae57bda73108995",
+        "bytes": 56085
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "surface-scratches",
+      "native_xywh": [
+        5112,
+        1256,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-surface-scratches-5112-1256.png",
+        "sha256": "8ad273bf909948faa395b228011cc18882d7be2835a2eb83fb9c8ed19c096e3a",
+        "bytes": 58697
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "surface-scratches",
+      "native_xywh": [
+        4856,
+        1512,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-surface-scratches-4856-1512.png",
+        "sha256": "cda3d277386442e193465ee9cff10d8cf05a983030e2a07633f7cd39c74989e0",
+        "bytes": 54598
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "surface-scratches",
+      "native_xywh": [
+        5112,
+        1512,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-surface-scratches-5112-1512.png",
+        "sha256": "7e05f83d45928c19f742a7af50986ca46e3d848eca4e26430120c81895aa7698",
+        "bytes": 60198
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        48,
+        336,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-upper-left-contact-grid-48-336.png",
+        "sha256": "161628645ee32d17fdc039dc057cf335e6a63ab6592dd34a8e0e479995287e40",
+        "bytes": 120649
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        304,
+        336,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-upper-left-contact-grid-304-336.png",
+        "sha256": "effbd73f8878ab7c53985cc9d05fa99b357169c42ff99b8e1ed0afb54c4c38b2",
+        "bytes": 105586
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        48,
+        592,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-upper-left-contact-grid-48-592.png",
+        "sha256": "c970071eb7a6dddb9faceef16c74b94c91c48f1fc0d126777044aa350ee368c7",
+        "bytes": 114184
+      }
+    },
+    {
+      "arm": "candidate",
+      "region": "upper-left-contact-grid",
+      "native_xywh": [
+        304,
+        592,
+        256,
+        256
+      ],
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-views-1\\candidate-upper-left-contact-grid-304-592.png",
+        "sha256": "cc3519776fea13fc671d9ae615c44e7f1f07772bdb7f8003947b976d4c99750f",
+        "bytes": 105109
+      }
+    }
+  ],
+  "targets": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-stock-selectivity\\targets.json",
+    "sha256": "60f1075e914dd754dd7113ae6749f438170669db71d8c0fbebfb8e69e2023888",
+    "bytes": 15337
+  },
+  "run_completion": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\native-full-1\\completion.json",
+    "sha256": "4ad55ec3aa20861db5d64380776c20ffe661ad72581d1a12029282512f475ec3",
+    "bytes": 1232
+  },
+  "native_size": [
+    6500,
+    4332
+  ],
+  "crop": [
+    133,
+    89,
+    3250,
+    2166
+  ],
+  "conversion": "Identical (RGB16+128)//257 with retained ICC; native tiles never resampled.",
+  "visual_verdict": null,
+  "scope": "One separately authorized exploratory single-surface intercept observation; original proxy and general intercept screen remain refused."
+}

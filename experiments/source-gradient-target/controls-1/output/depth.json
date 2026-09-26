@@ -1,0 +1,752 @@
+{
+  "canonical_consumer_qualified": false,
+  "cases": [
+    {
+      "component_retention_pass": true,
+      "components": [
+        {
+          "baseline_joint": [
+            0.99999987719952,
+            0.21766875056666243
+          ],
+          "candidate_joint": [
+            0.9999998759836309,
+            0.2176687829035371
+          ],
+          "channel": 0,
+          "half_far_joint": [
+            1.0000000003221974,
+            0.49999999967666847
+          ],
+          "level": 0,
+          "live": true,
+          "protected_component": 0,
+          "retention_pass": true,
+          "truth_joint": [
+            0.9999999999999937,
+            0.9999999999999807
+          ],
+          "wrong_depth_joint": [
+            1.0000000470921457,
+            0.21766864905269523
+          ]
+        },
+        {
+          "baseline_joint": [
+            0.0004745180069601636,
+            0.94064178600221
+          ],
+          "candidate_joint": [
+            0.00047454287640113547,
+            0.940641761579193
+          ],
+          "channel": 0,
+          "half_far_joint": [
+            1.0000000000000002,
+            0.5000000000000001
+          ],
+          "level": 2,
+          "live": true,
+          "protected_component": 1,
+          "retention_pass": true,
+          "truth_joint": [
+            1.0,
+            1.0000000000000004
+          ],
+          "wrong_depth_joint": [
+            0.9999528316832509,
+            0.2176682943573371
+          ]
+        },
+        {
+          "baseline_joint": [
+            0.9999998502343087,
+            0.21766832141222997
+          ],
+          "candidate_joint": [
+            0.9999998489327024,
+            0.21766786265898783
+          ],
+          "channel": 1,
+          "half_far_joint": [
+            1.0000000000801348,
+            0.49999999211841223
+          ],
+          "level": 0,
+          "live": true,
+          "protected_component": 0,
+          "retention_pass": true,
+          "truth_joint": [
+            1.0000000000319103,
+            1.000000009788202
+          ],
+          "wrong_depth_joint": [
+            1.0000000218945775,
+            0.21766781953704295
+          ]
+        },
+        {
+          "baseline_joint": [
+            0.0004467808744226973,
+            0.9406416457428118
+          ],
+          "candidate_joint": [
+            0.00046954144399814936,
+            0.9406416281289919
+          ],
+          "channel": 1,
+          "half_far_joint": [
+            1.0000000844707426,
+            0.49999999995644057
+          ],
+          "level": 2,
+          "live": true,
+          "protected_component": 1,
+          "retention_pass": true,
+          "truth_joint": [
+            1.000000047567034,
+            1.000000000883492
+          ],
+          "wrong_depth_joint": [
+            1.0000050405159553,
+            0.21766838303227098
+          ]
+        },
+        {
+          "baseline_joint": [
+            0.9999998423722664,
+            0.2176683875391201
+          ],
+          "candidate_joint": [
+            0.9999998422327069,
+            0.21766790182067589
+          ],
+          "channel": 2,
+          "half_far_joint": [
+            0.9999999995660527,
+            0.4999999886006003
+          ],
+          "level": 0,
+          "live": true,
+          "protected_component": 0,
+          "retention_pass": true,
+          "truth_joint": [
+            1.0000000002823193,
+            0.9999999946223647
+          ],
+          "wrong_depth_joint": [
+            1.000000016865377,
+            0.2176678870177738
+          ]
+        },
+        {
+          "baseline_joint": [
+            0.0004508561945804002,
+            0.9406416927737632
+          ],
+          "candidate_joint": [
+            0.0004725032917550223,
+            0.9406416821512348
+          ],
+          "channel": 2,
+          "half_far_joint": [
+            1.0000000465423275,
+            0.5000000014342878
+          ],
+          "level": 2,
+          "live": true,
+          "protected_component": 1,
+          "retention_pass": true,
+          "truth_joint": [
+            1.0000000071233563,
+            0.9999999971418012
+          ],
+          "wrong_depth_joint": [
+            1.000004664956023,
+            0.21766829551801575
+          ]
+        },
+        {
+          "baseline_joint": [
+            0.9999998379907008,
+            0.2176682613850727
+          ],
+          "candidate_joint": [
+            0.9999998373267642,
+            0.2176681735188831
+          ],
+          "channel": 3,
+          "half_far_joint": [
+            1.0000000000683178,
+            0.49999999285026064
+          ],
+          "level": 0,
+          "live": true,
+          "protected_component": 0,
+          "retention_pass": true,
+          "truth_joint": [
+            1.0000000000526688,
+            1.0000000137025005
+          ],
+          "wrong_depth_joint": [
+            1.0000000076387026,
+            0.21766815864447553
+          ]
+        },
+        {
+          "baseline_joint": [
+            0.00047806021769461,
+            0.9406416529712065
+          ],
+          "candidate_joint": [
+            0.000477480192721071,
+            0.9406416562532408
+          ],
+          "channel": 3,
+          "half_far_joint": [
+            0.9999999489103653,
+            0.5000000008748762
+          ],
+          "level": 2,
+          "live": true,
+          "protected_component": 1,
+          "retention_pass": true,
+          "truth_joint": [
+            0.9999998543966804,
+            1.000000001749844
+          ],
+          "wrong_depth_joint": [
+            0.9999916323874776,
+            0.21766832310873996
+          ]
+        }
+      ],
+      "erased_rejected": true,
+      "half_far_rejected": true,
+      "levels": [
+        {
+          "baseline_rmse_dn": 6.29790733174911,
+          "candidate_rmse_dn": 6.297907066217343,
+          "channel": 0,
+          "edge_count": 24220,
+          "level": 0,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 118.41909914579267,
+          "candidate_rmse_dn": 115.66403740174513,
+          "channel": 0,
+          "edge_count": 5890,
+          "level": 1,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 14.808118727383933,
+          "candidate_rmse_dn": 14.808124846600583,
+          "channel": 0,
+          "edge_count": 1445,
+          "level": 2,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 26.43939750394237,
+          "candidate_rmse_dn": 26.439398082125486,
+          "channel": 0,
+          "edge_count": 362,
+          "level": 3,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 11.76661790111894,
+          "candidate_rmse_dn": 11.766624800988543,
+          "channel": 1,
+          "edge_count": 24220,
+          "level": 0,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 256.34160468737775,
+          "candidate_rmse_dn": 257.5276271868556,
+          "channel": 1,
+          "edge_count": 5890,
+          "level": 1,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 29.446875598609363,
+          "candidate_rmse_dn": 29.446814649971692,
+          "channel": 1,
+          "edge_count": 1445,
+          "level": 2,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 53.86788120315849,
+          "candidate_rmse_dn": 53.86788607962543,
+          "channel": 1,
+          "edge_count": 362,
+          "level": 3,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 11.765709844931225,
+          "candidate_rmse_dn": 11.765717149319235,
+          "channel": 2,
+          "edge_count": 24220,
+          "level": 0,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 256.33779673672484,
+          "candidate_rmse_dn": 257.438071999185,
+          "channel": 2,
+          "edge_count": 5890,
+          "level": 1,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 29.453186958750507,
+          "candidate_rmse_dn": 29.4531261854373,
+          "channel": 2,
+          "edge_count": 1445,
+          "level": 2,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 53.893711489875415,
+          "candidate_rmse_dn": 53.89371552198482,
+          "channel": 2,
+          "edge_count": 362,
+          "level": 3,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 4.350614744946296,
+          "candidate_rmse_dn": 4.3506152334048265,
+          "channel": 3,
+          "edge_count": 24220,
+          "level": 0,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 90.12020443475637,
+          "candidate_rmse_dn": 89.16224274240854,
+          "channel": 3,
+          "edge_count": 5890,
+          "level": 1,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 10.829068313745907,
+          "candidate_rmse_dn": 10.829068350146018,
+          "channel": 3,
+          "edge_count": 1445,
+          "level": 2,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 19.92918128239649,
+          "candidate_rmse_dn": 19.9291837588977,
+          "channel": 3,
+          "edge_count": 362,
+          "level": 3,
+          "no_harm": true,
+          "window": "whole-interior"
+        }
+      ],
+      "noise_sigma_dn": 0.0,
+      "scientific_pass": true,
+      "wrong_depth_rejected": true
+    },
+    {
+      "component_retention_pass": true,
+      "components": [
+        {
+          "baseline_joint": [
+            1.000139492495979,
+            0.21873786329675482
+          ],
+          "candidate_joint": [
+            1.0001394924300229,
+            0.21873789040121935
+          ],
+          "channel": 0,
+          "half_far_joint": [
+            1.0000000003221974,
+            0.49999999967666847
+          ],
+          "level": 0,
+          "live": true,
+          "protected_component": 0,
+          "retention_pass": true,
+          "truth_joint": [
+            0.9999999999999937,
+            0.9999999999999807
+          ],
+          "wrong_depth_joint": [
+            1.0001396513831002,
+            0.21873776323238112
+          ]
+        },
+        {
+          "baseline_joint": [
+            0.023010819198206783,
+            0.9404919088791993
+          ],
+          "candidate_joint": [
+            0.022802221755259942,
+            0.9404925045175186
+          ],
+          "channel": 0,
+          "half_far_joint": [
+            1.0000000000000002,
+            0.5000000000000001
+          ],
+          "level": 2,
+          "live": true,
+          "protected_component": 1,
+          "retention_pass": true,
+          "truth_joint": [
+            1.0,
+            1.0000000000000004
+          ],
+          "wrong_depth_joint": [
+            1.0258032388694698,
+            0.21798385704715337
+          ]
+        },
+        {
+          "baseline_joint": [
+            0.999847110525594,
+            0.21754300763788212
+          ],
+          "candidate_joint": [
+            0.9998471075792607,
+            0.21754260759435035
+          ],
+          "channel": 1,
+          "half_far_joint": [
+            1.0000000000801348,
+            0.49999999211841223
+          ],
+          "level": 0,
+          "live": true,
+          "protected_component": 0,
+          "retention_pass": true,
+          "truth_joint": [
+            1.0000000000319103,
+            1.000000009788202
+          ],
+          "wrong_depth_joint": [
+            0.9998472696091649,
+            0.21754254780331927
+          ]
+        },
+        {
+          "baseline_joint": [
+            0.0005310720080525758,
+            0.9406521909454587
+          ],
+          "candidate_joint": [
+            0.0005342545323024204,
+            0.9406525654576734
+          ],
+          "channel": 1,
+          "half_far_joint": [
+            1.0000000844707426,
+            0.49999999995644057
+          ],
+          "level": 2,
+          "live": true,
+          "protected_component": 1,
+          "retention_pass": true,
+          "truth_joint": [
+            1.000000047567034,
+            1.000000000883492
+          ],
+          "wrong_depth_joint": [
+            1.0025808087835075,
+            0.21775011691316973
+          ]
+        },
+        {
+          "baseline_joint": [
+            1.0008684443812998,
+            0.21881797595921662
+          ],
+          "candidate_joint": [
+            1.0008684399486527,
+            0.21881756021915458
+          ],
+          "channel": 2,
+          "half_far_joint": [
+            0.9999999995660527,
+            0.4999999886006003
+          ],
+          "level": 0,
+          "live": true,
+          "protected_component": 0,
+          "retention_pass": true,
+          "truth_joint": [
+            1.0000000002823193,
+            0.9999999946223647
+          ],
+          "wrong_depth_joint": [
+            1.000868603651002,
+            0.21881752150006395
+          ]
+        },
+        {
+          "baseline_joint": [
+            0.002879045176587884,
+            0.9407106594212493
+          ],
+          "candidate_joint": [
+            0.0028710491247094377,
+            0.9407102399323071
+          ],
+          "channel": 2,
+          "half_far_joint": [
+            1.0000000465423275,
+            0.5000000014342878
+          ],
+          "level": 2,
+          "live": true,
+          "protected_component": 1,
+          "retention_pass": true,
+          "truth_joint": [
+            1.0000000071233563,
+            0.9999999971418012
+          ],
+          "wrong_depth_joint": [
+            1.0032798242139644,
+            0.21773270655437962
+          ]
+        },
+        {
+          "baseline_joint": [
+            1.0001384814497796,
+            0.21322930289508568
+          ],
+          "candidate_joint": [
+            1.00013848151691,
+            0.21322928511682693
+          ],
+          "channel": 3,
+          "half_far_joint": [
+            1.0000000000683178,
+            0.49999999285026064
+          ],
+          "level": 0,
+          "live": true,
+          "protected_component": 0,
+          "retention_pass": true,
+          "truth_joint": [
+            1.0000000000526688,
+            1.0000000137025005
+          ],
+          "wrong_depth_joint": [
+            1.0001386399491632,
+            0.21322918480347333
+          ]
+        },
+        {
+          "baseline_joint": [
+            0.0010036526541455486,
+            0.9412361560858674
+          ],
+          "candidate_joint": [
+            0.0009489326263948392,
+            0.9412394426597191
+          ],
+          "channel": 3,
+          "half_far_joint": [
+            0.9999999489103653,
+            0.5000000008748762
+          ],
+          "level": 2,
+          "live": true,
+          "protected_component": 1,
+          "retention_pass": true,
+          "truth_joint": [
+            0.9999998543966804,
+            1.000000001749844
+          ],
+          "wrong_depth_joint": [
+            0.9751720340964941,
+            0.21701265704924586
+          ]
+        }
+      ],
+      "erased_rejected": true,
+      "half_far_rejected": true,
+      "levels": [
+        {
+          "baseline_rmse_dn": 28.55047200638275,
+          "candidate_rmse_dn": 28.550472102201265,
+          "channel": 0,
+          "edge_count": 24220,
+          "level": 0,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 118.49381617590278,
+          "candidate_rmse_dn": 115.70730451709012,
+          "channel": 0,
+          "edge_count": 5890,
+          "level": 1,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 14.941996432915731,
+          "candidate_rmse_dn": 14.94174644647738,
+          "channel": 0,
+          "edge_count": 1445,
+          "level": 2,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 26.44953317213361,
+          "candidate_rmse_dn": 26.450727202237495,
+          "channel": 0,
+          "edge_count": 362,
+          "level": 3,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 30.17129439247494,
+          "candidate_rmse_dn": 30.171295759568995,
+          "channel": 1,
+          "edge_count": 24220,
+          "level": 0,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 256.44215861425744,
+          "candidate_rmse_dn": 257.6058196667142,
+          "channel": 1,
+          "edge_count": 5890,
+          "level": 1,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 29.48959871531157,
+          "candidate_rmse_dn": 29.488989147337154,
+          "channel": 1,
+          "edge_count": 1445,
+          "level": 2,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 53.882189809799264,
+          "candidate_rmse_dn": 53.88367127985796,
+          "channel": 1,
+          "edge_count": 362,
+          "level": 3,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 30.310178014707866,
+          "candidate_rmse_dn": 30.310179507885127,
+          "channel": 2,
+          "edge_count": 24220,
+          "level": 0,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 256.374547512941,
+          "candidate_rmse_dn": 257.4741525945203,
+          "channel": 2,
+          "edge_count": 5890,
+          "level": 1,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 29.462250445892455,
+          "candidate_rmse_dn": 29.461779653208218,
+          "channel": 2,
+          "edge_count": 1445,
+          "level": 2,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 53.86902121051216,
+          "candidate_rmse_dn": 53.87050369058478,
+          "channel": 2,
+          "edge_count": 362,
+          "level": 3,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 28.478872859771393,
+          "candidate_rmse_dn": 28.478872909829494,
+          "channel": 3,
+          "edge_count": 24220,
+          "level": 0,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 90.04926360440102,
+          "candidate_rmse_dn": 89.13182405519487,
+          "channel": 3,
+          "edge_count": 5890,
+          "level": 1,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 10.861114900112703,
+          "candidate_rmse_dn": 10.860610446660454,
+          "channel": 3,
+          "edge_count": 1445,
+          "level": 2,
+          "no_harm": true,
+          "window": "whole-interior"
+        },
+        {
+          "baseline_rmse_dn": 19.813154631930963,
+          "candidate_rmse_dn": 19.813376104508304,
+          "channel": 3,
+          "edge_count": 362,
+          "level": 3,
+          "no_harm": true,
+          "window": "whole-interior"
+        }
+      ],
+      "noise_sigma_dn": 20.0,
+      "scientific_pass": true,
+      "wrong_depth_rejected": true
+    }
+  ],
+  "mechanical_pass": true,
+  "photographic_quality_admitted": false,
+  "scientific_pass": true
+}

@@ -1,0 +1,23 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\source-gradient-target\\build-2\\controls.exe",
+    "independent_controls::",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_SOURCE_GRADIENT_TARGET_OUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\source-gradient-target\\controls-1\\output"
+  },
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\band-source-agreement\\run.py",
+    "sha256": "64022f1c05f4c769184cd529dac7f2e993713d1522e87f4a028d8f86e88b07c5",
+    "bytes": 18717
+  },
+  "limits": {
+    "wall_seconds": 120,
+    "cpu_seconds": 600,
+    "committed_bytes": 4294967296
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "test_status": "ok",
+  "passed": 4,
+  "failed": 0,
+  "sources_unchanged": true,
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\controls-1\\process.json",
+    "sha256": "9c80de85f30aa7ce670dcda8ebd265ca611f98d2419823ac52df7cb7f85e1099",
+    "bytes": 2680
+  },
+  "scientific_screen_pass": false,
+  "canonical_consumer_qualified": false,
+  "records": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\controls-1\\output\\adversary.json",
+      "sha256": "0bd2e2128b8f4efc7f0c2f2abbc777320a1aaaa2740e26a39318228b0686a8db",
+      "bytes": 6665
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\controls-1\\output\\arithmetic.json",
+      "sha256": "946eb1b0c8a4b50624dfbca0859ac7826abfb91f7cba583c64a3c3f5e955a51d",
+      "bytes": 277
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\controls-1\\output\\planar.json",
+      "sha256": "393652d271192528f9a1a4f61ad4e987649600687fbe8b976c001911f0994141",
+      "bytes": 855
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-focus-intercept\\controls-1\\output\\support.json",
+      "sha256": "54028d8fedd3f7e8b1565c867596cb8ebffbf15a643b46d29aad72fa7e303fb0",
+      "bytes": 206
+    }
+  ],
+  "photographic_quality_admitted": false,
+  "scope": "Operator-only falsifier; canonical native consumer and real image remain untested."
+}
