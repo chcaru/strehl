@@ -1,0 +1,30 @@
+[package]
+name = "strehl-ui"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "Native desktop workspace for Strehl RAW focus stacking."
+
+[[bin]]
+name = "strehl-ui"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+strehl-core.workspace = true
+strehl-cli = { path = "../strehl-cli" }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = "=1.0.151"
+eframe = { version = "=0.33.3", default-features = false, features = ["default_fonts", "wgpu", "wayland", "x11"] }
+# eframe with defaults disabled does not enable any native graphics backend.
+wgpu = { version = "=27.0.1", default-features = false, features = ["std", "dx12", "vulkan", "metal", "wgsl"] }
+rfd = "=0.15.4"
+image = { version = "=0.25.10", default-features = false, features = ["png", "jpeg", "tiff"] }
+# Reduced-IDCT camera browsing only; no additional Rayon decoder pool.
+jpeg-decoder = { version = "=0.3.2", default-features = false }
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_Storage_FileSystem", "Win32_System_SystemInformation", "Win32_UI_Input_KeyboardAndMouse", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging"] }

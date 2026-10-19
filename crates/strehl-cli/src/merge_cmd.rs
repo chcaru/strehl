@@ -39,7 +39,6 @@ use std::time::Instant;
 
 use anyhow::{Context, Result, bail, ensure};
 use rayon::{ThreadPoolBuilder, prelude::*};
-use strehl_core::photometric::{self, Flux, PhotometricMap, PhotometricMode};
 use strehl_core::align::Resampler;
 use strehl_core::clip::{CONTAINER_MAX_DN, ClipCensus};
 use strehl_core::color::{self, AppliedExposure, Exposure};
@@ -50,6 +49,7 @@ use strehl_core::focus::FocusField;use strehl_core::merge::{
     regularise_at, regularise_guided, regularise_layered,
 };
 use strehl_core::noise::{Levels, NoiseModel};
+use strehl_core::photometric::{self, Flux, PhotometricMap, PhotometricMode};
 use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma_with_clip};
 use strehl_core::profile;
 use strehl_core::pyramid::{
@@ -87,6 +87,10 @@ mod native_signed_black {
 #[cfg(test)]
 #[path = "merge_cmd/production-truth.rs"]
 mod production_truth;
+
+#[cfg(test)]
+#[path = "merge-ui-observer-tests.rs"]
+mod ui_observer_tests;
 
 #[cfg(test)]
 pub(crate) mod native_sensor_transfer {
@@ -164,9 +168,10 @@ pub struct MergeOptions {
     ///
     /// See [`write_n_eff_map`] for the grid and the value convention.
     pub n_eff_map: Option<PathBuf>,
-    /// Also write the **confidence map**: how far the merged output sits from
-    /// the nearest aligned observation, per pixel, in milli-sigma of the
-    /// calibrated noise. Debug output; `None` costs nothing and never touches
+    /// Also write the **confidence map**: folded rank centrality of the merged
+    /// green-luma value among aligned observations, stored from 0 to 1000.
+    /// This is observation balance, not calibrated confidence or image quality.
+    /// Debug output; `None` costs nothing and never touches
     /// the merged image, but unlike the two maps above it is not free — it
     /// costs a second decode and warp of every frame.
     ///
@@ -174,8 +179,7 @@ pub struct MergeOptions {
     /// `--index-map` are both refused there, so before this the default merge
     /// emitted an image and no per-pixel evidence of any kind.
     ///
-    /// See [`write_confidence_map`] for the grid, the value convention and the
-    /// polarity, which is the opposite of `n_eff`'s.
+    /// See [`write_confidence_map`] for the grid, value convention and limits.
     pub confidence_map: Option<PathBuf>,
     /// Fit and apply a per-frame affine photometric gain. **Default on**
     /// since V-TONE; it was opt-in from M99 until then.
@@ -2257,35 +2261,37 @@ fn guide_winner_field(
     let out = paths
         .par_chunks(plan.chunk_len)
         .enumerate()
-        .map(|(ci, chunk)| -> Result<(FocusStats, Option<BimodalStats>, Timings)> {
-            let first_index = (ci * plan.chunk_len) as u16;
-            let mut stats = FocusStats::new(geom);
-            // Rides the guide's decode. The detector needs the NARROW field
-            // for the same reason the guide does: a 13 px window smears the
-            // foreground and background modes into a single peak, which is
-            // precisely the confusion under investigation.
-            let mut modes = bimodal.then(|| BimodalStats::new(geom));
-            let mut scratch = Scratch::new_with_warp(geom, false, ctx.warps.is_some());
-            let mut t = Timings::default();
-            for (offset, path) in chunk.iter().enumerate() {
-                let index = first_index + offset as u16;
-                // The guide must skip exactly the frames the merge skips, or it
-                // would locate silhouettes in a bracket the election never sees.
-                if ctx.is_refused(index) {
-                    continue;
+        .map(
+            |(ci, chunk)| -> Result<(FocusStats, Option<BimodalStats>, Timings)> {
+                let first_index = (ci * plan.chunk_len) as u16;
+                let mut stats = FocusStats::new(geom);
+                // Rides the guide's decode. The detector needs the NARROW field
+                // for the same reason the guide does: a 13 px window smears the
+                // foreground and background modes into a single peak, which is
+                // precisely the confusion under investigation.
+                let mut modes = bimodal.then(|| BimodalStats::new(geom));
+                let mut scratch = Scratch::new_with_warp(geom, false, ctx.warps.is_some());
+                let mut t = Timings::default();
+                for (offset, path) in chunk.iter().enumerate() {
+                    let index = first_index + offset as u16;
+                    // The guide must skip exactly the frames the merge skips, or it
+                    // would locate silhouettes in a bracket the election never sees.
+                    if ctx.is_refused(index) {
+                        continue;
+                    }
+                    let frame = ctx.field_for(path, index, &mut scratch, &mut t)?;
+                    ctx.release(frame);
+                    stats
+                        .fold(index, &scratch.reg)
+                        .map_err(|e| map_dim_err(index, e))?;
+                    if let Some(m) = modes.as_mut() {
+                        m.fold(index, &scratch.reg)
+                            .map_err(|e| anyhow::anyhow!("frame {index}: {e}"))?;
+                    }
                 }
-                let frame = ctx.field_for(path, index, &mut scratch, &mut t)?;
-                ctx.release(frame);
-                stats
-                    .fold(index, &scratch.reg)
-                    .map_err(|e| map_dim_err(index, e))?;
-                if let Some(m) = modes.as_mut() {
-                    m.fold(index, &scratch.reg)
-                        .map_err(|e| anyhow::anyhow!("frame {index}: {e}"))?;
-                }
-            }
-            Ok((stats, modes, t))
-        })
+                Ok((stats, modes, t))
+            },
+        )
         .reduce_with(|a, b| match (a, b) {
             (Ok((mut sa, mut ma, mut ta)), Ok((sb, mb, tb))) => {
                 sa.absorb(&sb).map_err(|e| map_dim_err(0, e))?;
@@ -2407,13 +2413,33 @@ fn alignment_for(
     paths: &[PathBuf],
     resampler: Resampler,
 ) -> Result<Option<(WarpMap, &'static str)>> {
+    alignment_for_observed(dir, paths, resampler, None)
+}
+
+fn alignment_for_observed(
+    dir: &Path,
+    paths: &[PathBuf],
+    resampler: Resampler,
+    progress: Option<&crate::ui_progress::Progress>,
+) -> Result<Option<(WarpMap, &'static str)>> {
     let Some(explicit) = std::env::var_os(WARPMAP_ENV) else {
-        return align_cmd::load_or_solve(dir, paths, 0, resampler);
+        return match progress {
+            Some(progress) => {
+                align_cmd::load_or_solve_observed(dir, paths, 0, resampler, Some(progress))
+            }
+            None => align_cmd::load_or_solve(dir, paths, 0, resampler),
+        };
     };
     // `STREHL_ALIGN=0` still wins, so an unregistered baseline can be rendered
     // without first unsetting the override.
     if !align_cmd::align_enabled() {
+        if let Some(progress) = progress {
+            progress.alignment_result("off", 0, 0, 0);
+        }
         return Ok(None);
+    }
+    if let Some(progress) = progress {
+        progress.alignment_phase("cache", paths.len());
     }
     let path = PathBuf::from(explicit);
     let map = WarpMap::load(&path).with_context(|| {
@@ -2450,6 +2476,14 @@ fn alignment_for(
              {WARPMAP_ENV} was solved with {:?}; THE SIDECAR WINS. Unset {WARPMAP_ENV} to \
              let --resampler choose.",
             map.resampler()
+        );
+    }
+    if let Some(progress) = progress {
+        progress.alignment_result(
+            "override",
+            map.provenance().reference,
+            map.placed_count(),
+            map.refused_count(),
         );
     }
     Ok(Some((map, "sidecar-override")))
@@ -4844,11 +4878,21 @@ trait PyramidFrameSource: Sync {
     #[cfg(feature = "native-green-cue")]
     fn green_cue_enabled(&self) -> bool { false }
     #[cfg(all(test, feature = "native-direct-planes"))]
-    fn observe_direct_inputs(&self, _index: usize, _planes: &[Vec<f32>], _luma: &[f32], _beta: Option<&[f32]>) -> Result<()> { Ok(()) }
+    fn observe_direct_inputs(
+        &self,
+        _index: usize,
+        _planes: &[Vec<f32>],
+        _luma: &[f32],
+        _beta: Option<&[f32]>,
+    ) -> Result<()> {
+        Ok(())
+    }
     #[cfg(all(test, feature = "native-direct-planes"))]
     fn observe_direct_collapsed(&self, _planes: &[Vec<f32>]) -> Result<()> { Ok(()) }
     #[cfg(feature = "native-boundary-radiance")]
-    fn boundary_config(&self) -> Option<native_boundary_radiance::Configuration> { None }
+    fn boundary_config(&self) -> Option<native_boundary_radiance::Configuration> {
+        None
+    }
     #[cfg(feature = "native-boundary-radiance")]
     fn observe_boundary(&self, _index: usize, _frame: &Frame) -> Result<()> { Ok(()) }
 }
@@ -5157,6 +5201,7 @@ impl BandWorker {
 
     /// Decode, register and fold one frame. `false` means the alignment solve
     /// refused this frame, so it was skipped rather than merged unregistered.
+    #[allow(dead_code)] // Compatibility entry point for generated and feature-gated consumers.
     fn fold(
         &mut self,
         source: &impl PyramidFrameSource,
@@ -5166,11 +5211,25 @@ impl BandWorker {
         warps: Option<&WarpMap>,
         defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
     ) -> Result<bool> {
+        self.fold_observed(source, index, levels, noise, warps, defect, None)
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn fold_observed(
+        &mut self,
+        source: &impl PyramidFrameSource,
+        index: usize,
+        levels: Levels,
+        noise: &NoiseModel,
+        warps: Option<&WarpMap>,
+        defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
+        progress: Option<&crate::ui_progress::Progress>,
+    ) -> Result<bool> {
         self.beta.clear();
         if let Some(p) = self.floor.as_mut() {
             p.invalidate();
         }
-        if !load_frame_impl(
+        if !load_frame_impl_observed(
             source,
             index,
             self.domain,
@@ -5181,7 +5240,9 @@ impl BandWorker {
             self.floor.as_mut(),
             &mut self.planes,
             &mut self.luma,
-            #[cfg(feature = "native-green-cue")] Some((noise,&mut self.green_cue)),
+            #[cfg(feature = "native-green-cue")]
+            Some((noise, &mut self.green_cue)),
+            progress,
         )? {
             return Ok(false);
         }
@@ -5220,15 +5281,53 @@ impl BandWorker {
         #[cfg(feature = "native-pyramid-profile")]
         let add_phase = native_pyramid_profile::start(native_pyramid_profile::ADD);
         self.fws.next_frame();
+        let tap = progress.map(|progress| {
+            crate::ui_progress::FrameTap::new(progress, index, self.merge.sizes().len())
+        });
         #[cfg(feature = "native-green-cue")]
         if let Some(cue) = self.green_cue.as_ref() {
-            self.merge.add_frame_with_green_cue(&refs,&self.luma,&self.var,frame_beta,&mut self.fws,cue);
+            self.merge.add_frame_with_green_cue(
+                &refs,
+                &self.luma,
+                &self.var,
+                frame_beta,
+                &mut self.fws,
+                cue,
+            );
         } else {
-            self.merge.add_frame_with_gain(&refs,&self.luma,&self.var,frame_beta,&mut self.fws);
+            if let Some(tap) = tap.as_ref() {
+                self.merge.add_frame_with_gain_observed(
+                    &refs,
+                    &self.luma,
+                    &self.var,
+                    frame_beta,
+                    &mut self.fws,
+                    tap,
+                );
+            } else {
+                self.merge.add_frame_with_gain(
+                    &refs,
+                    &self.luma,
+                    &self.var,
+                    frame_beta,
+                    &mut self.fws,
+                );
+            }
         }
         #[cfg(not(feature = "native-green-cue"))]
-        self.merge
-            .add_frame_with_gain(&refs, &self.luma, &self.var, frame_beta, &mut self.fws);
+        if let Some(tap) = tap.as_ref() {
+            self.merge.add_frame_with_gain_observed(
+                &refs,
+                &self.luma,
+                &self.var,
+                frame_beta,
+                &mut self.fws,
+                tap,
+            );
+        } else {
+            self.merge
+                .add_frame_with_gain(&refs, &self.luma, &self.var, frame_beta, &mut self.fws);
+        }
         #[cfg(feature = "native-pyramid-profile")]
         drop(add_phase);
         #[cfg(all(test, feature = "native-sensor-transfer"))]
@@ -5244,7 +5343,10 @@ impl BandWorker {
 pub(crate) fn green_cue_consume(
     frames: Vec<Frame>, noise: &NoiseModel, on: bool,
 ) -> (Vec<Vec<f32>>, usize) {
-    struct Source { frames: Vec<Frame>, on: bool }
+    struct Source {
+        frames: Vec<Frame>,
+        on: bool,
+    }
     impl PyramidFrameSource for Source {
         fn len(&self) -> usize { self.frames.len() }
         fn decode(&self,index:usize) -> Result<Frame> { Ok(self.frames[index].clone()) }
@@ -5253,7 +5355,13 @@ pub(crate) fn green_cue_consume(
     assert!(!frames.is_empty());
     assert!(frames.iter().all(|f| !f.path.exists()),"generated fixture only");
     let full = frames[0].geometry();
-    assert_eq!(full,PlaneGeometry {width:137,height:95});
+    assert_eq!(
+        full,
+        PlaneGeometry {
+            width: 137,
+            height: 95
+        }
+    );
     let levels = frames[0].levels;
     let domain = PyramidDomain::cropped(full,align_cmd::CropRect {x:9,y:6,width:112,height:78}).unwrap();
     let paths: Vec<_> = frames.iter().map(|f|f.path.clone()).collect();
@@ -5269,7 +5377,11 @@ pub(crate) fn green_cue_consume(
     let mut worker = BandWorker::new(domain,cfg);
     let mut valid_supplied = 0;
     for index in 0..source.len() {
-        assert!(worker.fold(&source,index,levels,noise,Some(&map),None).unwrap());
+        assert!(
+            worker
+                .fold(&source, index, levels, noise, Some(&map), None)
+                .unwrap()
+        );
         if let Some(cue) = worker.green_cue.as_ref() {
             valid_supplied += cue.valid.iter().filter(|&&v|v).count();
         }
@@ -5307,12 +5419,55 @@ fn load_frame(
 
 #[allow(clippy::too_many_arguments)]
 fn load_frame_impl(
-    source: &impl PyramidFrameSource, index: usize, domain: PyramidDomain, levels: Levels,
-    warps: Option<&WarpMap>, defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
-    scratch: &mut WarpScratch, floor: Option<&mut gatefloor::Probe>,
-    planes: &mut [Vec<f32>], luma: &mut [f32],
-    #[cfg(feature = "native-green-cue")]
-    cue: Option<(&NoiseModel,&mut Option<strehl_core::pyramid::native_green_cue::Cue>)>,
+    source: &impl PyramidFrameSource,
+    index: usize,
+    domain: PyramidDomain,
+    levels: Levels,
+    warps: Option<&WarpMap>,
+    defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
+    scratch: &mut WarpScratch,
+    floor: Option<&mut gatefloor::Probe>,
+    planes: &mut [Vec<f32>],
+    luma: &mut [f32],
+    #[cfg(feature = "native-green-cue")] cue: Option<(
+        &NoiseModel,
+        &mut Option<strehl_core::pyramid::native_green_cue::Cue>,
+    )>,
+) -> Result<bool> {
+    load_frame_impl_observed(
+        source,
+        index,
+        domain,
+        levels,
+        warps,
+        defect,
+        scratch,
+        floor,
+        planes,
+        luma,
+        #[cfg(feature = "native-green-cue")]
+        cue,
+        None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn load_frame_impl_observed(
+    source: &impl PyramidFrameSource,
+    index: usize,
+    domain: PyramidDomain,
+    levels: Levels,
+    warps: Option<&WarpMap>,
+    defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
+    scratch: &mut WarpScratch,
+    floor: Option<&mut gatefloor::Probe>,
+    planes: &mut [Vec<f32>],
+    luma: &mut [f32],
+    #[cfg(feature = "native-green-cue")] cue: Option<(
+        &NoiseModel,
+        &mut Option<strehl_core::pyramid::native_green_cue::Cue>,
+    )>,
+    progress: Option<&crate::ui_progress::Progress>,
 ) -> Result<bool> {
     #[cfg(feature = "native-green-cue")]
     if source.green_cue_enabled() {
@@ -5329,6 +5484,9 @@ fn load_frame_impl(
     {
         #[cfg(feature = "native-pyramid-profile")]
         let decode_phase = native_pyramid_profile::start(native_pyramid_profile::DECODE);
+        if let Some(progress) = progress {
+            progress.merge_step(index, "decode", None, "started");
+        }
         let mut frame = source
             .decode(index)
             .with_context(|| format!("frame {index}"))?;
@@ -5342,12 +5500,18 @@ fn load_frame_impl(
             levels.black,
             levels.white
         );
+        if let Some(progress) = progress {
+            progress.merge_step(index, "decode", None, "finished");
+        }
         #[cfg(feature = "native-green-cue")]
-        if let Some((noise,cue)) = cue {
+        if let Some((noise, cue)) = cue {
             *cue = None;
             if source.green_cue_enabled() {
-                ensure!(noise.plane(CfaPlane::G1).levels == levels && noise.plane(CfaPlane::G2).levels == levels,
-                    "native green cue requires the injected source levels");
+                ensure!(
+                    noise.plane(CfaPlane::G1).levels == levels
+                        && noise.plane(CfaPlane::G2).levels == levels,
+                    "native green cue requires the injected source levels"
+                );
                 let ident = strehl_raw::identity(&frame.path);
                 ensure!(strehl_core::optics::profile_for_capture_env(ident.model.as_deref(),ident.lens_type3)?.is_none(),
                     "native green cue does not support CA transport");
@@ -5400,10 +5564,16 @@ fn load_frame_impl(
         if let Some(map) = warps {
             match map.warp(index)? {
                 FrameWarp::Placed(t) => {
+                    if let Some(progress) = progress {
+                        progress.merge_step(index, "gather", None, "started");
+                    }
                     #[cfg(feature = "native-pyramid-profile")]
-                    let gather_phase = native_pyramid_profile::start(native_pyramid_profile::GATHER);
+                    let gather_phase =
+                        native_pyramid_profile::start(native_pyramid_profile::GATHER);
                     #[cfg(feature = "native-direct-planes")]
-                    if direct_mode != align_cmd::DirectPlaneMode::Off && align_cmd::fullres_gather_enabled() {
+                    if direct_mode != align_cmd::DirectPlaneMode::Off
+                        && align_cmd::fullres_gather_enabled()
+                    {
                         align_cmd::warp_frame_fullres_into_planes::<false>(
                             &mut frame,*t,domain.full,map.resampler(),scratch,domain.rect,
                             &BAND_PLANE_OFFSETS,planes,direct_mode)?;
@@ -5422,6 +5592,9 @@ fn load_frame_impl(
                     }
                     #[cfg(feature = "native-pyramid-profile")]
                     drop(gather_phase);
+                    if let Some(progress) = progress {
+                        progress.merge_step(index, "gather", None, "finished");
+                    }
                     // This frame's own band-noise floor, at this frame's own
                     // sub-pixel phase, measured here because this is the only
                     // place the decoded frame and the transform that was
@@ -5445,14 +5618,26 @@ fn load_frame_impl(
                 // The solve could not connect this frame to the bracket, so its
                 // geometry is unknown and folding it would put mis-registered
                 // data into the merge.
-                FrameWarp::Refused(_) => return Ok(false),
+                FrameWarp::Refused(_) => {
+                    if let Some(progress) = progress {
+                        progress.merge_step(index, "gather", None, "skipped");
+                    }
+                    return Ok(false);
+                }
             }
+        } else if let Some(progress) = progress {
+            progress.merge_step(index, "gather", None, "skipped");
         }
 
         #[cfg(all(test, feature = "native-sensor-transfer"))]
         native_sensor_transfer::prepared(&frame, domain);
         #[cfg(feature = "native-pyramid-profile")]
-        { extract_phase = native_pyramid_profile::start(native_pyramid_profile::EXTRACT); }
+        {
+            extract_phase = native_pyramid_profile::start(native_pyramid_profile::EXTRACT);
+        }
+        if let Some(progress) = progress {
+            progress.merge_step(index, "extract", None, "started");
+        }
         let black = levels.black;
         if !direct_consumed {
             extract_planes(
@@ -5494,6 +5679,9 @@ fn load_frame_impl(
         });
     #[cfg(feature = "native-pyramid-profile")]
     drop(extract_phase);
+    if let Some(progress) = progress {
+        progress.merge_step(index, "extract", None, "finished");
+    }
     Ok(true)
 }
 
@@ -5560,20 +5748,15 @@ fn confidence_map_path(opts: &MergeOptions) -> Option<PathBuf> {
     Some(PathBuf::from(trimmed))
 }
 
-/// Where the merged output sits INSIDE the cloud of aligned observations at
-/// each pixel: 0 when it sits at an extreme of that cloud, 1 when it sits dead
-/// centre.
+/// Folded rank centrality of the merged green-luma value among aligned
+/// observations: `1 - 2 * abs(below / seen - 0.5)`.
 ///
-/// **What this is a statement about.** The pyramid elects per band coefficient,
-/// so no single frame owns an output pixel and there is no frame count to
-/// report -- which is why `--n-eff-map` is refused on this backend. But there
-/// is a question about the merge's own behaviour that still has a per-pixel
-/// answer: *did this merge commit to something, or did it hedge?* Electing a
-/// frame puts the output at an extremity of the observations, because the frame
-/// that is in focus is the one that departs furthest from the defocused
-/// majority. Averaging puts it in the middle. So a value near 1 says the merge
-/// declined to choose and emitted the consensus of frames that disagreed --
-/// which is the veiling failure stated as a measurement.
+/// `below` uses a strict comparison, so ties count on the at-or-above side.
+/// Zero therefore includes identical observations, as well as outputs at or
+/// beyond an extreme. One means equal counts below and at-or-above the output;
+/// it does not establish averaging, a defect, or photographic quality. Folding
+/// discards direction, and the saved map also discards the observation count.
+/// This is neither calibrated confidence nor a source-contribution map.
 ///
 /// **Why the obvious quantity is not this one, and lost.** The first design
 /// here was `d_min`, the distance from the output to the *nearest* observation,
@@ -5600,9 +5783,8 @@ fn confidence_map_path(opts: &MergeOptions) -> Option<PathBuf> {
 struct Centrality {
     /// How many observations fell below the merged value at this pixel.
     below: Vec<u32>,
-    /// How many observations reached this pixel at all. Kept separately rather
-    /// than assumed equal to the frame count, because a warp can leave a pixel
-    /// outside every frame's support and a rank out of zero is not zero.
+    /// Number of accepted frames compared at this analysis pixel. This pass
+    /// does not test per-pixel warp support; it is not a coverage certificate.
     seen: Vec<u32>,
 }
 
@@ -5618,6 +5800,25 @@ fn confidence_pass(
     merged_luma: &[f32],
     per_chunk: usize,
 ) -> Result<Centrality> {
+    confidence_pass_observed(source, paths, domain, levels, warps, defect, merged_luma, per_chunk, None)
+}
+
+// Preserve the unobserved entry point used by independent research controls.
+#[allow(clippy::too_many_arguments)]
+fn confidence_pass_observed(
+    source: &impl PyramidFrameSource,
+    paths: &[PathBuf],
+    domain: PyramidDomain,
+    levels: Levels,
+    warps: Option<&WarpMap>,
+    defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
+    merged_luma: &[f32],
+    per_chunk: usize,
+    progress: Option<&crate::ui_progress::Progress>,
+) -> Result<Centrality> {
+    if let Some(progress) = progress {
+        progress.confidence_started();
+    }
     let geom = domain.analysis();
     let indexed: Vec<(usize, PathBuf)> = paths.iter().cloned().enumerate().collect();
     let parts: Vec<Result<Centrality>> = indexed
@@ -5644,6 +5845,9 @@ fn confidence_pass(
                     &mut planes,
                     &mut luma,
                 )? {
+                    if let Some(progress) = progress {
+                        progress.confidence_frame_finished(*i, false);
+                    }
                     continue;
                 }
                 for ((b, s), (l, m)) in c
@@ -5656,6 +5860,9 @@ fn confidence_pass(
                         *b += 1;
                     }
                     *s += 1;
+                }
+                if let Some(progress) = progress {
+                    progress.confidence_frame_finished(*i, true);
                 }
             }
             Ok(c)
@@ -5678,7 +5885,11 @@ fn confidence_pass(
             None => out = Some(c),
         }
     }
-    out.context("no frames were available for the confidence pass")
+    let out = out.context("no frames were available for the confidence pass")?;
+    if let Some(progress) = progress {
+        progress.confidence_finished();
+    }
+    Ok(out)
 }
 
 /// MEASUREMENT SCAFFOLDING, gated on `STREHL_CONFIDENCE_DEBUG=<dir>`.
@@ -5899,17 +6110,15 @@ fn write_confidence_debug(
 
 /// Write the confidence field as a single-channel 16-bit TIFF.
 ///
-/// **Grid.** The plane grid, identical to [`write_n_eff_map`]'s and to
-/// [`write_election_map`]'s: half sensor resolution, one value per 2x2 CFA
-/// quad. The three maps overlay pixel-for-pixel with no resampling.
+/// **Grid.** The merge's analysis plane, one value per 2x2 CFA quad. A cropped
+/// analysis domain is already cropped here; do not apply its origin again.
 ///
 /// **Values, and how they differ from `n_eff`'s.** `n_eff` is a literal frame
-/// count starting at 1. This is NOT a count -- it is a bounded fraction, in
-/// **milli-units**: the stored integer divided by 1000 is how centrally the
-/// merged output sits inside the cloud of observations, 0.0 at an extreme of
-/// that cloud and 1.0 dead centre. **Low is good.** That is the opposite
-/// polarity to `n_eff`, and it is stated here rather than fixed by inverting,
-/// because inverting would make the number's name disagree with its arithmetic.
+/// count starting at 1. This is a bounded folded rank in **milli-units**:
+/// `round(1000 * (1 - 2 * abs(below / seen - 0.5)))`. Zero is one-sided,
+/// including all ties; 1000 is balanced counts below versus at-or-above the
+/// output. Neither endpoint establishes image quality, source ownership,
+/// noise reduction, or whether the output is within the observation range.
 ///
 /// Milli-units, not the full 16-bit range, because with `frames` observations
 /// the rank can only resolve `1/frames` and a finer quantisation would invent
@@ -5918,9 +6127,8 @@ fn write_confidence_debug(
 ///
 /// **Saturation is impossible by construction** -- the field is bounded above
 /// by 1.0, which encodes to 1000 -- so the partition below is graded against
-/// unreached only. A pixel no frame reached is reported at the ceiling and
-/// counted separately, because "no observation" and "perfectly confident" must
-/// not encode to the same value.
+/// unobserved only. A pixel with zero comparisons is encoded as 65535, outside
+/// the valid 0..=1000 range. This pass does not establish per-pixel warp support.
 fn write_confidence_map(path: &Path, c: &Centrality, geom: PlaneGeometry) -> Result<()> {
     ensure!(
         c.below.len() == geom.pixels() && c.seen.len() == geom.pixels(),
@@ -5949,7 +6157,7 @@ fn write_confidence_map(path: &Path, c: &Centrality, geom: PlaneGeometry) -> Res
     let n = q.len().max(1);
     image_out::write_gray16(path, geom.width as u32, geom.height as u32, &q)?;
     eprintln!(
-        "confidence map  : wrote {} ({}x{} u16 plane grid, milli-units, LOW IS GOOD)",
+        "confidence map  : wrote {} ({}x{} u16 analysis grid, rank centrality 0..1000)",
         path.display(),
         geom.width,
         geom.height
@@ -5959,15 +6167,14 @@ fn write_confidence_map(path: &Path, c: &Centrality, geom: PlaneGeometry) -> Res
         graded + unreached
     );
     eprintln!(
-        "                  mean {:.4} over the {graded} pixels a frame reached",
+        "                  mean {:.4} over the {graded} pixels with comparisons",
         sum / graded.max(1) as f64
     );
     eprintln!(
-        "                  where the merged output sits inside the cloud of aligned \
-         observations.\n                  Zero means the merge committed to an extreme -- it \
-         elected a frame. One\n                  means it sat dead centre -- it averaged frames \
-         that disagreed and chose\n                  none of them, which is what veiled detail \
-         looks like from the inside."
+        "                  Observation balance: zero is one-sided (including all ties); \
+         one is balanced\n                  counts below versus at-or-above the output. \
+         This is not a quality grade,\n                  calibrated confidence, source ownership, \
+         or a per-pixel support certificate."
     );
     eprintln!();
     Ok(())
@@ -6158,6 +6365,8 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         paths.len()
     );
 
+    let progress = crate::ui_progress::Progress::new(paths.len());
+    progress.stage("read");
     let t_prologue = Instant::now();
     let first = strehl_raw::decode(&paths[0]).context("decoding the first frame")?;
     let prologue_secs = t_prologue.elapsed().as_secs_f64();
@@ -6174,8 +6383,9 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     // Coverage must be resolved before any pyramid-sized allocation or banner
     // is produced: under Crop, the rectangle is the level-zero geometry rather
     // than a writer-time view onto `geom`.
+    progress.stage("alignment");
     let t_align = Instant::now();
-    let alignment = alignment_for(&opts.dir, &paths, opts.resampler)?;
+    let alignment = alignment_for_observed(&opts.dir, &paths, opts.resampler, progress.observer())?;
     let alignment = alignment.map(|(m, how)| {
         let (m, fit) = align_cmd::cover_or_explain(m, opts.cover);
         (m, how, fit)
@@ -6268,6 +6478,7 @@ fn run_pyramid_prepared(
         "Pyramid source count differs from prepared inputs"
     );
     let cfg = opts.pyramid;
+    let progress = crate::ui_progress::Progress::new(paths.len());
     let analysis_geom = domain.analysis();
     let defect_tally = crate::stack::DefectTally::default();
     let defect = defect_plan
@@ -6442,14 +6653,27 @@ fn run_pyramid_prepared(
     let mut folded_total = 0usize;
     let mut beta_sum: Vec<f64> = Vec::new();
     let mut beta_n = 0usize;
+    progress.stage("merge");
     pool.install(|| -> Result<()> {
         let mut chunks = paths.chunks(per_chunk).enumerate().peekable();
         while let Some((chunk_index, chunk)) = chunks.next() {
             let mut folded = 0usize;
             for (offset, _path) in chunk.iter().enumerate() {
                 let index = chunk_index * per_chunk + offset;
-                if worker.fold(source, index, levels, &noise, warps, defect)? {
+                progress.frame_started(index);
+                let accepted = worker.fold_observed(
+                    source,
+                    index,
+                    levels,
+                    &noise,
+                    warps,
+                    defect,
+                    progress.observer(),
+                )?;
+                progress.frame_finished(index, accepted);
+                if accepted {
                     folded += 1;
+                    progress.live_accumulator(merged.as_ref(), &worker.merge, index);
                 }
             }
             folded_total += folded;
@@ -6473,6 +6697,14 @@ fn run_pyramid_prepared(
                         ),
                     ));
                 }
+            }
+            if let Some(acc) = merged.as_ref() {
+                progress.accumulator(
+                    acc,
+                    (chunk_index * per_chunk + chunk.len()).saturating_sub(1),
+                    chunk_index,
+                    paths.len().div_ceil(per_chunk),
+                );
             }
             if chunks.peek().is_some() {
                 worker.reset_chunk();
@@ -6581,8 +6813,10 @@ fn run_pyramid_prepared(
         }))?;
         return Ok(());
     };
+    progress.stage("render");
     let t_out = Instant::now();
     let mut ws = Workspace::new(&sizes);
+    progress.render_step("reconstruct", "started");
     let planes = merge.finish(&mut ws);
     #[cfg(feature = "native-boundary-radiance")]
     let mut planes = planes;
@@ -6598,6 +6832,8 @@ fn run_pyramid_prepared(
     observed_source.finish(&mut planes)?;
     #[cfg(all(test, feature = "native-direct-planes"))]
     source.observe_direct_collapsed(&planes)?;
+    progress.reconstruction(&planes, sizes[0], paths.len() - 1, folded_total);
+    progress.render_step("reconstruct", "finished");
 
     // The confidence map, if asked for. Deliberately AFTER `finish` and before
     // the write: the question it answers is about the merged output, so the
@@ -6636,8 +6872,8 @@ fn run_pyramid_prepared(
                 below: c.below,
                 seen: c.seen,
             }
-        } else {
-            confidence_pass(
+        } else if let Some(observer) = progress.observer() {
+            confidence_pass_observed(
                 source,
                 paths,
                 domain,
@@ -6646,7 +6882,10 @@ fn run_pyramid_prepared(
                 defect,
                 &merged_luma,
                 per_chunk,
+                Some(observer),
             )?
+        } else {
+            confidence_pass(source, paths, domain, levels, warps, defect, &merged_luma, per_chunk)?
         };
         if let Some(parent) = cpath.parent() {
             std::fs::create_dir_all(parent).ok();
@@ -6677,7 +6916,7 @@ fn run_pyramid_prepared(
         }
         _ => None,
     };
-    write_merged(
+    write_merged_observed(
         Merged::Bands {
             domain,
             planes: &planes,
@@ -6690,6 +6929,7 @@ fn run_pyramid_prepared(
         exposure,
         restore,
         path,
+        progress.observer(),
     )?;
     eprintln!("collapse+write  : {:.1} s", t_out.elapsed().as_secs_f64());
     eprintln!("total           : {:.1} s", t_start.elapsed().as_secs_f64());
@@ -7839,6 +8079,27 @@ fn write_merged(
     restore: Option<strehl_core::restore::RestorePlan<'_>>,
     path: &Path,
 ) -> Result<()> {
+    write_merged_observed(
+        merged, levels, wb, xyz_to_cam, space, demosaic, exposure, restore, path, None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn write_merged_observed(
+    merged: Merged<'_>,
+    levels: Levels,
+    wb: Option<[f32; 3]>,
+    xyz_to_cam: Option<&([[f32; 3]; 3], String)>,
+    space: image_out::OutputSpace,
+    demosaic: bool,
+    exposure: Exposure,
+    restore: Option<strehl_core::restore::RestorePlan<'_>>,
+    path: &Path,
+    progress: Option<&crate::ui_progress::Progress>,
+) -> Result<()> {
+    if let Some(progress) = progress {
+        progress.render_step("develop", "started");
+    }
     // The transfer curve, and *only* the transfer curve. Bound here so the
     // byte-frozen arithmetic further down stays textually identical to what
     // M85 proved: it reads `srgb` exactly as it always did, and the meaning of
@@ -8190,7 +8451,14 @@ fn write_merged(
                 bot[px * 2 + 1] = planes[3][i];
             }
         }
+        if let Some(progress) = progress {
+            progress.render_step("develop", "finished");
+            progress.render_step("write", "started");
+        }
         image_out::write_demosaiced(path, mw, mh, &mosaic, &dev)?;
+        if let Some(progress) = progress {
+            progress.render_step("write", "finished");
+        }
         eprintln!();
         eprintln!(
             "wrote           : {} ({mw} x {mh}, 16-bit RGB, {}, Malvar-He-Cutler demosaic)",
@@ -8235,7 +8503,14 @@ fn write_merged(
         let dev = space
             .develop(matrix.map(|r| r.with_saturation(levels, gains, eg)))
             .with_exposure_gain(eg);
+        if let Some(progress) = progress {
+            progress.render_step("develop", "finished");
+            progress.render_step("write", "started");
+        }
         image_out::write_binned(path, geom.width, geom.height, &lin, &dev)?;
+        if let Some(progress) = progress {
+            progress.render_step("write", "finished");
+        }
         eprintln!();
         eprintln!(
             "wrote           : {} ({} x {}, 16-bit RGB, {}, binned from one 2x2 quad per pixel)",
@@ -8308,7 +8583,14 @@ fn write_merged(
         );
         eprintln!("                  as being in a stated colour space.");
     }
+    if let Some(progress) = progress {
+        progress.render_step("develop", "finished");
+        progress.render_step("write", "started");
+    }
     image_out::write_rgb16_described(path, geom.width as u32, geom.height as u32, &rgb, &dev)?;
+    if let Some(progress) = progress {
+        progress.render_step("write", "finished");
+    }
     eprintln!();
     eprintln!(
         "wrote           : {} ({} x {}, 16-bit RGB, {}, binned from one 2x2 quad per pixel)",
@@ -8330,7 +8612,6 @@ mod tests {
     mod native_gpu_gather_controls {
         include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-gpu-gather/independent-tests.rs"));
     }
-
 
     #[test]
     fn restoration_accepts_linear_kernels_and_refuses_clamped_catmull() {

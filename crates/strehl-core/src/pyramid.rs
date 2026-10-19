@@ -70,6 +70,10 @@ use std::sync::{Mutex, OnceLock};
 use crate::noise::NoiseModel;
 use rayon::prelude::*;
 
+#[path = "pyramid-observer.rs"]
+mod observer;
+pub use observer::{AccumulatorObservation, BandObservation, FoldPhase, MergeObserver};
+
 #[cfg(feature = "m194h-pedestal-causality")]
 pub mod m194h {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/m194h-pedestal-causality/core-hook.rs"));
@@ -1828,7 +1832,18 @@ impl BandMerge {
     ) {
         self.add_frame_with_gain_impl(planes,luma,variance,frame_beta,ws,
             #[cfg(feature = "native-green-cue")] None,
-            #[cfg(feature = "native-correction-variance")] fine_support_candidate::environment_mode());
+            #[cfg(feature = "native-correction-variance")] fine_support_candidate::environment_mode(), None);
+    }
+
+    /// The ordinary fold with a read-only observer at existing work boundaries.
+    /// Observations return nothing and are not part of any numerical decision.
+    pub fn add_frame_with_gain_observed(
+        &mut self, planes: &[&[f32]], luma: &[f32], variance: &[f32],
+        frame_beta: Option<&[f32]>, ws: &mut FrameWorkspace, observer: &dyn MergeObserver,
+    ) {
+        self.add_frame_with_gain_impl(planes,luma,variance,frame_beta,ws,
+            #[cfg(feature = "native-green-cue")] None,
+            #[cfg(feature = "native-correction-variance")] fine_support_candidate::environment_mode(), Some(observer));
     }
 
     /// Explicit experimental mode for generated controls. Ordinary consumers
@@ -1839,7 +1854,7 @@ impl BandMerge {
         frame_beta: Option<&[f32]>, ws: &mut FrameWorkspace, mode: fine_support_candidate::Mode,
     ) {
         self.add_frame_with_gain_impl(planes,luma,variance,frame_beta,ws,
-            #[cfg(feature = "native-green-cue")] None, mode);
+            #[cfg(feature = "native-green-cue")] None, mode, None);
     }
 
     #[cfg(feature = "native-green-cue")]
@@ -1850,7 +1865,7 @@ impl BandMerge {
         let n = self.sizes[0].pixels();
         assert_eq!(cue.energy.len(),n); assert_eq!(cue.variance.len(),n); assert_eq!(cue.valid.len(),n);
         self.add_frame_with_gain_impl(planes,luma,variance,frame_beta,ws,Some(cue),
-            #[cfg(feature = "native-correction-variance")] fine_support_candidate::environment_mode());
+            #[cfg(feature = "native-correction-variance")] fine_support_candidate::environment_mode(), None);
     }
 
     fn add_frame_with_gain_impl(
@@ -1858,6 +1873,7 @@ impl BandMerge {
         frame_beta: Option<&[f32]>, ws: &mut FrameWorkspace,
         #[cfg(feature = "native-green-cue")] cue: Option<&native_green_cue::Cue>,
         #[cfg(feature = "native-correction-variance")] fine_mode: fine_support_candidate::Mode,
+        observer: Option<&dyn MergeObserver>,
     ) {
         assert_eq!(planes.len(), self.planes, "wrong number of planes");
         let n0 = self.sizes[0].pixels();
@@ -1877,12 +1893,15 @@ impl BandMerge {
         native_sensor_transfer::begin_frame(self, frame_beta);
 
         // 1. The selection pyramid, and the noise pyramid beside it.
+        if let Some(observer) = observer { observer.phase(FoldPhase::PyramidStarted); }
         ws.luma.build(luma, &mut ws.ws);
         ws.var.build_gaussian(variance, &mut ws.ws);
+        if let Some(observer) = observer { observer.phase(FoldPhase::PyramidReady); }
 
         // 2. Per band, a noise-corrected local energy, then a weight.
         let nb = self.sizes.len() - 1;
         for k in 0..nb {
+            if let Some(observer) = observer { observer.phase(FoldPhase::FocusStarted(k)); }
             let sz = self.sizes[k];
             let px = sz.pixels();
             let lv = ws.luma.level(k);
@@ -1968,7 +1987,15 @@ impl BandMerge {
             #[cfg(feature = "native-sensor-transfer")]
             native_sensor_transfer::band(self, k, averaged, frame_beta,
                 lv, ws.var.level(k), sq, w);
+            if let Some(observer) = observer {
+                observer.band(BandObservation {
+                    level: k, size: sz, energy: Some(sq), variance: Some(ws.var.level(k)),
+                    floor_multiplier: self.cfg.gate * Self::beta_for(&self.gain, frame_beta, k), weights: w,
+                });
+                observer.phase(FoldPhase::FoldStarted(k));
+            }
             self.accumulate_level(k, planes, &mut ws.plane, w);
+            if let Some(observer) = observer { observer.phase(FoldPhase::FoldFinished(k)); }
         }
 
         #[cfg(feature = "m194h-pedestal-causality")]
@@ -1999,7 +2026,15 @@ impl BandMerge {
         #[cfg(feature = "native-sensor-transfer")]
         native_sensor_transfer::base(self, kb, ws.luma.level(kb), ws.var.level(kb),
             &ws.coarse[..szb.pixels()]);
+        if let Some(observer) = observer {
+            observer.band(BandObservation {
+                level: kb, size: szb, energy: None, variance: None,
+                floor_multiplier: 0.0, weights: &ws.coarse[..szb.pixels()],
+            });
+            observer.phase(FoldPhase::FoldStarted(kb));
+        }
         Self::accumulate_level(self, kb, planes, &mut ws.plane, &ws.coarse[..szb.pixels()]);
+        if let Some(observer) = observer { observer.phase(FoldPhase::FoldFinished(kb)); }
 
         // 4. The hull of the aligned inputs, which the reconstruction will be
         //    confined to. Taken from the frames as supplied — before any

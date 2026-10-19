@@ -236,6 +236,14 @@ struct Stack {
 }
 
 fn decode_stack(paths: &[PathBuf], threads: usize) -> Result<Stack> {
+    decode_stack_observed(paths, threads, None)
+}
+
+fn decode_stack_observed(
+    paths: &[PathBuf],
+    threads: usize,
+    progress: Option<&crate::ui_progress::Progress>,
+) -> Result<Stack> {
     let pool = rayon::ThreadPoolBuilder::new()
         .num_threads(threads)
         .build()
@@ -243,7 +251,11 @@ fn decode_stack(paths: &[PathBuf], threads: usize) -> Result<Stack> {
     let decoded: Result<Vec<(PlaneGeometry, Vec<f32>)>> = pool.install(|| {
         paths
             .par_iter()
-            .map(|p| {
+            .enumerate()
+            .map(|(index, p)| {
+                if let Some(progress) = progress {
+                    progress.alignment_plane_started(index);
+                }
                 let raw =
                     strehl_raw::decode(p).with_context(|| format!("decoding {}", p.display()))?;
                 let geom = PlaneGeometry {
@@ -252,6 +264,9 @@ fn decode_stack(paths: &[PathBuf], threads: usize) -> Result<Stack> {
                 };
                 let mut plane = vec![0f32; geom.pixels()];
                 green_luma(&raw, raw.levels.black as f32, &mut plane);
+                if let Some(progress) = progress {
+                    progress.alignment_plane_finished(index);
+                }
                 Ok((geom, plane))
             })
             .collect()
@@ -274,6 +289,16 @@ fn measure_edges(
     cfg: &AlignConfig,
     threads: usize,
 ) -> Result<Vec<AlignEdge>> {
+    measure_edges_observed(st, pairs, cfg, threads, None)
+}
+
+fn measure_edges_observed(
+    st: &Stack,
+    pairs: &[(usize, usize)],
+    cfg: &AlignConfig,
+    threads: usize,
+    progress: Option<&crate::ui_progress::Progress>,
+) -> Result<Vec<AlignEdge>> {
     let pool = rayon::ThreadPoolBuilder::new()
         .num_threads(threads)
         .build()
@@ -282,10 +307,21 @@ fn measure_edges(
 
     // Built once per frame, not once per pair: on a dense ladder each frame
     // appears in |spans| pairs and rebuilding would dominate the run.
+    if let Some(progress) = progress {
+        progress.alignment_phase("pyramids", st.planes.len());
+    }
     let pyramids: Vec<Option<AlignPyramid>> = pool.install(|| {
         st.planes
             .par_iter()
-            .map(|p| PlaneRef::from_geometry(p, geom).and_then(|v| AlignPyramid::build(v, cfg)))
+            .enumerate()
+            .map(|(index, p)| {
+                let pyramid =
+                    PlaneRef::from_geometry(p, geom).and_then(|v| AlignPyramid::build(v, cfg));
+                if let Some(progress) = progress {
+                    progress.alignment_pyramid_finished(index);
+                }
+                pyramid
+            })
             .collect()
     });
 
@@ -300,28 +336,40 @@ fn measure_edges(
         )
         .context("the fine tile grid does not fit in this plane")?
     };
+    if let Some(progress) = progress {
+        progress.alignment_phase("pairs", pairs.len());
+    }
     let edges: Vec<AlignEdge> = pool.install(|| {
         pairs
             .par_iter()
             .filter_map(|&(i, j)| {
-                let (pi, pj) = (pyramids[i].as_ref()?, pyramids[j].as_ref()?);
-                let a = AlignFrame {
-                    plane: PlaneRef::from_geometry(&st.planes[i], geom)?,
-                    pyramid: pi,
-                };
-                let b = AlignFrame {
-                    plane: PlaneRef::from_geometry(&st.planes[j], geom)?,
-                    pyramid: pj,
-                };
-                let fit = align_pair(a, b, &spots, cfg).ok()?;
-                Some(AlignEdge {
-                    i,
-                    j,
-                    t: fit.similarity(),
-                    rms: fit.rms as f64,
-                    used: fit.used,
-                    lever: fit.lever_rms as f64,
-                })
+                if let Some(progress) = progress {
+                    progress.alignment_pair_started(i, j, pairs.len());
+                }
+                let edge = (|| {
+                    let (pi, pj) = (pyramids[i].as_ref()?, pyramids[j].as_ref()?);
+                    let a = AlignFrame {
+                        plane: PlaneRef::from_geometry(&st.planes[i], geom)?,
+                        pyramid: pi,
+                    };
+                    let b = AlignFrame {
+                        plane: PlaneRef::from_geometry(&st.planes[j], geom)?,
+                        pyramid: pj,
+                    };
+                    let fit = align_pair(a, b, &spots, cfg).ok()?;
+                    Some(AlignEdge {
+                        i,
+                        j,
+                        t: fit.similarity(),
+                        rms: fit.rms as f64,
+                        used: fit.used,
+                        lever: fit.lever_rms as f64,
+                    })
+                })();
+                if let Some(progress) = progress {
+                    progress.alignment_pair_finished(i, j, edge.is_some(), pairs.len());
+                }
+                edge
             })
             .collect()
     });
@@ -1463,6 +1511,22 @@ pub fn solve_map(
     resampler: Resampler,
     verbose: bool,
 ) -> Result<WarpMap> {
+    solve_map_observed(
+        dir, paths, reference, spans, threads, resampler, verbose, None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn solve_map_observed(
+    dir: &Path,
+    paths: &[PathBuf],
+    reference: usize,
+    spans: &[usize],
+    threads: usize,
+    resampler: Resampler,
+    verbose: bool,
+    progress: Option<&crate::ui_progress::Progress>,
+) -> Result<WarpMap> {
     let n = paths.len();
     if reference >= n {
         bail!("reference {reference} is out of range for {n} frames");
@@ -1477,7 +1541,10 @@ pub fn solve_map(
     }
 
     let t0 = std::time::Instant::now();
-    let st = decode_stack(paths, threads)?;
+    if let Some(progress) = progress {
+        progress.alignment_phase("planes", n);
+    }
+    let st = decode_stack_observed(paths, threads, progress)?;
     if verbose {
         println!(
             "  decoded {n} frames in {:.1} s, plane {}x{}",
@@ -1498,7 +1565,7 @@ pub fn solve_map(
     pairs.dedup();
 
     let t1 = std::time::Instant::now();
-    let edges = measure_edges(&st, &pairs, &cfg, threads)?;
+    let edges = measure_edges_observed(&st, &pairs, &cfg, threads, progress)?;
     if verbose {
         println!(
             "  measured {}/{} edges in {:.1} s ({:.1}% refused)",
@@ -1509,12 +1576,21 @@ pub fn solve_map(
         );
     }
 
+    if let Some(progress) = progress {
+        progress.alignment_phase("cycle-check", edges.len());
+    }
     let floor = cycle_floor(&edges, st.geom);
     let mut opts = GlobalOptions::new(st.geom);
     opts.weighting = Weighting::Unit;
     apply_smooth_env(&mut opts);
+    if let Some(progress) = progress {
+        progress.alignment_phase("solve", n);
+    }
     let placements = solve_global(&edges, n, &opts)
         .context("the global system is not full rank; the edge ladder is too sparse")?;
+    if let Some(progress) = progress {
+        progress.alignment_phase("validate", edges.len());
+    }
     let heldout = heldout_error(&edges, n, &opts, st.geom);
 
     let warps: Vec<FrameWarp> = placements
@@ -1561,10 +1637,26 @@ pub fn load_or_solve(
     threads: usize,
     resampler: Resampler,
 ) -> Result<Option<(WarpMap, &'static str)>> {
+    load_or_solve_observed(dir, paths, threads, resampler, None)
+}
+
+pub(crate) fn load_or_solve_observed(
+    dir: &Path,
+    paths: &[PathBuf],
+    threads: usize,
+    resampler: Resampler,
+    progress: Option<&crate::ui_progress::Progress>,
+) -> Result<Option<(WarpMap, &'static str)>> {
     if !align_enabled() {
+        if let Some(progress) = progress {
+            progress.alignment_result("off", 0, 0, 0);
+        }
         return Ok(None);
     }
     if is_tilted_subject(dir) {
+        if let Some(progress) = progress {
+            progress.alignment_result("refused", 0, 0, 0);
+        }
         eprintln!(
             "alignment      : REFUSED -- {} is a tilted subject; a global similarity \
              cannot describe it (M86). Merging unregistered.",
@@ -1582,6 +1674,9 @@ pub fn load_or_solve(
     let side = sidecar_path(dir, solve_config_key(want_ref, &spans, want_resampler));
 
     if side.exists() {
+        if let Some(progress) = progress {
+            progress.alignment_phase("cache", paths.len());
+        }
         match WarpMap::load(&side) {
             Ok(map) => match map.check_stack(&identity) {
                 Ok(()) if map.len() != paths.len() => eprintln!(
@@ -1604,22 +1699,37 @@ pub fn load_or_solve(
                      uses {want_resampler:?}; re-solving",
                     map.resampler()
                 ),
-                Ok(()) => return Ok(Some((map, "sidecar"))),
+                Ok(()) => {
+                    if let Some(progress) = progress {
+                        progress.alignment_result(
+                            "cache",
+                            map.provenance().reference,
+                            map.placed_count(),
+                            map.refused_count(),
+                        );
+                    }
+                    return Ok(Some((map, "sidecar")));
+                }
                 Err(e) => eprintln!("alignment      : sidecar rejected ({e}); re-solving"),
             },
             Err(e) => eprintln!("alignment      : sidecar unreadable ({e}); re-solving"),
         }
     }
 
-    let map = solve_map(
-        dir,
-        paths,
-        want_ref,
-        &spans,
-        threads,
-        want_resampler,
-        false,
-    )?;
+    let map = if progress.is_some() {
+        solve_map_observed(
+            dir,
+            paths,
+            want_ref,
+            &spans,
+            threads,
+            want_resampler,
+            false,
+            progress,
+        )
+    } else {
+        solve_map(dir, paths, want_ref, &spans, threads, want_resampler, false)
+    }?;
     // Best effort: a read-only capture directory must not fail the merge.
     //
     // Write-then-rename, because the cache is shared. M97 measured a torn read
@@ -1629,6 +1739,14 @@ pub fn load_or_solve(
     // the pid so two processes racing to cache the same stack cannot collide.
     if let Err(e) = save_atomic(&map, &side) {
         eprintln!("alignment      : could not cache sidecar ({e}); continuing");
+    }
+    if let Some(progress) = progress {
+        progress.alignment_result(
+            "solved",
+            map.provenance().reference,
+            map.placed_count(),
+            map.refused_count(),
+        );
     }
     Ok(Some((map, "solved")))
 }
@@ -2202,7 +2320,13 @@ fn warp_frame_fullres_with_sink<const GREEN_ONLY: bool, F>(
 ) -> Result<f64>
 where F: FnMut(&mut strehl_raw::Frame,(usize,usize),&[f32],&[bool],f32,f32,WarpWriteback)->Result<usize>
 {
-    warp_frame_fullres_with_sink_impl::<GREEN_ONLY,F>(frame,t,geom,resampler,scratch,sink,
+    warp_frame_fullres_with_sink_impl::<GREEN_ONLY, F>(
+        frame,
+        t,
+        geom,
+        resampler,
+        scratch,
+        sink,
         #[cfg(all(test, feature = "native-gpu-gather"))]
         None)
 }
@@ -2214,8 +2338,9 @@ fn warp_frame_fullres_with_sink_impl<const GREEN_ONLY: bool, F>(
     resampler: Resampler,
     scratch: &mut WarpScratch,
     mut sink: F,
-    #[cfg(all(test, feature = "native-gpu-gather"))]
-    ca_override: Option<Option<strehl_core::optics::OpticalProfile>>,
+    #[cfg(all(test, feature = "native-gpu-gather"))] ca_override: Option<
+        Option<strehl_core::optics::OpticalProfile>,
+    >,
 ) -> Result<f64>
 where F: FnMut(&mut strehl_raw::Frame,(usize,usize),&[f32],&[bool],f32,f32,WarpWriteback)->Result<usize>
 {
@@ -2294,8 +2419,11 @@ where F: FnMut(&mut strehl_raw::Frame,(usize,usize),&[f32],&[bool],f32,f32,WarpW
     #[cfg(not(all(test, feature = "native-gpu-gather")))]
     let ident = strehl_raw::identity(&frame.path);
     #[cfg(all(test, feature = "native-gpu-gather"))]
-    let ident = if ca_override.is_some() { strehl_raw::CaptureIdentity::default() }
-        else { strehl_raw::identity(&frame.path) };
+    let ident = if ca_override.is_some() {
+        strehl_raw::CaptureIdentity::default()
+    } else {
+        strehl_raw::identity(&frame.path)
+    };
     #[cfg(not(all(test, feature = "native-gpu-gather")))]
     let ca = strehl_core::optics::profile_for_capture_env(
         ident.model.as_deref(),
@@ -2864,6 +2992,106 @@ pub fn cover_scale(map: &WarpMap, margin: f64) -> Option<f64> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn alignment_observer_counts_real_pair_attempts_including_flat_and_noise_refusals() {
+        // The fixture must contain both a match and genuine failed comparisons.
+        // An observer that counts only successful filter_map results fails it.
+        let geom = PlaneGeometry {
+            width: 192,
+            height: 128,
+        };
+        let detail: Vec<f32> = (0..geom.pixels())
+            .map(|i| {
+                let x = (i % geom.width) as f32;
+                let y = (i / geom.width) as f32;
+                120.0 + 25.0 * (x / 4.7 + y / 7.1).sin() + 19.0 * (x / 11.3 - y / 3.9).cos()
+            })
+            .collect();
+        let mut seed = 0x93a7_61d2_u32;
+        let noise: Vec<f32> = (0..geom.pixels())
+            .map(|_| {
+                seed = seed.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
+                80.0 + (seed >> 24) as f32 * 0.3
+            })
+            .collect();
+        let st = Stack {
+            geom,
+            planes: vec![detail.clone(), detail, vec![100.0; geom.pixels()], noise],
+        };
+        let cfg = AlignConfig {
+            coarse_factors: vec![2],
+            coarse_tile: 12,
+            coarse_grid: (4, 3),
+            coarse_radius: 3,
+            fine_tile: 24,
+            fine_grid: (5, 4),
+            fine_radius: 3,
+            margin: 12,
+            min_tiles: 6,
+            min_contrast: 2.0,
+            min_peak: 0.8,
+            ..AlignConfig::shallow()
+        };
+        let pairs = [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)];
+        let ordinary = measure_edges(&st, &pairs, &cfg, 2).unwrap();
+        let (observer, captured) = crate::ui_progress::Progress::captured(st.planes.len());
+        let observed = measure_edges_observed(&st, &pairs, &cfg, 2, Some(&observer)).unwrap();
+        assert!(
+            !observed.is_empty(),
+            "The known matching pair must actually fit"
+        );
+        assert!(
+            observed.len() < pairs.len(),
+            "Flat/noise controls must actually refuse"
+        );
+        assert!(observed.iter().any(|edge| (edge.i, edge.j) == (0, 1)));
+        let identity = |edges: &[AlignEdge]| {
+            edges
+                .iter()
+                .map(|edge| {
+                    (
+                        edge.i,
+                        edge.j,
+                        edge.t,
+                        edge.rms.to_bits(),
+                        edge.used,
+                        edge.lever.to_bits(),
+                    )
+                })
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(
+            identity(&ordinary),
+            identity(&observed),
+            "Observing a comparison must not alter the geometry reaching the merge"
+        );
+        let counts = observer.alignment_counts();
+        assert_eq!(counts.pyramids, st.planes.len());
+        assert_eq!(counts.pairs_started, pairs.len());
+        assert_eq!(counts.pairs, pairs.len());
+        assert_eq!(counts.accepted, observed.len());
+        let lines = captured.lock().unwrap();
+        let completed: Vec<_> = lines
+            .iter()
+            .filter(|line| line.contains("event=align-pair "))
+            .collect();
+        assert_eq!(completed.len(), pairs.len());
+        assert!(completed.last().unwrap().contains("completed=6"));
+        assert!(
+            completed
+                .last()
+                .unwrap()
+                .contains(&format!("accepted={}", observed.len()))
+        );
+        assert_eq!(
+            lines
+                .iter()
+                .filter(|line| line.contains("event=align-pyramid "))
+                .count(),
+            st.planes.len()
+        );
+    }
 
     /// The gather default is the one switch on this path that changes what
     /// every output pixel is interpolated from, so its polarity is asserted

@@ -78,9 +78,8 @@ fact about this system, and no other document in the repository states it plainl
 
 ## 2. Crate topology
 
-Four crates, 83 Rust files totalling 93,300 lines, of which 44 files and 66,138 lines
-are library/binary sources under `src/` and the remainder are examples and integration
-tests.
+Four crates own the processing pipeline. A fifth, `strehl-ui`, provides the native
+desktop workspace and runs the CLI as an owned background process.
 
 | Crate | Owns | Notes |
 | --- | --- | --- |
@@ -88,6 +87,7 @@ tests.
 | `strehl-core` | Every algorithm and physical model | No `rayon` dependency at all — it is a library of kernels, not a scheduler |
 | `strehl-plugin` | The focus-measure extension surface | Registry, host calibration, seven reference operators, deterministic RNG |
 | `strehl-cli` | The binary, all orchestration, all parallelism, all I/O | Owns the pipeline; `strehl-core` owns the mathematics |
+| `strehl-ui` | Desktop interface, source inventory, developed-image preview, job lifecycle | Rust egui/wgpu shell; RAW processing remains in the CLI |
 
 The parallelism boundary is deliberate. `strehl-core::demosaic::demosaic_row` is
 row-at-a-time specifically so the CLI can choose how to parallelise it

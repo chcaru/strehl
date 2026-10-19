@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Strehl — three focal planes, one resolved point</title>
+  <polygon points="8,40 32,26 56,40 32,54" fill="#141821" stroke="#8f7748" stroke-width="3" stroke-linejoin="round"/>
+  <polygon points="8,32 32,18 56,32 32,46" fill="#141821" stroke="#b99a59" stroke-width="3" stroke-linejoin="round"/>
+  <polygon points="8,24 32,10 56,24 32,38" fill="#141821" stroke="#e6b450" stroke-width="3" stroke-linejoin="round"/>
+  <polygon points="25,24 32,20 39,24 32,28" fill="#e6b450"/>
+</svg>

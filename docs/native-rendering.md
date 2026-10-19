@@ -1,9 +1,13 @@
-# Rendering with the current native build
+# Pinned native rendering research workflow
+
+This workflow uses a separately retained experimental build. It is not the
+normal desktop or default CLI quickstart, and a clean checkout does not contain
+the bound executable. Use the [main README](../README.md) for the normal build.
 
 Use `scripts/render-native.py` for new Sony ARW stacks. It binds the selected executable by SHA256, records the original file order and hashes, runs the native GPU path, and writes the complete RGB16 TIFF, full-resolution JPEG, overview, command logs and receipts into a fresh output directory.
 
 ```
-python scripts/render-native.py --input "D:/personal/macro/example" --out "outputs/example-current"
+python scripts/render-native.py --input "path/to/capture-folder" --out "outputs/example-current"
 ```
 
 The default build binding is `scripts/native-build.json`, published after the selected build passes its relevant checks. Its schema is `{ "schema": 1, "executable": { "path": "absolute path or path relative to the repository", "sha256": "actual SHA256" } }`. Missing manifests or mismatched hashes stop the render. The manifest currently selects the locally retained September25 build; executables and large image artifacts are not committed to Git. See `experiments/garnet-spatial-trace/results.md` for its build command, validation and remaining CLI test-configuration failures.

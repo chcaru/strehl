@@ -35,7 +35,11 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 fn git(dir: &Path, args: &[&str]) -> Option<String> {
-    let out = Command::new("git").current_dir(dir).args(args).output().ok()?;
+    let out = Command::new("git")
+        .current_dir(dir)
+        .args(args)
+        .output()
+        .ok()?;
     if !out.status.success() {
         return None;
     }
@@ -98,11 +102,11 @@ fn main() {
     // An explicit stamp always wins, so a build outside a checkout (a release
     // tarball, a container) can still name its source.
     println!("cargo:rerun-if-env-changed=STREHL_BUILD_ID");
-    if let Ok(forced) = std::env::var("STREHL_BUILD_ID") {
-        if !forced.trim().is_empty() {
-            println!("cargo:rustc-env=STREHL_BUILD_ID={}", forced.trim());
-            return;
-        }
+    if let Ok(forced) = std::env::var("STREHL_BUILD_ID")
+        && !forced.trim().is_empty()
+    {
+        println!("cargo:rustc-env=STREHL_BUILD_ID={}", forced.trim());
+        return;
     }
 
     let stamp = match git(&manifest, &["rev-parse", "--short=12", "HEAD"]) {

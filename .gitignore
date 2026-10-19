@@ -10,9 +10,22 @@ target-*/
 .cargo-target*/
 **/*.rs.bk
 *.pdb
+*.exe
+*.dll
+*.obj
+*.o
+*.a
+*.lib
+*.so
+*.dylib
+*.rlib
+*.rmeta
 
 # Stacked output and test renders -- never commit heavy binaries
 /out/
+# Generated desktop packages, captures and run artifacts. Reusable reproduction
+# code belongs in scripts/ or experiments/, not this disposable output tree.
+/outputs/
 *.tif
 *.tiff
 *.dng
@@ -20,6 +33,9 @@ target-*/
 *.png
 *.jpg
 *.jpeg
+# Small, owned application-icon sources are intentional release assets.
+!crates/strehl-ui/assets/*.png
+!crates/strehl-ui/assets/*.ico
 
 # RAW inputs are never committed
 *.ARW
@@ -49,9 +65,27 @@ experiments/m30-hdr-cobracket/out/cache/
 # always regenerable, so ignore them everywhere.
 *.npy
 *.npz
-__pycache__/
-*.pyc
-# ...except these two, which are committed RESULTS rather than caches and are
-# already tracked (gitignore does not untrack, but state the intent).
+# These two are committed results rather than caches. Ignore rules do not
+# untrack them, but keep the intended exceptions explicit.
 !experiments/m29-static-defects/out/static-109.npy
 !experiments/m39-verify/out/07-merged-rois.npz
+__pycache__/
+*.pyc
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# Machine-local configuration and credentials; keep examples reviewable.
+/local.env
+/.env
+/.env.*
+!/.env.example
+!/.env.template
+/.strehl/
+/projects.json
+/settings.json
+
+# Do not ignore all ZIP/JSON/text files: research source archives and compact
+# measurement receipts are intentional reproducibility evidence.

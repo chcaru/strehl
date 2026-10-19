@@ -11,6 +11,9 @@
 #[path = "../src/align_cmd.rs"]
 mod align_cmd;
 #[allow(dead_code)]
+#[path = "../src/ui-progress.rs"]
+mod ui_progress;
+#[allow(dead_code)]
 #[path = "../src/image_out.rs"]
 mod image_out;
 
