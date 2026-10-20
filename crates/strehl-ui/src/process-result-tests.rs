@@ -284,6 +284,163 @@ fn result_warm(field: &mut ProcessTheater, ctx: &egui::Context, input: Input<'_>
 }
 
 #[test]
+fn drawing_on_zoomed_final_photo_uses_its_real_crop_and_does_not_pan() {
+    use crate::edit_workspace::{DrawingTool, EditorState, LoadedPhoto};
+    use std::sync::Arc;
+    for cropped in [false, true] {
+        let ctx = egui::Context::default();
+        let fixture = ResultFixture::new(&ctx, cropped);
+        let surfaces = fixture.surfaces();
+        let input = result_input(&fixture, &surfaces);
+        let mut field = ProcessTheater::default();
+        result_warm(&mut field, &ctx, input);
+        field.set_photo_view(egui::pos2(0.65, 0.4), 4.0);
+        let output = result_paint(&mut field, &ctx, input, 0.8, vec![]);
+        let painted = result_photo(&output, &fixture);
+        assert!(
+            painted.uv.width() < 0.3,
+            "agent view must zoom the final photograph"
+        );
+        assert!((painted.uv.center().x - 0.65).abs() < 0.002);
+        let before = field.scales.aperture();
+        let image = Arc::new(strehl_edit::LinearImage {
+            width: 16,
+            height: 12,
+            pixels: vec![0.2; 16 * 12 * 3],
+            origin: strehl_edit::ImageOrigin::SceneLinear,
+            baseline: None,
+            baked_recipe: None,
+        });
+        let mut editor = EditorState::default();
+        editor.loaded = Some(LoadedPhoto {
+            image: image.clone(),
+            preview: image,
+            recipe: Default::default(),
+            source: "unopened-fixture".into(),
+            warnings: vec![],
+        });
+        editor.tool = DrawingTool::Rectangle;
+        let a = painted.rect.min + painted.rect.size() * egui::vec2(0.2, 0.3);
+        let b = painted.rect.min + painted.rect.size() * egui::vec2(0.7, 0.65);
+        for (time, events) in [
+            (1.0, vec![]),
+            (
+                1.2,
+                vec![egui::Event::PointerMoved(a), result_button(a, true)],
+            ),
+            (1.4, vec![egui::Event::PointerMoved(b)]),
+            (1.6, vec![result_button(b, false)]),
+        ] {
+            let _ = ctx.run(
+                egui::RawInput {
+                    screen_rect: Some(Rect::from_min_size(Pos2::ZERO, REVIEW_SIZE.into())),
+                    time: Some(time),
+                    events,
+                    ..Default::default()
+                },
+                |ctx| {
+                    egui::CentralPanel::default()
+                        .frame(egui::Frame::NONE)
+                        .show(ctx, |ui| {
+                            field.annotation_mode = editor.tool != DrawingTool::Navigate;
+                            field.show(ui, ui.max_rect(), &input, &mut Response::default());
+                            let mapping = field
+                                .edit_mapping
+                                .expect("final photograph must expose its coordinates");
+                            editor.draw_overlay(ui, mapping);
+                        });
+                },
+            );
+        }
+        assert_eq!(
+            editor.recipe.regions.len(),
+            1,
+            "one drag must create one region"
+        );
+        let expected = Rect::from_min_max(
+            painted.uv.min + painted.uv.size() * egui::vec2(0.2, 0.3),
+            painted.uv.min + painted.uv.size() * egui::vec2(0.7, 0.65),
+        );
+        let bounds = crate::edit_workspace::shape_bounds(&editor.recipe.regions[0].shape);
+        result_same_rect(
+            Rect::from_min_max(bounds[0].into(), bounds[1].into()),
+            expected,
+        );
+        result_same_rect(field.scales.aperture(), before);
+        assert!(editor.undo());
+        assert!(editor.recipe.regions.is_empty());
+        assert!(editor.redo());
+        assert_eq!(editor.recipe.regions.len(), 1);
+    }
+}
+
+#[test]
+fn scene_button_resets_the_actual_photo_crop_while_annotation_owns_the_canvas() {
+    // A no-op click fails because every arm starts with a non-central,
+    // visibly magnified crop. Exercise both the instrument and photo layouts,
+    // and both certified output geometries rather than only a square fixture.
+    for cropped in [false, true] {
+        for photo_focus in [false, true] {
+            let ctx = egui::Context::default();
+            let fixture = ResultFixture::new(&ctx, cropped);
+            let surfaces = fixture.surfaces();
+            let input = result_input(&fixture, &surfaces);
+            let mut field = ProcessTheater {
+                annotation_mode: true,
+                edit_focus: photo_focus,
+                ..Default::default()
+            };
+            result_warm(&mut field, &ctx, input);
+            field.set_photo_view(egui::pos2(0.68, 0.43), 3.6);
+            let zoomed = result_paint(&mut field, &ctx, input, 0.9, vec![]);
+            let photo = result_photo(&zoomed, &fixture);
+            assert!(photo.uv.width() < 0.3, "fixture must be visibly zoomed");
+            assert!((photo.uv.center().x - 0.68).abs() < 0.002);
+            let button = zoomed
+                .shapes
+                .iter()
+                .find_map(|shape| match &shape.shape {
+                    egui::Shape::Text(text) if text.galley.text().ends_with("× · Scene") => {
+                        Some(text.visual_bounding_rect().center())
+                    }
+                    _ => None,
+                })
+                .expect("Scene reset must be visible while drawing");
+            result_paint(
+                &mut field,
+                &ctx,
+                input,
+                1.1,
+                vec![
+                    egui::Event::PointerMoved(button),
+                    result_button(button, true),
+                ],
+            );
+            result_paint(
+                &mut field,
+                &ctx,
+                input,
+                1.2,
+                vec![result_button(button, false)],
+            );
+            let reset = result_paint(&mut field, &ctx, input, 1.8, vec![]);
+            let photo = result_photo(&reset, &fixture);
+            result_same_rect(
+                photo.uv,
+                Rect::from_min_max(Pos2::ZERO, egui::pos2(1.0, 1.0)),
+            );
+            assert!(
+                field.annotation_mode,
+                "reset must leave the drawing tool active"
+            );
+            let (whole, visible) = field.edit_mapping.expect("drawing mapping must remain");
+            result_same_rect(whole, photo.rect);
+            result_same_rect(visible, photo.rect);
+        }
+    }
+}
+
+#[test]
 fn completion_supersedes_the_real_live_preview_and_shows_the_actual_final_photo() {
     let ctx = egui::Context::default();
     let mut fixture = ResultFixture::new(&ctx, false);

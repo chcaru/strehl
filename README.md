@@ -9,6 +9,8 @@ workspace lets you explore how the captures relate to the finished photograph.
 
 [Download the preview](https://github.com/chcaru/strehl/releases/tag/v0.1.0-alpha.5) ·
 [Desktop controls](crates/strehl-ui/README.md) ·
+[Development and HDR](docs/development-and-hdr.md) ·
+[Agent interface](docs/agent-interface.md) ·
 [Build and verify](docs/development/release-workflow.md)
 
 ## Watch a photograph come together
@@ -72,8 +74,19 @@ failed approaches, corrections, and remaining limitations.
 | Scrub | Move through captures beside the final photograph, with linked zoom and pan. |
 | Select | Pin multiple capture ranges. Their estimated regions keep distinct colors, with mixed stripes at intersections. |
 | Investigate | Probe a region, compare detail scales, inspect recorded sample admission, and view observation balance when recorded. |
+| Develop | Keep a scene-linear float master; adjust exposure, tone, and color globally or in feathered circles, boxes, and polygons. Import supported numeric XMP controls with explicit warnings for unsupported Adobe profiles. |
+| Repair | Restrict a selected region to a capture span on the next stack, then feather that reconstruction into the photograph. |
+| Deliver | Export a developed 16-bit sRGB TIFF or a genuine 10-bit BT.2020/PQ HDR AVIF from the linear master. Existing files are preserved. |
 | Arrange | Resize the workspace panes, open sidebar tools, undo exploration changes, and reset views with a double-click. |
-| Automate | Use the separate CLI or build against the Rust workspace. |
+| Collaborate | Enable a local MCP session for an external agent: inspect bounded image crops and diagnostics, annotate regions, adjust settings, and operate the workspace with revision checks. |
+| Automate | Use the separate CLI, shared development recipe, or Rust workspace. |
+
+Development, local source repairs, HDR export, and MCP collaboration describe the
+current source checkout; the linked alpha.5 download predates these additions.
+The [development guide](docs/development-and-hdr.md) explains color and recipe
+semantics, and the [agent guide](docs/agent-interface.md) describes connecting an
+existing MCP-capable host. Strehl does not supply a model subscription or
+intercept a vendor login.
 
 **Reading the overlays:** admission marks show sampled coefficients that passed
 a detail gate. They are not fractional RGB ownership, an exact winning-frame
@@ -124,8 +137,11 @@ alignment, and scene; inspect the complete result and native-resolution detail.
 Occlusion boundaries, deep focus sweeps, and complex motion remain difficult.
 
 Normal stacking runs on the CPU; the GPU draws the workspace. The display uses
-8-bit textures and is not an ICC soft-proofing viewer; saved TIFF output is
-16-bit. Live reconstructions precede final bounds and color development. Older
+8-bit SDR textures and is not an ICC soft-proofing or native HDR monitor viewer.
+Saved TIFF output is 16-bit; optional HDR AVIF output requires a retained linear
+master and a compatible external HDR viewer. HDR export does not perform
+multi-exposure bracket fusion, and an old SDR TIFF cannot recover clipped light.
+Live reconstructions precede final bounds and color development. Older
 saved runs may lack newer diagnostic channels.
 
 Windows has been exercised interactively with real photographs. The release
@@ -167,7 +183,7 @@ paths, with different assumptions and settings from the normal pyramid workflow.
 
 ## Development and research
 
-The Rust workspace contains `strehl-core`, `strehl-raw`, `strehl-plugin`,
+The Rust workspace contains `strehl-core`, `strehl-raw`, `strehl-plugin`, `strehl-edit`,
 `strehl-cli`, and `strehl-ui`. A complete source checkout also includes the
 optional path dependency `experiments/native-gpu-gather`. Private photographic
 corpora are not needed to launch the application or run the normal CLI.

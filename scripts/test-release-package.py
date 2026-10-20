@@ -37,6 +37,28 @@ def pe_fixture(*, normal="KERNEL32.dll", delayed=None):
 
 
 class ReleasePackagingTests(unittest.TestCase):
+    def test_dependency_patent_grants_are_shipped_with_licenses(self):
+        for name in ("LICENSE", "COPYING.md", "PATENTS", "Patent-Grant.txt"):
+            self.assertTrue(release.license_name(name), name)
+        for name in ("patented.rs", "licensee.rs", "decoder.rs"):
+            self.assertFalse(release.license_name(name), name)
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            dependency = root / "encoder"
+            dependency.mkdir()
+            (dependency / "LICENSE").write_text("BSD license", encoding="utf-8")
+            (dependency / "PATENTS").write_text("patent grant", encoding="utf-8")
+            metadata = {"packages": [{
+                "name": name, "version": "1.0.0", "source": "registry+fixture",
+                "manifest_path": str(dependency / "Cargo.toml"), "license": "BSD-2-Clause",
+                "license_file": None,
+            } for name in ("fixture-codec", "rawler")]}
+            release.collect_notices(metadata, root / "notices", {"version": "0.0.0", "source_commit": "fixture"})
+            self.assertEqual(
+                (root / "notices/licenses/fixture-codec-1.0.0/PATENTS").read_text(),
+                "patent grant",
+            )
+
     def test_pe_audit_includes_delay_imports_and_rejects_missing_runtime(self):
         self.assertEqual(release.pe_imports(pe_fixture())[1], ["kernel32.dll"])
         with tempfile.TemporaryDirectory() as temp:

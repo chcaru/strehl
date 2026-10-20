@@ -73,8 +73,22 @@ pub struct ProcessSpace {
     output_path: Option<std::path::PathBuf>,
 }
 impl ProcessSpace {
+    pub(crate) fn edit_mapping(&self) -> Option<(Rect, Rect)> {
+        self.theater.edit_mapping
+    }
+    pub(crate) fn set_annotation_mode(&mut self, active: bool) {
+        self.theater.annotation_mode = active;
+    }
+    pub(crate) fn set_edit_focus(&mut self, active: bool) {
+        self.theater.edit_focus = active;
+    }
+    pub(crate) fn set_photo_view(&mut self, center: [f32; 2], zoom: f32) {
+        self.theater
+            .set_photo_view(egui::pos2(center[0], center[1]), zoom);
+    }
     pub(crate) fn set_output_path(&mut self, path: Option<&std::path::Path>) {
         if self.output_path.as_deref() != path {
+            self.theater.invalidate_balance();
             self.output_path = path.map(std::path::Path::to_path_buf);
         }
     }
@@ -139,6 +153,8 @@ impl ProcessSpace {
     pub fn show(&mut self, ui: &mut Ui, input: Input<'_>) -> Response {
         if self.epoch != Some(input.epoch) {
             let layout = self.theater.layout;
+            let annotation_mode = self.theater.annotation_mode;
+            let edit_focus = self.theater.edit_focus;
             let output_path = self.output_path.take();
             *self = Self {
                 epoch: Some(input.epoch),
@@ -146,6 +162,8 @@ impl ProcessSpace {
                 ..Default::default()
             };
             self.theater.layout = layout;
+            self.theater.annotation_mode = annotation_mode;
+            self.theater.edit_focus = edit_focus;
         }
         let certified = input.output.is_some()
             && input.output_size.is_some_and(|size| {

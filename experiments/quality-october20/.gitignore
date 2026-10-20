@@ -1,0 +1,10 @@
+# Generated ELF copies are reproducible from the recorded release asset.
+/linux-strip/unstripped/
+/linux-strip/Strehl-stripped
+# Source receipts contain private local paths; retain them locally.
+/existing-review/
+/native-review/
+# Keep the portable binary receipt and report, not local compiler output.
+/release-build*.log
+/repair-tests.log
+/collapse-benchmark.log

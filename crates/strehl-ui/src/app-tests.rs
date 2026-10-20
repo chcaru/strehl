@@ -2625,6 +2625,8 @@ fn completion_loads_and_paints_owned_tiff_on_scheduled_frames_without_pointer_in
         pyramid_gate: None,
         worker_threads: Some(1),
         settings: jobs::RenderSettings::default(),
+        retain_master: false,
+        recipe: None,
     });
     let (sender, receiver) = mpsc::channel();
     job.receiver = receiver;

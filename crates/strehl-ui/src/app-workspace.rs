@@ -6,6 +6,8 @@ use crate::workspace_history::{NodeId, StackDraft};
 pub(super) enum Sidebar {
     Projects,
     Adjust,
+    Edit,
+    Agent,
     Review,
     Activity,
 }
@@ -14,6 +16,8 @@ impl Sidebar {
         match self {
             Self::Projects => "Projects",
             Self::Adjust => "Adjust",
+            Self::Edit => "Edit",
+            Self::Agent => "Agent",
             Self::Review => "Review",
             Self::Activity => "Activity",
         }
@@ -32,6 +36,13 @@ impl StrehlApp {
             Some("Reading source photos…")
         } else if self.replay.is_some() {
             Some("Opening the saved result…")
+        } else if self.editor.loading.is_some() {
+            Some("Opening the photograph's saved edits…")
+        } else if self.editor.path == self.result
+            && self.editor.path.is_some()
+            && self.editor.loaded.is_none()
+        {
+            Some("Resolve the photograph's edit-loading error before restacking")
         } else if self.draft_job.is_some() {
             Some("Finishing the preview…")
         } else if self
@@ -390,7 +401,7 @@ impl StrehlApp {
         self.replay = Some(crate::workspace_history::reopen(run));
         self.status = "Opening saved render and observations…".into();
     }
-    fn open_project_stack(&mut self, id: NodeId) {
+    pub(super) fn open_project_stack(&mut self, id: NodeId) {
         if self.job.is_some() || self.picker_active() {
             return;
         }
@@ -422,13 +433,14 @@ impl StrehlApp {
                     ui.disable();
                 }
                 for (index, pane) in [
-                    Sidebar::Projects,
-                    Sidebar::Adjust,
-                    Sidebar::Review,
-                    Sidebar::Activity,
+                    (0, Sidebar::Projects),
+                    (1, Sidebar::Adjust),
+                    (7, Sidebar::Edit),
+                    (8, Sidebar::Agent),
+                    (2, Sidebar::Review),
+                    (3, Sidebar::Activity),
                 ]
                 .into_iter()
-                .enumerate()
                 {
                     if rail_command(ui, pane.label(), index, self.sidebar == Some(pane), true)
                         .clicked()
@@ -440,18 +452,6 @@ impl StrehlApp {
                         };
                         self.process_view = true;
                     }
-                }
-                if rail_command(
-                    ui,
-                    "Space",
-                    6,
-                    self.spatial_view,
-                    self.stack.is_some() || self.activity,
-                )
-                .clicked()
-                {
-                    self.spatial_view = !self.spatial_view;
-                    self.process_view = true;
                 }
                 let spare = ui.available_rect_before_wrap();
                 let drag = egui::Rect::from_min_max(
@@ -465,7 +465,6 @@ impl StrehlApp {
                     ui.add_space(5.0);
                     if rail_command(ui, "Reset layout", 5, false, true).clicked() {
                         self.process_space.set_layout(Default::default());
-                        self.process_atlas.reset();
                         self.catalog.layout = Default::default();
                         self.persist_catalog();
                     }
@@ -588,6 +587,8 @@ impl StrehlApp {
                                     .show(ui, |ui| self.destination_controls(ui));
                             }
                             Sidebar::Review => self.review_panel(ui),
+                            Sidebar::Edit => self.edit_panel(ui),
+                            Sidebar::Agent => self.agent_panel(ui),
                             Sidebar::Activity => {
                                 if let Some(error) = &self.error {
                                     ui.colored_label(AMBER, error);
@@ -642,7 +643,6 @@ impl StrehlApp {
             return;
         }
         if let Some(focus) = crate::controls::show_review(ui, &self.progress) {
-            self.spatial_view = false;
             self.process_space.review_focus(focus, self.selected);
         }
         if let Some(output) = &self.result {
@@ -833,7 +833,8 @@ fn rail_command(
         2 => crate::workspace_icons::Icon::Review,
         3 => crate::workspace_icons::Icon::Activity,
         4 => crate::workspace_icons::Icon::Stack,
-        6 => crate::workspace_icons::Icon::Space,
+        7 => crate::workspace_icons::Icon::Edit,
+        8 => crate::workspace_icons::Icon::Agent,
         _ => crate::workspace_icons::Icon::Layout,
     };
     crate::workspace_icons::paint(&p, c, 20.0, icon, color);

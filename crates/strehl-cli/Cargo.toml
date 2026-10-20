@@ -20,6 +20,7 @@ path = "src/bin/strehl-common-input.rs"
 strehl-core.workspace = true
 strehl-plugin.workspace = true
 strehl-raw.workspace = true
+strehl-edit.workspace = true
 # Experimental test bridge only; no production GPU dispatch.
 strehl-native-gpu-gather = { path = "../../experiments/native-gpu-gather", optional = true }
 clap.workspace = true

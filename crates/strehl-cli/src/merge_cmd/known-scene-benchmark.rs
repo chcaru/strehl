@@ -470,6 +470,8 @@ impl Inputs {
 
 fn options(out: PathBuf) -> MergeOptions {
     MergeOptions {
+        linear_master: None,
+        region_recipe: None,
         dir: PathBuf::from("M194B-NO-RAW-DIRECTORY"),
         out: Some(out),
         limit: None,

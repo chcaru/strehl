@@ -12,6 +12,37 @@ fn texture(ctx: &egui::Context, name: &str, size: [usize; 2]) -> TextureHandle {
         egui::TextureOptions::NEAREST,
     )
 }
+
+#[test]
+fn changing_final_development_texture_keeps_the_current_inspection() {
+    let context = egui::Context::default();
+    let original = texture(&context, "before-original", [160, 100]);
+    let developed = texture(&context, "after-developed", [160, 100]);
+    let mut progress = PipelineProgress::default();
+    progress.mark_complete();
+    let mut initial = input(&progress);
+    initial.output = Some(&original);
+    initial.output_size = Some([1600, 1000]);
+    let mut theater = ProcessTheater::default();
+    theater.sync_hero(&initial, 0.0, &context);
+    assert_eq!(theater.hero.as_ref().unwrap().plate.kind, 3);
+    theater.zoom = 3.0;
+    theater.pan = egui::vec2(-70.0, 35.0);
+    theater.inspected_source = Some(4);
+    let mut updated = initial;
+    updated.output = Some(&developed);
+    theater.sync_hero(&updated, 1.0, &context);
+    assert_eq!(
+        theater.hero.as_ref().unwrap().plate.texture.id(),
+        developed.id()
+    );
+    assert_eq!(
+        theater.zoom, 3.0,
+        "Before/After must not refit the photograph"
+    );
+    assert_eq!(theater.pan, egui::vec2(-70.0, 35.0));
+    assert_eq!(theater.inspected_source, Some(4));
+}
 fn input(progress: &PipelineProgress) -> Input<'_> {
     Input {
         epoch: 1,

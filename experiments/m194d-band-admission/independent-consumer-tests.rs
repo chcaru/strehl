@@ -131,6 +131,8 @@ fn crop() -> align_cmd::CropRect {
 
 fn independent_options(out: PathBuf) -> MergeOptions {
     MergeOptions {
+        linear_master: None,
+        region_recipe: None,
         dir: PathBuf::from("M194D-INDEPENDENT-NO-SUCH-RAW-DIRECTORY"),
         out: Some(out),
         limit: None,

@@ -49,16 +49,10 @@ fn paint(
         },
         |ctx| {
             app.undo_shortcuts(ctx);
-            if !app.spatial_view {
-                app.status_bar(ctx);
-            }
+            app.status_bar(ctx);
             app.workspace(ctx);
             app.observe_edits(ctx);
-            if app.spatial_view {
-                crate::window_chrome::finish_spatial(ctx, false);
-            } else {
-                crate::window_chrome::finish(ctx, false);
-            }
+            crate::window_chrome::finish(ctx, false);
         },
     )
 }
@@ -326,99 +320,6 @@ fn install_owned_photo(app: &mut StrehlApp, ctx: &egui::Context) -> egui::Textur
     app.progress.mark_complete();
     photo.id()
 }
-fn photo_quad(out: &egui::FullOutput, id: egui::TextureId) -> Vec<egui::Pos2> {
-    out.shapes
-        .iter()
-        .find_map(|shape| match &shape.shape {
-            egui::Shape::Mesh(mesh) if mesh.texture_id == id => {
-                Some(mesh.vertices.iter().map(|v| v.pos).collect())
-            }
-            _ => None,
-        })
-        .expect("the actual owned photo must be painted")
-}
-#[test]
-fn spatial_photograph_gesture_orders_after_pending_recipe_and_undo_reveals_its_own_view() {
-    let (mut app, _, _) = fixture();
-    let ctx = egui::Context::default();
-    let photo = install_owned_photo(&mut app, &ctx);
-    let evidence = serde_json::to_vec(&app.catalog.runs).unwrap();
-    toggle_auto_exposure(&mut app, &ctx);
-    app.spatial_view = true;
-    let out = paint(&mut app, &ctx, 0.14, vec![]);
-    let tilted = photo_quad(&out, photo);
-    let at = find(&out, "Photograph").unwrap().center();
-    click(&mut app, &ctx, at, 0.16);
-    let flat = photo_quad(&paint(&mut app, &ctx, 0.22, vec![]), photo);
-    assert_ne!(
-        tilted, flat,
-        "fixture must actually change the projected photo, not only a counter"
-    );
-    assert_eq!(app.process_atlas.history_depths(), (1, 0));
-    assert_eq!(app.undo_label(false), "Undo space view");
-    app.spatial_view = false; // Navigating away cannot hide where Undo applies.
-    assert!(app.undo_edit(false));
-    assert!(app.spatial_view);
-    let restored = photo_quad(&paint(&mut app, &ctx, 0.3, vec![]), photo);
-    assert_eq!(
-        restored, tilted,
-        "Space Undo must restore the actual photographic projection"
-    );
-    assert!(
-        app.controls.settings.auto_exposure,
-        "later camera gesture reverses before earlier pending recipe"
-    );
-    assert_eq!(app.undo_label(false), "Undo settings");
-    assert!(app.undo_edit(false));
-    assert_eq!(app.controls.exposure, Some(0.75));
-    assert!(app.undo_edit(true));
-    assert!(app.undo_edit(true));
-    assert!(app.spatial_view);
-    let redone = photo_quad(&paint(&mut app, &ctx, 0.4, vec![]), photo);
-    assert_eq!(redone, flat);
-    assert_eq!(serde_json::to_vec(&app.catalog.runs).unwrap(), evidence);
-}
-#[test]
-fn local_space_undo_and_global_view_redo_keep_both_surfaces_in_one_history() {
-    let (mut app, _, _) = fixture();
-    let ctx = egui::Context::default();
-    install_owned_photo(&mut app, &ctx);
-    paint(&mut app, &ctx, 0.0, vec![]);
-    app.process_space.inspect_frame(1);
-    paint(&mut app, &ctx, 0.1, vec![key(egui::Key::Escape, false)]);
-    assert!(app.process_space.can_undo());
-    app.spatial_view = true;
-    let out = paint(&mut app, &ctx, 0.2, vec![]);
-    click(
-        &mut app,
-        &ctx,
-        find(&out, "Photograph").unwrap().center(),
-        0.3,
-    );
-    assert!(app.process_atlas.can_undo());
-    assert_eq!(app.undo_label(false), "Undo space view");
-    assert!(
-        app.process_atlas.undo(),
-        "use the same local operation as the Space context menu"
-    );
-    paint(&mut app, &ctx, 0.4, vec![]);
-    assert_eq!(app.undo_label(false), "Undo view");
-    assert!(app.undo_edit(false));
-    assert!(
-        !app.spatial_view,
-        "undoing a 2D gesture must reveal its restored surface"
-    );
-    assert_eq!(app.process_space.inspection_frame(), Some(1));
-    assert!(app.undo_edit(true));
-    assert!(!app.spatial_view);
-    assert_eq!(app.undo_label(true), "Redo space view");
-    assert!(app.undo_edit(true));
-    assert!(
-        app.spatial_view,
-        "redoing a spatial gesture must reveal Space"
-    );
-    assert!(!app.can_undo_edit(true));
-}
 #[test]
 fn resetting_an_idle_imported_stack_never_leaves_the_primary_process_workspace() {
     let (mut app, _, _) = fixture();
@@ -436,70 +337,6 @@ fn resetting_an_idle_imported_stack_never_leaves_the_primary_process_workspace()
     );
     let out = paint(&mut app, &ctx, 0.2, vec![]);
     assert!(find(&out, "READ").is_some());
-    app.spatial_view = true;
-    let out = paint(&mut app, &ctx, 0.3, vec![]);
-    click(
-        &mut app,
-        &ctx,
-        find(&out, "Photograph").unwrap().center(),
-        0.4,
-    );
-    assert!(
-        app.process_view,
-        "Space Photograph/reset also belongs to the persistent workspace"
-    );
-    let out = paint(&mut app, &ctx, 0.5, vec![]);
-    assert!(find(&out, "PROJECTS").is_none());
-    assert!(find(&out, "Photograph").is_some());
-}
-
-#[test]
-fn spatial_object_occupies_the_window_and_escape_restores_the_same_workspace() {
-    let (mut app, _, _) = fixture();
-    let ctx = egui::Context::default();
-    install_owned_photo(&mut app, &ctx);
-    app.sidebar = Some(workspace::Sidebar::Projects);
-    let ordinary = paint(&mut app, &ctx, 0.0, vec![]);
-    assert!(find(&ordinary, "PROJECTS").is_some());
-    app.spatial_view = true;
-    let spatial = paint(&mut app, &ctx, 0.3, vec![]);
-    assert!(find(&spatial, "PROJECTS").is_none());
-    assert!(find(&spatial, "Adjust").is_none());
-    assert!(find(&spatial, "Undo space view").is_none());
-    assert!(
-        find(&spatial, "Photograph").is_some(),
-        "object itself must provide its reset action"
-    );
-    let full_window = egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(1440.0, 940.0));
-    let covers_window = |out: &egui::FullOutput| {
-        out.shapes.iter().any(|shape| {
-        matches!(&shape.shape, egui::Shape::Rect(rect) if rect.fill == BG && rect.rect == full_window)
-    })
-    };
-    assert!(
-        !covers_window(&ordinary),
-        "the surrounding workspace must be a real negative control"
-    );
-    assert!(
-        covers_window(&spatial),
-        "the actual Space canvas must occupy the complete window"
-    );
-    let restored = paint(&mut app, &ctx, 0.4, vec![key(egui::Key::Escape, false)]);
-    assert!(!app.spatial_view && app.process_view);
-    assert_eq!(app.sidebar, Some(workspace::Sidebar::Projects));
-    assert!(find(&restored, "PROJECTS").is_some());
-    app.spatial_view = true;
-    app.apply_process_response(
-        process_space::Response {
-            exit_space: true,
-            ..Default::default()
-        },
-        3,
-    );
-    assert!(
-        !app.spatial_view && app.process_view,
-        "object-local Workspace control must restore the surrounding workspace"
-    );
 }
 
 #[test]

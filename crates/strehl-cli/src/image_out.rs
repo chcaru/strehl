@@ -1392,6 +1392,18 @@ pub fn write_demosaiced(
     mosaic: &[f32],
     dev: &Develop,
 ) -> Result<()> {
+    write_demosaiced_with_master(path, width, height, mosaic, dev, None, None)
+}
+
+pub fn write_demosaiced_with_master(
+    path: &Path,
+    width: usize,
+    height: usize,
+    mosaic: &[f32],
+    dev: &Develop,
+    linear_master: Option<&Path>,
+    baked_recipe: Option<&strehl_edit::DevelopmentRecipe>,
+) -> Result<()> {
     assert_eq!(mosaic.len(), width * height);
     let m = Mosaic {
         data: mosaic,
@@ -1399,6 +1411,36 @@ pub fn write_demosaiced(
         height,
     };
     let dev = &resolve_tone(dev, || tone_from_mosaic(&m, dev));
+    if let Some(master) = linear_master {
+        let matrix = dev.matrix.context("scene-linear master requires a camera color matrix")?;
+        // This is one final merged image, never a volume of aligned source frames.
+        // The SDR row path below is untouched. Persist negative/out-of-display-gamut
+        // values and highlights above 1 before SDR tone/gamut/transfer/quantization.
+        let mut pixels = vec![0.0f32; width * height * 3];
+        pixels.par_chunks_mut(width * 3).enumerate().for_each_init(
+            || vec![0.0f32; width * 3],
+            |scratch, (y, row)| {
+                demosaic_row(&m, y, scratch);
+                for (src, dst) in scratch.chunks_exact(3).zip(row.chunks_exact_mut(3)) {
+                    dst.copy_from_slice(&matrix.develop([src[0], src[1], src[2]]));
+                }
+            },
+        );
+        let image = strehl_edit::LinearImage {
+            width: width as u32, height: height as u32, pixels,
+            origin: strehl_edit::ImageOrigin::SceneLinear,
+            baseline: dev.tone.map(|tone| strehl_edit::DisplayBaseline {
+                black: tone.black, white: tone.white, contrast: tone.contrast,
+                exposure_gain: dev.exposure_gain,
+            }),
+            baked_recipe: baked_recipe.cloned(),
+        };
+        if let Some(parent) = master.parent().filter(|p| !p.as_os_str().is_empty()) {
+            std::fs::create_dir_all(parent)?;
+        }
+        strehl_edit::save_linear_tiff(master, &image)?;
+        eprintln!("linear master   : {} ({width} x {height}, RGB32-float, BT.709/D65, pre-tone)", master.display());
+    }
     #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
     highlight_rendering::record_resolved(dev);
     #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
@@ -1542,6 +1584,38 @@ fn develop_binned(width: usize, height: usize, rgb_lin: &[f32], dev: &Develop) -
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn linear_master_is_observational_and_neutral_edit_matches_legacy_pixels() {
+        use strehl_edit::{DevelopmentRecipe, load_tiff};
+        let dir=std::env::temp_dir().join(format!("strehl-linear-master-{}",std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let off=dir.join("off.tiff");
+        let on=dir.join("on.tiff");
+        let master=dir.join("master.tiff");
+        let w=32;let h=24;
+        let mosaic:Vec<f32>=(0..w*h).map(|i|0.01+(i%w) as f32*0.08).collect();
+        let dev=Develop {
+            matrix:Some(color::camera_to_srgb(A7C2).unwrap()),
+            srgb:true,wants_tone:true,
+            tone:None,exposure_gain:1.0,
+        };
+        write_demosaiced(&off,w,h,&mosaic,&dev).unwrap();
+        write_demosaiced_with_master(&on,w,h,&mosaic,&dev,Some(&master),None).unwrap();
+        assert_eq!(std::fs::read(&off).unwrap(),std::fs::read(&on).unwrap(),
+            "optional master export changed the SDR artifact");
+        let image=load_tiff(&master).unwrap();
+        assert!(image.pixels.iter().any(|&v|v>1.0),"fixture never exercised pre-tone headroom");
+        assert!(image.baseline.is_some());
+        let mut decoder=tiff::decoder::Decoder::new(std::io::BufReader::new(File::open(&on).unwrap())).unwrap();
+        let tiff::decoder::DecodingResult::U16(expected)=decoder.read_image().unwrap() else {panic!("wrong sample type")};
+        assert_eq!(image.render_sdr16(&DevelopmentRecipe::default()).unwrap(),expected,
+            "opening the master with neutral settings changes the baseline photograph");
+        let _=std::fs::remove_file(off);
+        let _=std::fs::remove_file(on);
+        let _=std::fs::remove_file(master);
+        let _=std::fs::remove_dir(dir);
+    }
 
     /// The A7C II's characterisation, MEASURED through `rawpy`/LibRaw in
     /// `docs/research/M26-colour-clipping-measured.md` §1 and reproduced

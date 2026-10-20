@@ -3,6 +3,7 @@ resolver = "3"
 # Optional experiment dependency keeps its own workspace; ordinary builds do not adopt it.
 exclude = ["experiments/native-gpu-gather"]
 members = [
+    "crates/strehl-edit",
     "crates/strehl-core",
     "crates/strehl-raw",
     "crates/strehl-plugin",
@@ -19,6 +20,7 @@ repository = "https://github.com/chcaru/strehl"
 authors = ["Chris Caruso"]
 
 [workspace.dependencies]
+strehl-edit = { path = "crates/strehl-edit" }
 strehl-core = { path = "crates/strehl-core" }
 strehl-raw = { path = "crates/strehl-raw" }
 strehl-plugin = { path = "crates/strehl-plugin" }
@@ -40,6 +42,7 @@ tiff = "0.11"
 opt-level = 3
 lto = "thin"
 codegen-units = 1
+strip = "symbols"
 
 [profile.bench]
 inherits = "release"

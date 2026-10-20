@@ -126,7 +126,7 @@ fn local_stack_command_freezes_request_and_second_click_cannot_stop_or_duplicate
     assert_eq!(pending.frames, 2);
     assert_eq!(pending.settings, recipe);
     assert_eq!(pending.exposure, Some(0.75));
-    assert!(app.process_view && !app.spatial_view && app.job.is_some());
+    assert!(app.process_view && app.job.is_some());
     let pending_ui = paint(&mut app, &ctx, 0.15, vec![]);
     text(&pending_ui, "STARTING");
     text(&pending_ui, "Starting…");

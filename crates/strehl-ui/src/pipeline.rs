@@ -26,6 +26,18 @@ const MAX_ALIGNMENT_OBSERVATIONS: usize = 512;
 const MAX_ALIGNMENT_EDGE_OBSERVATIONS: usize = 65_536;
 pub(crate) const LOG_GAP: &str = "\nLive output skipped ahead; the complete log is saved.\n";
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) struct SourceRepairProgress {
+    pub region: usize,
+    pub regions: usize,
+    pub first: usize,
+    pub last: usize,
+    pub current: usize,
+    pub completed: usize,
+    pub accepted: usize,
+    pub finished: bool,
+}
+
 #[cfg(test)]
 #[path = "pipeline-history-tests.rs"]
 mod history_tests;
@@ -183,6 +195,7 @@ pub struct PipelineProgress {
     pub render_step: Option<RenderStep>,
     pub render_step_state: Option<WorkState>,
     pub confidence: Option<ConfidenceProgress>,
+    pub(crate) source_repair: Option<SourceRepairProgress>,
     pub frames_total: Option<usize>,
     pub folded: Option<(usize, usize)>,
     pub frames_processed: Option<usize>,
@@ -556,6 +569,72 @@ impl PipelineProgress {
                 (key == name).then_some(value)
             })
         };
+        if field("event") == Some("source-repair") {
+            let number = |name| field(name).and_then(|value| value.parse::<usize>().ok());
+            let (
+                Some(region),
+                Some(regions),
+                Some(first),
+                Some(last),
+                Some(current),
+                Some(completed),
+                Some(accepted),
+                Some(total),
+            ) = (
+                number("region"),
+                number("regions"),
+                number("first"),
+                number("last"),
+                number("index"),
+                number("completed"),
+                number("accepted"),
+                number("total"),
+            )
+            else {
+                return;
+            };
+            let state = field("state");
+            if regions == 0
+                || regions > 128
+                || region >= regions
+                || first > last
+                || last >= MAX_FRAME_OBSERVATIONS
+                || current < first
+                || current > last
+                || total != last - first + 1
+                || completed > total
+                || accepted > completed
+                || !matches!(state, Some("started" | "folded" | "finished"))
+                || state == Some("finished") && completed != total
+                || self.stage > Stage::Rendering
+            {
+                return;
+            }
+            if let Some(previous) = self.source_repair
+                && (region < previous.region
+                    || region == previous.region
+                        && (completed < previous.completed
+                            || previous.finished && state != Some("finished")))
+            {
+                return;
+            }
+            self.source_repair = Some(SourceRepairProgress {
+                region,
+                regions,
+                first,
+                last,
+                current,
+                completed,
+                accepted,
+                finished: state == Some("finished"),
+            });
+            self.advance(Stage::Rendering);
+            self.record(format!(
+                "Region {} / {regions} · {completed}/{total} captures rebuilt · {accepted} placed",
+                region + 1
+            ));
+            return;
+        }
         if field("event").is_some_and(|event| event.starts_with("align-")) {
             self.alignment_event(fields);
             return;
@@ -1061,6 +1140,40 @@ impl Utf8LogDecoder {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn regional_repair_progress_is_actual_work_and_never_rewinds_global_counts() {
+        let mut progress = PipelineProgress {
+            frames_total: Some(197),
+            frames_processed: Some(197),
+            stage: Stage::Merge,
+            ..Default::default()
+        };
+        progress.ingest("STREHL_UI_PROGRESS event=source-repair region=0 regions=2 first=40 last=49 index=40 completed=0 accepted=0 total=10 state=started\n");
+        assert_eq!(progress.stage, Stage::Rendering);
+        assert_eq!(progress.frames_total, Some(197));
+        assert_eq!(progress.frames_processed, Some(197));
+        progress.ingest("STREHL_UI_PROGRESS event=source-repair region=0 regions=2 first=40 last=49 index=45 completed=6 accepted=4 total=10 state=folded\n");
+        let observed = progress.source_repair.unwrap();
+        assert_eq!(observed.completed, 6);
+        assert_eq!(observed.accepted, 4);
+        for invalid in [
+            "region=0 regions=2 first=40 last=49 index=41 completed=2 accepted=2 total=10 state=folded",
+            "region=0 regions=2 first=40 last=49 index=45 completed=6 accepted=7 total=10 state=folded",
+            "region=0 regions=2 first=40 last=49 index=45 completed=6 accepted=4 total=10 state=finished",
+            "region=0 regions=2 first=40 last=49 index=45 completed=6 accepted=4 total=197 state=folded",
+        ] {
+            progress.ingest(&format!(
+                "STREHL_UI_PROGRESS event=source-repair {invalid}\n"
+            ));
+            assert_eq!(progress.source_repair, Some(observed));
+        }
+        progress.ingest("STREHL_UI_PROGRESS event=source-repair region=0 regions=2 first=40 last=49 index=49 completed=10 accepted=8 total=10 state=finished\n");
+        assert!(progress.source_repair.unwrap().finished);
+        progress.ingest("STREHL_UI_PROGRESS event=source-repair region=1 regions=2 first=80 last=80 index=80 completed=0 accepted=0 total=1 state=started\n");
+        assert_eq!(progress.source_repair.unwrap().region, 1);
+        assert!(!progress.source_repair.unwrap().finished);
+    }
 
     // Retained output: outputs/strehl-1792271060583-37452-0/render.log.
     const LOG: &str = "align: track prior on, lambda=1 huber=Some(1.0) px\n\

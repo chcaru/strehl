@@ -125,6 +125,7 @@ impl SampleGeometry {
 
     /// Strict spatial hit: unsampled coefficient cells remain unknown. A
     /// point anywhere inside a giant telemetry bin does not count as observed.
+    #[cfg(test)]
     pub(crate) fn observed_index_at(self, pin: Pos2) -> Option<usize> {
         let index = self.nearest_index_at(pin)?;
         self.at(index)?.cell.contains(pin).then_some(index)

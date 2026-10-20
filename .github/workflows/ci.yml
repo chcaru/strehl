@@ -82,12 +82,16 @@ jobs:
       - name: Check desktop formatting and lints
         if: runner.os == 'Linux'
         run: |
-          cargo fmt -p strehl-ui -- --check
-          cargo clippy --locked -p strehl-ui --all-targets --target "$TARGET" --no-deps -- -D warnings
+          cargo fmt -p strehl-ui -p strehl-edit -- --check
+          cargo clippy --locked -p strehl-ui -p strehl-edit --all-targets --target "$TARGET" --no-deps -- -D warnings
       - name: Run self-contained desktop tests
         # Corpus-dependent benchmarks remain ignored; CLI integration tests need private RAWs.
         # Each fixture may start decoder workers; bound simultaneous fixture pools.
-        run: cargo test --locked -p strehl-ui --target "$TARGET" -- --test-threads=2
+        run: cargo test --locked -p strehl-ui -p strehl-edit --target "$TARGET" -- --test-threads=2
+      - name: Check reconstruction and regional repair invariants
+        run: |
+          cargo test --locked -p strehl-core --lib collapse_tests --target "$TARGET" -- --test-threads=2
+          cargo test --locked -p strehl-cli --lib source_repair --target "$TARGET" -- --test-threads=2
       - name: Build the native desktop
         run: cargo build --locked -p strehl-ui --target "$TARGET"
       - name: Exercise the embedded engine without opening a window

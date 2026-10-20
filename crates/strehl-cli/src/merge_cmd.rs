@@ -72,6 +72,8 @@ use crate::image_out;
 pub(crate) mod dump;
 pub(crate) mod gatefloor;
 pub(crate) mod halo;
+#[path = "merge_cmd/region-repair.rs"]
+mod region_repair;
 #[cfg(feature = "native-boundary-radiance")]
 pub(crate) mod native_boundary_radiance {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-boundary-radiance/implementation.rs"));
@@ -107,6 +109,8 @@ use crate::stack::{
 pub struct MergeOptions {
     pub dir: PathBuf,
     pub out: Option<PathBuf>,
+    pub linear_master: Option<PathBuf>,
+    pub region_recipe: Option<PathBuf>,
     pub limit: Option<usize>,
     /// Apply the sRGB transfer curve **and** the camera's colour matrix.
     /// For looking at, NOT for measuring.
@@ -2989,6 +2993,16 @@ pub fn preflight_soft_kernel() -> Result<()> {
 /// lines of compiled, tested, unreachable code and `blend-render` -- an example
 /// binary that ships nothing -- was the only way to run it.
 pub fn run(opts: &MergeOptions) -> Result<()> {
+    if let Some(path) = &opts.region_recipe {
+        ensure!(opts.backend == MergeBackend::Pyramid, "source-region repairs require --merge pyramid");
+        ensure!(opts.out.is_some(), "source-region repairs require an --out photograph");
+        region_repair::Repairs::load(Some(path))?;
+    }
+    if let Some(master) = &opts.linear_master {
+        ensure!(opts.srgb && opts.demosaic, "a linear master requires --srgb and full-resolution output");
+        ensure!(opts.out.as_ref().is_some_and(|out| out != master), "a linear master needs a distinct --out TIFF");
+        ensure!(!master.exists(), "linear master already exists; choose a new path");
+    }
     #[cfg(feature = "native-direct-planes")]
     if align_cmd::local_placement::enabled()? {
         ensure!(opts.backend == MergeBackend::Pyramid, "local placement requires the pyramid consumer");
@@ -4566,7 +4580,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
             }
             _ => None,
         };
-        write_merged(
+        write_merged_observed(
             Merged::Estimated {
                 est: &p2.est[0],
                 halo: halo_fix.as_ref(),
@@ -4579,6 +4593,9 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
             exposure,
             restore,
             path,
+            None,
+            opts.linear_master.as_deref(),
+            None,
         )?;
     }
     Ok(())
@@ -6480,6 +6497,13 @@ fn run_pyramid_prepared(
     let cfg = opts.pyramid;
     let progress = crate::ui_progress::Progress::new(paths.len());
     let analysis_geom = domain.analysis();
+    let repairs = region_repair::Repairs::load(opts.region_recipe.as_deref())?;
+    repairs.preflight(
+        paths.len(),
+        domain,
+        alignment.as_ref().map(|(map, _, _)| map),
+        alignment.as_ref().map(|(_, _, fit)| *fit),
+    )?;
     let defect_tally = crate::stack::DefectTally::default();
     let defect = defect_plan
         .as_ref()
@@ -6817,9 +6841,7 @@ fn run_pyramid_prepared(
     let t_out = Instant::now();
     let mut ws = Workspace::new(&sizes);
     progress.render_step("reconstruct", "started");
-    let planes = merge.finish(&mut ws);
-    #[cfg(feature = "native-boundary-radiance")]
-    let mut planes = planes;
+    let mut planes = merge.finish(&mut ws);
     drop(ws);
     drop(merge);
     ensure!(
@@ -6832,6 +6854,26 @@ fn run_pyramid_prepared(
     observed_source.finish(&mut planes)?;
     #[cfg(all(test, feature = "native-direct-planes"))]
     source.observe_direct_collapsed(&planes)?;
+    if repairs.active() {
+        progress.render_step("region-repair", "started");
+        pool.install(|| {
+            repairs.apply(
+                &mut planes,
+                region_repair::RepairContext {
+                    source,
+                    domain,
+                    config: cfg,
+                    levels,
+                    noise: &noise,
+                    warps,
+                    defect,
+                    per_chunk,
+                    progress: progress.observer(),
+                },
+            )
+        })?;
+        progress.render_step("region-repair", "finished");
+    }
     progress.reconstruction(&planes, sizes[0], paths.len() - 1, folded_total);
     progress.render_step("reconstruct", "finished");
 
@@ -6930,6 +6972,8 @@ fn run_pyramid_prepared(
         restore,
         path,
         progress.observer(),
+        opts.linear_master.as_deref(),
+        repairs.applied_recipe(),
     )?;
     eprintln!("collapse+write  : {:.1} s", t_out.elapsed().as_secs_f64());
     eprintln!("total           : {:.1} s", t_start.elapsed().as_secs_f64());
@@ -8063,6 +8107,7 @@ const TOP_K_LAST: usize = strehl_core::through_focus::TOP_K - 1;
 /// reproducible from the command line alone.
 const PLACEBO_SEED: u64 = 0x4D31_385E;
 
+#[cfg(test)]
 #[allow(clippy::too_many_arguments)]
 fn write_merged(
     merged: Merged<'_>,
@@ -8072,15 +8117,12 @@ fn write_merged(
     space: image_out::OutputSpace,
     demosaic: bool,
     exposure: Exposure,
-    // `Some` only when the restoration flag is set AND alignment actually ran:
-    // with no gather there is no resampling loss, so there is nothing to undo.
-    // `None` leaves every arithmetic expression below textually and
-    // numerically identical to what it was before this was wired.
     restore: Option<strehl_core::restore::RestorePlan<'_>>,
     path: &Path,
 ) -> Result<()> {
     write_merged_observed(
-        merged, levels, wb, xyz_to_cam, space, demosaic, exposure, restore, path, None,
+        merged, levels, wb, xyz_to_cam, space, demosaic, exposure, restore, path,
+        None, None, None,
     )
 }
 
@@ -8096,6 +8138,8 @@ fn write_merged_observed(
     restore: Option<strehl_core::restore::RestorePlan<'_>>,
     path: &Path,
     progress: Option<&crate::ui_progress::Progress>,
+    linear_master: Option<&Path>,
+    baked_recipe: Option<&strehl_edit::DevelopmentRecipe>,
 ) -> Result<()> {
     if let Some(progress) = progress {
         progress.render_step("develop", "started");
@@ -8455,7 +8499,9 @@ fn write_merged_observed(
             progress.render_step("develop", "finished");
             progress.render_step("write", "started");
         }
-        image_out::write_demosaiced(path, mw, mh, &mosaic, &dev)?;
+        image_out::write_demosaiced_with_master(
+            path, mw, mh, &mosaic, &dev, linear_master, baked_recipe,
+        )?;
         if let Some(progress) = progress {
             progress.render_step("write", "finished");
         }

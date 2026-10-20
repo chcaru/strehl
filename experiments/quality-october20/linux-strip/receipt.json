@@ -1,0 +1,197 @@
+{
+  "input_appimage_sha256": "b61fa8df1c2646daeaf4900e5763df3973a773441e89e1feec33e70abdd88647",
+  "before_bytes": 31717040,
+  "after_bytes": 26267488,
+  "before_sha256": "8c4de0f29417cc372d4046cbe565ecd2843bbedbde447300175e7d3107f7cf6a",
+  "after_sha256": "54f04d017dfbcb43b5cf48a7821005c0dfbefaaededaa0bb2142eb0c1deb7298",
+  "allocated_sections_equal": true,
+  "allocated_sections": {
+    ".interp": {
+      "address": 736,
+      "size": 28,
+      "flags": 2,
+      "sha256": "9097c98ea70f6f3b01d50145eb72bf55ad1f4e9713bccf27bd6405d6254eed00"
+    },
+    ".note.ABI-tag": {
+      "address": 764,
+      "size": 32,
+      "flags": 2,
+      "sha256": "6e48317ad93a8ac2dc04321465ede06d1274543fc8ab172e68171a9d684bb313"
+    },
+    ".note.gnu.build-id": {
+      "address": 796,
+      "size": 36,
+      "flags": 2,
+      "sha256": "6ac49a9902446a162b57a33b35fdc74df57c8fef2fdd33f8a86189b65bf4a50e"
+    },
+    ".dynsym": {
+      "address": 832,
+      "size": 4800,
+      "flags": 2,
+      "sha256": "b9246159b8a1a02ade65f7b362449e790b2a5462e8f2834ff44a7d8187abe8f4"
+    },
+    ".gnu.version": {
+      "address": 5632,
+      "size": 400,
+      "flags": 2,
+      "sha256": "7685f985e63cfcb5b22fcde4f1cba3b4ad95efbc515a9e08b64a4502e1e686d0"
+    },
+    ".gnu.version_r": {
+      "address": 6032,
+      "size": 464,
+      "flags": 2,
+      "sha256": "455b70bfd4a4c28addc7eae3c72847ab7e2d447420eeadb673e1754c6ae43008"
+    },
+    ".gnu.hash": {
+      "address": 6496,
+      "size": 28,
+      "flags": 2,
+      "sha256": "89fc7752f1865b59328f96a95d470a17194dfe083d80f746bdb25b02efde9dd1"
+    },
+    ".dynstr": {
+      "address": 6524,
+      "size": 2472,
+      "flags": 2,
+      "sha256": "6aa5bf4c6ba8dba83995b37abc44744f7d61f3254311a9c273cf0cfb94cdcd80"
+    },
+    ".rela.dyn": {
+      "address": 9000,
+      "size": 787416,
+      "flags": 2,
+      "sha256": "fbe81d3bffd8769915f5c973212902809d2cdb6839aae53a7ff050e1ae6ff2ef"
+    },
+    ".rela.plt": {
+      "address": 796416,
+      "size": 48,
+      "flags": 66,
+      "sha256": "cf35bb12d214a05d203bf6926d3e74a0db35c87aadff5e5abe411b296cd4e0dd"
+    },
+    ".rodata": {
+      "address": 796544,
+      "size": 3643100,
+      "flags": 50,
+      "sha256": "2741de17ac815978a21dbdad3a707ed8ba1ec38d216ff957a93bb1d6e5ffd47a"
+    },
+    ".gcc_except_table": {
+      "address": 4439644,
+      "size": 670628,
+      "flags": 2,
+      "sha256": "b1e204f0ae60fd9e964c928ecb3d1720ed2f4ceddec794f83be21a2755fd7d94"
+    },
+    ".eh_frame_hdr": {
+      "address": 5110272,
+      "size": 190420,
+      "flags": 2,
+      "sha256": "ffa27bb5c070d775b06fd90717a5f9cb5c203f394947a72c38c825ab7953fed3"
+    },
+    ".eh_frame": {
+      "address": 5300696,
+      "size": 1477116,
+      "flags": 2,
+      "sha256": "0fe358845396a171985c1eea2a20cecebaa19f2fdecde23b8a317814f974e9ae"
+    },
+    ".text": {
+      "address": 6781920,
+      "size": 18899329,
+      "flags": 6,
+      "sha256": "4671f8aa208a73da1fc08b92f7ef54665019ce2ba8eb00a998d19753fd131fb8"
+    },
+    ".init": {
+      "address": 25681252,
+      "size": 27,
+      "flags": 6,
+      "sha256": "7cfe27ba7518e8d6122ac38c8fbf4f6959c4570e2fd6197162a69eac6e9ec84c"
+    },
+    ".fini": {
+      "address": 25681280,
+      "size": 13,
+      "flags": 6,
+      "sha256": "6a4f3e5efc7c1f7ee7d6f21afd9ed040ba1d7f0b97bb12b016f5b176cc558bd8"
+    },
+    ".plt": {
+      "address": 25681296,
+      "size": 48,
+      "flags": 6,
+      "sha256": "97fb93b1b5dbaebd704a24a70469ae06b1e0212749cd714e68a3a8eade0204eb"
+    },
+    ".tdata": {
+      "address": 25685440,
+      "size": 2256,
+      "flags": 1027,
+      "sha256": "22ab1c1bc3b40a870b68bdc8fa832c13f562ee1d76da7f3ebde58b7d2b0878e9"
+    },
+    ".tbss": {
+      "address": 25687696,
+      "size": 432,
+      "flags": 1027,
+      "sha256": null
+    },
+    ".fini_array": {
+      "address": 25687696,
+      "size": 8,
+      "flags": 3,
+      "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+    },
+    ".init_array": {
+      "address": 25687704,
+      "size": 16,
+      "flags": 2097155,
+      "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    ".data.rel.ro": {
+      "address": 25687720,
+      "size": 532240,
+      "flags": 3,
+      "sha256": "66ced0fa65ef82cd6de393245408d8e3e69b251e2e7026c4dc2310243b613959"
+    },
+    ".dynamic": {
+      "address": 26219960,
+      "size": 480,
+      "flags": 3,
+      "sha256": "51b88b49f1599cc9046fcf8000e7c8bda6f249408a66f901da0e63fb5312ab95"
+    },
+    ".got": {
+      "address": 26220440,
+      "size": 35072,
+      "flags": 3,
+      "sha256": "797761da2cf563411ac599198068bae30f763e3baf52e3269dc1a5ade014cdcf"
+    },
+    ".got.plt": {
+      "address": 26255512,
+      "size": 40,
+      "flags": 3,
+      "sha256": "440066dd06c26113d96f5eb7a4a952f552015799e14e4234260f4eefe396692b"
+    },
+    ".relro_padding": {
+      "address": 26255552,
+      "size": 3904,
+      "flags": 3,
+      "sha256": null
+    },
+    ".tm_clone_table": {
+      "address": 26259648,
+      "size": 0,
+      "flags": 3,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".data": {
+      "address": 26259712,
+      "size": 17448,
+      "flags": 3,
+      "sha256": "d604e841399e5750716f2eae0a6bbae1c1237fc069bbd5fbd13f7f85b9f41d3b"
+    },
+    ".bss": {
+      "address": 26277160,
+      "size": 7672,
+      "flags": 3,
+      "sha256": null
+    }
+  },
+  "strip_version": "GNU strip (GNU Binutils for Ubuntu) 2.42",
+  "version_before_after": [
+    "strehl 0.1.0-alpha.5 (5cfc0bfc191e)",
+    "strehl 0.1.0-alpha.5 (5cfc0bfc191e)"
+  ],
+  "help_byte_equal": true,
+  "limitation": "Exact existing Linux binary comparison, worker startup only. Not a rebuilt Cargo profile pair, GUI test, or compressed AppImage reduction."
+}

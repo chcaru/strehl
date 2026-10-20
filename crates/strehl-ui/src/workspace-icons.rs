@@ -11,7 +11,8 @@ pub(crate) enum Icon {
     Adjust,
     Review,
     Activity,
-    Space,
+    Edit,
+    Agent,
     Layout,
     Add,
     Check,
@@ -90,17 +91,22 @@ pub(crate) fn paint(painter: &Painter, center: Pos2, size: f32, icon: Icon, colo
                 line(&[[-2.0, y], [end, y]]);
             }
         }
-        Icon::Space => {
+        Icon::Edit => {
+            line(&[[-8.0, -7.0], [-8.0, 7.0], [6.0, 7.0]]);
             closed(&[
-                [0.0, -9.0],
-                [8.0, -4.0],
-                [8.0, 5.0],
-                [0.0, 10.0],
-                [-8.0, 5.0],
-                [-8.0, -4.0],
+                [-3.0, 3.0],
+                [-2.0, -1.0],
+                [5.0, -8.0],
+                [8.0, -5.0],
+                [1.0, 2.0],
             ]);
-            line(&[[-8.0, -4.0], [0.0, 1.0], [8.0, -4.0]]);
-            line(&[[0.0, 1.0], [0.0, 10.0]]);
+            line(&[[3.0, -6.0], [6.0, -3.0]]);
+        }
+        Icon::Agent => {
+            painter.circle_stroke(point(-5.0, -4.0), 3.0 * scale, stroke);
+            painter.circle_stroke(point(5.0, 4.0), 3.0 * scale, stroke);
+            line(&[[-2.0, -4.0], [5.0, -4.0], [5.0, 1.0]]);
+            line(&[[2.0, 4.0], [-5.0, 4.0], [-5.0, -1.0]]);
         }
         Icon::Layout => {
             closed(&[[-8.0, -7.0], [8.0, -7.0], [8.0, 7.0], [-8.0, 7.0]]);

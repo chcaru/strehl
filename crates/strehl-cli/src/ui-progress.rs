@@ -62,6 +62,36 @@ impl Progress {
         self.enabled.then_some(self)
     }
 
+    /// Actual source-constrained reconstruction, separate from the original
+    /// global admission diagnostics. No image data returns to the worker.
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn source_repair(
+        &self,
+        region: usize,
+        regions: usize,
+        first: usize,
+        last: usize,
+        index: usize,
+        completed: usize,
+        accepted: usize,
+        state: &str,
+    ) {
+        if self.enabled {
+            self.emit(format!(
+                "event=source-repair region={region} regions={regions} first={first} last={last} \
+                 index={index} completed={completed} accepted={accepted} total={} state={state}",
+                last - first + 1,
+            ));
+        }
+    }
+
+    #[cfg(test)]
+    pub(crate) fn captured_enabled(enabled: bool) -> (Self, std::sync::Arc<Mutex<Vec<String>>>) {
+        let (mut p, lines) = Self::captured(0);
+        p.enabled = enabled;
+        (p, lines)
+    }
+
     fn emit(&self, fields: String) {
         #[cfg(test)]
         if let Some(lines) = &self.capture {

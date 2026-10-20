@@ -4,7 +4,7 @@ use super::*;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Domain {
     View,
-    Space,
+    Development,
     Projects,
     Recipe,
 }
@@ -12,7 +12,7 @@ impl Domain {
     fn label(self) -> &'static str {
         match self {
             Self::View => "view",
-            Self::Space => "space view",
+            Self::Development => "photo edits",
             Self::Projects => "project edit",
             Self::Recipe => "settings",
         }
@@ -51,13 +51,13 @@ pub(super) struct WorkspaceEdits {
     recipe_redo: Vec<Recipe>,
     recipe_pending: Option<(Recipe, f64)>,
     view_revision: u64,
-    space_revision: u64,
+    development_revision: u64,
     project_revision: u64,
     view_depths: (usize, usize),
-    space_depths: (usize, usize),
+    development_depths: (usize, usize),
     project_depths: (usize, usize),
     view_commits: u64,
-    space_commits: u64,
+    development_commits: u64,
     project_commits: u64,
 }
 impl WorkspaceEdits {
@@ -84,9 +84,9 @@ impl WorkspaceEdits {
         self.view_revision = 0;
         self.view_depths = (0, 0);
         self.view_commits = 0;
-        self.space_revision = 0;
-        self.space_depths = (0, 0);
-        self.space_commits = 0;
+        self.development_revision = 0;
+        self.development_depths = (0, 0);
+        self.development_commits = 0;
     }
     fn synchronize(
         &mut self,
@@ -128,7 +128,7 @@ impl WorkspaceEdits {
 }
 
 impl StrehlApp {
-    fn commit_recipe_edit(&mut self) {
+    pub(super) fn commit_recipe_edit(&mut self) {
         if let Some((before, _)) = self.edits.recipe_pending.take()
             && before != Recipe::capture(&self.controls)
         {
@@ -156,20 +156,20 @@ impl StrehlApp {
             self.edits.view_depths = depths;
             self.edits.view_commits = commits;
         }
-        let space = self.process_atlas.history_revision();
-        if space != self.edits.space_revision {
+        let space = self.editor.history_revision();
+        if space != self.edits.development_revision {
             self.commit_recipe_edit();
-            let depths = self.process_atlas.history_depths();
-            let commits = self.process_atlas.history_commits();
+            let depths = self.editor.history_depths();
+            let commits = self.editor.history_commits();
             self.edits.synchronize(
-                Domain::Space,
-                self.edits.space_depths,
+                Domain::Development,
+                self.edits.development_depths,
                 depths,
-                commits.saturating_sub(self.edits.space_commits),
+                commits.saturating_sub(self.edits.development_commits),
             );
-            self.edits.space_revision = space;
-            self.edits.space_depths = depths;
-            self.edits.space_commits = commits;
+            self.edits.development_revision = space;
+            self.edits.development_depths = depths;
+            self.edits.development_commits = commits;
         }
         let projects = self.project_explorer.history_revision();
         if projects != self.edits.project_revision {
@@ -203,11 +203,11 @@ impl StrehlApp {
                     self.process_space.can_undo()
                 }
             }
-            Domain::Space => {
+            Domain::Development => {
                 if redo {
-                    self.process_atlas.can_redo()
+                    self.editor.can_redo()
                 } else {
-                    self.process_atlas.can_undo()
+                    self.editor.can_undo()
                 }
             }
             Domain::Projects => {
@@ -273,11 +273,11 @@ impl StrehlApp {
                     self.process_space.undo()
                 }
             }
-            Domain::Space => {
+            Domain::Development => {
                 if redo {
-                    self.process_atlas.redo()
+                    self.editor.redo()
                 } else {
-                    self.process_atlas.undo()
+                    self.editor.undo()
                 }
             }
             Domain::Projects => {
@@ -310,8 +310,8 @@ impl StrehlApp {
         };
         if changed {
             match domain {
-                Domain::View => self.spatial_view = false,
-                Domain::Space => self.spatial_view = true,
+                Domain::View => {}
+                Domain::Development => self.sidebar = Some(workspace::Sidebar::Edit),
                 Domain::Projects | Domain::Recipe => {}
             }
             if redo {
@@ -322,9 +322,9 @@ impl StrehlApp {
                 self.edits.redo.push(domain);
             }
             self.edits.view_revision = self.process_space.history_revision();
-            self.edits.space_revision = self.process_atlas.history_revision();
-            self.edits.space_depths = self.process_atlas.history_depths();
-            self.edits.space_commits = self.process_atlas.history_commits();
+            self.edits.development_revision = self.editor.history_revision();
+            self.edits.development_depths = self.editor.history_depths();
+            self.edits.development_commits = self.editor.history_commits();
             self.edits.project_revision = self.project_explorer.history_revision();
             self.edits.view_depths = self.process_space.history_depths();
             self.edits.project_depths = self.project_explorer.history_depths();
@@ -349,14 +349,6 @@ impl StrehlApp {
             && ctx.input_mut(|i| i.consume_key(egui::Modifiers::NONE, egui::Key::Escape))
         {
             egui::Popup::close_all(ctx);
-            return;
-        }
-        if self.spatial_view
-            && !self.picker_active()
-            && ctx.input_mut(|i| i.consume_key(egui::Modifiers::NONE, egui::Key::Escape))
-        {
-            self.spatial_view = false;
-            self.process_view = true;
             return;
         }
         // wants_keyboard_input also includes focused tree rows, checkboxes and

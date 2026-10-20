@@ -176,6 +176,84 @@ fn retained_mesh_rebuilds_for_crop_density_and_new_evidence() {
 }
 
 #[test]
+fn repaired_photo_keeps_current_confidence_and_navigation_without_old_admission() {
+    let directory = crate::jobs::tests::TestDirectory::new("repaired-photo-confidence");
+    let result = directory.path().join("result.tiff");
+    image::ImageBuffer::<image::Luma<u16>, Vec<u16>>::from_raw(
+        4,
+        3,
+        vec![0, 250, 500, 1000, 0, 250, 500, 1000, 0, 250, 500, 1000],
+    )
+    .unwrap()
+    .save_with_format(
+        result.with_file_name("confidence.tiff"),
+        image::ImageFormat::Tiff,
+    )
+    .unwrap();
+    let ctx = egui::Context::default();
+    let texture = ctx.load_texture(
+        "repaired-photograph",
+        egui::ColorImage::filled([4, 3], Color32::GRAY),
+        egui::TextureOptions::LINEAR,
+    );
+    let archive = archive();
+    let mut field = ResultPhoto::default();
+    let initial = draw(&ctx, &mut field, &archive, &texture, 0, full(), Pos2::ZERO);
+    assert!(
+        !overlay_marker_centers(&initial).is_empty(),
+        "positive control: this archive paints admission marks"
+    );
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(3);
+    while !field.balance.ready() {
+        field.update_balance(&ctx, Some(&result), Some([4, 3]));
+        assert!(std::time::Instant::now() < deadline);
+        std::thread::sleep(std::time::Duration::from_millis(2));
+    }
+    field.balance.set_enabled(true);
+    field.suppress_diagnostics(true);
+    let crop = Rect::from_min_max(egui::pos2(0.1, 0.1), egui::pos2(0.5, 0.5));
+    let repaired = draw(&ctx, &mut field, &archive, &texture, 0, crop, Pos2::ZERO);
+    assert!(overlay_marker_centers(&repaired).is_empty());
+    assert!(
+        field.probe_overview.is_some(),
+        "repair must not hide the zoom navigator"
+    );
+    assert!(
+        field.probe_region.is_none(),
+        "old admission cannot become a repaired ownership probe"
+    );
+    let confidence_meshes: Vec<_> = repaired
+        .shapes
+        .iter()
+        .filter_map(|shape| {
+            let egui::Shape::Mesh(mesh) = &shape.shape else {
+                return None;
+            };
+            (mesh.texture_id != texture.id() && mesh.texture_id != egui::TextureId::default())
+                .then_some(mesh)
+        })
+        .collect();
+    assert_eq!(
+        confidence_meshes.len(),
+        1,
+        "post-repair confidence must still paint"
+    );
+    assert_eq!(field.balance.reading_at(egui::pos2(0.1, 0.5)), Some(0));
+    assert_eq!(field.balance.reading_at(egui::pos2(0.9, 0.5)), Some(1000));
+
+    // A same-size replacement photograph must clear old evidence before its
+    // first paint, even though the next asynchronous update occurs afterward.
+    field.invalidate_balance();
+    assert!(!field.balance.ready());
+    assert_eq!(field.balance.reading_at(egui::pos2(0.9, 0.5)), None);
+    let replaced = draw(&ctx, &mut field, &archive, &texture, 0, crop, Pos2::ZERO);
+    assert!(!replaced.shapes.iter().any(|shape| {
+        matches!(&shape.shape, egui::Shape::Mesh(mesh)
+            if mesh.texture_id != texture.id() && mesh.texture_id != egui::TextureId::default())
+    }));
+}
+
+#[test]
 #[ignore = "explicit CPU draw-preparation comparison; excludes GPU presentation"]
 fn benchmark_retained_overlay_against_individual_sample_shapes() {
     let ctx = egui::Context::default();

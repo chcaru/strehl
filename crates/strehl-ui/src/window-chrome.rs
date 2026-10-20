@@ -240,7 +240,8 @@ pub(crate) fn finish(ctx: &egui::Context, modal: bool) {
     ctx.move_to_top(layer);
 }
 
-/// Exploration shares the same native affordances as the ordinary workspace.
+/// Legacy test permutations share the ordinary workspace's native affordances.
+#[cfg(test)]
 pub(crate) fn finish_spatial(ctx: &egui::Context, modal: bool) {
     finish(ctx, modal);
 }

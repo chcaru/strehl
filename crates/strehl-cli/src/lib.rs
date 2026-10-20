@@ -3,6 +3,7 @@
 mod align_cmd;
 mod focus_plugin;
 mod image_out;
+mod develop_cmd;
 mod merge_cmd;
 mod stack;
 #[path = "ui-progress.rs"]
@@ -89,6 +90,11 @@ enum FocusAction {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Re-develop a saved scene-linear master without restacking.
+    Develop(develop_cmd::DevelopArgs),
+
+    /// Import supported XMP numeric controls into a portable development recipe.
+    ImportPreset(develop_cmd::ImportPresetArgs),
     /// Solve a bracket's inter-frame geometry and write a warp sidecar.
     ///
     /// Focus breathing changes magnification frame to frame, so a deep bracket
@@ -247,6 +253,13 @@ enum Command {
         // reader would meet the false sentence again.
         #[arg(short, long)]
         out: Option<PathBuf>,
+        /// Also preserve an unclipped RGB32-float BT.709 master for editing/HDR.
+        /// Requires --srgb and full-resolution output; does not change the SDR TIFF.
+        #[arg(long, requires = "srgb", requires = "out", conflicts_with = "binned")]
+        linear_master: Option<PathBuf>,
+        /// Rebuild annotated regions from explicitly limited source-frame ranges.
+        #[arg(long, requires = "out")]
+        region_recipe: Option<PathBuf>,
         /// Stack at most this many frames, in filename order.
         #[arg(short, long)]
         limit: Option<usize>,
@@ -893,6 +906,8 @@ where
 
     match Cli::parse_from(args).command {
         Command::Align(args) => align_cmd::run(&args),
+        Command::Develop(args) => develop_cmd::run(&args),
+        Command::ImportPreset(args) => develop_cmd::import(&args),
         Command::Probe { dir, limit } => probe(&dir, limit),
         Command::Focus { action } => match action {
             FocusAction::List { gate } => focus_plugin::list(gate),
@@ -929,6 +944,8 @@ where
         Command::Stack {
             dir,
             out,
+            linear_master,
+            region_recipe,
             focus,
             limit,
             merge_backend,
@@ -1153,6 +1170,8 @@ where
             merge_cmd::run(&MergeOptions {
             dir,
             out,
+            linear_master,
+            region_recipe,
             limit,
             srgb,
             // Resolved here, once, from the two mutually exclusive flags, so

@@ -128,6 +128,29 @@ enum EditTarget {
     Revision(PathBuf),
 }
 impl ProjectExplorer {
+    /// Agent organization commands enter the same reversible metadata journal
+    /// as explorer edits. Capture imports and immutable run evidence stay out.
+    pub(crate) fn organize<T>(
+        &mut self,
+        catalog: &mut Catalog,
+        change: impl FnOnce(&mut Catalog) -> anyhow::Result<T>,
+    ) -> anyhow::Result<T> {
+        self.sync_evidence(catalog);
+        let before = Organization::capture(catalog);
+        let result = change(catalog)?;
+        if before != Organization::capture(catalog) {
+            self.undo.push(before);
+            if self.undo.len() > 80 {
+                self.undo.remove(0);
+            }
+            self.redo.clear();
+            self.history_focus = None;
+            self.history_revision = self.history_revision.wrapping_add(1);
+            self.history_commits = self.history_commits.wrapping_add(1);
+        }
+        Ok(result)
+    }
+
     pub fn show(
         &mut self,
         ui: &mut egui::Ui,

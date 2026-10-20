@@ -399,6 +399,8 @@ impl PyramidFrameSource for Source {
 
 fn options(out: PathBuf) -> MergeOptions {
     MergeOptions {
+        linear_master: None,
+        region_recipe: None,
         dir: PathBuf::from("M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY"),
         out: Some(out),
         limit: None,

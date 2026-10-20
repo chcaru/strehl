@@ -6,7 +6,6 @@ use crate::{
     jobs::{self, RenderEvent, RenderOutcome, RenderRequest, StackScan, Task},
     pipeline::{DiagnosticKind, DiagnosticScope, DiagnosticSurface, PipelineProgress, Stage},
     preview::{self, PreviewImage},
-    process_atlas::ProcessAtlas,
     process_space::{self, ProcessSpace},
     processing_view,
     source_browser::SourceBrowser,
@@ -15,6 +14,10 @@ use crate::{
     viewer::Viewer,
     workbench::{SourcePhoto, Workbench, WorkbenchMode},
 };
+#[path = "app-agent.rs"]
+mod agent;
+#[path = "app-editing.rs"]
+mod editing;
 #[path = "app-history.rs"]
 mod history;
 #[cfg(test)]
@@ -106,8 +109,11 @@ pub struct StrehlApp {
     live_input: Option<(usize, TextureHandle)>,
     workbench: Workbench,
     process_space: ProcessSpace,
-    process_atlas: ProcessAtlas,
-    spatial_view: bool,
+    editor: crate::edit_workspace::EditorState,
+    edit_photo_focus: bool,
+    regional: editing::RegionalInspector,
+    agent: agent::AgentState,
+    close_after_export: bool,
     process_view: bool,
     sidebar: Option<workspace::Sidebar>,
     project_explorer: crate::project_explorer::ProjectExplorer,
@@ -193,8 +199,11 @@ impl StrehlApp {
             live_input: None,
             workbench: Workbench::default(),
             process_space: ProcessSpace::default(),
-            process_atlas: ProcessAtlas::default(),
-            spatial_view: launch.space,
+            editor: Default::default(),
+            edit_photo_focus: true,
+            regional: Default::default(),
+            agent: Default::default(),
+            close_after_export: false,
             process_view: true,
             sidebar: Some(workspace::Sidebar::Projects),
             project_explorer: Default::default(),
@@ -243,6 +252,7 @@ impl StrehlApp {
             updates: 0,
             max_texture_side,
         };
+        app.editor.restore_recoveries();
         if let Some(source) = launch.source {
             app.import(source);
         }
@@ -304,7 +314,15 @@ impl StrehlApp {
         }
         if app.screenshot_ranges.is_some() {
             app.process_view = true;
-            app.spatial_view = false;
+        }
+        if launch.edit {
+            app.process_view = true;
+            app.sidebar = Some(workspace::Sidebar::Edit);
+        }
+        if launch.agent {
+            app.process_view = true;
+            app.sidebar = Some(workspace::Sidebar::Agent);
+            app.start_agent_session();
         }
         app
     }
@@ -332,10 +350,9 @@ impl StrehlApp {
         self.live_input = None;
         self.workbench = Workbench::default();
         self.process_space = ProcessSpace::default();
-        self.process_atlas = ProcessAtlas::default();
+        self.editor.reset_document();
         self.process_space.set_layout(self.catalog.layout);
         self.process_view = true;
-        self.spatial_view = false;
         self.sidebar = Some(workspace::Sidebar::Projects);
         self.replay = None;
         self.expected_run = None;
@@ -360,6 +377,11 @@ impl StrehlApp {
         // In-flight JPEG/ TIFF decodes finish serially; their old epoch is discarded.
     }
     fn open_result(&mut self, path: PathBuf) {
+        // Saved edits belong to the photograph, independent of which sidebar
+        // happens to be open when this result arrives.
+        if crate::edit_workspace::recipe_path(&path).is_file() {
+            self.editor.open(path.clone());
+        }
         self.process_view = false;
         self.pending_result = Some(path);
         self.error = None;
@@ -450,13 +472,15 @@ impl StrehlApp {
             pyramid_gate: self.controls.gate,
             worker_threads: Some(self.controls.workers),
             settings: self.controls.settings.clone(),
+            retain_master: true,
+            recipe: (self.editor.loaded.is_some() && self.editor.path == self.result)
+                .then(|| self.editor.recipe.clone()),
         }));
         self.progress = PipelineProgress::default();
         self.process_space = ProcessSpace::default();
-        self.process_atlas = ProcessAtlas::default();
+        self.editor.reset_document();
         self.process_space.set_layout(self.catalog.layout);
         self.process_view = true;
-        self.spatial_view = false;
         self.result_viewer = Viewer::default();
         self.result_work = None;
         self.process_surfaces.clear();
@@ -609,6 +633,17 @@ impl StrehlApp {
                 }
                 RenderEvent::Log(text) => {
                     self.progress.ingest(&text);
+                    if let Some(repair) = self.progress.source_repair
+                        && !repair.finished
+                    {
+                        self.status = format!(
+                            "Rebuilding region {} / {} · {} of {} captures",
+                            repair.region + 1,
+                            repair.regions,
+                            repair.completed,
+                            repair.last - repair.first + 1
+                        );
+                    }
                     self.log(&text);
                     self.follow_current_frame();
                 }
@@ -1930,6 +1965,20 @@ impl StrehlApp {
             });
     }
     fn show_process(&mut self, ctx: &egui::Context) {
+        if self.sidebar != Some(workspace::Sidebar::Edit) {
+            self.editor.tool = crate::edit_workspace::DrawingTool::Navigate;
+            self.editor.drag = None;
+            self.editor.polygon.clear();
+        }
+        self.process_space.set_edit_focus(
+            self.sidebar == Some(workspace::Sidebar::Edit)
+                && self.edit_photo_focus
+                && self.editor.loaded.is_some()
+                && self.editor.path == self.result
+                && self.progress.stage == Stage::Complete,
+        );
+        self.process_space
+            .set_annotation_mode(self.editor.tool != crate::edit_workspace::DrawingTool::Navigate);
         let count = self
             .stack
             .as_ref()
@@ -1992,7 +2041,14 @@ impl StrehlApp {
                     inspection_photos: &inspection_photos,
                     surfaces: &surfaces,
                     output: if self.result.is_some() && self.image_path == self.result {
-                        self.result_viewer.texture.as_ref()
+                        if self.editor.before {
+                            self.result_viewer.texture.as_ref()
+                        } else {
+                            self.editor
+                                .texture
+                                .as_ref()
+                                .or(self.result_viewer.texture.as_ref())
+                        }
                     } else {
                         None
                     },
@@ -2000,18 +2056,17 @@ impl StrehlApp {
                     output_size: (self.result.is_some() && self.image_path == self.result)
                         .then_some(self.result_viewer.source_size),
                 };
-                if self.spatial_view {
-                    self.process_atlas.show(ui, input)
-                } else {
-                    self.process_space.show(ui, input)
+                let response = self.process_space.show(ui, input);
+                if let Some(mapping) = self.process_space.edit_mapping() {
+                    self.editor.draw_overlay(ui, mapping);
                 }
+                response
             })
             .inner;
         self.apply_process_response(response, count);
     }
     fn apply_process_response(&mut self, response: process_space::Response, count: usize) {
         if response.exit_space {
-            self.spatial_view = false;
             self.process_view = true;
         }
         if let Some(index) = response.selected {
@@ -2033,10 +2088,8 @@ impl StrehlApp {
         }
     }
     fn workspace(&mut self, ctx: &egui::Context) {
-        if !self.spatial_view {
-            self.navigation_rail(ctx);
-            self.sidebar(ctx);
-        }
+        self.navigation_rail(ctx);
+        self.sidebar(ctx);
         if self.process_view {
             if self.stack.is_none() && !self.activity && self.expected_run.is_none() {
                 self.welcome_workspace(ctx);
@@ -2051,18 +2104,10 @@ impl StrehlApp {
         }
     }
     fn process_contacts(&self) -> Vec<usize> {
-        if self.spatial_view {
-            self.process_atlas.contact_indices()
-        } else {
-            self.process_space.contact_indices()
-        }
+        self.process_space.contact_indices()
     }
     fn process_inspection(&self) -> Option<usize> {
-        if self.spatial_view {
-            self.process_atlas.inspection_frame()
-        } else {
-            self.process_space.inspection_frame()
-        }
+        self.process_space.inspection_frame()
     }
     fn preview_target(&self) -> usize {
         let count = self.stack.as_ref().map_or(0, |stack| stack.frames.len());
@@ -2090,14 +2135,11 @@ impl StrehlApp {
             // Hidden comparison widgets do not animate while Process owns the
             // viewport. Wait for the actual process input pair instead.
             let pair = self.process_pair();
-            !(if self.spatial_view {
-                self.process_atlas.transitioning()
-            } else {
-                self.process_space.transitioning()
-            }) && (self.stack.is_none()
-                || pair.iter().all(|index| {
-                    self.source_photo(*index).is_some() || self.browser.error(*index).is_some()
-                }))
+            !self.process_space.transitioning()
+                && (self.stack.is_none()
+                    || pair.iter().all(|index| {
+                        self.source_photo(*index).is_some() || self.browser.error(*index).is_some()
+                    }))
         } else if self.view == View::Sources && self.canvas_mode.is_some() {
             let pair = self.current_pair();
             !self.workbench.transitioning()
@@ -2113,6 +2155,9 @@ impl StrehlApp {
             && self.replay.is_none()
             && self.result_work.is_none()
             && self.pending_result.is_none()
+            && self.editor.loading.is_none()
+            && self.editor.developing.is_none()
+            && self.agent.starting.is_none()
             && reveal_ready
             && self.draft_job.is_none()
             && !self.draft_requested
@@ -2214,15 +2259,10 @@ impl StrehlApp {
     }
     fn update_workspace(&mut self, ctx: &egui::Context) {
         self.updates += 1;
-        let image_domain = (
-            self.epoch,
-            self.spatial_view,
-            self.process_view,
-            self.picker_active(),
-        );
+        let image_domain = (self.epoch, self.process_view, self.picker_active());
         let domain_changed = ctx.data_mut(|data| {
             let id = egui::Id::new("image-gesture-workspace-domain");
-            let changed = data.get_temp::<(u64, bool, bool, bool)>(id) != Some(image_domain);
+            let changed = data.get_temp::<(u64, bool, bool)>(id) != Some(image_domain);
             data.insert_temp(id, image_domain);
             changed
         });
@@ -2230,6 +2270,9 @@ impl StrehlApp {
             crate::image_gesture::clear(ctx);
         }
         self.poll(ctx);
+        self.poll_editing(ctx);
+        self.poll_agent(ctx);
+        self.handle_close(ctx);
         // Windows can deliver a tiny drawable area during minimize/restore.
         // Laying out that transient area clamps egui's remembered pane widths
         // and can produce negative child sizes. Continue consuming engine work
@@ -2271,9 +2314,7 @@ impl StrehlApp {
                 }
             }
         }
-        if !self.spatial_view {
-            self.status_bar(ctx);
-        }
+        self.status_bar(ctx);
         self.workspace(ctx);
         self.observe_edits(ctx);
         let layout = self.process_space.layout();
@@ -2285,11 +2326,7 @@ impl StrehlApp {
             self.import(directory);
             ctx.request_repaint();
         }
-        if self.spatial_view {
-            crate::window_chrome::finish_spatial(ctx, self.picker_active());
-        } else {
-            crate::window_chrome::finish(ctx, self.picker_active());
-        }
+        crate::window_chrome::finish(ctx, self.picker_active());
         if let Some(edited) = self.catalog_edit_pending {
             if edited.elapsed() >= Duration::from_millis(300)
                 && !ctx.input(|i| i.pointer.any_down())
@@ -2335,6 +2372,9 @@ impl eframe::App for StrehlApp {
         self.update_workspace(ctx);
     }
     fn on_exit(&mut self) {
+        if let Err(error) = self.editor.ensure_saved_on_close() {
+            eprintln!("Saving photo edits: {error:#}");
+        }
         if self.catalog_edit_pending.is_some() {
             self.persist_catalog();
         }

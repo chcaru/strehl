@@ -37,9 +37,10 @@ SOURCE_PATHS = (
     "Cargo.toml", "Cargo.lock", "rust-toolchain.toml", "LICENSE*", ".gitattributes",
     "crates", "experiments/native-gpu-gather/Cargo.toml", "experiments/native-gpu-gather/src",
     "scripts/release-package.py", "scripts/release-rebuild.py", "scripts/release-smoke.py",
-    "scripts/test-release-package.py",
+    "scripts/test-release-package.py", "scripts/verify-hdr-avif.py",
     ".github/workflows/*.yml", "docs/development/release-workflow.md",
     "docs/desktop-build.md", "docs/raw-decoder-notice.md", "docs/public-release.md",
+    "docs/development-and-hdr.md", "docs/agent-interface.md",
 )
 APPIMAGE_TOOL = (
     "https://github.com/AppImage/appimagetool/releases/download/1.9.1/appimagetool-x86_64.AppImage",
@@ -217,7 +218,7 @@ def copy_application_source(destination):
 
 
 def license_name(name):
-    return re.match(r"^(?:licen[cs]e|copying|notice|copyright)(?:$|[._-])", name, re.I) is not None
+    return re.match(r"^(?:licen[cs]e|copying|notice|copyright|patents?)(?:$|[._-])", name, re.I) is not None
 
 
 def collect_notices(metadata, destination, context):
