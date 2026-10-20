@@ -15,6 +15,16 @@ Strehl is experimental software and has no guaranteed response time or formal
 security-support window. Use a current reviewed build. Historical research
 results are not maintained releases.
 
+The [archived residual-interpolation reference](experiments/quality-september14/residual-interpolation-reference/README.md)
+retains upstream dependency pins affected by
+[GHSA-6p56-wp2h-9hxr](https://github.com/advisories/GHSA-6p56-wp2h-9hxr),
+[GHSA-fpfv-jqm9-f5jm](https://github.com/advisories/GHSA-fpfv-jqm9-f5jm), and
+[GHSA-qr4w-53vh-m672](https://github.com/advisories/GHSA-qr4w-53vh-m672).
+Do not install its historical `source/requirements.txt`. These dependencies are
+excluded from the `v0.1.0-alpha.4` application and delivered source/relink kit,
+and CI does not install that manifest. This scope assessment does not fix the
+archived pins or establish that other dependencies are vulnerability-free.
+
 The desktop processes photographs and saved activity locally and starts an
 owned engine child process. That separation supports cancellation and memory
 isolation; it is not a security sandbox. Treat malformed or untrusted image and

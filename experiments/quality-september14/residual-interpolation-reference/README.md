@@ -1,5 +1,20 @@
 # Published RI reference and local adaptation
 
+> **Archived dependencies: do not install `source/requirements.txt`.**
+> Its original pins include vulnerable NumPy 1.19.0 and OpenCV Python 4.3.0.38.
+> They are preserved as upstream research evidence, not a supported environment.
+> See the NumPy advisories
+> [GHSA-6p56-wp2h-9hxr](https://github.com/advisories/GHSA-6p56-wp2h-9hxr) and
+> [GHSA-fpfv-jqm9-f5jm](https://github.com/advisories/GHSA-fpfv-jqm9-f5jm), and the
+> OpenCV/libwebp advisory
+> [GHSA-qr4w-53vh-m672](https://github.com/advisories/GHSA-qr4w-53vh-m672).
+
+For `v0.1.0-alpha.4`, this reference and these Python dependencies are excluded
+from the application and delivered source/relink kit; CI does not install this
+manifest. The historical pins remain vulnerable. Any future reference work
+needs a separately maintained and tested environment; changing that environment
+does not retroactively validate the recorded research results.
+
 Source: [IPOL 2021/358](https://www.ipol.im/pub/art/2021/358/), Jin, Guo,
 Morel and Facciolo, *A Mathematical Analysis and Implementation of Residual
 Interpolation Demosaicking Algorithms*. The official ZIP was downloaded on
