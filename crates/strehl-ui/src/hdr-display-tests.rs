@@ -276,3 +276,322 @@ fn native_float_pixels_ui_white_and_sdr_negative_control() {
         hdr[0], sdr[0], native_ui[6]
     );
 }
+
+fn sdr_presenter(
+    adapter: &wgpu::Adapter,
+    device: &wgpu::Device,
+    queue: &wgpu::Queue,
+    format: wgpu::TextureFormat,
+    white: f32,
+    options: egui_wgpu::RendererOptions,
+) -> PhotoPresenter {
+    let (pipeline, bindings) = photo_pipeline(device, format);
+    let mut renderer = egui_wgpu::Renderer::new(device, format, options);
+    renderer.set_output_white_scale(white);
+    PhotoPresenter(Arc::new(Presenter {
+        render: egui_wgpu::RenderState {
+            adapter: adapter.clone(),
+            available_adapters: vec![adapter.clone()],
+            device: device.clone(),
+            queue: queue.clone(),
+            target_format: format,
+            renderer: Arc::new(egui::mutex::RwLock::new(renderer)),
+        },
+        pipeline,
+        bindings,
+        status: RwLock::new(DisplayStatus {
+            active: white > 1.0,
+            sdr_white_nits: white * 80.0,
+            ..Default::default()
+        }),
+        refresh: Mutex::new(Refresh {
+            next: Instant::now(),
+            pending: None,
+        }),
+        #[cfg(any(windows, target_os = "macos"))]
+        window: 0,
+        #[cfg(target_os = "macos")]
+        native_color_space: false,
+        context: egui::Context::default(),
+        sdr_retirement: Arc::default(),
+    }))
+}
+
+fn draw_sdr_layers(presenter: &PhotoPresenter, layer: &PhotoLayer, alpha: f32) -> Vec<[f32; 4]> {
+    let render = &presenter.0.render;
+    let ctx = &presenter.0.context;
+    let screen_rect = Rect::from_min_max(egui::Pos2::ZERO, egui::pos2(8.0, 2.0));
+    let output = ctx.run(
+        egui::RawInput {
+            screen_rect: Some(screen_rect),
+            ..Default::default()
+        },
+        |ctx| {
+            let painter = ctx.layer_painter(egui::LayerId::background());
+            // Two placements of the same layer must keep independent UVs and
+            // both remain ordinary mesh draws on the optimized target formats.
+            for (x, aperture) in [
+                (
+                    0.0,
+                    Rect::from_min_max(egui::pos2(0.25, 0.0), egui::pos2(0.75, 1.0)),
+                ),
+                (
+                    4.0,
+                    Rect::from_min_max(egui::pos2(0.0, 0.0), egui::pos2(0.5, 1.0)),
+                ),
+            ] {
+                presenter.paint_sdr_layer(
+                    &painter,
+                    Rect::from_min_size(egui::pos2(x, 0.0), egui::vec2(4.0, 2.0)),
+                    aperture,
+                    layer,
+                    alpha,
+                );
+            }
+        },
+    );
+    let jobs = ctx.tessellate(output.shapes, output.pixels_per_point);
+    if !render.target_format.is_srgb() || alpha == 1.0 {
+        assert!(
+            jobs.iter()
+                .all(|job| matches!(job.primitive, egui::epaint::Primitive::Mesh(_)))
+        );
+        assert!(!jobs.is_empty(), "The fixture must emit real image meshes");
+    } else {
+        assert!(
+            jobs.iter()
+                .any(|job| matches!(job.primitive, egui::epaint::Primitive::Callback(_)))
+        );
+    }
+    let screen = egui_wgpu::ScreenDescriptor {
+        size_in_pixels: [8, 2],
+        pixels_per_point: 1.0,
+    };
+    let texture = target(&render.device, render.target_format);
+    let view = texture.create_view(&Default::default());
+    let mut encoder = render.device.create_command_encoder(&Default::default());
+    let mut renderer = render.renderer.write();
+    let commands =
+        renderer.update_buffers(&render.device, &render.queue, &mut encoder, &jobs, &screen);
+    {
+        let pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+            color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                view: &view,
+                resolve_target: None,
+                depth_slice: None,
+                ops: wgpu::Operations {
+                    load: wgpu::LoadOp::Clear(wgpu::Color {
+                        r: 0.15,
+                        g: 0.25,
+                        b: 0.35,
+                        a: 1.0,
+                    }),
+                    store: wgpu::StoreOp::Store,
+                },
+            })],
+            ..Default::default()
+        });
+        renderer.render(&mut pass.forget_lifetime(), &jobs, &screen);
+    }
+    drop(renderer);
+    render
+        .queue
+        .submit(commands.into_iter().chain([encoder.finish()]));
+    read(&render.device, &render.queue, &texture)
+}
+
+#[test]
+#[ignore = "real GPU: run explicitly with normal desktop permissions"]
+fn registered_sdr_images_preserve_color_crop_alpha_and_deferred_lifetime() {
+    let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor {
+        backends: if cfg!(windows) {
+            wgpu::Backends::DX12
+        } else {
+            wgpu::Backends::PRIMARY
+        },
+        ..Default::default()
+    });
+    let adapter = block_on(instance.request_adapter(&Default::default())).unwrap();
+    let (device, queue) = block_on(adapter.request_device(&Default::default())).unwrap();
+    eprintln!("Registered SDR GPU verification: {:?}", adapter.get_info());
+    let colors = [
+        [32u8, 128, 224, 255],
+        [192, 64, 96, 255],
+        [80, 176, 48, 255],
+        [240, 112, 160, 255],
+    ];
+    let decode = |v: f32| {
+        if v <= 0.04045 {
+            v / 12.92
+        } else {
+            ((v + 0.055) / 1.055).powf(2.4)
+        }
+    };
+    let encode = |v: f32| {
+        if v <= 0.0031308 {
+            v * 12.92
+        } else {
+            1.055 * v.powf(1.0 / 2.4) - 0.055
+        }
+    };
+    for (format, options) in [
+        wgpu::TextureFormat::Rgba16Float,
+        wgpu::TextureFormat::Rgba8Unorm,
+        wgpu::TextureFormat::Rgba8UnormSrgb,
+    ]
+    .into_iter()
+    .flat_map(|format| {
+        [egui_wgpu::RendererOptions::PREDICTABLE, Default::default()]
+            .map(|options| (format, options))
+    }) {
+        for white in [1.0, 2.5] {
+            let presenter = sdr_presenter(&adapter, &device, &queue, format, white, options);
+            // The actual upload/registration takes place on a worker thread.
+            let upload = presenter.clone();
+            let bytes: Arc<[u8]> = colors.into_iter().flatten().collect::<Vec<_>>().into();
+            let layer = std::thread::spawn(move || {
+                upload
+                    .upload_sdr([4, 1], bytes, [[0.0, 0.0], [1.0, 1.0]])
+                    .unwrap()
+            })
+            .join()
+            .unwrap();
+            let id = layer.0.registered.as_ref().unwrap().id;
+            for alpha in [1.0, 0.37] {
+                let actual = draw_sdr_layers(&presenter, &layer, alpha);
+                let quantized_alpha = egui::Color32::WHITE.gamma_multiply(alpha).a() as f32 / 255.0;
+                for (x, pixel) in actual[..8].iter().enumerate() {
+                    // Apertures sample source positions .75..2.25 and -.25..1.25.
+                    let location = if x < 4 {
+                        0.75 + x as f32 * 0.5
+                    } else {
+                        -0.25 + (x - 4) as f32 * 0.5
+                    };
+                    let lo = location.floor() as i32;
+                    let t = location - location.floor();
+                    for c in 0..3 {
+                        let sample = (f32::from(colors[lo.clamp(0, 3) as usize][c]) * (1.0 - t)
+                            + f32::from(colors[(lo + 1).clamp(0, 3) as usize][c]) * t)
+                            / 255.0;
+                        let background = [0.15, 0.25, 0.35][c];
+                        let expected = if format == wgpu::TextureFormat::Rgba16Float {
+                            decode(sample) * quantized_alpha * white
+                                + background * (1.0 - quantized_alpha)
+                        } else if format.is_srgb() {
+                            encode(decode(sample) * alpha + background * (1.0 - alpha))
+                        } else {
+                            sample * quantized_alpha + background * (1.0 - quantized_alpha)
+                        };
+                        assert!(
+                            (pixel[c] - expected).abs() < 0.006,
+                            "{format:?} white{white} alpha{alpha} pixel{x} c{c}: {} vs {expected}",
+                            pixel[c]
+                        );
+                    }
+                }
+                assert_ne!(
+                    actual[0], actual[4],
+                    "Two distinct crops must remain distinct"
+                );
+            }
+            let retained = layer.clone();
+            drop(layer);
+            assert!(presenter.0.sdr_retirement.0.lock().unwrap().is_empty());
+            assert!(presenter.0.render.renderer.read().texture(&id).is_some());
+            let replacement = presenter
+                .upload_sdr([1, 1], Arc::from([255u8; 4]), [[0.0, 0.0], [1.0, 1.0]])
+                .unwrap();
+            let replacement_id = replacement.0.registered.as_ref().unwrap().id;
+            assert_ne!(id, replacement_id);
+            drop(retained);
+            presenter.retire_sdr_textures();
+            assert!(
+                presenter.0.render.renderer.read().texture(&id).is_some(),
+                "Already-emitted meshes must keep their binding"
+            );
+            for elapsed in 1..=2 {
+                let _ = presenter.0.context.run(Default::default(), |_| {});
+                presenter.retire_sdr_textures();
+                assert_eq!(
+                    presenter.0.render.renderer.read().texture(&id).is_some(),
+                    elapsed < 2,
+                    "Retirement must follow the completed-frame boundary"
+                );
+            }
+            presenter.retire_sdr_textures();
+            assert!(presenter.0.render.renderer.read().texture(&id).is_none());
+            assert!(
+                presenter
+                    .0
+                    .render
+                    .renderer
+                    .read()
+                    .texture(&replacement_id)
+                    .is_some()
+            );
+            drop(replacement);
+            for _ in 0..2 {
+                let _ = presenter.0.context.run(Default::default(), |_| {});
+            }
+            presenter.retire_sdr_textures();
+            assert!(
+                presenter
+                    .0
+                    .render
+                    .renderer
+                    .read()
+                    .texture(&replacement_id)
+                    .is_none()
+            );
+            assert!(presenter.0.sdr_retirement.0.lock().unwrap().is_empty());
+            let region = presenter
+                .upload_sdr([1, 1], Arc::from([255u8; 4]), [[0.2, 0.3], [0.8, 0.9]])
+                .unwrap();
+            let clip = Rect::from_min_max(egui::pos2(1.0, 0.5), egui::pos2(9.0, 3.5));
+            let output = presenter.0.context.run(
+                egui::RawInput {
+                    screen_rect: Some(Rect::from_min_max(egui::Pos2::ZERO, egui::pos2(12.0, 8.0))),
+                    ..Default::default()
+                },
+                |ctx| {
+                    let painter = ctx
+                        .layer_painter(egui::LayerId::background())
+                        .with_clip_rect(clip);
+                    presenter.paint_sdr_layer(
+                        &painter,
+                        Rect::from_min_max(egui::Pos2::ZERO, egui::pos2(10.0, 4.0)),
+                        Rect::from_min_max(egui::pos2(0.05, 0.15), egui::pos2(0.65, 0.75)),
+                        &region,
+                        1.0,
+                    );
+                },
+            );
+            let meshes = output
+                .shapes
+                .iter()
+                .filter_map(|shape| {
+                    if let egui::Shape::Mesh(mesh) = &shape.shape {
+                        Some((shape.clip_rect, mesh))
+                    } else {
+                        None
+                    }
+                })
+                .collect::<Vec<_>>();
+            assert_eq!(meshes.len(), 1);
+            assert_eq!(meshes[0].0, clip);
+            let bounds = meshes[0].1.calc_bounds();
+            assert!(bounds.min.distance(egui::pos2(2.5, 1.0)) < 0.00001);
+            assert!(bounds.max.distance(egui::pos2(10.0, 4.0)) < 0.00001);
+            let uv_bounds = Rect::from_points(
+                &meshes[0]
+                    .1
+                    .vertices
+                    .iter()
+                    .map(|v| v.uv)
+                    .collect::<Vec<_>>(),
+            );
+            assert!(uv_bounds.min.distance(egui::Pos2::ZERO) < 0.00001);
+            assert!(uv_bounds.max.distance(egui::pos2(0.75, 0.75)) < 0.00001);
+        }
+    }
+}

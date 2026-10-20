@@ -503,6 +503,16 @@ impl ProcessTheater {
         self.requested_view = Some((center, zoom));
         self.remember(before);
     }
+    fn follow_newer_photo_view(&mut self, previous: Option<(Pos2, f32)>) {
+        let current = self.scales.target_view();
+        if self.requested_view.is_some()
+            && previous.is_some_and(|previous| previous != current)
+            && current.0.is_finite()
+            && current.1.is_finite()
+        {
+            self.requested_view = Some(current);
+        }
+    }
     pub(crate) fn set_photo_paint(&mut self, paint: Option<crate::photo_viewport::PhotoPaint>) {
         self.photo_paint = paint.clone();
         self.result_photo.set_photo_paint(paint);
@@ -535,6 +545,9 @@ impl ProcessTheater {
         }
     }
     fn restore(&mut self, view: Exploration) {
+        let awaiting_final = self.requested_view.is_some()
+            || self.last_stage == Stage::Complete
+                && self.hero.as_ref().is_none_or(|hero| hero.plate.kind != 3);
         self.requested_view = None;
         self.source_drag = None;
         self.hover_source = None;
@@ -556,6 +569,9 @@ impl ProcessTheater {
         self.gesture_start = None;
         self.wheel_edit = None;
         self.history_revision = self.history_revision.wrapping_add(1);
+        if awaiting_final {
+            self.requested_view = Some(self.scales.target_view());
+        }
     }
     fn remember(&mut self, before: Exploration) {
         if before == self.exploration() {
@@ -603,6 +619,7 @@ impl ProcessTheater {
         true
     }
     fn fit_views(&mut self) {
+        self.requested_view = None;
         self.result_photo.clear_lenses();
         self.hover_source = None;
         self.result_photo.cancel_gesture();
@@ -803,9 +820,7 @@ impl ProcessTheater {
         self.sync_photos(input, now, ui.ctx());
         self.sync_latest_preview(input, ui.ctx());
         self.sync_hero(input, now, ui.ctx());
-        if self.output_space(input).is_some()
-            && let Some((center, zoom)) = self.requested_view
-        {
+        if let Some((center, zoom)) = self.requested_view {
             // The first final plate and its diagnostic domain initialize their
             // view clocks above. An explicit incoming crop wins over that
             // automatic Scene placement, before any linked image is painted.
@@ -813,6 +828,7 @@ impl ProcessTheater {
             self.scales.set_view(center, zoom);
             self.pin = self.scales.pin();
         }
+        let pending_view = self.requested_view.map(|_| self.scales.target_view());
         if input.progress.stage == Stage::Complete && self.last_stage != Stage::Complete {
             self.enlarged = None;
         }
@@ -1021,8 +1037,15 @@ impl ProcessTheater {
             self.contribution(ui, layout.contributions, input);
         }
         self.source_axis_bounds = focused.then_some(layout.hero);
+        // Instrument gestures run before the photograph. Their newest target
+        // must replace queued intent before the placeholder paints it again.
+        self.follow_newer_photo_view(pending_view);
+        let pending_view = self.requested_view.map(|_| self.scales.target_view());
         self.photograph(ui, layout.hero, input, response);
         self.scales.set_pin(self.pin);
+        // The same rule covers photo clicks, locator gestures and linked
+        // source gestures without a per-control list of superseding actions.
+        self.follow_newer_photo_view(pending_view);
         if !compact && !focused {
             self.fingerprint(ui, layout, input, response);
         }
@@ -2070,7 +2093,11 @@ impl ProcessTheater {
                 self.pan = (egui::vec2(0.5, 0.5) - center.to_vec2()) * size;
                 self.pin = center;
                 self.scales.set_pin(center);
-                if self.saved_output.is_none() || hero.plate.kind == 3 {
+                // A completed run may still show its retained reconstruction
+                // while the bounded TIFF overview is decoded. That temporary
+                // plate cannot consume intent meant for the final photograph:
+                // its arrival initializes Scene and must reapply this crop.
+                if input.progress.stage != Stage::Complete || hero.plate.kind == 3 {
                     self.requested_view = None;
                 }
             }
@@ -2142,6 +2169,7 @@ impl ProcessTheater {
             ui.ctx().set_cursor_icon(egui::CursorIcon::Crosshair);
         }
         if gestures_allowed && image_gesture.reset {
+            self.requested_view = None;
             self.enlarged = None;
             self.zoom = 1.0;
             self.pan = Vec2::ZERO;
@@ -2161,6 +2189,7 @@ impl ProcessTheater {
                 self.pin = normalized(pos, mapped);
             }
         } else {
+            let mut changed_view = false;
             if gestures_allowed
                 && !image_gesture.reset
                 && !image_gesture.pending
@@ -2182,6 +2211,7 @@ impl ProcessTheater {
                             self.pan * ratio + (pointer - image_box.center()) * (1.0 - ratio);
                     }
                     self.zoom = next;
+                    changed_view = true;
                 }
             }
             if gestures_allowed
@@ -2190,7 +2220,9 @@ impl ProcessTheater {
                 && gesture.dragged()
                 && !navigation.owns_drag
             {
-                self.pan += ui.input(|state| state.pointer.delta());
+                let delta = ui.input(|state| state.pointer.delta());
+                self.pan += delta;
+                changed_view |= delta != Vec2::ZERO;
             }
             let extent = self
                 .hero
@@ -2206,6 +2238,20 @@ impl ProcessTheater {
             let limit = ((fit(extent, image_box).size() * self.zoom - image_box.size()) * 0.5)
                 .max(Vec2::ZERO);
             self.pan = self.pan.clamp(-limit, limit);
+            if changed_view && self.requested_view.is_some() {
+                // Preserve the newest human framing through the pending final
+                // plate too. Reapplying the older command next frame would
+                // otherwise fight wheel/pan input during asynchronous loading.
+                let size = fit(extent, image_box).size() * self.zoom;
+                if size.is_finite() && size.x > 0.0 && size.y > 0.0 && self.pan.is_finite() {
+                    let center = egui::pos2(0.5, 0.5) - self.pan / size;
+                    if center.is_finite() {
+                        self.requested_view = Some((center, self.zoom));
+                        self.scales.set_view(center, self.zoom);
+                        self.pin = self.scales.pin();
+                    }
+                }
+            }
             if live_photo
                 && gesture.clicked()
                 && !image_gesture.reset

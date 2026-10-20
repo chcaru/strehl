@@ -105,6 +105,7 @@ pub struct StrehlApp {
     draft_cancelled: bool,
     result_work: Option<ResultWork>,
     pending_result: Option<PathBuf>,
+    result_native_fallback: Option<(u64, PathBuf)>,
     visible_sources: Vec<usize>,
     reveal_selected: bool,
     follow_processing: bool,
@@ -199,6 +200,7 @@ impl StrehlApp {
             draft_cancelled: false,
             result_work: None,
             pending_result: None,
+            result_native_fallback: None,
             visible_sources: Vec::new(),
             reveal_selected: false,
             follow_processing: true,
@@ -864,20 +866,53 @@ impl StrehlApp {
             if work.epoch == self.epoch {
                 match result {
                     Ok(image) => {
+                        let same_document = self.image_path.as_ref() == Some(&image.path);
                         self.image_path = Some(image.path.clone());
-                        install_viewer(&mut self.result_viewer, &cache_image(ctx, image));
-                        self.result_viewer.reset(true);
+                        let cached = cache_image(ctx, image);
+                        if same_document {
+                            self.result_viewer.install_refinement(
+                                &cached.texture,
+                                cached.source_size,
+                                cached.overview,
+                            );
+                        } else {
+                            self.result_viewer.set_photo_paint(None);
+                            install_viewer(&mut self.result_viewer, &cached);
+                            self.result_viewer.reset(true);
+                        }
                     }
                     Err(error) => self.error = Some(error),
                 }
             }
         }
         if self.result_work.is_none()
+            && self.pending_result.is_none()
+            && self.editor.loading.is_none()
+            && self.editor.loaded.is_none()
+            && self.editor.error.is_some()
+            && self.editor.path == self.image_path
+            && self.image_path == self.result
+            && self.result_viewer.overview
+            && let Some(path) = self.image_path.clone()
+            && self.result_native_fallback.as_ref() != Some(&(self.epoch, path.clone()))
+        {
+            // A malformed/missing edit master must not strand a valid TIFF at
+            // overview resolution. Attempt the legacy native fallback once.
+            self.result_native_fallback = Some((self.epoch, path.clone()));
+            self.pending_result = Some(path);
+        }
+        if self.result_work.is_none()
             && let Some(path) = self.pending_result.take()
         {
+            let bounded = self.result.as_ref() == Some(&path)
+                && self.result_native_fallback.as_ref() != Some(&(self.epoch, path.clone()));
             self.result_work = Some(ResultWork {
                 epoch: self.epoch,
-                task: preview::load_preview(path, self.max_texture_side),
+                task: if bounded {
+                    preview::load_overview(path, self.max_texture_side)
+                } else {
+                    preview::load_preview(path, self.max_texture_side)
+                },
             });
         }
     }
@@ -1566,6 +1601,11 @@ impl StrehlApp {
         }
     }
     fn canvas(&mut self, ctx: &egui::Context) {
+        self.result_viewer.set_photo_paint(
+            (self.editor.path == self.image_path)
+                .then(|| self.editor.photo_paint())
+                .flatten(),
+        );
         egui::CentralPanel::default()
             .frame(egui::Frame::new().fill(BG))
             .show(ctx, |ui| {
@@ -1700,7 +1740,7 @@ impl StrehlApp {
                         };
                         if ui
                             .add_enabled_ui(
-                                !in_workbench && viewer.texture.is_some() && !viewer.overview,
+                                !in_workbench && viewer.native_inspection_available(),
                                 |ui| theme::tab(ui, "1:1", !viewer.fit && viewer.zoom == 1.0),
                             )
                             .inner
@@ -1821,6 +1861,13 @@ impl StrehlApp {
                             .show(&mut image_ui, mode, photo_a, photo_b, self.epoch);
                 } else {
                     viewer.show(&mut image_ui, loading);
+                    if self.view == View::Result
+                        && self.editor.path == self.image_path
+                        && let Some(mapping) = viewer.display_mapping
+                    {
+                        self.editor
+                            .request_view(ctx, mapping, self.max_texture_side);
+                    }
                 }
                 let caption_rect = egui::Rect::from_min_max(
                     footer.min + egui::vec2(14.0, 0.0),
@@ -2391,8 +2438,11 @@ impl eframe::App for StrehlApp {
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
         let started = Instant::now();
         self.update_workspace(ctx);
-        self.frame_performance
-            .record(started.elapsed().as_secs_f64(), frame.info().cpu_usage);
+        self.frame_performance.record(
+            ctx.cumulative_frame_nr(),
+            started.elapsed().as_secs_f64(),
+            frame.info().cpu_usage,
+        );
     }
     fn on_exit(&mut self) {
         if let Err(error) = self.editor.ensure_saved_on_close() {

@@ -24,6 +24,8 @@ pub struct Viewer {
     drag: Option<egui::Pos2>,
     source_identity: Option<(u64, usize)>,
     reveal: Option<Reveal>,
+    photo_paint: Option<crate::photo_viewport::PhotoPaint>,
+    pub(crate) display_mapping: Option<(Rect, Rect)>,
 }
 
 impl Default for Viewer {
@@ -38,11 +40,41 @@ impl Default for Viewer {
             drag: None,
             source_identity: None,
             reveal: None,
+            photo_paint: None,
+            display_mapping: None,
         }
     }
 }
 
 impl Viewer {
+    pub(crate) fn set_photo_paint(&mut self, paint: Option<crate::photo_viewport::PhotoPaint>) {
+        let previous = self.aperture_size();
+        let changed = self.photo_paint.is_some() != paint.is_some();
+        self.photo_paint = paint;
+        if changed
+            && !self.fit
+            && let (Some(old), Some(next)) = (previous, self.aperture_size())
+        {
+            self.zoom *= old.x / next.x;
+        }
+    }
+    pub(crate) fn native_inspection_available(&self) -> bool {
+        self.texture.is_some() && (!self.overview || self.photo_paint.is_some())
+    }
+    pub(crate) fn install_refinement(
+        &mut self,
+        texture: &TextureHandle,
+        source_size: [u32; 2],
+        overview: bool,
+    ) {
+        let previous = self.aperture_size();
+        self.install(texture, source_size, overview);
+        if !self.fit
+            && let (Some(old), Some(next)) = (previous, self.aperture_size())
+        {
+            self.zoom *= old.x / next.x;
+        }
+    }
     /// Instant replacement for a new result/draft. Camera source refinement
     /// uses install_source so only two resolutions of the same capture blend.
     pub fn install(&mut self, texture: &TextureHandle, source_size: [u32; 2], overview: bool) {
@@ -110,6 +142,12 @@ impl Viewer {
     /// Canonical display extent of a reduced image, correcting only integer
     /// resize rounding. Native views always retain their exact pixel geometry.
     pub fn aperture_size(&self) -> Option<Vec2> {
+        if self.photo_paint.is_some() && !self.source_size.contains(&0) {
+            return Some(egui::vec2(
+                self.source_size[0] as f32,
+                self.source_size[1] as f32,
+            ));
+        }
         self.texture
             .as_ref()
             .map(|texture| preview_aperture(texture.size_vec2(), self.source_size, self.overview).0)
@@ -123,6 +161,7 @@ impl Viewer {
     }
 
     pub fn show(&mut self, ui: &mut egui::Ui, loading: bool) {
+        self.display_mapping = None;
         let (rect, response) = ui.allocate_exact_size(ui.available_size(), Sense::click_and_drag());
         let painter = ui.painter_at(rect);
         painter.rect_filled(rect, 0.0, theme::BG);
@@ -132,8 +171,9 @@ impl Viewer {
             .map(|texture| (texture.id(), texture.size_vec2()))
         {
             let pixels_per_point = ui.ctx().pixels_per_point();
-            let (aperture_size, uv) =
+            let (fallback_size, uv) =
                 preview_aperture(texture_size, self.source_size, self.overview);
+            let aperture_size = self.aperture_size().unwrap_or(fallback_size);
             let native = aperture_size / pixels_per_point;
             let fit_scale = (rect.width() / native.x).min(rect.height() / native.y) * 0.95;
             let reset_gesture = crate::image_gesture::reset(ui, &response);
@@ -193,6 +233,21 @@ impl Viewer {
                 .round()
                 / pixels_per_point;
             let image_rect = Rect::from_min_size(top_left.to_pos2(), size);
+            let visible = image_rect.intersect(rect);
+            self.display_mapping = Some((image_rect, visible));
+            if let Some(paint) = &self.photo_paint {
+                self.reveal = None;
+                if visible.is_positive() {
+                    let local =
+                        |p: egui::Pos2| egui::Pos2::ZERO + (p - image_rect.min) / image_rect.size();
+                    paint.paint(
+                        &painter,
+                        visible,
+                        Rect::from_min_max(local(visible.min), local(visible.max)),
+                    );
+                }
+                return;
+            }
             let now = ui.input(|input| input.time);
             let reveal = self.reveal.as_mut().map(|reveal| {
                 let started = *reveal.started.get_or_insert(now);

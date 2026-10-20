@@ -368,6 +368,230 @@ fn an_explicit_view_before_first_final_paint_survives_completion_and_refinement(
 }
 
 #[test]
+fn early_view_survives_delayed_overview_and_developed_photo_publication() {
+    for requested_at in [0, 1, 2, 3, 4] {
+        for focused in [false, true] {
+            let ctx = egui::Context::default();
+            let mut fixture = ResultFixture::new(&ctx, true);
+            let mut preview = fixture.packets[0].clone();
+            preview.kind = DiagnosticKind::Preview;
+            preview.scope = DiagnosticScope::Stack;
+            preview.sequence = 900;
+            preview.scale = DiagnosticScale::Linear;
+            fixture.packets.push(preview);
+            fixture.textures.push(fixture.textures[0].clone());
+            let surfaces = fixture.surfaces();
+            let input = result_input(&fixture, &surfaces);
+            let overview = ctx.load_texture(
+                "delayed-bounded-overview",
+                egui::ColorImage::filled([41, 32], Color32::WHITE),
+                egui::TextureOptions::LINEAR,
+            );
+            let mut field = ProcessTheater {
+                edit_focus: focused,
+                ..Default::default()
+            };
+            let mut last = None;
+            for step in 0..12 {
+                if step == requested_at {
+                    field.set_photo_view(egui::pos2(0.38, 0.57), 8.0);
+                }
+                let output = match step {
+                    0..=1 => None,
+                    2..=4 => Some(&overview),
+                    _ => input.output,
+                };
+                last = Some(result_paint(
+                    &mut field,
+                    &ctx,
+                    Input { output, ..input },
+                    step as f64 * 0.1,
+                    vec![],
+                ));
+            }
+            let photo = result_photo(last.as_ref().unwrap(), &fixture);
+            assert!(
+                (photo.uv.width() - 0.125).abs() < 0.002,
+                "request at {requested_at}, focused {focused}: {:?}",
+                photo.uv
+            );
+            assert!(photo.uv.center().distance(egui::pos2(0.38, 0.57)) < 0.002);
+        }
+    }
+}
+
+#[test]
+fn latest_human_gesture_replaces_pending_final_photo_intent() {
+    for reset in [false, true] {
+        let ctx = egui::Context::default();
+        let mut fixture = ResultFixture::new(&ctx, true);
+        let mut preview = fixture.packets[0].clone();
+        preview.kind = DiagnosticKind::Preview;
+        preview.scope = DiagnosticScope::Stack;
+        preview.sequence = 900;
+        preview.scale = DiagnosticScale::Linear;
+        fixture.packets.push(preview);
+        fixture.textures.push(fixture.textures[0].clone());
+        let surfaces = fixture.surfaces();
+        let input = result_input(&fixture, &surfaces);
+        let waiting = Input {
+            output: None,
+            ..input
+        };
+        let mut field = ProcessTheater::default();
+        result_warm(&mut field, &ctx, waiting);
+        field.set_photo_view(egui::pos2(0.38, 0.57), 8.0);
+        result_paint(&mut field, &ctx, waiting, 0.7, vec![]);
+        assert!(field.requested_view.is_some());
+        let area = field.primary_destination.unwrap();
+        let at = area.min + area.size() * egui::vec2(0.2, 0.8);
+        if reset {
+            for (time, pressed) in [(0.8, true), (0.82, false), (0.92, true), (0.94, false)] {
+                result_paint(
+                    &mut field,
+                    &ctx,
+                    waiting,
+                    time,
+                    vec![egui::Event::PointerMoved(at), result_button(at, pressed)],
+                );
+            }
+            assert!(
+                field.requested_view.is_none(),
+                "A newer human reset must cancel pending zoom"
+            );
+            assert_eq!(field.zoom, 1.0, "The real double click must fire");
+        } else {
+            result_paint(
+                &mut field,
+                &ctx,
+                waiting,
+                0.8,
+                vec![
+                    egui::Event::PointerMoved(at),
+                    egui::Event::MouseWheel {
+                        unit: egui::MouseWheelUnit::Point,
+                        delta: egui::vec2(0.0, -120.0),
+                        modifiers: egui::Modifiers::NONE,
+                    },
+                ],
+            );
+            let zoom = field.requested_view.unwrap().1;
+            assert!(
+                zoom > 1.0 && zoom < 7.0,
+                "The real wheel must modify the pending crop: {zoom}"
+            );
+            result_paint(&mut field, &ctx, waiting, 1.0, vec![]);
+            assert!(
+                (field.requested_view.unwrap().1 - field.zoom).abs() < 0.001,
+                "The latest human crop must replace the old request"
+            );
+        }
+        let expected_zoom = field.zoom;
+        for time in [1.2, 1.6, 2.0] {
+            result_paint(&mut field, &ctx, input, time, vec![]);
+        }
+        assert!(
+            (field.scales.aperture().width().recip() - expected_zoom).abs() < 0.002,
+            "Final arrival overrode the latest human gesture"
+        );
+        assert!(field.requested_view.is_none());
+    }
+}
+
+#[test]
+fn pending_final_photo_follows_plain_image_and_matrix_clicks() {
+    for matrix in [false, true] {
+        let ctx = egui::Context::default();
+        let mut fixture = ResultFixture::new(&ctx, true);
+        let mut preview = fixture.packets[0].clone();
+        preview.kind = DiagnosticKind::Preview;
+        preview.scope = DiagnosticScope::Stack;
+        preview.sequence = 900;
+        preview.scale = DiagnosticScale::Linear;
+        fixture.packets.push(preview);
+        fixture.textures.push(fixture.textures[0].clone());
+        let surfaces = fixture.surfaces();
+        let input = result_input(&fixture, &surfaces);
+        let waiting = Input {
+            output: None,
+            ..input
+        };
+        let mut field = ProcessTheater::default();
+        result_warm(&mut field, &ctx, waiting);
+        field.set_photo_view(egui::pos2(0.5, 0.5), 1.0);
+        let painted = result_paint(&mut field, &ctx, waiting, 0.7, vec![]);
+        let area = if matrix {
+            result_meshes(&painted)
+                .into_iter()
+                .find(|mesh| mesh.id == fixture.textures[0].id())
+                .expect("The real matrix map must be painted")
+                .rect
+        } else {
+            field.primary_destination.unwrap()
+        };
+        let at = area.min + area.size() * egui::vec2(0.22, 0.73);
+        for (time, pressed) in [(0.8, true), (0.82, false)] {
+            result_paint(
+                &mut field,
+                &ctx,
+                waiting,
+                time,
+                vec![egui::Event::PointerMoved(at), result_button(at, pressed)],
+            );
+        }
+        let expected = field
+            .requested_view
+            .expect("Newer interaction must reach the pending photograph");
+        assert!(
+            expected.0.distance(egui::pos2(0.5, 0.5)) > 0.1,
+            "The real {matrix} click must relocate the pin: {expected:?}"
+        );
+        assert!(expected.1 > 1.0, "The real click must focus detail");
+        for time in [1.2, 1.6, 2.0] {
+            result_paint(&mut field, &ctx, input, time, vec![]);
+        }
+        let actual = field.scales.aperture();
+        assert!(actual.center().distance(expected.0) < 0.002);
+        assert!((actual.width().recip() - expected.1).abs() < 0.002);
+    }
+}
+
+#[test]
+fn pending_final_photo_respects_navigation_undo_and_redo() {
+    for redo in [false, true] {
+        let ctx = egui::Context::default();
+        let fixture = ResultFixture::new(&ctx, true);
+        let surfaces = fixture.surfaces();
+        let input = result_input(&fixture, &surfaces);
+        let mut field = ProcessTheater::default();
+        result_warm(
+            &mut field,
+            &ctx,
+            Input {
+                output: None,
+                ..input
+            },
+        );
+        field.set_photo_view(egui::pos2(0.3, 0.6), 2.0);
+        field.set_photo_view(egui::pos2(0.6, 0.3), 4.0);
+        assert!(field.undo());
+        if redo {
+            assert!(field.redo());
+        }
+        let expected = if redo {
+            (egui::pos2(0.6, 0.3), 4.0)
+        } else {
+            (egui::pos2(0.3, 0.6), 2.0)
+        };
+        for time in [1.2, 1.6, 2.0] {
+            result_paint(&mut field, &ctx, input, time, vec![]);
+        }
+        assert!((field.scales.aperture().width().recip() - expected.1).abs() < 0.002);
+        assert!(field.scales.aperture().center().distance(expected.0) < 0.002);
+    }
+}
+
+#[test]
 fn drawing_on_zoomed_final_photo_uses_its_real_crop_and_does_not_pan() {
     use crate::edit_workspace::{DrawingTool, EditorState, LoadedPhoto};
     use std::sync::Arc;

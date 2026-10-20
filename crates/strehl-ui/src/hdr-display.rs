@@ -67,6 +67,25 @@ struct Layer {
     peak_nits: f32,
     origin: ImageOrigin,
     sdr: bool,
+    registered: Option<SdrRegistration>,
+}
+
+/// Plain egui meshes retain a texture ID, rather than the layer's Arc. Retire
+/// registrations only after the frame which could reference them has rendered.
+#[derive(Default)]
+struct SdrRetirement(Mutex<Vec<(u64, egui::TextureId)>>);
+
+struct SdrRegistration {
+    id: egui::TextureId,
+    retirement: Arc<SdrRetirement>,
+    context: egui::Context,
+}
+
+impl Drop for SdrRegistration {
+    fn drop(&mut self) {
+        let frame = self.context.cumulative_frame_nr_for(egui::ViewportId::ROOT);
+        self.retirement.0.lock().unwrap().push((frame, self.id));
+    }
 }
 
 #[derive(Clone)]
@@ -82,6 +101,7 @@ struct Presenter {
     #[cfg(target_os = "macos")]
     native_color_space: bool,
     context: egui::Context,
+    sdr_retirement: Arc<SdrRetirement>,
 }
 struct Refresh {
     next: Instant,
@@ -139,6 +159,7 @@ impl PhotoPresenter {
             #[cfg(target_os = "macos")]
             native_color_space,
             context: context.egui_ctx.clone(),
+            sdr_retirement: Arc::default(),
             status: RwLock::new(DisplayStatus::default()),
             refresh: Mutex::new(Refresh {
                 next: Instant::now(),
@@ -157,6 +178,7 @@ impl PhotoPresenter {
     }
 
     pub fn poll(&mut self) -> bool {
+        self.retire_sdr_textures();
         let mut refresh = self.0.refresh.lock().unwrap();
         #[allow(unused_mut)] // macOS queries NSWindow on the main thread below.
         let mut observed = None;
@@ -233,6 +255,32 @@ impl PhotoPresenter {
         changed
     }
 
+    fn retire_sdr_textures(&self) {
+        let frame = self
+            .0
+            .context
+            .cumulative_frame_nr_for(egui::ViewportId::ROOT);
+        let mut retired = self.0.sdr_retirement.0.lock().unwrap();
+        if retired.is_empty() {
+            return;
+        }
+        let mut ready = Vec::new();
+        retired.retain(|&(last_frame, id)| {
+            let keep = frame.saturating_sub(last_frame) < 2;
+            if !keep {
+                ready.push(id);
+            }
+            keep
+        });
+        drop(retired);
+        if !ready.is_empty() {
+            let mut renderer = self.0.render.renderer.write();
+            for id in ready {
+                renderer.free_texture(&id);
+            }
+        }
+    }
+
     pub fn upload(&self, photo: Arc<FloatPhoto>) -> Result<PhotoLayer> {
         let [width, height] = photo.size;
         let limit = self.0.render.device.limits().max_texture_dimension_2d;
@@ -302,6 +350,7 @@ impl PhotoPresenter {
             peak_nits: photo.peak_nits,
             origin: photo.origin,
             sdr: false,
+            registered: None,
         })))
     }
 
@@ -362,6 +411,13 @@ impl PhotoPresenter {
             texture.size(),
         );
         let view = texture.create_view(&Default::default());
+        // Upload and immutable bind-group creation both run on the caller's
+        // development worker. Painting only emits an ordinary batched mesh.
+        let id = self.0.render.renderer.write().register_native_texture(
+            &self.0.render.device,
+            &view,
+            wgpu::FilterMode::Linear,
+        );
         Ok(PhotoLayer(Arc::new(Layer {
             _texture: texture,
             view,
@@ -370,6 +426,11 @@ impl PhotoPresenter {
             peak_nits: 80.0,
             origin: ImageOrigin::DisplayReferred,
             sdr: true,
+            registered: Some(SdrRegistration {
+                id,
+                retirement: self.0.sdr_retirement.clone(),
+                context: self.0.context.clone(),
+            }),
         })))
     }
 
@@ -417,19 +478,46 @@ impl PhotoPresenter {
         if !overview.0.sdr || !destination.is_positive() || !aperture.is_positive() {
             return false;
         }
-        let status = self.status();
-        self.paint_layer(painter, destination, aperture, overview, 1.0, &status);
+        self.paint_sdr_layer(painter, destination, aperture, overview, 1.0);
         if let Some((layer, alpha)) = detail.filter(|(layer, _)| layer.0.sdr) {
-            self.paint_layer(
-                painter,
-                destination,
-                aperture,
-                layer,
-                alpha.clamp(0.0, 1.0),
-                &status,
-            );
+            self.paint_sdr_layer(painter, destination, aperture, layer, alpha.clamp(0.0, 1.0));
         }
         true
+    }
+
+    fn paint_sdr_layer(
+        &self,
+        painter: &egui::Painter,
+        destination: Rect,
+        aperture: Rect,
+        layer: &PhotoLayer,
+        alpha: f32,
+    ) {
+        // Upstream egui's sRGB-attachment shader decodes premultiplied gamma
+        // colors directly. Keep the existing linear-alpha callback for fades
+        // on that fallback format; our extended-linear shader handles it.
+        if self.0.render.target_format.is_srgb() && alpha < 1.0 {
+            self.paint_layer(painter, destination, aperture, layer, alpha, &self.status());
+            return;
+        }
+        let Some(registered) = &layer.0.registered else {
+            return;
+        };
+        let visible = aperture.intersect(layer.0.uv);
+        if !visible.is_positive() || alpha <= 0.0 {
+            return;
+        }
+        let project = |point: egui::Pos2| {
+            destination.min + (point - aperture.min) / aperture.size() * destination.size()
+        };
+        let local =
+            |point: egui::Pos2| egui::Pos2::ZERO + (point - layer.0.uv.min) / layer.0.uv.size();
+        painter.image(
+            registered.id,
+            Rect::from_min_max(project(visible.min), project(visible.max)),
+            Rect::from_min_max(local(visible.min), local(visible.max)),
+            egui::Color32::WHITE.gamma_multiply(alpha),
+        );
     }
 
     fn paint_layer(

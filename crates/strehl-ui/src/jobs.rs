@@ -106,6 +106,58 @@ pub(crate) fn spawn_task<T: Send + 'static>(
     }
 }
 
+struct CompletionNotice<T> {
+    sender: Option<SyncSender<Result<T, String>>>,
+    notify: Arc<dyn Fn() + Send + Sync>,
+}
+
+impl<T> Drop for CompletionNotice<T> {
+    fn drop(&mut self) {
+        // Notification promises a readable result OR a disconnected channel.
+        // Drop the sole sender first, including during cancellation/unwinding.
+        drop(self.sender.take());
+        (self.notify)();
+    }
+}
+
+/// Like `spawn_task`, with exactly one completion notice after publication.
+/// The receiver needs no polling timer: a failed/cancelled/panicking worker
+/// also notifies, after its channel becomes readable or disconnected.
+pub(crate) fn spawn_notifying_task<T: Send + 'static>(
+    name: &str,
+    work: impl FnOnce(Arc<AtomicBool>) -> Result<T> + Send + 'static,
+    notify: impl Fn() + Send + Sync + 'static,
+) -> Task<T> {
+    let (sender, receiver) = mpsc::sync_channel(1);
+    let cancelled = Arc::new(AtomicBool::new(false));
+    let worker_cancelled = Arc::clone(&cancelled);
+    let notify: Arc<dyn Fn() + Send + Sync> = Arc::new(notify);
+    let worker_notify = Arc::clone(&notify);
+    let started = thread::Builder::new().name(name.into()).spawn(move || {
+        let completion = CompletionNotice {
+            sender: Some(sender),
+            notify: worker_notify,
+        };
+        let result = work(Arc::clone(&worker_cancelled)).map_err(|error| format!("{error:#}"));
+        if !worker_cancelled.load(Ordering::Relaxed) {
+            let _ = completion.sender.as_ref().unwrap().send(result);
+        }
+    });
+    if started.is_err() {
+        // The failed spawn has already dropped its closure and sole sender.
+        // No CompletionNotice was constructed, so this is the only notice.
+        notify();
+    }
+    Task {
+        receiver,
+        cancelled,
+    }
+}
+
+#[cfg(test)]
+#[path = "jobs-worker-tests.rs"]
+mod worker_tests;
+
 #[derive(Clone, Debug)]
 pub struct FrameFile {
     pub path: PathBuf,

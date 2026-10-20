@@ -2,7 +2,7 @@
 //! Pointer motion only changes geometry; workers develop the latest demand.
 use crate::{
     hdr_display::{FloatPhoto, PhotoLayer, PhotoPresenter},
-    jobs::{Task, spawn_task},
+    jobs::{Task, spawn_notifying_task},
 };
 use eframe::egui::{self, Color32, Pos2, Rect, TextureHandle, Vec2};
 use std::{
@@ -15,6 +15,15 @@ const MAX_PATCH_SIDE: u32 = 3072;
 const MAX_PATCH_PIXELS: u64 = 6 * 1024 * 1024;
 const SETTLE: Duration = Duration::from_millis(80);
 const REVEAL: Duration = Duration::from_millis(120);
+const FRAME_DELAY: Duration = Duration::from_millis(16);
+
+fn request_paced_repaint(ctx: &egui::Context, delay: Duration) {
+    // egui subtracts predicted_dt. Compensate so this is an actual future
+    // deadline, including on 60Hz displays where 16ms would otherwise be zero.
+    let predicted =
+        ctx.input(|input| Duration::try_from_secs_f32(input.predicted_dt).unwrap_or_default());
+    ctx.request_repaint_after(delay.saturating_add(predicted));
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(super) struct Identity {
@@ -109,6 +118,38 @@ struct Patch {
     published: Instant,
 }
 
+fn continues_reveal(
+    previous: &Patch,
+    next: DisplayRegionRequest,
+    next_uv: Rect,
+    aperture: Option<Rect>,
+) -> bool {
+    let Some(aperture) = aperture.filter(|r| r.is_finite() && r.is_positive()) else {
+        return false;
+    };
+    // Exact common sample footprints require complete bins on both patches.
+    // Partial coarse edge bins can have different centers despite equal stride.
+    let same_grid = next.stride > 0
+        && previous.request.stride == next.stride
+        && [
+            previous.request.min,
+            previous.request.max,
+            next.min,
+            next.max,
+        ]
+        .into_iter()
+        .flatten()
+        .all(|coordinate| coordinate % next.stride == 0);
+    // This is a bounded visual tradeoff: at most 20% newly exposed area may
+    // join the existing reveal. A small pan must not soften already-sharp
+    // pixels, while a large jump still gets the full transition.
+    let overlap = previous.uv.intersect(aperture);
+    same_grid
+        && next_uv.contains_rect(aperture)
+        && overlap.is_positive()
+        && overlap.area() >= aperture.area() * 0.8
+}
+
 /// Immutable geometry/pixel generation passed to the photograph painter.
 #[derive(Clone)]
 pub(crate) struct PhotoPaint {
@@ -125,24 +166,37 @@ impl PhotoPaint {
             (patch.published.elapsed().as_secs_f32() / REVEAL.as_secs_f32()).clamp(0.0, 1.0)
         });
         if opacity > 0.0 && opacity < 1.0 {
-            painter.ctx().request_repaint();
+            request_paced_repaint(painter.ctx(), FRAME_DELAY);
         }
         if let (Some(presenter), Some(overview)) = (&self.presenter, &self.layer) {
+            let opaque = self
+                .detail
+                .as_ref()
+                .filter(|patch| opacity >= 1.0 && patch.uv.contains_rect(aperture))
+                .and_then(|patch| patch.layer.as_ref());
             let detail = self
                 .detail
                 .as_ref()
                 .and_then(|p| p.layer.as_ref())
+                .filter(|_| opaque.is_none())
                 .map(|p| (p, opacity));
+            // An opaque patch covering the viewport is already the whole base.
+            // Avoid shading an overview which would be completely overwritten.
+            let base = opaque.unwrap_or(overview);
             let painted = if self.hdr {
-                presenter.paint(painter, destination, aperture, overview, detail)
+                presenter.paint(painter, destination, aperture, base, detail)
             } else {
-                presenter.paint_sdr(painter, destination, aperture, overview, detail)
+                presenter.paint_sdr(painter, destination, aperture, base, detail)
             };
             if painted {
                 return;
             }
         }
-        painter.image(self.overview.id(), destination, aperture, Color32::WHITE);
+        if !self.detail.as_ref().is_some_and(|patch| {
+            opacity >= 1.0 && patch.texture.is_some() && patch.uv.contains_rect(aperture)
+        }) {
+            painter.image(self.overview.id(), destination, aperture, Color32::WHITE);
+        }
         if let Some(patch) = &self.detail
             && let Some(texture) = &patch.texture
         {
@@ -189,6 +243,8 @@ pub(super) struct ViewportRefinement {
     jobs: u64,
     cancellations: u64,
     reuses: u64,
+    reveal_reused: u64,
+    reveal_restarted: u64,
     source_samples: u64,
     rendered_pixels: u64,
     last_ms: f64,
@@ -369,12 +425,15 @@ impl ViewportRefinement {
             let result = pending.task.receiver.try_recv();
             if !matches!(result, Err(std::sync::mpsc::TryRecvError::Empty)) {
                 let pending = self.pending.take().unwrap();
-                if let Ok(result) = result
-                    && pending.identity == current
+                if pending.identity == current
                     && self.identity == Some(current)
+                    && !pending.task.is_cancelled()
                 {
+                    let result = result.unwrap_or_else(|_| {
+                        Err("Photo detail worker stopped before publishing its result".into())
+                    });
                     match result {
-                        Ok(image) if !pending.task.is_cancelled() => {
+                        Ok(image) => {
                             let publication = Instant::now();
                             let uv = Rect::from_min_max(
                                 Pos2::from(image.uv[0]),
@@ -397,23 +456,40 @@ impl ViewportRefinement {
                                 )
                             });
                             if let Some(paint) = &mut self.paint {
+                                // The identity checks above and atomic overview
+                                // replacement guarantee both patches share a recipe.
+                                let continued = paint.detail.as_ref().filter(|previous| {
+                                    continues_reveal(
+                                        previous,
+                                        pending.request,
+                                        uv,
+                                        self.desired.map(|demand| demand.aperture),
+                                    )
+                                });
+                                let published = if let Some(previous) = continued {
+                                    self.reveal_reused += 1;
+                                    previous.published
+                                } else {
+                                    self.reveal_restarted += 1;
+                                    Instant::now()
+                                };
                                 paint.detail = Some(Patch {
                                     request: pending.request,
                                     texture,
                                     size: image.size,
                                     layer: image.layer,
                                     uv,
-                                    published: Instant::now(),
+                                    published,
                                 });
                             }
                             self.record_publication(publication);
-                            ctx.request_repaint();
+                            // This frame paints the publication. The worker already
+                            // woke it, and any active reveal schedules its next frame.
                         }
                         Err(error) => {
                             self.failed = Some((current, pending.request));
                             self.last_error = Some(error);
                         }
-                        _ => {}
                     }
                 }
             }
@@ -453,29 +529,46 @@ impl ViewportRefinement {
                 let recipe = recipe.clone();
                 let request = demand.request;
                 let presenter = self.presenter.clone();
+                let wake = ctx.clone();
                 self.jobs += 1;
                 self.pending = Some(Pending {
                     identity: current,
                     request,
-                    task: spawn_task("strehl-photo-detail", move |cancelled| {
-                        prepare(
-                            &source,
-                            &recipe,
-                            request,
-                            &cancelled,
-                            presenter.as_ref(),
-                            current.hdr,
-                            false,
-                        )
-                    }),
+                    task: spawn_notifying_task(
+                        "strehl-photo-detail",
+                        move |cancelled| {
+                            prepare(
+                                &source,
+                                &recipe,
+                                request,
+                                &cancelled,
+                                presenter.as_ref(),
+                                current.hdr,
+                                false,
+                            )
+                        },
+                        move || {
+                            // Pixels (or disconnect) are available before this one-shot
+                            // wake. A nonzero delay avoids egui's extra immediate pass.
+                            request_paced_repaint(&wake, Duration::from_millis(1));
+                        },
+                    ),
                 });
             }
-            if !already && self.failed != Some((current, demand.request)) {
-                ctx.request_repaint_after(Duration::from_millis(16));
+            if self.pending.is_none() && !already && self.failed != Some((current, demand.request))
+            {
+                let remaining = self
+                    .since
+                    .map_or(SETTLE, |at| SETTLE.saturating_sub(at.elapsed()));
+                request_paced_repaint(
+                    ctx,
+                    if remaining.is_zero() {
+                        FRAME_DELAY
+                    } else {
+                        remaining
+                    },
+                );
             }
-        }
-        if self.pending.is_some() {
-            ctx.request_repaint_after(Duration::from_millis(16));
         }
     }
 
@@ -488,6 +581,7 @@ impl ViewportRefinement {
                 "revision":self.identity.map(|i|i.revision),"before":self.identity.map(|i|i.before)
             })),
             "jobs":self.jobs,"cancelled":self.cancellations,"cache_reuses":self.reuses,
+            "reveal_reused":self.reveal_reused,"reveal_restarted":self.reveal_restarted,
             "source_samples":self.source_samples,"refined_pixels":self.rendered_pixels,"last_development_ms":self.last_ms,
             "last_publication_ms":self.last_publication_ms,"max_publication_ms":self.max_publication_ms,
             "pending":self.pending.is_some(),
@@ -526,22 +620,28 @@ fn plan(
         stride *= 2;
     }
     loop {
-        let grid = stride * 32;
-        let min = std::array::from_fn(|i| {
-            let at = (aperture.min[i] * source[i] as f32 - native[i] * 0.12).max(0.0) as u32;
-            at / grid * grid
-        });
-        let max = std::array::from_fn(|i| {
-            let at = (aperture.max[i] * source[i] as f32 + native[i] * 0.12)
-                .ceil()
-                .min(source[i] as f32) as u32;
-            at.div_ceil(grid).saturating_mul(grid).min(source[i])
-        });
-        let size: [u32; 2] = std::array::from_fn(|i| (max[i] - min[i]).div_ceil(stride));
-        if size.iter().all(|&n| n <= max_side.clamp(1, MAX_PATCH_SIDE))
-            && u64::from(size[0]) * u64::from(size[1]) <= MAX_PATCH_PIXELS
-        {
-            return Some(DisplayRegionRequest { min, max, stride });
+        // Retain enough surrounding detail for a pan, but spend the budget on
+        // visible resolution first. Padding must never force a coarser LOD.
+        for padding in [0.35, 0.12, 0.0] {
+            // With no cache margin, discard the extra 32-bin snap as well;
+            // otherwise its rounding alone could reduce visible resolution.
+            let grid = if padding > 0.0 { stride * 32 } else { stride };
+            let min = std::array::from_fn(|i| {
+                let at = (aperture.min[i] * source[i] as f32 - native[i] * padding).max(0.0) as u32;
+                at / grid * grid
+            });
+            let max = std::array::from_fn(|i| {
+                let at = (aperture.max[i] * source[i] as f32 + native[i] * padding)
+                    .ceil()
+                    .min(source[i] as f32) as u32;
+                at.div_ceil(grid).saturating_mul(grid).min(source[i])
+            });
+            let size: [u32; 2] = std::array::from_fn(|i| (max[i] - min[i]).div_ceil(stride));
+            if size.iter().all(|&n| n <= max_side.clamp(1, MAX_PATCH_SIDE))
+                && u64::from(size[0]) * u64::from(size[1]) <= MAX_PATCH_PIXELS
+            {
+                return Some(DisplayRegionRequest { min, max, stride });
+            }
         }
         stride = stride.checked_mul(2)?;
     }

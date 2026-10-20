@@ -75,16 +75,17 @@ refines according to the window's physical pixel density and the source pixels
 covered by the current view. At close inspection the patch uses the original
 source pixels. Zooming does not enlarge a permanently fixed 1600-pixel preview.
 
-Development, validation, and native texture uploads happen on background workers.
-The viewer keeps the previous image while work finishes, discards obsolete
+High-resolution development, validation, and native texture uploads happen on
+background workers. A small initial overview still uses the regular UI upload
+path. The viewer keeps the previous image while work finishes, discards obsolete
 requests, and reveals new detail gradually. A small margin around the visible
 area reuses nearby detail while panning. The patch is bounded to 3072 pixels per
-side and six million pixels; this bounds transfer and working memory on large
+side and about 6.3 million pixels; this bounds transfer and working memory on large
 displays. Changing the recipe or Before state cannot mix generations of pixels.
 
 Windows DX12 uses extended-linear scRGB when the window's active display has HDR
 enabled. macOS Metal uses the display's current EDR headroom. Photograph storage,
-development, and GPU working textures remain f32; only the final operating-system
+development, and HDR GPU working textures remain f32; only the final operating-system
 presentation boundary uses its required float16 surface. Ordinary controls follow
 SDR white, while the photograph retains supported highlight headroom. Moving
 between displays or changing HDR availability refreshes the presentation.
@@ -99,6 +100,8 @@ GPU readback tests establish color arithmetic and above-white preservation.
 Physical HDR-monitor appearance still needs testing on an enabled HDR display;
 the development machine used for this change reported SDR. General ICC soft
 proofing and native HDR on Linux are not implemented.
+See the [display verification record](development/progressive-display-verification.md)
+for the native interaction controls, matched CPU measurements, and their limits.
 
 ## XMP presets
 

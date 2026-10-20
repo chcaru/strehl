@@ -2,6 +2,7 @@
 //! No user catalog, capture directory, or full RAW render is modified.
 use super::*;
 use crate::agent_interface::{AgentRequest, Annotation, IssueKind};
+use egui::Rect;
 use strehl_edit::{
     Adjustments, DevelopmentRecipe, ImageOrigin, LinearImage, RegionAdjustment, SourceRange,
 };
@@ -15,6 +16,29 @@ fn image() -> LinearImage {
         baseline: None,
         baked_recipe: None,
     }
+}
+
+#[test]
+fn painted_photo_aperture_reports_pan_and_rejects_hidden_or_missing_photo() {
+    let photo = Rect::from_min_size(egui::pos2(-30.0, -10.0), egui::vec2(200.0, 100.0));
+    let visible = Rect::from_min_size(egui::pos2(20.0, 15.0), egui::vec2(50.0, 25.0));
+    let first = agent_photo_view(true, Some((photo, visible)));
+    assert_eq!(first["uv"], json!([[0.25, 0.25], [0.5, 0.5]]));
+    let moved = agent_photo_view(
+        true,
+        Some((photo.translate(egui::vec2(-50.0, 0.0)), visible)),
+    );
+    assert_eq!(moved["uv"], json!([[0.5, 0.25], [0.75, 0.5]]));
+    assert!(agent_photo_view(false, Some((photo, visible))).is_null());
+    assert!(agent_photo_view(true, None).is_null());
+    assert!(agent_photo_view(true, Some((photo, Rect::NOTHING))).is_null());
+    let spilling = Rect::from_min_max(egui::pos2(-90.0, -90.0), egui::pos2(70.0, 40.0));
+    assert_eq!(
+        agent_photo_view(true, Some((photo, spilling)))["uv"],
+        json!([[0.0, 0.0], [0.5, 0.5]])
+    );
+    let invalid = Rect::from_min_max(egui::pos2(f32::NAN, 0.0), egui::pos2(70.0, 40.0));
+    assert!(agent_photo_view(true, Some((photo, invalid))).is_null());
 }
 fn app() -> StrehlApp {
     let mut app = StrehlApp::from_launch(4096, LaunchOptions::default());

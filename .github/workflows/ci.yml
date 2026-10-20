@@ -78,6 +78,7 @@ jobs:
         run: |
           python -S crates/strehl-ui/assets/generate-icons.py --check
           python scripts/test-release-package.py -v
+          python scripts/test-display-performance.py -v
           python scripts/release-smoke.py --self-test
       - name: Check desktop formatting and lints
         if: runner.os == 'Linux'

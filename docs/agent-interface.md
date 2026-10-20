@@ -186,6 +186,11 @@ Snapshots also expose `display` with the actual visible region, physical-pixel
 demand, detail sampling stride, publication identity, worker/cache counters, and
 native display capability. `frame_performance` contains the latest bounded CPU
 frame observations, including renderer submission time reported by eframe.
+Repeated layout passes are summed under one egui frame ID; the framework CPU
+value belongs to the preceding frame and is sampled only once.
+`photo_view.uv` identifies the final photograph's actually painted visible crop;
+it is null when that process photograph is not visible. Audits can use this
+to distinguish a requested navigation action from a changed image view.
 These are CPU costs for rendered frames, **not** GPU timings, refresh rate,
 input latency, or proof of what an HDR monitor physically emitted.
 

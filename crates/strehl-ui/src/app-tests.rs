@@ -92,6 +92,147 @@ fn image_task(name: &str, color: [u8; 4]) -> Task<PreviewImage> {
     jobs::spawn_task("independent-image-delivery", move |_| Ok(image))
 }
 
+#[test]
+fn bounded_stack_overview_has_one_native_error_recovery_and_standalone_stays_native() {
+    let directory = jobs::tests::TestDirectory::new("bounded-result-routes");
+    let path = directory.path().join("result.tiff");
+    let standalone = directory.path().join("standalone.png");
+    let pixels = image::RgbImage::from_pixel(2003, 317, image::Rgb([91, 122, 208]));
+    pixels.save(&path).unwrap();
+    pixels.save(&standalone).unwrap();
+    let ctx = Context::default();
+    let mut app = app();
+    app.result = Some(path.clone());
+    app.pending_result = Some(path.clone());
+    let until = Instant::now() + Duration::from_secs(10);
+    while app.image_path.as_ref() != Some(&path) {
+        assert!(Instant::now() < until);
+        app.poll_images(&ctx);
+        std::thread::sleep(Duration::from_millis(2));
+    }
+    assert_eq!(
+        app.result_viewer.texture.as_ref().unwrap().size()[0],
+        preview::OVERVIEW_SIDE as usize
+    );
+    assert_eq!(app.result_viewer.source_size, [2003, 317]);
+    assert!(app.result_viewer.overview);
+    app.result_viewer.reset(false);
+    app.result_viewer.zoom = 2.0;
+    let previous = app.result_viewer.aperture_size().unwrap() * app.result_viewer.zoom;
+    app.editor.path = Some(path.clone());
+    app.editor.error = Some("Invalid edit master".into());
+    app.poll_images(&ctx);
+    assert!(
+        app.result_work.is_some(),
+        "Unavailable editor must dispatch the native fallback"
+    );
+    while app.result_work.is_some() {
+        assert!(Instant::now() < until);
+        app.poll_images(&ctx);
+        std::thread::sleep(Duration::from_millis(2));
+    }
+    assert_eq!(
+        app.result_viewer.texture.as_ref().unwrap().size(),
+        [2003, 317]
+    );
+    let next = app.result_viewer.aperture_size().unwrap() * app.result_viewer.zoom;
+    assert!(
+        (previous - next).length() < 0.002,
+        "Fallback must not disturb a user's framing"
+    );
+    app.result_viewer.overview = true; // Also model a source bigger than the device limit.
+    for _ in 0..5 {
+        app.poll_images(&ctx);
+        assert!(
+            app.result_work.is_none() && app.pending_result.is_none(),
+            "Recovery may not loop"
+        );
+    }
+    app.open_result(standalone.clone());
+    while app.image_path.as_ref() != Some(&standalone) {
+        assert!(Instant::now() < until);
+        app.poll_images(&ctx);
+        std::thread::sleep(Duration::from_millis(2));
+    }
+    assert_eq!(
+        app.result_viewer.texture.as_ref().unwrap().size(),
+        [2003, 317]
+    );
+    assert!(app.result_viewer.native_inspection_available());
+    assert!(app.result_viewer.fit, "A new document must start fitted");
+    assert_eq!(
+        app.result.as_ref(),
+        Some(&path),
+        "Standalone viewing cannot change stack ownership"
+    );
+}
+
+#[test]
+fn bounded_legacy_result_canvas_uses_developed_pixels_and_requests_visible_native_detail() {
+    let ctx = Context::default();
+    theme::install(&ctx);
+    let mut app = app();
+    let path = PathBuf::from("unopened-owned-result.tiff");
+    let image = std::sync::Arc::new(strehl_edit::LinearImage {
+        width: 2048,
+        height: 1024,
+        pixels: vec![0.2; 2048 * 1024 * 3],
+        origin: strehl_edit::ImageOrigin::SceneLinear,
+        baseline: None,
+        baked_recipe: None,
+    });
+    app.editor.path = Some(path.clone());
+    app.editor.loaded = Some(crate::edit_workspace::LoadedPhoto {
+        preview: std::sync::Arc::new(image.preview(32)),
+        image,
+        recipe: Default::default(),
+        source: path.clone(),
+        warnings: Vec::new(),
+    });
+    app.editor.saved_revision = Some(app.editor.revision);
+    let until = Instant::now() + Duration::from_secs(10);
+    while app.editor.photo_paint().is_none() {
+        assert!(Instant::now() < until);
+        app.editor.poll(&ctx, 4096);
+        std::thread::sleep(Duration::from_millis(2));
+    }
+    let coarse = ctx.load_texture(
+        "bounded-fallback",
+        egui::ColorImage::filled([32, 16], Color32::WHITE),
+        egui::TextureOptions::LINEAR,
+    );
+    app.result_viewer.install(&coarse, [2048, 1024], true);
+    app.image_path = Some(path.clone());
+    app.result = Some(path);
+    app.view = View::Result;
+    app.process_view = false;
+    workbench_scene(&mut app, &ctx, 0.1, vec![]);
+    assert!(app.result_viewer.native_inspection_available());
+    app.result_viewer.reset(false);
+    app.result_viewer.zoom = 2.0;
+    let painted = workbench_scene(&mut app, &ctx, 0.2, vec![]);
+    let developed = app.editor.display_texture().unwrap().id();
+    assert!(
+        painted.shapes.iter().any(
+            |shape| matches!(&shape.shape,egui::Shape::Mesh(mesh) if mesh.texture_id==developed)
+        ),
+        "Legacy Result must paint the developed photograph"
+    );
+    let requested = app.editor.display_stats()["requested"].clone();
+    let uv = requested["uv"].as_array().unwrap();
+    assert!(
+        uv[1][0].as_f64().unwrap() - uv[0][0].as_f64().unwrap() < 0.8,
+        "Actual canvas crop must reach the detail worker"
+    );
+    assert_eq!(requested["stride"], 1);
+    while app.editor.display_stats()["published"].is_null() {
+        assert!(Instant::now() < until);
+        app.editor.poll(&ctx, 4096);
+        std::thread::sleep(Duration::from_millis(2));
+    }
+    assert_eq!(app.editor.display_stats()["published"]["stride"], 1);
+}
+
 fn wait_for(app: &mut StrehlApp, ctx: &Context, ready: impl Fn(&StrehlApp) -> bool) {
     let deadline = Instant::now() + Duration::from_secs(30);
     while !ready(app) && Instant::now() < deadline {

@@ -97,6 +97,61 @@ fn native_intervals(bounds: Rect, scale: f32) -> bool {
 }
 
 #[test]
+fn bounded_photo_paint_attachment_and_detachment_preserve_zoomed_panned_bounds() {
+    let context = Context::default();
+    let mut viewer = fixture(&context, true);
+    // A resized full photograph, including odd-dimension rounding, unlike the
+    // deliberately different camera crop used by the generic viewer fixture.
+    viewer.source_size = [3173, 1991];
+    viewer.zoom = 2.4;
+    let before = frame(&context, &mut viewer, 1.5, 0.0, vec![]);
+    let bounds = image_bounds(&before, viewer.texture.as_ref().unwrap().id());
+    let pan = viewer.pan;
+    let mut editor = crate::edit_workspace::EditorState::default();
+    let image = std::sync::Arc::new(strehl_edit::LinearImage {
+        width: 8,
+        height: 6,
+        pixels: vec![0.2; 8 * 6 * 3],
+        origin: strehl_edit::ImageOrigin::SceneLinear,
+        baseline: None,
+        baked_recipe: None,
+    });
+    editor.loaded = Some(crate::edit_workspace::LoadedPhoto {
+        preview: std::sync::Arc::new(image.preview(8)),
+        image,
+        recipe: Default::default(),
+        source: "unopened-viewer-fixture.tiff".into(),
+        warnings: Vec::new(),
+    });
+    let until = std::time::Instant::now() + std::time::Duration::from_secs(10);
+    while editor.photo_paint().is_none() {
+        assert!(std::time::Instant::now() < until);
+        editor.poll(&context, 4096);
+        std::thread::sleep(std::time::Duration::from_millis(2));
+    }
+    viewer.set_photo_paint(editor.photo_paint());
+    assert!(viewer.native_inspection_available());
+    frame(&context, &mut viewer, 1.5, 0.1, vec![]);
+    let attached = viewer.display_mapping.unwrap().0;
+    viewer.set_photo_paint(None);
+    assert!(!viewer.native_inspection_available());
+    let after = frame(&context, &mut viewer, 1.5, 0.2, vec![]);
+    let detached = image_bounds(&after, viewer.texture.as_ref().unwrap().id());
+    for observed in [attached, detached] {
+        assert!(
+            observed.min.distance(bounds.min) < 0.001,
+            "{observed:?} versus {bounds:?}"
+        );
+        assert!(
+            observed.max.distance(bounds.max) < 0.001,
+            "{observed:?} versus {bounds:?}"
+        );
+    }
+    assert_eq!(viewer.pan, pan);
+    assert!(!viewer.fit);
+}
+
+#[test]
 fn native_scale_maps_known_source_intervals_to_single_physical_pixels() {
     // Different settings from the author's 1x examples: fractional Windows
     // scaling plus 2.75x, odd texture dimensions, and subpixel pan offsets.

@@ -304,6 +304,7 @@ impl StrehlApp {
             "adaptive":self.adaptive_snapshot(),
             "display":self.editor.display_stats(),
             "frame_performance":self.frame_performance.snapshot(),
+            "photo_view":agent_photo_view(self.process_view, self.process_space.edit_mapping()),
             "photo":self.editor.loaded.as_ref().filter(|_|self.agent_photo_is_current()).map(|p|json!({"width":p.image.width,"height":p.image.height,"origin":p.image.origin,"source":p.source})),
             "export":self.editor.last_export,"error":self.editor.error.as_ref().or(self.error.as_ref()),
             "grants":self.agent.grants.iter().map(|(id,p)|json!({"id":id,"name":p.file_name()})).collect::<Vec<_>>(),
@@ -835,6 +836,25 @@ impl StrehlApp {
             size,
         ))
     }
+}
+
+fn agent_photo_view(active: bool, mapping: Option<(egui::Rect, egui::Rect)>) -> Value {
+    let Some((photo, visible)) = mapping.filter(|_| active) else {
+        return Value::Null;
+    };
+    if !photo.is_positive() || !visible.is_positive() || !photo.is_finite() || !visible.is_finite()
+    {
+        return Value::Null;
+    }
+    let visible = visible.intersect(photo);
+    if !visible.is_positive() {
+        return Value::Null;
+    }
+    let local = |point: egui::Pos2| (point - photo.min) / photo.size();
+    let min = local(visible.min);
+    let max = local(visible.max);
+    json!({"uv":[[min.x,min.y],[max.x,max.y]],
+        "meaning":"Visible final-photograph aperture from the last painted process view, in normalized image coordinates."})
 }
 
 fn png_reply(

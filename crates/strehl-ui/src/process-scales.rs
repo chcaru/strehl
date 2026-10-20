@@ -204,6 +204,10 @@ impl ProcessScales {
     pub(crate) fn detail_zoom(&self) -> f32 {
         self.zoom_target
     }
+    pub(crate) fn target_view(&self) -> (Pos2, f32) {
+        let view = self.view();
+        (view.pin, view.zoom)
+    }
     pub(crate) fn painted_pin(&self) -> Pos2 {
         self.painted_pin
     }
