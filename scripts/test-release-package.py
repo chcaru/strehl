@@ -49,6 +49,19 @@ class ReleasePackagingTests(unittest.TestCase):
             binary.write_bytes(pe_fixture(delayed="d3d12.dll"))
             self.assertIn("d3d12.dll", release.audit_windows(binary)["imports"])
 
+    def test_pe_audit_accepts_windows_combase_without_admitting_external_libraries(self):
+        with tempfile.TemporaryDirectory() as temp:
+            binary = Path(temp) / "Strehl.exe"
+            for normal, delayed in (("ComBase.dll", None), ("KERNEL32.dll", "ComBase.dll")):
+                with self.subTest(normal=normal, delayed=delayed):
+                    binary.write_bytes(pe_fixture(normal=normal, delayed=delayed))
+                    self.assertIn("combase.dll", release.audit_windows(binary)["imports"])
+            for dependency in ("VCRUNTIME140.dll", "combase-helper.dll", "custom-codec.dll"):
+                with self.subTest(dependency=dependency):
+                    binary.write_bytes(pe_fixture(normal="ComBase.dll", delayed=dependency))
+                    with self.assertRaisesRegex(RuntimeError, "Non-system Windows DLL imports"):
+                        release.audit_windows(binary)
+
     def test_archive_paths_refuse_cross_platform_traversal_and_symlinks(self):
         for name in ("../escape", "/absolute", "C:/outside", "foo\\..\\escape"):
             with self.subTest(name=name), self.assertRaises(RuntimeError):

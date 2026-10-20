@@ -89,7 +89,7 @@ LINUX_DLOPEN = (
     "libGLESv2.so.2",
 )
 WINDOWS_SYSTEM = set("""
-advapi32 avrt bcrypt bcryptprimitives cfgmgr32 comctl32 comdlg32 crypt32 cryptbase
+advapi32 avrt bcrypt bcryptprimitives cfgmgr32 combase comctl32 comdlg32 crypt32 cryptbase
 cryptsp d2d1 d3d11 d3d12 d3dcompiler_47 dbghelp dwmapi dwrite dxcore dxgi dxva2
 gdi32 hid imm32 iphlpapi kernel32 kernelbase msimg32 mswsock ncrypt netapi32 ntdll
 ole32 oleaut32 opengl32 powrprof profapi propsys psapi rpcrt4 secur32 setupapi

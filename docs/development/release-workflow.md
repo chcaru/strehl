@@ -72,12 +72,12 @@ appear. Signature verification does not establish photographic quality or prove
 that the source is free of defects.
 
 Download the app package, `SHA256SUMS`, and both `.sigstore.json` files from the same
-release. With Cosign 3 and a current GitHub CLI, replace the tag and package below
+release. With Cosign 3.1.3 or newer and a current GitHub CLI, replace the tag and package below
 with the release you downloaded:
 
 ```sh
-tag=v0.1.0-alpha.3
-package=Strehl-0.1.0-alpha.3-x86_64-unknown-linux-gnu.AppImage
+tag=v0.1.0-alpha.4
+package=Strehl-0.1.0-alpha.4-x86_64-unknown-linux-gnu.AppImage
 identity="https://github.com/chcaru/strehl/.github/workflows/release.yml@refs/tags/$tag"
 cosign verify-blob --bundle SHA256SUMS.sigstore.json \
   --certificate-identity "$identity" \
@@ -94,12 +94,14 @@ payloads are downloaded, `sha256sum --check SHA256SUMS` verifies the complete se
 For a separately reviewed source commit, also pass `--source-digest <full-sha>`
 to `gh attestation verify`. The [GitHub CLI reference](https://cli.github.com/manual/gh_attestation_verify)
 describes these policy checks.
+The Cosign minimum includes the fix for a
+[legacy-bundle identity verification bypass](https://github.com/sigstore/cosign/security/advisories/GHSA-fx35-mq7g-6g98).
 
 ## Maintainer release procedure
 
 1. Review CI, update the Cargo workspace version and lockfile, and commit the
    intended release sources. Keep the toolchain pinned to an exact release.
-2. Push a matching tag, for example `v0.1.0-alpha.3`. Repository visibility must
+2. Push a matching tag, for example `v0.1.0-alpha.4`. Repository visibility must
    already be public so attestations use the public Sigstore service.
 3. Wait for every release job to pass. Download all fifteen assets from the draft:
    twelve payloads, checksums and two signature/provenance bundles.

@@ -7,7 +7,7 @@ the alignment network, detail at different scales, noise thresholds, admitted
 detail, fallback averages, and the image taking shape. After stacking, the same
 workspace lets you explore how the captures relate to the finished photograph.
 
-[Download the preview](https://github.com/chcaru/strehl/releases/tag/v0.1.0-alpha.3) ·
+[Download the preview](https://github.com/chcaru/strehl/releases/tag/v0.1.0-alpha.4) ·
 [Desktop controls](crates/strehl-ui/README.md) ·
 [Build and verify](docs/development/release-workflow.md)
 
@@ -87,7 +87,7 @@ these distinctions.
 ## Download and start
 
 Get the platform package from the
-[release page](https://github.com/chcaru/strehl/releases/tag/v0.1.0-alpha.3).
+[release page](https://github.com/chcaru/strehl/releases/tag/v0.1.0-alpha.4).
 
 | Platform | Application |
 | --- | --- |
