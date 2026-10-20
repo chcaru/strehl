@@ -36,6 +36,13 @@ fn main() {
         .replace('\\', "/")
         .replace('"', "\\\"");
     let version = env::var("CARGO_PKG_VERSION").expect("Cargo package version");
+    let numeric_version = [
+        env::var("CARGO_PKG_VERSION_MAJOR").unwrap(),
+        env::var("CARGO_PKG_VERSION_MINOR").unwrap(),
+        env::var("CARGO_PKG_VERSION_PATCH").unwrap(),
+        "0".into(),
+    ]
+    .join(",");
     fs::write(
         &resource,
         format!(
@@ -44,8 +51,8 @@ fn main() {
 
 LANGUAGE 9, 1
 1 VERSIONINFO
- FILEVERSION 0,0,0,0
- PRODUCTVERSION 0,0,0,0
+ FILEVERSION {numeric_version}
+ PRODUCTVERSION {numeric_version}
  FILEFLAGSMASK 0x3fL
  FILEFLAGS 0x0L
  FILEOS 0x40004L

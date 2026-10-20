@@ -1,0 +1,2 @@
+# The generated SVG is checked byte-for-byte on every platform.
+crates/strehl-ui/assets/strehl.svg text eol=lf

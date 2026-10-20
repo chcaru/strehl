@@ -1,93 +1,85 @@
-# Desktop engine and rebuild kit
+# Build the Strehl desktop
 
-The supported packaging workflow is Windows with Rust/Cargo 1.98 or newer,
-the MSVC host toolchain, Microsoft C++ build tools, a Windows SDK, and
-PowerShell 7 (`pwsh`). The checkout selects the stable Rust channel; a generated
-source kit records the exact compiler used for that package. Linux and macOS
-desktop builds have not received the same release validation.
+The release checkout pins Rust **1.98.0**. Install that toolchain through rustup.
+The desktop uses the native linker, operating-system graphics libraries, and a
+working graphics driver.
 
-For a normal checkout build, run from the repository root:
+| Platform | Build prerequisites |
+| --- | --- |
+| Windows x64 | MSVC Rust host, Microsoft C++ Build Tools, and Windows SDK |
+| Linux x64 | GCC/build-essential, pkg-config, libssl-dev, libx11-dev, libxi-dev, libxcursor-dev, libxrandr-dev, libxkbcommon-dev, libxkbcommon-x11-dev, libwayland-dev |
+| macOS | Xcode command line tools; native Apple silicon or Intel Rust host |
+
+On Ubuntu 22.04:
+
+```sh
+sudo apt-get install build-essential pkg-config libssl-dev libx11-dev libxi-dev \
+  libxcursor-dev libxrandr-dev libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev
+```
+
+From the repository root:
+
+```sh
+cargo build --locked --release -p strehl-ui --bin strehl-ui
+cargo run --locked --release -p strehl-ui
+```
+
+Keep the complete checkout, including `experiments/native-gpu-gather`, which
+Cargo resolves as an optional path dependency even when its feature is disabled.
+The first checkout build needs network access for locked Cargo dependencies.
+Python is not required to run the application.
+
+The internal Cargo targets are `strehl-ui` (desktop) and `strehl` (CLI).
+Distributed applications are named **Strehl**. The desktop includes the CLI
+engine and launches an owned copy of itself with `--engine-worker`. This
+preserves cancellation and process memory isolation without a second executable
+or engine picker. The normal build enables no experimental engine features.
+
+## Official release packages
+
+The [release workflow](development/release-workflow.md) creates Windows portable
+ZIPs, Linux AppImages, and macOS application bundles. Windows uses the static MSVC
+C runtime; macOS bundles are audited for non-system dependencies. Linux packages
+include the selected user-space libraries, with corresponding native source
+archives. Core operating-system libraries and GPU drivers remain prerequisites.
+
+Every release includes a source/relink kit containing Strehl's application
+sources, lockfile, all locked Cargo dependency sources, notices, and rebuild
+instructions. All four release jobs build the shipped executable from that
+delivered kit with Cargo offline. The kit records the exact source revision and
+compiler identity. It does not promise byte-identical builds across different
+SDKs, linkers, or hosted-runner images.
+
+Extract the kit and choose the command for your native platform:
+
+```sh
+python scripts/release-rebuild.py --target x86_64-pc-windows-msvc
+python scripts/release-rebuild.py --target x86_64-unknown-linux-gnu
+python scripts/release-rebuild.py --target aarch64-apple-darwin
+python scripts/release-rebuild.py --target x86_64-apple-darwin
+```
+
+To replace the LGPL RAW decoder, copy its vendored directory to a separate
+editable directory and follow `REBUILD.md` in the kit. The rebuild script accepts
+`--patch rawler=modified/rawler`, uses the replacement's source, and allows the
+required lockfile change while keeping Cargo offline. Do not modify the original
+checksum-protected vendor directory. See the [decoder notice](raw-decoder-notice.md).
+
+Preserve the corresponding source/relink kit and license notices when
+redistributing binaries. A lone statically linked executable is not a complete
+redistribution package.
+
+## Local Windows development packages
+
+The older local helper remains available:
 
 ```powershell
-cargo build --locked --release -p strehl-ui
-./target/release/strehl-ui.exe
+./scripts/package-desktop.ps1 -Destination ./outputs/strehl-desktop
+./outputs/strehl-desktop/Strehl.exe
 ```
 
-Keep the complete checkout, including `experiments/native-gpu-gather`: Cargo
-resolves that optional path dependency even when its feature is disabled.
-Python is not required for the normal desktop build. The first build needs
-network access to fetch the locked Cargo dependencies.
-
-The packaged **Strehl.exe** carries the same command-line engine as the separate
-**strehl-cli.exe**. Cargo's development targets retain the internal names
-`strehl-ui` and `strehl`; the package gives the desktop its product name. Stack jobs
-launch an isolated copy of the desktop executable with `--engine-worker`. The
-child enters the CLI before starting any window or GUI worker. This keeps render
-cancellation, log capture and process memory isolation. No engine picker or
-second executable is required to use the desktop. The standalone CLI remains
-available for scripts.
-
-The package includes the exact owned source snapshot, its `Cargo.lock`, a
-per-file SHA-256 manifest, the compiler identity, both project licences, and a
-rebuild script. It also includes `RAW-DECODER-NOTICE.md` and the decoder's LGPL
-license text. Keep `source/` or `strehl-source.zip` and these notices with
-distributed binaries.
-The RAW decoder is the locked `rawler` crate (LGPL-2.1); Cargo obtains its
-published crate normally. Its source is not incorporated into Strehl's own
-source tree. This source kit lets recipients rebuild and relink the desktop and
-CLI, including with a modified decoder. The project does not permit shipping
-only a statically linked binary.
-The kit is not an offline dependency bundle. Before redistribution, verify
-availability of the corresponding decoder source and the complete relinking
-materials; see [the release checklist](public-release.md).
-
-On Windows, install the Rust version and host listed in
-`source/desktop-source.json`, plus the Microsoft C++ build tools. From the
-package directory, select that installed version and run:
-
-```powershell
-$manifest = Get-Content ./source/desktop-source.json -Raw | ConvertFrom-Json
-$env:RUSTUP_TOOLCHAIN = $manifest.toolchain
-& ./source/scripts/rebuild-desktop.ps1
-```
-
-The script first checks that the compiler and owned sources match the recorded
-snapshot, then uses the lockfile and recorded build stamp. Cargo may download
-the dependencies pinned in `Cargo.lock`. Output is in
-`source/target-desktop/release/`. The default build enables no experimental
-engine features. This kit covers that desktop build; the repository's separate
-research experiments and their external data are not part of it.
-The script temporarily clears caller-supplied Rust flags and release-profile
-environment overrides so they cannot silently change this recipe.
-
-To rebuild modified sources or replace a dependency, make your changes and run
-`cargo build --release -p strehl-cli --bin strehl -p strehl-ui --bin strehl-ui`
-directly from `source/`, allowing Cargo to update the lockfile if you changed a
-dependency. The script's initial hash check deliberately detects modifications.
-Choose a new `STREHL_BUILD_ID`
-for that build so its TIFF provenance distinguishes it from the supplied kit.
-
-For example, to use a separately obtained, modified `rawler` checkout with a
-compatible package version, add this to the source kit's root `Cargo.toml`:
-
-```toml
-[patch.crates-io]
-rawler = { path = "../rawler-modified" }
-```
-
-Then run the direct build command above from `source/` and retain its updated
-lockfile. This is a modified build, so the original source-manifest verification
-script is expected to reject it. Changing the decoder does not require modifying
-or reverse-engineering a supplied executable.
-
-To create a new release package from a checkout:
-
-```powershell
-& ./scripts/package-desktop.ps1 -Destination ./outputs/strehl-desktop-release
-```
-
-The packager refuses an existing destination. It builds from the copied source
-snapshot and records hashes of the resulting UI, standalone CLI and source ZIP.
-Compiler/linker metadata can affect executable bytes across machines; the
-manifest is a source and build recipe, not a promise of identical PE hashes on
-different Windows toolchains.
+It requires PowerShell 7, refuses an existing destination, and creates a copied
+application source snapshot, a desktop executable, and a separate CLI. Its local
+source kit fetches locked Cargo dependencies on rebuild; unlike the official
+release kit, it does not vendor them. Use the official workflow for published
+binaries.

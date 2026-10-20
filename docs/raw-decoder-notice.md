@@ -9,9 +9,11 @@ version and SHA-256 checksum are recorded in the accompanying `Cargo.lock`:
 
 `04f4cc35c23969a4a834e0b117c7da41ace812eb9053b5effc3fc5c77d114677`
 
-The Strehl source kit contains the application sources and build instructions
+The release source/relink kit contains the application sources, the exact
+mechanically vendored decoder source and other locked Cargo dependencies,
+license notices, and build instructions
 needed to rebuild and relink both executables, including with a modified
-decoder. See `REBUILD.md` beside the executables or `docs/desktop-build.md`
+decoder. See `REBUILD.md` inside the release source/relink kit or `docs/desktop-build.md`
 inside the source kit. Keep the kit and this notice with distributed binaries.
 The application sources remain available under MIT OR Apache-2.0.
 

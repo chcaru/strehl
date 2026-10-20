@@ -1,24 +1,24 @@
 # Security reporting
 
-Strehl is experimental software and has no published security-support window or
-guaranteed response time. Use a current reviewed build; old research binaries
-are retained for provenance, not maintained as supported releases.
-
-For a suspected vulnerability, use this repository's private vulnerability
-reporting channel if it is enabled. If no private reporting channel is
-available, open an issue asking for a secure contact method without including
-exploit details, credentials or private files. Do not assume a public issue or
-an image attachment is confidential.
+Report suspected vulnerabilities through
+[GitHub private vulnerability reporting](https://github.com/chcaru/strehl/security/advisories/new).
+Do not post exploit details, credentials, or private photographs in public issues.
+If the private route is unavailable, open an issue asking for a secure contact
+method without disclosing those details.
 
 Include the build identity, operating system, affected command or interaction,
-expected impact and a minimal reproduction. Share only files you are authorized
-to disclose. RAW images, embedded previews, saved projects and logs may contain
-paths, camera identifiers or location metadata; review them before sharing.
+expected impact, and a minimal reproduction. Share only files you are authorized
+to disclose. RAW images, embedded previews, saved projects, and logs may contain
+paths, camera identifiers, or location metadata; review them before sharing.
 
-The desktop processes RAW files and saved activity locally and starts an owned
-engine child process. That process separation supports cancellation and memory
+Strehl is experimental software and has no guaranteed response time or formal
+security-support window. Use a current reviewed build. Historical research
+results are not maintained releases.
+
+The desktop processes photographs and saved activity locally and starts an
+owned engine child process. That separation supports cancellation and memory
 isolation; it is not a security sandbox. Treat malformed or untrusted image and
 project inputs with the same care as other native file-processing applications.
 
-Maintainers should establish and verify a private reporting route before a
-public release. The [release checklist](docs/public-release.md) tracks that work.
+Release signatures authenticate published bytes and their build workflow.
+They do not establish that the application is free of vulnerabilities.

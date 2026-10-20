@@ -1,79 +1,60 @@
-# Public-release preparation
+# Public release review
 
-This checklist records preparation work. It does not authorize changing
-repository visibility, publishing a release, uploading a package or rewriting
-history. A private push and a public release are separate actions.
+This checklist records the first public preview, `v0.1.0-alpha.1`. It is an
+experimental release; native build checks do not establish photographic quality
+or compatibility with every desktop, GPU, or camera.
 
-The repository currently includes a substantial research history, compact
-result artifacts and archived source packages. Historical reports contain
-machine-specific paths, private-corpus references and superseded claims.
-The working-tree ignore rules do not remove files already tracked or erase
-historical binaries. A source checkout can therefore remain large even after
-generated files are excluded from new commits. Preserve this evidence unless
-the owner explicitly approves a separate history-cleanup plan.
+## Public history preparation
 
-## Before making the repository public
+The owner authorized publication and a narrowly scoped history cleanup on
+2026-10-19. The original remote history was preserved in a verified local Git
+bundle before filtering. The backup stays private and is not a release asset.
 
-- Review both the proposed tree and reachable Git history for credentials,
-  private data, personal identifiers and material without redistribution rights.
-  A filename scan alone is not a secret audit. Rotate any exposed credential;
-  removing its latest copy is insufficient.
-- Confirm the README commands work from a clean checkout without local build
-  bindings, private corpora or environment overrides. Record the exact revision,
-  Rust compiler, platform, commands and failures. Check the documentation links.
-- Confirm every workspace member, lockfile entry and optional path dependency
-  needed by Cargo is present. The normal build currently resolves
-  `experiments/native-gpu-gather` even with that feature disabled.
-- State which platforms and camera inputs were actually exercised. Windows and
-  Sony ARW are the current documented desktop scope; do not infer support from
-  the decoder or graphics backend alone.
-- Review source ownership, project license texts and dependency notices. Keep
-  the project's prohibited-source rules in [AGENTS.md](../AGENTS.md).
-- Enable and test a private vulnerability-reporting route, then update
-  [SECURITY.md](../SECURITY.md) if a more specific contact is available.
-- Review the retained research history's size and local-path disclosures with
-  the owner. A public README cleanup is not a certification that every old
-  report or historical artifact is suitable for public distribution.
+The filter removed an accidentally committed build directory, seven generated
+executables, and full copies of 33 third-party web pages and four manuals.
+Research reports, source code, result tables, source archives, and existing
+source URL/hash citation records were preserved.
 
-## Before distributing a binary
+Verification compared all 3,593 original commits. Each of the 3,592 retained
+commit trees differs only by the approved deletions. The single pruned commit
+only removed the already-filtered build directory. All 1,164 targeted historical
+paths and their 1,033 object IDs are absent from every retained ref.
 
-- Choose a release identifier and supported platform explicitly. Workspace
-  package metadata is currently `0.0.0`; a local build/package label does not
-  establish a public versioning or support policy.
-- Run the relevant automated checks and inspect complete photographic outputs,
-  native-resolution regions and the actual GPU interface. Record limitations
-  rather than converting old benchmark or quality claims into current ones.
-- Build from the exact source snapshot being supplied. Use
-  [the desktop packaging workflow](desktop-build.md), which refuses an existing
-  destination and records source, compiler and package hashes.
-- Include the corresponding application source, lockfile, rebuild recipe,
-  project licenses, [decoder notice](raw-decoder-notice.md) and LGPL text.
-  Verify that recipients can obtain the exact corresponding decoder source and
-  rebuild/relink with a modified decoder. The current kit fetches dependencies
-  from Cargo registries; it is not an offline dependency bundle. Do not ship
-  only a statically linked executable or assume a successful build alone proves
-  redistribution obligations have been met.
-- Rebuild the supplied kit on a separate clean environment, verify its receipt
-  and test launch, one render, cancellation and saved-result reopening. Exact
-  executable bytes across different linker environments are not promised.
-- Review package contents for local paths, logs, caches, private images and
-  debug artifacts. Keep generated packages under ignored `outputs/`.
-- Obtain the owner's explicit public-publication decision before changing
-  visibility, creating a public release or uploading its assets.
+Commit IDs changed. Historical reports can still contain original IDs; the
+[commit map](public-history-commit-map.txt) maps them to the public history.
+A zero replacement identifies the one pruned cleanup commit.
 
-Mark these items with concrete evidence in the release review; an unchecked
-list or an old passing run is not a completed release gate.
+An earlier conventional credential-pattern scan examined 41,275 text blobs.
+The additional archive review examined all 2,925 members of 16 reachable ZIP
+archives and found no matching private-key, token, API-key, or credential
+assignment patterns. The captured public vendor-page browser key identified in
+the earlier review was removed with that full snapshot. These bounded checks
+are evidence of the work performed, not a guarantee that arbitrary historical
+data contains no sensitive information.
 
-## Preparation audit, 2026-10-18
+Historical reports retain machine paths, references to private photographic
+corpora, and superseded research claims. Those datasets are not included.
 
-A conventional credential-pattern scan of reachable local history examined
-41,275 text blobs (14,695 binary blobs were outside its scope). It found two
-occurrences of one Google Maps browser key in the captured public Canva page
-`experiments/M132-blocker-d-routes/canva-affinity-free.html`, Git blob
-`b7b7c504b656cd619b739997ae2a3f01e1450a97`. The snapshot matches its recorded
-public-page URL and manifest hash; its frontend configuration states that the
-visitor is logged out. This is a narrow third-party snapshot finding, not a
-Strehl account credential. The key was not tested; its restrictions and validity
-are unknown. Keep future scans enabled for this pattern and review changed
-content independently. This scan does not certify all historical content as
-safe or licensed for public distribution.
+## Release gates
+
+- Build from committed sources with a pinned Rust toolchain.
+- Supply the matching application and dependency sources, notices, and a
+  working offline rebuild/relink recipe.
+- Build and test the delivered kit on Windows x64, Linux x64, macOS Apple
+  silicon, and macOS Intel.
+- Audit native dependencies and run the packaged embedded engine.
+- Check Windows executable resources, macOS bundle metadata/signature, and
+  Linux runtime/native-library source coverage.
+- Reject missing, extra, empty, or incorrectly identified release assets.
+- Sign checksums and verify the exact workflow/tag identity and build provenance.
+- Review genuine application recordings and document diagnostic limitations.
+- Enable a private vulnerability-reporting route.
+- Publish the draft only after reviewing its assets and verification results.
+
+The [release workflow guide](development/release-workflow.md) records the
+commands, platform assumptions, signing scope, and maintenance procedure.
+Windows Authenticode and Apple Developer ID/notarization are not enabled for
+this preview; the owner selected signed checksums and build provenance.
+
+Future publication changes should repeat the relevant checks. Do not treat an
+old passing result as evidence for a modified binary, source kit, or workflow.

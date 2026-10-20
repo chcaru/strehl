@@ -36,6 +36,9 @@ target-*/
 # Small, owned application-icon sources are intentional release assets.
 !crates/strehl-ui/assets/*.png
 !crates/strehl-ui/assets/*.ico
+# Curated screenshots and app recordings for the public README.
+!docs/media/*.png
+!docs/media/*.gif
 
 # RAW inputs are never committed
 *.ARW

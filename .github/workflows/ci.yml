@@ -1,0 +1,101 @@
+name: Desktop CI
+
+on:
+  pull_request:
+  push:
+    branches: ["**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: desktop-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: "0"
+
+jobs:
+  native:
+    name: Test ${{ matrix.target }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: windows-2025
+            target: x86_64-pc-windows-msvc
+            rustflags: "-C target-feature=+crt-static"
+          - runner: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            rustflags: ""
+          - runner: macos-15
+            target: aarch64-apple-darwin
+            rustflags: ""
+          - runner: macos-15-intel
+            target: x86_64-apple-darwin
+            rustflags: ""
+    defaults:
+      run:
+        shell: bash
+    env:
+      RUSTFLAGS: ${{ matrix.rustflags }}
+      TARGET: ${{ matrix.target }}
+      MACOSX_DEPLOYMENT_TARGET: "11.0"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Install Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            build-essential pkg-config libssl-dev libx11-dev libxi-dev \
+            libxcursor-dev libxrandr-dev libxkbcommon-dev libxkbcommon-x11-dev \
+            libwayland-dev libvulkan1 libegl1 libgl1
+      - name: Read the repository's pinned Rust toolchain
+        run: |
+          python - <<'PY'
+          import os, pathlib, re, tomllib
+          channel = tomllib.loads(pathlib.Path("rust-toolchain.toml").read_text(encoding="utf-8"))["toolchain"]["channel"]
+          if not re.fullmatch(r"\d+\.\d+\.\d+", channel):
+              raise SystemExit("Pin an exact Rust release in rust-toolchain.toml")
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as output:
+              output.write(f"RUST_TOOLCHAIN={channel}\n")
+          PY
+      - name: Prepare Rust
+        run: |
+          rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal --component rustfmt,clippy --target "$TARGET"
+          rustc --version --verbose
+      - name: Check generated icons and packaging controls
+        run: |
+          python -S crates/strehl-ui/assets/generate-icons.py --check
+          python scripts/test-release-package.py -v
+      - name: Check desktop formatting and lints
+        if: runner.os == 'Linux'
+        run: |
+          cargo fmt -p strehl-ui -- --check
+          cargo clippy --locked -p strehl-ui --all-targets --target "$TARGET" --no-deps -- -D warnings
+      - name: Run self-contained desktop tests
+        # Corpus-dependent benchmarks remain ignored; CLI integration tests need private RAWs.
+        run: cargo test --locked -p strehl-ui --target "$TARGET"
+      - name: Build the native desktop
+        run: cargo build --locked -p strehl-ui --target "$TARGET"
+      - name: Exercise the embedded engine without opening a window
+        run: |
+          python - <<'PY'
+          import os, pathlib, subprocess
+          suffix = ".exe" if os.name == "nt" else ""
+          binary = pathlib.Path("target") / os.environ["TARGET"] / "debug" / f"strehl-ui{suffix}"
+          result = subprocess.run([str(binary.resolve()), "--engine-worker", "--help"], check=True, capture_output=True, text=True)
+          if not {"stack", "probe"}.issubset(result.stdout.lower().split()):
+              raise SystemExit("Embedded engine help did not list stack and probe")
+          print(result.stdout)
+          PY
