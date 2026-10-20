@@ -93,10 +93,10 @@ fn image_task(name: &str, color: [u8; 4]) -> Task<PreviewImage> {
 }
 
 fn wait_for(app: &mut StrehlApp, ctx: &Context, ready: impl Fn(&StrehlApp) -> bool) {
-    let deadline = Instant::now() + Duration::from_secs(5);
+    let deadline = Instant::now() + Duration::from_secs(30);
     while !ready(app) && Instant::now() < deadline {
         app.poll(ctx);
-        std::thread::yield_now();
+        std::thread::sleep(Duration::from_millis(1));
     }
     assert!(
         ready(app),
@@ -585,7 +585,7 @@ fn embedded_camera_orientation_preserves_actual_pixels_in_all_eight_directions()
         std::fs::write(&path, &bytes).unwrap();
         let preview = source_preview::load_source_preview(path.clone(), 100)
             .receiver
-            .recv_timeout(Duration::from_secs(5))
+            .recv_timeout(Duration::from_secs(30))
             .unwrap()
             .unwrap();
         let (width, height) = if orientation >= 5 { (9, 13) } else { (13, 9) };
@@ -2582,7 +2582,8 @@ fn completion_loads_and_paints_owned_tiff_on_scheduled_frames_without_pointer_in
             |ctx| app.update_workspace(ctx),
         )
     };
-    let warm_deadline = Instant::now() + Duration::from_secs(5);
+    let warm_deadline = Instant::now() + Duration::from_secs(30);
+    let mut idle_frames = 0;
     loop {
         let _ = tick(&mut app, time);
         time += 0.02;
@@ -2590,18 +2591,23 @@ fn completion_loads_and_paints_owned_tiff_on_scheduled_frames_without_pointer_in
             && !app.browser.active()
             && !app.process_space.transitioning()
             && (0..3).all(|index| app.browser.native_thumbnail(index).is_some())
+            && app.result_work.is_none()
+            && app.pending_result.is_none()
         {
-            break;
+            // Later rendered frames can request another quality tier after a
+            // momentary idle. Require the full eight-frame idle precondition.
+            idle_frames += 1;
+            if idle_frames == 8 {
+                break;
+            }
+        } else {
+            idle_frames = 0;
         }
         assert!(
             Instant::now() < warm_deadline,
             "the idle-cache precondition never occurred"
         );
         std::thread::sleep(Duration::from_millis(2));
-    }
-    for _ in 0..8 {
-        let _ = tick(&mut app, time);
-        time += 0.02;
     }
     assert!(!app.browser.active() && app.result_work.is_none() && app.pending_result.is_none());
     // Completing while inspecting Sources must still present the photograph
@@ -3036,7 +3042,7 @@ fn entering_process_from_a_middle_photos_viewport_warms_every_fixed_contact_then
     assert!(retired.native_thumbnail(omitted).is_none());
     let start = Instant::now();
     let mut idle_samples = 0;
-    while start.elapsed() < Duration::from_secs(5) {
+    while start.elapsed() < Duration::from_secs(30) {
         retired.poll(
             &ctx,
             app.epoch,
@@ -3054,7 +3060,7 @@ fn entering_process_from_a_middle_photos_viewport_warms_every_fixed_contact_then
         } else {
             idle_samples = 0;
         }
-        std::thread::yield_now();
+        std::thread::sleep(Duration::from_millis(1));
     }
     assert_eq!(
         idle_samples, 5,
@@ -3068,7 +3074,7 @@ fn entering_process_from_a_middle_photos_viewport_warms_every_fixed_contact_then
 
     let start = Instant::now();
     let mut idle_samples = 0;
-    while start.elapsed() < Duration::from_secs(5) {
+    while start.elapsed() < Duration::from_secs(30) {
         app.poll_images(&ctx);
         let complete = anchors
             .iter()
@@ -3081,7 +3087,7 @@ fn entering_process_from_a_middle_photos_viewport_warms_every_fixed_contact_then
         } else {
             idle_samples = 0;
         }
-        std::thread::yield_now();
+        std::thread::sleep(Duration::from_millis(1));
     }
     assert_eq!(
         idle_samples, 5,

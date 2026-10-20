@@ -178,7 +178,8 @@ jobs:
             libxcursor-dev libxrandr-dev libxkbcommon-dev libxkbcommon-x11-dev \
             libwayland-dev libvulkan1 libegl1 libgl1 libgles2 desktop-file-utils \
             libxinerama1 libxrender1 libxfixes3 libx11-xcb1 libxcb1 \
-            libwayland-client0 libwayland-cursor0 libwayland-egl1 libdecor-0-0 xkb-data
+            libwayland-client0 libwayland-cursor0 libwayland-egl1 libdecor-0-0 xkb-data \
+            xvfb xauth mesa-vulkan-drivers
       - name: Install pinned native Rust
         run: |
           rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal --target "$TARGET"
@@ -188,9 +189,11 @@ jobs:
         run: |
           python -S crates/strehl-ui/assets/generate-icons.py --check
           python scripts/test-release-package.py -v
+          python scripts/release-smoke.py --self-test
       - name: Test the delivered kit without network or private corpus inputs
         working-directory: build-kit/Strehl-source
-        run: cargo test --locked --offline -p strehl-ui --target "$TARGET"
+        # Each fixture may start decoder workers; bound simultaneous fixture pools.
+        run: cargo test --locked --offline -p strehl-ui --target "$TARGET" -- --test-threads=2
       - name: Build the shipped executable from the offline relink kit
         run: python build-kit/Strehl-source/scripts/release-rebuild.py --target "$TARGET"
       - name: Package and inspect native dependencies
@@ -199,6 +202,29 @@ jobs:
             --platform "$PLATFORM" --target "$TARGET" --version "$VERSION" \
             --binary "build-kit/Strehl-source/target/$TARGET/release/strehl-ui$EXE_SUFFIX" \
             --notices "source-kit/Strehl-$VERSION-third-party-notices.zip" --output dist
+      - name: Render the packaged native window
+        run: |
+          if [ "$PLATFORM" = linux ]; then
+            # Only this smoke uses a software Vulkan adapter; shipped defaults stay intact.
+            export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.x86_64.json
+            test -s "$VK_ICD_FILENAMES"
+            export WGPU_BACKEND=vulkan
+            export XDG_RUNTIME_DIR="$RUNNER_TEMP/strehl-runtime"
+            mkdir -p "$XDG_RUNTIME_DIR"
+            chmod 700 "$XDG_RUNTIME_DIR"
+            xvfb-run -a -s "-screen 0 1600x1000x24" \
+              python scripts/release-smoke.py --platform "$PLATFORM" --target "$TARGET" --version "$VERSION"
+          else
+            python scripts/release-smoke.py --platform "$PLATFORM" --target "$TARGET" --version "$VERSION"
+          fi
+      - name: Save native window evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: smoke-${{ matrix.target }}
+          path: native-smoke/*
+          if-no-files-found: warn
+          retention-days: 14
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: release-${{ matrix.target }}

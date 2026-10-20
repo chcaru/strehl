@@ -6,6 +6,8 @@ runs the self-contained UI tests, builds the native executable, and starts its
 embedded engine in help mode without opening a window. Linux also checks desktop
 formatting and Clippy. Private RAW benchmarks stay ignored; this workflow does not
 claim to run the full photographic corpus or test GPU presentation.
+UI tests run with two test threads so concurrent fixtures do not oversubscribe
+their decoder pools; the app's production worker count is unchanged.
 
 [Draft desktop release](../../.github/workflows/release.yml) runs on a pushed `v*`
 tag, or a manual run explicitly targeting that tag. It requires a public repository,
@@ -37,6 +39,15 @@ packaging script and Git identity; the executable comes from the extracted kit.
 The Linux job enables matching Ubuntu source repositories so unavailable native
 library sources stop the release.
 
+Each packaged app must also open a native window, display a generated image and
+save its own rendered screenshot before its release artifact is uploaded. The
+check decodes that screenshot and requires all four image colors in their expected
+quadrants. Linux uses Xvfb and Mesa's software Vulkan renderer for this check;
+macOS and Windows use their runner's native graphics backend. This exercises
+window creation and preview rendering, not RAW stacking or every graphics driver.
+Screenshots, logs and a receipt are saved as separate `smoke-*` Actions artifacts
+even when the check fails; they are excluded from the release payloads.
+
 The final job requires all four native jobs and the source job to succeed. It
 rejects missing, extra, duplicate or empty assets, checks each manifest against
 the tag's source commit, and verifies every package size and SHA-256 digest. The
@@ -65,8 +76,8 @@ release. With Cosign 3 and a current GitHub CLI, replace the tag and package bel
 with the release you downloaded:
 
 ```sh
-tag=v0.1.0-alpha.1
-package=Strehl-0.1.0-alpha.1-x86_64-unknown-linux-gnu.AppImage
+tag=v0.1.0-alpha.2
+package=Strehl-0.1.0-alpha.2-x86_64-unknown-linux-gnu.AppImage
 identity="https://github.com/chcaru/strehl/.github/workflows/release.yml@refs/tags/$tag"
 cosign verify-blob --bundle SHA256SUMS.sigstore.json \
   --certificate-identity "$identity" \
@@ -88,7 +99,7 @@ describes these policy checks.
 
 1. Review CI, update the Cargo workspace version and lockfile, and commit the
    intended release sources. Keep the toolchain pinned to an exact release.
-2. Push a matching tag, for example `v0.1.0-alpha.1`. Repository visibility must
+2. Push a matching tag, for example `v0.1.0-alpha.2`. Repository visibility must
    already be public so attestations use the public Sigstore service.
 3. Wait for every release job to pass. Download all fifteen assets from the draft:
    twelve payloads, checksums and two signature/provenance bundles.

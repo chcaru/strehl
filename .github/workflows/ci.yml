@@ -78,6 +78,7 @@ jobs:
         run: |
           python -S crates/strehl-ui/assets/generate-icons.py --check
           python scripts/test-release-package.py -v
+          python scripts/release-smoke.py --self-test
       - name: Check desktop formatting and lints
         if: runner.os == 'Linux'
         run: |
@@ -85,7 +86,8 @@ jobs:
           cargo clippy --locked -p strehl-ui --all-targets --target "$TARGET" --no-deps -- -D warnings
       - name: Run self-contained desktop tests
         # Corpus-dependent benchmarks remain ignored; CLI integration tests need private RAWs.
-        run: cargo test --locked -p strehl-ui --target "$TARGET"
+        # Each fixture may start decoder workers; bound simultaneous fixture pools.
+        run: cargo test --locked -p strehl-ui --target "$TARGET" -- --test-threads=2
       - name: Build the native desktop
         run: cargo build --locked -p strehl-ui --target "$TARGET"
       - name: Exercise the embedded engine without opening a window

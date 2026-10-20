@@ -301,7 +301,15 @@ fn rendered_project_rename_defers_disk_write_and_exit_flushes_latest_name() {
         true,
         0.4,
         vec![
-            key(egui::Key::A, egui::Modifiers::CTRL),
+            key(
+                egui::Key::A,
+                egui::Modifiers {
+                    command: true,
+                    mac_cmd: cfg!(target_os = "macos"),
+                    ctrl: !cfg!(target_os = "macos"),
+                    ..egui::Modifiers::NONE
+                },
+            ),
             egui::Event::Text("After editing".into()),
         ],
     );

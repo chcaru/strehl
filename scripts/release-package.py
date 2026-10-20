@@ -36,7 +36,8 @@ TARGETS = {
 SOURCE_PATHS = (
     "Cargo.toml", "Cargo.lock", "rust-toolchain.toml", "LICENSE*", ".gitattributes",
     "crates", "experiments/native-gpu-gather/Cargo.toml", "experiments/native-gpu-gather/src",
-    "scripts/release-package.py", "scripts/release-rebuild.py", "scripts/test-release-package.py",
+    "scripts/release-package.py", "scripts/release-rebuild.py", "scripts/release-smoke.py",
+    "scripts/test-release-package.py",
     ".github/workflows/*.yml", "docs/development/release-workflow.md",
     "docs/desktop-build.md", "docs/raw-decoder-notice.md", "docs/public-release.md",
 )
