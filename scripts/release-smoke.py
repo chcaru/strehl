@@ -76,7 +76,8 @@ def decode_png(data):
     return width, height, channels, pixels
 
 
-def inspect_image(data, minimum=(1060, 720)):
+# Hosted Windows can clamp the requested 1200x800 window to its 1024x768 display.
+def inspect_image(data, minimum=(1024, 720)):
     width, height, channels, pixels = decode_png(data)
     if width < minimum[0] or height < minimum[1]:
         raise ValueError(f"Window is too small: {width}x{height}")
@@ -122,6 +123,14 @@ def self_test():
                                        30, 40, 50, 90, 60, 70, 80, 50))
     inspect_image(fixture(), minimum=(320, 240))
     inspect_image(fixture(alpha=255), minimum=(320, 240))
+    inspect_image(fixture(width=1024, height=768))
+    for width, height in ((1023, 768), (1024, 719)):
+        try:
+            inspect_image(fixture(width=width, height=height))
+        except ValueError as error:
+            assert "Window is too small" in str(error)
+        else:
+            raise AssertionError("An undersized screenshot passed")
     for bad in (fixture(colors=(COLORS[0],) * 4), fixture(colors=COLORS[::-1]),
                 fixture(alpha=0), b"not a PNG"):
         try:

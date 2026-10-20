@@ -76,8 +76,8 @@ release. With Cosign 3.1.3 or newer and a current GitHub CLI, replace the tag an
 with the release you downloaded:
 
 ```sh
-tag=v0.1.0-alpha.4
-package=Strehl-0.1.0-alpha.4-x86_64-unknown-linux-gnu.AppImage
+tag=v0.1.0-alpha.5
+package=Strehl-0.1.0-alpha.5-x86_64-unknown-linux-gnu.AppImage
 identity="https://github.com/chcaru/strehl/.github/workflows/release.yml@refs/tags/$tag"
 cosign verify-blob --bundle SHA256SUMS.sigstore.json \
   --certificate-identity "$identity" \
@@ -101,7 +101,7 @@ The Cosign minimum includes the fix for a
 
 1. Review CI, update the Cargo workspace version and lockfile, and commit the
    intended release sources. Keep the toolchain pinned to an exact release.
-2. Push a matching tag, for example `v0.1.0-alpha.4`. Repository visibility must
+2. Push a matching tag, for example `v0.1.0-alpha.5`. Repository visibility must
    already be public so attestations use the public Sigstore service.
 3. Wait for every release job to pass. Download all fifteen assets from the draft:
    twelve payloads, checksums and two signature/provenance bundles.

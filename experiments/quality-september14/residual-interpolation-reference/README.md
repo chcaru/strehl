@@ -9,7 +9,7 @@
 > OpenCV/libwebp advisory
 > [GHSA-qr4w-53vh-m672](https://github.com/advisories/GHSA-qr4w-53vh-m672).
 
-For `v0.1.0-alpha.4`, this reference and these Python dependencies are excluded
+For `v0.1.0-alpha.5`, this reference and these Python dependencies are excluded
 from the application and delivered source/relink kit; CI does not install this
 manifest. The historical pins remain vulnerable. Any future reference work
 needs a separately maintained and tested environment; changing that environment

@@ -21,7 +21,7 @@ retains upstream dependency pins affected by
 [GHSA-fpfv-jqm9-f5jm](https://github.com/advisories/GHSA-fpfv-jqm9-f5jm), and
 [GHSA-qr4w-53vh-m672](https://github.com/advisories/GHSA-qr4w-53vh-m672).
 Do not install its historical `source/requirements.txt`. These dependencies are
-excluded from the `v0.1.0-alpha.4` application and delivered source/relink kit,
+excluded from the `v0.1.0-alpha.5` application and delivered source/relink kit,
 and CI does not install that manifest. This scope assessment does not fix the
 archived pins or establish that other dependencies are vulnerability-free.
 
