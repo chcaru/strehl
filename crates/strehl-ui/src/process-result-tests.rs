@@ -284,6 +284,90 @@ fn result_warm(field: &mut ProcessTheater, ctx: &egui::Context, input: Input<'_>
 }
 
 #[test]
+fn an_explicit_view_before_first_final_paint_survives_completion_and_refinement() {
+    for focused in [false, true] {
+        let ctx = egui::Context::default();
+        let fixture = ResultFixture::new(&ctx, true);
+        let surfaces = fixture.surfaces();
+        let input = result_input(&fixture, &surfaces);
+        let mut field = ProcessTheater {
+            edit_focus: focused,
+            ..Default::default()
+        };
+        field.set_photo_view(egui::pos2(0.64, 0.38), 8.0);
+        result_warm(&mut field, &ctx, input);
+        let output = result_paint(&mut field, &ctx, input, 0.9, vec![]);
+        let photo = result_photo(&output, &fixture);
+        assert!(
+            (photo.uv.width() - 0.125).abs() < 0.002,
+            "An accepted early crop must survive initial epoch/completion: {:?}",
+            photo.uv
+        );
+        assert!(photo.uv.center().distance(egui::pos2(0.64, 0.38)) < 0.002);
+        let refined = ctx.load_texture(
+            "later-developed-same-photo",
+            egui::ColorImage::filled([166, 126], Color32::WHITE),
+            egui::TextureOptions::LINEAR,
+        );
+        result_paint(
+            &mut field,
+            &ctx,
+            Input {
+                output: Some(&refined),
+                ..input
+            },
+            1.1,
+            vec![],
+        );
+        assert!(
+            (field.scales.aperture().width() - 0.125).abs() < 0.002,
+            "Texture refinement must retain crop"
+        );
+        assert!(
+            field.undo(),
+            "The initial explicit view must remain reversible"
+        );
+        result_paint(
+            &mut field,
+            &ctx,
+            Input {
+                output: Some(&refined),
+                ..input
+            },
+            1.4,
+            vec![],
+        );
+        assert!((field.scales.aperture().width() - 1.0).abs() < 0.002);
+    }
+    let ctx = egui::Context::default();
+    let fixture = ResultFixture::new(&ctx, false);
+    let surfaces = fixture.surfaces();
+    let input = result_input(&fixture, &surfaces);
+    let mut space = crate::process_space::ProcessSpace::default();
+    space.set_photo_view([0.64, 0.38], 8.0);
+    let mut last = None;
+    for time in [0.0, 0.4, 0.6, 0.9] {
+        last = Some(ctx.run(
+            egui::RawInput {
+                screen_rect: Some(Rect::from_min_size(Pos2::ZERO, REVIEW_SIZE.into())),
+                time: Some(time),
+                ..Default::default()
+            },
+            |ctx| {
+                egui::CentralPanel::default().show(ctx, |ui| {
+                    space.show(ui, input);
+                });
+            },
+        ));
+    }
+    let photo = result_photo(last.as_ref().unwrap(), &fixture);
+    assert!(
+        (photo.uv.width() - 0.125).abs() < 0.002,
+        "Outer workspace initialization must preserve the request"
+    );
+}
+
+#[test]
 fn drawing_on_zoomed_final_photo_uses_its_real_crop_and_does_not_pan() {
     use crate::edit_workspace::{DrawingTool, EditorState, LoadedPhoto};
     use std::sync::Arc;

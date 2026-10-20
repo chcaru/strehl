@@ -35,7 +35,7 @@ TARGETS = {
 }
 SOURCE_PATHS = (
     "Cargo.toml", "Cargo.lock", "rust-toolchain.toml", "LICENSE*", ".gitattributes",
-    "crates", "experiments/native-gpu-gather/Cargo.toml", "experiments/native-gpu-gather/src",
+    "crates", "third-party", "experiments/native-gpu-gather/Cargo.toml", "experiments/native-gpu-gather/src",
     "scripts/release-package.py", "scripts/release-rebuild.py", "scripts/release-smoke.py",
     "scripts/test-release-package.py", "scripts/verify-hdr-avif.py",
     ".github/workflows/*.yml", "docs/development/release-workflow.md",
@@ -214,6 +214,13 @@ def copy_application_source(destination):
         copied.append({"path": relative, "sha256": sha256(target)})
     require((destination / "experiments/native-gpu-gather/Cargo.toml").is_file(),
             "Optional Cargo path dependency must be present in the source kit")
+    manifest = tomllib.loads((destination / "Cargo.toml").read_text(encoding="utf-8"))
+    for patches in manifest.get("patch", {}).values():
+        for name, patch in patches.items():
+            if isinstance(patch, dict) and "path" in patch:
+                relative = safe_relative(patch["path"])
+                require((destination / relative / "Cargo.toml").is_file(),
+                        f"Patched dependency missing from source kit: {name}")
     return copied
 
 
@@ -221,13 +228,19 @@ def license_name(name):
     return re.match(r"^(?:licen[cs]e|copying|notice|copyright|patents?)(?:$|[._-])", name, re.I) is not None
 
 
-def collect_notices(metadata, destination, context):
+def collect_notices(metadata, destination, context, application_root=ROOT):
     destination.mkdir(parents=True)
     packages = []
     for package in sorted(metadata["packages"], key=lambda item: (item["name"], item["version"])):
-        if package["source"] is None:
-            continue
         directory = Path(package["manifest_path"]).parent
+        source = package["source"]
+        if source is None:
+            # Cargo registry patches become local path dependencies. Preserve
+            # their upstream notices even though ordinary workspace crates are
+            # already covered by Strehl's own top-level licences.
+            if not directory.resolve().is_relative_to((application_root / "third-party").resolve()):
+                continue
+            source = "local-patch:" + directory.relative_to(application_root).as_posix()
         name = f'{package["name"]}-{package["version"]}'
         candidates = {path for path in directory.rglob("*")
                       if path.is_file() and license_name(path.name)}
@@ -244,7 +257,7 @@ def collect_notices(metadata, destination, context):
             shutil.copyfile(path, target)  # Mechanical copy; never print its contents.
             copies.append(target.relative_to(destination).as_posix())
         packages.append({"name": package["name"], "version": package["version"],
-                         "license": package.get("license"), "source": package["source"],
+                         "license": package.get("license"), "source": source,
                          "repository": package.get("repository"), "license_files": copies})
     require(any(item["name"] == "rawler" for item in packages), "RAW decoder notice missing")
     for name in ("LICENSE-MIT", "LICENSE-APACHE", "LICENSE-LGPL-2.1"):
@@ -338,7 +351,7 @@ def package_source(args, stage, context):
     actual = {(p["name"], p["version"]) for p in metadata["packages"] if p.get("source")}
     require(expected <= actual, "Metadata/vendor set omits a locked dependency")
     notices = stage / "notices"
-    packages = collect_notices(metadata, notices, context)
+    packages = collect_notices(metadata, notices, context, source)
     shutil.copytree(notices, source / "THIRD-PARTY")
     (source / "REBUILD.md").write_text(REBUILD, encoding="utf-8")
     write_json(source / "release-source.json", {**context, "files": copied,

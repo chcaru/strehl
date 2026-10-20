@@ -15,9 +15,13 @@ mod draft_preview;
 #[path = "edit-workspace.rs"]
 mod edit_workspace;
 mod engine;
+#[path = "hdr-display.rs"]
+mod hdr_display;
 #[path = "image-gesture.rs"]
 mod image_gesture;
 mod jobs;
+#[path = "photo-viewport.rs"]
+mod photo_viewport;
 mod pipeline;
 mod preview;
 #[path = "process-admission-regions.rs"]
@@ -280,10 +284,7 @@ fn main() -> eframe::Result {
         renderer: eframe::Renderer::Wgpu,
         // Keep at most one presentation in flight: camera inspection should
         // follow the newest pointer position without a queue of stale views.
-        wgpu_options: eframe::egui_wgpu::WgpuConfiguration {
-            desired_maximum_frame_latency: Some(1),
-            ..Default::default()
-        },
+        wgpu_options: hdr_display::configuration(),
         ..Default::default()
     };
     eframe::run_native(

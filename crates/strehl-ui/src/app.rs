@@ -14,10 +14,14 @@ use crate::{
     viewer::Viewer,
     workbench::{SourcePhoto, Workbench, WorkbenchMode},
 };
+#[path = "app-adaptive.rs"]
+mod adaptive;
 #[path = "app-agent.rs"]
 mod agent;
 #[path = "app-editing.rs"]
 mod editing;
+#[path = "frame-performance.rs"]
+mod frame_performance;
 #[path = "app-history.rs"]
 mod history;
 #[cfg(test)]
@@ -110,6 +114,8 @@ pub struct StrehlApp {
     workbench: Workbench,
     process_space: ProcessSpace,
     editor: crate::edit_workspace::EditorState,
+    adaptive: adaptive::AdaptiveState,
+    frame_performance: frame_performance::FramePerformance,
     edit_photo_focus: bool,
     regional: editing::RegionalInspector,
     agent: agent::AgentState,
@@ -170,7 +176,9 @@ impl StrehlApp {
             .wgpu_render_state
             .as_ref()
             .map_or(8192, |r| r.device.limits().max_texture_dimension_2d);
-        Self::from_launch(max_texture_side, launch)
+        let mut app = Self::from_launch(max_texture_side, launch);
+        app.editor.viewport.presenter = crate::hdr_display::PhotoPresenter::new(cc);
+        app
     }
     fn from_launch(max_texture_side: u32, launch: LaunchOptions) -> Self {
         let catalog =
@@ -200,6 +208,8 @@ impl StrehlApp {
             workbench: Workbench::default(),
             process_space: ProcessSpace::default(),
             editor: Default::default(),
+            adaptive: Default::default(),
+            frame_performance: Default::default(),
             edit_photo_focus: true,
             regional: Default::default(),
             agent: Default::default(),
@@ -2029,6 +2039,13 @@ impl StrehlApp {
                 .as_deref()
                 .filter(|_| self.image_path == self.result),
         );
+        self.process_space.set_photo_paint(
+            (self.result.is_some()
+                && self.image_path == self.result
+                && self.editor.path == self.result)
+                .then(|| self.editor.photo_paint())
+                .flatten(),
+        );
         let response = egui::CentralPanel::default()
             .frame(egui::Frame::new().fill(BG))
             .show(ctx, |ui| {
@@ -2041,14 +2058,9 @@ impl StrehlApp {
                     inspection_photos: &inspection_photos,
                     surfaces: &surfaces,
                     output: if self.result.is_some() && self.image_path == self.result {
-                        if self.editor.before {
-                            self.result_viewer.texture.as_ref()
-                        } else {
-                            self.editor
-                                .texture
-                                .as_ref()
-                                .or(self.result_viewer.texture.as_ref())
-                        }
+                        self.editor
+                            .display_texture()
+                            .or(self.result_viewer.texture.as_ref())
                     } else {
                         None
                     },
@@ -2058,6 +2070,13 @@ impl StrehlApp {
                 };
                 let response = self.process_space.show(ui, input);
                 if let Some(mapping) = self.process_space.edit_mapping() {
+                    if self.result.is_some()
+                        && self.image_path == self.result
+                        && self.editor.path == self.result
+                    {
+                        self.editor
+                            .request_view(ctx, mapping, self.max_texture_side);
+                    }
                     self.editor.draw_overlay(ui, mapping);
                 }
                 response
@@ -2157,6 +2176,7 @@ impl StrehlApp {
             && self.pending_result.is_none()
             && self.editor.loading.is_none()
             && self.editor.developing.is_none()
+            && self.editor.viewport.settled()
             && self.agent.starting.is_none()
             && reveal_ready
             && self.draft_job.is_none()
@@ -2368,8 +2388,11 @@ impl eframe::App for StrehlApp {
             }
         }
     }
-    fn update(&mut self, ctx: &egui::Context, _: &mut eframe::Frame) {
+    fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
+        let started = Instant::now();
         self.update_workspace(ctx);
+        self.frame_performance
+            .record(started.elapsed().as_secs_f64(), frame.info().cpu_usage);
     }
     fn on_exit(&mut self) {
         if let Err(error) = self.editor.ensure_saved_on_close() {

@@ -171,6 +171,24 @@ the application's normal background jobs. Snapshots list up to 256 catalog
 objects and the latest 32 runs per object; truncation and full run counts are
 reported explicitly.
 
+## Adaptive development and display evidence
+
+The command `{"operation":"adaptive_develop","strength":1.0}` queues a bounded
+scene-aware development analysis. Poll `adaptive.analyzing` in `strehl_snapshot`;
+completion includes the original and suggested recipes, measured statistics,
+per-control reasons, limitations, and any stale-result error. Strength is finite
+and between 0 and 1. When the current treatment is still attached, another amount
+uses that same frozen analysis without compounding edits. Changing the photograph
+or recipe while analysis runs prevents its result from overwriting newer work.
+The same Undo journal is used as for human development changes.
+
+Snapshots also expose `display` with the actual visible region, physical-pixel
+demand, detail sampling stride, publication identity, worker/cache counters, and
+native display capability. `frame_performance` contains the latest bounded CPU
+frame observations, including renderer submission time reported by eframe.
+These are CPU costs for rendered frames, **not** GPU timings, refresh rate,
+input latency, or proof of what an HDR monitor physically emitted.
+
 ## Evidence and limits
 
 Admission samples indicate where a frame passed a particular detail-band gate.

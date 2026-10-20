@@ -1,14 +1,19 @@
 //! Shared, versioned development recipes. Image data remains linear f32 until export.
 //! These controls are Strehl's rendering operators, not Adobe's proprietary process.
 
+mod adaptive;
 mod avif;
+#[path = "display-region.rs"]
+mod display_region;
 mod icc;
 mod image;
 mod publish;
 mod recipe;
 mod xmp;
 
+pub use adaptive::{AdaptiveChange, AdaptiveStatistics, AdaptiveSuggestion, analyze_adaptive};
 pub use avif::{HdrExportReport, export_hdr_avif};
+pub use display_region::{DisplayRegion, DisplayRegionRequest};
 pub use image::{
     DisplayBaseline, ImageOrigin, LinearImage, load_tiff, save_linear_tiff, save_sdr_tiff,
 };

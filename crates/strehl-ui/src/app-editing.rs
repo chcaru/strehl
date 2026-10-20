@@ -40,15 +40,15 @@ impl StrehlApp {
     }
 
     pub(super) fn poll_editing(&mut self, ctx: &egui::Context) {
-        if self.sidebar == Some(workspace::Sidebar::Edit)
-            && let Some(path) = self
-                .result
-                .as_ref()
-                .filter(|path| Some(*path) == self.image_path.as_ref())
+        if let Some(path) = self
+            .result
+            .as_ref()
+            .filter(|path| Some(*path) == self.image_path.as_ref())
         {
             self.editor.open(path.clone());
         }
         self.editor.poll(ctx, self.max_texture_side);
+        self.poll_adaptive(ctx);
         self.poll_region_inspector(ctx);
         if let Some((_, time)) = self.editor.pending_edit
             && !ctx.input(|input| input.pointer.any_down())
@@ -129,6 +129,7 @@ impl StrehlApp {
             );
         }
         ui.add_space(8.0);
+        self.adaptive_panel(ui);
         ui.horizontal(|ui| {
             if ui.button("Import preset…").clicked() && self.editor.dialog.is_none() {
                 self.editor.dialog_kind = Some("preset");
@@ -243,7 +244,19 @@ impl StrehlApp {
             adjustment_controls(ui, &mut self.editor.recipe.global);
         }
         ui.separator();
-        egui::CollapsingHeader::new("HDR output").default_open(hdr_available).show(ui, |ui| {
+        egui::CollapsingHeader::new("HDR display & output").default_open(hdr_available).show(ui, |ui| {
+            if let Some(presenter) = &self.editor.viewport.presenter {
+                let status = presenter.status();
+                ui.label(RichText::new(if status.active && hdr_available {
+                    "HDR photograph · native display"
+                } else {
+                    "SDR photograph preview"
+                }).color(if status.active && hdr_available { ACCENT } else { MUTED }));
+                theme::caption(ui, &status.reason);
+                if status.active && hdr_available {
+                    theme::caption(ui, &format!("{:.1}× display headroom · visible detail refines automatically", status.headroom));
+                }
+            }
             if !hdr_available {
                 theme::caption(ui, "Re-stack to retain a RAW-derived master for HDR. This saved photograph has SDR pixels.");
                 return;
@@ -252,7 +265,7 @@ impl StrehlApp {
             ui.add(egui::Slider::new(&mut self.editor.recipe.hdr.reference_white_nits, 80.0..=self.editor.recipe.hdr.peak_nits.min(500.0)).text("White nits"));
             ui.add(egui::Slider::new(&mut self.editor.recipe.hdr.quality, 1..=100).text("AVIF quality"));
             ui.add(egui::Slider::new(&mut self.editor.recipe.hdr.speed, 0..=10).text("Encode speed"));
-            theme::caption(ui, "10-bit PQ · BT.2020 · source color remains BT.709\nNative HDR monitor presentation is not enabled.");
+            theme::caption(ui, "AVIF: 10-bit PQ · BT.2020 container\nWorking color: linear BT.709");
         });
         let needs_restack = self.editor.loaded.as_ref().is_some_and(|loaded| {
             loaded

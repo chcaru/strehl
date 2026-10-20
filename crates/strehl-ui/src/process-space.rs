@@ -73,6 +73,9 @@ pub struct ProcessSpace {
     output_path: Option<std::path::PathBuf>,
 }
 impl ProcessSpace {
+    pub(crate) fn set_photo_paint(&mut self, paint: Option<crate::photo_viewport::PhotoPaint>) {
+        self.theater.set_photo_paint(paint);
+    }
     pub(crate) fn edit_mapping(&self) -> Option<(Rect, Rect)> {
         self.theater.edit_mapping
     }
@@ -155,6 +158,8 @@ impl ProcessSpace {
             let layout = self.theater.layout;
             let annotation_mode = self.theater.annotation_mode;
             let edit_focus = self.theater.edit_focus;
+            let photo_paint = self.theater.photo_paint.clone();
+            let requested_view = self.theater.requested_view;
             let output_path = self.output_path.take();
             *self = Self {
                 epoch: Some(input.epoch),
@@ -164,6 +169,10 @@ impl ProcessSpace {
             self.theater.layout = layout;
             self.theater.annotation_mode = annotation_mode;
             self.theater.edit_focus = edit_focus;
+            self.theater.set_photo_paint(photo_paint);
+            if let Some((center, zoom)) = requested_view {
+                self.theater.set_photo_view(center, zoom);
+            }
         }
         let certified = input.output.is_some()
             && input.output_size.is_some_and(|size| {

@@ -1,4 +1,4 @@
-# Development and HDR export
+# Development, progressive display, and HDR
 
 Strehl keeps an optional **scene-linear RGB32-float master** alongside its familiar
 16-bit SDR photograph. The master is taken after the camera color transform and
@@ -66,8 +66,39 @@ No fictitious mastering-display metadata is invented.
 
 This is HDR **development and output from the preserved RAW-derived master**.
 It does not recover sensor-clipped information and is not an exposure-bracket
-fusion algorithm. The current desktop SDR surface cannot prove HDR monitor
-presentation; inspect the AVIF in a compatible HDR viewer and display.
+fusion algorithm.
+
+## Progressive photograph display
+
+Completed photographs open with a retained overview. The visible area then
+refines according to the window's physical pixel density and the source pixels
+covered by the current view. At close inspection the patch uses the original
+source pixels. Zooming does not enlarge a permanently fixed 1600-pixel preview.
+
+Development, validation, and native texture uploads happen on background workers.
+The viewer keeps the previous image while work finishes, discards obsolete
+requests, and reveals new detail gradually. A small margin around the visible
+area reuses nearby detail while panning. The patch is bounded to 3072 pixels per
+side and six million pixels; this bounds transfer and working memory on large
+displays. Changing the recipe or Before state cannot mix generations of pixels.
+
+Windows DX12 uses extended-linear scRGB when the window's active display has HDR
+enabled. macOS Metal uses the display's current EDR headroom. Photograph storage,
+development, and GPU working textures remain f32; only the final operating-system
+presentation boundary uses its required float16 surface. Ordinary controls follow
+SDR white, while the photograph retains supported highlight headroom. Moving
+between displays or changing HDR availability refreshes the presentation.
+
+The status bar and **Edit → HDR display & output** report the active mode. An old
+SDR TIFF stays SDR even on an HDR monitor. Unsupported graphics backends, Linux,
+and displays without active HDR use the SDR path. The app never enables Windows
+HDR or changes display brightness for you. An HDR screenshot is an SDR proxy;
+use AVIF export to preserve HDR delivery values.
+
+GPU readback tests establish color arithmetic and above-white preservation.
+Physical HDR-monitor appearance still needs testing on an enabled HDR display;
+the development machine used for this change reported SDR. General ICC soft
+proofing and native HDR on Linux are not implemented.
 
 ## XMP presets
 
@@ -79,6 +110,34 @@ execute it. Imported numeric values use Strehl's operators, so the result is not
 claimed to match Lightroom.
 
 Private preset contents are not copied into the repository.
+
+## Adaptive light and color
+
+**Edit → Adaptive** measures the current photograph and proposes an editable
+treatment. It uses bounded, stratified scene samples to assess tonal range,
+highlight headroom, dark backgrounds, strongly separated light/dark compositions,
+and color saturation. It is an original deterministic alternative to an opaque
+profile, not a learned model or a reproduction of Adobe's Adaptive Color.
+
+The treatment adjusts ordinary exposure, contrast, shadow/highlight, white, and
+vibrance controls. **Amount** blends against the recipe that preceded the
+analysis; moving the slider repeatedly does not compound the effect. **What
+changed** shows the proposed control values and the measurements behind them.
+Undo restores the previous recipe. Manual changes remain possible; analyze again
+to start from those new settings.
+
+Nearly flat or extremely dark scenes, unstable spatial samples, strongly
+saturated subjects, and isolated color outliers constrain the suggestion.
+Scene-linear masters retain valid HDR headroom above diffuse white; the delivery
+ceiling comes from the recipe's peak/reference-white ratio. An imported SDR image
+uses its existing white. This is a starting point for judgment, not a guarantee
+of a better photograph or a repair for focus, alignment, noise, or clipped capture
+data. Existing regions, source-span repairs, white balance, and HDR settings are
+preserved.
+
+Analysis runs off the UI thread and is discarded if the photograph or edits
+change before it returns. Agents can request the same operation with
+`adaptive_develop` and inspect the returned analysis in a workspace snapshot.
 
 ## Verification
 

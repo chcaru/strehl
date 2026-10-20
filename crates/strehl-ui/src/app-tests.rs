@@ -2660,14 +2660,25 @@ fn completion_loads_and_paints_owned_tiff_on_scheduled_frames_without_pointer_in
             );
         }
         observed_loading |= app.result_work.is_some();
-        let actual = app.result_viewer.texture.as_ref().map(TextureHandle::id);
-        let opaque_output = actual.is_some_and(|id| {
-            painted.shapes.iter().any(|shape| {
-                matches!(&shape.shape, egui::Shape::Mesh(mesh)
+        // The completed TIFF can now progress into the current document's
+        // developed overview before its first fully opaque paint.
+        let actual = [
+            app.result_viewer.texture.as_ref(),
+            (app.editor.path.as_ref() == Some(&output_path))
+                .then(|| app.editor.display_texture())
+                .flatten(),
+        ];
+        let opaque_output = actual
+            .into_iter()
+            .flatten()
+            .map(TextureHandle::id)
+            .any(|id| {
+                painted.shapes.iter().any(|shape| {
+                    matches!(&shape.shape, egui::Shape::Mesh(mesh)
                 if mesh.texture_id == id && !mesh.vertices.is_empty()
                 && mesh.vertices.iter().all(|vertex| vertex.color.a() == 255))
-            })
-        });
+                })
+            });
         if opaque_output && !app.process_space.transitioning() {
             assert!(
                 painted_support_markers(&painted).len() >= 3,

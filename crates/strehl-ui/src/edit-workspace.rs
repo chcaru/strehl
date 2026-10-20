@@ -22,8 +22,9 @@ pub(crate) struct LoadedPhoto {
 
 pub(crate) struct DevelopedPreview {
     pub revision: u64,
-    pub size: [usize; 2],
-    pub rgb: Vec<u8>,
+    pub before: bool,
+    pub hdr: bool,
+    pub prepared: crate::photo_viewport::PreparedPhoto,
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
@@ -50,6 +51,11 @@ pub(crate) struct EditorState {
     pub loading: Option<Task<LoadedPhoto>>,
     pub developing: Option<Task<DevelopedPreview>>,
     developing_revision: Option<u64>,
+    developing_before: bool,
+    developing_hdr: bool,
+    painted_before: bool,
+    painted_hdr: bool,
+    pub(crate) viewport: crate::photo_viewport::ViewportRefinement,
     pub exporting: Option<Task<PathBuf>>,
     pub dialog: Option<Task<Option<PathBuf>>>,
     pub dialog_kind: Option<&'static str>,
@@ -60,7 +66,6 @@ pub(crate) struct EditorState {
     pub revision: u64,
     pub painted_revision: Option<u64>,
     painted_side: u32,
-    preview_ready_at: Option<Instant>,
     pub changed: Option<Instant>,
     pub saved_revision: Option<u64>,
     pub saving: Option<Task<u64>>,
@@ -78,6 +83,34 @@ pub(crate) struct EditorState {
 }
 
 impl EditorState {
+    pub fn display_stats(&self) -> serde_json::Value {
+        self.viewport.stats()
+    }
+    pub fn photo_paint(&self) -> Option<crate::photo_viewport::PhotoPaint> {
+        (self.painted_before == self.before)
+            .then(|| self.viewport.paint())
+            .flatten()
+    }
+    pub fn display_texture(&self) -> Option<&TextureHandle> {
+        (self.painted_before == self.before)
+            .then_some(self.texture.as_ref())
+            .flatten()
+    }
+    pub fn request_view(
+        &mut self,
+        ctx: &egui::Context,
+        mapping: (egui::Rect, egui::Rect),
+        max_side: u32,
+    ) {
+        if let Some(loaded) = &self.loaded {
+            self.viewport.demand(
+                [loaded.image.width, loaded.image.height],
+                mapping,
+                ctx.pixels_per_point(),
+                max_side,
+            );
+        }
+    }
     pub fn import_preset(&mut self, path: PathBuf) -> anyhow::Result<()> {
         anyhow::ensure!(
             self.loaded.is_some() && self.loading.is_none(),
@@ -258,10 +291,13 @@ impl EditorState {
         let recovery_root = self.recovery_root.take();
         let exporting = self.exporting.take();
         let last_export = self.last_export.take();
+        self.viewport.reset();
+        let viewport = std::mem::take(&mut self.viewport);
         *self = Self {
             show_regions: true,
             exporting,
             last_export,
+            viewport,
             error,
             recoveries,
             recovery_files,
@@ -466,87 +502,122 @@ impl EditorState {
                 Err(error) => self.error = Some(error),
             }
         }
-        if let Some(result) = self
+        self.viewport.refresh_display(ctx);
+        let hdr = self
+            .loaded
+            .as_ref()
+            .is_some_and(|p| self.viewport.hdr_active(p.image.origin));
+        if let Some(task) = &self.developing
+            && (self.developing_revision != Some(self.revision)
+                || self.developing_before != self.before
+                || self.developing_hdr != hdr)
+        {
+            task.cancel();
+        }
+        let developed = self
             .developing
             .as_ref()
-            .and_then(|task| task.receiver.try_recv().ok())
+            .map(|task| task.receiver.try_recv());
+        if let Some(result) = developed
+            && !matches!(result, Err(std::sync::mpsc::TryRecvError::Empty))
         {
             self.developing = None;
             let requested_revision = self.developing_revision.take();
             match result {
-                Ok(preview)
+                Ok(Ok(preview))
                     if preview.revision == self.revision
-                        && (self.painted_revision != Some(preview.revision)
-                            || preview.size[0].max(preview.size[1]) as u32
-                                >= self.painted_side) =>
+                        && preview.before == self.before
+                        && preview.hdr == hdr =>
                 {
-                    let image = egui::ColorImage::from_rgb(preview.size, &preview.rgb);
-                    if let Some(texture) = &mut self.texture {
-                        texture.set(image, egui::TextureOptions::LINEAR);
-                    } else {
-                        self.texture = Some(ctx.load_texture(
-                            "developed-photo",
-                            image,
-                            egui::TextureOptions::LINEAR,
-                        ));
-                    }
+                    self.painted_side = preview.prepared.size[0].max(preview.prepared.size[1]);
+                    self.texture = Some(self.viewport.publish_overview(
+                        ctx,
+                        crate::photo_viewport::Identity {
+                            revision: preview.revision,
+                            before: preview.before,
+                            hdr: preview.hdr,
+                        },
+                        preview.prepared,
+                    ));
                     self.painted_revision = Some(preview.revision);
-                    self.painted_side = preview.size[0].max(preview.size[1]) as u32;
-                    self.preview_ready_at = Some(Instant::now());
+                    self.painted_before = preview.before;
+                    self.painted_hdr = preview.hdr;
                 }
-                Ok(_) => {} // A newer gesture has superseded this preview.
-                Err(error) if requested_revision == Some(self.revision) => {
+                Err(std::sync::mpsc::TryRecvError::Disconnected) => {}
+                Ok(Err(error))
+                    if requested_revision == Some(self.revision)
+                        && self.developing_before == self.before
+                        && self.developing_hdr == hdr =>
+                {
                     self.error = Some(error);
                     self.painted_revision = Some(self.revision);
-                    self.painted_side = max_texture_side.max(1); // Do not retry a failed preview continuously.
+                    self.painted_before = self.before;
+                    self.painted_hdr = hdr;
                 }
+                Ok(_) => {} // A newer gesture has superseded this preview.
                 Err(_) => {}
             }
         }
-        let idle = !ctx.input(|input| input.pointer.any_down())
-            && self
-                .changed
-                .or(self.preview_ready_at)
-                .is_some_and(|time| time.elapsed() >= Duration::from_millis(350));
-        let needs_coarse = self.painted_revision != Some(self.revision);
-        let refine = self.loaded.as_ref().is_some_and(|loaded| {
-            self.painted_side
-                < loaded
-                    .image
-                    .width
-                    .max(loaded.image.height)
-                    .min(max_texture_side.max(1))
-        });
+        let needs_coarse = self.painted_revision != Some(self.revision)
+            || self.painted_before != self.before
+            || self.painted_hdr != hdr;
         if self.developing.is_none()
-            && (needs_coarse || (idle && refine))
+            && needs_coarse
             && let Some(loaded) = &self.loaded
         {
-            let image = Arc::clone(if needs_coarse {
-                &loaded.preview
+            let image = Arc::clone(&loaded.preview);
+            let recipe = if self.before {
+                DevelopmentRecipe::default()
             } else {
-                &loaded.image
-            });
-            let recipe = self.recipe.clone();
+                self.recipe.clone()
+            };
             let revision = self.revision;
+            let before = self.before;
             self.developing_revision = Some(revision);
+            self.developing_before = before;
+            self.developing_hdr = hdr;
+            let presenter = self.viewport.presenter.clone();
             self.developing = Some(spawn_task("strehl-edit-preview", move |cancelled| {
-                anyhow::ensure!(
-                    !cancelled.load(std::sync::atomic::Ordering::Relaxed),
-                    "Preview cancelled"
-                );
-                let (width, height, rgb) = image.render_region_sdr8(
+                let mut stride = 1u32;
+                while image.width.max(image.height).div_ceil(stride) > max_texture_side.max(1) {
+                    stride *= 2;
+                }
+                let prepared = crate::photo_viewport::prepare(
+                    &image,
                     &recipe,
-                    [0.0, 0.0],
-                    [1.0, 1.0],
-                    max_texture_side.max(1),
+                    strehl_edit::DisplayRegionRequest {
+                        min: [0, 0],
+                        max: [image.width, image.height],
+                        stride,
+                    },
+                    &cancelled,
+                    presenter.as_ref(),
+                    hdr,
+                    true,
                 )?;
                 Ok(DevelopedPreview {
                     revision,
-                    size: [width as usize, height as usize],
-                    rgb,
+                    before,
+                    hdr,
+                    prepared,
                 })
             }));
         }
+        let display_recipe = if self.before {
+            DevelopmentRecipe::default()
+        } else {
+            self.recipe.clone()
+        };
+        self.viewport.poll(
+            ctx,
+            self.loaded.as_ref().map(|p| Arc::clone(&p.image)),
+            &display_recipe,
+            crate::photo_viewport::Identity {
+                revision: self.revision,
+                before: self.before,
+                hdr,
+            },
+        );
         if let Some(result) = self
             .exporting
             .as_ref()
@@ -609,7 +680,6 @@ impl EditorState {
             || (!self.save_failed
                 && self.loaded.is_some()
                 && self.saved_revision != Some(self.revision))
-            || (refine && !idle)
         {
             ctx.request_repaint_after(Duration::from_millis(25));
         }

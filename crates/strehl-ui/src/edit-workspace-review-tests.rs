@@ -123,30 +123,63 @@ fn embedded_source_repair_recipe_is_restored_when_sidecar_is_missing() {
 }
 
 #[test]
-fn idle_development_refines_to_native_size_without_regressing_a_newer_revision() {
+fn viewport_refinement_keeps_overview_and_drops_a_superseded_recipe() {
     let mut editor = editor();
-    editor.changed = Some(Instant::now() - Duration::from_secs(1));
-    poll_until(&mut editor, |state| state.painted_side == 128);
-    assert_eq!(editor.texture.as_ref().unwrap().size(), [128, 96]);
+    let ctx = egui::Context::default();
+    editor.request_view(
+        &ctx,
+        (
+            egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(128.0, 96.0)),
+            egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(128.0, 96.0)),
+        ),
+        128,
+    );
+    poll_until(&mut editor, |state| {
+        !state.display_stats()["published"].is_null()
+    });
+    assert_eq!(editor.texture.as_ref().unwrap().size(), [32, 24]);
+    assert_eq!(
+        editor.display_stats()["published"]["pixels"],
+        serde_json::json!([128, 96])
+    );
     let old_revision = editor.revision;
     let mut next = editor.recipe.clone();
     next.global.exposure = 0.5;
     editor.replace(next).unwrap();
     editor.developing_revision = Some(old_revision);
-    editor.developing = Some(spawn_task("test-old-preview", move |_| {
+    editor.developing = Some(spawn_task("test-old-preview", move |cancelled| {
+        let source = image();
+        let prepared = crate::photo_viewport::prepare(
+            &source,
+            &DevelopmentRecipe::default(),
+            strehl_edit::DisplayRegionRequest {
+                min: [0, 0],
+                max: [128, 96],
+                stride: 1,
+            },
+            &cancelled,
+            None,
+            false,
+            true,
+        )?;
         Ok(DevelopedPreview {
             revision: old_revision,
-            size: [128, 96],
-            rgb: vec![255; 128 * 96 * 3],
+            before: false,
+            hdr: false,
+            prepared,
         })
     }));
-    editor.changed = Some(Instant::now() - Duration::from_secs(1));
     poll_until(&mut editor, |state| {
-        state.painted_revision == Some(state.revision) && state.painted_side == 128
+        state.painted_revision == Some(state.revision)
     });
     assert!(editor.revision > old_revision);
     assert!(editor.error.is_none());
-    assert_eq!(editor.texture.as_ref().unwrap().size(), [128, 96]);
+    assert_eq!(editor.texture.as_ref().unwrap().size(), [32, 24]);
+    let published = editor.display_stats()["published"].clone();
+    assert!(
+        published.is_null() || published["revision"] == editor.revision,
+        "Coarse publication must atomically retire the old-recipe patch"
+    );
 }
 
 #[test]

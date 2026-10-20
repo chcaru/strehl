@@ -1,7 +1,7 @@
 [workspace]
 resolver = "3"
 # Optional experiment dependency keeps its own workspace; ordinary builds do not adopt it.
-exclude = ["experiments/native-gpu-gather"]
+exclude = ["experiments/native-gpu-gather", "third-party/egui-wgpu"]
 members = [
     "crates/strehl-edit",
     "crates/strehl-core",
@@ -47,3 +47,6 @@ strip = "symbols"
 [profile.bench]
 inherits = "release"
 debug = true
+
+[patch.crates-io]
+egui-wgpu = { path = "third-party/egui-wgpu" }

@@ -149,6 +149,46 @@ class ReleasePackagingTests(unittest.TestCase):
         with patch.object(release, "run", side_effect=["Usage: strehl stack", "strehl 0.1.0-alpha.1 " + "a" * 12]):
             self.assertEqual(release.smoke(["Strehl"], context)["help"], "passed")
 
+    def test_local_renderer_patch_keeps_upstream_notices_in_release_kit(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            renderer = root / "third-party" / "egui-wgpu"
+            decoder = root / "registry" / "rawler"
+            own = root / "crates" / "strehl-ui"
+            for directory in (renderer, decoder, own):
+                directory.mkdir(parents=True)
+            (renderer / "LICENSE-MIT").write_text("upstream renderer notice")
+            (decoder / "COPYING").write_text("decoder notice fixture")
+            packages = [
+                {"name": "egui-wgpu", "version": "0.33.3", "source": None,
+                 "manifest_path": str(renderer / "Cargo.toml"), "license": "MIT OR Apache-2.0"},
+                {"name": "rawler", "version": "0.7.2", "source": "registry+fixture",
+                 "manifest_path": str(decoder / "Cargo.toml"), "license": "LGPL-2.1"},
+                {"name": "strehl-ui", "version": "0.1.0", "source": None,
+                 "manifest_path": str(own / "Cargo.toml"), "license": "MIT OR Apache-2.0"},
+            ]
+            context = {"version": "0.1.0", "source_commit": "a" * 40}
+            notices = root / "notices"
+            manifest = release.collect_notices({"packages": packages}, notices, context, root)
+            indexed = {item["name"]: item for item in manifest}
+            self.assertIn("egui-wgpu", indexed, "path patches remain third-party code")
+            self.assertNotIn("strehl-ui", indexed, "do not duplicate our own licence")
+            copied = notices / indexed["egui-wgpu"]["license_files"][0]
+            self.assertEqual(copied.read_text(), "upstream renderer notice")
+            self.assertEqual(indexed["egui-wgpu"]["source"], "local-patch:third-party/egui-wgpu")
+
+    def test_source_kit_refuses_an_omitted_local_patch(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "experiments/native-gpu-gather").mkdir(parents=True)
+            (root / "experiments/native-gpu-gather/Cargo.toml").write_text("[package]\nname='fixture'\n")
+            (root / "Cargo.toml").write_text(
+                "[patch.crates-io]\negui-wgpu={path='third-party/egui-wgpu'}\n")
+            paths = "Cargo.toml\0experiments/native-gpu-gather/Cargo.toml\0"
+            with patch.object(release, "ROOT", root), patch.object(release, "run", return_value=paths):
+                with self.assertRaisesRegex(RuntimeError, "Patched dependency missing"):
+                    release.copy_application_source(root / "kit")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -87,6 +87,10 @@ pub(crate) enum AgentCommand {
     SetDevelop {
         recipe: strehl_edit::DevelopmentRecipe,
     },
+    /// Queue a bounded scene analysis and apply its editable suggested controls.
+    AdaptiveDevelop {
+        strength: f32,
+    },
     Annotate {
         annotation: Annotation,
     },
@@ -191,6 +195,10 @@ impl AgentCommand {
             }
             Self::SetSettings { patch } => validate_settings(patch),
             Self::SetDevelop { recipe } => recipe.validate().map_err(|e| e.to_string()),
+            Self::AdaptiveDevelop { strength } => ensure(
+                strength.is_finite() && (0.0..=1.0).contains(strength),
+                "Adaptive amount must be between 0 and 1",
+            ),
             Self::Annotate { annotation } => {
                 identifier(&annotation.id)?;
                 text_bound(&annotation.label, 120, false)?;

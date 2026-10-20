@@ -104,6 +104,7 @@ pub(crate) struct ProcessTheater {
     saved_output: Option<TextureHandle>,
     saved_output_size: Option<[u32; 2]>,
     result_photo: crate::process_result::ResultPhoto,
+    pub(crate) photo_paint: Option<crate::photo_viewport::PhotoPaint>,
     participation: crate::process_participation::CaptureParticipation,
     participation_frame: Option<usize>,
     participation_held: bool,
@@ -143,7 +144,7 @@ pub(crate) struct ProcessTheater {
     pub(crate) edit_mapping: Option<(Rect, Rect)>,
     pub(crate) annotation_mode: bool,
     pub(crate) edit_focus: bool,
-    requested_view: Option<(Pos2, f32)>,
+    pub(crate) requested_view: Option<(Pos2, f32)>,
     history_revision: u64,
     history_commits: u64,
     restored: bool,
@@ -180,6 +181,7 @@ impl Default for ProcessTheater {
             saved_output: None,
             saved_output_size: None,
             result_photo: Default::default(),
+            photo_paint: None,
             participation: Default::default(),
             participation_frame: None,
             participation_held: false,
@@ -501,6 +503,10 @@ impl ProcessTheater {
         self.requested_view = Some((center, zoom));
         self.remember(before);
     }
+    pub(crate) fn set_photo_paint(&mut self, paint: Option<crate::photo_viewport::PhotoPaint>) {
+        self.photo_paint = paint.clone();
+        self.result_photo.set_photo_paint(paint);
+    }
     pub(crate) fn update_balance(
         &mut self,
         ctx: &egui::Context,
@@ -748,6 +754,8 @@ impl ProcessTheater {
         };
         let input = &processing_input;
         if self.epoch != Some(input.epoch) {
+            let photo_paint = self.photo_paint.clone();
+            let requested_view = self.requested_view;
             *self = Self {
                 layout: self.layout,
                 epoch: Some(input.epoch),
@@ -755,6 +763,10 @@ impl ProcessTheater {
                 edit_focus: self.edit_focus,
                 ..Default::default()
             };
+            self.set_photo_paint(photo_paint);
+            if let Some((center, zoom)) = requested_view {
+                self.set_photo_view(center, zoom);
+            }
         }
         if self.domain_epoch != input.progress.diagnostic_epoch {
             self.domain_epoch = input.progress.diagnostic_epoch;
@@ -791,6 +803,16 @@ impl ProcessTheater {
         self.sync_photos(input, now, ui.ctx());
         self.sync_latest_preview(input, ui.ctx());
         self.sync_hero(input, now, ui.ctx());
+        if self.output_space(input).is_some()
+            && let Some((center, zoom)) = self.requested_view
+        {
+            // The first final plate and its diagnostic domain initialize their
+            // view clocks above. An explicit incoming crop wins over that
+            // automatic Scene placement, before any linked image is painted.
+            self.scales.prepare_frame(ui, input);
+            self.scales.set_view(center, zoom);
+            self.pin = self.scales.pin();
+        }
         if input.progress.stage == Stage::Complete && self.last_stage != Stage::Complete {
             self.enlarged = None;
         }
@@ -2041,13 +2063,16 @@ impl ProcessTheater {
                 self.enlarged = None;
             }
         }
-        if let Some((center, zoom)) = self.requested_view.take() {
+        if let Some((center, zoom)) = self.requested_view {
             self.zoom = zoom.clamp(1.0, 8.0);
             if let Some(hero) = &self.hero {
                 let size = fit(hero.plate.extent, image_box).size() * self.zoom;
                 self.pan = (egui::vec2(0.5, 0.5) - center.to_vec2()) * size;
                 self.pin = center;
                 self.scales.set_pin(center);
+                if self.saved_output.is_none() || hero.plate.kind == 3 {
+                    self.requested_view = None;
+                }
             }
         }
         let gesture = ui.interact(
@@ -2419,7 +2444,11 @@ impl ProcessTheater {
             // A drawing gesture has a single owner. Keep the exact photo crop,
             // but do not register a competing pan/zoom/probe widget beneath it.
             self.result_photo.cancel_gesture();
-            p.image(photo.plate.texture.id(), image, aperture, Color32::WHITE);
+            if let Some(paint) = &self.photo_paint {
+                paint.paint(&p, image, aperture);
+            } else {
+                p.image(photo.plate.texture.id(), image, aperture, Color32::WHITE);
+            }
             return;
         }
         if multiple {

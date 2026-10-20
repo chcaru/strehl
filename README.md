@@ -75,13 +75,15 @@ failed approaches, corrections, and remaining limitations.
 | Select | Pin multiple capture ranges. Their estimated regions keep distinct colors, with mixed stripes at intersections. |
 | Investigate | Probe a region, compare detail scales, inspect recorded sample admission, and view observation balance when recorded. |
 | Develop | Keep a scene-linear float master; adjust exposure, tone, and color globally or in feathered circles, boxes, and polygons. Import supported numeric XMP controls with explicit warnings for unsupported Adobe profiles. |
+| Adapt | Measure the scene with **Adaptive**, then adjust its amount or any suggested tone/color control. This is an original, inspectable treatment, not a reproduction of Adobe's AI profile. |
+| Inspect | Retain a fast overview while visible detail refines to source pixels as you zoom. HDR-capable Windows/macOS displays can present the linear master's highlight headroom. |
 | Repair | Restrict a selected region to a capture span on the next stack, then feather that reconstruction into the photograph. |
 | Deliver | Export a developed 16-bit sRGB TIFF or a genuine 10-bit BT.2020/PQ HDR AVIF from the linear master. Existing files are preserved. |
 | Arrange | Resize the workspace panes, open sidebar tools, undo exploration changes, and reset views with a double-click. |
 | Collaborate | Enable a local MCP session for an external agent: inspect bounded image crops and diagnostics, annotate regions, adjust settings, and operate the workspace with revision checks. |
 | Automate | Use the separate CLI, shared development recipe, or Rust workspace. |
 
-Development, local source repairs, HDR export, and MCP collaboration describe the
+Development, Adaptive, progressive/HDR display, local source repairs, HDR export, and MCP collaboration describe the
 current source checkout; the linked alpha.5 download predates these additions.
 The [development guide](docs/development-and-hdr.md) explains color and recipe
 semantics, and the [agent guide](docs/agent-interface.md) describes connecting an
@@ -136,10 +138,13 @@ are supported by this application. Image quality depends on the capture,
 alignment, and scene; inspect the complete result and native-resolution detail.
 Occlusion boundaries, deep focus sweeps, and complex motion remain difficult.
 
-Normal stacking runs on the CPU; the GPU draws the workspace. The display uses
-8-bit SDR textures and is not an ICC soft-proofing or native HDR monitor viewer.
-Saved TIFF output is 16-bit; optional HDR AVIF output requires a retained linear
-master and a compatible external HDR viewer. HDR export does not perform
+Normal stacking runs on the CPU; the GPU draws the workspace. Completed photographs
+refine the visible area progressively, up to source-pixel resolution. Windows DX12
+and macOS Metal support native HDR presentation when the active display provides
+HDR/EDR headroom; Linux and other backends use SDR. The app reports the active
+display mode and does not change system display settings. General ICC soft proofing
+is not implemented. Saved TIFF output is 16-bit; HDR display and AVIF export require
+a retained linear master. HDR export does not perform
 multi-exposure bracket fusion, and an old SDR TIFF cannot recover clipped light.
 Live reconstructions precede final bounds and color development. Older
 saved runs may lack newer diagnostic channels.

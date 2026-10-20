@@ -411,6 +411,12 @@ pub(crate) fn tool_definitions() -> Value {
             &["recipe"],
         ),
         command(
+            "adaptive_develop",
+            json!({"strength":{"type":"number","minimum":0,"maximum":1,
+                "description":"Amount of a scene-aware editable treatment. Analysis is asynchronous; read adaptive in the snapshot for completion, measured reasons and limitations."}}),
+            &["strength"],
+        ),
+        command(
             "annotate",
             json!({"annotation":annotation}),
             &["annotation"],

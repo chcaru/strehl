@@ -706,7 +706,16 @@ impl StrehlApp {
                     let status = identity
                         .map_or_else(|| message.to_owned(), |name| format!("{name} · {message}"));
                     let label = ui.add_sized(
-                        [ui.available_width() - 320.0, 19.0],
+                        [
+                            (ui.available_width()
+                                - if self.editor.loaded.is_some() {
+                                    365.0
+                                } else {
+                                    320.0
+                                })
+                            .max(20.0),
+                            19.0,
+                        ],
                         egui::Label::new(
                             RichText::new(&status)
                                 .size(10.0)
@@ -721,6 +730,24 @@ impl StrehlApp {
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                         if ui.add(egui::Button::new("Activity").frame(false)).clicked() {
                             self.sidebar = Some(Sidebar::Activity);
+                        }
+                        if self.editor.loaded.is_some()
+                            && let Some(presenter) = &self.editor.viewport.presenter
+                        {
+                            let display = presenter.status();
+                            let hdr = display.active
+                                && self.editor.loaded.as_ref().is_some_and(|photo| {
+                                    photo.image.origin == strehl_edit::ImageOrigin::SceneLinear
+                                });
+                            ui.label(
+                                RichText::new(if hdr { "HDR" } else { "SDR" })
+                                    .size(10.0)
+                                    .color(if hdr { ACCENT } else { MUTED }),
+                            )
+                            .on_hover_text(format!(
+                                "{}\nVisible photo detail refines to source pixels as you zoom.",
+                                display.reason
+                            ));
                         }
                         if self.recorded {
                             theme::caption(ui, "Recorded");

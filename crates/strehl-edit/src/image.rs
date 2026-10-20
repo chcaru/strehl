@@ -47,7 +47,7 @@ pub struct DisplayBaseline {
 }
 
 impl DisplayBaseline {
-    fn validate(&self) -> Result<()> {
+    pub(crate) fn validate(&self) -> Result<()> {
         ensure!(
             [self.black, self.white, self.contrast, self.exposure_gain]
                 .iter()
@@ -243,16 +243,21 @@ impl LinearImage {
 
     pub(crate) fn developed_pixel(&self, i: usize, recipe: &DevelopmentRecipe) -> [f32; 3] {
         let p = &self.pixels[i * 3..i * 3 + 3];
-        let raw = [p[0], p[1], p[2]];
-        let base = self.baseline.map_or(raw, |b| b.place(raw));
         let uv = [
-            (i % self.width as usize) as f32 + 0.5,
-            (i / self.width as usize) as f32 + 0.5,
+            ((i % self.width as usize) as f32 + 0.5) / self.width as f32,
+            ((i / self.width as usize) as f32 + 0.5) / self.height as f32,
         ];
-        let developed = recipe.apply_pixel(
-            base,
-            [uv[0] / self.width as f32, uv[1] / self.height as f32],
-        );
+        self.developed_sample([p[0], p[1], p[2]], uv, recipe)
+    }
+
+    pub(crate) fn developed_sample(
+        &self,
+        raw: [f32; 3],
+        uv: [f32; 2],
+        recipe: &DevelopmentRecipe,
+    ) -> [f32; 3] {
+        let base = self.baseline.map_or(raw, |b| b.place(raw));
+        let developed = recipe.apply_pixel(base, uv);
         // Match the original SDR midtone style while retaining HDR headroom.
         // The display S-curve is extended with its positive tangent above white;
         // evaluating the cubic there would fold the highlight order backwards.
@@ -280,12 +285,20 @@ impl LinearImage {
         // Baseline stays fixed while editing. Exposure is applied after its placement
         // so an auto-tone cannot silently cancel a commanded exposure adjustment.
         let p = &self.pixels[i * 3..i * 3 + 3];
-        let raw = [p[0], p[1], p[2]];
-        let base = self.baseline.map_or(raw, |b| b.place(raw));
         let uv = [
             ((i % self.width as usize) as f32 + 0.5) / self.width as f32,
             ((i / self.width as usize) as f32 + 0.5) / self.height as f32,
         ];
+        self.display_sample([p[0], p[1], p[2]], uv, recipe)
+    }
+
+    pub(crate) fn display_sample(
+        &self,
+        raw: [f32; 3],
+        uv: [f32; 2],
+        recipe: &DevelopmentRecipe,
+    ) -> [f32; 3] {
+        let base = self.baseline.map_or(raw, |b| b.place(raw));
         let rgb = recipe.apply_pixel(base, uv);
         let rgb = if self.baseline.is_some() {
             gamut_map(rgb)

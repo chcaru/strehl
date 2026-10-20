@@ -301,6 +301,9 @@ impl StrehlApp {
             "stack_blocker":self.stack_start_blocker(), "settings":self.controls.settings,
             "exposure_ev":self.controls.exposure,"pyramid_gate":self.controls.gate,"workers":self.controls.workers,
             "development":self.editor.recipe,"before_preview":self.editor.before, "photo_ready":self.agent_photo_is_current(),
+            "adaptive":self.adaptive_snapshot(),
+            "display":self.editor.display_stats(),
+            "frame_performance":self.frame_performance.snapshot(),
             "photo":self.editor.loaded.as_ref().filter(|_|self.agent_photo_is_current()).map(|p|json!({"width":p.image.width,"height":p.image.height,"origin":p.image.origin,"source":p.source})),
             "export":self.editor.last_export,"error":self.editor.error.as_ref().or(self.error.as_ref()),
             "grants":self.agent.grants.iter().map(|(id,p)|json!({"id":id,"name":p.file_name()})).collect::<Vec<_>>(),
@@ -365,6 +368,15 @@ impl StrehlApp {
                 self.process_view = true;
             }
             SetSettings { patch } => self.agent_settings(patch)?,
+            AdaptiveDevelop { strength } => {
+                self.start_adaptive(strength)?;
+                let state = if self.adaptive_snapshot()["analyzing"] == true {
+                    "queued"
+                } else {
+                    "applied"
+                };
+                return Ok(json!({"state":state,"operation":"adaptive_develop"}));
+            }
             SetDevelop { recipe } => {
                 anyhow::ensure!(
                     self.agent_photo_is_current(),

@@ -14,6 +14,7 @@ use overlay_mesh::Mode as OverlayMode;
 
 #[derive(Default)]
 pub(crate) struct ResultPhoto {
+    photo_paint: Option<crate::photo_viewport::PhotoPaint>,
     diagnostics_suppressed: bool,
     navigator: DetailNavigator,
     drag: Option<Pos2>,
@@ -61,6 +62,9 @@ pub(crate) struct Context<'a> {
 }
 
 impl ResultPhoto {
+    pub(crate) fn set_photo_paint(&mut self, paint: Option<crate::photo_viewport::PhotoPaint>) {
+        self.photo_paint = paint;
+    }
     pub(crate) fn suppress_diagnostics(&mut self, suppressed: bool) {
         self.diagnostics_suppressed = suppressed;
         if suppressed {
@@ -172,7 +176,11 @@ impl ResultPhoto {
         }
         let image = fit(input.extent, rect);
         let painter = ui.painter_at(rect);
-        painter.image(input.texture.id(), image, input.aperture, Color32::WHITE);
+        if let Some(paint) = &self.photo_paint {
+            paint.paint(&painter, image, input.aperture);
+        } else {
+            painter.image(input.texture.id(), image, input.aperture, Color32::WHITE);
+        }
         let show_samples = self.dense_selection.is_none() || self.range_samples_visible(ui.ctx());
         if show_samples && !hide_admission {
             self.sync_samples(ui.ctx(), &input);
