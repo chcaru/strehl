@@ -32,6 +32,8 @@ pub fn rule(p: &egui::Painter, mut from: egui::Pos2, mut to: egui::Pos2, color: 
     p.line_segment([from, to], Stroke::new(1.0 / scale, color));
 }
 pub fn install(ctx: &egui::Context) {
+    // Keep native controls on the same palette when the OS reports light mode.
+    ctx.set_theme(egui::Theme::Dark);
     // Read an installed system face; font files are never redistributed.
     #[cfg(windows)]
     if let Ok(bytes) = std::fs::read("C:/Windows/Fonts/segoeui.ttf") {
@@ -270,6 +272,94 @@ pub fn mark(painter: &egui::Painter, rect: egui::Rect) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn native_control_colors(
+        ctx: &egui::Context,
+        system_theme: egui::Theme,
+        time: f64,
+    ) -> (Color32, Color32, Color32) {
+        let mut text = "Strehl project".to_owned();
+        let mut edit = egui::Rect::NOTHING;
+        let mut separator = egui::Rect::NOTHING;
+        let output = ctx.run(
+            egui::RawInput {
+                screen_rect: Some(egui::Rect::from_min_size(
+                    egui::Pos2::ZERO,
+                    egui::vec2(400.0, 200.0),
+                )),
+                system_theme: Some(system_theme),
+                time: Some(time),
+                ..Default::default()
+            },
+            |ctx| {
+                egui::CentralPanel::default().show(ctx, |ui| {
+                    edit = ui.text_edit_singleline(&mut text).rect;
+                    separator = ui.separator().rect;
+                });
+            },
+        );
+        assert_eq!(ctx.system_theme(), Some(system_theme));
+        let (fill, border) = output
+            .shapes
+            .iter()
+            .find_map(|shape| match &shape.shape {
+                egui::Shape::Rect(rect) if rect.rect == edit => {
+                    Some((rect.fill, rect.stroke.color))
+                }
+                _ => None,
+            })
+            .expect("the real text editor must paint its background and border");
+        let rule = output
+            .shapes
+            .iter()
+            .find_map(|shape| match &shape.shape {
+                egui::Shape::LineSegment { points, stroke }
+                    if points[0].y == points[1].y
+                        && (points[0].y - separator.center().y).abs() < 0.01 =>
+                {
+                    Some(stroke.color)
+                }
+                _ => None,
+            })
+            .expect("the real separator must paint its rule");
+        (fill, border, rule)
+    }
+
+    #[test]
+    fn native_controls_keep_the_app_palette_across_system_theme_changes() {
+        for initial_light in [false, true] {
+            let ctx = egui::Context::default();
+            if initial_light {
+                let _ = native_control_colors(&ctx, egui::Theme::Light, 0.0);
+            }
+            install(&ctx);
+            for (frame, system_theme) in [egui::Theme::Light, egui::Theme::Dark, egui::Theme::Light]
+                .into_iter()
+                .enumerate()
+            {
+                let colors = native_control_colors(&ctx, system_theme, frame as f64 + 1.0);
+                assert_eq!(
+                    colors,
+                    (BG, LINE, LINE),
+                    "OS theme changes must preserve the actual editor and separator paint"
+                );
+                assert_eq!(ctx.theme(), egui::Theme::Dark);
+                assert_eq!(ctx.style().visuals.panel_fill, PANEL);
+                assert_eq!(ctx.style().visuals.override_text_color, Some(INK));
+            }
+        }
+
+        // Reproduce the retired automatic-theme preference on the same real
+        // widgets: a light OS input must expose the white editor/bright rules.
+        let control = egui::Context::default();
+        install(&control);
+        control.set_theme(egui::ThemePreference::System);
+        let (fill, border, rule) = native_control_colors(&control, egui::Theme::Light, 0.0);
+        assert_eq!(control.theme(), egui::Theme::Light);
+        assert_ne!(fill, BG);
+        assert_ne!(border, LINE);
+        assert_ne!(rule, LINE);
+    }
 
     fn command_frame(
         ctx: &egui::Context,

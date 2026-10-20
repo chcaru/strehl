@@ -1,6 +1,6 @@
 # Public release review
 
-This checklist records the first public preview, `v0.1.0-alpha.2`. It is an
+This checklist records the first public preview, `v0.1.0-alpha.3`. It is an
 experimental release; native build checks do not establish photographic quality
 or compatibility with every desktop, GPU, or camera.
 

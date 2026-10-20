@@ -76,8 +76,8 @@ release. With Cosign 3 and a current GitHub CLI, replace the tag and package bel
 with the release you downloaded:
 
 ```sh
-tag=v0.1.0-alpha.2
-package=Strehl-0.1.0-alpha.2-x86_64-unknown-linux-gnu.AppImage
+tag=v0.1.0-alpha.3
+package=Strehl-0.1.0-alpha.3-x86_64-unknown-linux-gnu.AppImage
 identity="https://github.com/chcaru/strehl/.github/workflows/release.yml@refs/tags/$tag"
 cosign verify-blob --bundle SHA256SUMS.sigstore.json \
   --certificate-identity "$identity" \
@@ -99,7 +99,7 @@ describes these policy checks.
 
 1. Review CI, update the Cargo workspace version and lockfile, and commit the
    intended release sources. Keep the toolchain pinned to an exact release.
-2. Push a matching tag, for example `v0.1.0-alpha.2`. Repository visibility must
+2. Push a matching tag, for example `v0.1.0-alpha.3`. Repository visibility must
    already be public so attestations use the public Sigstore service.
 3. Wait for every release job to pass. Download all fifteen assets from the draft:
    twelve payloads, checksums and two signature/provenance bundles.
