@@ -188,10 +188,37 @@ adding HDR/editing. No GUI/RAW execution claim is made from help/version checks.
 Detailed hashes and invocation are in `linux-strip/receipt.json`.
 
 **MEASURED net Windows executable size:** the locally extracted official alpha.5
-`Strehl.exe` is 25,138,688 bytes; the new release build with HDR/editing/agent features
-is 28,310,528 bytes (+3,171,840 bytes, 12.6%). These are different feature sets, not a
-controlled stripping comparison. This release does not claim a smaller Windows
-executable.
+`Strehl.exe` is 25,138,688 bytes; the final local feature build from `ea873c3c`
+is 28,401,152 bytes (+3,262,464 bytes, 13.0%). These are different feature sets, not
+a controlled stripping comparison. This feature build does not claim a smaller
+Windows executable. `Get-Item` and `Get-FileHash -Algorithm SHA256` were run on
+`outputs/strehl-feature-preview/Strehl.exe`; its SHA256 is
+`4d1d3719f87059a78ea02cae52d23220dc5920e941c2bedcc3f16f1cfd8f0b9a`.
+
+## Integrated desktop verification
+
+**VERIFIED:** a fresh normal-account `cargo test -p strehl-ui --offline` run passed
+716 tests, with 8 intentionally ignored. Formatting and all-target Clippy for
+`strehl-ui` and `strehl-edit` passed with warnings denied. Independent controls
+exercise annotation coordinates after cropping/zoom, the Scene button while
+drawing, shared agent/human undo, recovery after failed saves, export/close
+ordering, and confidence-map identity when moving between same-sized results.
+
+The final native executable was also exercised through its real stdio MCP server
+against an isolated copy of a 299-frame insect run. The harness requested actual
+PNG crops and recorded admissions, annotated a region, changed exposure, rejected
+a stale revision, changed the view, and undid the view and exposure separately.
+The restored crop was byte-identical. A new TIFF export independently decoded to
+all 98,898,048 original RGB16 channel values exactly; a deliberately corrupted
+exposure control was rejected. Existing export filenames were refused. The
+original catalog hash and all source sizes/mtimes remained unchanged.
+
+The local commands were `python outputs/feature-validation/check-native-mcp.py
+--verify-view-undo` and the native app's `--edit --open-run <copied-run>
+--screenshot <png> --size 1600x1000` inspection. Private-path receipts remain in
+the ignored `outputs/feature-validation` directory. The displayed workspace was
+visually checked after the final build. This demonstrates the local MCP/app
+workflow; it does not certify every vendor host or operating-system compositor.
 
 ## Independent HDR/editing review
 
