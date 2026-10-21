@@ -49,6 +49,46 @@ region recipe in the master. Exports compare the current enabled region shapes,
 feathers, source ranges, and ordering against that record and refuse a mismatch.
 Tone and note changes remain possible without another stack.
 
+## Editing in the workspace
+
+**Edit** keeps the photograph in the process workspace. **Light** and **Color**
+apply immediately to the whole photograph or the selected region; they do not
+require another stack. Click a value to type, drag its track to adjust, or
+double-click to reset. **Before** compares the original treatment. Undo/Redo
+includes both adjustments and region geometry.
+
+The resizable **Regions** shelf stays below the independently scrolling controls.
+Click a name to select it; double-click to rename it inline. Its context menu
+offers Duplicate, Reset light & color, and Delete. The checkbox enables the
+region. Collapsing the shelf preserves its expanded height.
+
+**Polygon** places points with clicks; Enter, a double-click, or the first point
+closes it. **Lasso** draws a freehand boundary while the mouse is held down.
+**Select** moves regions and exposes resize handles or editable vertices.
+Double-click a polygon edge to add a point; Delete/Backspace removes a selected
+point while retaining at least three. Escape cancels the current gesture before
+changing the selection. Hold **Space** for photo navigation and **Alt** for
+diagnostic inspection, so the inspection overlay does not compete with editing.
+
+**Magic lasso** is experimental image-guided selection: draw a loose enclosure
+with a little background around an object or defect. It measures supported
+boundary colors, rejects isolated noise, and traces separate contrasting areas
+inside the enclosure. Up to eight outlines are added together as one undoable
+action. The resulting points stay editable. It uses a bounded crop on a worker,
+including unclipped HDR values; it does not run semantic object recognition.
+Flat or ambiguous enclosures produce an explicit no-selection result. Significant
+holes cannot be represented by the current recipe: the tool can retain a
+supported high-contrast core instead, or skip that component. Small raster gaps
+may close. The status reports these approximations and any omitted regions.
+Press Escape to cancel refinement. Changing tools, the photograph, or its recipe
+prevents old work from appearing over newer edits.
+
+**Source repair** is a separate, initially collapsed section. Choosing a capture
+range queues a change to the merge; **Re-stack with source changes** applies it.
+The current photograph remains unchanged by that source choice until stacking
+finishes. Exports wait for pending source changes to be applied. This differs
+from the immediate Light/Color controls above it.
+
 ## What HDR AVIF contains
 
 The built-in Rust encoder writes **10-bit 4:4:4 AV1**, full range, BT.2020 primaries,
@@ -90,18 +130,22 @@ presentation boundary uses its required float16 surface. Ordinary controls follo
 SDR white, while the photograph retains supported highlight headroom. Moving
 between displays or changing HDR availability refreshes the presentation.
 
-The status bar and **Edit → HDR display & output** report the active mode. An old
+The status bar and **Edit → Display & export** report the active mode. The Edit
+header reports the display mode separately from the photograph's origin. An old
 SDR TIFF stays SDR even on an HDR monitor. Unsupported graphics backends, Linux,
 and displays without active HDR use the SDR path. The app never enables Windows
 HDR or changes display brightness for you. An HDR screenshot is an SDR proxy;
 use AVIF export to preserve HDR delivery values.
 
 GPU readback tests establish color arithmetic and above-white preservation.
-Physical HDR-monitor appearance still needs testing on an enabled HDR display;
-the development machine used for this change reported SDR. General ICC soft
-proofing and native HDR on Linux are not implemented.
+Monitor appearance is separate from those arithmetic controls. Windows capability
+queries are associated with the window's current monitor; a reply from a monitor
+the window has left is discarded. General ICC soft proofing and native HDR on
+Linux are not implemented.
 See the [display verification record](development/progressive-display-verification.md)
 for the native interaction controls, matched CPU measurements, and their limits.
+The [editor verification record](development/edit-workspace-verification.md)
+covers region gestures, Magic selection and monitor-transition checks.
 
 ## XMP presets
 
@@ -116,7 +160,7 @@ Private preset contents are not copied into the repository.
 
 ## Adaptive light and color
 
-**Edit → Adaptive** measures the current photograph and proposes an editable
+**Edit → Auto develop** measures the current photograph and proposes an editable
 treatment. It uses bounded, stratified scene samples to assess tonal range,
 highlight headroom, dark backgrounds, strongly separated light/dark compositions,
 and color saturation. It is an original deterministic alternative to an opaque
@@ -137,6 +181,13 @@ uses its existing white. This is a starting point for judgment, not a guarantee
 of a better photograph or a repair for focus, alignment, noise, or clipped capture
 data. Existing regions, source-span repairs, white balance, and HDR settings are
 preserved.
+
+With a region selected, **Balance region** meters that region and changes only
+its Light/Color settings. **Balance highlights** targets its bright tones and
+reports whether the stored image still contains tonal variation there. It can
+reduce distracting brightness; it cannot reconstruct texture already clipped
+out of the input TIFF or RAW. The highlight fit is separate from the midtone
+treatment, so a small bright reflection does not suppress the entire adjustment.
 
 Analysis runs off the UI thread and is discarded if the photograph or edits
 change before it returns. Agents can request the same operation with

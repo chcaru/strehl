@@ -182,6 +182,23 @@ uses that same frozen analysis without compounding edits. Changing the photograp
 or recipe while analysis runs prevents its result from overwriting newer work.
 The same Undo journal is used as for human development changes.
 
+The optional `intent` is `"balance"` by default, preserving strength-only clients.
+It balances `selected_region` from the snapshot, or the whole photograph when
+that field is null. `{"operation":"adaptive_develop","strength":1.0,"intent":"highlights"}`
+uses the human's **Balance highlights** action and requires a selected, enabled
+region. It compresses existing bright light and reports stored-white/variation
+limits; it cannot recreate clipped texture. Annotating a region selects it.
+Selection changes invalidate the agent revision, so obtain a fresh snapshot
+before either action. An unknown intent is rejected before reaching the app.
+Cached Amount belongs to both the selected region and the intent; switching
+between balance and highlights starts a new analysis instead of reusing the
+other treatment. `adaptive.analysis` includes its scope, intent, before/after
+sampled measurements and diagnosis. The after measurements describe full amount,
+not the current interpolated amount.
+Adaptive is unavailable while Magic selection is pending. Starting a newer Magic
+selection invalidates an older Adaptive analysis even if that selection is later
+cancelled; worker completion order cannot choose which operation wins.
+
 Snapshots also expose `display` with the actual visible region, physical-pixel
 demand, detail sampling stride, publication identity, worker/cache counters, and
 native display capability. `frame_performance` contains the latest bounded CPU

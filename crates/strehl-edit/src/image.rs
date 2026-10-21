@@ -241,7 +241,10 @@ impl LinearImage {
         Ok(())
     }
 
-    pub(crate) fn developed_pixel(&self, i: usize, recipe: &DevelopmentRecipe) -> [f32; 3] {
+    /// Developed linear BT.709, including the stored baseline and recipe.
+    /// Values above reference white remain above 1, as in native HDR display.
+    /// `i` must address a pixel in this image, just as for `display_pixel`.
+    pub fn developed_pixel(&self, i: usize, recipe: &DevelopmentRecipe) -> [f32; 3] {
         let p = &self.pixels[i * 3..i * 3 + 3];
         let uv = [
             ((i % self.width as usize) as f32 + 0.5) / self.width as f32,

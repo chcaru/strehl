@@ -250,11 +250,198 @@ fn separated_black_white_compositions_and_isolated_color_outliers_are_not_reinte
         }
     });
     let s = analyze_adaptive(&sparse_color, &DevelopmentRecipe::default()).unwrap();
+    let before = sparse_color.render_sdr16(&s.base).unwrap();
+    let after = sparse_color.render_sdr16(&s.suggested).unwrap();
     assert!(
-        (s.suggested.global.vibrance - 2.5).abs() < 1e-5,
-        "one quarter of lit samples are colored, below the saturation guard: {:?}",
+        s.suggested.global.vibrance > 5.0,
+        "real color support should receive a useful editable lift"
+    );
+    assert_ne!(before, after);
+    // Neutral samples must stay neutral even though the colored quarter changes.
+    for (i, p) in after.as_chunks::<3>().0.iter().enumerate() {
+        if i % 4 != 0 {
+            assert_eq!(p[0], p[1]);
+            assert_eq!(p[1], p[2]);
+        }
+    }
+}
+
+#[test]
+fn bright_color_outliers_do_not_cancel_useful_middle_tone_correction() {
+    let mut image = fixture(128, 96, |i| {
+        if i % 131 == 0 {
+            [0.99, 0.65, 0.4]
+        } else {
+            let v = 0.025 + (i % 127) as f32 * 0.001;
+            [v * 1.3, v, v * 0.7]
+        }
+    });
+    image.origin = ImageOrigin::DisplayReferred;
+    let s = analyze_adaptive(&image, &DevelopmentRecipe::default()).unwrap();
+    assert!(s.stats.luminance_percentiles[2] < 0.12);
+    assert!(
+        s.after_stats.luminance_percentiles[2] > s.stats.luminance_percentiles[2] * 1.20,
+        "highlight protection erased the requested tonal correction: {:?}",
         s.changes
     );
+    assert!(
+        s.suggested.global.highlights < -1.0,
+        "fixture must exercise highlight protection"
+    );
+    assert!(s.suggested.global.vibrance > 5.0);
+    assert_eq!(s.after_stats.above_white_fraction, 0.0);
+}
+
+fn region_recipe() -> DevelopmentRecipe {
+    let mut recipe = DevelopmentRecipe::default();
+    recipe.regions.push(RegionAdjustment {
+        id: "bright-part".into(),
+        name: "Bright wing".into(),
+        note: "retain annotation".into(),
+        shape: RegionShape::Rectangle {
+            min: [0.5, 0.0],
+            max: [1.0, 1.0],
+        },
+        feather: 0.2,
+        enabled: true,
+        adjustments: Adjustments::default(),
+        source_range: Some(SourceRange { first: 3, last: 7 }),
+    });
+    recipe
+}
+
+#[test]
+fn regional_highlight_treatment_has_exact_scope_and_frozen_strength() {
+    let image = fixture(128, 96, |i| {
+        if i % 128 < 64 {
+            [0.12, 0.08, 0.05]
+        } else {
+            let v = 0.7 + (i % 64) as f32 * 0.03;
+            [v, v * 0.95, v * 0.9]
+        }
+    });
+    let base = region_recipe();
+    let s = analyze_adaptive_region(
+        &image,
+        &base,
+        "bright-part",
+        AdaptiveIntent::RestoreHighlights,
+    )
+    .unwrap();
+    assert!(s.highlights.bright_fraction > 0.8 && s.highlights.bright_luminance_span > 0.1);
+    assert_eq!(s.highlights.stored_white_channel_fraction, None);
+    assert!(s.suggested.regions[0].adjustments.highlights < -15.0);
+    assert_eq!(s.suggested.global, base.global);
+    assert_eq!(s.suggested.hdr, base.hdr);
+    let mut structure = s.suggested.clone();
+    structure.regions[0].adjustments = base.regions[0].adjustments;
+    assert_eq!(structure, base, "annotation/source constraint changed");
+    assert_eq!(s.recipe_at(0.0).unwrap(), base);
+    let half_before = s.recipe_at(0.5).unwrap();
+    let _ = s.recipe_at(0.1).unwrap();
+    let _ = s.recipe_at(1.0).unwrap();
+    assert_eq!(half_before, s.recipe_at(0.5).unwrap());
+    let before = image.render_sdr16(&base).unwrap();
+    let after = image.render_sdr16(&s.suggested).unwrap();
+    let mut changed = 0;
+    for i in 0..128 * 96 {
+        if i % 128 < 64 {
+            assert_eq!(&before[i * 3..i * 3 + 3], &after[i * 3..i * 3 + 3]);
+        } else if before[i * 3..i * 3 + 3] != after[i * 3..i * 3 + 3] {
+            changed += 1;
+        }
+    }
+    assert!(
+        changed > 1000,
+        "selected-region positive control did not change pixels"
+    );
+}
+
+#[test]
+fn clipped_white_is_dimmed_without_inventing_texture_or_claiming_recovery() {
+    let mut image = fixture(128, 96, |i| if i % 128 < 64 { [0.1; 3] } else { [1.0; 3] });
+    image.origin = ImageOrigin::DisplayReferred;
+    let mut base = region_recipe();
+    base.regions[0].feather = 0.0;
+    let s = analyze_adaptive_region(
+        &image,
+        &base,
+        "bright-part",
+        AdaptiveIntent::RestoreHighlights,
+    )
+    .unwrap();
+    assert_eq!(s.highlights.stored_white_channel_fraction, Some(1.0));
+    assert_eq!(s.highlights.bright_luminance_span, 0.0);
+    assert!(s.highlights.assessment.contains("cannot restore"));
+    let after = image.render_sdr16(&s.suggested).unwrap();
+    let value = after[64 * 3];
+    assert!(value < 64000 && value > 50000);
+    for i in 0..128 * 96 {
+        if i % 128 >= 64 {
+            assert_eq!(&after[i * 3..i * 3 + 3], &[value; 3]);
+        }
+    }
+    let dark = fixture(128, 96, |_| [0.12; 3]);
+    let unchanged = analyze_adaptive_region(
+        &dark,
+        &base,
+        "bright-part",
+        AdaptiveIntent::RestoreHighlights,
+    )
+    .unwrap();
+    assert_eq!(unchanged.suggested, base);
+}
+
+#[test]
+fn small_region_metering_is_local_and_disabled_regions_are_rejected() {
+    let image = fixture(1000, 800, |i| {
+        let x = i % 1000;
+        let y = i / 1000;
+        if (480..520).contains(&x) && (380..420).contains(&y) {
+            let v = 0.02 + (x - 480) as f32 * 0.0015;
+            [v * 1.3, v, v * 0.7]
+        } else {
+            [0.0; 3]
+        }
+    });
+    let mut base = region_recipe();
+    base.regions[0].shape = RegionShape::Ellipse {
+        center: [0.5, 0.5],
+        radius: [0.018, 0.022],
+    };
+    let s = analyze_adaptive_region(&image, &base, "bright-part", AdaptiveIntent::Balance).unwrap();
+    assert!(s.stats.sample_count > 400 && s.stats.sample_count < 1600);
+    assert!(s.suggested.regions[0].adjustments.exposure > 0.3);
+    assert_eq!(s.suggested.global, base.global);
+    assert!(analyze_adaptive_region(&image, &base, "missing", AdaptiveIntent::Balance).is_err());
+    base.regions[0].enabled = false;
+    assert!(
+        analyze_adaptive_region(&image, &base, "bright-part", AdaptiveIntent::Balance).is_err()
+    );
+}
+
+#[test]
+fn feathered_exposure_cannot_invent_recorded_highlight_variation() {
+    let image = fixture(128, 96, |_| [0.3; 3]);
+    let mut base = region_recipe();
+    base.regions[0].feather = 1.0;
+    base.regions[0].adjustments.exposure = 4.0;
+    let s = analyze_adaptive_region(
+        &image,
+        &base,
+        "bright-part",
+        AdaptiveIntent::RestoreHighlights,
+    )
+    .unwrap();
+    assert!(
+        s.highlights.bright_fraction > 0.5,
+        "fixture never exercised bright edited light"
+    );
+    assert_eq!(
+        s.highlights.bright_luminance_span, 0.0,
+        "the feather's gradient was mistaken for recorded variation"
+    );
+    assert!(s.highlights.assessment.contains("Little variation"));
 }
 
 #[test]

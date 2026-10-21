@@ -16,6 +16,7 @@ use overlay_mesh::Mode as OverlayMode;
 pub(crate) struct ResultPhoto {
     photo_paint: Option<crate::photo_viewport::PhotoPaint>,
     diagnostics_suppressed: bool,
+    edit_navigation: bool,
     navigator: DetailNavigator,
     drag: Option<Pos2>,
     region: Option<(Pos2, Pos2)>,
@@ -62,6 +63,15 @@ pub(crate) struct Context<'a> {
 }
 
 impl ResultPhoto {
+    pub(crate) fn set_edit_navigation(&mut self, editing: bool) {
+        if self.edit_navigation != editing {
+            self.cancel_gesture();
+        }
+        self.edit_navigation = editing;
+        if editing {
+            self.probe_region = None;
+        }
+    }
     pub(crate) fn set_photo_paint(&mut self, paint: Option<crate::photo_viewport::PhotoPaint>) {
         self.photo_paint = paint;
     }
@@ -104,6 +114,7 @@ impl ResultPhoto {
     pub(crate) fn hover_region(&self, ui: &Ui, aperture: Rect) -> Option<Rect> {
         let allowed = ui.is_enabled()
             && !self.diagnostics_suppressed
+            && !self.edit_navigation
             && ui.ctx().memory(|m| m.is_above_modal_layer(ui.layer_id()))
             && !egui::Popup::is_any_open(ui.ctx())
             && self.probe_count > 0
@@ -166,7 +177,7 @@ impl ResultPhoto {
         let peek = allowed && ui.input(|state| state.key_down(egui::Key::Space));
         // Regional reconstruction changes admission provenance. Confidence is
         // recomputed against the repaired result, so it remains valid here.
-        let hide_admission = peek || self.diagnostics_suppressed;
+        let hide_admission = peek || self.diagnostics_suppressed || self.edit_navigation;
         if allowed
             && !egui::Popup::is_any_open(ui.ctx())
             && ui.input(|state| state.key_pressed(egui::Key::Escape))
@@ -185,7 +196,7 @@ impl ResultPhoto {
         if show_samples && !hide_admission {
             self.sync_samples(ui.ctx(), &input);
         }
-        if !peek {
+        if !peek && !self.edit_navigation {
             self.balance
                 .paint(&painter, image, input.aperture, input.pin);
         }
@@ -291,7 +302,9 @@ impl ResultPhoto {
         {
             if hit.is_pointer_button_down_on() && ui.input(|state| state.pointer.primary_pressed())
             {
-                if input.aperture.width() >= 0.995 || ui.input(|s| s.modifiers.shift) {
+                if !self.edit_navigation
+                    && (input.aperture.width() >= 0.995 || ui.input(|s| s.modifiers.shift))
+                {
                     self.region = pointer.map(|at| (at, at));
                     self.drag = None;
                 } else {
@@ -321,7 +334,9 @@ impl ResultPhoto {
                 ui.ctx().set_cursor_icon(egui::CursorIcon::Grabbing);
             } else if hit.hovered() {
                 ui.ctx().set_cursor_icon(
-                    if input.aperture.width() >= 0.995 || ui.input(|s| s.modifiers.shift) {
+                    if !self.edit_navigation
+                        && (input.aperture.width() >= 0.995 || ui.input(|s| s.modifiers.shift))
+                    {
                         egui::CursorIcon::Crosshair
                     } else {
                         egui::CursorIcon::Grab
@@ -329,6 +344,7 @@ impl ResultPhoto {
                 );
             }
             if hit.clicked()
+                && !self.edit_navigation
                 && !reset_gesture.pending
                 && let Some(at) = pointer
             {
@@ -356,6 +372,7 @@ impl ResultPhoto {
             }
         }
         if !peek
+            && !self.edit_navigation
             && self.probe_count == 0
             && hit.hovered()
             && input.aperture.width() >= 0.995

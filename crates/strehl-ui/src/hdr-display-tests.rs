@@ -307,6 +307,8 @@ fn sdr_presenter(
         refresh: Mutex::new(Refresh {
             next: Instant::now(),
             pending: None,
+            #[cfg(windows)]
+            window: WindowDisplay::default(),
         }),
         #[cfg(any(windows, target_os = "macos"))]
         window: 0,
@@ -315,6 +317,98 @@ fn sdr_presenter(
         context: egui::Context::default(),
         sdr_retirement: Arc::default(),
     }))
+}
+
+#[test]
+#[cfg(windows)]
+fn display_changes_reject_a_previous_monitors_delayed_reply() {
+    let mut window = WindowDisplay::default();
+    assert!(window.observe_monitor(0x91));
+    window.queried_monitor = 0x91;
+    assert!(window.accepts_reply());
+    // A drag inside the same monitor must not restart capability enumeration.
+    assert!(!window.observe_monitor(0x91));
+    assert!(window.accepts_reply());
+    // Both directions matter: reject a stale HDR reply on SDR, and a stale SDR
+    // reply when the photograph has returned to the HDR display.
+    assert!(window.observe_monitor(0x38));
+    assert!(!window.accepts_reply());
+    window.queried_monitor = 0x38;
+    assert!(window.accepts_reply());
+    assert!(window.observe_monitor(0x91));
+    assert!(!window.accepts_reply());
+    window.queried_monitor = 0x91;
+    assert!(window.accepts_reply());
+    assert!(window.observe_monitor(0));
+    assert!(!window.accepts_reply());
+}
+
+#[test]
+#[cfg(windows)]
+#[ignore = "real GPU: run explicitly with normal desktop permissions"]
+fn actual_poll_discards_stale_monitor_reply_before_publishing_display_state() {
+    let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor {
+        backends: wgpu::Backends::DX12,
+        ..Default::default()
+    });
+    let adapter = block_on(instance.request_adapter(&Default::default())).unwrap();
+    let (device, queue) = block_on(adapter.request_device(&Default::default())).unwrap();
+    let mut presenter = sdr_presenter(
+        &adapter,
+        &device,
+        &queue,
+        wgpu::TextureFormat::Rgba16Float,
+        1.0,
+        Default::default(),
+    );
+    // This presenter deliberately owns no HWND. The actual OS lookup therefore
+    // returns monitor 0. A queued HDR reply for an earlier real monitor must not
+    // become active after that window disappears, even if the worker finishes.
+    let before = presenter.status();
+    let (tx, rx) = mpsc::sync_channel(1);
+    tx.send(DisplayStatus {
+        active: true,
+        supported: true,
+        monitor: "old HDR monitor".into(),
+        sdr_white_nits: 240.0,
+        peak_nits: 600.0,
+        headroom: 2.5,
+        ..Default::default()
+    })
+    .unwrap();
+    {
+        let mut refresh = presenter.0.refresh.lock().unwrap();
+        refresh.next = Instant::now() + Duration::from_secs(60);
+        refresh.window.monitor = 0;
+        refresh.window.queried_monitor = 0x91;
+        refresh.pending = Some(rx);
+    }
+    assert!(
+        !presenter.poll(),
+        "Stale HDR reply changed the active display"
+    );
+    assert_eq!(presenter.status(), before);
+    assert!(presenter.0.refresh.lock().unwrap().pending.is_none());
+
+    // Positive control: the real unavailable-window reply has the matching key,
+    // must traverse the same receiver path and must update the displayed reason.
+    let (tx, rx) = mpsc::sync_channel(1);
+    tx.send(platform::detect_monitor(0)).unwrap();
+    {
+        let mut refresh = presenter.0.refresh.lock().unwrap();
+        refresh.window.queried_monitor = 0;
+        refresh.pending = Some(rx);
+    }
+    assert!(
+        presenter.poll(),
+        "Matching current-monitor reply was not published"
+    );
+    let actual = presenter.status();
+    assert!(!actual.active && !actual.supported && actual.monitor.is_empty());
+    assert_eq!(actual.sdr_white_nits, 80.0);
+    assert_eq!(actual.headroom, 1.0);
+    assert!(actual.reason.contains("unavailable"));
+    assert!(presenter.0.refresh.lock().unwrap().pending.is_none());
 }
 
 fn draw_sdr_layers(presenter: &PhotoPresenter, layer: &PhotoLayer, alpha: f32) -> Vec<[f32; 4]> {

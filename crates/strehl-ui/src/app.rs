@@ -119,6 +119,7 @@ pub struct StrehlApp {
     frame_performance: frame_performance::FramePerformance,
     edit_photo_focus: bool,
     regional: editing::RegionalInspector,
+    edit_pane: editing::EditPaneState,
     agent: agent::AgentState,
     close_after_export: bool,
     process_view: bool,
@@ -214,6 +215,7 @@ impl StrehlApp {
             frame_performance: Default::default(),
             edit_photo_focus: true,
             regional: Default::default(),
+            edit_pane: Default::default(),
             agent: Default::default(),
             close_after_export: false,
             process_view: true,
@@ -2022,20 +2024,24 @@ impl StrehlApp {
             });
     }
     fn show_process(&mut self, ctx: &egui::Context) {
-        if self.sidebar != Some(workspace::Sidebar::Edit) {
-            self.editor.tool = crate::edit_workspace::DrawingTool::Navigate;
-            self.editor.drag = None;
-            self.editor.polygon.clear();
+        let edit_enabled = self.sidebar == Some(workspace::Sidebar::Edit)
+            && self.editor.loaded.is_some()
+            && self.editor.path == self.result
+            && self.progress.stage == Stage::Complete;
+        if !edit_enabled {
+            self.editor.cancel_geometry();
+            self.editor
+                .set_tool(crate::edit_workspace::DrawingTool::Navigate);
+        } else if self.editor.tool == crate::edit_workspace::DrawingTool::Navigate {
+            self.editor
+                .set_tool(crate::edit_workspace::DrawingTool::Select);
         }
-        self.process_space.set_edit_focus(
-            self.sidebar == Some(workspace::Sidebar::Edit)
-                && self.edit_photo_focus
-                && self.editor.loaded.is_some()
-                && self.editor.path == self.result
-                && self.progress.stage == Stage::Complete,
-        );
         self.process_space
-            .set_annotation_mode(self.editor.tool != crate::edit_workspace::DrawingTool::Navigate);
+            .set_edit_focus(edit_enabled && self.edit_photo_focus);
+        self.process_space
+            .set_annotation_mode(edit_enabled && self.editor.owns_canvas(ctx));
+        self.process_space
+            .set_edit_navigation(edit_enabled && !ctx.input(|input| input.modifiers.alt));
         let count = self
             .stack
             .as_ref()
@@ -2124,7 +2130,9 @@ impl StrehlApp {
                         self.editor
                             .request_view(ctx, mapping, self.max_texture_side);
                     }
-                    self.editor.draw_overlay(ui, mapping);
+                    if edit_enabled {
+                        self.editor.draw_overlay(ui, mapping);
+                    }
                 }
                 response
             })

@@ -554,6 +554,8 @@ impl StrehlApp {
                     let response = self.project_explorer.show(ui, &mut self.catalog, busy);
                     changed = response.changed;
                     action = response.action;
+                } else if pane == Sidebar::Edit {
+                    self.edit_panel(ui);
                 } else {
                     egui::Frame::NONE.inner_margin(10).show(ui, |ui| {
                         egui::ScrollArea::vertical()
@@ -587,7 +589,7 @@ impl StrehlApp {
                                     .show(ui, |ui| self.destination_controls(ui));
                             }
                             Sidebar::Review => self.review_panel(ui),
-                            Sidebar::Edit => self.edit_panel(ui),
+                            Sidebar::Edit => unreachable!(),
                             Sidebar::Agent => self.agent_panel(ui),
                             Sidebar::Activity => {
                                 if let Some(error) = &self.error {

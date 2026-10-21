@@ -8,15 +8,33 @@ use windows::{
 use windows_sys::Win32::{
     Devices::Display::*,
     Foundation::HWND,
-    Graphics::Gdi::{MONITOR_DEFAULTTOPRIMARY, MonitorFromWindow},
+    Graphics::Gdi::{MONITOR_DEFAULTTONEAREST, MonitorFromWindow},
+    UI::WindowsAndMessaging::IsWindow,
 };
 
 fn wide(value: &[u16]) -> String {
     String::from_utf16_lossy(&value[..value.iter().position(|v| *v == 0).unwrap_or(value.len())])
 }
 
-pub(super) fn detect(window: usize) -> DisplayStatus {
-    match query(window) {
+pub(super) fn window_monitor(window: usize) -> usize {
+    // A missing or retired window must not silently select the primary display.
+    // Nearest also preserves the restore monitor for minimized/off-screen windows.
+    unsafe {
+        if window == 0 || IsWindow(window as HWND) == 0 {
+            return 0;
+        }
+        MonitorFromWindow(window as HWND, MONITOR_DEFAULTTONEAREST) as usize
+    }
+}
+
+pub(super) fn detect_monitor(monitor: usize) -> DisplayStatus {
+    if monitor == 0 {
+        return DisplayStatus {
+            reason: "SDR: this window's display is unavailable".into(),
+            ..Default::default()
+        };
+    }
+    match query(monitor) {
         Ok(value) => value,
         Err(error) => DisplayStatus {
             reason: format!("SDR: display capability query failed: {error}"),
@@ -25,11 +43,10 @@ pub(super) fn detect(window: usize) -> DisplayStatus {
     }
 }
 
-fn query(window: usize) -> windows::core::Result<DisplayStatus> {
-    // SAFETY: HWND is only queried; a destroyed handle returns no monitor. COM
+fn query(monitor: usize) -> windows::core::Result<DisplayStatus> {
+    // SAFETY: HMONITOR is only compared; a retired output is not found. COM
     // interfaces are owned smart pointers. All enumerations have fixed bounds.
     unsafe {
-        let monitor = MonitorFromWindow(window as HWND, MONITOR_DEFAULTTOPRIMARY);
         let factory: IDXGIFactory1 = CreateDXGIFactory1()?;
         for adapter_index in 0..32 {
             let Ok(adapter) = factory.EnumAdapters1(adapter_index) else {
@@ -40,7 +57,7 @@ fn query(window: usize) -> windows::core::Result<DisplayStatus> {
                     break;
                 };
                 let desc = output.GetDesc()?;
-                if desc.Monitor.0 != monitor {
+                if desc.Monitor.0 as usize != monitor {
                     continue;
                 }
                 let name = wide(&desc.DeviceName);
@@ -144,4 +161,19 @@ fn sdr_white(device: &str) -> Option<f32> {
         }
     }
     None
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn missing_window_never_borrows_the_primary_monitors_hdr_state() {
+        assert_eq!(window_monitor(0), 0);
+        assert_eq!(window_monitor(usize::MAX), 0);
+        let status = detect_monitor(0);
+        assert!(!status.active && !status.supported);
+        assert!(status.monitor.is_empty());
+        assert!(status.reason.contains("unavailable"));
+    }
 }

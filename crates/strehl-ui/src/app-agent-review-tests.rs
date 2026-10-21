@@ -19,6 +19,90 @@ fn image() -> LinearImage {
 }
 
 #[test]
+fn selected_region_is_observable_and_invalidates_an_agents_old_scope() {
+    let mut app = app();
+    app.apply_agent_command(AgentCommand::Annotate {
+        annotation: Annotation {
+            id: "reflection".into(),
+            label: "Reflection".into(),
+            kind: IssueKind::BrightSpot,
+            region: region(),
+            note: String::new(),
+        },
+    })
+    .unwrap();
+    app.sync_agent_revision();
+    let observed = app.agent.revision;
+    assert_eq!(app.agent_snapshot()["selected_region"], "reflection");
+    let request = AgentRequest {
+        expected_revision: Some(observed),
+        command: AgentCommand::AdaptiveDevelop {
+            strength: 1.0,
+            intent: crate::agent_interface::AdaptiveDevelopIntent::Highlights,
+        },
+    };
+    app.editor.selected = None; // A human changed only scope, not any photo control.
+    app.sync_agent_revision();
+    assert!(request.check_revision(app.agent.revision).is_err());
+    assert!(app.agent_snapshot()["selected_region"].is_null());
+}
+
+#[test]
+fn agent_highlight_intent_uses_the_same_local_worker_and_invalid_calls_do_nothing() {
+    let mut app = app();
+    let command = |strength| AgentCommand::AdaptiveDevelop {
+        strength,
+        intent: crate::agent_interface::AdaptiveDevelopIntent::Highlights,
+    };
+    let original = app.editor.recipe.clone();
+    assert!(app.apply_agent_command(command(1.0)).is_err());
+    assert_eq!(app.editor.recipe, original);
+    assert_eq!(app.adaptive_snapshot()["analyzing"], false);
+    app.apply_agent_command(AgentCommand::Annotate {
+        annotation: Annotation {
+            id: "reflection".into(),
+            label: "Reflection".into(),
+            kind: IssueKind::BrightSpot,
+            region: region(),
+            note: String::new(),
+        },
+    })
+    .unwrap();
+    let mut bright = app.editor.recipe.clone();
+    bright.regions[0].adjustments.exposure = 3.0;
+    app.editor.replace(bright.clone()).unwrap();
+    assert!(app.apply_agent_command(command(-0.1)).is_err());
+    assert_eq!(app.editor.recipe, bright);
+    let reply = app.apply_agent_command(command(1.0)).unwrap();
+    assert_eq!(reply["state"], "queued");
+    assert_eq!(reply["intent"], "highlights");
+    assert_eq!(reply["selected_region"], "reflection");
+    let deadline = Instant::now() + Duration::from_secs(3);
+    let ctx = egui::Context::default();
+    while app.adaptive_snapshot()["analyzing"] == true {
+        assert!(Instant::now() < deadline);
+        app.poll_adaptive(&ctx);
+        std::thread::yield_now();
+    }
+    assert!(
+        app.adaptive_snapshot()["error"].is_null(),
+        "{}",
+        app.adaptive_snapshot()
+    );
+    assert_eq!(app.editor.recipe.global, bright.global);
+    assert!(app.editor.recipe.regions[0].adjustments.highlights < -1.0);
+    let full = app.editor.recipe.clone();
+    assert_eq!(
+        app.apply_agent_command(command(0.4)).unwrap()["state"],
+        "applied"
+    );
+    app.apply_agent_command(command(1.0)).unwrap();
+    assert_eq!(app.editor.recipe, full);
+    app.apply_agent_command(command(0.0)).unwrap();
+    assert_eq!(app.editor.recipe, bright);
+}
+
+#[test]
 fn painted_photo_aperture_reports_pan_and_rejects_hidden_or_missing_photo() {
     let photo = Rect::from_min_size(egui::pos2(-30.0, -10.0), egui::vec2(200.0, 100.0));
     let visible = Rect::from_min_size(egui::pos2(20.0, 15.0), egui::vec2(50.0, 25.0));

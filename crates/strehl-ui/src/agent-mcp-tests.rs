@@ -88,6 +88,7 @@ fn malformed_calls_never_reach_the_application() {
         json!({"expected_revision":2,"command":{"operation":"shell","path":"C:\\private"}}),
         json!({"expected_revision":2,"command":{"operation":"set_settings","patch":{"workers":0}}}),
         json!({"expected_revision":2,"command":{"operation":"export","file_name":"../secret.tif","format":"tiff"}}),
+        json!({"expected_revision":2,"command":{"operation":"adaptive_develop","strength":1,"intent":"invent_texture"}}),
     ] {
         let call = json!({"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"strehl_command","arguments":arguments}});
         assert_eq!(

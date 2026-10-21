@@ -54,6 +54,14 @@ pub(crate) enum PreviewTarget {
 /// Unknown keys are rejected before the request reaches the UI.
 pub(crate) type SettingsPatch = BTreeMap<String, Value>;
 
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub(crate) enum AdaptiveDevelopIntent {
+    #[default]
+    Balance,
+    Highlights,
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(tag = "operation", rename_all = "snake_case", deny_unknown_fields)]
 pub(crate) enum AgentCommand {
@@ -90,6 +98,8 @@ pub(crate) enum AgentCommand {
     /// Queue a bounded scene analysis and apply its editable suggested controls.
     AdaptiveDevelop {
         strength: f32,
+        #[serde(default)]
+        intent: AdaptiveDevelopIntent,
     },
     Annotate {
         annotation: Annotation,
@@ -195,7 +205,7 @@ impl AgentCommand {
             }
             Self::SetSettings { patch } => validate_settings(patch),
             Self::SetDevelop { recipe } => recipe.validate().map_err(|e| e.to_string()),
-            Self::AdaptiveDevelop { strength } => ensure(
+            Self::AdaptiveDevelop { strength, .. } => ensure(
                 strength.is_finite() && (0.0..=1.0).contains(strength),
                 "Adaptive amount must be between 0 and 1",
             ),

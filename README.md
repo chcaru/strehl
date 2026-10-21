@@ -74,8 +74,9 @@ failed approaches, corrections, and remaining limitations.
 | Scrub | Move through captures beside the final photograph, with linked zoom and pan. |
 | Select | Pin multiple capture ranges. Their estimated regions keep distinct colors, with mixed stripes at intersections. |
 | Investigate | Probe a region, compare detail scales, inspect recorded sample admission, and view observation balance when recorded. |
-| Develop | Keep a scene-linear float master; adjust exposure, tone, and color globally or in feathered circles, boxes, and polygons. Import supported numeric XMP controls with explicit warnings for unsupported Adobe profiles. |
-| Adapt | Measure the scene with **Adaptive**, then adjust its amount or any suggested tone/color control. This is an original, inspectable treatment, not a reproduction of Adobe's AI profile. |
+| Develop | Keep a scene-linear float master; adjust light and color globally or in editable regions. Draw an ellipse, rectangle, polygon, or freehand lasso; move and reshape it afterward. Import supported numeric XMP controls with explicit warnings for unsupported Adobe profiles. |
+| Refine a selection | Draw **Magic lasso** around contrasting objects or defects. Bounded image analysis proposes separate editable outlines; ambiguous areas remain unselected. This experimental tool uses image contrast, not semantic object recognition. |
+| Adapt | Use **Auto develop**, **Balance region**, or **Balance highlights**, then adjust Amount or any suggested tone/color control. This is an original, inspectable treatment, not a reproduction of Adobe's AI profile or recovery of clipped texture. |
 | Inspect | Retain a fast overview while visible detail refines to source pixels as you zoom. HDR-capable Windows/macOS displays can present the linear master's highlight headroom. |
 | Repair | Restrict a selected region to a capture span on the next stack, then feather that reconstruction into the photograph. |
 | Deliver | Export a developed 16-bit sRGB TIFF or a genuine 10-bit BT.2020/PQ HDR AVIF from the linear master. Existing files are preserved. |

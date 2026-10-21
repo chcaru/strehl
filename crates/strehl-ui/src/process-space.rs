@@ -82,6 +82,9 @@ impl ProcessSpace {
     pub(crate) fn set_annotation_mode(&mut self, active: bool) {
         self.theater.annotation_mode = active;
     }
+    pub(crate) fn set_edit_navigation(&mut self, active: bool) {
+        self.theater.edit_navigation = active;
+    }
     pub(crate) fn set_edit_focus(&mut self, active: bool) {
         self.theater.edit_focus = active;
     }
@@ -157,6 +160,7 @@ impl ProcessSpace {
         if self.epoch != Some(input.epoch) {
             let layout = self.theater.layout;
             let annotation_mode = self.theater.annotation_mode;
+            let edit_navigation = self.theater.edit_navigation;
             let edit_focus = self.theater.edit_focus;
             let photo_paint = self.theater.photo_paint.clone();
             let requested_view = self.theater.requested_view;
@@ -168,6 +172,7 @@ impl ProcessSpace {
             };
             self.theater.layout = layout;
             self.theater.annotation_mode = annotation_mode;
+            self.theater.edit_navigation = edit_navigation;
             self.theater.edit_focus = edit_focus;
             self.theater.set_photo_paint(photo_paint);
             if let Some((center, zoom)) = requested_view {
@@ -212,7 +217,14 @@ impl ProcessSpace {
                 crate::process_journey::HEIGHT,
             ),
         );
-        self.journey.show(ui, journey, input.epoch, input.progress);
+        let edit_chrome = ui.ctx().animate_bool_with_time(
+            ui.id().with("photo-edit-chrome"),
+            self.theater.edit_focus && input.progress.stage == Stage::Complete,
+            0.18,
+        );
+        if edit_chrome < 0.001 {
+            self.journey.show(ui, journey, input.epoch, input.progress);
+        }
         // One persistent timeline owns capture browsing, sampled participation,
         // and source inspection. Its seam never participates in
         // egui's auto-sizing feedback: only a pointer drag changes the fraction.
@@ -238,7 +250,7 @@ impl ProcessSpace {
         }
         let bottom = height(self.theater.layout.lower) + 14.0;
         let body = Rect::from_min_max(
-            scene.min + egui::vec2(12.0, 92.0),
+            scene.min + egui::vec2(12.0, 92.0 - 80.0 * edit_chrome),
             scene.max - egui::vec2(12.0, bottom),
         );
         let detail = Input {

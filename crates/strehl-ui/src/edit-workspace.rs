@@ -9,8 +9,12 @@ use std::{
 };
 use strehl_edit::{Adjustments, DevelopmentRecipe, LinearImage, RegionAdjustment, RegionShape};
 
+#[path = "edit-magic.rs"]
+mod magic;
 #[path = "edit-recovery.rs"]
 mod recovery;
+#[path = "edit-regions.rs"]
+mod regions;
 
 pub(crate) struct LoadedPhoto {
     pub image: Arc<LinearImage>,
@@ -31,9 +35,12 @@ pub(crate) struct DevelopedPreview {
 pub(crate) enum DrawingTool {
     #[default]
     Navigate,
+    Select,
     Ellipse,
     Rectangle,
     Polygon,
+    Lasso,
+    MagicLasso,
 }
 
 #[derive(Default)]
@@ -47,6 +54,8 @@ pub(crate) struct EditorState {
     pub show_regions: bool,
     pub drag: Option<egui::Pos2>,
     pub polygon: Vec<[f32; 2]>,
+    region_interaction: regions::RegionInteraction,
+    magic: magic::MagicState,
     pub texture: Option<TextureHandle>,
     pub loading: Option<Task<LoadedPhoto>>,
     pub developing: Option<Task<DevelopedPreview>>,
@@ -146,135 +155,6 @@ impl EditorState {
             }
         }
         self.replace(recipe)
-    }
-    pub fn draw_overlay(&mut self, ui: &mut egui::Ui, (image, clip): (egui::Rect, egui::Rect)) {
-        if !image.is_positive() || self.loaded.is_none() {
-            return;
-        }
-        let allowed = ui.input(|input| input.focused)
-            && ui.is_enabled()
-            && ui
-                .ctx()
-                .memory(|memory| memory.is_above_modal_layer(ui.layer_id()));
-        let visible = clip.intersect(image);
-        let paint = ui.painter_at(visible);
-        let project = |p: [f32; 2]| image.min + image.size() * egui::vec2(p[0], p[1]);
-        if self.show_regions {
-            for (index, region) in self.recipe.regions.iter().enumerate() {
-                let selected = self.selected.as_ref() == Some(&region.id);
-                let color = if !region.enabled {
-                    crate::theme::MUTED
-                } else {
-                    crate::process_sample_glyphs::level_color(index % 7)
-                };
-                let points = outline(&region.shape)
-                    .into_iter()
-                    .map(project)
-                    .collect::<Vec<_>>();
-                paint.add(egui::Shape::closed_line(
-                    points,
-                    egui::Stroke::new(if selected { 1.5f32 } else { 1.0 }, color),
-                ));
-                let bounds = shape_bounds(&region.shape);
-                let at = project(bounds[0]);
-                if visible.contains(at) {
-                    let text = paint.layout_no_wrap(
-                        region.name.clone(),
-                        egui::FontId::proportional(11.0),
-                        color,
-                    );
-                    let rect = egui::Rect::from_min_size(at, text.size()).expand(4.0);
-                    paint.rect_filled(rect, 0.0, crate::theme::BG.gamma_multiply(0.92));
-                    paint.galley(at, text, color);
-                    let hit = ui.interact(
-                        rect,
-                        ui.id().with(("edit-region", &region.id)),
-                        egui::Sense::click(),
-                    );
-                    if hit.clicked() {
-                        self.selected = Some(region.id.clone());
-                    }
-                }
-            }
-        }
-        if self.tool == DrawingTool::Navigate {
-            return;
-        }
-        let hit = ui.interact(
-            visible,
-            ui.id().with("draw-photo-region"),
-            egui::Sense::click_and_drag(),
-        );
-        if hit.hovered() {
-            ui.ctx().set_cursor_icon(egui::CursorIcon::Crosshair);
-        }
-        if !allowed || ui.input(|input| input.key_pressed(egui::Key::Escape)) {
-            self.drag = None;
-            self.polygon.clear();
-            self.tool = DrawingTool::Navigate;
-            return;
-        }
-        if self.tool == DrawingTool::Polygon {
-            if hit.clicked()
-                && let Some(point) = hit.interact_pointer_pos()
-                && self.polygon.len() < 256
-            {
-                self.polygon.push(normalized(point, image));
-            }
-            let mut points = self
-                .polygon
-                .iter()
-                .copied()
-                .map(project)
-                .collect::<Vec<_>>();
-            if let Some(pointer) = hit.hover_pos() {
-                points.push(pointer);
-            }
-            if points.len() >= 2 {
-                paint.add(egui::Shape::line(
-                    points,
-                    egui::Stroke::new(1.5f32, crate::theme::ACCENT),
-                ));
-            }
-            if ui.input(|input| input.key_pressed(egui::Key::Enter)) || hit.double_clicked() {
-                let points = std::mem::take(&mut self.polygon);
-                if let Err(error) = self.add_region(RegionShape::Polygon { points }) {
-                    self.error = Some(error.to_string());
-                }
-            }
-            return;
-        }
-        if hit.is_pointer_button_down_on() && ui.input(|input| input.pointer.primary_pressed()) {
-            self.drag = hit.interact_pointer_pos();
-        }
-        if let Some(start) = self.drag
-            && let Some(pointer) = ui.input(|input| input.pointer.interact_pos())
-        {
-            let bounds = egui::Rect::from_two_pos(start, pointer).intersect(image);
-            let min = normalized(bounds.min, image);
-            let max = normalized(bounds.max, image);
-            let shape = if self.tool == DrawingTool::Rectangle {
-                RegionShape::Rectangle { min, max }
-            } else {
-                RegionShape::Ellipse {
-                    center: [(min[0] + max[0]) * 0.5, (min[1] + max[1]) * 0.5],
-                    radius: [(max[0] - min[0]) * 0.5, (max[1] - min[1]) * 0.5],
-                }
-            };
-            paint.add(egui::Shape::closed_line(
-                outline(&shape).into_iter().map(project).collect(),
-                egui::Stroke::new(1.5f32, crate::theme::ACCENT),
-            ));
-            if ui.input(|input| input.pointer.primary_released()) {
-                self.drag = None;
-                if bounds.width() >= 4.0
-                    && bounds.height() >= 4.0
-                    && let Err(error) = self.add_region(shape)
-                {
-                    self.error = Some(error.to_string());
-                }
-            }
-        }
     }
     pub fn reset_document(&mut self) {
         let error = self
@@ -457,6 +337,7 @@ impl EditorState {
     }
 
     pub fn poll(&mut self, ctx: &egui::Context, max_texture_side: u32) {
+        self.poll_magic(ctx);
         if let Some(result) = self
             .preset
             .as_ref()
@@ -491,6 +372,7 @@ impl EditorState {
                         .and_then(|path| self.recoveries.get(path))
                         .cloned();
                     self.recipe = recovered.clone().unwrap_or_else(|| loaded.recipe.clone());
+                    self.reconcile_selection();
                     self.warnings = loaded.warnings.clone();
                     self.loaded = Some(loaded);
                     self.revision = self.revision.wrapping_add(1);
@@ -724,7 +606,19 @@ impl EditorState {
             self.changed();
             self.commit_edit();
         }
+        self.reconcile_selection();
         Ok(())
+    }
+
+    pub fn reconcile_selection(&mut self) {
+        if self
+            .selected
+            .as_ref()
+            .is_some_and(|id| !self.recipe.regions.iter().any(|r| &r.id == id))
+        {
+            self.selected = None;
+            self.cancel_geometry();
+        }
     }
 
     pub fn add_region(&mut self, shape: RegionShape) -> anyhow::Result<String> {
@@ -751,7 +645,7 @@ impl EditorState {
         });
         self.replace(recipe)?;
         self.selected = Some(id.clone());
-        self.tool = DrawingTool::Navigate;
+        self.set_tool(DrawingTool::Select);
         self.show_regions = true;
         Ok(id)
     }
@@ -780,6 +674,7 @@ impl EditorState {
             .push(std::mem::replace(&mut self.recipe, previous));
         self.history_revision = self.history_revision.wrapping_add(1);
         self.changed();
+        self.reconcile_selection();
         true
     }
     pub fn redo(&mut self) -> bool {
@@ -789,6 +684,7 @@ impl EditorState {
         self.undo.push(std::mem::replace(&mut self.recipe, next));
         self.history_revision = self.history_revision.wrapping_add(1);
         self.changed();
+        self.reconcile_selection();
         true
     }
 

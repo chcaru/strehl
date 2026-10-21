@@ -9,6 +9,14 @@ builds. Compare each arm's minimum and spread. This is a paced MCP interaction
 trace, not a pointer-event benchmark, GPU timing, FPS, or input-to-photon latency.
 The binary must expose the per-egui-frame `frame_performance` snapshot contract.
 Opening follows file copies, so its timings must not be called cold-start times.
+
+With --edit, launch flags alone are insufficient: some versions let --agent
+override --edit. Before and after timing, this script writes edit-request-PHASE.json
+and waits for edit-witness-PHASE.json. The operator must activate Edit in the owned
+window, inspect its visible adjustment controls, and retain a PNG/JPEG screenshot.
+Copy the request fields into the witness and add visible_pane="Edit",
+observed_controls=[actual visible labels], and screenshot="relative-image-path".
+This is an explicit visual witness, not automated pixel recognition.
 """
 
 import argparse
@@ -19,6 +27,7 @@ import os
 from pathlib import Path
 import platform
 import queue
+import secrets
 import shutil
 import subprocess
 import threading
@@ -231,6 +240,47 @@ class Session:
         raise RuntimeError(f"SetView failed to move the painted photograph: {error}")
 
 
+def checked_edit_witness(path, request):
+    """Validate provenance of an operator-observed pane, not its launch flag.
+
+    This intentionally does not pretend to recognize pixels. The operator must
+    inspect the owned window, activate Edit and record the visible pane before
+    writing the witness. The screenshot remains available for independent review.
+    """
+    witness = json.loads(path.read_text(encoding="utf-8"))
+    for key in ("nonce", "pid", "binary_sha256", "phase"):
+        if witness.get(key) != request[key]:
+            raise ValueError(f"Edit witness {key} does not match this owned launch")
+    if witness.get("visible_pane") != "Edit" or not witness.get("observed_controls"):
+        raise ValueError("Edit witness must identify directly observed editing controls")
+    screenshot = (path.parent / witness["screenshot"]).resolve()
+    screenshot.relative_to(path.parent.resolve())
+    signature = screenshot.read_bytes()[:8]
+    if signature != b"\x89PNG\r\n\x1a\n" and not signature.startswith(b"\xff\xd8\xff"):
+        raise ValueError("Edit witness screenshot must be a PNG or JPEG")
+    return {**witness, "screenshot_sha256": digest(screenshot),
+            "meaning": "Operator-observed visible Edit pane; screenshot retained for review."}
+
+
+def await_edit_witness(output, app, session, binary_sha256, phase):
+    request = {"nonce": secrets.token_hex(16), "pid": app.pid,
+               "binary_sha256": binary_sha256, "phase": phase,
+               "instruction": "Activate Edit in this owned window; inspect and save its screenshot, "
+                              "then write the matching edit witness. Do not modify photo controls."}
+    (output / f"edit-request-{phase}.json").write_text(json.dumps(request, indent=2), encoding="utf-8")
+    witness_path = output / f"edit-witness-{phase}.json"
+    print(f"Awaiting directly observed Edit pane: {witness_path}", flush=True)
+    deadline = time.monotonic() + 600
+    while not witness_path.exists():
+        if app.poll() is not None:
+            raise RuntimeError("Owned application exited during Edit-pane verification")
+        if time.monotonic() >= deadline:
+            raise TimeoutError("No direct Edit-pane witness; launch flags are not visibility proof")
+        session.snapshot()
+        time.sleep(0.25)
+    return checked_edit_witness(witness_path, request)
+
+
 def prepare_fixture(run, catalog_path, output):
     catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
     matching = [
@@ -281,6 +331,7 @@ def main():
     parser.add_argument("--output", required=True, type=Path, help="New, nonexistent directory")
     parser.add_argument("--motions", type=int, default=100)
     parser.add_argument("--size", default="2600x1300")
+    parser.add_argument("--edit", action="store_true", help="Require operator-observed Edit-pane screenshots before and after timing; pauses for witnesses")
     args = parser.parse_args()
     if os.name != "nt":
         parser.error("This audit currently supports native Windows app launches")
@@ -326,6 +377,8 @@ def main():
         environment["XDG_STATE_HOME"] = str(state)
         receipt["launch"] = [str(binary), "--agent", "--open-run", str(fixture),
                              "--size", args.size]
+        if args.edit:
+            receipt["launch"].append("--edit")
         with (output / "native-app.log").open("w", encoding="utf-8") as app_log, (
             output / "mcp.log"
         ).open("w", encoding="utf-8") as mcp_log:
@@ -369,6 +422,10 @@ def main():
                 "development": ready["development"], "display": ready.get("display"),
             }
             print("Opening CPU:", receipt["opening"]["framework_cpu"], flush=True)
+            if args.edit:
+                receipt["edit_before"] = await_edit_witness(
+                    output, app, session, receipt["binary_sha256"], "before")
+                ready = session.settle(minimum=1.0)
             zoom_begin = trace.latest + 1
             session.view([0.38, 0.57], 8)
             session.settle(minimum=1.0)
@@ -401,6 +458,9 @@ def main():
                 "final_display": finished.get("display"),
                 "painted_apertures": apertures,
             }
+            if args.edit:
+                receipt["edit_after"] = await_edit_witness(
+                    output, app, session, receipt["binary_sha256"], "after")
             receipt["passed"] = True
             print("Motion CPU:", receipt["motion"]["framework_cpu"], flush=True)
     except Exception as error:

@@ -1,5 +1,5 @@
 //! Render complete before/after photographs and an exact strength-zero placebo.
-//! Usage: cargo run --release -p strehl-edit --example adaptive-review -- input.tiff new-output-dir
+//! Usage: cargo run --release -p strehl-edit --example adaptive-review -- input.tiff new-output-dir [recipe.json region-id balance|highlights]
 use std::{fs, path::PathBuf, time::Instant};
 use strehl_edit::*;
 
@@ -14,8 +14,24 @@ fn main() -> anyhow::Result<()> {
     for region in &mut base.regions {
         region.adjustments = Adjustments::default();
     }
+    let target = if let Some(recipe) = args.next() {
+        base = serde_json::from_slice(&fs::read(recipe)?)?;
+        let region = args.next().expect("region ID");
+        let intent = match args.next().as_deref() {
+            Some("balance") => AdaptiveIntent::Balance,
+            Some("highlights") => AdaptiveIntent::RestoreHighlights,
+            _ => anyhow::bail!("intent must be balance or highlights"),
+        };
+        Some((region, intent))
+    } else {
+        None
+    };
+    anyhow::ensure!(args.next().is_none(), "unexpected argument");
     let started = Instant::now();
-    let suggestion = analyze_adaptive(&image, &base)?;
+    let suggestion = match target.as_ref() {
+        Some((region, intent)) => analyze_adaptive_region(&image, &base, region, *intent)?,
+        None => analyze_adaptive(&image, &base)?,
+    };
     let analysis_ms = started.elapsed().as_secs_f64() * 1000.0;
     let zero = suggestion.recipe_at(0.0)?;
     anyhow::ensure!(zero == base, "zero strength changed the recipe");
@@ -43,7 +59,8 @@ fn main() -> anyhow::Result<()> {
             "width": image.width, "height": image.height, "origin": image.origin,
             "analysis_ms": analysis_ms, "zero_strength_all_pixels_identical": true,
             "sample_count": suggestion.stats.sample_count,
-            "scope": "Whole-photo development suggestions, not automatic quality acceptance or new stack reconstruction"
+            "scope": "Complete-photo development comparison, not automatic quality acceptance or new stack reconstruction",
+            "target_region": suggestion.target_region, "intent": suggestion.intent,
         }))?,
     )?;
     println!(

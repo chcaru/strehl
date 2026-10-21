@@ -144,6 +144,43 @@ fn develop_requests_validate_the_engine_recipe_including_region_adjustments() {
 }
 
 #[test]
+fn adaptive_intent_defaults_to_balance_and_rejects_unknown_treatments() {
+    let original: AgentCommand = serde_json::from_value(json!({
+        "operation":"adaptive_develop", "strength":0.5
+    }))
+    .unwrap();
+    assert!(
+        matches!(original, AgentCommand::AdaptiveDevelop { intent: AdaptiveDevelopIntent::Balance, strength } if strength == 0.5)
+    );
+    original.validate().unwrap();
+    let highlights: AgentCommand = serde_json::from_value(json!({
+        "operation":"adaptive_develop", "strength":1.0,"intent":"highlights"
+    }))
+    .unwrap();
+    assert!(matches!(
+        highlights,
+        AgentCommand::AdaptiveDevelop {
+            intent: AdaptiveDevelopIntent::Highlights,
+            ..
+        }
+    ));
+    highlights.validate().unwrap();
+    for intent in [
+        json!("generate_detail"),
+        json!("restore_highlights"),
+        json!(1),
+        Value::Null,
+    ] {
+        assert!(
+            serde_json::from_value::<AgentCommand>(json!({
+                "operation":"adaptive_develop","strength":1.0,"intent":intent
+            }))
+            .is_err()
+        );
+    }
+}
+
+#[test]
 fn export_and_import_never_accept_arbitrary_paths_or_device_names() {
     assert!(safe_file_name("insect-detail.avif").is_ok());
     for name in [

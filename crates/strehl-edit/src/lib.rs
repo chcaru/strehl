@@ -11,7 +11,10 @@ mod publish;
 mod recipe;
 mod xmp;
 
-pub use adaptive::{AdaptiveChange, AdaptiveStatistics, AdaptiveSuggestion, analyze_adaptive};
+pub use adaptive::{
+    AdaptiveChange, AdaptiveIntent, AdaptiveStatistics, AdaptiveSuggestion, HighlightDiagnosis,
+    analyze_adaptive, analyze_adaptive_region,
+};
 pub use avif::{HdrExportReport, export_hdr_avif};
 pub use display_region::{DisplayRegion, DisplayRegionRequest};
 pub use image::{

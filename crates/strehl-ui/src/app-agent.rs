@@ -44,6 +44,7 @@ impl StrehlApp {
             "epoch":self.epoch, "stack":self.active_stack, "selected":self.selected, "output":self.result,
             "settings":self.controls.settings, "exposure":self.controls.exposure,"gate":self.controls.gate,
             "workers":self.controls.workers, "edits":self.editor.revision,"before_preview":self.editor.before,
+            "selected_region":self.editor.selected,
             "view":self.process_space.history_revision(), "projects":self.project_explorer.history_revision(),
             "running":self.job.is_some(), "opening":self.scan.is_some() || self.replay.is_some()
         });
@@ -301,6 +302,7 @@ impl StrehlApp {
             "stack_blocker":self.stack_start_blocker(), "settings":self.controls.settings,
             "exposure_ev":self.controls.exposure,"pyramid_gate":self.controls.gate,"workers":self.controls.workers,
             "development":self.editor.recipe,"before_preview":self.editor.before, "photo_ready":self.agent_photo_is_current(),
+            "selected_region":self.editor.selected,
             "adaptive":self.adaptive_snapshot(),
             "display":self.editor.display_stats(),
             "frame_performance":self.frame_performance.snapshot(),
@@ -369,14 +371,24 @@ impl StrehlApp {
                 self.process_view = true;
             }
             SetSettings { patch } => self.agent_settings(patch)?,
-            AdaptiveDevelop { strength } => {
-                self.start_adaptive(strength)?;
+            AdaptiveDevelop { strength, intent } => {
+                match intent {
+                    crate::agent_interface::AdaptiveDevelopIntent::Balance => {
+                        self.start_adaptive(strength)?
+                    }
+                    crate::agent_interface::AdaptiveDevelopIntent::Highlights => {
+                        self.start_highlight_restore(strength)?
+                    }
+                }
                 let state = if self.adaptive_snapshot()["analyzing"] == true {
                     "queued"
                 } else {
                     "applied"
                 };
-                return Ok(json!({"state":state,"operation":"adaptive_develop"}));
+                return Ok(
+                    json!({"state":state,"operation":"adaptive_develop", "intent":intent,
+                    "selected_region":self.editor.selected}),
+                );
             }
             SetDevelop { recipe } => {
                 anyhow::ensure!(

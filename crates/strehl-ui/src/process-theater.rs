@@ -143,6 +143,7 @@ pub(crate) struct ProcessTheater {
     primary_destination: Option<Rect>,
     pub(crate) edit_mapping: Option<(Rect, Rect)>,
     pub(crate) annotation_mode: bool,
+    pub(crate) edit_navigation: bool,
     pub(crate) edit_focus: bool,
     pub(crate) requested_view: Option<(Pos2, f32)>,
     history_revision: u64,
@@ -217,6 +218,7 @@ impl Default for ProcessTheater {
             primary_destination: None,
             edit_mapping: None,
             annotation_mode: false,
+            edit_navigation: false,
             edit_focus: false,
             requested_view: None,
             history_revision: 0,
@@ -2406,6 +2408,7 @@ impl ProcessTheater {
     }
 
     fn finished_photograph(&mut self, ui: &mut Ui, rect: Rect, image_box: Rect, input: &Input<'_>) {
+        self.result_photo.set_edit_navigation(self.edit_navigation);
         self.result_photo
             .suppress_diagnostics(input.progress.source_repair.is_some());
         let p = ui.painter_at(rect);
@@ -2413,7 +2416,9 @@ impl ProcessTheater {
         // Use the capture actually on screen while a newly requested preview
         // is pending. The final and approximate source then share one footprint.
         let current = self.dense_current_frame();
-        let label = if multiple {
+        let label = if self.edit_navigation {
+            "PHOTOGRAPH / EDIT".into()
+        } else if multiple {
             format!(
                 "{} SELECTED RANGES{} / {} ADMISSION",
                 self.participation.spans().len(),
@@ -2611,7 +2616,10 @@ impl ProcessTheater {
     }
 
     fn final_modifier(&self, ui: &mut Ui, rect: Rect, _image_box: Rect, input: &Input<'_>) {
-        if input.progress.source_repair.is_some() || ui.input(|i| i.key_down(egui::Key::Space)) {
+        if self.edit_navigation
+            || input.progress.source_repair.is_some()
+            || ui.input(|i| i.key_down(egui::Key::Space))
+        {
             return;
         }
         let Some(destination) = self.primary_destination else {

@@ -84,6 +84,43 @@ class FrameControls(unittest.TestCase):
 
 
 class IsolationControls(unittest.TestCase):
+    def test_edit_witness_requires_matching_owned_launch_and_visible_controls(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            (directory / "edit.png").write_bytes(b"\x89PNG\r\n\x1a\nfixture")
+            request = {"nonce": "unique-launch", "pid": 123, "binary_sha256": "hash", "phase": "before"}
+            valid = {**request, "visible_pane": "Edit", "observed_controls": ["Exposure", "Contrast"],
+                     "screenshot": "edit.png"}
+            path = directory / "witness.json"
+            path.write_text(json.dumps(valid))
+            checked = audit.checked_edit_witness(path, request)
+            self.assertEqual(checked["screenshot_sha256"], audit.digest(directory / "edit.png"))
+            (directory / "edit.jpg").write_bytes(b"\xff\xd8\xfffixture")
+            path.write_text(json.dumps({**valid, "screenshot": "edit.jpg"}))
+            self.assertEqual(audit.checked_edit_witness(path, request)["screenshot_sha256"],
+                             audit.digest(directory / "edit.jpg"))
+            for change in ({"pid": 124}, {"nonce": "other-launch"}, {"phase": "after"},
+                           {"visible_pane": "Agent"}, {"observed_controls": []},
+                           {"binary_sha256": "different-binary"}):
+                path.write_text(json.dumps({**valid, **change}))
+                with self.subTest(change=change), self.assertRaises(ValueError):
+                    audit.checked_edit_witness(path, request)
+
+    def test_edit_witness_cannot_use_an_external_or_non_image_file(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            output = directory / "owned"
+            output.mkdir()
+            (directory / "outside.png").write_bytes(b"\x89PNG\r\n\x1a\nfixture")
+            (output / "not-image.txt").write_text("Edit")
+            request = {"nonce": "nonce", "pid": 123, "binary_sha256": "hash", "phase": "before"}
+            path = output / "witness.json"
+            for image_path in ("../outside.png", "not-image.txt"):
+                path.write_text(json.dumps({**request, "visible_pane": "Edit",
+                                           "observed_controls": ["Exposure"], "screenshot": image_path}))
+                with self.subTest(image_path=image_path), self.assertRaises(ValueError):
+                    audit.checked_edit_witness(path, request)
+
     def test_copy_remaps_only_selected_run_and_never_rewrites_original_catalog(self):
         with tempfile.TemporaryDirectory() as temporary:
             base = Path(temporary)

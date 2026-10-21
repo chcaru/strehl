@@ -413,7 +413,9 @@ pub(crate) fn tool_definitions() -> Value {
         command(
             "adaptive_develop",
             json!({"strength":{"type":"number","minimum":0,"maximum":1,
-                "description":"Amount of a scene-aware editable treatment. Analysis is asynchronous; read adaptive in the snapshot for completion, measured reasons and limitations."}}),
+                "description":"Amount of a scene-aware editable treatment. Analysis is asynchronous; read adaptive in the snapshot for completion, measured reasons and limitations."},
+                "intent":{"enum":["balance","highlights"],"default":"balance",
+                    "description":"Balance the selected region, or the whole photograph when selected_region is null. Highlights requires a selected region and compresses bright light without promising recovery of clipped texture. Read selected_region from a fresh snapshot before acting."}}),
             &["strength"],
         ),
         command(

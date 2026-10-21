@@ -2,6 +2,226 @@ use super::*;
 use crate::edit_workspace::DrawingTool;
 use strehl_edit::{Adjustments, DevelopmentRecipe};
 
+#[cfg(test)]
+#[path = "edit-pane-tests.rs"]
+mod tests;
+
+#[path = "edit-controls.rs"]
+pub(super) mod controls;
+
+#[derive(Default)]
+pub(super) struct EditPaneState {
+    document: Option<PathBuf>,
+    rename: Option<(String, String)>,
+}
+
+impl EditPaneState {
+    fn reconcile(&mut self, editor: &crate::edit_workspace::EditorState) {
+        if self.document != editor.path {
+            self.document = editor.path.clone();
+            self.rename = None;
+        } else if self
+            .rename
+            .as_ref()
+            .is_some_and(|(id, _)| !editor.recipe.regions.iter().any(|region| &region.id == id))
+        {
+            self.rename = None;
+        }
+    }
+}
+
+fn bounded_text(text: &str, max_bytes: usize) -> String {
+    let mut end = text.len().min(max_bytes);
+    while !text.is_char_boundary(end) {
+        end -= 1;
+    }
+    text[..end].to_owned()
+}
+
+/// Rename consumes its own completion keys so Escape cannot also deselect the canvas.
+fn rename_region(
+    ui: &mut egui::Ui,
+    rect: egui::Rect,
+    id: &str,
+    text: &mut String,
+    name: &mut String,
+) -> bool {
+    let field_id = egui::Id::new(("rename-region", id));
+    let response = ui.put(
+        rect,
+        egui::TextEdit::singleline(text)
+            .id(field_id)
+            .desired_width(f32::INFINITY),
+    );
+    if ui
+        .ctx()
+        .data_mut(|d| d.remove_temp::<bool>(field_id.with("request-focus")))
+        .unwrap_or(false)
+    {
+        response.request_focus();
+    }
+    let cancel = ui.input_mut(|i| i.consume_key(egui::Modifiers::NONE, egui::Key::Escape));
+    let accept = ui.input_mut(|i| i.consume_key(egui::Modifiers::NONE, egui::Key::Enter));
+    if cancel || accept || response.lost_focus() {
+        if !cancel && !text.trim().is_empty() {
+            *name = bounded_text(text.trim(), 256);
+        }
+        response.surrender_focus();
+        true
+    } else {
+        false
+    }
+}
+
+fn duplicate_region(
+    editor: &mut crate::edit_workspace::EditorState,
+    id: &str,
+) -> anyhow::Result<()> {
+    anyhow::ensure!(
+        editor.recipe.regions.len() < 128,
+        "A photograph can contain up to 128 regions."
+    );
+    let mut region = editor
+        .recipe
+        .regions
+        .iter()
+        .find(|r| r.id == id)
+        .cloned()
+        .ok_or_else(|| anyhow::anyhow!("This region no longer exists."))?;
+    // The source ID can already use the entire schema budget. Allocate a new short ID.
+    let mut suffix = 1;
+    let id = loop {
+        let candidate = format!("region-copy-{suffix}");
+        if !editor.recipe.regions.iter().any(|r| r.id == candidate) {
+            break candidate;
+        }
+        suffix += 1;
+    };
+    region.id = id.clone();
+    region.name = format!("{} copy", bounded_text(&region.name, 251));
+    // Duplicating an edit must not silently schedule a second source repair.
+    region.source_range = None;
+    let mut recipe = editor.recipe.clone();
+    recipe.regions.push(region);
+    editor.replace(recipe)?;
+    editor.selected = Some(id);
+    editor.set_tool(DrawingTool::Select);
+    editor.before = false;
+    Ok(())
+}
+
+fn region_shelf(ui: &mut egui::Ui, open: bool, contents: impl FnOnce(&mut egui::Ui)) {
+    // A collapsed panel must not overwrite the persisted expanded height.
+    let mut shelf = egui::TopBottomPanel::bottom(if open {
+        "edit-regions-shelf"
+    } else {
+        "edit-regions-shelf-collapsed"
+    })
+    .show_separator_line(false)
+    .frame(egui::Frame::NONE.fill(PANEL));
+    if open {
+        let max_height = (ui.available_height() * 0.48).max(174.0);
+        shelf = shelf
+            .resizable(true)
+            .default_height(222.0)
+            .height_range(174.0..=max_height);
+    } else {
+        shelf = shelf.resizable(false).exact_height(29.0);
+    }
+    shelf.show_inside(ui, |ui| {
+        // Even an empty list retains the chosen height. Frame::NONE otherwise
+        // reports only its contents' minimum size to the persistent panel state.
+        ui.set_min_height(ui.available_height());
+        contents(ui);
+    });
+}
+
+fn source_range_controls(
+    ui: &mut egui::Ui,
+    source_range: &mut Option<strehl_edit::SourceRange>,
+    count: Option<usize>,
+    selected: usize,
+) {
+    let count = count.filter(|&count| count > 0);
+    let mut enabled = source_range.is_some();
+    if ui
+        .add_enabled(
+            count.is_some() || enabled,
+            egui::Checkbox::new(&mut enabled, "Use a capture range"),
+        )
+        .changed()
+    {
+        *source_range = enabled.then(|| {
+            let frame = selected.min(count.unwrap_or(1) - 1);
+            strehl_edit::SourceRange {
+                first: frame,
+                last: frame,
+            }
+        });
+    }
+    if let Some(range) = source_range {
+        let (mut first, mut last) = (range.first.saturating_add(1), range.last.saturating_add(1));
+        let mut changed = false;
+        ui.add_enabled_ui(count.is_some(), |ui| {
+            ui.horizontal(|ui| {
+                ui.label("From");
+                changed |= ui
+                    .add(
+                        egui::DragValue::new(&mut first)
+                            .range(1..=count.unwrap_or(usize::MAX))
+                            .clamp_existing_to_range(false),
+                    )
+                    .changed();
+                ui.label("to");
+                changed |= ui
+                    .add(
+                        egui::DragValue::new(&mut last)
+                            .range(1..=count.unwrap_or(usize::MAX))
+                            .clamp_existing_to_range(false),
+                    )
+                    .changed();
+            });
+        });
+        // A saved range is evidence, even when its original captures are missing.
+        // Rendering a control must never rewrite it or silently queue a repair.
+        if changed && let Some(count) = count {
+            range.first = first.clamp(1, count) - 1;
+            range.last = last.clamp(1, count).max(range.first + 1) - 1;
+        }
+        if count.is_some_and(|count| range.last >= count || range.first > range.last) {
+            ui.colored_label(AMBER, "Saved range exceeds the available captures. Choose a valid range before re-stacking.");
+        }
+    }
+    if count.is_none() {
+        theme::caption(
+            ui,
+            "Original captures unavailable. The saved range is preserved.",
+        );
+    }
+}
+
+fn hdr_luminance_controls(ui: &mut egui::Ui, hdr: &mut strehl_edit::HdrSettings) {
+    controls::slider(
+        ui,
+        "Peak brightness",
+        &mut hdr.peak_nits,
+        hdr.reference_white_nits..=10_000.0,
+        1000.0,
+        0,
+        " nits",
+    );
+    let max_white = hdr.peak_nits.min(500.0);
+    controls::slider(
+        ui,
+        "Reference white",
+        &mut hdr.reference_white_nits,
+        80.0..=max_white,
+        203.0_f32.min(max_white),
+        0,
+        " nits",
+    );
+}
+
 #[derive(Default)]
 pub(super) struct RegionalInspector {
     key: Option<(PathBuf, u64, String, bool)>,
@@ -48,6 +268,7 @@ impl StrehlApp {
             self.editor.open(path.clone());
         }
         self.editor.poll(ctx, self.max_texture_side);
+        self.edit_pane.reconcile(&self.editor);
         self.poll_adaptive(ctx);
         self.poll_region_inspector(ctx);
         if let Some((_, time)) = self.editor.pending_edit
@@ -85,251 +306,621 @@ impl StrehlApp {
     }
 
     pub(super) fn edit_panel(&mut self, ui: &mut egui::Ui) {
-        self.editor.recovery_panel(ui);
-        let ready = self.editor.loaded.is_some();
-        if !ready {
-            ui.label(if self.editor.loading.is_some() {
-                "Opening the editable photograph…"
-            } else {
-                "Stack a photograph, then develop its light and color here."
+        if self.editor.loaded.is_none() {
+            egui::Frame::NONE.inner_margin(12).show(ui, |ui| {
+                self.editor.recovery_panel(ui);
+                ui.label(if self.editor.loading.is_some() {
+                    "Opening photograph…"
+                } else {
+                    "Choose a completed stack to edit its photograph."
+                });
+                if let Some(error) = &self.editor.error {
+                    ui.colored_label(AMBER, error);
+                }
             });
-            if let Some(error) = &self.editor.error {
-                ui.colored_label(AMBER, error);
-            }
             return;
         }
-        let hdr_available = self
-            .editor
-            .loaded
-            .as_ref()
-            .is_some_and(|loaded| loaded.image.origin == strehl_edit::ImageOrigin::SceneLinear);
         let before = self.editor.recipe.clone();
         let history_before = self.editor.history_revision();
-        ui.horizontal(|ui| {
-            ui.label(RichText::new("DEVELOP").monospace().size(9.0).color(ACCENT));
-            ui.checkbox(&mut self.editor.before, "Before");
-            if ui.button("Reset").clicked() {
-                let _ = self.editor.replace(DevelopmentRecipe::default());
-                self.editor.selected = None;
-            }
-        });
-        ui.checkbox(&mut self.edit_photo_focus, "Photograph focus")
-            .on_hover_text("Give the photograph room while editing. Turn off to bring the process instruments alongside it.");
-        if let Some(loaded) = &self.editor.loaded {
-            let origin = match loaded.image.origin {
-                strehl_edit::ImageOrigin::SceneLinear => "RAW-derived master",
-                strehl_edit::ImageOrigin::DisplayReferred => "SDR photograph",
-            };
-            theme::caption(
-                ui,
-                &format!(
-                    "{} × {} · {origin}",
-                    loaded.image.width, loaded.image.height
-                ),
-            );
+        let document_before = self.editor.path.clone();
+        self.editor.reconcile_selection();
+        self.edit_pane.reconcile(&self.editor);
+        self.edit_header(ui);
+        let shelf_open = ui
+            .ctx()
+            .data_mut(|data| data.get_temp::<bool>(egui::Id::new("regions-shelf-open")))
+            .unwrap_or(true);
+        region_shelf(ui, shelf_open, |ui| self.edit_region_shelf(ui, shelf_open));
+        let control_scope = (self.editor.path.clone(), self.editor.selected.clone());
+        egui::ScrollArea::vertical()
+            .id_salt("photo-adjustments-scroll")
+            .auto_shrink([false, false])
+            .show(ui, |ui| {
+                controls::adjustment_scope(
+                    ui,
+                    control_scope.0.as_deref(),
+                    control_scope.1.as_deref(),
+                    |ui| {
+                        ui.spacing_mut().item_spacing.y = 0.0;
+                        egui::Frame::NONE.inner_margin(12).show(ui, |ui| {
+                            self.editor.recovery_panel(ui);
+                            self.adaptive_panel(ui);
+                        });
+                        if controls::section(ui, "light", "Light", true) {
+                            egui::Frame::NONE
+                                .inner_margin(egui::Margin::symmetric(12, 7))
+                                .show(ui, |ui| {
+                                    let adjustments = self.current_adjustments();
+                                    controls::slider(
+                                        ui,
+                                        "Exposure",
+                                        &mut adjustments.exposure,
+                                        -8.0..=8.0,
+                                        0.0,
+                                        2,
+                                        " EV",
+                                    );
+                                    for (label, value) in [
+                                        ("Contrast", &mut adjustments.contrast),
+                                        ("Highlights", &mut adjustments.highlights),
+                                        ("Shadows", &mut adjustments.shadows),
+                                        ("Whites", &mut adjustments.whites),
+                                        ("Blacks", &mut adjustments.blacks),
+                                    ] {
+                                        controls::slider(
+                                            ui,
+                                            label,
+                                            value,
+                                            -100.0..=100.0,
+                                            0.0,
+                                            0,
+                                            "",
+                                        );
+                                    }
+                                });
+                        }
+                        if controls::section(ui, "color", "Color", true) {
+                            egui::Frame::NONE
+                                .inner_margin(egui::Margin::symmetric(12, 7))
+                                .show(ui, |ui| {
+                                    let adjustments = self.current_adjustments();
+                                    for (label, value) in [
+                                        ("Warmth", &mut adjustments.temperature),
+                                        ("Tint", &mut adjustments.tint),
+                                        ("Vibrance", &mut adjustments.vibrance),
+                                        ("Saturation", &mut adjustments.saturation),
+                                    ] {
+                                        controls::slider(
+                                            ui,
+                                            label,
+                                            value,
+                                            -100.0..=100.0,
+                                            0.0,
+                                            0,
+                                            "",
+                                        );
+                                    }
+                                });
+                        }
+                        if self.editor.selected.is_some() {
+                            if controls::section(ui, "mask", "Selection", false) {
+                                egui::Frame::NONE.inner_margin(12).show(ui, |ui| {
+                                    let selected = self.editor.selected.clone();
+                                    if let Some(region) = self
+                                        .editor
+                                        .recipe
+                                        .regions
+                                        .iter_mut()
+                                        .find(|r| Some(&r.id) == selected.as_ref())
+                                    {
+                                        controls::slider(
+                                            ui,
+                                            "Feather",
+                                            &mut region.feather,
+                                            0.0..=1.0,
+                                            0.4,
+                                            2,
+                                            "",
+                                        );
+                                        ui.add(
+                                            egui::TextEdit::multiline(&mut region.note)
+                                                .hint_text("Add a note…")
+                                                .desired_rows(2)
+                                                .desired_width(f32::INFINITY),
+                                        );
+                                        if region.note.len() > 4096 {
+                                            region.note = bounded_text(&region.note, 4096);
+                                        }
+                                    }
+                                });
+                            }
+                            if controls::section(
+                                ui,
+                                "source-repair",
+                                if self.source_repairs_pending() {
+                                    "Source repair · pending"
+                                } else {
+                                    "Source repair"
+                                },
+                                false,
+                            ) {
+                                egui::Frame::NONE
+                                    .inner_margin(12)
+                                    .show(ui, |ui| self.source_repair_panel(ui));
+                            }
+                            if controls::section(ui, "source-evidence", "Source evidence", false) {
+                                egui::Frame::NONE
+                                    .inner_margin(12)
+                                    .show(ui, |ui| self.region_inspector(ui));
+                            }
+                        }
+                        if controls::section(ui, "delivery", "Display & export", false) {
+                            egui::Frame::NONE
+                                .inner_margin(12)
+                                .show(ui, |ui| self.edit_delivery_panel(ui));
+                        }
+                        if !self.editor.warnings.is_empty() || self.editor.error.is_some() {
+                            egui::Frame::NONE.inner_margin(12).show(ui, |ui| {
+                                for warning in &self.editor.warnings {
+                                    ui.colored_label(AMBER, warning);
+                                }
+                                if let Some(error) = &self.editor.error {
+                                    ui.colored_label(AMBER, error);
+                                }
+                            });
+                        }
+                    },
+                );
+            });
+        if self.editor.loaded.is_some()
+            && self.editor.path == document_before
+            && before != self.editor.recipe
+            && history_before == self.editor.history_revision()
+        {
+            self.editor.before = false;
+            self.editor.begin_edit(before, ui.input(|input| input.time));
         }
-        ui.add_space(8.0);
-        self.adaptive_panel(ui);
-        ui.horizontal(|ui| {
-            if ui.button("Import preset…").clicked() && self.editor.dialog.is_none() {
-                self.editor.dialog_kind = Some("preset");
-                self.editor.dialog = Some(jobs::spawn_task("strehl-preset-picker", |_| {
-                    Ok(rfd::FileDialog::new()
-                        .add_filter("Camera Raw preset", &["xmp"])
-                        .pick_file())
-                }));
-            }
-            if ui
-                .add_enabled(self.editor.can_undo(), egui::Button::new("Undo"))
-                .clicked()
-            {
-                self.editor.undo();
-            }
-        });
-        ui.separator();
-        ui.horizontal(|ui| {
-            ui.selectable_value(&mut self.editor.selected, None, "Whole photograph");
-        });
-        ui.horizontal(|ui| {
-            for (tool, label) in [
-                (DrawingTool::Navigate, "Pan"),
-                (DrawingTool::Ellipse, "Circle"),
-                (DrawingTool::Rectangle, "Box"),
-                (DrawingTool::Polygon, "Lasso"),
-            ] {
-                if ui
-                    .selectable_value(&mut self.editor.tool, tool, label)
-                    .clicked()
-                {
-                    self.editor.drag = None;
-                    self.editor.polygon.clear();
-                }
-            }
-        });
-        if self.editor.tool != DrawingTool::Navigate {
-            theme::caption(
-                ui,
-                if self.editor.tool == DrawingTool::Polygon {
-                    "Click points on the photograph · Enter finishes · Esc cancels"
-                } else {
-                    "Drag over the photograph to make a feathered region · Esc cancels"
-                },
-            );
+    }
+
+    fn current_adjustments(&mut self) -> &mut Adjustments {
+        if let Some(index) = self
+            .editor
+            .recipe
+            .regions
+            .iter()
+            .position(|r| Some(&r.id) == self.editor.selected.as_ref())
+        {
+            &mut self.editor.recipe.regions[index].adjustments
+        } else {
+            &mut self.editor.recipe.global
         }
-        let mut delete = None;
-        for region in &self.editor.recipe.regions {
-            ui.horizontal(|ui| {
-                if ui
-                    .selectable_label(
-                        self.editor.selected.as_ref() == Some(&region.id),
-                        &region.name,
+    }
+
+    fn edit_header(&mut self, ui: &mut egui::Ui) {
+        egui::Frame::NONE
+            .inner_margin(egui::Margin::symmetric(12, 8))
+            .show(ui, |ui| {
+                ui.horizontal(|ui| {
+                    let selected = self.editor.selected.is_some();
+                    if controls::quiet_button(ui, "Photograph", !selected)
+                        .on_hover_text("Adjust the whole photograph")
+                        .clicked()
+                    {
+                        self.editor.selected = None;
+                        self.editor.cancel_geometry();
+                    }
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        ui.menu_button("···", |ui| {
+                            if ui.button("Import XMP preset…").clicked()
+                                && self.editor.dialog.is_none()
+                            {
+                                self.editor.dialog_kind = Some("preset");
+                                self.editor.dialog =
+                                    Some(jobs::spawn_task("strehl-preset-picker", |_| {
+                                        Ok(rfd::FileDialog::new()
+                                            .add_filter("Camera Raw preset", &["xmp"])
+                                            .pick_file())
+                                    }));
+                                ui.close();
+                            }
+                            if ui.button("Reset selected adjustments").clicked() {
+                                *self.current_adjustments() = Adjustments::default();
+                                ui.close();
+                            }
+                            ui.separator();
+                            ui.checkbox(&mut self.edit_photo_focus, "Give photograph more room");
+                            ui.checkbox(&mut self.editor.show_regions, "Show selections");
+                        });
+                        if controls::quiet_button(ui, "Before", self.editor.before)
+                            .on_hover_text("Compare with the original photograph")
+                            .clicked()
+                        {
+                            self.editor.before = !self.editor.before;
+                        }
+                    });
+                });
+                if let Some(presenter) = &self.editor.viewport.presenter {
+                    let display = presenter.status();
+                    let raw =
+                        self.editor.loaded.as_ref().is_some_and(|p| {
+                            p.image.origin == strehl_edit::ImageOrigin::SceneLinear
+                        });
+                    let caption = match (display.active, raw) {
+                        (true, true) => "HDR display · HDR photograph",
+                        (true, false) => "HDR display · SDR photograph",
+                        (false, true) => "SDR display · HDR photograph",
+                        (false, false) => "SDR display · SDR photograph",
+                    };
+                    ui.add(
+                        egui::Label::new(RichText::new(caption).size(10.0).color(MUTED)).truncate(),
                     )
-                    .clicked()
-                {
-                    self.editor.selected = Some(region.id.clone());
+                    .on_hover_text(format!(
+                        "{} · {}\nDisplay & export has the full display and photo details.",
+                        display.monitor, display.reason
+                    ));
                 }
-                if ui
-                    .small_button("×")
-                    .on_hover_text("Remove this region; original pixels stay intact")
-                    .clicked()
-                {
-                    delete = Some(region.id.clone());
+                let region = self
+                    .editor
+                    .selected
+                    .as_ref()
+                    .and_then(|id| self.editor.recipe.regions.iter().find(|r| &r.id == id));
+                if let Some(region) = region {
+                    ui.add(
+                        egui::Label::new(RichText::new(&region.name).size(13.0).color(ACCENT))
+                            .truncate(),
+                    );
+                    theme::caption(
+                        ui,
+                        if region.enabled {
+                            "Light & color · selected region · live"
+                        } else {
+                            "Region disabled · enable it in Regions to see edits"
+                        },
+                    );
+                } else {
+                    theme::caption(ui, "Light & color · whole photograph · live");
                 }
             });
+    }
+
+    fn edit_region_shelf(&mut self, ui: &mut egui::Ui, open: bool) {
+        let (heading, hit) =
+            ui.allocate_exact_size(egui::vec2(ui.available_width(), 29.0), egui::Sense::click());
+        theme::rule(ui.painter(), heading.left_top(), heading.right_top(), LINE);
+        let center = heading.left_center() + egui::vec2(12.0, 0.0);
+        let points = if open {
+            [
+                center + egui::vec2(-3.0, -1.5),
+                center + egui::vec2(0.0, 1.5),
+                center + egui::vec2(3.0, -1.5),
+            ]
+        } else {
+            [
+                center + egui::vec2(-1.5, -3.0),
+                center + egui::vec2(1.5, 0.0),
+                center + egui::vec2(-1.5, 3.0),
+            ]
+        };
+        ui.painter().add(egui::Shape::line(
+            points.to_vec(),
+            Stroke::new(1.0f32, MUTED),
+        ));
+        ui.painter().text(
+            heading.left_center() + egui::vec2(25.0, 0.0),
+            egui::Align2::LEFT_CENTER,
+            format!("Regions  {}", self.editor.recipe.regions.len()),
+            egui::FontId::proportional(11.0),
+            INK,
+        );
+        if hit.clicked() {
+            ui.ctx()
+                .data_mut(|data| data.insert_temp(egui::Id::new("regions-shelf-open"), !open));
         }
-        if let Some(id) = delete {
-            self.editor.recipe.regions.retain(|region| region.id != id);
-            if self.editor.selected.as_ref() == Some(&id) {
-                self.editor.selected = None;
-            }
+        if !open {
+            return;
         }
-        ui.checkbox(&mut self.editor.show_regions, "Show region outlines");
+        egui::Frame::NONE
+            .inner_margin(egui::Margin::symmetric(8, 4))
+            .show(ui, |ui| {
+                for tools in [
+                    [
+                        (DrawingTool::Select, "Select", "Select, move, resize, or reshape a region"),
+                        (DrawingTool::Lasso, "Lasso", "Draw a freehand selection · release to close"),
+                        (DrawingTool::MagicLasso, "Magic lasso", "Enclose an object or defect with a little surrounding background · refine from image contrast"),
+                    ],
+                    [
+                        (DrawingTool::Polygon, "Polygon", "Click vertices · Enter or first point finishes"),
+                        (DrawingTool::Rectangle, "Rectangle", "Drag a rectangular region"),
+                        (DrawingTool::Ellipse, "Ellipse", "Drag an elliptical region"),
+                    ],
+                ] {
+                    ui.horizontal(|ui| {
+                        ui.spacing_mut().item_spacing.x = 3.0;
+                        let width = (ui.available_width() - 6.0) / 3.0;
+                    for (tool, label, hint) in tools {
+                            let active = self.editor.tool == tool;
+                            if ui.add_sized([width, 24.0], egui::Button::new(
+                                RichText::new(label).color(if active { ACCENT } else { MUTED }))
+                                .selected(active).frame(active))
+                            .on_hover_text(hint)
+                            .clicked()
+                        {
+                            self.editor.set_tool(tool);
+                        }
+                    }
+                    });
+                }
+                theme::caption(ui, "Space: pan / zoom · Alt: inspect · Esc: cancel");
+                if let Some(status) = self.editor.magic_status() {
+                    theme::caption(ui, status);
+                }
+            });
+        controls::rule(ui);
+        egui::ScrollArea::vertical()
+            .id_salt("edit-regions-list")
+            .auto_shrink([false, false])
+            .show(ui, |ui| {
+                let mut selected = None;
+                let mut remove = None;
+                let mut duplicate = None;
+                let mut rename = None;
+                let can_duplicate = self.editor.recipe.regions.len() < 128;
+                for (index, region) in self.editor.recipe.regions.iter_mut().enumerate() {
+                    let active = self.editor.selected.as_ref() == Some(&region.id);
+                    let color = crate::process_sample_glyphs::level_color(index % 7);
+                    let (row, _) = ui.allocate_exact_size(
+                        egui::vec2(ui.available_width(), 29.0),
+                        egui::Sense::hover(),
+                    );
+                    if active {
+                        ui.painter().rect_filled(row, 0.0, crate::theme::RAISED);
+                        theme::rule(ui.painter(), row.left_top(), row.left_bottom(), color);
+                    }
+                    let enabled = egui::Rect::from_center_size(
+                        row.left_center() + egui::vec2(15.0, 0.0),
+                        egui::vec2(18.0, 20.0),
+                    );
+                    ui.put(enabled, egui::Checkbox::without_text(&mut region.enabled))
+                        .on_hover_text("Enable this region");
+                    let name_rect = egui::Rect::from_min_max(
+                        row.min + egui::vec2(30.0, 3.0),
+                        row.max - egui::vec2(10.0, 3.0),
+                    );
+                    if let Some((id, text)) = &mut self.edit_pane.rename
+                        && id == &region.id
+                    {
+                        if rename_region(ui, name_rect, id, text, &mut region.name) {
+                            self.edit_pane.rename = None;
+                        }
+                    } else {
+                        let response = ui
+                            .interact(
+                                name_rect,
+                                ui.id().with(("region-row", &region.id)),
+                                egui::Sense::click(),
+                            )
+                            .on_hover_text(&region.name);
+                        let galley = ui.painter().layout_no_wrap(
+                            region.name.clone(),
+                            egui::FontId::proportional(11.0),
+                            if active { INK } else { MUTED },
+                        );
+                        ui.painter().with_clip_rect(name_rect).galley(
+                            name_rect.left_center() - egui::vec2(0.0, galley.size().y * 0.5),
+                            galley,
+                            INK,
+                        );
+                        if response.clicked() {
+                            selected = Some(region.id.clone());
+                        }
+                        if response.double_clicked() {
+                            rename = Some((region.id.clone(), region.name.clone()));
+                        }
+                        response.context_menu(|ui| {
+                            if ui.button("Rename").clicked() {
+                                rename = Some((region.id.clone(), region.name.clone()));
+                                ui.close();
+                            }
+                            if ui
+                                .add_enabled(can_duplicate, egui::Button::new("Duplicate"))
+                                .on_disabled_hover_text("This photograph already has 128 regions.")
+                                .clicked()
+                            {
+                                duplicate = Some(region.id.clone());
+                                ui.close();
+                            }
+                            if ui.button("Reset light & color").clicked() {
+                                region.adjustments = Adjustments::default();
+                                ui.close();
+                            }
+                            ui.separator();
+                            if ui.button("Delete region").clicked() {
+                                remove = Some(region.id.clone());
+                                ui.close();
+                            }
+                        });
+                    }
+                }
+                if let Some(id) = selected {
+                    self.editor.commit_edit();
+                    self.editor.selected = Some(id);
+                    self.editor.set_tool(DrawingTool::Select);
+                    self.editor.show_regions = true;
+                }
+                if let Some((id, name)) = rename {
+                    self.edit_pane.rename = Some((id.clone(), name));
+                    // The text field exists on the next frame. Request focus only once.
+                    let field_id = egui::Id::new(("rename-region", id));
+                    ui.ctx()
+                        .data_mut(|d| d.insert_temp(field_id.with("request-focus"), true));
+                }
+                if let Some(id) = remove {
+                    self.editor.recipe.regions.retain(|r| r.id != id);
+                    if self.editor.selected.as_ref() == Some(&id) {
+                        self.editor.selected = None;
+                    }
+                    self.editor.cancel_geometry();
+                }
+                if let Some(id) = duplicate
+                    && let Err(error) = duplicate_region(&mut self.editor, &id)
+                {
+                    self.editor.error = Some(error.to_string());
+                }
+                if self.editor.recipe.regions.is_empty() {
+                    egui::Frame::NONE.inner_margin(12).show(ui, |ui| {
+                        theme::caption(ui, "Draw on the photograph to adjust just that area.");
+                    });
+                }
+            });
+    }
+
+    fn source_repair_panel(&mut self, ui: &mut egui::Ui) {
+        theme::caption(
+            ui,
+            "Choose different captures for this area. This changes the stack itself; Light and Color above update the current photograph immediately.",
+        );
         let selected = self.editor.selected.clone();
         if let Some(region) = self
             .editor
             .recipe
             .regions
             .iter_mut()
-            .find(|region| Some(&region.id) == selected.as_ref())
+            .find(|r| Some(&r.id) == selected.as_ref())
         {
-            ui.separator();
-            ui.text_edit_singleline(&mut region.name);
-            ui.add(
-                egui::TextEdit::multiline(&mut region.note)
-                    .hint_text("What needs attention here?")
-                    .desired_rows(2),
+            source_range_controls(
+                ui,
+                &mut region.source_range,
+                self.stack.as_ref().map(|stack| stack.frames.len()),
+                self.selected,
             );
-            ui.checkbox(&mut region.enabled, "Apply this region");
-            ui.add(egui::Slider::new(&mut region.feather, 0.0..=1.0).text("Feather"));
-            egui::CollapsingHeader::new("Stack repair · next run").show(ui, |ui| {
-                let mut enabled = region.source_range.is_some();
-                if ui.checkbox(&mut enabled, "Use only a capture span here").changed() {
-                    region.source_range = enabled.then_some(strehl_edit::SourceRange { first: self.selected, last: self.selected });
-                }
-                if let Some(range) = &mut region.source_range {
-                    let count = self.stack.as_ref().map_or(1, |stack| stack.frames.len()).max(1);
-                    let (mut first, mut last) = (range.first + 1, range.last + 1);
-                    ui.horizontal(|ui| {
-                        ui.label("Captures");
-                        ui.add(egui::DragValue::new(&mut first).range(1..=count));
-                        ui.label("to");
-                        ui.add(egui::DragValue::new(&mut last).range(first..=count));
-                    });
-                    range.first = first - 1; range.last = last.max(first) - 1;
-                    theme::caption(ui, "Reconstruct this region from these captures on the next Stack. Feather joins it to the original merge. Extra reconstruction pass; no new alignment.");
-                }
-            });
-            adjustment_controls(ui, &mut region.adjustments);
-        } else {
-            adjustment_controls(ui, &mut self.editor.recipe.global);
         }
-        ui.separator();
-        egui::CollapsingHeader::new("HDR display & output").default_open(hdr_available).show(ui, |ui| {
-            if let Some(presenter) = &self.editor.viewport.presenter {
-                let status = presenter.status();
-                ui.label(RichText::new(if status.active && hdr_available {
-                    "HDR photograph · native display"
-                } else {
-                    "SDR photograph preview"
-                }).color(if status.active && hdr_available { ACCENT } else { MUTED }));
-                theme::caption(ui, &status.reason);
-                if status.active && hdr_available {
-                    theme::caption(ui, &format!("{:.1}× display headroom · visible detail refines automatically", status.headroom));
-                }
+        let pending = self.source_repairs_pending();
+        ui.add_space(7.0);
+        if pending {
+            ui.colored_label(AMBER, "Source change pending · photograph unchanged");
+            let blocker = self.stack_start_blocker();
+            if ui
+                .add_enabled(
+                    blocker.is_none(),
+                    egui::Button::new("Re-stack with source changes"),
+                )
+                .on_disabled_hover_text(blocker.unwrap_or_default())
+                .clicked()
+            {
+                self.editor.commit_edit();
+                self.start_render();
             }
-            if !hdr_available {
-                theme::caption(ui, "Re-stack to retain a RAW-derived master for HDR. This saved photograph has SDR pixels.");
-                return;
-            }
-            ui.add(egui::Slider::new(&mut self.editor.recipe.hdr.peak_nits, 203.0..=4000.0).logarithmic(true).text("Peak nits"));
-            ui.add(egui::Slider::new(&mut self.editor.recipe.hdr.reference_white_nits, 80.0..=self.editor.recipe.hdr.peak_nits.min(500.0)).text("White nits"));
-            ui.add(egui::Slider::new(&mut self.editor.recipe.hdr.quality, 1..=100).text("AVIF quality"));
-            ui.add(egui::Slider::new(&mut self.editor.recipe.hdr.speed, 0..=10).text("Encode speed"));
-            theme::caption(ui, "AVIF: 10-bit PQ · BT.2020 container\nWorking color: linear BT.709");
-        });
-        let needs_restack = self.editor.loaded.as_ref().is_some_and(|loaded| {
+        } else {
+            theme::caption(ui, "No source changes waiting to be applied.");
+        }
+    }
+
+    fn source_repairs_pending(&self) -> bool {
+        self.editor.loaded.as_ref().is_some_and(|loaded| {
             loaded
                 .image
                 .validate_source_repairs(&self.editor.recipe)
                 .is_err()
-        });
-        if needs_restack {
-            ui.colored_label(
-                AMBER,
-                "Stack again to apply the changed capture regions before exporting.",
+        })
+    }
+
+    fn edit_delivery_panel(&mut self, ui: &mut egui::Ui) {
+        let hdr_photo = self
+            .editor
+            .loaded
+            .as_ref()
+            .is_some_and(|loaded| loaded.image.origin == strehl_edit::ImageOrigin::SceneLinear);
+        if let Some(presenter) = &self.editor.viewport.presenter {
+            let display = presenter.status();
+            ui.label(
+                RichText::new(if display.active {
+                    "Display · HDR active"
+                } else {
+                    "Display · SDR"
+                })
+                .color(if display.active { GREEN } else { MUTED }),
+            );
+            theme::caption(ui, &display.monitor);
+            theme::caption(ui, &display.reason);
+            if display.active {
+                theme::caption(
+                    ui,
+                    &format!(
+                        "{:.0} nits white · {:.0} nits peak",
+                        display.sdr_white_nits, display.peak_nits
+                    ),
+                );
+            }
+        }
+        ui.add_space(6.0);
+        if hdr_photo {
+            ui.label("Photograph · RAW-derived HDR master");
+            hdr_luminance_controls(ui, &mut self.editor.recipe.hdr);
+        } else {
+            ui.label("Photograph · SDR file");
+            theme::caption(
+                ui,
+                "This saved image has no HDR highlight data. A new stack retains the RAW-derived HDR master.",
             );
         }
-        ui.horizontal(|ui| {
-            for (kind, label, extension) in [
-                ("hdr", "Export HDR AVIF…", "avif"),
-                ("sdr", "TIFF…", "tiff"),
-            ] {
-                if ui
-                    .add_enabled(
-                        self.editor.exporting.is_none()
-                            && self.editor.dialog.is_none()
-                            && !needs_restack
-                            && (kind != "hdr" || hdr_available),
-                        egui::Button::new(label),
-                    )
-                    .on_disabled_hover_text(if needs_restack {
-                        "The photograph still contains the previous source repair. Stack to rebuild it."
-                    } else if kind == "hdr" && !hdr_available {
-                        "HDR needs a RAW-derived master. The next stack saves one automatically."
-                    } else {
-                        "Finish the current export or file selection first."
-                    })
-                    .clicked()
-                {
-                    self.editor.dialog_kind = Some(kind);
-                    let name = format!("Strehl-edited.{extension}");
-                    self.editor.dialog =
-                        Some(jobs::spawn_task("strehl-export-picker", move |_| {
-                            Ok(rfd::FileDialog::new()
-                                .set_file_name(name)
-                                .add_filter("Photograph", &[extension])
-                                .save_file())
-                        }));
-                }
+        let pending = self.source_repairs_pending();
+        ui.add_space(8.0);
+        for (kind, label, extension) in [
+            ("hdr", "Export HDR AVIF…", "avif"),
+            ("sdr", "Export TIFF…", "tiff"),
+        ] {
+            if ui
+                .add_enabled(
+                    self.editor.exporting.is_none()
+                        && self.editor.dialog.is_none()
+                        && !pending
+                        && (kind != "hdr" || hdr_photo),
+                    egui::Button::new(label).min_size(egui::vec2(ui.available_width(), 27.0)),
+                )
+                .on_disabled_hover_text(if pending {
+                    "Apply pending source changes with Re-stack before exporting."
+                } else if kind == "hdr" && !hdr_photo {
+                    "A new stack saves the HDR master needed for this export."
+                } else {
+                    "Wait for the current export or file dialog."
+                })
+                .clicked()
+            {
+                self.editor.dialog_kind = Some(kind);
+                let name = format!("Strehl-edited.{extension}");
+                self.editor.dialog = Some(jobs::spawn_task("strehl-export-picker", move |_| {
+                    Ok(rfd::FileDialog::new()
+                        .set_file_name(name)
+                        .add_filter("Photograph", &[extension])
+                        .save_file())
+                }));
             }
-        });
+        }
+        if hdr_photo {
+            egui::CollapsingHeader::new("AVIF encoding").show(ui, |ui| {
+                ui.horizontal(|ui| {
+                    ui.label("Quality");
+                    ui.add(
+                        egui::DragValue::new(&mut self.editor.recipe.hdr.quality).range(1..=100),
+                    );
+                });
+                ui.horizontal(|ui| {
+                    ui.label("Speed");
+                    ui.add(egui::DragValue::new(&mut self.editor.recipe.hdr.speed).range(0..=10));
+                });
+                theme::caption(ui, "10-bit PQ · BT.2020");
+            });
+        }
+        if pending {
+            ui.colored_label(AMBER, "Source repair is waiting for Re-stack.");
+        }
         if self.editor.exporting.is_some() {
-            ui.label("Encoding photograph… You can keep exploring.");
+            theme::caption(ui, "Encoding photograph…");
         }
         if let Some(path) = &self.editor.last_export {
             ui.colored_label(GREEN, "Export saved");
-            ui.label(path.file_name().unwrap_or_default().to_string_lossy());
+            theme::caption(ui, &path.file_name().unwrap_or_default().to_string_lossy());
         }
-        for warning in &self.editor.warnings {
-            ui.colored_label(AMBER, warning);
-        }
-        if let Some(error) = &self.editor.error {
-            ui.colored_label(AMBER, error);
-        }
-        if before != self.editor.recipe && history_before == self.editor.history_revision() {
-            self.editor.begin_edit(before, ui.input(|input| input.time));
-        }
-        self.region_inspector(ui);
     }
 
     fn poll_region_inspector(&mut self, ctx: &egui::Context) {
@@ -504,27 +1095,5 @@ impl StrehlApp {
         if let Some(frame) = inspect {
             self.inspect_frame(frame);
         }
-    }
-}
-
-fn adjustment_controls(ui: &mut egui::Ui, controls: &mut Adjustments) {
-    ui.add(
-        egui::Slider::new(&mut controls.exposure, -8.0..=8.0)
-            .text("Exposure")
-            .suffix(" EV"),
-    );
-    for (label, value) in [
-        ("Contrast", &mut controls.contrast),
-        ("Highlights", &mut controls.highlights),
-        ("Shadows", &mut controls.shadows),
-        ("Whites", &mut controls.whites),
-        ("Blacks", &mut controls.blacks),
-        ("Vibrance", &mut controls.vibrance),
-        ("Saturation", &mut controls.saturation),
-        ("Warmth", &mut controls.temperature),
-        ("Tint", &mut controls.tint),
-    ] {
-        let hit = ui.add(egui::Slider::new(value, -100.0..=100.0).text(label));
-        hit.on_hover_text("Drag to adjust · click the number to type");
     }
 }

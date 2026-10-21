@@ -106,6 +106,29 @@ struct Presenter {
 struct Refresh {
     next: Instant,
     pending: Option<mpsc::Receiver<DisplayStatus>>,
+    #[cfg(windows)]
+    window: WindowDisplay,
+}
+
+#[cfg(windows)]
+#[derive(Default)]
+struct WindowDisplay {
+    bounds: Option<Rect>,
+    monitor: usize,
+    queried_monitor: usize,
+}
+
+#[cfg(windows)]
+impl WindowDisplay {
+    fn observe_monitor(&mut self, monitor: usize) -> bool {
+        let changed = self.monitor != monitor;
+        self.monitor = monitor;
+        changed
+    }
+
+    fn accepts_reply(&self) -> bool {
+        self.monitor == self.queried_monitor
+    }
 }
 
 pub(crate) fn configuration() -> egui_wgpu::WgpuConfiguration {
@@ -164,6 +187,8 @@ impl PhotoPresenter {
             refresh: Mutex::new(Refresh {
                 next: Instant::now(),
                 pending: None,
+                #[cfg(windows)]
+                window: WindowDisplay::default(),
             }),
         }));
         // Poll is asynchronous on Windows: enumerating monitors never blocks a
@@ -180,12 +205,38 @@ impl PhotoPresenter {
     pub fn poll(&mut self) -> bool {
         self.retire_sdr_textures();
         let mut refresh = self.0.refresh.lock().unwrap();
+        #[cfg(windows)]
+        {
+            let bounds = self.0.context.input(|input| input.viewport().outer_rect);
+            // Only the cheap window-to-monitor lookup runs on movement, the
+            // periodic deadline, or before accepting a worker response. DXGI
+            // enumeration and white-level queries always stay off this thread.
+            if bounds != refresh.window.bounds
+                || Instant::now() >= refresh.next
+                || refresh.pending.is_some()
+            {
+                refresh.window.bounds = bounds;
+                if refresh
+                    .window
+                    .observe_monitor(platform::window_monitor(self.0.window))
+                {
+                    refresh.next = Instant::now();
+                }
+            }
+        }
         #[allow(unused_mut)] // macOS queries NSWindow on the main thread below.
         let mut observed = None;
         if let Some(receiver) = &refresh.pending {
             match receiver.try_recv() {
                 Ok(value) => {
-                    observed = Some(value);
+                    #[cfg(windows)]
+                    if refresh.window.accepts_reply() {
+                        observed = Some(value);
+                    }
+                    #[cfg(not(windows))]
+                    {
+                        observed = Some(value);
+                    }
                     refresh.pending = None;
                 }
                 Err(mpsc::TryRecvError::Disconnected) => {
@@ -199,11 +250,12 @@ impl PhotoPresenter {
             #[cfg(windows)]
             {
                 let (tx, rx) = mpsc::sync_channel(1);
-                let window = self.0.window;
+                let monitor = refresh.window.monitor;
+                refresh.window.queried_monitor = monitor;
                 let context = self.0.context.clone();
                 refresh.pending = Some(rx);
                 std::thread::spawn(move || {
-                    let _ = tx.send(platform::detect(window));
+                    let _ = tx.send(platform::detect_monitor(monitor));
                     context.request_repaint();
                 });
             }
