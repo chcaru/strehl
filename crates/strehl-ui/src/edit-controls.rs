@@ -3,6 +3,28 @@ use crate::theme::{self, ACCENT, INK, LINE, MUTED, PANEL, RAISED};
 use eframe::egui::{self, Align2, FontId, Rect, RichText, Sense, Stroke, Ui};
 use std::ops::RangeInclusive;
 
+pub(crate) const ACTION_HEIGHT: f32 = 26.0;
+
+/// Fixed header/shelf commands share the scrolling controls' content edges.
+/// The scrollbar gutter remains reserved as sections open and close.
+pub(crate) fn pane_margin(ui: &Ui, vertical: i8) -> egui::Margin {
+    egui::Margin {
+        left: 12,
+        right: 12 + ui.spacing().scroll.allocated_width().round() as i8,
+        top: vertical,
+        bottom: vertical,
+    }
+}
+
+/// Shared geometry for pane commands, including secondary actions. A short
+/// label should not turn into a smaller target or move the row's baseline.
+pub(crate) fn action_button(ui: &mut Ui, text: &str, width: f32) -> egui::Response {
+    ui.add_sized(
+        [width.max(1.0), ACTION_HEIGHT],
+        egui::Button::new(RichText::new(text).size(11.0)).truncate(),
+    )
+}
+
 pub(crate) fn adjustment_scope<R>(
     ui: &mut Ui,
     document: Option<&std::path::Path>,
@@ -77,10 +99,10 @@ pub(crate) fn slider(
     ui.push_id(label, |ui| {
         let initial = *value;
         let width = ui.available_width().max(80.0);
-        let (rect, _) = ui.allocate_exact_size(egui::vec2(width, 37.0), Sense::hover());
+        let (rect, _) = ui.allocate_exact_size(egui::vec2(width, 40.0), Sense::hover());
         let number = Rect::from_min_max(
-            egui::pos2(rect.right() - 72.0, rect.top()),
-            egui::pos2(rect.right(), rect.top() + 18.0),
+            egui::pos2(rect.right() - 62.0, rect.top()),
+            egui::pos2(rect.right(), rect.top() + 22.0),
         );
         let label_rect =
             Rect::from_min_max(rect.min, egui::pos2(number.left() - 4.0, number.bottom()));
@@ -94,6 +116,10 @@ pub(crate) fn slider(
         );
         let number_hit = ui
             .scope(|ui| {
+                // DragValue otherwise inherits the pane's taller command
+                // height and paints beyond its allocated label/value row.
+                ui.spacing_mut().interact_size.y = number.height();
+                ui.spacing_mut().button_padding = egui::vec2(4.0, 2.0);
                 ui.visuals_mut().override_text_color = Some(if (*value - default).abs() > 0.0001 {
                     ACCENT
                 } else {
@@ -110,7 +136,7 @@ pub(crate) fn slider(
             })
             .inner;
         let track = Rect::from_min_max(
-            egui::pos2(rect.left(), rect.top() + 19.0),
+            egui::pos2(rect.left(), rect.top() + 24.0),
             egui::pos2(rect.right(), rect.bottom()),
         );
         let mut track_ui = ui.new_child(egui::UiBuilder::new().id_salt("track").max_rect(track));
@@ -154,9 +180,15 @@ pub(crate) fn slider(
 
 pub(super) fn quiet_button(ui: &mut Ui, text: &str, selected: bool) -> egui::Response {
     ui.add(
-        egui::Button::new(RichText::new(text).color(if selected { ACCENT } else { MUTED }))
-            .selected(selected)
-            .frame(selected),
+        egui::Button::new(RichText::new(text).size(11.0).color(if selected {
+            ACCENT
+        } else {
+            MUTED
+        }))
+        .min_size(egui::vec2(0.0, ACTION_HEIGHT))
+        .truncate()
+        .selected(selected)
+        .frame(selected),
     )
 }
 

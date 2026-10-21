@@ -48,6 +48,7 @@ fn main() -> anyhow::Result<()> {
                 tone_range: AdaptiveToneRange::Highlights,
                 shadow_protection: 1.0,
                 highlight_compression: 0.65,
+                ..Default::default()
             },
         ),
     ];

@@ -22,7 +22,8 @@ pub use color::OutputColorSpace;
 pub use display_region::{DisplayRegion, DisplayRegionRequest};
 pub use export::{ExportFormat, ExportReport, ExportSettings, export_image};
 pub use image::{
-    DisplayBaseline, ImageOrigin, LinearImage, load_tiff, save_linear_tiff, save_sdr_tiff,
+    DisplayBaseline, ImageOrigin, LinearImage, load_tiff, load_tiff_thumbnail, save_linear_tiff,
+    save_sdr_tiff,
 };
 pub use recipe::{
     AdaptiveParameters, AdaptiveToneRange, Adjustments, DevelopmentRecipe, HdrSettings,

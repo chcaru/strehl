@@ -38,6 +38,9 @@ pub struct AdaptiveParameters {
     pub shadow_protection: f32,
     #[serde(skip_serializing_if = "is_zero")]
     pub highlight_compression: f32,
+    /// Scene-relative tonal separation, fitted once into the existing curves.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub presence: f32,
 }
 
 impl Default for AdaptiveParameters {
@@ -49,11 +52,26 @@ impl Default for AdaptiveParameters {
             tone_range: AdaptiveToneRange::All,
             shadow_protection: 0.0,
             highlight_compression: 0.0,
+            presence: 0.0,
         }
     }
 }
 
 impl AdaptiveParameters {
+    /// A stronger photographic starting point with a protected dark floor.
+    /// This is an intent: each photograph still receives its own measured field.
+    pub fn signature() -> Self {
+        Self {
+            balance: 0.3,
+            local_contrast: 0.7,
+            color: 0.9,
+            tone_range: AdaptiveToneRange::All,
+            shadow_protection: 1.0,
+            highlight_compression: 0.25,
+            presence: 0.8,
+        }
+    }
+
     pub fn validate(&self) -> Result<()> {
         for v in [
             self.balance,
@@ -61,6 +79,7 @@ impl AdaptiveParameters {
             self.color,
             self.shadow_protection,
             self.highlight_compression,
+            self.presence,
         ] {
             ensure!(
                 v.is_finite() && (0.0..=1.0).contains(&v),

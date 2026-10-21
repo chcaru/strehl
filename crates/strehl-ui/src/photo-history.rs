@@ -197,7 +197,7 @@ pub(crate) fn save_version(
     let body = serde_json::to_vec(&SavedVersion {
         format: 1,
         version: version.clone(),
-        recipe,
+        recipe: recipe.clone(),
     })?;
     ensure!(
         body.len() <= MAX_VERSION_BYTES,
@@ -225,6 +225,9 @@ pub(crate) fn save_version(
     })();
     let _ = fs::remove_file(&temporary);
     result?;
+    // The immutable recipe is already safe. A small navigation derivative is
+    // best-effort and must never turn a successful version save into failure.
+    let _ = crate::preview::explorer::save_version(root, &version, image, &recipe);
     Ok(version)
 }
 

@@ -119,6 +119,9 @@ impl AdaptiveSuggestion {
                             * old_weight
                             + next.parameters.highlight_compression * new_weight)
                             / denominator,
+                        presence: (previous.parameters.presence * old_weight
+                            + next.parameters.presence * new_weight)
+                            / denominator,
                     };
                     if previous.version == 2 && field.version == 1 {
                         field.version = 2;

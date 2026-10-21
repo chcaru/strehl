@@ -101,7 +101,7 @@ tonal separation in midtones; **Gentle highlights** concentrates its treatment i
 bright areas and adds a soft highlight shoulder. Texture contrast does not
 sharpen, reconstruct detail or establish optical resolution.
 
-**Shape treatment** exposes Light balance, Local contrast, Color, a tone range,
+**Shape treatment** exposes Light balance, Local contrast, Color, Presence, a tone range,
 Protect shadows and Soften highlights. Those choices are drafts until
 **Recalculate** is pressed, so dragging a parameter does not enqueue repeated
 image analyses. Ordinary Light/Color sliders remain independent.
@@ -129,6 +129,36 @@ photograph without a cached analysis. Zero disables that addressed field while
 retaining its curves for instant restoration. The shared control handles numeric
 entry, dragging and double-click reset. The separate Balance highlights action
 still edits regional highlights and reports the limitations of clipped input.
+
+### Signature
+
+**Signature** is a stronger starting profile. In addition to the spatial tone
+and color field, it fits a smooth contrast curve to robust percentiles of this
+photograph's non-dark light. A large black background cannot set that curve's
+pivot. Very narrow tonal populations do not receive this contrast curve, and
+already wide distributions receive less strength. The curve is common across
+space so this extra contrast does not introduce a new spatial exposure boundary;
+the existing bilateral field still supplies the location-dependent treatment.
+Supported color receives a larger, bounded enrichment along the existing hue ray.
+
+The profile protects the dark floor fully and adds a restrained highlight
+shoulder after light centering. This changes existing light and color; it does
+not sharpen, identify subjects, repair clipping, recover texture, or guarantee a
+preferred result on every photograph. Amount remains reversible and the ordinary
+controls remain untouched. Presence is opt-in and defaults to zero, preserving
+Natural. Its fitted coefficients use the same bounded field and per-pixel
+evaluation as the earlier profiles; there is no extra full-resolution pass.
+
+The controls in `tests/adaptive-signature.rs` must fail if a noisy flat receives
+contrast, either flat side of a hard step acquires a spatial band, dark-floor
+samples move, hue/neutrality/headroom change incorrectly, two different light
+distributions receive identical curves, luminance order reverses, or Amount zero
+or a persisted partial Amount changes pixels. A positive varied scene must
+actually change. These tests constrain behavior; stronger contrast is not itself
+a quality score. The complete insect, calibration-slide and garnet photographs
+are rendered by `examples/adaptive-signature-review.rs` for independent review;
+overview images may judge tone and composition but cannot certify fine defects.
+Native crops for such review must be at most 400 pixels without resampling.
 
 **Where it changes** optionally shows a bounded sampled effect map. A worker
 compares actual developed pixels with and without the addressed field, including
@@ -270,3 +300,73 @@ detail, solved glare/occlusion artifacts or demonstrated quality superiority.
 This supports visual non-regression for the inspected scenes and regions only.
 The independently chosen crop coordinates and images are retained beside the
 receipts in `independent-option-crops.py` and `independent-option-crops/`.
+
+## Signature verification
+
+**VERIFIED, October 21, 2026:** the fresh `strehl-edit` test build passed 64
+tests, including five Signature controls. The independent review requested two
+additional checks before acceptance: actual Signature and maximum-control
+monotonicity after all guards, and a midtone noisy patch embedded in a varied
+scene. Both passed. The latter compares developed variation with the analytic
+local tonal slope, and includes a deliberately excessive gain as a failing arm;
+contrast is allowed to scale existing noise and is not described as denoising.
+The retained build/test log is `outputs/polish-october21/edit-tests-v2.log`.
+
+The example renders the same three complete 7032 × 4688 inputs as the earlier
+options review. All three Natural RGB16 outputs remain pixel-exact to the prior
+`options-*` outputs. All six Natural/Signature Amount-zero controls return every
+complete image pixel unchanged. These are compatibility and reversibility
+controls, not photographic quality scores.
+
+```powershell
+$env:CARGO_BUILD_JOBS = '4'
+$env:CARGO_TARGET_DIR = 'outputs/quality-october20-target'
+cargo build --release --locked -p strehl-edit --example adaptive-signature-review
+$env:RAYON_NUM_THREADS = '4'
+$tool = 'outputs/quality-october20-target/release/examples/adaptive-signature-review.exe'
+& $tool outputs/feature-validation/insect-run/result.tiff outputs/adaptive-spatial-review/signature-insect
+& $tool outputs/quality-october20-slide/repair/linear-master.tiff outputs/adaptive-spatial-review/signature-slide
+& $tool ../strehl-1792368598430-22840-1/result.tiff outputs/adaptive-spatial-review/signature-garnet
+python outputs/adaptive-spatial-review/prepare-signature.py
+```
+
+The first slide invocation refused export because the new review example had
+cleared its baked source-repair region constraints. The guard prevented an
+incorrect development-only export. The example was corrected to retain those
+constraints while resetting only their development controls, rebuilt, and the
+complete run then passed. This is not acceptance of that earlier source-repair
+experiment as a stacking improvement.
+
+**MEASURED:** after one warm-up per option, four alternating Natural/Signature
+sweeps produced the following minimum through maximum worker analysis times.
+Each analysis uses 16,328 samples. This excludes TIFF loading, full-image
+rendering, uploads, GPU work and UI interaction; it is not a frame-rate claim.
+
+| Photograph | Natural | Signature |
+| --- | ---: | ---: |
+| Insect | 13.11–13.28 ms | 14.04–14.28 ms |
+| Slide, scene-linear | 17.14–17.36 ms | 17.51–17.93 ms |
+| Garnet | 13.03–13.82 ms | 13.52–14.27 ms |
+
+Local complete outputs, exact hashes, parameters and timings are in
+`outputs/adaptive-spatial-review/signature-*`; Natural compatibility is recorded
+in `signature-compatibility.json`. Output differences can measure change but
+cannot distinguish attractive development from damage. Independent photographic
+review is required in addition to these controls.
+
+An independent reviewer inspected every complete before/Natural/Signature
+overview, then chose three native 400 × 400 regions per photograph. Each before
+and Signature crop was displayed separately at original size; initial composite
+plates were explicitly replaced for the fine-detail inspection. On the insect,
+Signature gives deeper ground tones and stronger green/orange separation;
+existing grain and small bright points are slightly more conspicuous. On garnet,
+dark facets deepen modestly and its background stays dark. The slide's neutral
+plate, circles and existing edge fringe remain visually similar. No obvious new
+broad boundary bands or changed hair geometry appeared in those selected native
+views. Bright specular patches remain bright and missing detail is not recovered.
+
+This supports an optional, reversible stronger starting profile on these three
+photographs, not universal improvement, sharpening, denoising or Lightroom parity.
+The independent coordinates, method and observations are retained in
+`outputs/adaptive-spatial-review/signature-independent-review.md`; individual
+native crops are beside each scene's complete outputs.

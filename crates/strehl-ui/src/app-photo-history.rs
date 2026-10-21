@@ -536,17 +536,17 @@ impl StrehlApp {
 
     pub(super) fn photo_history_edit_actions(&mut self, ui: &mut egui::Ui) {
         ui.horizontal(|ui| {
+            let width = (ui.available_width() - ui.spacing().item_spacing.x) * 0.5;
             if ui
-                .add_enabled(
-                    !self.photo_history_busy(),
-                    egui::Button::new("Save version…"),
-                )
+                .add_enabled_ui(!self.photo_history_busy(), |ui| {
+                    super::editing::controls::action_button(ui, "Save version…", width)
+                })
+                .inner
                 .clicked()
             {
                 self.open_save_edit_version();
             }
-            if ui
-                .small_button("Versions")
+            if super::editing::controls::action_button(ui, "Versions", width)
                 .on_hover_text("Browse this photograph’s versions and exports in Projects")
                 .clicked()
             {
@@ -584,10 +584,17 @@ impl StrehlApp {
                 draft.focus = false;
             }
             ui.horizontal(|ui| {
-                if ui.add_enabled(!busy, egui::Button::new("Save")).clicked() {
+                let width = (ui.available_width() - ui.spacing().item_spacing.x) * 0.5;
+                if ui
+                    .add_enabled_ui(!busy, |ui| {
+                        super::editing::controls::action_button(ui, "Save", width)
+                    })
+                    .inner
+                    .clicked()
+                {
                     save = Some(());
                 }
-                cancel = ui.small_button("Cancel").clicked();
+                cancel = super::editing::controls::action_button(ui, "Cancel", width).clicked();
             });
             if field.has_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter)) {
                 save = Some(());

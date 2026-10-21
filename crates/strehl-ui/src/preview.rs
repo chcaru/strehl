@@ -8,6 +8,9 @@ use image::{DynamicImage, ImageFormat, ImageReader, imageops::FilterType};
 
 use crate::jobs::{Task, spawn_task};
 
+#[path = "explorer-preview-cache.rs"]
+pub(crate) mod explorer;
+
 const MAX_IMAGE_SIDE: u32 = 32_768;
 const MAX_IMAGE_PIXELS: u64 = 80_000_000;
 const MAX_DECODE_BYTES: u64 = 512 * 1024 * 1024;
@@ -27,30 +30,38 @@ pub struct PreviewImage {
 
 pub fn load_preview(path: PathBuf, max_texture_side: u32) -> Task<PreviewImage> {
     spawn_task("strehl-preview", move |cancelled| {
-        ensure!(
-            max_texture_side > 0,
-            "The graphics device has no usable texture size"
-        );
-        ensure!(!cancelled.load(Ordering::Relaxed), "Preview cancelled");
-        let image = decode_developed(&path, None)?;
-        ensure!(!cancelled.load(Ordering::Relaxed), "Preview cancelled");
-        let source_size = [image.width(), image.height()];
-        let is_overview = source_size.iter().any(|&side| side > max_texture_side);
-        let rgba = if is_overview {
-            image
-                .resize(max_texture_side, max_texture_side, FilterType::Triangle)
-                .into_rgba8()
-        } else {
-            image.into_rgba8()
-        };
-        ensure!(!cancelled.load(Ordering::Relaxed), "Preview cancelled");
-        Ok(PreviewImage {
-            path,
-            source_size,
-            size: [rgba.width() as usize, rgba.height() as usize],
-            rgba: rgba.into_raw(),
-            is_overview,
-        })
+        load_preview_image(path, max_texture_side, &cancelled)
+    })
+}
+
+pub(crate) fn load_preview_image(
+    path: PathBuf,
+    max_texture_side: u32,
+    cancelled: &std::sync::atomic::AtomicBool,
+) -> Result<PreviewImage> {
+    ensure!(
+        max_texture_side > 0,
+        "The graphics device has no usable texture size"
+    );
+    ensure!(!cancelled.load(Ordering::Relaxed), "Preview cancelled");
+    let image = decode_developed(&path, None)?;
+    ensure!(!cancelled.load(Ordering::Relaxed), "Preview cancelled");
+    let source_size = [image.width(), image.height()];
+    let is_overview = source_size.iter().any(|&side| side > max_texture_side);
+    let rgba = if is_overview {
+        image
+            .resize(max_texture_side, max_texture_side, FilterType::Triangle)
+            .into_rgba8()
+    } else {
+        image.into_rgba8()
+    };
+    ensure!(!cancelled.load(Ordering::Relaxed), "Preview cancelled");
+    Ok(PreviewImage {
+        path,
+        source_size,
+        size: [rgba.width() as usize, rgba.height() as usize],
+        rgba: rgba.into_raw(),
+        is_overview,
     })
 }
 

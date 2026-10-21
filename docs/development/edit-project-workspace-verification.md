@@ -108,3 +108,75 @@ of whole photographs and separately chosen native crops accepted restrained
 optional treatments, not glare removal, clipped-detail recovery, Adobe parity
 or universal improvement. Analysis cost is measured separately from rendering
 and UI latency in the [spatial-treatment record](adaptive-spatial-treatment.md).
+
+## October 21 follow-up
+
+Edit timeline inspection again animates into the linked source/final comparison
+and paints the admission footprints on both photographs. Opening Edit no longer
+blanket-suppresses these diagnostics. Leaving the timeline still clears the
+comparison in the same paint, retaining the crop and pinned source spans. The
+regression uses real pointer motion and actual rendered overlay marks, requires
+an intermediate animation position, then checks immediate exit and re-entry.
+
+Pane commands share a 26-point height; the version actions share a row, and the
+profile selector and Apply/Recalculate action have bounded, aligned geometry.
+Numeric controls reserve their own height above the slider instead of inheriting
+a taller button size and colliding with the track. Tests render the actual pane
+at 230, 270 and 440 points, compare painted controls and text baselines, and drive
+the real profile menu. Selecting Signature applies it directly; advanced changes
+remain a draft until Recalculate. Disabled regions cannot start treatment.
+Native screenshot review also prompted a shared scrollbar gutter for the fixed
+header and Regions tools. The controls reserve it even when sections collapse,
+so both content edges remain aligned without a horizontal jump.
+The Regions list also no longer forces its default minimum scroll height into
+the small empty shelf; the actual painted shelf must fit the viewport in the
+regression, including where the outer native pane would otherwise clip overflow.
+
+**VERIFIED:** a fresh build passed 877 UI tests and 67 editor tests; 14 local
+timing/photographic checks remain explicitly ignored by the ordinary suite.
+Strict Clippy passed for both crates and all targets. The first layout checks
+caught two test-oracle issues: comparing a text glyph center to a button-box
+center, and targeting a popup before egui's sizing pass. The corrected tests
+retain the separate rectangle bounds and now exercise a settled menu.
+
+```powershell
+$env:CARGO_BUILD_JOBS = '4'
+$env:CARGO_TARGET_DIR = 'target/progressive-photo'
+cargo test --locked -p strehl-ui -p strehl-edit --all-targets
+cargo clippy --locked -p strehl-ui -p strehl-edit --all-targets --no-deps -- -D warnings
+```
+
+Tests use a separate TEMP/LOCALAPPDATA under `outputs/polish-october21/test-state`
+and the normal Windows account to avoid the sandbox's filesystem-link/ACL test
+artifacts. Final logs are retained in `outputs/polish-october21/workspace-tests-delivery.log`
+and `clippy-delivery.log`. Thumbnail behavior, limits and measurements have their own
+[record](explorer-thumbnail-performance.md); Signature's complete-photograph
+and independent crop review is in the [Adaptive record](adaptive-spatial-treatment.md).
+
+The final optimized executable passed the owned native workflow with Signature:
+changed preview pixels, exact Amount-zero and Undo restoration, preserved manual
+settings, named version restore/Undo, full-resolution PNG beside the TIFF, and
+durable recipe/export lineage. The copied TIFF and the protected source/catalog
+hashes stayed unchanged. The native run exercises the stored Signature parameters;
+the actual profile-menu activation is covered separately by the pointer test.
+
+```powershell
+$env:CARGO_BUILD_JOBS = '4'
+$env:CARGO_TARGET_DIR = 'outputs/quality-october20-target'
+cargo build --release --locked -p strehl-ui
+$env:RAYON_NUM_THREADS = '4'
+python outputs/edit-polish-review/check-native.py --run-name october21-signature-final --signature
+python outputs/edit-polish-review/capture-workspace.py --run-name october21-signature-delivery --signature
+```
+
+Independent final screenshot review accepted Edit at 1280 x 900 and 980 x 720,
+plus Export at 1280 x 900: aligned content edges, consistent controls and a
+contained Regions shelf. This is layout inspection, not an interaction-latency
+measurement or physical HDR-display validation.
+
+Delivery: `outputs/strehl-polish-october21/Strehl.exe`, 30,458,368 bytes, SHA-256
+`b033fbc4c27b72c49cef20b62813b928fea9937b60fa3ab2db01dc06acc953e8`.
+The native workflow, screenshot capture and copied delivery all identify this
+same binary. Receipts are retained under
+`outputs/edit-polish-review/october21-signature-final/receipt.json` and
+`outputs/edit-polish-review/october21-signature-delivery/`.

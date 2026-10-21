@@ -295,11 +295,15 @@ pub(crate) fn load_draft_source(
         }
         let mut bytes = vec![0; candidate.length as usize];
         read_at(&mut file, file_len, candidate.offset, &mut bytes, cancelled)?;
-        match decode_jpeg(&bytes) {
-            Ok(image) => {
+        match decode::decode(&bytes, max_side, cancelled) {
+            Ok((image, native_size)) => {
                 check_cancelled(cancelled)?;
                 let image = orient(image, candidate.orientation);
-                let source_size = [image.width(), image.height()];
+                let source_size = if (5..=8).contains(&candidate.orientation) {
+                    [native_size[1], native_size[0]]
+                } else {
+                    native_size
+                };
                 let is_overview = source_size.iter().any(|&side| side > max_side);
                 let rgba = if is_overview {
                     image.resize(max_side, max_side, FilterType::Triangle)

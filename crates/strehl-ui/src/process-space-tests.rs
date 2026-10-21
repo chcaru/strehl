@@ -647,6 +647,124 @@ fn edit_timeline_comparison_ends_on_exit_even_after_click_or_captured_drag() {
 }
 
 #[test]
+fn edit_timeline_animates_entry_and_restores_both_photos_admission_overlays() {
+    // A sparse fixture cannot exercise the source contour. Use a real dense
+    // right-side admission island; the left side is recorded negative evidence.
+    // Test both Select navigation and an armed drawing tool, which previously
+    // suppressed diagnostics even though the pointer was on the timeline.
+    for drawing_tool in [false, true] {
+        let ctx = egui::Context::default();
+        let mut space = ProcessSpace::default();
+        space.set_edit_workspace(true);
+        space.set_edit_focus(true);
+        space.set_edit_navigation(true);
+        space.set_annotation_mode(drawing_tool);
+        let photos = camera_photos(&ctx);
+        let result = texture(&ctx, "edit-linked-overlay-final", Color32::GOLD);
+        let mut progress = PipelineProgress::default();
+        progress.ingest("planes : 120 x 80 per CFA plane\ncoverage : field of view scaled to 0.9500 so that EVERY frame covers every pixel\nbands : 7 Laplacian levels + 1 base, coarsest 1 x 1\nwrote : result.tiff (240 x 160, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)\n");
+        progress.admission_archive.ingest(
+            &crate::pipeline::DiagnosticSurface {
+                sequence: 1,
+                frame: 7,
+                level: 0,
+                kind: DiagnosticKind::GateSupport,
+                scope: crate::pipeline::DiagnosticScope::Frame,
+                scale: DiagnosticScale::Linear,
+                width: 24,
+                height: 16,
+                min: 0.0,
+                max: 1.0,
+                pixels: (0..384)
+                    .map(|index| if index % 24 >= 13 { 255 } else { 0 })
+                    .collect::<Vec<_>>()
+                    .into(),
+                folded: 1,
+            },
+            [120, 80],
+        );
+        progress.mark_complete();
+        let data = Input {
+            photos: &photos,
+            inspection_photos: &photos,
+            output: Some(&result),
+            output_size: Some([240, 160]),
+            ..input(&progress)
+        };
+        draw(&mut space, &ctx, data, 0.0, vec![]);
+        let (_, initial) = draw(&mut space, &ctx, data, 0.6, vec![]);
+        let full_photo = largest_image(&initial, result.id()).unwrap();
+        let at = contact_at(&initial, 7);
+        let (_, entering) = draw(
+            &mut space,
+            &ctx,
+            data,
+            0.61,
+            vec![egui::Event::PointerMoved(at)],
+        );
+        assert_eq!(space.inspection_frame(), Some(7));
+        let mut entry_areas = vec![largest_image(&entering, result.id()).unwrap().area()];
+        let mut compared = entering;
+        for frame in 1..=16 {
+            compared = draw(&mut space, &ctx, data, 0.61 + frame as f64 * 0.016, vec![]).1;
+            entry_areas.push(largest_image(&compared, result.id()).unwrap().area());
+        }
+        let final_photo = largest_image(&compared, result.id()).unwrap();
+        let source_photo = largest_image(&compared, photos[7].texture.id()).unwrap();
+        assert!(
+            entry_areas
+                .iter()
+                .any(|area| *area > final_photo.area() * 1.1 && *area < full_photo.area() * 0.99),
+            "entry must actually paint an intermediate photograph, not jump to the split: {full_photo:?} -> {entry_areas:?} -> {final_photo:?}"
+        );
+        assert!(!source_photo.intersects(final_photo));
+        let dots: Vec<_> = crate::process_result::overlay_marker_centers(&compared)
+            .into_iter()
+            .filter(|point| final_photo.contains(*point))
+            .collect();
+        assert!(
+            dots.len() > 8,
+            "timeline hover must paint retained admission on the final, including with an armed drawing tool"
+        );
+        assert!(dots.iter().all(|point| point.x > final_photo.center().x));
+        let color = crate::process_sample_glyphs::level_color(0);
+        let source_fill = Color32::from_rgba_unmultiplied(color.r(), color.g(), color.b(), 18);
+        assert!(compared.shapes.iter().any(|shape| matches!(&shape.shape,
+            egui::Shape::Mesh(mesh) if mesh.texture_id == egui::TextureId::default()
+                && mesh.vertices.iter().any(|vertex| vertex.color == source_fill
+                    && source_photo.contains(vertex.pos) && shape.clip_rect.contains(vertex.pos))
+        )), "source must display the approximate footprint too; a source thumbnail alone is not linked inspection");
+        text_contains(&compared, "CAPTURE 008");
+        let (_, exited) = draw(
+            &mut space,
+            &ctx,
+            data,
+            0.90,
+            vec![egui::Event::PointerMoved(full_photo.center())],
+        );
+        assert_eq!(space.inspection_frame(), None);
+        assert_eq!(largest_image(&exited, result.id()).unwrap(), full_photo);
+        assert!(
+            crate::process_result::overlay_marker_centers(&exited)
+                .into_iter()
+                .all(|point| !full_photo.contains(point)),
+            "canvas editing must return to its clean photograph immediately"
+        );
+        let (_, reentered) = draw(
+            &mut space,
+            &ctx,
+            data,
+            0.91,
+            vec![egui::Event::PointerMoved(at)],
+        );
+        assert!(
+            largest_image(&reentered, result.id()).unwrap().area() > final_photo.area() * 1.1,
+            "quick re-entry starts from the displayed full photograph, not stale animation state"
+        );
+    }
+}
+
+#[test]
 fn edit_compact_timeline_reclaims_photo_space_and_keeps_plain_wheel_zoom() {
     let ctx = egui::Context::default();
     let mut space = ProcessSpace::default();

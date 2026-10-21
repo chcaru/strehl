@@ -10,8 +10,9 @@ use strehl_edit::{
 #[path = "adaptive-effect.rs"]
 mod effect;
 
-fn treatment_choices() -> [(&'static str, AdaptiveParameters); 4] {
+fn treatment_choices() -> [(&'static str, AdaptiveParameters); 5] {
     [
+        ("Signature", AdaptiveParameters::signature()),
         ("Natural", AdaptiveParameters::default()),
         (
             "Deep background",
@@ -41,6 +42,7 @@ fn treatment_choices() -> [(&'static str, AdaptiveParameters); 4] {
                 tone_range: AdaptiveToneRange::Highlights,
                 shadow_protection: 1.0,
                 highlight_compression: 0.65,
+                ..Default::default()
             },
         ),
     ]
@@ -371,6 +373,7 @@ impl StrehlApp {
     }
 
     pub(super) fn adaptive_panel(&mut self, ui: &mut egui::Ui) {
+        ui.spacing_mut().item_spacing.y = 5.0;
         self.adaptive.wake = Some(ui.ctx().clone());
         self.reconcile_adaptive_parameters();
         let scope_enabled = self.editor.selected.as_ref().is_none_or(|id| {
@@ -405,14 +408,20 @@ impl StrehlApp {
         let mut analyze = false;
         ui.add_enabled_ui(ready, |ui| {
             ui.horizontal(|ui| {
-                let width = (ui.available_width() - 94.0).max(80.0);
-                egui::ComboBox::from_id_salt("adaptive-look").width(width).truncate().selected_text(look)
-                    .show_ui(ui, |ui| {
-                        for (name, value) in choices {
-                            ui.selectable_value(&mut parameters, value, name);
-                        }
-                    }).response.on_hover_text("Choose the treatment, then Analyze. Each choice builds local curves for this photograph or selected region.");
-                analyze = ui.add_sized([82.0, 25.0], egui::Button::new(if has_field { "Recalculate" } else { "Analyze" }))
+                let action_width = 82.0;
+                let width = (ui.available_width() - action_width - ui.spacing().item_spacing.x).max(40.0);
+                ui.allocate_ui_with_layout(egui::vec2(width, super::editing::controls::ACTION_HEIGHT), egui::Layout::left_to_right(egui::Align::Center), |ui| {
+                    ui.spacing_mut().icon_width = 12.0;
+                    egui::ComboBox::from_id_salt("adaptive-look").width(width).truncate().selected_text(look)
+                        .show_ui(ui, |ui| {
+                            for (name, value) in choices {
+                                if ui.selectable_value(&mut parameters, value, name).clicked() {
+                                    analyze = true;
+                                }
+                            }
+                        }).response.on_hover_text("Choose a profile to apply its local light and color treatment. Amount controls the result; Undo returns to your previous edit.");
+                });
+                analyze |= super::editing::controls::action_button(ui, if has_field { "Recalculate" } else { "Apply" }, action_width)
                     .on_hover_text("Measure this scope and apply local light and color. Manual sliders remain available; Undo restores the previous treatment.")
                     .clicked();
             });
@@ -473,6 +482,7 @@ impl StrehlApp {
                     for (label, value, default, help) in [
                         ("Light balance", &mut draft.value.balance, defaults.balance, "Redistribute local light while preserving the scene's overall light placement."),
                         ("Local contrast", &mut draft.value.local_contrast, defaults.local_contrast, "Separate local tones without sharpening pixels or inventing detail."),
+                        ("Presence", &mut draft.value.presence, defaults.presence, "Shape contrast around this photograph's measured light range, with protection for deep shadows and highlights."),
                         ("Color", &mut draft.value.color, defaults.color, "Enrich supported local color with protection for neutral and already saturated areas."),
                         ("Protect shadows", &mut draft.value.shadow_protection, defaults.shadow_protection, "Keep deep backgrounds dark while treating the subject."),
                         ("Soften highlights", &mut draft.value.highlight_compression, defaults.highlight_compression, "Compress bright light without lifting the rest of the image. This does not recover clipped detail."),

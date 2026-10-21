@@ -1,4 +1,4 @@
-//! One bounded background lane shared by tiny rows and larger hover previews.
+//! Bounded, completion-driven thumbnail lanes shared by rows and hover previews.
 use crate::{
     jobs::{self, Task},
     preview::{self, PreviewImage},
@@ -12,7 +12,9 @@ use std::{
 };
 use strehl_edit::LinearImage;
 
-const SIDE: u32 = 384;
+#[cfg(test)]
+const SIDE: u32 = preview::explorer::SIDE;
+const WORKERS: usize = 2;
 // Forty maximum-size RGBA previews fit below the 24 MiB GPU budget.
 const MAX_ENTRIES: usize = 40;
 const MAX_BYTES: usize = 24 * 1024 * 1024;
@@ -24,6 +26,15 @@ enum Request {
         path: PathBuf,
         source: bool,
     },
+    Current {
+        path: PathBuf,
+        image: Weak<LinearImage>,
+        source_size: [u32; 2],
+    },
+    SavedVersion {
+        root: PathBuf,
+        version: Box<PhotoVersion>,
+    },
     Version {
         root: PathBuf,
         version: Box<PhotoVersion>,
@@ -33,6 +44,14 @@ enum Request {
 impl Request {
     fn key(&self) -> String {
         match self {
+            Self::Current { path, .. } => format!("photo:{}", path.display()),
+            Self::SavedVersion { root, version } => format!(
+                "saved:{}:{}:{}:{}",
+                root.display(),
+                version.id,
+                version.loaded_sha256,
+                version.photo.sha256
+            ),
             Self::File { path, source } => format!(
                 "{}:{}",
                 if *source { "camera" } else { "photo" },
@@ -62,6 +81,7 @@ struct Current {
     path: PathBuf,
     image: Weak<LinearImage>,
     preview: Arc<LinearImage>,
+    source_size: [u32; 2],
     identity: Option<String>,
     identifying: Option<Task<String>>,
 }
@@ -69,7 +89,7 @@ struct Current {
 pub(super) struct ExplorerPreviews {
     entries: BTreeMap<String, Entry>,
     queue: VecDeque<(Request, u64)>,
-    pending: Option<Pending>,
+    pending: Vec<Pending>,
     current: Option<Current>,
     clock: u64,
     ctx: Option<egui::Context>,
@@ -77,7 +97,7 @@ pub(super) struct ExplorerPreviews {
 
 impl ExplorerPreviews {
     pub(super) fn pending(&self) -> bool {
-        self.pending.is_some()
+        !self.pending.is_empty()
             || !self.queue.is_empty()
             || self
                 .current
@@ -113,8 +133,8 @@ impl ExplorerPreviews {
         }
         .key();
         self.entries.remove(&base_key);
-        if self.pending.as_ref().is_some_and(|p| p.key == base_key) {
-            self.pending = None;
+        for pending in self.pending.iter().filter(|p| p.key == base_key) {
+            pending.task.cancel();
         }
         self.queue
             .retain(|(r, _)| matches!(r, Request::File { .. }) && r.key() != base_key);
@@ -122,6 +142,7 @@ impl ExplorerPreviews {
             path: path.into(),
             image: Arc::downgrade(image),
             preview: preview.clone(),
+            source_size: [image.width, image.height],
             identity: None,
             identifying: None,
         });
@@ -145,14 +166,29 @@ impl ExplorerPreviews {
                 Err(mpsc::TryRecvError::Empty) => {}
             }
         }
-        if let Some(pending) = &self.pending {
-            let ready = match pending.task.receiver.try_recv() {
+        let mut at = 0;
+        while at < self.pending.len() {
+            let ready = match self.pending[at].task.receiver.try_recv() {
                 Ok(result) => Some(result),
                 Err(mpsc::TryRecvError::Empty) => None,
                 Err(mpsc::TryRecvError::Disconnected) => Some(Err("Preview worker ended".into())),
             };
             if let Some(result) = ready {
-                let pending = self.pending.take().unwrap();
+                let pending = self.pending.swap_remove(at);
+                // Cancellation retains its lane until the decoder has actually
+                // returned; rapid navigation cannot create unbounded workers.
+                if pending.task.is_cancelled() {
+                    continue;
+                }
+                let published_key = if result.is_ok() {
+                    pending
+                        .key
+                        .strip_prefix("version:")
+                        .map(|key| format!("saved:{key}"))
+                        .unwrap_or_else(|| pending.key.clone())
+                } else {
+                    pending.key.clone()
+                };
                 let entry = match result {
                     Ok(image) => {
                         let pixels =
@@ -175,67 +211,70 @@ impl ExplorerPreviews {
                         touched: self.clock,
                     },
                 };
-                self.entries.insert(pending.key, entry);
+                // Reconstructing a legacy derivative replaces its earlier
+                // saved-preview miss. It stays inspectable after leaving this
+                // photograph; an open document is not required a second time.
+                self.entries.insert(published_key, entry);
                 self.trim();
+            } else {
+                at += 1;
             }
         }
         // Rows not requested in the last completed paint no longer consume decode time.
         self.queue
             .retain(|(_, seen)| seen.saturating_add(1) >= self.clock);
-        if self.pending.is_none()
-            && let Some((request, _)) = self.queue.pop_front()
-        {
-            let key = request.key();
-            let task = match request {
-                Request::File { path, source: true } => {
-                    jobs::spawn_task("strehl-explorer-source", move |cancelled| {
-                        crate::source_preview::load_draft_source(&path, SIDE, &cancelled)
-                    })
-                }
-                Request::File {
-                    path,
-                    source: false,
-                } => preview::load_preview(path, SIDE),
-                Request::Version {
-                    root,
-                    version,
-                    image,
-                } => jobs::spawn_task("strehl-explorer-version", move |cancelled| {
-                    anyhow::ensure!(
-                        !cancelled.load(std::sync::atomic::Ordering::Relaxed),
-                        "Preview cancelled"
-                    );
-                    let image = image
-                        .upgrade()
-                        .ok_or_else(|| anyhow::anyhow!("Photograph preview is no longer open"))?;
-                    let recipe = photographs::read_preview_recipe(&root, &version)?;
-                    image.validate_source_repairs(&recipe)?;
-                    let (width, height, rgb) =
-                        image.render_region_sdr8(&recipe, [0.0, 0.0], [1.0, 1.0], SIDE)?;
-                    let rgba = rgb
-                        .as_chunks::<3>()
-                        .0
-                        .iter()
-                        .flat_map(|p| [p[0], p[1], p[2], 255])
-                        .collect();
-                    Ok(PreviewImage {
-                        path: version.owner.output,
-                        source_size: [width, height],
-                        size: [width as usize, height as usize],
-                        rgba,
-                        is_overview: true,
-                    })
-                }),
+        self.start_workers(ctx);
+    }
+
+    fn start_workers(&mut self, ctx: &egui::Context) {
+        while self.pending.len() < WORKERS {
+            let Some((request, _)) = self.queue.pop_front() else {
+                break;
             };
-            self.pending = Some(Pending { key, task });
-        }
-        if self.pending.is_some()
-            || self
-                .current
-                .as_ref()
-                .is_some_and(|p| p.identifying.is_some())
-        {
-            ctx.request_repaint_after(std::time::Duration::from_millis(80));
+            let key = request.key();
+            let notify = ctx.clone();
+            let task = jobs::spawn_notifying_task(
+                "strehl-explorer-thumbnail",
+                move |cancelled| match request {
+                    Request::File { path, source } => preview::explorer::load_file(
+                        &path,
+                        source,
+                        preview::explorer::default_root().as_deref(),
+                        &cancelled,
+                    ),
+                    Request::Current {
+                        path,
+                        image,
+                        source_size,
+                    } => {
+                        let image = image.upgrade().ok_or_else(|| {
+                            anyhow::anyhow!("Photograph preview is no longer open")
+                        })?;
+                        preview::explorer::render(&path, &image, &Default::default(), source_size)
+                    }
+                    Request::SavedVersion { root, version } => {
+                        preview::explorer::load_version(&root, &version)
+                    }
+                    Request::Version {
+                        root,
+                        version,
+                        image,
+                    } => {
+                        anyhow::ensure!(
+                            !cancelled.load(std::sync::atomic::Ordering::Relaxed),
+                            "Preview cancelled"
+                        );
+                        let image = image.upgrade().ok_or_else(|| {
+                            anyhow::anyhow!("Photograph preview is no longer open")
+                        })?;
+                        let recipe = photographs::read_preview_recipe(&root, &version)?;
+                        image.validate_source_repairs(&recipe)?;
+                        preview::explorer::save_version(&root, &version, &image, &recipe)
+                    }
+                },
+                move || notify.request_repaint(),
+            );
+            self.pending.push(Pending { key, task });
         }
     }
 
@@ -258,7 +297,11 @@ impl ExplorerPreviews {
             entry.touched = self.clock;
             return entry.texture.clone();
         }
-        if self.pending.as_ref().is_some_and(|p| p.key == key) {
+        if self
+            .pending
+            .iter()
+            .any(|p| p.key == key && !p.task.is_cancelled())
+        {
             return None;
         }
         if let Some((_, seen)) = self.queue.iter_mut().find(|(r, _)| r.key() == key) {
@@ -267,9 +310,7 @@ impl ExplorerPreviews {
         }
         // Pin this paint's working set. Oversized trees stop admitting extra
         // rows instead of continuously evicting and decoding the same images.
-        if self.entries.len() + self.queue.len() + usize::from(self.pending.is_some())
-            >= MAX_ENTRIES
-        {
+        if self.entries.len() + self.queue.len() + self.pending.len() >= MAX_ENTRIES {
             if let Some(old) = self
                 .entries
                 .iter()
@@ -285,8 +326,8 @@ impl ExplorerPreviews {
         }
         if self.queue.len() < MAX_QUEUE {
             self.queue.push_back((request, self.clock));
-            if let Some(ctx) = &self.ctx {
-                ctx.request_repaint();
+            if let Some(ctx) = self.ctx.clone() {
+                self.start_workers(&ctx);
             }
         }
         None
@@ -299,6 +340,16 @@ impl ExplorerPreviews {
         {
             return None;
         }
+        if !source
+            && let Some(current) = &self.current
+            && current.path == path
+        {
+            return self.request(Request::Current {
+                path: path.into(),
+                image: Arc::downgrade(&current.preview),
+                source_size: current.source_size,
+            });
+        }
         self.request(Request::File {
             path: path.into(),
             source,
@@ -310,6 +361,25 @@ impl ExplorerPreviews {
         version: &PhotoVersion,
     ) -> (Option<TextureHandle>, bool) {
         let mut exact = None;
+        let saved = root.map(|root| Request::SavedVersion {
+            root: root.into(),
+            version: Box::new(version.clone()),
+        });
+        if let Some(saved) = &saved {
+            if let Some(texture) = self.request(saved.clone()) {
+                return (Some(texture), true);
+            }
+            // Missing legacy derivatives may be reconstructed from the current
+            // image after matching its full loaded-pixel identity. New versions
+            // already carry a derivative and never need to hash/decode here.
+            if !self
+                .entries
+                .get(&saved.key())
+                .is_some_and(|entry| entry.error.is_some())
+            {
+                return (self.file(&version.owner.output, false), false);
+            }
+        }
         if let Some(current) = self
             .current
             .as_mut()
@@ -319,9 +389,15 @@ impl ExplorerPreviews {
                 && current.identifying.is_none()
                 && let Some(image) = current.image.upgrade()
             {
-                current.identifying = Some(jobs::spawn_task(
+                let notify = self.ctx.clone();
+                current.identifying = Some(jobs::spawn_notifying_task(
                     "strehl-explorer-identity",
                     move |cancelled| photographs::loaded_hash(&image, &cancelled),
+                    move || {
+                        if let Some(ctx) = &notify {
+                            ctx.request_repaint();
+                        }
+                    },
                 ));
             }
             if current.identity.as_deref() == Some(&version.loaded_sha256)

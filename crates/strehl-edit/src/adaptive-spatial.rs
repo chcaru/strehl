@@ -129,6 +129,7 @@ pub(super) fn analyze_spatial(
         || (parameters.balance == 0.0
             && parameters.local_contrast == 0.0
             && parameters.color == 0.0
+            && parameters.presence == 0.0
             && parameters.highlight_compression == 0.0)
     {
         limitations.push("There is insufficient sampled tonal variation for a spatial treatment, or all treatment controls are zero; ordinary controls remain unchanged.".into());
@@ -159,6 +160,9 @@ pub(super) fn analyze_spatial(
             }
             if parameters.highlight_compression > 0.0 {
                 changes.push(AdaptiveChange { control: "bright-tone compression".into(), before: 0.0, after: parameters.highlight_compression, reason: "A bounded smooth shoulder lowers existing bright light after balancing, without compensating by lifting the rest of the image. It cannot recover clipped texture.".into() });
+            }
+            if parameters.presence > 0.0 {
+                changes.push(AdaptiveChange { control: "scene-relative presence".into(), before: 0.0, after: parameters.presence, reason: "Robust light percentiles place a smooth contrast curve within this photograph's useful tones. The curve adds separation without sharpening pixels, while dark-floor and highlight protection remain active.".into() });
             }
             suggested.spatial.push(field);
         }
@@ -270,6 +274,11 @@ fn build_field(
     }
     let colored_population = global.iter().map(|m| m.color).sum::<f32>()
         / global.iter().map(|m| m.weight).sum::<f32>().max(1e-10);
+    let presence = if structure_enabled && parameters.presence > 0.0 {
+        fit_presence(&samples, parameters.presence)
+    } else {
+        None
+    };
     let mut tone_ev = vec![0.0; w * h * levels];
     let mut color_gain = vec![1.0; w * h];
     for (cell, cell_color) in color_gain.iter_mut().enumerate() {
@@ -294,13 +303,23 @@ fn build_field(
         }
         *cell_color = if colored_population >= 0.05 {
             quantize(
-                1.0 + 0.14
+                1.0 + (0.14 + 0.06 * parameters.presence)
                     * parameters.color
                     * (color_sum / color_weight.max(1e-10)).clamp(0.0, 1.0),
             )
         } else {
             1.0
         };
+        if let Some((pivot, amplitude)) = presence {
+            for z in 0..levels {
+                let log = log_min + (log_max - log_min) * z as f32 / (levels - 1) as f32;
+                // A shared scene-relative curve avoids an extra spatially varying
+                // exposure boundary. Existing bilateral curves supply local tone.
+                let correction = amplitude * ((log - pivot) / 1.35).tanh();
+                let i = cell * levels + z;
+                tone_ev[i] = quantize((tone_ev[i] + correction).clamp(-0.8, 0.8));
+            }
+        }
         // Limit slope, in addition to amplitude. No local curve may reverse
         // brightness ordering; this is an operator constraint, not a quality score.
         for z in 1..levels {
@@ -385,7 +404,9 @@ fn build_field(
         &tone_weights,
         if (selective || parameters.highlight_compression > 0.0)
             && (!structure_enabled
-                || (parameters.balance == 0.0 && parameters.local_contrast == 0.0))
+                || (parameters.balance == 0.0
+                    && parameters.local_contrast == 0.0
+                    && parameters.presence == 0.0))
         {
             0.0
         } else {
@@ -423,6 +444,32 @@ fn smooth_weight(x: f32) -> f32 {
     x * x * (3.0 - 2.0 * x)
 }
 
+/// Robust tone placement, not subject recognition. Excluding the noise floor
+/// prevents a large black background from becoming the contrast pivot. The
+/// finite percentile span also lowers the strength on already contrasty scenes.
+fn fit_presence(samples: &[([f32; 2], [f32; 3])], amount: f32) -> Option<(f32, f32)> {
+    let mut light: Vec<f32> = samples
+        .iter()
+        .map(|(_, pixel)| crate::recipe::luma(*pixel))
+        .filter(|y| *y > 0.025)
+        .map(f32::log2)
+        .collect();
+    if light.len() < 64 {
+        return None;
+    }
+    light.sort_unstable_by(f32::total_cmp);
+    let percentile = |fraction: f32| light[((light.len() - 1) as f32 * fraction) as usize];
+    let (lo, hi) = (percentile(0.1), percentile(0.9));
+    let span = hi - lo;
+    if span < 0.35 {
+        return None;
+    }
+    Some((
+        (lo + hi) * 0.5,
+        0.65 * amount * (4.0 / span).clamp(0.45, 1.0),
+    ))
+}
+
 fn tonal_weight(log: f32, parameters: AdaptiveParameters) -> f32 {
     let range = match parameters.tone_range {
         AdaptiveToneRange::All => 1.0,
@@ -444,6 +491,9 @@ fn set_centering(
     if let Some(original) = original {
         for (i, ev) in field.tone_ev.iter_mut().enumerate() {
             *ev = (original[i] + shift) * weights[i % weights.len()];
+            if field.parameters.presence > 0.0 {
+                *ev = ev.clamp(-1.0, 1.0);
+            }
         }
         field.centering_ev = 0.0;
     } else {

@@ -375,6 +375,34 @@ pub fn load_tiff(path: &Path) -> Result<LinearImage> {
         .max(2 * 1024 * 1024);
     limits.ifd_value_size = 2 * 1024 * 1024;
     decoder = decoder.with_limits(limits);
+    let (description, color, input_space) = tiff_metadata(&mut decoder)?;
+    let (mut pixels, origin) = match (color, decoder.read_image()?) {
+        (ColorType::RGB(32), DecodingResult::F32(v)) => (v, ImageOrigin::SceneLinear),
+        (ColorType::RGB(16), DecodingResult::U16(v)) => (
+            v.into_par_iter()
+                .map(|x| srgb_decode(x as f32 / 65535.0))
+                .collect(),
+            ImageOrigin::DisplayReferred,
+        ),
+        (ColorType::RGB(8), DecodingResult::U8(v)) => (
+            v.into_par_iter()
+                .map(|x| srgb_decode(x as f32 / 255.0))
+                .collect(),
+            ImageOrigin::DisplayReferred,
+        ),
+        _ => bail!("editing supports Strehl RGB32-float masters and sRGB RGB8/RGB16 TIFFs"),
+    };
+    if input_space != crate::OutputColorSpace::Srgb && origin == ImageOrigin::DisplayReferred {
+        pixels.par_chunks_mut(3).for_each(|p| {
+            p.copy_from_slice(&input_space.to_linear_srgb([p[0], p[1], p[2]]));
+        });
+    }
+    tiff_image(width, height, pixels, origin, &description)
+}
+
+fn tiff_metadata<R: std::io::Read + std::io::Seek>(
+    decoder: &mut Decoder<R>,
+) -> Result<(String, ColorType, crate::OutputColorSpace)> {
     let description = decoder
         .get_tag_ascii_string(Tag::ImageDescription)
         .unwrap_or_default();
@@ -388,45 +416,31 @@ pub fn load_tiff(path: &Path) -> Result<LinearImage> {
             .into_iter().find(|&space| profile == crate::icc::icc_output_v2(space, false))
             .context("this TIFF has an unsupported embedded color profile; convert it to sRGB before editing (foreign profiles are never silently relabeled)")?;
     }
-    let (mut pixels, origin) = match (color, decoder.read_image()?) {
-        (ColorType::RGB(32), DecodingResult::F32(v)) => {
+    match color {
+        ColorType::RGB(32) => {
             ensure!(
                 description.starts_with(LINEAR_MASTER_DESCRIPTION),
                 "float TIFF must identify a Strehl scene-linear BT.709 master; unknown primaries are not assumed"
             );
-            (v, ImageOrigin::SceneLinear)
         }
-        (ColorType::RGB(16), DecodingResult::U16(v)) => {
+        ColorType::RGB(16) | ColorType::RGB(8) => {
             ensure!(
                 !description.contains("camera-native") && !description.starts_with("Linear sRGB"),
                 "this TIFF is not an sRGB display photograph; use a scene-linear master"
             );
-            (
-                v.into_par_iter()
-                    .map(|x| srgb_decode(x as f32 / 65535.0))
-                    .collect(),
-                ImageOrigin::DisplayReferred,
-            )
-        }
-        (ColorType::RGB(8), DecodingResult::U8(v)) => {
-            ensure!(
-                !description.contains("camera-native") && !description.starts_with("Linear sRGB"),
-                "this TIFF is not an sRGB display photograph"
-            );
-            (
-                v.into_par_iter()
-                    .map(|x| srgb_decode(x as f32 / 255.0))
-                    .collect(),
-                ImageOrigin::DisplayReferred,
-            )
         }
         _ => bail!("editing supports Strehl RGB32-float masters and sRGB RGB8/RGB16 TIFFs"),
-    };
-    if input_space != crate::OutputColorSpace::Srgb && origin == ImageOrigin::DisplayReferred {
-        pixels.par_chunks_mut(3).for_each(|p| {
-            p.copy_from_slice(&input_space.to_linear_srgb([p[0], p[1], p[2]]));
-        });
     }
+    Ok((description, color, input_space))
+}
+
+fn tiff_image(
+    width: u32,
+    height: u32,
+    pixels: Vec<f32>,
+    origin: ImageOrigin,
+    description: &str,
+) -> Result<LinearImage> {
     let baseline = description
         .lines()
         .find_map(|line| line.strip_prefix("DisplayBaseline: "))
@@ -450,6 +464,10 @@ pub fn load_tiff(path: &Path) -> Result<LinearImage> {
     image.validate()?;
     Ok(image)
 }
+
+#[path = "image-thumbnail.rs"]
+mod thumbnail;
+pub use thumbnail::load_tiff_thumbnail;
 
 pub fn save_linear_tiff(path: &Path, image: &LinearImage) -> Result<()> {
     image.validate()?;

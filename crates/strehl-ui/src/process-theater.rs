@@ -687,6 +687,20 @@ impl ProcessTheater {
         self.hover_source.or(self.inspected_source)
     }
 
+    /// The timeline temporarily owns inspection even with Edit open. Canvas
+    /// gestures and clean-photo editing resume on the first paint outside it.
+    fn edit_timeline_inspection(&self) -> bool {
+        self.edit_workspace && self.inspection_frame().is_some()
+    }
+
+    fn editing_canvas(&self) -> bool {
+        self.edit_navigation && !self.edit_timeline_inspection()
+    }
+
+    fn annotating_canvas(&self) -> bool {
+        self.annotation_mode && !self.edit_timeline_inspection()
+    }
+
     fn release_timeline_source(&mut self) {
         if self.inspection_frame().is_some() || self.participation_frame.is_some() {
             self.resume_live();
@@ -1984,19 +1998,20 @@ impl ProcessTheater {
         p.rect_filled(rect, 0.0, crate::theme::BG);
         let final_owned = input.progress.stage == Stage::Complete
             && self.hero.as_ref().is_some_and(|hero| hero.plate.kind == 3);
-        self.source_relation_mix = if self.edit_workspace {
-            if final_owned && self.inspection_frame().is_some() {
-                1.0
-            } else {
+        let comparing = final_owned && self.inspection_frame().is_some();
+        // Entry retains the same continuous photo-to-comparison reveal as the
+        // Process workspace. Edit releases immediately; resetting the animation
+        // itself also makes a quick re-entry start from the actual full photo.
+        self.source_relation_mix = ui.ctx().animate_bool_with_time_and_easing(
+            ui.id().with(("source-final-companion", input.epoch)),
+            comparing,
+            if self.edit_workspace && !comparing {
                 0.0
-            }
-        } else {
-            ui.ctx().animate_bool_with_time(
-                ui.id().with(("source-final-companion", input.epoch)),
-                final_owned && self.inspection_frame().is_some(),
-                0.18,
-            )
-        };
+            } else {
+                0.18
+            },
+            egui::emath::easing::cubic_out,
+        );
         let final_extent = self
             .hero
             .as_ref()
@@ -2072,7 +2087,7 @@ impl ProcessTheater {
                 .is_some_and(|hero| hero.plate.kind == 3 && hero.previous.is_none())
         {
             self.finished_photograph(ui, rect, image_box, input);
-            if !self.annotation_mode {
+            if !self.annotating_canvas() {
                 self.final_modifier(ui, rect, image_box, input);
             }
             if !input.standalone_photo() && !self.edit_workspace {
@@ -2509,7 +2524,7 @@ impl ProcessTheater {
     }
 
     fn finished_photograph(&mut self, ui: &mut Ui, rect: Rect, image_box: Rect, input: &Input<'_>) {
-        self.result_photo.set_edit_navigation(self.edit_navigation);
+        self.result_photo.set_edit_navigation(self.editing_canvas());
         self.result_photo.suppress_diagnostics(
             input.progress.source_repair.is_some() || input.standalone_photo(),
         );
@@ -2518,7 +2533,7 @@ impl ProcessTheater {
         // Use the capture actually on screen while a newly requested preview
         // is pending. The final and approximate source then share one footprint.
         let current = self.dense_current_frame();
-        let label = if self.edit_navigation {
+        let label = if self.editing_canvas() {
             "PHOTOGRAPH / EDIT".into()
         } else if input.standalone_photo() {
             "YOUR PHOTOGRAPH".into()
@@ -2574,7 +2589,7 @@ impl ProcessTheater {
             FontId::monospace(8.0),
             if fit_hit.hovered() { INK } else { MUTED },
         );
-        if self.annotation_mode && fit_hit.clicked() {
+        if self.annotating_canvas() && fit_hit.clicked() {
             if self.source_relation_rect.is_some() {
                 self.scales.reset_view();
                 self.source_drag = None;
@@ -2595,7 +2610,7 @@ impl ProcessTheater {
             image,
         ));
         self.primary_destination = Some(image);
-        if self.annotation_mode {
+        if self.annotating_canvas() {
             // A drawing gesture has a single owner. Keep the exact photo crop,
             // but do not register a competing pan/zoom/probe widget beneath it.
             self.result_photo.cancel_gesture();
@@ -2720,7 +2735,7 @@ impl ProcessTheater {
     }
 
     fn final_modifier(&self, ui: &mut Ui, rect: Rect, _image_box: Rect, input: &Input<'_>) {
-        if self.edit_navigation
+        if self.editing_canvas()
             || input.progress.source_repair.is_some()
             || ui.input(|i| i.key_down(egui::Key::Space))
         {
@@ -3279,7 +3294,7 @@ impl ProcessTheater {
         // this deliberately as a dashed normalized-location estimate; the
         // solid region on the final photograph remains the measured domain.
         if linked
-            && !self.edit_navigation
+            && !self.editing_canvas()
             && crate::process_result::ResultPhoto::admission_visible(ui.ctx())
             && !ui.input(|i| i.key_down(egui::Key::Space))
             && let Some(analysis) = input.progress.analysis_size.or(input.progress.plane_size)

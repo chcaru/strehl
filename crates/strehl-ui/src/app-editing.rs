@@ -6,6 +6,10 @@ use strehl_edit::{Adjustments, DevelopmentRecipe};
 #[path = "edit-pane-tests.rs"]
 mod tests;
 
+#[cfg(test)]
+#[path = "edit-control-layout-tests.rs"]
+mod control_layout_tests;
+
 #[path = "edit-controls.rs"]
 pub(super) mod controls;
 
@@ -373,6 +377,8 @@ impl StrehlApp {
     }
 
     pub(super) fn edit_panel(&mut self, ui: &mut egui::Ui) {
+        ui.spacing_mut().interact_size.y = controls::ACTION_HEIGHT;
+        ui.spacing_mut().item_spacing = egui::vec2(6.0, 4.0);
         if self.editor.loaded.is_none() {
             egui::Frame::NONE.inner_margin(12).show(ui, |ui| {
                 self.editor.recovery_panel(ui);
@@ -408,6 +414,8 @@ impl StrehlApp {
         let control_scope = (self.editor.path.clone(), self.editor.selected.clone());
         egui::ScrollArea::vertical()
             .id_salt("photo-adjustments-scroll")
+            .min_scrolled_height(0.0)
+            .scroll_bar_visibility(egui::scroll_area::ScrollBarVisibility::AlwaysVisible)
             .auto_shrink([false, false])
             .show(ui, |ui| {
                 controls::adjustment_scope(
@@ -579,7 +587,7 @@ impl StrehlApp {
 
     fn edit_header(&mut self, ui: &mut egui::Ui) {
         egui::Frame::NONE
-            .inner_margin(egui::Margin::symmetric(12, 8))
+            .inner_margin(controls::pane_margin(ui, 8))
             .show(ui, |ui| {
                 ui.horizontal(|ui| {
                     let selected = self.editor.selected.is_some();
@@ -590,7 +598,7 @@ impl StrehlApp {
                         self.editor.select_photograph();
                     }
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                        ui.menu_button("···", |ui| {
+                        ui.menu_button(RichText::new("···").size(11.0), |ui| {
                             if ui.button("Import XMP preset…").clicked()
                                 && self.editor.dialog.is_none()
                             {
@@ -681,7 +689,7 @@ impl StrehlApp {
             return;
         }
         egui::Frame::NONE
-            .inner_margin(egui::Margin::symmetric(8, 4))
+            .inner_margin(controls::pane_margin(ui, 4))
             .show(ui, |ui| {
                 for tools in [
                     [
@@ -702,7 +710,7 @@ impl StrehlApp {
                             let active = self.editor.tool == tool;
                             if ui.add_sized([width, 24.0], egui::Button::new(
                                 RichText::new(label).color(if active { ACCENT } else { MUTED }))
-                                .selected(active).frame(active))
+                                .selected(active).frame(active).truncate())
                             .on_hover_text(hint)
                             .clicked()
                         {
@@ -717,14 +725,17 @@ impl StrehlApp {
         controls::rule(ui);
         egui::ScrollArea::vertical()
             .id_salt("edit-regions-list")
+            .min_scrolled_height(0.0)
             .auto_shrink([false, false])
             .show(ui, |ui| {
                 // Status belongs to the scrollable content so asynchronous
                 // progress cannot resize the drawing tools above it.
                 if let Some(status) = self.editor.magic_status() {
-                    egui::Frame::NONE.inner_margin(8).show(ui, |ui| {
-                        theme::caption(ui, status);
-                    });
+                    egui::Frame::NONE
+                        .inner_margin(egui::Margin::symmetric(12, 8))
+                        .show(ui, |ui| {
+                            theme::caption(ui, status);
+                        });
                 }
                 let mut selected = None;
                 let mut remove = None;
@@ -849,13 +860,15 @@ impl StrehlApp {
                         DrawingTool::Lasso => "Draw a loop; release to close it.",
                         DrawingTool::MagicLasso => "Enclose detail with a little background.",
                     };
-                    egui::Frame::NONE.inner_margin(8).show(ui, |ui| {
-                        ui.add(
-                            egui::Label::new(RichText::new(hint).size(11.0).color(MUTED))
-                                .truncate(),
-                        )
-                        .on_hover_text(hint);
-                    });
+                    egui::Frame::NONE
+                        .inner_margin(egui::Margin::symmetric(12, 8))
+                        .show(ui, |ui| {
+                            ui.add(
+                                egui::Label::new(RichText::new(hint).size(11.0).color(MUTED))
+                                    .truncate(),
+                            )
+                            .on_hover_text(hint);
+                        });
                 }
             });
     }
