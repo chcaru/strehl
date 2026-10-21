@@ -282,6 +282,9 @@ def await_edit_witness(output, app, session, binary_sha256, phase):
 
 
 def prepare_fixture(run, catalog_path, output):
+    # Hosted temp roots may resolve through an alias (for example /var on
+    # macOS). Compare and enforce containment using the same resolved paths.
+    run = run.resolve()
     catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
     matching = [
         item for item in catalog["runs"] if Path(item["directory"]).resolve() == run

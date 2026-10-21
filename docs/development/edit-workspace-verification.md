@@ -173,6 +173,16 @@ Edit-pane ABBA result is claimed. The new app's separate native Edit layout
 capture above remains valid. This limitation concerns the measurement setup,
 not an observed application crash or measured editing slowdown.
 
+The preceding cross-platform CI run also exposed an older fixture-path bug:
+catalog entries were resolved while the supplied run path was not, so temporary
+directory aliases failed on hosted Windows/macOS workers. The helper now resolves
+both sides before matching or enforcing containment. The alias regression must
+accept the same existing directory while still rejecting outputs outside it;
+normalizing paths does not relax that boundary.
+All 11 harness controls passed. The equivalent-path and strengthened containment
+cases both failed against the preceding helper loaded independently in memory,
+demonstrating that they detect its mismatched path comparison.
+
 | Arm | Frames | Framework CPU p95 (ms) | Summed framework CPU (ms) | UI update sum (ms) |
 | --- | ---: | ---: | ---: | ---: |
 | A1 | 672 | 4.648 | 2644.24 | 1473.01 |

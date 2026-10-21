@@ -164,9 +164,41 @@ class IsolationControls(unittest.TestCase):
                 "directory": str(run), "output": str(outside),
                 "log": str(run / "render.log"),
             }]}), encoding="utf-8")
-            with self.assertRaises(ValueError):
-                audit.prepare_fixture(run, catalog, output)
+            for argument in (run, run / ".." / "run"):
+                with self.subTest(argument=argument), self.assertRaises(ValueError) as rejected:
+                    audit.prepare_fixture(argument, catalog, output)
+                # A path-containment refusal is required, not an earlier failure
+                # to recognize the same saved run under its equivalent spelling.
+                self.assertNotIn("exactly one record", str(rejected.exception))
             self.assertFalse((output / "fixture").exists())
+            self.assertEqual(outside.read_bytes(), b"never copied")
+
+    def test_equivalent_noncanonical_run_is_matched_and_remapped(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            run, output = base / "run", base / "audit"
+            run.mkdir()
+            output.mkdir()
+            alias = run / ".." / "run"
+            self.assertNotEqual(alias, alias.resolve())
+            self.assertTrue(alias.is_dir())
+            for name in ("result.tiff", "render.log"):
+                (run / name).write_bytes(("original " + name).encode())
+            catalog = base / "projects.json"
+            catalog.write_text(json.dumps({"runs": [{
+                "directory": str(run.resolve()), "output": str(run / "result.tiff"),
+                "log": str(run / "render.log"),
+            }]}), encoding="utf-8")
+            original = catalog.read_bytes()
+            fixture, state, protected = audit.prepare_fixture(alias, catalog, output)
+            isolated = json.loads((state / "Strehl/projects.json").read_text())
+            self.assertEqual(isolated["runs"][0]["directory"], str(fixture))
+            self.assertEqual(isolated["runs"][0]["output"], str(fixture / "result.tiff"))
+            self.assertEqual((fixture / "result.tiff").read_bytes(), b"original result.tiff")
+            self.assertEqual(catalog.read_bytes(), original)
+            self.assertEqual(len(protected), 2)
+            for path, before in protected.items():
+                self.assertEqual(audit.digest(Path(path)), before)
 
 
 if __name__ == "__main__":
