@@ -85,7 +85,7 @@ pub(crate) fn slider(
         let label_rect =
             Rect::from_min_max(rect.min, egui::pos2(number.left() - 4.0, number.bottom()));
         let label_hit = ui.interact(label_rect, ui.id().with("label"), Sense::click());
-        ui.painter().text(
+        ui.painter().with_clip_rect(label_rect).text(
             label_rect.left_center(),
             Align2::LEFT_CENTER,
             label,

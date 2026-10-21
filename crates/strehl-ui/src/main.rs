@@ -68,6 +68,8 @@ mod process_theater;
 mod processing_view;
 #[path = "project-explorer.rs"]
 mod project_explorer;
+#[path = "reveal-path.rs"]
+mod reveal_path;
 #[path = "source-browser.rs"]
 mod source_browser;
 #[path = "source-preview.rs"]
@@ -112,6 +114,7 @@ pub struct LaunchOptions {
     pub process: bool,
     pub edit: bool,
     pub export: bool,
+    pub projects: bool,
     pub agent: bool,
 }
 
@@ -148,6 +151,10 @@ fn main() -> eframe::Result {
         }
         if arg == "--export" {
             launch.export = true;
+            continue;
+        }
+        if arg == "--projects" {
+            launch.projects = true;
             continue;
         }
         if arg == "--agent" {
@@ -258,7 +265,7 @@ fn main() -> eframe::Result {
             Some("--activity-log") => &mut launch.activity_log,
             _ => {
                 eprintln!(
-                    "Usage: Strehl [--source DIR] [--open-run DIR] [--browse DIR] [--preview IMAGE] [--engine EXE] [--process] [--edit | --export] [--agent] [--screenshot PNG]"
+                    "Usage: Strehl [--source DIR] [--open-run DIR] [--browse DIR] [--preview IMAGE] [--engine EXE] [--process] [--edit | --export | --projects] [--agent] [--screenshot PNG]"
                 );
                 std::process::exit(2);
             }

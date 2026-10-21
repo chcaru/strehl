@@ -52,6 +52,7 @@ pub(crate) struct EditorState {
     pub tool: DrawingTool,
     pub before: bool,
     pub show_regions: bool,
+    pub fit_view_requested: bool,
     pub drag: Option<egui::Pos2>,
     pub polygon: Vec<[f32; 2]>,
     region_interaction: regions::RegionInteraction,

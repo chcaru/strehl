@@ -546,6 +546,225 @@ fn camera_photos(ctx: &egui::Context) -> Vec<SourcePhoto> {
 }
 
 #[test]
+fn edit_timeline_comparison_ends_on_exit_even_after_click_or_captured_drag() {
+    for editing in [false, true] {
+        for interaction in ["hover", "click", "drag", "pointer-gone", "popup"] {
+            let ctx = egui::Context::default();
+            let mut space = ProcessSpace::default();
+            space.set_edit_workspace(editing);
+            space.set_edit_focus(editing);
+            space.set_edit_navigation(editing);
+            let photos = camera_photos(&ctx);
+            let result = texture(&ctx, "exit-final", Color32::GOLD);
+            let mut p = PipelineProgress::default();
+            p.ingest("planes : 120 x 80 per CFA plane\ncoverage : field of view scaled to 0.9500 so that EVERY frame covers every pixel\nwrote : result.tiff (240 x 160, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)\n");
+            p.mark_complete();
+            let data = Input {
+                photos: &photos,
+                inspection_photos: &photos,
+                output: Some(&result),
+                output_size: Some([240, 160]),
+                ..input(&p)
+            };
+            draw(&mut space, &ctx, data, 0.0, vec![]);
+            let (_, initial) = draw(&mut space, &ctx, data, 0.6, vec![]);
+            let original = largest_image(&initial, result.id()).unwrap();
+            let at = contact_at(&initial, 7);
+            draw(
+                &mut space,
+                &ctx,
+                data,
+                0.8,
+                vec![egui::Event::PointerMoved(at)],
+            );
+            if interaction == "click" || interaction == "popup" {
+                click(&mut space, &ctx, data, 0.9, at);
+            } else if interaction == "drag" {
+                draw(
+                    &mut space,
+                    &ctx,
+                    data,
+                    0.9,
+                    vec![pointer(at, true, egui::Modifiers::NONE)],
+                );
+                draw(
+                    &mut space,
+                    &ctx,
+                    data,
+                    1.0,
+                    vec![egui::Event::PointerMoved(at + egui::vec2(18.0, 0.0))],
+                );
+            }
+            let (_, compared) = draw(&mut space, &ctx, data, 1.3, vec![]);
+            assert!(
+                space.inspection_frame().is_some(),
+                "fixture must actually enter {interaction} comparison"
+            );
+            let compared_area = largest_image(&compared, result.id()).unwrap().area();
+            assert!(
+                compared_area < original.area() * 0.8,
+                "fixture must paint split photos"
+            );
+            if interaction == "popup" {
+                egui::Popup::open_id(&ctx, egui::Id::new("edit-timeline-review-popup"));
+                assert!(egui::Popup::is_any_open(&ctx));
+            }
+            let (response, exited) = draw(
+                &mut space,
+                &ctx,
+                data,
+                1.31,
+                vec![if interaction == "pointer-gone" {
+                    egui::Event::PointerGone
+                } else if interaction == "popup" {
+                    egui::Event::PointerMoved(at)
+                } else {
+                    egui::Event::PointerMoved(original.center())
+                }],
+            );
+            if editing {
+                assert_eq!(space.inspection_frame(), None, "{interaction}");
+                assert_eq!(
+                    response.selected, None,
+                    "outside captured drag cannot reopen source"
+                );
+                assert_eq!(
+                    largest_image(&exited, result.id()).unwrap(),
+                    original,
+                    "full photo returns in the actual exit paint, with no settling timer"
+                );
+                let (_, stationary) = draw(&mut space, &ctx, data, 1.32, vec![]);
+                assert_eq!(space.inspection_frame(), None);
+                assert_eq!(largest_image(&stationary, result.id()).unwrap(), original);
+            } else {
+                assert!(
+                    space.inspection_frame().is_some(),
+                    "Process retains the comparison as before"
+                );
+            }
+        }
+    }
+}
+
+#[test]
+fn edit_compact_timeline_reclaims_photo_space_and_keeps_plain_wheel_zoom() {
+    let ctx = egui::Context::default();
+    let mut space = ProcessSpace::default();
+    space.set_edit_workspace(true);
+    space.set_edit_focus(true);
+    space.set_edit_navigation(true);
+    let photos = camera_photos(&ctx);
+    let result = texture(&ctx, "compact-final", Color32::GREEN);
+    let mut p = PipelineProgress::default();
+    p.ingest("planes : 120 x 80 per CFA plane\ncoverage : field of view scaled to 0.9500 so that EVERY frame covers every pixel\nwrote : result.tiff (240 x 160, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)\n");
+    p.mark_complete();
+    let data = Input {
+        photos: &photos,
+        inspection_photos: &photos,
+        output: Some(&result),
+        output_size: Some([240, 160]),
+        ..input(&p)
+    };
+    draw(&mut space, &ctx, data, 0.0, vec![]);
+    let (_, initial) = draw(&mut space, &ctx, data, 0.6, vec![]);
+    let photo = largest_image(&initial, result.id()).unwrap();
+    assert!(
+        photo.height() > 430.0,
+        "photo must occupy reclaimed title/footer/timeline space: {photo:?}"
+    );
+    assert!(
+        photos
+            .iter()
+            .any(|source| largest_image(&initial, source.texture.id())
+                .is_some_and(|r| r.height() > 55.0 && r.bottom() < 720.0)),
+        "compact still means readable, fully visible thumbnails"
+    );
+    assert!(!initial.shapes.iter().any(|s| matches!(&s.shape, egui::Shape::Text(t) if t.galley.text().contains("PHOTOGRAPH COMPLETE") || t.galley.text() == "Source + final")));
+    let at = photo.center();
+    draw(
+        &mut space,
+        &ctx,
+        data,
+        0.7,
+        vec![egui::Event::PointerMoved(at)],
+    );
+    draw(
+        &mut space,
+        &ctx,
+        data,
+        0.8,
+        vec![egui::Event::MouseWheel {
+            unit: egui::MouseWheelUnit::Point,
+            delta: egui::vec2(0.0, 180.0),
+            modifiers: egui::Modifiers::NONE,
+        }],
+    );
+    for frame in 0..12 {
+        draw(&mut space, &ctx, data, 0.9 + frame as f64 * 0.1, vec![]);
+    }
+    let (full_before, visible_before) = space.edit_mapping().unwrap();
+    let zoom_before = full_before.width() / visible_before.width();
+    assert!(
+        zoom_before > 1.001,
+        "unmodified wheel must navigate in Edit: {zoom_before}"
+    );
+    let (_, scene) = draw(&mut space, &ctx, data, 2.2, vec![]);
+    click(&mut space, &ctx, data, 2.3, contact_at(&scene, 7));
+    draw(
+        &mut space,
+        &ctx,
+        data,
+        2.4,
+        vec![egui::Event::PointerMoved(at)],
+    );
+    let (full_after, visible_after) = space.edit_mapping().unwrap();
+    assert!(
+        (full_after.width() / visible_after.width() - zoom_before).abs() < 0.001,
+        "exit changes the layout, never the chosen crop"
+    );
+    assert!(
+        ((visible_after.center() - full_after.min) / full_after.size()
+            - (visible_before.center() - full_before.min) / full_before.size())
+        .length()
+            < 0.001
+    );
+}
+
+#[test]
+fn edit_workspace_leaves_escape_for_the_annotation_owner() {
+    for editing in [false, true] {
+        let ctx = egui::Context::default();
+        let mut space = ProcessSpace::default();
+        space.set_edit_workspace(editing);
+        let progress = PipelineProgress::default();
+        let mut still_pressed = false;
+        let _ = ctx.run(
+            egui::RawInput {
+                screen_rect: Some(Rect::from_min_size(Pos2::ZERO, egui::vec2(1060.0, 720.0))),
+                events: vec![egui::Event::Key {
+                    key: egui::Key::Escape,
+                    physical_key: None,
+                    pressed: true,
+                    repeat: false,
+                    modifiers: egui::Modifiers::NONE,
+                }],
+                ..Default::default()
+            },
+            |ctx| {
+                egui::CentralPanel::default().show(ctx, |ui| {
+                    space.show(ui, input(&progress));
+                    still_pressed = ctx.input(|i| i.key_pressed(egui::Key::Escape));
+                });
+            },
+        );
+        assert_eq!(
+            still_pressed, editing,
+            "Edit cancels geometry/scope; Process keeps its existing fit shortcut"
+        );
+    }
+}
+
+#[test]
 fn timeline_source_sweep_uses_the_primary_photo_and_never_requests_another_dock() {
     let ctx = egui::Context::default();
     let mut space = ProcessSpace::default();

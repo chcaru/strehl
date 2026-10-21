@@ -115,27 +115,38 @@ fn duplicate_region(
     Ok(())
 }
 
-fn region_shelf(ui: &mut egui::Ui, open: bool, contents: impl FnOnce(&mut egui::Ui)) {
-    // A collapsed panel must not overwrite the persisted expanded height.
-    let mut shelf = egui::TopBottomPanel::bottom(if open {
+fn region_shelf(
+    ui: &mut egui::Ui,
+    open: bool,
+    populated: bool,
+    contents: impl FnOnce(&mut egui::Ui),
+) {
+    // Empty and collapsed states cannot overwrite the user's populated height.
+    let mut shelf = egui::TopBottomPanel::bottom(if !open {
+        "edit-regions-shelf-collapsed"
+    } else if populated {
         "edit-regions-shelf"
     } else {
-        "edit-regions-shelf-collapsed"
+        "edit-regions-shelf-empty"
     })
     .show_separator_line(false)
     .frame(egui::Frame::NONE.fill(PANEL));
-    if open {
+    if open && populated {
         let max_height = (ui.available_height() * 0.48).max(174.0);
         shelf = shelf
             .resizable(true)
             .default_height(222.0)
             .height_range(174.0..=max_height);
-    } else {
+    } else if !open {
         shelf = shelf.resizable(false).exact_height(29.0);
+    } else {
+        // Fixed tool geometry; drawing or finishing a draft cannot make the
+        // shelf chase the pointer. The first committed region restores the list.
+        shelf = shelf.resizable(false).exact_height(150.0);
     }
     shelf.show_inside(ui, |ui| {
-        // Even an empty list retains the chosen height. Frame::NONE otherwise
-        // reports only its contents' minimum size to the persistent panel state.
+        // Frame::NONE otherwise reports only its contents' minimum size to the
+        // persistent panel state, erasing the user's resized list height.
         ui.set_min_height(ui.available_height());
         contents(ui);
     });
@@ -237,7 +248,11 @@ pub(super) struct RegionalInspector {
 impl StrehlApp {
     pub(super) fn handle_close(&mut self, ctx: &egui::Context) {
         let requested = ctx.input(|input| input.viewport().close_requested());
-        if !requested && !self.close_after_export && !self.close_after_presets {
+        if !requested
+            && !self.close_after_export
+            && !self.close_after_presets
+            && !self.close_after_photo_history
+        {
             return;
         }
         if self.editor.exporting.is_some() {
@@ -250,6 +265,7 @@ impl StrehlApp {
         let waited = std::mem::take(&mut self.close_after_export);
         if waited && self.editor.last_export.is_none() {
             self.close_after_presets = false;
+            self.close_after_photo_history = false;
             // Encoding failed: keep its explanation and the editable image
             // visible instead of closing on a failed background operation.
             ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
@@ -273,11 +289,29 @@ impl StrehlApp {
             }
             Ok(true) => {}
         }
+        let waited_for_history = std::mem::take(&mut self.close_after_photo_history);
+        match self.flush_photo_history(ctx) {
+            Ok(false) => {
+                self.close_after_photo_history = true;
+                ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
+                self.status = "Saving photograph history before closing…".into();
+                ctx.request_repaint_after(Duration::from_millis(100));
+                return;
+            }
+            Err(error) => {
+                ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
+                self.editor.error =
+                    Some(format!("Photograph history could not be saved: {error:#}"));
+                self.sidebar = Some(workspace::Sidebar::Projects);
+                return;
+            }
+            Ok(true) => {}
+        }
         if let Err(error) = self.editor.ensure_saved_on_close() {
             ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
             self.editor.error = Some(format!("Edits could not be saved: {error:#}"));
             self.sidebar = Some(workspace::Sidebar::Edit);
-        } else if waited || waited_for_presets {
+        } else if waited || waited_for_presets || waited_for_history {
             ctx.send_viewport_cmd(egui::ViewportCommand::Close);
         }
     }
@@ -291,6 +325,7 @@ impl StrehlApp {
             self.editor.open(path.clone());
         }
         self.editor.poll(ctx, self.max_texture_side);
+        self.poll_photo_history(ctx);
         self.edit_pane.reconcile(&self.editor);
         self.poll_adaptive(ctx);
         self.poll_presets(ctx);
@@ -362,7 +397,14 @@ impl StrehlApp {
             .ctx()
             .data_mut(|data| data.get_temp::<bool>(egui::Id::new("regions-shelf-open")))
             .unwrap_or(true);
-        region_shelf(ui, shelf_open, |ui| self.edit_region_shelf(ui, shelf_open));
+        region_shelf(
+            ui,
+            shelf_open,
+            !self.editor.recipe.regions.is_empty(),
+            |ui| {
+                self.edit_region_shelf(ui, shelf_open);
+            },
+        );
         let control_scope = (self.editor.path.clone(), self.editor.selected.clone());
         egui::ScrollArea::vertical()
             .id_salt("photo-adjustments-scroll")
@@ -374,10 +416,12 @@ impl StrehlApp {
                     control_scope.1.as_deref(),
                     |ui| {
                         ui.spacing_mut().item_spacing.y = 0.0;
-                        egui::Frame::NONE.inner_margin(12).show(ui, |ui| {
-                            self.editor.recovery_panel(ui);
-                            self.adaptive_panel(ui);
-                        });
+                        self.editor.recovery_panel(ui);
+                        if controls::section(ui, "adaptive", "Adaptive", true) {
+                            egui::Frame::NONE
+                                .inner_margin(egui::Margin::symmetric(12, 7))
+                                .show(ui, |ui| self.adaptive_panel(ui));
+                        }
                         if controls::section(ui, "presets", "Presets", false) {
                             egui::Frame::NONE
                                 .inner_margin(12)
@@ -539,12 +583,11 @@ impl StrehlApp {
             .show(ui, |ui| {
                 ui.horizontal(|ui| {
                     let selected = self.editor.selected.is_some();
-                    if controls::quiet_button(ui, "Photograph", !selected)
-                        .on_hover_text("Adjust the whole photograph")
+                    if controls::quiet_button(ui, "Whole photograph", !selected)
+                        .on_hover_text("Leave the region and edit the whole photograph · Esc also clears a selection")
                         .clicked()
                     {
-                        self.editor.selected = None;
-                        self.editor.cancel_geometry();
+                        self.editor.select_photograph();
                     }
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                         ui.menu_button("···", |ui| {
@@ -560,7 +603,7 @@ impl StrehlApp {
                                     }));
                                 ui.close();
                             }
-                            if ui.button("Reset selected adjustments").clicked() {
+                            if ui.button(if selected { "Reset region adjustments" } else { "Reset whole-photo adjustments" }).clicked() {
                                 *self.current_adjustments() = Adjustments::default();
                                 self.editor
                                     .recipe
@@ -579,47 +622,25 @@ impl StrehlApp {
                         }
                     });
                 });
-                if let Some(presenter) = &self.editor.viewport.presenter {
-                    let display = presenter.status();
-                    let raw =
-                        self.editor.loaded.as_ref().is_some_and(|p| {
-                            p.image.origin == strehl_edit::ImageOrigin::SceneLinear
-                        });
-                    let caption = match (display.active, raw) {
-                        (true, true) => "HDR display · HDR photograph",
-                        (true, false) => "HDR display · SDR photograph",
-                        (false, true) => "SDR display · HDR photograph",
-                        (false, false) => "SDR display · SDR photograph",
-                    };
-                    ui.add(
-                        egui::Label::new(RichText::new(caption).size(10.0).color(MUTED)).truncate(),
-                    )
-                    .on_hover_text(format!(
-                        "{} · {}\nDisplay & export has the full display and photo details.",
-                        display.monitor, display.reason
-                    ));
-                }
                 let region = self
                     .editor
                     .selected
                     .as_ref()
                     .and_then(|id| self.editor.recipe.regions.iter().find(|r| &r.id == id));
                 if let Some(region) = region {
-                    ui.add(
-                        egui::Label::new(RichText::new(&region.name).size(13.0).color(ACCENT))
-                            .truncate(),
-                    );
-                    theme::caption(
-                        ui,
-                        if region.enabled {
-                            "Light & color · selected region · live"
-                        } else {
-                            "Region disabled · enable it in Regions to see edits"
-                        },
-                    );
-                } else {
-                    theme::caption(ui, "Light & color · whole photograph · live");
+                    let name = region.name.clone();
+                    let enabled = region.enabled;
+                    ui.horizontal(|ui| {
+                        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                            if controls::quiet_button(ui, "Clear", false)
+                                .on_hover_text("Keep the region, return to whole-photograph editing")
+                                .clicked() { self.editor.select_photograph(); }
+                            ui.add(egui::Label::new(RichText::new(name).size(11.0).color(if enabled { ACCENT } else { AMBER })).truncate());
+                        });
+                    });
+                    if !enabled { theme::caption(ui, "Region disabled · enable it in Regions to see edits"); }
                 }
+                self.photo_history_edit_actions(ui);
             });
     }
 
@@ -690,16 +711,21 @@ impl StrehlApp {
                     }
                     });
                 }
-                theme::caption(ui, "Space: pan / zoom · Alt: inspect · Esc: cancel");
-                if let Some(status) = self.editor.magic_status() {
-                    theme::caption(ui, status);
-                }
+                ui.add(egui::Label::new(RichText::new("Scroll: zoom · Space: pan image · Alt: inspect").size(10.0).color(MUTED)).truncate())
+                    .on_hover_text("Select: drag empty image to pan, drag a region to move it. Esc cancels a drawing, then clears selection. Double-click the image to fit.");
             });
         controls::rule(ui);
         egui::ScrollArea::vertical()
             .id_salt("edit-regions-list")
             .auto_shrink([false, false])
             .show(ui, |ui| {
+                // Status belongs to the scrollable content so asynchronous
+                // progress cannot resize the drawing tools above it.
+                if let Some(status) = self.editor.magic_status() {
+                    egui::Frame::NONE.inner_margin(8).show(ui, |ui| {
+                        theme::caption(ui, status);
+                    });
+                }
                 let mut selected = None;
                 let mut remove = None;
                 let mut duplicate = None;
@@ -813,8 +839,22 @@ impl StrehlApp {
                     self.editor.error = Some(error.to_string());
                 }
                 if self.editor.recipe.regions.is_empty() {
-                    egui::Frame::NONE.inner_margin(12).show(ui, |ui| {
-                        theme::caption(ui, "Draw on the photograph to adjust just that area.");
+                    let hint = match self.editor.tool {
+                        DrawingTool::Navigate | DrawingTool::Select => {
+                            "Choose a shape to add a region."
+                        }
+                        DrawingTool::Ellipse => "Drag an ellipse on the photograph.",
+                        DrawingTool::Rectangle => "Drag a rectangle on the photograph.",
+                        DrawingTool::Polygon => "Click points; Enter finishes the region.",
+                        DrawingTool::Lasso => "Draw a loop; release to close it.",
+                        DrawingTool::MagicLasso => "Enclose detail with a little background.",
+                    };
+                    egui::Frame::NONE.inner_margin(8).show(ui, |ui| {
+                        ui.add(
+                            egui::Label::new(RichText::new(hint).size(11.0).color(MUTED))
+                                .truncate(),
+                        )
+                        .on_hover_text(hint);
                     });
                 }
             });

@@ -25,7 +25,7 @@ pub use image::{
     DisplayBaseline, ImageOrigin, LinearImage, load_tiff, save_linear_tiff, save_sdr_tiff,
 };
 pub use recipe::{
-    AdaptiveParameters, Adjustments, DevelopmentRecipe, HdrSettings, MAX_SPATIAL_TREATMENTS,
-    RegionAdjustment, RegionShape, SourceRange, SpatialTreatment,
+    AdaptiveParameters, AdaptiveToneRange, Adjustments, DevelopmentRecipe, HdrSettings,
+    MAX_SPATIAL_TREATMENTS, RegionAdjustment, RegionShape, SourceRange, SpatialTreatment,
 };
 pub use xmp::{XmpImport, import_xmp};

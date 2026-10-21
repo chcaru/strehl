@@ -89,6 +89,7 @@ pub struct ProcessSpace {
     theater: ProcessTheater,
     journey: crate::process_journey::ProcessJourney,
     output_path: Option<std::path::PathBuf>,
+    edit_timeline_height: f32,
 }
 impl ProcessSpace {
     pub(crate) fn set_photo_paint(&mut self, paint: Option<crate::photo_viewport::PhotoPaint>) {
@@ -106,9 +107,15 @@ impl ProcessSpace {
     pub(crate) fn set_edit_focus(&mut self, active: bool) {
         self.theater.edit_focus = active;
     }
+    pub(crate) fn set_edit_workspace(&mut self, active: bool) {
+        self.theater.edit_workspace = active;
+    }
     pub(crate) fn set_photo_view(&mut self, center: [f32; 2], zoom: f32) {
         self.theater
             .set_photo_view(egui::pos2(center[0], center[1]), zoom);
+    }
+    pub(crate) fn fit_edit_view(&mut self) {
+        self.theater.fit_edit_view();
     }
     pub(crate) fn set_output_path(&mut self, path: Option<&std::path::Path>) {
         if self.output_path.as_deref() != path {
@@ -180,18 +187,22 @@ impl ProcessSpace {
             let annotation_mode = self.theater.annotation_mode;
             let edit_navigation = self.theater.edit_navigation;
             let edit_focus = self.theater.edit_focus;
+            let edit_workspace = self.theater.edit_workspace;
+            let edit_timeline_height = self.edit_timeline_height;
             let photo_paint = self.theater.photo_paint.clone();
             let requested_view = self.theater.requested_view;
             let output_path = self.output_path.take();
             *self = Self {
                 epoch: Some(input.epoch),
                 output_path,
+                edit_timeline_height,
                 ..Default::default()
             };
             self.theater.layout = layout;
             self.theater.annotation_mode = annotation_mode;
             self.theater.edit_navigation = edit_navigation;
             self.theater.edit_focus = edit_focus;
+            self.theater.edit_workspace = edit_workspace;
             self.theater.set_photo_paint(photo_paint);
             if let Some((center, zoom)) = requested_view {
                 self.theater.set_photo_view(center, zoom);
@@ -241,24 +252,40 @@ impl ProcessSpace {
                 crate::process_journey::HEIGHT,
             ),
         );
-        let edit_chrome = ui.ctx().animate_bool_with_time(
-            ui.id().with("photo-edit-chrome"),
-            self.theater.edit_focus && input.progress.stage == Stage::Complete,
-            0.18,
-        );
+        let editing = self.theater.edit_workspace && input.progress.stage == Stage::Complete;
+        // Pane changes do not start a second geometry animation underneath
+        // an image gesture. Source inspection never changes this chrome.
+        let edit_chrome = if self.theater.edit_focus && input.progress.stage == Stage::Complete {
+            1.0
+        } else {
+            0.0
+        };
         if edit_chrome < 0.001 {
             self.journey.show(ui, journey, input.epoch, input.progress);
         }
         // One persistent timeline owns capture browsing, sampled participation,
         // and source inspection. Its seam never participates in
         // egui's auto-sizing feedback: only a pointer drag changes the fraction.
-        let minimum_timeline = crate::process_participation::HEIGHT + 25.0;
+        let minimum_timeline = if editing {
+            crate::process_participation::EDIT_HEIGHT
+        } else {
+            crate::process_participation::HEIGHT
+        } + 25.0;
         let maximum_timeline = (scene.height() - 340.0).clamp(minimum_timeline, 420.0);
-        let default_timeline = (scene.height() * 0.29).clamp(minimum_timeline, 300.0);
+        let default_timeline = if editing {
+            minimum_timeline
+        } else {
+            (scene.height() * 0.29).clamp(minimum_timeline, 300.0)
+        };
+        let lower = if editing {
+            &mut self.edit_timeline_height
+        } else {
+            &mut self.theater.layout.lower
+        };
         let height = |lower: f32| {
             (default_timeline + scene.height() * lower).clamp(minimum_timeline, maximum_timeline)
         };
-        let boundary = scene.bottom() - height(self.theater.layout.lower) - 7.0;
+        let boundary = scene.bottom() - height(*lower) - 7.0;
         let seam = Rect::from_min_max(
             egui::pos2(scene.left(), boundary - 7.0),
             egui::pos2(scene.right(), boundary + 1.0),
@@ -266,13 +293,12 @@ impl ProcessSpace {
         let (delta, reset) =
             crate::workspace_layout::seam(ui, "process-timeline-height", seam, false);
         if reset {
-            self.theater.layout.lower = 0.0;
+            *lower = 0.0;
         } else if delta != 0.0 {
-            let next = (height(self.theater.layout.lower) - delta)
-                .clamp(minimum_timeline, maximum_timeline);
-            self.theater.layout.lower = (next - default_timeline) / scene.height().max(1.0);
+            let next = (height(*lower) - delta).clamp(minimum_timeline, maximum_timeline);
+            *lower = (next - default_timeline) / scene.height().max(1.0);
         }
-        let bottom = height(self.theater.layout.lower) + 14.0;
+        let bottom = height(*lower) + 14.0;
         let body = Rect::from_min_max(
             scene.min + egui::vec2(12.0, 92.0 - 80.0 * edit_chrome),
             scene.max - egui::vec2(12.0, bottom),

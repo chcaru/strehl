@@ -67,8 +67,48 @@ closes it. **Lasso** draws a freehand boundary while the mouse is held down.
 **Select** moves regions and exposes resize handles or editable vertices.
 Double-click a polygon edge to add a point; Delete/Backspace removes a selected
 point while retaining at least three. Escape cancels the current gesture before
-changing the selection. Hold **Space** for photo navigation and **Alt** for
-diagnostic inspection, so the inspection overlay does not compete with editing.
+changing the selection. **Whole photograph** (or **Clear** beside the region name)
+leaves regional editing without deleting the region. Scroll to zoom; in
+Select, drag outside regions to pan. Hold **Space** only when a drawing or region
+would otherwise own the drag, and **Alt** for diagnostic inspection. Double-click
+the photograph to fit; a polygon edge retains its local add-point action.
+
+Edit uses a compact timeline and photo chrome. Source inspection lasts only
+while the pointer is inside the timeline; leaving restores the full photograph,
+including after a clicked or dragged source sweep. The linked crop and pinned
+capture ranges remain. Process mode retains its longer inspection grace.
+
+### Photograph versions
+
+**Save version…** names an immutable snapshot of the current edits. **Versions**
+opens Projects, where versions and their exported files appear beneath the
+owning result. Standalone TIFFs have their own Photographs group. Restoring a
+version first saves the current treatment, then applies the selected version as
+one Undo action. Restoring the already-applied recipe adds no backup or Undo.
+Version names can be changed without changing their recipe.
+
+The stack's **Captures** row opens its sources; results, saved edit versions, and
+exports stay together beneath that stack. Drag stacks or virtual folders onto a
+project or folder to organize them. This changes library organization only, never
+moves photograph files, and can be undone. Standalone TIFFs remain in the separate
+Photographs group in this release.
+
+Press **F2** on a selected row, or choose **Rename** in its context menu, to edit
+its name in place; **Enter** saves and **Escape** discards. The context menu also
+offers **Reveal in Explorer** for real source folders, results, saved edit files,
+and exports. Virtual folders do not represent folders on disk.
+
+Row thumbnails and larger hover previews share a bounded background cache. Saved
+edit previews are rendered from the saved recipe when the matching photograph is
+open and its loaded-pixel identity matches; otherwise the hover explicitly labels
+the base photograph. AVIF and wide-gamut/HDR exports use a labeled saved-edit or
+base preview rather than an inaccurate decoding of their delivery colors. Large
+trees prioritize their admitted visible preview set within a fixed memory budget.
+
+Versions bind to the TIFF, the decoded master, and the loaded pixels. A changed
+underlying photograph cannot silently inherit an older measured treatment.
+Hashing runs on a worker. Concurrent library writes are detected; recovery keeps
+this window's catalog before loading the other window's saved library.
 
 **Magic lasso** is experimental image-guided selection: draw a loose enclosure
 with a little background around an object or defect. It measures supported
@@ -145,8 +185,7 @@ SDR white, while the photograph retains supported highlight headroom. Moving
 between displays or changing HDR availability refreshes the presentation.
 
 The status bar and **Edit → Display** report the active mode. File delivery has
-its own **Export** pane. The Edit
-header reports the display mode separately from the photograph's origin. An old
+its own **Export** pane. Display mode is separate from the photograph's origin. An old
 SDR TIFF stays SDR even on an HDR monitor. Unsupported graphics backends, Linux,
 and displays without active HDR use the SDR path. The app never enables Windows
 HDR or changes display brightness for you. An HDR screenshot is an SDR proxy;
@@ -175,8 +214,8 @@ Private preset contents are not copied into the repository.
 
 ## Spatial light and color
 
-In **Edit → Spatial light & color**, choose **Analyze photograph** or, with an
-annotation selected, **Analyze region**. The treatment responds to both location
+In **Edit → Adaptive**, choose **Analyze** for the whole photograph or the
+selected region. The treatment responds to both location
 and pixel brightness: similar colors in different parts of the photograph can
 receive different adjustments. It preserves the ordinary Light/Color sliders
 and stores its local curves separately in the recipe. It is deterministic,
@@ -186,8 +225,14 @@ Adaptive Color.
 **Amount** controls the stored treatment without analyzing the image again.
 It remains available after reopening; zero disables that scope's treatment,
 and returning to the previous amount restores it without compounding edits.
-Under **Shape the treatment**, adjust **Light balance**, **Local contrast**, and
-**Color**, then choose **Recalculate treatment**. Those parameter changes are
+Choose **Natural**, **Deep background**, **Texture contrast**, or **Gentle highlights**,
+then **Analyze**. These are starting choices for measured local curves, not
+trained models or semantic object masks. Under **Shape treatment**, choose a
+tonal range and adjust **Light balance**, **Local contrast**, **Color**,
+**Protect shadows**, and **Soften highlights**, then choose **Recalculate**.
+Bright-tone compression lowers existing bright light without compensating by
+lifting the rest of the photograph; it cannot restore sensor-clipped texture.
+Those parameter changes are
 drafts until recalculation, so dragging a control does not repeatedly run an
 analysis. Manual adjustments and other regions remain intact. Undo restores
 the previous recipe.

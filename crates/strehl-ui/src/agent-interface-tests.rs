@@ -240,3 +240,38 @@ fn bounded_png_helper_and_base64_have_independent_known_vectors() {
     assert!(AgentImage::png(&too_wide).is_err());
     assert!(AgentImage::png(b"not an image").is_err());
 }
+
+#[test]
+fn edit_version_commands_require_valid_names_ids_and_current_revision() {
+    for command in [
+        AgentCommand::SaveEditVersion {
+            name: "Reflection repair".into(),
+        },
+        AgentCommand::RestoreEditVersion {
+            id: "0123456789abcdef0123456789abcdef".into(),
+        },
+    ] {
+        command.validate().unwrap();
+        assert!(!command.is_read_only());
+        let request = AgentRequest {
+            expected_revision: Some(41),
+            command,
+        };
+        assert!(request.check_revision(42).is_err());
+        request.check_revision(41).unwrap();
+    }
+    for name in ["", " ", "bad\nname", &"x".repeat(121)] {
+        assert!(
+            AgentCommand::SaveEditVersion { name: name.into() }
+                .validate()
+                .is_err()
+        );
+    }
+    for id in ["../file", "0123456789ABCDEF0123456789ABCDEF", "0123"] {
+        assert!(
+            AgentCommand::RestoreEditVersion { id: id.into() }
+                .validate()
+                .is_err()
+        );
+    }
+}

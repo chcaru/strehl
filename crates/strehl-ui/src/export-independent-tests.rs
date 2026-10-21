@@ -83,6 +83,51 @@ fn expand_options(ctx: &egui::Context) {
 }
 
 #[test]
+fn destination_and_saved_filename_offer_local_file_actions_without_starting_work() {
+    for label in ["destination", "delivery.avif"] {
+        let mut app = photograph(ImageOrigin::DisplayReferred);
+        app.catalog.export_directories.insert(
+            app.editor.path.clone().unwrap(),
+            PathBuf::from("fixtures/destination"),
+        );
+        app.editor.last_export = Some(PathBuf::from("fixtures/destination/delivery.avif"));
+        let before = app.editor.recipe.clone();
+        let revision = app.editor.revision;
+        let context = egui::Context::default();
+        // The bottom panel discovers its content height on its first paint;
+        // interact with the next settled layout, as the native window does.
+        let _ = paint(&mut app, &context, 0.0, Vec::new());
+        let initial = paint(&mut app, &context, 0.05, Vec::new());
+        let at = text_rect(&initial, label)
+            .unwrap_or_else(|| panic!("Missing visible path: {label}"))
+            .center();
+        for (time, pressed) in [(0.1, true), (0.2, false)] {
+            let _ = paint(
+                &mut app,
+                &context,
+                time,
+                vec![
+                    egui::Event::PointerMoved(at),
+                    egui::Event::PointerButton {
+                        pos: at,
+                        button: egui::PointerButton::Secondary,
+                        pressed,
+                        modifiers: egui::Modifiers::NONE,
+                    },
+                ],
+            );
+        }
+        let menu = paint(&mut app, &context, 0.3, Vec::new());
+        assert!(text_rect(&menu, "Reveal in Explorer").is_some(), "{label}");
+        assert!(text_rect(&menu, "Copy path").is_some(), "{label}");
+        assert!(!app.photo_history_busy());
+        assert!(app.editor.exporting.is_none());
+        assert_eq!(app.editor.recipe, before);
+        assert_eq!(app.editor.revision, revision);
+    }
+}
+
+#[test]
 fn expanded_export_controls_preserve_valid_extreme_luminance_and_truthful_tags() {
     for (origin, format, peak, white, tag) in [
         (

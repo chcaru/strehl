@@ -145,6 +145,7 @@ pub(crate) struct ProcessTheater {
     pub(crate) annotation_mode: bool,
     pub(crate) edit_navigation: bool,
     pub(crate) edit_focus: bool,
+    pub(crate) edit_workspace: bool,
     pub(crate) requested_view: Option<(Pos2, f32)>,
     history_revision: u64,
     history_commits: u64,
@@ -220,6 +221,7 @@ impl Default for ProcessTheater {
             annotation_mode: false,
             edit_navigation: false,
             edit_focus: false,
+            edit_workspace: false,
             requested_view: None,
             history_revision: 0,
             history_commits: 0,
@@ -620,6 +622,23 @@ impl ProcessTheater {
         self.restore(after);
         true
     }
+    pub(crate) fn fit_edit_view(&mut self) {
+        let before = self.exploration();
+        self.requested_view = None;
+        self.result_photo.clear_lenses();
+        self.result_photo.cancel_gesture();
+        self.source_drag = None;
+        self.enlarged = None;
+        self.zoom = 1.0;
+        self.pan = Vec2::ZERO;
+        self.source_zoom = 1.0;
+        self.source_pan = Vec2::ZERO;
+        self.scales.reset_view();
+        self.pin = self.scales.pin();
+        self.navigator.clear();
+        self.remember(before);
+    }
+
     fn fit_views(&mut self) {
         self.requested_view = None;
         self.result_photo.clear_lenses();
@@ -647,7 +666,10 @@ impl ProcessTheater {
             ui.ctx().request_repaint();
         }
         let allowed = ui.is_enabled() && ui.ctx().memory(|m| m.is_above_modal_layer(ui.layer_id()));
-        if allowed && ui.input_mut(|i| i.consume_key(egui::Modifiers::NONE, egui::Key::Escape)) {
+        if !self.edit_workspace
+            && allowed
+            && ui.input_mut(|i| i.consume_key(egui::Modifiers::NONE, egui::Key::Escape))
+        {
             let before = self.exploration();
             self.resume_live();
             self.fit_views();
@@ -663,6 +685,15 @@ impl ProcessTheater {
     }
     pub(crate) fn inspection_frame(&self) -> Option<usize> {
         self.hover_source.or(self.inspected_source)
+    }
+
+    fn release_timeline_source(&mut self) {
+        if self.inspection_frame().is_some() || self.participation_frame.is_some() {
+            self.resume_live();
+        }
+        self.participation.release_source();
+        self.participation_frame = None;
+        self.participation_held = false;
     }
     pub(crate) fn inspecting(&self) -> bool {
         self.inspection_frame().is_some() || self.enlarged.is_some() || self.review_network
@@ -781,6 +812,7 @@ impl ProcessTheater {
                 annotation_mode: self.annotation_mode,
                 edit_navigation: self.edit_navigation,
                 edit_focus: self.edit_focus,
+                edit_workspace: self.edit_workspace,
                 ..Default::default()
             };
             self.set_photo_paint(photo_paint);
@@ -812,6 +844,26 @@ impl ProcessTheater {
             self.completion_started = None;
             self.completion_mix = 0.0;
         }
+        let transient_inspection = self.edit_workspace && input.progress.stage == Stage::Complete;
+        let in_timeline = ui.is_enabled()
+            && ui
+                .ctx()
+                .memory(|memory| memory.is_above_modal_layer(ui.layer_id()))
+            && !egui::Popup::is_any_open(ui.ctx())
+            && ui.input(|state| {
+                state.focused
+                    && state.viewport().focused != Some(false)
+                    && state.viewport().minimized != Some(true)
+                    && state.pointer.hover_pos().is_some_and(|at| {
+                        ribbon.is_some_and(|r| r.intersect(ui.clip_rect()).contains(at))
+                    })
+            });
+        if transient_inspection && !in_timeline {
+            self.release_timeline_source();
+            response.selected = None;
+        }
+        self.participation
+            .set_transient_source(transient_inspection);
         self.receive(input);
         if let Some(level) = self.result_photo.take_requested_level() {
             self.level = level;
@@ -863,7 +915,7 @@ impl ProcessTheater {
             self.gesture_start = Some(before.clone());
             self.wheel_edit = None;
         }
-        self.inspection_mix = if standalone {
+        self.inspection_mix = if standalone || (self.edit_workspace && self.edit_focus) {
             1.0
         } else {
             ui.ctx().animate_bool_with_time(
@@ -918,7 +970,9 @@ impl ProcessTheater {
                 target.1.min.x = rect.left();
                 target.1.max.y = rect.bottom();
             }
-            if standalone {
+            if self.edit_workspace && self.edit_focus {
+                target.1.min.y = rect.top();
+            } else if standalone {
                 target.1.min.y = rect.top() + 24.0;
             }
             let blend = |from: Rect, to: Rect| {
@@ -966,7 +1020,7 @@ impl ProcessTheater {
             self.instruments(ui, layout, input, response, completed);
             None
         };
-        if !standalone {
+        if !standalone && !(self.edit_workspace && self.edit_focus) {
             self.heading(ui, layout.title, input);
         }
         if let Some(ribbon) = ribbon {
@@ -975,9 +1029,15 @@ impl ProcessTheater {
                 ribbon.min + egui::vec2(0.0, 25.0),
                 egui::pos2(
                     ribbon.right(),
-                    ribbon
-                        .bottom()
-                        .max(ribbon.top() + 25.0 + crate::process_participation::HEIGHT),
+                    ribbon.bottom().max(
+                        ribbon.top()
+                            + 25.0
+                            + if transient_inspection {
+                                crate::process_participation::EDIT_HEIGHT
+                            } else {
+                                crate::process_participation::HEIGHT
+                            },
+                    ),
                 ),
             );
             self.participation.set_source_mode(
@@ -987,7 +1047,7 @@ impl ProcessTheater {
             );
             self.participation
                 .set_active_source(self.inspection_frame());
-            let picked = self.participation.show(
+            let mut picked = self.participation.show(
                 ui,
                 capture,
                 capture_input,
@@ -997,6 +1057,13 @@ impl ProcessTheater {
                     .hover_region(ui, self.scales.aperture())
                     .unwrap_or_else(|| self.scales.aperture()),
             );
+            let inspect_here = in_timeline && !egui::Popup::is_any_open(ui.ctx());
+            if transient_inspection && !inspect_here {
+                picked.open_source = None;
+                picked.hover_source = None;
+                picked.frame = None;
+                picked.held = false;
+            }
             self.participation_frame = picked.frame;
             self.participation_held = picked.held;
             if let Some(level) = picked.level {
@@ -1044,6 +1111,14 @@ impl ProcessTheater {
                     .as_ref()
                     .map(|slot| slot.current().index)
                     .or_else(|| self.inspection_frame());
+            }
+            // Captured drags can keep emitting picks outside their widget.
+            // In Edit, even a held mouse must stop modifying the photograph
+            // immediately upon leaving the timeline. The Process policy stays
+            // sticky; shared zoom and pinned ranges are untouched here.
+            if transient_inspection && !inspect_here {
+                self.release_timeline_source();
+                response.selected = None;
             }
         }
         if (!compact || focused) && !self.edit_focus && !standalone {
@@ -1909,11 +1984,19 @@ impl ProcessTheater {
         p.rect_filled(rect, 0.0, crate::theme::BG);
         let final_owned = input.progress.stage == Stage::Complete
             && self.hero.as_ref().is_some_and(|hero| hero.plate.kind == 3);
-        self.source_relation_mix = ui.ctx().animate_bool_with_time(
-            ui.id().with(("source-final-companion", input.epoch)),
-            final_owned && self.inspection_frame().is_some(),
-            0.18,
-        );
+        self.source_relation_mix = if self.edit_workspace {
+            if final_owned && self.inspection_frame().is_some() {
+                1.0
+            } else {
+                0.0
+            }
+        } else {
+            ui.ctx().animate_bool_with_time(
+                ui.id().with(("source-final-companion", input.epoch)),
+                final_owned && self.inspection_frame().is_some(),
+                0.18,
+            )
+        };
         let final_extent = self
             .hero
             .as_ref()
@@ -1933,7 +2016,11 @@ impl ProcessTheater {
             self.source_relation_axis = None;
         }
         let (rect, companion) = source_relation_layout(rect, self.source_relation_mix, axis);
-        let footer = photograph_footer(rect);
+        let footer = if self.edit_workspace {
+            20.0
+        } else {
+            photograph_footer(rect)
+        };
         self.source_relation_rect = companion;
         let title_rect = Rect::from_min_size(
             rect.min + egui::vec2(10.0, 8.0),
@@ -1969,7 +2056,7 @@ impl ProcessTheater {
             }
         }
         let image_box = Rect::from_min_max(
-            rect.min + egui::vec2(10.0, 36.0),
+            rect.min + egui::vec2(10.0, if self.edit_workspace { 28.0 } else { 36.0 }),
             // Reserve the diagnostic caption from the first camera frame.
             // Its later contents cannot shrink the live image at TIFF arrival.
             rect.max - egui::vec2(10.0, footer),
@@ -1988,7 +2075,7 @@ impl ProcessTheater {
             if !self.annotation_mode {
                 self.final_modifier(ui, rect, image_box, input);
             }
-            if !input.standalone_photo() {
+            if !input.standalone_photo() && !self.edit_workspace {
                 self.result_photo.legend(
                     ui,
                     Rect::from_min_size(
@@ -2621,7 +2708,7 @@ impl ProcessTheater {
                 "Drag: pan · Shift-drag: select a region · double-click: scene"
             }
         };
-        if !self.review_strip_visible && photograph_footer(rect) >= 53.0 {
+        if !self.edit_workspace && !self.review_strip_visible && photograph_footer(rect) >= 53.0 {
             text(
                 &p,
                 rect.left_bottom() + egui::vec2(10.0, -19.0),
@@ -2759,8 +2846,16 @@ impl ProcessTheater {
             egui::vec2(44.0, 22.0),
         );
         let image_box = Rect::from_min_max(
-            rect.min + egui::vec2(10.0, 36.0),
-            rect.max - egui::vec2(10.0, photograph_footer(rect)),
+            rect.min + egui::vec2(10.0, if self.edit_workspace { 28.0 } else { 36.0 }),
+            rect.max
+                - egui::vec2(
+                    10.0,
+                    if self.edit_workspace {
+                        20.0
+                    } else {
+                        photograph_footer(rect)
+                    },
+                ),
         );
         if self.inspection.is_some() {
             self.source_photograph(ui, rect, image_box, input);
@@ -2780,7 +2875,17 @@ impl ProcessTheater {
                 MUTED,
             );
         }
-        self.source_admission_strip(ui, rect, input);
+        if self.edit_workspace {
+            text(
+                &p,
+                rect.left_bottom() + egui::vec2(10.0, -15.0),
+                "CAMERA PREVIEW · unregistered coordinates",
+                8.0,
+                MUTED,
+            );
+        } else {
+            self.source_admission_strip(ui, rect, input);
+        }
         let close_hit = ui.interact(close, ui.id().with("source-relation-close"), Sense::click());
         p.rect_filled(close, 0.0, crate::theme::BG);
         p.text(
@@ -3048,22 +3153,24 @@ impl ProcessTheater {
             9.0,
             capture_color,
         );
-        text(
-            &painter.with_clip_rect(title),
-            title.min + egui::vec2(0.0, 13.0),
-            &if linked && self.participation.has_ranges() {
-                format!(
-                    "SELECTED REGIONS · APPROXIMATE · CURRENT {:03}",
-                    photo.index + 1
-                )
-            } else if linked {
-                "LINKED REGION · APPROXIMATE".to_owned()
-            } else {
-                "CAMERA SPACE".to_owned()
-            },
-            7.5,
-            MUTED,
-        );
+        if !self.edit_workspace {
+            text(
+                &painter.with_clip_rect(title),
+                title.min + egui::vec2(0.0, 13.0),
+                &if linked && self.participation.has_ranges() {
+                    format!(
+                        "SELECTED REGIONS · APPROXIMATE · CURRENT {:03}",
+                        photo.index + 1
+                    )
+                } else if linked {
+                    "LINKED REGION · APPROXIMATE".to_owned()
+                } else {
+                    "CAMERA SPACE".to_owned()
+                },
+                7.5,
+                MUTED,
+            );
+        }
         let hit = ui.interact(
             image_box,
             ui.id().with("primary-source-photo"),
@@ -3172,6 +3279,7 @@ impl ProcessTheater {
         // this deliberately as a dashed normalized-location estimate; the
         // solid region on the final photograph remains the measured domain.
         if linked
+            && !self.edit_navigation
             && crate::process_result::ResultPhoto::admission_visible(ui.ctx())
             && !ui.input(|i| i.key_down(egui::Key::Space))
             && let Some(analysis) = input.progress.analysis_size.or(input.progress.plane_size)
@@ -3243,7 +3351,7 @@ impl ProcessTheater {
                 egui::StrokeKind::Inside,
             );
         }
-        if !linked {
+        if !linked && !self.edit_workspace {
             text(
                 &painter,
                 rect.left_bottom() + egui::vec2(10.0, -19.0),
@@ -3259,7 +3367,9 @@ impl ProcessTheater {
                 MUTED,
             );
         }
-        hit.on_hover_text(if linked {
+        hit.on_hover_text(if self.edit_workspace {
+            "Original camera preview. Navigation shares the final photograph's normalized crop; camera pixels are not registered. Leave the timeline to return to the full photograph."
+        } else if linked {
             "Solid shading on the final photograph estimates dense admission. Dashed shading here shows its approximate normalized location: this camera JPEG has no saved registration or sensor-crop certificate. Zoom and pan both together; double-click resets."
         } else { "Camera preview · wheel to zoom · drag to pan · double-click to fit" });
     }
@@ -3293,6 +3403,9 @@ impl ProcessTheater {
         ];
         let mut x = rect.left();
         for (index, (label, width)) in controls.into_iter().enumerate() {
+            if self.edit_workspace && index < 2 {
+                continue;
+            }
             let cell = Rect::from_min_size(egui::pos2(x, rect.top()), egui::vec2(width, 22.0));
             x += width;
             let enabled = match index {
@@ -3372,7 +3485,9 @@ impl ProcessTheater {
             egui::pos2(x + 14.0, rect.top()),
             rect.right_top() + egui::vec2(0.0, 22.0),
         ));
-        let caption: String = if self.enlarged.is_some() {
+        let caption: String = if self.edit_workspace {
+            "Hover or drag: compare · leave timeline: photograph · Shift: span".into()
+        } else if self.enlarged.is_some() {
             "MAP INSPECTION · Fit or Escape to return".into()
         } else if complete {
             "Hover: explore · wheel: step · Photograph / Esc: return · Shift: span".into()

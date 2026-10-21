@@ -216,7 +216,7 @@ fn bounded_fields_fit_sidecar_with_maximum_text_annotations_and_reject_malformed
         recipe.regions.push(r);
     }
     let template = SpatialTreatment {
-        version: 1,
+        version: 2,
         target_region: None,
         parameters: Default::default(),
         amount: 1.0,
@@ -227,7 +227,7 @@ fn bounded_fields_fit_sidecar_with_maximum_text_annotations_and_reject_malformed
         log_min: -12.0,
         log_max: 4.0,
         tone_ev: vec![-0.123291016; 20 * 20 * 33],
-        color_gain: vec![1.0488281; 20 * 20],
+        color_gain: vec![1.0488281; 20 * 20 * 33],
         delivery_ceiling: 4.9261084,
         centering_ev: 0.012345678,
     };
@@ -259,6 +259,18 @@ fn bounded_fields_fit_sidecar_with_maximum_text_annotations_and_reject_malformed
     let mut wrong = recipe.clone();
     wrong.spatial[0].tone_ev.pop();
     assert!(wrong.validate().is_err());
+    let mut wrong = recipe.clone();
+    wrong.spatial[0].version = 1;
+    assert!(
+        wrong.validate().is_err(),
+        "old layout must not accept luminance-sliced color"
+    );
+    let mut wrong = recipe.clone();
+    wrong.spatial[0].color_gain.truncate(20 * 20);
+    assert!(
+        wrong.validate().is_err(),
+        "new layout needs every color/light coefficient"
+    );
     let mut wrong = recipe.clone();
     wrong.spatial[0].tone_ev[0] = f32::NAN;
     assert!(wrong.validate().is_err());

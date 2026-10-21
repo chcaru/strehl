@@ -116,7 +116,7 @@ its identity when the viewport pans or zooms.
 | `strehl_snapshot` | Current revision, projects/stacks/runs, settings, development recipe, annotations, job state, and available evidence. |
 | `strehl_probe` | Bounded source admission, saved confidence ranks, and linear-light statistics for an output-image region. |
 | `strehl_preview` | A bounded PNG of the final image, a source, or an available diagnostic, optionally cropped. |
-| `strehl_command` | Validated workspace operations: select, annotate, adjust, start/cancel, export, undo/redo, organize, import from shared folders, and suggest. |
+| `strehl_command` | Validated workspace operations: select, annotate, adjust, save/restore edit versions, start/cancel, export, undo/redo, organize, import from shared folders, and suggest. |
 
 Every mutation includes `expected_revision` from a fresh snapshot. If the human
 or another agent has changed the workspace, Strehl rejects the stale command.
@@ -185,15 +185,63 @@ the application's normal background jobs. Snapshots list up to 256 catalog
 objects and the latest 32 runs per object; truncation and full run counts are
 reported explicitly.
 
+## Photograph edit versions
+
+`save_edit_version` saves the current recipe as a named, immutable version of
+the open photograph. Its `name` must contain 1–120 characters (at most 384 UTF-8
+bytes), without control characters:
+
+```json
+{
+  "expected_revision": 12,
+  "command": {"operation": "save_edit_version", "name": "Softer reflections"}
+}
+```
+
+The reply is `queued`. Poll `photo_history.busy` and check `photo_history.error`
+before treating the operation as complete. `photo_history.versions` lists the
+current photograph's newest versions first, up to 64; each includes its `id`,
+name, owner, creation time, and source identities. `photo_history.exports` lists
+up to 128 deliveries for that photograph, newest first, with their version ID,
+destination, encoding settings, byte count, and SHA-256. `list_limit` states
+these bounds; the arrays are not the entire project library. `status` is a
+human-readable operation message.
+
+Use a returned version ID with `restore_edit_version`:
+
+```json
+{
+  "expected_revision": 15,
+  "command": {
+    "operation": "restore_edit_version",
+    "id": "0123456789abcdef0123456789abcdef"
+  }
+}
+```
+
+Replace that example ID with an actual saved ID and use a fresh revision.
+Restore opens the version's photograph if needed, validates its recorded file,
+decoded source and loaded-pixel identities, then replaces the recipe through
+the shared Undo journal. Before a different recipe is restored, the current
+recipe is saved as a backup version. Changed or missing source evidence causes
+an error; versions are not portable presets. A newer edit or photograph change
+during restoration prevents stale work from replacing the current view.
+Saving a version alone does not render a delivery; `export` records the recipe
+version and resulting file together.
+
 ## Export delivery
 
-`export` requires a destination folder explicitly selected by the human in
-**Export → Destination**, or the parent folder of a file chosen for a human
-export. The snapshot reports it in `export_capabilities.destination`; null means
-the human has not selected one. It never falls back to the stack-output folder.
+`export` defaults to the folder beside the current photograph's TIFF, matching
+the human Export pane. An alternate chosen in **Export → Destination** is
+remembered for that photograph. The snapshot reports the resolved folder in
+`export_capabilities.destination`; null means no photograph destination exists.
 Changing the destination invalidates the agent revision. `file_name` is a name,
 never an arbitrary path. The original `file_name` and
 `format` command remains valid. Optional delivery fields now match the app:
+
+`busy.export` includes version preparation and delivery recording as well as
+encoding. `photo_history` reports bounded version/export metadata, status and
+errors. Only a successfully published and recorded file is a completed delivery.
 
 ```json
 {

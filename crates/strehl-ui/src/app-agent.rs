@@ -45,7 +45,7 @@ impl StrehlApp {
             "settings":self.controls.settings, "exposure":self.controls.exposure,"gate":self.controls.gate,
             "workers":self.controls.workers, "edits":self.editor.revision,"before_preview":self.editor.before,
             "selected_region":self.editor.selected,
-            "export_directory":self.export_pane.destination,
+            "export_directory":self.export_destination_for_current(),
             "view":self.process_space.history_revision(), "projects":self.project_explorer.history_revision(),
             "running":self.job.is_some(), "opening":self.scan.is_some() || self.replay.is_some()
         });
@@ -293,16 +293,26 @@ impl StrehlApp {
             "revisions":node.revisions.iter().enumerate().rev().take(32).map(|(i,path)| json!({"index":i,"name":path.file_name()})).collect::<Vec<_>>(),
             "revision_count":node.revisions.len()
         })).collect();
+        let export_capabilities = json!({"formats":["avif","tiff","png","jpeg"],"color_spaces":["srgb","display_p3","rec2020"],
+                "destination":self.export_destination_for_current(),
+                "defaults":strehl_edit::ExportSettings::default(),
+                "hdr_available":self.editor.loaded.as_ref().is_some_and(|p|self.agent_photo_is_current() && p.image.origin==strehl_edit::ImageOrigin::SceneLinear)});
+        let diagnostics = json!({"admission_packets":self.progress.admission_archive.len(),
+                "omitted_packets":self.progress.admission_archive.dropped(),
+                "confidence":self.progress.confidence.as_ref().map(|p|json!({"compared":p.compared,"total":p.total,
+                    "meaning":"folded aligned-observation rank: 0 one-sided, 1000 balanced; ties can also read 0; neither end is a quality grade"})),
+                "alignment":self.progress.alignment,"placed":self.progress.placed,"refused":self.progress.refused,
+                "noise_model":self.progress.noise_model,"geometry_error":self.progress.alignment_error});
         json!({
             "revision":self.agent.revision, "application":"Strehl", "version":env!("CARGO_PKG_VERSION"),
             "active_stack":self.active_stack, "projects":projects, "project_list_truncated":self.catalog.nodes.len()>256,
             "source_count":self.stack.as_ref().map(|s|s.frames.len()), "selected_frame":self.selected,
             "frame_index_base":0, "status":self.status, "stage":format!("{:?}",self.progress.stage),
             "busy":{"stack":self.job.is_some(),"opening":self.scan.is_some()||self.replay.is_some(),
-                "photo":self.editor.loading.is_some(),"preset":self.editor.preset.is_some()||self.presets_busy(),"export":self.editor.exporting.is_some()},
+                "photo":self.editor.loading.is_some(),"preset":self.editor.preset.is_some()||self.presets_busy(),"export":self.editor.exporting.is_some() || self.photo_history_busy()},
             "stack_blocker":self.stack_start_blocker(), "settings":self.controls.settings,
             "exposure_ev":self.controls.exposure,"pyramid_gate":self.controls.gate,"workers":self.controls.workers,
-            "development":self.editor.recipe,"before_preview":self.editor.before, "photo_ready":self.agent_photo_is_current(),
+            "photo_history":self.photo_history_snapshot(), "development":self.editor.recipe,"before_preview":self.editor.before, "photo_ready":self.agent_photo_is_current(),
             "selected_region":self.editor.selected,
             "adaptive":self.adaptive_snapshot(),
             "display":self.editor.display_stats(),
@@ -310,17 +320,9 @@ impl StrehlApp {
             "photo_view":agent_photo_view(self.process_view, self.process_space.edit_mapping()),
             "photo":self.editor.loaded.as_ref().filter(|_|self.agent_photo_is_current()).map(|p|json!({"width":p.image.width,"height":p.image.height,"origin":p.image.origin,"source":p.source})),
             "export":self.editor.last_export,"error":self.editor.error.as_ref().or(self.error.as_ref()),
-            "export_capabilities":{"formats":["avif","tiff","png","jpeg"],"color_spaces":["srgb","display_p3","rec2020"],
-                "destination":self.export_pane.destination,
-                "defaults":strehl_edit::ExportSettings::default(),
-                "hdr_available":self.editor.loaded.as_ref().is_some_and(|p|self.agent_photo_is_current() && p.image.origin==strehl_edit::ImageOrigin::SceneLinear)},
+            "export_capabilities":export_capabilities,
             "grants":self.agent.grants.iter().map(|(id,p)|json!({"id":id,"name":p.file_name()})).collect::<Vec<_>>(),
-            "diagnostics":{"admission_packets":self.progress.admission_archive.len(),
-                "omitted_packets":self.progress.admission_archive.dropped(),
-                "confidence":self.progress.confidence.as_ref().map(|p|json!({"compared":p.compared,"total":p.total,
-                    "meaning":"folded aligned-observation rank: 0 one-sided, 1000 balanced; ties can also read 0; neither end is a quality grade"})),
-                "alignment":self.progress.alignment,"placed":self.progress.placed,"refused":self.progress.refused,
-                "noise_model":self.progress.noise_model,"geometry_error":self.progress.alignment_error},
+            "diagnostics":diagnostics,
             "semantics":"Camera previews are unregistered. Admission is sampled gate evidence, not fractional ownership. Annotations use final-photo normalized coordinates. Exports and new runs preserve originals."
         })
     }
@@ -518,6 +520,14 @@ impl StrehlApp {
                 job.cancel();
                 return Ok(json!({"state":"cancellation_requested","operation":"stack"}));
             }
+            SaveEditVersion { name } => {
+                self.save_edit_version(&name)?;
+                return Ok(json!({"state":"queued","operation":"save_edit_version"}));
+            }
+            RestoreEditVersion { id } => {
+                self.restore_edit_version(&id)?;
+                return Ok(json!({"state":"queued","operation":"restore_edit_version"}));
+            }
             Export {
                 file_name,
                 format,
@@ -530,7 +540,7 @@ impl StrehlApp {
                     self.agent_photo_is_current(),
                     "The current photograph is still loading"
                 );
-                let destination = self.export_pane.destination.as_ref().ok_or_else(|| {
+                let destination = self.export_destination_for_current().ok_or_else(|| {
                     anyhow::anyhow!("Choose an export folder in Export → Destination")
                 })?;
                 anyhow::ensure!(
@@ -539,7 +549,7 @@ impl StrehlApp {
                 );
                 jobs::validate_export_destination(
                     self.stack.as_ref().map(|s| s.directory.as_path()),
-                    destination,
+                    &destination,
                 )?;
                 let origin = self
                     .editor
@@ -558,8 +568,7 @@ impl StrehlApp {
                 )
                 .map_err(anyhow::Error::msg)?;
                 let resolved = serde_json::to_value(&settings)?;
-                self.editor
-                    .export_with_settings(destination.join(file_name), settings)?;
+                self.start_tracked_export(destination.join(file_name), settings)?;
                 return Ok(json!({"state":"queued","operation":"export","settings":resolved}));
             }
             Undo {} => {

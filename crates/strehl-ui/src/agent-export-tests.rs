@@ -64,7 +64,16 @@ fn old_export_commands_and_all_new_delivery_options_are_validated() {
 
 fn app(origin: ImageOrigin) -> StrehlApp {
     let mut app = StrehlApp::from_launch(4096, LaunchOptions::default());
-    app.catalog = Default::default();
+    let root = std::env::temp_dir().join(format!(
+        "strehl-agent-export-fixture-{}-{}",
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    ));
+    std::fs::create_dir_all(&root).unwrap();
+    app.catalog = crate::workspace_history::Catalog::load(Some(root.join("projects.json")));
     let image = Arc::new(LinearImage {
         width: 16,
         height: 12,
@@ -73,7 +82,8 @@ fn app(origin: ImageOrigin) -> StrehlApp {
         baseline: None,
         baked_recipe: None,
     });
-    let path = PathBuf::from("never-written-agent-export-master.tiff");
+    let path = root.join("agent-export-master.tiff");
+    std::fs::write(&path, b"fixture source photograph").unwrap();
     app.editor.loaded = Some(crate::edit_workspace::LoadedPhoto {
         image: image.clone(),
         preview: image,
@@ -92,7 +102,7 @@ fn app(origin: ImageOrigin) -> StrehlApp {
 #[test]
 fn hdr_from_sdr_is_rejected_before_queuing_and_omitted_hdr_matches_human_defaults() {
     let mut app = app(ImageOrigin::DisplayReferred);
-    app.export_pane.destination = Some(std::env::temp_dir());
+    app.set_export_directory(std::env::temp_dir()).unwrap();
     assert_eq!(
         app.agent_snapshot()["export_capabilities"]["hdr_available"],
         false
@@ -127,7 +137,7 @@ fn agent_exports_use_the_real_writer_and_preserve_existing_files() {
     ));
     std::fs::create_dir(&destination).unwrap();
     app.output = destination.join("not-the-chosen-destination");
-    app.export_pane.destination = Some(destination.clone());
+    app.set_export_directory(destination.clone()).unwrap();
     let recipe = app.editor.recipe.clone();
     for (format, suffix, image_format) in [
         ("tiff", "tiff", image::ImageFormat::Tiff),
@@ -140,12 +150,15 @@ fn agent_exports_use_the_real_writer_and_preserve_existing_files() {
         assert_eq!(reply["state"], "queued");
         assert_eq!(reply["settings"]["color_space"], "display_p3");
         assert_eq!(reply["settings"]["quality"], 94);
-        let worker = app.editor.exporting.take().unwrap();
-        let path = worker
-            .receiver
-            .recv_timeout(Duration::from_secs(15))
-            .unwrap()
-            .unwrap();
+        let ctx = egui::Context::default();
+        let until = std::time::Instant::now() + Duration::from_secs(15);
+        while app.photo_history_busy() || app.editor.exporting.is_some() {
+            app.editor.poll(&ctx, 4096);
+            app.poll_photo_history(&ctx);
+            assert!(std::time::Instant::now() < until, "export did not settle");
+            std::thread::sleep(Duration::from_millis(2));
+        }
+        let path = app.editor.last_export.clone().unwrap();
         assert_eq!(path.parent(), Some(destination.as_path()));
         let bytes = std::fs::read(&path).unwrap();
         let decoded = image::load_from_memory_with_format(&bytes, image_format).unwrap();
@@ -166,23 +179,27 @@ fn agent_exports_use_the_real_writer_and_preserve_existing_files() {
 }
 
 #[test]
-fn agent_export_requires_explicit_destination_and_folder_change_invalidates_revision() {
+fn agent_export_defaults_beside_photo_and_folder_change_invalidates_revision() {
     let mut app = app(ImageOrigin::DisplayReferred);
     app.output = std::env::temp_dir(); // Existing writable stack output is insufficient.
     let command = export(
         json!({"operation":"export","file_name":"never-created-agent-destination.png","format":"png"}),
     );
-    assert!(
-        app.apply_agent_command(command.clone())
-            .unwrap_err()
-            .to_string()
-            .contains("Destination")
+    assert_eq!(
+        app.export_destination_for_current(),
+        app.editor
+            .path
+            .as_ref()
+            .and_then(|p| p.parent())
+            .map(Path::to_path_buf)
     );
-    assert!(app.editor.exporting.is_none());
-    assert!(app.agent_snapshot()["export_capabilities"]["destination"].is_null());
+    assert_ne!(
+        app.export_destination_for_current(),
+        Some(app.output.clone())
+    );
     app.sync_agent_revision();
     let observed = app.agent.revision;
-    app.export_pane.destination = Some(std::env::temp_dir());
+    app.set_export_directory(std::env::temp_dir()).unwrap();
     app.sync_agent_revision();
     assert!(
         crate::agent_interface::AgentRequest {

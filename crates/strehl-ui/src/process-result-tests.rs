@@ -9,6 +9,68 @@ use crate::{
 
 const REVIEW_SIZE: [f32; 2] = [1410.0, 850.0];
 
+#[test]
+fn edit_fit_resets_all_camera_views_but_keeps_pinned_capture_ranges() {
+    let ctx = egui::Context::default();
+    let fixture = ResultFixture::new(&ctx, false);
+    let surfaces = fixture.surfaces();
+    let data = result_input(&fixture, &surfaces);
+    let mut theater = ProcessTheater::default();
+    result_paint(&mut theater, &ctx, data, 0.0, vec![]);
+    result_paint(&mut theater, &ctx, data, 0.6, vec![]);
+    // Range state belongs to the actual timeline, which the legacy direct
+    // theater fixture does not create. Paint that owner before selecting.
+    let _ = ctx.run(
+        egui::RawInput {
+            screen_rect: Some(Rect::from_min_size(Pos2::ZERO, REVIEW_SIZE.into())),
+            time: Some(0.7),
+            ..Default::default()
+        },
+        |ctx| {
+            egui::CentralPanel::default().show(ctx, |ui| {
+                theater.show_with_ribbon(
+                    ui,
+                    Rect::from_min_size(Pos2::ZERO, egui::vec2(1410.0, 590.0)),
+                    &data,
+                    &mut Response::default(),
+                    Some(Rect::from_min_max(
+                        egui::pos2(0.0, 600.0),
+                        egui::pos2(1410.0, 850.0),
+                    )),
+                );
+            });
+        },
+    );
+    assert!(
+        theater
+            .screenshot_ranges(
+                (1, fixture.progress.diagnostic_epoch),
+                data.frame_count,
+                &[[2, 8], [19, 28]]
+            )
+            .unwrap()
+    );
+    let pinned = theater.participation.spans().to_vec();
+    theater.scales.set_view(egui::pos2(0.6, 0.4), 3.0);
+    theater.zoom = 4.0;
+    theater.pan = egui::vec2(8.0, 12.0);
+    theater.source_zoom = 2.5;
+    theater.source_pan = egui::vec2(-4.0, 7.0);
+    theater.enlarged = Some(DiagnosticKind::Averaging);
+    theater.fit_edit_view();
+    assert_eq!(theater.participation.spans(), pinned);
+    assert_eq!(theater.scales.target_view(), (egui::pos2(0.5, 0.5), 1.0));
+    assert_eq!((theater.zoom, theater.source_zoom), (1.0, 1.0));
+    assert_eq!((theater.pan, theater.source_pan), (Vec2::ZERO, Vec2::ZERO));
+    assert_eq!(theater.enlarged, None);
+    assert!(
+        theater.undo(),
+        "reset remains an ordinary undoable navigation action"
+    );
+    assert_eq!((theater.zoom, theater.source_zoom), (4.0, 2.5));
+    assert_eq!(theater.participation.spans(), pinned);
+}
+
 struct ResultFixture {
     progress: PipelineProgress,
     packets: Vec<DiagnosticSurface>,

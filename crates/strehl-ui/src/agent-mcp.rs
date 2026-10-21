@@ -492,6 +492,12 @@ pub(crate) fn tool_definitions() -> Value {
         ),
         command("start_stack", json!({}), &[]),
         command("cancel_stack", json!({}), &[]),
+        command("save_edit_version", json!({"name":string(120)}), &["name"]),
+        command(
+            "restore_edit_version",
+            json!({"id":{"type":"string","pattern":"^[0-9a-f]{32}$"}}),
+            &["id"],
+        ),
         command(
             "export",
             json!({"file_name":string(200),"format":{"enum":["avif","tiff","png","jpeg"]},

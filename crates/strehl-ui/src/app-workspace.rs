@@ -553,6 +553,12 @@ impl StrehlApp {
                     self.stack_launch_panel(ui, pane);
                 }
                 if pane == Sidebar::Projects {
+                    self.photo_history_panel(ui);
+                    self.project_explorer.set_current_photo(
+                        self.editor.path.as_deref(),
+                        self.editor.loaded.as_ref().map(|photo| &photo.image),
+                        self.editor.loaded.as_ref().map(|photo| &photo.preview),
+                    );
                     let busy = self.job.is_some() || self.picker_active() || self.scan.is_some();
                     let response = self.project_explorer.show(ui, &mut self.catalog, busy);
                     changed = response.changed;
@@ -638,6 +644,9 @@ impl StrehlApp {
                 }
                 ExplorerAction::OpenStack { id } => self.open_project_stack(id),
                 ExplorerAction::OpenRun { run } => self.reopen_run(*run),
+                action @ (ExplorerAction::RestoreVersion { .. }
+                | ExplorerAction::OpenExport { .. }
+                | ExplorerAction::RevealPath { .. }) => self.handle_photo_history_action(action),
             }
         }
     }

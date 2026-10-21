@@ -3,7 +3,9 @@ use serde::{Deserialize, Serialize};
 
 #[path = "spatial.rs"]
 mod spatial;
-pub use spatial::{AdaptiveParameters, MAX_SPATIAL_TREATMENTS, SpatialTreatment};
+pub use spatial::{
+    AdaptiveParameters, AdaptiveToneRange, MAX_SPATIAL_TREATMENTS, SpatialTreatment,
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize, Default)]
 #[serde(default, deny_unknown_fields)]

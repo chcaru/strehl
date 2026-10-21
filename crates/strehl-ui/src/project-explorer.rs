@@ -6,11 +6,17 @@ use crate::{
 };
 use eframe::egui::{self, Align2, Color32, FontId, Key, RichText, Sense, Stroke};
 use std::path::{Path, PathBuf};
+#[path = "explorer-previews.rs"]
+mod previews;
+
 #[derive(Clone, Debug)]
 pub(crate) enum ExplorerAction {
     NewCapture { parent: Option<NodeId> },
     OpenStack { id: NodeId },
     OpenRun { run: Box<Run> },
+    RestoreVersion { id: String },
+    OpenExport { id: String },
+    RevealPath { path: PathBuf },
 }
 #[derive(Default)]
 pub(crate) struct ExplorerResponse {
@@ -25,6 +31,9 @@ pub(crate) struct ProjectExplorer {
     error: Option<String>,
     selected_revision: Option<PathBuf>,
     selected_stack: Option<NodeId>,
+    selected_history: Option<String>,
+    previews: previews::ExplorerPreviews,
+    dragging: Option<NodeId>,
     notes_open: bool,
     notes_editor: Option<egui::Id>,
     undo: Vec<Organization>,
@@ -42,6 +51,7 @@ pub(crate) struct ProjectExplorer {
 struct Organization {
     nodes: Vec<OrganizedNode>,
     results: Vec<(PathBuf, String, bool)>,
+    version_names: Vec<(String, String)>,
 }
 #[derive(Clone, PartialEq, Eq)]
 struct OrganizedNode {
@@ -64,6 +74,11 @@ impl Organization {
                     kind: n.kind,
                     notes: n.notes.clone(),
                 })
+                .collect(),
+            version_names: catalog
+                .photo_versions
+                .iter()
+                .map(|v| (v.id.clone(), v.name.clone()))
                 .collect(),
             results: catalog
                 .runs
@@ -93,6 +108,11 @@ impl Organization {
                     stack: None,
                     revisions: vec![],
                 });
+            }
+        }
+        for (id, name) in &self.version_names {
+            if let Some(v) = catalog.photo_versions.iter_mut().find(|v| v.id == *id) {
+                v.name.clone_from(name);
             }
         }
         for (directory, label, pinned) in &self.results {
@@ -126,8 +146,22 @@ enum EditTarget {
     Folder(NodeId),
     Node(NodeId),
     Revision(PathBuf),
+    Version(String),
 }
 impl ProjectExplorer {
+    pub(crate) fn preview_pending(&self) -> bool {
+        self.previews.pending()
+    }
+
+    pub(crate) fn set_current_photo(
+        &mut self,
+        path: Option<&Path>,
+        image: Option<&std::sync::Arc<strehl_edit::LinearImage>>,
+        preview: Option<&std::sync::Arc<strehl_edit::LinearImage>>,
+    ) {
+        self.previews.set_current(path, image, preview);
+    }
+
     /// Agent organization commands enter the same reversible metadata journal
     /// as explorer edits. Capture imports and immutable run evidence stay out.
     pub(crate) fn organize<T>(
@@ -157,6 +191,14 @@ impl ProjectExplorer {
         catalog: &mut Catalog,
         busy: bool,
     ) -> ExplorerResponse {
+        self.previews.poll(ui.ctx());
+        if !ui.is_enabled()
+            || ui.input(|i| !i.focused || i.key_pressed(Key::Escape))
+            || egui::Popup::is_any_open(ui.ctx())
+            || !ui.ctx().memory(|m| m.is_above_modal_layer(ui.layer_id()))
+        {
+            self.dragging = None;
+        }
         self.sync_evidence(catalog);
         // Painting and pointer hover do not edit the catalog. Avoid cloning
         // notes/result metadata on every animation frame of the photo workspace.
@@ -251,7 +293,7 @@ impl ProjectExplorer {
             .auto_shrink([false, false])
             .max_height(tree_height)
             .show(ui, |ui| {
-                if catalog.nodes.is_empty() {
+                if catalog.nodes.is_empty() && catalog.photo_versions.is_empty() {
                     egui::Frame::new().inner_margin(12).show(ui, |ui| {
                         ui.label(RichText::new("Your photographs start here").color(INK));
                         theme::caption(ui, "New stack opens your source photos.");
@@ -265,6 +307,28 @@ impl ProjectExplorer {
                     .collect();
                 for id in roots {
                     self.show_node(ui, catalog, id, 0, busy, &mut response);
+                }
+                let mut photos: Vec<_> = catalog
+                    .photo_versions
+                    .iter()
+                    .filter(|v| v.owner.stack.is_none())
+                    .map(|v| v.owner.output.clone())
+                    .collect();
+                photos.sort();
+                photos.dedup();
+                if !photos.is_empty() {
+                    divider(ui);
+                    ui.label(RichText::new("PHOTOGRAPHS").small().color(MUTED));
+                    for path in photos {
+                        egui::CollapsingHeader::new(
+                            path.file_name().unwrap_or_default().to_string_lossy(),
+                        )
+                        .id_salt(("photo-history", &path))
+                        .default_open(true)
+                        .show(ui, |ui| {
+                            self.show_photo_history(ui, catalog, &path, 0, busy, &mut response);
+                        });
+                    }
                 }
             });
         if let Some(id) = catalog.selected {
@@ -294,6 +358,9 @@ impl ProjectExplorer {
             self.history_revision = self.history_revision.wrapping_add(1);
         } else if !ui.ctx().wants_keyboard_input() {
             self.history_focus = None;
+        }
+        if ui.input(|i| i.pointer.any_released() || !i.focused || i.key_pressed(Key::Escape)) {
+            self.dragging = None;
         }
         response
     }
@@ -361,11 +428,35 @@ impl ProjectExplorer {
     /// Keep the explorer's result identity synchronized with navigation outside it.
     pub fn select_stack(&mut self, id: NodeId) {
         self.selected_stack = Some(id);
+        self.selected_history = None;
         self.selected_revision = None;
     }
     pub fn select_revision(&mut self, path: &Path) {
+        self.selected_history = None;
         self.selected_revision = Some(path.to_path_buf());
     }
+    pub(crate) fn reveal_photo_history(
+        &mut self,
+        catalog: &mut Catalog,
+        path: &Path,
+        item: Option<&str>,
+    ) {
+        let owner = catalog.photo_owner(path);
+        self.filter.clear();
+        self.selected_stack = owner.stack;
+        self.selected_revision = owner.run;
+        self.selected_history = item.map(str::to_owned);
+        catalog.selected = owner.stack;
+        let mut current = owner.stack;
+        while let Some(id) = current {
+            let Some(node) = catalog.node_mut(id) else {
+                break;
+            };
+            node.expanded = true;
+            current = node.parent;
+        }
+    }
+
     fn edit(&mut self, target: EditTarget, value: &str) {
         self.edit = Some(Edit {
             target,
@@ -381,17 +472,22 @@ impl ProjectExplorer {
         catalog: &mut Catalog,
         response: &mut ExplorerResponse,
     ) {
+        let (row, _) =
+            ui.allocate_exact_size(egui::vec2(ui.available_width(), 27.0), Sense::hover());
+        self.show_editor_at(ui, catalog, response, row);
+    }
+    fn show_editor_at(
+        &mut self,
+        ui: &mut egui::Ui,
+        catalog: &mut Catalog,
+        response: &mut ExplorerResponse,
+        row: egui::Rect,
+    ) {
         let Some(edit) = &mut self.edit else {
             return;
         };
         let mut accept = false;
         let mut cancel = false;
-        // These controls live in fixed cells. TextEdit's desired width is
-        // its text width, not its framed outer width; a horizontal auto-layout
-        // made the old row exceed its parent by 15 points every paint, feeding
-        // that excess back into SidePanel's remembered width indefinitely.
-        let (row, _) =
-            ui.allocate_exact_size(egui::vec2(ui.available_width(), 27.0), Sense::hover());
         let cancel_rect =
             egui::Rect::from_min_max(egui::pos2(row.right() - 28.0, row.top()), row.max);
         let save_rect = cancel_rect.translate(egui::vec2(-32.0, 0.0));
@@ -439,6 +535,7 @@ impl ProjectExplorer {
                     catalog.create_folder(*parent, &edit.value).map(|_| ())
                 }
                 EditTarget::Node(id) => catalog.rename(*id, &edit.value),
+                EditTarget::Version(id) => catalog.rename_photo_version(id, &edit.value),
                 EditTarget::Revision(path) => {
                     let name = edit.value.trim();
                     if name.is_empty()
@@ -547,11 +644,21 @@ impl ProjectExplorer {
             .filter(|n| n.parent == Some(id))
             .map(|n| n.id)
             .collect();
-        let has_children = !children.is_empty() || !node.revisions.is_empty();
+        let has_children =
+            node.kind == NodeKind::Stack || !children.is_empty() || !node.revisions.is_empty();
         let expanded = node.expanded || !self.filter.trim().is_empty();
         let (rect, _) =
             ui.allocate_exact_size(egui::vec2(ui.available_width(), 25.0), Sense::hover());
-        let hit = ui.interact(rect, ui.id().with(("project-node", id)), Sense::click());
+        let editing = matches!(self.edit.as_ref().map(|e|&e.target),Some(EditTarget::Node(target))if *target==id);
+        let hit = ui.interact(
+            rect,
+            ui.id().with(("project-node", id)),
+            if editing {
+                Sense::hover()
+            } else {
+                Sense::click_and_drag()
+            },
+        );
         let selected = catalog.selected == Some(id) && self.selected_revision.is_none();
         paint_row(ui, rect, &hit, selected);
         let indent = (depth as f32 * 14.0).min(rect.width() * 0.42);
@@ -591,8 +698,70 @@ impl ProjectExplorer {
                 count => format!("{count} results"),
             },
         };
-        row_text(ui, rect, indent + 42.0, &node.name, &suffix, INK);
-        if hit.clicked() && !(busy && node.kind == NodeKind::Stack) {
+        let representative = if node.kind == NodeKind::Stack {
+            catalog
+                .latest_run(id)
+                .map(|r| (r.output.clone(), false))
+                .or_else(|| {
+                    catalog
+                        .node(id)
+                        .and_then(|n| n.stack.as_ref())
+                        .and_then(|s| s.sources.first())
+                        .map(|s| (s.path.clone(), true))
+                })
+        } else {
+            None
+        };
+        let texture = representative
+            .as_ref()
+            .filter(|_| ui.is_rect_visible(rect))
+            .and_then(|(path, source)| self.previews.file(path, *source));
+        if representative.is_some() {
+            previews::ExplorerPreviews::paint(
+                ui,
+                egui::Rect::from_center_size(
+                    rect.min + egui::vec2(indent + 29.0, 12.5),
+                    egui::vec2(22.0, 18.0),
+                ),
+                texture.as_ref(),
+            );
+        }
+        if !editing {
+            row_text(ui, rect, indent + 42.0, &node.name, &suffix, INK);
+        }
+        if hit.drag_started() && !editing && !busy && !egui::Popup::is_any_open(ui.ctx()) {
+            self.dragging = Some(id);
+            self.edit = None;
+        }
+        if let Some(dragged) = self.dragging
+            && !busy
+            && ui.is_enabled()
+            && !egui::Popup::is_any_open(ui.ctx())
+            && hit.contains_pointer()
+        {
+            let valid = catalog.can_move(dragged, Some(id));
+            ui.painter().rect_stroke(
+                rect.shrink(0.5),
+                0.0,
+                Stroke::new(1.0_f32, if valid.is_ok() { ACCENT } else { AMBER }),
+                egui::StrokeKind::Inside,
+            );
+            if ui.input(|i| i.pointer.primary_released()) {
+                match valid.and_then(|_| catalog.move_node(dragged, Some(id))) {
+                    Ok(()) => {
+                        response.changed = true;
+                        self.error = None;
+                    }
+                    Err(e) => self.error = Some(e.to_string()),
+                }
+            }
+        }
+
+        if hit.clicked()
+            && self.dragging.is_none()
+            && !editing
+            && !(busy && node.kind == NodeKind::Stack)
+        {
             if has_children
                 && hit
                     .interact_pointer_pos()
@@ -642,15 +811,23 @@ impl ProjectExplorer {
                 response.changed = true;
             }
         }
-        hit.clone().on_hover_text(format!(
-            "{}\n{} · Right-click for actions",
+        let caption = format!(
+            "{} · {}",
             catalog.breadcrumb(id),
             match node.kind {
-                NodeKind::Project => "Project: related capture stacks and results",
-                NodeKind::Folder => "Folder: organize stacks inside a project",
-                NodeKind::Stack => "Stack: source photos and saved results",
+                NodeKind::Project => "Project",
+                NodeKind::Folder => "Virtual folder",
+                NodeKind::Stack => "Stack · source captures and results",
             }
-        ));
+        );
+        hit.clone().on_hover_ui(|ui| {
+            previews::ExplorerPreviews::hover(ui, texture.as_ref(), &caption);
+            if let Some((path, source)) = &representative
+                && let Some(error) = self.previews.error(path, *source)
+            {
+                ui.label(egui::RichText::new(error).small().color(AMBER));
+            }
+        });
         hit.context_menu(|ui| {
             if ui.button("Rename…").clicked() {
                 self.edit(EditTarget::Node(id), &node.name);
@@ -674,6 +851,12 @@ impl ProjectExplorer {
                     ui.close();
                 }
             } else if let Some(source) = &node.source {
+                if ui.button("Reveal in Explorer").clicked() {
+                    response.action = Some(ExplorerAction::RevealPath {
+                        path: source.clone(),
+                    });
+                    ui.close();
+                }
                 if ui.button("Copy source folder").clicked() {
                     ui.ctx().copy_text(source.display().to_string());
                     ui.close();
@@ -689,11 +872,15 @@ impl ProjectExplorer {
                 }
             }
         });
-        if matches!(self.edit.as_ref().map(|e| &e.target), Some(EditTarget::Node(target) | EditTarget::Folder(target)) if *target == id)
+        if matches!(self.edit.as_ref().map(|e|&e.target),Some(EditTarget::Node(target))if *target==id)
         {
-            egui::Frame::new()
-                .inner_margin(egui::Margin::symmetric(8, 3))
-                .show(ui, |ui| self.show_editor(ui, catalog, response));
+            let edit_rect =
+                egui::Rect::from_min_max(rect.min + egui::vec2(indent + 42.0, 0.0), rect.max);
+            ui.painter().rect_filled(edit_rect, 0.0, RAISED);
+            self.show_editor_at(ui, catalog, response, edit_rect);
+        } else if matches!(self.edit.as_ref().map(|e|&e.target),Some(EditTarget::Folder(target))if *target==id)
+        {
+            self.show_editor(ui, catalog, response);
         }
         if self.moving == Some(id) {
             egui::Frame::new()
@@ -712,6 +899,9 @@ impl ProjectExplorer {
             }
         }
         if expanded {
+            if node.kind == NodeKind::Stack {
+                self.show_captures(ui, catalog, id, depth + 1, busy, response);
+            }
             for child in children {
                 self.show_node(ui, catalog, child, depth + 1, busy, response);
             }
@@ -748,12 +938,18 @@ impl ProjectExplorer {
         let run = &catalog.runs[run_index];
         let (rect, _) =
             ui.allocate_exact_size(egui::vec2(ui.available_width(), 24.0), Sense::hover());
+        let editing = matches!(self.edit.as_ref().map(|e|&e.target),Some(EditTarget::Revision(path))if *path==run.directory);
         let hit = ui.interact(
             rect,
             ui.id().with(("project-result", &run.directory)),
-            Sense::click(),
+            if editing {
+                Sense::hover()
+            } else {
+                Sense::click()
+            },
         );
-        let selected = catalog.selected == Some(stack)
+        let selected = self.selected_history.is_none()
+            && catalog.selected == Some(stack)
             && self.selected_revision.as_ref() == Some(&run.directory);
         paint_row(ui, rect, &hit, selected);
         let status = match run.status.as_str() {
@@ -775,6 +971,18 @@ impl ProjectExplorer {
         } else {
             format!("{number:02}  {}", run.label)
         };
+        let thumbnail = ui
+            .is_rect_visible(rect)
+            .then(|| self.previews.file(&run.output, false))
+            .flatten();
+        previews::ExplorerPreviews::paint(
+            ui,
+            egui::Rect::from_center_size(
+                rect.min + egui::vec2(indent + 29.0, 12.0),
+                egui::vec2(22.0, 18.0),
+            ),
+            thumbnail.as_ref(),
+        );
         row_text(
             ui,
             rect,
@@ -787,7 +995,12 @@ impl ProjectExplorer {
             },
             INK,
         );
-        hit.clone().on_hover_text(revision_description(run));
+        hit.clone().on_hover_ui(|ui| {
+            previews::ExplorerPreviews::hover(ui, thumbnail.as_ref(), &revision_description(run));
+            if let Some(error) = self.previews.error(&run.output, false) {
+                ui.colored_label(AMBER, error);
+            }
+        });
         let mut pin = false;
         hit.context_menu(|ui| {
             ui.label(
@@ -820,13 +1033,20 @@ impl ProjectExplorer {
                 pin = true;
                 ui.close();
             }
+            if ui.button("Reveal in Explorer").clicked() {
+                response.action = Some(ExplorerAction::RevealPath {
+                    path: run.output.clone(),
+                });
+                ui.close();
+            }
             if ui.button("Copy TIFF path").clicked() {
                 ui.ctx().copy_text(run.output.display().to_string());
                 ui.close();
             }
         });
-        if (hit.clicked() && !busy) || hit.secondary_clicked() {
+        if !editing && ((hit.clicked() && !busy) || hit.secondary_clicked()) {
             hit.request_focus();
+            self.selected_history = None;
             catalog.selected = Some(stack);
             self.selected_stack = Some(stack);
             self.selected_revision = Some(run.directory.clone());
@@ -840,6 +1060,7 @@ impl ProjectExplorer {
         if hit.has_focus() && ui.input_mut(|i| i.consume_key(egui::Modifiers::NONE, Key::F2)) {
             self.edit(EditTarget::Revision(run.directory.clone()), &run.label);
         }
+        let output = run.output.clone();
         let directory = run.directory.clone();
         if pin {
             catalog.runs[run_index].pinned = !catalog.runs[run_index].pinned;
@@ -847,9 +1068,300 @@ impl ProjectExplorer {
         }
         if matches!(self.edit.as_ref().map(|e| &e.target), Some(EditTarget::Revision(target)) if *target == directory)
         {
-            egui::Frame::new()
-                .inner_margin(egui::Margin::symmetric(8, 3))
-                .show(ui, |ui| self.show_editor(ui, catalog, response));
+            let edit_rect =
+                egui::Rect::from_min_max(rect.min + egui::vec2(indent + 42.0, 0.0), rect.max);
+            ui.painter().rect_filled(edit_rect, 0.0, RAISED);
+            self.show_editor_at(ui, catalog, response, edit_rect);
+        }
+        self.show_photo_history(ui, catalog, &output, depth + 1, busy, response);
+    }
+    fn show_captures(
+        &mut self,
+        ui: &mut egui::Ui,
+        catalog: &Catalog,
+        id: NodeId,
+        depth: usize,
+        busy: bool,
+        response: &mut ExplorerResponse,
+    ) {
+        let Some(draft) = catalog.node(id).and_then(|n| n.stack.as_ref()) else {
+            return;
+        };
+        let (rect, _) =
+            ui.allocate_exact_size(egui::vec2(ui.available_width(), 24.0), Sense::hover());
+        let hit = ui.interact(rect, ui.id().with(("project-captures", id)), Sense::click());
+        let indent = (depth as f32 * 14.0).min(ui.available_width() * 0.42);
+        let source = draft.sources.first().map(|s| s.path.as_path());
+        let thumbnail = source
+            .filter(|_| ui.is_rect_visible(rect))
+            .and_then(|path| self.previews.file(path, true));
+        previews::ExplorerPreviews::paint(
+            ui,
+            egui::Rect::from_center_size(
+                rect.min + egui::vec2(indent + 29.0, 12.0),
+                egui::vec2(22.0, 18.0),
+            ),
+            thumbnail.as_ref(),
+        );
+        row_text(
+            ui,
+            rect,
+            indent + 42.0,
+            "Captures",
+            &format!("{} photos", draft.sources.len()),
+            MUTED,
+        );
+        hit.clone().on_hover_ui(|ui| {
+            previews::ExplorerPreviews::hover(
+                ui,
+                thumbnail.as_ref(),
+                &format!(
+                    "Camera preview · {} source photographs\n{}",
+                    draft.sources.len(),
+                    draft.source.display()
+                ),
+            );
+            if let Some(path) = source
+                && let Some(error) = self.previews.error(path, true)
+            {
+                ui.colored_label(AMBER, error);
+            }
+        });
+        if hit.clicked() && !busy {
+            response.action = Some(ExplorerAction::OpenStack { id });
+        }
+        hit.context_menu(|ui| {
+            if ui.button("Reveal in Explorer").clicked() {
+                response.action = Some(ExplorerAction::RevealPath {
+                    path: draft.source.clone(),
+                });
+                ui.close();
+            }
+            if ui.button("Copy source folder").clicked() {
+                ui.ctx().copy_text(draft.source.display().to_string());
+                ui.close();
+            }
+        });
+    }
+    fn show_photo_history(
+        &mut self,
+        ui: &mut egui::Ui,
+        catalog: &mut Catalog,
+        path: &Path,
+        depth: usize,
+        busy: bool,
+        response: &mut ExplorerResponse,
+    ) {
+        let versions: Vec<_> = catalog
+            .photo_versions
+            .iter()
+            .filter(|v| v.owner.output == path)
+            .cloned()
+            .collect();
+        for version in versions.iter().rev() {
+            let indent = (depth as f32 * 14.0).min(ui.available_width() * 0.42);
+            let (rect, _) =
+                ui.allocate_exact_size(egui::vec2(ui.available_width(), 24.0), Sense::hover());
+            let editing = matches!(self.edit.as_ref().map(|e|&e.target),Some(EditTarget::Version(id))if *id==version.id);
+            let hit = ui.interact(
+                rect,
+                ui.id().with(("photo-version", &version.id)),
+                if editing {
+                    Sense::hover()
+                } else {
+                    Sense::click()
+                },
+            );
+            paint_row(
+                ui,
+                rect,
+                &hit,
+                self.selected_history.as_ref() == Some(&version.id),
+            );
+            glyph(
+                ui.painter(),
+                rect.min + egui::vec2(indent + 15.0, 12.0),
+                Glyph::Result,
+                ACCENT,
+            );
+            let (thumbnail, exact) = if ui.is_rect_visible(rect) {
+                self.previews
+                    .version(catalog.history_root().as_deref(), version)
+            } else {
+                (None, false)
+            };
+            previews::ExplorerPreviews::paint(
+                ui,
+                egui::Rect::from_center_size(
+                    rect.min + egui::vec2(indent + 15.0, 12.0),
+                    egui::vec2(22.0, 18.0),
+                ),
+                thumbnail.as_ref(),
+            );
+            row_text(ui, rect, indent + 28.0, &version.name, "edit", INK);
+            hit.clone().on_hover_ui(|ui| {
+                previews::ExplorerPreviews::hover(
+                    ui,
+                    thumbnail.as_ref(),
+                    if exact {
+                        "Saved edit · SDR preview"
+                    } else {
+                        "Base photograph · saved edits appear when this photograph is open"
+                    },
+                );
+                ui.label(
+                    "Restore these edits. Your current edits are preserved and can be undone.",
+                );
+                if let Some(error) = self.previews.error(&version.owner.output, false) {
+                    ui.colored_label(AMBER, error);
+                }
+            });
+            let mut restore = hit.clicked() && !busy && !editing;
+            hit.context_menu(|ui| {
+                restore |= ui
+                    .add_enabled(!busy, egui::Button::new("Restore edit version"))
+                    .clicked();
+                if ui.button("Rename version…").clicked() {
+                    self.edit(EditTarget::Version(version.id.clone()), &version.name);
+                    ui.close();
+                }
+                if ui.button("Reveal photograph in Explorer").clicked() {
+                    response.action = Some(ExplorerAction::RevealPath {
+                        path: version.owner.output.clone(),
+                    });
+                    ui.close();
+                }
+                if let Some(root) = catalog.history_root()
+                    && ui.button("Reveal saved edits in Explorer").clicked()
+                {
+                    response.action = Some(ExplorerAction::RevealPath {
+                        path: root.join(format!("{}.json", version.id)),
+                    });
+                    ui.close();
+                }
+                if ui.button("Copy photograph path").clicked() {
+                    ui.ctx()
+                        .copy_text(version.owner.output.display().to_string());
+                    ui.close();
+                }
+            });
+            if restore {
+                hit.request_focus();
+                self.selected_history = Some(version.id.clone());
+                response.action = Some(ExplorerAction::RestoreVersion {
+                    id: version.id.clone(),
+                });
+            }
+            if matches!(self.edit.as_ref().map(|e|&e.target),Some(EditTarget::Version(id))if *id==version.id)
+            {
+                let edit_rect =
+                    egui::Rect::from_min_max(rect.min + egui::vec2(indent + 28.0, 0.0), rect.max);
+                ui.painter().rect_filled(edit_rect, 0.0, RAISED);
+                self.show_editor_at(ui, catalog, response, edit_rect);
+            }
+            if hit.has_focus() && ui.input_mut(|i| i.consume_key(egui::Modifiers::NONE, Key::F2)) {
+                self.edit(EditTarget::Version(version.id.clone()), &version.name);
+            }
+            for export in catalog
+                .photo_exports
+                .iter()
+                .filter(|e| e.version == version.id)
+            {
+                let (rect, _) =
+                    ui.allocate_exact_size(egui::vec2(ui.available_width(), 24.0), Sense::hover());
+                let hit = ui.interact(
+                    rect,
+                    ui.id().with(("photo-export", &export.id)),
+                    Sense::click(),
+                );
+                paint_row(
+                    ui,
+                    rect,
+                    &hit,
+                    self.selected_history.as_ref() == Some(&export.id),
+                );
+                glyph(
+                    ui.painter(),
+                    rect.min + egui::vec2(indent + 29.0, 12.0),
+                    Glyph::Result,
+                    GREEN,
+                );
+                let name = export
+                    .path
+                    .file_name()
+                    .unwrap_or_default()
+                    .to_string_lossy();
+                row_text(
+                    ui,
+                    rect,
+                    indent + 42.0,
+                    &name,
+                    if export.settings.hdr { "HDR" } else { "SDR" },
+                    MUTED,
+                );
+                let decoded = export.settings.format != strehl_edit::ExportFormat::Avif
+                    && export.settings.color_space == strehl_edit::OutputColorSpace::Srgb
+                    && !export.settings.hdr;
+                let export_thumbnail = if decoded && ui.is_rect_visible(rect) {
+                    self.previews.file(&export.path, false)
+                } else {
+                    thumbnail.clone()
+                };
+                previews::ExplorerPreviews::paint(
+                    ui,
+                    egui::Rect::from_center_size(
+                        rect.min + egui::vec2(indent + 29.0, 12.0),
+                        egui::vec2(22.0, 18.0),
+                    ),
+                    export_thumbnail.as_ref(),
+                );
+                hit.clone().on_hover_ui(|ui| {
+                    let preview_label = if decoded {
+                        "Export preview"
+                    } else if exact {
+                        "Saved edit preview · export encoding not shown"
+                    } else {
+                        "Base photograph · export encoding not shown"
+                    };
+                    previews::ExplorerPreviews::hover(
+                        ui,
+                        export_thumbnail.as_ref(),
+                        &format!(
+                            "{preview_label}\n{}\n{:?} · {} · quality {}\nFrom edit: {}",
+                            export.path.display(),
+                            export.settings.format,
+                            export.settings.color_space.label(),
+                            export.settings.quality,
+                            version.name
+                        ),
+                    );
+                    if let Some(error) = self.previews.error(&export.path, false) {
+                        ui.colored_label(AMBER, error);
+                    }
+                });
+                let mut open = hit.clicked() && !busy;
+                hit.context_menu(|ui| {
+                    open |= ui
+                        .add_enabled(!busy, egui::Button::new("Open exported photograph"))
+                        .clicked();
+                    if ui.button("Reveal in Explorer").clicked() {
+                        response.action = Some(ExplorerAction::RevealPath {
+                            path: export.path.clone(),
+                        });
+                        ui.close();
+                    }
+                    if ui.button("Copy export path").clicked() {
+                        ui.ctx().copy_text(export.path.display().to_string());
+                        ui.close();
+                    }
+                });
+                if open {
+                    self.selected_history = Some(export.id.clone());
+                    response.action = Some(ExplorerAction::OpenExport {
+                        id: export.id.clone(),
+                    });
+                }
+            }
         }
     }
     fn matches_branch(&self, catalog: &Catalog, node: &ProjectNode) -> bool {
@@ -868,6 +1380,16 @@ impl ProjectExplorer {
                 return true;
             }
             parent = ancestor.parent;
+        }
+        if catalog.photo_versions.iter().any(|v| {
+            v.owner.stack == Some(node.id)
+                && (v.name.to_lowercase().contains(&query)
+                    || catalog.photo_exports.iter().any(|e| {
+                        e.version == v.id
+                            && e.path.to_string_lossy().to_lowercase().contains(&query)
+                    }))
+        }) {
+            return true;
         }
         if node.revisions.iter().any(|p| {
             catalog

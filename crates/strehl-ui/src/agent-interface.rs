@@ -128,6 +128,12 @@ pub(crate) enum AgentCommand {
     StartStack {},
     CancelStack {},
     /// The destination is the app's selected export folder; never an arbitrary path.
+    SaveEditVersion {
+        name: String,
+    },
+    RestoreEditVersion {
+        id: String,
+    },
     Export {
         file_name: String,
         format: String,
@@ -262,6 +268,20 @@ impl AgentCommand {
                     && zoom.is_finite()
                     && (1.0..=8.0).contains(zoom),
                 "View center must be normalized and zoom must be 1..8",
+            ),
+            Self::SaveEditVersion { name } => ensure(
+                !name.trim().is_empty()
+                    && name.trim().chars().count() <= 120
+                    && name.len() <= 384
+                    && !name.chars().any(char::is_control),
+                "Version name must be 1..120 characters without control characters",
+            ),
+            Self::RestoreEditVersion { id } => ensure(
+                id.len() == 32
+                    && id
+                        .bytes()
+                        .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b)),
+                "Use the exact saved version ID from photo_history.versions",
             ),
             Self::Export {
                 file_name,

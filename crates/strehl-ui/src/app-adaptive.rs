@@ -3,11 +3,48 @@ use super::*;
 use serde_json::{Value, json};
 use std::sync::Arc;
 use strehl_edit::{
-    AdaptiveIntent, AdaptiveParameters, AdaptiveSuggestion, DevelopmentRecipe, LinearImage,
+    AdaptiveIntent, AdaptiveParameters, AdaptiveSuggestion, AdaptiveToneRange, DevelopmentRecipe,
+    LinearImage,
 };
 
 #[path = "adaptive-effect.rs"]
 mod effect;
+
+fn treatment_choices() -> [(&'static str, AdaptiveParameters); 4] {
+    [
+        ("Natural", AdaptiveParameters::default()),
+        (
+            "Deep background",
+            AdaptiveParameters {
+                balance: 0.35,
+                shadow_protection: 0.85,
+                ..Default::default()
+            },
+        ),
+        (
+            "Texture contrast",
+            AdaptiveParameters {
+                balance: 0.2,
+                local_contrast: 0.8,
+                color: 0.15,
+                tone_range: AdaptiveToneRange::Midtones,
+                shadow_protection: 0.6,
+                ..Default::default()
+            },
+        ),
+        (
+            "Gentle highlights",
+            AdaptiveParameters {
+                balance: 0.0,
+                local_contrast: 0.25,
+                color: 0.15,
+                tone_range: AdaptiveToneRange::Highlights,
+                shadow_protection: 1.0,
+                highlight_compression: 0.65,
+            },
+        ),
+    ]
+}
 
 struct ParameterDraft {
     image: Arc<LinearImage>,
@@ -350,7 +387,7 @@ impl StrehlApp {
             .recipe
             .adaptive_scope(self.editor.selected.as_deref())
             .is_some();
-        let parameters = self
+        let mut parameters = self
             .adaptive
             .parameters
             .as_ref()
@@ -360,23 +397,34 @@ impl StrehlApp {
         } else {
             "Finish or cancel the current adjustment first."
         };
-        ui.label(RichText::new("Spatial light & color").color(INK).size(12.0));
-        theme::caption(
-            ui,
-            "Light and color shaped by the photograph, area by area.",
-        );
-        let label = if has_field {
-            "Recalculate treatment"
-        } else if self.editor.selected.is_some() {
-            "Analyze region"
-        } else {
-            "Analyze photograph"
-        };
-        if ui.add_enabled_ui(ready, |ui| ui.add_sized([ui.available_width(), 27.0], egui::Button::new(label))).inner
-            .on_hover_text("Build local light and color curves from this photograph. Manual sliders stay unchanged. Undo restores the previous treatment.")
-            .on_disabled_hover_text(disabled).clicked()
-            && let Err(error) = self.start_adaptive_parameters(1.0, AdaptiveIntent::Balance, parameters, false) {
-                self.adaptive.error = Some(error.to_string());
+        let choices = treatment_choices();
+        let look = choices
+            .iter()
+            .find(|(_, value)| *value == parameters)
+            .map_or("Custom", |(name, _)| *name);
+        let mut analyze = false;
+        ui.add_enabled_ui(ready, |ui| {
+            ui.horizontal(|ui| {
+                let width = (ui.available_width() - 94.0).max(80.0);
+                egui::ComboBox::from_id_salt("adaptive-look").width(width).truncate().selected_text(look)
+                    .show_ui(ui, |ui| {
+                        for (name, value) in choices {
+                            ui.selectable_value(&mut parameters, value, name);
+                        }
+                    }).response.on_hover_text("Choose the treatment, then Analyze. Each choice builds local curves for this photograph or selected region.");
+                analyze = ui.add_sized([82.0, 25.0], egui::Button::new(if has_field { "Recalculate" } else { "Analyze" }))
+                    .on_hover_text("Measure this scope and apply local light and color. Manual sliders remain available; Undo restores the previous treatment.")
+                    .clicked();
+            });
+        }).response.on_disabled_hover_text(disabled);
+        if let Some(draft) = &mut self.adaptive.parameters {
+            draft.value = parameters;
+        }
+        if analyze
+            && let Err(error) =
+                self.start_adaptive_parameters(1.0, AdaptiveIntent::Balance, parameters, false)
+        {
+            self.adaptive.error = Some(error.to_string());
         }
         if self.adaptive.pending.is_some() {
             theme::caption(ui, "Reading local light and color…");
@@ -407,14 +455,27 @@ impl StrehlApp {
                 self.adaptive.error = Some(error.to_string());
             }
         }
-        egui::CollapsingHeader::new("Shape the treatment").id_salt("adaptive-parameters").show(ui, |ui| {
+        egui::CollapsingHeader::new("Shape treatment").id_salt("adaptive-parameters").show(ui, |ui| {
             ui.add_enabled_ui(ready, |ui| {
                 let defaults = AdaptiveParameters::default();
                 if let Some(draft) = &mut self.adaptive.parameters {
+                    ui.horizontal(|ui| {
+                        ui.label(RichText::new("Tones").size(11.0).color(MUTED));
+                        egui::ComboBox::from_id_salt("adaptive-tone-range")
+                            .truncate()
+                            .selected_text(match draft.value.tone_range { AdaptiveToneRange::All => "All light", AdaptiveToneRange::Shadows => "Shadows", AdaptiveToneRange::Midtones => "Midtones", AdaptiveToneRange::Highlights => "Highlights" })
+                            .show_ui(ui, |ui| {
+                                for (value, text) in [(AdaptiveToneRange::All, "All light"), (AdaptiveToneRange::Shadows, "Shadows"), (AdaptiveToneRange::Midtones, "Midtones"), (AdaptiveToneRange::Highlights, "Highlights")] {
+                                    ui.selectable_value(&mut draft.value.tone_range, value, text);
+                                }
+                            });
+                    });
                     for (label, value, default, help) in [
                         ("Light balance", &mut draft.value.balance, defaults.balance, "Redistribute local light while preserving the scene's overall light placement."),
                         ("Local contrast", &mut draft.value.local_contrast, defaults.local_contrast, "Separate local tones without sharpening pixels or inventing detail."),
                         ("Color", &mut draft.value.color, defaults.color, "Enrich supported local color with protection for neutral and already saturated areas."),
+                        ("Protect shadows", &mut draft.value.shadow_protection, defaults.shadow_protection, "Keep deep backgrounds dark while treating the subject."),
+                        ("Soften highlights", &mut draft.value.highlight_compression, defaults.highlight_compression, "Compress bright light without lifting the rest of the image. This does not recover clipped detail."),
                     ] {
                         super::editing::controls::slider(ui, label, value, 0.0..=1.0, default, 2, "").on_hover_text(help);
                     }
@@ -939,6 +1000,7 @@ mod tests {
             balance: 0.2,
             local_contrast: 0.85,
             color: 0.65,
+            ..Default::default()
         };
         app.adaptive.parameters.as_mut().unwrap().value = parameters;
         assert_eq!(

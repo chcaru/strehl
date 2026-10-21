@@ -5,6 +5,12 @@ default is AVIF, HDR, Rec.2020, quality 100. HDR requires the retained scene-lin
 master; an imported SDR photograph can be exported as SDR but cannot acquire
 missing highlight detail by changing a file tag.
 
+The initial destination is beside the photograph's TIFF. A chosen alternate
+folder is remembered for that photograph. Projects retains each successful
+export, its format/color/encoding settings, and the exact named edit version
+behind it. A preparation or encoding failure is shown in Export and does not
+create a successful delivery record.
+
 | Format | Stored samples | Delivery | Color description |
 | --- | --- | --- | --- |
 | AVIF | 10-bit, 4:4:4, full range | PQ HDR or SDR | Matching AV1 sequence header and AVIF `nclx` |

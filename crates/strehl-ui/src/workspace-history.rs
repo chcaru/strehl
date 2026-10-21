@@ -7,11 +7,15 @@ use crate::{
 };
 use serde::{Deserialize, Serialize};
 use std::{
-    collections::HashSet,
-    io::Read,
+    cell::RefCell,
+    collections::{BTreeMap, HashSet},
+    io::{Read, Write},
     path::{Path, PathBuf},
     time::{SystemTime, UNIX_EPOCH},
 };
+#[path = "photo-history.rs"]
+pub(crate) mod photographs;
+pub(crate) use photographs::{PhotoExport, PhotoOwner, PhotoVersion};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub(crate) struct SourceIdentity {
@@ -151,15 +155,22 @@ pub(crate) struct Catalog {
     pub runs: Vec<Run>,
     pub nodes: Vec<ProjectNode>,
     pub selected: Option<NodeId>,
+    pub photo_versions: Vec<PhotoVersion>,
+    pub photo_exports: Vec<PhotoExport>,
+    /// Explicit alternate destinations, keyed by the photograph, not a stack's RAW folder.
+    pub export_directories: BTreeMap<PathBuf, PathBuf>,
     next_node_id: NodeId,
     #[serde(skip)]
     pub path: Option<PathBuf>,
     #[serde(skip)]
     pub load_error: Option<String>,
+    #[serde(skip)]
+    disk_bytes: RefCell<Option<Vec<u8>>>,
 }
 impl Catalog {
     pub fn load(path: Option<PathBuf>) -> Self {
         let mut load_error = None;
+        let mut disk_bytes = None;
         let mut catalog = path
             .as_deref()
             .and_then(|p| {
@@ -178,6 +189,9 @@ impl Catalog {
                     let mut catalog: Self = serde_json::from_slice(&bytes)?;
                     catalog.validate()?;
                     catalog.migrate_runs()?;
+                    if source == p {
+                        disk_bytes = Some(bytes);
+                    }
                     Ok(catalog)
                 }) {
                     Ok(catalog) => Some(catalog),
@@ -192,6 +206,7 @@ impl Catalog {
             .unwrap_or_default();
         catalog.path = path;
         catalog.load_error = load_error;
+        catalog.disk_bytes = RefCell::new(disk_bytes);
         catalog.layout.sanitize();
         catalog
     }
@@ -211,14 +226,79 @@ impl Catalog {
             .parent()
             .ok_or_else(|| anyhow::anyhow!("Catalog has no parent"))?;
         std::fs::create_dir_all(parent)?;
+        let lock = std::fs::OpenOptions::new()
+            .create(true)
+            .truncate(false)
+            .read(true)
+            .write(true)
+            .open(path.with_extension("lock"))?;
+        lock.try_lock()
+            .map_err(|e| anyhow::anyhow!("Another Strehl window is saving Projects; retry: {e}"))?;
+        let actual = if path.exists() {
+            Some(read_catalog_bytes(path, MAX_CATALOG_BYTES)?)
+        } else {
+            None
+        };
+        anyhow::ensure!(
+            actual.as_ref() == self.disk_bytes.borrow().as_ref(),
+            "Projects changed in another window. Your changes remain in this window; reload before replacing the saved library"
+        );
         let temporary = path.with_extension(format!("{}.tmp", std::process::id()));
         let bytes = serde_json::to_vec_pretty(self)?;
         anyhow::ensure!(bytes.len() <= limit, "Workspace exceeds size limit");
-        std::fs::write(&temporary, bytes)?;
-        // rename replaces the destination atomically on the supported platforms.
-        std::fs::rename(&temporary, path)?;
+        let result = (|| {
+            let mut file = std::fs::File::create(&temporary)?;
+            file.write_all(&bytes)?;
+            file.sync_all()?;
+            drop(file);
+            // rename replaces the destination atomically on the supported platforms.
+            std::fs::rename(&temporary, path)?;
+            anyhow::Ok(())
+        })();
+        if result.is_err() {
+            let _ = std::fs::remove_file(&temporary);
+        }
+        result?;
+        *self.disk_bytes.borrow_mut() = Some(bytes);
         Ok(())
     }
+    /// Explicit conflict recovery preserves this window before loading another
+    /// window's library. Immutable recipe payloads are never removed.
+    pub(crate) fn recover_and_reload(&mut self) -> anyhow::Result<PathBuf> {
+        let path = self
+            .path
+            .clone()
+            .ok_or_else(|| anyhow::anyhow!("No project storage folder is available"))?;
+        let parent = path
+            .parent()
+            .ok_or_else(|| anyhow::anyhow!("Projects path has no parent"))?;
+        std::fs::create_dir_all(parent)?;
+        let bytes = serde_json::to_vec_pretty(self)?;
+        anyhow::ensure!(
+            bytes.len() <= MAX_CATALOG_BYTES,
+            "Projects recovery exceeds size limit"
+        );
+        let mut nonce = [0u8; 8];
+        getrandom::fill(&mut nonce).map_err(|e| anyhow::anyhow!("Recovery identity: {e}"))?;
+        let suffix = nonce.iter().map(|b| format!("{b:02x}")).collect::<String>();
+        let recovery = parent.join(format!("projects-recovery-{suffix}.json"));
+        let mut file = std::fs::OpenOptions::new()
+            .create_new(true)
+            .write(true)
+            .open(&recovery)?;
+        file.write_all(&bytes)?;
+        file.sync_all()?;
+        drop(file);
+        let loaded = Self::load(Some(path));
+        anyhow::ensure!(
+            loaded.load_error.is_none(),
+            "Current Projects cannot be read; your recovery is saved at {}",
+            recovery.display()
+        );
+        *self = loaded;
+        Ok(recovery)
+    }
+
     /// Legacy recent-run insertion. Revisions attached to a project are always
     /// retained; the old 128-entry cap applies only to unattached recent runs.
     pub fn add(&mut self, run: Run) {
@@ -277,6 +357,103 @@ impl Catalog {
     pub fn latest_run(&self, id: NodeId) -> Option<&Run> {
         let directory = self.node(id)?.revisions.last()?;
         self.runs.iter().find(|run| &run.directory == directory)
+    }
+    pub fn photo_owner(&self, output: &Path) -> PhotoOwner {
+        let run = self
+            .runs
+            .iter()
+            .find(|run| run.output == output)
+            .and_then(|run| {
+                self.stack_for_run(&run.directory)
+                    .map(|stack| (stack, run.directory.clone()))
+            });
+        PhotoOwner {
+            stack: run.as_ref().map(|r| r.0),
+            run: run.map(|r| r.1),
+            output: output.to_path_buf(),
+        }
+    }
+    pub fn history_root(&self) -> Option<PathBuf> {
+        self.path
+            .as_ref()?
+            .parent()
+            .map(|p| p.join("photo-history"))
+    }
+    pub fn add_photo_version(&mut self, version: PhotoVersion) -> anyhow::Result<()> {
+        self.validate_photo_owner(&version.owner)?;
+        anyhow::ensure!(
+            photographs::valid_id(&version.id),
+            "Invalid version identity"
+        );
+        photographs::checked_name(&version.name)?;
+        if let Some(saved) = self.photo_versions.iter().find(|v| v.id == version.id) {
+            anyhow::ensure!(
+                saved == &version,
+                "A version identity cannot acquire different photo edits"
+            );
+            return Ok(());
+        }
+        anyhow::ensure!(
+            self.photo_versions.len() < 8192
+                && self
+                    .photo_versions
+                    .iter()
+                    .filter(|v| v.owner.output == version.owner.output)
+                    .count()
+                    < 256,
+            "Photograph version limit reached"
+        );
+        self.photo_versions.push(version);
+        Ok(())
+    }
+    pub fn rename_photo_version(&mut self, id: &str, name: &str) -> anyhow::Result<()> {
+        let name = photographs::checked_name(name)?;
+        self.photo_versions
+            .iter_mut()
+            .find(|v| v.id == id)
+            .ok_or_else(|| anyhow::anyhow!("Version no longer exists"))?
+            .name = name;
+        Ok(())
+    }
+    pub fn add_photo_export(&mut self, export: PhotoExport) -> anyhow::Result<()> {
+        anyhow::ensure!(
+            self.photo_versions.iter().any(|v| v.id == export.version),
+            "Export version is missing"
+        );
+        anyhow::ensure!(photographs::valid_id(&export.id), "Invalid export identity");
+        if let Some(saved) = self.photo_exports.iter().find(|e| e.id == export.id) {
+            anyhow::ensure!(saved == &export, "An export identity cannot change");
+            return Ok(());
+        }
+        anyhow::ensure!(
+            self.photo_exports.len() < 16384,
+            "Export history limit reached"
+        );
+        export.settings.validate()?;
+        self.photo_exports.push(export);
+        Ok(())
+    }
+    fn validate_photo_owner(&self, owner: &PhotoOwner) -> anyhow::Result<()> {
+        anyhow::ensure!(
+            !owner.output.as_os_str().is_empty(),
+            "Photograph path is empty"
+        );
+        match (owner.stack, owner.run.as_ref()) {
+            (Some(stack), Some(directory)) => anyhow::ensure!(
+                self.stack_for_run(directory) == Some(stack)
+                    && self
+                        .runs
+                        .iter()
+                        .any(|r| &r.directory == directory && r.output == owner.output),
+                "Photograph version belongs to a different stack or render"
+            ),
+            (None, None) => anyhow::ensure!(
+                self.photo_owner(&owner.output).stack.is_none(),
+                "Captured photograph is missing its stack identity"
+            ),
+            _ => anyhow::bail!("Photograph stack and render identity must agree"),
+        }
+        Ok(())
     }
     pub fn create_project(&mut self, name: &str) -> anyhow::Result<NodeId> {
         self.insert_node(None, name, NodeKind::Project, None)
@@ -574,6 +751,44 @@ impl Catalog {
             self.selected.is_none_or(|id| self.node(id).is_some()),
             "Selected object missing"
         );
+        anyhow::ensure!(
+            self.photo_versions.len() <= 8192
+                && self.photo_exports.len() <= 16384
+                && self.export_directories.len() <= 8192,
+            "Photograph history exceeds its limit"
+        );
+        let mut version_ids = HashSet::new();
+        let mut counts = std::collections::HashMap::<&Path, usize>::new();
+        for version in &self.photo_versions {
+            self.validate_photo_owner(&version.owner)?;
+            photographs::checked_name(&version.name)?;
+            anyhow::ensure!(
+                photographs::valid_id(&version.id)
+                    && version_ids.insert(&version.id)
+                    && version.loaded_sha256.len() == 64
+                    && version.decoded_source.sha256.len() == 64
+                    && version.photo.sha256.len() == 64
+                    && version.photo.sha256.bytes().all(|b| b.is_ascii_hexdigit())
+                    && version.photo.dimensions.iter().all(|n| *n > 0),
+                "Invalid photograph version record"
+            );
+            let count = counts.entry(&version.owner.output).or_default();
+            *count += 1;
+            anyhow::ensure!(*count <= 256, "Photograph version limit reached");
+        }
+        let mut export_ids = HashSet::new();
+        for export in &self.photo_exports {
+            anyhow::ensure!(
+                photographs::valid_id(&export.id)
+                    && export_ids.insert(&export.id)
+                    && version_ids.contains(&export.version)
+                    && !export.path.as_os_str().is_empty()
+                    && export.sha256.len() == 64
+                    && export.sha256.bytes().all(|b| b.is_ascii_hexdigit()),
+                "Invalid photograph export record"
+            );
+            export.settings.validate()?;
+        }
         Ok(())
     }
 }

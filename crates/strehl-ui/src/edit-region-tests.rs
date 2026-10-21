@@ -290,6 +290,126 @@ fn modifiers_yield_the_canvas_and_focus_loss_cancels_without_mutation() {
 }
 
 #[test]
+fn select_yields_empty_image_and_wheel_but_region_drag_stays_an_edit() {
+    let mut canvas = Canvas::new();
+    canvas.editor.set_tool(DrawingTool::Rectangle);
+    canvas.drag([0.3, 0.3], [0.6, 0.6]);
+    let original = canvas.editor.recipe.clone();
+    canvas.pointer([0.1, 0.1], Some(true));
+    assert!(
+        !canvas.editor.region_interaction.owns_pointer,
+        "empty image must allow plain pan"
+    );
+    canvas.pointer([0.45, 0.45], None);
+    assert!(
+        !canvas.editor.region_interaction.owns_pointer,
+        "a pan cannot turn into region movement halfway through"
+    );
+    canvas.pointer([0.45, 0.45], Some(false));
+    assert_eq!(canvas.editor.recipe, original);
+    canvas.frame(
+        vec![egui::Event::MouseWheel {
+            unit: egui::MouseWheelUnit::Point,
+            delta: egui::vec2(0.0, 40.0),
+            modifiers: Default::default(),
+        }],
+        Default::default(),
+    );
+    assert!(
+        !canvas.editor.region_interaction.owns_pointer,
+        "wheel over a region must zoom without a modifier"
+    );
+    // A new press must win while the previous wheel still has inertia.
+    canvas.pointer([0.45, 0.45], Some(true));
+    assert!(
+        canvas.ctx.input(|i| i.smooth_scroll_delta != Vec2::ZERO),
+        "fixture must actually retain wheel inertia"
+    );
+    assert!(canvas.editor.region_interaction.owns_pointer);
+    canvas.pointer([0.5, 0.5], None);
+    canvas.pointer([0.5, 0.5], Some(false));
+    assert_ne!(
+        canvas.editor.recipe, original,
+        "the same region must still be movable"
+    );
+}
+
+#[test]
+fn double_click_region_fits_photo_except_on_an_insertable_polygon_edge() {
+    for shape in [
+        RegionShape::Ellipse {
+            center: [0.4, 0.4],
+            radius: [0.2, 0.2],
+        },
+        RegionShape::Rectangle {
+            min: [0.2, 0.2],
+            max: [0.6, 0.6],
+        },
+        RegionShape::Polygon {
+            points: vec![[0.2, 0.2], [0.6, 0.2], [0.6, 0.6], [0.2, 0.6]],
+        },
+    ] {
+        let mut canvas = Canvas::new();
+        canvas.editor.add_region(shape).unwrap();
+        let original = canvas.editor.recipe.clone();
+        let history = canvas.editor.history_depths();
+        canvas.click([0.4, 0.4]);
+        assert!(
+            !canvas.editor.fit_view_requested,
+            "a single click still selects"
+        );
+        canvas.click([0.4, 0.4]);
+        assert!(
+            canvas.editor.fit_view_requested,
+            "region interior must not swallow photograph reset"
+        );
+        assert_eq!(canvas.editor.recipe, original);
+        assert_eq!(canvas.editor.history_depths(), history);
+    }
+    let mut canvas = Canvas::new();
+    canvas
+        .editor
+        .add_region(RegionShape::Polygon {
+            points: vec![[0.2, 0.2], [0.6, 0.2], [0.6, 0.6], [0.2, 0.6]],
+        })
+        .unwrap();
+    let original = canvas.editor.recipe.clone();
+    canvas.click([0.4, 0.2]);
+    canvas.click([0.4, 0.2]);
+    let RegionShape::Polygon { points } = &canvas.editor.recipe.regions[0].shape else {
+        panic!()
+    };
+    assert_eq!(
+        points.len(),
+        5,
+        "polygon edge keeps its vertex-insertion gesture"
+    );
+    assert!(
+        !canvas.editor.fit_view_requested,
+        "local geometry edit must not also reset view"
+    );
+    assert!(canvas.editor.undo());
+    assert_eq!(canvas.editor.recipe, original);
+}
+
+#[test]
+fn whole_photograph_scope_keeps_regions_and_cancels_unfinished_drawing() {
+    let mut canvas = Canvas::new();
+    canvas.editor.set_tool(DrawingTool::Rectangle);
+    canvas.drag([0.2, 0.2], [0.6, 0.6]);
+    let recipe = canvas.editor.recipe.clone();
+    assert!(canvas.editor.selected.is_some());
+    canvas.editor.set_tool(DrawingTool::Polygon);
+    canvas.click([0.1, 0.1]);
+    assert!(!canvas.editor.polygon.is_empty());
+    canvas.editor.select_photograph();
+    assert!(canvas.editor.selected.is_none());
+    assert!(canvas.editor.polygon.is_empty());
+    assert_eq!(canvas.editor.tool, DrawingTool::Select);
+    assert_eq!(canvas.editor.recipe, recipe);
+}
+
+#[test]
 fn lasso_storage_is_bounded_and_zoomed_mapping_keeps_global_coordinates() {
     let mut points = Vec::new();
     let image = Rect::from_min_size(Pos2::ZERO, Vec2::splat(20000.0));

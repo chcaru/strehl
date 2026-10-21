@@ -109,7 +109,25 @@ impl AdaptiveSuggestion {
                         color: (previous.parameters.color * old_weight
                             + next.parameters.color * new_weight)
                             / denominator,
+                        // Discrete intent describes the requested destination;
+                        // the actual stored curves below still blend continuously.
+                        tone_range: next.parameters.tone_range,
+                        shadow_protection: (previous.parameters.shadow_protection * old_weight
+                            + next.parameters.shadow_protection * new_weight)
+                            / denominator,
+                        highlight_compression: (previous.parameters.highlight_compression
+                            * old_weight
+                            + next.parameters.highlight_compression * new_weight)
+                            / denominator,
                     };
+                    if previous.version == 2 && field.version == 1 {
+                        field.version = 2;
+                        field.color_gain = field
+                            .color_gain
+                            .iter()
+                            .flat_map(|v| std::iter::repeat_n(*v, field.levels as usize))
+                            .collect();
+                    }
                     // Reanalysis replaces the addressed field. Resample its old
                     // curves onto the new lattice for a non-compounding Amount.
                     for y in 0..field.height as usize {
@@ -131,12 +149,20 @@ impl AdaptiveSuggestion {
                                 field.tone_ev[i] = (previous.gain_ev_at(uv, l) * old_weight
                                     + (field.tone_ev[i] + field.centering_ev) * new_weight)
                                     / denominator;
+                                if field.version == 2 {
+                                    field.color_gain[i] = 1.0
+                                        + ((previous.color_gain_at(uv, l) - 1.0) * old_weight
+                                            + (field.color_gain[i] - 1.0) * new_weight)
+                                            / denominator;
+                                }
                             }
-                            let i = y * field.width as usize + x;
-                            field.color_gain[i] = 1.0
-                                + ((previous.color_gain_at(uv) - 1.0) * old_weight
-                                    + (field.color_gain[i] - 1.0) * new_weight)
-                                    / denominator;
+                            if field.version == 1 {
+                                let i = y * field.width as usize + x;
+                                field.color_gain[i] = 1.0
+                                    + ((previous.color_gain_at(uv, 1.0) - 1.0) * old_weight
+                                        + (field.color_gain[i] - 1.0) * new_weight)
+                                        / denominator;
+                            }
                         }
                     }
                     field.centering_ev = 0.0;

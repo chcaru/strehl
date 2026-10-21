@@ -7,12 +7,37 @@ use super::luma;
 
 pub const MAX_SPATIAL_TREATMENTS: usize = 6;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum AdaptiveToneRange {
+    #[default]
+    All,
+    Shadows,
+    Midtones,
+    Highlights,
+}
+
+impl AdaptiveToneRange {
+    fn is_all(&self) -> bool {
+        *self == Self::All
+    }
+}
+fn is_zero(value: &f32) -> bool {
+    *value == 0.0
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct AdaptiveParameters {
     pub balance: f32,
     pub local_contrast: f32,
     pub color: f32,
+    #[serde(skip_serializing_if = "AdaptiveToneRange::is_all")]
+    pub tone_range: AdaptiveToneRange,
+    #[serde(skip_serializing_if = "is_zero")]
+    pub shadow_protection: f32,
+    #[serde(skip_serializing_if = "is_zero")]
+    pub highlight_compression: f32,
 }
 
 impl Default for AdaptiveParameters {
@@ -21,13 +46,22 @@ impl Default for AdaptiveParameters {
             balance: 0.5,
             local_contrast: 0.5,
             color: 0.35,
+            tone_range: AdaptiveToneRange::All,
+            shadow_protection: 0.0,
+            highlight_compression: 0.0,
         }
     }
 }
 
 impl AdaptiveParameters {
     pub fn validate(&self) -> Result<()> {
-        for v in [self.balance, self.local_contrast, self.color] {
+        for v in [
+            self.balance,
+            self.local_contrast,
+            self.color,
+            self.shadow_protection,
+            self.highlight_compression,
+        ] {
             ensure!(
                 v.is_finite() && (0.0..=1.0).contains(&v),
                 "Adaptive parameters must be finite and in 0..=1"
@@ -54,7 +88,7 @@ pub struct SpatialTreatment {
     /// EV corrections, ordered [y][x][luminance]. Quantized to 1/4096 stop.
     #[serde(with = "compact_f32")]
     pub tone_ev: Vec<f32>,
-    /// Modest chroma multipliers at each [y][x] cell.
+    /// Version 1: [y][x]. Version 2 also slices by input luminance [y][x][light].
     #[serde(with = "compact_f32")]
     pub color_gain: Vec<f32>,
     pub delivery_ceiling: f32,
@@ -64,7 +98,10 @@ pub struct SpatialTreatment {
 
 impl SpatialTreatment {
     pub fn validate(&self) -> Result<()> {
-        ensure!(self.version == 1, "unsupported spatial treatment version");
+        ensure!(
+            matches!(self.version, 1 | 2),
+            "unsupported spatial treatment version"
+        );
         self.parameters.validate()?;
         ensure!(
             self.amount.is_finite() && (0.0..=1.0).contains(&self.amount),
@@ -110,7 +147,14 @@ impl SpatialTreatment {
         }
         let cells = self.width as usize * self.height as usize;
         ensure!(
-            self.tone_ev.len() == cells * self.levels as usize && self.color_gain.len() == cells,
+            self.tone_ev.len() == cells * self.levels as usize
+                && self.color_gain.len()
+                    == cells
+                        * if self.version == 2 {
+                            self.levels as usize
+                        } else {
+                            1
+                        },
             "spatial lattice sample count mismatch"
         );
         ensure!(
@@ -163,9 +207,26 @@ impl SpatialTreatment {
             + self.centering_ev
     }
 
-    pub(crate) fn color_gain_at(&self, uv: [f32; 2]) -> f32 {
+    pub(crate) fn color_gain_at(&self, uv: [f32; 2], luminance: f32) -> f32 {
         let (x, y, tx, ty) = self.coordinates(uv);
-        let at = |xx, yy| self.color_gain[yy * self.width as usize + xx];
+        let z = if self.version == 2 {
+            ((luminance.max(1e-12).log2() - self.log_min) / (self.log_max - self.log_min)
+                * (self.levels - 1) as f32)
+                .clamp(0.0, (self.levels - 1) as f32)
+        } else {
+            0.0
+        };
+        let iz = (z as usize).min(self.levels as usize - 2);
+        let tz = z - iz as f32;
+        let at = |xx, yy| {
+            let cell = yy * self.width as usize + xx;
+            if self.version == 1 {
+                self.color_gain[cell]
+            } else {
+                let i = cell * self.levels as usize + iz;
+                self.color_gain[i] * (1.0 - tz) + self.color_gain[i + 1] * tz
+            }
+        };
         (at(x, y) * (1.0 - tx) + at(x + 1, y) * tx) * (1.0 - ty)
             + (at(x, y + 1) * (1.0 - tx) + at(x + 1, y + 1) * tx) * ty
     }
@@ -194,7 +255,7 @@ impl SpatialTreatment {
         };
         let toned = rgb.map(|c| c * gain);
         let new_y = y * gain;
-        let color = self.color_gain_at(uv);
+        let color = self.color_gain_at(uv, y);
         let maximum = toned.into_iter().fold(0.0, f32::max);
         let minimum = toned.into_iter().fold(f32::INFINITY, f32::min).max(0.0);
         let saturation = (maximum - minimum) / maximum.max(1e-12);

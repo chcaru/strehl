@@ -164,7 +164,7 @@ fn collapsing_region_shelf_preserves_expanded_height() {
                 egui::CentralPanel::default()
                     .frame(egui::Frame::NONE)
                     .show(ctx, |ui| {
-                        region_shelf(ui, open, |ui| {
+                        region_shelf(ui, open, true, |ui| {
                             heights.push(ui.max_rect().height());
                         });
                     });
@@ -180,6 +180,120 @@ fn collapsing_region_shelf_preserves_expanded_height() {
         (heights[2] - heights[0]).abs() < 1.0,
         "collapsed height replaced expanded height: {heights:?}"
     );
+}
+
+#[test]
+fn empty_shelf_reclaims_space_and_tool_guidance_without_erasing_resized_list() {
+    for width in [235.0, 272.0] {
+        let ctx = egui::Context::default();
+        theme::install(&ctx);
+        ctx.data_mut(|d| {
+            d.insert_persisted(
+                egui::Id::new("edit-regions-shelf"),
+                egui::containers::panel::PanelState {
+                    rect: egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(width, 276.0)),
+                },
+            );
+        });
+        let mut app = StrehlApp::from_launch(4096, LaunchOptions::default());
+        app.catalog = Default::default();
+        app.editor = Default::default();
+        let mut heights = Vec::new();
+        let mut free_heights = Vec::new();
+        for (populated, tool, expected_hint) in [
+            (true, DrawingTool::Select, None),
+            (
+                false,
+                DrawingTool::Select,
+                Some("Choose a shape to add a region."),
+            ),
+            (
+                false,
+                DrawingTool::Ellipse,
+                Some("Drag an ellipse on the photograph."),
+            ),
+            (
+                false,
+                DrawingTool::MagicLasso,
+                Some("Enclose detail with a little background."),
+            ),
+            (true, DrawingTool::Select, None),
+        ] {
+            app.editor.recipe.regions = if populated {
+                vec![region("r")]
+            } else {
+                Vec::new()
+            };
+            app.editor.set_tool(tool);
+            let recipe = app.editor.recipe.clone();
+            let mut shelf_rect = egui::Rect::NOTHING;
+            let mut free_height = 0.0;
+            let mut output = None;
+            for _ in 0..2 {
+                output = Some(ctx.run(
+                    egui::RawInput {
+                        screen_rect: Some(egui::Rect::from_min_size(
+                            egui::Pos2::ZERO,
+                            egui::vec2(width, 720.0),
+                        )),
+                        ..Default::default()
+                    },
+                    |ctx| {
+                        egui::CentralPanel::default()
+                            .frame(egui::Frame::NONE)
+                            .show(ctx, |ui| {
+                                region_shelf(ui, true, populated, |ui| {
+                                    shelf_rect = ui.max_rect();
+                                    app.edit_region_shelf(ui, true);
+                                });
+                                free_height = ui.available_height();
+                            });
+                    },
+                ));
+            }
+            let output = output.unwrap();
+            if let Some(hint) = expected_hint {
+                let text = output
+                    .shapes
+                    .iter()
+                    .find_map(|shape| match &shape.shape {
+                        egui::Shape::Text(text) if text.galley.text() == hint => {
+                            Some((shape.clip_rect, text.visual_bounding_rect()))
+                        }
+                        _ => None,
+                    })
+                    .unwrap_or_else(|| panic!("Missing tool guidance at width {width}: {hint}"));
+                assert!(
+                    text.0.intersect(text.1).height() >= 8.0,
+                    "Guidance was clipped away: {hint}"
+                );
+                assert!(shelf_rect.expand(1.0).contains(text.1.center()));
+            }
+            assert_eq!(app.editor.recipe, recipe);
+            heights.push(shelf_rect.height());
+            free_heights.push(free_height);
+        }
+        assert!(
+            heights[0] > 250.0,
+            "Resized fixture did not apply: {heights:?}"
+        );
+        assert!(
+            heights[1] <= 151.0 && heights[0] - heights[1] > 100.0,
+            "Empty shelf did not reclaim space: {heights:?}"
+        );
+        assert!(
+            (heights[1] - heights[2]).abs() < 0.1 && (heights[2] - heights[3]).abs() < 0.1,
+            "Tool changes resized the empty shelf: {heights:?}"
+        );
+        assert!(
+            (heights[0] - heights[4]).abs() < 1.0,
+            "Empty shelf erased the populated user height: {heights:?}"
+        );
+        assert!(
+            free_heights[1] - free_heights[0] > 100.0,
+            "Space was not returned to the adjustment controls: {free_heights:?}"
+        );
+    }
 }
 
 #[test]

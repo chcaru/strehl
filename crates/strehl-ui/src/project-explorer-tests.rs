@@ -442,8 +442,14 @@ fn new_project_leads_to_a_local_new_stack_action() {
 fn tree_icons_and_editor_actions_do_not_depend_on_symbol_font_glyphs() {
     let (mut catalog, project, _) = fixture();
     let mut explorer = ProjectExplorer::default();
-    explorer.edit(EditTarget::Node(project), "Fieldwork");
     let ctx = egui::Context::default();
+    let (out, _) = paint(&mut explorer, &mut catalog, &ctx, vec![], false);
+    assert!(
+        find(&out, "project").is_some(),
+        "Normal rows distinguish projects from stacks"
+    );
+    assert!(find(&out, "1 result").is_some());
+    explorer.edit(EditTarget::Node(project), "Fieldwork");
     let (out, _) = paint(&mut explorer, &mut catalog, &ctx, vec![], false);
     for symbol in ["◇", "▱", "▤", "⌄", "›", "✓", "×", "•", "◦"] {
         assert!(
@@ -452,8 +458,8 @@ fn tree_icons_and_editor_actions_do_not_depend_on_symbol_font_glyphs() {
         );
     }
     assert!(
-        find(&out, "project").is_some(),
-        "kind labels distinguish projects from stacks"
+        explorer.editor_save_rect.is_some(),
+        "The same-row rename editor is actually visible"
     );
     assert!(find(&out, "1 result").is_some());
 }
@@ -574,5 +580,160 @@ fn creating_project_is_reversible_without_reusing_ids_or_touching_captures() {
     assert!(
         next > created,
         "redo must preserve the monotonic node identity allocator"
+    );
+}
+
+#[test]
+fn photograph_versions_are_local_click_actions_and_rename_undo_keeps_export_lineage() {
+    let (mut catalog, project, stack) = fixture();
+    let output = catalog.runs[0].output.clone();
+    let id = "1234567890abcdef1234567890abcdef";
+    let identity = serde_json::json!({"canonical_path":output,"bytes":20,"dimensions":[20,10],"sha256":"a".repeat(64)});
+    let version=serde_json::from_value(serde_json::json!({"id":id,"name":"Reflection repair","created":20,
+        "owner":catalog.photo_owner(&output),"photo":identity,"decoded_source":identity,"loaded_sha256":"b".repeat(64)})).unwrap();
+    catalog.add_photo_version(version).unwrap();
+    let export_id = "abcdef0123456789abcdef0123456789";
+    catalog.add_photo_export(serde_json::from_value(serde_json::json!({"id":export_id,"version":id,"path":"delivery.png","created":22,"settings":{"format":"png","color_space":"display_p3","hdr":false,"quality":100,"speed":6},"bytes":20,"sha256":"c".repeat(64)})).unwrap()).unwrap();
+    let mut explorer = ProjectExplorer::default();
+    let ctx = egui::Context::default();
+    theme::install(&ctx);
+    let (out, _) = paint(&mut explorer, &mut catalog, &ctx, vec![], false);
+    let at = find(&out, "Reflection repair").expect("version appears beneath its result");
+    let response = click(&mut explorer, &mut catalog, &ctx, at, false);
+    assert!(matches!(response.action,Some(ExplorerAction::RestoreVersion{id:chosen})if chosen==id));
+    assert_eq!(explorer.selected_history.as_deref(), Some(id));
+    let recipe_evidence = catalog.photo_versions[0].photo.clone();
+    explorer
+        .organize(&mut catalog, |catalog| {
+            catalog.rename_photo_version(id, "Repaired facets")
+        })
+        .unwrap();
+    assert!(explorer.undo(&mut catalog));
+    assert_eq!(catalog.photo_versions[0].name, "Reflection repair");
+    assert_eq!(catalog.photo_versions[0].photo, recipe_evidence);
+    assert_eq!(catalog.photo_exports[0].version, id);
+    explorer.filter = "Reflection".into();
+    assert!(explorer.matches_branch(&catalog, catalog.node(project).unwrap()));
+    catalog.node_mut(project).unwrap().expanded = false;
+    explorer.reveal_photo_history(&mut catalog, &output, Some(id));
+    assert!(catalog.node(project).unwrap().expanded);
+    assert_eq!(catalog.selected, Some(stack));
+    assert!(explorer.filter.is_empty());
+    let (out, _) = paint(&mut explorer, &mut catalog, &ctx, vec![], false);
+    let at = find(&out, "delivery.png").unwrap();
+    let response = click(&mut explorer, &mut catalog, &ctx, at, false);
+    assert!(
+        matches!(response.action,Some(ExplorerAction::OpenExport{id:chosen})if chosen==export_id)
+    );
+}
+
+#[test]
+fn f2_renames_in_place_without_reopening_the_stack_and_escape_discards() {
+    let (mut catalog, _, stack) = fixture();
+    let mut explorer = ProjectExplorer::default();
+    let ctx = egui::Context::default();
+    let (out, _) = paint(&mut explorer, &mut catalog, &ctx, vec![], false);
+    let at = find(&out, "Bee antennae").unwrap();
+    click(&mut explorer, &mut catalog, &ctx, at, false);
+    let key = |key| egui::Event::Key {
+        key,
+        physical_key: None,
+        pressed: true,
+        repeat: false,
+        modifiers: egui::Modifiers::NONE,
+    };
+    let (_, response) = paint(&mut explorer, &mut catalog, &ctx, vec![key(Key::F2)], false);
+    assert!(response.action.is_none());
+    assert!(
+        (explorer.editor_save_rect.unwrap().center().y - at.y).abs() < 2.0,
+        "Rename stays on the same tree row"
+    );
+    paint(
+        &mut explorer,
+        &mut catalog,
+        &ctx,
+        vec![egui::Event::Text("Discarded".into())],
+        false,
+    );
+    paint(
+        &mut explorer,
+        &mut catalog,
+        &ctx,
+        vec![key(Key::Escape)],
+        false,
+    );
+    assert_eq!(catalog.node(stack).unwrap().name, "Bee antennae");
+    assert!(explorer.edit.is_none());
+    explorer.edit(EditTarget::Node(stack), "Antenna study");
+    paint(&mut explorer, &mut catalog, &ctx, vec![], false);
+    let (_, response) = paint(
+        &mut explorer,
+        &mut catalog,
+        &ctx,
+        vec![key(Key::Enter)],
+        false,
+    );
+    assert!(response.action.is_none());
+    assert_eq!(catalog.node(stack).unwrap().name, "Antenna study");
+    assert!(explorer.undo(&mut catalog));
+    assert_eq!(catalog.node(stack).unwrap().name, "Bee antennae");
+}
+#[test]
+fn pointer_drag_moves_virtual_stack_once_and_rejects_cycles_without_opening_photos() {
+    let (mut catalog, project, stack) = fixture();
+    let target = catalog.create_folder(project, "Target folder").unwrap();
+    let evidence = serde_json::to_vec(&catalog.runs).unwrap();
+    let mut explorer = ProjectExplorer::default();
+    let ctx = egui::Context::default();
+    let (out, _) = paint(&mut explorer, &mut catalog, &ctx, vec![], false);
+    let from = find(&out, "Bee antennae").unwrap();
+    let to = find(&out, "Target folder").unwrap();
+    let pointer = |pos, pressed| egui::Event::PointerButton {
+        pos,
+        button: egui::PointerButton::Primary,
+        pressed,
+        modifiers: egui::Modifiers::NONE,
+    };
+    paint(
+        &mut explorer,
+        &mut catalog,
+        &ctx,
+        vec![egui::Event::PointerMoved(from), pointer(from, true)],
+        false,
+    );
+    paint(
+        &mut explorer,
+        &mut catalog,
+        &ctx,
+        vec![egui::Event::PointerMoved(from + egui::vec2(12.0, 0.0))],
+        false,
+    );
+    assert_eq!(
+        explorer.dragging,
+        Some(stack),
+        "The actual pointer must start a drag"
+    );
+    paint(
+        &mut explorer,
+        &mut catalog,
+        &ctx,
+        vec![egui::Event::PointerMoved(to)],
+        false,
+    );
+    let (_, response) = paint(
+        &mut explorer,
+        &mut catalog,
+        &ctx,
+        vec![pointer(to, false)],
+        false,
+    );
+    assert!(response.action.is_none());
+    assert_eq!(catalog.node(stack).unwrap().parent, Some(target));
+    assert!(explorer.undo(&mut catalog));
+    assert_eq!(catalog.node(stack).unwrap().parent, Some(project));
+    assert_eq!(serde_json::to_vec(&catalog.runs).unwrap(), evidence);
+    assert!(
+        catalog.can_move(project, Some(target)).is_err(),
+        "A virtual folder cannot become its own ancestor"
     );
 }

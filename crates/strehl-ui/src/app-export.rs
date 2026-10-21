@@ -20,6 +20,7 @@ pub(super) struct PendingExport {
 pub(super) struct ExportPaneState {
     settings: ExportSettings,
     pub(super) destination: Option<PathBuf>,
+    destination_document: Option<PathBuf>,
     pub(super) pending: Option<PendingExport>,
     started: Option<std::time::Instant>,
 }
@@ -79,13 +80,57 @@ fn information_row(ui: &mut egui::Ui, name: &str, value: &str) {
     });
 }
 
+fn path_context_menu(response: egui::Response, path: &Path) -> Option<PathBuf> {
+    let mut reveal = None;
+    response
+        .on_hover_text(path.display().to_string())
+        .context_menu(|ui| {
+            if ui.button("Reveal in Explorer").clicked() {
+                reveal = Some(path.to_path_buf());
+                ui.close();
+            }
+            if ui.button("Copy path").clicked() {
+                ui.ctx().copy_text(path.display().to_string());
+                ui.close();
+            }
+        });
+    reveal
+}
+
 impl StrehlApp {
+    pub(super) fn export_destination_for_current(&self) -> Option<PathBuf> {
+        let document = self.editor.path.as_ref()?;
+        if self.export_pane.destination_document.as_ref() == Some(document) {
+            return self.export_pane.destination.clone();
+        }
+        self.catalog
+            .export_directories
+            .get(document)
+            .cloned()
+            .or_else(|| {
+                document
+                    .parent()
+                    .filter(|p| !p.as_os_str().is_empty())
+                    .map(Path::to_path_buf)
+            })
+    }
+
     pub(super) fn set_export_directory(&mut self, path: PathBuf) -> anyhow::Result<()> {
         jobs::validate_export_destination(
             self.stack.as_ref().map(|s| s.directory.as_path()),
             &path,
         )?;
         anyhow::ensure!(path.is_dir(), "Choose an existing export folder.");
+        let document = self
+            .editor
+            .path
+            .clone()
+            .ok_or_else(|| anyhow::anyhow!("Open a photograph first."))?;
+        self.catalog
+            .export_directories
+            .insert(document.clone(), path.clone());
+        self.catalog.save()?;
+        self.export_pane.destination_document = Some(document);
         self.export_pane.destination = Some(path);
         self.editor.error = None;
         Ok(())
@@ -109,8 +154,10 @@ impl StrehlApp {
                 .ok_or_else(|| anyhow::anyhow!("Choose an export folder."))?,
         )?;
         let destination = path.parent().map(Path::to_path_buf);
-        self.editor.export_with_settings(path, pending.settings)?;
-        self.export_pane.destination = destination;
+        if let Some(directory) = destination {
+            self.set_export_directory(directory)?;
+        }
+        self.start_tracked_export(path, pending.settings)?;
         self.export_pane.started = Some(std::time::Instant::now());
         Ok(())
     }
@@ -133,7 +180,7 @@ impl StrehlApp {
         let dimensions = [loaded.image.width, loaded.image.height];
         let pending_repair = self.source_repairs_pending();
         let current_photo = self.editor.path == self.result && self.editor.loading.is_none();
-        let exporting = self.editor.exporting.is_some();
+        let exporting = self.editor.exporting.is_some() || self.photo_history_busy();
         let can_export = current_photo
             && !pending_repair
             && !exporting
@@ -141,6 +188,7 @@ impl StrehlApp {
             && !self.adaptive_busy()
             && !self.presets_busy();
         let effective = effective_settings(&self.export_pane.settings, origin);
+        let mut reveal = None;
 
         egui::TopBottomPanel::bottom("export-action")
             .resizable(false)
@@ -190,7 +238,7 @@ impl StrehlApp {
                             let suffix = extension(effective.format);
                             let stem = document.file_stem().unwrap_or_default().to_string_lossy();
                             let name = format!("{stem}-edited.{suffix}");
-                            let directory = self.export_pane.destination.clone();
+                            let directory = self.export_destination_for_current();
                             self.export_pane.pending = Some(PendingExport {
                                 document,
                                 revision: self.editor.revision,
@@ -212,13 +260,19 @@ impl StrehlApp {
                     if pending_repair {
                         theme::caption(ui, "Source repair is waiting for Re-stack.");
                     }
+                    self.photo_history_panel(ui);
                     if let Some(path) = &self.editor.last_export {
                         ui.colored_label(GREEN, "Photograph saved");
-                        ui.label(
-                            RichText::new(path.file_name().unwrap_or_default().to_string_lossy())
+                        let label = ui.add(
+                            egui::Label::new(
+                                RichText::new(
+                                    path.file_name().unwrap_or_default().to_string_lossy(),
+                                )
                                 .small(),
-                        )
-                        .on_hover_text(path.display().to_string());
+                            )
+                            .sense(egui::Sense::click()),
+                        );
+                        reveal = path_context_menu(label, path).or(reveal.take());
                         if ui.small_button("Copy path").clicked() {
                             ui.ctx().copy_text(path.display().to_string());
                         }
@@ -239,13 +293,13 @@ impl StrehlApp {
                     theme::caption(ui, "Full resolution · current edits");
                     ui.add_space(9.0);
                     ui.label(RichText::new("Destination").small().color(MUTED));
-                    if let Some(directory) = &self.export_pane.destination {
-                        ui.add(egui::Label::new(RichText::new(directory.file_name().unwrap_or_default().to_string_lossy()).small()).truncate())
-                            .on_hover_text(directory.display().to_string());
+                    if let Some(directory) = self.export_destination_for_current() {
+                        let label = ui.add(egui::Label::new(RichText::new(directory.file_name().unwrap_or_default().to_string_lossy()).small()).truncate().sense(egui::Sense::click()));
+                        reveal = path_context_menu(label, &directory).or(reveal.take());
                     }
                     if ui.add_enabled(self.editor.dialog.is_none() && !exporting, egui::Button::new(
                         if self.export_pane.destination.is_some() { "Change folder…" } else { "Choose folder…" })).clicked() {
-                        let directory = self.export_pane.destination.clone();
+                        let directory = self.export_destination_for_current();
                         self.editor.dialog_kind = Some("export-destination");
                         self.editor.dialog = Some(jobs::spawn_task("strehl-export-folder", move |_| {
                             let mut picker = rfd::FileDialog::new();
@@ -345,5 +399,10 @@ impl StrehlApp {
                     });
                 }
             });
+        if let Some(path) = reveal {
+            self.handle_photo_history_action(crate::project_explorer::ExplorerAction::RevealPath {
+                path,
+            });
+        }
     }
 }

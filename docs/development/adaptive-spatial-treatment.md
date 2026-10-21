@@ -57,7 +57,9 @@ enrichment. A sampled centering constraint removes an overall working-light
 increase. This constraint controls exposure placement, not photographic merit.
 
 The frozen recipe stores at most 20 × 20 spatial cells, each with 33 tone-gain
-samples over input log luminance, and one chroma multiplier. Full-resolution
+samples over input log luminance. Original fields use one chroma multiplier per
+cell; tone-selective fields also sample chroma over the same luminance axis.
+Full-resolution
 evaluation interpolates those coefficients using original image coordinates
 and the current pixel's light. It does not blur or replace the source pixels.
 Dark noise-floor values, near-delivery-white channels, neutral pixels and already
@@ -91,11 +93,36 @@ accordingly.
 
 ## Photographic controls
 
-The photo pane calls this **Spatial light & color**. **Analyze photograph** or
-**Analyze region** builds the field in a worker. **Shape the treatment** exposes
-Light balance, Local contrast and Color. Those choices are drafts until
-**Recalculate treatment** is pressed, so dragging a parameter does not enqueue
-repeated image analyses. Ordinary Light/Color sliders remain independent.
+The photo pane calls this **Spatial light & color**. Choose a starting treatment,
+then **Analyze** builds the field for the photograph or selected region in a
+worker. **Natural** retains the original treatment. **Deep background** reduces
+light balancing and protects dark areas; **Texture contrast** concentrates local
+tonal separation in midtones; **Gentle highlights** concentrates its treatment in
+bright areas and adds a soft highlight shoulder. Texture contrast does not
+sharpen, reconstruct detail or establish optical resolution.
+
+**Shape treatment** exposes Light balance, Local contrast, Color, a tone range,
+Protect shadows and Soften highlights. Those choices are drafts until
+**Recalculate** is pressed, so dragging a parameter does not enqueue repeated
+image analyses. Ordinary Light/Color sliders remain independent.
+
+Tone ranges overlap smoothly rather than cutting a hard brightness mask. They
+select both local tone and color changes. Protect shadows progressively removes
+those changes in deep values; its maximum leaves values at or below 1/64 of
+working diffuse white unchanged. The light-placement constraint acts only
+through the selected tones, so it cannot compensate by lifting a protected
+background. Soften highlights is a separate, monotone shoulder with a knee at
+55% of the delivery ceiling, sampled into the curves after that constraint.
+It does not add a compensating
+exposure lift elsewhere. Imported SDR and scene-linear HDR use their respective
+delivery ceilings. This shoulder changes existing light; it cannot restore
+texture or color absent from clipped input.
+
+The new controls default to All light, no added shadow protection and no added
+highlight shoulder. These defaults retain the original coefficient format and
+rendering. Tone-selective fields use version 2 of the portable recipe, with
+continuous Amount interpolation across the two versions. Presets carry the
+intent and remeasure the destination image, rather than copying measured curves.
 
 The persisted field has an absolute Amount control, including after reopening a
 photograph without a cached analysis. Zero disables that addressed field while
@@ -112,7 +139,7 @@ detail-recovery score. The existing thumbnail stays in place during a refresh,
 and replies for a different image or scope are discarded. The map has no effect
 on rendering or saved pixels.
 
-## Verification status
+## Original treatment verification
 
 **VERIFIED, October 21, 2026:** the fresh core build passed 52 tests, including
 14 Adaptive and five spatial controls. Controls include
@@ -179,3 +206,67 @@ acceptance of this operator.
 The [delivery verification](spatial-export-verification.md) records final native
 Edit/Export screenshots, live MCP pixel/Undo controls, preset and persistence
 regressions, and bounded worker timings on the optimized executable.
+
+## Tone-selective options verification
+
+**VERIFIED, October 21, 2026:** a fresh core build passed all 57 tests. Five new
+option controls exercise selective light placement with a deliberately incorrect
+offset as the failing arm, exact dark/color exclusions, flat-noise and hard-edge
+plants, monotone hue-preserving highlight compression, unchanged default wire
+format, native-region/full-image agreement, and continuous interpolation between
+old and new field versions. Uniform bright input can be compressed but remains
+uniform. The pre-existing sidecar-size control now uses six maximum version-2
+fields. Strict all-target edit Clippy passed after removing one redundant default
+initializer from the review example; the first failed lint log is retained.
+
+The full-photograph run uses the same three inputs described above and renders
+all four UI choices. Every Natural RGB16 output is pixel-exact to the earlier
+Natural output. For all twelve image/option combinations, Amount zero returns
+the exact base recipe and every complete RGB16 pixel unchanged. These are
+compatibility controls, not evidence of photographic superiority.
+
+```powershell
+$env:CARGO_BUILD_JOBS = '4'
+$env:CARGO_TARGET_DIR = 'target/progressive-photo'
+cargo test -p strehl-edit --offline
+cargo clippy -p strehl-edit --all-targets --offline -- -D warnings
+cargo build -p strehl-edit --release --example adaptive-options-review --offline
+$env:RAYON_NUM_THREADS = '4'
+$tool = 'target/progressive-photo/release/examples/adaptive-options-review.exe'
+& $tool outputs/feature-validation/insect-run/result.tiff outputs/adaptive-spatial-review/options-insect
+& $tool outputs/quality-october20-slide/repair/linear-master.tiff outputs/adaptive-spatial-review/options-slide
+& $tool ../strehl-1792368598430-22840-1/result.tiff outputs/adaptive-spatial-review/options-garnet
+python outputs/adaptive-spatial-review/prepare-option-views.py
+```
+
+**MEASURED:** the example warms each option once, then runs four alternating
+forward/reverse sweeps. Each analysis uses 16,328 stratified samples. The table
+reports the minimum through maximum of four observations, in milliseconds,
+with four worker threads. It measures analysis only, excluding TIFF import,
+full-resolution development, upload, rendering and interaction latency. The
+small differences between options are a cost bound on this machine, not a
+general speed ranking, quality score or frame-rate claim.
+
+| Photograph | Natural | Deep background | Texture contrast | Gentle highlights |
+| --- | ---: | ---: | ---: | ---: |
+| Insect | 12.97–13.31 | 13.75–13.99 | 13.71–14.29 | 13.50–13.68 |
+| Slide | 17.02–17.16 | 17.41–17.57 | 17.64–17.71 | 17.28–17.44 |
+| Garnet | 12.82–13.02 | 13.22–13.36 | 13.25–13.35 | 13.15–13.29 |
+
+Local receipts are retained in `outputs/adaptive-spatial-review/options-summary.json`
+and each option folder, with the exact parameters, complete output hashes,
+timings and zero-Amount controls. The source photographs were read only.
+
+An independent reviewer viewed all fifteen complete before/options photographs
+before choosing native-resolution crops: insect bright border, plate seam and
+low-detail green area; garnet reflection and black background; slide flat ramp
+and high-contrast boundary. They found no obvious new bright edge outline,
+broad background lift or color damage in those views. Gentle highlights modestly
+dims the garnet reflection while its clipped center remains textureless. Its
+insect effect is subtle and the chart remains essentially stable. Texture
+contrast adds restrained insect plate separation. The reviewer accepted these
+as optional, restrained treatments, not a transformative correction, recovered
+detail, solved glare/occlusion artifacts or demonstrated quality superiority.
+This supports visual non-regression for the inspected scenes and regions only.
+The independently chosen crop coordinates and images are retained beside the
+receipts in `independent-option-crops.py` and `independent-option-crops/`.

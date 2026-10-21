@@ -2,7 +2,7 @@
 //! separates location from brightness; its coefficients are then frozen in the
 //! recipe. This is not a trained model, segmentation, or detail reconstruction.
 use super::*;
-use crate::{AdaptiveParameters, SpatialTreatment};
+use crate::{AdaptiveParameters, AdaptiveToneRange, SpatialTreatment};
 
 #[derive(Clone, Copy, Default)]
 struct Moment {
@@ -124,19 +124,24 @@ pub(super) fn analyze_spatial(
     let mut changes = Vec::new();
     let flat = p90 - p10 < 0.002 || stats.dynamic_range_stops < 0.18;
     let dark = p99 < 0.008;
-    if flat
-        || dark
-        || stats.sampling_disagreement_stops > 0.75
-        || parameters
-            == (AdaptiveParameters {
-                balance: 0.0,
-                local_contrast: 0.0,
-                color: 0.0,
-            })
+    let structure_enabled = !flat && !dark && stats.sampling_disagreement_stops <= 0.75;
+    if (!structure_enabled && parameters.highlight_compression == 0.0)
+        || (parameters.balance == 0.0
+            && parameters.local_contrast == 0.0
+            && parameters.color == 0.0
+            && parameters.highlight_compression == 0.0)
     {
         limitations.push("There is insufficient sampled tonal variation for a spatial treatment, or all treatment controls are zero; ordinary controls remain unchanged.".into());
     } else {
-        let field = build_field(image, &metering, &indices, target, parameters, ceiling)?;
+        let field = build_field(
+            image,
+            &metering,
+            &indices,
+            target,
+            parameters,
+            ceiling,
+            structure_enabled,
+        )?;
         let max_tone = field
             .tone_ev
             .iter()
@@ -147,6 +152,13 @@ pub(super) fn analyze_spatial(
             changes.push(AdaptiveChange { control:"spatial tone".into(),before:0.0,after:max_tone,reason:format!("{} × {} local tone curves distinguish location and input brightness; maximum unmasked correction {:.2} stops. Exposure and other manual sliders stay unchanged.",field.width,field.height,max_tone) });
             if max_color > 1.001 {
                 changes.push(AdaptiveChange {control:"spatial color".into(),before:1.0,after:max_color,reason:"Color enrichment follows local color support; neutral, already saturated, and clipping-prone pixels are protected independently.".into()});
+            }
+            if parameters.tone_range != AdaptiveToneRange::All || parameters.shadow_protection > 0.0
+            {
+                limitations.push("Tonal focus and dark protection are smooth luminance weights, not semantic foreground/background masks. They constrain both local light and color; use a drawn region for spatial targeting.".into());
+            }
+            if parameters.highlight_compression > 0.0 {
+                changes.push(AdaptiveChange { control: "bright-tone compression".into(), before: 0.0, after: parameters.highlight_compression, reason: "A bounded smooth shoulder lowers existing bright light after balancing, without compensating by lifting the rest of the image. It cannot recover clipped texture.".into() });
             }
             suggested.spatial.push(field);
         }
@@ -179,6 +191,7 @@ fn build_field(
     target: Option<&str>,
     parameters: AdaptiveParameters,
     ceiling: f32,
+    structure_enabled: bool,
 ) -> Result<SpatialTreatment> {
     let bounds = target
         .and_then(|id| recipe.regions.iter().find(|r| r.id == id))
@@ -311,6 +324,33 @@ fn build_field(
         delivery_ceiling: ceiling,
         centering_ev: 0.0,
     };
+    let selective =
+        parameters.tone_range != AdaptiveToneRange::All || parameters.shadow_protection > 0.0;
+    if !structure_enabled {
+        field.tone_ev.fill(0.0);
+        field.color_gain.fill(1.0);
+    }
+    let tone_source = selective.then(|| field.tone_ev.clone());
+    let tone_weights: Vec<f32> = (0..levels)
+        .map(|z| {
+            let log = log_min + (log_max - log_min) * z as f32 / (levels - 1) as f32;
+            tonal_weight(log, parameters)
+        })
+        .collect();
+    if selective {
+        // Color uses the same input-light slice as tone. No new full-resolution
+        // mask or pixel buffer is introduced; legacy fields retain their layout.
+        field.version = 2;
+        field.color_gain = field
+            .color_gain
+            .iter()
+            .flat_map(|gain| {
+                tone_weights
+                    .iter()
+                    .map(move |weight| 1.0 + (gain - 1.0) * weight)
+            })
+            .collect();
+    }
     // Solve only a light-placement offset, not an aesthetic target. Contrast
     // redistribution must not silently act like a global exposure increase.
     let original: f64 = samples
@@ -321,7 +361,8 @@ fn build_field(
     let mut lo = -0.5;
     let mut hi = 0.5;
     for _ in 0..14 {
-        field.centering_ev = (lo + hi) * 0.5;
+        let candidate = (lo + hi) * 0.5;
+        set_centering(&mut field, tone_source.as_deref(), &tone_weights, candidate);
         let after: f64 = samples
             .iter()
             .map(|(uv, p)| {
@@ -333,14 +374,81 @@ fn build_field(
             })
             .sum();
         if after > original {
-            hi = field.centering_ev;
+            hi = candidate;
         } else {
-            lo = field.centering_ev;
+            lo = candidate;
         }
     }
-    field.centering_ev = (lo + hi) * 0.5;
+    set_centering(
+        &mut field,
+        tone_source.as_deref(),
+        &tone_weights,
+        if (selective || parameters.highlight_compression > 0.0)
+            && (!structure_enabled
+                || (parameters.balance == 0.0 && parameters.local_contrast == 0.0))
+        {
+            0.0
+        } else {
+            (lo + hi) * 0.5
+        },
+    );
+    if parameters.highlight_compression > 0.0 {
+        // Apply after the centering solve: a highlight correction must never
+        // cause a compensating lift elsewhere. Bake it into the frozen curves.
+        for curve in field.tone_ev.chunks_exact_mut(levels) {
+            for (z, ev) in curve.iter_mut().enumerate() {
+                let light = (log_min + (log_max - log_min) * z as f32 / (levels - 1) as f32).exp2();
+                let original_ev = *ev + field.centering_ev;
+                let developed = light * original_ev.exp2();
+                let knee = ceiling * 0.55;
+                let excess = (developed - knee).max(0.0);
+                let compressed = knee
+                    + excess / (1.0 + parameters.highlight_compression * excess / (ceiling - knee));
+                let correction = if excess > 0.0 {
+                    (compressed / developed).log2().max(-0.75)
+                } else {
+                    0.0
+                };
+                *ev = (original_ev + correction).clamp(-1.0, 1.0);
+            }
+        }
+        field.centering_ev = 0.0;
+    }
     field.validate()?;
     Ok(field)
+}
+
+fn smooth_weight(x: f32) -> f32 {
+    let x = x.clamp(0.0, 1.0);
+    x * x * (3.0 - 2.0 * x)
+}
+
+fn tonal_weight(log: f32, parameters: AdaptiveParameters) -> f32 {
+    let range = match parameters.tone_range {
+        AdaptiveToneRange::All => 1.0,
+        AdaptiveToneRange::Shadows => 1.0 - smooth_weight((log + 5.0) / 3.0),
+        AdaptiveToneRange::Midtones => {
+            smooth_weight((log + 6.0) / 3.0) * (1.0 - smooth_weight(log / 2.0))
+        }
+        AdaptiveToneRange::Highlights => smooth_weight((log + 3.0) / 3.0),
+    };
+    range * (1.0 - parameters.shadow_protection * (1.0 - smooth_weight((log + 6.0) / 3.0)))
+}
+
+fn set_centering(
+    field: &mut SpatialTreatment,
+    original: Option<&[f32]>,
+    weights: &[f32],
+    shift: f32,
+) {
+    if let Some(original) = original {
+        for (i, ev) in field.tone_ev.iter_mut().enumerate() {
+            *ev = (original[i] + shift) * weights[i % weights.len()];
+        }
+        field.centering_ev = 0.0;
+    } else {
+        field.centering_ev = shift;
+    }
 }
 
 fn quantize(value: f32) -> f32 {

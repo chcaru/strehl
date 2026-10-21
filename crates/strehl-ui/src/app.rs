@@ -26,6 +26,8 @@ mod export;
 mod frame_performance;
 #[path = "app-history.rs"]
 mod history;
+#[path = "app-photo-history.rs"]
+mod photo_history;
 #[path = "app-presets.rs"]
 mod presets;
 #[cfg(test)]
@@ -126,9 +128,11 @@ pub struct StrehlApp {
     edit_pane: editing::EditPaneState,
     export_pane: export::ExportPaneState,
     presets: presets::PresetState,
+    photo_history: photo_history::PhotoHistoryState,
     agent: agent::AgentState,
     close_after_export: bool,
     close_after_presets: bool,
+    close_after_photo_history: bool,
     process_view: bool,
     sidebar: Option<workspace::Sidebar>,
     project_explorer: crate::project_explorer::ProjectExplorer,
@@ -225,9 +229,11 @@ impl StrehlApp {
             edit_pane: Default::default(),
             export_pane: Default::default(),
             presets: Default::default(),
+            photo_history: Default::default(),
             agent: Default::default(),
             close_after_export: false,
             close_after_presets: false,
+            close_after_photo_history: false,
             process_view: true,
             sidebar: Some(workspace::Sidebar::Projects),
             project_explorer: Default::default(),
@@ -285,7 +291,7 @@ impl StrehlApp {
         if let Some(image) = launch.preview {
             // An explicitly opened TIFF can be developed without a capture project.
             // Never attach a standalone photo to another stack's diagnostic history.
-            if (launch.edit || launch.export || launch.agent)
+            if (launch.edit || launch.export || launch.agent || launch.projects)
                 && app.scan.is_none()
                 && launch.open_run.is_none()
                 && launch.activity_log.is_none()
@@ -366,16 +372,26 @@ impl StrehlApp {
             app.process_view = true;
             app.sidebar = Some(workspace::Sidebar::Export);
         }
+        if launch.projects {
+            app.process_view = true;
+            app.sidebar = Some(workspace::Sidebar::Projects);
+        }
         app
     }
 
     fn import(&mut self, path: PathBuf) {
+        self.reset_capture();
+        self.scan = Some(jobs::scan_stack(path));
+        self.status = "Reading bracket…".into();
+    }
+
+    fn reset_capture(&mut self) {
         self.edits.change_stack();
         self.active_stack = None;
         self.epoch += 1;
         self.follow_processing = true;
         self.followed_frame = None;
-        self.scan = Some(jobs::scan_stack(path));
+        self.scan = None;
         self.stack = None;
         self.selected = 0;
         self.view = View::Sources;
@@ -415,8 +431,42 @@ impl StrehlApp {
         self.image_path = None;
         self.pending_result = None;
         self.error = None;
-        self.status = "Reading bracket…".into();
+        self.status = "No bracket loaded".into();
         // In-flight JPEG/ TIFF decodes finish serially; their old epoch is discarded.
+    }
+
+    pub(super) fn open_history_photograph(
+        &mut self,
+        owner: &crate::workspace_history::PhotoOwner,
+    ) -> anyhow::Result<()> {
+        anyhow::ensure!(
+            self.job.is_none() && self.scan.is_none() && !self.picker_active(),
+            "Finish the current stack operation first"
+        );
+        anyhow::ensure!(
+            owner.output.is_file(),
+            "This photograph is no longer at its saved location"
+        );
+        self.editor.ensure_saved_on_close()?;
+        if let Some(directory) = &owner.run {
+            let run = self
+                .catalog
+                .runs
+                .iter()
+                .find(|run| &run.directory == directory && run.output == owner.output)
+                .cloned()
+                .ok_or_else(|| anyhow::anyhow!("The saved stack run is no longer in Projects"))?;
+            self.reopen_run(run);
+        } else {
+            self.reset_capture();
+            self.result = Some(owner.output.clone());
+            self.progress.mark_complete();
+            self.open_result(owner.output.clone());
+            self.status = "Opened photograph".into();
+        }
+        self.process_view = true;
+        self.sidebar = Some(workspace::Sidebar::Edit);
+        Ok(())
     }
     fn open_result(&mut self, path: PathBuf) {
         // Saved edits belong to the photograph, independent of which sidebar
@@ -2070,8 +2120,13 @@ impl StrehlApp {
             && self.progress.stage == Stage::Complete;
         self.process_space
             .set_edit_focus((edit_enabled && self.edit_photo_focus) || export_focus);
-        self.process_space
-            .set_annotation_mode(edit_enabled && self.editor.owns_canvas(ctx));
+        self.process_space.set_annotation_mode(
+            edit_enabled
+                && self
+                    .editor
+                    .owns_canvas_at(ctx, self.process_space.edit_mapping()),
+        );
+        self.process_space.set_edit_workspace(edit_enabled);
         self.process_space
             .set_edit_navigation(edit_enabled && !ctx.input(|input| input.modifiers.alt));
         let count = self
@@ -2164,6 +2219,10 @@ impl StrehlApp {
                     }
                     if edit_enabled {
                         self.editor.draw_overlay(ui, mapping);
+                        if std::mem::take(&mut self.editor.fit_view_requested) {
+                            self.process_space.fit_edit_view();
+                            ctx.request_repaint();
+                        }
                     }
                 }
                 response
@@ -2282,6 +2341,8 @@ impl StrehlApp {
                     .iter()
                     .all(|i| self.browser.has_thumbnail(*i) || self.browser.error(*i).is_some()));
         let ready = ready
+            && (self.sidebar != Some(workspace::Sidebar::Projects)
+                || !self.project_explorer.preview_pending())
             && (!self.bracket_browser.active() || self.bracket_browser.settled(now))
             && (!self.process_view
                 || self.process_contacts().iter().all(|i| {

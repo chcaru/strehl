@@ -32,6 +32,9 @@ pub(super) struct RegionInteraction {
     tool: DrawingTool,
     cancelled_press: bool,
     text_focus: Option<egui::Id>,
+    navigation_press: bool,
+    ownership_frame: Option<u64>,
+    owns_pointer: bool,
 }
 
 impl EditorState {
@@ -45,6 +48,7 @@ impl EditorState {
     pub fn set_tool(&mut self, tool: DrawingTool) {
         if self.tool != tool {
             self.cancel_geometry();
+            self.region_interaction.ownership_frame = None;
             self.tool = tool;
             self.region_interaction.tool = tool;
         }
@@ -61,6 +65,53 @@ impl EditorState {
     pub fn owns_canvas(&self, ctx: &egui::Context) -> bool {
         self.tool != DrawingTool::Navigate
             && !ctx.input(|i| i.key_down(Key::Space) || i.modifiers.alt)
+    }
+
+    /// Decide once before the photograph handles input, and reuse that decision
+    /// for the overlay. A pan which starts outside a region stays a pan even
+    /// when the moving photograph carries a region under the pointer.
+    pub fn owns_canvas_at(&mut self, ctx: &egui::Context, mapping: Option<(Rect, Rect)>) -> bool {
+        let frame = ctx.cumulative_frame_nr();
+        if self.region_interaction.ownership_frame == Some(frame) {
+            return self.region_interaction.owns_pointer;
+        }
+        let (down, released, pressed, pointer, wheel) = ctx.input(|i| {
+            (
+                i.pointer.primary_down(),
+                i.pointer.primary_released(),
+                i.pointer.primary_pressed(),
+                i.pointer.interact_pos(),
+                i.raw_scroll_delta != Vec2::ZERO
+                    || i.smooth_scroll_delta != Vec2::ZERO
+                    || (i.zoom_delta() - 1.0).abs() > f32::EPSILON,
+            )
+        });
+        let hit = mapping.is_some_and(|(image, clip)| {
+            pointer.is_some_and(|at| {
+                image.intersect(clip).contains(at) && self.region_hit(at, image).is_some()
+            })
+        });
+        if !down && !released {
+            self.region_interaction.navigation_press = false;
+        }
+        if pressed {
+            self.region_interaction.navigation_press = self.tool == DrawingTool::Select && !hit;
+        }
+        let active = self.region_interaction.gesture.is_some();
+        let owns = self.owns_canvas(ctx)
+            && !self.region_interaction.navigation_press
+            && (active || pressed || !wheel)
+            && (active || self.tool != DrawingTool::Select || hit);
+        self.region_interaction.ownership_frame = Some(frame);
+        self.region_interaction.owns_pointer = owns;
+        owns
+    }
+
+    pub fn select_photograph(&mut self) {
+        self.commit_edit();
+        self.cancel_geometry();
+        self.selected = None;
+        self.set_tool(DrawingTool::Select);
     }
 
     fn finish_geometry(&mut self, shape: RegionShape) {
@@ -119,7 +170,7 @@ impl EditorState {
         if !ui.input(|i| i.pointer.primary_down() || i.pointer.primary_released()) {
             self.region_interaction.cancelled_press = false;
         }
-        let owns = self.owns_canvas(ui.ctx());
+        let owns = self.owns_canvas_at(ui.ctx(), Some((image, clip)));
         if !owns {
             // Temporarily yielding the camera cancels a drag, while an unfinished
             // click polygon can remain in place for the next point after panning.
@@ -175,7 +226,13 @@ impl EditorState {
                     self.finish_geometry(RegionShape::Polygon { points });
                 }
             } else {
-                if hit.is_pointer_button_down_on()
+                // The overlay deliberately yields during wheel navigation, so
+                // it may not exist in egui's previous-frame hit map. A fresh
+                // press in this topmost, owned photo must still start a region
+                // gesture without requiring an extra hover frame first.
+                if (hit.is_pointer_button_down_on()
+                    || (pointer.is_some_and(|at| visible.contains(at))
+                        && ui.rect_contains_pointer(visible)))
                     && ui.input(|i| i.pointer.primary_pressed())
                     && !self.region_interaction.cancelled_press
                     && let Some(at) = pointer
@@ -320,8 +377,9 @@ impl EditorState {
                 if self.tool == DrawingTool::Select
                     && hit.double_clicked()
                     && let Some(at) = pointer
+                    && !self.insert_vertex(at, image)
                 {
-                    self.insert_vertex(at, image);
+                    self.fit_view_requested = true;
                 }
             }
             if hovered {
@@ -387,28 +445,28 @@ impl EditorState {
             .map(|r| (r.id.clone(), Control::Move))
     }
 
-    fn insert_vertex(&mut self, at: Pos2, image: Rect) {
+    fn insert_vertex(&mut self, at: Pos2, image: Rect) -> bool {
         let Some(id) = &self.selected else {
-            return;
+            return false;
         };
         let Some(region) = self.recipe.regions.iter().find(|r| &r.id == id) else {
-            return;
+            return false;
         };
         let RegionShape::Polygon { points } = &region.shape else {
-            return;
+            return false;
         };
         if points.len() >= 256
             || points
                 .iter()
                 .any(|p| project(*p, image).distance(at) <= 7.0)
         {
-            return;
+            return false;
         }
         let Some((edge, distance)) = nearest_edge(&region.shape, at, image) else {
-            return;
+            return false;
         };
         if distance > 7.0 {
-            return;
+            return false;
         }
         let mut recipe = self.recipe.clone();
         let region = recipe.regions.iter_mut().find(|r| &r.id == id).unwrap();
@@ -419,6 +477,7 @@ impl EditorState {
         if self.replace(recipe).is_ok() {
             self.region_interaction.vertex = Some((id, edge + 1));
         }
+        true
     }
 
     fn delete_vertex(&mut self) {
