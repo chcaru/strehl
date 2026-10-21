@@ -1,5 +1,167 @@
 use super::*;
 
+fn measured_recipe() -> Value {
+    let field = |scope: Value| {
+        json!({"version":1,"target_region":scope,"parameters":{},"amount":0.6,
+        "bounds":[[0,0],[1,1]],"width":20,"height":20,"levels":33,"log_min":-8,"log_max":2,
+        "tone_ev":format!("f32hex:{}","3e4ccccd".repeat(20*20*33)),
+        "color_gain":format!("f32hex:{}","3f800000".repeat(20*20)),
+        "delivery_ceiling":4,"centering_ev":0})
+    };
+    json!({"regions":[{"id":"r","name":"Reflection","shape":{"kind":"rectangle","min":[0.2,0.2],"max":[0.8,0.8]},"feather":0.3,"enabled":true}],
+        "spatial":[field(Value::Null),field(json!("r"))]})
+}
+
+#[test]
+fn bounded_measured_recipe_round_trips_over_actual_ndjson_transport() {
+    let recipe = measured_recipe();
+    let lines = [
+        initialize(),
+        json!({"jsonrpc":"2.0","method":"notifications/initialized"}),
+        json!({"jsonrpc":"2.0","id":8,"method":"tools/call","params":{"name":"strehl_command",
+            "arguments":{"expected_revision":12,"command":{"operation":"set_develop","recipe":recipe}}}}),
+    ];
+    let wire = lines
+        .iter()
+        .map(Value::to_string)
+        .collect::<Vec<_>>()
+        .join("\n")
+        + "\n";
+    assert!(wire.len() > 128 * 1024, "must reject the old transport cap");
+    assert!(wire.len() < MAX_REQUEST_BYTES);
+    let mut output = Vec::new();
+    let mut called = false;
+    serve(std::io::Cursor::new(wire), &mut output, |request| {
+        request.check_revision(12).unwrap();
+        let AgentCommand::SetDevelop { recipe: received } = request.command else {
+            panic!("wrong operation")
+        };
+        received.validate().unwrap();
+        assert_eq!(
+            serde_json::to_value(received).unwrap()["spatial"][0]["tone_ev"],
+            recipe["spatial"][0]["tone_ev"]
+        );
+        called = true;
+        AgentReply::success(json!({"applied":true}))
+    })
+    .unwrap();
+    assert!(called);
+    let reply: Value = serde_json::from_str(
+        std::str::from_utf8(&output)
+            .unwrap()
+            .lines()
+            .last()
+            .unwrap(),
+    )
+    .unwrap();
+    assert_eq!(reply["result"]["structuredContent"]["applied"], true);
+}
+
+#[test]
+fn malformed_spatial_coefficients_and_portable_operations_never_dispatch() {
+    let mut protocol = Protocol::default();
+    ready(&mut protocol);
+    let mut invalid = Vec::new();
+    for (key, value) in [
+        ("tone_ev", json!("f32hex:7fc00000")),
+        ("tone_ev", json!("f32hex:00000000")),
+        ("width", json!(21)),
+        ("color_gain", json!("arbitrary-buffer")),
+    ] {
+        let mut recipe = measured_recipe();
+        recipe["spatial"][0][key] = value;
+        invalid.push(json!({"operation":"set_develop","recipe":recipe}));
+    }
+    invalid.extend([
+        json!({"operation":"set_adjustments","adjustments":{"exposure":9}}),
+        json!({"operation":"set_adjustments","adjustments":{"spatial":[]}}),
+        json!({"operation":"clear_adaptive","region_id":""}),
+    ]);
+    for command in invalid {
+        let call = json!({"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"strehl_command",
+            "arguments":{"expected_revision":12,"command":command}}});
+        let result = protocol
+            .handle(&serde_json::to_vec(&call).unwrap(), &mut |_| {
+                panic!("invalid command dispatched")
+            })
+            .unwrap();
+        assert_eq!(result["result"]["isError"], true);
+    }
+}
+
+#[test]
+fn schema_exposes_portable_controls_and_bounded_measured_spatial_data() {
+    let registry = tool_definitions();
+    let tool = registry
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|tool| tool["name"] == "strehl_command")
+        .unwrap();
+    let options = tool["inputSchema"]["properties"]["command"]["oneOf"]
+        .as_array()
+        .unwrap();
+    let command = |name: &str| {
+        options
+            .iter()
+            .find(|option| option["properties"]["operation"]["const"] == name)
+            .unwrap()
+    };
+    let spatial = &command("set_develop")["properties"]["recipe"]["properties"]["spatial"];
+    assert_eq!(spatial["maxItems"], 6);
+    assert_eq!(
+        spatial["items"]["properties"]["tone_ev"]["maxLength"],
+        105607
+    );
+    assert_eq!(
+        spatial["items"]["properties"]["color_gain"]["maxLength"],
+        3207
+    );
+    assert!(
+        spatial["description"]
+            .as_str()
+            .unwrap()
+            .contains("preserves")
+    );
+    assert_eq!(
+        command("set_adjustments")["required"],
+        json!(["operation", "adjustments"])
+    );
+    assert!(command("clear_adaptive")["properties"]["region_id"].is_object());
+}
+
+#[test]
+fn export_schema_advertises_the_same_formats_and_optional_delivery_settings() {
+    let registry = tool_definitions();
+    let tool = registry
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|tool| tool["name"] == "strehl_command")
+        .unwrap();
+    let options = tool["inputSchema"]["properties"]["command"]["oneOf"]
+        .as_array()
+        .unwrap();
+    let export = options
+        .iter()
+        .find(|option| option["properties"]["operation"]["const"] == "export")
+        .unwrap();
+    assert_eq!(
+        export["properties"]["format"]["enum"],
+        json!(["avif", "tiff", "png", "jpeg"])
+    );
+    assert_eq!(
+        export["properties"]["color_space"]["enum"],
+        json!(["srgb", "display_p3", "rec2020"])
+    );
+    assert_eq!(export["properties"]["quality"]["maximum"], 100);
+    assert_eq!(export["properties"]["speed"]["maximum"], 10);
+    assert_eq!(
+        export["required"],
+        json!(["operation", "file_name", "format"])
+    );
+}
+
 fn initialize() -> Value {
     json!({"jsonrpc":"2.0","id":1,"method":"initialize","params":{
         "protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"independent-test-client","version":"1"}

@@ -1,7 +1,17 @@
 use anyhow::{Context, Result, ensure};
-use clap::Args;
-use std::path::PathBuf;
-use strehl_edit::{DevelopmentRecipe, export_hdr_avif, import_xmp, load_tiff, save_sdr_tiff};
+use clap::{Args, ValueEnum};
+use std::{path::PathBuf, sync::atomic::AtomicBool};
+use strehl_edit::{
+    DevelopmentRecipe, ExportFormat, ExportSettings, OutputColorSpace, export_image, import_xmp,
+    load_tiff,
+};
+
+#[derive(Debug, Clone, Copy, ValueEnum)]
+pub enum ExportGamut {
+    Srgb,
+    DisplayP3,
+    Rec2020,
+}
 
 #[derive(Debug, Args)]
 pub struct DevelopArgs {
@@ -12,9 +22,18 @@ pub struct DevelopArgs {
     /// Versioned JSON development recipe.
     #[arg(long)]
     pub recipe: Option<PathBuf>,
-    /// Required for .avif output: true 10-bit PQ BT.2020 from a linear master.
+    /// 10-bit PQ HDR AVIF from a linear master. Other formats are SDR.
     #[arg(long)]
     pub hdr: bool,
+    /// Output RGB primaries. Default: Rec.2020 for HDR, sRGB for SDR.
+    #[arg(long, value_enum)]
+    pub color_space: Option<ExportGamut>,
+    /// AVIF/JPEG quality, 1..100. Highest supported quality remains lossy.
+    #[arg(long, value_parser = clap::value_parser!(u8).range(1..=100))]
+    pub quality: Option<u8>,
+    /// AVIF encoder speed, 0..10. Higher is faster and can change coding quality.
+    #[arg(long, value_parser = clap::value_parser!(u8).range(0..=10))]
+    pub speed: Option<u8>,
 }
 
 #[derive(Debug, Args)]
@@ -44,28 +63,39 @@ pub fn run(args: &DevelopArgs) -> Result<()> {
         .extension()
         .and_then(|x| x.to_str())
         .unwrap_or_default();
-    ensure!(
-        if args.hdr {
-            extension.eq_ignore_ascii_case("avif")
-        } else {
-            matches!(extension.to_ascii_lowercase().as_str(), "tif" | "tiff")
+    let format = match extension.to_ascii_lowercase().as_str() {
+        "avif" => ExportFormat::Avif,
+        "tif" | "tiff" => ExportFormat::Tiff,
+        "png" => ExportFormat::Png,
+        "jpg" | "jpeg" => ExportFormat::Jpeg,
+        _ => anyhow::bail!("output extension must be .avif, .tif/.tiff, .png or .jpg/.jpeg"),
+    };
+    let settings = ExportSettings {
+        format,
+        hdr: args.hdr,
+        color_space: match args.color_space {
+            Some(ExportGamut::Srgb) => OutputColorSpace::Srgb,
+            Some(ExportGamut::DisplayP3) => OutputColorSpace::DisplayP3,
+            Some(ExportGamut::Rec2020) => OutputColorSpace::Rec2020,
+            None if args.hdr => OutputColorSpace::Rec2020,
+            None => OutputColorSpace::Srgb,
         },
-        "use --hdr with .avif output, or .tif/.tiff for SDR output"
-    );
+        quality: args.quality.unwrap_or(recipe.hdr.quality),
+        speed: args.speed.unwrap_or(recipe.hdr.speed),
+    };
+    settings.validate()?;
     let image = load_tiff(&args.input)?;
     if let Some(parent) = args.out.parent().filter(|p| !p.as_os_str().is_empty()) {
         std::fs::create_dir_all(parent)?;
     }
-    if args.hdr {
-        let report = export_hdr_avif(&args.out, &image, &recipe)?;
-        println!("{}", serde_json::to_string_pretty(&report)?);
-    } else {
-        save_sdr_tiff(&args.out, &image, &recipe)?;
-        println!(
-            "{}",
-            serde_json::json!({"output":args.out,"width":image.width,"height":image.height,"bit_depth":16,"space":"sRGB","source_origin":image.origin})
-        );
-    }
+    let report = export_image(
+        &args.out,
+        &image,
+        &recipe,
+        &settings,
+        &AtomicBool::new(false),
+    )?;
+    println!("{}", serde_json::to_string_pretty(&report)?);
     Ok(())
 }
 

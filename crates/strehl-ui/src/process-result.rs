@@ -231,47 +231,63 @@ impl ResultPhoto {
         });
         let hit = ui.interact(image, ui.id().with("result-photo"), Sense::click_and_drag());
         hit.context_menu(|ui| {
-            ui.label("Photograph overlay");
-            if self.diagnostics_suppressed {
-                ui.label("Regional repairs changed the admitted detail.");
-                ui.label("Original admission evidence remains in the matrix.");
-            }
-            ui.add_enabled_ui(!self.diagnostics_suppressed, |ui| {
-                let mut mode = OverlayMode::read(ui.ctx());
-                for (value, label) in [
-                    (OverlayMode::Detail, "Selected detail size"),
-                    (OverlayMode::Scales, "All detail sizes"),
-                    (OverlayMode::Clean, "Hide admission marks"),
-                ] {
-                    if ui.selectable_value(&mut mode, value, label).changed() {
-                        mode.write(ui.ctx());
+            let diagnostics = self.probe_count > 0;
+            if diagnostics {
+                ui.label("Photograph overlay");
+                if self.diagnostics_suppressed {
+                    ui.label("Regional repairs changed the admitted detail.");
+                    ui.label("Original admission evidence remains in the matrix.");
+                }
+                ui.add_enabled_ui(!self.diagnostics_suppressed, |ui| {
+                    let mut mode = OverlayMode::read(ui.ctx());
+                    for (value, label) in [
+                        (OverlayMode::Detail, "Selected detail size"),
+                        (OverlayMode::Scales, "All detail sizes"),
+                        (OverlayMode::Clean, "Hide admission marks"),
+                    ] {
+                        if ui.selectable_value(&mut mode, value, label).changed() {
+                            mode.write(ui.ctx());
+                        }
+                    }
+                    ui.separator();
+                    dense_region_controls(ui);
+                    self.selection_summary(ui);
+                    if let Some(region) = &self.dense_region {
+                        ui.label(format!(
+                            "{} regions · {}/{} recorded samples admitted",
+                            region.islands, region.admitted, region.observed
+                        ));
+                    }
+                });
+                ui.separator();
+                if self.balance.ready() {
+                    let mut enabled = self.balance.enabled();
+                    if ui.checkbox(&mut enabled, "Observation balance").changed() {
+                        self.balance.set_enabled(enabled);
                     }
                 }
-                ui.separator();
-                dense_region_controls(ui);
-                self.selection_summary(ui);
-                if let Some(region) = &self.dense_region {
-                    ui.label(format!(
-                        "{} regions · {}/{} recorded samples admitted",
-                        region.islands, region.admitted, region.observed
-                    ));
-                }
-            });
-            ui.separator();
-            if self.balance.ready() {
-                let mut enabled = self.balance.enabled();
-                if ui.checkbox(&mut enabled, "Observation balance").changed() {
-                    self.balance.set_enabled(enabled);
-                }
             }
-            if ui.button("Fit photograph and linked details").clicked() {
+            if ui
+                .button(if diagnostics {
+                    "Fit photograph and linked details"
+                } else {
+                    "Fit photograph"
+                })
+                .clicked()
+            {
                 action.reset = true;
                 ui.close();
             }
             ui.separator();
-            ui.label("Click: focus · drag at fit: select a region");
-            ui.label("Wheel: zoom · zoomed drag: pan · Shift-drag: select");
-            ui.label("Ctrl+wheel: resize the regional contribution lens");
+            if self.edit_navigation {
+                ui.label("Wheel: zoom · drag: pan");
+            } else {
+                ui.label("Click: focus · drag at fit: select a region");
+                ui.label("Wheel: zoom · zoomed drag: pan · Shift-drag: select");
+            }
+            if diagnostics {
+                ui.label("Ctrl+wheel: resize the regional contribution lens");
+            }
             ui.label("Double-click: fit · Space: clean photograph");
         });
         let reset_gesture = crate::image_gesture::reset(ui, &hit);

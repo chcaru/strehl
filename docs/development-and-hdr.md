@@ -11,7 +11,7 @@ neutral development recipe reproduces the original photograph's rendering; the
 underlying samples remain available for further exposure and color changes.
 An existing sRGB TIFF can also be edited, but is marked **display referred** and
 cannot be exported as recovered HDR.
-Integer TIFFs with Strehl's sRGB ICC profile are supported. Untagged integer RGB
+Integer TIFFs with Strehl's own sRGB, Display P3 and Rec.2020 ICC profiles are supported. Untagged integer RGB
 TIFFs are assumed to be sRGB; camera-native and explicitly linear files are
 rejected. Other embedded profiles are rejected rather than silently interpreted
 as sRGB. General ICC profile conversion is not implemented yet.
@@ -27,7 +27,7 @@ strehl develop master.tiff --recipe development.json --hdr --out photograph.avif
 
 `develop` writes new files and refuses to overwrite an existing output. Applying
 another recipe does not restack or alter the master.
-TIFF and AVIF exports are fully written, flushed, and then published without
+TIFF, PNG, JPEG and AVIF exports are fully written, flushed, and then published without
 replacement, including when another application creates the destination during
 encoding. Interrupted work does not leave a partially written final filename.
 
@@ -91,7 +91,21 @@ from the immediate Light/Color controls above it.
 
 ## What HDR AVIF contains
 
-The built-in Rust encoder writes **10-bit 4:4:4 AV1**, full range, BT.2020 primaries,
+**Export** is a separate sidebar pane. It defaults to AVIF, quality 100 and
+HDR Rec.2020 for a scene-linear master. Choose sRGB or Display P3 when needed.
+Existing SDR photographs export as SDR; changing the color-space tag cannot
+restore discarded highlight data. TIFF and PNG use 16-bit channels; JPEG uses
+8-bit channels. All three carry matching ICC profiles. AVIF carries matching
+container and bitstream color metadata. See [export formats](export-formats.md)
+for conversion semantics, including the SDR appearance policy.
+
+Quality 100 is the highest setting for AVIF and JPEG, not lossless compression.
+Encoder effort is separate: faster searches can change distortion and file size
+at the same quality setting. The default balances these; the pane exposes the
+tradeoff under Encoding options. Output size remains the photograph's full
+resolution, independent of the on-screen preview.
+
+The built-in Rust encoder writes **10-bit 4:4:4 AV1**, full range, BT.2020 primaries by default,
 and the SMPTE ST 2084 PQ transfer function. Both the AV1 sequence header and AVIF
 container describe those values. Content light metadata is calculated from the
 actual developed image. No external encoder program is required.
@@ -130,7 +144,8 @@ presentation boundary uses its required float16 surface. Ordinary controls follo
 SDR white, while the photograph retains supported highlight headroom. Moving
 between displays or changing HDR availability refreshes the presentation.
 
-The status bar and **Edit → Display & export** report the active mode. The Edit
+The status bar and **Edit → Display** report the active mode. File delivery has
+its own **Export** pane. The Edit
 header reports the display mode separately from the photograph's origin. An old
 SDR TIFF stays SDR even on an HDR monitor. Unsupported graphics backends, Linux,
 and displays without active HDR use the SDR path. The app never enables Windows
@@ -158,40 +173,72 @@ claimed to match Lightroom.
 
 Private preset contents are not copied into the repository.
 
-## Adaptive light and color
+## Spatial light and color
 
-**Edit → Auto develop** measures the current photograph and proposes an editable
-treatment. It uses bounded, stratified scene samples to assess tonal range,
-highlight headroom, dark backgrounds, strongly separated light/dark compositions,
-and color saturation. It is an original deterministic alternative to an opaque
-profile, not a learned model or a reproduction of Adobe's Adaptive Color.
+In **Edit → Spatial light & color**, choose **Analyze photograph** or, with an
+annotation selected, **Analyze region**. The treatment responds to both location
+and pixel brightness: similar colors in different parts of the photograph can
+receive different adjustments. It preserves the ordinary Light/Color sliders
+and stores its local curves separately in the recipe. It is deterministic,
+not a learned model, semantic subject detector, or reproduction of Adobe's
+Adaptive Color.
 
-The treatment adjusts ordinary exposure, contrast, shadow/highlight, white, and
-vibrance controls. **Amount** blends against the recipe that preceded the
-analysis; moving the slider repeatedly does not compound the effect. **What
-changed** shows the proposed control values and the measurements behind them.
-Undo restores the previous recipe. Manual changes remain possible; analyze again
-to start from those new settings.
+**Amount** controls the stored treatment without analyzing the image again.
+It remains available after reopening; zero disables that scope's treatment,
+and returning to the previous amount restores it without compounding edits.
+Under **Shape the treatment**, adjust **Light balance**, **Local contrast**, and
+**Color**, then choose **Recalculate treatment**. Those parameter changes are
+drafts until recalculation, so dragging a control does not repeatedly run an
+analysis. Manual adjustments and other regions remain intact. Undo restores
+the previous recipe.
 
-Nearly flat or extremely dark scenes, unstable spatial samples, strongly
-saturated subjects, and isolated color outliers constrain the suggestion.
-Scene-linear masters retain valid HDR headroom above diffuse white; the delivery
-ceiling comes from the recipe's peak/reference-white ratio. An imported SDR image
-uses its existing white. This is a starting point for judgment, not a guarantee
-of a better photograph or a repair for focus, alignment, noise, or clipped capture
-data. Existing regions, source-span repairs, white balance, and HDR settings are
-preserved.
+**Where it changes** shows an optional, sampled map of the actual developed
+difference: warm tint for lifted light, cool tint for deeper light, and violet
+for color changes. The tints are amplified for visibility. The comparison
+includes region feathering and existing edits; it is not a source-contribution
+map or evidence of recovered detail. **Analysis notes** contains the measurements,
+reasoning and limitations from the last analysis.
 
-With a region selected, **Balance region** meters that region and changes only
-its Light/Color settings. **Balance highlights** targets its bright tones and
-reports whether the stored image still contains tonal variation there. It can
-reduce distracting brightness; it cannot reconstruct texture already clipped
-out of the input TIFF or RAW. The highlight fit is separate from the midtone
-treatment, so a small bright reflection does not suppress the entire adjustment.
+The operator protects dark floor values, near-white channels, neutral areas and
+already saturated colors. It constrains overall light placement while shaping
+local tones. A scene-linear master retains valid HDR headroom above diffuse
+white; an imported SDR photograph is limited to its stored range. This is an
+adjustable starting point, not a guarantee of a better photograph or a repair
+for focus, alignment, noise, or clipped capture data. Source-span repairs and
+HDR settings are preserved.
 
-Analysis runs off the UI thread and is discarded if the photograph or edits
-change before it returns. Agents can request the same operation with
-`adaptive_develop` and inspect the returned analysis in a workspace snapshot.
+With a region selected, **Balance highlights** remains a separate action. It
+adjusts that region's ordinary Highlights control and reports whether the stored
+image still contains tonal variation there. It can reduce distracting brightness;
+it cannot reconstruct texture already clipped out of the input TIFF or RAW.
+Its **Highlight amount** blends the proposed change against the preceding
+regional adjustment.
+
+Analysis and effect-map sampling run off the UI thread. A changed photograph,
+recipe, or selected scope invalidates pending analysis. Agents can request the
+same treatment with `adaptive_develop` and inspect compact analysis metadata in
+a workspace snapshot. The [spatial-treatment record](development/adaptive-spatial-treatment.md)
+documents the algorithm, research, photographic review and limits.
+
+## Named presets
+
+In **Edit → Presets**, choose **Save look…** and give the current treatment a
+name. A preset stores the selected scope's light and color controls, plus its
+spatial parameters and Amount when present. It excludes the photograph's measured
+curves, annotation geometry, source-repair ranges and HDR delivery settings.
+
+Select a saved look and choose **Apply to photograph** or **Apply to selection**;
+double-clicking its name also applies it. Spatial treatment is recomputed for the
+destination photograph or region in a worker. Applying replaces the addressed
+controls and treatment as one undoable edit, preserving other scopes and source
+repairs. A static preset clears the addressed spatial treatment rather than
+silently layering over it.
+
+The preset context menu offers Rename and Delete; a deleted preset can be
+restored with the shelf's Undo action. Presets are saved locally. If saving fails
+or the library changes externally, the pane reports the problem and offers retry
+or recovery instead of silently overwriting another version. This library is
+separate from the limited numeric XMP importer described above.
 
 ## Verification
 

@@ -20,10 +20,14 @@ mod adaptive;
 mod agent;
 #[path = "app-editing.rs"]
 mod editing;
+#[path = "app-export.rs"]
+mod export;
 #[path = "frame-performance.rs"]
 mod frame_performance;
 #[path = "app-history.rs"]
 mod history;
+#[path = "app-presets.rs"]
+mod presets;
 #[cfg(test)]
 #[path = "app-tests.rs"]
 mod tests;
@@ -120,8 +124,11 @@ pub struct StrehlApp {
     edit_photo_focus: bool,
     regional: editing::RegionalInspector,
     edit_pane: editing::EditPaneState,
+    export_pane: export::ExportPaneState,
+    presets: presets::PresetState,
     agent: agent::AgentState,
     close_after_export: bool,
+    close_after_presets: bool,
     process_view: bool,
     sidebar: Option<workspace::Sidebar>,
     project_explorer: crate::project_explorer::ProjectExplorer,
@@ -216,8 +223,11 @@ impl StrehlApp {
             edit_photo_focus: true,
             regional: Default::default(),
             edit_pane: Default::default(),
+            export_pane: Default::default(),
+            presets: Default::default(),
             agent: Default::default(),
             close_after_export: false,
+            close_after_presets: false,
             process_view: true,
             sidebar: Some(workspace::Sidebar::Projects),
             project_explorer: Default::default(),
@@ -273,6 +283,20 @@ impl StrehlApp {
         let explicit_image =
             launch.preview.is_some() || launch.workbench.is_some() || launch.probe_at.is_some();
         if let Some(image) = launch.preview {
+            // An explicitly opened TIFF can be developed without a capture project.
+            // Never attach a standalone photo to another stack's diagnostic history.
+            if (launch.edit || launch.export || launch.agent)
+                && app.scan.is_none()
+                && launch.open_run.is_none()
+                && launch.activity_log.is_none()
+                && image.extension().and_then(|s| s.to_str()).is_some_and(|s| {
+                    s.eq_ignore_ascii_case("tif") || s.eq_ignore_ascii_case("tiff")
+                })
+            {
+                app.result = Some(image.clone());
+                app.progress.mark_complete();
+                app.status = "Opened photograph".into();
+            }
             app.open_result(image);
         }
         if let Some(log) = launch.activity_log {
@@ -329,14 +353,18 @@ impl StrehlApp {
         if app.screenshot_ranges.is_some() {
             app.process_view = true;
         }
-        if launch.edit {
-            app.process_view = true;
-            app.sidebar = Some(workspace::Sidebar::Edit);
-        }
         if launch.agent {
             app.process_view = true;
             app.sidebar = Some(workspace::Sidebar::Agent);
             app.start_agent_session();
+        }
+        if launch.edit {
+            app.process_view = true;
+            app.sidebar = Some(workspace::Sidebar::Edit);
+        }
+        if launch.export {
+            app.process_view = true;
+            app.sidebar = Some(workspace::Sidebar::Export);
         }
         app
     }
@@ -439,7 +467,7 @@ impl StrehlApp {
         });
     }
     fn picker_active(&self) -> bool {
-        self.dialog.is_some() || self.bracket_browser.active()
+        self.dialog.is_some() || self.editor.dialog.is_some() || self.bracket_browser.active()
     }
     fn start_render(&mut self) {
         if self.stack_start_blocker().is_some() {
@@ -2036,8 +2064,12 @@ impl StrehlApp {
             self.editor
                 .set_tool(crate::edit_workspace::DrawingTool::Select);
         }
+        let export_focus = self.sidebar == Some(workspace::Sidebar::Export)
+            && self.editor.loaded.is_some()
+            && self.editor.path == self.result
+            && self.progress.stage == Stage::Complete;
         self.process_space
-            .set_edit_focus(edit_enabled && self.edit_photo_focus);
+            .set_edit_focus((edit_enabled && self.edit_photo_focus) || export_focus);
         self.process_space
             .set_annotation_mode(edit_enabled && self.editor.owns_canvas(ctx));
         self.process_space
@@ -2165,7 +2197,11 @@ impl StrehlApp {
         self.navigation_rail(ctx);
         self.sidebar(ctx);
         if self.process_view {
-            if self.stack.is_none() && !self.activity && self.expected_run.is_none() {
+            if self.stack.is_none()
+                && !self.activity
+                && self.expected_run.is_none()
+                && self.result.is_none()
+            {
                 self.welcome_workspace(ctx);
             } else {
                 self.show_process(ctx);

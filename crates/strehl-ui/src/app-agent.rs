@@ -45,6 +45,7 @@ impl StrehlApp {
             "settings":self.controls.settings, "exposure":self.controls.exposure,"gate":self.controls.gate,
             "workers":self.controls.workers, "edits":self.editor.revision,"before_preview":self.editor.before,
             "selected_region":self.editor.selected,
+            "export_directory":self.export_pane.destination,
             "view":self.process_space.history_revision(), "projects":self.project_explorer.history_revision(),
             "running":self.job.is_some(), "opening":self.scan.is_some() || self.replay.is_some()
         });
@@ -298,7 +299,7 @@ impl StrehlApp {
             "source_count":self.stack.as_ref().map(|s|s.frames.len()), "selected_frame":self.selected,
             "frame_index_base":0, "status":self.status, "stage":format!("{:?}",self.progress.stage),
             "busy":{"stack":self.job.is_some(),"opening":self.scan.is_some()||self.replay.is_some(),
-                "photo":self.editor.loading.is_some(),"preset":self.editor.preset.is_some(),"export":self.editor.exporting.is_some()},
+                "photo":self.editor.loading.is_some(),"preset":self.editor.preset.is_some()||self.presets_busy(),"export":self.editor.exporting.is_some()},
             "stack_blocker":self.stack_start_blocker(), "settings":self.controls.settings,
             "exposure_ev":self.controls.exposure,"pyramid_gate":self.controls.gate,"workers":self.controls.workers,
             "development":self.editor.recipe,"before_preview":self.editor.before, "photo_ready":self.agent_photo_is_current(),
@@ -309,6 +310,10 @@ impl StrehlApp {
             "photo_view":agent_photo_view(self.process_view, self.process_space.edit_mapping()),
             "photo":self.editor.loaded.as_ref().filter(|_|self.agent_photo_is_current()).map(|p|json!({"width":p.image.width,"height":p.image.height,"origin":p.image.origin,"source":p.source})),
             "export":self.editor.last_export,"error":self.editor.error.as_ref().or(self.error.as_ref()),
+            "export_capabilities":{"formats":["avif","tiff","png","jpeg"],"color_spaces":["srgb","display_p3","rec2020"],
+                "destination":self.export_pane.destination,
+                "defaults":strehl_edit::ExportSettings::default(),
+                "hdr_available":self.editor.loaded.as_ref().is_some_and(|p|self.agent_photo_is_current() && p.image.origin==strehl_edit::ImageOrigin::SceneLinear)},
             "grants":self.agent.grants.iter().map(|(id,p)|json!({"id":id,"name":p.file_name()})).collect::<Vec<_>>(),
             "diagnostics":{"admission_packets":self.progress.admission_archive.len(),
                 "omitted_packets":self.progress.admission_archive.dropped(),
@@ -390,11 +395,65 @@ impl StrehlApp {
                     "selected_region":self.editor.selected}),
                 );
             }
-            SetDevelop { recipe } => {
+            SetDevelop { mut recipe } => {
                 anyhow::ensure!(
                     self.agent_photo_is_current(),
                     "The current photograph is still loading"
                 );
+                // Older clients do not know about measured spatial fields. An
+                // absent/empty list must not silently flatten the photograph.
+                // ClearAdaptive is the explicit, scoped removal operation.
+                if recipe.spatial.is_empty() {
+                    recipe.spatial.clone_from(&self.editor.recipe.spatial);
+                    anyhow::ensure!(
+                        recipe.spatial.iter().all(|field| field
+                            .target_region
+                            .as_ref()
+                            .is_none_or(|id| recipe.regions.iter().any(|region| &region.id == id))),
+                        "This replacement removes a region with an Adaptive treatment. Use remove_annotation or clear_adaptive explicitly first"
+                    );
+                }
+                self.editor.replace(recipe)?;
+            }
+            SetAdjustments {
+                adjustments,
+                region_id,
+            } => {
+                anyhow::ensure!(
+                    self.agent_photo_is_current(),
+                    "The current photograph is still loading"
+                );
+                let mut recipe = self.editor.recipe.clone();
+                if let Some(id) = region_id {
+                    let region = recipe
+                        .regions
+                        .iter_mut()
+                        .find(|region| region.id == id)
+                        .ok_or_else(|| anyhow::anyhow!("Unknown region"))?;
+                    anyhow::ensure!(region.enabled, "Enable the region before adjusting it");
+                    region.adjustments = adjustments;
+                } else {
+                    recipe.global = adjustments;
+                }
+                self.editor.replace(recipe)?;
+            }
+            ClearAdaptive { region_id } => {
+                anyhow::ensure!(
+                    self.agent_photo_is_current(),
+                    "The current photograph is still loading"
+                );
+                if let Some(id) = &region_id {
+                    anyhow::ensure!(
+                        self.editor
+                            .recipe
+                            .regions
+                            .iter()
+                            .any(|region| &region.id == id),
+                        "Unknown region"
+                    );
+                }
+                let mut recipe = self.editor.recipe.clone();
+                recipe.clear_adaptive_scope(region_id.as_deref());
                 self.editor.replace(recipe)?;
             }
             Annotate { annotation } => {
@@ -435,6 +494,7 @@ impl StrehlApp {
                 let mut recipe = self.editor.recipe.clone();
                 anyhow::ensure!(recipe.regions.iter().any(|r| r.id == id), "Unknown region");
                 recipe.regions.retain(|r| r.id != id);
+                recipe.clear_adaptive_scope(Some(&id));
                 self.editor.replace(recipe)?;
             }
             SetView { center, zoom } => {
@@ -458,22 +518,49 @@ impl StrehlApp {
                 job.cancel();
                 return Ok(json!({"state":"cancellation_requested","operation":"stack"}));
             }
-            Export { file_name, format } => {
+            Export {
+                file_name,
+                format,
+                color_space,
+                hdr,
+                quality,
+                speed,
+            } => {
                 anyhow::ensure!(
                     self.agent_photo_is_current(),
                     "The current photograph is still loading"
                 );
+                let destination = self.export_pane.destination.as_ref().ok_or_else(|| {
+                    anyhow::anyhow!("Choose an export folder in Export → Destination")
+                })?;
                 anyhow::ensure!(
-                    self.output.is_dir(),
-                    "Choose an export folder in Adjust → Destination"
+                    destination.is_dir(),
+                    "Choose an export folder in Export → Destination"
                 );
                 jobs::validate_export_destination(
                     self.stack.as_ref().map(|s| s.directory.as_path()),
-                    &self.output,
+                    destination,
                 )?;
+                let origin = self
+                    .editor
+                    .loaded
+                    .as_ref()
+                    .ok_or_else(|| anyhow::anyhow!("Open a completed photograph first"))?
+                    .image
+                    .origin;
+                let settings = crate::agent_interface::resolve_export_settings(
+                    &format,
+                    color_space,
+                    hdr,
+                    quality,
+                    speed,
+                    Some(origin),
+                )
+                .map_err(anyhow::Error::msg)?;
+                let resolved = serde_json::to_value(&settings)?;
                 self.editor
-                    .export(self.output.join(file_name), format == "avif")?;
-                return Ok(json!({"state":"queued","operation":"export"}));
+                    .export_with_settings(destination.join(file_name), settings)?;
+                return Ok(json!({"state":"queued","operation":"export","settings":resolved}));
             }
             Undo {} => {
                 self.editor.commit_edit();
@@ -982,3 +1069,11 @@ pub(super) fn probe_region(
 #[cfg(test)]
 #[path = "app-agent-review-tests.rs"]
 mod independent_review_tests;
+
+#[cfg(test)]
+#[path = "agent-export-tests.rs"]
+mod export_tests;
+
+#[cfg(test)]
+#[path = "agent-spatial-tests.rs"]
+mod spatial_tests;

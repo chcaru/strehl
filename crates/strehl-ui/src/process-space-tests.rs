@@ -86,6 +86,107 @@ fn click(
     );
     draw(space, ctx, input, time + 0.05, vec![event(false)]).0
 }
+
+#[test]
+fn standalone_photo_uses_the_canvas_and_shared_zoom_without_claiming_diagnostics() {
+    for editing in [false, true] {
+        let ctx = egui::Context::default();
+        let mut space = ProcessSpace::default();
+        space.set_edit_focus(editing);
+        space.set_edit_navigation(editing);
+        let mut progress = PipelineProgress::default();
+        progress.mark_complete();
+        let photo = texture(&ctx, "standalone", Color32::GREEN);
+        let data = Input {
+            frame_count: 0,
+            output: Some(&photo),
+            output_size: Some([6000, 4000]),
+            ..input(&progress)
+        };
+        assert!(data.standalone_photo());
+        assert!(
+            crate::process_output_space::OutputSpace::from_progress(&progress, [6000, 4000])
+                .is_none()
+        );
+        let (_, painted) = draw(&mut space, &ctx, data, 0.1, vec![]);
+        let actual = largest_image(&painted, photo.id()).expect("decoded photo is painted");
+        assert!(
+            actual.width() > 850.0 && actual.height() > 550.0,
+            "{actual:?}"
+        );
+        assert!(!painted.shapes.iter().any(|shape| matches!(&shape.shape,
+            egui::Shape::Text(text) if text.galley.text().contains("HOW DETAIL")
+                || text.galley.text().contains("frames ·")
+                || text.galley.text() == "Source + final")));
+        let (full, visible) = space
+            .edit_mapping()
+            .expect("editor has the actual photo aperture");
+        assert!((full.width() / visible.width() - 1.0).abs() < 0.001);
+        space.set_photo_view([0.65, 0.4], 3.0);
+        for frame in 1..20 {
+            draw(&mut space, &ctx, data, 0.1 + frame as f64 * 0.1, vec![]);
+        }
+        let (full, visible) = space.edit_mapping().unwrap();
+        assert!((full.width() / visible.width() - 3.0).abs() < 0.01);
+        let center = (visible.center() - full.min) / full.size();
+        assert!((center.x - 0.65).abs() < 0.01 && (center.y - 0.4).abs() < 0.01);
+        assert!(space.undo());
+        for frame in 21..40 {
+            draw(&mut space, &ctx, data, 0.1 + frame as f64 * 0.1, vec![]);
+        }
+        let (full, visible) = space.edit_mapping().unwrap();
+        assert!((full.width() / visible.width() - 1.0).abs() < 0.01);
+        let at = visible.center();
+        for (time, pressed) in [(4.2, true), (4.25, false)] {
+            draw(
+                &mut space,
+                &ctx,
+                data,
+                time,
+                vec![
+                    egui::Event::PointerMoved(at),
+                    egui::Event::PointerButton {
+                        pos: at,
+                        button: egui::PointerButton::Secondary,
+                        pressed,
+                        modifiers: egui::Modifiers::NONE,
+                    },
+                ],
+            );
+        }
+        let (_, menu) = draw(&mut space, &ctx, data, 4.3, vec![]);
+        text(&menu, "Fit photograph");
+        assert!(!menu.shapes.iter().any(|shape| matches!(&shape.shape,
+            egui::Shape::Text(text) if text.galley.text().contains("Regional repairs")
+                || text.galley.text().contains("contribution lens")
+                || text.galley.text().contains("Photograph overlay"))));
+        assert!(
+            !Input {
+                frame_count: 1,
+                ..data
+            }
+            .standalone_photo()
+        );
+        assert!(
+            !Input {
+                output_size: Some([0, 4000]),
+                ..data
+            }
+            .standalone_photo()
+        );
+        let mut recorded = PipelineProgress::default();
+        recorded.mark_complete();
+        recorded.bands = Some(8);
+        assert!(
+            !Input {
+                progress: &recorded,
+                ..data
+            }
+            .standalone_photo()
+        );
+    }
+}
+
 #[test]
 fn continuous_journey_maps_and_final_photo_coexist_without_phase_navigation() {
     let ctx = egui::Context::default();

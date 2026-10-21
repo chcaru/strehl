@@ -10,9 +10,6 @@ const PCS_D50: [f64; 3] = [0.964_203, 1.0, 0.824_905];
 /// D65, the sRGB white point (IEC 61966-2-1).
 const WHITE_D65: [f64; 3] = [0.950_47, 1.0, 1.088_83];
 
-/// sRGB primaries as CIE xy chromaticities (IEC 61966-2-1).
-const SRGB_PRIMARIES_XY: [[f64; 2]; 3] = [[0.6400, 0.3300], [0.3000, 0.6000], [0.1500, 0.0600]];
-
 /// Bradford cone response matrix, and its inverse.
 const BRADFORD: [[f64; 3]; 3] = [
     [0.8951, 0.2664, -0.1614],
@@ -58,13 +55,13 @@ fn mat3_inv(m: [[f64; 3]; 3]) -> [[f64; 3]; 3] {
     o
 }
 
-/// The RGB-to-XYZ matrix for the sRGB primaries under their own white point,
+/// The RGB-to-XYZ matrix for the selected primaries under their D65 white point,
 /// then Bradford-adapted to the D50 PCS. Columns are the `rXYZ`/`gXYZ`/`bXYZ`
 /// tag values.
-fn srgb_to_xyz_d50() -> [[f64; 3]; 3] {
+fn rgb_to_xyz_d50(primaries: [[f64; 2]; 3]) -> [[f64; 3]; 3] {
     // Each primary's XYZ at unit luminance, from its xy chromaticity.
     let mut p = [[0.0; 3]; 3];
-    for (i, [x, y]) in SRGB_PRIMARIES_XY.iter().enumerate() {
+    for (i, [x, y]) in primaries.iter().enumerate() {
         p[0][i] = x / y;
         p[1][i] = 1.0;
         p[2][i] = (1.0 - x - y) / y;
@@ -117,16 +114,31 @@ fn srgb_eotf(v: f64) -> f64 {
 /// output file's hash change every run, and this project's epistemics rest on
 /// byte-freezes.
 pub(crate) fn icc_srgb_v2(linear: bool) -> Vec<u8> {
-    let m = srgb_to_xyz_d50();
+    icc_output_v2(crate::OutputColorSpace::Srgb, linear)
+}
 
-    let desc = if linear {
-        "strehl linear sRGB (BT.709-6 primaries, D65, gamma 1.0)"
-    } else {
-        "strehl sRGB (IEC 61966-2-1)"
+pub(crate) fn icc_output_v2(space: crate::OutputColorSpace, linear: bool) -> Vec<u8> {
+    let m = rgb_to_xyz_d50(space.primaries());
+
+    let desc = match (space, linear) {
+        (crate::OutputColorSpace::Srgb, true) => {
+            "strehl linear sRGB (BT.709-6 primaries, D65, gamma 1.0)"
+        }
+        (crate::OutputColorSpace::Srgb, false) => "strehl sRGB (IEC 61966-2-1)",
+        (crate::OutputColorSpace::DisplayP3, true) => "Strehl linear Display P3 (D65)",
+        (crate::OutputColorSpace::DisplayP3, false) => "Strehl Display P3 (D65, sRGB transfer)",
+        (crate::OutputColorSpace::Rec2020, true) => "Strehl linear Rec.2020 (D65)",
+        (crate::OutputColorSpace::Rec2020, false) => "Strehl Rec.2020 (D65, sRGB transfer)",
     };
-    let cprt = "Constructed by strehl from published colorimetry \
-                (IEC 61966-2-1 primaries and transfer curve, ICC.1 D50 PCS, \
-                 Bradford adaptation). No rights reserved.";
+    let cprt = if space == crate::OutputColorSpace::Srgb {
+        "Constructed by strehl from published colorimetry \
+         (IEC 61966-2-1 primaries and transfer curve, ICC.1 D50 PCS, \
+         Bradford adaptation). No rights reserved."
+    } else {
+        "Constructed by strehl from published colorimetry \
+         (standard D65 primaries, IEC 61966-2-1 transfer curve, ICC.1 D50 PCS, \
+         Bradford adaptation). No rights reserved."
+    };
 
     // -- tag payloads ------------------------------------------------------
     let xyz_tag = |c: usize| -> Vec<u8> {

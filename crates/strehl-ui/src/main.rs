@@ -10,6 +10,8 @@ mod bracket_browser;
 #[cfg(test)]
 mod capture_axis;
 mod controls;
+#[path = "develop-presets.rs"]
+mod develop_presets;
 #[path = "draft-preview.rs"]
 mod draft_preview;
 #[path = "edit-workspace.rs"]
@@ -109,6 +111,7 @@ pub struct LaunchOptions {
     pub probe_at: Option<[f32; 2]>,
     pub process: bool,
     pub edit: bool,
+    pub export: bool,
     pub agent: bool,
 }
 
@@ -141,6 +144,10 @@ fn main() -> eframe::Result {
     while let Some(arg) = args.next() {
         if arg == "--edit" {
             launch.edit = true;
+            continue;
+        }
+        if arg == "--export" {
+            launch.export = true;
             continue;
         }
         if arg == "--agent" {
@@ -251,7 +258,7 @@ fn main() -> eframe::Result {
             Some("--activity-log") => &mut launch.activity_log,
             _ => {
                 eprintln!(
-                    "Usage: Strehl [--source DIR] [--open-run DIR] [--browse DIR] [--preview IMAGE] [--engine EXE] [--process] [--edit] [--agent] [--screenshot PNG]"
+                    "Usage: Strehl [--source DIR] [--open-run DIR] [--browse DIR] [--preview IMAGE] [--engine EXE] [--process] [--edit | --export] [--agent] [--screenshot PNG]"
                 );
                 std::process::exit(2);
             }

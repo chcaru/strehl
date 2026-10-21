@@ -7,6 +7,7 @@ pub(super) enum Sidebar {
     Projects,
     Adjust,
     Edit,
+    Export,
     Agent,
     Review,
     Activity,
@@ -17,6 +18,7 @@ impl Sidebar {
             Self::Projects => "Projects",
             Self::Adjust => "Adjust",
             Self::Edit => "Edit",
+            Self::Export => "Export",
             Self::Agent => "Agent",
             Self::Review => "Review",
             Self::Activity => "Activity",
@@ -436,6 +438,7 @@ impl StrehlApp {
                     (0, Sidebar::Projects),
                     (1, Sidebar::Adjust),
                     (7, Sidebar::Edit),
+                    (9, Sidebar::Export),
                     (8, Sidebar::Agent),
                     (2, Sidebar::Review),
                     (3, Sidebar::Activity),
@@ -556,6 +559,8 @@ impl StrehlApp {
                     action = response.action;
                 } else if pane == Sidebar::Edit {
                     self.edit_panel(ui);
+                } else if pane == Sidebar::Export {
+                    self.export_panel(ui);
                 } else {
                     egui::Frame::NONE.inner_margin(10).show(ui, |ui| {
                         egui::ScrollArea::vertical()
@@ -589,7 +594,7 @@ impl StrehlApp {
                                     .show(ui, |ui| self.destination_controls(ui));
                             }
                             Sidebar::Review => self.review_panel(ui),
-                            Sidebar::Edit => unreachable!(),
+                            Sidebar::Edit | Sidebar::Export => unreachable!(),
                             Sidebar::Agent => self.agent_panel(ui),
                             Sidebar::Activity => {
                                 if let Some(error) = &self.error {
@@ -864,6 +869,7 @@ fn rail_command(
         4 => crate::workspace_icons::Icon::Stack,
         7 => crate::workspace_icons::Icon::Edit,
         8 => crate::workspace_icons::Icon::Agent,
+        9 => crate::workspace_icons::Icon::Export,
         _ => crate::workspace_icons::Icon::Layout,
     };
     crate::workspace_icons::paint(&p, c, 20.0, icon, color);

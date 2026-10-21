@@ -1,9 +1,20 @@
-# Adaptive development
+# Adaptive development — historical global approach
 
-Adaptive is an original, deterministic photographic starting point. It proposes
-ordinary editable controls rather than introducing another hidden rendering
-pipeline. It does not use a learned model, reproduce Adobe's AI profiles, infer
-the subject, invent texture, or automatically change the default stack rendering.
+**Superseded Balance implementation:** the user rejected the stronger global
+brightening recorded below. The current spatial replacement, research, scope
+and verification status are documented in
+[Spatial Adaptive development](adaptive-spatial-treatment.md). The regional
+Balance highlights operation described here remains a separate tool. Earlier
+review acceptance below is historical and is not a claim that the user accepted
+those results.
+
+The historical Balance operator below proposed ordinary editable controls. Its
+implementation and photographic reviews are retained as a decision record, not
+current user instructions. The current spatial treatment leaves those manual
+controls unchanged; use the linked replacement document above and the
+[editing guide](../development-and-hdr.md#spatial-light-and-color). Neither
+implementation uses a learned model, reproduces Adobe's AI profiles, infers the
+subject, invents texture, or automatically changes the default stack rendering.
 
 `analyze_adaptive(image, recipe)` returns the frozen base recipe, a suggested
 recipe, sampled before/after statistics, explanations for each changed control,

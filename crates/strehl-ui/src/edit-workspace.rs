@@ -598,7 +598,8 @@ impl EditorState {
     }
 
     pub fn replace(&mut self, recipe: DevelopmentRecipe) -> anyhow::Result<()> {
-        recipe.validate()?;
+        // Refuse unsaveable bulk edits before changing pixels or the undo journal.
+        recipe_bytes(&recipe)?;
         self.commit_edit();
         if recipe != self.recipe {
             let before = std::mem::replace(&mut self.recipe, recipe);
@@ -688,7 +689,12 @@ impl EditorState {
         true
     }
 
-    pub fn export(&mut self, path: PathBuf, hdr: bool) -> anyhow::Result<()> {
+    pub fn export_with_settings(
+        &mut self,
+        path: PathBuf,
+        settings: strehl_edit::ExportSettings,
+    ) -> anyhow::Result<()> {
+        settings.validate()?;
         anyhow::ensure!(self.exporting.is_none(), "An export is already running");
         anyhow::ensure!(
             !path.exists(),
@@ -707,13 +713,9 @@ impl EditorState {
         let recipe = self.recipe.clone();
         recipe.validate()?;
         self.last_export = None;
-        self.exporting = Some(spawn_task("strehl-edit-export", move |_| {
-            // The writer reserves the destination; extension alone never determines color encoding.
-            if hdr {
-                strehl_edit::export_hdr_avif(&path, &image, &recipe)?;
-            } else {
-                strehl_edit::save_sdr_tiff(&path, &image, &recipe)?;
-            }
+        self.exporting = Some(spawn_task("strehl-edit-export", move |cancelled| {
+            // The writer publishes without replacement; file options determine color encoding.
+            strehl_edit::export_image(&path, &image, &recipe, &settings, &cancelled)?;
             Ok(path)
         }));
         self.error = None;
@@ -726,8 +728,17 @@ pub(crate) fn recipe_path(image: &Path) -> PathBuf {
 }
 
 fn save_recipe(path: &Path, recipe: &DevelopmentRecipe) -> anyhow::Result<()> {
+    write_json_atomic(path, &recipe_bytes(recipe)?)
+}
+
+fn recipe_bytes(recipe: &DevelopmentRecipe) -> anyhow::Result<Vec<u8>> {
     recipe.validate()?;
-    write_json_atomic(path, &serde_json::to_vec_pretty(recipe)?)
+    let bytes = serde_json::to_vec_pretty(recipe)?;
+    anyhow::ensure!(
+        bytes.len() <= 2 * 1024 * 1024,
+        "These edits exceed the 2 MiB document limit. Reduce selections or Adaptive treatments before saving. Existing saved edits are intact."
+    );
+    Ok(bytes)
 }
 
 fn write_json_atomic(path: &Path, bytes: &[u8]) -> anyhow::Result<()> {

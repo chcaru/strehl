@@ -14,7 +14,7 @@ use tiff::{
 
 use crate::DevelopmentRecipe;
 
-struct IccBytes<'a>(&'a [u8]);
+pub(crate) struct IccBytes<'a>(pub(crate) &'a [u8]);
 impl tiff::encoder::TiffValue for IccBytes<'_> {
     const BYTE_LEN: u8 = 1;
     const FIELD_TYPE: tiff::tags::Type = tiff::tags::Type::UNDEFINED;
@@ -59,7 +59,7 @@ impl DisplayBaseline {
         );
         Ok(())
     }
-    fn place(&self, v: [f32; 3]) -> [f32; 3] {
+    pub(crate) fn place(&self, v: [f32; 3]) -> [f32; 3] {
         let l = crate::recipe::luma(v).max(0.0);
         if l <= 0.0 {
             return [0.0; 3];
@@ -379,16 +379,16 @@ pub fn load_tiff(path: &Path) -> Result<LinearImage> {
         .get_tag_ascii_string(Tag::ImageDescription)
         .unwrap_or_default();
     let color = decoder.colortype()?;
+    let mut input_space = crate::OutputColorSpace::Srgb;
     if matches!(color, ColorType::RGB(8) | ColorType::RGB(16))
         && decoder.find_tag(Tag::IccProfile)?.is_some()
     {
         let profile = decoder.get_tag_u8_vec(Tag::IccProfile)?;
-        ensure!(
-            profile == crate::icc::icc_srgb_v2(false),
-            "this TIFF has an unsupported embedded color profile; convert it to sRGB before editing (foreign profiles are never silently relabeled)"
-        );
+        input_space = [crate::OutputColorSpace::Srgb, crate::OutputColorSpace::DisplayP3, crate::OutputColorSpace::Rec2020]
+            .into_iter().find(|&space| profile == crate::icc::icc_output_v2(space, false))
+            .context("this TIFF has an unsupported embedded color profile; convert it to sRGB before editing (foreign profiles are never silently relabeled)")?;
     }
-    let (pixels, origin) = match (color, decoder.read_image()?) {
+    let (mut pixels, origin) = match (color, decoder.read_image()?) {
         (ColorType::RGB(32), DecodingResult::F32(v)) => {
             ensure!(
                 description.starts_with(LINEAR_MASTER_DESCRIPTION),
@@ -422,6 +422,11 @@ pub fn load_tiff(path: &Path) -> Result<LinearImage> {
         }
         _ => bail!("editing supports Strehl RGB32-float masters and sRGB RGB8/RGB16 TIFFs"),
     };
+    if input_space != crate::OutputColorSpace::Srgb && origin == ImageOrigin::DisplayReferred {
+        pixels.par_chunks_mut(3).for_each(|p| {
+            p.copy_from_slice(&input_space.to_linear_srgb([p[0], p[1], p[2]]));
+        });
+    }
     let baseline = description
         .lines()
         .find_map(|line| line.strip_prefix("DisplayBaseline: "))

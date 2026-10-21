@@ -12,6 +12,7 @@ pub(crate) enum Icon {
     Review,
     Activity,
     Edit,
+    Export,
     Agent,
     Layout,
     Add,
@@ -107,6 +108,11 @@ pub(crate) fn paint(painter: &Painter, center: Pos2, size: f32, icon: Icon, colo
             painter.circle_stroke(point(5.0, 4.0), 3.0 * scale, stroke);
             line(&[[-2.0, -4.0], [5.0, -4.0], [5.0, 1.0]]);
             line(&[[2.0, 4.0], [-5.0, 4.0], [-5.0, -1.0]]);
+        }
+        Icon::Export => {
+            line(&[[-8.0, 1.0], [-8.0, 8.0], [8.0, 8.0], [8.0, 1.0]]);
+            line(&[[0.0, 4.0], [0.0, -8.0]]);
+            line(&[[-4.0, -4.0], [0.0, -8.0], [4.0, -4.0]]);
         }
         Icon::Layout => {
             closed(&[[-8.0, -7.0], [8.0, -7.0], [8.0, 7.0], [-8.0, 7.0]]);

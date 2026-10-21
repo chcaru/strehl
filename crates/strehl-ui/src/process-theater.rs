@@ -779,6 +779,7 @@ impl ProcessTheater {
                 layout: self.layout,
                 epoch: Some(input.epoch),
                 annotation_mode: self.annotation_mode,
+                edit_navigation: self.edit_navigation,
                 edit_focus: self.edit_focus,
                 ..Default::default()
             };
@@ -831,6 +832,7 @@ impl ProcessTheater {
             self.pin = self.scales.pin();
         }
         let pending_view = self.requested_view.map(|_| self.scales.target_view());
+        let standalone = input.standalone_photo();
         if input.progress.stage == Stage::Complete && self.last_stage != Stage::Complete {
             self.enlarged = None;
         }
@@ -861,12 +863,16 @@ impl ProcessTheater {
             self.gesture_start = Some(before.clone());
             self.wheel_edit = None;
         }
-        self.inspection_mix = ui.ctx().animate_bool_with_time(
-            ui.id().with(("inspection-workspace", input.epoch)),
-            (self.inspection_frame().is_some() || self.edit_focus)
-                && self.output_space(input).is_some(),
-            0.24,
-        );
+        self.inspection_mix = if standalone {
+            1.0
+        } else {
+            ui.ctx().animate_bool_with_time(
+                ui.id().with(("inspection-workspace", input.epoch)),
+                (self.inspection_frame().is_some() || self.edit_focus)
+                    && self.output_space(input).is_some(),
+                0.24,
+            )
+        };
         let focused = self.inspection_mix > 0.001;
         let compact = ribbon.is_some() && rect.width() < 1040.0;
         if !compact && !focused {
@@ -905,12 +911,15 @@ impl ProcessTheater {
             self.scales.prepare_frame(ui, input);
             self.pin = self.scales.pin();
             let mut target = inspection_layout(rect);
-            if self.edit_focus {
+            if self.edit_focus || standalone {
                 // Editing occupies the same continuous photograph and timeline;
                 // instruments return when the sidebar focus is released.
                 target.0.min.x = rect.left();
                 target.1.min.x = rect.left();
                 target.1.max.y = rect.bottom();
+            }
+            if standalone {
+                target.1.min.y = rect.top() + 24.0;
             }
             let blend = |from: Rect, to: Rect| {
                 Rect::from_min_max(
@@ -921,7 +930,7 @@ impl ProcessTheater {
             layout.title = blend(layout.title, target.0);
             layout.hero = blend(layout.hero, target.1);
             layout.contributions = blend(layout.contributions, target.2);
-            if !self.edit_focus {
+            if !self.edit_focus && !standalone {
                 self.inspection_rail(ui, target.3, input, response);
             }
             None
@@ -957,7 +966,9 @@ impl ProcessTheater {
             self.instruments(ui, layout, input, response, completed);
             None
         };
-        self.heading(ui, layout.title, input);
+        if !standalone {
+            self.heading(ui, layout.title, input);
+        }
         if let Some(ribbon) = ribbon {
             self.timeline_controls(ui, ribbon, capture_input, response);
             let capture = Rect::from_min_max(
@@ -1035,7 +1046,7 @@ impl ProcessTheater {
                     .or_else(|| self.inspection_frame());
             }
         }
-        if (!compact || focused) && !self.edit_focus {
+        if (!compact || focused) && !self.edit_focus && !standalone {
             self.contribution(ui, layout.contributions, input);
         }
         self.source_axis_bounds = focused.then_some(layout.hero);
@@ -1963,10 +1974,11 @@ impl ProcessTheater {
             // Its later contents cannot shrink the live image at TIFF arrival.
             rect.max - egui::vec2(10.0, footer),
         );
-        if final_owned && self.output_space(input).is_some() {
+        let navigable = self.output_space(input).is_some() || input.standalone_photo();
+        if final_owned && navigable {
             self.requested_view = None;
         }
-        if self.output_space(input).is_some()
+        if navigable
             && self
                 .hero
                 .as_ref()
@@ -1976,14 +1988,16 @@ impl ProcessTheater {
             if !self.annotation_mode {
                 self.final_modifier(ui, rect, image_box, input);
             }
-            self.result_photo.legend(
-                ui,
-                Rect::from_min_size(
-                    rect.left_bottom() + egui::vec2(10.0, 1.0 - footer),
-                    egui::vec2((rect.width() - 20.0).max(0.0), 24.0),
-                ),
-                final_extent,
-            );
+            if !input.standalone_photo() {
+                self.result_photo.legend(
+                    ui,
+                    Rect::from_min_size(
+                        rect.left_bottom() + egui::vec2(10.0, 1.0 - footer),
+                        egui::vec2((rect.width() - 20.0).max(0.0), 24.0),
+                    ),
+                    final_extent,
+                );
+            }
             if let Some(companion) = companion {
                 self.source_relation(ui, companion, input, response);
             }
@@ -2409,8 +2423,9 @@ impl ProcessTheater {
 
     fn finished_photograph(&mut self, ui: &mut Ui, rect: Rect, image_box: Rect, input: &Input<'_>) {
         self.result_photo.set_edit_navigation(self.edit_navigation);
-        self.result_photo
-            .suppress_diagnostics(input.progress.source_repair.is_some());
+        self.result_photo.suppress_diagnostics(
+            input.progress.source_repair.is_some() || input.standalone_photo(),
+        );
         let p = ui.painter_at(rect);
         let multiple = self.participation.has_ranges();
         // Use the capture actually on screen while a newly requested preview
@@ -2418,6 +2433,8 @@ impl ProcessTheater {
         let current = self.dense_current_frame();
         let label = if self.edit_navigation {
             "PHOTOGRAPH / EDIT".into()
+        } else if input.standalone_photo() {
+            "YOUR PHOTOGRAPH".into()
         } else if multiple {
             format!(
                 "{} SELECTED RANGES{} / {} ADMISSION",

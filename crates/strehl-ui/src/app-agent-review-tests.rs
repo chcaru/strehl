@@ -564,7 +564,7 @@ fn closing_waits_for_export_and_only_closes_after_success() {
                     .iter()
                     .any(|command| matches!(command, egui::ViewportCommand::CancelClose))
             );
-            assert_eq!(app.sidebar, Some(workspace::Sidebar::Edit));
+            assert_eq!(app.sidebar, Some(workspace::Sidebar::Export));
             assert!(
                 app.editor
                     .error

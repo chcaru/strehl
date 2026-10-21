@@ -330,7 +330,7 @@ impl BridgeClient {
         let bytes = serde_json::to_vec(&envelope)?;
         ensure!(
             bytes.len() <= MAX_REQUEST_BYTES,
-            "Request is larger than 128 KiB"
+            "Request exceeds the fixed 2112 KiB limit"
         );
         let request_path = self.directory.join(format!("request-{id}.json"));
         let response_path = self.directory.join(format!("reply-{id}.json"));

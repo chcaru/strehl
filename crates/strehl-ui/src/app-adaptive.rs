@@ -1,8 +1,20 @@
-//! A bounded, inspectable starting point for development, shared with agents.
+//! Spatial photographic treatment, with persistent controls and worker-only metering.
 use super::*;
 use serde_json::{Value, json};
 use std::sync::Arc;
-use strehl_edit::{AdaptiveIntent, AdaptiveSuggestion, DevelopmentRecipe, LinearImage};
+use strehl_edit::{
+    AdaptiveIntent, AdaptiveParameters, AdaptiveSuggestion, DevelopmentRecipe, LinearImage,
+};
+
+#[path = "adaptive-effect.rs"]
+mod effect;
+
+struct ParameterDraft {
+    image: Arc<LinearImage>,
+    target: Option<String>,
+    stored: Option<AdaptiveParameters>,
+    value: AdaptiveParameters,
+}
 
 struct PendingAdaptive {
     path: PathBuf,
@@ -11,12 +23,14 @@ struct PendingAdaptive {
     strength: f32,
     target_region: Option<String>,
     magic_generation: u64,
+    parameters: AdaptiveParameters,
     task: Task<AdaptiveSuggestion>,
 }
 
 struct AppliedAdaptive {
     image: Arc<LinearImage>,
     suggestion: AdaptiveSuggestion,
+    parameters: AdaptiveParameters,
     strength: f32,
     applied: DevelopmentRecipe,
 }
@@ -27,9 +41,15 @@ pub(super) struct AdaptiveState {
     pending: Option<PendingAdaptive>,
     applied: Option<AppliedAdaptive>,
     error: Option<String>,
+    parameters: Option<ParameterDraft>,
+    effect: effect::EffectMap,
+    wake: Option<egui::Context>,
 }
 
 impl StrehlApp {
+    pub(super) fn adaptive_busy(&self) -> bool {
+        self.adaptive.pending.is_some()
+    }
     pub(super) fn start_adaptive(&mut self, strength: f32) -> anyhow::Result<()> {
         self.start_adaptive_action(strength, AdaptiveIntent::Balance)
     }
@@ -47,6 +67,22 @@ impl StrehlApp {
         strength: f32,
         intent: AdaptiveIntent,
     ) -> anyhow::Result<()> {
+        let parameters = self
+            .editor
+            .recipe
+            .adaptive_scope(self.editor.selected.as_deref())
+            .map_or_else(AdaptiveParameters::default, |field| field.parameters);
+        self.start_adaptive_parameters(strength, intent, parameters, true)
+    }
+
+    fn start_adaptive_parameters(
+        &mut self,
+        strength: f32,
+        intent: AdaptiveIntent,
+        parameters: AdaptiveParameters,
+        allow_cached: bool,
+    ) -> anyhow::Result<()> {
+        parameters.validate()?;
         anyhow::ensure!(
             strength.is_finite() && (0.0..=1.0).contains(&strength),
             "Adaptive amount must be between 0 and 1"
@@ -54,6 +90,10 @@ impl StrehlApp {
         anyhow::ensure!(
             self.adaptive.pending.is_none(),
             "Adaptive is already analyzing"
+        );
+        anyhow::ensure!(
+            !self.presets_busy(),
+            "Finish applying the preset before using Adaptive"
         );
         anyhow::ensure!(
             !self.editor.magic_pending(),
@@ -76,12 +116,14 @@ impl StrehlApp {
             .clone()
             .ok_or_else(|| anyhow::anyhow!("The photograph has no saved location"))?;
         let target_region = self.editor.selected.clone();
-        if self.adaptive.path.as_ref() == Some(&path)
+        if allow_cached
+            && self.adaptive.path.as_ref() == Some(&path)
             && let Some(applied) = self.adaptive.applied.as_mut()
             && applied.applied == self.editor.recipe
             && Arc::ptr_eq(&applied.image, &loaded.image)
             && applied.suggestion.target_region == target_region
             && applied.suggestion.intent == intent
+            && applied.parameters == parameters
         {
             let recipe = applied.suggestion.recipe_at(strength)?;
             self.editor.replace(recipe.clone())?;
@@ -97,6 +139,7 @@ impl StrehlApp {
         let worker_target = target_region.clone();
         self.adaptive.path = Some(path.clone());
         self.adaptive.error = None;
+        let wake = self.adaptive.wake.clone();
         self.adaptive.pending = Some(PendingAdaptive {
             path,
             image: Arc::clone(&image),
@@ -104,24 +147,46 @@ impl StrehlApp {
             strength,
             target_region,
             magic_generation: self.editor.magic_generation(),
-            task: jobs::spawn_task("strehl-adaptive-develop", move |cancelled| {
-                anyhow::ensure!(
-                    !cancelled.load(std::sync::atomic::Ordering::Relaxed),
-                    "Adaptive cancelled"
-                );
-                match worker_target.as_deref() {
-                    Some(id) => strehl_edit::analyze_adaptive_region(&image, &recipe, id, intent),
-                    None => strehl_edit::analyze_adaptive(&image, &recipe),
-                }
-            }),
+            parameters,
+            task: jobs::spawn_notifying_task(
+                "strehl-adaptive-develop",
+                move |cancelled| {
+                    anyhow::ensure!(
+                        !cancelled.load(std::sync::atomic::Ordering::Relaxed),
+                        "Adaptive cancelled"
+                    );
+                    strehl_edit::analyze_adaptive_with_parameters(
+                        &image,
+                        &recipe,
+                        worker_target.as_deref(),
+                        intent,
+                        parameters,
+                    )
+                },
+                move || {
+                    if let Some(ctx) = &wake {
+                        ctx.request_repaint();
+                    }
+                },
+            ),
         });
         Ok(())
     }
 
     pub(super) fn poll_adaptive(&mut self, ctx: &egui::Context) {
         if self.adaptive.path != self.editor.path {
-            self.adaptive = AdaptiveState::default();
+            self.adaptive = AdaptiveState {
+                path: self.editor.path.clone(),
+                ..Default::default()
+            };
         }
+        self.adaptive.wake = Some(ctx.clone());
+        self.adaptive.effect.poll(
+            ctx,
+            self.editor.loaded.as_ref().map(|p| &p.image),
+            &self.editor.recipe,
+            self.editor.selected.as_deref(),
+        );
         if self.adaptive.applied.as_ref().is_some_and(|applied| {
             self.editor
                 .loaded
@@ -177,6 +242,7 @@ impl StrehlApp {
                     Ok(AppliedAdaptive {
                         image: pending.image,
                         suggestion,
+                        parameters: pending.parameters,
                         strength: pending.strength,
                         applied: recipe,
                     })
@@ -189,27 +255,87 @@ impl StrehlApp {
                 }
             }
         }
-        if self.adaptive.pending.is_some() {
-            ctx.request_repaint_after(Duration::from_millis(30));
-        }
     }
 
     pub(super) fn adaptive_snapshot(&self) -> Value {
         let applied = self.adaptive.applied.as_ref();
+        let field = self
+            .editor
+            .recipe
+            .adaptive_scope(self.editor.selected.as_deref());
         json!({
             "analyzing": self.adaptive.pending.is_some(),
-            "amount": applied.map(|value| value.strength),
-            "current": applied.is_some_and(|value| value.applied == self.editor.recipe
+            "amount": field.map(|f| f.amount).or_else(|| applied.map(|value| value.strength)),
+            "current": applied.map_or(field.is_some(), |value| value.applied == self.editor.recipe
                 && value.suggestion.target_region == self.editor.selected
                 && self.editor.loaded.as_ref().is_some_and(|loaded| Arc::ptr_eq(&value.image, &loaded.image))),
-            "analysis": applied.map(|value| &value.suggestion),
+            // Do not duplicate up to six measured lattices twice in every snapshot.
+            "analysis": applied.map(|value| json!({
+                "stats": value.suggestion.stats,
+                "after_stats": value.suggestion.after_stats,
+                "target_region": value.suggestion.target_region,
+                "intent": value.suggestion.intent,
+                "highlights": value.suggestion.highlights,
+                "changes": value.suggestion.changes,
+                "limitations": value.suggestion.limitations,
+            })),
+            "spatial": field.map(|f| json!({"amount": f.amount, "parameters": f.parameters, "lattice": [f.width, f.height, f.levels]})),
             "error": self.adaptive.error,
-            "method": "Bounded scene measurements produce editable controls; no learned model or generated detail."
+            "method": "Image-dependent local light and color curves; deterministic, no learned model or generated detail."
         })
     }
 
+    // Absolute Amount edits a persisted field without metering again. The outer
+    // photo panel groups dragging/reset into the same shared Undo transaction.
+    fn set_spatial_amount(&mut self, amount: f32) -> anyhow::Result<()> {
+        anyhow::ensure!(
+            amount.is_finite() && (0.0..=1.0).contains(&amount),
+            "Amount must be between 0 and 1"
+        );
+        anyhow::ensure!(
+            !self.adaptive_busy() && !self.presets_busy() && !self.editor.magic_pending(),
+            "Finish the current adjustment first"
+        );
+        let field = self
+            .editor
+            .recipe
+            .spatial
+            .iter_mut()
+            .find(|field| field.target_region == self.editor.selected)
+            .ok_or_else(|| anyhow::anyhow!("Analyze this photograph or region first"))?;
+        field.amount = amount;
+        self.editor.before = false;
+        Ok(())
+    }
+
+    fn reconcile_adaptive_parameters(&mut self) {
+        let Some(loaded) = self.editor.loaded.as_ref() else {
+            self.adaptive.parameters = None;
+            return;
+        };
+        let stored = self
+            .editor
+            .recipe
+            .adaptive_scope(self.editor.selected.as_deref())
+            .map(|f| f.parameters);
+        let changed = self.adaptive.parameters.as_ref().is_none_or(|draft| {
+            !Arc::ptr_eq(&draft.image, &loaded.image)
+                || draft.target != self.editor.selected
+                || draft.stored != stored
+        });
+        if changed {
+            self.adaptive.parameters = Some(ParameterDraft {
+                image: Arc::clone(&loaded.image),
+                target: self.editor.selected.clone(),
+                stored,
+                value: stored.unwrap_or_default(),
+            });
+        }
+    }
+
     pub(super) fn adaptive_panel(&mut self, ui: &mut egui::Ui) {
-        let magic_pending = self.editor.magic_pending();
+        self.adaptive.wake = Some(ui.ctx().clone());
+        self.reconcile_adaptive_parameters();
         let scope_enabled = self.editor.selected.as_ref().is_none_or(|id| {
             self.editor
                 .recipe
@@ -217,55 +343,104 @@ impl StrehlApp {
                 .iter()
                 .any(|region| &region.id == id && region.enabled)
         });
-        let current = self.adaptive.applied.as_ref().is_some_and(|applied| {
-            applied.applied == self.editor.recipe
-                && applied.suggestion.target_region == self.editor.selected
-                && applied.suggestion.intent == AdaptiveIntent::Balance
-                && self
-                    .editor
-                    .loaded
-                    .as_ref()
-                    .is_some_and(|loaded| Arc::ptr_eq(&applied.image, &loaded.image))
-        });
-        ui.vertical(|ui| {
+        let idle = !self.adaptive_busy() && !self.presets_busy() && !self.editor.magic_pending();
+        let ready = idle && scope_enabled;
+        let has_field = self
+            .editor
+            .recipe
+            .adaptive_scope(self.editor.selected.as_deref())
+            .is_some();
+        let parameters = self
+            .adaptive
+            .parameters
+            .as_ref()
+            .map_or_else(AdaptiveParameters::default, |draft| draft.value);
+        let disabled = if !scope_enabled {
+            "Enable this region before changing its treatment."
+        } else {
+            "Finish or cancel the current adjustment first."
+        };
+        ui.label(RichText::new("Spatial light & color").color(INK).size(12.0));
+        theme::caption(
+            ui,
+            "Light and color shaped by the photograph, area by area.",
+        );
+        let label = if has_field {
+            "Recalculate treatment"
+        } else if self.editor.selected.is_some() {
+            "Analyze region"
+        } else {
+            "Analyze photograph"
+        };
+        if ui.add_enabled_ui(ready, |ui| ui.add_sized([ui.available_width(), 27.0], egui::Button::new(label))).inner
+            .on_hover_text("Build local light and color curves from this photograph. Manual sliders stay unchanged. Undo restores the previous treatment.")
+            .on_disabled_hover_text(disabled).clicked()
+            && let Err(error) = self.start_adaptive_parameters(1.0, AdaptiveIntent::Balance, parameters, false) {
+                self.adaptive.error = Some(error.to_string());
+        }
+        if self.adaptive.pending.is_some() {
+            theme::caption(ui, "Reading local light and color…");
+        }
+        if let Some(field) = self
+            .editor
+            .recipe
+            .adaptive_scope(self.editor.selected.as_deref())
+        {
+            let mut amount = field.amount;
             if ui
-                .add_enabled_ui(self.adaptive.pending.is_none() && !current && scope_enabled && !magic_pending, |ui| {
-                    ui.add_sized([ui.available_width(), 27.0], egui::Button::new(
-                        if self.editor.selected.is_some() { "Balance region" } else { "Auto develop" }
-                    ))
-                }).inner
-                .on_hover_text(
-                    "Measure the selected area and balance light and color while protecting highlights. Every control stays editable; Undo restores your previous treatment.",
-                )
-                .on_disabled_hover_text(if magic_pending {
-                    "Finish or cancel Magic selection before using Adaptive."
-                } else if !scope_enabled {
-                    "Enable this region before balancing its light and color."
-                } else if current {
-                    "Use Amount to adjust this treatment. After other edits, Adaptive can analyze the changed photograph again."
-                } else {
-                    "The current photograph is being analyzed."
+                .add_enabled_ui(ready, |ui| {
+                    super::editing::controls::slider(
+                        ui,
+                        "Amount",
+                        &mut amount,
+                        0.0..=1.0,
+                        1.0,
+                        2,
+                        "",
+                    )
                 })
-                .clicked()
-                && let Err(error) = self.start_adaptive(1.0)
+                .inner
+                .on_disabled_hover_text(disabled)
+                .changed()
+                && let Err(error) = self.set_spatial_amount(amount)
             {
                 self.adaptive.error = Some(error.to_string());
             }
-            if self.editor.selected.is_some() && ui
-                .add_enabled_ui(self.adaptive.pending.is_none() && scope_enabled && !magic_pending, |ui| {
-                    ui.add_sized([ui.available_width(), 25.0], egui::Button::new("Balance highlights"))
-                }).inner
-                .on_hover_text("Compress bright light in this region and diagnose available tonal variation. Already-clipped texture cannot be recreated.")
-                .on_disabled_hover_text(if magic_pending { "Finish or cancel Magic selection before using Adaptive." } else if !scope_enabled { "Enable this region before balancing its highlights." } else { "Analysis is already running." })
-                .clicked()
-                && let Err(error) = self.start_highlight_restore(1.0)
-            {
-                self.adaptive.error = Some(error.to_string());
-            }
-            if self.adaptive.pending.is_some() {
-                theme::caption(ui, "Reading light and color…");
-            }
+        }
+        egui::CollapsingHeader::new("Shape the treatment").id_salt("adaptive-parameters").show(ui, |ui| {
+            ui.add_enabled_ui(ready, |ui| {
+                let defaults = AdaptiveParameters::default();
+                if let Some(draft) = &mut self.adaptive.parameters {
+                    for (label, value, default, help) in [
+                        ("Light balance", &mut draft.value.balance, defaults.balance, "Redistribute local light while preserving the scene's overall light placement."),
+                        ("Local contrast", &mut draft.value.local_contrast, defaults.local_contrast, "Separate local tones without sharpening pixels or inventing detail."),
+                        ("Color", &mut draft.value.color, defaults.color, "Enrich supported local color with protection for neutral and already saturated areas."),
+                    ] {
+                        super::editing::controls::slider(ui, label, value, 0.0..=1.0, default, 2, "").on_hover_text(help);
+                    }
+                }
+            });
+            theme::caption(ui, "Recalculate to apply these choices · double-click resets a control");
         });
+        if has_field {
+            egui::CollapsingHeader::new("Where it changes")
+                .id_salt("adaptive-effect")
+                .show(ui, |ui| {
+                    if let Some(loaded) = &self.editor.loaded {
+                        self.adaptive.effect.show(
+                            ui,
+                            &loaded.image,
+                            &self.editor.recipe,
+                            self.editor.selected.as_deref(),
+                        );
+                    }
+                });
+        }
+        if self.editor.selected.is_some() && ui.add_enabled_ui(ready, |ui|
+            ui.add_sized([ui.available_width(), 25.0], egui::Button::new("Balance highlights"))).inner
+            .on_hover_text("Compress bright light in this region and diagnose tonal variation. Already-clipped texture cannot be recreated.")
+            .on_disabled_hover_text(disabled).clicked()
+            && let Err(error) = self.start_highlight_restore(1.0) { self.adaptive.error = Some(error.to_string()); }
         if let Some(applied) = &mut self.adaptive.applied {
             let current = applied.applied == self.editor.recipe
                 && applied.suggestion.target_region == self.editor.selected
@@ -274,89 +449,63 @@ impl StrehlApp {
                     .loaded
                     .as_ref()
                     .is_some_and(|loaded| Arc::ptr_eq(&applied.image, &loaded.image));
-            if current {
-                let response = ui
-                    .add_enabled_ui(!magic_pending, |ui| {
-                        super::editing::controls::slider(
-                            ui,
-                            "Amount",
-                            &mut applied.strength,
-                            0.0..=1.0,
-                            1.0,
-                            2,
-                            "",
-                        )
-                    })
-                    .inner
-                    .on_disabled_hover_text(
-                        "Finish or cancel Magic selection before changing Adaptive Amount.",
-                    );
-                if response.changed() {
-                    match applied.suggestion.recipe_at(applied.strength) {
-                        Ok(recipe) => {
-                            self.editor.recipe = recipe.clone();
-                            applied.applied = recipe;
-                            self.editor.before = false;
+            let same_scope = applied.suggestion.target_region == self.editor.selected
+                && self
+                    .editor
+                    .loaded
+                    .as_ref()
+                    .is_some_and(|loaded| Arc::ptr_eq(&applied.image, &loaded.image));
+            if same_scope {
+                if current && applied.suggestion.intent == AdaptiveIntent::RestoreHighlights {
+                    if ui
+                        .add_enabled_ui(ready, |ui| {
+                            super::editing::controls::slider(
+                                ui,
+                                "Highlight amount",
+                                &mut applied.strength,
+                                0.0..=1.0,
+                                1.0,
+                                2,
+                                "",
+                            )
+                        })
+                        .inner
+                        .changed()
+                    {
+                        match applied.suggestion.recipe_at(applied.strength) {
+                            Ok(recipe) => {
+                                self.editor.recipe = recipe.clone();
+                                applied.applied = recipe;
+                                self.editor.before = false;
+                            }
+                            Err(error) => self.adaptive.error = Some(error.to_string()),
                         }
-                        Err(error) => self.adaptive.error = Some(error.to_string()),
                     }
-                }
-                if applied.suggestion.changes.is_empty() {
-                    theme::caption(
-                        ui,
-                        "No useful change found for this area. Controls are unchanged.",
-                    );
-                } else {
-                    theme::caption(
-                        ui,
-                        &format!("{} adjustments", applied.suggestion.changes.len(),),
-                    );
-                }
-                if applied.suggestion.intent == AdaptiveIntent::RestoreHighlights {
                     theme::caption(ui, &applied.suggestion.highlights.assessment);
                 }
-            } else {
-                theme::caption(ui, "Edits changed · Adaptive can analyze them again");
-            }
-            egui::CollapsingHeader::new("What changed")
-                .id_salt("adaptive-explanation")
-                .show(ui, |ui| {
-                    theme::caption(
-                        ui,
-                        &format!(
-                            "Full-amount median linear light {:.3} → {:.3}",
-                            applied.suggestion.stats.luminance_percentiles[2],
-                            applied.suggestion.after_stats.luminance_percentiles[2]
-                        ),
-                    );
-                    if applied.suggestion.changes.is_empty() {
-                        ui.label("The measured scene did not call for further adjustments.");
-                    }
-                    for change in &applied.suggestion.changes {
-                        ui.horizontal(|ui| {
+                if applied.suggestion.changes.is_empty() {
+                    theme::caption(ui, "No additional treatment found for the measured area.");
+                }
+                egui::CollapsingHeader::new("Analysis notes")
+                    .id_salt("adaptive-explanation")
+                    .show(ui, |ui| {
+                        theme::caption(
+                            ui,
+                            "Measurements at analysis time, with full treatment amount.",
+                        );
+                        for change in &applied.suggestion.changes {
                             ui.label(&change.control);
-                            ui.label(
-                                RichText::new(format!(
-                                    "{:+.2} → {:+.2}",
-                                    change.before, change.after
-                                ))
-                                .monospace()
-                                .color(ACCENT),
-                            );
-                        });
-                        theme::caption(ui, &change.reason);
-                    }
-                    for limitation in &applied.suggestion.limitations {
-                        theme::caption(ui, limitation);
-                    }
-                    theme::caption(
-                        ui,
-                        &format!(
-                            "{} scene samples · controls shown at full amount",
-                            applied.suggestion.stats.sample_count
-                        ),
-                    );
-                });
+                            theme::caption(ui, &change.reason);
+                        }
+                        for limitation in &applied.suggestion.limitations {
+                            theme::caption(ui, limitation);
+                        }
+                        theme::caption(
+                            ui,
+                            &format!("{} scene samples", applied.suggestion.stats.sample_count),
+                        );
+                    });
+            }
         }
         if let Some(error) = &self.adaptive.error {
             ui.colored_label(AMBER, error);
@@ -438,9 +587,20 @@ mod tests {
         app.start_adaptive(1.0).unwrap();
         complete(&mut app);
         assert!(app.adaptive.error.is_none(), "{:?}", app.adaptive.error);
-        assert_ne!(
+        assert_eq!(
             app.editor.recipe.global, original.global,
-            "fixture must exercise a real edit"
+            "Spatial treatment must leave manual sliders intact"
+        );
+        assert!(
+            app.editor.recipe.adaptive_scope(None).is_some(),
+            "fixture must exercise an actual field"
+        );
+        let image = &app.editor.loaded.as_ref().unwrap().image;
+        assert!(
+            (0..image.width as usize * image.height as usize)
+                .any(|i| image.developed_pixel(i, &original)
+                    != image.developed_pixel(i, &app.editor.recipe)),
+            "field must actually affect pixels"
         );
         assert_eq!(app.editor.recipe.regions, original.regions);
         assert_eq!(app.editor.recipe.hdr, original.hdr);
@@ -561,8 +721,14 @@ mod tests {
         );
         complete(&mut app);
         assert_eq!(
-            app.editor.recipe, old_recipe,
-            "new uniform image should be unchanged"
+            app.editor.recipe.global, old_recipe.global,
+            "uniform input must not shift manual light controls"
+        );
+        let remaining = app.editor.recipe.adaptive_scope(None).unwrap();
+        assert_eq!(
+            remaining.amount,
+            old_recipe.adaptive_scope(None).unwrap().amount * 0.5,
+            "new flat-image analysis fades the old addressed field instead of reusing its cached result"
         );
         assert_eq!(app.adaptive_snapshot()["current"], true);
         assert!(
@@ -725,5 +891,96 @@ mod tests {
             "The positive control must actually edit"
         );
         assert!(app.adaptive.error.is_none());
+    }
+
+    #[test]
+    fn persisted_spatial_amount_works_without_analysis_and_keeps_other_scopes() {
+        let mut app = fixture();
+        app.start_adaptive(1.0).unwrap();
+        complete(&mut app);
+        let full = app.editor.recipe.clone();
+        app.adaptive = AdaptiveState::default(); // reopen: no cached suggestion
+        app.editor.before = true;
+        app.set_spatial_amount(0.0).unwrap();
+        assert!(!app.editor.before && !app.adaptive_busy());
+        let image = &app.editor.loaded.as_ref().unwrap().image;
+        assert_eq!(
+            image.render_sdr16(&app.editor.recipe).unwrap(),
+            image.render_sdr16(&DevelopmentRecipe::default()).unwrap(),
+            "zero amount must exactly restore unmodified pixels"
+        );
+        assert_eq!(app.adaptive_snapshot()["spatial"]["amount"], 0.0);
+        app.set_spatial_amount(0.37).unwrap();
+        let partial = app.editor.recipe.clone();
+        app.set_spatial_amount(1.0).unwrap();
+        assert_eq!(app.editor.recipe, full);
+        app.set_spatial_amount(0.37).unwrap();
+        assert_eq!(
+            app.editor.recipe, partial,
+            "Amount must not compound after reopening"
+        );
+        select_bright_region(&mut app);
+        let global_field = app.editor.recipe.adaptive_scope(None).unwrap().clone();
+        assert!(
+            app.set_spatial_amount(0.0).is_err(),
+            "selected region must not edit the global field"
+        );
+        assert_eq!(
+            app.editor.recipe.adaptive_scope(None).unwrap(),
+            &global_field
+        );
+    }
+
+    #[test]
+    fn parameter_recalculation_is_explicit_and_snapshot_stays_compact() {
+        let mut app = fixture();
+        app.reconcile_adaptive_parameters();
+        let parameters = AdaptiveParameters {
+            balance: 0.2,
+            local_contrast: 0.85,
+            color: 0.65,
+        };
+        app.adaptive.parameters.as_mut().unwrap().value = parameters;
+        assert_eq!(
+            app.editor.recipe,
+            DevelopmentRecipe::default(),
+            "draft controls must not silently launch or change the photograph"
+        );
+        app.start_adaptive_parameters(1.0, AdaptiveIntent::Balance, parameters, false)
+            .unwrap();
+        assert!(app.set_spatial_amount(0.2).is_err());
+        complete(&mut app);
+        assert!(app.adaptive.error.is_none(), "{:?}", app.adaptive.error);
+        assert_eq!(
+            app.editor.recipe.adaptive_scope(None).unwrap().parameters,
+            parameters
+        );
+        assert_eq!(
+            app.editor.recipe.global,
+            strehl_edit::Adjustments::default()
+        );
+        let snapshot = app.adaptive_snapshot();
+        assert_eq!(
+            snapshot["spatial"]["parameters"]["local_contrast"],
+            serde_json::json!(0.85_f32)
+        );
+        let encoded = serde_json::to_vec(&snapshot).unwrap();
+        assert!(
+            encoded.len() < 16_384,
+            "analysis snapshot duplicated spatial coefficients"
+        );
+        assert!(
+            snapshot["analysis"].get("base").is_none()
+                && snapshot["analysis"].get("suggested").is_none()
+        );
+        app.reconcile_adaptive_parameters();
+        assert_eq!(app.adaptive.parameters.as_ref().unwrap().value, parameters);
+        select_bright_region(&mut app);
+        app.reconcile_adaptive_parameters();
+        assert_eq!(
+            app.adaptive.parameters.as_ref().unwrap().value,
+            AdaptiveParameters::default(),
+            "region must not inherit another scope's draft"
+        );
     }
 }

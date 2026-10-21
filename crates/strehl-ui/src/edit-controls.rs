@@ -3,7 +3,7 @@ use crate::theme::{self, ACCENT, INK, LINE, MUTED, PANEL, RAISED};
 use eframe::egui::{self, Align2, FontId, Rect, RichText, Sense, Stroke, Ui};
 use std::ops::RangeInclusive;
 
-pub(super) fn adjustment_scope<R>(
+pub(crate) fn adjustment_scope<R>(
     ui: &mut Ui,
     document: Option<&std::path::Path>,
     selected: Option<&str>,
@@ -12,12 +12,12 @@ pub(super) fn adjustment_scope<R>(
     ui.push_id(("photo-controls", document, selected), contents)
 }
 
-pub(super) fn rule(ui: &mut Ui) {
+pub(crate) fn rule(ui: &mut Ui) {
     let (rect, _) = ui.allocate_exact_size(egui::vec2(ui.available_width(), 1.0), Sense::hover());
     theme::rule(ui.painter(), rect.left_center(), rect.right_center(), LINE);
 }
 
-pub(super) fn section(ui: &mut Ui, key: &str, title: &str, default_open: bool) -> bool {
+pub(crate) fn section(ui: &mut Ui, key: &str, title: &str, default_open: bool) -> bool {
     // The pane's organization persists across region changes; only numeric
     // editing state is isolated by the active photograph/region scope.
     let id = egui::Id::new(("photo-edit-section", key));

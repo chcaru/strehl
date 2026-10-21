@@ -76,10 +76,11 @@ failed approaches, corrections, and remaining limitations.
 | Investigate | Probe a region, compare detail scales, inspect recorded sample admission, and view observation balance when recorded. |
 | Develop | Keep a scene-linear float master; adjust light and color globally or in editable regions. Draw an ellipse, rectangle, polygon, or freehand lasso; move and reshape it afterward. Import supported numeric XMP controls with explicit warnings for unsupported Adobe profiles. |
 | Refine a selection | Draw **Magic lasso** around contrasting objects or defects. Bounded image analysis proposes separate editable outlines; ambiguous areas remain unselected. This experimental tool uses image contrast, not semantic object recognition. |
-| Adapt | Use **Auto develop**, **Balance region**, or **Balance highlights**, then adjust Amount or any suggested tone/color control. This is an original, inspectable treatment, not a reproduction of Adobe's AI profile or recovery of clipped texture. |
+| Adapt | Apply image-specific spatial tone and color treatment to the photograph or a selection; adjust its Amount without moving your manual sliders. Regional highlight balancing remains separate. This original treatment does not reproduce Adobe's AI profile or recover clipped texture. |
+| Reuse | Save light, color and Adaptive settings as named presets. Adaptive is recalculated for the destination photograph; measured fields and selection geometry are not transplanted. |
 | Inspect | Retain a fast overview while visible detail refines to source pixels as you zoom. HDR-capable Windows/macOS displays can present the linear master's highlight headroom. |
 | Repair | Restrict a selected region to a capture span on the next stack, then feather that reconstruction into the photograph. |
-| Deliver | Export a developed 16-bit sRGB TIFF or a genuine 10-bit BT.2020/PQ HDR AVIF from the linear master. Existing files are preserved. |
+| Deliver | Use the separate **Export** pane for AVIF, TIFF, PNG or JPEG, with sRGB, Display P3 or Rec.2020 tagging. AVIF defaults to quality 100 and HDR Rec.2020 for a linear master; SDR images remain SDR. Existing files are preserved. |
 | Arrange | Resize the workspace panes, open sidebar tools, undo exploration changes, and reset views with a double-click. |
 | Collaborate | Enable a local MCP session for an external agent: inspect bounded image crops and diagnostics, annotate regions, adjust settings, and operate the workspace with revision checks. |
 | Automate | Use the separate CLI, shared development recipe, or Rust workspace. |

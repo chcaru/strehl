@@ -11,6 +11,7 @@ fn main() -> anyhow::Result<()> {
     let image = load_tiff(&input)?;
     let mut base = image.baked_recipe.clone().unwrap_or_default();
     base.global = Adjustments::default();
+    base.spatial.clear();
     for region in &mut base.regions {
         region.adjustments = Adjustments::default();
     }

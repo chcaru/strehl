@@ -88,6 +88,7 @@ fn duplicate_region(
         .find(|r| r.id == id)
         .cloned()
         .ok_or_else(|| anyhow::anyhow!("This region no longer exists."))?;
+    let adaptive = editor.recipe.adaptive_scope(Some(id)).cloned();
     // The source ID can already use the entire schema budget. Allocate a new short ID.
     let mut suffix = 1;
     let id = loop {
@@ -103,6 +104,10 @@ fn duplicate_region(
     region.source_range = None;
     let mut recipe = editor.recipe.clone();
     recipe.regions.push(region);
+    if let Some(mut field) = adaptive {
+        field.target_region = Some(id.clone());
+        recipe.spatial.push(field);
+    }
     editor.replace(recipe)?;
     editor.selected = Some(id);
     editor.set_tool(DrawingTool::Select);
@@ -200,7 +205,7 @@ fn source_range_controls(
     }
 }
 
-fn hdr_luminance_controls(ui: &mut egui::Ui, hdr: &mut strehl_edit::HdrSettings) {
+pub(super) fn hdr_luminance_controls(ui: &mut egui::Ui, hdr: &mut strehl_edit::HdrSettings) {
     controls::slider(
         ui,
         "Peak brightness",
@@ -232,7 +237,7 @@ pub(super) struct RegionalInspector {
 impl StrehlApp {
     pub(super) fn handle_close(&mut self, ctx: &egui::Context) {
         let requested = ctx.input(|input| input.viewport().close_requested());
-        if !requested && !self.close_after_export {
+        if !requested && !self.close_after_export && !self.close_after_presets {
             return;
         }
         if self.editor.exporting.is_some() {
@@ -244,17 +249,35 @@ impl StrehlApp {
         }
         let waited = std::mem::take(&mut self.close_after_export);
         if waited && self.editor.last_export.is_none() {
+            self.close_after_presets = false;
             // Encoding failed: keep its explanation and the editable image
             // visible instead of closing on a failed background operation.
             ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
-            self.sidebar = Some(workspace::Sidebar::Edit);
+            self.sidebar = Some(workspace::Sidebar::Export);
             return;
+        }
+        let waited_for_presets = std::mem::take(&mut self.close_after_presets);
+        match self.flush_presets(ctx) {
+            Ok(false) => {
+                self.close_after_presets = true;
+                ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
+                self.status = "Saving presets before closing…".into();
+                ctx.request_repaint_after(Duration::from_millis(100));
+                return;
+            }
+            Err(error) => {
+                ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
+                self.editor.error = Some(format!("Presets could not be saved: {error:#}"));
+                self.sidebar = Some(workspace::Sidebar::Edit);
+                return;
+            }
+            Ok(true) => {}
         }
         if let Err(error) = self.editor.ensure_saved_on_close() {
             ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
             self.editor.error = Some(format!("Edits could not be saved: {error:#}"));
             self.sidebar = Some(workspace::Sidebar::Edit);
-        } else if waited {
+        } else if waited || waited_for_presets {
             ctx.send_viewport_cmd(egui::ViewportCommand::Close);
         }
     }
@@ -270,6 +293,7 @@ impl StrehlApp {
         self.editor.poll(ctx, self.max_texture_side);
         self.edit_pane.reconcile(&self.editor);
         self.poll_adaptive(ctx);
+        self.poll_presets(ctx);
         self.poll_region_inspector(ctx);
         if let Some((_, time)) = self.editor.pending_edit
             && !ctx.input(|input| input.pointer.any_down())
@@ -286,18 +310,26 @@ impl StrehlApp {
             self.editor.dialog = None;
             let kind = self.editor.dialog_kind.take();
             match result {
+                Ok(Some(path)) if kind == Some("export-destination") => {
+                    if let Err(error) = self.set_export_directory(path) {
+                        self.editor.error = Some(error.to_string());
+                    }
+                }
                 Ok(Some(path)) if kind == Some("preset") => {
                     if let Err(error) = self.editor.import_preset(path) {
                         self.editor.error = Some(error.to_string());
                     }
                 }
                 Ok(Some(path)) => {
-                    if let Err(error) = self.editor.export(path, kind == Some("hdr")) {
+                    if let Err(error) = self.finish_export_dialog(path) {
                         self.editor.error = Some(error.to_string());
                     }
                 }
-                Ok(None) => {}
-                Err(error) => self.editor.error = Some(error),
+                Ok(None) => self.export_pane.pending = None,
+                Err(error) => {
+                    self.export_pane.pending = None;
+                    self.editor.error = Some(error);
+                }
             }
         }
         if self.editor.dialog.is_some() {
@@ -346,6 +378,11 @@ impl StrehlApp {
                             self.editor.recovery_panel(ui);
                             self.adaptive_panel(ui);
                         });
+                        if controls::section(ui, "presets", "Presets", false) {
+                            egui::Frame::NONE
+                                .inner_margin(12)
+                                .show(ui, |ui| self.presets_panel(ui));
+                        }
                         if controls::section(ui, "light", "Light", true) {
                             egui::Frame::NONE
                                 .inner_margin(egui::Margin::symmetric(12, 7))
@@ -454,10 +491,10 @@ impl StrehlApp {
                                     .show(ui, |ui| self.region_inspector(ui));
                             }
                         }
-                        if controls::section(ui, "delivery", "Display & export", false) {
+                        if controls::section(ui, "display", "Display", false) {
                             egui::Frame::NONE
                                 .inner_margin(12)
-                                .show(ui, |ui| self.edit_delivery_panel(ui));
+                                .show(ui, |ui| self.edit_display_panel(ui));
                         }
                         if !self.editor.warnings.is_empty() || self.editor.error.is_some() {
                             egui::Frame::NONE.inner_margin(12).show(ui, |ui| {
@@ -525,6 +562,9 @@ impl StrehlApp {
                             }
                             if ui.button("Reset selected adjustments").clicked() {
                                 *self.current_adjustments() = Adjustments::default();
+                                self.editor
+                                    .recipe
+                                    .clear_adaptive_scope(self.editor.selected.as_deref());
                                 ui.close();
                             }
                             ui.separator();
@@ -664,6 +704,7 @@ impl StrehlApp {
                 let mut remove = None;
                 let mut duplicate = None;
                 let mut rename = None;
+                let mut reset = None;
                 let can_duplicate = self.editor.recipe.regions.len() < 128;
                 for (index, region) in self.editor.recipe.regions.iter_mut().enumerate() {
                     let active = self.editor.selected.as_ref() == Some(&region.id);
@@ -731,6 +772,7 @@ impl StrehlApp {
                             }
                             if ui.button("Reset light & color").clicked() {
                                 region.adjustments = Adjustments::default();
+                                reset = Some(region.id.clone());
                                 ui.close();
                             }
                             ui.separator();
@@ -756,10 +798,14 @@ impl StrehlApp {
                 }
                 if let Some(id) = remove {
                     self.editor.recipe.regions.retain(|r| r.id != id);
+                    self.editor.recipe.clear_adaptive_scope(Some(&id));
                     if self.editor.selected.as_ref() == Some(&id) {
                         self.editor.selected = None;
                     }
                     self.editor.cancel_geometry();
+                }
+                if let Some(id) = reset {
+                    self.editor.recipe.clear_adaptive_scope(Some(&id));
                 }
                 if let Some(id) = duplicate
                     && let Err(error) = duplicate_region(&mut self.editor, &id)
@@ -815,7 +861,7 @@ impl StrehlApp {
         }
     }
 
-    fn source_repairs_pending(&self) -> bool {
+    pub(super) fn source_repairs_pending(&self) -> bool {
         self.editor.loaded.as_ref().is_some_and(|loaded| {
             loaded
                 .image
@@ -824,7 +870,7 @@ impl StrehlApp {
         })
     }
 
-    fn edit_delivery_panel(&mut self, ui: &mut egui::Ui) {
+    fn edit_display_panel(&mut self, ui: &mut egui::Ui) {
         let hdr_photo = self
             .editor
             .loaded
@@ -862,64 +908,6 @@ impl StrehlApp {
                 ui,
                 "This saved image has no HDR highlight data. A new stack retains the RAW-derived HDR master.",
             );
-        }
-        let pending = self.source_repairs_pending();
-        ui.add_space(8.0);
-        for (kind, label, extension) in [
-            ("hdr", "Export HDR AVIF…", "avif"),
-            ("sdr", "Export TIFF…", "tiff"),
-        ] {
-            if ui
-                .add_enabled(
-                    self.editor.exporting.is_none()
-                        && self.editor.dialog.is_none()
-                        && !pending
-                        && (kind != "hdr" || hdr_photo),
-                    egui::Button::new(label).min_size(egui::vec2(ui.available_width(), 27.0)),
-                )
-                .on_disabled_hover_text(if pending {
-                    "Apply pending source changes with Re-stack before exporting."
-                } else if kind == "hdr" && !hdr_photo {
-                    "A new stack saves the HDR master needed for this export."
-                } else {
-                    "Wait for the current export or file dialog."
-                })
-                .clicked()
-            {
-                self.editor.dialog_kind = Some(kind);
-                let name = format!("Strehl-edited.{extension}");
-                self.editor.dialog = Some(jobs::spawn_task("strehl-export-picker", move |_| {
-                    Ok(rfd::FileDialog::new()
-                        .set_file_name(name)
-                        .add_filter("Photograph", &[extension])
-                        .save_file())
-                }));
-            }
-        }
-        if hdr_photo {
-            egui::CollapsingHeader::new("AVIF encoding").show(ui, |ui| {
-                ui.horizontal(|ui| {
-                    ui.label("Quality");
-                    ui.add(
-                        egui::DragValue::new(&mut self.editor.recipe.hdr.quality).range(1..=100),
-                    );
-                });
-                ui.horizontal(|ui| {
-                    ui.label("Speed");
-                    ui.add(egui::DragValue::new(&mut self.editor.recipe.hdr.speed).range(0..=10));
-                });
-                theme::caption(ui, "10-bit PQ · BT.2020");
-            });
-        }
-        if pending {
-            ui.colored_label(AMBER, "Source repair is waiting for Re-stack.");
-        }
-        if self.editor.exporting.is_some() {
-            theme::caption(ui, "Encoding photograph…");
-        }
-        if let Some(path) = &self.editor.last_export {
-            ui.colored_label(GREEN, "Export saved");
-            theme::caption(ui, &path.file_name().unwrap_or_default().to_string_lossy());
         }
     }
 

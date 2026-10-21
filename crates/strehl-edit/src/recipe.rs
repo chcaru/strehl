@@ -1,6 +1,10 @@
 use anyhow::{Result, ensure};
 use serde::{Deserialize, Serialize};
 
+#[path = "spatial.rs"]
+mod spatial;
+pub use spatial::{AdaptiveParameters, MAX_SPATIAL_TREATMENTS, SpatialTreatment};
+
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize, Default)]
 #[serde(default, deny_unknown_fields)]
 pub struct Adjustments {
@@ -70,7 +74,7 @@ impl Default for HdrSettings {
         Self {
             reference_white_nits: 203.0,
             peak_nits: 1000.0,
-            quality: 90,
+            quality: 100,
             speed: 6,
         }
     }
@@ -83,6 +87,9 @@ pub struct DevelopmentRecipe {
     pub global: Adjustments,
     pub regions: Vec<RegionAdjustment>,
     pub hdr: HdrSettings,
+    /// Image-specific curves, separate from portable preset parameters.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub spatial: Vec<SpatialTreatment>,
 }
 
 impl Default for DevelopmentRecipe {
@@ -92,6 +99,7 @@ impl Default for DevelopmentRecipe {
             global: Adjustments::default(),
             regions: Vec::new(),
             hdr: HdrSettings::default(),
+            spatial: Vec::new(),
         }
     }
 }
@@ -316,6 +324,18 @@ impl DevelopmentRecipe {
         self.global.validate()?;
         self.hdr.validate()?;
         ensure!(
+            self.spatial.len() <= MAX_SPATIAL_TREATMENTS,
+            "at most {MAX_SPATIAL_TREATMENTS} spatial treatments are supported"
+        );
+        let mut scopes = std::collections::HashSet::new();
+        for field in &self.spatial {
+            field.validate()?;
+            ensure!(
+                scopes.insert(field.target_region.as_deref()),
+                "spatial treatment scopes must be unique"
+            );
+        }
+        ensure!(
             self.regions.len() <= 128,
             "at most 128 regions are supported"
         );
@@ -339,6 +359,15 @@ impl DevelopmentRecipe {
                 );
             }
         }
+        for field in &self.spatial {
+            ensure!(
+                field
+                    .target_region
+                    .as_ref()
+                    .is_none_or(|id| ids.contains(id)),
+                "spatial treatment refers to a missing region"
+            );
+        }
         Ok(())
     }
 
@@ -351,7 +380,29 @@ impl DevelopmentRecipe {
                     .apply(v, region.shape.weight(uv, region.feather));
             }
         }
+        for treatment in &self.spatial {
+            let weight = match treatment.target_region.as_deref() {
+                None => 1.0,
+                Some(id) => self
+                    .regions
+                    .iter()
+                    .find(|r| r.id == id && r.enabled)
+                    .map_or(0.0, |r| r.shape.weight(uv, r.feather)),
+            };
+            v = treatment.apply(v, uv, weight);
+        }
         v
+    }
+
+    pub fn clear_adaptive_scope(&mut self, target: Option<&str>) {
+        self.spatial
+            .retain(|field| field.target_region.as_deref() != target);
+    }
+
+    pub fn adaptive_scope(&self, target: Option<&str>) -> Option<&SpatialTreatment> {
+        self.spatial
+            .iter()
+            .find(|field| field.target_region.as_deref() == target)
     }
 
     pub fn has_source_repairs(&self) -> bool {

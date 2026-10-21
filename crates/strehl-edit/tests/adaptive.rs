@@ -106,11 +106,12 @@ fn frozen_base_strength_is_exact_and_regions_hue_hdr_are_preserved() {
         assert_eq!(recipe.global.saturation, base.global.saturation);
         assert_eq!(recipe.global.blacks, base.global.blacks);
     }
-    assert!(suggestion.suggested.global.vibrance > base.global.vibrance);
-    assert_eq!(
-        suggestion.recipe_at(0.5).unwrap().global.vibrance,
-        (base.global.vibrance + suggestion.suggested.global.vibrance) * 0.5
-    );
+    assert_eq!(suggestion.suggested.global, base.global);
+    assert!(suggestion.suggested.adaptive_scope(None).is_some());
+    assert_eq!(suggestion.recipe_at(0.5).unwrap().spatial[0].amount, 0.5);
+    let half = suggestion.recipe_at(0.5).unwrap();
+    let _ = suggestion.recipe_at(0.2).unwrap();
+    assert_eq!(half, suggestion.recipe_at(0.5).unwrap());
     assert_eq!(
         original_bits,
         image.pixels.iter().map(|x| x.to_bits()).collect::<Vec<_>>()
@@ -145,6 +146,7 @@ fn local_paint_does_not_compensate_global_metering() {
     let b = analyze_adaptive(&image, &local).unwrap();
     assert_eq!(a.stats, b.stats);
     assert_eq!(a.suggested.global, b.suggested.global);
+    assert_eq!(a.suggested.spatial, b.suggested.spatial);
     assert_eq!(b.suggested.regions, local.regions);
 }
 
@@ -169,10 +171,13 @@ fn low_key_high_key_and_saturated_subjects_keep_their_identity() {
     assert!(s.stats.luminance_percentiles[1] > 0.45);
     assert_eq!(s.suggested.global.exposure, 0.0);
     assert_eq!(s.suggested.global.contrast, 0.0);
-    assert!(
-        s.suggested.global.highlights < 0.0,
-        "bright control did not exercise compression"
+    assert_eq!(s.suggested.global, s.base.global);
+    assert_ne!(
+        high.render_sdr16(&s.base).unwrap(),
+        high.render_sdr16(&s.suggested).unwrap(),
+        "high-key fixture never exercised spatial treatment"
     );
+    assert!(s.after_stats.above_white_fraction <= s.stats.above_white_fraction);
 
     let colored = fixture(128, 64, |i| {
         let v = 0.1 + (i % 128) as f32 * 0.005;
@@ -201,7 +206,9 @@ fn separated_black_white_compositions_and_isolated_color_outliers_are_not_reinte
     let s = analyze_adaptive(&target, &DevelopmentRecipe::default()).unwrap();
     assert!(s.stats.luminance_percentiles[2] < 0.05);
     assert!(s.stats.luminance_percentiles[3] > 0.65);
-    assert_eq!(s.suggested, s.base);
+    assert_eq!(s.suggested.global, s.base.global);
+    assert!(s.after_stats.luminance_percentiles[2] < 0.05);
+    assert!(s.after_stats.luminance_percentiles[3] > 0.65);
     let mostly_gray = fixture(128, 64, |i| {
         if i % 128 == 0 {
             [0.5, 0.2, 0.1]
@@ -212,8 +219,15 @@ fn separated_black_white_compositions_and_isolated_color_outliers_are_not_reinte
     let s = analyze_adaptive(&mostly_gray, &DevelopmentRecipe::default()).unwrap();
     assert_eq!(s.suggested.global.vibrance, 0.0);
     assert!(
-        s.suggested.global.contrast > 0.0,
+        !s.suggested.spatial.is_empty(),
         "gray control did not exercise a real tone suggestion"
+    );
+    assert!(
+        s.suggested
+            .spatial
+            .iter()
+            .flat_map(|f| &f.color_gain)
+            .all(|v| *v == 1.0)
     );
     let gray_with_small_channel_noise = fixture(128, 64, |i| {
         if i % 128 < 80 {
@@ -240,6 +254,13 @@ fn separated_black_white_compositions_and_isolated_color_outliers_are_not_reinte
     )
     .unwrap();
     assert_eq!(s.suggested.global.vibrance, 0.0);
+    assert!(
+        s.suggested
+            .spatial
+            .iter()
+            .flat_map(|f| &f.color_gain)
+            .all(|v| *v == 1.0)
+    );
 
     let sparse_color = fixture(128, 64, |i| {
         let v = 0.14 + (i % 16) as f32 * 0.012;
@@ -253,8 +274,12 @@ fn separated_black_white_compositions_and_isolated_color_outliers_are_not_reinte
     let before = sparse_color.render_sdr16(&s.base).unwrap();
     let after = sparse_color.render_sdr16(&s.suggested).unwrap();
     assert!(
-        s.suggested.global.vibrance > 5.0,
-        "real color support should receive a useful editable lift"
+        s.suggested
+            .spatial
+            .iter()
+            .flat_map(|f| &f.color_gain)
+            .any(|v| *v > 1.001),
+        "real color support should exercise local chroma enrichment"
     );
     assert_ne!(before, after);
     // Neutral samples must stay neutral even though the colored quarter changes.
@@ -267,7 +292,7 @@ fn separated_black_white_compositions_and_isolated_color_outliers_are_not_reinte
 }
 
 #[test]
-fn bright_color_outliers_do_not_cancel_useful_middle_tone_correction() {
+fn bright_color_outliers_are_protected_without_global_brightening() {
     let mut image = fixture(128, 96, |i| {
         if i % 131 == 0 {
             [0.99, 0.65, 0.4]
@@ -279,16 +304,23 @@ fn bright_color_outliers_do_not_cancel_useful_middle_tone_correction() {
     image.origin = ImageOrigin::DisplayReferred;
     let s = analyze_adaptive(&image, &DevelopmentRecipe::default()).unwrap();
     assert!(s.stats.luminance_percentiles[2] < 0.12);
-    assert!(
-        s.after_stats.luminance_percentiles[2] > s.stats.luminance_percentiles[2] * 1.20,
-        "highlight protection erased the requested tonal correction: {:?}",
-        s.changes
+    assert_eq!(s.suggested.global, s.base.global);
+    assert_ne!(
+        image.render_sdr16(&s.base).unwrap(),
+        image.render_sdr16(&s.suggested).unwrap()
     );
+    let sum = |r: &DevelopmentRecipe| {
+        (0..image.width as usize * image.height as usize)
+            .map(|i| {
+                let p = image.developed_pixel(i, r);
+                (0.2126 * p[0] + 0.7152 * p[1] + 0.0722 * p[2]) as f64
+            })
+            .sum::<f64>()
+    };
     assert!(
-        s.suggested.global.highlights < -1.0,
-        "fixture must exercise highlight protection"
+        (sum(&s.suggested) / sum(&s.base) - 1.0).abs() < 0.001,
+        "spatial treatment became a global light-placement increase"
     );
-    assert!(s.suggested.global.vibrance > 5.0);
     assert_eq!(s.after_stats.above_white_fraction, 0.0);
 }
 
@@ -411,7 +443,8 @@ fn small_region_metering_is_local_and_disabled_regions_are_rejected() {
     };
     let s = analyze_adaptive_region(&image, &base, "bright-part", AdaptiveIntent::Balance).unwrap();
     assert!(s.stats.sample_count > 400 && s.stats.sample_count < 1600);
-    assert!(s.suggested.regions[0].adjustments.exposure > 0.3);
+    assert_eq!(s.suggested.regions, base.regions);
+    assert!(s.suggested.adaptive_scope(Some("bright-part")).is_some());
     assert_eq!(s.suggested.global, base.global);
     assert!(analyze_adaptive_region(&image, &base, "missing", AdaptiveIntent::Balance).is_err());
     base.regions[0].enabled = false;
@@ -454,18 +487,20 @@ fn actual_tone_stays_ordered_and_keeps_linear_headroom_without_new_clipping() {
     recipe.hdr.peak_nits = 500.0;
     let s = analyze_adaptive(&image, &recipe).unwrap();
     assert!(s.stats.above_white_fraction > 0.05);
-    assert!(s.suggested.global.highlights < 0.0);
-    let mut previous = 0.0;
-    for i in 0..2048 {
-        let v = (-20.0 + i as f32 * 26.0 / 2047.0).exp2();
-        let p = s.suggested.global.apply([v; 3], 1.0);
-        assert_eq!(p[0], p[1], "gray acquired a color cast");
-        assert_eq!(p[1], p[2]);
-        assert!(p[0] >= previous, "neutral light order reversed");
-        previous = p[0];
+    assert!(!s.suggested.spatial.is_empty());
+    for uv in [[0.1, 0.2], [0.5, 0.5], [0.9, 0.8]] {
+        let mut previous = 0.0;
+        for i in 0..2048 {
+            let v = (-20.0 + i as f32 * 26.0 / 2047.0).exp2();
+            let p = s.suggested.apply_pixel([v; 3], uv);
+            assert_eq!(p[0], p[1], "gray acquired a color cast");
+            assert_eq!(p[1], p[2]);
+            assert!(p[0] >= previous, "neutral light order reversed");
+            previous = p[0];
+        }
     }
     assert!(
-        s.suggested.global.apply([4.0; 3], 1.0)[0] > 1.0,
+        s.suggested.apply_pixel([4.0; 3], [0.5, 0.5])[0] > 1.0,
         "float headroom was clipped away"
     );
     let count = |recipe: &DevelopmentRecipe| {
@@ -474,7 +509,8 @@ fn actual_tone_stays_ordered_and_keeps_linear_headroom_without_new_clipping() {
             .as_chunks::<3>()
             .0
             .iter()
-            .flat_map(|p| recipe.global.apply([p[0], p[1], p[2]], 1.0))
+            .enumerate()
+            .flat_map(|(i, _)| image.developed_pixel(i, recipe))
             .filter(|&v| v > s.stats.delivery_ceiling)
             .count()
     };
@@ -506,10 +542,20 @@ fn hdr_point_lights_and_bright_colors_are_not_mistaken_for_sdr_clipping() {
     let mut sdr = image.clone();
     sdr.origin = ImageOrigin::DisplayReferred;
     let sdr = analyze_adaptive(&sdr, &DevelopmentRecipe::default()).unwrap();
+    assert_eq!(sdr.stats.delivery_ceiling, 1.0);
     assert!(
-        sdr.suggested.global.highlights < -10.0,
-        "delivery target negative control had no effect"
+        hdr.suggested
+            .spatial
+            .iter()
+            .all(|f| f.delivery_ceiling > 4.0)
     );
+    assert!(
+        sdr.suggested
+            .spatial
+            .iter()
+            .all(|f| f.delivery_ceiling == 1.0)
+    );
+    assert!(hdr.suggested.apply_pixel([2.0; 3], [0.95, 0.5])[0] > 1.0);
 }
 
 #[test]

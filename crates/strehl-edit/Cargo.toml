@@ -18,6 +18,7 @@ quick-xml = "0.41"
 # Pure Rust builds avoid an external encoder, DLL, assembler or subprocess.
 rav1e = { version = "0.8.1", default-features = false, features = ["threading"] }
 avif-serialize = "0.8.9"
+image = { version = "=0.25.10", default-features = false, features = ["png", "jpeg"] }
 
 [target.'cfg(windows)'.dependencies]
 windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_Storage_FileSystem"] }

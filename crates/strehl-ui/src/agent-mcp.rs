@@ -57,7 +57,11 @@ pub(super) fn serve(
     while let Some(line) = read_line_bounded(&mut input)? {
         let response = match line {
             Ok(bytes) => protocol.handle(&bytes, &mut execute),
-            Err(()) => Some(error(Value::Null, -32700, "Message exceeds 128 KiB")),
+            Err(()) => Some(error(
+                Value::Null,
+                -32700,
+                "Message exceeds the fixed 2112 KiB limit",
+            )),
         };
         if let Some(response) = response {
             serde_json::to_writer(&mut output, &response)?;
@@ -332,6 +336,8 @@ fn recipe_schema() -> Value {
         json!({
             "version":{"const":1},
             "global":adjustments_schema(),
+            "spatial":{"type":"array","maxItems":6,"items":spatial_schema(),
+                "description":"Measured, photograph-specific Adaptive fields. Round-trip these unchanged from the current snapshot; do not copy between photographs or invent coefficients. Omitted or empty preserves the current fields for legacy clients. Use clear_adaptive for explicit scoped removal. Nonempty replaces the field list; prefer set_adjustments for portable manual changes."},
             "regions":{"type":"array","maxItems":128,"items":object(json!({
                 "id":string(128),"name":string(256),"note":{"type":"string","maxLength":4096},
                 "shape":region_schema(),"feather":{"type":"number","minimum":0,"maximum":1},
@@ -350,6 +356,48 @@ fn recipe_schema() -> Value {
             }), &[])
         }),
         &[],
+    )
+}
+fn spatial_schema() -> Value {
+    object(
+        json!({
+            "version":{"const":1},
+            "target_region":{"anyOf":[{"type":"null"},string(128)]},
+            "parameters":object(json!({
+                "balance":{"type":"number","minimum":0,"maximum":1},
+                "local_contrast":{"type":"number","minimum":0,"maximum":1},
+                "color":{"type":"number","minimum":0,"maximum":1}
+            }), &[]),
+            "amount":{"type":"number","minimum":0,"maximum":1},
+            "bounds":{"type":"array","items":point(),"minItems":2,"maxItems":2},
+            "width":{"type":"integer","minimum":2,"maximum":20},
+            "height":{"type":"integer","minimum":2,"maximum":20},
+            "levels":{"type":"integer","minimum":2,"maximum":33},
+            "log_min":{"type":"number","minimum":-16,"maximum":10},
+            "log_max":{"type":"number","minimum":-16,"maximum":10},
+            "tone_ev":{"type":"string","pattern":"^f32hex:([0-9a-f]{8})+$","maxLength":105607,
+                "description":"Exact finite f32 bits, width*height*levels samples; validated coefficient bounds and luminance order. Preserve verbatim."},
+            "color_gain":{"type":"string","pattern":"^f32hex:([0-9a-f]{8})+$","maxLength":3207,
+                "description":"Exact finite f32 bits, width*height samples in 1..1.2. Preserve verbatim."},
+            "delivery_ceiling":{"type":"number","minimum":1,"maximum":125},
+            "centering_ev":{"type":"number","minimum":-0.5,"maximum":0.5}
+        }),
+        &[
+            "version",
+            "target_region",
+            "parameters",
+            "amount",
+            "bounds",
+            "width",
+            "height",
+            "levels",
+            "log_min",
+            "log_max",
+            "tone_ev",
+            "color_gain",
+            "delivery_ceiling",
+            "centering_ev",
+        ],
     )
 }
 fn settings_schema() -> Value {
@@ -411,6 +459,19 @@ pub(crate) fn tool_definitions() -> Value {
             &["recipe"],
         ),
         command(
+            "set_adjustments",
+            json!({"adjustments":adjustments_schema(),
+                "region_id":{"anyOf":[{"type":"null"},string(128)],
+                    "description":"Explicit scope: null or omitted means the whole photograph; a current region ID addresses that region. Replaces manual controls in that scope (omitted controls reset to zero), preserving measured Adaptive fields, region shapes, source repairs and HDR settings."}}),
+            &["adjustments"],
+        ),
+        command(
+            "clear_adaptive",
+            json!({"region_id":{"anyOf":[{"type":"null"},string(128)],
+                "description":"Explicitly remove only this scope's measured Adaptive treatment; null or omitted means whole-photograph treatment. Manual controls and other scopes remain."}}),
+            &[],
+        ),
+        command(
             "adaptive_develop",
             json!({"strength":{"type":"number","minimum":0,"maximum":1,
                 "description":"Amount of a scene-aware editable treatment. Analysis is asynchronous; read adaptive in the snapshot for completion, measured reasons and limitations."},
@@ -433,7 +494,11 @@ pub(crate) fn tool_definitions() -> Value {
         command("cancel_stack", json!({}), &[]),
         command(
             "export",
-            json!({"file_name":string(200),"format":{"enum":["tiff","avif"]}}),
+            json!({"file_name":string(200),"format":{"enum":["avif","tiff","png","jpeg"]},
+                "color_space":{"enum":["srgb","display_p3","rec2020"],"default":"rec2020"},
+                "hdr":{"type":"boolean","description":"Default: HDR for scene-linear AVIF, SDR otherwise. Explicit true requires a scene-linear input and AVIF; unsupported requests fail instead of silently changing range."},
+                "quality":{"type":"integer","minimum":1,"maximum":100,"default":100},
+                "speed":{"type":"integer","minimum":0,"maximum":10,"default":6,"description":"AVIF encoding speed; 0 is slowest. TIFF/PNG are lossless, and quality/speed have no effect on them."}}),
             &["file_name", "format"],
         ),
         command("undo", json!({}), &[]),

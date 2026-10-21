@@ -47,6 +47,24 @@ pub struct Input<'a> {
     pub output_size: Option<[u32; 2]>,
 }
 impl Input<'_> {
+    /// A decoded standalone photo has its own UV domain, but no certificate
+    /// linking it to capture diagnostics. Never fabricate a merge geometry.
+    pub(crate) fn standalone_photo(&self) -> bool {
+        self.frame_count == 0
+            && self.progress.stage == Stage::Complete
+            && self.progress.bands.is_none()
+            && self.progress.plane_size.is_none()
+            && self.progress.analysis_size.is_none()
+            && self.progress.admission_archive.len() == 0
+            && self.surfaces.is_empty()
+            && self.photos.is_empty()
+            && self.inspection_photos.is_empty()
+            && self.output.is_some()
+            && self
+                .output_size
+                .is_some_and(|size| size.iter().all(|&value| value > 0 && value <= 32_768))
+    }
+
     /// Engine work may cover a prefix while the capture browser retains the
     /// whole bracket. Observed process counts never borrow that larger axis.
     pub(crate) fn processing_count(&self) -> usize {
@@ -207,6 +225,12 @@ impl ProcessSpace {
         painter.rect_filled(scene, 0.0, BG);
         let mut response = Response::default();
         self.theater.navigation_shortcuts(ui, &mut response);
+        if input.standalone_photo() {
+            self.theater
+                .show_with_ribbon(ui, scene.shrink(12.0), &input, &mut response, None);
+            self.theater.update_balance(ui.ctx(), None, None);
+            return response;
+        }
         let journey = Rect::from_min_size(
             scene.min + egui::vec2(12.0, 6.0),
             egui::vec2(

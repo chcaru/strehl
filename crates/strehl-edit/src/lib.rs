@@ -3,8 +3,10 @@
 
 mod adaptive;
 mod avif;
+mod color;
 #[path = "display-region.rs"]
 mod display_region;
+mod export;
 mod icc;
 mod image;
 mod publish;
@@ -13,14 +15,17 @@ mod xmp;
 
 pub use adaptive::{
     AdaptiveChange, AdaptiveIntent, AdaptiveStatistics, AdaptiveSuggestion, HighlightDiagnosis,
-    analyze_adaptive, analyze_adaptive_region,
+    analyze_adaptive, analyze_adaptive_region, analyze_adaptive_with_parameters,
 };
 pub use avif::{HdrExportReport, export_hdr_avif};
+pub use color::OutputColorSpace;
 pub use display_region::{DisplayRegion, DisplayRegionRequest};
+pub use export::{ExportFormat, ExportReport, ExportSettings, export_image};
 pub use image::{
     DisplayBaseline, ImageOrigin, LinearImage, load_tiff, save_linear_tiff, save_sdr_tiff,
 };
 pub use recipe::{
-    Adjustments, DevelopmentRecipe, HdrSettings, RegionAdjustment, RegionShape, SourceRange,
+    AdaptiveParameters, Adjustments, DevelopmentRecipe, HdrSettings, MAX_SPATIAL_TREATMENTS,
+    RegionAdjustment, RegionShape, SourceRange, SpatialTreatment,
 };
 pub use xmp::{XmpImport, import_xmp};

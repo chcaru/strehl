@@ -33,6 +33,54 @@ fn image() -> LinearImage {
         baked_recipe: None,
     }
 }
+
+#[test]
+fn oversized_recipe_does_not_replace_reopenable_saved_edits() {
+    let directory = TemporaryDirectory::new();
+    let path = directory.0.join("photo.strehl-edits.json");
+    let original = DevelopmentRecipe::default();
+    save_recipe(&path, &original).unwrap();
+    let previous_bytes = std::fs::read(&path).unwrap();
+    let mut oversized = original.clone();
+    for i in 0..128 {
+        oversized.regions.push(RegionAdjustment {
+            id: format!("region-{i}"),
+            name: "n".repeat(256),
+            note: "x".repeat(4096),
+            shape: RegionShape::Polygon {
+                points: (0..256)
+                    .map(|j| {
+                        let angle = j as f32 * std::f32::consts::TAU / 256.0;
+                        [0.5 + 0.4 * angle.cos(), 0.5 + 0.4 * angle.sin()]
+                    })
+                    .collect(),
+            },
+            feather: 0.0,
+            enabled: true,
+            adjustments: Default::default(),
+            source_range: None,
+        });
+    }
+    oversized.validate().unwrap();
+    assert!(
+        serde_json::to_vec_pretty(&oversized).unwrap().len() > 2 * 1024 * 1024,
+        "fixture must exceed the reader's size limit"
+    );
+    assert!(
+        save_recipe(&path, &oversized)
+            .unwrap_err()
+            .to_string()
+            .contains("document limit")
+    );
+    assert_eq!(std::fs::read(&path).unwrap(), previous_bytes);
+    let mut editor = EditorState::default();
+    assert!(editor.replace(oversized).is_err());
+    assert_eq!(editor.recipe, original);
+    assert!(!editor.can_undo());
+    let reopened: DevelopmentRecipe =
+        serde_json::from_slice(&read_bounded(&path, 2 * 1024 * 1024).unwrap()).unwrap();
+    assert_eq!(reopened, original);
+}
 fn editor() -> EditorState {
     let image = Arc::new(image());
     let preview = Arc::new(image.preview(32));
@@ -311,7 +359,10 @@ fn a_failed_second_export_cannot_reuse_the_previous_success_receipt() {
     Arc::make_mut(&mut loaded.image).origin = ImageOrigin::DisplayReferred;
     editor.last_export = Some(PathBuf::from("previous-success.tiff"));
     editor
-        .export(temporary.0.join("rejected-hdr.avif"), true)
+        .export_with_settings(
+            temporary.0.join("rejected-hdr.avif"),
+            strehl_edit::ExportSettings::default(),
+        )
         .unwrap();
     assert!(
         editor.last_export.is_none(),

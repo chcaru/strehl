@@ -11,7 +11,10 @@ mod mcp;
 pub(crate) use bridge::{AgentBridge, IncomingRequest, resolve_granted_path};
 pub(crate) use mcp::run_mcp_from_args;
 
-pub(crate) const MAX_REQUEST_BYTES: usize = 128 * 1024;
+pub(crate) const MAX_RECIPE_BYTES: usize = 2 * 1024 * 1024;
+// The recipe sidecar has a fixed 2 MiB budget. Leave a bounded allowance for
+// JSON-RPC/request metadata; never grow the mailbox based on caller input.
+pub(crate) const MAX_REQUEST_BYTES: usize = MAX_RECIPE_BYTES + 64 * 1024;
 pub(crate) const MAX_REPLY_BYTES: usize = 8 * 1024 * 1024;
 pub(crate) const MAX_PREVIEW_SIDE: u32 = 1024;
 pub(crate) const PROTOCOL_VERSION: &str = "2025-11-25";
@@ -95,6 +98,17 @@ pub(crate) enum AgentCommand {
     SetDevelop {
         recipe: strehl_edit::DevelopmentRecipe,
     },
+    /// Portable manual controls; measured fields and region geometry survive.
+    SetAdjustments {
+        adjustments: strehl_edit::Adjustments,
+        #[serde(default)]
+        region_id: Option<String>,
+    },
+    /// Explicitly remove the measured Adaptive treatment in one scope.
+    ClearAdaptive {
+        #[serde(default)]
+        region_id: Option<String>,
+    },
     /// Queue a bounded scene analysis and apply its editable suggested controls.
     AdaptiveDevelop {
         strength: f32,
@@ -117,6 +131,14 @@ pub(crate) enum AgentCommand {
     Export {
         file_name: String,
         format: String,
+        #[serde(default)]
+        color_space: Option<strehl_edit::OutputColorSpace>,
+        #[serde(default)]
+        hdr: Option<bool>,
+        #[serde(default)]
+        quality: Option<u8>,
+        #[serde(default)]
+        speed: Option<u8>,
     },
     Undo {},
     Redo {},
@@ -204,7 +226,24 @@ impl AgentCommand {
                 Ok(())
             }
             Self::SetSettings { patch } => validate_settings(patch),
-            Self::SetDevelop { recipe } => recipe.validate().map_err(|e| e.to_string()),
+            Self::SetDevelop { recipe } => {
+                recipe.validate().map_err(|e| e.to_string())?;
+                // Match the durable sidecar representation, not compact wire
+                // JSON: indentation can dominate a large polygon recipe.
+                let bytes = serde_json::to_vec_pretty(recipe).map_err(|e| e.to_string())?;
+                ensure(
+                    bytes.len() <= MAX_RECIPE_BYTES,
+                    "Recipe exceeds the 2 MiB limit",
+                )
+            }
+            Self::SetAdjustments {
+                adjustments,
+                region_id,
+            } => {
+                adjustments.validate().map_err(|e| e.to_string())?;
+                validate_region_id(region_id)
+            }
+            Self::ClearAdaptive { region_id } => validate_region_id(region_id),
             Self::AdaptiveDevelop { strength, .. } => ensure(
                 strength.is_finite() && (0.0..=1.0).contains(strength),
                 "Adaptive amount must be between 0 and 1",
@@ -224,12 +263,17 @@ impl AgentCommand {
                     && (1.0..=8.0).contains(zoom),
                 "View center must be normalized and zoom must be 1..8",
             ),
-            Self::Export { file_name, format } => {
+            Self::Export {
+                file_name,
+                format,
+                color_space,
+                hdr,
+                quality,
+                speed,
+            } => {
                 safe_file_name(file_name)?;
-                ensure(
-                    ["tiff", "avif"].contains(&format.as_str()),
-                    "Format must be tiff or avif",
-                )
+                resolve_export_settings(format, *color_space, *hdr, *quality, *speed, None)
+                    .map(|_| ())
             }
             Self::CreateProject { name, .. } | Self::RenameNode { name, .. } => {
                 text_bound(name, 160, false)
@@ -266,6 +310,53 @@ impl AgentCommand {
             _ => Ok(()),
         }
     }
+}
+
+fn validate_region_id(id: &Option<String>) -> Result<(), String> {
+    if let Some(id) = id {
+        ensure(
+            !id.is_empty() && id.len() <= 128 && !id.chars().any(char::is_control),
+            "region_id must be a nonempty region ID of at most 128 bytes",
+        )?;
+    }
+    Ok(())
+}
+
+/// Missing options use the same defaults as the human Export pane. Only an
+/// omitted HDR flag adapts to the input; an explicit unsupported HDR request is
+/// rejected rather than silently becoming SDR.
+pub(crate) fn resolve_export_settings(
+    format: &str,
+    color_space: Option<strehl_edit::OutputColorSpace>,
+    hdr: Option<bool>,
+    quality: Option<u8>,
+    speed: Option<u8>,
+    origin: Option<strehl_edit::ImageOrigin>,
+) -> Result<strehl_edit::ExportSettings, String> {
+    use strehl_edit::{ExportFormat, ExportSettings, ImageOrigin};
+    let format = match format {
+        "avif" => ExportFormat::Avif,
+        "tiff" => ExportFormat::Tiff,
+        "png" => ExportFormat::Png,
+        "jpeg" => ExportFormat::Jpeg,
+        _ => return Err("Format must be avif, tiff, png or jpeg".into()),
+    };
+    let defaults = ExportSettings::default();
+    let settings = ExportSettings {
+        format,
+        color_space: color_space.unwrap_or(defaults.color_space),
+        hdr: hdr.unwrap_or(
+            format == ExportFormat::Avif && origin != Some(ImageOrigin::DisplayReferred),
+        ),
+        quality: quality.unwrap_or(defaults.quality),
+        speed: speed.unwrap_or(defaults.speed),
+    };
+    settings.validate().map_err(|e| e.to_string())?;
+    ensure(
+        !settings.hdr || origin != Some(ImageOrigin::DisplayReferred),
+        "HDR export requires a scene-linear master. This photograph is SDR; request hdr:false to preserve its actual range.",
+    )?;
+    Ok(settings)
 }
 
 fn ensure(ok: bool, message: &str) -> Result<(), String> {

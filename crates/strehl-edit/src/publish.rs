@@ -19,6 +19,14 @@ impl Drop for OwnedTemporary {
 /// `write` must flush any buffered writer before returning. Publication never
 /// replaces even a destination created during encoding.
 pub(crate) fn new_file(path: &Path, write: impl FnOnce(&mut File) -> Result<()>) -> Result<()> {
+    new_file_checked(path, write, || Ok(()))
+}
+
+pub(crate) fn new_file_checked(
+    path: &Path,
+    write: impl FnOnce(&mut File) -> Result<()>,
+    before_publish: impl FnOnce() -> Result<()>,
+) -> Result<()> {
     if path.try_exists()? {
         bail!("destination already exists: {}", path.display());
     }
@@ -52,6 +60,7 @@ pub(crate) fn new_file(path: &Path, write: impl FnOnce(&mut File) -> Result<()>)
         write(&mut file).and_then(|()| file.sync_all().context("flushing completed export"));
     drop(file);
     result?;
+    before_publish()?;
     publish_without_replace(&temporary.0, path)
         .with_context(|| format!("publishing new export without replacing {}", path.display()))?;
     // The final name now refers to complete bytes. Drop cleans only our own name.
@@ -120,5 +129,24 @@ mod tests {
         new_file(&path, |file| Ok(file.write_all(b"complete")?)).unwrap();
         assert_eq!(std::fs::read(&path).unwrap(), b"complete");
         assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), 1);
+    }
+
+    #[test]
+    fn cancellation_after_encoding_removes_the_complete_temporary() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("photo.png");
+        assert!(
+            new_file_checked(
+                &path,
+                |file| {
+                    file.write_all(b"completed bytes")?;
+                    Ok(())
+                },
+                || bail!("cancelled while syncing")
+            )
+            .is_err()
+        );
+        assert!(!path.exists());
+        assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), 0);
     }
 }

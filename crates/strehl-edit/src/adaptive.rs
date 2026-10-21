@@ -3,13 +3,16 @@
 //! This is an original photographic heuristic, not an ML model or an imitation
 //! of another application's rendering. It never edits the master or annotations.
 use anyhow::{Result, ensure};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-use crate::{Adjustments, DevelopmentRecipe, ImageOrigin, LinearImage};
+use crate::{AdaptiveParameters, Adjustments, DevelopmentRecipe, ImageOrigin, LinearImage};
+
+#[path = "adaptive-spatial.rs"]
+mod spatial;
 
 const SAMPLE_BUDGET: usize = 16_384;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum AdaptiveIntent {
     Balance,
@@ -72,7 +75,7 @@ pub struct AdaptiveSuggestion {
 
 impl AdaptiveSuggestion {
     /// Blend against the frozen input, never against the last slider position.
-    /// There is no image scan here. Only the addressed adjustment controls change;
+    /// There is no image scan here. Only the addressed treatment changes;
     /// shapes, source constraints, other regions and HDR settings stay unchanged.
     pub fn recipe_at(&self, strength: f32) -> Result<DevelopmentRecipe> {
         ensure!(
@@ -87,6 +90,69 @@ impl AdaptiveSuggestion {
         }
         let mut recipe = self.base.clone();
         let target = self.target_region.as_deref();
+        if self.intent == AdaptiveIntent::Balance {
+            recipe.clear_adaptive_scope(target);
+            if let Some(next) = self.suggested.adaptive_scope(target) {
+                let mut field = next.clone();
+                if let Some(previous) = self.base.adaptive_scope(target) {
+                    let old_weight = previous.amount * (1.0 - strength);
+                    let new_weight = next.amount * strength;
+                    let amount = old_weight + new_weight;
+                    let denominator = amount.max(1e-12);
+                    field.parameters = AdaptiveParameters {
+                        balance: (previous.parameters.balance * old_weight
+                            + next.parameters.balance * new_weight)
+                            / denominator,
+                        local_contrast: (previous.parameters.local_contrast * old_weight
+                            + next.parameters.local_contrast * new_weight)
+                            / denominator,
+                        color: (previous.parameters.color * old_weight
+                            + next.parameters.color * new_weight)
+                            / denominator,
+                    };
+                    // Reanalysis replaces the addressed field. Resample its old
+                    // curves onto the new lattice for a non-compounding Amount.
+                    for y in 0..field.height as usize {
+                        for x in 0..field.width as usize {
+                            let uv = [
+                                field.bounds[0][0]
+                                    + (field.bounds[1][0] - field.bounds[0][0]) * x as f32
+                                        / (field.width - 1) as f32,
+                                field.bounds[0][1]
+                                    + (field.bounds[1][1] - field.bounds[0][1]) * y as f32
+                                        / (field.height - 1) as f32,
+                            ];
+                            for z in 0..field.levels as usize {
+                                let l = (field.log_min
+                                    + (field.log_max - field.log_min) * z as f32
+                                        / (field.levels - 1) as f32)
+                                    .exp2();
+                                let i = (y * field.width as usize + x) * field.levels as usize + z;
+                                field.tone_ev[i] = (previous.gain_ev_at(uv, l) * old_weight
+                                    + (field.tone_ev[i] + field.centering_ev) * new_weight)
+                                    / denominator;
+                            }
+                            let i = y * field.width as usize + x;
+                            field.color_gain[i] = 1.0
+                                + ((previous.color_gain_at(uv) - 1.0) * old_weight
+                                    + (field.color_gain[i] - 1.0) * new_weight)
+                                    / denominator;
+                        }
+                    }
+                    field.centering_ev = 0.0;
+                    field.amount = amount;
+                } else {
+                    field.amount *= strength;
+                }
+                recipe.spatial.push(field);
+            } else if let Some(previous) = self.base.adaptive_scope(target) {
+                let mut previous = previous.clone();
+                previous.amount *= 1.0 - strength;
+                recipe.spatial.push(previous);
+            }
+            recipe.validate()?;
+            return Ok(recipe);
+        }
         *adjustment_mut(&mut recipe, target)? = interpolate(
             adjustment(&self.base, target)?,
             adjustment(&self.suggested, target)?,
@@ -97,8 +163,8 @@ impl AdaptiveSuggestion {
     }
 }
 
-/// Meter at most 16,384 stratified image samples and propose ordinary editable
-/// global controls. Local adjustments remain intact but are deliberately excluded
+/// Meter at most 16,384 stratified image samples and propose spatial tone curves.
+/// Manual controls remain intact. Local adjustments are deliberately excluded
 /// from metering: a painted bright patch must not cause a compensating global edit.
 ///
 /// Call on a loaded/validated master or linear preview on a worker. Structural
@@ -108,19 +174,48 @@ pub fn analyze_adaptive(
     image: &LinearImage,
     base: &DevelopmentRecipe,
 ) -> Result<AdaptiveSuggestion> {
-    analyze(image, base, None, AdaptiveIntent::Balance)
+    analyze_adaptive_with_parameters(
+        image,
+        base,
+        None,
+        AdaptiveIntent::Balance,
+        AdaptiveParameters::default(),
+    )
 }
 
 /// Analyze an existing annotation in output-image coordinates. Its actual
 /// feather and all other edits participate in metering. This changes only the
-/// selected region's ordinary, editable photo controls, never its source span.
+/// selected region's spatial treatment (Balance) or ordinary Highlights control
+/// (RestoreHighlights), never its source span.
 pub fn analyze_adaptive_region(
     image: &LinearImage,
     base: &DevelopmentRecipe,
     region_id: &str,
     intent: AdaptiveIntent,
 ) -> Result<AdaptiveSuggestion> {
-    analyze(image, base, Some(region_id), intent)
+    analyze_adaptive_with_parameters(
+        image,
+        base,
+        Some(region_id),
+        intent,
+        AdaptiveParameters::default(),
+    )
+}
+
+/// Recompute image-dependent curves on the destination photograph. Presets carry
+/// these portable parameters, never another photograph's measured coefficients.
+pub fn analyze_adaptive_with_parameters(
+    image: &LinearImage,
+    base: &DevelopmentRecipe,
+    target: Option<&str>,
+    intent: AdaptiveIntent,
+    parameters: AdaptiveParameters,
+) -> Result<AdaptiveSuggestion> {
+    parameters.validate()?;
+    match intent {
+        AdaptiveIntent::Balance => spatial::analyze_spatial(image, base, target, parameters),
+        AdaptiveIntent::RestoreHighlights => analyze(image, base, target, intent),
+    }
 }
 
 fn analyze(

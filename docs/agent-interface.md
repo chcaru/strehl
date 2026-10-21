@@ -153,9 +153,22 @@ space: a camera source must not be presented as geometrically registered when
 that transform is unavailable.
 
 `set_settings` accepts a bounded patch for the existing stack controls.
+`set_adjustments` replaces manual controls in an explicit scope: `region_id`
+names an existing enabled region; null or omitted means the whole photograph.
+Omitted adjustment controls reset to zero. Geometry, source repairs, measured
+Adaptive fields, and HDR settings remain intact.
+
 `set_develop` accepts the shared, versioned development recipe, including global
-and region controls. Preset imports report unsupported Adobe profile operations
-as warnings. Arbitrary code and unknown setting names are rejected.
+and regional controls and bounded `spatial` fields. Unknown fields are rejected.
+Those measured fields belong to the current photograph: round-trip them from
+the snapshot unchanged instead of inventing coefficients or copying them to
+another photograph. A nonempty spatial list replaces that list. For compatibility
+with older clients, an omitted or empty list **preserves** existing treatments.
+Use `clear_adaptive` with the same explicit `region_id` scope to remove one
+treatment; it is undoable and retains the manual controls. Removing an annotation
+also removes its associated treatment. A legacy replacement that would orphan a
+treatment fails with an actionable error. Preset imports report unsupported Adobe
+profile operations as warnings. Arbitrary code and unknown settings are rejected.
 
 A region's optional `source_range: {"first": 12, "last": 18}` limits its repair
 to an inclusive range in filename order. This is a merge instruction: **restack
@@ -165,26 +178,66 @@ ordering no longer match that master. A tone-preview update is not evidence
 that a source-range repair has run.
 
 Preview requests are limited to 1024 pixels on the longest side. Region probes
-return at most 32 source records. The request limit is 128 KiB; the reply limit
+return at most 32 source records. The fixed request limit is 2112 KiB, including
+a recipe of at most 2 MiB and 64 KiB for the envelope; the reply limit
 is 8 MiB. Long render/export work returns a queued state and proceeds through
 the application's normal background jobs. Snapshots list up to 256 catalog
 objects and the latest 32 runs per object; truncation and full run counts are
 reported explicitly.
 
+## Export delivery
+
+`export` requires a destination folder explicitly selected by the human in
+**Export → Destination**, or the parent folder of a file chosen for a human
+export. The snapshot reports it in `export_capabilities.destination`; null means
+the human has not selected one. It never falls back to the stack-output folder.
+Changing the destination invalidates the agent revision. `file_name` is a name,
+never an arbitrary path. The original `file_name` and
+`format` command remains valid. Optional delivery fields now match the app:
+
+```json
+{
+  "expected_revision": 12,
+  "command": {
+    "operation": "export",
+    "file_name": "specimen.avif",
+    "format": "avif",
+    "color_space": "rec2020",
+    "hdr": true,
+    "quality": 100,
+    "speed": 6
+  }
+}
+```
+
+Formats are `avif`, `tiff`, `png`, and `jpeg`; color spaces are `srgb`,
+`display_p3`, and `rec2020`. Defaults are Rec.2020, quality 100, and AVIF speed
+6. Omitted HDR defaults to true for a scene-linear AVIF export and false
+otherwise. An explicit HDR request for SDR input, or a format other than AVIF,
+is rejected. The queued reply contains resolved settings; completion remains
+observable through `busy.export`, `export`, and `error` in the snapshot.
+`export_capabilities.hdr_available` reflects the current photograph.
+Existing files are never overwritten. JPEG/AVIF remain lossy even at quality
+100; TIFF/PNG are lossless and ignore codec quality/speed.
+
 ## Adaptive development and display evidence
 
 The command `{"operation":"adaptive_develop","strength":1.0}` queues a bounded
 scene-aware development analysis. Poll `adaptive.analyzing` in `strehl_snapshot`;
-completion includes the original and suggested recipes, measured statistics,
-per-control reasons, limitations, and any stale-result error. Strength is finite
+completion includes measured statistics, diagnosis, control changes, compact
+spatial-treatment metadata, limitations, and any stale-result error. The complete
+current recipe is available once under `development`, without duplicating its
+coefficient arrays in the analysis. Strength is finite
 and between 0 and 1. When the current treatment is still attached, another amount
 uses that same frozen analysis without compounding edits. Changing the photograph
 or recipe while analysis runs prevents its result from overwriting newer work.
 The same Undo journal is used as for human development changes.
 
 The optional `intent` is `"balance"` by default, preserving strength-only clients.
-It balances `selected_region` from the snapshot, or the whole photograph when
-that field is null. `{"operation":"adaptive_develop","strength":1.0,"intent":"highlights"}`
+It builds image-dependent spatial light and color curves for `selected_region`
+from the snapshot, or the whole photograph when that field is null. Ordinary
+Light/Color sliders remain unchanged; the measured field is stored in the recipe.
+`{"operation":"adaptive_develop","strength":1.0,"intent":"highlights"}`
 uses the human's **Balance highlights** action and requires a selected, enabled
 region. It compresses existing bright light and reports stored-white/variation
 limits; it cannot recreate clipped texture. Annotating a region selects it.
