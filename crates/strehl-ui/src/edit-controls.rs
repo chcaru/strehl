@@ -120,6 +120,10 @@ pub(crate) fn slider(
                 // height and paints beyond its allocated label/value row.
                 ui.spacing_mut().interact_size.y = number.height();
                 ui.spacing_mut().button_padding = egui::vec2(4.0, 2.0);
+                // Match Painter::text and DragValue's keyboard TextEdit glyph
+                // alignment. Centered glyph rows can round to a different
+                // baseline with bundled fonts or fractional display scales.
+                ui.style_mut().override_text_valign = Some(egui::Align::BOTTOM);
                 ui.visuals_mut().override_text_color = Some(if (*value - default).abs() > 0.0001 {
                     ACCENT
                 } else {

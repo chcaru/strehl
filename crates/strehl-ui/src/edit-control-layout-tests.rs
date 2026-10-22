@@ -166,6 +166,7 @@ fn actual_edit_pane_aligns_actions_and_keeps_amount_editor_clear_of_track() {
             "fixed commands must reserve the scrolling controls' gutter: {versions:?} {more:?} {apply:?}"
         );
         let amount = label(&output, "Amount");
+        assert!((amount.left() - save.left()).abs() < 0.1);
         let number = button(&output, "1.00");
         assert!((number.right() - apply.right()).abs() < 0.1);
         let number_text = label(&output, "1.00");
@@ -231,6 +232,41 @@ fn actual_edit_pane_aligns_actions_and_keeps_amount_editor_clear_of_track() {
                 (before.left() - after.left()).abs() < 0.1
                     && (before.right() - after.right()).abs() < 0.1,
                 "collapsing content must not shift {name} horizontally: {before:?} {after:?}"
+            );
+        }
+    }
+}
+
+#[test]
+fn amount_label_and_value_align_with_bundled_fonts_and_fractional_display_scales() {
+    for pixels_per_point in [1.0, 1.25, 1.5, 2.0] {
+        let ctx = egui::Context::default();
+        crate::theme::install(&ctx);
+        // Linux/macOS use these bundled faces. Windows otherwise substitutes
+        // Segoe UI, whose metrics conceal the different glyph-row alignment.
+        ctx.set_fonts(egui::FontDefinitions::default());
+        ctx.set_pixels_per_point(pixels_per_point);
+        let mut app = fixture();
+        frame(&mut app, &ctx, 270.0, 0.0, vec![]);
+        let output = frame(&mut app, &ctx, 270.0, 0.1, vec![]);
+        let number = button(&output, "1.00");
+        frame(&mut app, &ctx, 270.0, 0.2, pointer(number.center(), true));
+        frame(&mut app, &ctx, 270.0, 0.25, pointer(number.center(), false));
+        let editing = frame(&mut app, &ctx, 270.0, 0.3, vec![]);
+        assert!(
+            ctx.memory(|memory| memory.focused().is_some()),
+            "The variant must exercise the actual text editor"
+        );
+        for (state, output) in [("display", &output), ("typing", &editing)] {
+            let amount = label(output, "Amount");
+            let value = label(output, "1.00");
+            assert!(
+                (amount.left() - 12.0).abs() < 0.1,
+                "Amount caption must keep the pane's left edge while {state}: {amount:?}"
+            );
+            assert!(
+                (amount.center().y - value.center().y).abs() < 1.0,
+                "Bundled-font Amount row must align while {state} at {pixels_per_point} pixels/point: {amount:?} {value:?}"
             );
         }
     }
