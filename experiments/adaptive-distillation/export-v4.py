@@ -84,13 +84,14 @@ class Export(torch.nn.Module):
 
 
 class PortableGroupNorm(torch.nn.GroupNorm):
-    """Same normalization with short, centered FP32 reductions for export.
+    """Same normalization with bounded, centered FP32 reductions for export.
 
     Flattening a large spatial plane into one InstanceNormalization reduction
-    loses precision in some CPU runtimes. Keep the channel/spatial axes separate
-    and reduce each in turn after subtracting one group-local anchor. The anchor
-    prevents a constant offset from accumulating reduction error. This changes
-    neither parameters nor epsilon. The
+    loses precision in some CPU runtimes. Consecutive ReduceMean operations can
+    also be fused back into one large reduction. A tree of small pooling kernels
+    preserves short reductions after optimization. Subtracting a group-local
+    anchor keeps constant offsets out of the sums. This changes neither
+    parameters nor epsilon. The
     untouched PyTorch model remains the independent conversion reference.
     """
 
@@ -99,8 +100,30 @@ class PortableGroupNorm(torch.nn.GroupNorm):
                                 value.shape[1] // self.num_groups, *value.shape[2:])
 
         def average(tensor):
+            if tensor.ndim != 5:
+                raise ValueError("V4 normalization requires NCHW feature planes")
             for axis in range(tensor.ndim - 1, 1, -1):
-                tensor = tensor.mean(axis, keepdim=True)
+                # V4 export deliberately specializes its fixed input geometry.
+                # Padding only the final short block contributes zeros to the
+                # sum; the final scale removes those padding samples from the
+                # divisor. No pooling kernel accumulates more than eight terms.
+                length = int(tensor.shape[axis])
+                remaining, divisor = length, 1
+                while remaining > 1:
+                    kernel = min(8, remaining)
+                    padding = (-remaining) % kernel
+                    if padding:
+                        pads = [0] * 6
+                        pads[2 * (tensor.ndim - axis - 1) + 1] = padding
+                        tensor = torch.nn.functional.pad(tensor, tuple(pads))
+                    extent = [1, 1, 1]
+                    extent[axis - 2] = kernel
+                    tensor = torch.nn.functional.avg_pool3d(
+                        tensor, tuple(extent), stride=tuple(extent),
+                        count_include_pad=True)
+                    remaining = (remaining + padding) // kernel
+                    divisor *= kernel
+                tensor = tensor * (divisor / length)
             return tensor
 
         anchor = (slice(None), slice(None)) + (slice(0, 1),) * (grouped.ndim - 2)
@@ -238,7 +261,7 @@ def main():
               "checkpoint_sha256": sha256(args.checkpoint), "checkpoint_step": checkpoint.get("step"),
               "checkpoint_weights_only_load": True, "cache_manifest_sha256": sha256(manifest_path),
               "model_input_contract": input_contract, "model_input_contract_sha256": INPUT.contract_sha256(input_contract),
-              "normalization_export": "anchored-centered-sequential-spatial-reductions-v1",
+              "normalization_export": "anchored-centered-bounded-pooling-tree-v2",
               "parity_reference": "unchanged checkpoint with native PyTorch GroupNorm",
               "export_implementation_sha256": sha256(Path(__file__)),
               "student_implementation_sha256": sha256(Path(__file__).with_name("student-v4.py")),
