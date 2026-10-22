@@ -1,5 +1,8 @@
 # Adaptive model distillation prototype
 
+Historical V1–V3 results. See [V4 development](adaptive-v4-development.md) for the
+subsequent larger corpus, explicit linear input contract and native runtime checks.
+
 2026-10-22. **VERIFIED:** an original student was trained, exported, and executed
 independently of its local teacher. **Not approved as an editing profile:** the
 held-out insect loses to a constant baseline on color and exposure, one mineral
