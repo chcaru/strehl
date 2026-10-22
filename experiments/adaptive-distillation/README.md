@@ -270,13 +270,14 @@ cache immutable while any training or evaluation process is using it.
 python experiments/adaptive-distillation/student-v4.py
 python experiments/adaptive-distillation/input-contract.py
 python experiments/adaptive-distillation/runner-guard-smoke.py
+python experiments/adaptive-distillation/test-validation-selection.py
 python experiments/adaptive-distillation/train-v4.py --cache path/to/cache --output runs/v4 --device cuda --steps 6000 --batch 8 --rank 8
 python experiments/adaptive-distillation/export-v4.py --cache path/to/cache --checkpoint runs/v4/best.pt --output runs/v4-export
 python experiments/adaptive-distillation/evaluate-v4.py --cache path/to/cache --checkpoint runs/v4/best.pt --training-means runs/v4/training-means.pt --output runs/v4-evaluation.json --device cuda
 ```
 
 Use `--device cpu --workers 0` for a CPU training run. Output directories must be
-new or empty; the evaluation output file must not exist. The first three commands
+new or empty; the evaluation output file must not exist. The first four commands
 exercise small synthetic controls and do not open photographs or teacher labels.
 They are necessary checks, not evidence that the model improves photographs.
 
@@ -284,11 +285,13 @@ The trainer saves `best.pt`, `training-means.pt`, `pca-fit.pt`, cache receipts,
 configuration and validation history. Checkpoints use restricted
 `weights_only=True` loading. Evaluation verifies the exact training-mean file
 digest stored in the checkpoint; substituting another run's mean is rejected.
-Training scores natural-log gain error and averages rows within each validation
-group, then groups equally. The standalone evaluator reports log2 gain error,
-first averaging variants within a source, then sources and groups. Unequal
-variant counts can therefore change their aggregation; inspect per-group and
-per-head values alongside the headline score.
+Training scores natural-log gain error; the standalone evaluator reports log2
+gain error. Both average variants within each source, sources within each group,
+then groups equally. Extra variants do not buy a photograph more checkpoint
+selection weight. Inspect per-group, per-head and tail errors alongside the
+headline score. If the best checkpoint remains at step zero, record unsuccessful
+learning rather than substituting a later checkpoint. Fixed seeds do not promise
+bitwise replay across GPU kernels or library versions.
 
 The exporter checks every head's exact FP32 shape and finiteness and PyTorch/ONNX
 agreement across each validation group/variant plus synthetic mask cases. It

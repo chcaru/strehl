@@ -147,6 +147,33 @@ def validate_label_values(batch: dict) -> None:
             raise ValueError("teacher color table materially outside [0,1]")
 
 
+def validation_group_summary(records: list[dict], measurements: list[dict]) -> dict:
+    """Average variants within each source, then sources within each group.
+
+    Adding a mask variation must not give its photograph an extra statistical
+    vote when choosing the best checkpoint. This matches the final evaluator.
+    """
+    groups = defaultdict(lambda: defaultdict(list))
+    for measured in measurements:
+        record = records[measured["row"]]
+        identity = str(record.get("source_id") or record.get("paired_display_render")
+                       or record.get("path") or measured["row"])
+        for family in ("mae", "baseline"):
+            if set(measured[family]) != set(V4.OUTPUT_NAMES):
+                raise ValueError("validation measurement must include every output")
+            if any(not np.isfinite(value) or value < 0 for value in measured[family].values()):
+                raise ValueError("validation errors must be finite and nonnegative")
+        groups[record["group_id"]][identity].append(measured)
+    if not groups:
+        raise ValueError("validation measurements must be nonempty")
+    return {group: {"count": sum(map(len, sources.values())), "source_count": len(sources),
+                    **{family: {key: float(np.mean([
+                        np.mean([row[family][key] for row in variants])
+                        for variants in sources.values()])) for key in V4.OUTPUT_NAMES}
+                       for family in ("mae", "baseline")}}
+            for group, sources in groups.items()}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cache", type=Path, required=True)
@@ -305,6 +332,7 @@ def main() -> None:
                      "input_divisor": divisor, "domain": manifest.get("domain"), "masks": manifest.get("masks"),
                      "model_input_contract": input_contract, "model_input_contract_sha256": input_contract_digest,
                      "input_contract_implementation_sha256": INPUT.implementation_sha256(),
+                     "checkpoint_selection_weighting": "equal groups; equal sources per group; equal variants per source",
                      "train_count": len(indices["train"]), "validation_count": len(indices["validation"])}
     (args.output / "configuration.json").write_text(json.dumps(configuration, indent=2) + "\n")
 
@@ -312,10 +340,11 @@ def main() -> None:
     def evaluate():
         assert_cache_unchanged()
         model.eval()
-        per_group = defaultdict(lambda: {"count": 0, "mae": defaultdict(float), "baseline": defaultdict(float)})
+        validation_rows = []
         sample_errors = defaultdict(list)
         oracle = defaultdict(list)
         for image, batch, rows in validation_loader:
+            measured_rows = [{"row": row, "mae": {}, "baseline": {}} for row in rows.tolist()]
             targets = {key: value.to(device, non_blocking=use_pin) for key, value in batch.items()}
             predictions = model(INPUT.prepare_torch(image.to(device, non_blocking=use_pin), input_contract))
             coefficients = model.coefficient_targets(targets) * model.lut_coefficient_scale[None]
@@ -332,16 +361,11 @@ def main() -> None:
                 if not all(np.isfinite(value) for value in errors):
                     raise ValueError(f"non-finite validation prediction: {key}")
                 sample_errors[key].extend(errors)
-                for row, error, baseline_error in zip(rows.tolist(), errors, baselines):
-                    group = per_group[records[row]["group_id"]]
-                    group["mae"][key] += error
-                    group["baseline"][key] += baseline_error
-            for row in rows.tolist():
-                per_group[records[row]["group_id"]]["count"] += 1
-        grouped = {group: {"count": values["count"],
-                           "mae": {key: value / values["count"] for key, value in values["mae"].items()},
-                           "baseline": {key: value / values["count"] for key, value in values["baseline"].items()}}
-                   for group, values in per_group.items()}
+                for measured, error, baseline_error in zip(measured_rows, errors, baselines):
+                    measured["mae"][key] = error
+                    measured["baseline"][key] = baseline_error
+            validation_rows.extend(measured_rows)
+        grouped = validation_group_summary(records, validation_rows)
         errors = {key: float(np.mean([value["mae"][key] for value in grouped.values()])) for key in V4.OUTPUT_NAMES}
         baseline = {key: float(np.mean([value["baseline"][key] for value in grouped.values()])) for key in V4.OUTPUT_NAMES}
         ratios = {key: errors[key] / max(baseline[key], normalizers[key] * .05) for key in V4.OUTPUT_NAMES}
