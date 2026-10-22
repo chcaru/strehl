@@ -120,8 +120,11 @@ cross-codec rejection, malformed/duplicate/unknown metadata, every truncated
 length, correctly hashed invalid fields, external identity mismatches, missing
 or corrupted assets, idempotent/concurrent publication and cancellation after a
 complete temporary write. `cargo clippy --offline -p strehl-edit --all-targets
--- -D warnings` also passed. Independent codec/store review remains required
-before claiming production integration; no recipe or model is enabled here.
+-- -D warnings` also passed. Subsequent independent codec/store review exercised
+separate boundary, identity, cancellation and concurrent-publication fixtures;
+the Windows directory-replacement fixture needed an unrestricted test process.
+This accepts the storage boundary, not application integration. No recipe or
+model is enabled here.
 
 `learned_asset` freezes the exact FP32 fields, matrices, tone, mask geometry,
 original dimensions, and source/input/model/contract identities in a versioned
@@ -144,6 +147,39 @@ freeze one compiled snapshot for preview, native zoom, export and saved versions
 Pan, zoom and Amount changes must reuse fields rather than rerun inference.
 Amount zero must match the complete existing application view, including its
 baseline, not merely the raw linear input. No-asset behavior must remain unchanged.
+
+## Prepared SDR development
+
+`learned_development::PreparedSdrDevelopment` pins an owning image `Arc`, a
+caller-supplied source digest, immutable recipe, frozen scene asset and unique
+completion token before rendering. Asset resolution happens once at preparation.
+Wrong source, dimensions, model, input or contract identities fail explicitly.
+Absent, disabled and zero-Amount treatments skip resolution and use the existing
+display and extended-development helpers directly, including existing edits.
+
+The active candidate applies the scene treatment to raw samples at full-image
+coordinates, then manual/region/spatial edits, then SDR clipping. It receives no
+second baseline placement or contrast curve. Intermediate Amount blends the
+complete baseline and candidate in linear display space. Exact zero and one
+take their respective direct endpoints. Amount changes share prepared fields
+without inference, asset I/O or a new full-resolution image. An initially
+unresolved zero reference requires explicit preparation before activation.
+
+Caller-owned native and strided region buffers support cancellation. Full-image
+coordinates remain fixed through crops; coarse views develop area-averaged
+source samples, an explicitly approximate preview. A cancelled or failed buffer
+must not be published. New preparations and Amount changes receive new snapshot
+tokens, so consumers can reject stale completions even after a same-path reload.
+Active learned HDR development is explicitly unsupported and returns an error.
+
+**VERIFIED:** `cargo test --offline -p strehl-edit` passed 136 tests after fresh
+compilation, and strict edit-crate clippy passed. Eight additional independent
+tests used an asymmetric 27-by-19 image, overlapping edits and a separately
+computed f64 candidate. They checked exact bypasses, linear blending, native
+tiling, coarse coordinates, stale identities, source-repair separation,
+cancellation during work and HDR refusal. These checks accept the standalone
+API; application consumers, saved recipe references and model enablement remain
+separate work. No responsiveness or photographic-quality claim follows.
 
 ## Executed checks
 

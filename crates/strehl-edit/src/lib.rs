@@ -11,6 +11,8 @@ mod icc;
 mod image;
 #[path = "learned-asset.rs"]
 pub mod learned_asset;
+#[path = "learned-development.rs"]
+pub mod learned_development;
 #[path = "learned-profile.rs"]
 pub mod learned_profile;
 #[path = "learned-scene.rs"]
