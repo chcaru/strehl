@@ -6,6 +6,7 @@ labels. Every validation group/mask-variant combination supplies a fixture.
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import importlib.util
 import json
@@ -82,6 +83,58 @@ class Export(torch.nn.Module):
         return tuple(values[key] for key in V4.OUTPUT_NAMES)
 
 
+class PortableGroupNorm(torch.nn.GroupNorm):
+    """Same normalization with short, centered FP32 reductions for export.
+
+    Flattening a large spatial plane into one InstanceNormalization reduction
+    loses precision in some CPU runtimes. Keep the channel/spatial axes separate
+    and reduce each in turn after subtracting one group-local anchor. The anchor
+    prevents a constant offset from accumulating reduction error. This changes
+    neither parameters nor epsilon. The
+    untouched PyTorch model remains the independent conversion reference.
+    """
+
+    def forward(self, value):
+        grouped = value.reshape(value.shape[0], self.num_groups,
+                                value.shape[1] // self.num_groups, *value.shape[2:])
+
+        def average(tensor):
+            for axis in range(tensor.ndim - 1, 1, -1):
+                tensor = tensor.mean(axis, keepdim=True)
+            return tensor
+
+        anchor = (slice(None), slice(None)) + (slice(0, 1),) * (grouped.ndim - 2)
+        shifted = grouped - grouped[anchor]
+        centered = shifted - average(shifted)
+        normalized = centered / (average(centered.square()) + self.eps).sqrt()
+        result = normalized.reshape_as(value)
+        affine_shape = (1, -1) + (1,) * (value.ndim - 2)
+        if self.weight is not None:
+            result = result * self.weight.reshape(affine_shape)
+        if self.bias is not None:
+            result = result + self.bias.reshape(affine_shape)
+        return result
+
+
+def portable_model(student):
+    """Copy before substitution: conversion must not change its own reference."""
+    result = copy.deepcopy(student)
+
+    def replace(parent):
+        for name, child in list(parent.named_children()):
+            if isinstance(child, torch.nn.GroupNorm):
+                replacement = PortableGroupNorm(child.num_groups, child.num_channels,
+                                                child.eps, child.affine)
+                replacement.load_state_dict(child.state_dict(), strict=True)
+                replacement.train(child.training)
+                setattr(parent, name, replacement)
+            else:
+                replace(child)
+
+    replace(result)
+    return result
+
+
 def session(path: Path, threads: int):
     options = ort.SessionOptions()
     options.intra_op_num_threads, options.inter_op_num_threads = threads, 1
@@ -146,7 +199,7 @@ def main():
         fixtures.append(({"synthetic_mask": name}, value))
     args.output.mkdir(parents=True, exist_ok=True)
     path = args.output / "adaptive-student-v4.onnx"
-    torch.onnx.export(Export(student), torch.from_numpy(fixtures[0][1]), str(path),
+    torch.onnx.export(Export(portable_model(student)), torch.from_numpy(fixtures[0][1]), str(path),
                       input_names=["input"], output_names=list(V4.OUTPUT_NAMES), opset_version=17,
                       dynamo=False, do_constant_folding=True)
     onnx.checker.check_model(onnx.load(str(path)), full_check=True)
@@ -185,6 +238,10 @@ def main():
               "checkpoint_sha256": sha256(args.checkpoint), "checkpoint_step": checkpoint.get("step"),
               "checkpoint_weights_only_load": True, "cache_manifest_sha256": sha256(manifest_path),
               "model_input_contract": input_contract, "model_input_contract_sha256": INPUT.contract_sha256(input_contract),
+              "normalization_export": "anchored-centered-sequential-spatial-reductions-v1",
+              "parity_reference": "unchanged checkpoint with native PyTorch GroupNorm",
+              "export_implementation_sha256": sha256(Path(__file__)),
+              "student_implementation_sha256": sha256(Path(__file__).with_name("student-v4.py")),
               "input_contract_implementation_sha256": INPUT.implementation_sha256(),
               "output_bytes": path.stat().st_size, "output_sha256": sha256(path), "model": student.describe(),
               "provider": "CPUExecutionProvider", "threads": args.threads, "onnxruntime": ort.__version__,

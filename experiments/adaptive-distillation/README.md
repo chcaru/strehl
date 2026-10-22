@@ -271,13 +271,14 @@ python experiments/adaptive-distillation/student-v4.py
 python experiments/adaptive-distillation/input-contract.py
 python experiments/adaptive-distillation/runner-guard-smoke.py
 python experiments/adaptive-distillation/test-validation-selection.py
+python experiments/adaptive-distillation/test-export-normalization.py
 python experiments/adaptive-distillation/train-v4.py --cache path/to/cache --output runs/v4 --device cuda --steps 6000 --batch 8 --rank 8
 python experiments/adaptive-distillation/export-v4.py --cache path/to/cache --checkpoint runs/v4/best.pt --output runs/v4-export
 python experiments/adaptive-distillation/evaluate-v4.py --cache path/to/cache --checkpoint runs/v4/best.pt --training-means runs/v4/training-means.pt --output runs/v4-evaluation.json --device cuda
 ```
 
 Use `--device cpu --workers 0` for a CPU training run. Output directories must be
-new or empty; the evaluation output file must not exist. The first four commands
+new or empty; the evaluation output file must not exist. The first five commands
 exercise small synthetic controls and do not open photographs or teacher labels.
 They are necessary checks, not evidence that the model improves photographs.
 
@@ -301,6 +302,16 @@ training-mean and wrong-image controls, per-group errors and tail statistics.
 `--v3-checkpoint` optionally compares a compatible earlier model; its default
 source is the sibling `student.py`. It never silently changes the model's input
 color domain.
+
+Export substitutes a copied GroupNorm implementation with anchored, centered,
+short per-axis FP32 reductions. This avoids precision loss from flattening a
+large plane into one runtime reduction. It preserves weights, groups and epsilon;
+the unchanged native PyTorch checkpoint remains the strict model-level parity
+reference. Synthetic constant, nearly constant and asymmetric controls also use
+independent NumPy and PyTorch FP64 references. Native PyTorch FP32 itself loses
+some near-zero affine precision on those controls, so that discrepancy is bounded
+explicitly rather than excluding pixels or relaxing trained-model parity.
+The receipt records exporter/model-source hashes and the normalization policy.
 
 Low uniform tensor error can hide rare, conspicuous defects or errors at lookup
 coordinates the image does not visit. Low occupied error can hide damage that a
