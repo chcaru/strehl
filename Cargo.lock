@@ -3908,6 +3908,7 @@ dependencies = [
  "tiff",
  "tracing",
  "tracing-subscriber",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]

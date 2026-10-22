@@ -257,6 +257,13 @@ enum Command {
         /// Requires --srgb and full-resolution output; does not change the SDR TIFF.
         #[arg(long, requires = "srgb", requires = "out", conflicts_with = "binned")]
         linear_master: Option<PathBuf>,
+        /// Preserve exact signed FP32 merged CFA planes before display processing.
+        /// Writes TIFF plus <TIFF>.json provenance; pyramid only, restoration off.
+        #[arg(long, requires = "out", conflicts_with = "sensor_master_placebo")]
+        sensor_master: Option<PathBuf>,
+        /// Hash the exact would-be sensor TIFF without writing it (observer control).
+        #[arg(long, requires = "out", conflicts_with = "sensor_master")]
+        sensor_master_placebo: bool,
         /// Rebuild annotated regions from explicitly limited source-frame ranges.
         #[arg(long, requires = "out")]
         region_recipe: Option<PathBuf>,
@@ -945,6 +952,8 @@ where
             dir,
             out,
             linear_master,
+            sensor_master,
+            sensor_master_placebo,
             region_recipe,
             focus,
             limit,
@@ -1171,6 +1180,12 @@ where
             dir,
             out,
             linear_master,
+            sensor_master: match (sensor_master, sensor_master_placebo) {
+                (Some(path), false) => merge_cmd::sensor_master::Request::File(path),
+                (None, true) => merge_cmd::sensor_master::Request::Placebo,
+                (None, false) => merge_cmd::sensor_master::Request::Disabled,
+                (Some(_), true) => anyhow::bail!("sensor master file and placebo are mutually exclusive"),
+            },
             region_recipe,
             limit,
             srgb,

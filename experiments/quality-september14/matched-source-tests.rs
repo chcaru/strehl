@@ -101,7 +101,7 @@ pub(crate) fn observe_planes(index:Option<usize>, planes:&[Vec<f32>]) -> Result<
 }
 
 fn options(dir:PathBuf,out:PathBuf)->MergeOptions {
-    MergeOptions {dir,out:Some(out),limit:None,srgb:true,space:image_out::OutputSpace::Srgb,demosaic:true,
+    MergeOptions {dir,out:Some(out),linear_master:None,region_recipe:None,sensor_master:Default::default(),limit:None,srgb:true,space:image_out::OutputSpace::Srgb,demosaic:true,
         exposure:0.0,auto_exposure:false,gates:vec![2.0],focus:None,flat_roi:None,detail_roi:None,
         index_map:None,n_eff_map:None,confidence_map:None,photometric:PhotometricMode::Off,
         photometric_source:SettingSource::Default,target_n_eff:None,stats:false,stats_placebo:false,

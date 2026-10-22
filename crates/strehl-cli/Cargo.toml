@@ -58,3 +58,6 @@ native-green-cue = ["strehl-core/native-green-cue"]
 
 # Optional current fullres GPU gather equivalence controls.
 native-gpu-gather = ["dep:strehl-native-gpu-gather"]
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_Storage_FileSystem"] }

@@ -106,6 +106,7 @@ fn fixture_frame(width: usize, height: usize, k: usize) -> Frame {
 fn fixture_options(out: PathBuf) -> MergeOptions {
     MergeOptions {
         linear_master: None,
+        sensor_master: Default::default(),
         region_recipe: None,
         dir: PathBuf::from("M194-NO-SUCH-RAW-DIRECTORY"),
         out: Some(out),
