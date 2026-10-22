@@ -48,38 +48,44 @@ pub struct PreparedSceneSdrProfile {
     parameters: SceneSdrParameters,
 }
 
-impl PreparedSceneSdrProfile {
-    pub fn new(gain: GainMap, table: ColorLut, parameters: SceneSdrParameters) -> Result<Self> {
-        for scale in [parameters.gain_query_scale, parameters.exposure_scale] {
-            ensure!(
-                scale.is_finite() && scale > 0. && scale <= 256.,
-                "SDR scene scales must be finite in (0, 256]"
-            );
-        }
-        validate_matrix(parameters.linear_709_to_working)?;
-        validate_matrix(parameters.working_to_linear_709)?;
-        for (a, b) in [
-            (
-                parameters.linear_709_to_working,
-                parameters.working_to_linear_709,
-            ),
-            (
-                parameters.working_to_linear_709,
-                parameters.linear_709_to_working,
-            ),
-        ] {
-            for r in 0..3 {
-                for c in 0..3 {
-                    let value = (0..3)
-                        .map(|k| f64::from(a[r][k]) * f64::from(b[k][c]))
-                        .sum::<f64>();
-                    ensure!(
-                        (value - f64::from(IDENTITY_MATRIX[r][c])).abs() <= 0.001,
-                        "SDR scene transforms are not an inverse pair"
-                    );
-                }
+/// Validate serialized parameters before allocating numeric field payloads.
+pub(crate) fn validate_scene_parameters(parameters: SceneSdrParameters) -> Result<()> {
+    for scale in [parameters.gain_query_scale, parameters.exposure_scale] {
+        ensure!(
+            scale.is_finite() && scale > 0. && scale <= 256.,
+            "SDR scene scales must be finite in (0, 256]"
+        );
+    }
+    validate_matrix(parameters.linear_709_to_working)?;
+    validate_matrix(parameters.working_to_linear_709)?;
+    for (a, b) in [
+        (
+            parameters.linear_709_to_working,
+            parameters.working_to_linear_709,
+        ),
+        (
+            parameters.working_to_linear_709,
+            parameters.linear_709_to_working,
+        ),
+    ] {
+        for r in 0..3 {
+            for c in 0..3 {
+                let value = (0..3)
+                    .map(|k| f64::from(a[r][k]) * f64::from(b[k][c]))
+                    .sum::<f64>();
+                ensure!(
+                    (value - f64::from(IDENTITY_MATRIX[r][c])).abs() <= 0.001,
+                    "SDR scene transforms are not an inverse pair"
+                );
             }
         }
+    }
+    Ok(())
+}
+
+impl PreparedSceneSdrProfile {
+    pub fn new(gain: GainMap, table: ColorLut, parameters: SceneSdrParameters) -> Result<Self> {
+        validate_scene_parameters(parameters)?;
         Ok(Self {
             gain,
             table,

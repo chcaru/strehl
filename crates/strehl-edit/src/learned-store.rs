@@ -8,6 +8,7 @@
 //! changing ancestors between validation and publication. No garbage collection
 //! occurs here: versions, Undo and recovery may still reference old assets.
 use crate::learned_asset::{AssetDigest, AssetIdentities, FrozenLearnedAsset, MAX_ASSET_BYTES};
+use crate::learned_scene_asset::FrozenSceneAsset;
 use anyhow::{Context, Result, ensure};
 use std::{
     fmt,
@@ -84,25 +85,34 @@ pub struct ExpectedAsset {
 impl ExpectedAsset {
     pub fn verify(&self, asset: &FrozenLearnedAsset) -> Result<()> {
         let actual = asset.descriptor();
+        self.verify_fields(&actual.identities, actual.origin.full_size)
+    }
+
+    pub fn verify_scene(&self, asset: &FrozenSceneAsset) -> Result<()> {
+        let actual = asset.descriptor();
+        self.verify_fields(&actual.identities, actual.origin.full_size)
+    }
+
+    fn verify_fields(&self, actual: &AssetIdentities, full_size: [u32; 2]) -> Result<()> {
         ensure!(
-            actual.origin.full_size == self.full_size,
+            full_size == self.full_size,
             "Frozen asset photograph dimensions mismatch"
         );
         ensure!(
-            actual.identities.source_sha256 == self.identities.source_sha256,
+            actual.source_sha256 == self.identities.source_sha256,
             "Frozen asset source identity mismatch"
         );
         ensure!(
-            actual.identities.contract_id == self.identities.contract_id
-                && actual.identities.contract_sha256 == self.identities.contract_sha256,
+            actual.contract_id == self.identities.contract_id
+                && actual.contract_sha256 == self.identities.contract_sha256,
             "Frozen asset contract mismatch"
         );
         ensure!(
-            actual.identities.model_sha256 == self.identities.model_sha256,
+            actual.model_sha256 == self.identities.model_sha256,
             "Frozen asset model identity mismatch"
         );
         ensure!(
-            actual.identities.input_sha256 == self.identities.input_sha256,
+            actual.input_sha256 == self.identities.input_sha256,
             "Frozen asset analysis input identity mismatch"
         );
         Ok(())
@@ -270,6 +280,39 @@ impl LearnedAssetStore {
         expected: &ExpectedAsset,
         cancelled: &AtomicBool,
     ) -> Result<Arc<FrozenLearnedAsset>> {
+        let bytes = self.read_bytes(key, cancelled)?;
+        let asset = FrozenLearnedAsset::decode(&bytes)
+            .with_context(|| format!("Invalid frozen asset {key}"))?;
+        ensure!(
+            asset.digest() == key.digest(),
+            "Frozen asset content does not match its key"
+        );
+        expected.verify(&asset)?;
+        check_cancelled(cancelled)?;
+        Ok(Arc::new(asset))
+    }
+
+    /// Read only the distinct scene codec. Legacy content is never interpreted
+    /// as a scene treatment, even if supplied under the same typed content key.
+    pub fn load_scene(
+        &self,
+        key: AssetKey,
+        expected: &ExpectedAsset,
+        cancelled: &AtomicBool,
+    ) -> Result<Arc<FrozenSceneAsset>> {
+        let bytes = self.read_bytes(key, cancelled)?;
+        let asset = FrozenSceneAsset::decode(&bytes)
+            .with_context(|| format!("Invalid frozen scene asset {key}"))?;
+        ensure!(
+            asset.digest() == key.digest(),
+            "Frozen scene content does not match its key"
+        );
+        expected.verify_scene(&asset)?;
+        check_cancelled(cancelled)?;
+        Ok(Arc::new(asset))
+    }
+
+    fn read_bytes(&self, key: AssetKey, cancelled: &AtomicBool) -> Result<Vec<u8>> {
         check_cancelled(cancelled)?;
         self.validate_root()?;
         let path = self.path(key);
@@ -312,15 +355,7 @@ impl LearnedAssetStore {
         );
         self.validate_root()?;
         check_cancelled(cancelled)?;
-        let asset = FrozenLearnedAsset::decode(&bytes)
-            .with_context(|| format!("Invalid frozen asset {key}"))?;
-        ensure!(
-            asset.digest() == key.digest(),
-            "Frozen asset content does not match its key"
-        );
-        expected.verify(&asset)?;
-        check_cancelled(cancelled)?;
-        Ok(Arc::new(asset))
+        Ok(bytes)
     }
 
     /// The returned key is safe to reference only after this succeeds. A late
@@ -347,17 +382,71 @@ impl LearnedAssetStore {
         self.validate_root()?;
         expected.verify(asset)?;
         let key = AssetKey::from_digest(asset.digest());
+        self.publish_checked(
+            key,
+            cancelled,
+            || asset.encode(),
+            || self.load(key, expected, cancelled).map(|_| ()),
+            hook,
+        )
+    }
+
+    /// Same immutable publication behavior as `save`, for the separately
+    /// versioned SDR scene format. A key is usable only after success.
+    pub fn save_scene(
+        &self,
+        asset: &FrozenSceneAsset,
+        expected: &ExpectedAsset,
+        cancelled: &AtomicBool,
+    ) -> Result<AssetKey> {
+        self.save_scene_before_publish(asset, expected, cancelled, || Ok(()))
+    }
+
+    fn save_scene_before_publish(
+        &self,
+        asset: &FrozenSceneAsset,
+        expected: &ExpectedAsset,
+        cancelled: &AtomicBool,
+        hook: impl FnOnce() -> Result<()>,
+    ) -> Result<AssetKey> {
+        check_cancelled(cancelled)?;
+        self.validate_root()?;
+        expected.verify_scene(asset)?;
+        let key = AssetKey::from_digest(asset.digest());
+        self.publish_checked(
+            key,
+            cancelled,
+            || asset.encode(),
+            || self.load_scene(key, expected, cancelled).map(|_| ()),
+            hook,
+        )
+    }
+
+    // Both codecs retain identical file/link/race/cancellation behavior. Encoding
+    // is lazy so idempotent publication does not rebuild an existing payload.
+    fn publish_checked(
+        &self,
+        key: AssetKey,
+        cancelled: &AtomicBool,
+        encode: impl FnOnce() -> Result<Vec<u8>>,
+        verify_existing: impl Fn() -> Result<()>,
+        hook: impl FnOnce() -> Result<()>,
+    ) -> Result<AssetKey> {
         let path = self.path(key);
         match fs::symlink_metadata(&path) {
             Ok(_) => {
-                self.load(key, expected, cancelled)?;
+                verify_existing()?;
                 self.sync_directory()?;
                 return Ok(key);
             }
             Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
             Err(error) => return Err(error.into()),
         }
-        let bytes = asset.encode()?;
+        let bytes = encode()?;
+        ensure!(
+            bytes.len() <= MAX_ASSET_BYTES,
+            "Frozen asset exceeds file size limit"
+        );
         check_cancelled(cancelled)?;
         let publication = crate::publish::new_file_checked(
             &path,
@@ -377,13 +466,13 @@ impl LearnedAssetStore {
         if let Err(publication_error) = publication {
             // A simultaneous publisher may have won with exactly this content.
             // Corruption or a different object never becomes successful reuse.
-            if self.load(key, expected, cancelled).is_err() {
+            if verify_existing().is_err() {
                 return Err(publication_error).context("Publishing frozen asset");
             }
         }
         self.validate_root()?;
         self.sync_directory()?;
-        self.load(key, expected, cancelled)?;
+        verify_existing()?;
         Ok(key)
     }
 }
@@ -391,3 +480,7 @@ impl LearnedAssetStore {
 #[cfg(test)]
 #[path = "learned-store-tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "learned-scene-store-tests.rs"]
+mod scene_tests;

@@ -56,8 +56,8 @@ This is deliberately **SDR-only**. It discards negative working values and
 highlight headroom; a floating-point return value does not make it an HDR
 treatment. It currently has a single supplied color table, no semantic-mask
 blend, and no nonlinear exposure allocation. No existing asset file is silently
-reinterpreted as this contract, and no new asset codec, recipe or UI integration
-is enabled by this module.
+reinterpreted as this contract. Its separate asset codec is described below;
+recipe and UI integration remain disabled.
 
 `blend_sdr_scene_pixel` is a separate boundary for Amount. The caller supplies a
 **complete developed baseline** and a lazy candidate branch in the same declared
@@ -92,6 +92,36 @@ are not distributed; the public synthetic tests above remain reproducible withou
 them. This establishes the numerical port, not model quality or HDR equivalence.
 
 ## Immutable results
+
+`learned_scene_asset::FrozenSceneAsset` persists the exact SDR scene contract in
+a distinct `STRHLSC` version-1 envelope. It reuses the bounded identity, origin,
+gain and color-table descriptors, but records **both** supplied transforms and
+the separate gain-query/exposure factors. It accepts only
+`strehl.scene-sdr-linear.v1`, one color table and whole-photograph analysis.
+Regional analysis, semantic masks and unknown fields are rejected. Canonical
+JSON, exact payload sizes, transform validation, SHA-256 and all finite/range
+checks precede decoded FP32 field allocation. Accepted float bits, including
+signed zero and subnormals, survive reopening. The asset shares an immutable
+`Arc<PreparedSceneSdrProfile>` between consumers.
+
+`LearnedAssetStore::save_scene` and `load_scene` are separate typed entry points
+using the existing content-key namespace and atomic publication path. Expected
+source, dimensions, input, model and contract identities are all required on
+both read and write. Codecs reject each other's envelopes; neither falls back to
+another treatment. Existing valid assets are reused without replacement, and
+corrupt files, cancellation, competing writers, links and changed directories
+retain the same failure behavior as legacy storage. A digest verifies content,
+not the truth of caller-supplied provenance.
+
+**VERIFIED (author commissioning):** `cargo test --offline -p strehl-edit` passed
+126 tests after fresh compilation. Twelve new tests cover a literal legacy wire
+fixture's unchanged bytes, scene-field bit round trips and rendered output,
+cross-codec rejection, malformed/duplicate/unknown metadata, every truncated
+length, correctly hashed invalid fields, external identity mismatches, missing
+or corrupted assets, idempotent/concurrent publication and cancellation after a
+complete temporary write. `cargo clippy --offline -p strehl-edit --all-targets
+-- -D warnings` also passed. Independent codec/store review remains required
+before claiming production integration; no recipe or model is enabled here.
 
 `learned_asset` freezes the exact FP32 fields, matrices, tone, mask geometry,
 original dimensions, and source/input/model/contract identities in a versioned

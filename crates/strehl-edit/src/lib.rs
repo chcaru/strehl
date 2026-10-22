@@ -15,6 +15,8 @@ pub mod learned_asset;
 pub mod learned_profile;
 #[path = "learned-scene.rs"]
 pub mod learned_scene;
+#[path = "learned-scene-asset.rs"]
+pub mod learned_scene_asset;
 #[path = "learned-store.rs"]
 pub mod learned_store;
 mod publish;
