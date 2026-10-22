@@ -1,9 +1,10 @@
 """Original explicit cache-to-predictor color contract, with FP32 pixel arithmetic.
 
-Stored RGB remains encoded sRGB. Decode before converting standard BT.709/D65
-primaries to linear ProPhoto/D50 using declared Bradford white adaptation. Masks
-are probabilities/weights, never color channels. This does not reproduce a RAW
-developer, choose a tone curve, or claim Adobe's exact adaptation coefficients.
+Encoded caches decode standard sRGB before converting BT.709/D65 primaries to
+linear ProPhoto/D50 using declared Bradford white adaptation. Direct linear
+caches require an explicit FP32 identity contract; they must never be decoded
+again. Masks are probabilities/weights, never color channels. Neither contract
+reproduces a RAW developer or establishes Adobe's native preprocessing.
 
 Numeric primaries: https://www.color.org/chardata/rgb/srgb.xalter and
 https://www.color.org/chardata/rgb/ROMMRGB.pdf . The transfer is IEC sRGB.
@@ -19,6 +20,7 @@ import numpy as np
 
 LEGACY_DOMAIN = "display-rgb-research-v1"
 LINEAR_DOMAIN = "linear-prophoto-d50-bradford-from-srgb-v1"
+DIRECT_LINEAR_DOMAIN = "linear-prophoto-d50-normalized-fp32-v1"
 # Column-vector convention: destination = M @ source. Derived from published xy
 # primaries/whites and Bradford adaptation; independently recomputed below.
 LINEAR_709_TO_PROPHOTO = np.array([
@@ -29,6 +31,16 @@ LINEAR_709_TO_PROPHOTO = np.array([
 
 
 def contract_descriptor(domain: str = LINEAR_DOMAIN, storage_dtype: str = "uint8") -> dict:
+    if domain == DIRECT_LINEAR_DOMAIN:
+        if storage_dtype != "float32":
+            raise ValueError("direct linear predictor inputs require FP32 storage")
+        return {"schema": 1, "domain": domain, "layout": "NCHW", "shape": [5, 384, 512],
+                "storage_dtype": "float32", "arithmetic_dtype": "float32", "storage_scale": 1,
+                "channel_order": ["red", "green", "blue", "subject_weight", "sky_weight"],
+                "storage_rgb": "linear-prophoto-d50", "model_rgb": "linear-prophoto-d50",
+                "mask_transform": "identity", "rgb_clipping": "none",
+                "conversion_order": "FP32 identity; no transfer decode or primary conversion",
+                "current_dataset_range": "finite RGB and mask weights in [0,1]; does not establish native HDR input bounds"}
     if domain not in (LEGACY_DOMAIN, LINEAR_DOMAIN) or storage_dtype not in ("uint8", "float32"):
         raise ValueError("unsupported explicit predictor/storage contract")
     result = {"schema": 1, "domain": domain, "layout": "NCHW", "shape": [5, 384, 512],
@@ -83,7 +95,7 @@ def prepare_numpy(stored: np.ndarray, descriptor: dict) -> np.ndarray:
         raise ValueError("stored input dtype differs from manifest contract")
     values = np.array(stored, dtype=np.float32, copy=True) / np.float32(descriptor["storage_scale"])
     if not np.isfinite(values).all() or not ((values >= 0) & (values <= 1)).all():
-        raise ValueError("encoded SDR source/masks must be finite in [0,1]")
+        raise ValueError("declared normalized RGB and masks must be finite in [0,1]")
     if descriptor["domain"] == LINEAR_DOMAIN:
         rgb = values[:, :3]
         linear = np.where(rgb <= np.float32(.04045), rgb / np.float32(12.92),
@@ -158,9 +170,34 @@ def commission() -> dict:
     stored.fill(1)
     dark = prepare_numpy(stored, descriptor)
     assert 0 < dark[0, 0, 0, 0] < 1 / 255
+    # An already-linear half-intensity must remain .5, not become .214. Include
+    # unequal channels to expose an accidental second primary conversion too.
+    direct = contract_descriptor(DIRECT_LINEAR_DOMAIN, "float32")
+    linear_fixture = rng.uniform(0, 1, (1, 5, 384, 512)).astype(np.float32)
+    linear_fixture[0, :, 0, 0] = [.5, .125, .75, .17, .83]
+    np.testing.assert_array_equal(prepare_numpy(linear_fixture, direct), linear_fixture)
+    np.testing.assert_array_equal(prepare_torch(torch.from_numpy(linear_fixture), direct).numpy(), linear_fixture)
+    if np.allclose(prepare_numpy(linear_fixture, direct), prepare_numpy(linear_fixture, contract_descriptor(storage_dtype="float32"))):
+        raise AssertionError("fixture cannot distinguish linear input from encoded storage")
+    rejected = 0
+    for bad in (-.01, 1.01, float("nan"), float("inf")):
+        value = linear_fixture.copy()
+        value[0, 0, 0, 0] = bad
+        try:
+            prepare_numpy(value, direct)
+        except ValueError:
+            rejected += 1
+    try:
+        contract_descriptor(DIRECT_LINEAR_DOMAIN, "uint8")
+    except ValueError:
+        rejected += 1
+    if rejected != 5:
+        raise AssertionError("direct linear contract accepted invalid storage/range")
     return {"passed": True, "domain": LINEAR_DOMAIN, "model_input_contract_sha256": contract_sha256(descriptor),
             "numpy_torch_max_absolute": float(np.max(np.abs(torch_output - numpy_output))),
             "legacy_unchanged": True, "linear_uint8_storage_used": False,
+            "direct_linear_identity": True, "direct_linear_rejected_controls": rejected,
+            "direct_linear_contract_sha256": contract_sha256(direct),
             "scope": "original standard color math, not Adobe RAW/tone/display parity"}
 
 

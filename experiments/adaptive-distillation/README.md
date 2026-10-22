@@ -165,6 +165,14 @@ ProPhoto/D50 with the declared Bradford matrix. Mask values are only scaled.
 Do not put already-linear ProPhoto pixels in this storage format: that would
 apply the conversion twice. Linear uint8 storage is not supported.
 
+For already-linear normalized ProPhoto/D50 inputs, explicitly choose
+`contract_descriptor(DIRECT_LINEAR_DOMAIN, "float32")`. This declares
+`linear-prophoto-d50-normalized-fp32-v1`: all five channels remain FP32 and pass
+through unchanged. It rejects uint8 storage and nonfinite or out-of-range source
+values. This separate descriptor prevents a second transfer decode or primary
+conversion; it does not specify a camera developer, crop, orientation, exposure
+normalization, or semantic-mask estimator. Record those choices in the cache.
+
 Every teacher label must have been produced from
 `input-contract.py`'s `prepare_numpy(stored_batch, descriptor)`, or an independently
 verified equivalent operation. The trainer uses `prepare_torch` lazily on each
@@ -173,7 +181,7 @@ commissioning controls. Resizing happens **before** these helpers; record its
 filter, coordinate convention, aspect policy, and whether it operates on encoded
 or linear pixels. The descriptor does not establish those choices for you.
 
-This contract describes normalized SDR source pixels. The presence of HDR output
+These contracts describe normalized source pixels. The presence of HDR output
 heads does not validate HDR inputs. Inverse-sRGB conversion cannot undo camera
 profiles, baked tone curves, clipping, or prior local adjustments. Applying the
 same shape-compatible model to a RAW-development tapout or a developed TIFF can
