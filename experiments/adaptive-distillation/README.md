@@ -301,6 +301,11 @@ or establish production quality.
 
 ## Public V4 packaging differences
 
+The optional [native inference probe](native-probe/README.md) runs the exported
+model in a separate Rust process, translates it to NNEF, and permits a build
+without the ONNX file parser. It records exact field hashes and timings, without
+adding an inference runtime to the application or claiming photographic quality.
+
 The V4 architecture, losses, training loop, PCA fitting and exporter retain the
 research implementation. Public packaging changes only nonnumerical access paths:
 the optional V3 source defaults to the sibling file; all caches require an explicit

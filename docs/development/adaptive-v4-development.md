@@ -91,7 +91,8 @@ photographic fidelity or safety at coordinates reached by later edits.
 ## Native operation and packaging checks
 
 **VERIFIED:** public PyTorch-to-ONNX comparisons passed all ten outputs. A separate
-Rust/Tract 0.23.9 process executed the trained model on a complete-photo predictor
+Rust/Tract 0.23.9 [native probe](../../experiments/adaptive-distillation/native-probe/README.md)
+executed the trained model on a complete-photo predictor
 input and agreed with ONNX Runtime within `rtol=2e-4, atol=2e-5`; maximum gain
 difference was 7.28e-6. Its translated NNEF version produced identical output
 bytes without compiling the ONNX file parser.

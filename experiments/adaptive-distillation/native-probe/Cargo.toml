@@ -1,0 +1,27 @@
+[package]
+name = "strehl-adaptive-native-probe"
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[workspace]
+
+[features]
+default = ["onnx"]
+onnx = ["tract/onnx"]
+
+[dependencies]
+anyhow = "1.0"
+serde_json = "1.0"
+sha2 = "0.10"
+tract = { version = "=0.23.9", default-features = false }
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_System_ProcessStatus", "Win32_System_Threading"] }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+strip = "symbols"
