@@ -1,6 +1,7 @@
 //! One retained overview and one bounded, source-registered detail patch.
 //! Pointer motion only changes geometry; workers develop the latest demand.
 use crate::{
+    development_job::{DevelopmentJob, DevelopmentToken},
     hdr_display::{FloatPhoto, PhotoLayer, PhotoPresenter},
     jobs::{Task, spawn_notifying_task},
 };
@@ -27,6 +28,7 @@ fn request_paced_repaint(ctx: &egui::Context, delay: Duration) {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(super) struct Identity {
+    pub snapshot: Option<DevelopmentToken>,
     pub revision: u64,
     pub before: bool,
     pub hdr: bool,
@@ -40,6 +42,26 @@ pub(super) struct PreparedPhoto {
     pub upload_error: Option<String>,
     pub source_samples: u64,
     pub elapsed_ms: f64,
+}
+
+pub(super) fn prepare_job(
+    job: &DevelopmentJob,
+    coarse: bool,
+    request: DisplayRegionRequest,
+    cancelled: &std::sync::atomic::AtomicBool,
+    presenter: Option<&PhotoPresenter>,
+    hdr: bool,
+    retain_fallback: bool,
+) -> anyhow::Result<PreparedPhoto> {
+    prepare(
+        job.image(coarse),
+        job.recipe(),
+        request,
+        cancelled,
+        presenter,
+        hdr,
+        retain_fallback,
+    )
 }
 
 pub(super) fn prepare(
@@ -407,11 +429,10 @@ impl ViewportRefinement {
         });
     }
 
-    pub fn poll(
+    pub fn poll_job(
         &mut self,
         ctx: &egui::Context,
-        source: Option<Arc<LinearImage>>,
-        recipe: &DevelopmentRecipe,
+        job: Option<DevelopmentJob>,
         current: Identity,
     ) {
         if self
@@ -494,7 +515,8 @@ impl ViewportRefinement {
                 }
             }
         }
-        if let (Some(demand), Some(source)) = (self.desired, source) {
+        if let (Some(demand), Some(job)) = (self.desired, job) {
+            let source = job.image(false);
             let overview_enough = self.paint.as_ref().is_some_and(|p| {
                 let size = p.overview.size();
                 size[0] as u32 >= source.width.div_ceil(demand.request.stride)
@@ -526,7 +548,6 @@ impl ViewportRefinement {
                 && self.identity == Some(current)
                 && self.failed != Some((current, demand.request))
             {
-                let recipe = recipe.clone();
                 let request = demand.request;
                 let presenter = self.presenter.clone();
                 let wake = ctx.clone();
@@ -537,9 +558,9 @@ impl ViewportRefinement {
                     task: spawn_notifying_task(
                         "strehl-photo-detail",
                         move |cancelled| {
-                            prepare(
-                                &source,
-                                &recipe,
+                            prepare_job(
+                                &job,
+                                false,
                                 request,
                                 &cancelled,
                                 presenter.as_ref(),
@@ -570,6 +591,21 @@ impl ViewportRefinement {
                 );
             }
         }
+    }
+
+    #[cfg(test)]
+    fn poll(
+        &mut self,
+        ctx: &egui::Context,
+        source: Option<Arc<LinearImage>>,
+        recipe: &DevelopmentRecipe,
+        current: Identity,
+    ) {
+        self.poll_job(
+            ctx,
+            source.map(|source| DevelopmentJob::native(source, recipe.clone())),
+            current,
+        );
     }
 
     pub fn stats(&self) -> serde_json::Value {

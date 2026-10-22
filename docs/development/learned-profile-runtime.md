@@ -181,6 +181,41 @@ cancellation during work and HDR refusal. These checks accept the standalone
 API; application consumers, saved recipe references and model enablement remain
 separate work. No responsiveness or photographic-quality claim follows.
 
+## Application development jobs
+
+The application's `DevelopmentJob` now pins the loaded image, overview and edit
+recipe for preview, native detail, export and version thumbnails. A unique token
+distinguishes a new loaded instance even when its path and revision are reused.
+Completed preview work must match the current token before publication. Ordinary
+frame reuse checks identities and revision numbers; it does not hash image data
+or compare every spatial-adjustment coefficient.
+
+Export acceptance also checks the complete recipe. The same frozen job travels
+through pre-export version saving and final image encoding. A change while the
+version is being prepared refuses that export and retains the saved version;
+edits after encoding starts cannot change its pixels. Export destination dialogs
+also reject a replaced image at the same path.
+
+This integration carries **baseline edits only**. It cannot attach a learned
+asset, enable a model or silently omit an active learned treatment during HDR
+export. The separate prepared SDR API above still needs an explicit saved-recipe
+contract and complete consumer integration before a learned profile can ship.
+
+**VERIFIED:** 171 distinct targeted UI tests passed after fresh compilation.
+Four additional independent tests exercised actual changed pixels at a reused
+revision, stale error completion, release of the cached source on document reset,
+and an accepted export continuing unchanged across Before mode and navigation.
+Baseline coarse/native/HDR-fallback pixels, thumbnails and SDR file exports
+match the previous helpers. Tests do not establish HDR monitor presentation or
+learned-profile behavior. UI-only strict clippy uses `--no-deps`; a broader run
+currently fails on 25 existing engine lints outside this change.
+
+**MEASURED, debug build only:** alternating old/new render runs retained exact
+pixel hashes and had per-arm minima within 0.6% in two runs. This bounds the
+added job indirection on these fixtures; it is not an end-to-end latency claim.
+The six-field spatial-recipe cache fixture exposed an initial per-frame equality
+scan regression, which was removed before acceptance.
+
 ## Executed checks
 
 **VERIFIED:** fresh compilation followed by:

@@ -269,7 +269,8 @@ impl ExplorerPreviews {
                         })?;
                         let recipe = photographs::read_preview_recipe(&root, &version)?;
                         image.validate_source_repairs(&recipe)?;
-                        preview::explorer::save_version(&root, &version, &image, &recipe)
+                        let job = crate::development_job::DevelopmentJob::native(image, recipe);
+                        preview::explorer::save_version(&root, &version, &job)
                     }
                 },
                 move || notify.request_repaint(),

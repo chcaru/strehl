@@ -24,6 +24,7 @@ enum Prepared {
         version: PhotoVersion,
         path: PathBuf,
         settings: ExportSettings,
+        job: crate::development_job::DevelopmentJob,
     },
     Recorded(PhotoExport),
     Opened,
@@ -259,7 +260,11 @@ impl StrehlApp {
         let owner = self.catalog.photo_owner(&guard.path);
         let image = guard.image.clone();
         let source = guard.source.clone();
-        let recipe = self.editor.recipe.clone();
+        let job = self
+            .editor
+            .freeze_export_job()
+            .expect("Export requires a loaded photograph");
+        let recipe = job.recipe().clone();
         let name = format!(
             "Export · {}",
             path.file_name()
@@ -277,6 +282,7 @@ impl StrehlApp {
                     &root, owner, &name, recipe, &image, &source, &cancelled,
                 )?;
                 Ok(Prepared::Export {
+                    job,
                     version,
                     path,
                     settings,
@@ -448,17 +454,18 @@ impl StrehlApp {
                         version,
                         path,
                         settings,
+                        job,
                     } => {
                         self.catalog.add_photo_version(version.clone())?;
                         self.photo_history.dirty = true;
                         anyhow::ensure!(
-                            current,
+                            current && job.recipe() == &self.editor.recipe,
                             "The photograph changed while preparing export. Review it and export again."
                         );
                         self.catalog.save()?;
                         self.photo_history.dirty = false;
                         self.editor
-                            .export_with_settings(path.clone(), settings.clone())?;
+                            .export_job(path.clone(), settings.clone(), job)?;
                         self.photo_history.delivery = Some(Delivery {
                             version,
                             path,

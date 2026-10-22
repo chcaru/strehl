@@ -13,6 +13,7 @@ mod independent_tests;
 pub(super) struct PendingExport {
     document: PathBuf,
     revision: u64,
+    snapshot: crate::development_job::DevelopmentJob,
     settings: ExportSettings,
 }
 
@@ -144,7 +145,13 @@ impl StrehlApp {
             .ok_or_else(|| anyhow::anyhow!("Choose an export format and try Export again."))?;
         anyhow::ensure!(
             self.editor.path.as_ref() == Some(&pending.document)
-                && self.editor.revision == pending.revision,
+                && self.editor.revision == pending.revision
+                && self
+                    .editor
+                    .loaded
+                    .as_ref()
+                    .is_some_and(|loaded| pending.snapshot.matches_source(&loaded.image))
+                && pending.snapshot.recipe() == &self.editor.recipe,
             "The photograph changed while choosing a destination. Review it and export again."
         );
         let path = formatted_path(path, pending.settings.format);
@@ -242,6 +249,10 @@ impl StrehlApp {
                             self.export_pane.pending = Some(PendingExport {
                                 document,
                                 revision: self.editor.revision,
+                                snapshot: self
+                                    .editor
+                                    .freeze_export_job()
+                                    .expect("Export requires a loaded photograph"),
                                 settings: effective.clone(),
                             });
                             self.editor.dialog_kind = Some("export");

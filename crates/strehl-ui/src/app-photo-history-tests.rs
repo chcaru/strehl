@@ -207,6 +207,64 @@ fn export_default_and_explicit_alternate_are_per_photograph() {
 }
 
 #[test]
+fn export_version_preparation_rejects_new_edits_or_same_path_reload() {
+    for change in 0..3 {
+        let files = Files::new();
+        let mut app = files.app();
+        app.editor.recipe.global.exposure = 0.65;
+        let frozen_recipe = app.editor.recipe.clone();
+        let frozen_image = app.editor.loaded.as_ref().unwrap().image.clone();
+        let output = files.0.join("must-not-publish.png");
+        let settings = ExportSettings {
+            format: strehl_edit::ExportFormat::Png,
+            hdr: false,
+            color_space: strehl_edit::OutputColorSpace::Srgb,
+            ..Default::default()
+        };
+        app.start_tracked_export(output.clone(), settings).unwrap();
+        assert!(app.photo_history.pending.is_some());
+        // Change the live state before accepting the real worker completion.
+        if change == 0 {
+            app.editor.loaded.as_mut().unwrap().image = Arc::new((*frozen_image).clone());
+        } else if change == 1 {
+            let mut next = app.editor.recipe.clone();
+            next.global.exposure = -1.5;
+            app.editor.replace(next).unwrap();
+        } else {
+            let revision = app.editor.revision;
+            app.editor.recipe.global.exposure = -1.5;
+            assert_eq!(app.editor.revision, revision);
+        }
+        drain(&mut app);
+        assert!(app.editor.exporting.is_none());
+        assert!(!output.exists());
+        assert!(app.catalog.photo_exports.is_empty());
+        assert!(
+            app.photo_history
+                .error
+                .as_ref()
+                .unwrap()
+                .contains("changed while preparing export")
+        );
+        let version = app
+            .catalog
+            .photo_versions
+            .last()
+            .expect("The immutable pre-export version must remain recoverable");
+        let restored = photographs::read_version(
+            &app.catalog.history_root().unwrap(),
+            version,
+            &version.owner,
+            &frozen_image,
+            &version.owner.output,
+            &std::sync::atomic::AtomicBool::new(false),
+        )
+        .unwrap();
+        assert_eq!(restored, frozen_recipe);
+    }
+}
+
+#[test]
 fn restoring_the_current_recipe_is_a_provenance_checked_no_op() {
     let files = Files::new();
     let mut app = files.app();

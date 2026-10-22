@@ -7,7 +7,10 @@ use std::{
     fs::{self, File, OpenOptions},
     io::{Read, Write},
     path::{Path, PathBuf},
-    sync::atomic::{AtomicBool, Ordering},
+    sync::{
+        Arc,
+        atomic::{AtomicBool, Ordering},
+    },
 };
 use strehl_edit::{DevelopmentRecipe, ExportSettings, LinearImage};
 
@@ -175,7 +178,7 @@ pub(crate) fn save_version(
     owner: PhotoOwner,
     name: &str,
     recipe: DevelopmentRecipe,
-    image: &LinearImage,
+    image: &Arc<LinearImage>,
     source: &Path,
     cancelled: &AtomicBool,
 ) -> Result<PhotoVersion> {
@@ -227,7 +230,8 @@ pub(crate) fn save_version(
     result?;
     // The immutable recipe is already safe. A small navigation derivative is
     // best-effort and must never turn a successful version save into failure.
-    let _ = crate::preview::explorer::save_version(root, &version, image, &recipe);
+    let job = crate::development_job::DevelopmentJob::native(image.clone(), recipe);
+    let _ = crate::preview::explorer::save_version(root, &version, &job);
     Ok(version)
 }
 

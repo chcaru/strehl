@@ -103,17 +103,21 @@ fn chosen_format_controls_suffix_and_existing_aliases_are_preserved() {
 
 #[test]
 fn export_destination_picker_cannot_deliver_a_changed_photograph() {
-    for change_document in [false, true] {
+    for change in 0..3 {
         let mut app = fixture();
         app.export_pane.pending = Some(PendingExport {
             document: app.editor.path.clone().unwrap(),
             revision: app.editor.revision,
+            snapshot: app.editor.development_job(false).unwrap(),
             settings: ExportSettings::default(),
         });
-        if change_document {
+        if change == 0 {
             app.editor.path = Some("another-photo.tiff".into());
-        } else {
+        } else if change == 1 {
             app.editor.revision += 1;
+        } else {
+            let loaded = app.editor.loaded.as_mut().unwrap();
+            loaded.image = std::sync::Arc::new((*loaded.image).clone());
         }
         let error = app
             .finish_export_dialog("never-created.avif".into())

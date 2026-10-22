@@ -12,6 +12,8 @@ mod capture_axis;
 mod controls;
 #[path = "develop-presets.rs"]
 mod develop_presets;
+#[path = "development-job.rs"]
+mod development_job;
 #[path = "draft-preview.rs"]
 mod draft_preview;
 #[path = "edit-workspace.rs"]

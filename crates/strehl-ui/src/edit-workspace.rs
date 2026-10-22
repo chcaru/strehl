@@ -1,4 +1,5 @@
 //! Nondestructive photo edits. Decoding, development and export never run in a UI frame.
+use crate::development_job::{DevelopmentJob, DevelopmentToken};
 use crate::jobs::{Task, spawn_task};
 use eframe::egui::{self, TextureHandle};
 use std::{
@@ -25,6 +26,7 @@ pub(crate) struct LoadedPhoto {
 }
 
 pub(crate) struct DevelopedPreview {
+    pub snapshot: DevelopmentToken,
     pub revision: u64,
     pub before: bool,
     pub hdr: bool,
@@ -60,6 +62,9 @@ pub(crate) struct EditorState {
     pub texture: Option<TextureHandle>,
     pub loading: Option<Task<LoadedPhoto>>,
     pub developing: Option<Task<DevelopedPreview>>,
+    development: Option<(u64, bool, DevelopmentJob)>,
+    developing_snapshot: Option<DevelopmentToken>,
+    painted_snapshot: Option<DevelopmentToken>,
     developing_revision: Option<u64>,
     developing_before: bool,
     developing_hdr: bool,
@@ -93,6 +98,41 @@ pub(crate) struct EditorState {
 }
 
 impl EditorState {
+    /// Reuse one immutable job for every consumer of this image/recipe state.
+    /// No pixel validation, hashing or asset work happens in this frame path.
+    /// Recipe mutations must use the existing changed/begin_edit/replace hooks;
+    /// comparing all spatial coefficients here is more expensive than cloning.
+    pub(crate) fn development_job(&mut self, before: bool) -> Option<DevelopmentJob> {
+        let loaded = self.loaded.as_ref()?;
+        if let Some((revision, previous_before, job)) = &self.development
+            && *revision == self.revision
+            && *previous_before == before
+            && job.matches_source(&loaded.image)
+        {
+            return Some(job.clone());
+        }
+        let recipe = if before {
+            DevelopmentRecipe::default()
+        } else {
+            self.recipe.clone()
+        };
+        let job = DevelopmentJob::new(loaded.image.clone(), loaded.preview.clone(), recipe);
+        self.development = Some((self.revision, before, job.clone()));
+        Some(job)
+    }
+
+    /// Action boundary, outside frame reuse: also catch callers that changed the
+    /// public recipe without advancing its revision before accepting an export.
+    pub(crate) fn freeze_export_job(&mut self) -> Option<DevelopmentJob> {
+        if self
+            .development
+            .as_ref()
+            .is_some_and(|(_, _, job)| job.recipe() != &self.recipe)
+        {
+            self.development = None;
+        }
+        self.development_job(false)
+    }
     pub fn display_stats(&self) -> serde_json::Value {
         self.viewport.stats()
     }
@@ -390,8 +430,11 @@ impl EditorState {
             .loaded
             .as_ref()
             .is_some_and(|p| self.viewport.hdr_active(p.image.origin));
+        let job = self.development_job(self.before);
+        let snapshot = job.as_ref().map(DevelopmentJob::token);
         if let Some(task) = &self.developing
             && (self.developing_revision != Some(self.revision)
+                || self.developing_snapshot != snapshot
                 || self.developing_before != self.before
                 || self.developing_hdr != hdr)
         {
@@ -404,11 +447,14 @@ impl EditorState {
         if let Some(result) = developed
             && !matches!(result, Err(std::sync::mpsc::TryRecvError::Empty))
         {
+            let cancelled = self.developing.as_ref().is_some_and(Task::is_cancelled);
             self.developing = None;
             let requested_revision = self.developing_revision.take();
             match result {
                 Ok(Ok(preview))
-                    if preview.revision == self.revision
+                    if !cancelled
+                        && preview.revision == self.revision
+                        && Some(preview.snapshot) == snapshot
                         && preview.before == self.before
                         && preview.hdr == hdr =>
                 {
@@ -416,6 +462,7 @@ impl EditorState {
                     self.texture = Some(self.viewport.publish_overview(
                         ctx,
                         crate::photo_viewport::Identity {
+                            snapshot,
                             revision: preview.revision,
                             before: preview.before,
                             hdr: preview.hdr,
@@ -423,17 +470,21 @@ impl EditorState {
                         preview.prepared,
                     ));
                     self.painted_revision = Some(preview.revision);
+                    self.painted_snapshot = Some(preview.snapshot);
                     self.painted_before = preview.before;
                     self.painted_hdr = preview.hdr;
                 }
                 Err(std::sync::mpsc::TryRecvError::Disconnected) => {}
                 Ok(Err(error))
-                    if requested_revision == Some(self.revision)
+                    if !cancelled
+                        && requested_revision == Some(self.revision)
+                        && self.developing_snapshot == snapshot
                         && self.developing_before == self.before
                         && self.developing_hdr == hdr =>
                 {
                     self.error = Some(error);
                     self.painted_revision = Some(self.revision);
+                    self.painted_snapshot = snapshot;
                     self.painted_before = self.before;
                     self.painted_hdr = hdr;
                 }
@@ -442,32 +493,30 @@ impl EditorState {
             }
         }
         let needs_coarse = self.painted_revision != Some(self.revision)
+            || self.painted_snapshot != snapshot
             || self.painted_before != self.before
             || self.painted_hdr != hdr;
         if self.developing.is_none()
             && needs_coarse
-            && let Some(loaded) = &self.loaded
+            && let Some(job) = job.clone()
         {
-            let image = Arc::clone(&loaded.preview);
-            let recipe = if self.before {
-                DevelopmentRecipe::default()
-            } else {
-                self.recipe.clone()
-            };
             let revision = self.revision;
             let before = self.before;
+            let snapshot = job.token();
             self.developing_revision = Some(revision);
+            self.developing_snapshot = Some(snapshot);
             self.developing_before = before;
             self.developing_hdr = hdr;
             let presenter = self.viewport.presenter.clone();
             self.developing = Some(spawn_task("strehl-edit-preview", move |cancelled| {
+                let image = job.image(true);
                 let mut stride = 1u32;
                 while image.width.max(image.height).div_ceil(stride) > max_texture_side.max(1) {
                     stride *= 2;
                 }
-                let prepared = crate::photo_viewport::prepare(
-                    &image,
-                    &recipe,
+                let prepared = crate::photo_viewport::prepare_job(
+                    &job,
+                    true,
                     strehl_edit::DisplayRegionRequest {
                         min: [0, 0],
                         max: [image.width, image.height],
@@ -479,6 +528,7 @@ impl EditorState {
                     true,
                 )?;
                 Ok(DevelopedPreview {
+                    snapshot,
                     revision,
                     before,
                     hdr,
@@ -486,16 +536,11 @@ impl EditorState {
                 })
             }));
         }
-        let display_recipe = if self.before {
-            DevelopmentRecipe::default()
-        } else {
-            self.recipe.clone()
-        };
-        self.viewport.poll(
+        self.viewport.poll_job(
             ctx,
-            self.loaded.as_ref().map(|p| Arc::clone(&p.image)),
-            &display_recipe,
+            job,
             crate::photo_viewport::Identity {
+                snapshot,
                 revision: self.revision,
                 before: self.before,
                 hdr,
@@ -690,10 +735,23 @@ impl EditorState {
         true
     }
 
+    #[cfg(test)]
     pub fn export_with_settings(
         &mut self,
         path: PathBuf,
         settings: strehl_edit::ExportSettings,
+    ) -> anyhow::Result<()> {
+        let job = self
+            .freeze_export_job()
+            .ok_or_else(|| anyhow::anyhow!("Open a completed photograph first"))?;
+        self.export_job(path, settings, job)
+    }
+
+    pub(crate) fn export_job(
+        &mut self,
+        path: PathBuf,
+        settings: strehl_edit::ExportSettings,
+        job: DevelopmentJob,
     ) -> anyhow::Result<()> {
         settings.validate()?;
         anyhow::ensure!(self.exporting.is_none(), "An export is already running");
@@ -706,17 +764,11 @@ impl EditorState {
             path.parent()
                 .ok_or_else(|| anyhow::anyhow!("Choose an export directory"))?,
         )?;
-        let loaded = self
-            .loaded
-            .as_ref()
-            .ok_or_else(|| anyhow::anyhow!("Open a completed photograph first"))?;
-        let image = Arc::clone(&loaded.image);
-        let recipe = self.recipe.clone();
-        recipe.validate()?;
+        job.recipe().validate()?;
         self.last_export = None;
         self.exporting = Some(spawn_task("strehl-edit-export", move |cancelled| {
             // The writer publishes without replacement; file options determine color encoding.
-            strehl_edit::export_image(&path, &image, &recipe, &settings, &cancelled)?;
+            job.export(&path, &settings, &cancelled)?;
             Ok(path)
         }));
         self.error = None;
@@ -842,3 +894,11 @@ fn outline(shape: &RegionShape) -> Vec<[f32; 2]> {
 #[cfg(test)]
 #[path = "edit-workspace-review-tests.rs"]
 mod independent_review_tests;
+
+#[cfg(test)]
+#[path = "edit-development-tests.rs"]
+mod development_tests;
+
+#[cfg(test)]
+#[path = "edit-development-independent-tests.rs"]
+mod development_independent_tests;

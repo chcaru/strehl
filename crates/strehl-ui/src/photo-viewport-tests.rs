@@ -15,10 +15,75 @@ fn source() -> Arc<LinearImage> {
 }
 fn identity(revision: u64) -> Identity {
     Identity {
+        snapshot: None,
         revision,
         before: false,
         hdr: false,
     }
+}
+
+#[test]
+fn native_completion_cannot_cross_snapshot_on_same_revision_reload() {
+    let ctx = egui::Context::default();
+    let source = source();
+    let old = DevelopmentJob::native(source.clone(), DevelopmentRecipe::default());
+    let next = DevelopmentJob::native(Arc::new((*source).clone()), DevelopmentRecipe::default());
+    let old_id = Identity {
+        snapshot: Some(old.token()),
+        ..identity(1)
+    };
+    let next_id = Identity {
+        snapshot: Some(next.token()),
+        ..identity(1)
+    };
+    let request = DisplayRegionRequest {
+        min: [0, 0],
+        max: [512, 384],
+        stride: 4,
+    };
+    let prepared = prepare_job(
+        &old,
+        false,
+        request,
+        &AtomicBool::new(false),
+        None,
+        false,
+        true,
+    )
+    .unwrap();
+    let mut state = ViewportRefinement::default();
+    let _ = state.publish_overview(&ctx, old_id, prepared);
+    let prepared = prepare_job(
+        &old,
+        false,
+        DisplayRegionRequest {
+            stride: 1,
+            ..request
+        },
+        &AtomicBool::new(false),
+        None,
+        false,
+        true,
+    )
+    .unwrap();
+    state.pending = Some(Pending {
+        identity: old_id,
+        request,
+        task: spawn_task("old-native-snapshot", move |_| Ok(prepared)),
+    });
+    let until = Instant::now() + Duration::from_secs(8);
+    while state.pending.is_some() {
+        state.poll_job(&ctx, Some(next.clone()), next_id);
+        assert!(Instant::now() < until);
+        std::thread::sleep(Duration::from_millis(1));
+    }
+    assert!(state.paint.as_ref().unwrap().detail.is_none());
+    assert!(state.cancellations > 0);
+    assert_eq!(
+        state.identity,
+        Some(old_id),
+        "Retain the last complete view until the new overview is ready"
+    );
 }
 
 fn patterned_source() -> LinearImage {

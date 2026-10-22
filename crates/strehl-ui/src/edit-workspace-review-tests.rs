@@ -191,6 +191,7 @@ fn viewport_refinement_keeps_overview_and_drops_a_superseded_recipe() {
         serde_json::json!([128, 96])
     );
     let old_revision = editor.revision;
+    let old_snapshot = editor.development_job(false).unwrap().token();
     let mut next = editor.recipe.clone();
     next.global.exposure = 0.5;
     editor.replace(next).unwrap();
@@ -211,6 +212,7 @@ fn viewport_refinement_keeps_overview_and_drops_a_superseded_recipe() {
             true,
         )?;
         Ok(DevelopedPreview {
+            snapshot: old_snapshot,
             revision: old_revision,
             before: false,
             hdr: false,

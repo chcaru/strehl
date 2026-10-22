@@ -145,22 +145,28 @@ fn version_identity(version: &PhotoVersion, recipe: &DevelopmentRecipe) -> Resul
 pub(crate) fn save_version(
     root: &Path,
     version: &PhotoVersion,
-    image: &LinearImage,
-    recipe: &DevelopmentRecipe,
+    job: &crate::development_job::DevelopmentJob,
 ) -> Result<PreviewImage> {
     ensure!(
         photographs::valid_id(&version.id),
         "Invalid version thumbnail identity"
     );
-    let preview = render(
-        &version.owner.output,
-        image,
-        recipe,
-        version.photo.dimensions,
-    )?;
+    let (width, height, rgb) = job.thumbnail(SIDE)?;
+    let preview = PreviewImage {
+        path: version.owner.output.clone(),
+        source_size: version.photo.dimensions,
+        size: [width as usize, height as usize],
+        rgba: rgb
+            .as_chunks::<3>()
+            .0
+            .iter()
+            .flat_map(|p| [p[0], p[1], p[2], 255])
+            .collect(),
+        is_overview: true,
+    };
     write(
         &root.join(format!("{}.preview", version.id)),
-        &version_identity(version, recipe)?,
+        &version_identity(version, job.recipe())?,
         &preview,
     )?;
     Ok(preview)

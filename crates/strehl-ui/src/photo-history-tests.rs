@@ -4,7 +4,7 @@ use std::sync::{Arc, Barrier};
 struct Fixture {
     root: PathBuf,
     owner: PhotoOwner,
-    image: LinearImage,
+    image: Arc<LinearImage>,
 }
 impl Fixture {
     fn new() -> Self {
@@ -19,14 +19,14 @@ impl Fixture {
                 run: None,
                 output,
             },
-            image: LinearImage {
+            image: Arc::new(LinearImage {
                 width: 3,
                 height: 2,
                 pixels: vec![0.25; 18],
                 origin: strehl_edit::ImageOrigin::SceneLinear,
                 baseline: None,
                 baked_recipe: None,
-            },
+            }),
         }
     }
     fn save(&self, name: &str, recipe: DevelopmentRecipe) -> PhotoVersion {
@@ -81,14 +81,14 @@ fn immutable_version_roundtrip_rejects_wrong_owner_pixels_master_and_file() {
         )
         .is_err()
     );
-    f.image.pixels[7] = 0.8;
+    Arc::make_mut(&mut f.image).pixels[7] = 0.8;
     assert!(
         read(&f, &record)
             .unwrap_err()
             .to_string()
             .contains("loaded photograph")
     );
-    f.image.pixels[7] = 0.25;
+    Arc::make_mut(&mut f.image).pixels[7] = 0.25;
     let master = f.root.join("master.tiff");
     fs::write(&master, b"master").unwrap();
     assert!(

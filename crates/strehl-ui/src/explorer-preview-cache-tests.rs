@@ -74,14 +74,14 @@ fn cache_rejects_wrong_identity_and_malformed_allocation_before_pixels() {
 fn immutable_version_thumbnail_is_available_without_reopening_large_source() {
     let root = tempfile::tempdir().unwrap();
     let source = root.path().join("source.tiff");
-    let image = LinearImage {
+    let image = std::sync::Arc::new(LinearImage {
         width: 24,
         height: 16,
         pixels: vec![0.15; 24 * 16 * 3],
         origin: strehl_edit::ImageOrigin::SceneLinear,
         baseline: None,
         baked_recipe: None,
-    };
+    });
     strehl_edit::save_linear_tiff(&source, &image).unwrap();
     let mut recipe = DevelopmentRecipe::default();
     recipe.global.exposure = 1.4;
