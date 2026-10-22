@@ -13,6 +13,8 @@ mod image;
 pub mod learned_asset;
 #[path = "learned-profile.rs"]
 pub mod learned_profile;
+#[path = "learned-scene.rs"]
+pub mod learned_scene;
 #[path = "learned-store.rs"]
 pub mod learned_store;
 mod publish;

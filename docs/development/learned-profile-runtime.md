@@ -27,6 +27,70 @@ Applying it to an already-developed TIFF does not undo that TIFF's baked tone,
 color, clipping, or quantization. Scene-linear masters and display photographs
 need independently accepted application policies.
 
+## Separate SDR scene contract
+
+`strehl-edit::learned_scene` adds `strehl.scene-sdr-linear.v1` without changing
+the existing compositor or its asset reader. `PreparedSceneSdrProfile` holds
+immutable gain and color-table fields plus two explicitly supplied inverse color
+transforms. Its full-strength `develop_pixel` and `render_region` operations are:
+
+1. Transform scene-linear BT.709 into the declared working primaries, then clamp
+   negative working channels to zero.
+2. Query the gain map using working RGB multiplied by `gain_query_scale`.
+3. Multiply the **unscaled** working RGB by that gain, then `exposure_scale`.
+4. Cap the lowest and highest RGB channels at one and reconstruct the middle
+   channel at its previous relative position between them. Equal channels remain
+   equal. This is different from independently clipping each channel.
+5. Apply the supplied color table, with its explicit encoding, interpolation and
+   gamut policy, then the supplied inverse working transform.
+
+Both scale factors may be below one; the caller supplies their already-resolved
+linear values. The renderer does not infer EV units or camera compensation from
+model outputs. Transform pairs, scale ranges, dimensions and finite arithmetic
+are checked. Arithmetic overflow fails before the highlight cap can conceal it.
+Native crops use full-photograph coordinates, and cancellation can leave an
+unpublished partial output. The caller owns the destination buffer; the renderer
+does not allocate another full photograph.
+
+This is deliberately **SDR-only**. It discards negative working values and
+highlight headroom; a floating-point return value does not make it an HDR
+treatment. It currently has a single supplied color table, no semantic-mask
+blend, and no nonlinear exposure allocation. No existing asset file is silently
+reinterpreted as this contract, and no new asset codec, recipe or UI integration
+is enabled by this module.
+
+`blend_sdr_scene_pixel` is a separate boundary for Amount. The caller supplies a
+**complete developed baseline** and a lazy candidate branch in the same declared
+linear presentation domain. At zero, the baseline's exact bits are returned and
+the candidate closure is never evaluated, including asset resolution. At one,
+the candidate's exact bits are returned; intermediate Amounts use linear
+interpolation. The scene primitive alone is not a complete application branch:
+baseline placement, existing manual/region edits, contrast and presentation must
+still be integrated and tested. Raw-source identity does not prove that Amount
+zero preserves the existing application view.
+
+**MEASURED (author commissioning):** fresh compilation and
+`cargo test --offline -p strehl-edit --test learned-scene` passed eight synthetic
+tests. Controls exercise unequal query/exposure scales, subunit scales, all RGB
+permutations through the extrema cap, explicit asymmetric color transforms and
+LUT encoding, crop/full bit agreement, rejected crop-local coordinates, finite
+overflow, invalid inputs, cancellation, and exact baseline Amount endpoints
+with an unevaluated failing candidate. These checks establish code behavior;
+full application integration and photographic quality acceptance remain separate
+gates.
+
+**MEASURED (independent numerical comparison):** a separately compiled consumer
+matched the previously commissioned private renderer bit-for-bit on eight frozen
+cases, including a complete 7032 x 4688 photograph. That prior result also matched
+the independent Python expression across all 98,898,048 samples at
+`rtol=2e-5, atol=2e-6` (maximum absolute difference `1.43e-6`). The local consumer
+was built with `cargo build --offline --release --manifest-path
+outputs/ai-adaptive-production/scene-public-probe/Cargo.toml --target-dir
+outputs/ai-adaptive-production/native-compositor-probe/target` and run against
+the frozen specs with eight Rayon threads. Private photos and comparison fixtures
+are not distributed; the public synthetic tests above remain reproducible without
+them. This establishes the numerical port, not model quality or HDR equivalence.
+
 ## Immutable results
 
 `learned_asset` freezes the exact FP32 fields, matrices, tone, mask geometry,

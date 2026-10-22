@@ -30,7 +30,7 @@ pub const MAX_TONE_KNOTS: usize = 4096;
 const MAX_IMAGE_DIMENSION: u32 = 1 << 20;
 
 #[inline]
-fn matrix_rgb(m: &Matrix3, p: [f32; 3]) -> [f32; 3] {
+pub(crate) fn matrix_rgb(m: &Matrix3, p: [f32; 3]) -> [f32; 3] {
     m.map(|r| r[0] * p[0] + r[1] * p[1] + r[2] * p[2])
 }
 
@@ -150,7 +150,7 @@ impl GainMap {
     }
 
     #[inline]
-    fn sample_inner(&self, p: [f32; 3], uv: [f32; 2]) -> f32 {
+    pub(crate) fn sample_inner(&self, p: [f32; 3], uv: [f32; 2]) -> f32 {
         let par = self.parameters;
         let [n, h, w] = par.dimensions.map(|v| v as usize);
         let x = ((uv[0] - par.origin_yx[1]) / par.spacing_yx[1]).clamp(0., (w - 1) as f32);
@@ -296,7 +296,7 @@ impl ColorLut {
     }
 
     #[inline]
-    fn apply_inner(&self, source: [f32; 3]) -> [f32; 3] {
+    pub(crate) fn apply_inner(&self, source: [f32; 3]) -> [f32; 3] {
         let raw = matrix_rgb(&self.source_to_table, source);
         if raw.iter().any(|v| !v.is_finite()) {
             return [f32::NAN; 3];
