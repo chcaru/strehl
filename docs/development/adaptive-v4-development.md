@@ -231,6 +231,38 @@ python outputs/ai-adaptive-production/scene-rolloff-probe.py --rois outputs/ai-a
 The paired probe's frozen plan and results are retained with its local receipt.
 The three sabotage commands intentionally return failure.
 
+### Native application reference
+
+**VERIFIED:** a copied camera RAW now has three actual Lightroom Local exports:
+Adobe Color, Adaptive Color Amount 100, and Adaptive Color Amount 0. All are
+7008 by 4672 uint16 ProPhoto RGB TIFFs with matching geometry, ICC and represented
+non-profile settings. The original and copied RAW still match the prior SHA256.
+The synthetic scene-linear DNG was not eligible for Adaptive on this installation;
+changing its filename or tags would not establish equivalence to a camera RAW.
+
+The optional zero arm matters: Adobe Color and zero-strength Adaptive are distinct
+renderings. Default RAW sharpening and color noise reduction remain in all three
+arms. These exports are rendered SDR references, not scene-linear input tensors.
+They also differ in geometry from the stack master and another decoder's output.
+
+**MEASURED / independent photographic review:** on this one RAW, the neutral
+RAW-derived teacher input is substantially closer to the native saved gain/color
+fields than the developed-TIFF input. Whole-photo renders using the RAW proxy
+and either predicted or native saved fields form a plausible approximation group,
+but none reproduces the reference's color, transitions and texture in the inspected
+native-scale regions. The
+current student remains too dark. This narrows the input/rendering investigation;
+it does not establish exact native input recovery, a winning exposure policy,
+generalization, or production quality. The earlier rejection on already-developed
+stack inputs remains valid for that different processing path.
+
+The public read-only reference validator and its 20 synthetic adversarial tests
+are in `experiments/adaptive-distillation/validate-native-reference.py` and
+`test-native-reference.py`. The tests and the actual three-arm validation were
+run by both the author and an independent reviewer. Metadata checks establish a
+declared export contract, not authenticated provenance or photographic quality.
+Private photographs, model assets and per-image native payloads remain ignored.
+
 Scene-linear and already-developed inputs require separate acceptance. Remaining
 work includes an accepted photographic policy and reference rendering contract,
 real semantic masks, fresh-scene review, UI/recipe integration, and end-to-end

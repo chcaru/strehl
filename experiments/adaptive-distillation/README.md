@@ -299,6 +299,37 @@ review, fixed controls, a validated rendering contract and untouched final scene
 are still required. These tools do not select a UI profile, enable learned editing,
 or establish production quality.
 
+## Native reference export checks
+
+An extracted predictor's outputs are not a reference for the complete photograph.
+Keep an actual application export alongside each development input. For a paired
+Lightroom check, use copies of camera RAW files, preserve each photo's As Shot
+white balance, and copy only the profile between photographs. Export Adobe Color
+and Adaptive Color at Amount 100 with otherwise identical settings. An optional
+Adaptive Amount 0 arm separates the profile's base rendering from its treatment;
+it is not assumed to equal Adobe Color.
+
+```text
+python experiments/adaptive-distillation/test-native-reference.py
+python experiments/adaptive-distillation/validate-native-reference.py --baseline baseline.tif --adaptive adaptive.tif --adaptive-zero zero.tif --source-raw original.raw --copied-raw working-copy.raw --expected-raw-sha256 PRIOR_SHA256 --output reference-receipt.json
+```
+
+The validator requires uncompressed uint16 RGB TIFFs, matching embedded ProPhoto
+RGB ICC bytes, baked orientation, full-crop metadata, neutral basic controls and matching
+non-profile settings. It checks the embedded profile/AI declarations and decoded
+pixel differences, and optionally binds the original and copy to a prior RAW
+hash. It reads inputs without modifying them and refuses an existing receipt
+path. Tests use synthetic pixels and a generated sRGB ICC, with explicit failures
+for changed controls, profiles, identity, color space, geometry and source bytes.
+
+Metadata is a declaration, not authenticated application provenance. Matching
+ICC tags do not establish physical color accuracy. The tool does not infer export
+resize/sharpening switches, register another decoder's crop, recover model inputs,
+or judge photographic quality. Record actual dimensions from the receipt: a
+small diagnostic export cannot support a full-resolution quality claim. Native
+gain fields and rendered TIFFs also describe different stages of processing.
+Keep private exports, sidecars and predictor assets outside the public repository.
+
 ## Public V4 packaging differences
 
 The optional [native inference probe](native-probe/README.md) runs the exported
