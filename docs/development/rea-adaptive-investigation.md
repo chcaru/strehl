@@ -217,6 +217,11 @@ serialized and read back before attachment; failure raises an error.
 
 ## Implications for a Strehl AI option
 
+Follow-up: [the local distillation experiment](adaptive-distillation.md) now has
+an executed, smaller student and independent held-out measurements. Its local
+failures and unresolved photographic rendering contract keep it out of the UI.
+The statements below describe the limits of this earlier static pass.
+
 Adobe's [public description](https://blog.adobe.com/en/publish/2024/10/14/the-adobe-adaptive-profile)
 describes the same broad combination of spatial tone, global/subject/sky
 color, and separate SDR/HDR treatments. Native inspection now establishes
