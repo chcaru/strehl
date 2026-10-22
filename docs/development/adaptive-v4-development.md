@@ -16,8 +16,9 @@ and photographic policy.
 
 **VERIFIED locally:** 4,105 candidate sources were audited read-only; 4,104 decoded.
 Exact source/decoded identities and perceptual similarities were joined with
-capture-group metadata. The refined allocation contains 3,504 training sources,
-501 validation sources and 99 reserved sources, across 54 connected groups.
+capture-group metadata. The refined allocation contains 3,504 training entries,
+501 validation entries and 99 reserved entries, across 54 connected groups.
+Those contain 3,498, 499 and 92 distinct source-file hashes respectively.
 Absence of a perceptual-hash match does not prove scene independence. All earlier
 prototype test subjects are now development data, not fresh acceptance evidence.
 
@@ -35,6 +36,11 @@ It does **not** turn camera JPEGs or developed TIFFs back into a RAW pipeline.
 Most source images are embedded camera previews; masks are controlled geometric
 variants, not production semantic segmentation. Encoded-first resizing differs
 from resizing a linear RAW tapout. Native HDR input behavior is not established.
+All five validation groups contain embedded previews, with no complete stack
+renders or verified scene-linear masters. An inventory label containing `master`
+does not establish a linear color domain: the existing cache processes those
+training files through the same RGB8/sRGB path. The validation table therefore
+does not establish fidelity on the editor's actual scene-linear source.
 
 ## Model and executed run
 
@@ -54,6 +60,11 @@ The run completed 6,000 steps, batch 12, on an RTX 5090; validation selected the
 last checkpoint. The private research trainer and packaged public trainer have
 identical numerical code. Both exporters produced the same trained model bytes:
 `7f92ef40abb45341b067a8a8b7c03e5c9a2da9138f8a1734d4c73e8afd4fa3c1`.
+
+An independent curve audit found that the exposure-family validation ratio was
+best at step 3,000 and was 1.87% worse at step 6,000. The joint score improved
+only 0.093% from step 4,500 to 6,000. These development observations do not support
+extending the run merely because the joint best checkpoint was the last one.
 
 ## Validation fidelity, not photographic quality
 
@@ -129,11 +140,100 @@ has camera-dependent exposure compensation and nonlinear highlight handling
 before color tables. A model-output match through the simplified renderer cannot
 establish equivalence to the complete reference pipeline.
 
-The six-photo development panel uses whole-frame views followed by fixed native
-regions, anonymized candidates, duplicate baselines and deliberate clipping/color
-failures. The macro rejection already prevents promotion. An original Strehl
-highlight policy can be tested, but cannot be labeled a recovered native curve.
+### Independent photographic decisions
+
+**VERIFIED by independent visual review:** three development panels used whole
+photographs followed by fixed native regions, anonymous candidates and duplicate
+baselines. These are subjective photographic judgments, not universal quality
+measurements. The reviewer recorded observations before receiving the identities.
+
+- The first panel covered six photographs. Unchanged versions were preferred on
+  all four developed macro subjects. Lifting the two dark interiors was useful,
+  but a bright sign lost separation between its white arrow and cyan background.
+- Fixed clamp and highlight-shoulder alternatives did not visibly repair those
+  failures. No threshold was selected from this result.
+- A gain-only treatment subtracting median log gain within a preregistered
+  luminance region was more restrained, but
+  did not establish useful spatial adaptation beyond simpler controls. The
+  unchanged opal and neutral slide remained preferred. Several deliberately
+  shifted fields introduced their own discontinuities; beating those damaged
+  controls cannot establish meaningful scene correspondence.
+
+One fine teacher/student preference reversed between panels even though all 36
+corresponding whole/crop RGB arrays were byte-identical. That ranking was
+withdrawn as reviewer uncertainty. A suspected new mark on the slide was also
+withdrawn after native-resolution inspection found the mark in the baseline.
+The robust macro rejection remains; neither correction is hidden to strengthen it.
+
+A fourth, separately frozen panel used the actual 7032 by 4688 scene-linear insect
+master. Eight arms included the saved current result and duplicate, direct-linear
+display, both predictors at two fixed exposure-allocation endpoints, and a
+scalar-only tone control. All eight whole photographs and 48 fixed native crops
+were reviewed before identities were revealed. The current result and duplicate
+were preferred. The teacher versions remained too bright/vivid; the student
+versions were too subdued. Neither pair had a dependable improvement from
+moving positive exposure into the nonlinear stage. The scalar-only control was a
+viable flatter alternative, but did not beat the preferred current photograph.
+
+This last experiment preserved the gain-query brightness scale while changing
+only the declared linear/nonlinear exposure split. Both endpoints used the same
+extrema cap, negative-input policy and color tables. Independent synthetic review
+caught and fixed a near-black extrema error before rendering. The final synthetic
+checks covered 210 channel-permuted cases; original source and frozen fields were
+unchanged after complete-photo rendering. The experiment establishes sensitivity
+under its explicit policy, not the unknown native exposure allocation or a
+general quality result. The independent photographic review found no rescue on
+this development image, so it does not justify enabling an AI profile.
+
+### Paired input-domain check
+
+**MEASURED:** a fixed selection of three distinct RAW source hashes from each of
+the five existing validation groups compared the exact cached preview, the same
+preview decoded before linear resampling, and a neutral clipped LibRaw RGB16
+proxy. All 15 source hashes were unchanged. The proxy changes color, tone, WB,
+scaling, decoder and possibly crop as well as transfer behavior; it is neither
+an Adobe input nor the application's unclipped master.
+
+The broad prediction that linear RAW inputs would make every head worse was
+not supported. Relative to the linearly resampled preview, median per-source
+error improved for both gain heads and all six color heads. Exposure errors
+worsened on 9 of 15 SDR and 10 of 15 HDR sources, with three groups worse and
+two better in each branch. A separate actual scene-master insect retained a
+1.49416 SDR and 1.08991 HDR scalar discrepancy. It was not pooled into the RAW
+pairs. These are predictor-output units, not measured final-image EV errors.
+
+An independent review used per-source medians, group signs and absolute errors
+against fixed means and same-group donors. It also checked RMSE where one-sided
+residuals made a cyclic permutation's MAE equal by arithmetic. Some mean and donor
+comparisons still fail. These results support neither a uniform domain-failure
+explanation nor a claim that additional training will fix the photograph.
+
+The commissioning controls passed; swapping red/blue and decoding after resize
+both failed as intended. A nonconstant black/white fixture distinguishes the
+correct linear result 0.5 from the incorrectly ordered result about 0.214.
+
+Executed local investigations (private images and model remain ignored):
+
+```text
+python outputs/ai-adaptive-production/render-six-photo-native.py
+python outputs/ai-adaptive-production/probe-shoulder.py
+python outputs/ai-adaptive-production/anchored-gain-probe.py --commission
+python outputs/ai-adaptive-production/anchored-gain-probe.py
+python outputs/ai-adaptive-production/paired-domain-probe.py --commission
+python outputs/ai-adaptive-production/paired-domain-probe.py --commission --sabotage-channel-swap
+python outputs/ai-adaptive-production/paired-domain-probe.py --commission --sabotage-decode-after-resize
+python outputs/ai-adaptive-production/audit-paired-domain.py
+python outputs/ai-adaptive-production/scene-rolloff-probe.py --commission
+python outputs/ai-adaptive-production/scene-rolloff-probe.py --commission --sabotage-identity
+python outputs/ai-adaptive-production/scene-rolloff-probe.py --rois outputs/ai-adaptive-production/scene-rolloff-rois.json --output outputs/ai-adaptive-production/photographic-probes/scene-rolloff-v1
+```
+
+The paired probe's frozen plan and results are retained with its local receipt.
+The three sabotage commands intentionally return failure.
+
 Scene-linear and already-developed inputs require separate acceptance. Remaining
-work includes a useful photographic policy, real semantic masks, broader fresh
-scene review, UI/recipe integration, and end-to-end interaction tests. More
-training photos alone do not close those gaps.
+work includes an accepted photographic policy and reference rendering contract,
+real semantic masks, fresh-scene review, UI/recipe integration, and end-to-end
+interaction tests. More training photos alone do not close those gaps. No learned
+profile is promoted, no release is created, and the reserved final test remains
+unevaluated.
