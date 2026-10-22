@@ -66,7 +66,7 @@ impl FromStr for AssetKey {
             }
         };
         let mut digest = [0; 32];
-        for (destination, pair) in digest.iter_mut().zip(value.as_bytes().chunks_exact(2)) {
+        for (destination, pair) in digest.iter_mut().zip(value.as_bytes().as_chunks::<2>().0) {
             *destination = nibble(pair[0]) * 16 + nibble(pair[1]);
         }
         Ok(Self(digest))

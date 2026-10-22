@@ -386,7 +386,8 @@ fn correctly_hashed_descriptor_count_and_canonical_encoding_are_required() {
 
 #[test]
 fn malformed_metadata_is_rejected_before_field_preparation() {
-    let cases: &[(&str, fn(&mut FrozenProfileDescriptor))] = &[
+    type InvalidDescriptorCase = (&'static str, fn(&mut FrozenProfileDescriptor));
+    let cases: &[InvalidDescriptorCase] = &[
         ("contract", |d| {
             d.identities.contract_id = "../../ambiguous name".into()
         }),

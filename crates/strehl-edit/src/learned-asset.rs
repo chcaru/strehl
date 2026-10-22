@@ -545,8 +545,13 @@ impl FrozenLearnedAsset {
         let mut cursor = PREFIX_BYTES + header_bytes;
         // Validate the entire payload before allocating any FP32 field. Every
         // block after gain is either an SDR table or a semantic weight plane.
-        for (index, bytes) in encoded[cursor..digest_at].chunks_exact(4).enumerate() {
-            let value = f32::from_le_bytes(bytes.try_into().unwrap());
+        for (index, bytes) in encoded[cursor..digest_at]
+            .as_chunks::<4>()
+            .0
+            .iter()
+            .enumerate()
+        {
+            let value = f32::from_le_bytes(*bytes);
             ensure!(
                 value.is_finite() && value >= 0. && (index < layout.gain || value <= 1.),
                 "Invalid frozen field value"
@@ -555,8 +560,10 @@ impl FrozenLearnedAsset {
         let mut block = |count: usize| -> Result<Vec<f32>> {
             let bytes = &encoded[cursor..cursor + count * 4];
             let data = bytes
-                .chunks_exact(4)
-                .map(|b| f32::from_le_bytes(b.try_into().unwrap()))
+                .as_chunks::<4>()
+                .0
+                .iter()
+                .map(|b| f32::from_le_bytes(*b))
                 .collect();
             cursor += count * 4;
             Ok(data)

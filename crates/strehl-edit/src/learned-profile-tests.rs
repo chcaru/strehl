@@ -359,7 +359,7 @@ fn zero_amount_is_exact_identity_even_for_signed_zero_and_headroom() {
         },
     )
     .unwrap();
-    let input = [-0.0, -0.123_456_7, 3.14];
+    let input = [-0.0, -0.123_456_7, 3.125];
     assert_eq!(
         p.apply_pixel(input, [0.3, 0.9], [0., 0.], 0.)
             .unwrap()
