@@ -50,6 +50,7 @@ pub(crate) struct Action {
     pub reset: bool,
 }
 
+#[derive(Clone, Copy)]
 pub(crate) struct Context<'a> {
     pub texture: &'a TextureHandle,
     pub extent: Vec2,
@@ -192,35 +193,13 @@ impl ResultPhoto {
         } else {
             painter.image(input.texture.id(), image, input.aperture, Color32::WHITE);
         }
-        let show_samples = self.dense_selection.is_none() || self.range_samples_visible(ui.ctx());
-        if show_samples && !hide_admission {
-            self.sync_samples(ui.ctx(), &input);
-        }
-        if !peek && !self.edit_navigation {
+        if !hide_admission {
+            self.paint_inspection_evidence(ui, image, &input, 1.0);
+        } else if !peek && !self.edit_navigation {
+            // Confidence remains valid after a regional reconstruction, even
+            // though the original admission provenance is suppressed.
             self.balance
                 .paint(&painter, image, input.aperture, input.pin);
-        }
-        if !hide_admission {
-            if OverlayMode::read(ui.ctx()) != OverlayMode::Clean {
-                if let Some(selection) = &self.dense_selection {
-                    self.selection_painter
-                        .paint(&painter, selection, image, input.aperture);
-                } else if let Some(region) = &self.dense_region {
-                    self.dense_painter.paint(
-                        &painter,
-                        region,
-                        image,
-                        input.aperture,
-                        sample_glyphs::level_color(input.level),
-                    );
-                }
-            }
-            // A range's coherent footprint is the primary comparison. Dense
-            // sample marks can otherwise completely obscure its fill and the
-            // shared-region stripes, especially when the photograph is fit.
-            if show_samples {
-                self.paint_samples(&painter, image, &input);
-            }
         }
         let overview = (input.aperture.width() < 0.995 && !peek).then(|| {
             let size = Vec2::new(112.0, 78.0).min(image.size() * 0.34);
@@ -603,6 +582,51 @@ impl ResultPhoto {
 
     fn paint_samples(&mut self, painter: &egui::Painter, image: Rect, input: &Context<'_>) {
         self.overlay.paint(painter, image, input, &self.samples);
+    }
+
+    /// Paint-only evidence for an inspection reveal. Keeping this separate
+    /// from `show` lets a retiring overlay fade without registering any probe,
+    /// navigator or gesture response over the now-active editing canvas.
+    pub(crate) fn paint_inspection_evidence(
+        &mut self,
+        ui: &Ui,
+        image: Rect,
+        input: &Context<'_>,
+        opacity: f32,
+    ) {
+        if opacity <= 0.0 || ui.input(|state| state.key_down(egui::Key::Space)) {
+            return;
+        }
+        let mut painter = ui.painter_at(image);
+        painter.multiply_opacity(opacity);
+        self.balance
+            .paint(&painter, image, input.aperture, input.pin);
+        if self.diagnostics_suppressed {
+            return;
+        }
+        let show_samples = self.dense_selection.is_none() || self.range_samples_visible(ui.ctx());
+        if show_samples {
+            self.sync_samples(ui.ctx(), input);
+        }
+        if OverlayMode::read(ui.ctx()) != OverlayMode::Clean {
+            if let Some(selection) = &self.dense_selection {
+                self.selection_painter
+                    .paint(&painter, selection, image, input.aperture);
+            } else if let Some(region) = &self.dense_region {
+                self.dense_painter.paint(
+                    &painter,
+                    region,
+                    image,
+                    input.aperture,
+                    sample_glyphs::level_color(input.level),
+                );
+            }
+        }
+        // A range's coherent footprint is primary; optional sample marks must
+        // not obscure its fill and shared-region stripes.
+        if show_samples {
+            self.paint_samples(&painter, image, input);
+        }
     }
 
     fn selection_summary(&self, ui: &mut Ui) {
