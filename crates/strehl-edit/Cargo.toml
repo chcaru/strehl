@@ -14,6 +14,7 @@ rayon.workspace = true
 tiff.workspace = true
 serde = { version = "=1.0.229", features = ["derive"] }
 serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
+sha2 = "0.11"
 quick-xml = "0.41"
 # Pure Rust builds avoid an external encoder, DLL, assembler or subprocess.
 rav1e = { version = "0.8.1", default-features = false, features = ["threading"] }

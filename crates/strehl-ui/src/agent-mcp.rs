@@ -361,12 +361,16 @@ fn recipe_schema() -> Value {
 fn spatial_schema() -> Value {
     object(
         json!({
-            "version":{"const":1},
+            "version":{"enum":[1,2]},
             "target_region":{"anyOf":[{"type":"null"},string(128)]},
             "parameters":object(json!({
                 "balance":{"type":"number","minimum":0,"maximum":1},
                 "local_contrast":{"type":"number","minimum":0,"maximum":1},
-                "color":{"type":"number","minimum":0,"maximum":1}
+                "color":{"type":"number","minimum":0,"maximum":1},
+                "tone_range":{"enum":["all","shadows","midtones","highlights"]},
+                "shadow_protection":{"type":"number","minimum":0,"maximum":1},
+                "highlight_compression":{"type":"number","minimum":0,"maximum":1},
+                "presence":{"type":"number","minimum":0,"maximum":1}
             }), &[]),
             "amount":{"type":"number","minimum":0,"maximum":1},
             "bounds":{"type":"array","items":point(),"minItems":2,"maxItems":2},
@@ -377,8 +381,8 @@ fn spatial_schema() -> Value {
             "log_max":{"type":"number","minimum":-16,"maximum":10},
             "tone_ev":{"type":"string","pattern":"^f32hex:([0-9a-f]{8})+$","maxLength":105607,
                 "description":"Exact finite f32 bits, width*height*levels samples; validated coefficient bounds and luminance order. Preserve verbatim."},
-            "color_gain":{"type":"string","pattern":"^f32hex:([0-9a-f]{8})+$","maxLength":3207,
-                "description":"Exact finite f32 bits, width*height samples in 1..1.2. Preserve verbatim."},
+            "color_gain":{"type":"string","pattern":"^f32hex:([0-9a-f]{8})+$","maxLength":105607,
+                "description":"Exact finite f32 bits in 1..1.2. Version 1 uses width*height samples; version 2 uses width*height*levels samples in [y][x][light] order. The application validates the exact count for the version. Preserve verbatim."},
             "delivery_ceiling":{"type":"number","minimum":1,"maximum":125},
             "centering_ev":{"type":"number","minimum":-0.5,"maximum":0.5}
         }),

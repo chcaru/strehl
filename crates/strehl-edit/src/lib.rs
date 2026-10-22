@@ -9,6 +9,12 @@ mod display_region;
 mod export;
 mod icc;
 mod image;
+#[path = "learned-asset.rs"]
+pub mod learned_asset;
+#[path = "learned-profile.rs"]
+pub mod learned_profile;
+#[path = "learned-store.rs"]
+pub mod learned_store;
 mod publish;
 mod recipe;
 mod xmp;

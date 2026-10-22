@@ -1,15 +1,160 @@
 use super::*;
 
 fn measured_recipe() -> Value {
+    measured_recipe_version(1)
+}
+
+fn measured_recipe_version(version: u32) -> Value {
     let field = |scope: Value| {
-        json!({"version":1,"target_region":scope,"parameters":{},"amount":0.6,
+        json!({"version":version,"target_region":scope,"parameters":{},"amount":0.6,
         "bounds":[[0,0],[1,1]],"width":20,"height":20,"levels":33,"log_min":-8,"log_max":2,
         "tone_ev":format!("f32hex:{}","3e4ccccd".repeat(20*20*33)),
-        "color_gain":format!("f32hex:{}","3f800000".repeat(20*20)),
+        "color_gain":format!("f32hex:{}","3f800000".repeat(20*20*if version == 2 {33} else {1})),
         "delivery_ceiling":4,"centering_ev":0})
     };
     json!({"regions":[{"id":"r","name":"Reflection","shape":{"kind":"rectangle","min":[0.2,0.2],"max":[0.8,0.8]},"feather":0.3,"enabled":true}],
         "spatial":[field(Value::Null),field(json!("r"))]})
+}
+
+#[test]
+fn signature_v2_fields_round_trip_with_all_controls_and_luminance_colors() {
+    let mut recipe = measured_recipe_version(2);
+    let parameters = strehl_edit::AdaptiveParameters {
+        tone_range: strehl_edit::AdaptiveToneRange::Midtones,
+        ..strehl_edit::AdaptiveParameters::signature()
+    };
+    let parameters = serde_json::to_value(parameters).unwrap();
+    for field in recipe["spatial"].as_array_mut().unwrap() {
+        field["parameters"] = parameters.clone();
+        // Distinct coefficients catch accidental truncation to one value per
+        // spatial cell or implicit reconstruction as a v1 treatment.
+        field["color_gain"] = json!(format!(
+            "f32hex:{}",
+            "3f8000003f8ccccd3f99999a".repeat(20 * 20 * 33 / 3)
+        ));
+    }
+    let native: strehl_edit::DevelopmentRecipe = serde_json::from_value(recipe.clone()).unwrap();
+    native.validate().unwrap();
+    assert_eq!(native.spatial[0].version, 2);
+    assert_eq!(native.spatial[0].color_gain.len(), 20 * 20 * 33);
+    assert_ne!(
+        native.spatial[0].color_gain[0],
+        native.spatial[0].color_gain[1]
+    );
+
+    let advertised = spatial_schema();
+    let fields = &advertised["properties"];
+    assert!(
+        fields["version"]["enum"]
+            .as_array()
+            .unwrap()
+            .contains(&json!(2))
+    );
+    let serialized = serde_json::to_value(&native.spatial[0]).unwrap();
+    let color = serialized["color_gain"].as_str().unwrap();
+    assert!(
+        color.len() > 3207,
+        "fixture must fail the retired v1 schema"
+    );
+    assert!(color.len() <= fields["color_gain"]["maxLength"].as_u64().unwrap() as usize);
+    let controls = &fields["parameters"]["properties"];
+    for (name, value) in serialized["parameters"].as_object().unwrap() {
+        let schema = &controls[name];
+        assert!(
+            schema.is_object(),
+            "native control {name} is absent from MCP"
+        );
+        if let Some(allowed) = schema["enum"].as_array() {
+            assert!(allowed.contains(value));
+        } else {
+            let number = value.as_f64().unwrap();
+            assert!(number >= schema["minimum"].as_f64().unwrap());
+            assert!(number <= schema["maximum"].as_f64().unwrap());
+        }
+    }
+
+    let lines = [
+        initialize(),
+        json!({"jsonrpc":"2.0","method":"notifications/initialized"}),
+        json!({"jsonrpc":"2.0","id":9,"method":"tools/call","params":{"name":"strehl_command",
+            "arguments":{"expected_revision":12,"command":{"operation":"set_develop","recipe":recipe}}}}),
+    ];
+    let wire = lines
+        .iter()
+        .map(Value::to_string)
+        .collect::<Vec<_>>()
+        .join("\n")
+        + "\n";
+    assert!(wire.len() < MAX_REQUEST_BYTES);
+    let mut calls = 0;
+    let mut output = Vec::new();
+    serve(std::io::Cursor::new(wire), &mut output, |request| {
+        request.check_revision(12).unwrap();
+        let AgentCommand::SetDevelop { recipe: received } = request.command else {
+            panic!("wrong operation")
+        };
+        assert_eq!(received, native);
+        calls += 1;
+        AgentReply::success(json!({"applied":true}))
+    })
+    .unwrap();
+    assert_eq!(calls, 1);
+    let reply: Value = serde_json::from_str(
+        std::str::from_utf8(&output)
+            .unwrap()
+            .lines()
+            .last()
+            .unwrap(),
+    )
+    .unwrap();
+    assert_eq!(reply["result"]["structuredContent"]["applied"], true);
+}
+
+#[test]
+fn v2_layout_unknown_versions_and_invalid_adaptive_controls_never_dispatch() {
+    let valid = measured_recipe_version(2);
+    let native: strehl_edit::DevelopmentRecipe = serde_json::from_value(valid.clone()).unwrap();
+    native.validate().unwrap();
+    let mut invalid = Vec::new();
+    for (key, value) in [
+        ("version", json!(3)),
+        ("version", json!(1)), // v2 colors under a v1 declaration
+        (
+            "color_gain",
+            json!(format!("f32hex:{}", "3f800000".repeat(20 * 20))),
+        ),
+        (
+            "color_gain",
+            json!(format!("f32hex:{}", "7fc00000".repeat(20 * 20 * 33))),
+        ),
+    ] {
+        let mut recipe = valid.clone();
+        recipe["spatial"][0][key] = value;
+        invalid.push(recipe);
+    }
+    for (key, value) in [
+        ("tone_range", json!("skin")),
+        ("shadow_protection", json!(-0.01)),
+        ("highlight_compression", json!(1.01)),
+        ("presence", json!(1.01)),
+        ("invented_control", json!(0.5)),
+    ] {
+        let mut recipe = valid.clone();
+        recipe["spatial"][0]["parameters"][key] = value;
+        invalid.push(recipe);
+    }
+    let mut protocol = Protocol::default();
+    ready(&mut protocol);
+    for recipe in invalid {
+        let call = json!({"jsonrpc":"2.0","id":10,"method":"tools/call","params":{"name":"strehl_command",
+            "arguments":{"expected_revision":12,"command":{"operation":"set_develop","recipe":recipe}}}});
+        let reply = protocol
+            .handle(&serde_json::to_vec(&call).unwrap(), &mut |_| {
+                panic!("invalid v2 treatment dispatched")
+            })
+            .unwrap();
+        assert_eq!(reply["result"]["isError"], true);
+    }
 }
 
 #[test]
@@ -115,7 +260,7 @@ fn schema_exposes_portable_controls_and_bounded_measured_spatial_data() {
     );
     assert_eq!(
         spatial["items"]["properties"]["color_gain"]["maxLength"],
-        3207
+        105607
     );
     assert!(
         spatial["description"]
