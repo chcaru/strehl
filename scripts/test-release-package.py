@@ -1,8 +1,11 @@
 """Adversarial packaging checks; no compiler, dependency source, or network access."""
 import importlib.util
+import json
 from pathlib import Path
 import struct
+import tarfile
 import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 import zipfile
@@ -188,6 +191,68 @@ class ReleasePackagingTests(unittest.TestCase):
             with patch.object(release, "ROOT", root), patch.object(release, "run", return_value=paths):
                 with self.assertRaisesRegex(RuntimeError, "Patched dependency missing"):
                     release.copy_application_source(root / "kit")
+
+    def test_source_staging_keeps_patch_sources_and_notices_in_distinct_directories(self):
+        # Exercise real source staging, notice collection and both archives.
+        # Only Cargo/git discovery is replaced with tiny owned fixtures.
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            repository, stage, output = (root / name for name in ("repository", "stage", "output"))
+            stage.mkdir()
+            output.mkdir()
+            files = {
+                "Cargo.toml": "[patch.crates-io]\negui-wgpu={path='third-party/egui-wgpu'}\n",
+                "Cargo.lock": "[[package]]\nname='rawler'\nversion='0.0.1'\nsource='registry+fixture'\n",
+                "third-party/egui-wgpu/Cargo.toml": "[package]\nname='egui-wgpu'\nversion='0.0.1'\n",
+                "third-party/egui-wgpu/LICENSE-MIT": "renderer fixture notice\n",
+                "experiments/native-gpu-gather/Cargo.toml": "[package]\nname='fixture'\n",
+                **{name: "owned licence fixture\n" for name in
+                   ("LICENSE-MIT", "LICENSE-APACHE", "LICENSE-LGPL-2.1")},
+            }
+            for relative, content in files.items():
+                path = repository / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(content, encoding="utf-8")
+
+            def discovery(command, *, cwd=None, **kwargs):
+                if command[:3] == ["git", "ls-files", "-z"]:
+                    return "\0".join(files) + "\0"
+                if command[:2] == ["cargo", "vendor"]:
+                    decoder = cwd / "vendor/rawler-0.0.1"
+                    decoder.mkdir(parents=True)
+                    (decoder / "LICENSE").write_text("decoder fixture notice\n", encoding="utf-8")
+                    return "# fixture vendor configuration\n"
+                if command[:2] == ["cargo", "metadata"]:
+                    return json.dumps({"packages": [
+                        {"name": "rawler", "version": "0.0.1", "source": "registry+fixture",
+                         "manifest_path": str(cwd / "vendor/rawler-0.0.1/Cargo.toml"), "license": "LGPL-2.1"},
+                        {"name": "egui-wgpu", "version": "0.0.1", "source": None,
+                         "manifest_path": str(cwd / "third-party/egui-wgpu/Cargo.toml"), "license": "MIT"},
+                    ]})
+                raise AssertionError(f"Unexpected discovery command: {command}")
+
+            context = {"version": "0.0.1", "source_commit": "a" * 40}
+            with patch.object(release, "ROOT", repository), patch.object(release, "run", side_effect=discovery):
+                archives, counts = release.package_source(
+                    SimpleNamespace(version="0.0.1", output=output), stage, context)
+            source = stage / "Strehl-source"
+            siblings = [path.name.casefold() for path in source.iterdir()]
+            self.assertEqual(len(siblings), len(set(siblings)), "the kit must also extract on case-insensitive hosts")
+            self.assertEqual((source / "third-party/egui-wgpu/Cargo.toml").read_text(),
+                             files["third-party/egui-wgpu/Cargo.toml"])
+            notices = source / "THIRD-PARTY-NOTICES"
+            self.assertTrue((notices / "NOTICE.md").is_file())
+            self.assertEqual((notices / "licenses/egui-wgpu-0.0.1/LICENSE-MIT").read_text(),
+                             "renderer fixture notice\n")
+            self.assertEqual(counts["dependency_count"], 2)
+            with tarfile.open(archives[0]) as archive:
+                self.assertEqual(archive.extractfile("Strehl-source/third-party/egui-wgpu/Cargo.toml").read(),
+                                 (repository / "third-party/egui-wgpu/Cargo.toml").read_bytes())
+                self.assertEqual(archive.extractfile("Strehl-source/THIRD-PARTY-NOTICES/NOTICE.md").read(),
+                                 (notices / "NOTICE.md").read_bytes())
+            with zipfile.ZipFile(archives[1]) as archive:
+                self.assertEqual(archive.read("licenses/egui-wgpu-0.0.1/LICENSE-MIT"),
+                                 (repository / "third-party/egui-wgpu/LICENSE-MIT").read_bytes())
 
 
 if __name__ == "__main__":

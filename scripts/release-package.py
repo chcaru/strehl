@@ -352,7 +352,9 @@ def package_source(args, stage, context):
     require(expected <= actual, "Metadata/vendor set omits a locked dependency")
     notices = stage / "notices"
     packages = collect_notices(metadata, notices, context, source)
-    shutil.copytree(notices, source / "THIRD-PARTY")
+    # Keep generated notices distinct from the checked-in third-party sources
+    # on case-insensitive filesystems as well as when extracting the archive.
+    shutil.copytree(notices, source / "THIRD-PARTY-NOTICES")
     (source / "REBUILD.md").write_text(REBUILD, encoding="utf-8")
     write_json(source / "release-source.json", {**context, "files": copied,
                "dependency_count": len(packages), "rebuild": "scripts/release-rebuild.py"})
