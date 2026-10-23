@@ -387,3 +387,36 @@ Private commands, fixed plans, source bindings, failures and independent receipt
 are retained under `outputs/ai-adaptive-production/favorite-hdr-reference-v1/`.
 The reserved final test remains unevaluated. No new model training or profile
 promotion follows from these encoding checks.
+
+### User preference on the HDR references
+
+On October 22, the user reported tentative favorites before the candidate
+identities were disclosed: Chia B, Garnet A, and Opal A. The frozen manifest and
+key were checked independently; both viewer versions use identical labels.
+The native viewer log records HDR active during navigation through all three
+subjects. This establishes the reported display state, not physical calibration.
+
+| Subject | Selected treatment |
+| --- | --- |
+| Chia | Complete favorite HDR preset, Adaptive Amount 125 |
+| Garnet | Complete favorite HDR preset, Adaptive Amount 0 |
+| Opal | Complete favorite HDR preset, Adaptive Amount 0 |
+
+Amount 0 retains Lightroom's native RAW, profile, white-balance and HDR rendering
+and the preset's other contrast and color controls. It is not an unprocessed
+baseline. All three selected candidates came from that native pipeline; these
+preferences do not isolate which rendering component made the difference.
+
+The next investigation should include a Strehl control for the preset's basic
+contrast and color treatment before attributing the native preference to a
+learned rendering model; the two applications' slider scales are not presumed
+equivalent. Evaluate a consistent HDR base-rendering target separately from
+optional Adaptive treatment. The choices do not justify using
+Amount 125 universally, silently mixing per-scene winners into training targets,
+or fitting a scene selector from three examples. Intermediate amounts and unseen
+subjects remain untested. The user supplied favorites rather than a complete
+ranking or defect analysis. The earlier SDR rejection and the disabled learned
+profile remain unchanged.
+
+The exact statement and decoded choices are preserved privately in
+`favorite-hdr-reference-v1/user-hdr-preference-2026-10-22.json`.
