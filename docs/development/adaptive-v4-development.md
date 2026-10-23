@@ -269,3 +269,76 @@ real semantic masks, fresh-scene review, UI/recipe integration, and end-to-end
 interaction tests. More training photos alone do not close those gaps. No learned
 profile is promoted, no release is created, and the reserved final test remains
 unevaluated.
+
+### Complete-stack references and the next photographic gate
+
+**VERIFIED locally:** the earlier ineligible RGB DNG is no longer the only
+reference route. A private experiment preserves the actual merged floating-point
+CFA samples in DNG, with camera calibration from a matching native RAW donor.
+Lightroom Local offered Adaptive Color for these complete-stack inputs. This is
+not relabeling developed RGB as camera RAW. Independent checks compare every
+sample and all four CFA phases with the stored merge output, including fractional
+values and values above the nominal sensor white. Above-white merge values are
+not, by themselves, evidence of recovered highlight information.
+
+A bounded development pilot now has three complete stacks and six matched native
+exports: Adaptive Amount 0 and 100 for each stack. The exports are full-resolution
+7032 by 4688 RGB16 ProPhoto TIFFs. Each pair holds the represented development and
+export settings fixed except Amount. Default RAW sharpening and color noise
+reduction remain present in both arms. The input files are disposable copies;
+source RAW hashes and hidden-inclusive folder inventories were rechecked after
+each wrapper build. Native Local opened only disposable merged copies. These
+private exports and camera-specific metadata are not shipped with Strehl.
+
+The frozen five-arm comparison contains the default Strehl photograph, its exact
+duplicate, both native exports, and the unchanged rank-eight student. Four native
+400-pixel regions per photograph were selected from the default result before
+candidate inspection. The independent reviewer freezes whole-photo observations
+before inspecting these regions, and freezes the final judgment before seeing
+the identities. Native and baseline RGB16 data are transformed through their ICC
+profiles before quantizing the review images; an independent adversarial control
+uses a synthetic color fixture to expose precision lost by the earlier
+quantize-before-transform presentation path. It does not quantify that loss in
+the earlier photographs or invalidate their qualitative rankings.
+
+This gate asks whether the proposed targets are worth learning. A brighter or
+more saturated photograph does not establish improved detail, denoising, or
+useful spatial adaptation. The complete pipelines also differ in camera color
+and tone processing, so preference alone cannot identify which operation helped.
+All three subjects already belong to development/training groups; the reserved
+final test remains unevaluated. If useful local treatment is not repeatable, native
+Amount 100 must not become a compulsory training target. Unchanged is a valid
+outcome. Proceeding requires useful local value on at least two subjects without
+consequential new damage on the third. Duplicate inconsistency or disagreement
+makes the pilot inconclusive. Passing this bar leads to an independently checked
+representation capacity experiment against a matched global control, before
+further training.
+
+Executed private tools and receipts are under
+`outputs/ai-adaptive-production/stack-target-utility-v1/`: `pilot-plan.json`,
+`build-merged-dng.py`, `independent-merged-audit.py`,
+`independent-native-pair-audit.py`, `render-frozen-rank8.py`,
+`build-blind-panel.py`, and the per-scene frozen reviews. Completed integrity and
+presentation evidence is in `independent-native-final-audit.json` and
+`independent-panel-audit-v2/receipt.json`. These are local evidence paths, not
+downloadable fixtures or a production feature. No new training was performed
+during this pilot, and no learned editor profile is enabled by it.
+
+**Independent photographic result: the frozen utility gate failed.** All fifteen
+whole photographs and sixty fixed native crops were reviewed before unblinding;
+the duplicate baseline was tied correctly on all three subjects. Adaptive 100
+was preferred on the seed stack. Adaptive 0 was preferred on the garnet, with a
+reservation about conspicuous shared fine rim texture. The unchanged Strehl
+photograph was preferred overall on the opal; Adaptive 0 gave more readable
+reflection gradation but a darker, less luminous whole image. Adaptive 100 made
+the opal's support distracting and its body milky. The student was also too pale
+and exposed objectionable background texture there.
+
+The independent decision receipt is `independent-pilot-decision.json`. Even
+granting the seed result the most favorable interpretation, it supplies only one
+supporting subject. This is a completed negative gate, not duplicate inconsistency
+or an inconclusive run. There is no progression to the conditional capacity fit
+or new training on these targets. Amount 0's useful observations do not license
+silently substituting a mixture of per-scene winning targets. None of these SDR
+preferences establishes native HDR display quality or evaluates a separate HDR
+preset with additional contrast and color adjustments.
