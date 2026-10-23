@@ -273,6 +273,11 @@ impl SourceBrowser {
         self.images.contains_key(&index)
     }
 
+    #[cfg(test)]
+    pub(crate) fn has_overview(&self, index: usize) -> bool {
+        self.overviews.contains_key(&index)
+    }
+
     pub fn has_thumbnail(&self, index: usize) -> bool {
         self.thumbnail(index).is_some()
     }

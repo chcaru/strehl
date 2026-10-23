@@ -3294,6 +3294,60 @@ fn entering_process_from_a_middle_photos_viewport_warms_every_fixed_contact_then
 }
 
 #[test]
+fn process_capture_inspection_can_promote_between_equal_sized_texture_tiers() {
+    const INSPECTED: usize = 17;
+    const COUNT: usize = 259;
+    let directory = jobs::tests::TestDirectory::new("process-inspection-scrub-promotion");
+    let ctx = Context::default();
+    theme::install(&ctx);
+    let mut app = app();
+    app.stack = Some(camera_stack_with_native_strip(directory.path(), COUNT));
+    app.activity = true;
+    app.process_view = true;
+    app.progress.ingest("STREHL_UI_PROGRESS event=stage name=alignment total=259\nSTREHL_UI_PROGRESS event=align-phase name=pairs frames=259 total=900\nSTREHL_UI_PROGRESS event=align-pair-start i=170 j=180 started=1 total=900 frames=259\n");
+    app.follow_current_frame();
+    // Finish whole-stack warming before requesting inspection, so the small
+    // tier is guaranteed to precede the overview instead of racing it.
+    wait_for(&mut app, &ctx, |app| {
+        app.browser.canonical_indices().len() == COUNT && !app.browser.active()
+    });
+    let scrub = app.source_photo(INSPECTED).unwrap();
+    assert_eq!(scrub.texture.size(), [120, 80]);
+    assert_eq!(scrub.aperture, [120, 80]);
+    assert!(!app.browser.has_image(INSPECTED));
+    assert!(!app.browser.has_overview(INSPECTED));
+    assert_eq!(app.selected, 180);
+    assert_eq!(app.process_space.inspection_frame(), None);
+
+    app.process_space.inspect_frame(INSPECTED);
+    // Pixel dimensions cannot identify the tier: the fixture's entire camera
+    // JPEG fits inside both tiers, even before the inspection request is polled.
+    assert!(
+        app.source_photo(INSPECTED)
+            .is_some_and(|photo| photo.texture.size() == [120, 80])
+    );
+    wait_for(&mut app, &ctx, |app| app.browser.has_overview(INSPECTED));
+    let overview = app.source_photo(INSPECTED).unwrap();
+    assert_eq!(overview.index, scrub.index);
+    assert_eq!(overview.epoch, scrub.epoch);
+    assert_eq!(overview.aperture, scrub.aperture);
+    assert_eq!(overview.texture.size(), scrub.texture.size());
+    assert_ne!(overview.texture.id(), scrub.texture.id());
+    assert!(!app.browser.has_image(INSPECTED));
+    assert_eq!(app.selected, 180);
+    assert_eq!(app.process_pair(), [INSPECTED, 180]);
+    eprintln!(
+        "Resident scrub {:?} {:?} promoted to overview {:?} {:?} for frame {} in epoch {}",
+        scrub.texture.id(),
+        scrub.texture.size(),
+        overview.texture.id(),
+        overview.texture.size(),
+        overview.index,
+        overview.epoch
+    );
+}
+
+#[test]
 fn process_capture_inspection_keeps_decoding_its_pixels_while_live_follow_advances() {
     // A distant, never-selected capture rejects the old accidental-cache path:
     // only an explicit persistent inspection pin can request its canonical JPEG.
@@ -3337,7 +3391,10 @@ fn process_capture_inspection_keeps_decoding_its_pixels_while_live_follow_advanc
             "canonical scheduling must retain the inspected capture alongside current work"
         );
         wait_for(&mut app, &ctx, |app| {
-            app.source_photo(INSPECTED).is_some() && app.source_photo(pair[1]).is_some()
+            // A resident scrub can arrive before the protected overview. Both
+            // tiers fit this fixture's full camera JPEG, so dimensions cannot
+            // distinguish their legitimate texture-identity transition.
+            app.browser.has_overview(INSPECTED) && app.source_photo(pair[1]).is_some()
         });
         let photo = app.source_photo(INSPECTED).unwrap();
         assert_eq!(photo.index, INSPECTED);
