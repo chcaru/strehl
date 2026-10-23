@@ -342,3 +342,48 @@ or new training on these targets. Amount 0's useful observations do not license
 silently substituting a mixture of per-scene winning targets. None of these SDR
 preferences establishes native HDR display quality or evaluates a separate HDR
 preset with additional contrast and color adjustments.
+
+### The user's HDR preset is a separate reference question
+
+The supplied favorite preset uses HDR, Adaptive Amount 125, and additional
+contrast, vibrance and saturation. It was not the neutral SDR recipe above.
+A separate private experiment applies that complete preset to disposable merged
+CFA copies, with a matched Amount 0 arm. Its scope is reference acquisition and
+encoding validation; it does not change the failed SDR decision or authorize
+training against a mixture of whichever targets happened to win.
+
+**VERIFIED for the checked native export:** full-resolution floating-point TIFF
+uses linear Rec.2020 with 1.0 corresponding to 203 nits. The encoding conclusion
+combines the actual ICC, an explicit native PQ companion, the published Adobe
+reference-white contract, and a fixed-scale prediction. The stricter preregistered
+requirement that every component agree within two 16-bit PQ codes **failed**:
+three of 98,898,048 components exceeded that tolerance. Independent localization
+found tiny blue values, with a maximum localized absolute discrepancy below
+0.000017 nits. The failure remains recorded; no correction was fitted and no
+tolerance was relaxed. It does not establish bit-identical cross-format rendering.
+The PQ companion's legacy ICC curves must not be mistaken for its CICP-declared
+HDR encoding or used as an SDR conversion for this comparison.
+
+**Independently verified:** default Strehl HDR references for the same three
+complete stacks apply each master and its stored display placement exactly once. All
+296,694,144 developed float samples were checked against an independently
+implemented calculation, including negative and above-white values. The separate
+lossy AVIF companions retain their original transport-test results: two failed
+the maximum-error bar and one passed. The comparison consumes the verified float
+images, not those compressed companions. The native favorite's global contrast
+and color controls differ from Strehl's defaults: this compares complete
+pipelines, not an isolated Adaptive effect.
+
+A private comparison viewer uses the existing native HDR presenter, common
+203-nit white and a common display-peak policy, with synchronized zoom and pan.
+It refuses an inactive HDR display rather than silently substituting SDR. Its
+color conversion, signed-float resizing, input rejection, and GPU output were
+independently commissioned; physical display calibration and photographic
+preference are separate questions. The initial generic float-resize path failed
+a negative/above-white fixture and was replaced before photographs were shown.
+This instrument is not an enabled Adaptive profile or a production quality result.
+
+Private commands, fixed plans, source bindings, failures and independent receipts
+are retained under `outputs/ai-adaptive-production/favorite-hdr-reference-v1/`.
+The reserved final test remains unevaluated. No new model training or profile
+promotion follows from these encoding checks.
