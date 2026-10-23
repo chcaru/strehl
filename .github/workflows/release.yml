@@ -193,7 +193,7 @@ jobs:
       - name: Test the delivered kit without network or private corpus inputs
         working-directory: build-kit/Strehl-source
         # Each fixture may start decoder workers; bound simultaneous fixture pools.
-        run: cargo test --locked --offline -p strehl-ui --target "$TARGET" -- --test-threads=2
+        run: cargo test --locked --offline -p strehl-ui -p strehl-edit --target "$TARGET" -- --test-threads=2
       - name: Build the shipped executable from the offline relink kit
         run: python build-kit/Strehl-source/scripts/release-rebuild.py --target "$TARGET"
       - name: Package and inspect native dependencies

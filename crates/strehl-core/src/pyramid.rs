@@ -436,20 +436,46 @@ impl Pyramid {
 
     /// Rebuild the level-0 image from the bands and the base.
     pub fn collapse(&self, ws: &mut Workspace) -> Vec<f32> {
+        self.collapse_with(ws, |_, _| {})
+    }
+
+    /// Reconstruct with an optional bound after each level's addition.
+    ///
+    /// One output allocation alternates with the workspace's existing expansion
+    /// buffer. Only the active prefix is read: the rest is scratch left over
+    /// from a smaller level. Swapping buffers avoids copying or allocating every
+    /// expanded level, without changing expand/add/bound arithmetic or order.
+    fn collapse_with(
+        &self,
+        ws: &mut Workspace,
+        mut bound: impl FnMut(&mut [f32], usize),
+    ) -> Vec<f32> {
         let n = self.levels();
-        let mut acc = self.data[n - 1].clone();
+        // Both buffers retain the caller's maximum working extent. Otherwise
+        // an odd number of swaps on a smaller pyramid shrinks the workspace
+        // and a later reconstruction at its original size can panic.
+        let mut acc = vec![0.0; self.sizes[0].pixels().max(ws.expanded.len())];
+        let base_px = self.sizes[n - 1].pixels();
+        acc[..base_px].copy_from_slice(&self.data[n - 1]);
+        bound(&mut acc[..base_px], n - 1);
         for k in (0..n - 1).rev() {
             let px = self.sizes[k].pixels();
             expand(
-                &acc,
+                &acc[..self.sizes[k + 1].pixels()],
                 self.sizes[k + 1],
                 &mut ws.expanded[..px],
                 self.sizes[k],
                 &mut ws.scratch,
             );
-            acc = ws.expanded[..px].to_vec();
-            acc.par_iter_mut().zip(&self.data[k]).for_each(|(a, l)| *a += l);
+            ws.expanded[..px]
+                .par_iter_mut()
+                .zip(&self.data[k])
+                .for_each(|(a, l)| *a += l);
+            bound(&mut ws.expanded[..px], k);
+            std::mem::swap(&mut acc, &mut ws.expanded);
         }
+        // A caller may provide a workspace sized for a larger photograph.
+        acc.truncate(self.sizes[0].pixels());
         acc
     }
 
@@ -468,6 +494,10 @@ impl Pyramid {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "pyramid-collapse-tests.rs"]
+mod collapse_tests;
 
 /// Reusable scratch for the pyramid operators, so a per-frame fold allocates
 /// once rather than 300 times.
@@ -2679,30 +2709,13 @@ impl BandMerge {
     /// divergence in the reconstruction arithmetic itself would show up as a
     /// difference between hull modes and be misread as an effect of the bound.
     fn collapse_bounded(&self, pyr: &Pyramid, c: usize, ws: &mut Workspace) -> Vec<f32> {
-        let n = pyr.levels();
-        let mut acc = pyr.level(n - 1).to_vec();
-        // The coarsest level is the base residual. It is a convex combination of
-        // the frames' Gaussians there, so this clamp is very nearly inactive --
-        // but it is applied anyway rather than assumed inactive, because "nearly"
-        // is not a property and the unweighted fallback is a mean whose
-        // membership of the hull deserves to be enforced rather than reasoned
-        // about.
-        if n - 1 >= 1 {
-            self.clamp_level(&mut acc, n - 1, c);
-        }
-        for k in (0..n - 1).rev() {
-            let px = pyr.sizes()[k].pixels();
-            let mut up = vec![0.0; px];
-            expand(&acc, pyr.sizes()[k + 1], &mut up, pyr.sizes()[k], &mut ws.scratch);
-            for (u, b) in up.iter_mut().zip(pyr.level(k)) {
-                *u += b;
+        pyr.collapse_with(ws, |acc, k| {
+            // Include the base residual: a nearly inactive bound is not an
+            // inactive bound. Level 0 retains its separate final hull clamp.
+            if k > 0 {
+                self.clamp_level(acc, k, c);
             }
-            if k >= 1 {
-                self.clamp_level(&mut up, k, c);
-            }
-            acc = up;
-        }
-        acc
+        })
     }
 
     /// Apply the per-level hull bound to a partial reconstruction at level `k`.

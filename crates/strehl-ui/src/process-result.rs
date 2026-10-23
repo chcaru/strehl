@@ -14,6 +14,9 @@ use overlay_mesh::Mode as OverlayMode;
 
 #[derive(Default)]
 pub(crate) struct ResultPhoto {
+    photo_paint: Option<crate::photo_viewport::PhotoPaint>,
+    diagnostics_suppressed: bool,
+    edit_navigation: bool,
     navigator: DetailNavigator,
     drag: Option<Pos2>,
     region: Option<(Pos2, Pos2)>,
@@ -47,6 +50,7 @@ pub(crate) struct Action {
     pub reset: bool,
 }
 
+#[derive(Clone, Copy)]
 pub(crate) struct Context<'a> {
     pub texture: &'a TextureHandle,
     pub extent: Vec2,
@@ -60,6 +64,24 @@ pub(crate) struct Context<'a> {
 }
 
 impl ResultPhoto {
+    pub(crate) fn set_edit_navigation(&mut self, editing: bool) {
+        if self.edit_navigation != editing {
+            self.cancel_gesture();
+        }
+        self.edit_navigation = editing;
+        if editing {
+            self.probe_region = None;
+        }
+    }
+    pub(crate) fn set_photo_paint(&mut self, paint: Option<crate::photo_viewport::PhotoPaint>) {
+        self.photo_paint = paint;
+    }
+    pub(crate) fn suppress_diagnostics(&mut self, suppressed: bool) {
+        self.diagnostics_suppressed = suppressed;
+        if suppressed {
+            self.probe_region = None;
+        }
+    }
     pub(crate) fn admission_visible(ctx: &egui::Context) -> bool {
         OverlayMode::read(ctx) != OverlayMode::Clean
     }
@@ -92,6 +114,8 @@ impl ResultPhoto {
     }
     pub(crate) fn hover_region(&self, ui: &Ui, aperture: Rect) -> Option<Rect> {
         let allowed = ui.is_enabled()
+            && !self.diagnostics_suppressed
+            && !self.edit_navigation
             && ui.ctx().memory(|m| m.is_above_modal_layer(ui.layer_id()))
             && !egui::Popup::is_any_open(ui.ctx())
             && self.probe_count > 0
@@ -130,6 +154,9 @@ impl ResultPhoto {
     ) {
         self.balance.update(ctx, output, expected);
     }
+    pub(crate) fn invalidate_balance(&mut self) {
+        self.balance.invalidate();
+    }
     pub(crate) fn cancel_gesture(&mut self) {
         self.cancelled_press |= self.drag.is_some() || self.region.is_some();
         self.drag = None;
@@ -149,6 +176,9 @@ impl ResultPhoto {
                 .ctx()
                 .memory(|memory| memory.is_above_modal_layer(ui.layer_id()));
         let peek = allowed && ui.input(|state| state.key_down(egui::Key::Space));
+        // Regional reconstruction changes admission provenance. Confidence is
+        // recomputed against the repaired result, so it remains valid here.
+        let hide_admission = peek || self.diagnostics_suppressed || self.edit_navigation;
         if allowed
             && !egui::Popup::is_any_open(ui.ctx())
             && ui.input(|state| state.key_pressed(egui::Key::Escape))
@@ -158,34 +188,18 @@ impl ResultPhoto {
         }
         let image = fit(input.extent, rect);
         let painter = ui.painter_at(rect);
-        painter.image(input.texture.id(), image, input.aperture, Color32::WHITE);
-        let show_samples = self.dense_selection.is_none() || self.range_samples_visible(ui.ctx());
-        if show_samples {
-            self.sync_samples(ui.ctx(), &input);
+        if let Some(paint) = &self.photo_paint {
+            paint.paint(&painter, image, input.aperture);
+        } else {
+            painter.image(input.texture.id(), image, input.aperture, Color32::WHITE);
         }
-        if !peek {
+        if !hide_admission {
+            self.paint_inspection_evidence(ui, image, &input, 1.0);
+        } else if !peek && !self.edit_navigation {
+            // Confidence remains valid after a regional reconstruction, even
+            // though the original admission provenance is suppressed.
             self.balance
                 .paint(&painter, image, input.aperture, input.pin);
-            if OverlayMode::read(ui.ctx()) != OverlayMode::Clean {
-                if let Some(selection) = &self.dense_selection {
-                    self.selection_painter
-                        .paint(&painter, selection, image, input.aperture);
-                } else if let Some(region) = &self.dense_region {
-                    self.dense_painter.paint(
-                        &painter,
-                        region,
-                        image,
-                        input.aperture,
-                        sample_glyphs::level_color(input.level),
-                    );
-                }
-            }
-            // A range's coherent footprint is the primary comparison. Dense
-            // sample marks can otherwise completely obscure its fill and the
-            // shared-region stripes, especially when the photograph is fit.
-            if show_samples {
-                self.paint_samples(&painter, image, &input);
-            }
         }
         let overview = (input.aperture.width() < 0.995 && !peek).then(|| {
             let size = Vec2::new(112.0, 78.0).min(image.size() * 0.34);
@@ -196,41 +210,63 @@ impl ResultPhoto {
         });
         let hit = ui.interact(image, ui.id().with("result-photo"), Sense::click_and_drag());
         hit.context_menu(|ui| {
-            ui.label("Photograph overlay");
-            let mut mode = OverlayMode::read(ui.ctx());
-            for (value, label) in [
-                (OverlayMode::Detail, "Selected detail size"),
-                (OverlayMode::Scales, "All detail sizes"),
-                (OverlayMode::Clean, "Hide admission marks"),
-            ] {
-                if ui.selectable_value(&mut mode, value, label).changed() {
-                    mode.write(ui.ctx());
+            let diagnostics = self.probe_count > 0;
+            if diagnostics {
+                ui.label("Photograph overlay");
+                if self.diagnostics_suppressed {
+                    ui.label("Regional repairs changed the admitted detail.");
+                    ui.label("Original admission evidence remains in the matrix.");
+                }
+                ui.add_enabled_ui(!self.diagnostics_suppressed, |ui| {
+                    let mut mode = OverlayMode::read(ui.ctx());
+                    for (value, label) in [
+                        (OverlayMode::Detail, "Selected detail size"),
+                        (OverlayMode::Scales, "All detail sizes"),
+                        (OverlayMode::Clean, "Hide admission marks"),
+                    ] {
+                        if ui.selectable_value(&mut mode, value, label).changed() {
+                            mode.write(ui.ctx());
+                        }
+                    }
+                    ui.separator();
+                    dense_region_controls(ui);
+                    self.selection_summary(ui);
+                    if let Some(region) = &self.dense_region {
+                        ui.label(format!(
+                            "{} regions · {}/{} recorded samples admitted",
+                            region.islands, region.admitted, region.observed
+                        ));
+                    }
+                });
+                ui.separator();
+                if self.balance.ready() {
+                    let mut enabled = self.balance.enabled();
+                    if ui.checkbox(&mut enabled, "Observation balance").changed() {
+                        self.balance.set_enabled(enabled);
+                    }
                 }
             }
-            ui.separator();
-            dense_region_controls(ui);
-            self.selection_summary(ui);
-            if let Some(region) = &self.dense_region {
-                ui.label(format!(
-                    "{} regions · {}/{} recorded samples admitted",
-                    region.islands, region.admitted, region.observed
-                ));
-            }
-            ui.separator();
-            if self.balance.ready() {
-                let mut enabled = self.balance.enabled();
-                if ui.checkbox(&mut enabled, "Observation balance").changed() {
-                    self.balance.set_enabled(enabled);
-                }
-            }
-            if ui.button("Fit photograph and linked details").clicked() {
+            if ui
+                .button(if diagnostics {
+                    "Fit photograph and linked details"
+                } else {
+                    "Fit photograph"
+                })
+                .clicked()
+            {
                 action.reset = true;
                 ui.close();
             }
             ui.separator();
-            ui.label("Click: focus · drag at fit: select a region");
-            ui.label("Wheel: zoom · zoomed drag: pan · Shift-drag: select");
-            ui.label("Ctrl+wheel: resize the regional contribution lens");
+            if self.edit_navigation {
+                ui.label("Wheel: zoom · drag: pan");
+            } else {
+                ui.label("Click: focus · drag at fit: select a region");
+                ui.label("Wheel: zoom · zoomed drag: pan · Shift-drag: select");
+            }
+            if diagnostics {
+                ui.label("Ctrl+wheel: resize the regional contribution lens");
+            }
             ui.label("Double-click: fit · Space: clean photograph");
         });
         let reset_gesture = crate::image_gesture::reset(ui, &hit);
@@ -242,7 +278,7 @@ impl ResultPhoto {
         let over_overview =
             overview.is_some_and(|view| pointer.is_some_and(|at| view.expand(3.0).contains(at)));
         let resized_probe = allowed
-            && !peek
+            && !hide_admission
             && !over_overview
             && self.probe_count > 0
             && self.probe_analysis.is_some()
@@ -261,7 +297,9 @@ impl ResultPhoto {
         {
             if hit.is_pointer_button_down_on() && ui.input(|state| state.pointer.primary_pressed())
             {
-                if input.aperture.width() >= 0.995 || ui.input(|s| s.modifiers.shift) {
+                if !self.edit_navigation
+                    && (input.aperture.width() >= 0.995 || ui.input(|s| s.modifiers.shift))
+                {
                     self.region = pointer.map(|at| (at, at));
                     self.drag = None;
                 } else {
@@ -291,7 +329,9 @@ impl ResultPhoto {
                 ui.ctx().set_cursor_icon(egui::CursorIcon::Grabbing);
             } else if hit.hovered() {
                 ui.ctx().set_cursor_icon(
-                    if input.aperture.width() >= 0.995 || ui.input(|s| s.modifiers.shift) {
+                    if !self.edit_navigation
+                        && (input.aperture.width() >= 0.995 || ui.input(|s| s.modifiers.shift))
+                    {
                         egui::CursorIcon::Crosshair
                     } else {
                         egui::CursorIcon::Grab
@@ -299,6 +339,7 @@ impl ResultPhoto {
                 );
             }
             if hit.clicked()
+                && !self.edit_navigation
                 && !reset_gesture.pending
                 && let Some(at) = pointer
             {
@@ -326,6 +367,7 @@ impl ResultPhoto {
             }
         }
         if !peek
+            && !self.edit_navigation
             && self.probe_count == 0
             && hit.hovered()
             && input.aperture.width() >= 0.995
@@ -439,7 +481,7 @@ impl ResultPhoto {
         self.probe.set_texture(input.texture.id());
         let previous_probe = self.probe_region;
         self.probe_region = if allowed
-            && !peek
+            && !hide_admission
             && !over_overview
             && !reset_gesture.pending
             && self.probe_count > 0
@@ -542,6 +584,51 @@ impl ResultPhoto {
         self.overlay.paint(painter, image, input, &self.samples);
     }
 
+    /// Paint-only evidence for an inspection reveal. Keeping this separate
+    /// from `show` lets a retiring overlay fade without registering any probe,
+    /// navigator or gesture response over the now-active editing canvas.
+    pub(crate) fn paint_inspection_evidence(
+        &mut self,
+        ui: &Ui,
+        image: Rect,
+        input: &Context<'_>,
+        opacity: f32,
+    ) {
+        if opacity <= 0.0 || ui.input(|state| state.key_down(egui::Key::Space)) {
+            return;
+        }
+        let mut painter = ui.painter_at(image);
+        painter.multiply_opacity(opacity);
+        self.balance
+            .paint(&painter, image, input.aperture, input.pin);
+        if self.diagnostics_suppressed {
+            return;
+        }
+        let show_samples = self.dense_selection.is_none() || self.range_samples_visible(ui.ctx());
+        if show_samples {
+            self.sync_samples(ui.ctx(), input);
+        }
+        if OverlayMode::read(ui.ctx()) != OverlayMode::Clean {
+            if let Some(selection) = &self.dense_selection {
+                self.selection_painter
+                    .paint(&painter, selection, image, input.aperture);
+            } else if let Some(region) = &self.dense_region {
+                self.dense_painter.paint(
+                    &painter,
+                    region,
+                    image,
+                    input.aperture,
+                    sample_glyphs::level_color(input.level),
+                );
+            }
+        }
+        // A range's coherent footprint is primary; optional sample marks must
+        // not obscure its fill and shared-region stripes.
+        if show_samples {
+            self.paint_samples(&painter, image, input);
+        }
+    }
+
     fn selection_summary(&self, ui: &mut Ui) {
         let Some(selection) = &self.dense_selection else {
             return;
@@ -580,14 +667,31 @@ impl ResultPhoto {
     /// overlay panes, and never alter the data or the finished photograph.
     pub(crate) fn legend(&mut self, ui: &mut Ui, rect: Rect, extent: Vec2) {
         let key = self.mask_key.as_ref();
-        if key.is_none() && self.dense_selection.is_none() {
-            return;
-        }
         if rect.width() < 180.0 {
             return;
         }
         let p = ui.painter_at(rect);
         p.rect_filled(rect, 0.0, theme::BG);
+        if self.diagnostics_suppressed || key.is_none() && self.dense_selection.is_none() {
+            let balance_width = rect.width().min(280.0);
+            if self.diagnostics_suppressed && rect.width() > balance_width + 220.0 {
+                p.text(
+                    rect.left_center(),
+                    egui::Align2::LEFT_CENTER,
+                    "Regional repairs applied · original admission in matrix",
+                    egui::FontId::proportional(9.0),
+                    theme::MUTED,
+                );
+            }
+            self.balance.control(
+                ui,
+                Rect::from_min_max(
+                    egui::pos2(rect.right() - balance_width, rect.top()),
+                    rect.max,
+                ),
+            );
+            return;
+        }
         let mode_rect = Rect::from_min_size(rect.min, egui::vec2(60.0, rect.height()));
         ui.scope_builder(egui::UiBuilder::new().max_rect(mode_rect), |ui| {
             ui.set_clip_rect(mode_rect);

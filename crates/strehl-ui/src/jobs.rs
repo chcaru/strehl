@@ -106,6 +106,58 @@ pub(crate) fn spawn_task<T: Send + 'static>(
     }
 }
 
+struct CompletionNotice<T> {
+    sender: Option<SyncSender<Result<T, String>>>,
+    notify: Arc<dyn Fn() + Send + Sync>,
+}
+
+impl<T> Drop for CompletionNotice<T> {
+    fn drop(&mut self) {
+        // Notification promises a readable result OR a disconnected channel.
+        // Drop the sole sender first, including during cancellation/unwinding.
+        drop(self.sender.take());
+        (self.notify)();
+    }
+}
+
+/// Like `spawn_task`, with exactly one completion notice after publication.
+/// The receiver needs no polling timer: a failed/cancelled/panicking worker
+/// also notifies, after its channel becomes readable or disconnected.
+pub(crate) fn spawn_notifying_task<T: Send + 'static>(
+    name: &str,
+    work: impl FnOnce(Arc<AtomicBool>) -> Result<T> + Send + 'static,
+    notify: impl Fn() + Send + Sync + 'static,
+) -> Task<T> {
+    let (sender, receiver) = mpsc::sync_channel(1);
+    let cancelled = Arc::new(AtomicBool::new(false));
+    let worker_cancelled = Arc::clone(&cancelled);
+    let notify: Arc<dyn Fn() + Send + Sync> = Arc::new(notify);
+    let worker_notify = Arc::clone(&notify);
+    let started = thread::Builder::new().name(name.into()).spawn(move || {
+        let completion = CompletionNotice {
+            sender: Some(sender),
+            notify: worker_notify,
+        };
+        let result = work(Arc::clone(&worker_cancelled)).map_err(|error| format!("{error:#}"));
+        if !worker_cancelled.load(Ordering::Relaxed) {
+            let _ = completion.sender.as_ref().unwrap().send(result);
+        }
+    });
+    if started.is_err() {
+        // The failed spawn has already dropped its closure and sole sender.
+        // No CompletionNotice was constructed, so this is the only notice.
+        notify();
+    }
+    Task {
+        receiver,
+        cancelled,
+    }
+}
+
+#[cfg(test)]
+#[path = "jobs-worker-tests.rs"]
+mod worker_tests;
+
 #[derive(Clone, Debug)]
 pub struct FrameFile {
     pub path: PathBuf,
@@ -250,6 +302,10 @@ pub struct RenderRequest {
     pub pyramid_gate: Option<f32>,
     pub worker_threads: Option<usize>,
     pub settings: RenderSettings,
+    /// Keep scene-linear pixels for reversible development and HDR export.
+    pub retain_master: bool,
+    /// Immutable snapshot of this run's regional repairs and development.
+    pub recipe: Option<strehl_edit::DevelopmentRecipe>,
 }
 
 #[derive(Debug)]
@@ -371,7 +427,24 @@ fn run_render(
         let output_parent = prepare_output_parent(&source, &request.output_parent)?;
         // Re-scan immediately before launch; a stale UI scan must not authorize
         // a folder that is now empty. Only names and sizes are read here.
-        scan(&source, cancelled)?;
+        let captures = scan(&source, cancelled)?;
+        if let Some(recipe) = &request.recipe {
+            let count = request
+                .settings
+                .frame_limit
+                .unwrap_or(captures.frames.len())
+                .min(captures.frames.len());
+            for region in recipe.regions.iter().filter(|region| region.enabled) {
+                if let Some(range) = &region.source_range {
+                    ensure!(
+                        range.last < count,
+                        "Region {} needs capture {}, but this run includes only {count}",
+                        region.name,
+                        range.last + 1
+                    );
+                }
+            }
+        }
         let directory = create_job_directory(&output_parent)?;
         job_directory = Some(directory.clone());
         let directory = fs::canonicalize(&directory).context("Resolving the new output folder")?;
@@ -384,6 +457,18 @@ fn run_render(
         let log = directory.join("render.log");
         let cache = directory.join("cache");
         fs::create_dir(&cache).context("Creating the render's private cache")?;
+        if let Some(recipe) = &request.recipe {
+            let bytes = serde_json::to_vec_pretty(recipe)?;
+            for name in ["region-recipe.json", "result.strehl-edits.json"] {
+                let mut file = OpenOptions::new()
+                    .write(true)
+                    .create_new(true)
+                    .open(directory.join(name))
+                    .context("Saving the run's edit recipe")?;
+                file.write_all(&bytes)?;
+                file.sync_all()?;
+            }
+        }
         let mut command = render_command(request, &source, &partial)?;
         command.env("STREHL_CACHE_DIR", &cache);
         let mut log_file = OpenOptions::new()
@@ -423,6 +508,9 @@ fn run_render(
                     !cancelled.load(Ordering::Relaxed),
                     "Render cancelled before publication"
                 );
+                if request.retain_master {
+                    publish_linear_master(&directory, cancelled)?;
+                }
                 publish_render_outputs(
                     &partial,
                     &output,
@@ -452,6 +540,13 @@ fn run_render(
 }
 
 fn validate_settings(request: &RenderRequest) -> Result<()> {
+    if let Some(recipe) = &request.recipe {
+        recipe.validate()?;
+        ensure!(
+            request.retain_master,
+            "Regional edits require a retained linear master"
+        );
+    }
     ensure!(
         !(request.settings.auto_exposure && request.exposure_ev.is_some()),
         "Choose either automatic exposure or an explicit exposure, not both"
@@ -509,6 +604,19 @@ fn render_command(request: &RenderRequest, source: &Path, partial: &Path) -> Res
         .arg(source)
         .args(["--merge", "pyramid", "--srgb", "--out"])
         .arg(partial);
+    let directory = partial
+        .parent()
+        .context("The render output needs a parent directory")?;
+    if request.retain_master {
+        command
+            .arg("--linear-master")
+            .arg(directory.join("master.partial.tiff"));
+    }
+    if request.recipe.is_some() {
+        command
+            .arg("--region-recipe")
+            .arg(directory.join("region-recipe.json"));
+    }
     if let Some(exposure) = request.exposure_ev {
         command.arg(format!("--exposure={exposure}"));
     }
@@ -679,6 +787,12 @@ fn validate_output_parent(source: &Path, output_parent: &Path) -> Result<()> {
         !path_is_within(output_parent, source),
         "Choose an output folder outside the input stack"
     );
+    validate_corpus_destination(output_parent)
+}
+
+fn validate_corpus_destination(output_parent: &Path) -> Result<()> {
+    #[cfg(not(windows))]
+    let _ = output_parent;
     #[cfg(windows)]
     for corpus in [Path::new(r"C:\dev\macro"), Path::new(r"D:\personal\macro")] {
         let corpus = fs::canonicalize(corpus).unwrap_or_else(|_| corpus.to_path_buf());
@@ -688,6 +802,17 @@ fn validate_output_parent(source: &Path, output_parent: &Path) -> Result<()> {
         );
     }
     Ok(())
+}
+
+pub(crate) fn validate_export_destination(
+    source: Option<&Path>,
+    output_parent: &Path,
+) -> Result<()> {
+    let parent = canonical_directory(output_parent)?;
+    if let Some(source) = source {
+        return validate_output_parent(source, &parent);
+    }
+    validate_corpus_destination(&parent)
 }
 
 fn create_job_directory(parent: &Path) -> Result<PathBuf> {
@@ -728,6 +853,43 @@ fn publish_render_outputs(
         .context("Publishing the requested confidence map")?;
     }
     publish_output(partial, output, cancelled)
+}
+
+fn publish_linear_master(directory: &Path, cancelled: &AtomicBool) -> Result<()> {
+    let partial = directory.join("master.partial.tiff");
+    // Validate the complete float image, including embedded color and recipe
+    // metadata. The SDR viewer would accept a wrongly encoded integer TIFF.
+    let image = strehl_edit::load_tiff(&partial).context("Validating the linear master")?;
+    ensure!(
+        image.origin == strehl_edit::ImageOrigin::SceneLinear,
+        "The engine's editing master is not scene-linear"
+    );
+    ensure!(
+        image.baseline.is_some(),
+        "The editing master has no display baseline"
+    );
+    let recipe_path = directory.join("region-recipe.json");
+    let expected = if recipe_path.is_file() {
+        let bytes = crate::edit_workspace::read_bounded(&recipe_path, 2 * 1024 * 1024)?;
+        serde_json::from_slice::<strehl_edit::DevelopmentRecipe>(&bytes)?
+    } else {
+        strehl_edit::DevelopmentRecipe::default()
+    };
+    image
+        .validate_source_repairs(&expected)
+        .context("The engine did not apply the requested source-region repairs")?;
+    let result_size = image::image_dimensions(directory.join("result.partial.tiff"))
+        .context("Reading the SDR photograph dimensions")?;
+    ensure!(
+        (image.width, image.height) == result_size,
+        "The editing master and photograph have different dimensions"
+    );
+    drop(image);
+    ensure!(
+        !cancelled.load(Ordering::Relaxed),
+        "Render cancelled before publication"
+    );
+    publish_no_replace(&partial, &directory.join("master.tiff"))
 }
 
 fn publish_output(partial: &Path, output: &Path, cancelled: &AtomicBool) -> Result<()> {
@@ -966,7 +1128,93 @@ pub(crate) mod tests {
             pyramid_gate: None,
             worker_threads: None,
             settings: RenderSettings::default(),
+            retain_master: false,
+            recipe: None,
         }
+    }
+
+    #[test]
+    fn editing_master_and_recipe_are_explicit_arguments_in_the_reserved_run() {
+        let mut request = request(PathBuf::from("input with spaces"), PathBuf::from("outputs"));
+        request.retain_master = true;
+        request.recipe = Some(strehl_edit::DevelopmentRecipe::default());
+        let partial = Path::new("output with spaces/result.partial.tiff");
+        let command = render_command(&request, &request.source, partial).unwrap();
+        let args = command
+            .get_args()
+            .map(|v| v.to_string_lossy().into_owned())
+            .collect::<Vec<_>>();
+        let has_pair = |key: &str, path: &Path| {
+            args.windows(2)
+                .any(|pair| pair[0] == key && pair[1] == path.to_string_lossy())
+        };
+        assert!(has_pair(
+            "--linear-master",
+            &partial.parent().unwrap().join("master.partial.tiff")
+        ));
+        assert!(has_pair(
+            "--region-recipe",
+            &partial.parent().unwrap().join("region-recipe.json")
+        ));
+        request.retain_master = false;
+        assert!(validate_settings(&request).is_err());
+    }
+
+    #[test]
+    fn master_publication_rejects_wrong_pixels_and_preserves_existing_output() {
+        let directory = TestDirectory::new("editing-master-publication");
+        let root = directory.path();
+        image::RgbImage::new(16, 12)
+            .save(root.join("result.partial.tiff"))
+            .unwrap();
+        let cancelled = AtomicBool::new(false);
+        assert!(publish_linear_master(root, &cancelled).is_err());
+        fs::copy(
+            root.join("result.partial.tiff"),
+            root.join("master.partial.tiff"),
+        )
+        .unwrap();
+        assert!(
+            publish_linear_master(root, &cancelled).is_err(),
+            "an SDR TIFF is not a linear master"
+        );
+        fs::remove_file(root.join("master.partial.tiff")).unwrap();
+        let mut master = strehl_edit::LinearImage {
+            width: 16,
+            height: 12,
+            pixels: vec![1.7; 16 * 12 * 3],
+            origin: strehl_edit::ImageOrigin::SceneLinear,
+            baseline: Some(strehl_edit::DisplayBaseline {
+                black: 0.0,
+                white: 1.0,
+                contrast: 0.0,
+                exposure_gain: 1.0,
+            }),
+            baked_recipe: None,
+        };
+        strehl_edit::save_linear_tiff(&root.join("master.partial.tiff"), &master).unwrap();
+        cancelled.store(true, Ordering::Relaxed);
+        assert!(publish_linear_master(root, &cancelled).is_err());
+        assert!(!root.join("master.tiff").exists());
+        cancelled.store(false, Ordering::Relaxed);
+        fs::write(root.join("master.tiff"), b"existing-image").unwrap();
+        assert!(publish_linear_master(root, &cancelled).is_err());
+        assert_eq!(
+            fs::read(root.join("master.tiff")).unwrap(),
+            b"existing-image"
+        );
+        fs::remove_file(root.join("master.tiff")).unwrap();
+        publish_linear_master(root, &cancelled).unwrap();
+        let published = strehl_edit::load_tiff(&root.join("master.tiff")).unwrap();
+        assert_eq!(published.pixels, master.pixels);
+        assert!(!root.join("master.partial.tiff").exists());
+        master.width = 12;
+        master.height = 16;
+        strehl_edit::save_linear_tiff(&root.join("master.partial.tiff"), &master).unwrap();
+        assert!(
+            publish_linear_master(root, &cancelled).is_err(),
+            "same sample count, different shape must fail"
+        );
     }
 
     #[test]

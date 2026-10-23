@@ -88,12 +88,14 @@ fn catalog_roundtrips_exact_settings_pins_and_layout_and_replaces_an_existing_fi
         (run.exposure, run.gate, run.workers),
         (Some(-0.75), Some(0.65), 3)
     );
+    let entries: std::collections::BTreeSet<_> = fs::read_dir(files.catalog().parent().unwrap())
+        .unwrap()
+        .map(|e| e.unwrap().path())
+        .collect();
     assert_eq!(
-        fs::read_dir(files.catalog().parent().unwrap())
-            .unwrap()
-            .count(),
-        1,
-        "successful replacement should not leave a partial catalog alongside it"
+        entries,
+        std::collections::BTreeSet::from([files.catalog(), files.catalog().with_extension("lock")]),
+        "Only the completed catalog and persistent lock inode may remain; no temporary publication files"
     );
 }
 

@@ -9,6 +9,68 @@ use crate::{
 
 const REVIEW_SIZE: [f32; 2] = [1410.0, 850.0];
 
+#[test]
+fn edit_fit_resets_all_camera_views_but_keeps_pinned_capture_ranges() {
+    let ctx = egui::Context::default();
+    let fixture = ResultFixture::new(&ctx, false);
+    let surfaces = fixture.surfaces();
+    let data = result_input(&fixture, &surfaces);
+    let mut theater = ProcessTheater::default();
+    result_paint(&mut theater, &ctx, data, 0.0, vec![]);
+    result_paint(&mut theater, &ctx, data, 0.6, vec![]);
+    // Range state belongs to the actual timeline, which the legacy direct
+    // theater fixture does not create. Paint that owner before selecting.
+    let _ = ctx.run(
+        egui::RawInput {
+            screen_rect: Some(Rect::from_min_size(Pos2::ZERO, REVIEW_SIZE.into())),
+            time: Some(0.7),
+            ..Default::default()
+        },
+        |ctx| {
+            egui::CentralPanel::default().show(ctx, |ui| {
+                theater.show_with_ribbon(
+                    ui,
+                    Rect::from_min_size(Pos2::ZERO, egui::vec2(1410.0, 590.0)),
+                    &data,
+                    &mut Response::default(),
+                    Some(Rect::from_min_max(
+                        egui::pos2(0.0, 600.0),
+                        egui::pos2(1410.0, 850.0),
+                    )),
+                );
+            });
+        },
+    );
+    assert!(
+        theater
+            .screenshot_ranges(
+                (1, fixture.progress.diagnostic_epoch),
+                data.frame_count,
+                &[[2, 8], [19, 28]]
+            )
+            .unwrap()
+    );
+    let pinned = theater.participation.spans().to_vec();
+    theater.scales.set_view(egui::pos2(0.6, 0.4), 3.0);
+    theater.zoom = 4.0;
+    theater.pan = egui::vec2(8.0, 12.0);
+    theater.source_zoom = 2.5;
+    theater.source_pan = egui::vec2(-4.0, 7.0);
+    theater.enlarged = Some(DiagnosticKind::Averaging);
+    theater.fit_edit_view();
+    assert_eq!(theater.participation.spans(), pinned);
+    assert_eq!(theater.scales.target_view(), (egui::pos2(0.5, 0.5), 1.0));
+    assert_eq!((theater.zoom, theater.source_zoom), (1.0, 1.0));
+    assert_eq!((theater.pan, theater.source_pan), (Vec2::ZERO, Vec2::ZERO));
+    assert_eq!(theater.enlarged, None);
+    assert!(
+        theater.undo(),
+        "reset remains an ordinary undoable navigation action"
+    );
+    assert_eq!((theater.zoom, theater.source_zoom), (4.0, 2.5));
+    assert_eq!(theater.participation.spans(), pinned);
+}
+
 struct ResultFixture {
     progress: PipelineProgress,
     packets: Vec<DiagnosticSurface>,
@@ -281,6 +343,471 @@ fn result_warm(field: &mut ProcessTheater, ctx: &egui::Context, input: Input<'_>
     result_paint(field, ctx, input, 0.0, vec![]);
     result_paint(field, ctx, input, 0.4, vec![]);
     result_paint(field, ctx, input, 0.6, vec![]);
+}
+
+#[test]
+fn an_explicit_view_before_first_final_paint_survives_completion_and_refinement() {
+    for focused in [false, true] {
+        let ctx = egui::Context::default();
+        let fixture = ResultFixture::new(&ctx, true);
+        let surfaces = fixture.surfaces();
+        let input = result_input(&fixture, &surfaces);
+        let mut field = ProcessTheater {
+            edit_focus: focused,
+            ..Default::default()
+        };
+        field.set_photo_view(egui::pos2(0.64, 0.38), 8.0);
+        result_warm(&mut field, &ctx, input);
+        let output = result_paint(&mut field, &ctx, input, 0.9, vec![]);
+        let photo = result_photo(&output, &fixture);
+        assert!(
+            (photo.uv.width() - 0.125).abs() < 0.002,
+            "An accepted early crop must survive initial epoch/completion: {:?}",
+            photo.uv
+        );
+        assert!(photo.uv.center().distance(egui::pos2(0.64, 0.38)) < 0.002);
+        let refined = ctx.load_texture(
+            "later-developed-same-photo",
+            egui::ColorImage::filled([166, 126], Color32::WHITE),
+            egui::TextureOptions::LINEAR,
+        );
+        result_paint(
+            &mut field,
+            &ctx,
+            Input {
+                output: Some(&refined),
+                ..input
+            },
+            1.1,
+            vec![],
+        );
+        assert!(
+            (field.scales.aperture().width() - 0.125).abs() < 0.002,
+            "Texture refinement must retain crop"
+        );
+        assert!(
+            field.undo(),
+            "The initial explicit view must remain reversible"
+        );
+        result_paint(
+            &mut field,
+            &ctx,
+            Input {
+                output: Some(&refined),
+                ..input
+            },
+            1.4,
+            vec![],
+        );
+        assert!((field.scales.aperture().width() - 1.0).abs() < 0.002);
+    }
+    let ctx = egui::Context::default();
+    let fixture = ResultFixture::new(&ctx, false);
+    let surfaces = fixture.surfaces();
+    let input = result_input(&fixture, &surfaces);
+    let mut space = crate::process_space::ProcessSpace::default();
+    space.set_photo_view([0.64, 0.38], 8.0);
+    let mut last = None;
+    for time in [0.0, 0.4, 0.6, 0.9] {
+        last = Some(ctx.run(
+            egui::RawInput {
+                screen_rect: Some(Rect::from_min_size(Pos2::ZERO, REVIEW_SIZE.into())),
+                time: Some(time),
+                ..Default::default()
+            },
+            |ctx| {
+                egui::CentralPanel::default().show(ctx, |ui| {
+                    space.show(ui, input);
+                });
+            },
+        ));
+    }
+    let photo = result_photo(last.as_ref().unwrap(), &fixture);
+    assert!(
+        (photo.uv.width() - 0.125).abs() < 0.002,
+        "Outer workspace initialization must preserve the request"
+    );
+}
+
+#[test]
+fn early_view_survives_delayed_overview_and_developed_photo_publication() {
+    for requested_at in [0, 1, 2, 3, 4] {
+        for focused in [false, true] {
+            let ctx = egui::Context::default();
+            let mut fixture = ResultFixture::new(&ctx, true);
+            let mut preview = fixture.packets[0].clone();
+            preview.kind = DiagnosticKind::Preview;
+            preview.scope = DiagnosticScope::Stack;
+            preview.sequence = 900;
+            preview.scale = DiagnosticScale::Linear;
+            fixture.packets.push(preview);
+            fixture.textures.push(fixture.textures[0].clone());
+            let surfaces = fixture.surfaces();
+            let input = result_input(&fixture, &surfaces);
+            let overview = ctx.load_texture(
+                "delayed-bounded-overview",
+                egui::ColorImage::filled([41, 32], Color32::WHITE),
+                egui::TextureOptions::LINEAR,
+            );
+            let mut field = ProcessTheater {
+                edit_focus: focused,
+                ..Default::default()
+            };
+            let mut last = None;
+            for step in 0..12 {
+                if step == requested_at {
+                    field.set_photo_view(egui::pos2(0.38, 0.57), 8.0);
+                }
+                let output = match step {
+                    0..=1 => None,
+                    2..=4 => Some(&overview),
+                    _ => input.output,
+                };
+                last = Some(result_paint(
+                    &mut field,
+                    &ctx,
+                    Input { output, ..input },
+                    step as f64 * 0.1,
+                    vec![],
+                ));
+            }
+            let photo = result_photo(last.as_ref().unwrap(), &fixture);
+            assert!(
+                (photo.uv.width() - 0.125).abs() < 0.002,
+                "request at {requested_at}, focused {focused}: {:?}",
+                photo.uv
+            );
+            assert!(photo.uv.center().distance(egui::pos2(0.38, 0.57)) < 0.002);
+        }
+    }
+}
+
+#[test]
+fn latest_human_gesture_replaces_pending_final_photo_intent() {
+    for reset in [false, true] {
+        let ctx = egui::Context::default();
+        let mut fixture = ResultFixture::new(&ctx, true);
+        let mut preview = fixture.packets[0].clone();
+        preview.kind = DiagnosticKind::Preview;
+        preview.scope = DiagnosticScope::Stack;
+        preview.sequence = 900;
+        preview.scale = DiagnosticScale::Linear;
+        fixture.packets.push(preview);
+        fixture.textures.push(fixture.textures[0].clone());
+        let surfaces = fixture.surfaces();
+        let input = result_input(&fixture, &surfaces);
+        let waiting = Input {
+            output: None,
+            ..input
+        };
+        let mut field = ProcessTheater::default();
+        result_warm(&mut field, &ctx, waiting);
+        field.set_photo_view(egui::pos2(0.38, 0.57), 8.0);
+        result_paint(&mut field, &ctx, waiting, 0.7, vec![]);
+        assert!(field.requested_view.is_some());
+        let area = field.primary_destination.unwrap();
+        let at = area.min + area.size() * egui::vec2(0.2, 0.8);
+        if reset {
+            for (time, pressed) in [(0.8, true), (0.82, false), (0.92, true), (0.94, false)] {
+                result_paint(
+                    &mut field,
+                    &ctx,
+                    waiting,
+                    time,
+                    vec![egui::Event::PointerMoved(at), result_button(at, pressed)],
+                );
+            }
+            assert!(
+                field.requested_view.is_none(),
+                "A newer human reset must cancel pending zoom"
+            );
+            assert_eq!(field.zoom, 1.0, "The real double click must fire");
+        } else {
+            result_paint(
+                &mut field,
+                &ctx,
+                waiting,
+                0.8,
+                vec![
+                    egui::Event::PointerMoved(at),
+                    egui::Event::MouseWheel {
+                        unit: egui::MouseWheelUnit::Point,
+                        delta: egui::vec2(0.0, -120.0),
+                        modifiers: egui::Modifiers::NONE,
+                    },
+                ],
+            );
+            let zoom = field.requested_view.unwrap().1;
+            assert!(
+                zoom > 1.0 && zoom < 7.0,
+                "The real wheel must modify the pending crop: {zoom}"
+            );
+            result_paint(&mut field, &ctx, waiting, 1.0, vec![]);
+            assert!(
+                (field.requested_view.unwrap().1 - field.zoom).abs() < 0.001,
+                "The latest human crop must replace the old request"
+            );
+        }
+        let expected_zoom = field.zoom;
+        for time in [1.2, 1.6, 2.0] {
+            result_paint(&mut field, &ctx, input, time, vec![]);
+        }
+        assert!(
+            (field.scales.aperture().width().recip() - expected_zoom).abs() < 0.002,
+            "Final arrival overrode the latest human gesture"
+        );
+        assert!(field.requested_view.is_none());
+    }
+}
+
+#[test]
+fn pending_final_photo_follows_plain_image_and_matrix_clicks() {
+    for matrix in [false, true] {
+        let ctx = egui::Context::default();
+        let mut fixture = ResultFixture::new(&ctx, true);
+        let mut preview = fixture.packets[0].clone();
+        preview.kind = DiagnosticKind::Preview;
+        preview.scope = DiagnosticScope::Stack;
+        preview.sequence = 900;
+        preview.scale = DiagnosticScale::Linear;
+        fixture.packets.push(preview);
+        fixture.textures.push(fixture.textures[0].clone());
+        let surfaces = fixture.surfaces();
+        let input = result_input(&fixture, &surfaces);
+        let waiting = Input {
+            output: None,
+            ..input
+        };
+        let mut field = ProcessTheater::default();
+        result_warm(&mut field, &ctx, waiting);
+        field.set_photo_view(egui::pos2(0.5, 0.5), 1.0);
+        let painted = result_paint(&mut field, &ctx, waiting, 0.7, vec![]);
+        let area = if matrix {
+            result_meshes(&painted)
+                .into_iter()
+                .find(|mesh| mesh.id == fixture.textures[0].id())
+                .expect("The real matrix map must be painted")
+                .rect
+        } else {
+            field.primary_destination.unwrap()
+        };
+        let at = area.min + area.size() * egui::vec2(0.22, 0.73);
+        for (time, pressed) in [(0.8, true), (0.82, false)] {
+            result_paint(
+                &mut field,
+                &ctx,
+                waiting,
+                time,
+                vec![egui::Event::PointerMoved(at), result_button(at, pressed)],
+            );
+        }
+        let expected = field
+            .requested_view
+            .expect("Newer interaction must reach the pending photograph");
+        assert!(
+            expected.0.distance(egui::pos2(0.5, 0.5)) > 0.1,
+            "The real {matrix} click must relocate the pin: {expected:?}"
+        );
+        assert!(expected.1 > 1.0, "The real click must focus detail");
+        for time in [1.2, 1.6, 2.0] {
+            result_paint(&mut field, &ctx, input, time, vec![]);
+        }
+        let actual = field.scales.aperture();
+        assert!(actual.center().distance(expected.0) < 0.002);
+        assert!((actual.width().recip() - expected.1).abs() < 0.002);
+    }
+}
+
+#[test]
+fn pending_final_photo_respects_navigation_undo_and_redo() {
+    for redo in [false, true] {
+        let ctx = egui::Context::default();
+        let fixture = ResultFixture::new(&ctx, true);
+        let surfaces = fixture.surfaces();
+        let input = result_input(&fixture, &surfaces);
+        let mut field = ProcessTheater::default();
+        result_warm(
+            &mut field,
+            &ctx,
+            Input {
+                output: None,
+                ..input
+            },
+        );
+        field.set_photo_view(egui::pos2(0.3, 0.6), 2.0);
+        field.set_photo_view(egui::pos2(0.6, 0.3), 4.0);
+        assert!(field.undo());
+        if redo {
+            assert!(field.redo());
+        }
+        let expected = if redo {
+            (egui::pos2(0.6, 0.3), 4.0)
+        } else {
+            (egui::pos2(0.3, 0.6), 2.0)
+        };
+        for time in [1.2, 1.6, 2.0] {
+            result_paint(&mut field, &ctx, input, time, vec![]);
+        }
+        assert!((field.scales.aperture().width().recip() - expected.1).abs() < 0.002);
+        assert!(field.scales.aperture().center().distance(expected.0) < 0.002);
+    }
+}
+
+#[test]
+fn drawing_on_zoomed_final_photo_uses_its_real_crop_and_does_not_pan() {
+    use crate::edit_workspace::{DrawingTool, EditorState, LoadedPhoto};
+    use std::sync::Arc;
+    for cropped in [false, true] {
+        let ctx = egui::Context::default();
+        let fixture = ResultFixture::new(&ctx, cropped);
+        let surfaces = fixture.surfaces();
+        let input = result_input(&fixture, &surfaces);
+        let mut field = ProcessTheater::default();
+        result_warm(&mut field, &ctx, input);
+        field.set_photo_view(egui::pos2(0.65, 0.4), 4.0);
+        let output = result_paint(&mut field, &ctx, input, 0.8, vec![]);
+        let painted = result_photo(&output, &fixture);
+        assert!(
+            painted.uv.width() < 0.3,
+            "agent view must zoom the final photograph"
+        );
+        assert!((painted.uv.center().x - 0.65).abs() < 0.002);
+        let before = field.scales.aperture();
+        let image = Arc::new(strehl_edit::LinearImage {
+            width: 16,
+            height: 12,
+            pixels: vec![0.2; 16 * 12 * 3],
+            origin: strehl_edit::ImageOrigin::SceneLinear,
+            baseline: None,
+            baked_recipe: None,
+        });
+        let mut editor = EditorState::default();
+        editor.loaded = Some(LoadedPhoto {
+            image: image.clone(),
+            preview: image,
+            recipe: Default::default(),
+            source: "unopened-fixture".into(),
+            warnings: vec![],
+        });
+        editor.tool = DrawingTool::Rectangle;
+        let a = painted.rect.min + painted.rect.size() * egui::vec2(0.2, 0.3);
+        let b = painted.rect.min + painted.rect.size() * egui::vec2(0.7, 0.65);
+        for (time, events) in [
+            (1.0, vec![]),
+            (
+                1.2,
+                vec![egui::Event::PointerMoved(a), result_button(a, true)],
+            ),
+            (1.4, vec![egui::Event::PointerMoved(b)]),
+            (1.6, vec![result_button(b, false)]),
+        ] {
+            let _ = ctx.run(
+                egui::RawInput {
+                    screen_rect: Some(Rect::from_min_size(Pos2::ZERO, REVIEW_SIZE.into())),
+                    time: Some(time),
+                    events,
+                    ..Default::default()
+                },
+                |ctx| {
+                    egui::CentralPanel::default()
+                        .frame(egui::Frame::NONE)
+                        .show(ctx, |ui| {
+                            field.annotation_mode = editor.tool != DrawingTool::Navigate;
+                            field.show(ui, ui.max_rect(), &input, &mut Response::default());
+                            let mapping = field
+                                .edit_mapping
+                                .expect("final photograph must expose its coordinates");
+                            editor.draw_overlay(ui, mapping);
+                        });
+                },
+            );
+        }
+        assert_eq!(
+            editor.recipe.regions.len(),
+            1,
+            "one drag must create one region"
+        );
+        let expected = Rect::from_min_max(
+            painted.uv.min + painted.uv.size() * egui::vec2(0.2, 0.3),
+            painted.uv.min + painted.uv.size() * egui::vec2(0.7, 0.65),
+        );
+        let bounds = crate::edit_workspace::shape_bounds(&editor.recipe.regions[0].shape);
+        result_same_rect(
+            Rect::from_min_max(bounds[0].into(), bounds[1].into()),
+            expected,
+        );
+        result_same_rect(field.scales.aperture(), before);
+        assert!(editor.undo());
+        assert!(editor.recipe.regions.is_empty());
+        assert!(editor.redo());
+        assert_eq!(editor.recipe.regions.len(), 1);
+    }
+}
+
+#[test]
+fn scene_button_resets_the_actual_photo_crop_while_annotation_owns_the_canvas() {
+    // A no-op click fails because every arm starts with a non-central,
+    // visibly magnified crop. Exercise both the instrument and photo layouts,
+    // and both certified output geometries rather than only a square fixture.
+    for cropped in [false, true] {
+        for photo_focus in [false, true] {
+            let ctx = egui::Context::default();
+            let fixture = ResultFixture::new(&ctx, cropped);
+            let surfaces = fixture.surfaces();
+            let input = result_input(&fixture, &surfaces);
+            let mut field = ProcessTheater {
+                annotation_mode: true,
+                edit_focus: photo_focus,
+                ..Default::default()
+            };
+            result_warm(&mut field, &ctx, input);
+            field.set_photo_view(egui::pos2(0.68, 0.43), 3.6);
+            let zoomed = result_paint(&mut field, &ctx, input, 0.9, vec![]);
+            let photo = result_photo(&zoomed, &fixture);
+            assert!(photo.uv.width() < 0.3, "fixture must be visibly zoomed");
+            assert!((photo.uv.center().x - 0.68).abs() < 0.002);
+            let button = zoomed
+                .shapes
+                .iter()
+                .find_map(|shape| match &shape.shape {
+                    egui::Shape::Text(text) if text.galley.text().ends_with("× · Scene") => {
+                        Some(text.visual_bounding_rect().center())
+                    }
+                    _ => None,
+                })
+                .expect("Scene reset must be visible while drawing");
+            result_paint(
+                &mut field,
+                &ctx,
+                input,
+                1.1,
+                vec![
+                    egui::Event::PointerMoved(button),
+                    result_button(button, true),
+                ],
+            );
+            result_paint(
+                &mut field,
+                &ctx,
+                input,
+                1.2,
+                vec![result_button(button, false)],
+            );
+            let reset = result_paint(&mut field, &ctx, input, 1.8, vec![]);
+            let photo = result_photo(&reset, &fixture);
+            result_same_rect(
+                photo.uv,
+                Rect::from_min_max(Pos2::ZERO, egui::pos2(1.0, 1.0)),
+            );
+            assert!(
+                field.annotation_mode,
+                "reset must leave the drawing tool active"
+            );
+            let (whole, visible) = field.edit_mapping.expect("drawing mapping must remain");
+            result_same_rect(whole, photo.rect);
+            result_same_rect(visible, photo.rect);
+        }
+    }
 }
 
 #[test]

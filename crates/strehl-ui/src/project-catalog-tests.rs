@@ -456,9 +456,17 @@ fn catalog_read_and_save_share_the_same_boundary_and_refused_save_is_non_destruc
     assert_eq!(std::fs::read(&path).unwrap(), original);
     assert_eq!(
         std::fs::read_dir(&directory).unwrap().count(),
-        1,
-        "refused publication must not leave a misleading temporary workspace"
+        2,
+        "only the catalog and persistent lock inode may remain"
     );
+    assert!(path.with_extension("lock").is_file());
+    assert!(!std::fs::read_dir(&directory).unwrap().any(|entry| {
+        entry
+            .unwrap()
+            .path()
+            .extension()
+            .is_some_and(|ext| ext == "tmp")
+    }));
     std::fs::remove_dir_all(directory).unwrap();
 }
 
@@ -552,4 +560,38 @@ fn corrupt_project_library_never_falls_back_to_legacy_or_overwrites_either_file(
     assert_eq!(std::fs::read(&destination).unwrap(), damaged);
     assert_eq!(std::fs::read(&legacy).unwrap(), old);
     std::fs::remove_dir_all(directory).unwrap();
+}
+
+#[test]
+fn photo_versions_cannot_cross_stack_identity_and_exports_need_exact_saved_version() {
+    let mut catalog = Catalog::default();
+    let project = catalog.create_project("Same names").unwrap();
+    let first = catalog
+        .create_stack(project, "Capture", draft("a"))
+        .unwrap();
+    let second = catalog
+        .create_stack(project, "Capture", draft("b"))
+        .unwrap();
+    catalog.add_revision(first, run("one", "a", 7)).unwrap();
+    catalog.add_revision(second, run("two", "b", 7)).unwrap();
+    let output = PathBuf::from("one/photo.tiff");
+    let identity = serde_json::json!({"canonical_path":output,"bytes":20,"dimensions":[20,10],"sha256":"a".repeat(64)});
+    let version:PhotoVersion=serde_json::from_value(serde_json::json!({"id":"0123456789abcdef0123456789abcdef","name":"Edit","created":20,"owner":catalog.photo_owner(&output),"photo":identity,"decoded_source":identity,"loaded_sha256":"b".repeat(64)})).unwrap();
+    let mut wrong = version.clone();
+    wrong.owner.stack = Some(second);
+    assert!(catalog.add_photo_version(wrong).is_err());
+    let mut missing = version.clone();
+    missing.owner.stack = None;
+    missing.owner.run = None;
+    assert!(catalog.add_photo_version(missing).is_err());
+    assert!(catalog.photo_versions.is_empty());
+    catalog.add_photo_version(version.clone()).unwrap();
+    catalog.validate().unwrap();
+    let mut collision = version.clone();
+    collision.name = "Different content".into();
+    assert!(catalog.add_photo_version(collision).is_err());
+    assert_eq!(catalog.photo_versions.len(), 1);
+    let export:PhotoExport=serde_json::from_value(serde_json::json!({"id":"abcdef0123456789abcdef0123456789","version":"ffffffffffffffffffffffffffffffff","path":"out.png","created":22,"settings":{"format":"png","color_space":"srgb","hdr":false,"quality":100,"speed":6},"bytes":20,"sha256":"c".repeat(64)})).unwrap();
+    assert!(catalog.add_photo_export(export).is_err());
+    assert!(catalog.photo_exports.is_empty());
 }

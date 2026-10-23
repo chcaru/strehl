@@ -1,6 +1,8 @@
 //! Native, event-driven desktop shell. The existing CLI owns all RAW processing.
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+#[path = "agent-interface.rs"]
+mod agent_interface;
 mod app;
 #[path = "bracket-browser.rs"]
 mod bracket_browser;
@@ -8,18 +10,26 @@ mod bracket_browser;
 #[cfg(test)]
 mod capture_axis;
 mod controls;
+#[path = "develop-presets.rs"]
+mod develop_presets;
+#[path = "development-job.rs"]
+mod development_job;
 #[path = "draft-preview.rs"]
 mod draft_preview;
+#[path = "edit-workspace.rs"]
+mod edit_workspace;
 mod engine;
+#[path = "hdr-display.rs"]
+mod hdr_display;
 #[path = "image-gesture.rs"]
 mod image_gesture;
 mod jobs;
+#[path = "photo-viewport.rs"]
+mod photo_viewport;
 mod pipeline;
 mod preview;
 #[path = "process-admission-regions.rs"]
 mod process_admission_regions;
-#[path = "process-atlas.rs"]
-mod process_atlas;
 #[path = "process-balance.rs"]
 mod process_balance;
 #[path = "process-contribution.rs"]
@@ -60,6 +70,8 @@ mod process_theater;
 mod processing_view;
 #[path = "project-explorer.rs"]
 mod project_explorer;
+#[path = "reveal-path.rs"]
+mod reveal_path;
 #[path = "source-browser.rs"]
 mod source_browser;
 #[path = "source-preview.rs"]
@@ -102,7 +114,10 @@ pub struct LaunchOptions {
     pub workbench: Option<workbench::WorkbenchMode>,
     pub probe_at: Option<[f32; 2]>,
     pub process: bool,
-    pub space: bool,
+    pub edit: bool,
+    pub export: bool,
+    pub projects: bool,
+    pub agent: bool,
 }
 
 fn parse_screenshot_ranges(value: &str) -> Option<Vec<[usize; 2]>> {
@@ -123,20 +138,40 @@ fn parse_screenshot_ranges(value: &str) -> Option<Vec<[usize; 2]>> {
 }
 
 fn main() -> eframe::Result {
+    if let Some(code) = agent_interface::run_mcp_from_args() {
+        std::process::exit(code);
+    }
     if let Some(code) = engine::run_worker() {
         std::process::exit(code);
     }
     let mut launch = LaunchOptions::default();
     let mut args = std::env::args_os().skip(1);
     while let Some(arg) = args.next() {
+        if arg == "--edit" {
+            launch.edit = true;
+            continue;
+        }
+        if arg == "--export" {
+            launch.export = true;
+            continue;
+        }
+        if arg == "--projects" {
+            launch.projects = true;
+            continue;
+        }
+        if arg == "--agent" {
+            launch.agent = true;
+            continue;
+        }
         if arg == "--process" {
             launch.process = true;
             continue;
         }
         if arg == "--space" {
-            launch.space = true;
-            launch.process = true;
-            continue;
+            eprintln!(
+                "The experimental 3D viewer has been retired. Open the process workspace instead."
+            );
+            std::process::exit(2);
         }
         if arg == "--screenshot-ranges" {
             launch.screenshot_ranges = args
@@ -232,7 +267,7 @@ fn main() -> eframe::Result {
             Some("--activity-log") => &mut launch.activity_log,
             _ => {
                 eprintln!(
-                    "Usage: Strehl [--source DIR] [--open-run DIR] [--browse DIR] [--preview IMAGE] [--engine EXE] [--process] [--space] [--screenshot PNG]"
+                    "Usage: Strehl [--source DIR] [--open-run DIR] [--browse DIR] [--preview IMAGE] [--engine EXE] [--process] [--edit | --export | --projects] [--agent] [--screenshot PNG]"
                 );
                 std::process::exit(2);
             }
@@ -265,10 +300,7 @@ fn main() -> eframe::Result {
         renderer: eframe::Renderer::Wgpu,
         // Keep at most one presentation in flight: camera inspection should
         // follow the newest pointer position without a queue of stale views.
-        wgpu_options: eframe::egui_wgpu::WgpuConfiguration {
-            desired_maximum_frame_latency: Some(1),
-            ..Default::default()
-        },
+        wgpu_options: hdr_display::configuration(),
         ..Default::default()
     };
     eframe::run_native(

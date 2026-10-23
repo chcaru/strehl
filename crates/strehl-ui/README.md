@@ -45,7 +45,7 @@ and [release checklist](../../docs/public-release.md).
 **Exploring the photograph**
 
 The photograph, detail views and capture timeline remain together. **Projects**,
-**Adjust**, **Review** and **Activity** open in the resizable sidebar. Drag pane
+**Adjust**, **Edit**, **Agent**, **Review** and **Activity** open in the resizable sidebar. Drag pane
 boundaries to change proportions; double-click a boundary or use **Reset layout**
 to restore them. The compact window dock provides Move, minimize, maximize and
 close controls; outer edges and corners resize the window.
@@ -101,6 +101,27 @@ as **Observation balance**. It describes the rank balance of aligned observation
 it is not a confidence probability or defect detector. Missing observations and
 bounded diagnostic retention remain explicit. **Activity** provides the engine
 log; reported memory plans are not live RAM measurements.
+
+**Developing and repairing a photograph**
+
+Open **Edit** after stacking. **Photograph focus** gives the image more space
+while retaining the timeline; turn it off to show the process instruments again.
+Adjust the whole photograph, or choose **Circle**, **Box**, or **Lasso** and draw a
+region. Select its name to adjust only that region, set its feather, or leave a
+note. **Before** temporarily shows the original rendering; Undo/Redo also covers
+these edits. Recipes save beside the result, preserving the original image.
+
+**Stack repair · next run** restricts a region to a chosen capture span. Press
+**Stack** to rebuild it; changing that span or region does not change the already
+rendered pixels. Each run saves a new result and editable float master. Export a
+new TIFF or HDR AVIF from **Edit**. Older SDR results remain editable but need a
+new stack for HDR. See the [development guide](../../docs/development-and-hdr.md)
+for supported preset controls and HDR limits.
+
+Use **Agent → Enable agent access** to connect an existing MCP host. Its
+conversation stays in that host; annotations, suggestions, adjustments, and
+results appear in Strehl. **Circle an issue** opens the same region tool used for
+manual edits. See [connection instructions](../../docs/agent-interface.md).
 
 **Development**
 

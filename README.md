@@ -7,8 +7,10 @@ the alignment network, detail at different scales, noise thresholds, admitted
 detail, fallback averages, and the image taking shape. After stacking, the same
 workspace lets you explore how the captures relate to the finished photograph.
 
-[Download the preview](https://github.com/chcaru/strehl/releases/tag/v0.1.0-alpha.5) ·
+[Download the preview](https://github.com/chcaru/strehl/releases/tag/v0.1.0-alpha.6) ·
 [Desktop controls](crates/strehl-ui/README.md) ·
+[Development and HDR](docs/development-and-hdr.md) ·
+[Agent interface](docs/agent-interface.md) ·
 [Build and verify](docs/development/release-workflow.md)
 
 ## Watch a photograph come together
@@ -72,8 +74,24 @@ failed approaches, corrections, and remaining limitations.
 | Scrub | Move through captures beside the final photograph, with linked zoom and pan. |
 | Select | Pin multiple capture ranges. Their estimated regions keep distinct colors, with mixed stripes at intersections. |
 | Investigate | Probe a region, compare detail scales, inspect recorded sample admission, and view observation balance when recorded. |
+| Develop | Keep a scene-linear float master; adjust light and color globally or in editable regions. Draw an ellipse, rectangle, polygon, or freehand lasso; move and reshape it afterward. Import supported numeric XMP controls with explicit warnings for unsupported Adobe profiles. |
+| Refine a selection | Draw **Magic lasso** around contrasting objects or defects. Bounded image analysis proposes separate editable outlines; ambiguous areas remain unselected. This experimental tool uses image contrast, not semantic object recognition. |
+| Adapt | Apply image-specific spatial tone and color treatment to the photograph or a selection; adjust its Amount without moving your manual sliders. Regional highlight balancing remains separate. This original treatment does not reproduce Adobe's AI profile or recover clipped texture. |
+| Reuse | Save light, color and Adaptive settings as named presets. Adaptive is recalculated for the destination photograph; measured fields and selection geometry are not transplanted. |
+| Inspect | Retain a fast overview while visible detail refines to source pixels as you zoom. HDR-capable Windows/macOS displays can present the linear master's highlight headroom. |
+| Repair | Restrict a selected region to a capture span on the next stack, then feather that reconstruction into the photograph. |
+| Deliver | Use the separate **Export** pane for AVIF, TIFF, PNG or JPEG, with sRGB, Display P3 or Rec.2020 tagging. AVIF defaults to quality 100 and HDR Rec.2020 for a linear master; SDR images remain SDR. Existing files are preserved. |
 | Arrange | Resize the workspace panes, open sidebar tools, undo exploration changes, and reset views with a double-click. |
-| Automate | Use the separate CLI or build against the Rust workspace. |
+| Collaborate | Enable a local MCP session for an external agent: inspect bounded image crops and diagnostics, annotate regions, adjust settings, and operate the workspace with revision checks. |
+| Automate | Use the separate CLI, shared development recipe, or Rust workspace. |
+
+The alpha.6 preview includes development, spatial Adaptive, progressive/HDR display,
+local source repairs, HDR export, and MCP collaboration. A learned AI Adaptive
+profile is not enabled in this release.
+The [development guide](docs/development-and-hdr.md) explains color and recipe
+semantics, and the [agent guide](docs/agent-interface.md) describes connecting an
+existing MCP-capable host. Strehl does not supply a model subscription or
+intercept a vendor login.
 
 **Reading the overlays:** admission marks show sampled coefficients that passed
 a detail gate. They are not fractional RGB ownership, an exact winning-frame
@@ -87,7 +105,7 @@ these distinctions.
 ## Download and start
 
 Get the platform package from the
-[release page](https://github.com/chcaru/strehl/releases/tag/v0.1.0-alpha.5).
+[release page](https://github.com/chcaru/strehl/releases/tag/v0.1.0-alpha.6).
 
 | Platform | Application |
 | --- | --- |
@@ -123,9 +141,15 @@ are supported by this application. Image quality depends on the capture,
 alignment, and scene; inspect the complete result and native-resolution detail.
 Occlusion boundaries, deep focus sweeps, and complex motion remain difficult.
 
-Normal stacking runs on the CPU; the GPU draws the workspace. The display uses
-8-bit textures and is not an ICC soft-proofing viewer; saved TIFF output is
-16-bit. Live reconstructions precede final bounds and color development. Older
+Normal stacking runs on the CPU; the GPU draws the workspace. Completed photographs
+refine the visible area progressively, up to source-pixel resolution. Windows DX12
+and macOS Metal support native HDR presentation when the active display provides
+HDR/EDR headroom; Linux and other backends use SDR. The app reports the active
+display mode and does not change system display settings. General ICC soft proofing
+is not implemented. Saved TIFF output is 16-bit; HDR display and AVIF export require
+a retained linear master. HDR export does not perform
+multi-exposure bracket fusion, and an old SDR TIFF cannot recover clipped light.
+Live reconstructions precede final bounds and color development. Older
 saved runs may lack newer diagnostic channels.
 
 Windows has been exercised interactively with real photographs. The release
@@ -167,7 +191,7 @@ paths, with different assumptions and settings from the normal pyramid workflow.
 
 ## Development and research
 
-The Rust workspace contains `strehl-core`, `strehl-raw`, `strehl-plugin`,
+The Rust workspace contains `strehl-core`, `strehl-raw`, `strehl-plugin`, `strehl-edit`,
 `strehl-cli`, and `strehl-ui`. A complete source checkout also includes the
 optional path dependency `experiments/native-gpu-gather`. Private photographic
 corpora are not needed to launch the application or run the normal CLI.

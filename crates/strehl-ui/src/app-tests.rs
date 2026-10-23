@@ -92,6 +92,147 @@ fn image_task(name: &str, color: [u8; 4]) -> Task<PreviewImage> {
     jobs::spawn_task("independent-image-delivery", move |_| Ok(image))
 }
 
+#[test]
+fn bounded_stack_overview_has_one_native_error_recovery_and_standalone_stays_native() {
+    let directory = jobs::tests::TestDirectory::new("bounded-result-routes");
+    let path = directory.path().join("result.tiff");
+    let standalone = directory.path().join("standalone.png");
+    let pixels = image::RgbImage::from_pixel(2003, 317, image::Rgb([91, 122, 208]));
+    pixels.save(&path).unwrap();
+    pixels.save(&standalone).unwrap();
+    let ctx = Context::default();
+    let mut app = app();
+    app.result = Some(path.clone());
+    app.pending_result = Some(path.clone());
+    let until = Instant::now() + Duration::from_secs(10);
+    while app.image_path.as_ref() != Some(&path) {
+        assert!(Instant::now() < until);
+        app.poll_images(&ctx);
+        std::thread::sleep(Duration::from_millis(2));
+    }
+    assert_eq!(
+        app.result_viewer.texture.as_ref().unwrap().size()[0],
+        preview::OVERVIEW_SIDE as usize
+    );
+    assert_eq!(app.result_viewer.source_size, [2003, 317]);
+    assert!(app.result_viewer.overview);
+    app.result_viewer.reset(false);
+    app.result_viewer.zoom = 2.0;
+    let previous = app.result_viewer.aperture_size().unwrap() * app.result_viewer.zoom;
+    app.editor.path = Some(path.clone());
+    app.editor.error = Some("Invalid edit master".into());
+    app.poll_images(&ctx);
+    assert!(
+        app.result_work.is_some(),
+        "Unavailable editor must dispatch the native fallback"
+    );
+    while app.result_work.is_some() {
+        assert!(Instant::now() < until);
+        app.poll_images(&ctx);
+        std::thread::sleep(Duration::from_millis(2));
+    }
+    assert_eq!(
+        app.result_viewer.texture.as_ref().unwrap().size(),
+        [2003, 317]
+    );
+    let next = app.result_viewer.aperture_size().unwrap() * app.result_viewer.zoom;
+    assert!(
+        (previous - next).length() < 0.002,
+        "Fallback must not disturb a user's framing"
+    );
+    app.result_viewer.overview = true; // Also model a source bigger than the device limit.
+    for _ in 0..5 {
+        app.poll_images(&ctx);
+        assert!(
+            app.result_work.is_none() && app.pending_result.is_none(),
+            "Recovery may not loop"
+        );
+    }
+    app.open_result(standalone.clone());
+    while app.image_path.as_ref() != Some(&standalone) {
+        assert!(Instant::now() < until);
+        app.poll_images(&ctx);
+        std::thread::sleep(Duration::from_millis(2));
+    }
+    assert_eq!(
+        app.result_viewer.texture.as_ref().unwrap().size(),
+        [2003, 317]
+    );
+    assert!(app.result_viewer.native_inspection_available());
+    assert!(app.result_viewer.fit, "A new document must start fitted");
+    assert_eq!(
+        app.result.as_ref(),
+        Some(&path),
+        "Standalone viewing cannot change stack ownership"
+    );
+}
+
+#[test]
+fn bounded_legacy_result_canvas_uses_developed_pixels_and_requests_visible_native_detail() {
+    let ctx = Context::default();
+    theme::install(&ctx);
+    let mut app = app();
+    let path = PathBuf::from("unopened-owned-result.tiff");
+    let image = std::sync::Arc::new(strehl_edit::LinearImage {
+        width: 2048,
+        height: 1024,
+        pixels: vec![0.2; 2048 * 1024 * 3],
+        origin: strehl_edit::ImageOrigin::SceneLinear,
+        baseline: None,
+        baked_recipe: None,
+    });
+    app.editor.path = Some(path.clone());
+    app.editor.loaded = Some(crate::edit_workspace::LoadedPhoto {
+        preview: std::sync::Arc::new(image.preview(32)),
+        image,
+        recipe: Default::default(),
+        source: path.clone(),
+        warnings: Vec::new(),
+    });
+    app.editor.saved_revision = Some(app.editor.revision);
+    let until = Instant::now() + Duration::from_secs(10);
+    while app.editor.photo_paint().is_none() {
+        assert!(Instant::now() < until);
+        app.editor.poll(&ctx, 4096);
+        std::thread::sleep(Duration::from_millis(2));
+    }
+    let coarse = ctx.load_texture(
+        "bounded-fallback",
+        egui::ColorImage::filled([32, 16], Color32::WHITE),
+        egui::TextureOptions::LINEAR,
+    );
+    app.result_viewer.install(&coarse, [2048, 1024], true);
+    app.image_path = Some(path.clone());
+    app.result = Some(path);
+    app.view = View::Result;
+    app.process_view = false;
+    workbench_scene(&mut app, &ctx, 0.1, vec![]);
+    assert!(app.result_viewer.native_inspection_available());
+    app.result_viewer.reset(false);
+    app.result_viewer.zoom = 2.0;
+    let painted = workbench_scene(&mut app, &ctx, 0.2, vec![]);
+    let developed = app.editor.display_texture().unwrap().id();
+    assert!(
+        painted.shapes.iter().any(
+            |shape| matches!(&shape.shape,egui::Shape::Mesh(mesh) if mesh.texture_id==developed)
+        ),
+        "Legacy Result must paint the developed photograph"
+    );
+    let requested = app.editor.display_stats()["requested"].clone();
+    let uv = requested["uv"].as_array().unwrap();
+    assert!(
+        uv[1][0].as_f64().unwrap() - uv[0][0].as_f64().unwrap() < 0.8,
+        "Actual canvas crop must reach the detail worker"
+    );
+    assert_eq!(requested["stride"], 1);
+    while app.editor.display_stats()["published"].is_null() {
+        assert!(Instant::now() < until);
+        app.editor.poll(&ctx, 4096);
+        std::thread::sleep(Duration::from_millis(2));
+    }
+    assert_eq!(app.editor.display_stats()["published"]["stride"], 1);
+}
+
 fn wait_for(app: &mut StrehlApp, ctx: &Context, ready: impl Fn(&StrehlApp) -> bool) {
     let deadline = Instant::now() + Duration::from_secs(30);
     while !ready(app) && Instant::now() < deadline {
@@ -2625,6 +2766,8 @@ fn completion_loads_and_paints_owned_tiff_on_scheduled_frames_without_pointer_in
         pyramid_gate: None,
         worker_threads: Some(1),
         settings: jobs::RenderSettings::default(),
+        retain_master: false,
+        recipe: None,
     });
     let (sender, receiver) = mpsc::channel();
     job.receiver = receiver;
@@ -2658,14 +2801,25 @@ fn completion_loads_and_paints_owned_tiff_on_scheduled_frames_without_pointer_in
             );
         }
         observed_loading |= app.result_work.is_some();
-        let actual = app.result_viewer.texture.as_ref().map(TextureHandle::id);
-        let opaque_output = actual.is_some_and(|id| {
-            painted.shapes.iter().any(|shape| {
-                matches!(&shape.shape, egui::Shape::Mesh(mesh)
+        // The completed TIFF can now progress into the current document's
+        // developed overview before its first fully opaque paint.
+        let actual = [
+            app.result_viewer.texture.as_ref(),
+            (app.editor.path.as_ref() == Some(&output_path))
+                .then(|| app.editor.display_texture())
+                .flatten(),
+        ];
+        let opaque_output = actual
+            .into_iter()
+            .flatten()
+            .map(TextureHandle::id)
+            .any(|id| {
+                painted.shapes.iter().any(|shape| {
+                    matches!(&shape.shape, egui::Shape::Mesh(mesh)
                 if mesh.texture_id == id && !mesh.vertices.is_empty()
                 && mesh.vertices.iter().all(|vertex| vertex.color.a() == 255))
-            })
-        });
+                })
+            });
         if opaque_output && !app.process_space.transitioning() {
             assert!(
                 painted_support_markers(&painted).len() >= 3,
@@ -3140,6 +3294,86 @@ fn entering_process_from_a_middle_photos_viewport_warms_every_fixed_contact_then
 }
 
 #[test]
+fn process_capture_inspection_can_promote_between_equal_sized_texture_tiers() {
+    const INSPECTED: usize = 17;
+    const COUNT: usize = 259;
+    let directory = jobs::tests::TestDirectory::new("process-inspection-scrub-promotion");
+    let ctx = Context::default();
+    theme::install(&ctx);
+    let mut app = app();
+    app.stack = Some(camera_stack_with_native_strip(directory.path(), COUNT));
+    app.activity = true;
+    app.process_view = true;
+    app.progress.ingest("STREHL_UI_PROGRESS event=stage name=alignment total=259\nSTREHL_UI_PROGRESS event=align-phase name=pairs frames=259 total=900\nSTREHL_UI_PROGRESS event=align-pair-start i=170 j=180 started=1 total=900 frames=259\n");
+    app.follow_current_frame();
+    // Finish whole-stack warming before requesting inspection, so the small
+    // tier is guaranteed to precede the overview instead of racing it.
+    wait_for(&mut app, &ctx, |app| {
+        app.browser.canonical_indices().len() == COUNT && !app.browser.active()
+    });
+    let scrub = app.source_photo(INSPECTED).unwrap();
+    assert_eq!(scrub.texture.size(), [120, 80]);
+    assert_eq!(scrub.aperture, [120, 80]);
+    assert!(!app.browser.has_image(INSPECTED));
+    assert!(!app.browser.has_overview(INSPECTED));
+    assert_eq!(app.selected, 180);
+    assert_eq!(app.process_space.inspection_frame(), None);
+
+    app.process_space.inspect_frame(INSPECTED);
+    // Pixel dimensions cannot identify the tier: the fixture's entire camera
+    // JPEG fits inside every tier, even before the inspection request is polled.
+    assert!(
+        app.source_photo(INSPECTED)
+            .is_some_and(|photo| photo.texture.size() == [120, 80])
+    );
+    wait_for(&mut app, &ctx, |app| app.browser.has_overview(INSPECTED));
+    let overview = app.source_photo(INSPECTED).unwrap();
+    assert_eq!(overview.index, scrub.index);
+    assert_eq!(overview.epoch, scrub.epoch);
+    assert_eq!(overview.aperture, scrub.aperture);
+    assert_eq!(overview.texture.size(), scrub.texture.size());
+    assert_ne!(overview.texture.id(), scrub.texture.id());
+    assert!(!app.browser.has_image(INSPECTED));
+    assert_eq!(app.selected, 180);
+    assert_eq!(app.process_pair(), [INSPECTED, 180]);
+    eprintln!(
+        "Resident scrub {:?} {:?} promoted to overview {:?} {:?} for frame {} in epoch {}",
+        scrub.texture.id(),
+        scrub.texture.size(),
+        overview.texture.id(),
+        overview.texture.size(),
+        overview.index,
+        overview.epoch
+    );
+    // Inspection is the foreground decode target even while live following
+    // updates the selected frame. Its settled native image is a second valid
+    // identity transition; overview residency does not imply refinement ended.
+    wait_for(&mut app, &ctx, |app| app.browser.has_image(INSPECTED));
+    let native = app.source_photo(INSPECTED).unwrap();
+    assert!(app.browser.has_overview(INSPECTED));
+    assert_eq!(native.index, overview.index);
+    assert_eq!(native.epoch, overview.epoch);
+    assert_eq!(native.aperture, overview.aperture);
+    assert_eq!(native.texture.size(), overview.texture.size());
+    assert_ne!(
+        native.texture.id(),
+        overview.texture.id(),
+        "the fixture must observe native refinement, not merely reuse its overview"
+    );
+    assert_eq!(app.selected, 180);
+    assert_eq!(app.process_pair(), [INSPECTED, 180]);
+    eprintln!(
+        "Resident overview {:?} {:?} promoted to native {:?} {:?} for frame {} in epoch {}",
+        overview.texture.id(),
+        overview.texture.size(),
+        native.texture.id(),
+        native.texture.size(),
+        native.index,
+        native.epoch
+    );
+}
+
+#[test]
 fn process_capture_inspection_keeps_decoding_its_pixels_while_live_follow_advances() {
     // A distant, never-selected capture rejects the old accidental-cache path:
     // only an explicit persistent inspection pin can request its canonical JPEG.
@@ -3183,7 +3417,10 @@ fn process_capture_inspection_keeps_decoding_its_pixels_while_live_follow_advanc
             "canonical scheduling must retain the inspected capture alongside current work"
         );
         wait_for(&mut app, &ctx, |app| {
-            app.source_photo(INSPECTED).is_some() && app.source_photo(pair[1]).is_some()
+            // Scrub -> overview -> native refinement legitimately changes the
+            // texture identity, even at equal dimensions. Freeze the retention
+            // identity only after the foreground native image has arrived.
+            app.browser.has_image(INSPECTED) && app.source_photo(pair[1]).is_some()
         });
         let photo = app.source_photo(INSPECTED).unwrap();
         assert_eq!(photo.index, INSPECTED);

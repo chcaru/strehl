@@ -1,2 +1,4 @@
 # The generated SVG is checked byte-for-byte on every platform.
 crates/strehl-ui/assets/strehl.svg text eol=lf
+# Unified patches encode an empty context line with a required leading space.
+third-party/egui-wgpu/strehl.patch text eol=lf whitespace=-blank-at-eol

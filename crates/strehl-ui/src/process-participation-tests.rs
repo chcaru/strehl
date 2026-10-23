@@ -4,6 +4,32 @@ use crate::pipeline::{
 };
 
 #[test]
+fn releasing_a_transient_source_keeps_deliberately_pinned_ranges() {
+    let mut participation = CaptureParticipation::default();
+    participation.select(2, false, false);
+    participation.select(6, true, false);
+    let spans = participation.spans().to_vec();
+    assert!(
+        !spans.is_empty(),
+        "control must contain an actual pinned span"
+    );
+    participation.active_source = Some(4);
+    participation.held = Some(4);
+    participation.source_drag = true;
+    participation.hover_sweep = Some(HoverSweep {
+        frame: 4,
+        inside_at: 1.0,
+    });
+    participation.wheel_frame = Some(5);
+    participation.release_source();
+    assert_eq!(participation.spans(), spans);
+    assert_eq!(participation.active_source, None);
+    assert_eq!(participation.held, None);
+    assert_eq!(participation.wheel_frame, None);
+    assert!(!participation.source_drag && participation.hover_sweep.is_none());
+}
+
+#[test]
 fn rendered_timeline_caption_uses_photo_pixels_or_explicit_grid_units() {
     for (writer, expected) in [
         (

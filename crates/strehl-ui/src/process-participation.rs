@@ -12,6 +12,7 @@ use crate::{
 use eframe::egui::{self, Align2, Color32, FontId, Pos2, Rect, Sense, Stroke, TextureHandle, Ui};
 
 pub(crate) const HEIGHT: f32 = 224.0;
+pub(crate) const EDIT_HEIGHT: f32 = 172.0;
 const MAX_CONTACTS: usize = 48;
 const CONTACT_WIDTH: f32 = 144.0;
 const MIN_CONTACT_WIDTH: f32 = 88.0;
@@ -199,6 +200,7 @@ pub(crate) struct CaptureParticipation {
     active_source: Option<usize>,
     source_mode: bool,
     source_drag: bool,
+    transient_source: bool,
     hover_sweep: Option<HoverSweep>,
     hover_suppressed: bool,
     hover_suppressed_at: Option<Pos2>,
@@ -334,6 +336,21 @@ impl CaptureParticipation {
         self.suppress_hover_until_motion();
     }
 
+    pub(crate) fn set_transient_source(&mut self, active: bool) {
+        self.transient_source = active;
+    }
+
+    /// End temporary inspection without throwing away deliberately pinned spans.
+    pub(crate) fn release_source(&mut self) {
+        self.active_source = None;
+        self.held = None;
+        self.source_drag = false;
+        self.hover_sweep = None;
+        self.wheel_frame = None;
+        self.wheel_origin = None;
+        self.wheel_remainder = 0.0;
+    }
+
     pub(crate) fn spans(&self) -> &[SelectionSpan] {
         &self.spans
     }
@@ -442,6 +459,7 @@ impl CaptureParticipation {
             *self = Self {
                 domain: Some(domain),
                 source_mode: self.source_mode,
+                transient_source: self.transient_source,
                 active_source: self
                     .domain
                     .is_none()
@@ -1743,7 +1761,9 @@ impl CaptureParticipation {
             });
             return Some(frame);
         }
-        if let Some(mut hover) = self.hover_sweep {
+        if !self.transient_source
+            && let Some(mut hover) = self.hover_sweep
+        {
             let grace = layout.hit.expand2(egui::vec2(0.0, 40.0));
             if grace.contains(pointer) && now - hover.inside_at <= 0.30 {
                 hover.frame = layout.index(pointer.x);
@@ -1998,7 +2018,7 @@ fn dashed_line(painter: &egui::Painter, a: Pos2, b: Pos2, stroke: Stroke) {
 
 fn graph_height(height: f32) -> f32 {
     (height * 0.24 + 4.0)
-        .clamp(54.0, 84.0)
+        .clamp(28.0, 84.0)
         .min((height - 60.0).max(12.0))
 }
 

@@ -86,6 +86,107 @@ fn click(
     );
     draw(space, ctx, input, time + 0.05, vec![event(false)]).0
 }
+
+#[test]
+fn standalone_photo_uses_the_canvas_and_shared_zoom_without_claiming_diagnostics() {
+    for editing in [false, true] {
+        let ctx = egui::Context::default();
+        let mut space = ProcessSpace::default();
+        space.set_edit_focus(editing);
+        space.set_edit_navigation(editing);
+        let mut progress = PipelineProgress::default();
+        progress.mark_complete();
+        let photo = texture(&ctx, "standalone", Color32::GREEN);
+        let data = Input {
+            frame_count: 0,
+            output: Some(&photo),
+            output_size: Some([6000, 4000]),
+            ..input(&progress)
+        };
+        assert!(data.standalone_photo());
+        assert!(
+            crate::process_output_space::OutputSpace::from_progress(&progress, [6000, 4000])
+                .is_none()
+        );
+        let (_, painted) = draw(&mut space, &ctx, data, 0.1, vec![]);
+        let actual = largest_image(&painted, photo.id()).expect("decoded photo is painted");
+        assert!(
+            actual.width() > 850.0 && actual.height() > 550.0,
+            "{actual:?}"
+        );
+        assert!(!painted.shapes.iter().any(|shape| matches!(&shape.shape,
+            egui::Shape::Text(text) if text.galley.text().contains("HOW DETAIL")
+                || text.galley.text().contains("frames ·")
+                || text.galley.text() == "Source + final")));
+        let (full, visible) = space
+            .edit_mapping()
+            .expect("editor has the actual photo aperture");
+        assert!((full.width() / visible.width() - 1.0).abs() < 0.001);
+        space.set_photo_view([0.65, 0.4], 3.0);
+        for frame in 1..20 {
+            draw(&mut space, &ctx, data, 0.1 + frame as f64 * 0.1, vec![]);
+        }
+        let (full, visible) = space.edit_mapping().unwrap();
+        assert!((full.width() / visible.width() - 3.0).abs() < 0.01);
+        let center = (visible.center() - full.min) / full.size();
+        assert!((center.x - 0.65).abs() < 0.01 && (center.y - 0.4).abs() < 0.01);
+        assert!(space.undo());
+        for frame in 21..40 {
+            draw(&mut space, &ctx, data, 0.1 + frame as f64 * 0.1, vec![]);
+        }
+        let (full, visible) = space.edit_mapping().unwrap();
+        assert!((full.width() / visible.width() - 1.0).abs() < 0.01);
+        let at = visible.center();
+        for (time, pressed) in [(4.2, true), (4.25, false)] {
+            draw(
+                &mut space,
+                &ctx,
+                data,
+                time,
+                vec![
+                    egui::Event::PointerMoved(at),
+                    egui::Event::PointerButton {
+                        pos: at,
+                        button: egui::PointerButton::Secondary,
+                        pressed,
+                        modifiers: egui::Modifiers::NONE,
+                    },
+                ],
+            );
+        }
+        let (_, menu) = draw(&mut space, &ctx, data, 4.3, vec![]);
+        text(&menu, "Fit photograph");
+        assert!(!menu.shapes.iter().any(|shape| matches!(&shape.shape,
+            egui::Shape::Text(text) if text.galley.text().contains("Regional repairs")
+                || text.galley.text().contains("contribution lens")
+                || text.galley.text().contains("Photograph overlay"))));
+        assert!(
+            !Input {
+                frame_count: 1,
+                ..data
+            }
+            .standalone_photo()
+        );
+        assert!(
+            !Input {
+                output_size: Some([0, 4000]),
+                ..data
+            }
+            .standalone_photo()
+        );
+        let mut recorded = PipelineProgress::default();
+        recorded.mark_complete();
+        recorded.bands = Some(8);
+        assert!(
+            !Input {
+                progress: &recorded,
+                ..data
+            }
+            .standalone_photo()
+        );
+    }
+}
+
 #[test]
 fn continuous_journey_maps_and_final_photo_coexist_without_phase_navigation() {
     let ctx = egui::Context::default();
@@ -395,6 +496,21 @@ fn largest_image(output: &egui::FullOutput, id: egui::TextureId) -> Option<Rect>
         })
         .max_by(|a, b| a.area().total_cmp(&b.area()))
 }
+
+fn mapped_photo_zoom(destination: Rect, viewport: Rect, aspect: f32) -> f32 {
+    // A certified photo's viewport is already aspect-fitted; a legacy photo's
+    // viewport includes letterboxing. Use the fitted photograph, not that box,
+    // as the independent 1x reference for either rendering path.
+    destination.width() / viewport.width().min(viewport.height() * aspect)
+}
+
+fn mapped_photo_crop(destination: Rect, viewport: Rect) -> Rect {
+    let visible = destination.intersect(viewport);
+    Rect::from_min_max(
+        Pos2::ZERO + (visible.min - destination.min) / destination.size(),
+        Pos2::ZERO + (visible.max - destination.min) / destination.size(),
+    )
+}
 fn source_miniature_dots(output: &egui::FullOutput, id: egui::TextureId) -> (Rect, Vec<Pos2>) {
     let label = text(output, "FINAL");
     let map = output
@@ -442,6 +558,841 @@ fn camera_photos(ctx: &egui::Context) -> Vec<SourcePhoto> {
             ),
         })
         .collect()
+}
+
+#[test]
+fn edit_timeline_releases_input_on_exit_and_animates_back_even_after_captured_drag() {
+    for editing in [false, true] {
+        for interaction in ["hover", "click", "drag", "pointer-gone", "popup"] {
+            let ctx = egui::Context::default();
+            let mut space = ProcessSpace::default();
+            space.set_edit_workspace(editing);
+            space.set_edit_focus(editing);
+            space.set_edit_navigation(editing);
+            let photos = camera_photos(&ctx);
+            let result = texture(&ctx, "exit-final", Color32::GOLD);
+            let mut p = PipelineProgress::default();
+            p.ingest("planes : 120 x 80 per CFA plane\ncoverage : field of view scaled to 0.9500 so that EVERY frame covers every pixel\nwrote : result.tiff (240 x 160, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)\n");
+            p.mark_complete();
+            let data = Input {
+                photos: &photos,
+                inspection_photos: &photos,
+                output: Some(&result),
+                output_size: Some([240, 160]),
+                ..input(&p)
+            };
+            draw(&mut space, &ctx, data, 0.0, vec![]);
+            let (_, initial) = draw(&mut space, &ctx, data, 0.6, vec![]);
+            let original = largest_image(&initial, result.id()).unwrap();
+            let at = contact_at(&initial, 7);
+            draw(
+                &mut space,
+                &ctx,
+                data,
+                0.8,
+                vec![egui::Event::PointerMoved(at)],
+            );
+            if interaction == "click" || interaction == "popup" {
+                click(&mut space, &ctx, data, 0.9, at);
+            } else if interaction == "drag" {
+                draw(
+                    &mut space,
+                    &ctx,
+                    data,
+                    0.9,
+                    vec![pointer(at, true, egui::Modifiers::NONE)],
+                );
+                draw(
+                    &mut space,
+                    &ctx,
+                    data,
+                    1.0,
+                    vec![egui::Event::PointerMoved(at + egui::vec2(18.0, 0.0))],
+                );
+            }
+            let (_, compared) = draw(&mut space, &ctx, data, 1.3, vec![]);
+            assert!(
+                space.inspection_frame().is_some(),
+                "fixture must actually enter {interaction} comparison"
+            );
+            let compared_area = largest_image(&compared, result.id()).unwrap().area();
+            assert!(
+                compared_area < original.area() * 0.8,
+                "fixture must paint split photos"
+            );
+            if interaction == "popup" {
+                egui::Popup::open_id(&ctx, egui::Id::new("edit-timeline-review-popup"));
+                assert!(egui::Popup::is_any_open(&ctx));
+            }
+            let (response, exited) = draw(
+                &mut space,
+                &ctx,
+                data,
+                1.31,
+                vec![if interaction == "pointer-gone" {
+                    egui::Event::PointerGone
+                } else if interaction == "popup" {
+                    egui::Event::PointerMoved(at)
+                } else {
+                    egui::Event::PointerMoved(original.center())
+                }],
+            );
+            if editing {
+                assert_eq!(space.inspection_frame(), None, "{interaction}");
+                assert_eq!(
+                    response.selected, None,
+                    "outside captured drag cannot reopen source"
+                );
+                let exit_area = largest_image(&exited, result.id()).unwrap().area();
+                assert!(
+                    (exit_area - compared_area).abs() < 1.0,
+                    "exit starts from the displayed comparison, without a geometry jump"
+                );
+                let mut areas = vec![exit_area];
+                for frame in 1..=14 {
+                    let (_, stationary) =
+                        draw(&mut space, &ctx, data, 1.31 + frame as f64 * 0.016, vec![]);
+                    assert_eq!(space.inspection_frame(), None);
+                    areas.push(largest_image(&stationary, result.id()).unwrap().area());
+                }
+                assert!(areas.windows(2).all(|pair| pair[1] >= pair[0] - 1.0));
+                assert!(
+                    areas
+                        .iter()
+                        .any(|area| *area > compared_area * 1.1 && *area < original.area() * 0.99)
+                );
+                assert!((areas.last().unwrap() - original.area()).abs() < 1.0);
+            } else {
+                assert!(
+                    space.inspection_frame().is_some(),
+                    "Process retains the comparison as before"
+                );
+            }
+        }
+    }
+}
+
+#[test]
+fn edit_timeline_animates_entry_and_restores_both_photos_admission_overlays() {
+    // A sparse fixture cannot exercise the source contour. Use a real dense
+    // right-side admission island; the left side is recorded negative evidence.
+    // Test both Select navigation and an armed drawing tool, which previously
+    // suppressed diagnostics even though the pointer was on the timeline.
+    for drawing_tool in [false, true] {
+        let ctx = egui::Context::default();
+        let mut space = ProcessSpace::default();
+        space.set_edit_workspace(true);
+        space.set_edit_focus(true);
+        space.set_edit_navigation(true);
+        space.set_annotation_mode(drawing_tool);
+        let photos = camera_photos(&ctx);
+        let result = texture(&ctx, "edit-linked-overlay-final", Color32::GOLD);
+        let mut progress = PipelineProgress::default();
+        progress.ingest("planes : 120 x 80 per CFA plane\ncoverage : field of view scaled to 0.9500 so that EVERY frame covers every pixel\nbands : 7 Laplacian levels + 1 base, coarsest 1 x 1\nwrote : result.tiff (240 x 160, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)\n");
+        progress.admission_archive.ingest(
+            &crate::pipeline::DiagnosticSurface {
+                sequence: 1,
+                frame: 7,
+                level: 0,
+                kind: DiagnosticKind::GateSupport,
+                scope: crate::pipeline::DiagnosticScope::Frame,
+                scale: DiagnosticScale::Linear,
+                width: 24,
+                height: 16,
+                min: 0.0,
+                max: 1.0,
+                pixels: (0..384)
+                    .map(|index| if index % 24 >= 13 { 255 } else { 0 })
+                    .collect::<Vec<_>>()
+                    .into(),
+                folded: 1,
+            },
+            [120, 80],
+        );
+        progress.mark_complete();
+        let data = Input {
+            photos: &photos,
+            inspection_photos: &photos,
+            output: Some(&result),
+            output_size: Some([240, 160]),
+            ..input(&progress)
+        };
+        draw(&mut space, &ctx, data, 0.0, vec![]);
+        let (_, initial) = draw(&mut space, &ctx, data, 0.6, vec![]);
+        let full_photo = largest_image(&initial, result.id()).unwrap();
+        let at = contact_at(&initial, 7);
+        let (_, entering) = draw(
+            &mut space,
+            &ctx,
+            data,
+            0.61,
+            vec![egui::Event::PointerMoved(at)],
+        );
+        assert_eq!(space.inspection_frame(), Some(7));
+        let mut entry_areas = vec![largest_image(&entering, result.id()).unwrap().area()];
+        let mut compared = entering;
+        for frame in 1..=16 {
+            compared = draw(&mut space, &ctx, data, 0.61 + frame as f64 * 0.016, vec![]).1;
+            entry_areas.push(largest_image(&compared, result.id()).unwrap().area());
+        }
+        let final_photo = largest_image(&compared, result.id()).unwrap();
+        let source_photo = largest_image(&compared, photos[7].texture.id()).unwrap();
+        assert!(
+            entry_areas
+                .iter()
+                .any(|area| *area > final_photo.area() * 1.1 && *area < full_photo.area() * 0.99),
+            "entry must actually paint an intermediate photograph, not jump to the split: {full_photo:?} -> {entry_areas:?} -> {final_photo:?}"
+        );
+        assert!(!source_photo.intersects(final_photo));
+        let dots: Vec<_> = crate::process_result::overlay_marker_centers(&compared)
+            .into_iter()
+            .filter(|point| final_photo.contains(*point))
+            .collect();
+        assert!(
+            dots.len() > 8,
+            "timeline hover must paint retained admission on the final, including with an armed drawing tool"
+        );
+        assert!(dots.iter().all(|point| point.x > final_photo.center().x));
+        let color = crate::process_sample_glyphs::level_color(0);
+        let source_fill = Color32::from_rgba_unmultiplied(color.r(), color.g(), color.b(), 18);
+        assert!(compared.shapes.iter().any(|shape| matches!(&shape.shape,
+            egui::Shape::Mesh(mesh) if mesh.texture_id == egui::TextureId::default()
+                && mesh.vertices.iter().any(|vertex| vertex.color == source_fill
+                    && source_photo.contains(vertex.pos) && shape.clip_rect.contains(vertex.pos))
+        )), "source must display the approximate footprint too; a source thumbnail alone is not linked inspection");
+        text_contains(&compared, "CAPTURE 008");
+        let (_, exited) = draw(
+            &mut space,
+            &ctx,
+            data,
+            0.90,
+            vec![egui::Event::PointerMoved(full_photo.center())],
+        );
+        assert_eq!(space.inspection_frame(), None);
+        let leaving_photo = largest_image(&exited, result.id()).unwrap();
+        assert_eq!(leaving_photo, final_photo);
+        let source_alpha = |output: &egui::FullOutput| {
+            output
+                .shapes
+                .iter()
+                .filter_map(|shape| match &shape.shape {
+                    egui::Shape::Mesh(mesh)
+                        if mesh.texture_id == photos[7].texture.id()
+                            && Rect::from_points(
+                                &mesh.vertices.iter().map(|v| v.pos).collect::<Vec<_>>(),
+                            )
+                            .area()
+                                > 15_000.0 =>
+                    {
+                        mesh.vertices.iter().map(|v| v.color.a()).max()
+                    }
+                    _ => None,
+                })
+                .max()
+                .expect("actual camera companion")
+        };
+        assert_eq!(
+            source_alpha(&exited),
+            source_alpha(&compared),
+            "releasing input must not apply a disabled-widget brightness flash"
+        );
+        assert!(
+            crate::process_result::overlay_marker_centers(&exited)
+                .into_iter()
+                .any(|point| leaving_photo.contains(point)),
+            "retiring evidence must remain paintable after input ownership is released"
+        );
+        let (_, midway) = draw(
+            &mut space,
+            &ctx,
+            Input {
+                inspection_photos: &[],
+                ..data
+            },
+            0.95,
+            vec![],
+        );
+        let midway_photo = largest_image(&midway, result.id()).unwrap();
+        assert!(midway_photo.area() > final_photo.area() * 1.1);
+        // Fit reaches its height limit before the source panel has retired;
+        // its center still moves even once its area equals the final fit.
+        assert!(
+            midway_photo.center().distance(full_photo.center()) > 5.0,
+            "the midpoint must still be moving toward the full-photo position: {midway_photo:?} -> {full_photo:?}"
+        );
+        let admitted_alpha = |output: &egui::FullOutput, photo: Rect| {
+            let mut alpha = 0;
+            for shape in &output.shapes {
+                let egui::Shape::Mesh(mesh) = &shape.shape else {
+                    continue;
+                };
+                if mesh.texture_id != egui::TextureId::default() {
+                    continue;
+                }
+                let mut uses = vec![0; mesh.vertices.len()];
+                for &index in &mesh.indices {
+                    uses[index as usize] += 1;
+                }
+                for (vertex, uses) in mesh.vertices.iter().zip(uses) {
+                    if uses == 8
+                        && photo.contains(vertex.pos)
+                        && shape.clip_rect.contains(vertex.pos)
+                    {
+                        alpha = alpha.max(vertex.color.a());
+                    }
+                }
+            }
+            alpha
+        };
+        let initial_alpha = admitted_alpha(&compared, final_photo);
+        let fading_alpha = admitted_alpha(&midway, midway_photo);
+        assert!(
+            initial_alpha > 0 && fading_alpha > 0 && fading_alpha < initial_alpha,
+            "the measured final-image markers must actually fade: {initial_alpha} -> {fading_alpha}"
+        );
+        assert!(midway.shapes.iter().any(|shape| matches!(&shape.shape,
+            egui::Shape::Mesh(mesh) if mesh.texture_id == photos[7].texture.id()
+                && Rect::from_points(&mesh.vertices.iter().map(|v| v.pos).collect::<Vec<_>>()).area() > 15_000.0
+                && mesh.vertices.iter().any(|v| v.color.a() > 0 && v.color.a() < 255)
+        )), "the retained camera image must fade, without reloading or blinking black");
+        let (_, reentered) = draw(
+            &mut space,
+            &ctx,
+            data,
+            0.95,
+            vec![egui::Event::PointerMoved(at)],
+        );
+        assert!(
+            (largest_image(&reentered, result.id()).unwrap().area() - midway_photo.area()).abs()
+                < 1.0,
+            "re-entry must reverse from the displayed intermediate position without flashing"
+        );
+        draw(&mut space, &ctx, data, 1.2, vec![]);
+        draw(
+            &mut space,
+            &ctx,
+            data,
+            1.21,
+            vec![egui::Event::PointerMoved(full_photo.center())],
+        );
+        let (_, settled) = draw(&mut space, &ctx, data, 1.5, vec![]);
+        assert_eq!(largest_image(&settled, result.id()).unwrap(), full_photo);
+        assert!(
+            crate::process_result::overlay_marker_centers(&settled)
+                .into_iter()
+                .all(|point| !full_photo.contains(point)),
+            "no retiring evidence may remain after the return animation"
+        );
+        // A later visit must retire the actual new frame, never the texture
+        // from the previous visit; a new diagnostic domain ends that tail.
+        draw(
+            &mut space,
+            &ctx,
+            data,
+            1.51,
+            vec![egui::Event::PointerMoved(contact_at(&settled, 4))],
+        );
+        draw(&mut space, &ctx, data, 1.8, vec![]);
+        draw(
+            &mut space,
+            &ctx,
+            data,
+            1.81,
+            vec![egui::Event::PointerMoved(full_photo.center())],
+        );
+        let (_, second_return) = draw(&mut space, &ctx, data, 1.85, vec![]);
+        assert!(
+            largest_image(&second_return, photos[4].texture.id())
+                .is_some_and(|rect| rect.area() > 15_000.0)
+        );
+        assert!(
+            largest_image(&second_return, photos[7].texture.id())
+                .is_none_or(|rect| rect.area() < 15_000.0)
+        );
+        let mut replacement = PipelineProgress::default();
+        replacement.ingest("planes : 120 x 80 per CFA plane\ncoverage : field of view scaled to 0.9500 so that EVERY frame covers every pixel\nwrote : result.tiff (240 x 160, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)\n");
+        replacement.diagnostic_epoch = progress.diagnostic_epoch + 1;
+        replacement.mark_complete();
+        let (_, replaced) = draw(
+            &mut space,
+            &ctx,
+            Input {
+                progress: &replacement,
+                ..data
+            },
+            1.86,
+            vec![],
+        );
+        assert_eq!(space.inspection_frame(), None);
+        assert_eq!(largest_image(&replaced, result.id()).unwrap(), full_photo);
+        assert!(
+            largest_image(&replaced, photos[4].texture.id())
+                .is_none_or(|rect| rect.area() < 15_000.0),
+            "a new diagnostic domain must not inherit the old source return"
+        );
+    }
+}
+
+#[test]
+fn edit_exit_transition_does_not_delay_plain_wheel_navigation() {
+    let ctx = egui::Context::default();
+    let mut space = ProcessSpace::default();
+    space.set_edit_workspace(true);
+    space.set_edit_focus(true);
+    space.set_edit_navigation(true);
+    let photos = camera_photos(&ctx);
+    let result = texture(&ctx, "edit-exit-wheel", Color32::GOLD);
+    let mut progress = PipelineProgress::default();
+    progress.ingest("planes : 120 x 80 per CFA plane\ncoverage : field of view scaled to 0.9500 so that EVERY frame covers every pixel\nwrote : result.tiff (240 x 160, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)\n");
+    progress.mark_complete();
+    progress.ingest("bands : 7 Laplacian levels + 1 base, coarsest 1 x 1\n");
+    assert!(
+        crate::process_output_space::OutputSpace::from_progress(&progress, [240, 160]).is_some()
+    );
+    let data = Input {
+        photos: &photos,
+        inspection_photos: &photos,
+        output: Some(&result),
+        output_size: Some([240, 160]),
+        ..input(&progress)
+    };
+    draw(&mut space, &ctx, data, 0.0, vec![]);
+    let (_, initial) = draw(&mut space, &ctx, data, 0.6, vec![]);
+    let full_photo = largest_image(&initial, result.id()).unwrap();
+    draw(
+        &mut space,
+        &ctx,
+        data,
+        0.61,
+        vec![egui::Event::PointerMoved(contact_at(&initial, 7))],
+    );
+    let (_, compared) = draw(&mut space, &ctx, data, 0.9, vec![]);
+    let at = largest_image(&compared, result.id()).unwrap().center();
+    draw(
+        &mut space,
+        &ctx,
+        data,
+        0.91,
+        vec![
+            egui::Event::PointerMoved(at),
+            egui::Event::MouseWheel {
+                unit: egui::MouseWheelUnit::Point,
+                delta: egui::vec2(0.0, 180.0),
+                modifiers: egui::Modifiers::NONE,
+            },
+        ],
+    );
+    assert_eq!(space.inspection_frame(), None);
+    let (_, returning) = draw(&mut space, &ctx, data, 0.95, vec![]);
+    let (full, visible) = space.edit_mapping().unwrap();
+    assert!(
+        full.width() / visible.width() > 1.01,
+        "the actual editing wheel handler must consume input before the visual return finishes"
+    );
+    assert!(
+        largest_image(&returning, result.id())
+            .unwrap()
+            .center()
+            .distance(full_photo.center())
+            > 5.0,
+        "the fixture must still be moving toward the full-photo position when navigation takes effect"
+    );
+}
+
+#[test]
+fn edit_retiring_source_is_paint_only_for_wheel_and_drag() {
+    for (gesture, certified) in [
+        ("wheel", false),
+        ("wheel", true),
+        ("drag", false),
+        ("drag", true),
+    ] {
+        let ctx = egui::Context::default();
+        let mut space = ProcessSpace::default();
+        space.set_edit_workspace(true);
+        space.set_edit_focus(true);
+        space.set_edit_navigation(true);
+        let photos = camera_photos(&ctx);
+        let result = texture(&ctx, "retiring-source-input", Color32::GOLD);
+        let mut progress = PipelineProgress::default();
+        progress.ingest("planes : 120 x 80 per CFA plane\ncoverage : field of view scaled to 0.9500 so that EVERY frame covers every pixel\nwrote : result.tiff (240 x 160, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)\n");
+        progress.mark_complete();
+        if certified {
+            progress.ingest("bands : 7 Laplacian levels + 1 base, coarsest 1 x 1\n");
+        }
+        assert_eq!(
+            crate::process_output_space::OutputSpace::from_progress(&progress, [240, 160])
+                .is_some(),
+            certified
+        );
+        let data = Input {
+            photos: &photos,
+            inspection_photos: &photos,
+            output: Some(&result),
+            output_size: Some([240, 160]),
+            ..input(&progress)
+        };
+        draw(&mut space, &ctx, data, 0.0, vec![]);
+        let (_, initial) = draw(&mut space, &ctx, data, 0.6, vec![]);
+        draw(
+            &mut space,
+            &ctx,
+            data,
+            0.61,
+            vec![egui::Event::PointerMoved(contact_at(&initial, 7))],
+        );
+        let (_, compared) = draw(&mut space, &ctx, data, 0.9, vec![]);
+        let source = largest_image(&compared, photos[7].texture.id()).unwrap();
+        let final_photo = largest_image(&compared, result.id()).unwrap();
+        assert!(source.area() > 15_000.0 && !source.intersects(final_photo));
+        let at = source.center();
+        let mut events = vec![egui::Event::PointerMoved(at)];
+        if gesture == "wheel" {
+            events.push(egui::Event::MouseWheel {
+                unit: egui::MouseWheelUnit::Point,
+                delta: egui::vec2(0.0, 180.0),
+                modifiers: egui::Modifiers::NONE,
+            });
+        } else {
+            events.push(pointer(at, true, egui::Modifiers::NONE));
+        }
+        let (response, _) = draw(&mut space, &ctx, data, 0.91, events);
+        assert_eq!(space.inspection_frame(), None);
+        assert_eq!(response.selected, None);
+        if gesture == "drag" {
+            draw(
+                &mut space,
+                &ctx,
+                data,
+                0.925,
+                vec![egui::Event::PointerMoved(at + egui::vec2(12.0, 8.0))],
+            );
+            draw(
+                &mut space,
+                &ctx,
+                data,
+                0.94,
+                vec![pointer(
+                    at + egui::vec2(12.0, 8.0),
+                    false,
+                    egui::Modifiers::NONE,
+                )],
+            );
+        }
+        let (_, returning) = draw(&mut space, &ctx, data, 0.95, vec![]);
+        assert!(
+            largest_image(&returning, photos[7].texture.id())
+                .is_some_and(|rect| rect.area() > 15_000.0),
+            "fixture must still paint the retiring source"
+        );
+        let (full, visible) = space.edit_mapping().unwrap();
+        assert!(
+            (mapped_photo_zoom(full, visible, 1.5) - 1.0).abs() < 0.001,
+            "retiring source {gesture} must not modify the shared crop: full={full:?}, visible={visible:?}, source={source:?}, initial_final={final_photo:?}, pointer={at:?}"
+        );
+        assert!(
+            (full.center() - visible.center()).length() < 0.001,
+            "retiring source {gesture} must not pan the shared crop"
+        );
+        let crop = mapped_photo_crop(full, visible);
+        assert_eq!(
+            crop,
+            Rect::from_min_max(Pos2::ZERO, egui::pos2(1.0, 1.0)),
+            "a noninteractive source must not crop pixels in either completed-photo path"
+        );
+    }
+}
+
+#[test]
+fn edit_reentry_tracks_displayed_source_until_new_pixels_arrive_and_clears_on_epoch() {
+    let ctx = egui::Context::default();
+    let mut space = ProcessSpace::default();
+    space.set_edit_workspace(true);
+    space.set_edit_focus(true);
+    space.set_edit_navigation(true);
+    let photos = camera_photos(&ctx);
+    let result = texture(&ctx, "reentry-pending-final", Color32::GOLD);
+    let mut progress = PipelineProgress::default();
+    progress.ingest("planes : 120 x 80 per CFA plane\ncoverage : field of view scaled to 0.9500 so that EVERY frame covers every pixel\nbands : 7 Laplacian levels + 1 base, coarsest 1 x 1\nwrote : result.tiff (240 x 160, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)\n");
+    for frame in [7, 4] {
+        progress.admission_archive.ingest(
+            &crate::pipeline::DiagnosticSurface {
+                sequence: frame as u64,
+                frame,
+                level: 0,
+                kind: DiagnosticKind::GateSupport,
+                scope: crate::pipeline::DiagnosticScope::Frame,
+                scale: DiagnosticScale::Linear,
+                width: 24,
+                height: 16,
+                min: 0.0,
+                max: 1.0,
+                pixels: (0..384)
+                    .map(|index| {
+                        if (frame == 7 && index % 24 >= 13) || (frame == 4 && index % 24 < 11) {
+                            255
+                        } else {
+                            0
+                        }
+                    })
+                    .collect::<Vec<_>>()
+                    .into(),
+                folded: 1,
+            },
+            [120, 80],
+        );
+    }
+    progress.mark_complete();
+    let data = Input {
+        photos: &photos,
+        inspection_photos: &photos,
+        output: Some(&result),
+        output_size: Some([240, 160]),
+        ..input(&progress)
+    };
+    draw(&mut space, &ctx, data, 0.0, vec![]);
+    let (_, initial) = draw(&mut space, &ctx, data, 0.6, vec![]);
+    let full_photo = largest_image(&initial, result.id()).unwrap();
+    draw(
+        &mut space,
+        &ctx,
+        data,
+        0.61,
+        vec![egui::Event::PointerMoved(contact_at(&initial, 7))],
+    );
+    draw(&mut space, &ctx, data, 0.9, vec![]);
+    draw(
+        &mut space,
+        &ctx,
+        data,
+        0.91,
+        vec![egui::Event::PointerMoved(full_photo.center())],
+    );
+    let (_, midway) = draw(&mut space, &ctx, data, 0.96, vec![]);
+    let pending_data = Input {
+        inspection_photos: &photos[7..8],
+        ..data
+    };
+    let (_, pending) = draw(
+        &mut space,
+        &ctx,
+        pending_data,
+        0.96,
+        vec![egui::Event::PointerMoved(contact_at(&midway, 4))],
+    );
+    assert_eq!(space.inspection_frame(), Some(4));
+    let pending_photo = largest_image(&pending, result.id()).unwrap();
+    assert_eq!(
+        pending_photo,
+        largest_image(&midway, result.id()).unwrap(),
+        "missing new pixels must not reset reveal geometry"
+    );
+    let assert_side = |output: &egui::FullOutput, right: bool| {
+        let photo = largest_image(output, result.id()).unwrap();
+        let points = crate::process_result::overlay_marker_centers(output)
+            .into_iter()
+            .filter(|point| photo.contains(*point))
+            .collect::<Vec<_>>();
+        assert!(
+            points.len() > 8,
+            "the fixture must paint recorded admission"
+        );
+        assert!(
+            points.iter().all(|point| if right {
+                point.x > photo.center().x
+            } else {
+                point.x < photo.center().x
+            }),
+            "final evidence must belong to the camera pixels actually on screen"
+        );
+    };
+    text_contains(&pending, "CAPTURE 008");
+    text_contains(&pending, "SOURCE 008 / CAMERA · 005 pending");
+    assert_side(&pending, true);
+    assert!(
+        largest_image(&pending, photos[7].texture.id()).is_some_and(|rect| rect.area() > 15_000.0)
+    );
+    let (_, delivered) = draw(&mut space, &ctx, data, 1.0, vec![]);
+    text_contains(&delivered, "CAPTURE 005");
+    assert_side(&delivered, false);
+    assert!(
+        largest_image(&delivered, photos[4].texture.id())
+            .is_some_and(|rect| rect.area() > 15_000.0)
+    );
+    draw(
+        &mut space,
+        &ctx,
+        data,
+        1.01,
+        vec![egui::Event::PointerMoved(full_photo.center())],
+    );
+    let replacement = texture(&ctx, "new-stack-final", Color32::GREEN);
+    let mut next = PipelineProgress::default();
+    next.ingest("planes : 120 x 80 per CFA plane\ncoverage : field of view scaled to 0.9500 so that EVERY frame covers every pixel\nwrote : next.tiff (240 x 160, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)\n");
+    next.mark_complete();
+    let (_, replaced) = draw(
+        &mut space,
+        &ctx,
+        Input {
+            epoch: 2,
+            progress: &next,
+            output: Some(&replacement),
+            ..data
+        },
+        1.05,
+        vec![],
+    );
+    assert_eq!(space.inspection_frame(), None);
+    assert_eq!(
+        largest_image(&replaced, replacement.id()).unwrap(),
+        full_photo
+    );
+    assert!(
+        largest_image(&replaced, photos[4].texture.id()).is_none_or(|rect| rect.area() < 15_000.0)
+    );
+    assert!(
+        crate::process_result::overlay_marker_centers(&replaced)
+            .into_iter()
+            .all(|point| !full_photo.contains(point)),
+        "old inspection evidence must never cross a stack epoch"
+    );
+}
+
+#[test]
+fn edit_compact_timeline_reclaims_photo_space_and_keeps_plain_wheel_zoom() {
+    for certified in [false, true] {
+        let ctx = egui::Context::default();
+        let mut space = ProcessSpace::default();
+        space.set_edit_workspace(true);
+        space.set_edit_focus(true);
+        space.set_edit_navigation(true);
+        let photos = camera_photos(&ctx);
+        let result = texture(&ctx, "compact-final", Color32::GREEN);
+        let mut p = PipelineProgress::default();
+        p.ingest("planes : 120 x 80 per CFA plane\ncoverage : field of view scaled to 0.9500 so that EVERY frame covers every pixel\nwrote : result.tiff (240 x 160, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)\n");
+        p.mark_complete();
+        if certified {
+            p.ingest("bands : 7 Laplacian levels + 1 base, coarsest 1 x 1\n");
+        }
+        assert_eq!(
+            crate::process_output_space::OutputSpace::from_progress(&p, [240, 160]).is_some(),
+            certified
+        );
+        let data = Input {
+            photos: &photos,
+            inspection_photos: &photos,
+            output: Some(&result),
+            output_size: Some([240, 160]),
+            ..input(&p)
+        };
+        draw(&mut space, &ctx, data, 0.0, vec![]);
+        let (_, initial) = draw(&mut space, &ctx, data, 0.6, vec![]);
+        let photo = largest_image(&initial, result.id()).unwrap();
+        assert!(
+            photo.height() > 430.0,
+            "photo must occupy reclaimed title/footer/timeline space: {photo:?}"
+        );
+        assert!(
+            photos
+                .iter()
+                .any(|source| largest_image(&initial, source.texture.id())
+                    .is_some_and(|r| r.height() > 55.0 && r.bottom() < 720.0)),
+            "compact still means readable, fully visible thumbnails"
+        );
+        assert!(!initial.shapes.iter().any(|s| matches!(&s.shape, egui::Shape::Text(t) if t.galley.text().contains("PHOTOGRAPH COMPLETE") || t.galley.text() == "Source + final")));
+        let at = photo.center();
+        draw(
+            &mut space,
+            &ctx,
+            data,
+            0.7,
+            vec![egui::Event::PointerMoved(at)],
+        );
+        draw(
+            &mut space,
+            &ctx,
+            data,
+            0.8,
+            vec![egui::Event::MouseWheel {
+                unit: egui::MouseWheelUnit::Point,
+                delta: egui::vec2(0.0, 180.0),
+                modifiers: egui::Modifiers::NONE,
+            }],
+        );
+        for frame in 0..12 {
+            draw(&mut space, &ctx, data, 0.9 + frame as f64 * 0.1, vec![]);
+        }
+        let (full_before, visible_before) = space.edit_mapping().unwrap();
+        let zoom_before = mapped_photo_zoom(full_before, visible_before, 1.5);
+        assert!(
+            zoom_before > 1.001,
+            "unmodified wheel must navigate in Edit: {zoom_before}"
+        );
+        let (_, scene) = draw(&mut space, &ctx, data, 2.2, vec![]);
+        click(&mut space, &ctx, data, 2.3, contact_at(&scene, 7));
+        draw(
+            &mut space,
+            &ctx,
+            data,
+            2.4,
+            vec![egui::Event::PointerMoved(at)],
+        );
+        let (full_after, visible_after) = space.edit_mapping().unwrap();
+        assert!(
+            (mapped_photo_zoom(full_after, visible_after, 1.5) - zoom_before).abs() < 0.001,
+            "exit changes the layout, never the chosen crop: zoom_before={zoom_before}, before={full_before:?}/{visible_before:?}, after={full_after:?}/{visible_after:?}"
+        );
+        assert!(
+            ((visible_after.center() - full_after.min) / full_after.size()
+                - (visible_before.center() - full_before.min) / full_before.size())
+            .length()
+                < 0.001
+        );
+        // The legacy viewport changes aspect ratio while the source retires. Once
+        // the view returns, its actual clipped photo pixels must match exactly.
+        draw(&mut space, &ctx, data, 2.7, vec![]);
+        let (settled_full, settled_visible) = space.edit_mapping().unwrap();
+        let expected = mapped_photo_crop(full_before, visible_before);
+        let actual = mapped_photo_crop(settled_full, settled_visible);
+        assert!(
+            actual.min.distance(expected.min) < 0.001 && actual.max.distance(expected.max) < 0.001,
+            "final crop must survive timeline inspection: certified={certified}, {expected:?} -> {actual:?}"
+        );
+    }
+}
+
+#[test]
+fn edit_workspace_leaves_escape_for_the_annotation_owner() {
+    for editing in [false, true] {
+        let ctx = egui::Context::default();
+        let mut space = ProcessSpace::default();
+        space.set_edit_workspace(editing);
+        let progress = PipelineProgress::default();
+        let mut still_pressed = false;
+        let _ = ctx.run(
+            egui::RawInput {
+                screen_rect: Some(Rect::from_min_size(Pos2::ZERO, egui::vec2(1060.0, 720.0))),
+                events: vec![egui::Event::Key {
+                    key: egui::Key::Escape,
+                    physical_key: None,
+                    pressed: true,
+                    repeat: false,
+                    modifiers: egui::Modifiers::NONE,
+                }],
+                ..Default::default()
+            },
+            |ctx| {
+                egui::CentralPanel::default().show(ctx, |ui| {
+                    space.show(ui, input(&progress));
+                    still_pressed = ctx.input(|i| i.key_pressed(egui::Key::Escape));
+                });
+            },
+        );
+        assert_eq!(
+            still_pressed, editing,
+            "Edit cancels geometry/scope; Process keeps its existing fit shortcut"
+        );
+    }
 }
 
 #[test]

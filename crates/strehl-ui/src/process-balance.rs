@@ -24,6 +24,10 @@ use image::{DynamicImage, ImageFormat, ImageReader};
 
 use crate::{jobs, theme};
 
+#[path = "process-balance-evidence.rs"]
+mod evidence;
+pub(crate) use evidence::read_evidence;
+
 const MAX_SIDE: usize = 32_768;
 const MAX_PIXELS: usize = 32_000_000;
 const MAX_DECODE_BYTES: u64 = 128 * 1024 * 1024;
@@ -123,6 +127,21 @@ pub(crate) struct ObservationBalance {
 }
 
 impl ObservationBalance {
+    /// Clear visible evidence before a new photograph can paint. Keep an
+    /// obsolete decoder until retirement so rapid switching cannot fan out IO.
+    pub(crate) fn invalidate(&mut self) {
+        if let Some(pending) = &self.pending {
+            pending.obsolete.store(true, Ordering::Relaxed);
+        }
+        self.key = None;
+        self.attempted = false;
+        self.loaded = None;
+        self.enabled = false;
+        self.aperture = None;
+        self.distribution = Distribution::default();
+        self.at_pin = None;
+    }
+
     /// `output_path` is the selected owned result, not an arbitrary opened TIFF.
     /// Absence, malformed data, and uncertified dimensions leave the control
     /// visibly unavailable and never paint an uncertified map.
@@ -139,16 +158,8 @@ impl ObservationBalance {
             })
         });
         if self.key != key {
-            if let Some(pending) = &self.pending {
-                pending.obsolete.store(true, Ordering::Relaxed);
-            }
+            self.invalidate();
             self.key = key;
-            self.attempted = false;
-            self.loaded = None;
-            self.enabled = false;
-            self.aperture = None;
-            self.distribution = Distribution::default();
-            self.at_pin = None;
         }
         self.poll(ctx);
         if self.pending.is_none()

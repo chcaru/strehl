@@ -1,8 +1,9 @@
 [workspace]
 resolver = "3"
 # Optional experiment dependency keeps its own workspace; ordinary builds do not adopt it.
-exclude = ["experiments/native-gpu-gather"]
+exclude = ["experiments/native-gpu-gather", "third-party/egui-wgpu"]
 members = [
+    "crates/strehl-edit",
     "crates/strehl-core",
     "crates/strehl-raw",
     "crates/strehl-plugin",
@@ -11,7 +12,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.0-alpha.5"
+version = "0.1.0-alpha.6"
 edition = "2024"
 rust-version = "1.98"
 license = "MIT OR Apache-2.0"
@@ -19,6 +20,7 @@ repository = "https://github.com/chcaru/strehl"
 authors = ["Chris Caruso"]
 
 [workspace.dependencies]
+strehl-edit = { path = "crates/strehl-edit" }
 strehl-core = { path = "crates/strehl-core" }
 strehl-raw = { path = "crates/strehl-raw" }
 strehl-plugin = { path = "crates/strehl-plugin" }
@@ -40,7 +42,11 @@ tiff = "0.11"
 opt-level = 3
 lto = "thin"
 codegen-units = 1
+strip = "symbols"
 
 [profile.bench]
 inherits = "release"
 debug = true
+
+[patch.crates-io]
+egui-wgpu = { path = "third-party/egui-wgpu" }

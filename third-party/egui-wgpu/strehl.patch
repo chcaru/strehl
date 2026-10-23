@@ -1,0 +1,423 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -21,8 +21,9 @@
+ ]
+ build = false
+ include = [
+-    "../LICENSE-APACHE",
+-    "../LICENSE-MIT",
++    "LICENSE-APACHE",
++    "LICENSE-MIT",
++    "STREHL-PATCH.md",
+     "**/*.rs",
+     "**/*.wgsl",
+     "Cargo.toml",
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -240,7 +240,27 @@
+                 |s| s.get_capabilities(&adapter).formats,
+             )
+         };
+-        let target_format = crate::preferred_framebuffer_format(&surface_formats)?;
++        // Strehl: only native backends with an established extended-linear
++        // surface contract may opt into HDR. Vulkan without an explicit
++        // colorspace negotiation retains the original SDR path.
++        let float_features = adapter.get_texture_format_features(wgpu::TextureFormat::Rgba16Float);
++        let target_format = if config.extended_linear_surface
++            && matches!(
++                adapter.get_info().backend,
++                wgpu::Backend::Dx12 | wgpu::Backend::Metal
++            )
++            && surface_formats.contains(&wgpu::TextureFormat::Rgba16Float)
++            && float_features
++                .allowed_usages
++                .contains(wgpu::TextureUsages::RENDER_ATTACHMENT)
++            && float_features
++                .flags
++                .contains(wgpu::TextureFormatFeatureFlags::BLENDABLE)
++        {
++            wgpu::TextureFormat::Rgba16Float
++        } else {
++            crate::preferred_framebuffer_format(&surface_formats)?
++        };
+ 
+         let renderer = Renderer::new(&device, target_format, options);
+ 
+@@ -285,6 +305,8 @@
+ /// Configuration for using wgpu with eframe or the egui-wgpu winit feature.
+ #[derive(Clone)]
+ pub struct WgpuConfiguration {
++    /// Opt into native scRGB/extended-linear presentation when supported.
++    pub extended_linear_surface: bool,
+     /// Present mode used for the primary surface.
+     pub present_mode: wgpu::PresentMode,
+ 
+@@ -313,12 +335,14 @@
+ impl std::fmt::Debug for WgpuConfiguration {
+     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+         let Self {
++            extended_linear_surface,
+             present_mode,
+             desired_maximum_frame_latency,
+             wgpu_setup,
+             on_surface_error: _,
+         } = self;
+         f.debug_struct("WgpuConfiguration")
++            .field("extended_linear_surface", extended_linear_surface)
+             .field("present_mode", &present_mode)
+             .field(
+                 "desired_maximum_frame_latency",
+@@ -332,6 +356,7 @@
+ impl Default for WgpuConfiguration {
+     fn default() -> Self {
+         Self {
++            extended_linear_surface: false,
+             present_mode: wgpu::PresentMode::AutoVsync,
+             desired_maximum_frame_latency: None,
+             wgpu_setup: Default::default(),
+--- a/src/renderer.rs
++++ b/src/renderer.rs
+@@ -151,6 +151,8 @@
+     ///
+     /// See also <https://github.com/emilk/egui/issues/5295>.
+     predictable_texture_filtering: u32,
++    output_white_scale: f32,
++    _padding: [f32; 3],
+ }
+ 
+ struct SlicedBuffer {
+@@ -254,6 +256,8 @@
+     samplers: HashMap<epaint::textures::TextureOptions, wgpu::Sampler>,
+ 
+     options: RendererOptions,
++    output_white_scale: f32,
++    output_hdr_active: bool,
+ 
+     /// Storage for resources shared with all invocations of [`CallbackTrait`]'s methods.
+     ///
+@@ -288,6 +292,8 @@
+                 screen_size_in_points: [0.0, 0.0],
+                 dithering: u32::from(options.dithering),
+                 predictable_texture_filtering: u32::from(options.predictable_texture_filtering),
++                output_white_scale: 1.0,
++                _padding: [0.0; 3],
+             }]),
+             usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
+         });
+@@ -402,7 +408,9 @@
+ 
+                 fragment: Some(wgpu::FragmentState {
+                     module: &module,
+-                    entry_point: Some(if output_color_format.is_srgb() {
++                    entry_point: Some(if output_color_format == wgpu::TextureFormat::Rgba16Float {
++                        "fs_main_extended_linear_framebuffer"
++                    } else if output_color_format.is_srgb() {
+                         log::warn!("Detected a linear (sRGBA aware) framebuffer {output_color_format:?}. egui prefers Rgba8Unorm or Bgra8Unorm");
+                         "fs_main_linear_framebuffer"
+                     } else {
+@@ -458,8 +466,33 @@
+             next_user_texture_id: 0,
+             samplers: HashMap::default(),
+             options,
++            output_white_scale: 1.0,
++            output_hdr_active: false,
+             callback_resources: CallbackResources::default(),
+         }
++    }
++
++    /// SDR UI white in native extended-linear surface units.
++    pub fn set_output_white_scale(&mut self, scale: f32) {
++        self.output_white_scale = if scale.is_finite() {
++            scale.clamp(0.1, 100.0)
++        } else {
++            1.0
++        };
++    }
++
++    pub fn output_white_scale(&self) -> f32 {
++        self.output_white_scale
++    }
++
++    /// Whether screenshots need an SDR proxy for current above-white content.
++    /// An extended-linear surface alone does not imply an HDR display is active.
++    pub fn set_output_hdr_active(&mut self, active: bool) {
++        self.output_hdr_active = active;
++    }
++
++    pub fn output_hdr_active(&self) -> bool {
++        self.output_hdr_active
+     }
+ 
+     /// Executes the egui renderer onto an existing wgpu renderpass.
+@@ -903,6 +936,8 @@
+             screen_size_in_points,
+             dithering: u32::from(self.options.dithering),
+             predictable_texture_filtering: u32::from(self.options.predictable_texture_filtering),
++            output_white_scale: self.output_white_scale,
++            _padding: [0.0; 3],
+         };
+         if uniform_buffer_content != self.previous_uniform_buffer_content {
+             profiling::scope!("update uniforms");
+--- a/src/egui.wgsl
++++ b/src/egui.wgsl
+@@ -15,6 +15,10 @@
+     /// 1 to do manual filtering for more predictable kittest snapshot images.
+     /// See also https://github.com/emilk/egui/issues/5295
+     predictable_texture_filtering: u32,
++    output_white_scale: f32,
++    _padding0: f32,
++    _padding1: f32,
++    _padding2: f32,
+ };
+ @group(0) @binding(0) var<uniform> r_locals: Locals;
+ 
+@@ -160,3 +164,17 @@
+     }
+     return out_color_gamma;
+ }
++
++// Ordinary egui textures remain SDR: decode sRGB once and match OS SDR white.
++// The photograph callback supplies its own unclipped scene-linear pixels.
++@fragment
++fn fs_main_extended_linear_framebuffer(in: VertexOutput) -> @location(0) vec4<f32> {
++    let gamma = in.color * sample_texture(in);
++    let alpha = gamma.a;
++    // egui also permits additive colors with zero alpha.
++    if alpha == 0.0 {
++        return vec4<f32>(linear_from_gamma_rgb(gamma.rgb) * r_locals.output_white_scale, 0.0);
++    }
++    let straight = gamma.rgb / max(alpha, 0.000001);
++    return vec4<f32>(linear_from_gamma_rgb(straight) * alpha * r_locals.output_white_scale, alpha);
++}
+--- a/src/winit.rs
++++ b/src/winit.rs
+@@ -198,13 +198,47 @@
+         let render_state = if let Some(render_state) = &self.render_state {
+             render_state
+         } else {
+-            let render_state = RenderState::create(
++            let mut render_state = RenderState::create(
+                 &self.configuration,
+                 &self.instance,
+                 Some(&surface),
+                 self.options,
+             )
+             .await?;
++            // Strehl: validate the initial native float swapchain before the
++            // app receives its RenderState. A driver can advertise a format
++            // and still reject configuring it; preserve the ordinary SDR app.
++            if render_state.target_format == wgpu::TextureFormat::Rgba16Float
++                && size.width > 0
++                && size.height > 0
++            {
++                if let Some(mut initial) =
++                    surface.get_default_config(&render_state.adapter, size.width, size.height)
++                {
++                    initial.format = wgpu::TextureFormat::Rgba16Float;
++                    initial.view_formats = vec![initial.format];
++                    render_state
++                        .device
++                        .push_error_scope(wgpu::ErrorFilter::Internal);
++                    render_state
++                        .device
++                        .push_error_scope(wgpu::ErrorFilter::Validation);
++                    surface.configure(&render_state.device, &initial);
++                    let validation = render_state.device.pop_error_scope().await;
++                    let internal = render_state.device.pop_error_scope().await;
++                    if let Some(error) = validation.or(internal) {
++                        log::warn!("Extended-linear surface unavailable; using SDR: {error}");
++                        let formats = surface.get_capabilities(&render_state.adapter).formats;
++                        render_state.target_format = crate::preferred_framebuffer_format(&formats)?;
++                        render_state.renderer =
++                            std::sync::Arc::new(epaint::mutex::RwLock::new(crate::Renderer::new(
++                                &render_state.device,
++                                render_state.target_format,
++                                self.options,
++                            )));
++                    }
++                }
++            }
+             self.render_state.get_or_insert(render_state)
+         };
+         let alpha_mode = if self.support_transparent_backbuffer {
+@@ -487,6 +521,30 @@
+         let mut capture_buffer = None;
+         {
+             let renderer = render_state.renderer.read();
++            let clear_color = if render_state.target_format == wgpu::TextureFormat::Rgba16Float {
++                let alpha = clear_color[3];
++                let decode = |channel: f32| {
++                    let straight = if alpha > 0.0 {
++                        channel / alpha
++                    } else {
++                        channel
++                    };
++                    let linear = if straight <= 0.04045 {
++                        straight / 12.92
++                    } else {
++                        ((straight + 0.055) / 1.055).powf(2.4)
++                    };
++                    linear * if alpha > 0.0 { alpha } else { 1.0 } * renderer.output_white_scale()
++                };
++                [
++                    decode(clear_color[0]),
++                    decode(clear_color[1]),
++                    decode(clear_color[2]),
++                    alpha,
++                ]
++            } else {
++                clear_color
++            };
+ 
+             let target_texture = if capture {
+                 let capture_state = self.screen_capture_state.get_or_insert_with(|| {
+@@ -592,6 +650,8 @@
+                 capture_data,
+                 self.capture_tx.clone(),
+                 viewport_id,
++                render_state.renderer.read().output_white_scale(),
++                render_state.renderer.read().output_hdr_active(),
+             );
+         }
+ 
+--- a/src/capture.rs
++++ b/src/capture.rs
+@@ -82,7 +82,14 @@
+             view_formats: &[],
+         });
+ 
+-        let padding = BufferPadding::new(surface_texture.width());
++        let padding = BufferPadding::new(
++            surface_texture.width(),
++            if surface_texture.format() == wgpu::TextureFormat::Rgba16Float {
++                8
++            } else {
++                4
++            },
++        );
+ 
+         let view = texture.create_view(&Default::default());
+ 
+@@ -185,6 +192,8 @@
+         data: Vec<UserData>,
+         tx: CaptureSender,
+         viewport_id: ViewportId,
++        output_white_scale: f32,
++        output_hdr_active: bool,
+     ) {
+         #[allow(clippy::arc_with_non_send_sync, clippy::allow_attributes)] // For wasm
+         let buffer = Arc::new(buffer);
+@@ -196,6 +205,7 @@
+         let to_rgba = match format {
+             wgpu::TextureFormat::Rgba8Unorm => [0, 1, 2, 3],
+             wgpu::TextureFormat::Bgra8Unorm => [2, 1, 0, 3],
++            wgpu::TextureFormat::Rgba16Float => [0, 1, 2, 3],
+             _ => {
+                 log::error!(
+                     "Screen can't be captured unless the surface format is Rgba8Unorm or Bgra8Unorm. Current surface format is {format:?}"
+@@ -216,6 +226,17 @@
+                 .chunks(padding.padded_bytes_per_row as usize)
+             {
+                 let row = &padded_row[..padding.unpadded_bytes_per_row as usize];
++                if format == wgpu::TextureFormat::Rgba16Float {
++                    for color in row.chunks_exact(8) {
++                        let mut rgba = [0.0f32; 4];
++                        for c in 0..4 {
++                            rgba[c] =
++                                half_to_float(u16::from_le_bytes([color[c * 2], color[c * 2 + 1]]));
++                        }
++                        pixels.push(screenshot_sdr(rgba, output_white_scale, output_hdr_active));
++                    }
++                    continue;
++                }
+                 for color in row.chunks(4) {
+                     pixels.push(epaint::Color32::from_rgba_premultiplied(
+                         color[to_rgba[0]],
+@@ -248,8 +269,7 @@
+ }
+ 
+ impl BufferPadding {
+-    fn new(width: u32) -> Self {
+-        let bytes_per_pixel = std::mem::size_of::<u32>() as u32;
++    fn new(width: u32, bytes_per_pixel: u32) -> Self {
+         let unpadded_bytes_per_row = width * bytes_per_pixel;
+         let padded_bytes_per_row =
+             wgpu::util::align_to(unpadded_bytes_per_row, wgpu::COPY_BYTES_PER_ROW_ALIGNMENT);
+@@ -259,3 +279,77 @@
+         }
+     }
+ }
++
++// Conversion at the OS presentation/readback boundary only. Image data and
++// arithmetic in Strehl remain f32; no half-float working image is created.
++fn half_to_float(bits: u16) -> f32 {
++    let sign = if bits & 0x8000 == 0 { 1.0 } else { -1.0 };
++    let exponent = (bits >> 10) & 31;
++    let mantissa = bits & 1023;
++    match exponent {
++        0 => sign * f32::from(mantissa) * 2.0f32.powi(-24),
++        31 => {
++            if mantissa == 0 {
++                sign * f32::INFINITY
++            } else {
++                f32::NAN
++            }
++        }
++        _ => sign * (1.0 + f32::from(mantissa) / 1024.0) * 2.0f32.powi(i32::from(exponent) - 15),
++    }
++}
++
++fn screenshot_sdr(rgba: [f32; 4], white: f32, hdr_active: bool) -> epaint::Color32 {
++    let rgb = [rgba[0], rgba[1], rgba[2]].map(|v| {
++        if v.is_finite() {
++            (v / white.max(0.1)).max(0.0)
++        } else {
++            0.0
++        }
++    });
++    let peak = rgb.iter().copied().fold(0.0, f32::max);
++    // SDR screenshot proxy: a smooth, hue-preserving shoulder makes above-white
++    // photo detail visible rather than interpreting float bytes as RGBA8.
++    let mapped = if !hdr_active || peak <= 0.75 {
++        peak
++    } else {
++        0.75 + 0.25 * (1.0 - (-(peak - 0.75) / 0.25).exp())
++    };
++    let gain = if peak > 0.0 { mapped / peak } else { 1.0 };
++    let encode = |x: f32| {
++        let x = x * gain;
++        let gamma = if x <= 0.0031308 {
++            x * 12.92
++        } else {
++            1.055 * x.powf(1.0 / 2.4) - 0.055
++        };
++        (gamma.clamp(0.0, 1.0) * 255.0 + 0.5) as u8
++    };
++    epaint::Color32::from_rgba_premultiplied(
++        encode(rgb[0]),
++        encode(rgb[1]),
++        encode(rgb[2]),
++        (rgba[3].clamp(0.0, 1.0) * 255.0 + 0.5) as u8,
++    )
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    #[test]
++    fn float_sdr_capture_preserves_every_opaque_srgb_code() {
++        for code in 0u16..=255 {
++            let gamma = f32::from(code) / 255.0;
++            let linear = if gamma <= 0.04045 {
++                gamma / 12.92
++            } else {
++                ((gamma + 0.055) / 1.055).powf(2.4)
++            };
++            let pixel = screenshot_sdr([linear, linear, linear, 1.0], 1.0, false);
++            assert_eq!(pixel.to_array(), [code as u8, code as u8, code as u8, 255]);
++        }
++        assert_eq!(screenshot_sdr([1.0; 4], 1.0, false).r(), 255);
++        assert!(screenshot_sdr([1.0; 4], 1.0, true).r() < 255);
++    }
++}

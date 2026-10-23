@@ -34,7 +34,7 @@ struct LevelScope {
     last_sequence: u64,
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 struct Mask {
     level: usize,
     frame: usize,
@@ -87,7 +87,7 @@ impl AdmissionCells<'_> {
 /// At most 8192 masks are retained (under 14 MiB on the desktop target). New keys
 /// at capacity are explicitly omitted; retained keys may still be refreshed.
 /// Geometry changes clear only that level, never reinterpret its old samples.
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub(crate) struct AdmissionArchive {
     entries: Vec<Mask>,
     scopes: [Option<LevelScope>; LEVELS],

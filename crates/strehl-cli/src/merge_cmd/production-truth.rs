@@ -105,6 +105,9 @@ fn fixture_frame(width: usize, height: usize, k: usize) -> Frame {
 
 fn fixture_options(out: PathBuf) -> MergeOptions {
     MergeOptions {
+        linear_master: None,
+        sensor_master: Default::default(),
+        region_recipe: None,
         dir: PathBuf::from("M194-NO-SUCH-RAW-DIRECTORY"),
         out: Some(out),
         limit: None,
@@ -372,6 +375,9 @@ fn m194_actual_source_gather_fold_writer_controls() {
 
 #[path = "../../../../experiments/m194-production-truth/independent-controls.rs"]
 mod independent;
+
+#[path = "region-repair-tests.rs"]
+mod region_repair_tests;
 
 // Private output-coordinate and interpolation commissioning. These ignored
 // tests use generated CFA sources and never participate in the product CLI.
