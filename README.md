@@ -7,7 +7,7 @@ the alignment network, detail at different scales, noise thresholds, admitted
 detail, fallback averages, and the image taking shape. After stacking, the same
 workspace lets you explore how the captures relate to the finished photograph.
 
-[Download the preview](https://github.com/chcaru/strehl/releases/tag/v0.1.0-alpha.5) ·
+[Download the preview](https://github.com/chcaru/strehl/releases/tag/v0.1.0-alpha.6) ·
 [Desktop controls](crates/strehl-ui/README.md) ·
 [Development and HDR](docs/development-and-hdr.md) ·
 [Agent interface](docs/agent-interface.md) ·
@@ -85,8 +85,9 @@ failed approaches, corrections, and remaining limitations.
 | Collaborate | Enable a local MCP session for an external agent: inspect bounded image crops and diagnostics, annotate regions, adjust settings, and operate the workspace with revision checks. |
 | Automate | Use the separate CLI, shared development recipe, or Rust workspace. |
 
-Development, Adaptive, progressive/HDR display, local source repairs, HDR export, and MCP collaboration describe the
-current source checkout; the linked alpha.5 download predates these additions.
+The alpha.6 preview includes development, spatial Adaptive, progressive/HDR display,
+local source repairs, HDR export, and MCP collaboration. A learned AI Adaptive
+profile is not enabled in this release.
 The [development guide](docs/development-and-hdr.md) explains color and recipe
 semantics, and the [agent guide](docs/agent-interface.md) describes connecting an
 existing MCP-capable host. Strehl does not supply a model subscription or
@@ -104,7 +105,7 @@ these distinctions.
 ## Download and start
 
 Get the platform package from the
-[release page](https://github.com/chcaru/strehl/releases/tag/v0.1.0-alpha.5).
+[release page](https://github.com/chcaru/strehl/releases/tag/v0.1.0-alpha.6).
 
 | Platform | Application |
 | --- | --- |

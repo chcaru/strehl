@@ -3321,7 +3321,7 @@ fn process_capture_inspection_can_promote_between_equal_sized_texture_tiers() {
 
     app.process_space.inspect_frame(INSPECTED);
     // Pixel dimensions cannot identify the tier: the fixture's entire camera
-    // JPEG fits inside both tiers, even before the inspection request is polled.
+    // JPEG fits inside every tier, even before the inspection request is polled.
     assert!(
         app.source_photo(INSPECTED)
             .is_some_and(|photo| photo.texture.size() == [120, 80])
@@ -3344,6 +3344,32 @@ fn process_capture_inspection_can_promote_between_equal_sized_texture_tiers() {
         overview.texture.size(),
         overview.index,
         overview.epoch
+    );
+    // Inspection is the foreground decode target even while live following
+    // updates the selected frame. Its settled native image is a second valid
+    // identity transition; overview residency does not imply refinement ended.
+    wait_for(&mut app, &ctx, |app| app.browser.has_image(INSPECTED));
+    let native = app.source_photo(INSPECTED).unwrap();
+    assert!(app.browser.has_overview(INSPECTED));
+    assert_eq!(native.index, overview.index);
+    assert_eq!(native.epoch, overview.epoch);
+    assert_eq!(native.aperture, overview.aperture);
+    assert_eq!(native.texture.size(), overview.texture.size());
+    assert_ne!(
+        native.texture.id(),
+        overview.texture.id(),
+        "the fixture must observe native refinement, not merely reuse its overview"
+    );
+    assert_eq!(app.selected, 180);
+    assert_eq!(app.process_pair(), [INSPECTED, 180]);
+    eprintln!(
+        "Resident overview {:?} {:?} promoted to native {:?} {:?} for frame {} in epoch {}",
+        overview.texture.id(),
+        overview.texture.size(),
+        native.texture.id(),
+        native.texture.size(),
+        native.index,
+        native.epoch
     );
 }
 
@@ -3391,10 +3417,10 @@ fn process_capture_inspection_keeps_decoding_its_pixels_while_live_follow_advanc
             "canonical scheduling must retain the inspected capture alongside current work"
         );
         wait_for(&mut app, &ctx, |app| {
-            // A resident scrub can arrive before the protected overview. Both
-            // tiers fit this fixture's full camera JPEG, so dimensions cannot
-            // distinguish their legitimate texture-identity transition.
-            app.browser.has_overview(INSPECTED) && app.source_photo(pair[1]).is_some()
+            // Scrub -> overview -> native refinement legitimately changes the
+            // texture identity, even at equal dimensions. Freeze the retention
+            // identity only after the foreground native image has arrived.
+            app.browser.has_image(INSPECTED) && app.source_photo(pair[1]).is_some()
         });
         let photo = app.source_photo(INSPECTED).unwrap();
         assert_eq!(photo.index, INSPECTED);
