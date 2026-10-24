@@ -47,6 +47,8 @@ import unicodedata
 # --------------------------------------------------------------------------
 SYNTHESIS = "docs/research/SYNTHESIS.md"
 AGENTS = "AGENTS.md"
+RULES_LEDGER = "docs/agents/engineering-ledger.md"
+MILESTONE_LEDGER = "docs/agents/milestone-ledger.md"
 
 NAMESPACE_SECTION = {"fact": 4, "risk": 7, "discipline": 5, "question": 10}
 
@@ -203,6 +205,7 @@ def table_blocks(doc):
 class Index(object):
     def __init__(self, syn, agents):
         self.syn = syn
+        self.rule_source = agents.rel
         self.spans = self._sections(syn.lines)
         self.items = {}
         self.items["fact"] = self._fact_rows()
@@ -1097,7 +1100,7 @@ def check_c1_citations(docs, index):
             elsewhere = index.other_namespaces(num, kind)
             extra = (" — %d exists as %s" % (num, "/".join(elsewhere))) if elsewhere else \
                     (" — no item of any kind carries %d" % num)
-            where = "AGENTS.md" if kind == "rule" else \
+            where = index.rule_source if kind == "rule" else \
                     "SYNTHESIS §%d" % NAMESPACE_SECTION[kind]
             out.append(Violation(
                 doc.rel, line, "C1",
@@ -1364,7 +1367,7 @@ def check_c2_report_paths(md_docs, root):
     old stem with a forwarding note. Three dead citations, zero linter output.
 
     The exemption is grounded in DECLARED data, not inferred intent. Rule 41
-    requires a milestone number to be allocated in AGENTS.md's allocation ledger
+    requires a milestone number to be allocated in docs/agents/milestone-ledger.md
     *at dispatch*, before the agent writes anything, so the ledger legitimately
     names report paths that do not exist yet. A path appearing in that table is
     a forward reference and is exempt; anything else is a dead citation. This is
@@ -1381,7 +1384,12 @@ def check_c2_report_paths(md_docs, root):
     except OSError:
         return out
     ledger = ""
-    ap = os.path.join(root, AGENTS)
+    # Prefer the canonical allocation ledger; legacy fixture roots may still
+    # carry the table in AGENTS.md. Prose outside the selected allocation
+    # document must not grant forward-reference exemptions.
+    ap = os.path.join(root, MILESTONE_LEDGER)
+    if not os.path.isfile(ap):
+        ap = os.path.join(root, AGENTS)
     if os.path.isfile(ap):
         ledger = io.open(ap, encoding="utf-8").read()
     pat = re.compile(r"docs/research/([A-Za-z0-9_.\-]+\.md)")
@@ -1561,6 +1569,10 @@ def collect_files(root):
     for extra in (AGENTS, "README.md", "OWNER-QUESTIONS.md", "docs/captures-needed.md"):
         if os.path.isfile(os.path.join(root, extra)):
             md.append(extra)
+    references = os.path.join(root, "docs", "agents")
+    if os.path.isdir(references):
+        md.extend("docs/agents/" + name for name in sorted(os.listdir(references))
+                  if name.endswith(".md"))
     rs = []
     crates = os.path.join(root, "crates")
     for dirpath, dirnames, filenames in os.walk(crates):
@@ -1612,7 +1624,9 @@ def main(argv=None):
     md_docs = [Doc(root, p) for p in md_paths]
     rs_docs = [Doc(root, p) for p in rs_paths]
     syn = next(d for d in md_docs if d.rel == SYNTHESIS)
-    agents = next((d for d in md_docs if d.rel == AGENTS), None)
+    agents = next((d for d in md_docs if d.rel == RULES_LEDGER), None)
+    if agents is None:
+        agents = next((d for d in md_docs if d.rel == AGENTS), None)
     if agents is None:
         agents = Doc(root, SYNTHESIS)  # degrade rather than crash
     index = Index(syn, agents)
