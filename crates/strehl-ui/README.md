@@ -45,8 +45,9 @@ and [release checklist](../../docs/public-release.md).
 **Exploring the photograph**
 
 The photograph, detail views and capture timeline remain together. **Projects**,
-**Adjust**, **Edit**, **Agent**, **Review** and **Activity** open in the resizable sidebar. Drag pane
-boundaries to change proportions; double-click a boundary or use **Reset layout**
+**Adjust**, **Edit**, **Export**, **Agent**, **Review** and **Activity** open in the
+resizable sidebar. Drag pane boundaries to change proportions; double-click a
+boundary or use **Reset layout**
 to restore them. The compact window dock provides Move, minimize, maximize and
 close controls; outer edges and corners resize the window.
 
@@ -77,9 +78,13 @@ and optional sample marks over selected ranges.
 
 Camera previews are embedded JPEGs with camera processing. They are distinct from
 Strehl's developing image and final TIFF. The live coarse green reconstruction is
-an intermediate view before final bounds and color development. Display textures
-use RGBA8; the saved 16-bit TIFF is unchanged. The desktop is not an ICC soft-proofing
-viewer, and a reduced preview cannot establish native-pixel sharpness.
+an intermediate view before final bounds and color development. Completed
+photographs retain an overview while the visible area progressively refines to
+source pixels. Supported Windows DX12 and macOS Metal displays can present a
+linear master's HDR headroom; other display paths remain SDR. The saved 16-bit
+TIFF is unchanged. The desktop is not an ICC soft-proofing viewer, and a reduced
+preview cannot establish native-pixel sharpness. See the
+[display guide](../../docs/development-and-hdr.md#progressive-photograph-display).
 
 Admission marks record where sampled coefficients passed the detail gate. They
 are not fractional RGB ownership, a winning-frame map, or a quality score. Region
@@ -106,16 +111,17 @@ log; reported memory plans are not live RAM measurements.
 
 Open **Edit** after stacking. **Photograph focus** gives the image more space
 while retaining the timeline; turn it off to show the process instruments again.
-Adjust the whole photograph, or choose **Circle**, **Box**, or **Lasso** and draw a
-region. Select its name to adjust only that region, set its feather, or leave a
-note. **Before** temporarily shows the original rendering; Undo/Redo also covers
+Adjust the whole photograph, or choose **Ellipse**, **Rectangle**, **Polygon**, or
+**Lasso** and draw a region. Select its name to adjust only that region, set its
+feather, or leave a note. **Before** temporarily shows the original rendering; Undo/Redo also covers
 these edits. Recipes save beside the result, preserving the original image.
 
 **Stack repair · next run** restricts a region to a chosen capture span. Press
 **Stack** to rebuild it; changing that span or region does not change the already
 rendered pixels. Each run saves a new result and editable float master. Export a
-new TIFF or HDR AVIF from **Edit**. Older SDR results remain editable but need a
-new stack for HDR. See the [development guide](../../docs/development-and-hdr.md)
+new TIFF, PNG, JPEG, or HDR AVIF from the separate **Export** pane. Older SDR
+results remain editable but need a new stack for HDR. See the
+[development guide](../../docs/development-and-hdr.md)
 for supported preset controls and HDR limits.
 
 Use **Agent → Enable agent access** to connect an existing MCP host. Its
