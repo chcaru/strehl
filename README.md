@@ -263,6 +263,9 @@ paths, with different assumptions and settings from the normal pyramid workflow.
 
 ## Development and research
 
+Use the [research guide](docs/research/README.md) for topic indexes and searchable
+reports, experiment results, reviews, and plans.
+
 The Rust workspace contains `strehl-core`, `strehl-raw`, `strehl-plugin`, `strehl-edit`,
 `strehl-cli`, and `strehl-ui`. A complete source checkout also includes the
 optional path dependency `experiments/native-gpu-gather`. Private photographic

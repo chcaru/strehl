@@ -114,7 +114,9 @@ def run(terms, quiet=False):
         return []
     reports = []
     for fn in sorted(os.listdir(RESEARCH)):
-        if not fn.endswith(".md") or fn == "SYNTHESIS.md":
+        # Generated navigation repeats source titles; it is not another report.
+        if not fn.endswith(".md") or fn.casefold() in {
+                "synthesis.md", "readme.md", "report-index.md", "experiment-index.md"}:
             continue
         r = score_report(os.path.join(RESEARCH, fn), terms)
         if r:
@@ -128,7 +130,8 @@ def run(terms, quiet=False):
     print("=" * 78)
     top = [r for r in reports if r["head_hits"]] or reports[:8]
     if not top:
-        print("NO PRIOR REPORTS. This subject appears genuinely unasked.")
+        print("NO MATCHING REPORTS within docs/research/*.md.")
+        print("Search experiment notes too: python scripts/research.py search <terms>")
     else:
         print("CITE THESE IN THE BRIEF (rule 40):\n")
         for r in top[:10]:
