@@ -820,15 +820,22 @@ fn parabola(l: f32, c: f32, r: f32) -> f32 {
 /// peaks. A caller must then retain its original separable result. Conditioning
 /// is relative to the Hessian scale, so a positive score gain cannot change it.
 pub fn quadratic_peak(scores: &[f32], side: usize, x: usize, y: usize) -> Option<(f32, f32)> {
-    if side < 3 || scores.len() != side.checked_mul(side)?
-        || x == 0 || y == 0 || x.checked_add(1)? >= side || y.checked_add(1)? >= side
+    if side < 3
+        || scores.len() != side.checked_mul(side)?
+        || x == 0
+        || y == 0
+        || x.checked_add(1)? >= side
+        || y.checked_add(1)? >= side
     {
         return None;
     }
     let centre_index = y * side + x;
     let centre = scores[centre_index];
     if !centre.is_finite()
-        || scores.iter().enumerate().any(|(i, &v)| i != centre_index && v >= centre)
+        || scores
+            .iter()
+            .enumerate()
+            .any(|(i, &v)| i != centre_index && v >= centre)
     {
         return None;
     }
@@ -866,7 +873,13 @@ pub fn quadratic_peak(scores: &[f32], side: usize, x: usize, y: usize) -> Option
     Some((ox, oy))
 }
 
-fn refine_peak(scores: &[f32], side: usize, x: usize, y: usize, mode: PeakRefinement) -> (f32, f32) {
+fn refine_peak(
+    scores: &[f32],
+    side: usize,
+    x: usize,
+    y: usize,
+    mode: PeakRefinement,
+) -> (f32, f32) {
     let sc = |i: usize, j: usize| scores[j * side + i];
     let old = (
         parabola(sc(x - 1, y), sc(x, y), sc(x + 1, y)),
@@ -880,7 +893,10 @@ fn refine_peak(scores: &[f32], side: usize, x: usize, y: usize, mode: PeakRefine
 
 #[cfg(feature = "alignment-sinc-peak")]
 pub mod sinc_peak_diagnostic {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/alignment-sinc-peak/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/alignment-sinc-peak/implementation.rs"
+    ));
 }
 
 /// Where and how one tile is correlated.
@@ -911,8 +927,14 @@ pub fn ncc_tile(
     probe: TileProbe,
     cfg: &AlignConfig,
 ) -> TileMeasurement {
-    ncc_tile_impl::<false>(reference, moving, probe, cfg,
-        #[cfg(feature = "alignment-sinc-peak")] None)
+    ncc_tile_impl::<false>(
+        reference,
+        moving,
+        probe,
+        cfg,
+        #[cfg(feature = "alignment-sinc-peak")]
+        None,
+    )
 }
 
 fn ncc_tile_impl<const SINC: bool>(
@@ -920,8 +942,9 @@ fn ncc_tile_impl<const SINC: bool>(
     moving: PlaneRef<'_>,
     probe: TileProbe,
     cfg: &AlignConfig,
-    #[cfg(feature = "alignment-sinc-peak")]
-    diagnostic: Option<&mut Option<sinc_peak_diagnostic::Outcome>>,
+    #[cfg(feature = "alignment-sinc-peak")] diagnostic: Option<
+        &mut Option<sinc_peak_diagnostic::Outcome>,
+    >,
 ) -> TileMeasurement {
     let TileProbe {
         tx,
@@ -1016,17 +1039,26 @@ fn ncc_tile_impl<const SINC: bool>(
         m.peak = best;
         return m;
     }
-    let mode = if SINC { PeakRefinement::Separable } else { cfg.peak_refinement };
+    let mode = if SINC {
+        PeakRefinement::Separable
+    } else {
+        cfg.peak_refinement
+    };
     let (ox, oy) = refine_peak(&scores, n, bi, bj, mode);
     #[cfg(feature = "alignment-sinc-peak")]
     let (ox, oy) = if SINC {
         let result = sinc_peak_diagnostic::refine(&scores, n, bi, bj);
-        if let Some(diagnostic) = diagnostic { *diagnostic = Some(result); }
+        if let Some(diagnostic) = diagnostic {
+            *diagnostic = Some(result);
+        }
         result.offset.unwrap_or((ox, oy))
     } else {
         if let Some(diagnostic) = diagnostic {
             *diagnostic = Some(sinc_peak_diagnostic::Outcome {
-                offset: None, evaluations: 0, reason: "parabolic", integer_peak: (bi,bj),
+                offset: None,
+                evaluations: 0,
+                reason: "parabolic",
+                integer_peak: (bi, bj),
             });
         }
         (ox, oy)
@@ -1103,8 +1135,15 @@ pub fn ncc_tile_warped(
     warp: SimilarityParams,
     cfg: &AlignConfig,
 ) -> TileMeasurement {
-    ncc_tile_warped_impl::<false>(reference, moving, probe, warp, cfg,
-        #[cfg(feature = "alignment-sinc-peak")] None)
+    ncc_tile_warped_impl::<false>(
+        reference,
+        moving,
+        probe,
+        warp,
+        cfg,
+        #[cfg(feature = "alignment-sinc-peak")]
+        None,
+    )
 }
 
 fn ncc_tile_warped_impl<const SINC: bool>(
@@ -1113,8 +1152,9 @@ fn ncc_tile_warped_impl<const SINC: bool>(
     probe: TileProbe,
     warp: SimilarityParams,
     cfg: &AlignConfig,
-    #[cfg(feature = "alignment-sinc-peak")]
-    diagnostic: Option<&mut Option<sinc_peak_diagnostic::Outcome>>,
+    #[cfg(feature = "alignment-sinc-peak")] diagnostic: Option<
+        &mut Option<sinc_peak_diagnostic::Outcome>,
+    >,
 ) -> TileMeasurement {
     let TileProbe {
         tx,
@@ -1221,17 +1261,26 @@ fn ncc_tile_warped_impl<const SINC: bool>(
         m.peak = best;
         return m;
     }
-    let mode = if SINC { PeakRefinement::Separable } else { cfg.peak_refinement };
+    let mode = if SINC {
+        PeakRefinement::Separable
+    } else {
+        cfg.peak_refinement
+    };
     let (ox, oy) = refine_peak(&scores, n, bi, bj, mode);
     #[cfg(feature = "alignment-sinc-peak")]
     let (ox, oy) = if SINC {
         let result = sinc_peak_diagnostic::refine(&scores, n, bi, bj);
-        if let Some(diagnostic) = diagnostic { *diagnostic = Some(result); }
+        if let Some(diagnostic) = diagnostic {
+            *diagnostic = Some(result);
+        }
         result.offset.unwrap_or((ox, oy))
     } else {
         if let Some(diagnostic) = diagnostic {
             *diagnostic = Some(sinc_peak_diagnostic::Outcome {
-                offset: None, evaluations: 0, reason: "parabolic", integer_peak: (bi,bj),
+                offset: None,
+                evaluations: 0,
+                reason: "parabolic",
+                integer_peak: (bi, bj),
             });
         }
         (ox, oy)
@@ -1886,7 +1935,7 @@ impl Weighting {
     }
 }
 
-/// Options for [`solve_global`].
+/// Options for [`solve_global`] and [`solve_global_in_component`].
 #[derive(Clone, Debug)]
 pub struct GlobalOptions {
     pub weighting: Weighting,
@@ -1897,9 +1946,11 @@ pub struct GlobalOptions {
     /// Weight on a second-difference prior in frame index. Zero disables it.
     ///
     /// The prior encodes the *physics*: focus breathing is monotone and smooth
-    /// in focus position, so the transform should be smooth in frame index. It
-    /// also makes the system full rank across frames no edge reaches, which is
-    /// why coverage is reported unconditionally when it is on.
+    /// in focus position, so the transform should be smooth in frame index.
+    /// Legacy [`solve_global`] also uses the prior across edge-unreached frames;
+    /// their returned placements are model extrapolations, not measured reach.
+    /// [`solve_global_in_component`] admits only original adjacent triples in
+    /// the requested measured component; its prior cannot create coverage.
     pub smooth: f64,
     /// Huber threshold for the *smoothness prior*, in plane px of second
     /// difference. `None` leaves the prior purely quadratic.
@@ -1931,8 +1982,8 @@ impl GlobalOptions {
     }
 }
 
-/// A per-frame transform relative to frame 0, or `None` where nothing
-/// constrains it.
+/// Per-frame transforms in the solver's documented gauge, or `None` where
+/// the selected solver did not place a frame.
 pub type Placement = Vec<Option<Similarity>>;
 
 /// Connectivity and cycle structure of an edge set.
@@ -2000,6 +2051,12 @@ fn unique_pairs(edges: &[AlignEdge]) -> Vec<(usize, usize)> {
 /// Frames outside that component are constrained by no edge relative to the
 /// anchor. They must be reported as *not covered*, never as a number.
 pub fn reachable_from_zero(edges: &[AlignEdge], n: usize) -> Vec<bool> {
+    reachable_from(edges, n, 0)
+}
+
+/// Frames connected to an explicit reference through measured edges only.
+/// An invalid reference yields an all-false mask.
+pub fn reachable_from(edges: &[AlignEdge], n: usize, anchor: usize) -> Vec<bool> {
     let mut adj: Vec<Vec<usize>> = vec![Vec::new(); n];
     for e in edges {
         if e.i < n && e.j < n {
@@ -2008,11 +2065,11 @@ pub fn reachable_from_zero(edges: &[AlignEdge], n: usize) -> Vec<bool> {
         }
     }
     let mut seen = vec![false; n];
-    if n == 0 {
+    if n == 0 || anchor >= n {
         return seen;
     }
-    seen[0] = true;
-    let mut stack = vec![0usize];
+    seen[anchor] = true;
+    let mut stack = vec![anchor];
     while let Some(k) = stack.pop() {
         for &m in &adj[k] {
             if !seen[m] {
@@ -2132,7 +2189,19 @@ fn push_coeff(
     coeff: Cx,
     gauge: Cx,
 ) -> bool {
-    if frame == 0 {
+    push_coeff_at(cols, rhs, col_of, frame, coeff, gauge, 0)
+}
+
+fn push_coeff_at(
+    cols: &mut Vec<(usize, Cx)>,
+    rhs: &mut Cx,
+    col_of: &[Option<usize>],
+    frame: usize,
+    coeff: Cx,
+    gauge: Cx,
+    gauge_frame: usize,
+) -> bool {
+    if frame == gauge_frame {
         *rhs = *rhs - coeff * gauge;
         return true;
     }
@@ -2173,22 +2242,63 @@ pub fn solve_global(edges: &[AlignEdge], n: usize, opts: &GlobalOptions) -> Opti
     if n == 0 {
         return None;
     }
-    let rho = corner_radius(opts.geometry);
     let reach = reachable_from_zero(edges, n);
-    let use_all = opts.smooth > 0.0;
+    let admitted = if opts.smooth > 0.0 {
+        vec![true; n]
+    } else {
+        reach
+    };
+    solve_global_selected(edges, n, opts, &admitted, 0)
+}
 
-    // Column layout for one block: frame 0 is the gauge and has no column.
+/// Solve only the requested reference's measured connected component.
+///
+/// Original frame indices are retained. A smoothness row is included only when
+/// all three original neighboring frames are admitted; the prior cannot bridge
+/// a missing frame or attach another measured component. Other frames are None.
+/// The numerical gauge is the smallest original index in the component,
+/// independent of the requested output reference. It remains frame 0 for fully
+/// connected inputs, preserving their legacy arithmetic.
+/// Callers may rebase the returned placements to their requested reference.
+/// The legacy `solve_global` keeps its documented research extrapolation behavior.
+pub fn solve_global_in_component(
+    edges: &[AlignEdge],
+    n: usize,
+    opts: &GlobalOptions,
+    reference: usize,
+) -> Option<Placement> {
+    if n == 0 || reference >= n {
+        return None;
+    }
+    let admitted = reachable_from(edges, n, reference);
+    let gauge = admitted.iter().position(|&keep| keep)?;
+    solve_global_selected(edges, n, opts, &admitted, gauge)
+}
+
+fn solve_global_selected(
+    edges: &[AlignEdge],
+    n: usize,
+    opts: &GlobalOptions,
+    admitted: &[bool],
+    gauge: usize,
+) -> Option<Placement> {
+    if n == 0 || gauge >= n || admitted.len() != n || !admitted[gauge] {
+        return None;
+    }
+    let rho = corner_radius(opts.geometry);
+
+    // Keep original frame order; only the selected gauge has a fixed value.
     let mut col_of: Vec<Option<usize>> = vec![None; n];
     let mut ncol = 0usize;
-    for (k, c) in col_of.iter_mut().enumerate().skip(1) {
-        if use_all || reach[k] {
+    for (k, c) in col_of.iter_mut().enumerate() {
+        if k != gauge && admitted[k] {
             *c = Some(ncol);
             ncol += 1;
         }
     }
     if ncol == 0 {
         let mut g: Placement = vec![None; n];
-        g[0] = Some(Similarity::IDENTITY);
+        g[gauge] = Some(Similarity::IDENTITY);
         return Some(g);
     }
 
@@ -2206,7 +2316,7 @@ pub fn solve_global(edges: &[AlignEdge], n: usize, opts: &GlobalOptions) -> Opti
         let mut sys_b = LeastSquares::new(ncol);
 
         for e in edges {
-            if e.i >= n || e.j >= n {
+            if e.i >= n || e.j >= n || !admitted[e.i] || !admitted[e.j] {
                 continue;
             }
             let extra = weights.get(&(e.i, e.j)).copied().unwrap_or(1.0);
@@ -2219,8 +2329,8 @@ pub fn solve_global(edges: &[AlignEdge], n: usize, opts: &GlobalOptions) -> Opti
 
             let mut cols = Vec::with_capacity(2);
             let mut rhs = Cx::ZERO;
-            let ok = push_coeff(&mut cols, &mut rhs, &col_of, e.i, e.t.a, Cx::ONE)
-                && push_coeff(&mut cols, &mut rhs, &col_of, e.j, -Cx::ONE, Cx::ONE);
+            let ok = push_coeff_at(&mut cols, &mut rhs, &col_of, e.i, e.t.a, Cx::ONE, gauge)
+                && push_coeff_at(&mut cols, &mut rhs, &col_of, e.j, -Cx::ONE, Cx::ONE, gauge);
             if ok && !cols.is_empty() {
                 sys_a.push(
                     cols.into_iter().map(|(c, v)| (c, v.scale(wa))).collect(),
@@ -2230,8 +2340,8 @@ pub fn solve_global(edges: &[AlignEdge], n: usize, opts: &GlobalOptions) -> Opti
 
             let mut cols = Vec::with_capacity(2);
             let mut rhs = -e.t.b;
-            let ok = push_coeff(&mut cols, &mut rhs, &col_of, e.i, e.t.a, Cx::ZERO)
-                && push_coeff(&mut cols, &mut rhs, &col_of, e.j, -Cx::ONE, Cx::ZERO);
+            let ok = push_coeff_at(&mut cols, &mut rhs, &col_of, e.i, e.t.a, Cx::ZERO, gauge)
+                && push_coeff_at(&mut cols, &mut rhs, &col_of, e.j, -Cx::ONE, Cx::ZERO, gauge);
             if ok && !cols.is_empty() {
                 sys_b.push(
                     cols.into_iter().map(|(c, v)| (c, v.scale(wb))).collect(),
@@ -2242,12 +2352,23 @@ pub fn solve_global(edges: &[AlignEdge], n: usize, opts: &GlobalOptions) -> Opti
 
         if opts.smooth > 0.0 && n >= 3 {
             for (k, &pw) in pen_w.iter().enumerate().take(n - 1).skip(1) {
+                if !(admitted[k - 1] && admitted[k] && admitted[k + 1]) {
+                    continue;
+                }
                 let sw = pw.sqrt();
                 let stencil = [(k - 1, 1.0), (k, -2.0), (k + 1, 1.0)];
                 let mut cols = Vec::with_capacity(3);
                 let mut rhs = Cx::ZERO;
                 for (kk, c) in stencil {
-                    push_coeff(&mut cols, &mut rhs, &col_of, kk, Cx::real(c), Cx::ONE);
+                    push_coeff_at(
+                        &mut cols,
+                        &mut rhs,
+                        &col_of,
+                        kk,
+                        Cx::real(c),
+                        Cx::ONE,
+                        gauge,
+                    );
                 }
                 let w = opts.smooth * rho * sw;
                 sys_a.push(
@@ -2258,7 +2379,15 @@ pub fn solve_global(edges: &[AlignEdge], n: usize, opts: &GlobalOptions) -> Opti
                 let mut cols = Vec::with_capacity(3);
                 let mut rhs = Cx::ZERO;
                 for (kk, c) in stencil {
-                    push_coeff(&mut cols, &mut rhs, &col_of, kk, Cx::real(c), Cx::ZERO);
+                    push_coeff_at(
+                        &mut cols,
+                        &mut rhs,
+                        &col_of,
+                        kk,
+                        Cx::real(c),
+                        Cx::ZERO,
+                        gauge,
+                    );
                 }
                 let w = opts.smooth * sw;
                 sys_b.push(
@@ -2272,7 +2401,7 @@ pub fn solve_global(edges: &[AlignEdge], n: usize, opts: &GlobalOptions) -> Opti
         let xb = sys_b.solve()?;
 
         placement = vec![None; n];
-        placement[0] = Some(Similarity::IDENTITY);
+        placement[gauge] = Some(Similarity::IDENTITY);
         for (k, c) in col_of.iter().enumerate() {
             if let Some(c) = c {
                 placement[k] = Some(Similarity {
@@ -2318,6 +2447,9 @@ pub fn solve_global(edges: &[AlignEdge], n: usize, opts: &GlobalOptions) -> Opti
             && thr > 0.0
         {
             for k in 1..n - 1 {
+                if !(admitted[k - 1] && admitted[k] && admitted[k + 1]) {
+                    continue;
+                }
                 let (Some(p), Some(c), Some(q)) =
                     (placement[k - 1], placement[k], placement[k + 1])
                 else {
@@ -3153,12 +3285,17 @@ mod tests {
             parabola(scores[11], scores[12], scores[13]),
             parabola(scores[7], scores[12], scores[17]),
         );
-        assert!(expected.0 != 0.0 && expected.1 != 0.0, "fallback must carry fractional information");
+        assert!(
+            expected.0 != 0.0 && expected.1 != 0.0,
+            "fallback must carry fractional information"
+        );
         assert!(quadratic_peak(&scores, 5, 2, 2).is_none());
         for mode in [PeakRefinement::Separable, PeakRefinement::Quadratic] {
             let actual = refine_peak(&scores, 5, 2, 2, mode);
-            assert_eq!((actual.0.to_bits(), actual.1.to_bits()),
-                       (expected.0.to_bits(), expected.1.to_bits()));
+            assert_eq!(
+                (actual.0.to_bits(), actual.1.to_bits()),
+                (expected.0.to_bits(), expected.1.to_bits())
+            );
         }
     }
 
@@ -4142,7 +4279,10 @@ mod tests {
         }
         // Support parity with Catmull-Rom is the claim that distinguishes this
         // kernel from Lanczos-3, so it is asserted rather than assumed.
-        assert_eq!(Resampler::Lanczos2.support(), Resampler::CatmullRom.support());
+        assert_eq!(
+            Resampler::Lanczos2.support(),
+            Resampler::CatmullRom.support()
+        );
         let data = vec![1.0f32; 32 * 32];
         let p = PlaneRef {
             data: &data,
@@ -4230,5 +4370,12 @@ mod tests {
 
 #[cfg(test)]
 mod quadratic_peak_tests {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/alignment-quadratic-peak/consumer-tests.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/alignment-quadratic-peak/consumer-tests.rs"
+    ));
 }
+
+#[cfg(test)]
+#[path = "../../../experiments/rea-a7c2-2026-10-24-v/component-tests.rs"]
+mod measured_component_tests;

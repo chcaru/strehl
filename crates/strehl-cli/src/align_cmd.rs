@@ -21,17 +21,127 @@ use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::path::{Path, PathBuf};
 
+#[cfg(feature = "research-lens-warp")]
+use anyhow::ensure;
 use anyhow::{Context, Result, bail};
 use rayon::prelude::*;
 use strehl_core::align::{
-    AlignConfig, AlignEdge, AlignFrame, AlignPyramid, GlobalOptions, PeakRefinement, PlaneRef, Resampler,
-    Similarity, SimilarityParams, Weighting, align_pair, cycle_consistency, edge_errors,
-    solve_global, tile_grid, total_drift,
+    AlignConfig, AlignEdge, AlignFrame, AlignPyramid, GlobalOptions, PeakRefinement, PlaneRef,
+    Resampler, Similarity, SimilarityParams, Weighting, align_pair, cycle_consistency, edge_errors,
+    solve_global, solve_global_in_component, tile_grid, total_drift,
 };
 use strehl_core::plane::{PlaneGeometry, green_luma};
 use strehl_core::warpmap::{
     FrameWarp, Provenance, RESAMPLER_NAMES, StackIdentity, WarpMap, resampler_from_name,
 };
+
+#[cfg(feature = "research-lens-warp")]
+#[path = "lens-research-geometry.rs"]
+mod lens_research_geometry;
+#[cfg(feature = "research-lens-warp")]
+pub(crate) use lens_research_geometry::{NativeSimilarity, RadialCurve, ResearchPull};
+
+// Self-contained data/coordinates keep path-included legacy examples buildable.
+#[cfg(feature = "research-lens-warp")]
+mod lens_research_data {
+    use super::{
+        CropRect, NativeSimilarity, PlaneGeometry, ResearchPull, Similarity, native_placement,
+    };
+    use anyhow::{Result, ensure};
+    use serde::{Deserialize, Serialize};
+
+    #[derive(Clone, Debug, Serialize, Deserialize)]
+    #[serde(deny_unknown_fields)]
+    pub(crate) struct EdgeReceipt {
+        pub pair: [usize; 2],
+        pub transform: [f64; 4],
+        pub rms: f64,
+        pub used: usize,
+        pub lever: f64,
+    }
+    #[derive(Clone, Debug, Serialize, Deserialize)]
+    #[serde(deny_unknown_fields)]
+    pub(crate) struct SolveReceipt {
+        pub requested_pairs: Vec<[usize; 2]>,
+        pub accepted_edges: Vec<EdgeReceipt>,
+        pub guide_crop: [usize; 4],
+        pub cycle_rank: usize,
+        pub reference: usize,
+        pub threads: usize,
+        pub smooth: f64,
+        pub smooth_huber: f64,
+        pub weighting: String,
+        pub pair_config: String,
+        pub global_config: String,
+        pub guide_policy: String,
+    }
+
+    #[derive(Clone, Copy, Debug)]
+    pub(crate) struct FramePull {
+        pub geometry: ResearchPull,
+        pub(crate) ca: [NativeSimilarity; 3],
+        pub(crate) crop: CropRect,
+    }
+    impl FramePull {
+        pub(crate) fn new(
+            geometry: ResearchPull,
+            ca: [NativeSimilarity; 3],
+            crop: CropRect,
+        ) -> Result<Self> {
+            geometry.validate().map_err(anyhow::Error::msg)?;
+            for c in ca {
+                c.validate().map_err(anyhow::Error::msg)?;
+            }
+            ensure!(
+                crop.width > 0 && crop.height > 0,
+                "empty research consumer crop"
+            );
+            Ok(Self { geometry, ca, crop })
+        }
+        pub(crate) fn map_native(&self, p: [f32; 2], channel: usize) -> Option<[f32; 2]> {
+            self.geometry.map_native_with_ca(p, self.ca[channel])
+        }
+        pub(crate) fn validate_consumer(
+            &self,
+            t: Similarity,
+            geom: PlaneGeometry,
+            crop: CropRect,
+        ) -> Result<()> {
+            let expected = native_placement(t, geom);
+            ensure!(
+                crop == self.crop
+                    && self.geometry.placement.a == expected.a
+                    && self.geometry.placement.b == expected.b
+                    && self.geometry.placement.center == expected.center,
+                "research pull and CPU consumer placement/domain disagree"
+            );
+            Ok(())
+        }
+        pub(crate) fn consumes(&self, x: usize, y: usize) -> bool {
+            x >= self.crop.x
+                && y >= self.crop.y
+                && x < self.crop.x + self.crop.width
+                && y < self.crop.y + self.crop.height
+        }
+    }
+}
+#[cfg(feature = "research-lens-warp")]
+pub(crate) use lens_research_data::{EdgeReceipt, FramePull, SolveReceipt};
+#[cfg(feature = "research-lens-warp")]
+pub(crate) fn native_similarity(t: Similarity, geom: PlaneGeometry) -> NativeSimilarity {
+    NativeSimilarity {
+        a: [t.a.re as f32, t.a.im as f32],
+        b: [(2.0 * t.b.re) as f32, (2.0 * t.b.im) as f32],
+        center: [geom.width as f32, geom.height as f32],
+    }
+}
+#[cfg(feature = "research-lens-warp")]
+pub(crate) fn native_placement(t: Similarity, geom: PlaneGeometry) -> NativeSimilarity {
+    let mut t = native_similarity(t, geom);
+    t.center[0] += 0.5;
+    t.center[1] += 0.5;
+    t
+}
 
 /// Brackets whose subject is known not to be normal to the optical axis.
 ///
@@ -207,7 +317,9 @@ impl AlignArgs {
             "separable" => Ok(PeakRefinement::Separable),
             "quadratic" if self.out.is_some() => Ok(PeakRefinement::Quadratic),
             "quadratic" => bail!("quadratic peak refinement requires an explicit --out sidecar"),
-            other => bail!("unknown peak refinement {other:?}; valid choices are separable and quadratic"),
+            other => bail!(
+                "unknown peak refinement {other:?}; valid choices are separable and quadratic"
+            ),
         }
     }
 }
@@ -399,7 +511,10 @@ pub fn run(args: &AlignArgs) -> Result<()> {
     let peak_refinement = args.peak_refinement()?;
 
     if peak_refinement == PeakRefinement::Quadratic
-        && (args.verify_plant.is_some() || args.resampler_cost || args.verify_warp || args.check.is_some())
+        && (args.verify_plant.is_some()
+            || args.resampler_cost
+            || args.verify_warp
+            || args.check.is_some())
     {
         bail!("quadratic peak refinement applies to alignment solving, not verification submodes");
     }
@@ -457,7 +572,10 @@ pub fn run(args: &AlignArgs) -> Result<()> {
         st.geom.height
     );
 
-    let cfg = AlignConfig { peak_refinement, ..AlignConfig::deep() };
+    let cfg = AlignConfig {
+        peak_refinement,
+        ..AlignConfig::deep()
+    };
     if peak_refinement == PeakRefinement::Quadratic {
         println!("  peak refinement: quadratic (experimental; separable fallback)");
     }
@@ -480,40 +598,33 @@ pub fn run(args: &AlignArgs) -> Result<()> {
         100.0 * (pairs.len() - edges.len()) as f64 / pairs.len() as f64
     );
 
-    let floor = cycle_floor(&edges, st.geom);
+    let component_edges = measured_reference_edges(&edges, n, reference);
+    let floor = cycle_floor(&component_edges, st.geom);
     let mut opts = GlobalOptions::new(st.geom);
     opts.weighting = Weighting::Unit;
     apply_smooth_env(&mut opts);
-    let placements = solve_global(&edges, n, &opts)
+    let placements = solve_global_in_component(&edges, n, &opts, reference)
         .context("the global system is not full rank; the edge ladder is too sparse")?;
 
     // Held-out error, not fit error. Every other number here would flatter the
     // solve; this one is the only one a consumer can act on.
-    let heldout = heldout_error(&edges, n, &opts, st.geom);
+    let heldout = heldout_error(&component_edges, n, &opts, st.geom, Some(reference));
 
     let drift = total_drift(&placements, st.geom);
-    let warps: Vec<FrameWarp> = placements
-        .iter()
-        .enumerate()
-        .map(|(k, t)| match t {
-            Some(t) => FrameWarp::Placed(rebase(*t, placements[reference])),
-            None => FrameWarp::Refused(format!(
-                "frame {k} is not connected to the solved component by any measured edge"
-            )),
-        })
-        .collect();
+    let warps = ordinary_component_warps(&placements, reference)?;
 
     let map = WarpMap::new(
         Provenance {
             stack: identity,
-            strategy: "S3-ba-unit".into(),
+            strategy: NORMAL_ALIGNMENT_STRATEGY.into(),
             heldout_px: heldout,
             cycle_floor_px: floor,
             reference,
             note: match peak_refinement {
                 PeakRefinement::Separable => format!("strehl align, M86b, spans {:?}", args.spans),
                 PeakRefinement::Quadratic => format!(
-                    "strehl align, M86b, spans {:?}, peak-refinement quadratic (experimental)", args.spans
+                    "strehl align, M86b, spans {:?}, peak-refinement quadratic (experimental)",
+                    args.spans
                 ),
             },
         },
@@ -526,10 +637,12 @@ pub fn run(args: &AlignArgs) -> Result<()> {
     // are read-only corpus, and this way an explicit `strehl align` populates
     // exactly the entry `strehl stack` will later look for. `--out` still puts
     // the sidecar anywhere the caller asks.
-    let out = args
-        .out
-        .clone()
-        .unwrap_or_else(|| sidecar_path(&args.dir, solve_config_key(reference, &args.spans, resampler)));
+    let out = args.out.clone().unwrap_or_else(|| {
+        sidecar_path(
+            &args.dir,
+            solve_config_key(reference, &args.spans, resampler),
+        )
+    });
     save_atomic(&map, &out)?;
 
     println!(
@@ -569,6 +682,7 @@ pub fn run(args: &AlignArgs) -> Result<()> {
 /// for a different reference, every placement is composed with the inverse of
 /// the reference's own placement. Getting this backwards silently shifts the
 /// whole stack, so it is one expression in one place.
+#[cfg(test)]
 fn rebase(t: Similarity, reference: Option<Similarity>) -> Similarity {
     match reference.and_then(|r| r.invert()) {
         Some(inv) => inv.then(t),
@@ -702,6 +816,7 @@ fn heldout_error(
     n: usize,
     opts: &GlobalOptions,
     geom: PlaneGeometry,
+    reference: Option<usize>,
 ) -> Option<f64> {
     const MIN_SPAN: usize = 40;
     const MIN_USED: usize = 12;
@@ -711,7 +826,10 @@ fn heldout_error(
     if test.is_empty() || train.is_empty() {
         return None;
     }
-    let g = solve_global(&train, n, opts)?;
+    let g = match reference {
+        Some(reference) => solve_global_in_component(&train, n, opts, reference),
+        None => solve_global(&train, n, opts), // retained research diagnostic
+    }?;
     let mut errs: Vec<f64> = edge_errors(&g, &test, geom).iter().map(|x| x.err).collect();
     if errs.is_empty() {
         return None;
@@ -1424,7 +1542,64 @@ const DEFAULT_SMOOTH_HUBER_PX: f64 = 1.0;
 /// BUILD-SHARP would have been served for a request it no longer answers --
 /// silently, because `check_stack` only compares the frame set (M97). The
 /// generation byte closes that: old entries miss and are re-solved.
-const SOLVE_GENERATION: u32 = 2;
+const SOLVE_GENERATION: u32 = 3;
+
+// Versions the measured-component contract for ordinary cached and explicit maps.
+const NORMAL_ALIGNMENT_STRATEGY: &str = "S3-ba-unit-measured-component-v1";
+
+fn measured_reference_edges(edges: &[AlignEdge], n: usize, reference: usize) -> Vec<AlignEdge> {
+    let admitted = strehl_core::align::reachable_from(edges, n, reference);
+    edges
+        .iter()
+        .copied()
+        .filter(|e| e.i < n && e.j < n && admitted[e.i] && admitted[e.j])
+        .collect()
+}
+
+fn ordinary_component_warps(
+    placements: &[Option<Similarity>],
+    reference: usize,
+) -> Result<Vec<FrameWarp>> {
+    let inverse = placements
+        .get(reference)
+        .copied()
+        .flatten()
+        .and_then(|t| t.invert())
+        .with_context(|| {
+            format!("reference frame {reference} has no invertible measured placement")
+        })?;
+    Ok(placements
+        .iter()
+        .enumerate()
+        .map(|(k, t)| match t {
+            Some(t) => FrameWarp::Placed(inverse.then(*t)),
+            None => FrameWarp::Refused(format!(
+                "frame {k} is not connected to reference frame {reference} by any measured edge"
+            )),
+        })
+        .collect())
+}
+
+/// Policy/version declaration, not proof reconstructed from measured edges.
+/// Explicitly supplied nonordinary maps remain a deliberate research/control route.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum OrdinaryMapPolicy {
+    Current,
+    Legacy,
+    Nonordinary,
+}
+
+pub(crate) fn ordinary_map_policy(map: &WarpMap) -> OrdinaryMapPolicy {
+    match map.provenance().strategy.as_str() {
+        NORMAL_ALIGNMENT_STRATEGY => OrdinaryMapPolicy::Current,
+        "S3-ba-unit" => OrdinaryMapPolicy::Legacy,
+        _ => OrdinaryMapPolicy::Nonordinary,
+    }
+}
+
+fn ordinary_map_policy_matches(map: &WarpMap) -> bool {
+    ordinary_map_policy(map) == OrdinaryMapPolicy::Current
+}
 
 /// Digest of every input to [`solve_map`] that can change the warps it returns.
 ///
@@ -1579,35 +1754,27 @@ fn solve_map_observed(
     if let Some(progress) = progress {
         progress.alignment_phase("cycle-check", edges.len());
     }
-    let floor = cycle_floor(&edges, st.geom);
+    let component_edges = measured_reference_edges(&edges, n, reference);
+    let floor = cycle_floor(&component_edges, st.geom);
     let mut opts = GlobalOptions::new(st.geom);
     opts.weighting = Weighting::Unit;
     apply_smooth_env(&mut opts);
     if let Some(progress) = progress {
         progress.alignment_phase("solve", n);
     }
-    let placements = solve_global(&edges, n, &opts)
+    let placements = solve_global_in_component(&edges, n, &opts, reference)
         .context("the global system is not full rank; the edge ladder is too sparse")?;
     if let Some(progress) = progress {
         progress.alignment_phase("validate", edges.len());
     }
-    let heldout = heldout_error(&edges, n, &opts, st.geom);
+    let heldout = heldout_error(&component_edges, n, &opts, st.geom, Some(reference));
 
-    let warps: Vec<FrameWarp> = placements
-        .iter()
-        .enumerate()
-        .map(|(k, t)| match t {
-            Some(t) => FrameWarp::Placed(rebase(*t, placements[reference])),
-            None => FrameWarp::Refused(format!(
-                "frame {k} is not connected to the solved component by any measured edge"
-            )),
-        })
-        .collect();
+    let warps = ordinary_component_warps(&placements, reference)?;
 
     Ok(WarpMap::new(
         Provenance {
             stack: identity,
-            strategy: "S3-ba-unit".into(),
+            strategy: NORMAL_ALIGNMENT_STRATEGY.into(),
             heldout_px: heldout,
             cycle_floor_px: floor,
             reference,
@@ -1699,6 +1866,9 @@ pub(crate) fn load_or_solve_observed(
                      uses {want_resampler:?}; re-solving",
                     map.resampler()
                 ),
+                Ok(()) if !ordinary_map_policy_matches(&map) => eprintln!(
+                    "alignment      : sidecar predates the measured-reference-component policy; re-solving"
+                ),
                 Ok(()) => {
                     if let Some(progress) = progress {
                         progress.alignment_result(
@@ -1762,7 +1932,9 @@ fn save_atomic(map: &WarpMap, path: &Path) -> Result<()> {
     std::fs::create_dir_all(dir)?;
     let tmp = dir.join(format!(
         ".{}.{}.tmp",
-        path.file_name().map(|s| s.to_string_lossy()).unwrap_or_default(),
+        path.file_name()
+            .map(|s| s.to_string_lossy())
+            .unwrap_or_default(),
         std::process::id()
     ));
     map.save(&tmp)?;
@@ -2087,10 +2259,8 @@ pub fn warp_frame_in_place_plane(
     // better and is noted as a follow-up rather than done here, because this
     // function is the narrowest place the change can be made correctly.
     let ident = strehl_raw::identity(&frame.path);
-    let ca = strehl_core::optics::profile_for_capture_env(
-        ident.model.as_deref(),
-        ident.lens_type3,
-    )?;
+    let ca =
+        strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?;
 
     for dy in 0..2usize {
         for dx in 0..2usize {
@@ -2283,30 +2453,61 @@ pub(crate) fn writeback_fullres_site(
 }
 
 #[cfg(feature = "native-direct-planes")]
-include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-direct-planes/implementation.rs"));
+include!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../experiments/native-direct-planes/implementation.rs"
+));
 
 #[cfg(feature = "native-direct-planes")]
 pub(crate) mod local_placement {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/full-context-placement/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/full-context-placement/implementation.rs"
+    ));
 }
 
 #[cfg(feature = "native-gpu-gather")]
 pub(crate) mod native_gpu_integration {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-gpu-gather/integration.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-gpu-gather/integration.rs"
+    ));
 }
 
 fn warp_frame_in_place_fullres_outputs<const GREEN_ONLY: bool>(
-    frame: &mut strehl_raw::Frame, t: Similarity, geom: PlaneGeometry,
-    resampler: Resampler, scratch: &mut WarpScratch,
+    frame: &mut strehl_raw::Frame,
+    t: Similarity,
+    geom: PlaneGeometry,
+    resampler: Resampler,
+    scratch: &mut WarpScratch,
 ) -> Result<f64> {
     #[cfg(feature = "native-gpu-gather")]
-    if let Some(covered) = native_gpu_integration::gpu_remosaic::<GREEN_ONLY>(frame,t,geom,resampler)? {
+    if let Some(covered) =
+        native_gpu_integration::gpu_remosaic::<GREEN_ONLY>(frame, t, geom, resampler)?
+    {
         return Ok(covered);
     }
-    warp_frame_fullres_with_sink::<GREEN_ONLY,_>(frame,t,geom,resampler,scratch,
-        |frame,site,dst,cover,inv,black,execution| Ok(writeback_fullres_site(
-            &mut frame.data,frame.stride,(frame.active.x,frame.active.y),geom,site,
-            dst,cover,inv,black,execution)))
+    warp_frame_fullres_with_sink::<GREEN_ONLY, _>(
+        frame,
+        t,
+        geom,
+        resampler,
+        scratch,
+        |frame, site, dst, cover, inv, black, execution| {
+            Ok(writeback_fullres_site(
+                &mut frame.data,
+                frame.stride,
+                (frame.active.x, frame.active.y),
+                geom,
+                site,
+                dst,
+                cover,
+                inv,
+                black,
+                execution,
+            ))
+        },
+    )
 }
 
 // Every source, geometry and sampling operation is shared; only destination storage differs.
@@ -2318,7 +2519,16 @@ fn warp_frame_fullres_with_sink<const GREEN_ONLY: bool, F>(
     scratch: &mut WarpScratch,
     sink: F,
 ) -> Result<f64>
-where F: FnMut(&mut strehl_raw::Frame,(usize,usize),&[f32],&[bool],f32,f32,WarpWriteback)->Result<usize>
+where
+    F: FnMut(
+        &mut strehl_raw::Frame,
+        (usize, usize),
+        &[f32],
+        &[bool],
+        f32,
+        f32,
+        WarpWriteback,
+    ) -> Result<usize>,
 {
     warp_frame_fullres_with_sink_impl::<GREEN_ONLY, F>(
         frame,
@@ -2328,21 +2538,111 @@ where F: FnMut(&mut strehl_raw::Frame,(usize,usize),&[f32],&[bool],f32,f32,WarpW
         scratch,
         sink,
         #[cfg(all(test, feature = "native-gpu-gather"))]
-        None)
+        None,
+    )
 }
 
+#[allow(clippy::too_many_arguments)]
 fn warp_frame_fullres_with_sink_impl<const GREEN_ONLY: bool, F>(
     frame: &mut strehl_raw::Frame,
     t: Similarity,
     geom: PlaneGeometry,
     resampler: Resampler,
     scratch: &mut WarpScratch,
-    mut sink: F,
+    sink: F,
     #[cfg(all(test, feature = "native-gpu-gather"))] ca_override: Option<
         Option<strehl_core::optics::OpticalProfile>,
     >,
 ) -> Result<f64>
-where F: FnMut(&mut strehl_raw::Frame,(usize,usize),&[f32],&[bool],f32,f32,WarpWriteback)->Result<usize>
+where
+    F: FnMut(
+        &mut strehl_raw::Frame,
+        (usize, usize),
+        &[f32],
+        &[bool],
+        f32,
+        f32,
+        WarpWriteback,
+    ) -> Result<usize>,
+{
+    warp_frame_fullres_coordinates_impl::<GREEN_ONLY, F>(
+        frame,
+        t,
+        geom,
+        resampler,
+        scratch,
+        sink,
+        #[cfg(feature = "research-lens-warp")]
+        None,
+        #[cfg(all(test, feature = "native-gpu-gather"))]
+        ca_override,
+    )
+}
+
+/// Uses the same source reconstruction, resampler and quantizing sink as normal
+/// CPU pyramid gathering; only the immutable coordinate producer differs.
+#[cfg(feature = "research-lens-warp")]
+pub(crate) fn warp_frame_lens_research<const GREEN_ONLY: bool>(
+    frame: &mut strehl_raw::Frame,
+    t: Similarity,
+    geom: PlaneGeometry,
+    resampler: Resampler,
+    scratch: &mut WarpScratch,
+    pull: &FramePull,
+) -> Result<f64> {
+    ensure!(
+        fullres_gather_enabled(),
+        "research lens pull requires fullres gather"
+    );
+    warp_frame_fullres_coordinates_impl::<GREEN_ONLY, _>(
+        frame,
+        t,
+        geom,
+        resampler,
+        scratch,
+        |frame, site, dst, cover, inv, black, execution| {
+            Ok(writeback_fullres_site(
+                &mut frame.data,
+                frame.stride,
+                (frame.active.x, frame.active.y),
+                geom,
+                site,
+                dst,
+                cover,
+                inv,
+                black,
+                execution,
+            ))
+        },
+        Some(pull),
+        #[cfg(all(test, feature = "native-gpu-gather"))]
+        None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn warp_frame_fullres_coordinates_impl<const GREEN_ONLY: bool, F>(
+    frame: &mut strehl_raw::Frame,
+    t: Similarity,
+    geom: PlaneGeometry,
+    resampler: Resampler,
+    scratch: &mut WarpScratch,
+    mut sink: F,
+    #[cfg(feature = "research-lens-warp")] lens_pull: Option<&FramePull>,
+    #[cfg(all(test, feature = "native-gpu-gather"))] ca_override: Option<
+        Option<strehl_core::optics::OpticalProfile>,
+    >,
+) -> Result<f64>
+where
+    F: FnMut(
+        &mut strehl_raw::Frame,
+        (usize, usize),
+        &[f32],
+        &[bool],
+        f32,
+        f32,
+        WarpWriteback,
+    ) -> Result<usize>,
 {
     let (gw, gh) = (geom.width, geom.height);
     if frame.active.width / 2 != gw || frame.active.height / 2 != gh {
@@ -2425,15 +2725,14 @@ where F: FnMut(&mut strehl_raw::Frame,(usize,usize),&[f32],&[bool],f32,f32,WarpW
         strehl_raw::identity(&frame.path)
     };
     #[cfg(not(all(test, feature = "native-gpu-gather")))]
-    let ca = strehl_core::optics::profile_for_capture_env(
-        ident.model.as_deref(),
-        ident.lens_type3,
-    )?;
+    let ca =
+        strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?;
     #[cfg(all(test, feature = "native-gpu-gather"))]
     let ca = match ca_override.as_ref() {
         Some(explicit) => explicit.as_ref(),
-        None => strehl_core::optics::profile_for_capture_env(
-            ident.model.as_deref(), ident.lens_type3)?,
+        None => {
+            strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?
+        }
     };
 
     let fgeom = PlaneGeometry {
@@ -2460,7 +2759,15 @@ where F: FnMut(&mut strehl_raw::Frame,(usize,usize),&[f32],&[bool],f32,f32,WarpW
             let t_site = strehl_core::optics::OpticalProfile::compose(ca, ch, t);
             #[cfg(all(test, feature = "native-sensor-transfer"))]
             crate::merge_cmd::native_sensor_transfer::gather_site(
-                &frame.path, &gain, ident.model.as_deref(), ident.lens_type3, ca, dx, dy, t_site);
+                &frame.path,
+                &gain,
+                ident.model.as_deref(),
+                ident.lens_type3,
+                ca,
+                dx,
+                dy,
+                t_site,
+            );
             // The site's own offset inside the quad, in plane units.
             let (ox, oy) = (dx as f64 * 0.5, dy as f64 * 0.5);
             {
@@ -2471,9 +2778,23 @@ where F: FnMut(&mut strehl_raw::Frame,(usize,usize),&[f32],&[bool],f32,f32,WarpW
                     .enumerate()
                     .for_each(|(py, (drow, crow))| {
                         for (px, (o, c)) in drow.iter_mut().zip(crow.iter_mut()).enumerate() {
-                            let (sxp, syp) =
-                                t_site.apply_at(px as f64 + ox, py as f64 + oy, cx, cy);
-                            match resampler.sample_checked(src, 2.0 * sxp, 2.0 * syp) {
+                            let legacy_sample = || {
+                                let (sxp, syp) =
+                                    t_site.apply_at(px as f64 + ox, py as f64 + oy, cx, cy);
+                                resampler.sample_checked(src, 2.0 * sxp, 2.0 * syp)
+                            };
+                            #[cfg(feature = "research-lens-warp")]
+                            let sample = if let Some(pull) = lens_pull {
+                                pull.map_native([(2 * px + dx) as f32, (2 * py + dy) as f32], ci)
+                                    .and_then(|p| {
+                                        resampler.sample_checked(src, p[0] as f64, p[1] as f64)
+                                    })
+                            } else {
+                                legacy_sample()
+                            };
+                            #[cfg(not(feature = "research-lens-warp"))]
+                            let sample = legacy_sample();
+                            match sample {
                                 Some(v) => {
                                     *o = v;
                                     *c = true;
@@ -2487,8 +2808,28 @@ where F: FnMut(&mut strehl_raw::Frame,(usize,usize),&[f32],&[bool],f32,f32,WarpW
                     });
             }
 
+            #[cfg(feature = "research-lens-warp")]
+            if let Some(pull) = lens_pull {
+                for (index, ok) in scratch.cover.iter().enumerate() {
+                    if pull.consumes(index % gw, index / gw) && !ok {
+                        bail!(
+                            "certified research pull uncovered a consumed site ({},{}) phase ({dx},{dy})",
+                            index % gw,
+                            index / gw
+                        );
+                    }
+                }
+            }
             let inv = 1.0 / gain[ci];
-            covered_total += sink(frame,(dx,dy),&scratch.dst,&scratch.cover,inv,black,writeback)?;
+            covered_total += sink(
+                frame,
+                (dx, dy),
+                &scratch.dst,
+                &scratch.cover,
+                inv,
+                black,
+                writeback,
+            )?;
         }
     }
     let sites = if GREEN_ONLY { 2 } else { 4 };
@@ -2496,7 +2837,10 @@ where F: FnMut(&mut strehl_raw::Frame,(usize,usize),&[f32],&[bool],f32,f32,WarpW
 }
 
 #[cfg(all(test, feature = "native-gpu-gather"))]
-include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-gpu-gather/cpu-bridge.rs"));
+include!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../experiments/native-gpu-gather/cpu-bridge.rs"
+));
 
 /// Gate W8 -- `warp_frame_in_place` on a real decoded frame.
 ///
@@ -2925,7 +3269,10 @@ pub fn fit_to_cover(map: &WarpMap, margin: f64) -> Option<(WarpMap, f64)> {
         .collect();
     let mut prov = map.provenance().clone();
     prov.note = format!("{} | fit-to-cover k={lo:.6}", prov.note);
-    Some((WarpMap::new(prov, map.geometry(), map.resampler(), warps), lo))
+    Some((
+        WarpMap::new(prov, map.geometry(), map.resampler(), warps),
+        lo,
+    ))
 }
 
 /// The largest `k <= 1` for which the grid scaled by `k` about the plane centre
@@ -3114,7 +3461,10 @@ mod tests {
         // A typo must be louder than the default it would otherwise have
         // silently selected -- the same failure `STREHL_SOFT_GATE` panics on.
         let typo = std::panic::catch_unwind(|| fullres_from_raw("onn"));
-        assert!(typo.is_err(), "an unrecognised value fell back to a default");
+        assert!(
+            typo.is_err(),
+            "an unrecognised value fell back to a default"
+        );
     }
 
     /// Both commands parse `--resampler` here, so this is the one place the
@@ -3218,13 +3568,22 @@ mod tests {
 
         let base = solve_config_key(20, &spans, Resampler::CatmullRom);
         for (label, other) in [
-            ("reference", solve_config_key(40, &spans, Resampler::CatmullRom)),
-            ("resampler", solve_config_key(20, &spans, Resampler::Bilinear)),
+            (
+                "reference",
+                solve_config_key(40, &spans, Resampler::CatmullRom),
+            ),
+            (
+                "resampler",
+                solve_config_key(20, &spans, Resampler::Bilinear),
+            ),
             (
                 "catmull versus clamped catmull resampler",
                 solve_config_key(20, &spans, Resampler::ClampedCatmullRom),
             ),
-            ("spans", solve_config_key(20, &[1, 2], Resampler::CatmullRom)),
+            (
+                "spans",
+                solve_config_key(20, &[1, 2], Resampler::CatmullRom),
+            ),
         ] {
             assert_ne!(base, other, "{label} does not change the cache key");
             assert_ne!(
@@ -3284,12 +3643,14 @@ mod tests {
             },
             PlaneGeometry::from_active(4, 4),
             Resampler::CatmullRom,
-            vec![FrameWarp::Placed(Similarity::from_params(SimilarityParams {
-                ax: 0.0,
-                ay: 0.0,
-                g: 0.0,
-                rot: 0.0,
-            }))],
+            vec![FrameWarp::Placed(Similarity::from_params(
+                SimilarityParams {
+                    ax: 0.0,
+                    ay: 0.0,
+                    g: 0.0,
+                    rot: 0.0,
+                },
+            ))],
         );
         save_atomic(&map, &dst).unwrap();
         assert!(dst.exists());
@@ -3303,3 +3664,176 @@ mod tests {
         let _ = std::fs::remove_dir_all(dir.parent().unwrap());
     }
 }
+
+#[cfg(feature = "research-lens-warp")]
+pub(crate) fn lens_guide(
+    frame: &strehl_raw::Frame,
+    curve: RadialCurve,
+    full: PlaneGeometry,
+    crop: CropRect,
+) -> Result<Vec<f32>> {
+    ensure!(
+        frame.active.width / 2 == full.width && frame.active.height / 2 == full.height,
+        "research guide frame geometry mismatch"
+    );
+    let mut original = vec![0.0; full.pixels()];
+    green_luma(frame, frame.levels.black, &mut original);
+    remap_lens_guide(&original, full, crop, curve)
+}
+
+#[cfg(feature = "research-lens-warp")]
+pub(crate) fn remap_lens_guide(
+    original: &[f32],
+    full: PlaneGeometry,
+    crop: CropRect,
+    curve: RadialCurve,
+) -> Result<Vec<f32>> {
+    curve.validate().map_err(anyhow::Error::msg)?;
+    ensure!(
+        crop.width > 0
+            && crop.height > 0
+            && crop
+                .x
+                .checked_add(crop.width)
+                .is_some_and(|v| v <= full.width)
+            && crop
+                .y
+                .checked_add(crop.height)
+                .is_some_and(|v| v <= full.height),
+        "invalid research guide crop"
+    );
+    let src = PlaneRef::from_geometry(original, full).context("research source guide")?;
+    let mut out = vec![0.0; crop.width * crop.height];
+    for (v, row) in out.chunks_mut(crop.width).enumerate() {
+        for (u, value) in row.iter_mut().enumerate() {
+            let p = curve
+                .forward([
+                    2.0 * (u + crop.x) as f32 + 0.5,
+                    2.0 * (v + crop.y) as f32 + 0.5,
+                ])
+                .context("certified guide exceeded radial domain")?;
+            *value = Resampler::CatmullRom
+                .sample_checked(
+                    src,
+                    ((p[0] - 0.5) * 0.5) as f64,
+                    ((p[1] - 0.5) * 0.5) as f64,
+                )
+                .context("certified guide has uncovered source pixels")?;
+        }
+    }
+    Ok(out)
+}
+
+#[cfg(feature = "research-lens-warp")]
+pub(crate) fn solve_lens_guides(
+    identity: StackIdentity,
+    full: PlaneGeometry,
+    crop: CropRect,
+    planes: Vec<Vec<f32>>,
+    threads: usize,
+) -> Result<(WarpMap, SolveReceipt)> {
+    let n = planes.len();
+    ensure!(
+        n >= 3 && identity.frames == n && threads > 0,
+        "invalid research guide stack identity"
+    );
+    ensure!(
+        crop.x * 2 + crop.width == full.width && crop.y * 2 + crop.height == full.height,
+        "research guides require a symmetric crop preserving the physical center"
+    );
+    let reference = n / 2;
+    let geom = PlaneGeometry {
+        width: crop.width,
+        height: crop.height,
+    };
+    ensure!(
+        planes
+            .iter()
+            .all(|p| p.len() == geom.pixels() && p.iter().all(|v| v.is_finite())),
+        "research guide stack is incomplete/nonfinite"
+    );
+    let st = Stack { geom, planes };
+    let cfg = AlignConfig::deep();
+    let mut pairs = Vec::new();
+    for span in DEFAULT_SPANS {
+        for i in 0..n.saturating_sub(span) {
+            pairs.push((i, i + span));
+        }
+    }
+    pairs.sort_unstable();
+    pairs.dedup();
+    let edges = measure_edges_observed(&st, &pairs, &cfg, threads, None)?;
+    let mut connected = vec![false; n];
+    connected[reference] = true;
+    loop {
+        let mut changed = false;
+        for e in &edges {
+            if connected[e.i] != connected[e.j] {
+                connected[e.i] = true;
+                connected[e.j] = true;
+                changed = true;
+            }
+        }
+        if !changed {
+            break;
+        }
+    }
+    ensure!(
+        connected.iter().all(|v| *v),
+        "research solve refuses disconnected frames before the smooth prior can place them"
+    );
+    ensure!(
+        edges.len() >= n,
+        "research solve requires positive measured cycle rank"
+    );
+    let mut opts = GlobalOptions::new(st.geom);
+    opts.weighting = Weighting::Unit;
+    opts.smooth = 1.0;
+    opts.smooth_huber_px = Some(1.0);
+    let placements =
+        solve_global(&edges, n, &opts).context("research global solve is rank deficient")?;
+    let reference_inverse = placements[reference]
+        .context("research anchor was not placed")?
+        .invert()
+        .context("research anchor is singular")?;
+    let mut warps = Vec::with_capacity(n);
+    for (index, placement) in placements.iter().enumerate() {
+        let t = placement.with_context(|| format!("research frame {index} was not placed"))?;
+        warps.push(FrameWarp::Placed(if index == reference {
+            Similarity::IDENTITY
+        } else {
+            reference_inverse.then(t)
+        }));
+    }
+    let map = WarpMap::new(Provenance {
+        stack: identity,
+        strategy: "research-lens-direct-global-f32-v1".into(),
+        heldout_px: heldout_error(&edges, n, &opts, st.geom, None),
+        cycle_floor_px: cycle_floor(&edges, st.geom),
+        reference,
+        note: "virtual-undistorted guides; placement UNVERIFIED; fixed smooth=1,huber=1,unit edges".into(),
+    }, full, Resampler::CatmullRom, warps);
+    let receipt = SolveReceipt {
+        requested_pairs: pairs.iter().map(|&(i,j)| [i,j]).collect(),
+        accepted_edges: edges.iter().map(|e| {
+            let p = e.t.to_params();
+            EdgeReceipt { pair: [e.i,e.j], transform: [p.ax,p.ay,p.g,p.rot],
+                rms: e.rms, used: e.used, lever: e.lever }
+        }).collect(),
+        guide_crop: [crop.x,crop.y,crop.width,crop.height],
+        cycle_rank: edges.len() + 1 - n,
+        reference,
+        threads,
+        smooth: 1.0,
+        smooth_huber: 1.0,
+        weighting: "unit".into(),
+        pair_config: format!("{cfg:?}"),
+        global_config: format!("{opts:?}"),
+        guide_policy: "green-luma; native-center=2*(u+crop)+.5; CatmullRom; common symmetric certified crop; no extension".into(),
+    };
+    Ok((map, receipt))
+}
+
+#[cfg(test)]
+#[path = "../../../experiments/rea-a7c2-2026-10-24-v/cli-tests.rs"]
+mod measured_component_tests;

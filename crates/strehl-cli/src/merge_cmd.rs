@@ -44,7 +44,8 @@ use strehl_core::clip::{CONTAINER_MAX_DN, ClipCensus};
 use strehl_core::color::{self, AppliedExposure, Exposure};
 use strehl_core::edgeaware::{self, BimodalStats, LayerSupport};
 use strehl_core::flat_ratio::{self, FrameFlat};
-use strehl_core::focus::FocusField;use strehl_core::merge::{
+use strehl_core::focus::FocusField;
+use strehl_core::merge::{
     Estimator, FOCUS_NOISE_SD, FocusStats, Gate, REGULARISER_RADIUS, REGULARISER_WIDTH, regularise,
     regularise_at, regularise_guided, regularise_layered,
 };
@@ -76,17 +77,29 @@ pub(crate) mod halo;
 mod region_repair;
 #[path = "merge_cmd/sensor-master.rs"]
 pub(crate) mod sensor_master;
+#[cfg(feature = "temporal-energy")]
+#[path = "merge_cmd/temporal-cpu.rs"]
+mod temporal_cpu;
 #[cfg(feature = "native-boundary-radiance")]
 pub(crate) mod native_boundary_radiance {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-boundary-radiance/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-boundary-radiance/implementation.rs"
+    ));
 }
 #[cfg(feature = "native-pyramid-profile")]
 mod native_pyramid_profile {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-pyramid-profile/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-pyramid-profile/implementation.rs"
+    ));
 }
 #[cfg(feature = "native-signed-black")]
 mod native_signed_black {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-signed-black/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-signed-black/implementation.rs"
+    ));
 }
 #[cfg(test)]
 #[path = "merge_cmd/production-truth.rs"]
@@ -98,11 +111,48 @@ mod ui_observer_tests;
 
 #[cfg(test)]
 pub(crate) mod native_sensor_transfer {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-sensor-transfer/source/native-adapter.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-sensor-transfer/source/native-adapter.rs"
+    ));
 }
 #[cfg(test)]
 #[path = "merge_cmd/known-scene-benchmark.rs"]
 mod known_scene_benchmark;
+#[cfg(all(test, feature = "spatial-noise-floor"))]
+// Preserve archived numerical fixtures and their explicit reference loops/ranges.
+// These four style allowances apply only to this experimental test include tree.
+#[allow(
+    clippy::needless_range_loop,
+    clippy::manual_is_multiple_of,
+    clippy::manual_range_contains,
+    clippy::chunks_exact_to_as_chunks
+)]
+mod noise_floor_gather {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/rea-a7c2-2026-10-24-c/noise-floor-gather.rs"
+    ));
+    mod reconstruction {
+        include!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../experiments/rea-a7c2-2026-10-24-c/noise-floor-reconstruction.rs"
+        ));
+        #[cfg(feature = "temporal-energy")]
+        mod temporal_d {
+            include!(concat!(
+                env!("CARGO_MANIFEST_DIR"),
+                "/../../experiments/rea-a7c2-2026-10-24-d/temporal-finish.rs"
+            ));
+            mod normal_cpu {
+                include!(concat!(
+                    env!("CARGO_MANIFEST_DIR"),
+                    "/../../experiments/rea-a7c2-2026-10-24-d/normal-cpu-fixture.rs"
+                ));
+            }
+        }
+    }
+}
 use crate::stack::{
     MEMORY_BUDGET_BYTES, Roi, flat_roi_stats, mean_and_sigma, provenance_line, report_hp_reference,
     roi_green, srgb_encode,
@@ -707,7 +757,9 @@ pub fn parse_select_mode(v: &str) -> Result<SelectMode> {
     match v.trim().to_ascii_lowercase().as_str() {
         "soft" | "soft-power" | "softpower" => Ok(SelectMode::SoftPower),
         "hard" | "hard-max" | "hardmax" | "pmax" => Ok(SelectMode::HardMax),
-        other => bail!("unknown --pyramid-select {other:?}; valid values are `soft` and `hard-max`"),
+        other => {
+            bail!("unknown --pyramid-select {other:?}; valid values are `soft` and `hard-max`")
+        }
     }
 }
 
@@ -1678,9 +1730,12 @@ impl Ctx<'_> {
                     // carry --focus for the flag to mean anything in the
                     // shipping configuration.
                     Some(op) => {
-                        scratch
-                            .field
-                            .compute_scaled_with_measure(op.measure(), &scratch.luma, noise, s);
+                        scratch.field.compute_scaled_with_measure(
+                            op.measure(),
+                            &scratch.luma,
+                            noise,
+                            s,
+                        );
                     }
                     None => scratch.field.compute_scaled(&scratch.luma, noise, s),
                 },
@@ -1710,12 +1765,9 @@ impl Ctx<'_> {
             // is bit-identical either way — pinned by
             // `through_focus::tests::gathering_statistics_cannot_move_the_selection_field`
             // — so turning statistics on cannot move the merge.
-            scratch.field.compute_with_fine(
-                &scratch.luma,
-                noise,
-                STATS_RADIUS,
-                &mut scratch.fine,
-            );
+            scratch
+                .field
+                .compute_with_fine(&scratch.luma, noise, STATS_RADIUS, &mut scratch.fine);
         }
         match self.support.filter(|_| self.guide_radius.is_none()) {
             None if self.scale.is_some() && self.guide_radius.is_none() => {
@@ -1974,7 +2026,6 @@ fn edge_aware_arm() -> EdgeArm {
     }
 }
 
-
 /// Confidence the acuity term demands before it hands a pixel a smaller
 /// window, in standard deviations of a difference of two responses.
 ///
@@ -2173,8 +2224,7 @@ fn report_bimodality(
     let first = modes.first_mode_z();
     let sep = modes.separation();
     let blend = support.blend();
-    std::fs::create_dir_all(dir)
-        .with_context(|| format!("creating {}", dir.display()))?;
+    std::fs::create_dir_all(dir).with_context(|| format!("creating {}", dir.display()))?;
 
     // Three populations, by how far the fix reaches. "Boundary" is the blob
     // population: guards wanted it, the layer floor took it back.
@@ -2235,7 +2285,10 @@ fn report_bimodality(
     for (name, data) in [
         ("bimodal-second-mode-z.tif", quant(&prom, 6553.5)),
         ("bimodal-first-mode-z.tif", quant(&first, 6553.5)),
-        ("bimodal-mode-balance.tif", quant(&modes.mode_balance(), 65535.0)),
+        (
+            "bimodal-mode-balance.tif",
+            quant(&modes.mode_balance(), 65535.0),
+        ),
         (
             "bimodal-separation.tif",
             sep.iter().map(|&s| s.saturating_mul(256)).collect(),
@@ -2472,6 +2525,17 @@ fn alignment_for_observed(
         path.display(),
         map.len(),
         paths.len()
+    );
+    // A named ordinary map must declare the current connectivity policy.
+    // Unlike a cache miss, this is a hard refusal: never replace an explicitly
+    // requested registration. Nonordinary research/planted maps stay explicit
+    // operator choices; their provenance does not claim the ordinary policy.
+    ensure!(
+        align_cmd::ordinary_map_policy(&map) != align_cmd::OrdinaryMapPolicy::Legacy,
+        "the sidecar named by {WARPMAP_ENV} ({}) declares legacy ordinary alignment \
+         policy S3-ba-unit; regenerate it with strehl align before using it as an \
+         ordinary measured-component map; no replacement was written",
+        path.display()
     );
     // Never silently. The sidecar's kernel is the one that gathers, so if it is
     // not the one asked for, say which won: a flag that parses and is then
@@ -2733,9 +2797,7 @@ const PHOTOMETRIC_MIN_PX: usize = 1024;
 /// keeps the reported provenance honest: a second, independent read could
 /// disagree with the value in use, and a provenance line that disagrees with
 /// its own run is worse than none.
-pub fn resolve_photometric_mode(
-    flag: Option<&str>,
-) -> Result<(PhotometricMode, SettingSource)> {
+pub fn resolve_photometric_mode(flag: Option<&str>) -> Result<(PhotometricMode, SettingSource)> {
     if let Some(v) = flag {
         let mode =
             PhotometricMode::parse(v).with_context(|| format!("reading --photometric {v:?}"))?;
@@ -2988,6 +3050,28 @@ pub fn preflight_soft_kernel() -> Result<()> {
     Ok(())
 }
 
+fn preflight_temporal_dispatch(
+    backend: MergeBackend,
+    value: Option<&str>,
+    compiled: bool,
+) -> Result<()> {
+    match value {
+        None | Some("off") => Ok(()),
+        Some("on" | "shift") => {
+            ensure!(
+                compiled,
+                "STREHL_TEMPORAL_ENERGY requires a temporal-energy feature build"
+            );
+            ensure!(
+                backend == MergeBackend::Pyramid,
+                "STREHL_TEMPORAL_ENERGY requires --merge pyramid; estimator is unsupported"
+            );
+            Ok(())
+        }
+        _ => bail!("invalid STREHL_TEMPORAL_ENERGY={value:?}; use off/on/shift"),
+    }
+}
+
 /// Run the merge the options selected.
 ///
 /// **The dispatch is the point.** Both merges are compiled and both are
@@ -2996,24 +3080,61 @@ pub fn preflight_soft_kernel() -> Result<()> {
 /// lines of compiled, tested, unreachable code and `blend-render` -- an example
 /// binary that ships nothing -- was the only way to run it.
 pub fn run(opts: &MergeOptions) -> Result<()> {
+    #[cfg(feature = "research-lens-warp")]
+    crate::lens_research::preflight(opts)?;
+    #[cfg(not(feature = "research-lens-warp"))]
+    ensure!(
+        std::env::var_os("STREHL_RESEARCH_LENS_MAP").is_none(),
+        "STREHL_RESEARCH_LENS_MAP requires a research-lens-warp feature build"
+    );
+    let temporal_request = match std::env::var("STREHL_TEMPORAL_ENERGY") {
+        Ok(value) => Some(value),
+        Err(std::env::VarError::NotPresent) => None,
+        Err(error) => return Err(error).context("STREHL_TEMPORAL_ENERGY"),
+    };
+    preflight_temporal_dispatch(
+        opts.backend,
+        temporal_request.as_deref(),
+        cfg!(feature = "temporal-energy"),
+    )?;
     sensor_master::preflight(opts, &[])?;
     if let Some(path) = &opts.region_recipe {
-        ensure!(opts.backend == MergeBackend::Pyramid, "source-region repairs require --merge pyramid");
-        ensure!(opts.out.is_some(), "source-region repairs require an --out photograph");
+        ensure!(
+            opts.backend == MergeBackend::Pyramid,
+            "source-region repairs require --merge pyramid"
+        );
+        ensure!(
+            opts.out.is_some(),
+            "source-region repairs require an --out photograph"
+        );
         region_repair::Repairs::load(Some(path))?;
     }
     if let Some(master) = &opts.linear_master {
-        ensure!(opts.srgb && opts.demosaic, "a linear master requires --srgb and full-resolution output");
-        ensure!(opts.out.as_ref().is_some_and(|out| out != master), "a linear master needs a distinct --out TIFF");
-        ensure!(!master.exists(), "linear master already exists; choose a new path");
+        ensure!(
+            opts.srgb && opts.demosaic,
+            "a linear master requires --srgb and full-resolution output"
+        );
+        ensure!(
+            opts.out.as_ref().is_some_and(|out| out != master),
+            "a linear master needs a distinct --out TIFF"
+        );
+        ensure!(
+            !master.exists(),
+            "linear master already exists; choose a new path"
+        );
     }
     #[cfg(feature = "native-direct-planes")]
     if align_cmd::local_placement::enabled()? {
-        ensure!(opts.backend == MergeBackend::Pyramid, "local placement requires the pyramid consumer");
+        ensure!(
+            opts.backend == MergeBackend::Pyramid,
+            "local placement requires the pyramid consumer"
+        );
     }
     #[cfg(not(feature = "native-direct-planes"))]
-    ensure!(std::env::var_os("STREHL_LOCAL_PLACEMENT_FILE").is_none(),
-        "local placement requires a build with native-direct-planes");
+    ensure!(
+        std::env::var_os("STREHL_LOCAL_PLACEMENT_FILE").is_none(),
+        "local placement requires a build with native-direct-planes"
+    );
     #[cfg(feature = "native-gpu-gather")]
     align_cmd::native_gpu_integration::gpu_gather_enabled()?;
     preflight_soft_kernel()?;
@@ -3216,6 +3337,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
 
     let paths = crate::raw_paths(&opts.dir, opts.limit)?;
     let paths = only_frame(paths);
+    crate::sony_focus_cmd::print_preflight(&paths);
     ensure!(
         paths.len() < u16::MAX as usize,
         "{} frames exceeds the u16 winner-index range",
@@ -3513,9 +3635,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
             guide_winner_field(&paths, &plan, &ctx_guide, geom, true)?;
         let tau = edge_tau(&guide);
         eprintln!("--- pass zero: depth guide for the edge-aware election (MEASURED) ---");
-        eprintln!(
-            "guide radius    : {GUIDE_RADIUS} px box on |grad|, elected NARROW on purpose"
-        );
+        eprintln!("guide radius    : {GUIDE_RADIUS} px box on |grad|, elected NARROW on purpose");
         eprintln!(
             "depth tolerance : tau = {tau:.1} frames{}",
             if std::env::var(EDGE_TAU_ENV).is_ok() {
@@ -3567,7 +3687,13 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                 eprintln!(
                     "peak significance: p10 {:.2} p25 {:.2} p50 {:.2} p75 {:.2} p90 {:.2} \
                      p99 {:.2} max {:.2} sigma  (diagnostic; the veil does NOT gate on this)",
-                    q(0.10), q(0.25), q(0.50), q(0.75), q(0.90), q(0.99), q(1.0)
+                    q(0.10),
+                    q(0.25),
+                    q(0.50),
+                    q(0.75),
+                    q(0.90),
+                    q(0.99),
+                    q(1.0)
                 );
             }
             let may: Vec<bool> = excess.iter().map(|&e| e > cut).collect();
@@ -3659,10 +3785,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                 "  by layer      : {}",
                 hist.iter()
                     .enumerate()
-                    .map(|(l, n)| format!(
-                        "L{l} {:.2}%",
-                        100.0 * *n as f64 / geom.pixels() as f64
-                    ))
+                    .map(|(l, n)| format!("L{l} {:.2}%", 100.0 * *n as f64 / geom.pixels() as f64))
                     .collect::<Vec<_>>()
                     .join("  ")
             );
@@ -3694,7 +3817,9 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
     // A refused frame is dropped, not merged unregistered. Counted once here so
     // every pass agrees on the denominator; skipping is done per pass via
     // `Ctx::is_refused`.
-    let refused: Vec<u16> = (0..paths.len() as u16).filter(|i| ctx.is_refused(*i)).collect();
+    let refused: Vec<u16> = (0..paths.len() as u16)
+        .filter(|i| ctx.is_refused(*i))
+        .collect();
     let expected = paths.len() - refused.len();
     if !refused.is_empty() {
         let shown: Vec<String> = refused.iter().take(8).map(|i| i.to_string()).collect();
@@ -3774,8 +3899,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
             "mode            : {} ({})",
             match photometric_mode {
                 PhotometricMode::On => "on, unconditional",
-                PhotometricMode::Auto =>
-                    "auto, decides after pass one from this stack's drift",
+                PhotometricMode::Auto => "auto, decides after pass one from this stack's drift",
                 PhotometricMode::Off => unreachable!("off does not build a region"),
             },
             photometric_source.describe("--photometric", PHOTOMETRIC_ENV),
@@ -4248,7 +4372,9 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                     let mut e = Estimator::new(&p1.stats, gate);
                     if veil_on {
                         e.enable_veil_from_incoherence(
-                            veil_incoherence.as_deref().expect("refused above if absent"),
+                            veil_incoherence
+                                .as_deref()
+                                .expect("refused above if absent"),
                             veil_lo,
                             veil_hi,
                             veil_margin,
@@ -4771,10 +4897,8 @@ fn extract_planes(
                 .enumerate()
                 .for_each(|(local_y, dst)| {
                     let full_y = domain.rect.y + local_y;
-                    let row = (active_y + 2 * full_y + dy) * stride
-                        + active_x
-                        + 2 * domain.rect.x
-                        + dx;
+                    let row =
+                        (active_y + 2 * full_y + dy) * stride + active_x + 2 * domain.rect.x + dx;
                     for (local_x, value) in dst.iter_mut().enumerate() {
                         #[cfg(not(feature = "native-signed-black"))]
                         {
@@ -4783,7 +4907,11 @@ fn extract_planes(
                         #[cfg(feature = "native-signed-black")]
                         {
                             let sample = f32::from(data[row + 2 * local_x]) - black;
-                            *value = if signed_black { sample } else { sample.max(0.0) };
+                            *value = if signed_black {
+                                sample
+                            } else {
+                                sample.max(0.0)
+                            };
                         }
                     }
                 });
@@ -4868,6 +4996,8 @@ impl Merged<'_> {
 /// Per-frame buffers for the band merge, allocated once and reused across
 /// canonical chunks.
 struct BandWorker {
+    #[cfg(feature = "temporal-energy")]
+    config: MergeConfig,
     domain: PyramidDomain,
     merge: BandMerge,
     fws: FrameWorkspace,
@@ -4894,10 +5024,20 @@ struct BandWorker {
 /// The production implementation delegates to the existing RAW decoder; the
 /// test implementation supplies already-decoded fixtures, never a second merge.
 trait PyramidFrameSource: Sync {
+    #[cfg(feature = "research-lens-warp")]
+    fn lens_pull(&self, _index: usize) -> Result<Option<&crate::lens_research::FramePull>> {
+        Ok(None)
+    }
+    #[cfg(feature = "research-lens-warp")]
+    fn lens_envelope(&self) -> Option<&serde_json::Value> {
+        None
+    }
     fn len(&self) -> usize;
     fn decode(&self, index: usize) -> Result<Frame>;
     #[cfg(feature = "native-green-cue")]
-    fn green_cue_enabled(&self) -> bool { false }
+    fn green_cue_enabled(&self) -> bool {
+        false
+    }
     #[cfg(all(test, feature = "native-direct-planes"))]
     fn observe_direct_inputs(
         &self,
@@ -4909,20 +5049,34 @@ trait PyramidFrameSource: Sync {
         Ok(())
     }
     #[cfg(all(test, feature = "native-direct-planes"))]
-    fn observe_direct_collapsed(&self, _planes: &[Vec<f32>]) -> Result<()> { Ok(()) }
+    fn observe_direct_collapsed(&self, _planes: &[Vec<f32>]) -> Result<()> {
+        Ok(())
+    }
     #[cfg(feature = "native-boundary-radiance")]
     fn boundary_config(&self) -> Option<native_boundary_radiance::Configuration> {
         None
     }
     #[cfg(feature = "native-boundary-radiance")]
-    fn observe_boundary(&self, _index: usize, _frame: &Frame) -> Result<()> { Ok(()) }
+    fn observe_boundary(&self, _index: usize, _frame: &Frame) -> Result<()> {
+        Ok(())
+    }
 }
 
 struct RawPyramidSource<'a> {
     paths: &'a [PathBuf],
+    #[cfg(feature = "research-lens-warp")]
+    lens: Option<&'a crate::lens_research::RuntimeMap>,
 }
 
 impl PyramidFrameSource for RawPyramidSource<'_> {
+    #[cfg(feature = "research-lens-warp")]
+    fn lens_pull(&self, index: usize) -> Result<Option<&crate::lens_research::FramePull>> {
+        self.lens.map(|m| m.pull(index)).transpose()
+    }
+    #[cfg(feature = "research-lens-warp")]
+    fn lens_envelope(&self) -> Option<&serde_json::Value> {
+        self.lens.map(|m| m.envelope())
+    }
     fn len(&self) -> usize {
         self.paths.len()
     }
@@ -4933,13 +5087,23 @@ impl PyramidFrameSource for RawPyramidSource<'_> {
             .get(index)
             .context("Pyramid source index out of bounds")?;
         let frame = strehl_raw::decode(path)?;
+        #[cfg(feature = "research-lens-warp")]
+        if let Some(lens) = self.lens {
+            lens.validate_frame(index, &frame)?;
+        }
         #[cfg(all(test, feature = "native-direct-planes"))]
         matched_source_tests::observe_raw(index, &frame)?;
         Ok(frame)
     }
 
     #[cfg(all(test, feature = "native-direct-planes"))]
-    fn observe_direct_inputs(&self, index: usize, planes: &[Vec<f32>], _luma: &[f32], _beta: Option<&[f32]>) -> Result<()> {
+    fn observe_direct_inputs(
+        &self,
+        index: usize,
+        planes: &[Vec<f32>],
+        _luma: &[f32],
+        _beta: Option<&[f32]>,
+    ) -> Result<()> {
         matched_source_tests::observe_planes(Some(index), planes)
     }
 
@@ -4951,242 +5115,585 @@ impl PyramidFrameSource for RawPyramidSource<'_> {
 
 #[cfg(all(test, feature = "native-direct-planes"))]
 pub(crate) mod matched_source_tests {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/quality-september14/matched-source-tests.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/quality-september14/matched-source-tests.rs"
+    ));
 }
 
 #[cfg(all(test, feature = "native-direct-planes"))]
 mod local_placement_consumer_tests {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/quality-september14/local-placement-consumer-tests.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/quality-september14/local-placement-consumer-tests.rs"
+    ));
 }
 
 #[cfg(all(test, feature = "native-direct-planes"))]
 pub(crate) mod phase_packed_rgb {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/phase-packed-rgb/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/phase-packed-rgb/implementation.rs"
+    ));
 }
 
 #[cfg(all(test, feature = "native-direct-planes"))]
 pub(crate) mod green_match_rgb {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/green-match-rgb/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/green-match-rgb/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance"
+))]
 pub(crate) mod complex_wavelet_merge {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/complex-wavelet-merge/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/complex-wavelet-merge/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance"
+))]
 pub(crate) mod all_cfa_wavelet {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/all-cfa-wavelet/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/all-cfa-wavelet/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance"
+))]
 pub(crate) mod complete_cfa_wavelet {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/complete-cfa-wavelet/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/complete-cfa-wavelet/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod boundary_cfa_wavelet {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/boundary-cfa-wavelet/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/boundary-cfa-wavelet/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod shared_source_field {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/shared-source-field/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/shared-source-field/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod parallel_cfa_wavelet {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/parallel-cfa-wavelet/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/parallel-cfa-wavelet/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod relative_blur_source_witness {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/relative-blur-evidence/source-witness.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/relative-blur-evidence/source-witness.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod core_lineage {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/core-lineage/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/core-lineage/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod rb_own_guide {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/rb-own-guide/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/rb-own-guide/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod variance_stabilized_guide {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/variance-stabilized-guide/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/variance-stabilized-guide/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod learned_band_guide {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/learned-band-guide/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/learned-band-guide/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod cross_scale_band_export {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/cross-scale-band-guide/independent-export.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/cross-scale-band-guide/independent-export.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod cross_scale_band_full {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/cross-scale-band-guide/full-adapter.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/cross-scale-band-guide/full-adapter.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod common_edge_pyramid {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/common-edge-pyramid/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/common-edge-pyramid/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod rb_residual_guard {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/rb-residual-guard/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/rb-residual-guard/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod rb_residual_full {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/rb-residual-full/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/rb-residual-full/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod through_focus_events {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/through-focus-events/source-traces.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/through-focus-events/source-traces.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod raw_affinity_support {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/raw-affinity-support/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/raw-affinity-support/implementation.rs"
+    ));
 }
 
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-gpu-gather"))]
 pub(crate) mod ca_before_mhc {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/ca-before-mhc/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/ca-before-mhc/implementation.rs"
+    ));
 }
 
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-gpu-gather"))]
 pub(crate) mod ca_before_mhc_full {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/ca-before-mhc/full-implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/ca-before-mhc/full-implementation.rs"
+    ));
 }
 
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-gpu-gather"))]
 pub(crate) mod phase_packed_chip {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/phase-packed-chip/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/phase-packed-chip/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod cross_scale_source_prior {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/cross-scale-source-prior/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/cross-scale-source-prior/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod cross_scale_source_prior_chip {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/cross-scale-source-prior/chip-implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/cross-scale-source-prior/chip-implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod full_stack_source_prior {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/full-stack-source-prior/adapter.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/full-stack-source-prior/adapter.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 mod real_source_contributions {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/real-source-contributions/observer.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/real-source-contributions/observer.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 mod band_source_agreement {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/band-source-agreement/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/band-source-agreement/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 mod band_source_agreement_full {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/band-source-agreement/full-adapter.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/band-source-agreement/full-adapter.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 mod chip_shared_source_observation {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/chip-shared-source-observation/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/chip-shared-source-observation/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod chromatic_source_evidence {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/chromatic-source-evidence/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/chromatic-source-evidence/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod consistent_reconstruction {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/consistent-reconstruction/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/consistent-reconstruction/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 mod consistent_reconstruction_full {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/consistent-reconstruction/full-adapter.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/consistent-reconstruction/full-adapter.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 mod illuminant_aware_color {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/illuminant-aware-color/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/illuminant-aware-color/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 mod native_photometric_normalization {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-photometric-normalization/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-photometric-normalization/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 mod marigold_source_pure {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/marigold-source-pure/oracle.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/marigold-source-pure/oracle.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 mod chip_focus_radiance {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/chip-focus-radiance/operator.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/chip-focus-radiance/operator.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 mod chip_focus_radiance_full {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/chip-focus-radiance/full-adapter.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/chip-focus-radiance/full-adapter.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 mod chip_focus_intercept {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/chip-focus-intercept/operator.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/chip-focus-intercept/operator.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 mod chip_focus_intercept_full {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/chip-focus-intercept/full-adapter.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/chip-focus-intercept/full-adapter.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-correction-variance", feature = "native-gpu-gather", feature = "native-direct-planes"))]
+#[cfg(all(
+    test,
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather",
+    feature = "native-direct-planes"
+))]
 mod optical_support_veto {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/optical-support-veto/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/optical-support-veto/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod native_coherent_estimator {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-coherent-estimator/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-coherent-estimator/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 pub(crate) mod highlight_rendering_replay {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/highlight-rendering/merge-replay.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/highlight-rendering/merge-replay.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance"
+))]
 pub(crate) mod donor_consistency {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/donor-consistency/implementation.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance"
+))]
 pub(crate) mod fine_support_tests {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/fine-support-guidance/measure.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/fine-support-guidance/measure.rs"
+    ));
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance"
+))]
 pub(crate) mod fine_support_candidate_tests {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/fine-support-guidance/candidate-adapter.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/fine-support-guidance/candidate-adapter.rs"
+    ));
 }
 
 impl BandWorker {
@@ -5195,6 +5702,8 @@ impl BandWorker {
         let sizes = level_sizes(geom.width, geom.height, cfg.bands);
         let px = geom.pixels();
         Self {
+            #[cfg(feature = "temporal-energy")]
+            config: cfg,
             domain,
             merge: BandMerge::new(geom.width, geom.height, BAND_PLANES, cfg),
             fws: FrameWorkspace::new(&sizes, BAND_PLANES),
@@ -5236,7 +5745,7 @@ impl BandWorker {
     }
 
     #[allow(clippy::too_many_arguments)]
-    fn fold_observed(
+    fn prepare_observed(
         &mut self,
         source: &impl PyramidFrameSource,
         index: usize,
@@ -5282,6 +5791,23 @@ impl BandWorker {
         if let Some(p) = self.floor.as_ref() {
             self.beta
                 .extend(p.last().iter().copied().take_while(|b| b.is_finite()));
+        }
+        Ok(true)
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn fold_observed(
+        &mut self,
+        source: &impl PyramidFrameSource,
+        index: usize,
+        levels: Levels,
+        noise: &NoiseModel,
+        warps: Option<&WarpMap>,
+        defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
+        progress: Option<&crate::ui_progress::Progress>,
+    ) -> Result<bool> {
+        if !self.prepare_observed(source, index, levels, noise, warps, defect, progress)? {
+            return Ok(false);
         }
         let frame_beta = (!self.beta.is_empty()).then_some(self.beta.as_slice());
         if let Some(b) = frame_beta {
@@ -5362,19 +5888,30 @@ impl BandWorker {
 // of improved detail; the independent output comparison must establish that.
 #[cfg(all(test, feature = "native-green-cue"))]
 pub(crate) fn green_cue_consume(
-    frames: Vec<Frame>, noise: &NoiseModel, on: bool,
+    frames: Vec<Frame>,
+    noise: &NoiseModel,
+    on: bool,
 ) -> (Vec<Vec<f32>>, usize) {
     struct Source {
         frames: Vec<Frame>,
         on: bool,
     }
     impl PyramidFrameSource for Source {
-        fn len(&self) -> usize { self.frames.len() }
-        fn decode(&self,index:usize) -> Result<Frame> { Ok(self.frames[index].clone()) }
-        fn green_cue_enabled(&self) -> bool { self.on }
+        fn len(&self) -> usize {
+            self.frames.len()
+        }
+        fn decode(&self, index: usize) -> Result<Frame> {
+            Ok(self.frames[index].clone())
+        }
+        fn green_cue_enabled(&self) -> bool {
+            self.on
+        }
     }
     assert!(!frames.is_empty());
-    assert!(frames.iter().all(|f| !f.path.exists()),"generated fixture only");
+    assert!(
+        frames.iter().all(|f| !f.path.exists()),
+        "generated fixture only"
+    );
     let full = frames[0].geometry();
     assert_eq!(
         full,
@@ -5384,18 +5921,41 @@ pub(crate) fn green_cue_consume(
         }
     );
     let levels = frames[0].levels;
-    let domain = PyramidDomain::cropped(full,align_cmd::CropRect {x:9,y:6,width:112,height:78}).unwrap();
-    let paths: Vec<_> = frames.iter().map(|f|f.path.clone()).collect();
-    let entries: Vec<_> = paths.iter().map(|p|(p.to_string_lossy(),frames[0].allocated_bytes() as u64)).collect();
-    let map = WarpMap::new(strehl_core::warpmap::Provenance {
-        stack: StackIdentity::from_entries("native-green-cue generated",&entries),
-        strategy:"fixed identity consumer".into(),heldout_px:None,cycle_floor_px:None,
-        reference:4,note:"no optical alignment claim".into(),
-    },full,Resampler::CatmullRom,vec![FrameWarp::Placed(strehl_core::align::Similarity::IDENTITY);frames.len()]);
-    let source = Source {frames,on};
-    let cfg = MergeConfig {bands:3,..MergeConfig::default()};
-    assert_eq!(cfg.mean_coarse,0);
-    let mut worker = BandWorker::new(domain,cfg);
+    let domain = PyramidDomain::cropped(
+        full,
+        align_cmd::CropRect {
+            x: 9,
+            y: 6,
+            width: 112,
+            height: 78,
+        },
+    )
+    .unwrap();
+    let paths: Vec<_> = frames.iter().map(|f| f.path.clone()).collect();
+    let entries: Vec<_> = paths
+        .iter()
+        .map(|p| (p.to_string_lossy(), frames[0].allocated_bytes() as u64))
+        .collect();
+    let map = WarpMap::new(
+        strehl_core::warpmap::Provenance {
+            stack: StackIdentity::from_entries("native-green-cue generated", &entries),
+            strategy: "fixed identity consumer".into(),
+            heldout_px: None,
+            cycle_floor_px: None,
+            reference: 4,
+            note: "no optical alignment claim".into(),
+        },
+        full,
+        Resampler::CatmullRom,
+        vec![FrameWarp::Placed(strehl_core::align::Similarity::IDENTITY); frames.len()],
+    );
+    let source = Source { frames, on };
+    let cfg = MergeConfig {
+        bands: 3,
+        ..MergeConfig::default()
+    };
+    assert_eq!(cfg.mean_coarse, 0);
+    let mut worker = BandWorker::new(domain, cfg);
     let mut valid_supplied = 0;
     for index in 0..source.len() {
         assert!(
@@ -5404,11 +5964,14 @@ pub(crate) fn green_cue_consume(
                 .unwrap()
         );
         if let Some(cue) = worker.green_cue.as_ref() {
-            valid_supplied += cue.valid.iter().filter(|&&v|v).count();
+            valid_supplied += cue.valid.iter().filter(|&&v| v).count();
         }
     }
-    let sizes = level_sizes(112,78,cfg.bands);
-    (worker.merge.finish(&mut Workspace::new(&sizes)),valid_supplied)
+    let sizes = level_sizes(112, 78, cfg.bands);
+    (
+        worker.merge.finish(&mut Workspace::new(&sizes)),
+        valid_supplied,
+    )
 }
 
 /// Decode, register and deinterleave one frame into its four CFA planes and
@@ -5434,8 +5997,20 @@ fn load_frame(
     planes: &mut [Vec<f32>],
     luma: &mut [f32],
 ) -> Result<bool> {
-    load_frame_impl(source,index,domain,levels,warps,defect,scratch,floor,planes,luma,
-        #[cfg(feature = "native-green-cue")] None)
+    load_frame_impl(
+        source,
+        index,
+        domain,
+        levels,
+        warps,
+        defect,
+        scratch,
+        floor,
+        planes,
+        luma,
+        #[cfg(feature = "native-green-cue")]
+        None,
+    )
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -5492,7 +6067,10 @@ fn load_frame_impl_observed(
 ) -> Result<bool> {
     #[cfg(feature = "native-green-cue")]
     if source.green_cue_enabled() {
-        ensure!(defect.is_none(),"native green cue does not support corrected-source variance");
+        ensure!(
+            defect.is_none(),
+            "native green cue does not support corrected-source variance"
+        );
     }
     #[cfg(feature = "native-pyramid-profile")]
     let extract_phase;
@@ -5534,8 +6112,14 @@ fn load_frame_impl_observed(
                     "native green cue requires the injected source levels"
                 );
                 let ident = strehl_raw::identity(&frame.path);
-                ensure!(strehl_core::optics::profile_for_capture_env(ident.model.as_deref(),ident.lens_type3)?.is_none(),
-                    "native green cue does not support CA transport");
+                ensure!(
+                    strehl_core::optics::profile_for_capture_env(
+                        ident.model.as_deref(),
+                        ident.lens_type3
+                    )?
+                    .is_none(),
+                    "native green cue does not support CA transport"
+                );
                 let pull = match warps {
                     Some(map) => match map.warp(index)? {
                         FrameWarp::Placed(t) => *t,
@@ -5545,7 +6129,12 @@ fn load_frame_impl_observed(
                 };
                 let r = domain.rect;
                 *cue = Some(strehl_core::pyramid::native_green_cue::prepare(
-                    &frame,levels,noise,pull,[r.x,r.y,r.width,r.height]));
+                    &frame,
+                    levels,
+                    noise,
+                    pull,
+                    [r.x, r.y, r.width, r.height],
+                ));
             }
         }
         #[cfg(feature = "native-pyramid-profile")]
@@ -5596,20 +6185,57 @@ fn load_frame_impl_observed(
                         && align_cmd::fullres_gather_enabled()
                     {
                         align_cmd::warp_frame_fullres_into_planes::<false>(
-                            &mut frame,*t,domain.full,map.resampler(),scratch,domain.rect,
-                            &BAND_PLANE_OFFSETS,planes,direct_mode)?;
-                        direct_consumed = true;
-                        #[cfg(test)]
-                        align_cmd::direct_plane_actual_hit();
-                    }
-                    if !direct_consumed {
-                        align_cmd::warp_frame_in_place(
                             &mut frame,
                             *t,
                             domain.full,
                             map.resampler(),
                             scratch,
+                            domain.rect,
+                            &BAND_PLANE_OFFSETS,
+                            planes,
+                            direct_mode,
                         )?;
+                        direct_consumed = true;
+                        #[cfg(test)]
+                        align_cmd::direct_plane_actual_hit();
+                    }
+                    #[cfg(feature = "research-lens-warp")]
+                    let lens_pull = source.lens_pull(index)?;
+                    #[cfg(feature = "research-lens-warp")]
+                    if let Some(pull) = lens_pull {
+                        pull.validate_consumer(*t, domain.full, domain.rect)?;
+                    }
+                    #[cfg(feature = "research-lens-warp")]
+                    ensure!(
+                        !(direct_consumed && lens_pull.is_some()),
+                        "research lens pull cannot bypass the CPU reconstructed-source consumer"
+                    );
+                    if !direct_consumed {
+                        #[cfg(feature = "research-lens-warp")]
+                        let research_consumed = if let Some(pull) = lens_pull {
+                            align_cmd::warp_frame_lens_research::<false>(
+                                &mut frame,
+                                *t,
+                                domain.full,
+                                map.resampler(),
+                                scratch,
+                                pull,
+                            )?;
+                            true
+                        } else {
+                            false
+                        };
+                        #[cfg(not(feature = "research-lens-warp"))]
+                        let research_consumed = false;
+                        if !research_consumed {
+                            align_cmd::warp_frame_in_place(
+                                &mut frame,
+                                *t,
+                                domain.full,
+                                map.resampler(),
+                                scratch,
+                            )?;
+                        }
                     }
                     #[cfg(feature = "native-pyramid-profile")]
                     drop(gather_phase);
@@ -5630,7 +6256,15 @@ fn load_frame_impl_observed(
                     // not of a tolerance.
                     if let Some(p) = floor {
                         #[cfg(feature = "native-pyramid-profile")]
-                        let probe_phase = native_pyramid_profile::start(native_pyramid_profile::PROBE);
+                        let probe_phase =
+                            native_pyramid_profile::start(native_pyramid_profile::PROBE);
+                        #[cfg(feature = "research-lens-warp")]
+                        if let Some(pull) = lens_pull {
+                            p.measure_research(&frame, index, *t, map.resampler(), scratch, pull)?;
+                        } else {
+                            p.measure(&frame, index, *t, map.resampler(), scratch)?;
+                        }
+                        #[cfg(not(feature = "research-lens-warp"))]
                         p.measure(&frame, index, *t, map.resampler(), scratch)?;
                         #[cfg(feature = "native-pyramid-profile")]
                         drop(probe_phase);
@@ -5821,7 +6455,17 @@ fn confidence_pass(
     merged_luma: &[f32],
     per_chunk: usize,
 ) -> Result<Centrality> {
-    confidence_pass_observed(source, paths, domain, levels, warps, defect, merged_luma, per_chunk, None)
+    confidence_pass_observed(
+        source,
+        paths,
+        domain,
+        levels,
+        warps,
+        defect,
+        merged_luma,
+        per_chunk,
+        None,
+    )
 }
 
 // Preserve the unobserved entry point used by independent research controls.
@@ -5992,7 +6636,11 @@ fn laplacian_abs(luma: &[f32], w: usize, h: usize, out: &mut [f32]) {
     for y in 1..h - 1 {
         for x in 1..w - 1 {
             let i = y * w + x;
-            out[i] = 4.0f32.mul_add(luma[i], -(luma[i - 1] + luma[i + 1] + luma[i - w] + luma[i + w]))
+            out[i] = 4.0f32
+                .mul_add(
+                    luma[i],
+                    -(luma[i - 1] + luma[i + 1] + luma[i - w] + luma[i + w]),
+                )
                 .abs();
         }
     }
@@ -6380,6 +7028,9 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     let t_start = Instant::now();
     let paths = crate::raw_paths(&opts.dir, opts.limit)?;
     let paths = only_frame(paths);
+    #[cfg(feature = "research-lens-warp")]
+    let lens_map = crate::lens_research::load_for_render(&paths)?;
+    crate::sony_focus_cmd::print_preflight(&paths);
     ensure!(
         paths.len() < u16::MAX as usize,
         "{} frames exceeds the u16 frame-index range",
@@ -6388,11 +7039,17 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
 
     let mut sensor_provenance = if opts.sensor_master.enabled() {
         Some(sensor_master::Provenance::capture(opts, &paths)?)
-    } else { None };
+    } else {
+        None
+    };
     let progress = crate::ui_progress::Progress::new(paths.len());
     progress.stage("read");
     let t_prologue = Instant::now();
     let first = strehl_raw::decode(&paths[0]).context("decoding the first frame")?;
+    #[cfg(feature = "research-lens-warp")]
+    if let Some(lens) = &lens_map {
+        lens.validate_frame(0, &first)?;
+    }
     let prologue_secs = t_prologue.elapsed().as_secs_f64();
     let geom = first.geometry();
     let levels = first.levels;
@@ -6401,7 +7058,9 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     let wb = first.wb_gains();
     let xyz_to_cam = first.xyz_to_cam_rgb_with_source();
     let frame_bytes = first.allocated_bytes();
-    if let Some(provenance) = sensor_provenance.as_mut() { provenance.bind_first(&first); }
+    if let Some(provenance) = sensor_provenance.as_mut() {
+        provenance.bind_first(&first);
+    }
     drop(first);
 
     let noise = profile::noise_model_for(&camera, iso, levels);
@@ -6410,15 +7069,27 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     // than a writer-time view onto `geom`.
     progress.stage("alignment");
     let t_align = Instant::now();
-    let alignment = alignment_for_observed(&opts.dir, &paths, opts.resampler, progress.observer())?;
-    let alignment = alignment.map(|(m, how)| {
-        let (m, fit) = align_cmd::cover_or_explain(m, opts.cover);
-        (m, how, fit)
-    });
+    #[cfg(feature = "research-lens-warp")]
+    let alignment = if let Some(lens) = &lens_map {
+        Some((lens.map().clone(), "research-lens-envelope", lens.fit()))
+    } else {
+        alignment_for_observed(&opts.dir, &paths, opts.resampler, progress.observer())?.map(
+            |(m, how)| {
+                let (m, fit) = align_cmd::cover_or_explain(m, opts.cover);
+                (m, how, fit)
+            },
+        )
+    };
+    #[cfg(not(feature = "research-lens-warp"))]
+    let alignment = alignment_for_observed(&opts.dir, &paths, opts.resampler, progress.observer())?
+        .map(|(m, how)| {
+            let (m, fit) = align_cmd::cover_or_explain(m, opts.cover);
+            (m, how, fit)
+        });
     let align_secs = t_align.elapsed().as_secs_f64();
     let domain = pyramid_domain(geom, opts.cover, alignment.as_ref().map(|(_, _, fit)| fit))?;
     #[cfg(feature = "native-direct-planes")]
-    align_cmd::local_placement::preflight(&paths,geom,alignment.as_ref().map(|(map,_,_)|map))?;
+    align_cmd::local_placement::preflight(&paths, geom, alignment.as_ref().map(|(map, _, _)| map))?;
     let analysis_geom = domain.analysis();
     let sizes = level_sizes(analysis_geom.width, analysis_geom.height, cfg.bands);
 
@@ -6449,7 +7120,11 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     // default", contradicting the function it cites.
     let defect_request = crate::stack::defect_request_from_env()?;
     let defect_plan = crate::stack::defect_preflight(&defect_request, &noise, &paths)?;
-    let source = RawPyramidSource { paths: &paths };
+    let source = RawPyramidSource {
+        paths: &paths,
+        #[cfg(feature = "research-lens-warp")]
+        lens: lens_map.as_ref(),
+    };
     run_pyramid_prepared_with_sensor(
         opts,
         PreparedPyramid {
@@ -6480,7 +7155,10 @@ fn run_pyramid_prepared(
     prepared: PreparedPyramid<'_>,
     source: &impl PyramidFrameSource,
 ) -> Result<()> {
-    ensure!(!opts.sensor_master.enabled(), "synthetic prepared sources cannot claim native sensor provenance");
+    ensure!(
+        !opts.sensor_master.enabled(),
+        "synthetic prepared sources cannot claim native sensor provenance"
+    );
     run_pyramid_prepared_with_sensor(opts, prepared, source, None)
 }
 
@@ -6515,6 +7193,32 @@ fn run_pyramid_prepared_with_sensor(
         "Pyramid source count differs from prepared inputs"
     );
     let cfg = opts.pyramid;
+    #[cfg(feature = "temporal-energy")]
+    let temporal_mode = temporal_cpu::environment_mode()?;
+    #[cfg(feature = "temporal-energy")]
+    let temporal_active = temporal_mode != strehl_core::pyramid::temporal_energy::Mode::Off;
+    #[cfg(not(feature = "temporal-energy"))]
+    let temporal_active = false;
+    #[cfg(feature = "temporal-energy")]
+    if temporal_active {
+        temporal_cpu::preflight(
+            cfg,
+            paths.len(),
+            alignment.as_ref().map(|(map, _, _)| map),
+            opts.region_recipe.is_some(),
+        )?;
+        ensure!(
+            !opts.sensor_master.enabled(),
+            "experimental temporal energy does not support sensor-master output"
+        );
+        if let Some(output) = opts.out.as_deref() {
+            temporal_cpu::receipt_preflight(output)?;
+        }
+        eprintln!(
+            "temporal energy : EXPERIMENTAL {:?}; finest two E/complete-F guides, fixed [1,2,1]/4.\n                  Ordered dense-bracket falsifier; weak single-frame detail can be lost. Default remains Off.",
+            temporal_mode
+        );
+    }
     let progress = crate::ui_progress::Progress::new(paths.len());
     let analysis_geom = domain.analysis();
     let repairs = region_repair::Repairs::load(opts.region_recipe.as_deref())?;
@@ -6525,9 +7229,7 @@ fn run_pyramid_prepared_with_sensor(
         alignment.as_ref().map(|(_, _, fit)| *fit),
     )?;
     let defect_tally = crate::stack::DefectTally::default();
-    let defect = defect_plan
-        .as_ref()
-        .map(|p| (p, &defect_tally));
+    let defect = defect_plan.as_ref().map(|p| (p, &defect_tally));
     if let Some(p) = &defect_plan {
         eprintln!("{}", p.describe());
     }
@@ -6674,6 +7376,21 @@ fn run_pyramid_prepared_with_sensor(
     let canonical_chunks = canonical_band_chunks(planning_bytes, paths.len());
     let workers = band_workers(planning_bytes, paths.len())?;
     let per_chunk = paths.len().div_ceil(canonical_chunks);
+    #[cfg(feature = "temporal-energy")]
+    if temporal_active {
+        // Explicit extra-buffer preflight; never change canonical arithmetic chunks.
+        let reserved = planning_bytes
+            .checked_add(temporal_cpu::extra_buffer_bytes(
+                &budget_sizes,
+                frame_bytes,
+                workers,
+            )?)
+            .context("temporal worker buffer reservation overflow")?;
+        let guide_bytes = temporal_cpu::memory_preflight(reserved, 4 * acc_floats, &sizes)?;
+        eprintln!(
+            "temporal memory : at most {guide_bytes} guide-field bytes, one bounded ring; regathered centers, unchanged canonical partition"
+        );
+    }
     eprintln!(
         "memory plan     : {canonical_chunks} canonical chunks, 1 reusable frame worker, \
          1 retained + 1 scratch accumulator, {workers} execution threads\n                  \
@@ -6684,7 +7401,8 @@ fn run_pyramid_prepared_with_sensor(
 
     let warps = alignment.as_ref().map(|(m, _, _)| m);
     #[cfg(feature = "native-boundary-radiance")]
-    let observed_source = native_boundary_radiance::ObservedSource::new(source, levels, &noise, domain, warps)?;
+    let observed_source =
+        native_boundary_radiance::ObservedSource::new(source, levels, &noise, domain, warps)?;
     #[cfg(feature = "native-boundary-radiance")]
     let source = &observed_source;
     let t_fold = Instant::now();
@@ -6699,6 +7417,27 @@ fn run_pyramid_prepared_with_sensor(
     let mut beta_n = 0usize;
     progress.stage("merge");
     pool.install(|| -> Result<()> {
+        #[cfg(feature = "temporal-energy")]
+        if temporal_active {
+            let result = temporal_cpu::fold(
+                source,
+                &mut worker,
+                levels,
+                &noise,
+                warps,
+                defect,
+                progress.observer(),
+                paths.len(),
+                per_chunk,
+                temporal_mode,
+                None,
+            )?;
+            merged = Some(result.merge);
+            folded_total = result.folded_total;
+            beta_sum = result.beta_sum;
+            beta_n = result.beta_n;
+            return Ok(());
+        }
         let mut chunks = paths.chunks(per_chunk).enumerate().peekable();
         while let Some((chunk_index, chunk)) = chunks.next() {
             let mut folded = 0usize;
@@ -6733,12 +7472,7 @@ fn run_pyramid_prepared_with_sensor(
                 None => {
                     merged = Some(std::mem::replace(
                         &mut worker.merge,
-                        BandMerge::new(
-                            analysis_geom.width,
-                            analysis_geom.height,
-                            BAND_PLANES,
-                            cfg,
-                        ),
+                        BandMerge::new(analysis_geom.width, analysis_geom.height, BAND_PLANES, cfg),
                     ));
                 }
             }
@@ -6784,7 +7518,8 @@ fn run_pyramid_prepared_with_sensor(
             .join(" ")
     );
     eprintln!(
-        "                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)"    );
+        "                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)"
+    );
     if beta_n > 0 {
         let white = merge.band_gain().all();
         let gate_floor_env = gatefloor::GATE_FLOOR_ENV;
@@ -6805,13 +7540,19 @@ fn run_pyramid_prepared_with_sensor(
                 .collect::<Vec<_>>()
                 .join(" ")
         );
-        eprintln!(
-            "                  THE FLOOR THE GATE ACTUALLY USED, averaged over {beta_n} warped\n  \
+        if temporal_active {
+            eprintln!(
+                "                  Original beta sums / {beta_n} frames with any finite beta prefix. Missing later-prefix contributions are zero in this aggregate.\n                  Finest-two admission uses temporal complete E/F; this aggregate is neither a per-band valid-measurement mean nor the effective filtered floor."
+            );
+        } else {
+            eprintln!(
+                "                  THE FLOOR THE GATE ACTUALLY USED, averaged over {beta_n} warped\n  \
                                 frames. The line above it is the white-noise constant, which is\n  \
                                 exact only for an UNWARPED frame; resampling correlates \
              neighbours\n                  and moves the per-band split. Bands past this list \
              kept the constant.\n                  {gate_floor_env}=white restores it everywhere."
-        );
+            );
+        }
     }
     eprintln!(
         "{} : {}",
@@ -6947,7 +7688,16 @@ fn run_pyramid_prepared_with_sensor(
                 Some(observer),
             )?
         } else {
-            confidence_pass(source, paths, domain, levels, warps, defect, &merged_luma, per_chunk)?
+            confidence_pass(
+                source,
+                paths,
+                domain,
+                levels,
+                warps,
+                defect,
+                &merged_luma,
+                per_chunk,
+            )?
         };
         if let Some(parent) = cpath.parent() {
             std::fs::create_dir_all(parent).ok();
@@ -6995,6 +7745,40 @@ fn run_pyramid_prepared_with_sensor(
         opts.linear_master.as_deref(),
         repairs.applied_recipe(),
     )?;
+    #[cfg(feature = "temporal-energy")]
+    if temporal_active {
+        temporal_cpu::write_receipt(
+            path,
+            opts.linear_master.as_deref(),
+            serde_json::json!({
+                "schema":"strehl-experimental-temporal-energy-v1",
+                "experiment":"REA-a7c2-2026-10-24-d",
+                "status":"photographic falsifier; not default admission",
+                "mode":format!("{temporal_mode:?}"),
+                "kernel":[0.25,0.5,0.25], "filtered_ac_bands":if paths.len() < 3 { 0 } else { (sizes.len()-1).min(2) },
+                "fields":"energy and complete gate*beta*variance, before rectification",
+                "placebo":"ShiftNeighbors reads neighbor(y,(x+max(1,8>>k))%width); center unchanged",
+                "unchanged":"original coefficients, bands >=2, base, hull, fallback, endpoints and N<3",
+                "known_failure":"weak single-frame focus detail can be erased",
+                "support_limitation":"frame count does not establish broad focus support",
+                "rejected_scope":["unplaced sources","region repair","sensor master","non-Mean base or fallback",
+                    "non-SoftPower/HardFloor","active spatial correction","independent coefficient rewrites"],
+                "merge_config":format!("{cfg:?}"),
+                "resolved_exponents":(0..sizes.len()-1).map(|k|cfg.exponent_at(k,sizes.len()-1)).collect::<Vec<_>>(),
+                "source_order_paths":paths,
+                "source_identity_scope":"ordered paths and resolved map; source content hashes belong to the external run receipt",
+                "source_count":paths.len(), "folded_count":folded_total,
+                "canonical_chunks":canonical_chunks,"sources_per_chunk":per_chunk,"execution_threads":workers,
+                "resolved_warp_map":alignment.as_ref().map(|(map,_,_)|map.to_text()),
+                "alignment_anchor_index":alignment.as_ref().map(|(map,_,_)|map.provenance().reference),
+                "full_resolution_gather":align_cmd::fullres_gather_enabled(),
+                "measured_beta_frames":beta_n,
+                "original_beta_sum_over_any_beta_frames":beta_sum.iter().map(|s|s/beta_n.max(1) as f64).collect::<Vec<_>>(),
+                "beta_note":"denominator counts frames with any finite beta prefix; missing later-prefix contributions are zero in this aggregate; not a per-band valid-measurement mean or the effective filtered complete floor",
+                "domain":format!("{:?}",domain),
+            }),
+        )?;
+    }
     if let Some(provenance) = sensor_provenance {
         let warp_text = alignment.as_ref().map(|(map, _, _)| map.to_text());
         let process = serde_json::json!({
@@ -7022,10 +7806,45 @@ fn run_pyramid_prepared_with_sensor(
                 "native_green_cue":cfg!(feature="native-green-cue")
             }
         });
-        sensor_master::finish(opts, provenance, sensor_master::Geometry {
-            full_quad_width:domain.full.width, full_quad_height:domain.full.height,
-            crop_quad:[domain.rect.x,domain.rect.y,domain.rect.width,domain.rect.height],
-        }, &planes, levels.white-levels.black, process)?;
+        #[cfg(feature = "research-lens-warp")]
+        let process = if let Some(envelope) = source.lens_envelope() {
+            let mut process = process;
+            // These similarities alone do not describe the consumed nonlinear pull.
+            let diagnostics = process["resolved_warp_map"].take();
+            process["virtual_undistorted_similarity_diagnostics"] = diagnostics;
+            process["resolved_warp_map"] = serde_json::Value::Null;
+            process["research_lens_envelope"] = envelope.clone();
+            process["geometry_contract"] = serde_json::json!({
+                "pull":"CA_source(F_source(A_runtime(inverse(F_anchor)(native_output))))",
+                "placement_status":"unverified",
+                "guide_center":"full-active midpoint plus 0.5 native pixel",
+                "ca_center":"full-active midpoint",
+                "radial_center":"declared default-crop pixel-center midpoint",
+                "similarity_diagnostics_are_complete_map":false,
+            });
+            process["compiled_features"]["research_lens_warp"] = serde_json::Value::Bool(true);
+            process
+        } else {
+            process
+        };
+
+        sensor_master::finish(
+            opts,
+            provenance,
+            sensor_master::Geometry {
+                full_quad_width: domain.full.width,
+                full_quad_height: domain.full.height,
+                crop_quad: [
+                    domain.rect.x,
+                    domain.rect.y,
+                    domain.rect.width,
+                    domain.rect.height,
+                ],
+            },
+            &planes,
+            levels.white - levels.black,
+            process,
+        )?;
     }
     eprintln!("collapse+write  : {:.1} s", t_out.elapsed().as_secs_f64());
     eprintln!("total           : {:.1} s", t_start.elapsed().as_secs_f64());
@@ -8173,8 +8992,7 @@ fn write_merged(
     path: &Path,
 ) -> Result<()> {
     write_merged_observed(
-        merged, levels, wb, xyz_to_cam, space, demosaic, exposure, restore, path,
-        None, None, None,
+        merged, levels, wb, xyz_to_cam, space, demosaic, exposure, restore, path, None, None, None,
     )
 }
 
@@ -8255,7 +9073,11 @@ fn write_merged_observed(
                 let neutral = strehl_core::color::neutral_response(*m);
                 eprintln!(
                     "colour          : camera RGB -> {} (BT.709 primaries, D65 white)",
-                    if space.applies_curve() { "sRGB" } else { "LINEAR sRGB" }
+                    if space.applies_curve() {
+                        "sRGB"
+                    } else {
+                        "LINEAR sRGB"
+                    }
                 );
                 eprintln!("                  characterisation: {src}");
                 eprintln!(
@@ -8371,9 +9193,7 @@ fn write_merged_observed(
             color::AUTO_EXPOSURE_PERCENTILE,
             color::AUTO_EXPOSURE_TARGET
         );
-        eprintln!(
-            "                  To deviate deliberately from that rendering, use --exposure."
-        );
+        eprintln!("                  To deviate deliberately from that rendering, use --exposure.");
     }
     if !applied.is_identity() || applied.automatic {
         eprintln!(
@@ -8485,7 +9305,8 @@ fn write_merged_observed(
                 };
                 let scale = (gain * eg / range) as f64;
                 let cfg = plan.config(plan.sigma2(p, mean_dn, scale));
-                let rep = strehl_core::restore::restore_plane(&mut v, geom.width, geom.height, &cfg);
+                let rep =
+                    strehl_core::restore::restore_plane(&mut v, geom.width, geom.height, &cfg);
                 // `max_gain` is the ONE-dimensional response, and this report
                 // used to stop there. `restore_plane` convolves x and then y
                 // with the same taps, so the picture receives `G(fx) * G(fy)`
@@ -8552,7 +9373,13 @@ fn write_merged_observed(
             progress.render_step("write", "started");
         }
         image_out::write_demosaiced_with_master(
-            path, mw, mh, &mosaic, &dev, linear_master, baked_recipe,
+            path,
+            mw,
+            mh,
+            &mosaic,
+            &dev,
+            linear_master,
+            baked_recipe,
         )?;
         if let Some(progress) = progress {
             progress.render_step("write", "finished");
@@ -8670,9 +9497,7 @@ fn write_merged_observed(
         // this is the one path on which the flag still silently does nothing,
         // and it is the reason the interim guard in `main.rs` existed.
         eprintln!();
-        eprintln!(
-            "WARNING         : no colour characterisation for this body, so the requested"
-        );
+        eprintln!("WARNING         : no colour characterisation for this body, so the requested");
         eprintln!(
             "                  colorimetric space could not be reached. Emitting camera-native"
         );
@@ -8708,7 +9533,10 @@ mod tests {
 
     #[cfg(feature = "native-gpu-gather")]
     mod native_gpu_gather_controls {
-        include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-gpu-gather/independent-tests.rs"));
+        include!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../experiments/native-gpu-gather/independent-tests.rs"
+        ));
     }
 
     #[test]
@@ -9959,7 +10787,8 @@ mod tests {
             let claims_default = line.contains("THE DEFAULT PATH");
             let claims_not = line.contains("NOT the default");
             assert_ne!(
-                claims_default, claims_not,
+                claims_default,
+                claims_not,
                 "`{}`'s banner must make exactly one claim about its role: {line:?}",
                 backend.name()
             );
@@ -10063,7 +10892,17 @@ mod tests {
     /// test pins which of the two owns it.
     #[test]
     fn merge_backend_parse_refuses_unknown_spellings() {
-        for v in ["banana", "", "   ", "pyramidal", "est", "0", "1", "on", "off"] {
+        for v in [
+            "banana",
+            "",
+            "   ",
+            "pyramidal",
+            "est",
+            "0",
+            "1",
+            "on",
+            "off",
+        ] {
             let err = MergeBackend::parse(v).unwrap_err().to_string();
             assert!(
                 err.contains("unknown merge backend"),
@@ -10080,7 +10919,11 @@ mod tests {
     #[test]
     fn parse_select_mode_accepts_its_spellings_and_refuses_the_rest() {
         for v in ["soft", "soft-power", "softpower", "SOFT", " Soft "] {
-            assert_eq!(parse_select_mode(v).unwrap(), SelectMode::SoftPower, "{v:?}");
+            assert_eq!(
+                parse_select_mode(v).unwrap(),
+                SelectMode::SoftPower,
+                "{v:?}"
+            );
         }
         for v in ["hard", "hard-max", "hardmax", "pmax", "HARD"] {
             assert_eq!(parse_select_mode(v).unwrap(), SelectMode::HardMax, "{v:?}");
@@ -10151,11 +10994,7 @@ mod tests {
             ("legacy", MergeBackend::Estimator),
         ] {
             unsafe { std::env::set_var(MERGE_BACKEND_ENV, v) };
-            assert_eq!(
-                resolved(None).unwrap(),
-                want,
-                "{MERGE_BACKEND_ENV}={v}"
-            );
+            assert_eq!(resolved(None).unwrap(), want, "{MERGE_BACKEND_ENV}={v}");
         }
         unsafe { std::env::set_var(MERGE_BACKEND_ENV, "banana") };
         assert!(
@@ -10206,10 +11045,7 @@ mod tests {
         // mean an exported-but-cleared variable. Pinned because the two
         // channels genuinely differ and that is easy to "tidy" into a bug.
         for v in ["", "   "] {
-            assert!(
-                resolved(Some(v)).is_err(),
-                "--merge {v:?} was not an error"
-            );
+            assert!(resolved(Some(v)).is_err(), "--merge {v:?} was not an error");
             unsafe { std::env::set_var(MERGE_BACKEND_ENV, v) };
             assert_eq!(
                 resolved(None).unwrap(),
@@ -10503,7 +11339,10 @@ mod tests {
         //    configure one -- and the two ways of configuring one are `on` and
         //    naming a map, so both are exercised. A refusal that only caught
         //    `STREHL_DEFECT=on` would miss the more likely invocation.
-        for (k, v) in [("STREHL_DEFECT", "on"), ("STREHL_DEFECT_MAP", "some-map.txt")] {
+        for (k, v) in [
+            ("STREHL_DEFECT", "on"),
+            ("STREHL_DEFECT_MAP", "some-map.txt"),
+        ] {
             unsafe { std::env::remove_var("STREHL_DEFECT") };
             unsafe { std::env::remove_var("STREHL_DEFECT_MAP") };
             unsafe { std::env::set_var(k, v) };
@@ -10622,3 +11461,11 @@ mod tests {
         );
     }
 }
+
+#[cfg(all(test, feature = "research-lens-warp"))]
+#[path = "lens-research-tests.rs"]
+mod lens_research_tests;
+
+#[cfg(test)]
+#[path = "../../../experiments/rea-a7c2-2026-10-24-v/override-tests.rs"]
+mod measured_component_override_tests;

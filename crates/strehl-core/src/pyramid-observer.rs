@@ -12,6 +12,7 @@ pub enum FoldPhase {
     FoldFinished(usize),
 }
 
+#[derive(Clone, Copy)]
 pub struct BandObservation<'a> {
     pub level: usize,
     pub size: LevelSize,
@@ -19,12 +20,22 @@ pub struct BandObservation<'a> {
     /// Absent for the base residual, which has no independent focus election.
     pub energy: Option<&'a [f32]>,
     pub variance: Option<&'a [f32]>,
+    /// Complete filtered floor when a temporal guide overrides the gate.
+    /// In this case variance is None and floor_multiplier is 1; this array
+    /// already includes each neighboring frame's gate and beta exactly once.
+    #[cfg(feature = "temporal-energy")]
+    pub absolute_floor: Option<&'a [f32]>,
     /// The same gate*beta multiplier read by the numerical loop.
     pub floor_multiplier: f32,
     pub weights: &'a [f32],
 }
 
 pub trait MergeObserver: Send + Sync {
+    /// Opt in only when complete temporal floors are handled explicitly.
+    #[cfg(feature = "temporal-energy")]
+    fn supports_absolute_floor(&self) -> bool {
+        false
+    }
     fn phase(&self, phase: FoldPhase);
     fn band(&self, band: BandObservation<'_>);
 }

@@ -53,12 +53,19 @@ impl StrehlApp {
             .is_none_or(|stack| stack.frames.is_empty())
         {
             Some("Choose source photos to begin")
+        } else if self.output.as_os_str().is_empty() {
+            Some("Choose an output folder in Adjust > Destination")
         } else if self.engine.is_none() {
             Some("Stacking engine unavailable")
         } else if self.controls.settings.frame_limit == Some(0) {
             Some("Choose at least one source photo")
         } else {
-            None
+            jobs::temporal_settings_blocker(
+                &self.controls.settings,
+                self.controls.gate,
+                (self.editor.loaded.is_some() && self.editor.path == self.result)
+                    .then_some(&self.editor.recipe),
+            )
         }
     }
 

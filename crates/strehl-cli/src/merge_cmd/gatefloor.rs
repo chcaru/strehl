@@ -236,7 +236,74 @@ impl Probe {
         resampler: Resampler,
         scratch: &mut WarpScratch,
     ) -> Result<&[f32]> {
-        self.run(template, index, t, resampler, scratch)?;
+        self.measure_impl(
+            template,
+            index,
+            t,
+            resampler,
+            scratch,
+            #[cfg(feature = "research-lens-warp")]
+            None,
+        )
+    }
+
+    #[cfg(feature = "research-lens-warp")]
+    pub(super) fn measure_research(
+        &mut self,
+        template: &Frame,
+        index: usize,
+        t: Similarity,
+        resampler: Resampler,
+        scratch: &mut WarpScratch,
+        pull: &crate::lens_research::FramePull,
+    ) -> Result<&[f32]> {
+        self.measure_impl(template, index, t, resampler, scratch, Some(pull))
+    }
+
+    #[cfg(all(test, feature = "research-lens-warp"))]
+    #[allow(clippy::too_many_arguments)]
+    pub(super) fn measure_research_with_gather(
+        &mut self,
+        template: &Frame,
+        index: usize,
+        t: Similarity,
+        resampler: Resampler,
+        scratch: &mut WarpScratch,
+        pull: &crate::lens_research::FramePull,
+        greens_only: bool,
+    ) -> Result<&[f32]> {
+        self.run_gather_impl(
+            template,
+            index,
+            t,
+            resampler,
+            scratch,
+            Some(pull),
+            greens_only,
+        )?;
+        self.apply_scale();
+        Ok(&self.beta)
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn measure_impl(
+        &mut self,
+        template: &Frame,
+        index: usize,
+        t: Similarity,
+        resampler: Resampler,
+        scratch: &mut WarpScratch,
+        #[cfg(feature = "research-lens-warp")] lens_pull: Option<&crate::lens_research::FramePull>,
+    ) -> Result<&[f32]> {
+        self.run_impl(
+            template,
+            index,
+            t,
+            resampler,
+            scratch,
+            #[cfg(feature = "research-lens-warp")]
+            lens_pull,
+        )?;
         if debug() {
             // The commissioning null, run on the REAL frame with its real white
             // balance and its real CA profile, because those are exactly the
@@ -279,12 +346,55 @@ impl Probe {
         resampler: Resampler,
         scratch: &mut WarpScratch,
     ) -> Result<()> {
-        // Refuse an unknown arm before cloning or generating a synthetic frame.
-        let greens_only = probe_gather_uses_green()?;
+        self.run_impl(
+            template,
+            index,
+            t,
+            resampler,
+            scratch,
+            #[cfg(feature = "research-lens-warp")]
+            None,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn run_impl(
+        &mut self,
+        template: &Frame,
+        index: usize,
+        t: Similarity,
+        resampler: Resampler,
+        scratch: &mut WarpScratch,
+        #[cfg(feature = "research-lens-warp")] lens_pull: Option<&crate::lens_research::FramePull>,
+    ) -> Result<()> {
+        self.run_gather_impl(
+            template,
+            index,
+            t,
+            resampler,
+            scratch,
+            #[cfg(feature = "research-lens-warp")]
+            lens_pull,
+            probe_gather_uses_green()?,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn run_gather_impl(
+        &mut self,
+        template: &Frame,
+        index: usize,
+        t: Similarity,
+        resampler: Resampler,
+        scratch: &mut WarpScratch,
+        #[cfg(feature = "research-lens-warp")] lens_pull: Option<&crate::lens_research::FramePull>,
+        greens_only: bool,
+    ) -> Result<()> {
         #[cfg(feature = "native-direct-planes")]
         let direct_mode = align_cmd::direct_plane_mode()?;
         #[cfg(feature = "native-direct-planes")]
-        let direct_consumed = direct_mode != align_cmd::DirectPlaneMode::Off && align_cmd::fullres_gather_enabled();
+        let direct_consumed =
+            direct_mode != align_cmd::DirectPlaneMode::Off && align_cmd::fullres_gather_enabled();
         #[cfg(not(feature = "native-direct-planes"))]
         let direct_consumed = false;
         let mut probe = template.clone();
@@ -301,24 +411,87 @@ impl Probe {
         if direct_consumed {
             if greens_only {
                 align_cmd::warp_frame_fullres_into_planes::<true>(
-                    &mut probe,t,self.domain.full,resampler,scratch,self.domain.rect,
-                    &BAND_PLANE_OFFSETS[1..3],&mut self.planes,direct_mode)
+                    &mut probe,
+                    t,
+                    self.domain.full,
+                    resampler,
+                    scratch,
+                    self.domain.rect,
+                    &BAND_PLANE_OFFSETS[1..3],
+                    &mut self.planes,
+                    direct_mode,
+                )
             } else {
                 align_cmd::warp_frame_fullres_into_planes::<false>(
-                    &mut probe,t,self.domain.full,resampler,scratch,self.domain.rect,
-                    &BAND_PLANE_OFFSETS[1..3],&mut self.planes,direct_mode)
-            }.context("gathering the direct noise-probe planes")?;
+                    &mut probe,
+                    t,
+                    self.domain.full,
+                    resampler,
+                    scratch,
+                    self.domain.rect,
+                    &BAND_PLANE_OFFSETS[1..3],
+                    &mut self.planes,
+                    direct_mode,
+                )
+            }
+            .context("gathering the direct noise-probe planes")?;
             #[cfg(test)]
             align_cmd::direct_plane_probe_hit();
         }
+        #[cfg(feature = "research-lens-warp")]
+        anyhow::ensure!(
+            !(direct_consumed && lens_pull.is_some()),
+            "research lens probe refuses direct-plane dispatch"
+        );
         if !direct_consumed {
-            if greens_only {
-                align_cmd::warp_probe_greens_in_place(&mut probe, t, self.domain.full, resampler, scratch)
+            #[cfg(feature = "research-lens-warp")]
+            let research_consumed = if let Some(pull) = lens_pull {
+                if greens_only {
+                    align_cmd::warp_frame_lens_research::<true>(
+                        &mut probe,
+                        t,
+                        self.domain.full,
+                        resampler,
+                        scratch,
+                        pull,
+                    )?;
+                } else {
+                    align_cmd::warp_frame_lens_research::<false>(
+                        &mut probe,
+                        t,
+                        self.domain.full,
+                        resampler,
+                        scratch,
+                        pull,
+                    )?;
+                }
+                true
             } else {
-                align_cmd::warp_frame_in_place(&mut probe, t, self.domain.full, resampler, scratch)
+                false
+            };
+            #[cfg(not(feature = "research-lens-warp"))]
+            let research_consumed = false;
+            if !research_consumed {
+                if greens_only {
+                    align_cmd::warp_probe_greens_in_place(
+                        &mut probe,
+                        t,
+                        self.domain.full,
+                        resampler,
+                        scratch,
+                    )
+                } else {
+                    align_cmd::warp_frame_in_place(
+                        &mut probe,
+                        t,
+                        self.domain.full,
+                        resampler,
+                        scratch,
+                    )
                     .map(|_| ())
+                }
+                .context("warping the noise probe for the band-noise floor")?;
             }
-            .context("warping the noise probe for the band-noise floor")?;
         }
 
         // Deinterleave the two green phases exactly as `load_frame` does, and
@@ -625,8 +798,12 @@ mod m194c_independent_tests {
         make_frame(w, h, layout, k)
     }
 
-    pub(super) fn variance_warp() -> Similarity { warp(1) }
-    pub(super) fn variance_crop() -> align_cmd::CropRect { crop() }
+    pub(super) fn variance_warp() -> Similarity {
+        warp(1)
+    }
+    pub(super) fn variance_crop() -> align_cmd::CropRect {
+        crop()
+    }
 
     pub(super) fn green_render(
         frames: Vec<Frame>,
@@ -668,17 +845,26 @@ mod native_parallel_writeback_independent_tests {
 
 #[cfg(all(test, feature = "native-direct-planes"))]
 mod native_direct_planes_independent_tests {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-direct-planes/independent-tests.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-direct-planes/independent-tests.rs"
+    ));
 }
 
 #[cfg(all(test, feature = "native-correction-variance"))]
 mod native_correction_variance {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-correction-variance/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-correction-variance/implementation.rs"
+    ));
 }
 
 #[cfg(all(test, feature = "native-green-cue"))]
 mod native_green_cue_controls {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-green-cue/independent-controls.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-green-cue/independent-controls.rs"
+    ));
 }
 
 // Reuse the independently commissioned fixture without copying its formulas.
@@ -691,5 +877,13 @@ pub(crate) fn gpu_warp() -> Similarity {
     m194c_independent_tests::variance_warp()
 }
 
-#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
-include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/boundary-cfa-wavelet/gatefloor-bridge.rs"));
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
+include!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../experiments/boundary-cfa-wavelet/gatefloor-bridge.rs"
+));

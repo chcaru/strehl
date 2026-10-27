@@ -158,6 +158,10 @@ pub(crate) fn spawn_notifying_task<T: Send + 'static>(
 #[path = "jobs-worker-tests.rs"]
 mod worker_tests;
 
+#[cfg(test)]
+#[path = "temporal-energy-tests.rs"]
+mod temporal_energy_tests;
+
 #[derive(Clone, Debug)]
 pub struct FrameFile {
     pub path: PathBuf,
@@ -265,6 +269,8 @@ pub struct RenderSettings {
     pub pyramid_bands: Option<usize>,
     pub pyramid_exponent: Option<f32>,
     pub pyramid_sharpen: Option<f32>,
+    /// Experimental adjacent-capture guidance; never inherited from the environment.
+    pub temporal_energy: bool,
     pub resampler: Resampler,
     pub binned: bool,
     pub correct_lateral_ca: bool,
@@ -282,6 +288,7 @@ impl Default for RenderSettings {
             pyramid_bands: None,
             pyramid_exponent: None,
             pyramid_sharpen: None,
+            temporal_energy: false,
             resampler: Resampler::default(),
             binned: false,
             correct_lateral_ca: true,
@@ -290,6 +297,32 @@ impl Default for RenderSettings {
             auto_exposure: false,
             confidence_map: true,
         }
+    }
+}
+
+/// Shared by the launch affordance and worker validation. Saved development
+/// edits are compatible; enabled source-range repairs are not.
+pub(crate) fn temporal_settings_blocker(
+    settings: &RenderSettings,
+    gate: Option<f32>,
+    recipe: Option<&strehl_edit::DevelopmentRecipe>,
+) -> Option<&'static str> {
+    if !settings.temporal_energy {
+        return None;
+    }
+    if settings.binned {
+        Some("Turn off Half-size TIFF to use temporal detail smoothing")
+    } else if gate.is_some_and(|value| !value.is_finite() || value <= 0.0) {
+        Some("Temporal detail smoothing needs a Noise gate above zero")
+    } else if recipe.is_some_and(|recipe| {
+        recipe
+            .regions
+            .iter()
+            .any(|region| region.enabled && region.source_range.is_some())
+    }) {
+        Some("Turn off temporal detail smoothing or disable source-range repairs")
+    } else {
+        None
     }
 }
 
@@ -482,10 +515,15 @@ fn run_render(
             .unwrap_or_else(|| "engine default".into());
         writeln!(
             log_file,
-            "Strehl desktop render\nProgram: {:?}\nArguments: {:?}\nInherited STREHL_* overrides removed; STREHL_CACHE_DIR explicitly set to {}.\nRAYON_NUM_THREADS: {workers}. STREHL_PYRAMID_WORKERS: {workers}.\nExecution limits only; engine canonical reduction order and memory plan preserved.\n",
+            "Strehl desktop render\nProgram: {:?}\nArguments: {:?}\nInherited STREHL_* overrides removed; STREHL_CACHE_DIR explicitly set to {}.\nRAYON_NUM_THREADS: {workers}. STREHL_PYRAMID_WORKERS: {workers}.\nExecution limits only; engine canonical reduction order and memory plan preserved.\nTemporal detail smoothing: {} (experimental saved recipe setting).\n",
             command.get_program(),
             command.get_args().collect::<Vec<_>>(),
-            cache.display()
+            cache.display(),
+            if request.settings.temporal_energy {
+                "on"
+            } else {
+                "off"
+            }
         )?;
         command.stdout(Stdio::from(log_file.try_clone()?));
         command.stderr(Stdio::from(log_file));
@@ -508,15 +546,7 @@ fn run_render(
                     !cancelled.load(Ordering::Relaxed),
                     "Render cancelled before publication"
                 );
-                if request.retain_master {
-                    publish_linear_master(&directory, cancelled)?;
-                }
-                publish_render_outputs(
-                    &partial,
-                    &output,
-                    request.settings.confidence_map,
-                    cancelled,
-                )?;
+                publish_completed_render(request, &directory, &partial, &output, cancelled)?;
                 Ok(RenderOutcome::Completed {
                     directory,
                     output,
@@ -540,6 +570,13 @@ fn run_render(
 }
 
 fn validate_settings(request: &RenderRequest) -> Result<()> {
+    if let Some(reason) = temporal_settings_blocker(
+        &request.settings,
+        request.pyramid_gate,
+        request.recipe.as_ref(),
+    ) {
+        bail!("{reason}");
+    }
     if let Some(recipe) = &request.recipe {
         recipe.validate()?;
         ensure!(
@@ -598,6 +635,13 @@ fn validate_settings(request: &RenderRequest) -> Result<()> {
 }
 
 fn render_command(request: &RenderRequest, source: &Path, partial: &Path) -> Result<Command> {
+    if let Some(reason) = temporal_settings_blocker(
+        &request.settings,
+        request.pyramid_gate,
+        request.recipe.as_ref(),
+    ) {
+        bail!("{reason}");
+    }
     let mut command = crate::engine::command(&request.executable)?;
     command
         .arg("stack")
@@ -612,7 +656,10 @@ fn render_command(request: &RenderRequest, source: &Path, partial: &Path) -> Res
             .arg("--linear-master")
             .arg(directory.join("master.partial.tiff"));
     }
-    if request.recipe.is_some() {
+    // Temporal mode refuses the repair consumer. A development-only recipe
+    // stays saved beside the output, without sending an inert repair argument.
+    // An enabled source-range repair was explicitly refused above.
+    if request.recipe.is_some() && !request.settings.temporal_energy {
         command
             .arg("--region-recipe")
             .arg(directory.join("region-recipe.json"));
@@ -661,15 +708,7 @@ fn render_command(request: &RenderRequest, source: &Path, partial: &Path) -> Res
     if request.settings.crop_to_coverage {
         command.arg("--cover=crop");
     }
-    // Experimental overrides should never silently change a normal desktop
-    // render. Keep the OS environment (PATH, device drivers, LOCALAPPDATA).
-    remove_experimental_overrides(&mut command, std::env::vars_os());
-    command.env("STREHL_UI_PROGRESS", "1");
-    command.env_remove("RAYON_NUM_THREADS");
-    if let Some(threads) = request.worker_threads {
-        command.env("RAYON_NUM_THREADS", threads.to_string());
-        command.env("STREHL_PYRAMID_WORKERS", threads.to_string());
-    }
+    configure_render_environment(&mut command, request, std::env::vars_os());
     #[cfg(windows)]
     {
         use std::os::windows::process::CommandExt;
@@ -678,7 +717,30 @@ fn render_command(request: &RenderRequest, source: &Path, partial: &Path) -> Res
     Ok(command)
 }
 
-fn remove_experimental_overrides(
+fn configure_render_environment(
+    command: &mut Command,
+    request: &RenderRequest,
+    environment: impl IntoIterator<Item = (std::ffi::OsString, std::ffi::OsString)>,
+) {
+    // Keep OS variables, but bind every processing override to the saved recipe.
+    remove_experimental_overrides(command, environment);
+    command.env("STREHL_UI_PROGRESS", "1");
+    command.env(
+        "STREHL_TEMPORAL_ENERGY",
+        if request.settings.temporal_energy {
+            "on"
+        } else {
+            "off"
+        },
+    );
+    command.env_remove("RAYON_NUM_THREADS");
+    if let Some(threads) = request.worker_threads {
+        command.env("RAYON_NUM_THREADS", threads.to_string());
+        command.env("STREHL_PYRAMID_WORKERS", threads.to_string());
+    }
+}
+
+pub(crate) fn remove_experimental_overrides(
     command: &mut Command,
     environment: impl IntoIterator<Item = (std::ffi::OsString, std::ffi::OsString)>,
 ) {
@@ -702,7 +764,11 @@ fn canonical_directory(path: &Path) -> Result<PathBuf> {
 
 /// Resolve existing ancestors before any write. In particular, creating a new
 /// export folder must not quietly create a directory inside the RAW corpus.
-fn prepare_output_parent(source: &Path, requested: &Path) -> Result<PathBuf> {
+pub(crate) fn prepare_output_parent(source: &Path, requested: &Path) -> Result<PathBuf> {
+    ensure!(
+        !requested.as_os_str().is_empty(),
+        "Choose an output folder in Adjust > Destination"
+    );
     if requested
         .try_exists()
         .context("Checking the output folder")?
@@ -815,7 +881,7 @@ pub(crate) fn validate_export_destination(
     validate_corpus_destination(&parent)
 }
 
-fn create_job_directory(parent: &Path) -> Result<PathBuf> {
+pub(crate) fn create_job_directory(parent: &Path) -> Result<PathBuf> {
     let timestamp = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .context("The system clock precedes 1970")?
@@ -829,10 +895,157 @@ fn create_job_directory(parent: &Path) -> Result<PathBuf> {
         match fs::create_dir(&directory) {
             Ok(()) => return Ok(directory),
             Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => continue,
-            Err(error) => return Err(error).context("Creating a fresh render folder"),
+            Err(error) => {
+                return Err(error).with_context(|| {
+                    format!(
+                        "Creating render folder {}. Choose another folder in Adjust > Destination",
+                        directory.display()
+                    )
+                });
+            }
         }
     }
     bail!("Could not reserve a new render folder")
+}
+
+fn publish_completed_render(
+    request: &RenderRequest,
+    directory: &Path,
+    partial: &Path,
+    output: &Path,
+    cancelled: &AtomicBool,
+) -> Result<()> {
+    // An external worker that ignored the requested mode must not publish as On.
+    let temporal = request
+        .settings
+        .temporal_energy
+        .then(|| prepare_temporal_publication(directory, request.retain_master, cancelled))
+        .transpose()?;
+    if request.retain_master {
+        publish_linear_master(directory, cancelled)?;
+    }
+    publish_render_outputs(partial, output, request.settings.confidence_map, cancelled)?;
+    if let Some(receipt) = temporal {
+        publish_temporal_mapping(directory, &receipt, cancelled)?;
+    }
+    Ok(())
+}
+
+fn temporal_file_identity(path: &Path, cancelled: &AtomicBool) -> Result<(u64, String)> {
+    use sha2::{Digest, Sha256};
+    let mut file = File::open(path).context("Reading a temporal output identity")?;
+    let mut hash = Sha256::new();
+    let mut bytes = 0_u64;
+    let mut buffer = [0_u8; 64 * 1024];
+    loop {
+        ensure!(
+            !cancelled.load(Ordering::Relaxed),
+            "Render cancelled before publication"
+        );
+        let count = file.read(&mut buffer)?;
+        if count == 0 {
+            break;
+        }
+        bytes += count as u64;
+        hash.update(&buffer[..count]);
+    }
+    let digest = hash
+        .finalize()
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect();
+    Ok((bytes, digest))
+}
+
+fn prepare_temporal_publication(
+    directory: &Path,
+    retain_master: bool,
+    cancelled: &AtomicBool,
+) -> Result<serde_json::Value> {
+    ensure!(
+        !directory.join("temporal-publication.json").exists(),
+        "Temporal publication record already exists"
+    );
+    let worker_path = directory.join("result.partial.tiff.temporal-energy.json");
+    // Source paths and the resolved warp map grow with bracket length.
+    let worker_bytes = crate::edit_workspace::read_bounded(&worker_path, 64 * 1024 * 1024)
+        .context("Temporal detail smoothing requires its completed engine receipt")?;
+    let worker: serde_json::Value =
+        serde_json::from_slice(&worker_bytes).context("Reading the temporal engine receipt")?;
+    ensure!(
+        worker["schema"] == "strehl-experimental-temporal-energy-v1"
+            && worker["mode"] == "On"
+            && worker["completion"] == "images written and hashed",
+        "The engine receipt does not confirm temporal detail smoothing On"
+    );
+    let mut artifacts = Vec::new();
+    for (key, from, to) in [
+        ("completed_output", "result.partial.tiff", "result.tiff"),
+        (
+            "completed_linear_master",
+            "master.partial.tiff",
+            "master.tiff",
+        ),
+    ] {
+        if key == "completed_linear_master" && !retain_master {
+            ensure!(
+                worker[key].is_null(),
+                "Unexpected temporal editing master identity"
+            );
+            continue;
+        }
+        let staging = directory.join(from);
+        ensure!(
+            worker[key]["path"]
+                .as_str()
+                .is_some_and(|value| Path::new(value) == staging),
+            "Temporal engine receipt has the wrong {key} path"
+        );
+        let (bytes, sha256) = temporal_file_identity(&staging, cancelled)?;
+        ensure!(
+            bytes > 0
+                && worker[key]["bytes"].as_u64() == Some(bytes)
+                && worker[key]["sha256"].as_str() == Some(sha256.as_str()),
+            "Temporal engine receipt does not match the {key} bytes"
+        );
+        artifacts.push(serde_json::json!({
+            "worker_path":staging, "published_path":directory.join(to),
+            "bytes":bytes, "sha256":sha256,
+        }));
+    }
+    use sha2::{Digest, Sha256};
+    let worker_hash: String = Sha256::digest(&worker_bytes)
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect();
+    Ok(serde_json::json!({
+        "schema":"strehl-desktop-temporal-publication-v1", "mode":"on",
+        "worker_receipt":{"path":worker_path,"bytes":worker_bytes.len(),"sha256":worker_hash},
+        "artifacts":artifacts,
+        "identity_scope":"Worker bytes verified before same-directory no-replace publication; original worker receipt remains unchanged.",
+        "completion":"images published",
+    }))
+}
+
+fn publish_temporal_mapping(
+    directory: &Path,
+    receipt: &serde_json::Value,
+    cancelled: &AtomicBool,
+) -> Result<()> {
+    ensure!(
+        !cancelled.load(Ordering::Relaxed),
+        "Render cancelled before publication"
+    );
+    let mut file = OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(directory.join("temporal-publication.json"))
+        .context("Saving the temporal output publication record")?;
+    let mut bytes = serde_json::to_vec_pretty(receipt)?;
+    bytes.push(b'\n');
+    file.write_all(&bytes)?;
+    file.sync_all()
+        .context("Syncing the temporal output publication record")
 }
 
 fn publish_render_outputs(
@@ -956,7 +1169,7 @@ enum ProcessResult {
     Cancelled,
 }
 
-struct OwnedChild(Child);
+pub(crate) struct OwnedChild(pub(crate) Child);
 
 impl Drop for OwnedChild {
     fn drop(&mut self) {
@@ -1233,6 +1446,20 @@ pub(crate) mod tests {
         assert_eq!(scan.frames[1].path.file_name(), Some(OsStr::new("b.ARW")));
         assert_eq!(scan.frames[0].bytes, 2);
         assert_eq!(scan.total_bytes, 5);
+    }
+
+    #[test]
+    fn destination_failure_identifies_attempted_folder_and_recovery() {
+        let directory = TestDirectory::new("destination-failure");
+        let parent = directory.path().join("file-instead-of-folder");
+        fs::write(&parent, b"preserve").unwrap();
+        let error = create_job_directory(&parent).unwrap_err();
+        let message = format!("{error:#}");
+        assert!(message.contains(&parent.join("strehl-").display().to_string()));
+        assert!(message.contains("Adjust > Destination"));
+        assert!(error.downcast_ref::<std::io::Error>().is_some());
+        assert_eq!(fs::read(&parent).unwrap(), b"preserve");
+        assert!(prepare_output_parent(directory.path(), Path::new("")).is_err());
     }
 
     #[test]

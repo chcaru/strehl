@@ -39,6 +39,10 @@ impl<'a> FrameTap<'a> {
 }
 
 impl MergeObserver for FrameTap<'_> {
+    #[cfg(feature = "temporal-energy")]
+    fn supports_absolute_floor(&self) -> bool {
+        true
+    }
     fn phase(&self, phase: FoldPhase) {
         match phase {
             FoldPhase::PyramidStarted => self
@@ -77,6 +81,20 @@ impl MergeObserver for FrameTap<'_> {
                 1,
                 band.size,
                 |index| energy[index],
+                None,
+            );
+        }
+        #[cfg(feature = "temporal-energy")]
+        if let Some(floor) = band.absolute_floor {
+            self.progress.surface(
+                self.index,
+                band.level,
+                "gate-floor",
+                "frame",
+                "log",
+                1,
+                band.size,
+                |index| floor[index],
                 None,
             );
         }
@@ -250,7 +268,7 @@ impl Progress {
     }
 
     #[allow(clippy::too_many_arguments)]
-    fn surface(
+    pub(crate) fn surface(
         &self,
         frame: usize,
         level: usize,

@@ -218,6 +218,8 @@ impl Protocol {
                             "strehl_snapshot",
                             "strehl_probe",
                             "strehl_preview",
+                            "strehl_metadata",
+                            "strehl_shutdown",
                             "strehl_command",
                         ]
                         .contains(&name) =>
@@ -239,37 +241,65 @@ fn decode_tool(name: &str, args: Value) -> Result<AgentRequest, String> {
     if !args.is_object() {
         return Err("Tool arguments must be an object".into());
     }
-    let request = match name {
-        "strehl_snapshot" => {
-            if !args.as_object().unwrap().is_empty() {
-                return Err("Snapshot accepts no arguments".into());
+    let request =
+        match name {
+            "strehl_snapshot" => {
+                if !args.as_object().unwrap().is_empty() {
+                    return Err("Snapshot accepts no arguments".into());
+                }
+                AgentRequest {
+                    expected_revision: None,
+                    command: AgentCommand::Snapshot {},
+                }
             }
-            AgentRequest {
-                expected_revision: None,
-                command: AgentCommand::Snapshot {},
+            "strehl_probe" | "strehl_preview" => {
+                let mut fields = args.as_object().unwrap().clone();
+                fields.insert(
+                    "operation".into(),
+                    json!(if name == "strehl_probe" {
+                        "probe"
+                    } else {
+                        "preview"
+                    }),
+                );
+                AgentRequest {
+                    expected_revision: None,
+                    command: serde_json::from_value(Value::Object(fields))
+                        .map_err(|e| format!("Invalid tool arguments: {e}"))?,
+                }
             }
-        }
-        "strehl_probe" | "strehl_preview" => {
-            let mut fields = args.as_object().unwrap().clone();
-            fields.insert(
-                "operation".into(),
-                json!(if name == "strehl_probe" {
-                    "probe"
-                } else {
-                    "preview"
-                }),
-            );
-            AgentRequest {
-                expected_revision: None,
-                command: serde_json::from_value(Value::Object(fields))
-                    .map_err(|e| format!("Invalid tool arguments: {e}"))?,
+            "strehl_metadata" => {
+                let fields = args.as_object().unwrap();
+                if fields.len() != 1 || !fields.contains_key("frame") {
+                    return Err("Metadata accepts only the required zero-based frame index".into());
+                }
+                AgentRequest {
+                    expected_revision: None,
+                    command: serde_json::from_value(
+                        json!({"operation":"metadata","frame":fields["frame"]}),
+                    )
+                    .map_err(|e| format!("Invalid metadata request: {e}"))?,
+                }
             }
-        }
-        "strehl_command" => {
-            serde_json::from_value(args).map_err(|e| format!("Invalid command: {e}"))?
-        }
-        _ => return Err("Unknown tool".into()),
-    };
+            "strehl_shutdown" => {
+                let fields = args.as_object().unwrap();
+                if fields.len() != 1 || !fields.contains_key("expected_revision") {
+                    return Err(
+                        "Shutdown requires only expected_revision from a fresh snapshot".into(),
+                    );
+                }
+                AgentRequest {
+                    expected_revision: Some(fields["expected_revision"].as_u64().ok_or_else(
+                        || "expected_revision must be a nonnegative integer".to_owned(),
+                    )?),
+                    command: AgentCommand::Shutdown {},
+                }
+            }
+            "strehl_command" => {
+                serde_json::from_value(args).map_err(|e| format!("Invalid command: {e}"))?
+            }
+            _ => return Err("Unknown tool".into()),
+        };
     request.validate()?;
     Ok(request)
 }
@@ -496,6 +526,7 @@ pub(crate) fn tool_definitions() -> Value {
         ),
         command("start_stack", json!({}), &[]),
         command("cancel_stack", json!({}), &[]),
+        command("shutdown", json!({}), &[]),
         command("save_edit_version", json!({"name":string(120)}), &["name"]),
         command(
             "restore_edit_version",
@@ -552,6 +583,12 @@ pub(crate) fn tool_definitions() -> Value {
                 object(json!({"kind":{"const":"diagnostic"},"name":{"enum":["admission","fallback","confidence","detail","coverage","alignment"]},"level":{"type":"integer","minimum":0,"maximum":11}}), &["kind","name","level"])
             ]},"region":region_schema(),"max_side":{"type":"integer","minimum":64,"maximum":1024,"default":768}}), &["target"]),
             "annotations":{"readOnlyHint":true,"openWorldHint":false}},
+        {"name":"strehl_metadata","description":"Read the exact stored AF and optical metadata for one zero-based frame in the current imported bracket, without changing selection, settings or the photograph. Returns bounded full JSON data, source identity, and generated JSON/log paths in the configured output folder. Does not open a dialog or browser. Stored values are not calibrated depth or proof of fresh measurements.",
+            "inputSchema":object(json!({"frame":id_schema()}), &["frame"]),
+            "annotations":{"readOnlyHint":true,"openWorldHint":false}},
+        {"name":"strehl_shutdown","description":"Request save and shutdown of an idle headless workspace using a fresh snapshot revision. GUI sessions and active work are rejected. A successful response accepts the saved shutdown request; observe process exit separately to confirm completion.",
+            "inputSchema":object(json!({"expected_revision":id_schema()}), &["expected_revision"]),
+            "annotations":{"readOnlyHint":false,"destructiveHint":false,"idempotentHint":false,"openWorldHint":false}},
         {"name":"strehl_command","description":"Operate the same workspace as the human. Use expected_revision from a fresh snapshot. Select runs/sources, annotate/circle an issue, adjust validated stack/develop settings, start/cancel, export, undo/redo, organize projects, import from explicitly shared folders, or post a suggestion. Zero-based source/run indices. No arbitrary file access. Export never overwrites an existing file. Responses describe queued work separately from finished work.",
             "inputSchema":object(json!({"expected_revision":id_schema(),"command":{"oneOf":commands}}), &["expected_revision","command"]),
             "annotations":{"readOnlyHint":false,"destructiveHint":false,"idempotentHint":false,"openWorldHint":false}}

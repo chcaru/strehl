@@ -21,6 +21,7 @@ mean better image quality.
 | `--limit` | Capture range & evidence → First captures; filename-order prefix; All restores the complete bracket |
 | `--pyramid-bands` | Merge → Scale controls → Scales; 1–12 |
 | `--pyramid-gate` | Merge → Noise gate; default remains engine-controlled |
+| `STREHL_TEMPORAL_ENERGY` | Merge → Temporal detail smoothing; experimental, Off by default; saves with the recipe and applies to the next stack. Full-resolution, positive/default gate and no enabled source-range repair required. |
 | `--pyramid-exponent` | Merge → Scale controls → Coarse power |
 | `--pyramid-sharpen` | Merge → Scale controls → Fine-scale ramp |
 | `--exposure` | Develop → Exposure; −12 to +12 EV |
@@ -62,7 +63,7 @@ approximate: their embedded JPEG crop does not certify a sensor warp.
 | `--pyramid-base weighted` | Retained comparison arm for reproducibility; desktop keeps the measured mean tone base |
 | `--linear-srgb`, output without `--srgb` | Measurement encodings, not photographic viewing presets; the process photograph is sRGB |
 | Forced named `--fix-ca PROFILE` | Bypasses the normal gear guard; desktop permits automatic matching or off, not arbitrary correction on incompatible gear |
-| `--help`, `--version`, environment research switches | CLI introspection/research controls. Inherited `STREHL_*` overrides are stripped from desktop renders so hidden environment state cannot change a saved run |
+| `--help`, `--version`, other environment research switches | CLI introspection/research controls. Inherited `STREHL_*` overrides are stripped; the saved temporal checkbox explicitly sets its worker mode, so hidden environment state cannot change a saved run |
 
 The audit checked the complete `Stack` field list, not just flags mentioned in
 its short help. No focus-operator, photometric, posterior-confidence, or

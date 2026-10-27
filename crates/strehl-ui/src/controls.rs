@@ -66,6 +66,9 @@ impl Controls {
                 ui.horizontal(|ui| { ui.label("Method"); right(ui,"Laplacian pyramid"); });
                 optional_float(ui,"Noise gate",&mut self.gate,2.0,0.0..=8.0,
                     "A noise/detail tradeoff. Higher values average more coefficients below the sensor noise gate. Click Default to override; drag a number or click to type.");
+                ui.checkbox(&mut self.settings.temporal_energy, "Temporal detail smoothing")
+                    .on_hover_text("Uses adjacent captures to guide the finest detail layers on the next stack. Compare with this off; this is experimental and is not a post-process filter.");
+                note(ui, "Experimental. May remove faint detail visible in only one capture.");
                 egui::CollapsingHeader::new("Scale controls").id_salt("pyramid").show(ui, |ui| {
                     ui.horizontal(|ui| {
                         ui.label("Scales");
@@ -269,5 +272,90 @@ mod tests {
             "8/32 CPU threads",
             "Unavailable RAM must not masquerade as zero capacity"
         );
+    }
+
+    #[test]
+    fn temporal_energy_checkbox_and_reset_use_the_real_adjust_controls() {
+        fn paint(
+            controls: &mut Controls,
+            ctx: &egui::Context,
+            enabled: bool,
+            time: f64,
+            events: Vec<egui::Event>,
+        ) -> egui::FullOutput {
+            ctx.run(
+                egui::RawInput {
+                    screen_rect: Some(egui::Rect::from_min_size(
+                        egui::Pos2::ZERO,
+                        egui::vec2(300.0, 720.0),
+                    )),
+                    time: Some(time),
+                    events,
+                    ..Default::default()
+                },
+                |ctx| {
+                    egui::CentralPanel::default().show(ctx, |ui| controls.show(ui, enabled));
+                },
+            )
+        }
+        fn label(output: &egui::FullOutput, name: &str) -> egui::Pos2 {
+            output
+                .shapes
+                .iter()
+                .find_map(|shape| match &shape.shape {
+                    egui::Shape::Text(text) if text.galley.text() == name => {
+                        Some(text.visual_bounding_rect().center())
+                    }
+                    _ => None,
+                })
+                .unwrap_or_else(|| panic!("missing rendered control: {name}"))
+        }
+        fn click(
+            controls: &mut Controls,
+            ctx: &egui::Context,
+            enabled: bool,
+            at: egui::Pos2,
+            time: f64,
+        ) {
+            for (offset, pressed) in [(0.0, true), (0.02, false)] {
+                paint(
+                    controls,
+                    ctx,
+                    enabled,
+                    time + offset,
+                    vec![
+                        egui::Event::PointerMoved(at),
+                        egui::Event::PointerButton {
+                            pos: at,
+                            button: egui::PointerButton::Primary,
+                            pressed,
+                            modifiers: egui::Modifiers::NONE,
+                        },
+                    ],
+                );
+            }
+        }
+        let ctx = egui::Context::default();
+        crate::theme::install(&ctx);
+        let mut controls = Controls::default();
+        let first = paint(&mut controls, &ctx, true, 0.0, vec![]);
+        assert!(!controls.settings.temporal_energy);
+        let toggle = label(&first, "Temporal detail smoothing");
+        label(
+            &first,
+            "Experimental. May remove faint detail visible in only one capture.",
+        );
+        click(&mut controls, &ctx, true, toggle, 0.1);
+        assert!(controls.settings.temporal_energy);
+        paint(&mut controls, &ctx, false, 0.2, vec![]);
+        click(&mut controls, &ctx, false, toggle, 0.3);
+        assert!(
+            controls.settings.temporal_energy,
+            "disabled controls must not alter a running recipe"
+        );
+        let enabled = paint(&mut controls, &ctx, true, 0.4, vec![]);
+        click(&mut controls, &ctx, true, label(&enabled, "Reset"), 0.5);
+        assert_eq!(controls.settings, RenderSettings::default());
+        assert!(!controls.settings.temporal_energy);
     }
 }

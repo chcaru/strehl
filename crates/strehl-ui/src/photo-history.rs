@@ -209,30 +209,107 @@ pub(crate) fn save_version(
     fs::create_dir_all(root)?;
     let destination = payload_path(root, &version.id)?;
     let temporary = root.join(format!("{}.pending", version.id));
+    write_version_payload(&temporary, &destination, &body, cancelled)?;
+    // The immutable recipe is already safe. A small navigation derivative is
+    // best-effort and must never turn a successful version save into failure.
+    let job = crate::development_job::DevelopmentJob::native(image.clone(), recipe);
+    let _ = crate::preview::explorer::save_version(root, &version, &job);
+    Ok(version)
+}
+
+fn write_version_payload(
+    temporary: &Path,
+    destination: &Path,
+    body: &[u8],
+    cancelled: &AtomicBool,
+) -> Result<()> {
+    // Only clean up a pending file after this writer has created it.
+    let mut file = OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(temporary)?;
     let result = (|| {
-        let mut file = OpenOptions::new()
-            .write(true)
-            .create_new(true)
-            .open(&temporary)?;
-        file.write_all(&body)?;
+        file.write_all(body)?;
         file.sync_all()?;
         drop(file);
         ensure!(
             !cancelled.load(Ordering::Relaxed),
             "Photograph history cancelled"
         );
-        // A random immutable filename and no-replacement hard link make a
-        // competing publisher unable to overwrite an existing version.
-        fs::hard_link(&temporary, &destination)?;
+        // Publish only the complete, synced payload, without replacing a
+        // version published by another writer.
+        publish_version(temporary, destination)?;
         Ok(())
     })();
-    let _ = fs::remove_file(&temporary);
-    result?;
-    // The immutable recipe is already safe. A small navigation derivative is
-    // best-effort and must never turn a successful version save into failure.
-    let job = crate::development_job::DevelopmentJob::native(image.clone(), recipe);
-    let _ = crate::preview::explorer::save_version(root, &version, &job);
-    Ok(version)
+    // A successful Windows move relinquishes the pending name. Another writer
+    // may already have reused it, so only clean it up after a failed move.
+    // A successful hard link on other platforms still leaves our pending name.
+    if cfg!(not(windows)) || result.is_err() {
+        let _ = fs::remove_file(temporary);
+    }
+    result
+}
+
+fn publish_version(temporary: &Path, destination: &Path) -> std::io::Result<()> {
+    #[cfg(windows)]
+    {
+        use std::os::windows::ffi::OsStrExt;
+        use windows_sys::Win32::Storage::FileSystem::MoveFileExW;
+
+        fn extended_path(path: &Path) -> std::io::Result<PathBuf> {
+            let name = path.file_name().ok_or_else(|| {
+                std::io::Error::new(
+                    std::io::ErrorKind::InvalidInput,
+                    "A photograph version path needs a file name",
+                )
+            })?;
+            let parent = path
+                .parent()
+                .filter(|parent| !parent.as_os_str().is_empty())
+                .unwrap_or_else(|| Path::new("."));
+            // Windows canonicalize supplies an extended absolute path. Resolve
+            // only the existing directory; the destination must remain absent.
+            Ok(fs::canonicalize(parent)?.join(name))
+        }
+
+        // Validate both original paths before resolving them: Win32 must never
+        // silently interpret an embedded NUL as the end of a different path.
+        for path in [temporary, destination] {
+            if path.as_os_str().encode_wide().any(|unit| unit == 0) {
+                return Err(std::io::Error::new(
+                    std::io::ErrorKind::InvalidInput,
+                    "A photograph version path contains a NUL character",
+                ));
+            }
+        }
+
+        let source_path = extended_path(temporary)?;
+        let destination_path = extended_path(destination)?;
+        if source_path.parent() != destination_path.parent() {
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::InvalidInput,
+                "A photograph version must stay in its pending directory",
+            ));
+        }
+        let source: Vec<u16> = source_path.as_os_str().encode_wide().chain([0]).collect();
+        let destination: Vec<u16> = destination_path
+            .as_os_str()
+            .encode_wide()
+            .chain([0])
+            .collect();
+        // SAFETY: both owned UTF-16 buffers have one terminating NUL and no
+        // interior NULs, and remain alive throughout the call. Flags 0 omits
+        // REPLACE_EXISTING and COPY_ALLOWED, so a competing final name cannot
+        // be overwritten and publication cannot fall back to a partial copy.
+        if unsafe { MoveFileExW(source.as_ptr(), destination.as_ptr(), 0) } == 0 {
+            return Err(std::io::Error::last_os_error());
+        }
+        Ok(())
+    }
+    #[cfg(not(windows))]
+    {
+        fs::hard_link(temporary, destination)
+    }
 }
 
 pub(crate) fn read_version(

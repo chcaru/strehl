@@ -275,3 +275,29 @@ fn edit_version_commands_require_valid_names_ids_and_current_revision() {
         );
     }
 }
+
+#[test]
+fn metadata_is_read_only_but_shutdown_requires_a_current_revision() {
+    let read = AgentRequest {
+        expected_revision: None,
+        command: AgentCommand::Metadata { frame: 109 },
+    };
+    assert!(read.command.is_read_only());
+    assert!(read.validate().is_ok());
+    assert!(read.check_revision(12).is_ok());
+    for invalid in [
+        json!({"operation":"metadata","frame":-1}),
+        json!({"operation":"metadata","frame":1.5}),
+        json!({"operation":"metadata","frame":0,"path":"private.ARW"}),
+        json!({"operation":"metadata","frame":0,"output":"capture"}),
+        json!({"operation":"shutdown","force":true}),
+    ] {
+        assert!(serde_json::from_value::<AgentCommand>(invalid).is_err());
+    }
+    let mut stop = mutation(AgentCommand::Shutdown {});
+    assert!(!stop.command.is_read_only());
+    assert!(stop.check_revision(7).is_ok());
+    assert!(stop.check_revision(8).is_err());
+    stop.expected_revision = None;
+    assert!(stop.validate().is_err());
+}

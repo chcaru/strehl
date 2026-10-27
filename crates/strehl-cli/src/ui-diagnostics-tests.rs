@@ -83,6 +83,8 @@ fn real_buffer_maps_are_bounded_and_keep_flat_support_distinct_from_signal() {
                 size,
                 energy: Some(&texture),
                 variance: Some(&variance),
+                #[cfg(feature = "temporal-energy")]
+                absolute_floor: None,
                 floor_multiplier: 2.0,
                 weights: if frame == 0 { &flat } else { &texture },
             });

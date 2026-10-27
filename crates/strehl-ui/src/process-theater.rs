@@ -3494,6 +3494,7 @@ impl ProcessTheater {
             ("Fit", 42.0),
             ("Undo", 48.0),
             ("Redo", 48.0),
+            ("Camera metadata", 116.0),
         ];
         let mut x = rect.left();
         for (index, (label, width)) in controls.into_iter().enumerate() {
@@ -3503,7 +3504,7 @@ impl ProcessTheater {
             let cell = Rect::from_min_size(egui::pos2(x, rect.top()), egui::vec2(width, 22.0));
             x += width;
             let enabled = match index {
-                1 => input.frame_count > 0,
+                1 | 5 => input.frame_count > 0,
                 3 => self.can_undo(),
                 4 => self.can_redo(),
                 _ => true,
@@ -3562,6 +3563,7 @@ impl ProcessTheater {
                     4 => {
                         self.redo();
                     }
+                    5 => response.camera_metadata = Some(input.selected.min(input.frame_count - 1)),
                     _ => {}
                 }
             }
@@ -3572,6 +3574,7 @@ impl ProcessTheater {
                     1 => "Click or drag the capture thumbnails to sweep sources in the main viewer",
                     2 => "Reset image and linked detail magnification · double-click also resets",
                     3 => "Undo the last exploration gesture · Ctrl+Z",
+                    5 => "Read AF and optical metadata for the selected capture; no stack settings change",
                     _ => "Redo exploration · Ctrl+Shift+Z or Ctrl+Y",
                 });
         }

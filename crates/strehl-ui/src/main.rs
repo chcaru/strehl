@@ -6,6 +6,8 @@ mod agent_interface;
 mod app;
 #[path = "bracket-browser.rs"]
 mod bracket_browser;
+#[path = "camera-metadata.rs"]
+mod camera_metadata;
 #[path = "capture-axis.rs"]
 #[cfg(test)]
 mod capture_axis;
@@ -118,6 +120,13 @@ pub struct LaunchOptions {
     pub export: bool,
     pub projects: bool,
     pub agent: bool,
+    pub headless: bool,
+    pub offscreen: bool,
+    pub metadata: bool,
+    pub agent_session_out: Option<PathBuf>,
+    pub agent_grants: Vec<PathBuf>,
+    pub catalog: Option<PathBuf>,
+    pub output_directory: Option<PathBuf>,
 }
 
 fn parse_screenshot_ranges(value: &str) -> Option<Vec<[usize; 2]>> {
@@ -138,6 +147,9 @@ fn parse_screenshot_ranges(value: &str) -> Option<Vec<[usize; 2]>> {
 }
 
 fn main() -> eframe::Result {
+    if let Some(code) = agent_interface::run_control_from_args() {
+        std::process::exit(code);
+    }
     if let Some(code) = agent_interface::run_mcp_from_args() {
         std::process::exit(code);
     }
@@ -157,6 +169,32 @@ fn main() -> eframe::Result {
         }
         if arg == "--projects" {
             launch.projects = true;
+            continue;
+        }
+        if arg == "--metadata" {
+            launch.metadata = true;
+            continue;
+        }
+        if arg == "--offscreen-screenshot" {
+            launch.offscreen = true;
+            launch.screenshot = args.next().map(PathBuf::from);
+            if launch.screenshot.is_none() {
+                eprintln!("--offscreen-screenshot requires a PNG path");
+                std::process::exit(2);
+            }
+            continue;
+        }
+        if arg == "--headless" {
+            launch.headless = true;
+            launch.agent = true;
+            continue;
+        }
+        if arg == "--agent-grant" {
+            let Some(path) = args.next().map(PathBuf::from) else {
+                eprintln!("Missing directory for --agent-grant");
+                std::process::exit(2);
+            };
+            launch.agent_grants.push(path);
             continue;
         }
         if arg == "--agent" {
@@ -258,6 +296,9 @@ fn main() -> eframe::Result {
             continue;
         }
         let value = match arg.to_str() {
+            Some("--agent-session-out") => &mut launch.agent_session_out,
+            Some("--catalog") => &mut launch.catalog,
+            Some("--output-dir") => &mut launch.output_directory,
             Some("--source") => &mut launch.source,
             Some("--open-run") => &mut launch.open_run,
             Some("--browse") => &mut launch.browse,
@@ -267,7 +308,7 @@ fn main() -> eframe::Result {
             Some("--activity-log") => &mut launch.activity_log,
             _ => {
                 eprintln!(
-                    "Usage: Strehl [--source DIR] [--open-run DIR] [--browse DIR] [--preview IMAGE] [--engine EXE] [--process] [--edit | --export | --projects] [--agent] [--screenshot PNG]"
+                    "Usage: Strehl [--source DIR] [--open-run DIR] [--browse DIR] [--preview IMAGE] [--engine EXE] [--process] [--edit | --export | --projects] [--agent | --headless --agent-session-out JSON] [--agent-grant DIR] [--catalog JSON] [--output-dir DIR] [--screenshot PNG]\n       Strehl --control --session SESSION_JSON [--request JSON_FILE|-]"
                 );
                 std::process::exit(2);
             }
@@ -289,6 +330,28 @@ fn main() -> eframe::Result {
     if launch.screenshot_ranges.is_some() && launch.screenshot.is_none() {
         eprintln!("--screenshot-ranges requires --screenshot");
         std::process::exit(2);
+    }
+    if let Err(error) = app::validate_automation_launch(&mut launch) {
+        eprintln!("{error:#}");
+        std::process::exit(2);
+    }
+    if launch.offscreen {
+        match app::run_offscreen(launch) {
+            Ok(()) => return Ok(()),
+            Err(error) => {
+                eprintln!("Strehl offscreen: {error:#}");
+                std::process::exit(1);
+            }
+        }
+    }
+    if launch.headless {
+        match app::run_headless(launch) {
+            Ok(()) => return Ok(()),
+            Err(error) => {
+                eprintln!("Strehl headless: {error:#}");
+                std::process::exit(1);
+            }
+        }
     }
     let options = eframe::NativeOptions {
         viewport: eframe::egui::ViewportBuilder::default()

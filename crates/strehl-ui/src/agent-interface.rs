@@ -4,6 +4,10 @@ use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
 
+#[path = "agent-control.rs"]
+mod control;
+pub(crate) use control::run_control_from_args;
+
 #[path = "agent-bridge.rs"]
 mod bridge;
 #[path = "agent-mcp.rs"]
@@ -69,6 +73,12 @@ pub(crate) enum AdaptiveDevelopIntent {
 #[serde(tag = "operation", rename_all = "snake_case", deny_unknown_fields)]
 pub(crate) enum AgentCommand {
     Snapshot {},
+    /// Inspect one imported source without selecting it or opening a report.
+    Metadata {
+        frame: usize,
+    },
+    /// Save and close an idle headless workspace; completion is process exit.
+    Shutdown {},
     Probe {
         region: Region,
         #[serde(default = "default_sources")]
@@ -189,12 +199,15 @@ impl AgentCommand {
     pub(crate) fn is_read_only(&self) -> bool {
         matches!(
             self,
-            Self::Snapshot {} | Self::Probe { .. } | Self::Preview { .. }
+            Self::Snapshot {} | Self::Metadata { .. } | Self::Probe { .. } | Self::Preview { .. }
         )
     }
 
     pub(crate) fn validate(&self) -> Result<(), String> {
         match self {
+            // The current imported bracket bounds this zero-based index at dispatch.
+            // No caller-supplied source or output path is accepted.
+            Self::Metadata { .. } => Ok(()),
             Self::Probe {
                 region,
                 max_sources,

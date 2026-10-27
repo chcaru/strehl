@@ -485,7 +485,7 @@ field, and one MAD outlier pass. The coarse decimation ladder exists **only** to
 fine stage into capture range; all accuracy comes from the fine stage correlating the two
 full planes directly.
 
-*Solve*: `solve_global` — one weighted complex linear least squares over **all** measured
+*Solve*: `solve_global_in_component` - one weighted complex linear least squares over measured
 edges simultaneously, via normal equations plus Hermitian Cholesky with iterative
 refinement. Transforms are carried in **f64**, not f32.
 
@@ -495,9 +495,17 @@ negative control**: `solve_hops` with `max_span = 1` is the forbidden adjacent c
 asserted — do not ship it." It scores 40.342 plane px held-out against the global solve's
 6.758 px.
 
-Frames outside frame 0's connected component get `None` unless smoothing is on, in which
-case their placement is **extrapolation of the model, not a measurement**, and the module
-requires reports to say so.
+Normal alignment admits only the requested reference's measured connected component;
+other frames remain `None` even when smoothing is on. The numerical gauge is the
+smallest admitted original frame index, followed by an explicit rebase to the requested
+reference. Smoothness rows use only complete adjacent triples in original frame order
+inside that component; gaps are not compressed into new neighbors.
+
+The legacy research `solve_global` API retains its historical frame-0 behavior:
+smoothing can extrapolate outside measured reach. That is model extrapolation, and
+reports using that API must say so. Ordinary maps declare the measured-component
+policy in their strategy; cached old ordinary maps are recomputed, while explicitly
+named old ordinary maps are refused without replacement.
 
 ### The sidecar
 

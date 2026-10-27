@@ -5,6 +5,10 @@ desktop target; source import currently accepts Sony ARW brackets. The applicati
 includes its processing engine. Stacking runs on the CPU and the GPU draws the
 workspace. See the [build prerequisites](../../docs/desktop-build.md).
 
+For scripted work, use the [local control guide](../../docs/desktop-control.md)
+and [`strehl-control.py`](../../scripts/strehl-control.py) to launch a headless
+workspace, read state, inspect metadata, and send revision-checked commands.
+
 Build a source-inclusive package and launch the application from the repository
 root:
 
@@ -32,7 +36,9 @@ and [release checklist](../../docs/public-release.md).
    overrides. The desktop exposes the photographic pyramid controls described in
    the [settings audit](../../docs/desktop-settings-audit.md), rather than every
    research or alternative-backend CLI option.
-4. Choose an output destination and press **Stack**. The default output is a
+4. Choose an output destination and press **Stack**. New sessions default to
+   your Pictures/Strehl folder, independently of the launcher's working directory.
+   The default output is a
    full-resolution, 16-bit sRGB TIFF. Half-size output changes spatial sampling;
    it still uses every included capture. Each run gets a fresh output folder and
    log. **Stop** cancels the owned render process; a partial TIFF is not published
@@ -41,6 +47,15 @@ and [release checklist](../../docs/public-release.md).
    restores its photograph and recorded observations without rendering again.
    Source previews are withheld if the recorded source identities no longer match.
    Identity checks use ordered paths, sizes and modification times, not file hashes.
+
+**Experimental detail smoothing**
+
+Under **Adjust → Merge**, **Temporal detail smoothing** uses neighboring captures
+to guide the finest detail layers on the next stack. It defaults Off and saves
+with each stack recipe. It can reduce grain, but may remove faint detail visible
+in only one capture. Compare an Off result before retaining an On result. Use
+full-resolution output and a positive/default Noise gate, without source-range
+repairs. See the [mode guide](../../docs/temporal-energy.md).
 
 **Exploring the photograph**
 
@@ -145,3 +160,36 @@ Python nor a separately installed engine. Diagnostic launch options such as
 `--screenshot` are development tools. CPU paint timings exclude GPU presentation,
 decoding and operating-system input, so they do not measure end-to-end frame rate
 or interaction latency.
+
+## Camera metadata
+
+Select a capture on the timeline and click **Camera metadata**. The legacy
+**Sources** toolbar opens the same native panel. One background read loads the
+imported bracket; the panel follows the selected capture without another engine
+call. Click a focus-chart point to select that capture in the workspace.
+
+The panel shows the stored AF grid, exact hovered record bits and flags, and
+focus position/scalar A/scalar B progression across the bracket. Click a grid
+cell and choose **Selected AF cell** to follow its stored values. **Signed view
+(i16)** uses a two's-complement display interpretation on a fixed -32768 to
+32767 color scale; it does not establish the camera's arithmetic or depth units.
+Unavailable or incompatible frames leave gaps in the progression chart.
+
+Optical curves show all 16 shading, 16 distortion and 32 color-fringing samples
+against their stored indices. RAW settings and MakerNote settings remain separate.
+A zero setting does not erase a table or activate a correction. **Full capture
+details** expands the original values inside Strehl. The CLI's optional `--html`
+export remains available for a standalone report.
+
+JSON and worker logs live in fresh `metadata/strehl-*` folders under the selected
+output destination. **Refresh bracket metadata** rereads the bracket. Closing the
+panel or importing another bracket cancels its owned read; a replacement waits
+for that worker to finish. Reopening a completed snapshot reuses its cache.
+Inspection leaves the render recipe and source photographs unchanged.
+
+Source size and modification time are checked before and after reading; the
+entire RAW is not hashed. AF units, exact mapping onto the photograph, complete
+flag meanings and exposure-time freshness remain uncalibrated. Optical sample
+indices do not establish a radius, channel assignment or correction law.
+Unsupported, malformed, missing and unreadable metadata remain distinct; AF and
+optical outcomes are independent.

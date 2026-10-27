@@ -14,8 +14,8 @@ Strehl's implementation.
 ## Build and check a change
 
 Use the prerequisites and build commands in [README.md](README.md). Keep
-`Cargo.lock` in version control. Normal desktop builds do not enable experimental
-engine features.
+`Cargo.lock` in version control. The desktop includes experimental temporal-energy support, disabled by default
+in each saved stack recipe. Other experimental engine features remain disabled.
 
 Run checks appropriate to the files you change. For desktop work, useful checks
 include:

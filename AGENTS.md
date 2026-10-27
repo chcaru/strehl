@@ -22,6 +22,10 @@ it records rejected approaches as well as decisions.
 | Desktop or binary distribution | [Desktop README](crates/strehl-ui/README.md); [build guide](docs/desktop-build.md); [release checklist](docs/public-release.md) |
 | Pinned native research renderer | [Native workflow](docs/native-rendering.md); separate from normal CLI/desktop builds |
 
+For scripted desktop work, use [the local control interface](docs/desktop-control.md)
+and `scripts/strehl-control.py`. Use the helper's `screenshot` command for
+offscreen UI checks; do not drive the application with Computer Use.
+
 Historical citations to **AGENTS rule N** resolve to
 [engineering-ledger.md](docs/agents/engineering-ledger.md) at `#rule-N`, including
 `#rule-31b`. Original numbers, amendments and retractions remain there. Read the

@@ -14,6 +14,10 @@ anyhow.workspace = true
 rayon.workspace = true
 
 [features]
+# Isolated first-two-band temporal E/full-F experiment; no default path.
+temporal-energy = []
+# Experimental normalized spatial variance transport; runtime default off.
+spatial-noise-floor = []
 # Explicit experiment-only consumer hook; disabled in normal builds.
 m194h-pedestal-causality = []
 native-sensor-transfer = []
@@ -30,3 +34,8 @@ native-green-cue = []
 # Existing locked package, used only for experiment/test receipts.
 [dev-dependencies]
 serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
+
+# Bounded REA-a7c2-c numerical diagnostic, not a production path.
+[[example]]
+name = "noise-floor-oracle"
+path = "../../experiments/rea-a7c2-2026-10-24-c/noise-floor-oracle.rs"

@@ -1,3 +1,10 @@
+#[path = "app-headless.rs"]
+mod headless;
+pub(crate) use headless::{run_headless, validate_automation_launch};
+#[path = "app-offscreen.rs"]
+mod offscreen;
+pub(crate) use offscreen::run_offscreen;
+
 use crate::{
     LaunchOptions,
     bracket_browser::BracketBrowser,
@@ -18,6 +25,9 @@ use crate::{
 mod adaptive;
 #[path = "app-agent.rs"]
 mod agent;
+#[cfg(test)]
+#[path = "app-destination-tests.rs"]
+mod destination_tests;
 #[path = "app-editing.rs"]
 mod editing;
 #[path = "app-export.rs"]
@@ -26,6 +36,8 @@ mod export;
 mod frame_performance;
 #[path = "app-history.rs"]
 mod history;
+#[path = "output-destination.rs"]
+mod output_destination;
 #[path = "app-photo-history.rs"]
 mod photo_history;
 #[path = "app-presets.rs"]
@@ -102,6 +114,7 @@ pub struct StrehlApp {
     selected: usize,
     view: View,
     browser: SourceBrowser,
+    camera_metadata: crate::camera_metadata::CameraMetadata,
     draft_job: Option<DraftJob>,
     draft_viewer: Viewer,
     draft_info: Option<String>,
@@ -180,6 +193,10 @@ pub struct StrehlApp {
     reveal_requested_elapsed: Option<f64>,
     updates: usize,
     max_texture_side: u32,
+    headless: bool,
+    metadata_requested: bool,
+    headless_shutdown: bool,
+    agent_session_out: Option<PathBuf>,
 }
 
 impl StrehlApp {
@@ -194,8 +211,13 @@ impl StrehlApp {
         app
     }
     fn from_launch(max_texture_side: u32, launch: LaunchOptions) -> Self {
-        let catalog =
-            crate::workspace_history::Catalog::load(crate::workspace_history::default_path());
+        let isolated_state = launch.headless || launch.offscreen || launch.catalog.is_some();
+        let catalog = crate::workspace_history::Catalog::load(
+            launch
+                .catalog
+                .clone()
+                .or_else(crate::workspace_history::default_path),
+        );
         let mut app = Self {
             stack: None,
             scan: None,
@@ -203,6 +225,7 @@ impl StrehlApp {
             selected: 0,
             view: View::Sources,
             browser: SourceBrowser::default(),
+            camera_metadata: Default::default(),
             draft_job: None,
             draft_viewer: Viewer::default(),
             draft_info: None,
@@ -259,7 +282,7 @@ impl StrehlApp {
             dialog: None,
             bracket_browser: BracketBrowser::default(),
             engine: launch.engine.or_else(find_engine),
-            output: default_output(),
+            output: launch.output_directory.unwrap_or_else(default_output),
             controls: Controls::default(),
             progress: PipelineProgress::default(),
             logs: VecDeque::new(),
@@ -281,7 +304,18 @@ impl StrehlApp {
             reveal_requested_elapsed: None,
             updates: 0,
             max_texture_side,
+            headless: launch.headless,
+            metadata_requested: launch.metadata,
+            headless_shutdown: false,
+            agent_session_out: launch.agent_session_out,
         };
+        if isolated_state {
+            app.editor.recovery_root = app
+                .catalog
+                .path
+                .as_ref()
+                .map(|p| p.with_extension("recovered-edits"));
+        }
         app.editor.restore_recoveries();
         if let Some(source) = launch.source {
             app.import(source);
@@ -359,6 +393,9 @@ impl StrehlApp {
         if app.screenshot_ranges.is_some() {
             app.process_view = true;
         }
+        for path in launch.agent_grants {
+            app.agent.add_launch_grant(path);
+        }
         if launch.agent {
             app.process_view = true;
             app.sidebar = Some(workspace::Sidebar::Agent);
@@ -396,6 +433,7 @@ impl StrehlApp {
         self.selected = 0;
         self.view = View::Sources;
         self.browser.reset(self.epoch);
+        self.camera_metadata.reset();
         if let Some(job) = &self.draft_job {
             job.cancel();
             self.draft_cancelled = true;
@@ -612,6 +650,7 @@ impl StrehlApp {
         }
     }
     fn poll(&mut self, ctx: &egui::Context) {
+        self.camera_metadata.poll(ctx);
         if let Some(result) = self
             .replay
             .as_ref()
@@ -628,6 +667,7 @@ impl StrehlApp {
                     {
                         self.stack = None;
                         self.browser.reset(self.epoch);
+                        self.camera_metadata.reset();
                         self.source_viewer = Viewer::default();
                         self.error = Some("Source bracket changed. Saved photograph and observations remain available; source previews are withheld.".into());
                     }
@@ -684,6 +724,10 @@ impl StrehlApp {
                     self.error = Some(error);
                 }
             }
+        }
+        if self.metadata_requested && self.scan.is_none() {
+            self.metadata_requested = false;
+            self.inspect_camera_metadata(self.selected, ctx);
         }
         self.follow_current_frame();
         self.sync_workbench_phase();
@@ -1193,9 +1237,13 @@ impl StrehlApp {
     }
     fn destination_controls(&mut self, ui: &mut egui::Ui) {
         ui.label(
-            RichText::new(short_path(&self.output))
-                .size(11.0)
-                .color(MUTED),
+            RichText::new(if self.output.as_os_str().is_empty() {
+                "Choose an output folder".into()
+            } else {
+                short_path(&self.output)
+            })
+            .size(11.0)
+            .color(MUTED),
         )
         .on_hover_text(self.output.display().to_string());
         if ui
@@ -1724,6 +1772,17 @@ impl StrehlApp {
                         self.held_pair = None;
                         self.canvas_mode = None;
                     }
+                    if self.view == View::Sources {
+                        let capture = self.stack.as_ref().and_then(|stack| stack.frames.get(self.selected)).cloned();
+                        let hint = capture.as_ref().map_or_else(|| "Select a capture first".into(), |frame| {
+                            format!("Read AF and optical metadata for selected capture {}: {}. This does not change the stack.", self.selected + 1, frame.path.file_name().unwrap_or_default().to_string_lossy())
+                        });
+                        if ui.add_enabled(capture.is_some(), egui::Button::new("Camera metadata"))
+                            .on_hover_text(hint).clicked()
+                        {
+                            self.inspect_camera_metadata(self.selected, ctx);
+                        }
+                    }
                     if ui
                         .add_enabled_ui(
                             self.draft_viewer.texture.is_some() || self.draft_job.is_some(),
@@ -2101,6 +2160,28 @@ impl StrehlApp {
                 DiagnosticKind::Reconstructed => 6,
             });
     }
+    fn inspect_camera_metadata(&mut self, index: usize, ctx: &egui::Context) {
+        if let Some(stack) = self
+            .stack
+            .as_ref()
+            .filter(|stack| index < stack.frames.len())
+        {
+            self.camera_metadata.open_bracket(
+                self.epoch,
+                stack.directory.clone(),
+                stack.frames.clone(),
+                self.output.clone(),
+                ctx,
+            );
+            let view = self.view;
+            self.inspect_frame(index);
+            self.view = view;
+        } else {
+            self.error = Some(
+                "The source bracket is unavailable. Reopen it to inspect camera metadata.".into(),
+            );
+        }
+    }
     fn show_process(&mut self, ctx: &egui::Context) {
         let edit_enabled = self.sidebar == Some(workspace::Sidebar::Edit)
             && self.editor.loaded.is_some()
@@ -2228,6 +2309,9 @@ impl StrehlApp {
                 response
             })
             .inner;
+        if let Some(index) = response.camera_metadata {
+            self.inspect_camera_metadata(index, ctx);
+        }
         self.apply_process_response(response, count);
     }
     fn apply_process_response(&mut self, response: process_space::Response, count: usize) {
@@ -2328,6 +2412,8 @@ impl StrehlApp {
             && self.editor.developing.is_none()
             && self.editor.viewport.settled()
             && self.agent.starting.is_none()
+            && !self.metadata_requested
+            && !self.camera_metadata.is_loading()
             && reveal_ready
             && self.draft_job.is_none()
             && !self.draft_requested
@@ -2488,6 +2574,12 @@ impl StrehlApp {
         }
         self.status_bar(ctx);
         self.workspace(ctx);
+        let metadata_frame = self.preview_target();
+        if let Some(index) = self.camera_metadata.show(ctx, metadata_frame) {
+            let view = self.view;
+            self.inspect_frame(index);
+            self.view = view;
+        }
         self.observe_edits(ctx);
         let layout = self.process_space.layout();
         if layout != self.catalog.layout && !ctx.input(|i| i.pointer.primary_down()) {
@@ -2653,9 +2745,7 @@ fn is_image(p: &Path) -> bool {
     })
 }
 fn default_output() -> PathBuf {
-    let current = std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
-    let outputs = current.join("outputs");
-    if outputs.is_dir() { outputs } else { current }
+    output_destination::default_output()
 }
 fn find_engine() -> Option<PathBuf> {
     crate::engine::bundled_executable()

@@ -270,3 +270,28 @@ fn adjust_keeps_launch_above_scrolling_recipe_and_cancelled_import_preserves_cur
     assert_eq!(serde_json::to_value(&app.catalog).unwrap(), catalog);
     assert!(app.job.is_none());
 }
+
+#[test]
+fn temporal_energy_conflict_blocks_the_actual_launch_before_catalog_changes() {
+    let (mut app, _files) = fixture();
+    app.controls.settings.temporal_energy = true;
+    app.controls.gate = Some(0.0);
+    let catalog = serde_json::to_value(&app.catalog).unwrap();
+    assert_eq!(
+        app.stack_start_blocker(),
+        Some("Temporal detail smoothing needs a Noise gate above zero")
+    );
+    app.start_render();
+    assert!(app.job.is_none() && app.pending_run.is_none() && app.started.is_none());
+    assert_eq!(serde_json::to_value(&app.catalog).unwrap(), catalog);
+    app.controls.gate = None;
+    app.controls.settings.binned = true;
+    assert_eq!(
+        app.stack_start_blocker(),
+        Some("Turn off Half-size TIFF to use temporal detail smoothing")
+    );
+    app.start_render();
+    assert!(app.job.is_none() && app.pending_run.is_none());
+    app.controls.settings.binned = false;
+    assert!(app.stack_start_blocker().is_none());
+}

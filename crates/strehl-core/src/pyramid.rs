@@ -74,79 +74,128 @@ use rayon::prelude::*;
 mod observer;
 pub use observer::{AccumulatorObservation, BandObservation, FoldPhase, MergeObserver};
 
+#[cfg(feature = "temporal-energy")]
+#[path = "temporal-energy.rs"]
+pub mod temporal_energy;
+
 #[cfg(feature = "m194h-pedestal-causality")]
 pub mod m194h {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/m194h-pedestal-causality/core-hook.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/m194h-pedestal-causality/core-hook.rs"
+    ));
 }
 
 #[cfg(feature = "native-sensor-transfer")]
 pub mod native_sensor_transfer {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-sensor-transfer/source/core-hook.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-sensor-transfer/source/core-hook.rs"
+    ));
 }
 
 #[cfg(feature = "native-green-cue")]
 pub mod native_green_cue {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-green-cue/implementation.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-green-cue/implementation.rs"
+    ));
 }
 
 #[cfg(feature = "native-correction-variance")]
 pub mod correction_variance_diagnostic {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-correction-variance/core-bridge.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-correction-variance/core-bridge.rs"
+    ));
 }
 
 #[cfg(feature = "native-correction-variance")]
 pub mod donor_consistency_diagnostic {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/core-bridge.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/donor-consistency/core-bridge.rs"
+    ));
 }
 
 #[cfg(feature = "native-correction-variance")]
 pub mod shared_source_field_diagnostic {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/shared-source-field/core-bridge.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/shared-source-field/core-bridge.rs"
+    ));
 }
 
 #[cfg(feature = "native-correction-variance")]
 pub mod cross_scale_source_prior_diagnostic {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/cross-scale-source-prior/core-bridge.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/cross-scale-source-prior/core-bridge.rs"
+    ));
 }
 
 #[cfg(feature = "native-correction-variance")]
 pub mod garnet_spatial_trace {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/garnet-spatial-trace/core-observer.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/garnet-spatial-trace/core-observer.rs"
+    ));
 }
 
 #[cfg(feature = "native-correction-variance")]
 pub mod optical_support_veto_diagnostic {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/optical-support-veto/core-bridge.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/optical-support-veto/core-bridge.rs"
+    ));
 }
 
 #[cfg(feature = "native-correction-variance")]
 pub mod rb_own_guide_diagnostic {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/rb-own-guide/core-bridge.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/rb-own-guide/core-bridge.rs"
+    ));
 }
 
 #[cfg(feature = "native-correction-variance")]
 pub mod real_source_contributions {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/real-source-contributions/core-bridge.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/real-source-contributions/core-bridge.rs"
+    ));
 }
 
 #[cfg(feature = "native-correction-variance")]
 pub mod band_source_agreement_diagnostic {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/band-source-agreement/core-bridge.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/band-source-agreement/core-bridge.rs"
+    ));
 }
 
 #[cfg(feature = "native-correction-variance")]
 pub mod chip_shared_source_observation_diagnostic {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/chip-shared-source-observation/core-bridge.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/chip-shared-source-observation/core-bridge.rs"
+    ));
 }
 
 #[cfg(feature = "native-correction-variance")]
 pub mod rb_residual_guard_diagnostic {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/rb-residual-guard/core-bridge.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/rb-residual-guard/core-bridge.rs"
+    ));
 }
 
 #[cfg(feature = "native-correction-variance")]
 pub mod fine_support_candidate {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/fine-support-guidance/core-candidate.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/fine-support-guidance/core-candidate.rs"
+    ));
 }
 
 /// The 5-tap binomial generating kernel, `[1, 4, 6, 4, 1] / 16`.
@@ -232,8 +281,16 @@ pub const DEFAULT_BANDS: usize = 7;
 /// `scratch` must hold at least `dst_size.width * src_size.height` floats.
 pub fn reduce(src: &[f32], src_size: LevelSize, dst: &mut [f32], scratch: &mut [f32]) {
     let dst_size = src_size.reduced();
-    assert_eq!(src.len(), src_size.pixels(), "reduce: source is not level-sized");
-    assert_eq!(dst.len(), dst_size.pixels(), "reduce: destination is not level-sized");
+    assert_eq!(
+        src.len(),
+        src_size.pixels(),
+        "reduce: source is not level-sized"
+    );
+    assert_eq!(
+        dst.len(),
+        dst_size.pixels(),
+        "reduce: destination is not level-sized"
+    );
     let (sw, sh) = (src_size.width, src_size.height);
     let dw = dst_size.width;
     assert!(scratch.len() >= dw * sh, "reduce: scratch is too small");
@@ -299,8 +356,16 @@ pub fn expand(
     dst_size: LevelSize,
     scratch: &mut [f32],
 ) {
-    assert_eq!(src.len(), src_size.pixels(), "expand: source is not level-sized");
-    assert_eq!(dst.len(), dst_size.pixels(), "expand: destination is not level-sized");
+    assert_eq!(
+        src.len(),
+        src_size.pixels(),
+        "expand: source is not level-sized"
+    );
+    assert_eq!(
+        dst.len(),
+        dst_size.pixels(),
+        "expand: destination is not level-sized"
+    );
     assert_eq!(
         dst_size.reduced(),
         src_size,
@@ -348,7 +413,9 @@ fn clamp_idx(i: isize, n: usize) -> usize {
 fn expand_tap(row: &[f32], n: usize, x: usize) -> f32 {
     let c = x / 2;
     if x % 2 == 0 {
-        0.125 * row[clamp_idx(c as isize - 1, n)] + 0.75 * row[c] + 0.125 * row[clamp_idx(c as isize + 1, n)]
+        0.125 * row[clamp_idx(c as isize - 1, n)]
+            + 0.75 * row[c]
+            + 0.125 * row[clamp_idx(c as isize + 1, n)]
     } else {
         0.5 * (row[c] + row[clamp_idx(c as isize + 1, n)])
     }
@@ -406,7 +473,11 @@ impl Pyramid {
 
     /// Decompose `src` into this pyramid, reusing its allocation.
     pub fn build(&mut self, src: &[f32], ws: &mut Workspace) {
-        assert_eq!(src.len(), self.sizes[0].pixels(), "pyramid: source is not level-0 sized");
+        assert_eq!(
+            src.len(),
+            self.sizes[0].pixels(),
+            "pyramid: source is not level-0 sized"
+        );
         let n = self.levels();
         // Gaussian levels first, into the pyramid's own storage.
         self.data[0].copy_from_slice(src);
@@ -486,7 +557,11 @@ impl Pyramid {
     /// per-pixel noise variance, and any weight field a caller wants carried to
     /// coarser grids.
     pub fn build_gaussian(&mut self, src: &[f32], ws: &mut Workspace) {
-        assert_eq!(src.len(), self.sizes[0].pixels(), "pyramid: source is not level-0 sized");
+        assert_eq!(
+            src.len(),
+            self.sizes[0].pixels(),
+            "pyramid: source is not level-0 sized"
+        );
         self.data[0].copy_from_slice(src);
         for k in 1..self.levels() {
             let (lo, hi) = self.data.split_at_mut(k);
@@ -575,7 +650,11 @@ impl BandGain {
         // fixed 256.
         let n = (MIN_LEVEL_EXTENT << bands.min(12)).max(256);
         let sizes = level_sizes(n, n, bands);
-        debug_assert_eq!(sizes.len(), bands + 1, "the probe is too small for {bands} bands");
+        debug_assert_eq!(
+            sizes.len(),
+            bands + 1,
+            "the probe is too small for {bands} bands"
+        );
         let mut ws = Workspace::new(&sizes);
         let mut pyr = Pyramid::zeros(&sizes);
 
@@ -591,7 +670,8 @@ impl BandGain {
         let mut acc = vec![0.0f64; sizes.len()];
         let mut counts = vec![0usize; sizes.len()];
         for r in 0..REALISATIONS {
-            let mut state: u64 = 0x2545_F491_4F6C_DD1D ^ (r as u64).wrapping_mul(0x9E37_79B9_7F4A_7C15);
+            let mut state: u64 =
+                0x2545_F491_4F6C_DD1D ^ (r as u64).wrapping_mul(0x9E37_79B9_7F4A_7C15);
             let mut field: Vec<f32> = (0..n * n)
                 .map(|_| {
                     // The band gain of a linear operator depends on the input's
@@ -1481,6 +1561,8 @@ pub struct BandMerge {
     /// artifact suppression rather than resolution.
     sig_lv: Vec<Vec<f32>>,
     frames: u32,
+    #[cfg(feature = "temporal-energy")]
+    temporal_source_range: Option<std::ops::Range<usize>>,
     /// Frames whose contribution was entirely below the noise floor at every
     /// level. Reported, because a stack where this is large is one where the
     /// gate is wrong.
@@ -1573,12 +1655,17 @@ impl BandMerge {
         }
         let sizes = level_sizes(width, height, cfg.bands);
         let nl = sizes.len();
-        let per_level = || -> Vec<Vec<f32>> { sizes.iter().map(|s| vec![0.0; s.pixels()]).collect() };
+        let per_level =
+            || -> Vec<Vec<f32>> { sizes.iter().map(|s| vec![0.0; s.pixels()]).collect() };
         Self {
             cfg,
             planes,
-            num: (0..nl * planes).map(|i| vec![0.0; sizes[i / planes].pixels()]).collect(),
-            usum: (0..nl * planes).map(|i| vec![0.0; sizes[i / planes].pixels()]).collect(),
+            num: (0..nl * planes)
+                .map(|i| vec![0.0; sizes[i / planes].pixels()])
+                .collect(),
+            usum: (0..nl * planes)
+                .map(|i| vec![0.0; sizes[i / planes].pixels()])
+                .collect(),
             den: per_level(),
             fkey: match cfg.fallback {
                 Fallback::Mean => Vec::new(),
@@ -1603,13 +1690,15 @@ impl BandMerge {
             // Seeded at the identities so the first frame sets both, rather
             // than seeding from frame 0 and special-casing it.
             lo: match cfg.hull.bounds() {
-                true => (0..planes).map(|_| vec![f32::INFINITY; sizes[0].pixels()]).collect(),
+                true => (0..planes)
+                    .map(|_| vec![f32::INFINITY; sizes[0].pixels()])
+                    .collect(),
                 false => Vec::new(),
             },
             hi: match cfg.hull.bounds() {
-                true => {
-                    (0..planes).map(|_| vec![f32::NEG_INFINITY; sizes[0].pixels()]).collect()
-                }
+                true => (0..planes)
+                    .map(|_| vec![f32::NEG_INFINITY; sizes[0].pixels()])
+                    .collect(),
                 false => Vec::new(),
             },
             // Coarser-level hulls, indexed `(k - 1) * planes + c` for
@@ -1650,6 +1739,8 @@ impl BandMerge {
                 Vec::new()
             },
             frames: 0,
+            #[cfg(feature = "temporal-energy")]
+            temporal_source_range: None,
             // Measured for the depth this plane geometry ACTUALLY reaches, not
             // for `cfg.bands`: `level_sizes` truncates a shallow plane, and a
             // gain vector measured for the requested depth would then be longer
@@ -1701,9 +1792,7 @@ impl BandMerge {
             * (2 * planes
                 + 1
                 + usize::from(cfg.select == SelectMode::HardMax)
-                + usize::from(cfg.fallback != Fallback::Mean)
-                    * cfg.fallback_slots()
-                    * (planes + 1))
+                + usize::from(cfg.fallback != Fallback::Mean) * cfg.fallback_slots() * (planes + 1))
             + usize::from(cfg.hull.bounds()) * 2 * planes * sizes[0].pixels()
     }
 
@@ -1759,6 +1848,10 @@ impl BandMerge {
             values.fill(0.0);
         }
         self.frames = 0;
+        #[cfg(feature = "temporal-energy")]
+        {
+            self.temporal_source_range = None;
+        }
     }
 
     /// The band-noise floor to use at level `k`: the caller's measured value if
@@ -1860,50 +1953,125 @@ impl BandMerge {
         frame_beta: Option<&[f32]>,
         ws: &mut FrameWorkspace,
     ) {
-        self.add_frame_with_gain_impl(planes,luma,variance,frame_beta,ws,
-            #[cfg(feature = "native-green-cue")] None,
-            #[cfg(feature = "native-correction-variance")] fine_support_candidate::environment_mode(), None);
+        self.add_frame_with_gain_impl(
+            planes,
+            luma,
+            variance,
+            frame_beta,
+            ws,
+            #[cfg(feature = "native-green-cue")]
+            None,
+            #[cfg(feature = "native-correction-variance")]
+            fine_support_candidate::environment_mode(),
+            None,
+            #[cfg(feature = "temporal-energy")]
+            None,
+        );
     }
 
     /// The ordinary fold with a read-only observer at existing work boundaries.
     /// Observations return nothing and are not part of any numerical decision.
     pub fn add_frame_with_gain_observed(
-        &mut self, planes: &[&[f32]], luma: &[f32], variance: &[f32],
-        frame_beta: Option<&[f32]>, ws: &mut FrameWorkspace, observer: &dyn MergeObserver,
+        &mut self,
+        planes: &[&[f32]],
+        luma: &[f32],
+        variance: &[f32],
+        frame_beta: Option<&[f32]>,
+        ws: &mut FrameWorkspace,
+        observer: &dyn MergeObserver,
     ) {
-        self.add_frame_with_gain_impl(planes,luma,variance,frame_beta,ws,
-            #[cfg(feature = "native-green-cue")] None,
-            #[cfg(feature = "native-correction-variance")] fine_support_candidate::environment_mode(), Some(observer));
+        self.add_frame_with_gain_impl(
+            planes,
+            luma,
+            variance,
+            frame_beta,
+            ws,
+            #[cfg(feature = "native-green-cue")]
+            None,
+            #[cfg(feature = "native-correction-variance")]
+            fine_support_candidate::environment_mode(),
+            Some(observer),
+            #[cfg(feature = "temporal-energy")]
+            None,
+        );
     }
 
     /// Explicit experimental mode for generated controls. Ordinary consumers
     /// use the validated, default-off environment route above.
     #[cfg(feature = "native-correction-variance")]
     pub fn add_frame_with_fine_support(
-        &mut self, planes: &[&[f32]], luma: &[f32], variance: &[f32],
-        frame_beta: Option<&[f32]>, ws: &mut FrameWorkspace, mode: fine_support_candidate::Mode,
+        &mut self,
+        planes: &[&[f32]],
+        luma: &[f32],
+        variance: &[f32],
+        frame_beta: Option<&[f32]>,
+        ws: &mut FrameWorkspace,
+        mode: fine_support_candidate::Mode,
     ) {
-        self.add_frame_with_gain_impl(planes,luma,variance,frame_beta,ws,
-            #[cfg(feature = "native-green-cue")] None, mode, None);
+        self.add_frame_with_gain_impl(
+            planes,
+            luma,
+            variance,
+            frame_beta,
+            ws,
+            #[cfg(feature = "native-green-cue")]
+            None,
+            mode,
+            None,
+            #[cfg(feature = "temporal-energy")]
+            None,
+        );
     }
 
     #[cfg(feature = "native-green-cue")]
     pub fn add_frame_with_green_cue(
-        &mut self, planes: &[&[f32]], luma: &[f32], variance: &[f32],
-        frame_beta: Option<&[f32]>, ws: &mut FrameWorkspace, cue: &native_green_cue::Cue,
+        &mut self,
+        planes: &[&[f32]],
+        luma: &[f32],
+        variance: &[f32],
+        frame_beta: Option<&[f32]>,
+        ws: &mut FrameWorkspace,
+        cue: &native_green_cue::Cue,
     ) {
         let n = self.sizes[0].pixels();
-        assert_eq!(cue.energy.len(),n); assert_eq!(cue.variance.len(),n); assert_eq!(cue.valid.len(),n);
-        self.add_frame_with_gain_impl(planes,luma,variance,frame_beta,ws,Some(cue),
-            #[cfg(feature = "native-correction-variance")] fine_support_candidate::environment_mode(), None);
+        assert_eq!(cue.energy.len(), n);
+        assert_eq!(cue.variance.len(), n);
+        assert_eq!(cue.valid.len(), n);
+        self.add_frame_with_gain_impl(
+            planes,
+            luma,
+            variance,
+            frame_beta,
+            ws,
+            Some(cue),
+            #[cfg(feature = "native-correction-variance")]
+            fine_support_candidate::environment_mode(),
+            None,
+            #[cfg(feature = "temporal-energy")]
+            None,
+        );
     }
 
+    fn build_guide_fields(&self, luma: &[f32], variance: &[f32], ws: &mut FrameWorkspace) {
+        ws.luma.build(luma, &mut ws.ws);
+        ws.var.build_gaussian(variance, &mut ws.ws);
+        #[cfg(feature = "spatial-noise-floor")]
+        ws.spatial_noise_floor.prepare(variance, &self.sizes);
+    }
+
+    // Keep the optional temporal guide on the shared arithmetic seam.
+    #[cfg_attr(feature = "temporal-energy", allow(clippy::too_many_arguments))]
     fn add_frame_with_gain_impl(
-        &mut self, planes: &[&[f32]], luma: &[f32], variance: &[f32],
-        frame_beta: Option<&[f32]>, ws: &mut FrameWorkspace,
+        &mut self,
+        planes: &[&[f32]],
+        luma: &[f32],
+        variance: &[f32],
+        frame_beta: Option<&[f32]>,
+        ws: &mut FrameWorkspace,
         #[cfg(feature = "native-green-cue")] cue: Option<&native_green_cue::Cue>,
         #[cfg(feature = "native-correction-variance")] fine_mode: fine_support_candidate::Mode,
         observer: Option<&dyn MergeObserver>,
+        #[cfg(feature = "temporal-energy")] temporal: Option<&temporal_energy::Ready>,
     ) {
         assert_eq!(planes.len(), self.planes, "wrong number of planes");
         let n0 = self.sizes[0].pixels();
@@ -1911,10 +2079,12 @@ impl BandMerge {
         assert_eq!(variance.len(), n0);
 
         #[cfg(feature = "native-correction-variance")]
-        fine_support_candidate::validate_config(fine_mode,self.cfg);
+        fine_support_candidate::validate_config(fine_mode, self.cfg);
         #[cfg(all(feature = "native-correction-variance", feature = "native-green-cue"))]
-        assert!(fine_mode == fine_support_candidate::Mode::Off || cue.is_none(),
-            "fine support cannot combine with the original-CFA green cue");
+        assert!(
+            fine_mode == fine_support_candidate::Mode::Off || cue.is_none(),
+            "fine support cannot combine with the original-CFA green cue"
+        );
 
         #[cfg(feature = "m194h-pedestal-causality")]
         m194h::begin_frame(self, frame_beta);
@@ -1923,24 +2093,36 @@ impl BandMerge {
         native_sensor_transfer::begin_frame(self, frame_beta);
 
         // 1. The selection pyramid, and the noise pyramid beside it.
-        if let Some(observer) = observer { observer.phase(FoldPhase::PyramidStarted); }
-        ws.luma.build(luma, &mut ws.ws);
-        ws.var.build_gaussian(variance, &mut ws.ws);
-        if let Some(observer) = observer { observer.phase(FoldPhase::PyramidReady); }
+        if let Some(observer) = observer {
+            observer.phase(FoldPhase::PyramidStarted);
+        }
+        self.build_guide_fields(luma, variance, ws);
+        #[cfg(all(feature = "temporal-energy", feature = "spatial-noise-floor"))]
+        if temporal.is_some() {
+            assert!(
+                ws.spatial_noise_floor.level(0).is_none(),
+                "temporal experiment cannot combine an active spatial floor"
+            );
+        }
+        if let Some(observer) = observer {
+            observer.phase(FoldPhase::PyramidReady);
+        }
 
         // 2. Per band, a noise-corrected local energy, then a weight.
         let nb = self.sizes.len() - 1;
         for k in 0..nb {
-            if let Some(observer) = observer { observer.phase(FoldPhase::FocusStarted(k)); }
+            if let Some(observer) = observer {
+                observer.phase(FoldPhase::FocusStarted(k));
+            }
             let sz = self.sizes[k];
             let px = sz.pixels();
             let lv = ws.luma.level(k);
             let sq = &mut ws.sq[..px];
-            sq.par_iter_mut().zip(lv).for_each(|(s, l)| *s = l * l);
-            // Smooth the squared coefficients with the same binomial kernel,
-            // at the same scale. An unsmoothed |L| is a single noisy sample and
-            // makes the weight field as noisy as the data.
-            smooth5(sq, sz, &mut ws.smooth_scratch);
+            band_energy(lv, sz, sq, &mut ws.smooth_scratch);
+            #[cfg(feature = "temporal-energy")]
+            if let Some(band) = temporal.and_then(|ready| ready.band(k)) {
+                sq.copy_from_slice(&band.energy);
+            }
             // The coarsest `mean_coarse` bands are averaged, not selected: see
             // `DEFAULT_MEAN_COARSE`. Zeroing the weight routes every coefficient
             // through the unweighted fallback in `finish_level`, which is the
@@ -1967,13 +2149,20 @@ impl BandMerge {
                 // weight bit for bit: see `select_weight`.
                 let r_floor = significance_floor(gate) * self.cfg.significance_scale;
                 let vv = ws.var.level(k);
+                #[cfg(feature = "spatial-noise-floor")]
+                let vv = ws.spatial_noise_floor.level(k).unwrap_or(vv);
                 w.par_iter_mut()
                     .zip(sq.par_iter())
                     .zip(vv)
-                    .for_each(|((w, e), v)| {
+                    .enumerate()
+                    .for_each(|(_i, ((w, e), v))| {
                         // The floor at this band's scale: the level-0 variance
                         // carried down to this grid, times the measured band gain.
-                        let floor = gate * beta * v.max(0.0);
+                        let floor = band_floor(gate, beta, *v);
+                        #[cfg(feature = "temporal-energy")]
+                        let floor = temporal
+                            .and_then(|ready| ready.band(k))
+                            .map_or(floor, |band| band.floor[_i]);
                         match self.cfg.admission {
                             AdmissionMode::HardFloor => {
                                 let excess = (*e - floor).max(0.0);
@@ -1990,15 +2179,17 @@ impl BandMerge {
             if k == 0 && !averaged {
                 if let Some(cue) = cue {
                     let gate = self.cfg.gate;
-                    let p = self.cfg.exponent_at(k,nb);
-                    let r_floor = significance_floor(gate)*self.cfg.significance_scale;
-                    w.par_iter_mut().enumerate().for_each(|(i,w)| {
+                    let p = self.cfg.exponent_at(k, nb);
+                    let r_floor = significance_floor(gate) * self.cfg.significance_scale;
+                    w.par_iter_mut().enumerate().for_each(|(i, w)| {
                         if cue.valid[i] {
                             let e = cue.energy[i];
-                            let floor = gate*cue.variance[i];
+                            let floor = gate * cue.variance[i];
                             *w = match self.cfg.admission {
-                                AdmissionMode::HardFloor => select_weight((e-floor).max(0.0),floor,p,r_floor),
-                                AdmissionMode::FloorPedestalV1 => pedestal_weight(e,floor,p),
+                                AdmissionMode::HardFloor => {
+                                    select_weight((e - floor).max(0.0), floor, p, r_floor)
+                                }
+                                AdmissionMode::FloorPedestalV1 => pedestal_weight(e, floor, p),
                             };
                         }
                     });
@@ -2006,26 +2197,72 @@ impl BandMerge {
             }
             #[cfg(feature = "native-correction-variance")]
             if k == 0 && !averaged {
-                fine_support_candidate::rewrite_weights(fine_mode,sq,ws.var.level(0),sz,
-                    Self::beta_for(&self.gain,frame_beta,0),self.cfg.gate,
-                    self.cfg.exponent_at(0,nb),significance_floor(self.cfg.gate)*self.cfg.significance_scale,
-                    w,&mut ws.smooth_scratch,&mut ws.fine_support);
+                fine_support_candidate::rewrite_weights(
+                    fine_mode,
+                    sq,
+                    ws.var.level(0),
+                    sz,
+                    Self::beta_for(&self.gain, frame_beta, 0),
+                    self.cfg.gate,
+                    self.cfg.exponent_at(0, nb),
+                    significance_floor(self.cfg.gate) * self.cfg.significance_scale,
+                    w,
+                    &mut ws.smooth_scratch,
+                    &mut ws.fine_support,
+                );
             }
             #[cfg(feature = "m194h-pedestal-causality")]
-            m194h::band(self, k, planes, &mut ws.plane, sq, ws.var.level(k),
-                Self::beta_for(&self.gain, frame_beta, k), w);
+            m194h::band(
+                self,
+                k,
+                planes,
+                &mut ws.plane,
+                sq,
+                ws.var.level(k),
+                Self::beta_for(&self.gain, frame_beta, k),
+                w,
+            );
             #[cfg(feature = "native-sensor-transfer")]
-            native_sensor_transfer::band(self, k, averaged, frame_beta,
-                lv, ws.var.level(k), sq, w);
+            native_sensor_transfer::band(self, k, averaged, frame_beta, lv, ws.var.level(k), sq, w);
             if let Some(observer) = observer {
+                let observed_variance = ws.var.level(k);
+                #[cfg(feature = "spatial-noise-floor")]
+                let observed_variance =
+                    ws.spatial_noise_floor.level(k).unwrap_or(observed_variance);
+                let observed_variance = Some(observed_variance);
+                let floor_multiplier = self.cfg.gate * Self::beta_for(&self.gain, frame_beta, k);
+                #[cfg(feature = "temporal-energy")]
+                let absolute_floor = temporal
+                    .and_then(|ready| ready.band(k))
+                    .map(|band| band.floor.as_slice());
+                #[cfg(feature = "temporal-energy")]
+                let observed_variance = if absolute_floor.is_some() {
+                    None
+                } else {
+                    observed_variance
+                };
+                #[cfg(feature = "temporal-energy")]
+                let floor_multiplier = if absolute_floor.is_some() {
+                    1.0
+                } else {
+                    floor_multiplier
+                };
                 observer.band(BandObservation {
-                    level: k, size: sz, energy: Some(sq), variance: Some(ws.var.level(k)),
-                    floor_multiplier: self.cfg.gate * Self::beta_for(&self.gain, frame_beta, k), weights: w,
+                    level: k,
+                    size: sz,
+                    energy: Some(sq),
+                    variance: observed_variance,
+                    floor_multiplier,
+                    weights: w,
+                    #[cfg(feature = "temporal-energy")]
+                    absolute_floor,
                 });
                 observer.phase(FoldPhase::FoldStarted(k));
             }
             self.accumulate_level(k, planes, &mut ws.plane, w);
-            if let Some(observer) = observer { observer.phase(FoldPhase::FoldFinished(k)); }
+            if let Some(observer) = observer {
+                observer.phase(FoldPhase::FoldFinished(k));
+            }
         }
 
         #[cfg(feature = "m194h-pedestal-causality")]
@@ -2054,17 +2291,30 @@ impl BandMerge {
             }
         }
         #[cfg(feature = "native-sensor-transfer")]
-        native_sensor_transfer::base(self, kb, ws.luma.level(kb), ws.var.level(kb),
-            &ws.coarse[..szb.pixels()]);
+        native_sensor_transfer::base(
+            self,
+            kb,
+            ws.luma.level(kb),
+            ws.var.level(kb),
+            &ws.coarse[..szb.pixels()],
+        );
         if let Some(observer) = observer {
             observer.band(BandObservation {
-                level: kb, size: szb, energy: None, variance: None,
-                floor_multiplier: 0.0, weights: &ws.coarse[..szb.pixels()],
+                level: kb,
+                size: szb,
+                energy: None,
+                variance: None,
+                floor_multiplier: 0.0,
+                weights: &ws.coarse[..szb.pixels()],
+                #[cfg(feature = "temporal-energy")]
+                absolute_floor: None,
             });
             observer.phase(FoldPhase::FoldStarted(kb));
         }
         Self::accumulate_level(self, kb, planes, &mut ws.plane, &ws.coarse[..szb.pixels()]);
-        if let Some(observer) = observer { observer.phase(FoldPhase::FoldFinished(kb)); }
+        if let Some(observer) = observer {
+            observer.phase(FoldPhase::FoldFinished(kb));
+        }
 
         // 4. The hull of the aligned inputs, which the reconstruction will be
         //    confined to. Taken from the frames as supplied — before any
@@ -2100,10 +2350,13 @@ impl BandMerge {
                     let idx = (k - 1) * self.planes + c;
                     let g = ws.ghull.level(k);
                     let (lo, hi) = (&mut self.lo_lv[idx], &mut self.hi_lv[idx]);
-                    lo.par_iter_mut().zip(hi.par_iter_mut()).zip(g).for_each(|((l, h), v)| {
-                        *l = l.min(*v);
-                        *h = h.max(*v);
-                    });
+                    lo.par_iter_mut()
+                        .zip(hi.par_iter_mut())
+                        .zip(g)
+                        .for_each(|((l, h), v)| {
+                            *l = l.min(*v);
+                            *h = h.max(*v);
+                        });
                     // The margin's scale. `beta * var` is the module's own
                     // calibrated statement of noise power at level `k` -- the
                     // identical quantity the selection gate thresholds on -- so
@@ -2119,11 +2372,7 @@ impl BandMerge {
                     // would have the hull calling a pixel noise at a scale the
                     // gate had already decided was signal -- the exact
                     // divergence this comment was written to warn about.
-                    let beta = Self::beta_for(
-                        &self.gain,
-                        frame_beta,
-                        k.min(self.sizes.len() - 2),
-                    );
+                    let beta = Self::beta_for(&self.gain, frame_beta, k.min(self.sizes.len() - 2));
                     let vv = ws.var.level(k);
                     let sig = &mut self.sig_lv[idx];
                     sig.par_iter_mut().zip(vv).for_each(|(s, v)| {
@@ -2218,7 +2467,9 @@ impl BandMerge {
                         *b = *wv;
                     }
                 });
-                den.par_iter_mut().zip(w).for_each(|(d, wv)| *d = d.max(*wv));
+                den.par_iter_mut()
+                    .zip(w)
+                    .for_each(|(d, wv)| *d = d.max(*wv));
             }
         }
         if self.cfg.fallback != Fallback::Mean {
@@ -2355,8 +2606,8 @@ impl BandMerge {
                         let base = j * slots;
                         let (mut ia, mut ib) = (0usize, 0usize);
                         for t in 0..slots {
-                            let take_b = ia >= slots
-                                || (ib < slots && bk[base + ib] > ak[base + ia]);
+                            let take_b =
+                                ia >= slots || (ib < slots && bk[base + ib] > ak[base + ia]);
                             if take_b {
                                 tmp[t] = bk[base + ib];
                                 picks[base + t] = 0x80 | ib as u8;
@@ -2481,8 +2732,11 @@ impl BandMerge {
                 for i in 0..px {
                     if other.dmax[k][i] > self.dmax[k][i] {
                         self.dmax[k][i] = other.dmax[k][i];
-                        self.darg[k][i] =
-                            if other.darg[k][i] < 0 { -1 } else { other.darg[k][i] + base };
+                        self.darg[k][i] = if other.darg[k][i] < 0 {
+                            -1
+                        } else {
+                            other.darg[k][i] + base
+                        };
                     }
                     self.dsq[k][i] += other.dsq[k][i];
                 }
@@ -2556,7 +2810,11 @@ impl BandMerge {
             let mut neff: Vec<u8> = Vec::with_capacity(px * 4);
             for i in 0..px {
                 let d = self.den[k][i];
-                let share = if d > 0.0 { self.dmax[k][i] / d } else { f32::NAN };
+                let share = if d > 0.0 {
+                    self.dmax[k][i] / d
+                } else {
+                    f32::NAN
+                };
                 conc.extend_from_slice(&share.to_le_bytes());
                 arg.extend_from_slice(&self.darg[k][i].to_le_bytes());
                 let q = self.dsq[k][i];
@@ -2772,7 +3030,10 @@ impl BandMerge {
             return Vec::new();
         }
         let unclamped = BandMerge {
-            cfg: MergeConfig { hull: Hull::Unclamped, ..self.cfg },
+            cfg: MergeConfig {
+                hull: Hull::Unclamped,
+                ..self.cfg
+            },
             lo: Vec::new(),
             hi: Vec::new(),
             lo_lv: Vec::new(),
@@ -2815,9 +3076,18 @@ pub struct FrameWorkspace {
     /// planning formula so the experiment cannot change arithmetic chunks.
     #[cfg(feature = "native-correction-variance")]
     fine_support: fine_support_candidate::Scratch,
+    #[cfg(feature = "spatial-noise-floor")]
+    spatial_noise_floor: crate::spatial_noise_floor::Scratch,
 }
 
 impl FrameWorkspace {
+    /// Explicit experiment mode for deterministic controls without changing
+    /// process environment. Available only in the experimental feature build.
+    #[cfg(feature = "spatial-noise-floor")]
+    pub fn set_spatial_noise_floor_mode(&mut self, mode: crate::spatial_noise_floor::Mode) {
+        self.spatial_noise_floor.set_mode(mode);
+    }
+
     pub fn new(sizes: &[LevelSize], planes: usize) -> Self {
         let n0 = sizes[0].pixels();
         Self {
@@ -2832,6 +3102,8 @@ impl FrameWorkspace {
             smooth_scratch: vec![0.0; n0 + sizes[0].width],
             #[cfg(feature = "native-correction-variance")]
             fine_support: fine_support_candidate::Scratch::default(),
+            #[cfg(feature = "spatial-noise-floor")]
+            spatial_noise_floor: crate::spatial_noise_floor::Scratch::default(),
         }
     }
 
@@ -2844,7 +3116,12 @@ impl FrameWorkspace {
             + self.ws.expanded.len()
             + self.luma.floats()
             + self.var.floats()
-            + self.plane.pyramids.iter().map(Pyramid::floats).sum::<usize>()
+            + self
+                .plane
+                .pyramids
+                .iter()
+                .map(Pyramid::floats)
+                .sum::<usize>()
             + self.sq.len()
             + self.weight.len()
             + self.coarse.len()
@@ -2894,6 +3171,17 @@ impl PlaneCache {
         }
         self.valid = true;
     }
+}
+
+// These are the actual ordinary guide producers, also used by the isolated
+// temporal-energy measurement API. Operation order stays identical.
+#[inline]
+fn band_floor(gate: f32, beta: f32, variance: f32) -> f32 {
+    gate * beta * variance.max(0.0)
+}
+fn band_energy(lv: &[f32], size: LevelSize, sq: &mut [f32], scratch: &mut [f32]) {
+    sq.par_iter_mut().zip(lv).for_each(|(s, l)| *s = l * l);
+    smooth5(sq, size, scratch);
 }
 
 /// In-place separable 5-tap binomial smoothing at one level's own scale.
@@ -3144,12 +3432,18 @@ mod m194d_independent_tests {
 
 #[cfg(test)]
 mod accumulator_range_independent {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/pyramid-accumulator-range/independent-controls.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/pyramid-accumulator-range/independent-controls.rs"
+    ));
 }
 
 #[cfg(test)]
 mod accumulator_range_bounds {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/pyramid-accumulator-range/range-bound-controls.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/pyramid-accumulator-range/range-bound-controls.rs"
+    ));
 }
 
 #[cfg(test)]
@@ -3157,18 +3451,26 @@ mod tests {
     use super::*;
 
     fn ramp(w: usize, h: usize) -> Vec<f32> {
-        (0..w * h).map(|i| (i % 97) as f32 * 0.37 + (i / 97) as f32 * 0.11).collect()
+        (0..w * h)
+            .map(|i| (i % 97) as f32 * 0.37 + (i / 97) as f32 * 0.11)
+            .collect()
     }
 
     #[test]
     fn the_generating_kernel_is_binomial_and_sums_to_one() {
-        assert_eq!(KERNEL, [1.0 / 16.0, 4.0 / 16.0, 6.0 / 16.0, 4.0 / 16.0, 1.0 / 16.0]);
+        assert_eq!(
+            KERNEL,
+            [1.0 / 16.0, 4.0 / 16.0, 6.0 / 16.0, 4.0 / 16.0, 1.0 / 16.0]
+        );
         assert!((KERNEL.iter().sum::<f32>() - 1.0).abs() < 1e-7);
     }
 
     #[test]
     fn reduce_and_expand_preserve_a_constant_exactly() {
-        let size = LevelSize { width: 37, height: 23 };
+        let size = LevelSize {
+            width: 37,
+            height: 23,
+        };
         let src = vec![4.25f32; size.pixels()];
         let ds = size.reduced();
         let mut small = vec![0.0; ds.pixels()];
@@ -3190,9 +3492,15 @@ mod tests {
         // from adding curvature of its own inside a smooth region. A kernel
         // that failed this would put a low-amplitude checkerboard into every
         // flat gradient in the frame.
-        let ss = LevelSize { width: 16, height: 1 };
+        let ss = LevelSize {
+            width: 16,
+            height: 1,
+        };
         let src: Vec<f32> = (0..16).map(|i| i as f32).collect();
-        let ds = LevelSize { width: 32, height: 1 };
+        let ds = LevelSize {
+            width: 32,
+            height: 1,
+        };
         let mut out = vec![0.0; 32];
         let mut scratch = vec![0.0; 64];
         expand(&src, ss, &mut out, ds, &mut scratch);
@@ -3249,7 +3557,13 @@ mod tests {
     fn levels_stop_before_a_band_becomes_meaningless() {
         let sizes = level_sizes(3516, 2344, 7);
         assert_eq!(sizes.len(), 8, "7 bands plus a base");
-        assert_eq!(sizes[0], LevelSize { width: 3516, height: 2344 });
+        assert_eq!(
+            sizes[0],
+            LevelSize {
+                width: 3516,
+                height: 2344
+            }
+        );
         assert!(sizes[7].width >= MIN_LEVEL_EXTENT && sizes[7].height >= MIN_LEVEL_EXTENT);
         // And a small plane truncates rather than producing 2x1 levels.
         let small = level_sizes(40, 40, 7);
@@ -3268,14 +3582,21 @@ mod tests {
         for (k, b) in g.all().iter().enumerate() {
             assert!(*b > 0.0 && b.is_finite(), "beta[{k}] = {b}");
         }
-        assert!(g.beta(0) > g.beta(1), "the finest band must carry the most noise");
+        assert!(
+            g.beta(0) > g.beta(1),
+            "the finest band must carry the most noise"
+        );
         assert!(g.beta(1) > g.beta(2));
         // Level 0 keeps most of a white input: REDUCE removes almost all of it,
         // so the difference keeps almost all of it.
         assert!(g.beta(0) > 0.5, "beta[0] = {}", g.beta(0));
         // And it is deterministic.
         let again = BandGain::measure(5);
-        assert_eq!(g.all(), again.all(), "the band gain probe is not reproducible");
+        assert_eq!(
+            g.all(),
+            again.all(),
+            "the band gain probe is not reproducible"
+        );
     }
 
     #[test]
@@ -3346,7 +3667,10 @@ mod tests {
             assert!(cfg.exponent_at(k, nb) <= MAX_EXPONENT);
         }
         // And `1.0` restores a single global exponent, so the ramp is opt-out.
-        let flat = MergeConfig { sharpen_per_octave: 1.0, ..MergeConfig::default() };
+        let flat = MergeConfig {
+            sharpen_per_octave: 1.0,
+            ..MergeConfig::default()
+        };
         for k in 0..nb {
             assert_eq!(flat.exponent_at(k, nb), flat.exponent);
         }
@@ -3554,7 +3878,10 @@ mod tests {
         let rf = significance_floor(2.0);
 
         let share = |excesses: &[f32]| -> f32 {
-            let w: Vec<f32> = excesses.iter().map(|e| select_weight(*e, floor, p, rf)).collect();
+            let w: Vec<f32> = excesses
+                .iter()
+                .map(|e| select_weight(*e, floor, p, rf))
+                .collect();
             let sum: f32 = w.iter().sum();
             w[0] / sum
         };
@@ -3573,7 +3900,10 @@ mod tests {
             "a genuinely sharp frame only takes {real:.3}; the fix is diluting real \
              detail, which is the falsification"
         );
-        assert!(real > noise * 4.0, "improvement {real:.3} vs noise {noise:.3}");
+        assert!(
+            real > noise * 4.0,
+            "improvement {real:.3} vs noise {noise:.3}"
+        );
     }
 
     #[test]
@@ -3593,7 +3923,10 @@ mod tests {
         for gate in [0.0f32, -1.0, f32::NAN, 1e-6, 2.0, 64.0] {
             let rf = significance_floor(gate);
             if gate > 0.0 {
-                assert!(rf.is_finite() && rf > 0.0, "significance_floor({gate}) = {rf}");
+                assert!(
+                    rf.is_finite() && rf > 0.0,
+                    "significance_floor({gate}) = {rf}"
+                );
             } else {
                 // Documented: no usable noise scale, so decline to judge and
                 // fall back to the shipping weight. Asserted rather than
@@ -3672,7 +4005,10 @@ mod tests {
         let (floor, p, e) = (100.0f32, 8.0, 150.0f32);
         let off = select_weight(e, floor, p, 0.0);
         let on = select_weight(e, floor, p, significance_floor(2.0) * 1000.0);
-        assert!(on > off * 1.01, "enabled at 1000x, the fix moved the weight {off:e} -> {on:e}");
+        assert!(
+            on > off * 1.01,
+            "enabled at 1000x, the fix moved the weight {off:e} -> {on:e}"
+        );
     }
 
     #[test]
@@ -3683,18 +4019,27 @@ mod tests {
         // show. Zero must remain exactly off, or the null arm is not a null.
         let (floor, p, e) = (100.0f32, 8.0, 150.0f32);
         let base = significance_floor(2.0);
-        assert_eq!(select_weight(e, floor, p, base * 0.0), select_weight(e, floor, p, 0.0));
+        assert_eq!(
+            select_weight(e, floor, p, base * 0.0),
+            select_weight(e, floor, p, 0.0)
+        );
         let mut prev = select_weight(e, floor, p, 0.0);
         let mut moved = 0;
         for scale in [1.0f32, 10.0, 100.0, 1000.0] {
             let w = select_weight(e, floor, p, base * scale);
-            assert!(w >= prev, "a larger floor lowered the weight at scale {scale}");
+            assert!(
+                w >= prev,
+                "a larger floor lowered the weight at scale {scale}"
+            );
             if w > prev {
                 moved += 1;
             }
             prev = w;
         }
-        assert!(moved >= 3, "turning the scale up 1000x moved the weight {moved} times");
+        assert!(
+            moved >= 3,
+            "turning the scale up 1000x moved the weight {moved} times"
+        );
     }
 
     #[test]
@@ -3704,7 +4049,10 @@ mod tests {
         // normalisation this would drift.
         let (w, h) = (96, 72);
         let img = ramp(w, h);
-        let cfg = MergeConfig { sharpen_per_octave: 2.0, ..MergeConfig::default() };
+        let cfg = MergeConfig {
+            sharpen_per_octave: 2.0,
+            ..MergeConfig::default()
+        };
         let mut m = BandMerge::new(w, h, 1, cfg);
         let sizes = level_sizes(w, h, cfg.bands);
         let mut fws = FrameWorkspace::new(&sizes, 1);
@@ -3746,7 +4094,10 @@ mod tests {
         let (w, h) = (128usize, 96usize);
         let a = split_focus(w, h, true);
         let b = split_focus(w, h, false);
-        let cfg = MergeConfig { bands: 4, ..Default::default() };
+        let cfg = MergeConfig {
+            bands: 4,
+            ..Default::default()
+        };
         let sizes = level_sizes(w, h, cfg.bands);
         let mut merge = BandMerge::new(w, h, 1, cfg);
         let mut fws = FrameWorkspace::new(&sizes, 1);
@@ -3767,7 +4118,11 @@ mod tests {
             for y in 8..h - 8 {
                 for x in x0..x1 {
                     let c = img[y * w + x];
-                    let m = 0.25 * (img[y * w + x - 1] + img[y * w + x + 1] + img[(y - 1) * w + x] + img[(y + 1) * w + x]);
+                    let m = 0.25
+                        * (img[y * w + x - 1]
+                            + img[y * w + x + 1]
+                            + img[(y - 1) * w + x]
+                            + img[(y + 1) * w + x]);
                     acc += f64::from((c - m) * (c - m));
                     n += 1;
                 }
@@ -3798,7 +4153,10 @@ mod tests {
         let (w, h) = (128usize, 96usize);
         let a = split_focus(w, h, true);
         let b = split_focus(w, h, false);
-        let cfg = MergeConfig { bands: 4, ..Default::default() };
+        let cfg = MergeConfig {
+            bands: 4,
+            ..Default::default()
+        };
         let sizes = level_sizes(w, h, cfg.bands);
         let mut merge = BandMerge::new(w, h, 1, cfg);
         let mut fws = FrameWorkspace::new(&sizes, 1);
@@ -3815,7 +4173,10 @@ mod tests {
         // a LOW-frequency step, and measuring the raw pixels would just find
         // the fine texture.
         let lowpass = |img: &[f32]| -> Vec<f32> {
-            let s = LevelSize { width: w, height: h };
+            let s = LevelSize {
+                width: w,
+                height: h,
+            };
             let mut p = Pyramid::zeros(&sizes);
             let mut lws = Workspace::new(&sizes);
             p.build_gaussian(img, &mut lws);
@@ -3845,7 +4206,10 @@ mod tests {
             seam < 0.02 * bg,
             "a low-frequency step appeared at the seam: {seam} DN against a {bg} DN background"
         );
-        assert!(seam < away + 0.01 * bg, "the seam is worse than a non-seam column");
+        assert!(
+            seam < away + 0.01 * bg,
+            "the seam is worse than a non-seam column"
+        );
     }
 
     #[test]
@@ -3860,13 +4224,18 @@ mod tests {
         let var = vec![sigma * sigma; w * h];
         let mut state: u64 = 12345;
         let mut rnd = move || {
-            state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+            state = state
+                .wrapping_mul(6364136223846793005)
+                .wrapping_add(1442695040888963407);
             (((state >> 33) as f32) / ((1u64 << 31) as f32) - 1.0) * sigma * 1.732
         };
         let frames: Vec<Vec<f32>> = (0..n)
             .map(|_| (0..w * h).map(|_| 500.0 + rnd()).collect())
             .collect();
-        let cfg = MergeConfig { bands: 4, ..Default::default() };
+        let cfg = MergeConfig {
+            bands: 4,
+            ..Default::default()
+        };
         let sizes = level_sizes(w, h, cfg.bands);
         let mut merge = BandMerge::new(w, h, 1, cfg);
         let mut fws = FrameWorkspace::new(&sizes, 1);
@@ -3905,7 +4274,10 @@ mod tests {
         // but regrouping f32 sums is not bit-identical. The CLI therefore keeps
         // this partition canonical while varying execution threads.
         let (w, h) = (64usize, 48usize);
-        let cfg = MergeConfig { bands: 3, ..Default::default() };
+        let cfg = MergeConfig {
+            bands: 3,
+            ..Default::default()
+        };
         let sizes = level_sizes(w, h, cfg.bands);
         let var = vec![9.0f32; w * h];
         let frames: Vec<Vec<f32>> = (0..6)
@@ -3938,19 +4310,29 @@ mod tests {
         };
         let one = run(1);
         let three = run(3);
-        let err = one.iter().zip(&three).map(|(a, b)| (a - b).abs()).fold(0.0f32, f32::max);
+        let err = one
+            .iter()
+            .zip(&three)
+            .map(|(a, b)| (a - b).abs())
+            .fold(0.0f32, f32::max);
         let scale = one.iter().fold(0.0f32, |a, v| a.max(v.abs()));
         assert_ne!(
             one, three,
             "negative control did not expose the worker-dependent f32 reduction"
         );
-        assert!(err < 1e-3 * scale, "chunking changed the merge: {err} on a scale of {scale}");
+        assert!(
+            err < 1e-3 * scale,
+            "chunking changed the merge: {err} on a scale of {scale}"
+        );
     }
 
     #[test]
     fn spatial_parallelism_is_bit_identical_across_worker_counts() {
         let (w, h) = (64usize, 48usize);
-        let cfg = MergeConfig { bands: 3, ..Default::default() };
+        let cfg = MergeConfig {
+            bands: 3,
+            ..Default::default()
+        };
         let sizes = level_sizes(w, h, cfg.bands);
         let var = vec![9.0f32; w * h];
         let frames: Vec<Vec<f32>> = (0..6)
@@ -4071,7 +4453,10 @@ mod tests {
     #[test]
     fn recycled_canonical_chunks_are_bit_identical_to_retained_partials() {
         let (w, h, nf) = (64usize, 48usize, 10usize);
-        let cfg = MergeConfig { bands: 3, ..Default::default() };
+        let cfg = MergeConfig {
+            bands: 3,
+            ..Default::default()
+        };
         let sizes = level_sizes(w, h, cfg.bands);
         let var = vec![9.0f32; w * h];
         let frames: Vec<Vec<f32>> = (0..nf)
@@ -4085,9 +4470,7 @@ mod tests {
             .collect();
         let per_chunk = nf.div_ceil(4);
 
-        let fold_into = |merge: &mut BandMerge,
-                         fws: &mut FrameWorkspace,
-                         chunk: &[Vec<f32>]| {
+        let fold_into = |merge: &mut BandMerge, fws: &mut FrameWorkspace, chunk: &[Vec<f32>]| {
             for frame in chunk {
                 fws.next_frame();
                 merge.add_frame(&[frame.as_slice()], frame, &var, fws);
@@ -4119,8 +4502,10 @@ mod tests {
                     scratch.reset_for_reuse();
                 }
                 None => {
-                    recycled_acc =
-                        Some(std::mem::replace(&mut scratch, BandMerge::new(w, h, 1, cfg)));
+                    recycled_acc = Some(std::mem::replace(
+                        &mut scratch,
+                        BandMerge::new(w, h, 1, cfg),
+                    ));
                 }
             }
         }
@@ -4178,19 +4563,45 @@ mod tests {
 
         // A gate nothing can clear puts every coefficient on the fallback
         // path, so this measures the fallback rather than the weighted sum.
-        let base = MergeConfig { bands: 3, gate: 1e9, ..Default::default() };
+        let base = MergeConfig {
+            bands: 3,
+            gate: 1e9,
+            ..Default::default()
+        };
         let mean = run(base, 1);
 
         for (name, exact, cfg) in [
-            ("Best", true, MergeConfig { fallback: Fallback::Best, ..base }),
-            ("TopK", true, MergeConfig { fallback: Fallback::TopK, fallback_k: 3, ..base }),
+            (
+                "Best",
+                true,
+                MergeConfig {
+                    fallback: Fallback::Best,
+                    ..base
+                },
+            ),
+            (
+                "TopK",
+                true,
+                MergeConfig {
+                    fallback: Fallback::TopK,
+                    fallback_k: 3,
+                    ..base
+                },
+            ),
             // Power folds as a SUM, and float addition is not associative, so
             // regrouping perturbs the last bits. That is not a defect special
             // to it: `num`, `usum` and `den` are sums too, which is why
             // `chunked_folding_gives_the_same_merge` asserts a tolerance
             // rather than equality. Bit-identity is available to max-based
             // folds and to no sum-based fold, shipped or new.
-            ("Power", false, MergeConfig { fallback: Fallback::Power, ..base }),
+            (
+                "Power",
+                false,
+                MergeConfig {
+                    fallback: Fallback::Power,
+                    ..base
+                },
+            ),
         ] {
             let one = run(cfg, 1);
             let three = run(cfg, 3);
@@ -4201,9 +4612,15 @@ mod tests {
             } else {
                 let scale = one.iter().fold(0.0f32, |a, v| a.max(v.abs()));
                 for (n, other) in [(3, &three), (2, &two)] {
-                    let e =
-                        one.iter().zip(other).map(|(a, b)| (a - b).abs()).fold(0.0f32, f32::max);
-                    assert!(e < 1e-5 * scale, "chunking 1 vs {n} moved {name} by {e}/{scale}");
+                    let e = one
+                        .iter()
+                        .zip(other)
+                        .map(|(a, b)| (a - b).abs())
+                        .fold(0.0f32, f32::max);
+                    assert!(
+                        e < 1e-5 * scale,
+                        "chunking 1 vs {n} moved {name} by {e}/{scale}"
+                    );
                 }
             }
 
@@ -4222,11 +4639,22 @@ mod tests {
         // Mean exactly. That pins the estimator's zero point -- without it,
         // `Power` differing from `Mean` above proves only that it differs,
         // not that it differs in the intended direction.
-        let flat = MergeConfig { fallback: Fallback::Power, fallback_power: 0.0, ..base };
+        let flat = MergeConfig {
+            fallback: Fallback::Power,
+            fallback_power: 0.0,
+            ..base
+        };
         let flat_out = run(flat, 3);
-        let err = flat_out.iter().zip(&mean).map(|(a, b)| (a - b).abs()).fold(0.0f32, f32::max);
+        let err = flat_out
+            .iter()
+            .zip(&mean)
+            .map(|(a, b)| (a - b).abs())
+            .fold(0.0f32, f32::max);
         let scale = mean.iter().fold(0.0f32, |a, v| a.max(v.abs()));
-        assert!(err <= 1e-4 * scale, "Power(p=0) is not the mean: {err} on a scale of {scale}");
+        assert!(
+            err <= 1e-4 * scale,
+            "Power(p=0) is not the mean: {err} on a scale of {scale}"
+        );
     }
 
     #[test]
@@ -4235,7 +4663,10 @@ mod tests {
         // made. If each plane elected for itself, chroma noise would drive the
         // selection and the merge would manufacture colour speckle.
         let (w, h) = (64usize, 64usize);
-        let cfg = MergeConfig { bands: 3, ..Default::default() };
+        let cfg = MergeConfig {
+            bands: 3,
+            ..Default::default()
+        };
         let sizes = level_sizes(w, h, cfg.bands);
         let var = vec![4.0f32; w * h];
         let mut merge = BandMerge::new(w, h, 2, cfg);
@@ -4256,7 +4687,10 @@ mod tests {
             .map(|(a, b)| (a * 3.0 - b).abs())
             .fold(0.0f32, f32::max);
         let scale = out[1].iter().fold(0.0f32, |a, v| a.max(v.abs()));
-        assert!(err < 1e-3 * scale, "planes did not share one selection: {err} of {scale}");
+        assert!(
+            err < 1e-3 * scale,
+            "planes did not share one selection: {err} of {scale}"
+        );
     }
 
     #[test]
@@ -4278,8 +4712,15 @@ mod tests {
         }
         let mut ws = Workspace::new(&sizes);
         let out = merge.finish(&mut ws)[0].clone();
-        let err = src.iter().zip(&out).map(|(a, b)| (a - b).abs()).fold(0.0f32, f32::max);
-        assert!(err < 1e-2, "merging a frame with itself moved it by {err} DN");
+        let err = src
+            .iter()
+            .zip(&out)
+            .map(|(a, b)| (a - b).abs())
+            .fold(0.0f32, f32::max);
+        assert!(
+            err < 1e-2,
+            "merging a frame with itself moved it by {err} DN"
+        );
     }
 
     #[test]
@@ -4287,7 +4728,11 @@ mod tests {
         // Kept honest: the soft rule is only defensibly better than the
         // textbook one if the textbook one can actually be run.
         let (w, h) = (64usize, 64usize);
-        let cfg = MergeConfig { bands: 3, select: SelectMode::HardMax, ..Default::default() };
+        let cfg = MergeConfig {
+            bands: 3,
+            select: SelectMode::HardMax,
+            ..Default::default()
+        };
         let sizes = level_sizes(w, h, cfg.bands);
         let var = vec![4.0f32; w * h];
         let mut merge = BandMerge::new(w, h, 1, cfg);
@@ -4306,7 +4751,10 @@ mod tests {
     #[test]
     fn the_averaged_fraction_reports_where_the_gate_refused() {
         let (w, h) = (64usize, 64usize);
-        let cfg = MergeConfig { bands: 3, ..Default::default() };
+        let cfg = MergeConfig {
+            bands: 3,
+            ..Default::default()
+        };
         let sizes = level_sizes(w, h, cfg.bands);
         let flat = vec![800.0f32; w * h];
         // A huge declared noise floor: nothing can clear it, so every level
@@ -4320,7 +4768,10 @@ mod tests {
         }
         let frac = merge.averaged_fraction();
         for (k, f) in frac.iter().enumerate().take(sizes.len() - 1) {
-            assert!(*f > 0.999, "level {k} claims it selected on pure noise: {f}");
+            assert!(
+                *f > 0.999,
+                "level {k} claims it selected on pure noise: {f}"
+            );
         }
     }
 
@@ -4349,7 +4800,11 @@ mod tests {
             for x in 0..w {
                 // A dark left third, so the hull sits near zero there.
                 let bg = if x < w / 3 { 60.0 } else { 900.0 };
-                let coarse = if x >= coarse_lo && x < coarse_lo + stripe { 700.0 } else { 0.0 };
+                let coarse = if x >= coarse_lo && x < coarse_lo + stripe {
+                    700.0
+                } else {
+                    0.0
+                };
                 let fine = if x >= fine_lo && x < fine_lo + stripe {
                     260.0 * (((x * 5 + y * 3) % 7) as f32 / 7.0 - 0.5)
                 } else {
@@ -4366,7 +4821,10 @@ mod tests {
     fn hull_violations(hull: Hull) -> (usize, usize, f32) {
         let (w, h, nf) = (192usize, 144usize, 8usize);
         let frames: Vec<Vec<f32>> = (0..nf).map(|f| disagreeing_bands(w, h, nf, f)).collect();
-        let cfg = MergeConfig { hull, ..MergeConfig::default() };
+        let cfg = MergeConfig {
+            hull,
+            ..MergeConfig::default()
+        };
         let sizes = level_sizes(w, h, cfg.bands);
         let mut merge = BandMerge::new(w, h, 1, cfg);
         let mut fws = FrameWorkspace::new(&sizes, 1);
@@ -4404,13 +4862,19 @@ mod tests {
         );
         // Not a hair outside: a violation at the noise level would not be the
         // phenomenon ORCH measured.
-        assert!(worst > 0.01, "violations are trivially small (worst {worst} of span)");
+        assert!(
+            worst > 0.01,
+            "violations are trivially small (worst {worst} of span)"
+        );
     }
 
     #[test]
     fn the_reconstruction_never_leaves_the_hull_of_its_inputs() {
         let (bad, n, worst) = hull_violations(Hull::InputRange);
-        assert_eq!(bad, 0, "{bad}/{n} output pixels outside the input hull, worst {worst} of span");
+        assert_eq!(
+            bad, 0,
+            "{bad}/{n} output pixels outside the input hull, worst {worst} of span"
+        );
     }
 
     #[test]
@@ -4418,7 +4882,10 @@ mod tests {
         // `PerLevel` is a strict tightening of `InputRange`, so it inherits the
         // safety property rather than trading it away.
         let (bad, n, worst) = hull_violations(Hull::PerLevel);
-        assert_eq!(bad, 0, "{bad}/{n} output pixels outside the input hull, worst {worst} of span");
+        assert_eq!(
+            bad, 0,
+            "{bad}/{n} output pixels outside the input hull, worst {worst} of span"
+        );
     }
 
     /// Pixels the FINAL level-0 clamp had to rescue, i.e. sitting exactly on the
@@ -4433,7 +4900,10 @@ mod tests {
     fn pinned_to_hull(hull: Hull) -> (usize, usize) {
         let (w, h, nf) = (192usize, 144usize, 8usize);
         let frames: Vec<Vec<f32>> = (0..nf).map(|f| disagreeing_bands(w, h, nf, f)).collect();
-        let cfg = MergeConfig { hull, ..MergeConfig::default() };
+        let cfg = MergeConfig {
+            hull,
+            ..MergeConfig::default()
+        };
         let sizes = level_sizes(w, h, cfg.bands);
         let mut merge = BandMerge::new(w, h, 1, cfg);
         let mut fws = FrameWorkspace::new(&sizes, 1);
@@ -4470,7 +4940,10 @@ mod tests {
     }
 
     fn differing(a: &[f32], b: &[f32]) -> usize {
-        a.iter().zip(b).filter(|(x, y)| (*x - *y).abs() > 1e-3).count()
+        a.iter()
+            .zip(b)
+            .filter(|(x, y)| (*x - *y).abs() > 1e-3)
+            .count()
     }
 
     #[test]
@@ -4486,10 +4959,22 @@ mod tests {
         // must reproduce `InputRange` exactly (the bound is fully gated), and
         // the intermediate settings must differ from each other (the gate is
         // not stuck open or shut).
-        let base = MergeConfig { hull: Hull::PerLevel, ..MergeConfig::default() };
-        let all = render_cfg(MergeConfig { hull_from_level: 1, ..base });
-        let none = render_cfg(MergeConfig { hull_from_level: 999, ..base });
-        let flat = render_cfg(MergeConfig { hull: Hull::InputRange, ..MergeConfig::default() });
+        let base = MergeConfig {
+            hull: Hull::PerLevel,
+            ..MergeConfig::default()
+        };
+        let all = render_cfg(MergeConfig {
+            hull_from_level: 1,
+            ..base
+        });
+        let none = render_cfg(MergeConfig {
+            hull_from_level: 999,
+            ..base
+        });
+        let flat = render_cfg(MergeConfig {
+            hull: Hull::InputRange,
+            ..MergeConfig::default()
+        });
 
         assert_eq!(
             differing(&none, &flat),
@@ -4505,15 +4990,28 @@ mod tests {
     }
 
     #[test]
-    fn hull_low_only_bounds_the_dark_side_alone() {        // ORCH's acceptance data is one-sided -- 3.01% clipped at hard black
+    fn hull_low_only_bounds_the_dark_side_alone() {
+        // ORCH's acceptance data is one-sided -- 3.01% clipped at hard black
         // and p1 collapsing 8431 -> 110 -- so the low side is the side with a
         // defect and the high side is the side with a cost. This asserts the
         // knob does exactly that and nothing else: every pixel where the two
         // modes disagree must be one the symmetric bound pushed DOWN.
-        let base = MergeConfig { hull: Hull::PerLevel, ..MergeConfig::default() };
-        let sym = render_cfg(MergeConfig { hull_low_only: false, ..base });
-        let low = render_cfg(MergeConfig { hull_low_only: true, ..base });
-        let off = render_cfg(MergeConfig { hull_from_level: 999, ..base });
+        let base = MergeConfig {
+            hull: Hull::PerLevel,
+            ..MergeConfig::default()
+        };
+        let sym = render_cfg(MergeConfig {
+            hull_low_only: false,
+            ..base
+        });
+        let low = render_cfg(MergeConfig {
+            hull_low_only: true,
+            ..base
+        });
+        let off = render_cfg(MergeConfig {
+            hull_from_level: 999,
+            ..base
+        });
 
         // MEASURED, and it redirected the plan. The first version of this test
         // asserted `differing(&sym, &low) > 0` and FAILED: dropping the upper
@@ -4577,7 +5075,10 @@ mod tests {
         // something other than what the frames actually support.
         let (w, h) = (96usize, 72usize);
         let frame = disagreeing_bands(w, h, 4, 1);
-        let cfg = MergeConfig { hull: Hull::PerLevel, ..MergeConfig::default() };
+        let cfg = MergeConfig {
+            hull: Hull::PerLevel,
+            ..MergeConfig::default()
+        };
         let sizes = level_sizes(w, h, cfg.bands);
         let mut merge = BandMerge::new(w, h, 1, cfg);
         let mut fws = FrameWorkspace::new(&sizes, 1);
@@ -4591,7 +5092,10 @@ mod tests {
             .iter()
             .zip(&frame)
             .fold(0.0f32, |a, (o, f)| a.max((o - f).abs()));
-        assert!(worst < 1e-2, "identical frames did not reconstruct themselves: worst {worst} DN");
+        assert!(
+            worst < 1e-2,
+            "identical frames did not reconstruct themselves: worst {worst} DN"
+        );
     }
 
     #[test]
@@ -4607,7 +5111,10 @@ mod tests {
         m.add_frame(&[&img], &img, &vec![4.0f32; w * h], &mut fws);
         let out = m.finish(&mut Workspace::new(&sizes));
         for (i, (a, b)) in out[0].iter().zip(&img).enumerate() {
-            assert_eq!(*a, *b, "pixel {i}: clamped to {a} from a single input of {b}");
+            assert_eq!(
+                *a, *b,
+                "pixel {i}: clamped to {a} from a single input of {b}"
+            );
         }
     }
 
@@ -4633,8 +5140,14 @@ mod tests {
         let mut chunked = fold(0..3);
         chunked.absorb(&fold(3..nf));
         for i in 0..w * h {
-            assert_eq!(serial.lo[0][i], chunked.lo[0][i], "hull floor differs at {i}");
-            assert_eq!(serial.hi[0][i], chunked.hi[0][i], "hull ceiling differs at {i}");
+            assert_eq!(
+                serial.lo[0][i], chunked.lo[0][i],
+                "hull floor differs at {i}"
+            );
+            assert_eq!(
+                serial.hi[0][i], chunked.hi[0][i],
+                "hull ceiling differs at {i}"
+            );
         }
     }
 
@@ -4653,7 +5166,11 @@ mod tests {
         }
         let frac = m.clamped_fraction(&mut Workspace::new(&sizes), 1.0);
         assert_eq!(frac.len(), 1);
-        assert!(frac[0] > 0.0, "the clamp bound on this stack but reported {}", frac[0]);
+        assert!(
+            frac[0] > 0.0,
+            "the clamp bound on this stack but reported {}",
+            frac[0]
+        );
 
         // And it is silent where nothing is wrong: identical frames have a
         // POINT hull, so the collapse's own float error is formally outside it.
@@ -4666,15 +5183,24 @@ mod tests {
             flat.add_frame(&[&img], &img, &var, &mut fws);
         }
         let raw = flat.clamped_fraction(&mut Workspace::new(&sizes), 0.0);
-        let worst = flat
-            .finish(&mut Workspace::new(&sizes))[0]
+        let worst = flat.finish(&mut Workspace::new(&sizes))[0]
             .iter()
             .zip(&img)
             .fold(0.0f32, |a, (p, b)| a.max((p - b).abs()));
-        assert!(worst < 1.0, "identical frames reconstructed {worst} DN off, which is not dust");
-        assert!(raw[0] > 0.0, "no dust at tol=0, so this test is not exercising the tolerance");
+        assert!(
+            worst < 1.0,
+            "identical frames reconstructed {worst} DN off, which is not dust"
+        );
+        assert!(
+            raw[0] > 0.0,
+            "no dust at tol=0, so this test is not exercising the tolerance"
+        );
         let q = flat.clamped_fraction(&mut Workspace::new(&sizes), 1.0);
-        assert_eq!(q[0], 0.0, "the clamp bound on identical frames, reporting {}", q[0]);
+        assert_eq!(
+            q[0], 0.0,
+            "the clamp bound on identical frames, reporting {}",
+            q[0]
+        );
     }
 
     #[test]
@@ -4708,7 +5234,11 @@ mod tests {
             }
         }
         let run = |base: BaseBand| {
-            let cfg = MergeConfig { bands: 3, base, ..Default::default() };
+            let cfg = MergeConfig {
+                bands: 3,
+                base,
+                ..Default::default()
+            };
             let mut merge = BandMerge::new(w, h, 1, cfg);
             let mut fws = FrameWorkspace::new(&sizes, 1);
             for f in [&a, &b] {
@@ -4748,11 +5278,18 @@ mod tests {
         let (w, h, bands) = (64usize, 64usize, 3usize);
         let (a, b) = two_frames_differing_in_level_and_detail(w, h);
         let run = |mean_coarse: usize| {
-            run_merge(w, h, bands, &a, &b, MergeConfig {
+            run_merge(
+                w,
+                h,
                 bands,
-                mean_coarse,
-                ..Default::default()
-            })
+                &a,
+                &b,
+                MergeConfig {
+                    bands,
+                    mean_coarse,
+                    ..Default::default()
+                },
+            )
         };
         let selected = run(0);
         let averaged = run(2);
@@ -4780,12 +5317,19 @@ mod tests {
     fn averaging_every_band_reconstructs_the_plain_frame_mean() {
         let (w, h, bands) = (64usize, 64usize, 3usize);
         let (a, b) = two_frames_differing_in_level_and_detail(w, h);
-        let got = run_merge(w, h, bands, &a, &b, MergeConfig {
+        let got = run_merge(
+            w,
+            h,
             bands,
-            // Every Laplacian band averaged; the base is `Mean` by default.
-            mean_coarse: bands,
-            ..Default::default()
-        });
+            &a,
+            &b,
+            MergeConfig {
+                bands,
+                // Every Laplacian band averaged; the base is `Mean` by default.
+                mean_coarse: bands,
+                ..Default::default()
+            },
+        );
         let worst = got
             .iter()
             .enumerate()

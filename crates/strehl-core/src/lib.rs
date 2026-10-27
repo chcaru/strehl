@@ -32,6 +32,9 @@ pub mod pyramid;
 pub mod restore;
 pub mod robust;
 pub mod softgate;
+#[cfg(feature = "spatial-noise-floor")]
+#[path = "spatial-noise-floor.rs"]
+pub mod spatial_noise_floor;
 pub mod stack;
 pub mod through_focus;
 pub mod warpmap;

@@ -27,13 +27,19 @@ use rayon::prelude::*;
 use strehl_core::noise::Levels;
 use strehl_core::plane::{PlaneGeometry, QuadSource};
 
+pub mod common_tiff;
 /// Camera and lens identity, read from the file's own metadata.
 ///
 /// Deliberately **not** part of [`Frame`] and not on the decode path: a gear
 /// profile is optional, and a capture that carries no identity must decode
 /// exactly as it did before this module existed.
 pub mod identity;
-pub mod common_tiff;
+#[path = "sony-focus.rs"]
+pub mod sony_focus;
+#[path = "sony-optical.rs"]
+pub mod sony_optical;
+#[path = "sony-tiff.rs"]
+mod sony_tiff;
 
 pub use identity::{CaptureIdentity, identity};
 

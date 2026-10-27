@@ -1,5 +1,7 @@
 //! Human and agent actions share the same workspace and undo journal.
 use super::*;
+#[path = "app-agent-metadata.rs"]
+mod metadata;
 use crate::agent_interface::{
     AgentBridge, AgentCommand, AgentImage, AgentReply, IncomingRequest, PreviewTarget, Region,
 };
@@ -25,12 +27,35 @@ pub(super) struct AgentState {
     error: Option<String>,
 }
 
+impl AgentState {
+    pub(super) fn add_launch_grant(&mut self, path: PathBuf) {
+        self.next_grant = self.next_grant.saturating_add(1);
+        self.grants
+            .insert(format!("folder-{}", self.next_grant), path);
+    }
+}
+
 impl StrehlApp {
+    pub(super) fn agent_start_error(&self) -> Option<&str> {
+        self.agent.error.as_deref()
+    }
+    pub(super) fn agent_read_pending(&self) -> bool {
+        !self.agent.pending.is_empty()
+    }
+    pub(super) fn close_agent_session(&mut self) {
+        self.agent.bridge = None;
+    }
+
     pub(super) fn start_agent_session(&mut self) {
         if self.agent.bridge.is_some() || self.agent.starting.is_some() {
             return;
         }
-        let parent = crate::workspace_history::default_path()
+        let state_path = if self.headless {
+            self.catalog.path.clone()
+        } else {
+            crate::workspace_history::default_path()
+        };
+        let parent = state_path
             .and_then(|p| p.parent().map(Path::to_path_buf))
             .unwrap_or_else(std::env::temp_dir)
             .join("agent-sessions");
@@ -69,6 +94,17 @@ impl StrehlApp {
             match result {
                 Ok(bridge) => self.agent.bridge = Some(bridge),
                 Err(error) => self.agent.error = Some(error),
+            }
+        }
+        if let Some(path) = self.agent_session_out.as_ref()
+            && let Some(bridge) = self.agent.bridge.as_ref()
+        {
+            match super::headless::publish_session(path, bridge.descriptor_path()) {
+                Ok(()) => self.agent_session_out = None,
+                Err(error) => {
+                    self.agent.error = Some(format!("Publish agent session: {error:#}"));
+                    self.agent.bridge = None;
+                }
             }
         }
         if let Some(result) = self
@@ -127,10 +163,16 @@ impl StrehlApp {
                 ));
                 continue;
             }
+            if self.headless_shutdown {
+                incoming.reply(AgentReply::error("The headless session is shutting down"));
+                continue;
+            }
             let command = incoming.request.command.clone();
             if matches!(
                 command,
-                AgentCommand::Probe { .. } | AgentCommand::Preview { .. }
+                AgentCommand::Probe { .. }
+                    | AgentCommand::Preview { .. }
+                    | AgentCommand::Metadata { .. }
             ) {
                 if self.agent.pending.len() >= 2 {
                     incoming.reply(AgentReply::error(
@@ -146,7 +188,12 @@ impl StrehlApp {
             }
             let mutation = !command.is_read_only();
             let description = format!("{command:?}");
-            match self.apply_agent_command(command) {
+            let result = if matches!(command, AgentCommand::Shutdown {}) {
+                self.prepare_headless_shutdown(ctx)
+            } else {
+                self.apply_agent_command(command)
+            };
+            match result {
                 Ok(data) => {
                     if mutation {
                         self.agent.revision = self.agent.revision.wrapping_add(1);
@@ -305,6 +352,7 @@ impl StrehlApp {
                 "noise_model":self.progress.noise_model,"geometry_error":self.progress.alignment_error});
         json!({
             "revision":self.agent.revision, "application":"Strehl", "version":env!("CARGO_PKG_VERSION"),
+            "headless":self.headless,"output_directory":self.output,
             "active_stack":self.active_stack, "projects":projects, "project_list_truncated":self.catalog.nodes.len()>256,
             "source_count":self.stack.as_ref().map(|s|s.frames.len()), "selected_frame":self.selected,
             "frame_index_base":0, "status":self.status, "stage":format!("{:?}",self.progress.stage),
@@ -332,6 +380,9 @@ impl StrehlApp {
         command.validate().map_err(anyhow::Error::msg)?;
         match command {
             Snapshot {} => return Ok(self.agent_snapshot()),
+            Shutdown {} => {
+                anyhow::bail!("Shutdown must run through the application command pump");
+            }
             SelectStack { id } => {
                 anyhow::ensure!(
                     self.job.is_none() && self.scan.is_none() && self.replay.is_none(),
@@ -654,7 +705,7 @@ impl StrehlApp {
                 self.agent.suggestions.truncate(24);
                 self.sidebar = Some(workspace::Sidebar::Agent);
             }
-            Probe { .. } | Preview { .. } => {
+            Probe { .. } | Preview { .. } | Metadata { .. } => {
                 anyhow::bail!("Diagnostic reads must run through the background read queue")
             }
         }
@@ -722,6 +773,7 @@ impl StrehlApp {
         command.validate().map_err(anyhow::Error::msg)?;
         let revision = self.agent.revision;
         match command {
+            AgentCommand::Metadata { frame } => self.agent_metadata_read_task(frame),
             AgentCommand::Probe {
                 region,
                 max_sources,

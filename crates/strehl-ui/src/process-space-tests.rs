@@ -2151,3 +2151,6 @@ fn completed_source_drag_links_actual_camera_pixels_to_admission_and_is_undoable
     assert!(!waiting.shapes.iter().any(|shape| matches!(&shape.shape, egui::Shape::Text(text) if text.galley.text().starts_with("Camera 008 ·"))),
         "pending source cannot inherit the requested capture's admission count");
 }
+
+#[path = "process-metadata-tests.rs"]
+mod camera_metadata;

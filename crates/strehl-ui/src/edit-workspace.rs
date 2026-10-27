@@ -94,7 +94,7 @@ pub(crate) struct EditorState {
     recoveries: BTreeMap<PathBuf, DevelopmentRecipe>,
     recovery_files: BTreeMap<PathBuf, PathBuf>,
     recovered_from_disk: BTreeSet<PathBuf>,
-    recovery_root: Option<PathBuf>,
+    pub(crate) recovery_root: Option<PathBuf>,
 }
 
 impl EditorState {

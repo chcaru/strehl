@@ -35,6 +35,12 @@ serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
 sha2 = "=0.11.0"
 
 [features]
+# Default-off nonlinear Sony metadata research consumer.
+research-lens-warp = []
+# Isolated first-two-band temporal E/full-F experiment; no default path.
+temporal-energy = ["strehl-core/temporal-energy"]
+# Experimental normalized spatial variance transport; runtime default off.
+spatial-noise-floor = ["strehl-core/spatial-noise-floor"]
 # Explicit experiment-only consumer hook; disabled in normal builds.
 m194h-pedestal-causality = ["strehl-core/m194h-pedestal-causality"]
 native-sensor-transfer = ["strehl-core/native-sensor-transfer"]
@@ -61,3 +67,18 @@ native-gpu-gather = ["dep:strehl-native-gpu-gather"]
 
 [target.'cfg(windows)'.dependencies]
 windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_Storage_FileSystem"] }
+[[example]]
+name = "rea-native-roi"
+path = "../../experiments/rea-a7c2-2026-10-24-i/native-roi/raw-roi-export.rs"
+
+[[example]]
+name = "rea-reference-roi"
+path = "../../experiments/rea-a7c2-2026-10-24-k/native-roi/raw-roi-export.rs"
+
+[[example]]
+name = "rea-sensor-roi"
+path = "../../experiments/rea-a7c2-2026-10-24-n/native-roi/raw-roi-export.rs"
+
+[[example]]
+name = "rea-natural-reference-roi"
+path = "../../experiments/rea-a7c2-2026-10-24-q/native-roi/raw-roi-export.rs"

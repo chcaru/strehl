@@ -79,6 +79,7 @@ pub struct Response {
     pub selected: Option<usize>,
     pub compare_pair: Option<[usize; 2]>,
     pub open_sources: bool,
+    pub camera_metadata: Option<usize>,
     pub return_live: bool,
     pub exit_space: bool,
 }

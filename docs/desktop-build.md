@@ -33,7 +33,37 @@ The internal Cargo targets are `strehl-ui` (desktop) and `strehl` (CLI).
 Distributed applications are named **Strehl**. The desktop includes the CLI
 engine and launches an owned copy of itself with `--engine-worker`. This
 preserves cancellation and process memory isolation without a second executable
-or engine picker. The normal build enables no experimental engine features.
+or engine picker. The desktop compiles the experimental `temporal-energy` engine
+feature so its **Temporal detail smoothing** toggle can control each render.
+The toggle defaults to Off, including for older saved recipes. Enabling it can
+remove faint detail that appears in only one capture; compare against Off.
+See the [experimental mode guide](temporal-energy.md).
+
+## Native metadata and command control
+
+The desktop's **Camera metadata** panel reads a bracket once and presents its AF
+grid, raw focus progression and optical sample curves inside Strehl. It follows
+capture selection on the timeline; chart clicks select the corresponding capture.
+The separate CLI's HTML export remains optional.
+
+For scripted application control, the executable supports `--control` and a
+headless workspace. The supplied `scripts/strehl-control.py` helper adds launch,
+session discovery and orderly shutdown. The `--offscreen-screenshot` path can
+also render the real native workspace to PNG without an operating-system window;
+combine it with `--metadata` to inspect the metadata panel. Offscreen rendering
+requires a working graphics backend, while ordinary headless command control
+does not. See the [desktop control guide](desktop-control.md) for invocation,
+source grants, separate state/output folders and the readiness limits.
+
+## Render destination
+
+New desktop sessions default to the user's **Pictures/Strehl** directory, using
+the Windows known Pictures folder when available. The launcher's working
+directory does not determine where photographs are saved. An explicit choice
+under **Adjust > Destination** remains the destination for that session. If no
+absolute user directory is available, choose a destination before stacking.
+A failed write reports the attempted folder and how to change it; it does not
+silently redirect the output.
 
 ## Official release packages
 
@@ -78,8 +108,12 @@ The older local helper remains available:
 ./outputs/strehl-desktop/Strehl.exe
 ```
 
-It requires PowerShell 7, refuses an existing destination, and creates a copied
-application source snapshot, a desktop executable, and a separate CLI. Its local
-source kit fetches locked Cargo dependencies on rebuild; unlike the official
-release kit, it does not vendor them. Use the official workflow for published
-binaries.
+It requires PowerShell 7 (`pwsh`), refuses an existing destination, and creates
+a copied application source snapshot, a desktop executable, and a separate CLI.
+Both binaries are built from that copied snapshot. The source manifest records
+`temporal-energy` as compiled and its runtime default as Off; the snapshot also
+includes the small Rust sources referenced outside `crates/` by the current
+example targets and research controls. Generated research data and captures are not
+included. Its local source kit fetches locked Cargo dependencies on rebuild;
+unlike the official release kit, it does not vendor them. Use the official
+workflow for published binaries.

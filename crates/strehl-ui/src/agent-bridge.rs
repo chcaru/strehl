@@ -58,6 +58,7 @@ pub(crate) struct AgentBridge {
     descriptor: PathBuf,
     requests: Receiver<IncomingRequest>,
     stopped: Arc<AtomicBool>,
+    worker: Option<thread::JoinHandle<()>>,
 }
 impl AgentBridge {
     /// `parent` must be the application's private per-user data directory.
@@ -79,7 +80,7 @@ impl AgentBridge {
         let (tx, requests) = mpsc::sync_channel(MAX_PENDING);
         let stopped = Arc::new(AtomicBool::new(false));
         let worker_stopped = stopped.clone();
-        thread::Builder::new()
+        let worker = thread::Builder::new()
             .name("strehl-agent-mailbox".into())
             .spawn(move || {
                 mailbox_worker(directory, capability, tx, worker_stopped);
@@ -88,6 +89,7 @@ impl AgentBridge {
             descriptor,
             requests,
             stopped,
+            worker: Some(worker),
         })
     }
     pub(crate) fn descriptor_path(&self) -> &Path {
@@ -109,6 +111,9 @@ impl AgentBridge {
 impl Drop for AgentBridge {
     fn drop(&mut self) {
         self.stopped.store(true, Ordering::Release);
+        if let Some(worker) = self.worker.take() {
+            let _ = worker.join();
+        }
     }
 }
 
@@ -268,6 +273,14 @@ fn mailbox_worker(
         }
         thread::sleep(POLL);
     }
+    // Publish completed acknowledgements before revoking the descriptor.
+    for pending in pending {
+        let reply = pending
+            .receiver
+            .try_recv()
+            .unwrap_or_else(|_| AgentReply::error("The application disconnected"));
+        let _ = write_reply(&directory, &pending.id, reply);
+    }
     // Delete only files created by this protocol inside our unique directory;
     // never recurse through supplied paths or follow a directory link.
     let _ = fs::remove_file(directory.join("session.json"));
@@ -275,9 +288,9 @@ fn mailbox_worker(
         for entry in entries.take(512).flatten() {
             let name = entry.file_name();
             let name = name.to_string_lossy();
-            if (name.starts_with("request-") || name.starts_with("reply-"))
-                && name.ends_with(".json")
-            {
+            // In-flight clients check replies before descriptor revocation.
+            // Retain published replies so shutdown acknowledgements cannot vanish.
+            if name.starts_with("request-") && name.ends_with(".json") {
                 let _ = fs::remove_file(entry.path());
             }
         }
@@ -515,3 +528,7 @@ fn now_ms() -> u64 {
 #[cfg(test)]
 #[path = "agent-bridge-tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "agent-shutdown-tests.rs"]
+mod shutdown_tests;

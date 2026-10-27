@@ -357,7 +357,7 @@ fn handshake_and_tool_registry_work_over_real_ndjson_stream() {
         .collect::<Vec<_>>();
     assert_eq!(replies.len(), 3);
     assert_eq!(executions, 1);
-    assert_eq!(replies[1]["result"]["tools"].as_array().unwrap().len(), 4);
+    assert_eq!(replies[1]["result"]["tools"].as_array().unwrap().len(), 6);
     assert_eq!(replies[2]["result"]["structuredContent"]["revision"], 17);
     assert_eq!(replies[2]["id"], "state");
 }
@@ -464,4 +464,91 @@ fn image_reply_uses_mcp_image_content_and_tool_errors_keep_request_identity() {
     assert_eq!(r["id"], "a");
     assert_eq!(r["result"]["isError"], true);
     assert!(r.get("error").is_none());
+}
+
+#[test]
+fn metadata_and_shutdown_tools_dispatch_typed_requests_with_distinct_revision_rules() {
+    let definitions = tool_definitions();
+    let find = |name: &str| {
+        definitions
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|tool| tool["name"] == name)
+            .unwrap()
+    };
+    assert_eq!(find("strehl_metadata")["annotations"]["readOnlyHint"], true);
+    assert_eq!(
+        find("strehl_metadata")["inputSchema"]["required"],
+        json!(["frame"])
+    );
+    assert_eq!(
+        find("strehl_shutdown")["annotations"]["readOnlyHint"],
+        false
+    );
+    assert_eq!(
+        find("strehl_shutdown")["inputSchema"]["required"],
+        json!(["expected_revision"])
+    );
+
+    let mut protocol = Protocol::default();
+    ready(&mut protocol);
+    for (name, arguments) in [
+        ("strehl_metadata", json!({"frame":109})),
+        ("strehl_shutdown", json!({"expected_revision":7})),
+    ] {
+        let call = json!({"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":name,"arguments":arguments}});
+        let mut dispatched = false;
+        let reply = protocol
+            .handle(
+                &serde_json::to_vec(&call).unwrap(),
+                &mut |request: AgentRequest| {
+                    match request.command {
+                        AgentCommand::Metadata { frame } => {
+                            assert_eq!(frame, 109);
+                            assert!(request.expected_revision.is_none());
+                            request.check_revision(99).unwrap();
+                        }
+                        AgentCommand::Shutdown {} => {
+                            assert_eq!(request.expected_revision, Some(7));
+                            request.check_revision(7).unwrap();
+                            assert!(request.check_revision(8).is_err());
+                        }
+                        _ => panic!("wrong typed operation"),
+                    }
+                    dispatched = true;
+                    AgentReply::success(json!({"accepted":true}))
+                },
+            )
+            .unwrap();
+        assert!(dispatched);
+        assert_eq!(reply["result"]["structuredContent"]["accepted"], true);
+    }
+}
+
+#[test]
+fn invalid_metadata_and_shutdown_arguments_do_not_dispatch() {
+    let mut protocol = Protocol::default();
+    ready(&mut protocol);
+    let mut never = |_| panic!("invalid metadata/shutdown request dispatched");
+    for (name, arguments) in [
+        ("strehl_metadata", json!({})),
+        ("strehl_metadata", json!({"frame":-1})),
+        ("strehl_metadata", json!({"frame":1.5})),
+        ("strehl_metadata", json!({"frame":0,"path":"private.ARW"})),
+        ("strehl_metadata", json!({"frame":0,"operation":"shutdown"})),
+        ("strehl_shutdown", json!({})),
+        ("strehl_shutdown", json!({"expected_revision":-1})),
+        ("strehl_shutdown", json!({"expected_revision":1.5})),
+        (
+            "strehl_shutdown",
+            json!({"expected_revision":7,"force":true}),
+        ),
+    ] {
+        let call = json!({"jsonrpc":"2.0","id":5,"method":"tools/call","params":{"name":name,"arguments":arguments}});
+        let reply = protocol
+            .handle(&serde_json::to_vec(&call).unwrap(), &mut never)
+            .unwrap();
+        assert_eq!(reply["result"]["isError"], true, "{call}");
+    }
 }

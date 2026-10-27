@@ -13,6 +13,7 @@ leaving that workspace.
 [Development and HDR](docs/development-and-hdr.md) ·
 [Export formats](docs/export-formats.md) ·
 [Agent interface](docs/agent-interface.md) ·
+[Local desktop control](docs/desktop-control.md) ·
 [Build and verify](docs/development/release-workflow.md)
 
 ## See the stack form
@@ -260,6 +261,18 @@ dark in an ordinary viewer. Supply `--out` to write an image.
 
 The alternate `--merge estimator` backend and experiment features are research
 paths, with different assumptions and settings from the normal pyramid workflow.
+
+Optional [temporal-energy guidance](docs/temporal-energy.md) remains Off by default
+and can erase weak detail visible in only one capture.
+
+Inspect A7C II focus metadata without decoding image pixels:
+
+```powershell
+strehl focus inspect "path/to/bracket" --out "focus.json" --html "focus.html"
+```
+
+The offline viewer shows the sparse AF records and bracket progression. See
+[Sony focus metadata](docs/sony-focus-metadata.md) for supported layouts and limits.
 
 ## Development and research
 

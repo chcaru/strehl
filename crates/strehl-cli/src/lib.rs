@@ -1,10 +1,17 @@
 //! Shared Strehl command-line engine. Both frontends invoke this at process startup.
 
 mod align_cmd;
+mod develop_cmd;
 mod focus_plugin;
 mod image_out;
-mod develop_cmd;
+#[cfg(feature = "research-lens-warp")]
+#[path = "lens-research.rs"]
+mod lens_research;
 mod merge_cmd;
+#[path = "sony-focus-cmd.rs"]
+mod sony_focus_cmd;
+#[path = "sony-focus-report.rs"]
+mod sony_focus_report;
 mod stack;
 #[path = "ui-progress.rs"]
 mod ui_progress;
@@ -75,6 +82,9 @@ struct Cli {
 /// list` ambiguous with an operator that someone named `list`.
 #[derive(Subcommand)]
 enum FocusAction {
+    /// Inspect Sony focus metadata and audit bracket changes without decoding pixels.
+    Inspect(sony_focus_cmd::InspectArgs),
+
     /// Print every registered operator with its host-measured noise scale.
     List {
         /// Gate to price the tolerance column at.
@@ -90,6 +100,9 @@ enum FocusAction {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Prepare an isolated, uncalibrated nonlinear optical research map.
+    #[cfg(feature = "research-lens-warp")]
+    LensResearch(lens_research::Args),
     /// Re-develop a saved scene-linear master without restacking.
     Develop(develop_cmd::DevelopArgs),
 
@@ -772,10 +785,13 @@ enum Command {
         cover: Option<String>,
     },
 
-    /// List the focus operators `--focus` can select, with the noise scale the
-    /// HOST MEASURED for each at registration.
+    /// Inspect Sony capture metadata or list calibrated focus operators.
     ///
-    /// The scales are measured here and now -- this command runs the
+    /// `focus inspect` reads metadata without decoding pixels and can export
+    /// JSON or a self-contained HTML viewer. `focus list` reports the noise
+    /// scale the host measured for each operator that `--focus` can select.
+    ///
+    /// For `focus list`, the scales are measured here and now -- it runs the
     /// calibrator, it does not print a table of literals. That is the whole
     /// design of `crates/strehl-plugin`: `FocusMeasure` has no method that
     /// could report a noise SD, and `Calibration` has no public constructor, so
@@ -911,12 +927,26 @@ where
         )
         .init();
 
-    match Cli::parse_from(args).command {
+    let command = Cli::parse_from(args).command;
+    if std::env::var_os("STREHL_RESEARCH_LENS_MAP").is_some() {
+        anyhow::ensure!(
+            cfg!(feature = "research-lens-warp"),
+            "STREHL_RESEARCH_LENS_MAP requires a research-lens-warp feature build"
+        );
+        anyhow::ensure!(
+            matches!(&command, Command::Stack { .. }),
+            "STREHL_RESEARCH_LENS_MAP applies only to stack; unset it for other commands"
+        );
+    }
+    match command {
         Command::Align(args) => align_cmd::run(&args),
+        #[cfg(feature = "research-lens-warp")]
+        Command::LensResearch(args) => lens_research::run(&args),
         Command::Develop(args) => develop_cmd::run(&args),
         Command::ImportPreset(args) => develop_cmd::import(&args),
         Command::Probe { dir, limit } => probe(&dir, limit),
         Command::Focus { action } => match action {
+            FocusAction::Inspect(args) => sony_focus_cmd::run(&args),
             FocusAction::List { gate } => focus_plugin::list(gate),
         },
         Command::ArgmaxBaseline {
@@ -1012,13 +1042,20 @@ where
             // separate list of family membership would be a second place to
             // record the same fact, and the two would drift.
             let wrong_backend: &[(&str, bool, merge_cmd::MergeBackend, &str)] = &[
-                ("--gate", !gates.is_empty(), merge_cmd::MergeBackend::Pyramid,
-                 "--pyramid-gate is the pyramid's noise gate, but it is a DIFFERENT QUANTITY: a \
+                (
+                    "--gate",
+                    !gates.is_empty(),
+                    merge_cmd::MergeBackend::Pyramid,
+                    "--pyramid-gate is the pyramid's noise gate, but it is a DIFFERENT QUANTITY: a \
                   multiple of the modelled band-noise power (default 2.0), where --gate is a \
                   multiple of the focus-response SD (default 4.0). The number does NOT carry \
-                  over -- re-choose it, do not rename it."),
-                ("--focus", focus.is_some(), merge_cmd::MergeBackend::Pyramid,
-                 "no counterpart. --focus names a focus MEASURE, and the pyramid does not compute \
+                  over -- re-choose it, do not rename it.",
+                ),
+                (
+                    "--focus",
+                    focus.is_some(),
+                    merge_cmd::MergeBackend::Pyramid,
+                    "no counterpart. --focus names a focus MEASURE, and the pyramid does not compute \
                   a focus field at all: it elects per band coefficient from band energy, so there \
                   is no operator to swap and no response SD to calibrate a gate against.",
                 ),
@@ -1028,48 +1065,105 @@ where
                     merge_cmd::MergeBackend::Pyramid,
                     "no counterpart. n_eff counts the frames the gated average admitted at a pixel; \
                   the pyramid weights every frame per band coefficient, so there is no per-pixel \
-                  frame count to solve a gate against."),
-                ("--index-map", index_map.is_some(), merge_cmd::MergeBackend::Pyramid,
-                 "no counterpart. The pyramid elects per band coefficient, not per pixel, so no \
-                  single frame index owns an output pixel."),
-                ("--n-eff-map", n_eff_map.is_some(), merge_cmd::MergeBackend::Pyramid,
-                 "no counterpart, for the same reason as --target-n-eff."),
-                ("--photometric", photometric.is_some(), merge_cmd::MergeBackend::Pyramid,
-                 "NOT YET IMPLEMENTED on this backend, rather than inapplicable. The per-frame \
+                  frame count to solve a gate against.",
+                ),
+                (
+                    "--index-map",
+                    index_map.is_some(),
+                    merge_cmd::MergeBackend::Pyramid,
+                    "no counterpart. The pyramid elects per band coefficient, not per pixel, so no \
+                  single frame index owns an output pixel.",
+                ),
+                (
+                    "--n-eff-map",
+                    n_eff_map.is_some(),
+                    merge_cmd::MergeBackend::Pyramid,
+                    "no counterpart, for the same reason as --target-n-eff.",
+                ),
+                (
+                    "--photometric",
+                    photometric.is_some(),
+                    merge_cmd::MergeBackend::Pyramid,
+                    "NOT YET IMPLEMENTED on this backend, rather than inapplicable. The per-frame \
                   affine gain would apply unchanged, but fitting it needs every frame's flux \
                   before the first frame is folded, which the pyramid's single-pass fold does \
-                  not currently do."),
-                ("--stats", stats, merge_cmd::MergeBackend::Pyramid,
-                 "no counterpart. Through-focus statistics describe the estimator's focus field, \
-                  which this backend does not compute."),
-                ("--stats-placebo", stats_placebo, merge_cmd::MergeBackend::Pyramid,
-                 "no counterpart; it is a control for --stats."),
-                ("--flat-roi", flat_roi.is_some(), merge_cmd::MergeBackend::Pyramid,
-                 "no counterpart. The ROI diagnostics report on the estimator's noise invariant."),
-                ("--detail-roi", detail_roi.is_some(), merge_cmd::MergeBackend::Pyramid,
-                 "no counterpart, for the same reason as --flat-roi."),
-                ("--pyramid-bands", pyramid_bands.is_some(), merge_cmd::MergeBackend::Estimator,
-                 "no counterpart. The estimator has no band pyramid to set a depth on."),
-                ("--pyramid-gate", pyramid_gate.is_some(), merge_cmd::MergeBackend::Estimator,
-                 "--gate is the estimator's noise gate, but it is a DIFFERENT QUANTITY: a \
+                  not currently do.",
+                ),
+                (
+                    "--stats",
+                    stats,
+                    merge_cmd::MergeBackend::Pyramid,
+                    "no counterpart. Through-focus statistics describe the estimator's focus field, \
+                  which this backend does not compute.",
+                ),
+                (
+                    "--stats-placebo",
+                    stats_placebo,
+                    merge_cmd::MergeBackend::Pyramid,
+                    "no counterpart; it is a control for --stats.",
+                ),
+                (
+                    "--flat-roi",
+                    flat_roi.is_some(),
+                    merge_cmd::MergeBackend::Pyramid,
+                    "no counterpart. The ROI diagnostics report on the estimator's noise invariant.",
+                ),
+                (
+                    "--detail-roi",
+                    detail_roi.is_some(),
+                    merge_cmd::MergeBackend::Pyramid,
+                    "no counterpart, for the same reason as --flat-roi.",
+                ),
+                (
+                    "--pyramid-bands",
+                    pyramid_bands.is_some(),
+                    merge_cmd::MergeBackend::Estimator,
+                    "no counterpart. The estimator has no band pyramid to set a depth on.",
+                ),
+                (
+                    "--pyramid-gate",
+                    pyramid_gate.is_some(),
+                    merge_cmd::MergeBackend::Estimator,
+                    "--gate is the estimator's noise gate, but it is a DIFFERENT QUANTITY: a \
                   multiple of the focus-response SD (default 4.0), where --pyramid-gate is a \
                   multiple of the modelled band-noise power (default 2.0). The number does NOT \
-                  carry over."),
-                ("--pyramid-exponent", pyramid_exponent.is_some(), merge_cmd::MergeBackend::Estimator,
-                 "no counterpart. The estimator's selection is a gated average, not a weighted \
-                  combination with a tunable exponent."),
-                ("--pyramid-sharpen", pyramid_sharpen.is_some(), merge_cmd::MergeBackend::Estimator,
-                 "no counterpart; it ramps the exponent across bands."),
-                ("--pyramid-select", pyramid_select.is_some(), merge_cmd::MergeBackend::Estimator,
-                 "no counterpart; it chooses between soft and hard-max band selection."),
-                ("--pyramid-base", pyramid_base.is_some(), merge_cmd::MergeBackend::Estimator,
-                 "no counterpart; it chooses how the base band is formed."),
-                ("--confidence-map", confidence_map.is_some(), merge_cmd::MergeBackend::Estimator,
-                 "--n-eff-map is the estimator's per-pixel trust artifact, but it is a DIFFERENT \
+                  carry over.",
+                ),
+                (
+                    "--pyramid-exponent",
+                    pyramid_exponent.is_some(),
+                    merge_cmd::MergeBackend::Estimator,
+                    "no counterpart. The estimator's selection is a gated average, not a weighted \
+                  combination with a tunable exponent.",
+                ),
+                (
+                    "--pyramid-sharpen",
+                    pyramid_sharpen.is_some(),
+                    merge_cmd::MergeBackend::Estimator,
+                    "no counterpart; it ramps the exponent across bands.",
+                ),
+                (
+                    "--pyramid-select",
+                    pyramid_select.is_some(),
+                    merge_cmd::MergeBackend::Estimator,
+                    "no counterpart; it chooses between soft and hard-max band selection.",
+                ),
+                (
+                    "--pyramid-base",
+                    pyramid_base.is_some(),
+                    merge_cmd::MergeBackend::Estimator,
+                    "no counterpart; it chooses how the base band is formed.",
+                ),
+                (
+                    "--confidence-map",
+                    confidence_map.is_some(),
+                    merge_cmd::MergeBackend::Estimator,
+                    "--n-eff-map is the estimator's per-pixel trust artifact, but it is a DIFFERENT \
                   QUANTITY: a COUNT of frames the gate admitted, where --confidence-map is a \
                   RANK -- how centrally the merged output sits inside the observations. The \
                   polarity is opposite -- high n_eff is good, high confidence-map is bad -- so \
-                  the two cannot be compared by reading, only by knowing which one you have."),
+                  the two cannot be compared by reading, only by knowing which one you have.",
+                ),
             ];
             // A flag belonging to the other backend is REFUSED, not ignored.
             // The failure this guards against is the one the whole switch
@@ -1177,71 +1271,73 @@ where
             let (cover_mode, cover_source) = merge_cmd::resolve_cover_mode(cover.as_deref())?;
 
             merge_cmd::run(&MergeOptions {
-            dir,
-            out,
-            linear_master,
-            sensor_master: match (sensor_master, sensor_master_placebo) {
-                (Some(path), false) => merge_cmd::sensor_master::Request::File(path),
-                (None, true) => merge_cmd::sensor_master::Request::Placebo,
-                (None, false) => merge_cmd::sensor_master::Request::Disabled,
-                (Some(_), true) => anyhow::bail!("sensor master file and placebo are mutually exclusive"),
-            },
-            region_recipe,
-            limit,
-            srgb,
-            // Resolved here, once, from the two mutually exclusive flags, so
-            // that no colour decision is taken inside the merge code. clap
-            // already refuses the pair via `conflicts_with`; this re-checks it
-            // because the invariant belongs to the type, not to the argument
-            // parser, and `stack.rs` resolves the same way.
-            space: image_out::OutputSpace::from_flags(srgb, linear_srgb)?,
-            // M95: --srgb is the "for looking at" path, and binning it throws
-            // away half the linear resolution of the capture. Full resolution
-            // is the default there unless --binned asks for the old behaviour.
-            // The measurement path passes neither flag, so this is false for it
-            // and the byte-frozen output is untouched.
-            demosaic: demosaic || (srgb && !binned),
-            exposure,
-            auto_exposure,
-            // Filled in here rather than by clap, so that "the user passed a
-            // gate" and "the user did not" stay distinguishable above. An
-            // estimator run that omits --gate is unchanged: it still folds
-            // DEFAULT_GATE and exactly that.
-            gates: if gates.is_empty() {
-                vec![DEFAULT_GATE]
-            } else {
-                gates
-            },
-            // Passed through as the raw name. Resolution -- and the
-            // CALIBRATION it triggers -- happens inside run_estimator, where
-            // the run banner can report the measured scale next to the gate it
-            // denominates. Resolving it here would calibrate before the
-            // backend refusals had run, which would make a rejected
-            // `--merge pyramid --focus x` pay half a second to be told no.
-            focus,
-            flat_roi,
-            detail_roi,
-            index_map,
-            n_eff_map,
-            confidence_map,
-            // Resolved above, with its provenance, so the banner can name the
-            // channel that chose this mode.
-            photometric: photometric_mode,
-            photometric_source,
-            target_n_eff,
-            stats,
-            stats_placebo,
-            confidence_tail,
-            // Parsed here, by the same function `strehl align --resampler`
-            // uses, so an unknown name is one error message in one place and
-            // never a silent fall back to the default.
-            resampler: align_cmd::parse_resampler(&resampler)?,
-            backend,
-            // Resolved above with its provenance, exactly like `photometric`.
-            cover: cover_mode,
-            cover_source,
-            pyramid,
-        })
+                dir,
+                out,
+                linear_master,
+                sensor_master: match (sensor_master, sensor_master_placebo) {
+                    (Some(path), false) => merge_cmd::sensor_master::Request::File(path),
+                    (None, true) => merge_cmd::sensor_master::Request::Placebo,
+                    (None, false) => merge_cmd::sensor_master::Request::Disabled,
+                    (Some(_), true) => {
+                        anyhow::bail!("sensor master file and placebo are mutually exclusive")
+                    }
+                },
+                region_recipe,
+                limit,
+                srgb,
+                // Resolved here, once, from the two mutually exclusive flags, so
+                // that no colour decision is taken inside the merge code. clap
+                // already refuses the pair via `conflicts_with`; this re-checks it
+                // because the invariant belongs to the type, not to the argument
+                // parser, and `stack.rs` resolves the same way.
+                space: image_out::OutputSpace::from_flags(srgb, linear_srgb)?,
+                // M95: --srgb is the "for looking at" path, and binning it throws
+                // away half the linear resolution of the capture. Full resolution
+                // is the default there unless --binned asks for the old behaviour.
+                // The measurement path passes neither flag, so this is false for it
+                // and the byte-frozen output is untouched.
+                demosaic: demosaic || (srgb && !binned),
+                exposure,
+                auto_exposure,
+                // Filled in here rather than by clap, so that "the user passed a
+                // gate" and "the user did not" stay distinguishable above. An
+                // estimator run that omits --gate is unchanged: it still folds
+                // DEFAULT_GATE and exactly that.
+                gates: if gates.is_empty() {
+                    vec![DEFAULT_GATE]
+                } else {
+                    gates
+                },
+                // Passed through as the raw name. Resolution -- and the
+                // CALIBRATION it triggers -- happens inside run_estimator, where
+                // the run banner can report the measured scale next to the gate it
+                // denominates. Resolving it here would calibrate before the
+                // backend refusals had run, which would make a rejected
+                // `--merge pyramid --focus x` pay half a second to be told no.
+                focus,
+                flat_roi,
+                detail_roi,
+                index_map,
+                n_eff_map,
+                confidence_map,
+                // Resolved above, with its provenance, so the banner can name the
+                // channel that chose this mode.
+                photometric: photometric_mode,
+                photometric_source,
+                target_n_eff,
+                stats,
+                stats_placebo,
+                confidence_tail,
+                // Parsed here, by the same function `strehl align --resampler`
+                // uses, so an unknown name is one error message in one place and
+                // never a silent fall back to the default.
+                resampler: align_cmd::parse_resampler(&resampler)?,
+                backend,
+                // Resolved above with its provenance, exactly like `photometric`.
+                cover: cover_mode,
+                cover_source,
+                pyramid,
+            })
         }
     }
 }
@@ -1289,6 +1385,10 @@ fn probe(dir: &Path, limit: Option<usize>) -> Result<()> {
 
     let f = &ok[0];
     println!("camera          : {}", f.camera);
+    println!(
+        "focus metadata  : {}",
+        sony_focus_cmd::probe_summary(&f.path)
+    );
     println!(
         "iso             : {}",
         f.iso
@@ -1348,17 +1448,43 @@ mod tests {
             _ => panic!("align parsed as another command"),
         }
         let parsed = super::Cli::try_parse_from([
-            "strehl", "align", "example-stack", "--peak-refinement", "quadratic",
-            "--out", "candidate-warpmap.txt",
-        ]).unwrap();
+            "strehl",
+            "align",
+            "example-stack",
+            "--peak-refinement",
+            "quadratic",
+            "--out",
+            "candidate-warpmap.txt",
+        ])
+        .unwrap();
         match parsed.command {
             super::Command::Align(args) => assert_eq!(args.peak_refinement, "quadratic"),
             _ => panic!("align parsed as another command"),
         }
         for argv in [
-            vec!["strehl", "align", "example-stack", "--peak-refinement", "quadratic"],
-            vec!["strehl", "align", "example-stack", "--peak-refinement", "typo", "--out", "candidate-warpmap.txt"],
-            vec!["strehl", "stack", "example-stack", "--peak-refinement", "quadratic"],
+            vec![
+                "strehl",
+                "align",
+                "example-stack",
+                "--peak-refinement",
+                "quadratic",
+            ],
+            vec![
+                "strehl",
+                "align",
+                "example-stack",
+                "--peak-refinement",
+                "typo",
+                "--out",
+                "candidate-warpmap.txt",
+            ],
+            vec![
+                "strehl",
+                "stack",
+                "example-stack",
+                "--peak-refinement",
+                "quadratic",
+            ],
         ] {
             assert!(super::Cli::try_parse_from(argv).is_err());
         }
@@ -1385,13 +1511,74 @@ mod tests {
             .expect("--focus is missing from `strehl stack`");
         assert_eq!(focus.get_long(), Some("focus"));
 
-        // And the refusal table names it, so `--merge pyramid --focus x` is an
-        // error rather than a silently ignored operator.
-        let src = include_str!("lib.rs");
+        // Run the actual entry point in a fresh process: logger/environment
+        // state must not leak into other tests, and a source-text match cannot
+        // establish that the refusal reaches the command the user runs.
+        let child_name = "tests::focus_wrong_backend_child";
+        let mut child = std::process::Command::new(std::env::current_exe().unwrap());
+        child.args([
+            "--exact",
+            child_name,
+            "--ignored",
+            "--nocapture",
+            "--test-threads=1",
+        ]);
+        for (key, _) in std::env::vars_os() {
+            if key.to_string_lossy().starts_with("STREHL_") {
+                child.env_remove(key);
+            }
+        }
+        child.env("STREHL_TEST_FOCUS_REFUSAL", "1");
+        let result = child
+            .output()
+            .expect("launching isolated focus refusal test");
+        let stdout = String::from_utf8_lossy(&result.stdout);
+        let stderr = String::from_utf8_lossy(&result.stderr);
+        assert!(result.status.success(), "child failed: {stdout} {stderr}");
         assert!(
-            src.contains("(\"--focus\", focus.is_some(), merge_cmd::MergeBackend::Pyramid,"),
-            "--focus dropped out of the wrong-backend refusal table"
+            stdout.contains("running 1 test")
+                && stdout.contains("1 passed; 0 failed")
+                && stdout.contains(child_name),
+            "the selected child test must actually run exactly once: {stdout}"
         );
+        assert!(
+            stdout.contains("FOCUS_REFUSAL:")
+                && stdout.contains("--focus belongs to the estimator merge")
+                && stdout.contains("--merge selected pyramid"),
+            "the actual CLI must refuse --focus for its backend before source I/O: {stdout}"
+        );
+    }
+
+    #[test]
+    #[ignore = "invoked in an isolated process by the parent focus-selector test"]
+    fn focus_wrong_backend_child() {
+        assert_eq!(
+            std::env::var("STREHL_TEST_FOCUS_REFUSAL").as_deref(),
+            Ok("1")
+        );
+        let nonexistent = std::env::temp_dir()
+            .join(format!("strehl-focus-refusal-{}", std::process::id()))
+            .join("source-must-not-be-opened");
+        assert!(!nonexistent.exists());
+        // SAFETY: this isolated process runs one selected test, passes no
+        // environment-setting flags, and must return before creating workers.
+        // A nonexistent source ensures an accidental decode/list attempt cannot
+        // masquerade as the expected semantic refusal.
+        let result = unsafe {
+            super::run_from([
+                "strehl".to_owned(),
+                "stack".to_owned(),
+                nonexistent.to_string_lossy().into_owned(),
+                "--merge".to_owned(),
+                "pyramid".to_owned(),
+                "--focus".to_owned(),
+                "deliberately-unregistered-test-operator".to_owned(),
+            ])
+        };
+        let message = format!("{:#}", result.expect_err("wrong-backend focus must refuse"));
+        assert!(message.contains("--focus belongs to the estimator merge"));
+        assert!(message.contains("--merge selected pyramid"));
+        println!("FOCUS_REFUSAL:{message}");
     }
 
     /// `strehl focus list` is reachable, because an operator nobody can
@@ -1640,7 +1827,6 @@ mod tests {
              a reader which mode they get when they pass nothing.",
         );
     }
-
 
     ///
     /// "Requires exactly one --gate" reads as "you must pass --gate". The

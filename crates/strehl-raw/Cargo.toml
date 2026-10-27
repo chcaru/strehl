@@ -14,3 +14,7 @@ rawler.workspace = true
 rayon.workspace = true
 thiserror.workspace = true
 anyhow.workspace = true
+
+[[example]]
+name = "rea-dark-audit"
+path = "../../experiments/rea-a7c2-2026-10-24-d/raw-dark-audit.rs"

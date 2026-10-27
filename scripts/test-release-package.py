@@ -40,6 +40,29 @@ def pe_fixture(*, normal="KERNEL32.dll", delayed=None):
 
 
 class ReleasePackagingTests(unittest.TestCase):
+    def test_application_source_keeps_declared_workspace_targets(self):
+        # Exercise the real staging list: a forgotten external Cargo example
+        # must fail here instead of producing an unrebuildable release kit.
+        with tempfile.TemporaryDirectory() as temp:
+            staged = Path(temp)
+            copied = release.copy_application_source(staged)
+            self.assertTrue(copied)
+            workspace = release.tomllib.loads((staged / "Cargo.toml").read_text(encoding="utf-8"))
+            targets = []
+            for member in workspace["workspace"]["members"]:
+                for directory in staged.glob(member):
+                    manifest = release.tomllib.loads((directory / "Cargo.toml").read_text(encoding="utf-8"))
+                    entries = [manifest["lib"]] if "lib" in manifest else []
+                    for kind in ("bin", "example", "test", "bench"):
+                        entries.extend(manifest.get(kind, []))
+                    for entry in entries:
+                        if "path" in entry:
+                            target = (directory / entry["path"]).resolve()
+                            self.assertTrue(target.is_relative_to(staged.resolve()), entry)
+                            self.assertTrue(target.is_file(), f"Missing staged Cargo target: {target}")
+                            targets.append(target)
+            self.assertTrue(targets)
+
     def test_dependency_patent_grants_are_shipped_with_licenses(self):
         for name in ("LICENSE", "COPYING.md", "PATENTS", "Patent-Grant.txt"):
             self.assertTrue(release.license_name(name), name)
