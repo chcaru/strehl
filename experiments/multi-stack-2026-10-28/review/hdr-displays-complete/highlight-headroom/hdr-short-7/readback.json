@@ -1,0 +1,224 @@
+{
+  "label": "hdr-short-7",
+  "master": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\hdr-short-7\\master.tiff",
+    "shape": [
+      4620,
+      6928,
+      3
+    ],
+    "dtype": "float32",
+    "description": "Strehl scene-linear master v1; RGB32Float; BT.709 primaries; D65; linear transfer; unclipped pre-tone values; 1.0 is sensor-normalized reference white.\nDisplayBaseline: {\"black\":0.057261206,\"white\":1.1813023,\"contrast\":0.55,\"exposure_gain\":1.0}",
+    "icc_bytes": 696,
+    "file_sha256": "67f27ad5c19d293be960570c1c399abddf538caa101533959cfe56341805ecf8"
+  },
+  "shape_verified": [
+    4620,
+    6928,
+    3
+  ],
+  "transform_file_sha256": "bbe4b6b7a6e00a684b858ac20a69e381679a724e7940a16479187356e75128e7",
+  "transform": {
+    "black": 0.0,
+    "white": 4.0,
+    "contrast": 0.55,
+    "exposure_gain": 0.25
+  },
+  "complete_display_sha256": "2d01af8d338b39237fdbb52c99547a3b32c3f33b8943ab3f3ba04d20222b8c88",
+  "overview_sha256": "8750de8529ea32dacd1ee80950af946378fa707b9f00981959bc463f5178421c",
+  "overview_size": [
+    1400,
+    934
+  ],
+  "overview_use": "orientation only; resized",
+  "source_negative_channels": 0,
+  "source_above1_channels": 6130988,
+  "numpy": "2.4.4",
+  "python": "3.12.10",
+  "argv": [
+    "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\experiments\\multi-stack-2026-10-28\\review\\prepare-hdr-displays.py"
+  ],
+  "script_sha256": "5e0fcca9069c42e1424159fc2cb767aacf0835932b6a3ae056da7f4031c2cdef",
+  "rois": [
+    {
+      "name": "gray-ramp-middle",
+      "origin": [
+        957,
+        416
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file_sha256": "21d145390e59d4ac6b65a824a5701559ee395f828e8f92e751bfcdfa494d0c6c",
+      "linear_pixel_sha256": "cf7fc8693f95312636326d1ea811c5a0f1edfc0dcd5a99839ddac977a16f9a79",
+      "encoded_pixel_sha256": "4f96955e61e43e3a8ae1307a6d2e6e69ec319fe7307017eafda80846911d25b5",
+      "sampling": "native pixel slice; no spatial resampling"
+    },
+    {
+      "name": "adverse-flare-p12",
+      "origin": [
+        4157,
+        1565
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file_sha256": "907a74bf7f8a4b1f340bf2704b87dff681867e5b7f5ecf4aba7ce6450cc50bcc",
+      "linear_pixel_sha256": "05a82dcc0aca9fe2cccea01c61b21b293225abbe1dd2afe67f8846f690eba250",
+      "encoded_pixel_sha256": "627cb5d62d31ee5da68582ff6fae08a82eccd8432ddfd91e4e84a7710d286a94",
+      "sampling": "native pixel slice; no spatial resampling"
+    },
+    {
+      "name": "qr-white-black-grid",
+      "origin": [
+        3957,
+        415
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file_sha256": "fd2fa5fb88ac8f43359996affba2c806cc5a8419cbce360f5b42aa278756ca14",
+      "linear_pixel_sha256": "69eacd0924005bff13e3ef85e40264f1686e547657b5b92d28cc15e52b6ae5ab",
+      "encoded_pixel_sha256": "a4b2503510b954fa42f51f3e80bae147b6c781427ba34fdfadb47f3b8be2ed49",
+      "sampling": "native pixel slice; no spatial resampling"
+    },
+    {
+      "name": "qr-corner-boundary",
+      "origin": [
+        4657,
+        1165
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file_sha256": "d6f408a8cd7da95881887071fb5a602c2fcd85688a1044d1e59e12a26681e2bd",
+      "linear_pixel_sha256": "d1509d973e5e7efffb98d09b274c5448d3de0fbc6e1ac8b66b568b3f9000d819",
+      "encoded_pixel_sha256": "df8e498b0a3e309ac81db6d65f804f084abbc59b0ab756ccf9d2f60e64da134f",
+      "sampling": "native pixel slice; no spatial resampling"
+    },
+    {
+      "name": "large-radial-star",
+      "origin": [
+        5857,
+        615
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file_sha256": "94b781509830a42d8811163039d3d4beec4795403891f3474984110762d596ea",
+      "linear_pixel_sha256": "14774608460f5d9aba02bd4501e49f6c6e6b7bb00a2fb46fe7085ebf6578575b",
+      "encoded_pixel_sha256": "7a55b5edeaf1bd0b825653b22385c6a90cb16b6ad829cd35e6b6a2dff6321ac4",
+      "sampling": "native pixel slice; no spatial resampling"
+    },
+    {
+      "name": "fine-resolution-bars",
+      "origin": [
+        5157,
+        1815
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file_sha256": "219448236c89e32cd158abfbfe5baa1ac237c4cc452358b0f8a2f8e87e402e01",
+      "linear_pixel_sha256": "7c038b0e61127b971b0769396079d8306a1ec8c63636203ec3c500a3af9efa45",
+      "encoded_pixel_sha256": "d3acc2c93af0a357608f71e4d891e38f1889f10125ab905bfc1cfaf67d2f954d",
+      "sampling": "native pixel slice; no spatial resampling"
+    },
+    {
+      "name": "bright-dot-field",
+      "origin": [
+        558,
+        2015
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file_sha256": "8b858ed9552cf1d3d6136e3253beefc0219cc54c5243ca92b75ea84ae735669a",
+      "linear_pixel_sha256": "76217187b71e6442347438f7f79cdc59b3b5ab4c07c3cdf67b651e0db1ce53c1",
+      "encoded_pixel_sha256": "858a1b0a5917e0686fb20acd740012ead0aaa67ba4557f3955523054064e021b",
+      "sampling": "native pixel slice; no spatial resampling"
+    },
+    {
+      "name": "low-contrast-dot-field",
+      "origin": [
+        3957,
+        3115
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file_sha256": "e51ac3f6e617afbb68fec26311e2e367a0dfdf106e3ff8ea21ff588204a18462",
+      "linear_pixel_sha256": "af7307e57ce532bcbb92a2e9ab9e2c80cd5927beb7226fd7fcf076c34bddd034",
+      "encoded_pixel_sha256": "2ccf080c8232526678027f953afa9f06097e1ce05cffcf03e8be59739c4076eb",
+      "sampling": "native pixel slice; no spatial resampling"
+    },
+    {
+      "name": "lower-radial-spokes",
+      "origin": [
+        1257,
+        4115
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file_sha256": "94f0ddef4a9c58fe9ee8bb1d6d69c06bbc0feb178c7f25d164fa1f32079596da",
+      "linear_pixel_sha256": "b5d888bd91e41bddf35771e7c3d220167c8e17757c0a78245bc2d28399badea8",
+      "encoded_pixel_sha256": "843cfdab6437e3ffe3b3477201b322c36da29c8172d756aa52f9344217e20a39",
+      "sampling": "native pixel slice; no spatial resampling"
+    },
+    {
+      "name": "clipped-core",
+      "origin": [
+        44,
+        894
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file_sha256": "3fee9fcf6c6e3f4def2cfef41d8129426bea2528a7a497456aa47a5d4b1eff61",
+      "linear_pixel_sha256": "87d5c2e0a3429de9c1a0f53ee72e899e6661ac39fc406443d70a7ac806ae0580",
+      "encoded_pixel_sha256": "503a7626e162129de3b35f570e80813bdee5da3a2210c07662fb99c2d05e5344",
+      "sampling": "native pixel slice; no spatial resampling"
+    },
+    {
+      "name": "blue-clipped-core",
+      "origin": [
+        556,
+        894
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file_sha256": "98fa532d6aa82c81c69d0893dea029a63c27bea280fb721687ae4b108e626071",
+      "linear_pixel_sha256": "02f5a5d89d3fe219cc7c2b631ca23c73d8a8d5e783e4ab1c6f6c4870a0aab15b",
+      "encoded_pixel_sha256": "0b0416652e3c5eaecd77f8330d1c2bc0a469eac66d6f656cb3579b66fcd654ae",
+      "sampling": "native pixel slice; no spatial resampling"
+    },
+    {
+      "name": "clipped-boundary",
+      "origin": [
+        1580,
+        830
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file_sha256": "ae564b0028e1a0673f5085323964dbcc09ad290b2f71858f918e05cc75869f92",
+      "linear_pixel_sha256": "7c584719e9bff3be22ff647e5ea6c2d4e26283fa536b9b8accb862c6392bb12c",
+      "encoded_pixel_sha256": "28294d7ca8d52a3c51468620576f57e6824bbcea36dfdbdd35cc3814cd6a2608",
+      "sampling": "native pixel slice; no spatial resampling"
+    }
+  ]
+}

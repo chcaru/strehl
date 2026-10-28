@@ -1,0 +1,278 @@
+{
+  "schema": "strehl.independent-hdr-review-freeze.v1",
+  "status": "FROZEN before viewing fused HDR or either output control; source locator only was inspected",
+  "helper_sha256": "2ed5b1be72f78a316fd0af62c61a0d76f07a2c01d7be593cbf2e0c836b5e7e8e",
+  "inputs": {
+    "one_second_locator_sha256": "54f753b14703a42eca524876d97246fed37ee9b8668723a3211e6fc73c2deb48",
+    "old_geometry_sha256": "d1228651cf578a5922504be04bee92ed7b85d5508ef38fd9b3db193f4971c8f2",
+    "new_geometry_sha256": "786b809e4de07e20af4853704e4c0b5ffa744820f81c69d7ee70575ee00ca8f7",
+    "new_warpmap_sha256": "a8afec6897a6be67df7b0fc04071fc352e239443eb8685302c2b49c830552c08",
+    "clipping_count_report_sha256": "f53b74113cd5ff05fa5a0dd57bf69756bfed5ce1d36615e3f6bba36159db6efb",
+    "photometry_report_sha256": "7956745b4c02ea14bb437cfe54a1a814793cf433ea3a0fbdaab3ec7063ec20cc"
+  },
+  "common_anchor": {
+    "new_global_index": 93,
+    "old_global_index": 153,
+    "path": "\\\\?\\D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl\\DSC00047.ARW",
+    "sha256": "a5225aef221dad3d6eb850940be527e48a99548ef3cf23990ae4d09ea5b5a146",
+    "exposure_seconds": 6,
+    "pass_index": 32
+  },
+  "calibrated_gains_recorded_not_refit": [
+    2.5335414,
+    1.0
+  ],
+  "rounding_rule": "When final saved canvas is available, origin[d]=floor(full_candidate_native_center[d]-2*canvas_origin_plane[d]-191.5+0.5); fixed384square, no resampling. Refuse out-of-bounds; no content-driven reposition.",
+  "geometry_limits": "Legacy1s locator centers use the old globally measured map only to transfer broad landmarks into the same physical6s-middle frame; this is not placement truth or pixelwise registration. Clipping-count witnesses already name that actual6s-middle sensor.",
+  "controls_required": [
+    "Full2.5sonly and6sonly on the exact126map/canvas with same calibrated gains,WB,color matrix,noise/transfer config and frozen display",
+    "Keep full3pass refusal evidence; two-pass success does not validate rejected1spass",
+    "Local original long clipping plus actual contributing short coverage/uncensored support before highlight-recovery language"
+  ],
+  "display_views": [
+    {
+      "name": "physical-reference",
+      "black": 0.0,
+      "white": 4.0,
+      "contrast": 0.55,
+      "exposure_gain": 1.0
+    },
+    {
+      "name": "highlight-headroom",
+      "black": 0.0,
+      "white": 4.0,
+      "contrast": 0.55,
+      "exposure_gain": 0.25
+    }
+  ],
+  "rois": [
+    {
+      "name": "gray-ramp-middle",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        1200,
+        650
+      ],
+      "full_candidate_native_center": [
+        1200.9298460947248,
+        641.0677001588931
+      ],
+      "purpose": "Gray field and low-frequency radiometry",
+      "size": 384
+    },
+    {
+      "name": "adverse-flare-p12",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        4400,
+        1800
+      ],
+      "full_candidate_native_center": [
+        4400.619246579238,
+        1790.8609848296655
+      ],
+      "purpose": "Keep known focus-dependent flare witness; do not censor failure",
+      "size": 384
+    },
+    {
+      "name": "qr-white-black-grid",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        4200,
+        650
+      ],
+      "full_candidate_native_center": [
+        4200.610285166335,
+        640.9887467463825
+      ],
+      "purpose": "Clipped grid edges, false contrast and chromatic fringes",
+      "size": 384
+    },
+    {
+      "name": "qr-corner-boundary",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        4900,
+        1400
+      ],
+      "full_candidate_native_center": [
+        4900.555459302838,
+        1390.890434051366
+      ],
+      "purpose": "High-contrast corner continuity and halos",
+      "size": 384
+    },
+    {
+      "name": "large-radial-star",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        6100,
+        850
+      ],
+      "full_candidate_native_center": [
+        6100.413160139189,
+        840.9174388565664
+      ],
+      "purpose": "Radial spoke continuity, false detail and aliasing",
+      "size": 384
+    },
+    {
+      "name": "fine-resolution-bars",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        5400,
+        2050
+      ],
+      "full_candidate_native_center": [
+        5400.519305720817,
+        2040.8080369481295
+      ],
+      "purpose": "Fine bars and colored moire; not gradient-energy sharpness",
+      "size": 384
+    },
+    {
+      "name": "bright-dot-field",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        800,
+        2250
+      ],
+      "full_candidate_native_center": [
+        801.0145627051825,
+        2240.9077947854203
+      ],
+      "purpose": "Bright dot shape and halo/background",
+      "size": 384
+    },
+    {
+      "name": "low-contrast-dot-field",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        4200,
+        3350
+      ],
+      "full_candidate_native_center": [
+        4200.681343237595,
+        3340.7011419108317
+      ],
+      "purpose": "Faint dots and smoothing/noise trade",
+      "size": 384
+    },
+    {
+      "name": "lower-radial-spokes",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        1500,
+        4350
+      ],
+      "full_candidate_native_center": [
+        1500.995265877316,
+        4340.665679672628
+      ],
+      "purpose": "Field-dependent spoke/color behavior",
+      "size": 384
+    },
+    {
+      "name": "clipped-core",
+      "selection": "Derived clipping-count report only; maximal count, raster-order tie break,384square fits,512px separation between selected clipping witnesses",
+      "selection_center_sensor": [
+        287.5,
+        1119.5
+      ],
+      "full_candidate_native_center": [
+        287.49999999999955,
+        1119.4999999999998
+      ],
+      "size": 384,
+      "purpose": "Original6s clipping support witness; requires actual2.5s admitted support evidence before recovery claim",
+      "block_sensor_origin": [
+        256,
+        1088
+      ],
+      "block_sensor_size": [
+        64,
+        64
+      ],
+      "original6s_clipped_sites_rg1g2b": [
+        0,
+        1024,
+        1024,
+        1024
+      ],
+      "original6s_site_counts_rg1g2b": [
+        1024,
+        1024,
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "blue-clipped-core",
+      "selection": "Derived clipping-count report only; maximal count, raster-order tie break,384square fits,512px separation between selected clipping witnesses",
+      "selection_center_sensor": [
+        799.5,
+        1119.5
+      ],
+      "full_candidate_native_center": [
+        799.4999999999995,
+        1119.4999999999998
+      ],
+      "size": 384,
+      "purpose": "Original6s clipping support witness; requires actual2.5s admitted support evidence before recovery claim",
+      "block_sensor_origin": [
+        768,
+        1088
+      ],
+      "block_sensor_size": [
+        64,
+        64
+      ],
+      "original6s_clipped_sites_rg1g2b": [
+        0,
+        1024,
+        1024,
+        1024
+      ],
+      "original6s_site_counts_rg1g2b": [
+        1024,
+        1024,
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "clipped-boundary",
+      "selection": "Derived clipping-count report only; maximal count, raster-order tie break,384square fits,512px separation between selected clipping witnesses",
+      "selection_center_sensor": [
+        1823.5,
+        1055.5
+      ],
+      "full_candidate_native_center": [
+        1823.4999999999998,
+        1055.4999999999998
+      ],
+      "size": 384,
+      "purpose": "Original6s clipping support witness; requires actual2.5s admitted support evidence before recovery claim",
+      "block_sensor_origin": [
+        1792,
+        1024
+      ],
+      "block_sensor_size": [
+        64,
+        64
+      ],
+      "original6s_clipped_sites_rg1g2b": [
+        0,
+        1023,
+        1024,
+        0
+      ],
+      "original6s_site_counts_rg1g2b": [
+        1024,
+        1024,
+        1024,
+        1024
+      ]
+    }
+  ]
+}

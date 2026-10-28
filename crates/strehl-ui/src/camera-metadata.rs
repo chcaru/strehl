@@ -490,6 +490,9 @@ pub(crate) struct CameraMetadata {
     view: view::ViewState,
 }
 impl CameraMetadata {
+    pub(crate) fn is_open(&self) -> bool {
+        self.open
+    }
     pub(crate) fn is_loading(&self) -> bool {
         self.work.is_some() || self.pending.is_some()
     }

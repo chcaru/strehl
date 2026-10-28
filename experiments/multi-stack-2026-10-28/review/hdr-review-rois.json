@@ -1,0 +1,499 @@
+{
+  "schema": "strehl.independent-review-rois.v1",
+  "size": 384,
+  "mapping_sha256": "3042ba14c828a6c44cb391ac1d79f4014108fbcd4cd5f7c44763abe19db7ef71",
+  "rois": [
+    {
+      "name": "gray-ramp-middle",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        1200,
+        650
+      ],
+      "full_candidate_native_center": [
+        1200.9298460947248,
+        641.0677001588931
+      ],
+      "purpose": "Gray field and low-frequency radiometry",
+      "size": 384,
+      "origins": {
+        "slide-hdr-pair-6": [
+          957,
+          416
+        ],
+        "hdr-short-7": [
+          957,
+          416
+        ],
+        "hdr-long-7": [
+          957,
+          416
+        ]
+      },
+      "continuous_origin": [
+        957.4298460947248,
+        415.5677001588931
+      ],
+      "rounding_error_pixels": [
+        -0.4298460947247804,
+        0.43229984110689657
+      ]
+    },
+    {
+      "name": "adverse-flare-p12",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        4400,
+        1800
+      ],
+      "full_candidate_native_center": [
+        4400.619246579238,
+        1790.8609848296655
+      ],
+      "purpose": "Keep known focus-dependent flare witness; do not censor failure",
+      "size": 384,
+      "origins": {
+        "slide-hdr-pair-6": [
+          4157,
+          1565
+        ],
+        "hdr-short-7": [
+          4157,
+          1565
+        ],
+        "hdr-long-7": [
+          4157,
+          1565
+        ]
+      },
+      "continuous_origin": [
+        4157.119246579238,
+        1565.3609848296655
+      ],
+      "rounding_error_pixels": [
+        -0.11924657923827908,
+        -0.36098482966554
+      ]
+    },
+    {
+      "name": "qr-white-black-grid",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        4200,
+        650
+      ],
+      "full_candidate_native_center": [
+        4200.610285166335,
+        640.9887467463825
+      ],
+      "purpose": "Clipped grid edges, false contrast and chromatic fringes",
+      "size": 384,
+      "origins": {
+        "slide-hdr-pair-6": [
+          3957,
+          415
+        ],
+        "hdr-short-7": [
+          3957,
+          415
+        ],
+        "hdr-long-7": [
+          3957,
+          415
+        ]
+      },
+      "continuous_origin": [
+        3957.1102851663354,
+        415.4887467463825
+      ],
+      "rounding_error_pixels": [
+        -0.11028516633541585,
+        -0.48874674638250326
+      ]
+    },
+    {
+      "name": "qr-corner-boundary",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        4900,
+        1400
+      ],
+      "full_candidate_native_center": [
+        4900.555459302838,
+        1390.890434051366
+      ],
+      "purpose": "High-contrast corner continuity and halos",
+      "size": 384,
+      "origins": {
+        "slide-hdr-pair-6": [
+          4657,
+          1165
+        ],
+        "hdr-short-7": [
+          4657,
+          1165
+        ],
+        "hdr-long-7": [
+          4657,
+          1165
+        ]
+      },
+      "continuous_origin": [
+        4657.055459302838,
+        1165.390434051366
+      ],
+      "rounding_error_pixels": [
+        -0.055459302838244184,
+        -0.3904340513659008
+      ]
+    },
+    {
+      "name": "large-radial-star",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        6100,
+        850
+      ],
+      "full_candidate_native_center": [
+        6100.413160139189,
+        840.9174388565664
+      ],
+      "purpose": "Radial spoke continuity, false detail and aliasing",
+      "size": 384,
+      "origins": {
+        "slide-hdr-pair-6": [
+          5857,
+          615
+        ],
+        "hdr-short-7": [
+          5857,
+          615
+        ],
+        "hdr-long-7": [
+          5857,
+          615
+        ]
+      },
+      "continuous_origin": [
+        5856.913160139189,
+        615.4174388565664
+      ],
+      "rounding_error_pixels": [
+        0.08683986081086914,
+        -0.4174388565663776
+      ]
+    },
+    {
+      "name": "fine-resolution-bars",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        5400,
+        2050
+      ],
+      "full_candidate_native_center": [
+        5400.519305720817,
+        2040.8080369481295
+      ],
+      "purpose": "Fine bars and colored moire; not gradient-energy sharpness",
+      "size": 384,
+      "origins": {
+        "slide-hdr-pair-6": [
+          5157,
+          1815
+        ],
+        "hdr-short-7": [
+          5157,
+          1815
+        ],
+        "hdr-long-7": [
+          5157,
+          1815
+        ]
+      },
+      "continuous_origin": [
+        5157.019305720817,
+        1815.3080369481295
+      ],
+      "rounding_error_pixels": [
+        -0.019305720817101246,
+        -0.3080369481294838
+      ]
+    },
+    {
+      "name": "bright-dot-field",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        800,
+        2250
+      ],
+      "full_candidate_native_center": [
+        801.0145627051825,
+        2240.9077947854203
+      ],
+      "purpose": "Bright dot shape and halo/background",
+      "size": 384,
+      "origins": {
+        "slide-hdr-pair-6": [
+          558,
+          2015
+        ],
+        "hdr-short-7": [
+          558,
+          2015
+        ],
+        "hdr-long-7": [
+          558,
+          2015
+        ]
+      },
+      "continuous_origin": [
+        557.5145627051825,
+        2015.4077947854203
+      ],
+      "rounding_error_pixels": [
+        0.4854372948175296,
+        -0.4077947854202648
+      ]
+    },
+    {
+      "name": "low-contrast-dot-field",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        4200,
+        3350
+      ],
+      "full_candidate_native_center": [
+        4200.681343237595,
+        3340.7011419108317
+      ],
+      "purpose": "Faint dots and smoothing/noise trade",
+      "size": 384,
+      "origins": {
+        "slide-hdr-pair-6": [
+          3957,
+          3115
+        ],
+        "hdr-short-7": [
+          3957,
+          3115
+        ],
+        "hdr-long-7": [
+          3957,
+          3115
+        ]
+      },
+      "continuous_origin": [
+        3957.181343237595,
+        3115.2011419108317
+      ],
+      "rounding_error_pixels": [
+        -0.1813432375947741,
+        -0.20114191083166588
+      ]
+    },
+    {
+      "name": "lower-radial-spokes",
+      "selection": "Existing1s-middle locator only; selected before fused HDR view",
+      "selection_center_sensor": [
+        1500,
+        4350
+      ],
+      "full_candidate_native_center": [
+        1500.995265877316,
+        4340.665679672628
+      ],
+      "purpose": "Field-dependent spoke/color behavior",
+      "size": 384,
+      "origins": {
+        "slide-hdr-pair-6": [
+          1257,
+          4115
+        ],
+        "hdr-short-7": [
+          1257,
+          4115
+        ],
+        "hdr-long-7": [
+          1257,
+          4115
+        ]
+      },
+      "continuous_origin": [
+        1257.495265877316,
+        4115.165679672628
+      ],
+      "rounding_error_pixels": [
+        -0.49526587731588734,
+        -0.16567967262835737
+      ]
+    },
+    {
+      "name": "clipped-core",
+      "selection": "Derived clipping-count report only; maximal count, raster-order tie break,384square fits,512px separation between selected clipping witnesses",
+      "selection_center_sensor": [
+        287.5,
+        1119.5
+      ],
+      "full_candidate_native_center": [
+        287.49999999999955,
+        1119.4999999999998
+      ],
+      "size": 384,
+      "purpose": "Original6s clipping support witness; requires actual2.5s admitted support evidence before recovery claim",
+      "block_sensor_origin": [
+        256,
+        1088
+      ],
+      "block_sensor_size": [
+        64,
+        64
+      ],
+      "original6s_clipped_sites_rg1g2b": [
+        0,
+        1024,
+        1024,
+        1024
+      ],
+      "original6s_site_counts_rg1g2b": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "origins": {
+        "slide-hdr-pair-6": [
+          44,
+          894
+        ],
+        "hdr-short-7": [
+          44,
+          894
+        ],
+        "hdr-long-7": [
+          44,
+          894
+        ]
+      },
+      "continuous_origin": [
+        43.999999999999545,
+        893.9999999999998
+      ],
+      "rounding_error_pixels": [
+        4.547473508864641e-13,
+        2.2737367544323206e-13
+      ]
+    },
+    {
+      "name": "blue-clipped-core",
+      "selection": "Derived clipping-count report only; maximal count, raster-order tie break,384square fits,512px separation between selected clipping witnesses",
+      "selection_center_sensor": [
+        799.5,
+        1119.5
+      ],
+      "full_candidate_native_center": [
+        799.4999999999995,
+        1119.4999999999998
+      ],
+      "size": 384,
+      "purpose": "Original6s clipping support witness; requires actual2.5s admitted support evidence before recovery claim",
+      "block_sensor_origin": [
+        768,
+        1088
+      ],
+      "block_sensor_size": [
+        64,
+        64
+      ],
+      "original6s_clipped_sites_rg1g2b": [
+        0,
+        1024,
+        1024,
+        1024
+      ],
+      "original6s_site_counts_rg1g2b": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "origins": {
+        "slide-hdr-pair-6": [
+          556,
+          894
+        ],
+        "hdr-short-7": [
+          556,
+          894
+        ],
+        "hdr-long-7": [
+          556,
+          894
+        ]
+      },
+      "continuous_origin": [
+        555.9999999999995,
+        893.9999999999998
+      ],
+      "rounding_error_pixels": [
+        4.547473508864641e-13,
+        2.2737367544323206e-13
+      ]
+    },
+    {
+      "name": "clipped-boundary",
+      "selection": "Derived clipping-count report only; maximal count, raster-order tie break,384square fits,512px separation between selected clipping witnesses",
+      "selection_center_sensor": [
+        1823.5,
+        1055.5
+      ],
+      "full_candidate_native_center": [
+        1823.4999999999998,
+        1055.4999999999998
+      ],
+      "size": 384,
+      "purpose": "Original6s clipping support witness; requires actual2.5s admitted support evidence before recovery claim",
+      "block_sensor_origin": [
+        1792,
+        1024
+      ],
+      "block_sensor_size": [
+        64,
+        64
+      ],
+      "original6s_clipped_sites_rg1g2b": [
+        0,
+        1023,
+        1024,
+        0
+      ],
+      "original6s_site_counts_rg1g2b": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "origins": {
+        "slide-hdr-pair-6": [
+          1580,
+          830
+        ],
+        "hdr-short-7": [
+          1580,
+          830
+        ],
+        "hdr-long-7": [
+          1580,
+          830
+        ]
+      },
+      "continuous_origin": [
+        1579.9999999999998,
+        829.9999999999998
+      ],
+      "rounding_error_pixels": [
+        2.2737367544323206e-13,
+        2.2737367544323206e-13
+      ]
+    }
+  ]
+}

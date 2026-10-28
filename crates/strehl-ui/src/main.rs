@@ -74,6 +74,8 @@ mod processing_view;
 mod project_explorer;
 #[path = "reveal-path.rs"]
 mod reveal_path;
+#[path = "session-workspace.rs"]
+mod session_workspace;
 #[path = "source-browser.rs"]
 mod source_browser;
 #[path = "source-preview.rs"]

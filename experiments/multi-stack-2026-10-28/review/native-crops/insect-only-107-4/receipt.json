@@ -1,0 +1,148 @@
+{
+  "schema": "strehl.independent-native-crops.v1",
+  "command": [
+    "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\experiments\\multi-stack-2026-10-28\\review\\copy-frozen-native-crops.py",
+    "insect-only-107-4",
+    "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\experiments\\multi-stack-2026-10-28\\review\\full-displays\\insect-only-107-4"
+  ],
+  "helper_sha256": "428a212ebc18edf3a2b06aa6f1cb19a14ab65d07a2c9e5ca6ce7d5ddbf14c314",
+  "mapping_sha256": "074084cce8d8d0788c3827f3872229593992c339a9eed33e3151af3ec2cd00a4",
+  "source_complete_png_sha256": "a230621e62e661363fd88b53e0aa8efb109cf0f71ffe5cde7730b5c18c2a1c3b",
+  "transform_file_sha256": "c6adc8f592bb83a49df8909b3475ad3a933e431260913f632efae0f42e7dcc3a",
+  "canvas_verified": [
+    38,
+    26,
+    3440,
+    2292
+  ],
+  "warpmap_sha256_verified": "314ed66c63e5b11c286a5d19430198d14bc5937e98aad5c847dd0627e29b7098",
+  "operation": "Integer native PNG pixel slices only; no resizing or tone edits; complete PNG was produced with baseline-frozen transform. Readback pixels exact.",
+  "crops": [
+    {
+      "name": "dark-flat-background",
+      "origin": [
+        5631,
+        575
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\experiments\\multi-stack-2026-10-28\\review\\native-crops\\insect-only-107-4\\dark-flat-background.png",
+      "sha256": "95177155eda9894977fc4662e4fea56f3852b74f0fe6236646db9285dac49f05",
+      "pixel_sha256": "61a62e89456312f071eb83339fe5c05a6d4fbde35d1144839dd8a45062853623"
+    },
+    {
+      "name": "cyan-wing-scales",
+      "origin": [
+        3028,
+        2000
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\experiments\\multi-stack-2026-10-28\\review\\native-crops\\insect-only-107-4\\cyan-wing-scales.png",
+      "sha256": "5c575968a6d83edcc9a2ab749c467c36dc3f277f025073964e488c9adfe7c8b3",
+      "pixel_sha256": "37a1d16e6e22081237f9e7675122513c57116e198db3b40d3df384ccd146f826"
+    },
+    {
+      "name": "dark-wing-band",
+      "origin": [
+        2664,
+        2098
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\experiments\\multi-stack-2026-10-28\\review\\native-crops\\insect-only-107-4\\dark-wing-band.png",
+      "sha256": "6b85bece8b635ccbc44dbb7e5474eb1810d998e258d5a606afb2e692c4c0e234",
+      "pixel_sha256": "717efddaac086fa5ec88106696c86826854e42f1ef3b7e5c72d23377305aaf0c"
+    },
+    {
+      "name": "upper-leg-hairs",
+      "origin": [
+        1525,
+        664
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\experiments\\multi-stack-2026-10-28\\review\\native-crops\\insect-only-107-4\\upper-leg-hairs.png",
+      "sha256": "1999fe722b938747ed456bd4c7f32fed4e6db5a355aef8e8dedc46d56672fd43",
+      "pixel_sha256": "8f32204b39c0870672807cac0ba696a2ba25ecdb194c40e2a24f2f2c5e5afd86"
+    },
+    {
+      "name": "wing-leg-occlusion",
+      "origin": [
+        2438,
+        2737
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\experiments\\multi-stack-2026-10-28\\review\\native-crops\\insect-only-107-4\\wing-leg-occlusion.png",
+      "sha256": "683db95ce4db7316a2d0123dea6d9a8fa425092191fe81aa9dcbd0f95ef9dde3",
+      "pixel_sha256": "82d87cdc255143a355e6185e6ace66446aa1e0aeefb21f2eea67b15e8e41c0b9"
+    },
+    {
+      "name": "bright-wing-glint",
+      "origin": [
+        3323,
+        1420
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\experiments\\multi-stack-2026-10-28\\review\\native-crops\\insect-only-107-4\\bright-wing-glint.png",
+      "sha256": "28409314a30962b15586c1f920b676473527d5c2234d80e6292f287217e25819",
+      "pixel_sha256": "39424c9119cc0090e674d7d6184340a6b0c78951ff49c3e7f9b55a8650b929d8"
+    },
+    {
+      "name": "blue-cyan-chroma",
+      "origin": [
+        2419,
+        782
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\experiments\\multi-stack-2026-10-28\\review\\native-crops\\insect-only-107-4\\blue-cyan-chroma.png",
+      "sha256": "ef7f45b20ed26899e0e6707bea4608c5f087de277a96e3f6c42f75036baccfcf",
+      "pixel_sha256": "570de2ff39f8f9d344a5923f1e0f11cafe9b9c8757e1942cf065f627c872d616"
+    },
+    {
+      "name": "face-edge",
+      "origin": [
+        4993,
+        2923
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\experiments\\multi-stack-2026-10-28\\review\\native-crops\\insect-only-107-4\\face-edge.png",
+      "sha256": "3ac18b5aeb00c14ce69e2e2007e20a7c3925b3f2552a5fe59a0788e5d6a6381e",
+      "pixel_sha256": "8c244a62647656ba31fa6f01bfb266265c568fd405ee55b1517d72cb81966582"
+    },
+    {
+      "name": "antenna-hairs",
+      "origin": [
+        5180,
+        2412
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "file": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\experiments\\multi-stack-2026-10-28\\review\\native-crops\\insect-only-107-4\\antenna-hairs.png",
+      "sha256": "94ed8061411e7b7d8fd936836c9ccaefbd7f22a5079ce36aca80fd448b981794",
+      "pixel_sha256": "2555b210f3a3f74fa7c92f456d99b6f382fdd5edea453af6fd2259a2f04f6ba6"
+    }
+  ]
+}

@@ -55,6 +55,10 @@ impl Controls {
     }
 
     pub fn show(&mut self, ui: &mut egui::Ui, enabled: bool) {
+        if self.settings.session.is_some() {
+            self.show_session_controls(ui, enabled);
+            return;
+        }
         ui.add_enabled_ui(enabled, |ui| {
             ui.horizontal(|ui| {
                 ui.label(RichText::new("RENDER SETTINGS").monospace().size(9.0).color(MUTED));
@@ -131,6 +135,32 @@ impl Controls {
                 note(ui,"All available CPU threads by default.");
                 note(ui,"CPU stacking · GPU display");
                 ui.label(RichText::new("Engine manages memory and task routing.").size(9.5).color(MUTED)).on_hover_text("The normal stacking engine runs on CPU. The graphics card draws this workspace. Thread limits do not change the image settings or canonical merge reduction order; actual active threads depend on the current stage and bracket.");
+            });
+        });
+    }
+
+    fn show_session_controls(&mut self, ui: &mut egui::Ui, enabled: bool) {
+        ui.add_enabled_ui(enabled, |ui| {
+            section(ui, "01", "Session merge", |ui| {
+                optional_float(ui, "Noise gate", &mut self.gate, 2.0, 0.0..=8.0, "Higher values average more coefficients below the calibrated noise gate.");
+                optional_usize(ui, "Detail scales", &mut self.settings.pyramid_bands, 7, 1..=12, "Pyramid scale count for this session.");
+                optional_float(ui, "Coarse power", &mut self.settings.pyramid_exponent, 2.0, 0.5..=8.0, "Band-weight exponent.");
+                optional_float(ui, "Fine-scale ramp", &mut self.settings.pyramid_sharpen, 1.4, 1.0..=2.0, "Selection exponent increase toward finer bands.");
+                optional_float(ui, "Exposure", &mut self.exposure, 0.0, -12.0..=12.0, "Manual output exposure in stops; camera previews keep camera processing.");
+                note(ui, "Full resolution · 16-bit photograph + linear master");
+                note(ui, "Each pass is calibrated independently. Source repairs and temporal smoothing are unavailable in a session.");
+                note(ui, "New session renders start from these merge settings. Develop each saved photograph afterwards; previous edits stay with their saved result.");
+            });
+            section(ui, "02", "Session resources", |ui| {
+                note(ui, &self.machine_summary());
+                let maximum = self.machine.physical_memory_bytes.map_or(4096.0, |bytes| (bytes as f64 / (1u64 << 30) as f64).max(1.0));
+                ui.horizontal(|ui| {
+                    ui.label("RAM budget").on_hover_text("Working-memory reservation for the session engine, including cached CFA, guides, direct native pairs and reconstruction. It refuses a budget too small for the required workspace.");
+                    let session = self.settings.session.as_mut().expect("session controls");
+                    ui.add(egui::DragValue::new(&mut session.memory_limit_gib).range(1.0..=maximum).speed(0.25).suffix(" GiB"));
+                });
+                ui.horizontal(|ui| { ui.label("CPU thread limit"); ui.add(egui::DragValue::new(&mut self.workers).range(1..=self.machine.maximum_workers()).speed(0.1)); });
+                note(ui, "The engine bounds active workers to the RAM reservation. GPU draws this workspace.");
             });
         });
     }

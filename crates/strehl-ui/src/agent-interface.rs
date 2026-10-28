@@ -61,6 +61,14 @@ pub(crate) enum PreviewTarget {
 /// Unknown keys are rejected before the request reaches the UI.
 pub(crate) type SettingsPatch = BTreeMap<String, Value>;
 
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct CatalogSessionPass {
+    pub name: String,
+    /// Existing catalog stacks, in continuation order; no arbitrary filesystem paths.
+    pub stack_ids: Vec<u64>,
+}
+
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub(crate) enum AdaptiveDevelopIntent {
@@ -172,6 +180,17 @@ pub(crate) enum AgentCommand {
         grant_id: String,
         relative_path: String,
         name: String,
+        #[serde(default)]
+        parent_id: Option<u64>,
+    },
+    /// Compose already imported catalog stacks into ordered pass segments.
+    CreateSession {
+        name: String,
+        passes: Vec<CatalogSessionPass>,
+        mode: strehl_cli::session_input::SessionMode,
+        #[serde(default)]
+        primary_pass: Option<usize>,
+        memory_limit_gib: f64,
         #[serde(default)]
         parent_id: Option<u64>,
     },
@@ -327,6 +346,35 @@ impl AgentCommand {
             } => {
                 identifier(grant_id)?;
                 safe_relative_path(relative_path)
+            }
+            Self::CreateSession {
+                name,
+                passes,
+                primary_pass,
+                memory_limit_gib,
+                ..
+            } => {
+                text_bound(name, 160, false)?;
+                ensure(
+                    !passes.is_empty() && passes.len() <= 64,
+                    "Use 1..64 explicit passes",
+                )?;
+                ensure(
+                    primary_pass.is_none_or(|index| index < passes.len()),
+                    "Primary pass is outside the session",
+                )?;
+                ensure(
+                    memory_limit_gib.is_finite() && (1.0..=4096.0).contains(memory_limit_gib),
+                    "RAM budget must be 1..4096 GiB",
+                )?;
+                for pass in passes {
+                    text_bound(&pass.name, 160, false)?;
+                    ensure(
+                        !pass.stack_ids.is_empty() && pass.stack_ids.len() <= 256,
+                        "Each pass needs 1..256 existing source stacks",
+                    )?;
+                }
+                Ok(())
             }
             Self::Suggest {
                 title,

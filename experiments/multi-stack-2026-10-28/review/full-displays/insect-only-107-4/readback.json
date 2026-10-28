@@ -1,0 +1,51 @@
+{
+  "label": "insect-only-107-4",
+  "master": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\insect-only-107-4\\master.tiff",
+    "shape": [
+      4584,
+      6880,
+      3
+    ],
+    "dtype": "float32",
+    "description": "Strehl scene-linear master v1; RGB32Float; BT.709 primaries; D65; linear transfer; unclipped pre-tone values; 1.0 is sensor-normalized reference white.\nDisplayBaseline: {\"black\":-0.00015472464,\"white\":0.27965742,\"contrast\":0.55,\"exposure_gain\":1.0}",
+    "icc_bytes": 696,
+    "file_sha256": "68fe370d6aa16ce2d9c84ae8f0d1c2f76aa894b6f6296f959c3a0987bb6a54c1"
+  },
+  "shape_verified": [
+    4584,
+    6880,
+    3
+  ],
+  "transform_file_sha256": "c6adc8f592bb83a49df8909b3475ad3a933e431260913f632efae0f42e7dcc3a",
+  "transform": {
+    "black": -0.0002594062,
+    "white": 0.20555225,
+    "contrast": 0.55,
+    "exposure_gain": 1.0
+  },
+  "complete_display_sha256": "a230621e62e661363fd88b53e0aa8efb109cf0f71ffe5cde7730b5c18c2a1c3b",
+  "overview_sha256": "17affc54dfcb36b1fc28abb54a0bc9f95753a2595a6cb7ccff72271663e85207",
+  "overview_size": [
+    1400,
+    933
+  ],
+  "overview_use": "orientation only; resized",
+  "source_negative_channels": 16360292,
+  "source_above1_channels": 3141,
+  "numpy": "2.4.4",
+  "python": "3.12.10",
+  "argv": [
+    "experiments/multi-stack-2026-10-28/challenge/prepare-review.py",
+    "render",
+    "--master",
+    "outputs/multi-stack/insect-only-107-4/master.tiff",
+    "--destination",
+    "experiments/multi-stack-2026-10-28/review/full-displays/insect-only-107-4",
+    "--label",
+    "insect-only-107-4",
+    "--transform",
+    "outputs/multi-stack/independent-review/fixed-transform.json"
+  ],
+  "script_sha256": "5e0fcca9069c42e1424159fc2cb767aacf0835932b6a3ae056da7f4031c2cdef"
+}

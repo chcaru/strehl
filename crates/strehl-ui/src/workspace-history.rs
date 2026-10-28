@@ -58,6 +58,19 @@ pub(crate) struct Run {
     pub pinned: bool,
 }
 impl Run {
+    pub(crate) fn owns_output(&self, output: &Path) -> bool {
+        self.output == output
+            || self.settings.session.as_ref().is_some_and(|session| {
+                session.manifest.mode == crate::session_workspace::SessionMode::Layers
+                    && (0..session.manifest.passes.len()).any(|index| {
+                        self.directory
+                            .join("session-output")
+                            .join(format!("layer-{:02}", index + 1))
+                            .join("photograph.tiff")
+                            == output
+                    })
+            })
+    }
     pub fn matches_scan(&self, stack: &jobs::StackScan) -> bool {
         !self.sources.is_empty()
             && self.frames
@@ -362,7 +375,7 @@ impl Catalog {
         let run = self
             .runs
             .iter()
-            .find(|run| run.output == output)
+            .find(|run| run.owns_output(output))
             .and_then(|run| {
                 self.stack_for_run(&run.directory)
                     .map(|stack| (stack, run.directory.clone()))
@@ -444,7 +457,7 @@ impl Catalog {
                     && self
                         .runs
                         .iter()
-                        .any(|r| &r.directory == directory && r.output == owner.output),
+                        .any(|r| &r.directory == directory && r.owns_output(&owner.output)),
                 "Photograph version belongs to a different stack or render"
             ),
             (None, None) => anyhow::ensure!(

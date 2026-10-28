@@ -42,6 +42,8 @@ mod output_destination;
 mod photo_history;
 #[path = "app-presets.rs"]
 mod presets;
+#[path = "app-session.rs"]
+mod session;
 #[cfg(test)]
 #[path = "app-tests.rs"]
 mod tests;
@@ -108,6 +110,8 @@ struct ProcessSurface {
 }
 
 pub struct StrehlApp {
+    session_ui: crate::session_workspace::SessionUi,
+    ordinary_recipe: Option<history::Recipe>,
     stack: Option<StackScan>,
     scan: Option<Task<StackScan>>,
     epoch: u64,
@@ -219,6 +223,8 @@ impl StrehlApp {
                 .or_else(crate::workspace_history::default_path),
         );
         let mut app = Self {
+            session_ui: crate::session_workspace::SessionUi::default(),
+            ordinary_recipe: None,
             stack: None,
             scan: None,
             epoch: 0,
@@ -417,12 +423,21 @@ impl StrehlApp {
     }
 
     fn import(&mut self, path: PathBuf) {
+        if self.controls.settings.session.is_some() {
+            if let Some(recipe) = self.ordinary_recipe.take() {
+                recipe.apply(&mut self.controls);
+            } else {
+                self.controls = Controls::default();
+            }
+        }
+        self.controls.settings.session = None;
         self.reset_capture();
         self.scan = Some(jobs::scan_stack(path));
         self.status = "Reading bracket…".into();
     }
 
     fn reset_capture(&mut self) {
+        self.session_ui = crate::session_workspace::SessionUi::default();
         self.edits.change_stack();
         self.active_stack = None;
         self.epoch += 1;
@@ -487,13 +502,16 @@ impl StrehlApp {
         );
         self.editor.ensure_saved_on_close()?;
         if let Some(directory) = &owner.run {
-            let run = self
+            let mut run = self
                 .catalog
                 .runs
                 .iter()
-                .find(|run| &run.directory == directory && run.output == owner.output)
+                .find(|run| &run.directory == directory && run.owns_output(&owner.output))
                 .cloned()
                 .ok_or_else(|| anyhow::anyhow!("The saved stack run is no longer in Projects"))?;
+            // This transient view selects a declared layer; the catalog's run
+            // snapshot and its initial photograph remain unchanged.
+            run.output = owner.output.clone();
             self.reopen_run(run);
         } else {
             self.reset_capture();
@@ -539,6 +557,7 @@ impl StrehlApp {
             return;
         }
         if matches!(kind, Dialog::Source) {
+            self.session_ui.chooser = None;
             self.bracket_browser
                 .open(self.stack.as_ref().map(|stack| stack.directory.clone()));
             return;
@@ -603,7 +622,9 @@ impl StrehlApp {
             worker_threads: Some(self.controls.workers),
             settings: self.controls.settings.clone(),
             retain_master: true,
-            recipe: (self.editor.loaded.is_some() && self.editor.path == self.result)
+            recipe: (self.controls.settings.session.is_none()
+                && self.editor.loaded.is_some()
+                && self.editor.path == self.result)
                 .then(|| self.editor.recipe.clone()),
         }));
         self.progress = PipelineProgress::default();
@@ -705,6 +726,15 @@ impl StrehlApp {
                         self.status = "Saved stack / source bracket changed".into();
                         self.error = Some("Source bracket differs from this saved run. Its photograph and observations remain available.".into());
                     } else {
+                        if let Some(session) = &mut self.controls.settings.session {
+                            session.sources = crate::workspace_history::source_identities(&stack);
+                            match session.groups(&stack) {
+                                Ok(groups) => self.session_ui.groups = groups,
+                                Err(error) => {
+                                    self.error = Some(error.to_string());
+                                }
+                            }
+                        }
                         self.status = format!("{} source frames", stack.frames.len());
                         self.selected = stack.frames.len() / 2;
                         self.stack = Some(stack);
@@ -804,6 +834,7 @@ impl StrehlApp {
                                 log.display()
                             ));
                             self.result = Some(output.clone());
+                            self.refresh_session_outputs(&directory);
                             self.open_result(output);
                             self.process_view = true;
                         }
@@ -1042,6 +1073,12 @@ impl StrehlApp {
     }
 
     fn start_draft(&mut self) {
+        if self.controls.settings.session.is_some() {
+            self.error = Some(
+                "Multi-stack previews use camera sources until a session render completes.".into(),
+            );
+            return;
+        }
         if self.draft_job.is_some()
             || self.picker_active()
             || self.job.is_some()
@@ -2166,10 +2203,31 @@ impl StrehlApp {
             .as_ref()
             .filter(|stack| index < stack.frames.len())
         {
+            let (directory, frames, offset) = if self.controls.settings.session.is_some() {
+                let directory = stack.frames[index]
+                    .path
+                    .parent()
+                    .unwrap_or(&stack.directory)
+                    .to_path_buf();
+                let start = stack.frames[..=index]
+                    .iter()
+                    .rposition(|frame| frame.path.parent() != Some(directory.as_path()))
+                    .map_or(0, |i| i + 1);
+                let end = index
+                    + stack.frames[index..]
+                        .iter()
+                        .take_while(|frame| frame.path.parent() == Some(directory.as_path()))
+                        .count();
+                (directory, stack.frames[start..end].to_vec(), start)
+            } else {
+                (stack.directory.clone(), stack.frames.clone(), 0)
+            };
+            self.session_ui.metadata_start = offset;
+            self.session_ui.metadata_directory = Some(directory.clone());
             self.camera_metadata.open_bracket(
                 self.epoch,
-                stack.directory.clone(),
-                stack.frames.clone(),
+                directory,
+                frames,
                 self.output.clone(),
                 ctx,
             );
@@ -2183,6 +2241,13 @@ impl StrehlApp {
         }
     }
     fn show_process(&mut self, ctx: &egui::Context) {
+        if let (Some(session), Some(scan)) = (&self.controls.settings.session, &self.stack) {
+            self.session_ui.groups = session.groups(scan).unwrap_or_default();
+        }
+        self.process_space
+            .set_capture_groups(&self.session_ui.groups);
+        self.process_space
+            .set_session_summary(self.session_ui.summary.as_ref());
         let edit_enabled = self.sidebar == Some(workspace::Sidebar::Edit)
             && self.editor.loaded.is_some()
             && self.editor.path == self.result
@@ -2574,10 +2639,24 @@ impl StrehlApp {
         }
         self.status_bar(ctx);
         self.workspace(ctx);
-        let metadata_frame = self.preview_target();
+        if self.camera_metadata.is_open() && self.controls.settings.session.is_some() {
+            let index = self.preview_target();
+            if self
+                .stack
+                .as_ref()
+                .and_then(|stack| stack.frames.get(index))
+                .and_then(|frame| frame.path.parent())
+                != self.session_ui.metadata_directory.as_deref()
+            {
+                self.inspect_camera_metadata(index, ctx);
+            }
+        }
+        let metadata_frame = self
+            .preview_target()
+            .saturating_sub(self.session_ui.metadata_start);
         if let Some(index) = self.camera_metadata.show(ctx, metadata_frame) {
             let view = self.view;
-            self.inspect_frame(index);
+            self.inspect_frame(index + self.session_ui.metadata_start);
             self.view = view;
         }
         self.observe_edits(ctx);
@@ -2587,7 +2666,11 @@ impl StrehlApp {
             self.persist_catalog();
         }
         if let Some(directory) = self.bracket_browser.show(ctx) {
-            self.import(directory);
+            if let Some(choose) = self.session_ui.chooser.take() {
+                self.add_session_directory(directory, choose);
+            } else {
+                self.import(directory);
+            }
             ctx.request_repaint();
         }
         crate::window_chrome::finish(ctx, self.picker_active());

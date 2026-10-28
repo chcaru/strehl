@@ -563,3 +563,58 @@ source. The unchanged fusion-order diagnostic remains a separate non-native lane
 | raw-quality-2026-10-27-native-spectral-fusion-pilot | Does fixed source-lattice Fourier interpolation plus noise-gated frequency aggregation preserve useful original-CFA insect detail at practical cost? | experiments/raw-quality-2026-10-27/native-spectral-fusion/pilot/ | CLOSED fixed recipe: clean complete299 in7627.829s; full photographs and masters verified. Root and independent full review reject softer hairs/scales, colored haze and regular texture artifacts versus prior native. full-results.md and both independent full reviews; no transfer/default/SOTA admission. User-requested stopping point reached. |
 | raw-quality-2026-10-27-final-cfa-color | Can final native color completion preserve the chromatic detail retained by the new CFA consumer without noise or false structure? | experiments/raw-quality-2026-10-27/final-cfa-color/ | Source design, prior-photo constraints and challenge completed. No numerical/build/RAW work. Held at the user's requested stopping point; no photographic gain established. |
 | raw-quality-2026-10-27-final-cfa-color-pilot | Does fixed independent-color final spectral completion improve actual native CFA output without sacrificing neutral detail or adding artifacts? | experiments/raw-quality-2026-10-27/final-cfa-color/pilot/ | SOURCE READY, UNEXECUTED: operator, independent controls, normalized-camera writer and six-arm views reviewed. No Cargo registration/build or numerical/image run. User requested pause after current full299 review; future execution requires resumption. See execution-state.md. |
+
+## Multi-stack feature research and implementation (2026-10-28)
+
+| Identifier | Question and scope | Owned paths | Owner and state |
+| --- | --- | --- | --- |
+| multi-stack-2026-10-28 | Research, validate and deliver opt-in multi-stack core and UI; preserve single-stack behavior and optimize. | experiments/multi-stack-2026-10-28/brief.md; product paths allocated after discovery | root; COMPLETE additive core/CLI/UI, real-capture review, regression and optimization; latest remote main c149e528; see experiments/multi-stack-2026-10-28/results.md |
+| multi-stack-2026-10-28-corpus | Which supplied captures support hypotheses; where are duplicates, motion and acquisition gaps? | experiments/multi-stack-2026-10-28/corpus/ | corpus agent; metadata and bounded previews |
+| multi-stack-2026-10-28-architecture | Safe core/CLI/UI seams and design against current code and prior decisions. | experiments/multi-stack-2026-10-28/architecture/ | architecture agent; read-only product audit |
+| multi-stack-2026-10-28-challenge | Independent proposal challenge, prior art and control choices. | experiments/multi-stack-2026-10-28/challenge/ | challenge agent; research, no campaigns |
+| multi-stack-2026-10-28-geometry-core | Can explicit pass tracks preserve legacy solves while removing boundary priors, and can seeded native refinement use existing controls? | crates/strehl-core/src/align.rs; crates/strehl-core/src/multi-track-tests.rs; experiments/multi-stack-2026-10-28/geometry/ | architecture agent; source and synthetic controls released; root schedules builds/runs |
+| multi-stack-2026-10-28-input | Can explicit multi-segment sessions retain provenance, refuse duplicate sources and bound original-CFA caching? | crates/strehl-cli/src/session-input.rs; crates/strehl-cli/src/session-cache.rs; experiments/multi-stack-2026-10-28/input/ | corpus agent; source and self-contained controls released |
+| multi-stack-2026-10-28-fusion-design | Specify actual coefficient-domain repeat consumer and noise propagation controls after independent proposal challenge. | experiments/multi-stack-2026-10-28/challenge/ | challenge agent; design, no product edits yet |
+| multi-stack-2026-10-28-fusion-core | Implement a separate coverage-aware coefficient-group consumer with propagated temporal variance, symmetric disagreement fallback and optional primary preference. | crates/strehl-core/src/session-fusion.rs; experiments/multi-stack-2026-10-28/fusion/ | challenge agent; source/self-contained controls released; root alone schedules numerical execution |
+| multi-stack-2026-10-28-session-alignment | Bounded guides and original-CFA cache, measured direct intra/cross-pass graph, focus candidates and explicit pairing uncertainty. | crates/strehl-cli/src/session-align.rs; experiments/multi-stack-2026-10-28/geometry/ | architecture agent; source and controls released, root schedules actual pilot |
+| multi-stack-2026-10-28-native-sampling | Gather original same-color CFA with explicit site/active coordinates and support/clipping, then commission actual per-warp band-noise transfer. | crates/strehl-cli/src/session-sampling.rs; experiments/multi-stack-2026-10-28/sampling/ | corpus agent; source/controls released, root schedules tests |
+| multi-stack-2026-10-28-desktop | Optional session draft with ordered passes/segments, primary selection outside stitching, resource budget, immutable saved run and grouped capture inspection; preserve ordinary single-stack UI. | crates/strehl-ui/; experiments/multi-stack-2026-10-28/desktop/ | architecture agent; source released, root schedules builds and actual local-control exercise |
+| multi-stack-2026-10-28-performance | Preserve exact arithmetic while parallelizing native gathers and per-source coefficient accumulation; measure isolated pilot and actual peak resources. | crates/strehl-cli/src/session-sampling.rs; crates/strehl-core/src/session-fusion.rs; experiments/multi-stack-2026-10-28/sampling/ | corpus agent source; challenge independent review; root schedules binaries and comparisons |
+| multi-stack-2026-10-28-photo-review | Freeze baseline-derived display and witnesses, commission viewer, inspect complete outputs and native samples, challenge placement and color assumptions. | experiments/multi-stack-2026-10-28/challenge/; outputs/multi-stack/independent-review/ | challenge agent baseline preparation; additional independent reviewer allocated before final acceptance |
+| multi-stack-2026-10-28-independent-product-review | Independently challenge desktop session routing, source identity, primary semantics, saved history and actual complete photographic outputs without authoring the implementation. | experiments/multi-stack-2026-10-28/review/; read-only product and generated outputs | fresh review agent; source review first, root releases actual full-output review |
+| multi-stack-2026-10-28-photometry | Can bounded compatible-pair and spatial holdout checks validate one shutter correction per pass without fitting a private noise model? | crates/strehl-cli/src/session-photometry.rs; experiments/multi-stack-2026-10-28/challenge/ | challenge agent source and synthetic controls; root schedules RAW calibration execution |
+| multi-stack-2026-10-28-aperture-layers | Can complete unequal-length f11/f14 sweeps export separate common-gauge layers while preserving their distinct calibrations? | outputs/multi-stack/fabric-aperture-layers-6; experiments/multi-stack-2026-10-28/results | root; full109+83sources,16workers16GiB, no fusion or aperture-quality gain claim |
+| multi-stack-2026-10-28-transfer-prefetch | Can a checked small number of concurrent independent operator probes improve cold-run CPU utilization while preserving every beta bit and source-order fusion? | crates/strehl-cli/src/session-transfer-prefetch.rs; experiments/multi-stack-2026-10-28/sampling/ | corpus agent source; root integration and isolated benchmark; no image volume |
+
+Root schedules all numerical jobs. Complete unchanged-main baselines106/107
+use299original sources each, isolated maps and full photograph/RGB/sensor masters.
+Their logs resolve to4pyramid execution threads: the requested
+STREHL_BAND_WORKERS variable is not a current setting. The regression rerun
+uses the actual STREHL_PYRAMID_WORKERS=16; all three106files are byte-identical.
+Timing across those worker counts is not an isolated implementation comparison.
+
+The optional primary, requested by the owner on2026-10-28, anchors ordinary
+session framing and disagreement fallback on matched overlap. Unset remains
+symmetric fusion with an automatic geometry reference. It does not apply to
+stitching, and does not promise appearance protection over unmatched focus ranges.
+
+Root released exact-byte copies of zero-based frames147..151 from passes106/107
+for full-resolution mechanism/timing pilots. Provenance is retained under
+outputs/multi-stack/pilot-inputs. Incomplete focus coverage cannot establish
+photographic quality. Candidate1completed92.605s; candidate2completed33.459s.
+The runs use the same persistent cache, initially cold for candidate1, so those
+are end-to-end observations rather than an isolated sampler speedup.
+
+Root released the complete598source direct-native geometry pilot after controls,
+with16workers and16GiB budget. Separate controls must assess placement and focus
+correspondence; a connected graph alone does not establish either.
+
+Completion: the multi-stack allocations above are closed for this implementation.
+Combine, repeat, exposure-range and aligned-layer modes are opt-in; optional
+primary selection is implemented. Ordinary299-source output regression and
+complete598-source optimization equality passed. Real desktop saved-run and
+packaged embedded-worker checks passed. Independent insect/HDR/layer review
+found useful capability and retained artifacts, but no general resolution,
+deghosting or noise-gain claim. Stitching, depth and super-resolution remain
+unimplemented hypotheses. Final commands, qualifiers and inherited style debt
+are in experiments/multi-stack-2026-10-28/results.md and its evidence links.

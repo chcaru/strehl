@@ -359,6 +359,7 @@ impl StrehlApp {
             "busy":{"stack":self.job.is_some(),"opening":self.scan.is_some()||self.replay.is_some(),
                 "photo":self.editor.loading.is_some(),"preset":self.editor.preset.is_some()||self.presets_busy(),"export":self.editor.exporting.is_some() || self.photo_history_busy()},
             "stack_blocker":self.stack_start_blocker(), "settings":self.controls.settings,
+            "session":self.controls.settings.session.as_ref().map(|session|json!({"mode":session.manifest.mode,"primary_pass":session.manifest.primary_pass,"memory_limit_gib":session.memory_limit_gib,"capture_groups":self.session_ui.groups,"layers":self.session_ui.layers,"primary_scope":if session.manifest.mode == crate::session_workspace::SessionMode::Layers {"Common reference frame and first displayed layer; each layer retains its own appearance."} else {"Framing, appearance and disagreement fallback; automatic reference has no fusion preference."}})),
             "exposure_ev":self.controls.exposure,"pyramid_gate":self.controls.gate,"workers":self.controls.workers,
             "photo_history":self.photo_history_snapshot(), "development":self.editor.recipe,"before_preview":self.editor.before, "photo_ready":self.agent_photo_is_current(),
             "selected_region":self.editor.selected,
@@ -695,6 +696,71 @@ impl StrehlApp {
                 );
                 self.editor.import_preset(path)?;
                 return Ok(json!({"state":"queued","operation":"preset_import"}));
+            }
+            CreateSession {
+                name,
+                passes,
+                mode,
+                primary_pass,
+                memory_limit_gib,
+                parent_id,
+            } => {
+                anyhow::ensure!(
+                    self.job.is_none()
+                        && self.scan.is_none()
+                        && self.replay.is_none()
+                        && !self.picker_active(),
+                    "Wait for the active operation"
+                );
+                let mut seen = std::collections::HashSet::new();
+                let mut manifest_passes = Vec::new();
+                for pass in passes {
+                    let mut directories = Vec::new();
+                    for id in pass.stack_ids {
+                        anyhow::ensure!(
+                            seen.insert(id),
+                            "A source stack may appear only once in this session"
+                        );
+                        let draft = self
+                            .catalog
+                            .node(id)
+                            .and_then(|node| node.stack.as_ref())
+                            .ok_or_else(|| anyhow::anyhow!("Unknown imported source stack {id}"))?;
+                        anyhow::ensure!(
+                            draft.settings.session.is_none(),
+                            "Choose original source stacks instead of nesting an existing session"
+                        );
+                        directories.push(draft.source.clone());
+                    }
+                    manifest_passes.push(crate::session_workspace::PassSpec {
+                        name: pass.name,
+                        directories,
+                    });
+                }
+                if let Some(parent) = parent_id {
+                    anyhow::ensure!(
+                        self.catalog
+                            .node(parent)
+                            .is_some_and(|node| node.stack.is_none()),
+                        "Choose a project or folder"
+                    );
+                }
+                self.capture_parent = parent_id;
+                self.reload_session(
+                    crate::session_workspace::SessionDraft {
+                        manifest: crate::session_workspace::SessionSpec {
+                            passes: manifest_passes,
+                            mode,
+                            primary_pass,
+                            ..Default::default()
+                        },
+                        memory_limit_gib,
+                        sources: Vec::new(),
+                    },
+                    false,
+                );
+                self.session_ui.pending_name = Some(name);
+                return Ok(json!({"state":"queued","operation":"session_import"}));
             }
             Suggest {
                 title,
@@ -1138,3 +1204,7 @@ mod export_tests;
 #[cfg(test)]
 #[path = "agent-spatial-tests.rs"]
 mod spatial_tests;
+
+#[cfg(test)]
+#[path = "app-session-control-tests.rs"]
+mod session_control_tests;

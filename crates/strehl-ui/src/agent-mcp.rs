@@ -565,6 +565,18 @@ pub(crate) fn tool_definitions() -> Value {
             &["grant_id", "relative_path"],
         ),
         command(
+            "create_session",
+            json!({
+                "name":string(160),
+                "passes":{"type":"array","minItems":1,"maxItems":64,"items":object(json!({"name":string(160),"stack_ids":{"type":"array","minItems":1,"maxItems":256,"items":id_schema()}}), &["name","stack_ids"])},
+                "mode":{"enum":["combine","repeat","hdr","layers"]},
+                "primary_pass":{"anyOf":[{"type":"null"},{"type":"integer","minimum":0,"maximum":63}]},
+                "memory_limit_gib":{"type":"number","minimum":1,"maximum":4096},
+                "parent_id":id_schema()
+            }),
+            &["name", "passes", "mode", "memory_limit_gib"],
+        ),
+        command(
             "suggest",
             json!({"title":string(160),"rationale":string(8000),"region":region_schema()}),
             &["title", "rationale"],

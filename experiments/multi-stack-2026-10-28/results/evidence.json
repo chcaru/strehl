@@ -1,0 +1,1962 @@
+{
+  "base": "c149e52834fc1c86c2af0fe022713c39fa25f33c",
+  "runs": {
+    "single-route-6": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/candidate-6/strehl.exe",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/insect-single.json",
+          "--out-dir",
+          "outputs/multi-stack/single-route-6",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793215185.0263865,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 48188649472,
+        "environment": {
+          "RAYON_NUM_THREADS": "16",
+          "STREHL_EXPERIMENT_CONTEXT": "concurrent-with-control-renders"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "complete",
+        "executable_sha256": "22204d4ebd2142b1f232b55e8f8fa5b12851484298d7a2edc9d7c058c069cc71",
+        "pid": 33664,
+        "exit_code": 0,
+        "elapsed_seconds": 198.46075677871704,
+        "finished_unix": 1793215383.4871433,
+        "sampled_peak_private_bytes": 11703328768,
+        "sampled_peak_rss_bytes": 12229324800,
+        "sampled_cpu_seconds": 2111.859375,
+        "available_memory_after": 35924406272
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 72660,
+          "sha256": "661fd5c959e81cda4323c979a6ba913a273f6b804d6087e118ca23812624b5b9"
+        },
+        "completed.json": {
+          "bytes": 191,
+          "sha256": "fb2a203970bfc323f17088e11bcce1c95ca7a3fe1c65a01091c7b6d5c27aaac1"
+        },
+        "photograph.tiff": {
+          "bytes": 197801322,
+          "sha256": "bb9e9fc4077cb651b65970067edd7ada1eb4944dc092c84e93ca3e95a6b3c138"
+        },
+        "master.tiff": {
+          "bytes": 395596540,
+          "sha256": "b97188c458778aa058257207868b530e7fcd8a38528b6d3e340e7bf229b142a5"
+        }
+      }
+    },
+    "insect-repeat-4": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/candidate-4/strehl.exe",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/insect-repeat.json",
+          "--out-dir",
+          "outputs/multi-stack/insect-repeat-4",
+          "--cache",
+          "outputs/multi-stack/full-source-cache",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793213539.1991043,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 50634776576,
+        "environment": {
+          "RAYON_NUM_THREADS": "16"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "complete",
+        "executable_sha256": "31960a4c0de8bc03f649e3ae45f8d0429a31f722608dafa9ee805c37b6e9bcaa",
+        "pid": 13968,
+        "exit_code": 0,
+        "elapsed_seconds": 1452.2106440067291,
+        "finished_unix": 1793214991.4097483,
+        "sampled_peak_private_bytes": 13396910080,
+        "sampled_peak_rss_bytes": 13380575232,
+        "sampled_cpu_seconds": 8740.5625,
+        "available_memory_after": 42649260032
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 145317,
+          "sha256": "f3cb48fa5cfd592f3bb3facc4fc8efac247c90272afd9b03aa2188b2e1efb672"
+        },
+        "alignment.json": {
+          "bytes": 3714748,
+          "sha256": "7c06ed37d92f3a1dde0a03e5b6f2f5eaf71d2c5ab4ef494bac51441400e2ef82"
+        },
+        "calibration.json": {
+          "bytes": 5949,
+          "sha256": "b099595114f3abcd25b7f5b1b00ea94993b325ca36fbbe29b2bd3be6dcbbafe7"
+        },
+        "render-report.json": {
+          "bytes": 697158,
+          "sha256": "614ce136e9445b5d5853b1dd28ff0266ec714bb6ebb47999cdfe835c32e6944a"
+        },
+        "completed.json": {
+          "bytes": 154,
+          "sha256": "a3dc0b208acea2c5ea62878e32404cf1ba593d28187759fbec81eaa2c61674c6"
+        },
+        "photograph.tiff": {
+          "bytes": 189232650,
+          "sha256": "9a55161f6a5c97fe6d66f497fb2666dd5d27096101776ca12b68ae0d9dcfff0b"
+        },
+        "master.tiff": {
+          "bytes": 378459084,
+          "sha256": "52894b57e3a4cd38dcab93302ff3a38e62c4d4b462cea937f562a9569d27a546"
+        }
+      }
+    },
+    "insect-pooled-4": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/candidate-4/strehl.exe",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/insect-repeat.json",
+          "--out-dir",
+          "outputs/multi-stack/insect-pooled-4",
+          "--alignment",
+          "outputs/multi-stack/insect-repeat-4/alignment.json",
+          "--cache",
+          "outputs/multi-stack/full-source-cache",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16",
+          "--no-repeat-grouping"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793215056.8610513,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 44399677440,
+        "environment": {
+          "RAYON_NUM_THREADS": "16",
+          "STREHL_EXPERIMENT_CONTEXT": "concurrent-with-hdr-and-build"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "complete",
+        "executable_sha256": "31960a4c0de8bc03f649e3ae45f8d0429a31f722608dafa9ee805c37b6e9bcaa",
+        "pid": 24128,
+        "exit_code": 0,
+        "elapsed_seconds": 600.2526497840881,
+        "finished_unix": 1793215657.113701,
+        "sampled_peak_private_bytes": 5076070400,
+        "sampled_peak_rss_bytes": 4913324032,
+        "sampled_cpu_seconds": 2401.734375,
+        "available_memory_after": 33372651520
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 145317,
+          "sha256": "f3cb48fa5cfd592f3bb3facc4fc8efac247c90272afd9b03aa2188b2e1efb672"
+        },
+        "alignment.json": {
+          "bytes": 3714748,
+          "sha256": "7c06ed37d92f3a1dde0a03e5b6f2f5eaf71d2c5ab4ef494bac51441400e2ef82"
+        },
+        "calibration.json": {
+          "bytes": 5949,
+          "sha256": "b099595114f3abcd25b7f5b1b00ea94993b325ca36fbbe29b2bd3be6dcbbafe7"
+        },
+        "render-report.json": {
+          "bytes": 697702,
+          "sha256": "06b32759632fc03fa90dfb03742d3779c3704bddb8757e7e4b1e739805b0fb34"
+        },
+        "completed.json": {
+          "bytes": 152,
+          "sha256": "41dbfbdc50a618467ce15d2c852f5c87c20b47f450d633701d734348c5524078"
+        },
+        "photograph.tiff": {
+          "bytes": 189232650,
+          "sha256": "248e59bff11a94fb774e8c5aec953cf76f7ecc9d60fca8b43c297b5b558fcd06"
+        },
+        "master.tiff": {
+          "bytes": 378459084,
+          "sha256": "8c7fe2575441ff9d285cebb279641a8a11c4ba6864ed8a24bca75d2dd32b2756"
+        }
+      }
+    },
+    "insect-only-106-4": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/candidate-4/strehl.exe",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/insect-repeat.json",
+          "--out-dir",
+          "outputs/multi-stack/insect-only-106-4",
+          "--alignment",
+          "outputs/multi-stack/insect-repeat-4/alignment.json",
+          "--cache",
+          "outputs/multi-stack/full-source-cache",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16",
+          "--only-pass",
+          "0"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793215657.2611797,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 33380126720,
+        "environment": {
+          "RAYON_NUM_THREADS": "16",
+          "STREHL_EXPERIMENT_CONTEXT": "concurrent-validation"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "complete",
+        "executable_sha256": "31960a4c0de8bc03f649e3ae45f8d0429a31f722608dafa9ee805c37b6e9bcaa",
+        "pid": 32964,
+        "exit_code": 0,
+        "elapsed_seconds": 311.70735239982605,
+        "finished_unix": 1793215968.968532,
+        "sampled_peak_private_bytes": 4855873536,
+        "sampled_peak_rss_bytes": 4732792832,
+        "sampled_cpu_seconds": 1234.09375,
+        "available_memory_after": 41466810368
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 145317,
+          "sha256": "f3cb48fa5cfd592f3bb3facc4fc8efac247c90272afd9b03aa2188b2e1efb672"
+        },
+        "alignment.json": {
+          "bytes": 3714748,
+          "sha256": "7c06ed37d92f3a1dde0a03e5b6f2f5eaf71d2c5ab4ef494bac51441400e2ef82"
+        },
+        "calibration.json": {
+          "bytes": 5949,
+          "sha256": "b099595114f3abcd25b7f5b1b00ea94993b325ca36fbbe29b2bd3be6dcbbafe7"
+        },
+        "render-report.json": {
+          "bytes": 350617,
+          "sha256": "46dedfe8a6eabc5e5731c921eb73ae30cf8696bcf8af95a0d5b3dda3467f7f99"
+        },
+        "completed.json": {
+          "bytes": 153,
+          "sha256": "284e0e7d6c9f54194dfb1c399bba092ce20b9f6afe1cfccec43584f484bc40d2"
+        },
+        "photograph.tiff": {
+          "bytes": 189232650,
+          "sha256": "dc6c9260d9da83ded808519ec6dbbd00504f8d88930a0d5e7ba60286c6f675e5"
+        },
+        "master.tiff": {
+          "bytes": 378459085,
+          "sha256": "16a579e6b33d652ffb78620444be51e26b344dabd309f2b147d69e42fe29906a"
+        }
+      }
+    },
+    "insect-only-107-4": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/candidate-4/strehl.exe",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/insect-repeat.json",
+          "--out-dir",
+          "outputs/multi-stack/insect-only-107-4",
+          "--alignment",
+          "outputs/multi-stack/insect-repeat-4/alignment.json",
+          "--cache",
+          "outputs/multi-stack/full-source-cache",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16",
+          "--only-pass",
+          "1"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793215969.0849009,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 41333620736,
+        "environment": {
+          "RAYON_NUM_THREADS": "16",
+          "STREHL_EXPERIMENT_CONTEXT": "concurrent-validation"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "complete",
+        "executable_sha256": "31960a4c0de8bc03f649e3ae45f8d0429a31f722608dafa9ee805c37b6e9bcaa",
+        "pid": 41648,
+        "exit_code": 0,
+        "elapsed_seconds": 315.83743119239807,
+        "finished_unix": 1793216284.922332,
+        "sampled_peak_private_bytes": 4855955456,
+        "sampled_peak_rss_bytes": 4732854272,
+        "sampled_cpu_seconds": 1266.8125,
+        "available_memory_after": 37916975104
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 145317,
+          "sha256": "f3cb48fa5cfd592f3bb3facc4fc8efac247c90272afd9b03aa2188b2e1efb672"
+        },
+        "alignment.json": {
+          "bytes": 3714748,
+          "sha256": "7c06ed37d92f3a1dde0a03e5b6f2f5eaf71d2c5ab4ef494bac51441400e2ef82"
+        },
+        "calibration.json": {
+          "bytes": 5949,
+          "sha256": "b099595114f3abcd25b7f5b1b00ea94993b325ca36fbbe29b2bd3be6dcbbafe7"
+        },
+        "render-report.json": {
+          "bytes": 350964,
+          "sha256": "67177d195ac311509c12bfe70a903198339ffeb423fc2d53bc63a9d8ad5199c9"
+        },
+        "completed.json": {
+          "bytes": 153,
+          "sha256": "39fa470db919f09ce9f56e42b2138944813fa753d1546fdcb99afbd67306de3c"
+        },
+        "photograph.tiff": {
+          "bytes": 189232650,
+          "sha256": "5ccf7bcbaa722961b07eb6344b7207462c497627c5d4f8ed1c740b59a32d6a8e"
+        },
+        "master.tiff": {
+          "bytes": 378459085,
+          "sha256": "68fe370d6aa16ce2d9c84ae8f0d1c2f76aa894b6f6296f959c3a0987bb6a54c1"
+        }
+      }
+    },
+    "insect-primary-6": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/candidate-6/strehl.exe",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/insect-primary.json",
+          "--out-dir",
+          "outputs/multi-stack/insect-primary-6",
+          "--cache",
+          "outputs/multi-stack/full-source-cache",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793215197.428037,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 37806321664,
+        "environment": {
+          "RAYON_NUM_THREADS": "16",
+          "STREHL_EXPERIMENT_CONTEXT": "concurrent-with-control-renders"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "complete",
+        "executable_sha256": "22204d4ebd2142b1f232b55e8f8fa5b12851484298d7a2edc9d7c058c069cc71",
+        "pid": 25456,
+        "exit_code": 0,
+        "elapsed_seconds": 1138.0772194862366,
+        "finished_unix": 1793216335.5052564,
+        "sampled_peak_private_bytes": 13397372928,
+        "sampled_peak_rss_bytes": 13394472960,
+        "sampled_cpu_seconds": 7700.093749999999,
+        "available_memory_after": 42053586944
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 145317,
+          "sha256": "f3cb48fa5cfd592f3bb3facc4fc8efac247c90272afd9b03aa2188b2e1efb672"
+        },
+        "alignment.json": {
+          "bytes": 3714742,
+          "sha256": "3c29abb2ce9e8959f90ce9334c56f367313c0df589ae38ccaf91bbcd63e1fa09"
+        },
+        "calibration.json": {
+          "bytes": 5949,
+          "sha256": "b099595114f3abcd25b7f5b1b00ea94993b325ca36fbbe29b2bd3be6dcbbafe7"
+        },
+        "render-report.json": {
+          "bytes": 696625,
+          "sha256": "1ed2fc82e0976966853d849d29dcdacdcd7ead02c3c82a34506b868460afbf10"
+        },
+        "completed.json": {
+          "bytes": 151,
+          "sha256": "c050c91455a33a9c996a3b6ec4d25934377bdd7f3c5ddee9cf23b7736166c8da"
+        },
+        "photograph.tiff": {
+          "bytes": 189232650,
+          "sha256": "7a1545c92eb41a059452ac38d59c997b82bc16bd408dd8023f9c43c73f619e50"
+        },
+        "master.tiff": {
+          "bytes": 378459085,
+          "sha256": "6320cdf459c5fc8c2c5e4fa15822b5774954b37cd59e8ecf916e51ad7d0d1d77"
+        }
+      }
+    },
+    "slide-hdr-5": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/candidate-5/strehl.exe",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/slide-hdr.json",
+          "--out-dir",
+          "outputs/multi-stack/slide-hdr-5",
+          "--cache",
+          "outputs/multi-stack/hdr-source-cache",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793214880.544581,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 46421782528,
+        "environment": {
+          "RAYON_NUM_THREADS": "16",
+          "STREHL_EXPERIMENT_CONTEXT": "concurrent-with-repeat-render-and-build"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "failed",
+        "executable_sha256": "44b95bf12b9013ae564e85fde2b390a3f778de8bb53fd4acfd1cf3f93f45ce60",
+        "pid": 21140,
+        "exit_code": 1,
+        "elapsed_seconds": 198.9862184524536,
+        "finished_unix": 1793215079.5307994,
+        "sampled_peak_private_bytes": 8270196736,
+        "sampled_peak_rss_bytes": 8279683072,
+        "sampled_cpu_seconds": 1366.171875,
+        "available_memory_after": 49532669952
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 57599,
+          "sha256": "e73fbe442b6bd2f94a80cfb9ddb4318be3bb5f75d305737413e63b5815368b85"
+        },
+        "alignment.json": {
+          "bytes": 1005052,
+          "sha256": "659eeca0a3db8f427a6865902bb5b22858bdd1ae22489a3e304d09c0dc9ffa6d"
+        },
+        "calibration.json": {
+          "bytes": 8923,
+          "sha256": "fdcbf8c86080a7a292400cdcc53a050de5752888bf893875a88fa99c0f79db82"
+        },
+        "photometry.json": {
+          "bytes": 159895,
+          "sha256": "9729b484d88be3cfefb87f38ddbe3792ad9848d364e48d7b9de3cd2e7cb261c6"
+        }
+      }
+    },
+    "slide-hdr-pair-6": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/candidate-6/strehl.exe",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/slide-hdr-pair.json",
+          "--out-dir",
+          "outputs/multi-stack/slide-hdr-pair-6",
+          "--cache",
+          "outputs/multi-stack/hdr-source-cache",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793215459.7515004,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 34777513984,
+        "environment": {
+          "RAYON_NUM_THREADS": "16",
+          "STREHL_EXPERIMENT_CONTEXT": "concurrent-with-control-renders"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "complete",
+        "executable_sha256": "22204d4ebd2142b1f232b55e8f8fa5b12851484298d7a2edc9d7c058c069cc71",
+        "pid": 28092,
+        "exit_code": 0,
+        "elapsed_seconds": 435.2333607673645,
+        "finished_unix": 1793215894.9848611,
+        "sampled_peak_private_bytes": 6287396864,
+        "sampled_peak_rss_bytes": 6301036544,
+        "sampled_cpu_seconds": 2495.15625,
+        "available_memory_after": 39942311936
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 39059,
+          "sha256": "df080d3310b14c8cd90dc6ba06eb5c00501687f5fdb8255d3c574f4324d8da83"
+        },
+        "alignment.json": {
+          "bytes": 622325,
+          "sha256": "786b809e4de07e20af4853704e4c0b5ffa744820f81c69d7ee70575ee00ca8f7"
+        },
+        "calibration.json": {
+          "bytes": 5950,
+          "sha256": "d4301cd79f6c75293321866b801dfdb8f6fc0a71551d53362bb17e587e5ff4a3"
+        },
+        "photometry.json": {
+          "bytes": 159448,
+          "sha256": "7956745b4c02ea14bb437cfe54a1a814793cf433ea3a0fbdaab3ec7063ec20cc"
+        },
+        "render-report.json": {
+          "bytes": 159299,
+          "sha256": "aeb2d9d86386cc0c9ab3a3656121f57f9ebce28f00dcd7a23c623cef3c008573"
+        },
+        "completed.json": {
+          "bytes": 153,
+          "sha256": "eb62cdd7e4bef56970a60cdcc636239e7a272fdf222b5acd7ad6137d22dae28c"
+        },
+        "photograph.tiff": {
+          "bytes": 192049297,
+          "sha256": "2faa719e2a4714632581c880f023c372998647b6396e34c3abe4987a7ff3b9e8"
+        },
+        "master.tiff": {
+          "bytes": 384092384,
+          "sha256": "5051c7ab4063b612c92a22a4020a3f99171a1c874ca5651a9721157529742488"
+        }
+      }
+    },
+    "hdr-short-7": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/candidate-7/strehl.exe",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/slide-hdr-pair.json",
+          "--out-dir",
+          "outputs/multi-stack/hdr-short-7",
+          "--alignment",
+          "outputs/multi-stack/slide-hdr-pair-6/alignment.json",
+          "--cache",
+          "outputs/multi-stack/hdr-source-cache",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16",
+          "--only-pass",
+          "0"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793217241.4108536,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 49809338368,
+        "environment": {
+          "RAYON_NUM_THREADS": "16",
+          "STREHL_EXPERIMENT_CONTEXT": "concurrent-final-validation"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "complete",
+        "executable_sha256": "8035e490b1a834baa8c0c1d2fe81740380a93c7046945ae628581855e4c70e03",
+        "pid": 23052,
+        "exit_code": 0,
+        "elapsed_seconds": 62.717236042022705,
+        "finished_unix": 1793217304.1280897,
+        "sampled_peak_private_bytes": 4891361280,
+        "sampled_peak_rss_bytes": 4767703040,
+        "sampled_cpu_seconds": 261.359375,
+        "available_memory_after": 45822894080
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 39059,
+          "sha256": "df080d3310b14c8cd90dc6ba06eb5c00501687f5fdb8255d3c574f4324d8da83"
+        },
+        "alignment.json": {
+          "bytes": 622325,
+          "sha256": "786b809e4de07e20af4853704e4c0b5ffa744820f81c69d7ee70575ee00ca8f7"
+        },
+        "calibration.json": {
+          "bytes": 5950,
+          "sha256": "d4301cd79f6c75293321866b801dfdb8f6fc0a71551d53362bb17e587e5ff4a3"
+        },
+        "photometry.json": {
+          "bytes": 159448,
+          "sha256": "7956745b4c02ea14bb437cfe54a1a814793cf433ea3a0fbdaab3ec7063ec20cc"
+        },
+        "render-report.json": {
+          "bytes": 79712,
+          "sha256": "7c1b436a75239f784c769c92acce930434a50e0bff54db015d4f36cea28e7ebf"
+        },
+        "completed.json": {
+          "bytes": 152,
+          "sha256": "59f190fb41440b417ad8860a26d8dd658b58e238114c20279ae57ed62f81ef7a"
+        },
+        "photograph.tiff": {
+          "bytes": 192049297,
+          "sha256": "294ea15450fb55ba812085ac54229fabf3ebf11009921e882e1f4ed8e96c2b43"
+        },
+        "master.tiff": {
+          "bytes": 384092385,
+          "sha256": "67f27ad5c19d293be960570c1c399abddf538caa101533959cfe56341805ecf8"
+        }
+      }
+    },
+    "hdr-long-7": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/candidate-7/strehl.exe",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/slide-hdr-pair.json",
+          "--out-dir",
+          "outputs/multi-stack/hdr-long-7",
+          "--alignment",
+          "outputs/multi-stack/slide-hdr-pair-6/alignment.json",
+          "--cache",
+          "outputs/multi-stack/hdr-source-cache",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16",
+          "--only-pass",
+          "1"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793217304.253077,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 45792636928,
+        "environment": {
+          "RAYON_NUM_THREADS": "16",
+          "STREHL_EXPERIMENT_CONTEXT": "concurrent-final-validation"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "complete",
+        "executable_sha256": "8035e490b1a834baa8c0c1d2fe81740380a93c7046945ae628581855e4c70e03",
+        "pid": 42100,
+        "exit_code": 0,
+        "elapsed_seconds": 65.72216415405273,
+        "finished_unix": 1793217369.9752412,
+        "sampled_peak_private_bytes": 4890779648,
+        "sampled_peak_rss_bytes": 4767117312,
+        "sampled_cpu_seconds": 311.6875,
+        "available_memory_after": 46095568896
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 39059,
+          "sha256": "df080d3310b14c8cd90dc6ba06eb5c00501687f5fdb8255d3c574f4324d8da83"
+        },
+        "alignment.json": {
+          "bytes": 622325,
+          "sha256": "786b809e4de07e20af4853704e4c0b5ffa744820f81c69d7ee70575ee00ca8f7"
+        },
+        "calibration.json": {
+          "bytes": 5950,
+          "sha256": "d4301cd79f6c75293321866b801dfdb8f6fc0a71551d53362bb17e587e5ff4a3"
+        },
+        "photometry.json": {
+          "bytes": 159448,
+          "sha256": "7956745b4c02ea14bb437cfe54a1a814793cf433ea3a0fbdaab3ec7063ec20cc"
+        },
+        "render-report.json": {
+          "bytes": 84043,
+          "sha256": "27028c3a1133a311372a3847154bdbc64c06ba982ed76917132e717a405ecf9f"
+        },
+        "completed.json": {
+          "bytes": 152,
+          "sha256": "a0fc60d925dd63fdb53234c5596052ae6430060e2ba2365675c97b498649175f"
+        },
+        "photograph.tiff": {
+          "bytes": 192049297,
+          "sha256": "987348822b79dd45a5a297f5095a699c46b6ae68818dc12d1fe56621ab44a9c7"
+        },
+        "master.tiff": {
+          "bytes": 384092385,
+          "sha256": "db6e343ec55ff2a3026419bdeb4eb98293fe77ab351130de54cea56dc6230b6a"
+        }
+      }
+    },
+    "fabric-aperture-layers-6": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/candidate-6/strehl.exe",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/fabric-aperture-layers.json",
+          "--out-dir",
+          "outputs/multi-stack/fabric-aperture-layers-6",
+          "--cache",
+          "outputs/multi-stack/fabric-source-cache",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793215870.6755247,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 37620068352,
+        "environment": {
+          "RAYON_NUM_THREADS": "16",
+          "STREHL_EXPERIMENT_CONTEXT": "concurrent-with-control-renders"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "complete",
+        "executable_sha256": "22204d4ebd2142b1f232b55e8f8fa5b12851484298d7a2edc9d7c058c069cc71",
+        "pid": 23860,
+        "exit_code": 0,
+        "elapsed_seconds": 594.809131860733,
+        "finished_unix": 1793216465.4846566,
+        "sampled_peak_private_bytes": 8481906688,
+        "sampled_peak_rss_bytes": 8490135552,
+        "sampled_cpu_seconds": 3047.65625,
+        "available_memory_after": 52563042304
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 52035,
+          "sha256": "87b428861a5d01a592c6b5a7ac3b84c0579cad75c5f16e7bacc5f0bafc3a4248"
+        },
+        "alignment.json": {
+          "bytes": 1040455,
+          "sha256": "cf090ae1e124775ae2ef1b9261ab7f2a0714834e0841aebb0fca78ee73905f05"
+        },
+        "calibration.json": {
+          "bytes": 5945,
+          "sha256": "3da4d185cf9872e08546120f242fc85d51493d7ab902d60b77f5754b7ec85380"
+        },
+        "completed.json": {
+          "bytes": 153,
+          "sha256": "21c940e6b4f08281756f33be0ff8de178cd4dcbdc47a5370c7bfd8dbf920d1ab"
+        },
+        "layer-01/master.tiff": {
+          "bytes": 352295915,
+          "sha256": "ecfb5825429b5d8ae86d74c5e608c7ef0242186c364081195df7c85be953d336"
+        },
+        "layer-01/photograph.tiff": {
+          "bytes": 176151009,
+          "sha256": "eab48980a026dd01f7bddddc73bc22ad8896aa0b71fe1ed9362d1d9eb70cff73"
+        },
+        "layer-02/master.tiff": {
+          "bytes": 352295914,
+          "sha256": "80d50d035f8c1e8357a88edfd5141f298a299e0507fe3edcbbd6bd62aff6c433"
+        },
+        "layer-02/photograph.tiff": {
+          "bytes": 176151009,
+          "sha256": "996e6e3544488954d6ce2f7477caf006966b49b6384af46245fcd541238bbcf1"
+        }
+      }
+    },
+    "insect-repeat-7": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/candidate-7/strehl.exe",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/insect-repeat.json",
+          "--out-dir",
+          "outputs/multi-stack/insect-repeat-7",
+          "--alignment",
+          "outputs/multi-stack/insect-repeat-4/alignment.json",
+          "--cache",
+          "outputs/multi-stack/full-source-cache",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793217228.6733658,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 52161245184,
+        "environment": {
+          "RAYON_NUM_THREADS": "16",
+          "STREHL_EXPERIMENT_CONTEXT": "concurrent-final-validation"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "complete",
+        "executable_sha256": "8035e490b1a834baa8c0c1d2fe81740380a93c7046945ae628581855e4c70e03",
+        "pid": 42324,
+        "exit_code": 0,
+        "elapsed_seconds": 481.40402698516846,
+        "finished_unix": 1793217710.0773928,
+        "sampled_peak_private_bytes": 4993712128,
+        "sampled_peak_rss_bytes": 4982099968,
+        "sampled_cpu_seconds": 2139.71875,
+        "available_memory_after": 51756142592
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 145317,
+          "sha256": "f3cb48fa5cfd592f3bb3facc4fc8efac247c90272afd9b03aa2188b2e1efb672"
+        },
+        "alignment.json": {
+          "bytes": 3714748,
+          "sha256": "7c06ed37d92f3a1dde0a03e5b6f2f5eaf71d2c5ab4ef494bac51441400e2ef82"
+        },
+        "calibration.json": {
+          "bytes": 5949,
+          "sha256": "b099595114f3abcd25b7f5b1b00ea94993b325ca36fbbe29b2bd3be6dcbbafe7"
+        },
+        "render-report.json": {
+          "bytes": 696846,
+          "sha256": "168c0e8751b87acccf48d1fb9de550d895f029a93ffe3c54ecb7b787203cf7c3"
+        },
+        "completed.json": {
+          "bytes": 153,
+          "sha256": "98a4864b4b9bb436bc6960bf3561a17feeb7f426b0f85606d184aa13b937f76b"
+        },
+        "photograph.tiff": {
+          "bytes": 189232650,
+          "sha256": "3b9ff3aee3290d3a1fcb4826c5c517e2eaf448ce73e5c2894ac1d61b35ac83a2"
+        },
+        "master.tiff": {
+          "bytes": 378459084,
+          "sha256": "52894b57e3a4cd38dcab93302ff3a38e62c4d4b462cea937f562a9569d27a546"
+        }
+      }
+    },
+    "prefetch-a1": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/candidate-6/strehl.exe",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/insect-middle-five.json",
+          "--out-dir",
+          "outputs/multi-stack/prefetch-a1",
+          "--alignment",
+          "outputs/multi-stack/pilot-4/alignment.json",
+          "--cache",
+          "outputs/multi-stack/prefetch-cache-a1",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793217112.9630687,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 49924775936,
+        "environment": {
+          "RAYON_NUM_THREADS": "16",
+          "STREHL_EXPERIMENT_CONTEXT": "ABBA-cold-transfer-warm-originals-no-other-owned-render-or-build"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "complete",
+        "executable_sha256": "22204d4ebd2142b1f232b55e8f8fa5b12851484298d7a2edc9d7c058c069cc71",
+        "pid": 5480,
+        "exit_code": 0,
+        "elapsed_seconds": 21.200911283493042,
+        "finished_unix": 1793217134.16398,
+        "sampled_peak_private_bytes": 3915681792,
+        "sampled_peak_rss_bytes": 3774357504,
+        "sampled_cpu_seconds": 97.4375,
+        "available_memory_after": 51311386624
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 3003,
+          "sha256": "97e47c10354d7df979387f58c20318a1ad0afcbb2c45a1e9996178cd71a8e6bb"
+        },
+        "alignment.json": {
+          "bytes": 34946,
+          "sha256": "4752377efa5a57f5952e77df9249dea3933a70fc7570f45a7309566e7928ab63"
+        },
+        "calibration.json": {
+          "bytes": 5949,
+          "sha256": "b099595114f3abcd25b7f5b1b00ea94993b325ca36fbbe29b2bd3be6dcbbafe7"
+        },
+        "render-report.json": {
+          "bytes": 16092,
+          "sha256": "ecd40d57c9e2b934617c7230777364bf61f6c1788e411cc8b9f20d5a85bb5fe4"
+        },
+        "completed.json": {
+          "bytes": 151,
+          "sha256": "291e6ccc98b79034dcb6835702b9525b9c8ef4bb2c460bddd7c713b0d3b3f033"
+        },
+        "photograph.tiff": {
+          "bytes": 196453474,
+          "sha256": "9ad2ddb7ba73643290ce44094999f70d55e3c0e3b616d6583c80918e02b70f6d"
+        },
+        "master.tiff": {
+          "bytes": 392900853,
+          "sha256": "0bbd7984c2a1413b67104b6ef1cd1631b5f88984690fa3ba087687fb78f6cb50"
+        }
+      }
+    },
+    "prefetch-b1": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/candidate-7/strehl.exe",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/insect-middle-five.json",
+          "--out-dir",
+          "outputs/multi-stack/prefetch-b1",
+          "--alignment",
+          "outputs/multi-stack/pilot-4/alignment.json",
+          "--cache",
+          "outputs/multi-stack/prefetch-cache-b1",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793217134.2594776,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 51302277120,
+        "environment": {
+          "RAYON_NUM_THREADS": "16",
+          "STREHL_EXPERIMENT_CONTEXT": "ABBA-cold-transfer-warm-originals-no-other-owned-render-or-build"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "complete",
+        "executable_sha256": "8035e490b1a834baa8c0c1d2fe81740380a93c7046945ae628581855e4c70e03",
+        "pid": 14280,
+        "exit_code": 0,
+        "elapsed_seconds": 15.375948905944824,
+        "finished_unix": 1793217149.6354265,
+        "sampled_peak_private_bytes": 3498856448,
+        "sampled_peak_rss_bytes": 3387965440,
+        "sampled_cpu_seconds": 95.828125,
+        "available_memory_after": 51470102528
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 3003,
+          "sha256": "97e47c10354d7df979387f58c20318a1ad0afcbb2c45a1e9996178cd71a8e6bb"
+        },
+        "alignment.json": {
+          "bytes": 34946,
+          "sha256": "4752377efa5a57f5952e77df9249dea3933a70fc7570f45a7309566e7928ab63"
+        },
+        "calibration.json": {
+          "bytes": 5949,
+          "sha256": "b099595114f3abcd25b7f5b1b00ea94993b325ca36fbbe29b2bd3be6dcbbafe7"
+        },
+        "render-report.json": {
+          "bytes": 16337,
+          "sha256": "643fa6834e9ad904ddab8e7919d097cc895cd007b4678ea2535d418020be10db"
+        },
+        "completed.json": {
+          "bytes": 151,
+          "sha256": "22b4021466a39a26f91df1969088c46a5f689e9f90dacce8bc618d93fd7b8a8a"
+        },
+        "photograph.tiff": {
+          "bytes": 196453474,
+          "sha256": "ca1775943d1e070771d8d7f7515f1d4d2ed8bd51f1961043856cad7852d6d734"
+        },
+        "master.tiff": {
+          "bytes": 392900853,
+          "sha256": "0bbd7984c2a1413b67104b6ef1cd1631b5f88984690fa3ba087687fb78f6cb50"
+        }
+      }
+    },
+    "prefetch-b2": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/candidate-7/strehl.exe",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/insect-middle-five.json",
+          "--out-dir",
+          "outputs/multi-stack/prefetch-b2",
+          "--alignment",
+          "outputs/multi-stack/pilot-4/alignment.json",
+          "--cache",
+          "outputs/multi-stack/prefetch-cache-b2",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793217149.7413187,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 51466428416,
+        "environment": {
+          "RAYON_NUM_THREADS": "16",
+          "STREHL_EXPERIMENT_CONTEXT": "ABBA-cold-transfer-warm-originals-no-other-owned-render-or-build"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "complete",
+        "executable_sha256": "8035e490b1a834baa8c0c1d2fe81740380a93c7046945ae628581855e4c70e03",
+        "pid": 25348,
+        "exit_code": 0,
+        "elapsed_seconds": 15.180336236953735,
+        "finished_unix": 1793217164.921655,
+        "sampled_peak_private_bytes": 3498717184,
+        "sampled_peak_rss_bytes": 3374608384,
+        "sampled_cpu_seconds": 96.9375,
+        "available_memory_after": 51564740608
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 3003,
+          "sha256": "97e47c10354d7df979387f58c20318a1ad0afcbb2c45a1e9996178cd71a8e6bb"
+        },
+        "alignment.json": {
+          "bytes": 34946,
+          "sha256": "4752377efa5a57f5952e77df9249dea3933a70fc7570f45a7309566e7928ab63"
+        },
+        "calibration.json": {
+          "bytes": 5949,
+          "sha256": "b099595114f3abcd25b7f5b1b00ea94993b325ca36fbbe29b2bd3be6dcbbafe7"
+        },
+        "render-report.json": {
+          "bytes": 16301,
+          "sha256": "f730e747ec01d32975ef5439fef516657b533bd6d11a20c93f4d58e2eafb117a"
+        },
+        "completed.json": {
+          "bytes": 151,
+          "sha256": "9c1cb8ef68fcfb4f9871f07d571de2b04a84800264d8a13f25ee1079ac48a101"
+        },
+        "photograph.tiff": {
+          "bytes": 196453474,
+          "sha256": "ca1775943d1e070771d8d7f7515f1d4d2ed8bd51f1961043856cad7852d6d734"
+        },
+        "master.tiff": {
+          "bytes": 392900853,
+          "sha256": "0bbd7984c2a1413b67104b6ef1cd1631b5f88984690fa3ba087687fb78f6cb50"
+        }
+      }
+    },
+    "prefetch-a2": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/candidate-6/strehl.exe",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/insect-middle-five.json",
+          "--out-dir",
+          "outputs/multi-stack/prefetch-a2",
+          "--alignment",
+          "outputs/multi-stack/pilot-4/alignment.json",
+          "--cache",
+          "outputs/multi-stack/prefetch-cache-a2",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793217165.0147583,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 51574132736,
+        "environment": {
+          "RAYON_NUM_THREADS": "16",
+          "STREHL_EXPERIMENT_CONTEXT": "ABBA-cold-transfer-warm-originals-no-other-owned-render-or-build"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "complete",
+        "executable_sha256": "22204d4ebd2142b1f232b55e8f8fa5b12851484298d7a2edc9d7c058c069cc71",
+        "pid": 30936,
+        "exit_code": 0,
+        "elapsed_seconds": 20.206217288970947,
+        "finished_unix": 1793217185.2209756,
+        "sampled_peak_private_bytes": 3905384448,
+        "sampled_peak_rss_bytes": 3708403712,
+        "sampled_cpu_seconds": 89.859375,
+        "available_memory_after": 51538178048
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 3003,
+          "sha256": "97e47c10354d7df979387f58c20318a1ad0afcbb2c45a1e9996178cd71a8e6bb"
+        },
+        "alignment.json": {
+          "bytes": 34946,
+          "sha256": "4752377efa5a57f5952e77df9249dea3933a70fc7570f45a7309566e7928ab63"
+        },
+        "calibration.json": {
+          "bytes": 5949,
+          "sha256": "b099595114f3abcd25b7f5b1b00ea94993b325ca36fbbe29b2bd3be6dcbbafe7"
+        },
+        "render-report.json": {
+          "bytes": 16078,
+          "sha256": "c84ab8b4cc71532bbccd2901768b87d7b5022284c7862324fc935807ecaf6bd2"
+        },
+        "completed.json": {
+          "bytes": 151,
+          "sha256": "728420d5ed1a84f7f111fd29f3279f50d2a53b5645e587fe48a7492a65aef9f1"
+        },
+        "photograph.tiff": {
+          "bytes": 196453474,
+          "sha256": "9ad2ddb7ba73643290ce44094999f70d55e3c0e3b616d6583c80918e02b70f6d"
+        },
+        "master.tiff": {
+          "bytes": 392900853,
+          "sha256": "0bbd7984c2a1413b67104b6ef1cd1631b5f88984690fa3ba087687fb78f6cb50"
+        }
+      }
+    },
+    "packaged-pilot": {
+      "receipt": {
+        "command": [
+          "outputs/multi-stack/desktop-package/Strehl.exe",
+          "--engine-worker",
+          "session",
+          "stack",
+          "outputs/multi-stack/manifests/insect-middle-five.json",
+          "--out-dir",
+          "outputs/multi-stack/packaged-pilot",
+          "--alignment",
+          "outputs/multi-stack/pilot-4/alignment.json",
+          "--cache",
+          "outputs/multi-stack/source-cache",
+          "--threads",
+          "16",
+          "--memory-limit-gib",
+          "16"
+        ],
+        "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+        "started_unix": 1793217591.2299469,
+        "platform": "Windows-11-10.0.26200-SP0",
+        "logical_cpus": 32,
+        "physical_cpus": 16,
+        "physical_memory_bytes": 66094223360,
+        "available_memory_before": 46590734336,
+        "environment": {
+          "RAYON_NUM_THREADS": "16",
+          "STREHL_EXPERIMENT_CONTEXT": "packaged-embedded-engine-concurrent-validation"
+        },
+        "sampling_seconds": 1,
+        "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+        "state": "complete",
+        "executable_sha256": "5f3bb76cb114dc2c3a557e9d1aac645de2be527a4c5f001c00d69b4f75b4ac77",
+        "pid": 18492,
+        "exit_code": 0,
+        "elapsed_seconds": 12.438755512237549,
+        "finished_unix": 1793217603.6687024,
+        "sampled_peak_private_bytes": 3531448320,
+        "sampled_peak_rss_bytes": 3386355712,
+        "sampled_cpu_seconds": 48.6875,
+        "available_memory_after": 46634061824
+      },
+      "artifacts": {
+        "source-identities.json": {
+          "bytes": 3003,
+          "sha256": "97e47c10354d7df979387f58c20318a1ad0afcbb2c45a1e9996178cd71a8e6bb"
+        },
+        "alignment.json": {
+          "bytes": 34946,
+          "sha256": "4752377efa5a57f5952e77df9249dea3933a70fc7570f45a7309566e7928ab63"
+        },
+        "calibration.json": {
+          "bytes": 5949,
+          "sha256": "b099595114f3abcd25b7f5b1b00ea94993b325ca36fbbe29b2bd3be6dcbbafe7"
+        },
+        "render-report.json": {
+          "bytes": 16278,
+          "sha256": "3aeeaa2f758333f35333f0b358d66f564276dcb3cc1e9417c8a026d9493e5514"
+        },
+        "completed.json": {
+          "bytes": 151,
+          "sha256": "f914c0ab90f9d6de304c8c8df43b9510c3524e7204977e53a22638a2c4e37bf2"
+        },
+        "photograph.tiff": {
+          "bytes": 196453463,
+          "sha256": "d7d35ab64aa89b5c321875276cd49132af8db6198907bace4d015efca94b3a4a"
+        },
+        "master.tiff": {
+          "bytes": 392900853,
+          "sha256": "0bbd7984c2a1413b67104b6ef1cd1631b5f88984690fa3ba087687fb78f6cb50"
+        }
+      }
+    }
+  },
+  "verification": {
+    "prefetch-equality.json": {
+      "status": "VERIFIED_EXACT_MECHANICS_NOT_QUALITY",
+      "labels": [
+        "prefetch-a1",
+        "prefetch-b1",
+        "prefetch-b2",
+        "prefetch-a2"
+      ],
+      "excluded_fields": [
+        "accumulate_seconds",
+        "build",
+        "development_reference_pass",
+        "elapsed_before_output_seconds",
+        "gather_seconds",
+        "prepare_seconds",
+        "probe_cache_hit",
+        "probe_seconds",
+        "renderer_source_sha256",
+        "transfer_prefetch",
+        "working_memory_reservation_bytes"
+      ],
+      "remaining_report_fields_equal": true,
+      "geometry_equal": true,
+      "source_identities_equal": true,
+      "outputs": {
+        "master.tiff": {
+          "shape": [
+            4672,
+            7008,
+            3
+          ],
+          "dtype": "float32",
+          "sha256": {
+            "prefetch-a1": "0bbd7984c2a1413b67104b6ef1cd1631b5f88984690fa3ba087687fb78f6cb50",
+            "prefetch-b1": "0bbd7984c2a1413b67104b6ef1cd1631b5f88984690fa3ba087687fb78f6cb50",
+            "prefetch-b2": "0bbd7984c2a1413b67104b6ef1cd1631b5f88984690fa3ba087687fb78f6cb50",
+            "prefetch-a2": "0bbd7984c2a1413b67104b6ef1cd1631b5f88984690fa3ba087687fb78f6cb50"
+          },
+          "differences": {
+            "prefetch-b1": 0,
+            "prefetch-b2": 0,
+            "prefetch-a2": 0
+          }
+        },
+        "photograph.tiff": {
+          "shape": [
+            4672,
+            7008,
+            3
+          ],
+          "dtype": "uint16",
+          "sha256": {
+            "prefetch-a1": "9ad2ddb7ba73643290ce44094999f70d55e3c0e3b616d6583c80918e02b70f6d",
+            "prefetch-b1": "ca1775943d1e070771d8d7f7515f1d4d2ed8bd51f1961043856cad7852d6d734",
+            "prefetch-b2": "ca1775943d1e070771d8d7f7515f1d4d2ed8bd51f1961043856cad7852d6d734",
+            "prefetch-a2": "9ad2ddb7ba73643290ce44094999f70d55e3c0e3b616d6583c80918e02b70f6d"
+          },
+          "differences": {
+            "prefetch-b1": 0,
+            "prefetch-b2": 0,
+            "prefetch-a2": 0
+          }
+        }
+      },
+      "runs": {
+        "prefetch-a1": {
+          "run": {
+            "command": [
+              "outputs/multi-stack/candidate-6/strehl.exe",
+              "session",
+              "stack",
+              "outputs/multi-stack/manifests/insect-middle-five.json",
+              "--out-dir",
+              "outputs/multi-stack/prefetch-a1",
+              "--alignment",
+              "outputs/multi-stack/pilot-4/alignment.json",
+              "--cache",
+              "outputs/multi-stack/prefetch-cache-a1",
+              "--threads",
+              "16",
+              "--memory-limit-gib",
+              "16"
+            ],
+            "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+            "started_unix": 1793217112.9630687,
+            "platform": "Windows-11-10.0.26200-SP0",
+            "logical_cpus": 32,
+            "physical_cpus": 16,
+            "physical_memory_bytes": 66094223360,
+            "available_memory_before": 49924775936,
+            "environment": {
+              "RAYON_NUM_THREADS": "16",
+              "STREHL_EXPERIMENT_CONTEXT": "ABBA-cold-transfer-warm-originals-no-other-owned-render-or-build"
+            },
+            "sampling_seconds": 1,
+            "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+            "state": "complete",
+            "executable_sha256": "22204d4ebd2142b1f232b55e8f8fa5b12851484298d7a2edc9d7c058c069cc71",
+            "pid": 5480,
+            "exit_code": 0,
+            "elapsed_seconds": 21.200911283493042,
+            "finished_unix": 1793217134.16398,
+            "sampled_peak_private_bytes": 3915681792,
+            "sampled_peak_rss_bytes": 3774357504,
+            "sampled_cpu_seconds": 97.4375,
+            "available_memory_after": 51311386624
+          },
+          "probe_cache_hits": 0,
+          "probe_sum_seconds": 10.4259082,
+          "transfer_prefetch": null
+        },
+        "prefetch-b1": {
+          "run": {
+            "command": [
+              "outputs/multi-stack/candidate-7/strehl.exe",
+              "session",
+              "stack",
+              "outputs/multi-stack/manifests/insect-middle-five.json",
+              "--out-dir",
+              "outputs/multi-stack/prefetch-b1",
+              "--alignment",
+              "outputs/multi-stack/pilot-4/alignment.json",
+              "--cache",
+              "outputs/multi-stack/prefetch-cache-b1",
+              "--threads",
+              "16",
+              "--memory-limit-gib",
+              "16"
+            ],
+            "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+            "started_unix": 1793217134.2594776,
+            "platform": "Windows-11-10.0.26200-SP0",
+            "logical_cpus": 32,
+            "physical_cpus": 16,
+            "physical_memory_bytes": 66094223360,
+            "available_memory_before": 51302277120,
+            "environment": {
+              "RAYON_NUM_THREADS": "16",
+              "STREHL_EXPERIMENT_CONTEXT": "ABBA-cold-transfer-warm-originals-no-other-owned-render-or-build"
+            },
+            "sampling_seconds": 1,
+            "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+            "state": "complete",
+            "executable_sha256": "8035e490b1a834baa8c0c1d2fe81740380a93c7046945ae628581855e4c70e03",
+            "pid": 14280,
+            "exit_code": 0,
+            "elapsed_seconds": 15.375948905944824,
+            "finished_unix": 1793217149.6354265,
+            "sampled_peak_private_bytes": 3498856448,
+            "sampled_peak_rss_bytes": 3387965440,
+            "sampled_cpu_seconds": 95.828125,
+            "available_memory_after": 51470102528
+          },
+          "probe_cache_hits": 0,
+          "probe_sum_seconds": 16.7480104,
+          "transfer_prefetch": {
+            "elapsed_seconds": 4.8437513,
+            "lanes": 4,
+            "per_probe_bytes": 426382322,
+            "reserved_bytes": 1705572808,
+            "retained_result_bytes": 43520
+          }
+        },
+        "prefetch-b2": {
+          "run": {
+            "command": [
+              "outputs/multi-stack/candidate-7/strehl.exe",
+              "session",
+              "stack",
+              "outputs/multi-stack/manifests/insect-middle-five.json",
+              "--out-dir",
+              "outputs/multi-stack/prefetch-b2",
+              "--alignment",
+              "outputs/multi-stack/pilot-4/alignment.json",
+              "--cache",
+              "outputs/multi-stack/prefetch-cache-b2",
+              "--threads",
+              "16",
+              "--memory-limit-gib",
+              "16"
+            ],
+            "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+            "started_unix": 1793217149.7413187,
+            "platform": "Windows-11-10.0.26200-SP0",
+            "logical_cpus": 32,
+            "physical_cpus": 16,
+            "physical_memory_bytes": 66094223360,
+            "available_memory_before": 51466428416,
+            "environment": {
+              "RAYON_NUM_THREADS": "16",
+              "STREHL_EXPERIMENT_CONTEXT": "ABBA-cold-transfer-warm-originals-no-other-owned-render-or-build"
+            },
+            "sampling_seconds": 1,
+            "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+            "state": "complete",
+            "executable_sha256": "8035e490b1a834baa8c0c1d2fe81740380a93c7046945ae628581855e4c70e03",
+            "pid": 25348,
+            "exit_code": 0,
+            "elapsed_seconds": 15.180336236953735,
+            "finished_unix": 1793217164.921655,
+            "sampled_peak_private_bytes": 3498717184,
+            "sampled_peak_rss_bytes": 3374608384,
+            "sampled_cpu_seconds": 96.9375,
+            "available_memory_after": 51564740608
+          },
+          "probe_cache_hits": 0,
+          "probe_sum_seconds": 17.0333917,
+          "transfer_prefetch": {
+            "elapsed_seconds": 5.0269174,
+            "lanes": 4,
+            "per_probe_bytes": 426382322,
+            "reserved_bytes": 1705572808,
+            "retained_result_bytes": 43520
+          }
+        },
+        "prefetch-a2": {
+          "run": {
+            "command": [
+              "outputs/multi-stack/candidate-6/strehl.exe",
+              "session",
+              "stack",
+              "outputs/multi-stack/manifests/insect-middle-five.json",
+              "--out-dir",
+              "outputs/multi-stack/prefetch-a2",
+              "--alignment",
+              "outputs/multi-stack/pilot-4/alignment.json",
+              "--cache",
+              "outputs/multi-stack/prefetch-cache-a2",
+              "--threads",
+              "16",
+              "--memory-limit-gib",
+              "16"
+            ],
+            "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+            "started_unix": 1793217165.0147583,
+            "platform": "Windows-11-10.0.26200-SP0",
+            "logical_cpus": 32,
+            "physical_cpus": 16,
+            "physical_memory_bytes": 66094223360,
+            "available_memory_before": 51574132736,
+            "environment": {
+              "RAYON_NUM_THREADS": "16",
+              "STREHL_EXPERIMENT_CONTEXT": "ABBA-cold-transfer-warm-originals-no-other-owned-render-or-build"
+            },
+            "sampling_seconds": 1,
+            "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+            "state": "complete",
+            "executable_sha256": "22204d4ebd2142b1f232b55e8f8fa5b12851484298d7a2edc9d7c058c069cc71",
+            "pid": 30936,
+            "exit_code": 0,
+            "elapsed_seconds": 20.206217288970947,
+            "finished_unix": 1793217185.2209756,
+            "sampled_peak_private_bytes": 3905384448,
+            "sampled_peak_rss_bytes": 3708403712,
+            "sampled_cpu_seconds": 89.859375,
+            "available_memory_after": 51538178048
+          },
+          "probe_cache_hits": 0,
+          "probe_sum_seconds": 10.3618945,
+          "transfer_prefetch": null
+        }
+      },
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "experiments/multi-stack-2026-10-28/verify-final-equality.py",
+        "prefetch-a1",
+        "prefetch-b1",
+        "prefetch-b2",
+        "prefetch-a2",
+        "outputs/multi-stack/prefetch-equality.json"
+      ],
+      "script_sha256": "4b260431d3c4dd3514c309a66dfe040ce57b0bc0d0c3f7601dfab41866e51702"
+    },
+    "final-full-equality.json": {
+      "status": "VERIFIED_EXACT_MECHANICS_NOT_QUALITY",
+      "labels": [
+        "insect-repeat-4",
+        "insect-repeat-7"
+      ],
+      "excluded_fields": [
+        "accumulate_seconds",
+        "build",
+        "development_reference_pass",
+        "elapsed_before_output_seconds",
+        "gather_seconds",
+        "limitations",
+        "prepare_seconds",
+        "probe_cache_hit",
+        "probe_seconds",
+        "renderer_source_sha256",
+        "transfer_prefetch",
+        "working_memory_reservation_bytes"
+      ],
+      "remaining_report_fields_equal": true,
+      "explicitly_validated_description_changes": [
+        {
+          "label": "insect-repeat-7",
+          "field": "limitations[4]",
+          "old": "HDR currently requires equal ISO and aperture and uses exposure-time normalization; it is not a radiometrically calibrated camera response.",
+          "new": "HDR requires equal ISO/aperture and a bounded exposure correction validated on spatial holdouts across proposed focus pairs; this does not calibrate a general camera response."
+        }
+      ],
+      "geometry_equal": true,
+      "source_identities_equal": true,
+      "outputs": {
+        "master.tiff": {
+          "shape": [
+            4584,
+            6880,
+            3
+          ],
+          "dtype": "float32",
+          "sha256": {
+            "insect-repeat-4": "52894b57e3a4cd38dcab93302ff3a38e62c4d4b462cea937f562a9569d27a546",
+            "insect-repeat-7": "52894b57e3a4cd38dcab93302ff3a38e62c4d4b462cea937f562a9569d27a546"
+          },
+          "differences": {
+            "insect-repeat-7": 0
+          }
+        },
+        "photograph.tiff": {
+          "shape": [
+            4584,
+            6880,
+            3
+          ],
+          "dtype": "uint16",
+          "sha256": {
+            "insect-repeat-4": "9a55161f6a5c97fe6d66f497fb2666dd5d27096101776ca12b68ae0d9dcfff0b",
+            "insect-repeat-7": "3b9ff3aee3290d3a1fcb4826c5c517e2eaf448ce73e5c2894ac1d61b35ac83a2"
+          },
+          "differences": {
+            "insect-repeat-7": 0
+          }
+        }
+      },
+      "runs": {
+        "insect-repeat-4": {
+          "run": {
+            "command": [
+              "outputs/multi-stack/candidate-4/strehl.exe",
+              "session",
+              "stack",
+              "outputs/multi-stack/manifests/insect-repeat.json",
+              "--out-dir",
+              "outputs/multi-stack/insect-repeat-4",
+              "--cache",
+              "outputs/multi-stack/full-source-cache",
+              "--threads",
+              "16",
+              "--memory-limit-gib",
+              "16"
+            ],
+            "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+            "started_unix": 1793213539.1991043,
+            "platform": "Windows-11-10.0.26200-SP0",
+            "logical_cpus": 32,
+            "physical_cpus": 16,
+            "physical_memory_bytes": 66094223360,
+            "available_memory_before": 50634776576,
+            "environment": {
+              "RAYON_NUM_THREADS": "16"
+            },
+            "sampling_seconds": 1,
+            "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+            "state": "complete",
+            "executable_sha256": "31960a4c0de8bc03f649e3ae45f8d0429a31f722608dafa9ee805c37b6e9bcaa",
+            "pid": 13968,
+            "exit_code": 0,
+            "elapsed_seconds": 1452.2106440067291,
+            "finished_unix": 1793214991.4097483,
+            "sampled_peak_private_bytes": 13396910080,
+            "sampled_peak_rss_bytes": 13380575232,
+            "sampled_cpu_seconds": 8740.5625,
+            "available_memory_after": 42649260032
+          },
+          "probe_cache_hits": 0,
+          "probe_sum_seconds": 596.7638806,
+          "transfer_prefetch": null
+        },
+        "insect-repeat-7": {
+          "run": {
+            "command": [
+              "outputs/multi-stack/candidate-7/strehl.exe",
+              "session",
+              "stack",
+              "outputs/multi-stack/manifests/insect-repeat.json",
+              "--out-dir",
+              "outputs/multi-stack/insect-repeat-7",
+              "--alignment",
+              "outputs/multi-stack/insect-repeat-4/alignment.json",
+              "--cache",
+              "outputs/multi-stack/full-source-cache",
+              "--threads",
+              "16",
+              "--memory-limit-gib",
+              "16"
+            ],
+            "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+            "started_unix": 1793217228.6733658,
+            "platform": "Windows-11-10.0.26200-SP0",
+            "logical_cpus": 32,
+            "physical_cpus": 16,
+            "physical_memory_bytes": 66094223360,
+            "available_memory_before": 52161245184,
+            "environment": {
+              "RAYON_NUM_THREADS": "16",
+              "STREHL_EXPERIMENT_CONTEXT": "concurrent-final-validation"
+            },
+            "sampling_seconds": 1,
+            "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+            "state": "complete",
+            "executable_sha256": "8035e490b1a834baa8c0c1d2fe81740380a93c7046945ae628581855e4c70e03",
+            "pid": 42324,
+            "exit_code": 0,
+            "elapsed_seconds": 481.40402698516846,
+            "finished_unix": 1793217710.0773928,
+            "sampled_peak_private_bytes": 4993712128,
+            "sampled_peak_rss_bytes": 4982099968,
+            "sampled_cpu_seconds": 2139.71875,
+            "available_memory_after": 51756142592
+          },
+          "probe_cache_hits": 598,
+          "probe_sum_seconds": 0.2924413,
+          "transfer_prefetch": {
+            "elapsed_seconds": 0.0813318,
+            "lanes": 4,
+            "per_probe_bytes": 414650632,
+            "reserved_bytes": 1661205024,
+            "retained_result_bytes": 2602496
+          }
+        }
+      },
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "experiments/multi-stack-2026-10-28/verify-final-equality.py",
+        "insect-repeat-4",
+        "insect-repeat-7",
+        "outputs/multi-stack/final-full-equality.json"
+      ],
+      "script_sha256": "4c0f3c259dd8ab9b19165b65e0f63ec4c313604ceedfd94e25787b9c416b57fe"
+    },
+    "package-equality.json": {
+      "status": "VERIFIED_EXACT_MECHANICS_NOT_QUALITY",
+      "labels": [
+        "prefetch-b1",
+        "packaged-pilot"
+      ],
+      "excluded_fields": [
+        "accumulate_seconds",
+        "build",
+        "development_reference_pass",
+        "elapsed_before_output_seconds",
+        "gather_seconds",
+        "prepare_seconds",
+        "probe_cache_hit",
+        "probe_seconds",
+        "renderer_source_sha256",
+        "transfer_prefetch",
+        "working_memory_reservation_bytes"
+      ],
+      "remaining_report_fields_equal": true,
+      "geometry_equal": true,
+      "source_identities_equal": true,
+      "outputs": {
+        "master.tiff": {
+          "shape": [
+            4672,
+            7008,
+            3
+          ],
+          "dtype": "float32",
+          "sha256": {
+            "prefetch-b1": "0bbd7984c2a1413b67104b6ef1cd1631b5f88984690fa3ba087687fb78f6cb50",
+            "packaged-pilot": "0bbd7984c2a1413b67104b6ef1cd1631b5f88984690fa3ba087687fb78f6cb50"
+          },
+          "differences": {
+            "packaged-pilot": 0
+          }
+        },
+        "photograph.tiff": {
+          "shape": [
+            4672,
+            7008,
+            3
+          ],
+          "dtype": "uint16",
+          "sha256": {
+            "prefetch-b1": "ca1775943d1e070771d8d7f7515f1d4d2ed8bd51f1961043856cad7852d6d734",
+            "packaged-pilot": "d7d35ab64aa89b5c321875276cd49132af8db6198907bace4d015efca94b3a4a"
+          },
+          "differences": {
+            "packaged-pilot": 0
+          }
+        }
+      },
+      "runs": {
+        "prefetch-b1": {
+          "run": {
+            "command": [
+              "outputs/multi-stack/candidate-7/strehl.exe",
+              "session",
+              "stack",
+              "outputs/multi-stack/manifests/insect-middle-five.json",
+              "--out-dir",
+              "outputs/multi-stack/prefetch-b1",
+              "--alignment",
+              "outputs/multi-stack/pilot-4/alignment.json",
+              "--cache",
+              "outputs/multi-stack/prefetch-cache-b1",
+              "--threads",
+              "16",
+              "--memory-limit-gib",
+              "16"
+            ],
+            "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+            "started_unix": 1793217134.2594776,
+            "platform": "Windows-11-10.0.26200-SP0",
+            "logical_cpus": 32,
+            "physical_cpus": 16,
+            "physical_memory_bytes": 66094223360,
+            "available_memory_before": 51302277120,
+            "environment": {
+              "RAYON_NUM_THREADS": "16",
+              "STREHL_EXPERIMENT_CONTEXT": "ABBA-cold-transfer-warm-originals-no-other-owned-render-or-build"
+            },
+            "sampling_seconds": 1,
+            "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+            "state": "complete",
+            "executable_sha256": "8035e490b1a834baa8c0c1d2fe81740380a93c7046945ae628581855e4c70e03",
+            "pid": 14280,
+            "exit_code": 0,
+            "elapsed_seconds": 15.375948905944824,
+            "finished_unix": 1793217149.6354265,
+            "sampled_peak_private_bytes": 3498856448,
+            "sampled_peak_rss_bytes": 3387965440,
+            "sampled_cpu_seconds": 95.828125,
+            "available_memory_after": 51470102528
+          },
+          "probe_cache_hits": 0,
+          "probe_sum_seconds": 16.7480104,
+          "transfer_prefetch": {
+            "elapsed_seconds": 4.8437513,
+            "lanes": 4,
+            "per_probe_bytes": 426382322,
+            "reserved_bytes": 1705572808,
+            "retained_result_bytes": 43520
+          }
+        },
+        "packaged-pilot": {
+          "run": {
+            "command": [
+              "outputs/multi-stack/desktop-package/Strehl.exe",
+              "--engine-worker",
+              "session",
+              "stack",
+              "outputs/multi-stack/manifests/insect-middle-five.json",
+              "--out-dir",
+              "outputs/multi-stack/packaged-pilot",
+              "--alignment",
+              "outputs/multi-stack/pilot-4/alignment.json",
+              "--cache",
+              "outputs/multi-stack/source-cache",
+              "--threads",
+              "16",
+              "--memory-limit-gib",
+              "16"
+            ],
+            "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+            "started_unix": 1793217591.2299469,
+            "platform": "Windows-11-10.0.26200-SP0",
+            "logical_cpus": 32,
+            "physical_cpus": 16,
+            "physical_memory_bytes": 66094223360,
+            "available_memory_before": 46590734336,
+            "environment": {
+              "RAYON_NUM_THREADS": "16",
+              "STREHL_EXPERIMENT_CONTEXT": "packaged-embedded-engine-concurrent-validation"
+            },
+            "sampling_seconds": 1,
+            "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+            "state": "complete",
+            "executable_sha256": "5f3bb76cb114dc2c3a557e9d1aac645de2be527a4c5f001c00d69b4f75b4ac77",
+            "pid": 18492,
+            "exit_code": 0,
+            "elapsed_seconds": 12.438755512237549,
+            "finished_unix": 1793217603.6687024,
+            "sampled_peak_private_bytes": 3531448320,
+            "sampled_peak_rss_bytes": 3386355712,
+            "sampled_cpu_seconds": 48.6875,
+            "available_memory_after": 46634061824
+          },
+          "probe_cache_hits": 10,
+          "probe_sum_seconds": 0.0384862,
+          "transfer_prefetch": {
+            "elapsed_seconds": 0.0118453,
+            "lanes": 4,
+            "per_probe_bytes": 426382322,
+            "reserved_bytes": 1705572808,
+            "retained_result_bytes": 43520
+          }
+        }
+      },
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "experiments/multi-stack-2026-10-28/verify-final-equality.py",
+        "prefetch-b1",
+        "packaged-pilot",
+        "outputs/multi-stack/package-equality.json"
+      ],
+      "script_sha256": "4b260431d3c4dd3514c309a66dfe040ce57b0bc0d0c3f7601dfab41866e51702"
+    },
+    "package-verification.json": {
+      "build_id": "desktop-4f645cc797d86ea7",
+      "source_manifest_verified": true,
+      "package_manifest_verified": true,
+      "all_rust_sources_equal_validated_worktree": true,
+      "zip_crc_verified": true,
+      "archive": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\Strehl-multi-stack-windows-x64.zip",
+      "bytes": 25674028,
+      "sha256": "289df6d3c875a743d9664618dfdece87a8e5cd30cb881d7406b988f5cc1e6ba1",
+      "initial_zip_verification_failure": "Windows Path arcname retained backslashes in in-memory central entry; retained failed artifact; rebuilt with explicit POSIX arcnames and reopened full CRC check."
+    },
+    "single-route-6/regression.json": {
+      "photograph.tiff": {
+        "shape": [
+          4688,
+          7032,
+          3
+        ],
+        "different_channels": 0,
+        "max_abs_difference": 0.0,
+        "file_sha256": [
+          "f4f1611df063162b61113c573fd2e07354fffa089ca446465fa12ec09af8ff43",
+          "bb9e9fc4077cb651b65970067edd7ada1eb4944dc092c84e93ca3e95a6b3c138"
+        ]
+      },
+      "master.tiff": {
+        "shape": [
+          4688,
+          7032,
+          3
+        ],
+        "different_channels": 0,
+        "max_abs_difference": 0.0,
+        "file_sha256": [
+          "b97188c458778aa058257207868b530e7fcd8a38528b6d3e340e7bf229b142a5",
+          "b97188c458778aa058257207868b530e7fcd8a38528b6d3e340e7bf229b142a5"
+        ]
+      },
+      "completion": {
+        "elapsed_seconds": 192.2609346,
+        "frames": 299,
+        "outputs": 1,
+        "passes": 1,
+        "pipeline": "ordinary-single-pass",
+        "primary_pass": null,
+        "schema": "strehl.session-completion.v1"
+      },
+      "source_count": 299,
+      "qualification": "All299sources; newly solved ordinary alignment in isolated output; exact pixel equality with remote-main baseline. Build-label TIFF metadata may differ. Runtime overlapped other session controls."
+    },
+    "docs-link-check.json": {
+      "links_checked": 79,
+      "issues": []
+    },
+    "candidate-7/build.json": {
+      "build_id": "c149e52834fc-multi-stack-candidate7",
+      "base": "c149e52834fc1c86c2af0fe022713c39fa25f33c",
+      "executables": {
+        "strehl.exe": "8035e490b1a834baa8c0c1d2fe81740380a93c7046945ae628581855e4c70e03",
+        "strehl-ui.exe": "51e99d3d9528510bc79be406253254bf5beb075e1a3efefbe10eea66fd1edf48"
+      }
+    },
+    "desktop-package/desktop-package.json": {
+      "schema": 1,
+      "build_id": "desktop-4f645cc797d86ea7",
+      "source_sha256": "4f645cc797d86ea7cba47f8b908500c1d0f4298759fdaedf823903ffc6284703",
+      "rustc": "rustc 1.98.0 (88d9e12ae 2026-08-18)\nbinary: rustc\ncommit-hash: 88d9e12ae178fab0fb5cc050a94da85685d449ea\ncommit-date: 2026-08-18\nhost: x86_64-pc-windows-msvc\nrelease: 1.98.0\nLLVM version: 22.1.8",
+      "files": [
+        {
+          "path": "Strehl.exe",
+          "bytes": 35289600,
+          "sha256": "5f3bb76cb114dc2c3a557e9d1aac645de2be527a4c5f001c00d69b4f75b4ac77"
+        },
+        {
+          "path": "strehl-cli.exe",
+          "bytes": 16984064,
+          "sha256": "1653d3baffa40983046327d0091db078d0cf191f66fc973df8e9ad68e9161fb7"
+        },
+        {
+          "path": "strehl-source.zip",
+          "bytes": 3265427,
+          "sha256": "be5fe5b1a02dbf660faa4d361548604edb6dadaa5ccb000083a6ea475fd7dc68"
+        },
+        {
+          "path": "README.md",
+          "bytes": 2184,
+          "sha256": "8cd8959233eed90bd2e1c4df0e7182c1d9942405a717c55914070194a5e0241d"
+        },
+        {
+          "path": "REBUILD.md",
+          "bytes": 6150,
+          "sha256": "547ebfe61148c7b2d7ec3f1f829ddd2c22da144c8cbba85b04f6cfea940505c9"
+        },
+        {
+          "path": "RAW-DECODER-NOTICE.md",
+          "bytes": 1124,
+          "sha256": "11fc766589b5c3e58d76ce648a6949ce4debf29c2232507ee4f4df79fe5edc03"
+        },
+        {
+          "path": "LICENSE-MIT",
+          "bytes": 1092,
+          "sha256": "1254bdfae7d28b46245a3bae01385611dda4bba18d9e65c244d767fee23b846d"
+        },
+        {
+          "path": "LICENSE-APACHE",
+          "bytes": 11560,
+          "sha256": "47b2b7375318c574ef44d0def1e28d296e8bac5940d24d2694f5d99e7053b780"
+        },
+        {
+          "path": "LICENSE-LGPL-2.1",
+          "bytes": 26920,
+          "sha256": "b14c366c41cc9f62dc20ec1a0885f278cf9681076d98027012a910fca5e89639"
+        }
+      ]
+    }
+  }
+}

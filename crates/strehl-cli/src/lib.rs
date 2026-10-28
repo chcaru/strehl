@@ -8,6 +8,18 @@ mod image_out;
 #[path = "lens-research.rs"]
 mod lens_research;
 mod merge_cmd;
+#[path = "session-align.rs"]
+pub mod session_align;
+#[path = "session-cache.rs"]
+pub mod session_cache;
+#[path = "session-cmd.rs"]
+mod session_cmd;
+#[path = "session-input.rs"]
+pub mod session_input;
+#[path = "session-photometry.rs"]
+pub mod session_photometry;
+#[path = "session-sampling.rs"]
+pub mod session_sampling;
 #[path = "sony-focus-cmd.rs"]
 mod sony_focus_cmd;
 #[path = "sony-focus-report.rs"]
@@ -100,6 +112,11 @@ enum FocusAction {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Work with explicitly grouped passes of one subject.
+    Session {
+        #[command(subcommand)]
+        action: session_cmd::Action,
+    },
     /// Prepare an isolated, uncalibrated nonlinear optical research map.
     #[cfg(feature = "research-lens-warp")]
     LensResearch(lens_research::Args),
@@ -927,7 +944,8 @@ where
         )
         .init();
 
-    let command = Cli::parse_from(args).command;
+    let (command, single_pass_completion) =
+        unsafe { session_cmd::route_single_pass(Cli::parse_from(args).command)? };
     if std::env::var_os("STREHL_RESEARCH_LENS_MAP").is_some() {
         anyhow::ensure!(
             cfg!(feature = "research-lens-warp"),
@@ -938,7 +956,8 @@ where
             "STREHL_RESEARCH_LENS_MAP applies only to stack; unset it for other commands"
         );
     }
-    match command {
+    let result = match command {
+        Command::Session { action } => session_cmd::run(action),
         Command::Align(args) => align_cmd::run(&args),
         #[cfg(feature = "research-lens-warp")]
         Command::LensResearch(args) => lens_research::run(&args),
@@ -1270,6 +1289,9 @@ where
             // one backend to honour the mode while the other ignores it.
             let (cover_mode, cover_source) = merge_cmd::resolve_cover_mode(cover.as_deref())?;
 
+            if let Some(completion) = single_pass_completion.as_ref() {
+                completion.prepare_alignment()?;
+            }
             merge_cmd::run(&MergeOptions {
                 dir,
                 out,
@@ -1339,7 +1361,12 @@ where
                 pyramid,
             })
         }
+    };
+    result?;
+    if let Some(completion) = single_pass_completion {
+        completion.finish()?;
     }
+    Ok(())
 }
 
 /// RAW files in `dir`, sorted by filename so that frame index is capture order.

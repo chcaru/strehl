@@ -1,0 +1,122 @@
+[
+  {
+    "label": "slide-hdr-pair-6",
+    "render_report_sha256": "aeb2d9d86386cc0c9ab3a3656121f57f9ebce28f00dcd7a23c623cef3c008573",
+    "source_count": 126,
+    "groups": 77,
+    "development_reference_pass": 1,
+    "white_balance": [
+      2.7392578125,
+      1.0,
+      1.560546875
+    ],
+    "color_matrix": [
+      [
+        [
+          0.7459999918937683,
+          -0.23649999499320984,
+          -0.058800000697374344
+        ],
+        [
+          -0.5687000155448914,
+          1.3442000150680542,
+          0.24740000069141388
+        ],
+        [
+          -0.06239999830722809,
+          0.11559999734163284,
+          0.6583999991416931
+        ]
+      ],
+      "decoder color_matrix[D65]"
+    ],
+    "canvas": [
+      26,
+      17,
+      3464,
+      2310
+    ],
+    "warpmap_sha256": "a8afec6897a6be67df7b0fc04071fc352e239443eb8685302c2b49c830552c08",
+    "all_source_operator_gain_and_support_fields_equal_fused": true
+  },
+  {
+    "label": "hdr-short-7",
+    "render_report_sha256": "7c1b436a75239f784c769c92acce930434a50e0bff54db015d4f36cea28e7ebf",
+    "source_count": 61,
+    "groups": 61,
+    "development_reference_pass": 1,
+    "white_balance": [
+      2.7392578125,
+      1.0,
+      1.560546875
+    ],
+    "color_matrix": [
+      [
+        [
+          0.7459999918937683,
+          -0.23649999499320984,
+          -0.058800000697374344
+        ],
+        [
+          -0.5687000155448914,
+          1.3442000150680542,
+          0.24740000069141388
+        ],
+        [
+          -0.06239999830722809,
+          0.11559999734163284,
+          0.6583999991416931
+        ]
+      ],
+      "decoder color_matrix[D65]"
+    ],
+    "canvas": [
+      26,
+      17,
+      3464,
+      2310
+    ],
+    "warpmap_sha256": "a8afec6897a6be67df7b0fc04071fc352e239443eb8685302c2b49c830552c08",
+    "all_source_operator_gain_and_support_fields_equal_fused": true
+  },
+  {
+    "label": "hdr-long-7",
+    "render_report_sha256": "27028c3a1133a311372a3847154bdbc64c06ba982ed76917132e717a405ecf9f",
+    "source_count": 65,
+    "groups": 65,
+    "development_reference_pass": 1,
+    "white_balance": [
+      2.7392578125,
+      1.0,
+      1.560546875
+    ],
+    "color_matrix": [
+      [
+        [
+          0.7459999918937683,
+          -0.23649999499320984,
+          -0.058800000697374344
+        ],
+        [
+          -0.5687000155448914,
+          1.3442000150680542,
+          0.24740000069141388
+        ],
+        [
+          -0.06239999830722809,
+          0.11559999734163284,
+          0.6583999991416931
+        ]
+      ],
+      "decoder color_matrix[D65]"
+    ],
+    "canvas": [
+      26,
+      17,
+      3464,
+      2310
+    ],
+    "warpmap_sha256": "a8afec6897a6be67df7b0fc04071fc352e239443eb8685302c2b49c830552c08",
+    "all_source_operator_gain_and_support_fields_equal_fused": true
+  }
+]

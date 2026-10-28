@@ -1,0 +1,375 @@
+{
+  "schema": "strehl.independent-review-mapped-rois.v1",
+  "status": "FROZEN from saved geometry before viewing candidate photographic content",
+  "helper_sha256": "4471d269a453f78599af1ece684246c40c873fbcfb24813548262e6b2fb08a52",
+  "source_roi_sha256": "5226589f291817ca0988ffbe04850d3ff06094ea19710568ce37f3df8828b799",
+  "baseline_warpmap_sha256": "aab325916cde886f0a4962aa1a17624b12c7877547870c2a98415a0bfe7ee51c",
+  "baseline_sensor_metadata_sha256": "a7998b23b63b3a86573d68119d950ede7cf588f580353aa650e1b8c065652836",
+  "candidate_alignment_file_sha256": "7c06ed37d92f3a1dde0a03e5b6f2f5eaf71d2c5ab4ef494bac51441400e2ef82",
+  "candidate_warpmap_sha256": "314ed66c63e5b11c286a5d19430198d14bc5937e98aad5c847dd0627e29b7098",
+  "candidate_calibration_sha256": "b099595114f3abcd25b7f5b1b00ea94993b325ca36fbbe29b2bd3be6dcbbafe7",
+  "align_source_sha256": "8e0fde40626db5783356e1be00b26e8e01a34de566f1bc16ab456008ae711cdb",
+  "common_reference": {
+    "frame_index": 149,
+    "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\106MSDCF\\DSC00150.ARW",
+    "sha256": "e3d2046d5e718df10cb80c7108d9644adaa61189d992ea5b64b1ff8ffda25a06",
+    "legacy_placement_f64": [
+      1.0000000000000002,
+      0.0,
+      0.0,
+      -2.220446049250313e-16
+    ],
+    "candidate_placement_f64": [
+      0.9999999999999999,
+      0.0,
+      0.0,
+      2.220446049250313e-16
+    ],
+    "placements": "numerical identity; exact coefficients transported and same integer origins verified"
+  },
+  "baseline_cover_scale": 0.9824474577918777,
+  "baseline_cover_scale_f64_hex": "0x1.f7035a6a8247fp-1",
+  "baseline_saved_cover_applied": "Scaled(0.9824474577918777)",
+  "cover_margin_plane_pixels": 3.0,
+  "candidate_cover_scale": 0.9785878769497705,
+  "candidate_canvas_plane_pixels": [
+    38,
+    26,
+    3440,
+    2292
+  ],
+  "candidate_native_dimensions": [
+    6880,
+    4584
+  ],
+  "formula": "Transport legacy scaled pixel centers through exact legacy reference placement and inverse candidate reference placement, accounting for legacy u/2 versus native (u-0.5)/2 guide conventions. This agrees below1e-10px with u_candidate=C+k_legacy*(u_legacy-C)-2*crop; C=(3516,2344).",
+  "center_convention": "Mean of integer pixel-center coordinates in each384 square: origin+191.5. Round mapped continuous origin to nearest integer via floor(x+0.5).",
+  "size": 384,
+  "maximum_abs_rounding_pixels": 0.499521710064073,
+  "limitations": [
+    "Geometry-only landmark mapping; no candidate image used for fitting or witness choice.",
+    "Same physical reference fixes coordinate gauge, not physical placement truth for every frame.",
+    "Legacy scaled/demosaic gather and native same-color CFA sampling differ; no pixelwise cross-path differences are licensed.",
+    "Same384 native output pixels cover different scene extents: legacy reference extent is384*k while candidate extent is384.",
+    "Color-specific optical pull and guide versus photosite-center conventions mean reconstructed color detail is not one exact image warp.",
+    "Baseline107 uses a different reference acquisition; its same frozen origins are landmark context, not an exact mapped coordinate correspondence.",
+    "Candidate pooled/only-pass controls must verify identical598 warpmap and canvas before reusing these origins."
+  ],
+  "rois": [
+    {
+      "name": "dark-flat-background",
+      "purpose": "flat dark background, away from silhouettes; spatial SD is not temporal noise",
+      "size": 384,
+      "origins": {
+        "bug-3-106": [
+          5750,
+          600
+        ],
+        "insect-repeat-4": [
+          5631,
+          575
+        ],
+        "shared-candidate-gauge": [
+          5631,
+          575
+        ]
+      },
+      "baseline_center": [
+        5941.5,
+        791.5
+      ],
+      "mapped_center": [
+        5822.926308874201,
+        766.7503217781093
+      ],
+      "continuous_origin": [
+        5631.426308874201,
+        575.2503217781093
+      ],
+      "rounding_error_pixels": [
+        -0.4263088742009131,
+        -0.2503217781093099
+      ]
+    },
+    {
+      "name": "cyan-wing-scales",
+      "purpose": "repeated natural scale texture; judge actual boundaries and false repeat texture",
+      "size": 384,
+      "origins": {
+        "bug-3-106": [
+          3100,
+          2050
+        ],
+        "insect-repeat-4": [
+          3028,
+          2000
+        ],
+        "shared-candidate-gauge": [
+          3028,
+          2000
+        ]
+      },
+      "baseline_center": [
+        3291.5,
+        2241.5
+      ],
+      "mapped_center": [
+        3219.4405457257235,
+        2191.2991355763324
+      ],
+      "continuous_origin": [
+        3027.9405457257235,
+        1999.7991355763324
+      ],
+      "rounding_error_pixels": [
+        0.05945427427650429,
+        0.20086442366755364
+      ]
+    },
+    {
+      "name": "dark-wing-band",
+      "purpose": "low-contrast body texture between cyan scale patches",
+      "size": 384,
+      "origins": {
+        "bug-3-106": [
+          2730,
+          2150
+        ],
+        "insect-repeat-4": [
+          2664,
+          2098
+        ],
+        "shared-candidate-gauge": [
+          2664,
+          2098
+        ]
+      },
+      "baseline_center": [
+        2921.5,
+        2341.5
+      ],
+      "mapped_center": [
+        2855.9349863427287,
+        2289.54388135552
+      ],
+      "continuous_origin": [
+        2664.4349863427287,
+        2098.04388135552
+      ],
+      "rounding_error_pixels": [
+        -0.4349863427287346,
+        -0.04388135552017047
+      ]
+    },
+    {
+      "name": "upper-leg-hairs",
+      "purpose": "fine hairs along bright leg on dark background",
+      "size": 384,
+      "origins": {
+        "bug-3-106": [
+          1570,
+          690
+        ],
+        "insect-repeat-4": [
+          1525,
+          664
+        ],
+        "shared-candidate-gauge": [
+          1525,
+          664
+        ]
+      },
+      "baseline_center": [
+        1761.5,
+        881.5
+      ],
+      "mapped_center": [
+        1716.29593530415,
+        855.1705929793784
+      ],
+      "continuous_origin": [
+        1524.79593530415,
+        663.6705929793784
+      ],
+      "rounding_error_pixels": [
+        0.2040646958500929,
+        0.329407020621602
+      ]
+    },
+    {
+      "name": "wing-leg-occlusion",
+      "purpose": "overlapping body/leg depth boundary and dark occlusion halo",
+      "size": 384,
+      "origins": {
+        "bug-3-106": [
+          2500,
+          2800
+        ],
+        "insect-repeat-4": [
+          2438,
+          2737
+        ],
+        "shared-candidate-gauge": [
+          2438,
+          2737
+        ]
+      },
+      "baseline_center": [
+        2691.5,
+        2991.5
+      ],
+      "mapped_center": [
+        2629.9720710505967,
+        2928.134728920241
+      ],
+      "continuous_origin": [
+        2438.4720710505967,
+        2736.634728920241
+      ],
+      "rounding_error_pixels": [
+        -0.4720710505966963,
+        0.36527107975916806
+      ]
+    },
+    {
+      "name": "bright-wing-glint",
+      "purpose": "bright glint at baseline106 sensor-space location3578,1650; display clipping does not certify source saturation",
+      "size": 384,
+      "origins": {
+        "bug-3-106": [
+          3400,
+          1460
+        ],
+        "insect-repeat-4": [
+          3323,
+          1420
+        ],
+        "shared-candidate-gauge": [
+          3323,
+          1420
+        ]
+      },
+      "baseline_center": [
+        3591.5,
+        1651.5
+      ],
+      "mapped_center": [
+        3514.1747830632867,
+        1611.6551354791245
+      ],
+      "continuous_origin": [
+        3322.6747830632867,
+        1420.1551354791245
+      ],
+      "rounding_error_pixels": [
+        0.32521693671333196,
+        -0.1551354791245103
+      ]
+    },
+    {
+      "name": "blue-cyan-chroma",
+      "purpose": "saturated blue knee and transition toward cyan hairs/scales",
+      "size": 384,
+      "origins": {
+        "bug-3-106": [
+          2480,
+          810
+        ],
+        "insect-repeat-4": [
+          2419,
+          782
+        ],
+        "shared-candidate-gauge": [
+          2419,
+          782
+        ]
+      },
+      "baseline_center": [
+        2671.5,
+        1001.5
+      ],
+      "mapped_center": [
+        2610.323121894759,
+        973.0642879144036
+      ],
+      "continuous_origin": [
+        2418.823121894759,
+        781.5642879144036
+      ],
+      "rounding_error_pixels": [
+        0.17687810524103043,
+        0.43571208559637853
+      ]
+    },
+    {
+      "name": "face-edge",
+      "purpose": "dark curved facial boundary and near-eye surface",
+      "size": 384,
+      "origins": {
+        "bug-3-106": [
+          5100,
+          2990
+        ],
+        "insect-repeat-4": [
+          4993,
+          2923
+        ],
+        "shared-candidate-gauge": [
+          4993,
+          2923
+        ]
+      },
+      "baseline_center": [
+        5291.5,
+        3181.5
+      ],
+      "mapped_center": [
+        5184.33546130948,
+        3114.799745900698
+      ],
+      "continuous_origin": [
+        4992.83546130948,
+        2923.299745900698
+      ],
+      "rounding_error_pixels": [
+        0.1645386905202031,
+        -0.29974590069787155
+      ]
+    },
+    {
+      "name": "antenna-hairs",
+      "purpose": "isolated fine hairs/antenna against black, sensitive to doubles and occlusion trails",
+      "size": 384,
+      "origins": {
+        "bug-3-106": [
+          5290,
+          2470
+        ],
+        "insect-repeat-4": [
+          5180,
+          2412
+        ],
+        "shared-candidate-gauge": [
+          5180,
+          2412
+        ]
+      },
+      "baseline_center": [
+        5481.5,
+        2661.5
+      ],
+      "mapped_center": [
+        5371.000478289936,
+        2603.927067848921
+      ],
+      "continuous_origin": [
+        5179.500478289936,
+        2412.427067848921
+      ],
+      "rounding_error_pixels": [
+        0.499521710064073,
+        -0.4270678489210695
+      ]
+    }
+  ]
+}

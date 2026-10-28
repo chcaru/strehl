@@ -1,0 +1,56 @@
+{
+  "classification": "DERIVED; analytical counterexamples, not product or photographic validation",
+  "command": "python -I experiments/multi-stack-2026-10-28/challenge/derive-assumption-controls.py",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "equal_independent_repeat_model": {
+    "variance": 687.6242515043999,
+    "k": 3,
+    "actual_average": 229.20808383479996,
+    "proposal_model": 229.20808383479996
+  },
+  "duplicate_false_gain": {
+    "actual_variance": 687.6242515043999,
+    "naive_claimed_variance": 229.20808383479996,
+    "variance_understatement": 3
+  },
+  "unequal_exposure": {
+    "relative_exposures": [
+      1.0,
+      0.25
+    ],
+    "normalized_source_variances": [
+      670.3867690000001,
+      2690.988304
+    ],
+    "correct_fixed_oracle_weight_variance": 536.6860036018807,
+    "naive_equal_model_variance": 335.19338450000004
+  },
+  "interpolation_covariance": {
+    "pixel_variance": 0.5,
+    "neighbor_covariance": 0.25,
+    "actual_difference_variance": 0.5,
+    "diagonal_only_prediction": 1.0
+  },
+  "common_postfilter_coherence": {
+    "unfiltered": 0.8,
+    "filtered": {
+      "0.1": 0.8,
+      "0.5": 0.8,
+      "2.0": 0.8,
+      "10.0": 0.8
+    },
+    "pooled_before": 0.0,
+    "pooled_after": 0.6
+  },
+  "two_dimensional_2x_alias_matrix_rank": {
+    "four_identical": 1,
+    "four_distinct_x_only": 2,
+    "two_axis_square": 4
+  },
+  "parallax": {
+    "exact": 196.896,
+    "first_order": 205.1,
+    "relative_error": 0.04166666666666674
+  },
+  "assertions": "PASS"
+}

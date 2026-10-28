@@ -85,6 +85,9 @@ pub struct Response {
 }
 #[derive(Default)]
 pub struct ProcessSpace {
+    capture_groups: Vec<crate::session_workspace::CaptureGroup>,
+    session_summary: Option<crate::session_workspace::SessionSummary>,
+    session_contacts: Vec<usize>,
     epoch: Option<u64>,
     visited: BTreeSet<Stage>,
     theater: ProcessTheater,
@@ -93,6 +96,19 @@ pub struct ProcessSpace {
     edit_timeline_height: f32,
 }
 impl ProcessSpace {
+    pub(crate) fn set_session_summary(
+        &mut self,
+        summary: Option<&crate::session_workspace::SessionSummary>,
+    ) {
+        if self.session_summary.as_ref() != summary {
+            self.session_summary = summary.cloned();
+        }
+    }
+    pub(crate) fn set_capture_groups(&mut self, groups: &[crate::session_workspace::CaptureGroup]) {
+        if self.capture_groups != groups {
+            self.capture_groups = groups.to_vec();
+        }
+    }
     pub(crate) fn set_photo_paint(&mut self, paint: Option<crate::photo_viewport::PhotoPaint>) {
         self.theater.set_photo_paint(paint);
     }
@@ -170,6 +186,7 @@ impl ProcessSpace {
     }
     pub fn contact_indices(&self) -> Vec<usize> {
         let mut indices = self.theater.contact_indices();
+        indices.extend(&self.session_contacts);
         indices.sort_unstable();
         indices.dedup();
         indices
@@ -193,7 +210,11 @@ impl ProcessSpace {
             let photo_paint = self.theater.photo_paint.clone();
             let requested_view = self.theater.requested_view;
             let output_path = self.output_path.take();
+            let capture_groups = std::mem::take(&mut self.capture_groups);
+            let session_summary = self.session_summary.take();
             *self = Self {
+                capture_groups,
+                session_summary,
                 epoch: Some(input.epoch),
                 output_path,
                 edit_timeline_height,
@@ -237,6 +258,13 @@ impl ProcessSpace {
         painter.rect_filled(scene, 0.0, BG);
         let mut response = Response::default();
         self.theater.navigation_shortcuts(ui, &mut response);
+        if input.progress.stage == Stage::Complete
+            && let Some(summary) = self.session_summary.clone()
+        {
+            self.show_session(ui, scene, &input, &summary, &mut response);
+            return response;
+        }
+        self.session_contacts.clear();
         if input.standalone_photo() {
             self.theater
                 .show_with_ribbon(ui, scene.shrink(12.0), &input, &mut response, None);
@@ -317,10 +345,86 @@ impl ProcessSpace {
                 }),
             ..input
         };
-        let contacts = Rect::from_min_max(
+        let mut contacts = Rect::from_min_max(
             egui::pos2(body.left(), scene.bottom() - bottom + 7.0),
             egui::pos2(body.right(), scene.bottom() - 7.0),
         );
+        if !self.capture_groups.is_empty() && input.frame_count > 0 {
+            let strip = Rect::from_min_size(contacts.min, egui::vec2(contacts.width(), 20.0));
+            for group in &self.capture_groups {
+                let left = strip.left()
+                    + strip.width() * group.range.start as f32 / input.frame_count as f32;
+                let right = strip.left()
+                    + strip.width() * group.range.end as f32 / input.frame_count as f32;
+                let rect = Rect::from_min_max(
+                    egui::pos2(left, strip.top()),
+                    egui::pos2(right - 2.0, strip.bottom()),
+                );
+                let selected = group.range.contains(&detail.selected);
+                ui.painter().rect_filled(
+                    rect,
+                    3.0,
+                    if selected {
+                        crate::theme::PANEL
+                    } else {
+                        crate::theme::BG
+                    },
+                );
+                let label = format!(
+                    "{}{}  ·  {}–{}",
+                    if group.primary { "★ " } else { "" },
+                    group.name,
+                    group.range.start + 1,
+                    group.range.end
+                );
+                ui.painter().with_clip_rect(rect).text(
+                    rect.center(),
+                    egui::Align2::CENTER_CENTER,
+                    &label,
+                    egui::FontId::proportional(10.0),
+                    if selected {
+                        crate::theme::ACCENT
+                    } else {
+                        crate::theme::MUTED
+                    },
+                );
+                let hit = ui
+                    .interact(
+                        rect,
+                        ui.id().with(("session-capture-pass", group.pass_index)),
+                        egui::Sense::click(),
+                    )
+                    .on_hover_text(format!(
+                        "{} · {} captures · {} ordered folder segments{}",
+                        group.name,
+                        group.range.len(),
+                        group.segment_ends.len(),
+                        if group.primary {
+                            " · primary pass"
+                        } else {
+                            ""
+                        }
+                    ));
+                if hit.clicked() {
+                    response.selected = Some(group.range.start + group.range.len() / 2);
+                }
+                for &end in group
+                    .segment_ends
+                    .iter()
+                    .take(group.segment_ends.len().saturating_sub(1))
+                {
+                    let x = strip.left() + strip.width() * end as f32 / input.frame_count as f32;
+                    ui.painter().line_segment(
+                        [
+                            egui::pos2(x, strip.bottom() - 4.0),
+                            egui::pos2(x, strip.bottom()),
+                        ],
+                        egui::Stroke::new(1.0_f32, crate::theme::MUTED),
+                    );
+                }
+            }
+            contacts.min.y += 23.0;
+        }
         self.theater
             .show_with_ribbon(ui, body, &detail, &mut response, Some(contacts));
         // The theater has now established the epoch and owned photograph.
@@ -353,3 +457,10 @@ fn normal_stage(stage: Stage) -> Option<Stage> {
 #[cfg(test)]
 #[path = "process-space-tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "process-session-tests.rs"]
+mod session_tests;
+
+#[path = "process-session.rs"]
+mod session;

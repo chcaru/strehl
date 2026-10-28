@@ -10,6 +10,7 @@ leaving that workspace.
 
 [Download the preview](https://github.com/chcaru/strehl/releases/tag/v0.1.0-alpha.6) ·
 [Desktop controls](crates/strehl-ui/README.md) ·
+[Multi-stack sessions](docs/multi-stack.md) ·
 [Development and HDR](docs/development-and-hdr.md) ·
 [Export formats](docs/export-formats.md) ·
 [Agent interface](docs/agent-interface.md) ·
@@ -194,8 +195,9 @@ Apple Developer ID notarization.** These are different forms of verification;
 see the release guide before installing.
 
 1. Open **Projects → New stack**, or drop a folder of Sony `.ARW` captures.
-2. Choose the bracket in the visual browser. Each stack uses one directory,
-   ordered by filename.
+2. Choose the bracket in the visual browser. An ordinary stack uses one directory,
+   ordered by filename. For several sweeps, choose
+   [Create multi-stack session](docs/multi-stack.md).
 3. Open **Adjust** if you want to change the recipe, then select **Stack**.
 4. Follow the process; afterward, scrub the timeline to inspect sources against
    the result. Escape or **Photograph** restores the final image.
@@ -220,8 +222,9 @@ and macOS Metal support native HDR presentation when the active display provides
 HDR/EDR headroom; Linux and other backends use SDR. The app reports the active
 display mode and does not change system display settings. General ICC soft proofing
 is not implemented. Saved TIFF output is 16-bit; HDR display and AVIF export require
-a retained linear master. HDR export does not perform
-multi-exposure bracket fusion, and an old SDR TIFF cannot recover clipped light.
+a retained linear master. Exposure fusion is a separate opt-in
+[multi-stack session mode](docs/multi-stack.md); HDR export itself does not merge
+exposures, and an old SDR TIFF cannot recover clipped light.
 Live reconstructions precede final bounds and color development. Older
 saved runs may lack newer diagnostic channels.
 

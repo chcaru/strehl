@@ -65,6 +65,9 @@
 //! in which any one coefficient sees frames. Frame chunking remains a caller
 //! decision because it owns the much larger decode and warp working sets.
 
+#[path = "session-fusion.rs"]
+pub mod session_fusion;
+
 use std::sync::{Mutex, OnceLock};
 
 use crate::noise::NoiseModel;

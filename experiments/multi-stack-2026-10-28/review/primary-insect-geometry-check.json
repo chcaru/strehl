@@ -1,0 +1,52 @@
+[
+  {
+    "label": "insect-only-107-4",
+    "warp_rows_exact": true,
+    "raw_warp_text_equal": true,
+    "canvas_equal": true,
+    "canvas": [
+      38,
+      26,
+      3440,
+      2292
+    ],
+    "reference_frame": 149,
+    "reference_pass": 0,
+    "primary_pass": null,
+    "sources": 299,
+    "groups": 299,
+    "completed": {
+      "elapsed_seconds": 315.2510932,
+      "frames": 598,
+      "outputs": 1,
+      "passes": 2,
+      "primary_pass": null,
+      "schema": "strehl.session-completion.v1"
+    }
+  },
+  {
+    "label": "insect-primary-6",
+    "warp_rows_exact": true,
+    "raw_warp_text_equal": true,
+    "canvas_equal": true,
+    "canvas": [
+      38,
+      26,
+      3440,
+      2292
+    ],
+    "reference_frame": 149,
+    "reference_pass": 0,
+    "primary_pass": 0,
+    "sources": 598,
+    "groups": 480,
+    "completed": {
+      "elapsed_seconds": 1136.8789601,
+      "frames": 598,
+      "outputs": 1,
+      "passes": 2,
+      "primary_pass": 0,
+      "schema": "strehl.session-completion.v1"
+    }
+  }
+]

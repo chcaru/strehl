@@ -48,6 +48,65 @@ and [release checklist](../../docs/public-release.md).
    Source previews are withheld if the recorded source identities no longer match.
    Identity checks use ordered paths, sizes and modification times, not file hashes.
 
+**Working with several passes of one subject**
+
+Import a source stack, then choose **Create multi-stack session** in Projects or
+Adjust. The new session has its own saved recipe; the original stack remains in
+the library. Add an **independent pass** for a repeat, changed exposure or lighting
+treatment. Use **Add continuation folder** when another directory continues the
+same focus sweep. Folder segments and passes have explicit order; folder names
+never imply matching focus.
+
+Choose **Combine detail**, **Repeated captures**, **Exposure range**, or **Aligned
+layers**. Combined output currently requires matching aperture and ISO; exposure
+range can vary shutter time. Use layers for incompatible capture conditions.
+Proposed repeats must pass the engine's agreement checks; uncertain matches remain
+separate. This feature does not stitch different viewpoints into a mosaic.
+
+An optional **Primary** pass anchors framing and appearance and retains its reliable
+content when matched sources disagree. Automatic framing gives no pass that
+preference. The capture timeline shows pass ranges, continuation boundaries and
+the selected primary. Camera metadata inspects the selected folder segment.
+
+Adjust exposes the session **RAM budget** and **CPU thread limit** alongside its
+supported pyramid and exposure controls. Session rendering uses full resolution
+and retains a linear master. It does not apply temporal detail smoothing,
+source-range repairs or automatic exposure. Develop the resulting photographs
+after rendering; earlier photographs and edits remain intact.
+
+Every run saves a fresh manifest, source snapshot and log. The engine's photographs,
+masters, alignment envelope and reports live in its `session-output` subdirectory.
+Original CFA and matching alignment caches are shared between revisions under
+`.strehl-session-cache` in the chosen output destination, outside all source folders.
+Aligned layers each have a `layer-NN` folder; use **Aligned layer** in Projects or
+Review to inspect them individually. A running job uses an immutable snapshot even
+if the next recipe is edited later. Sources changed since import require Reload.
+
+The local control API can compose already imported catalog stacks without granting
+new filesystem access:
+
+```json
+{
+  "expected_revision": 12,
+  "command": {
+    "operation": "create_session",
+    "name": "Repeated subject",
+    "passes": [
+      {"name": "First pass", "stack_ids": [3, 4]},
+      {"name": "Repeat", "stack_ids": [5]}
+    ],
+    "mode": "repeat",
+    "primary_pass": null,
+    "memory_limit_gib": 16
+  }
+}
+```
+
+Use actual stack IDs and the latest workspace revision from a snapshot. Stack IDs
+within one pass are ordered folder segments. The queued response does not mean the
+scan or render has finished. Snapshot `session.capture_groups` and `stack_blocker`
+expose readiness; `start_stack` launches the saved recipe.
+
 **Experimental detail smoothing**
 
 Under **Adjust → Merge**, **Temporal detail smoothing** uses neighboring captures

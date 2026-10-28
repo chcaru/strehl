@@ -81,6 +81,8 @@ $relativeFiles.Add('scripts/rebuild-desktop.ps1')
 $relativeFiles.Add('scripts/package-desktop.ps1')
 $relativeFiles.Add('scripts/strehl-control.py')
 $relativeFiles.Add('docs/desktop-control.md')
+$relativeFiles.Add('docs/multi-stack.md')
+$relativeFiles.Add('experiments/multi-stack-2026-10-28/brief.md')
 $relativeFiles.Add('docs/desktop-build.md')
 $relativeFiles.Add('docs/public-release.md')
 $relativeFiles.Add('SECURITY.md')
@@ -154,9 +156,14 @@ $rebuildGuide = $rebuildGuide.Replace('](temporal-energy.md)', '](source/docs/te
 $rebuildGuide = $rebuildGuide.Replace('](raw-decoder-notice.md)', '](source/docs/raw-decoder-notice.md)')
 [IO.File]::WriteAllText((Join-Path $package 'REBUILD.md'), $rebuildGuide)
 $packageReadme = @'
-# Strehl: native metadata and application control
+# Strehl desktop workspace
 
-Open **Strehl.exe** for the desktop workspace. Import a bracket, select a capture
+Open **Strehl.exe** for the desktop workspace. To combine several focus sweeps,
+choose **Create multi-stack session** from Projects. Repeat fusion, exposure
+range and aligned layers retain separate pass identity, with an optional primary
+stack and a configurable RAM budget. See the [session guide](source/docs/multi-stack.md).
+
+Import a bracket, select a capture
 on the timeline, and open **Camera metadata**. The native panel contains the AF
 grid, exact cell bits and flags, focus progression and optical sample curves.
 Selecting a chart point selects its capture. Full details stay inside Strehl.

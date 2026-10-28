@@ -13,6 +13,9 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use anyhow::{Context, Result, bail, ensure};
 
 use crate::pipeline::Utf8LogDecoder;
+#[path = "jobs-session.rs"]
+mod session;
+pub(crate) use session::scan_session;
 
 static NEXT_JOB: AtomicU64 = AtomicU64::new(0);
 const EVENT_CAPACITY: usize = 96;
@@ -266,6 +269,9 @@ impl Resampler {
 #[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct RenderSettings {
+    /// Explicit multi-pass recipe; absent for every existing ordinary stack.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub(crate) session: Option<crate::session_workspace::SessionDraft>,
     pub pyramid_bands: Option<usize>,
     pub pyramid_exponent: Option<f32>,
     pub pyramid_sharpen: Option<f32>,
@@ -285,6 +291,7 @@ pub struct RenderSettings {
 impl Default for RenderSettings {
     fn default() -> Self {
         Self {
+            session: None,
             pyramid_bands: None,
             pyramid_exponent: None,
             pyramid_sharpen: None,
@@ -453,6 +460,9 @@ fn run_render(
     cancelled: &Arc<AtomicBool>,
     sender: &SyncSender<RenderEvent>,
 ) -> RenderOutcome {
+    if request.settings.session.is_some() {
+        return session::run_session_render(request, cancelled, sender);
+    }
     let mut job_directory = None;
     let result = (|| -> Result<RenderOutcome> {
         validate_settings(request)?;
@@ -634,7 +644,11 @@ fn validate_settings(request: &RenderRequest) -> Result<()> {
     Ok(())
 }
 
-fn render_command(request: &RenderRequest, source: &Path, partial: &Path) -> Result<Command> {
+pub(crate) fn render_command(
+    request: &RenderRequest,
+    source: &Path,
+    partial: &Path,
+) -> Result<Command> {
     if let Some(reason) = temporal_settings_blocker(
         &request.settings,
         request.pyramid_gate,

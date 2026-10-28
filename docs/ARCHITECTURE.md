@@ -811,3 +811,122 @@ backends, so any unintended change to the merge is caught as a hash movement.
   declined a real file, because all corpus stacks are the same rig.
 - **Rail capture is deferred** — no rail hardware to test against, and an untested geometry
   model would violate rule 8.
+
+## 12. Opt-in multi-stack sessions
+
+**SEPARATE SESSION PATH.** `strehl session` consumes a versioned manifest of
+ordered passes, each with one or more ordered continuation folders.
+[The session guide](multi-stack.md) describes the user contract. The existing
+`stack` command does not call this consumer. A one-pass, one-folder
+Combine/Repeat session delegates to the ordinary command and adds only source
+binding and completion receipts around it.
+
+### Source and geometry contract
+
+`session-input.rs` retains global, pass, segment and local indices. Canonical
+paths, file stamps and whole-original SHA256 identities bind each run;
+duplicate paths or duplicate file content are refused. Outputs and caches
+must remain outside every capture folder.
+
+`session-cache.rs` stores original active CFA codes as `u16`, preserving
+decoded geometry, levels and calibration. The in-memory cache has a byte
+budget and pinned handles. Checksummed disk entries bind the original identity
+and decoder implementation; corrupt or stale derived entries are rebuilt.
+This cache contains no aligned frame volume.
+
+`session-align.rs` builds bounded guides, proposes intra-pass and cross-pass
+pairs, refines accepted seeds directly against original native data, and solves
+the direct measured graph in one reference gauge. Core's
+`solve_global_in_tracks` applies the smoothness prior within explicit pass
+tracks only. It does not introduce rows across pass boundaries or chain poses.
+The ordinary solver retains its original single-track behavior.
+
+Reports preserve components, cycle rank, per-pass placement/refusal counts,
+direct edges and candidate correspondence. Fitted scale proximity and mutual
+nearest partners are retrieval hints; `validated_same_focus` remains false.
+A connected graph establishes connectivity, not placement accuracy or
+identical physical focus. Geometry caches bind source identities, ordered
+session layout, configuration, resampler and owned implementation sources.
+
+### Sampling and fusion
+
+`session-sampling.rs` gathers original same-color CFA samples at consumption.
+Coordinates explicitly relate each CFA site to the green-quad alignment gauge.
+Only the current source's signed `f32` planes are materialized. Coverage and
+original clipping support are separate masks. The clipping check includes
+nonzero negative-lobed interpolation taps; clipped data are not silently
+turned into valid zero-valued observations.
+
+Each pass receives the existing injected sensor-noise model. A deterministic
+original-CFA Rademacher probe measures the actual gather-plus-pyramid variance
+transfer for each placement, profile, canvas and resampler. Luma and color
+transfer are separate. This is an operator measurement with known input
+variance, not a new fitted sensor noise estimate. It is a spatial average
+under stationary independent noise and does not represent exact local
+covariance. Nonlinear clamped Catmull-Rom is refused.
+
+`session-transfer-cache.rs` caches only those small measured operator reports.
+Its binding includes exact placement bits, canvas, full geometry, optical
+profile, probe settings, platform and implementation sources. Payload float
+bits, checksum, dimensions, support counts and positivity are checked.
+Worker count is excluded because indexed parallelism preserves the
+measurement's reduction order; one-versus-sixteen-worker controls cover it.
+
+Core's `pyramid::session_fusion` is an additional coefficient consumer.
+Disjoint proposed groups contain at most one observation per pass. Compatible
+repeats use an equal-weight coefficient mean with variance
+`sum(v_i) / K^2`; this is valid propagation, not an inverse-variance optimal
+HDR estimator. Disagreement uses ordinary noise-gated admission, or the
+explicit primary's supported coefficient. Absent a primary, the automatically
+chosen geometry reference has no fusion preference. Combine mode admits
+sources independently unless a primary requires matching-overlap handling.
+
+Strict uncensored support is preferred across groups. A separate coverage
+fallback retains real saturated values only where all observations lack
+strict support; it never claims to recover clipped information. The hull uses
+uncensored observations where available. Actual unsupported output pixels
+withhold the completed photograph. CFA planes are demosaiced once by the
+existing writer into the photograph and scene-linear master.
+
+### Modes, resources and desktop boundary
+
+Fused sessions require compatible camera, lens, decoded sensor calibration,
+known ISO and aperture. Combine/Repeat also require equal shutter time.
+Different apertures or lighting appearances remain separate in Aligned layers,
+which shares geometry/canvas while preserving each pass's final calibration.
+Physical camera-body identity cannot be established from model metadata alone.
+
+HDR's `session-photometry.rs` validates one bounded multiplicative correction
+per pass after nominal shutter normalization. A fixed checkerboard split of
+spatial patches separates fitting and validation; several proposed focus
+partners must span the tracks. Original clipping/coverage masks and injected
+noise eligibility guard the measurement. Supported contradictory radiometry
+vetoes the pass rather than disappearing through accepted-pair selection.
+All pair evidence, tolerances, gains and refusals are retained. The consumer
+applies the accepted gain to signal and its square to propagated variance.
+Calibration phase and retained report memory are checked before merge buffers
+are allocated. These are sampled compatibility checks, not calibration of
+physical focus or a general camera response.
+
+The optional primary anchors framing and preference over disagreeing matched
+overlap. It does not suppress useful unmatched focus coverage. For layers it
+sets the shared reference and initially opened layer. Neither mode is a
+stitching implementation.
+
+A checked session memory reservation covers cache, sampling, probes,
+coefficient workspaces and output development. It is separate from ordinary
+stacking's existing planner. Deterministic row and pixel-chunk parallelism
+uses CPU workers without changing per-pixel source order. GPU support remains
+the desktop display path; experimental GPU fusion is not silently enabled.
+
+The desktop saves a session recipe separately from ordinary catalog stacks.
+Its isolated engine worker receives an immutable manifest, fresh output
+directory and shared cache outside captures. Publication checks completed
+source identities against the imported recipe and validates every photograph
+and linear master. Leaving session mode restores the entire ordinary recipe.
+Pass groups and layer ownership survive saved-run reopening.
+
+Depth-aware mosaics, super-resolution, calibrated depth, and Fourier-ring
+resolution claims are not implemented by this path. Their capture and
+identifiability requirements remain separate from usable session input,
+common-gauge layers and conservative fusion.

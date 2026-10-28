@@ -77,6 +77,8 @@ pub(crate) mod halo;
 mod region_repair;
 #[path = "merge_cmd/sensor-master.rs"]
 pub(crate) mod sensor_master;
+#[path = "session-consumer.rs"]
+pub(crate) mod session_consumer;
 #[cfg(feature = "temporal-energy")]
 #[path = "merge_cmd/temporal-cpu.rs"]
 mod temporal_cpu;
