@@ -1,0 +1,818 @@
+{
+  "status": "ALL30_NATIVE_CROPS_READY_NO_VERDICT",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\export-corresponding.py",
+    "--whole-images-reviewed"
+  ],
+  "inputs": [
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\export-corresponding.py",
+      "sha256": "cf48bac2cbbe5489edf3525f0452aa9550d018317fda45bae91b63df82aac172",
+      "bytes": 8765,
+      "mtime_ns": 1793089948248225800
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-witnesses.json",
+      "sha256": "826c4ab6c620122449f6575cdd18c0f9ee9cb460f29f6d895e832325d6405888",
+      "bytes": 12213,
+      "mtime_ns": 1793071347179153000
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\export-corresponding.py",
+      "sha256": "4a7df974014431fcefff4803f1ad8dcc394644856d8927dcab7015c26fba7244",
+      "bytes": 6206,
+      "mtime_ns": 1793073128000656100
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-ca-off\\completion.json",
+      "sha256": "67b7056865d541c88e7ea2e41cb6517399f38276921cf0a9a078453f8f4c3f67",
+      "bytes": 1773,
+      "mtime_ns": 1793073559086672500
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-ca-off\\stack-master.tiff",
+      "sha256": "5dc571cce0d9e310f1f06b6e7f3c78faae8fb4ee4f12c94ff76d1d0c0e3fb655",
+      "bytes": 190169209,
+      "mtime_ns": 1793073552900423200
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-ca-off\\stack-full.jpg",
+      "sha256": "64471fe73f1e059c004cc88f4f009f699a24a7863f8bc8d402dc72c5cfad79f0",
+      "bytes": 16227838,
+      "mtime_ns": 1793073553283782900
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-comparator\\b\\completion.json",
+      "sha256": "c21f3af01d81ac24cb64c8ffec6b1eb93ab20053c712f4a98755a1bcf31ae510",
+      "bytes": 651,
+      "mtime_ns": 1793072859371700100
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-comparator\\b\\stack-master.tiff",
+      "sha256": "56e6f5be1c98f7670b81dfe458d734d0bd782e0bc2a801bb7cd1dcf30a89165a",
+      "bytes": 196984074,
+      "mtime_ns": 1793072816535605500
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-comparator\\b\\stack-full.jpg",
+      "sha256": "eda196df3a5fecc65714e7f4f402e5cbefb7c282e5b019471f4e11a8fead8918",
+      "bytes": 17607230,
+      "mtime_ns": 1793072821650998800
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-27\\weevil-107-fine-comparator\\b-r4-desktop-2\\completion.json",
+      "sha256": "b5dd1c3a004a4462a4654b695460b70243f58c6d1e88290a0be508eff3682d85",
+      "bytes": 2738,
+      "mtime_ns": 1793089780608184500
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-27\\weevil-107-fine-comparator\\b-r4-desktop-2\\stack-master.tiff",
+      "sha256": "d24e944825fe5e8405dbf26a7339e7d69af4f70dea6607db1af81ea809a274ff",
+      "bytes": 196984074,
+      "mtime_ns": 1793089741991634600
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-27\\weevil-107-fine-comparator\\b-r4-desktop-2\\stack-full.jpg",
+      "sha256": "903800dd2f801cec3ef17ffefd04fb1779b24debef76224d31acd98be9f689d0",
+      "bytes": 17624891,
+      "mtime_ns": 1793089780360282600
+    }
+  ],
+  "mapped_manifest": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\mapped-witnesses.json",
+    "sha256": "2b886b0006414b7219196deefb87ab8d805336df51d21df65127868bec7f59fa",
+    "bytes": 22242,
+    "mtime_ns": 1793089965392826700
+  },
+  "inputs_unchanged": true,
+  "outputs": [
+    {
+      "arm": "native-ca-off",
+      "name": "background-black",
+      "xywh": [
+        3800,
+        500,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\background-black.png",
+        "sha256": "2245d75e6317f73c9ee6402f593d2bfb7a27bd654b3c8559e1891dbe543294ab",
+        "bytes": 112612,
+        "mtime_ns": 1793089965434009900
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\background-black.tiff",
+        "sha256": "3b5fa4efe522d1bfbe966231302c68fa4b699836e7368ccd1124f9c8bf9a40af",
+        "bytes": 887680,
+        "mtime_ns": 1793089965436284200
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "native-ca-off",
+      "name": "dark-elytron",
+      "xywh": [
+        2750,
+        2120,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\dark-elytron.png",
+        "sha256": "0b1e9f852050e1917905ffd2ca0d34d6cceac319adff38c7d41383f18eecbfed",
+        "bytes": 273041,
+        "mtime_ns": 1793089965462515200
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\dark-elytron.tiff",
+        "sha256": "c19127fe6d6d8485591f00ae40034e9b55368aeddbabe633ce3900fd1f764f72",
+        "bytes": 887680,
+        "mtime_ns": 1793089965463515300
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "native-ca-off",
+      "name": "turquoise-scales",
+      "xywh": [
+        2120,
+        1340,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\turquoise-scales.png",
+        "sha256": "d026c6171e03d4bd21358a2fa8af5b0c59a8139d1181ba46bb28c8536e668d57",
+        "bytes": 300050,
+        "mtime_ns": 1793089965489498400
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\turquoise-scales.tiff",
+        "sha256": "c8e7480217a08456b7e82ca4957d5ea77202caf66ea87c126369ea148e24fbc3",
+        "bytes": 887680,
+        "mtime_ns": 1793089965492825800
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "native-ca-off",
+      "name": "elytron-seam",
+      "xywh": [
+        2950,
+        1960,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\elytron-seam.png",
+        "sha256": "431a6d7e09439293ce182d70ec8e87be1fad9d8896eac7daf89c2f862decd758",
+        "bytes": 296612,
+        "mtime_ns": 1793089965519843900
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\elytron-seam.tiff",
+        "sha256": "f5d7f725eac0887a767ca4a5a658d2b51edfc3523dab07d95606b15864adb26e",
+        "bytes": 887680,
+        "mtime_ns": 1793089965521275700
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "native-ca-off",
+      "name": "bright-wing-rim",
+      "xywh": [
+        4050,
+        1810,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\bright-wing-rim.png",
+        "sha256": "2540a32776a1d7f543487d407e43f4e4c8378d7b1042c3adbe8090e3f666ab0f",
+        "bytes": 300941,
+        "mtime_ns": 1793089965548019200
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\bright-wing-rim.tiff",
+        "sha256": "578c235aa948e3956d4b1061c9b21507075c11949e29ce334e51bf5bcf84a640",
+        "bytes": 887680,
+        "mtime_ns": 1793089965549018300
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "native-ca-off",
+      "name": "thorax-texture",
+      "xywh": [
+        4520,
+        2560,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\thorax-texture.png",
+        "sha256": "b3d23f0c304d11479d1f3b86e4204892ddeeec5d502ab39cb3d2ff8a61607f55",
+        "bytes": 316351,
+        "mtime_ns": 1793089965576261500
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\thorax-texture.tiff",
+        "sha256": "44b9208f8dbbbf45774f14e622ac4c16be1ad135beab609cb857048e70e0b4d0",
+        "bytes": 887680,
+        "mtime_ns": 1793089965578506600
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "native-ca-off",
+      "name": "upper-leg-hairs",
+      "xywh": [
+        1820,
+        640,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\upper-leg-hairs.png",
+        "sha256": "02e6ca05f5d0548448c353fed2b8a4ec19712e3ee5bbb943be0ca52852f5665b",
+        "bytes": 185086,
+        "mtime_ns": 1793089965604179600
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\upper-leg-hairs.tiff",
+        "sha256": "514833d92e64632d5d4d796a166ba63f5fdd58a6265aa513d77cb17a3e734319",
+        "bytes": 887680,
+        "mtime_ns": 1793089965606254900
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "native-ca-off",
+      "name": "blue-joint",
+      "xywh": [
+        2680,
+        850,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\blue-joint.png",
+        "sha256": "3ce08a758cf8c9a9dc268aaa047cc982dee8a5ef898b520a3bc7f3af3c9314f3",
+        "bytes": 288401,
+        "mtime_ns": 1793089965632337400
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\blue-joint.tiff",
+        "sha256": "1e418bd85b0685241e48b55db349ced9c5bea71d8c91a9905eb4f3cd32d6ca16",
+        "bytes": 887680,
+        "mtime_ns": 1793089965634336100
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "native-ca-off",
+      "name": "upper-occlusion",
+      "xywh": [
+        3850,
+        1300,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\upper-occlusion.png",
+        "sha256": "6b7caa61a7074d5963615ee8dda612b978c99b1ddccbbeef7cfa84110c457add",
+        "bytes": 273733,
+        "mtime_ns": 1793089965663660100
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\upper-occlusion.tiff",
+        "sha256": "c8e19dfe6a37a865646c1100d8a3024155eb529b904e35c8adfb1ddcf3a1fc39",
+        "bytes": 887680,
+        "mtime_ns": 1793089965665665400
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "native-ca-off",
+      "name": "eye-and-antenna",
+      "xywh": [
+        5350,
+        2920,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\eye-and-antenna.png",
+        "sha256": "7d45b8e688559303623b4fca92d712a30e0f4134aa47c2d54ccb24b89b74c351",
+        "bytes": 244743,
+        "mtime_ns": 1793089965693665000
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\native-ca-off\\eye-and-antenna.tiff",
+        "sha256": "f49bb8feb42cb57dcb1151ff6b83dae530f9a17161933d68826b8caffbbc235b",
+        "bytes": 887680,
+        "mtime_ns": 1793089965693665000
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b8",
+      "name": "background-black",
+      "xywh": [
+        3865,
+        495,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\background-black.png",
+        "sha256": "6bd4eeab1b1ab36c95adeafed703c82e49af617106aa5924ec3d87ded2afeffc",
+        "bytes": 121474,
+        "mtime_ns": 1793089965730329100
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\background-black.tiff",
+        "sha256": "222068690f094c8e67e79aff39731a19be7c3b48d468b05fc1fae08a7fd91def",
+        "bytes": 887680,
+        "mtime_ns": 1793089965730329100
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b8",
+      "name": "dark-elytron",
+      "xywh": [
+        2795,
+        2147,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\dark-elytron.png",
+        "sha256": "158d18ed1cea93a356d3b80fd6948cf551f96b9b6df78cb9558d13bac04b8cc6",
+        "bytes": 277799,
+        "mtime_ns": 1793089965756563900
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\dark-elytron.tiff",
+        "sha256": "c27605e03aee3e9e249cf3900265306c72ee6fdd915730720dff2edbfbb620c9",
+        "bytes": 887680,
+        "mtime_ns": 1793089965760527000
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b8",
+      "name": "turquoise-scales",
+      "xywh": [
+        2152,
+        1352,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\turquoise-scales.png",
+        "sha256": "1df57c1e91215b21c4843089bf2b129ad17737c16a94a25f6d23aecd518ff158",
+        "bytes": 306994,
+        "mtime_ns": 1793089965788677900
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\turquoise-scales.tiff",
+        "sha256": "8c6b6bf721800d2ce41adbb8ea1506a5ad68f24087857513fb961c76e8f2324b",
+        "bytes": 887680,
+        "mtime_ns": 1793089965789683700
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b8",
+      "name": "elytron-seam",
+      "xywh": [
+        2998,
+        1984,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\elytron-seam.png",
+        "sha256": "add6e88fe701659c917477a18cb52ce8b720cace6fa1e9633abce49b3fce0431",
+        "bytes": 299566,
+        "mtime_ns": 1793089965818458500
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\elytron-seam.tiff",
+        "sha256": "d240103ed56cfd95285aaf39689a7d6931e55260ba62edf7c316a72f9157fdf8",
+        "bytes": 887680,
+        "mtime_ns": 1793089965820525900
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b8",
+      "name": "bright-wing-rim",
+      "xywh": [
+        4118,
+        1831,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\bright-wing-rim.png",
+        "sha256": "c7691fc34c3e473ca2074d1a3cce58048f228f1efc54774dc46b86bc2e2a9750",
+        "bytes": 307235,
+        "mtime_ns": 1793089965847815600
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\bright-wing-rim.tiff",
+        "sha256": "84b74351232ede0b6d1592ad521d2ffdb95a44e662474ef7856f4faf0c786e2a",
+        "bytes": 887680,
+        "mtime_ns": 1793089965847815600
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b8",
+      "name": "thorax-texture",
+      "xywh": [
+        4597,
+        2596,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\thorax-texture.png",
+        "sha256": "0a61cf1b2a3f05a3a6692fdfbf10ba0fcc2aee516e6c39c8d6b111c076cd3f66",
+        "bytes": 324847,
+        "mtime_ns": 1793089965877811700
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\thorax-texture.tiff",
+        "sha256": "fd1e478d221be017015bdb9ce3030a13e721e580490bf2dc8590ac3257f29dfe",
+        "bytes": 887680,
+        "mtime_ns": 1793089965880827100
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b8",
+      "name": "upper-leg-hairs",
+      "xywh": [
+        1845,
+        638,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\upper-leg-hairs.png",
+        "sha256": "86bd97015bfae50be73553288d433472b9fe683d4898a8c03842169363b607f1",
+        "bytes": 220767,
+        "mtime_ns": 1793089965910062900
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\upper-leg-hairs.tiff",
+        "sha256": "4077eb9e786b563997bb1145e01fb87cc1ad56bde87ca5df9399a2c240b47fe7",
+        "bytes": 887680,
+        "mtime_ns": 1793089965911121200
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b8",
+      "name": "blue-joint",
+      "xywh": [
+        2722,
+        853,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\blue-joint.png",
+        "sha256": "e36f9d1a2fb0b528233334b48168f2606bcf6d5d77afa17d743afb7c810092f6",
+        "bytes": 291906,
+        "mtime_ns": 1793089965937515000
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\blue-joint.tiff",
+        "sha256": "1fb99e6bcdb22a66f89b44f62c47c02f03fc260289ced5dc7774eee483fe89e1",
+        "bytes": 887680,
+        "mtime_ns": 1793089965938921400
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b8",
+      "name": "upper-occlusion",
+      "xywh": [
+        3915,
+        1312,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\upper-occlusion.png",
+        "sha256": "86c340a06e66cf701c8088c83639699e5c6719f378d19695b10fb7e6d18644f3",
+        "bytes": 279260,
+        "mtime_ns": 1793089965967867700
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\upper-occlusion.tiff",
+        "sha256": "08e73802544b26bd1474acaae497d57ff22afb6bf24eb8cb03dcb03385bd99dd",
+        "bytes": 887680,
+        "mtime_ns": 1793089965968876000
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b8",
+      "name": "eye-and-antenna",
+      "xywh": [
+        5447,
+        2964,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\eye-and-antenna.png",
+        "sha256": "ae447ab1e7c27f504735ce0d908769a3df2a7f185d4f371d32c0aeaf526b59d9",
+        "bytes": 258337,
+        "mtime_ns": 1793089965999033300
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b8\\eye-and-antenna.tiff",
+        "sha256": "08a536d6507c513d8e67e63bfbd9e66a98cde26ae2686c436ef9bdfa0ddb7639",
+        "bytes": 887680,
+        "mtime_ns": 1793089966001033000
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b4",
+      "name": "background-black",
+      "xywh": [
+        3866,
+        495,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\background-black.png",
+        "sha256": "a0e8459ee50fe07c8f904734314663f6ac5c3044dd7232f5bbf6514a4116bb6a",
+        "bytes": 123251,
+        "mtime_ns": 1793089966040747300
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\background-black.tiff",
+        "sha256": "c9a9de3e3b6f2f2e0772fda29a2d07cf2fe6b4fe9c64378a095d44ee638cab30",
+        "bytes": 887680,
+        "mtime_ns": 1793089966042446700
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b4",
+      "name": "dark-elytron",
+      "xywh": [
+        2795,
+        2147,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\dark-elytron.png",
+        "sha256": "b57a1d2d8cd1d024046f705fc6d2c3549a394f19b42c8819ddf536b613cd5692",
+        "bytes": 278236,
+        "mtime_ns": 1793089966068859600
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\dark-elytron.tiff",
+        "sha256": "57e41539eebd71d6908bef78557a3c16af9a77503425e6cbba817dda6743f867",
+        "bytes": 887680,
+        "mtime_ns": 1793089966070860100
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b4",
+      "name": "turquoise-scales",
+      "xywh": [
+        2152,
+        1353,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\turquoise-scales.png",
+        "sha256": "054dfca17283f3d1412612bacdfd56dc58e62f47e1012a7b4db9632ac7d06efd",
+        "bytes": 307166,
+        "mtime_ns": 1793089966100029700
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\turquoise-scales.tiff",
+        "sha256": "2e1b4013903c80c2e92efee6e082226bb2736d3e38fb1a3e6b647a4653ceaaff",
+        "bytes": 887680,
+        "mtime_ns": 1793089966102637700
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b4",
+      "name": "elytron-seam",
+      "xywh": [
+        2998,
+        1984,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\elytron-seam.png",
+        "sha256": "f57abb3deafa74c7cb2aad8a0ab012fd2b481d1310faf33ad9f28cee9c62fadd",
+        "bytes": 300028,
+        "mtime_ns": 1793089966130213200
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\elytron-seam.tiff",
+        "sha256": "66fbb19cd62a1c5e71362cd915b26e35e15f2bf2ba20430b94685556465a1f4a",
+        "bytes": 887680,
+        "mtime_ns": 1793089966130735000
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b4",
+      "name": "bright-wing-rim",
+      "xywh": [
+        4118,
+        1831,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\bright-wing-rim.png",
+        "sha256": "9ac00f0531bcb35b1ae367d8a808f05057e124a3d0622e20b3242e51642c0fb5",
+        "bytes": 308115,
+        "mtime_ns": 1793089966160488100
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\bright-wing-rim.tiff",
+        "sha256": "fc4423d4759555b2fd76a4d76f4801da5e811a088a7c5b38fc2204eda378efac",
+        "bytes": 887680,
+        "mtime_ns": 1793089966161488100
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b4",
+      "name": "thorax-texture",
+      "xywh": [
+        4598,
+        2596,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\thorax-texture.png",
+        "sha256": "1f8771c810380556be7690f304a614b6a120c9ed7e0106bd8fb2f42d68708baf",
+        "bytes": 325189,
+        "mtime_ns": 1793089966192862500
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\thorax-texture.tiff",
+        "sha256": "bb77ff7d09d3f0f343c1b43ceb8e7fcc89ca1812020013994d203382d7904b99",
+        "bytes": 887680,
+        "mtime_ns": 1793089966192862500
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b4",
+      "name": "upper-leg-hairs",
+      "xywh": [
+        1845,
+        638,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\upper-leg-hairs.png",
+        "sha256": "cbf2140489c27ee908a3043590ab637bca927b7b9e22ff3de5e1e6c82957e1b2",
+        "bytes": 220838,
+        "mtime_ns": 1793089966222043500
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\upper-leg-hairs.tiff",
+        "sha256": "3aa6110952671832a5d8745428486b11034c0fd61ac331bb295fde2799789280",
+        "bytes": 887680,
+        "mtime_ns": 1793089966226217400
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b4",
+      "name": "blue-joint",
+      "xywh": [
+        2722,
+        853,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\blue-joint.png",
+        "sha256": "d0f781255beaca5abf3978247448b69f54011b427b148624d94333d15d15593c",
+        "bytes": 293571,
+        "mtime_ns": 1793089966255208400
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\blue-joint.tiff",
+        "sha256": "fcb2dd7ce0a62d18ad7ff1688ebaf0a412f8b7644943ce2f95dd44cb838d92cc",
+        "bytes": 887680,
+        "mtime_ns": 1793089966255728100
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b4",
+      "name": "upper-occlusion",
+      "xywh": [
+        3915,
+        1311,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\upper-occlusion.png",
+        "sha256": "a99e67a19686797c65503a1e27705431928469126b04e3c58093adee2d1eeaee",
+        "bytes": 280071,
+        "mtime_ns": 1793089966285536600
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\upper-occlusion.tiff",
+        "sha256": "e3e2491f27e210991fa648e5e58e63f859099dc92f8fbf1f44d3685d1240df4a",
+        "bytes": 887680,
+        "mtime_ns": 1793089966288538300
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    },
+    {
+      "arm": "b4",
+      "name": "eye-and-antenna",
+      "xywh": [
+        5448,
+        2964,
+        384,
+        384
+      ],
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\eye-and-antenna.png",
+        "sha256": "226b3573cef097570ee62142a9dfdcfa2e014256bdafe43cd875ac8409b3e069",
+        "bytes": 259023,
+        "mtime_ns": 1793089966319174800
+      },
+      "tiff": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\b4\\eye-and-antenna.tiff",
+        "sha256": "94abfef10f4791c2097e707dcb52a243a0cb24e4b1b951d237c895cb60d35726",
+        "bytes": 887680,
+        "mtime_ns": 1793089966321171700
+      },
+      "pixels_exact": true,
+      "icc_exact": true
+    }
+  ],
+  "seconds": 4.813000000001921,
+  "raw_reads": 0,
+  "resized_crops": false,
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b"
+}

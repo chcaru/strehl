@@ -1,0 +1,68 @@
+--- ../model.py
++++ model-counted.py
+@@ -227,6 +227,29 @@
+         +cross.square().sum(-1)/16).sum()/(ow*oh)
+ 
+ 
++def _count_scaled(value, numerator_count, total_count):
++    """Fixed f32 count weighting, shared by the actual data/prior consumers."""
++    if (type(numerator_count) is not int or numerator_count <= 0
++            or type(total_count) is not int or total_count <= 0):
++        raise ValueError("positive original-observation counts required")
++    if not torch.is_tensor(value) or value.dtype != torch.float32 or value.ndim != 0:
++        raise ValueError("counted objective term must be scalar f32")
++    return value*(value.new_tensor(numerator_count)/value.new_tensor(total_count))
++
++
++def data_term(mu, codes, query, config, total_count):
++    """Sum original-sensel NLL/N; exposed producing path for partition tests."""
++    if not torch.is_tensor(codes) or codes.ndim != 1 or len(codes) != len(query.phase):
++        raise ValueError("one original code per supplied query required")
++    return _count_scaled(_nll(mu, codes, query, config), len(codes), total_count)
++
++
++def prior_term(x, config, total_count):
++    """Unchanged edge-loss SUM/N, counted once, including the fixed free apron."""
++    _, _, ow, oh = config.output_xywh
++    return _count_scaled(_prior(x, config), ow*oh, total_count)
++
++
+ def _output_matrix(config):
+     if config._output_matrix is None:
+         ox, oy, w, h = config.output_xywh
+@@ -337,7 +360,10 @@
+             holdout="spatial transfer with per-view training-cell variance calibration",
+             radiance_domain="all field_hw HWC parameters free, including72pixel apron",
+             initializer_extension="replicate the normalized anchor CFA interpolation",
+-            prior_normalization="sum matrix-Cauchy edge terms / observed output area",
++            objective_formulation="(sum training original-sensel NLL + unchanged sum matrix-Cauchy edge terms) / training sensel count",
++            data_normalization="each view mean NLL times its eligible original-sensel count / total training count",
++            prior_normalization="existing observed-area prior times observed area / total training sensel count; prior counted once",
++            source_parent_sha256="659da66d343908564b16262482dc55e3220dd15f8318bf49623a7b2d8d8106cc",
+             direct_query_support_definition="nonzero pre-blur training-query basis coefficients; not identifiability",
+             direct_query_unsupported_scalar_count=int((~self.direct_query_support_rgb).sum()),
+             blurred_observations_can_constrain_apron=True,
+@@ -383,6 +409,7 @@
+     optimizer = torch.optim.LBFGS([z, theta], lr=1, history_size=10, max_iter=64,
+         max_eval=150, tolerance_grad=1e-6, tolerance_change=1e-11, line_search_fn="strong_wolfe")
+     history = []
++    total_training_sensels = sum(len(view.codes) for view in train_views)
+     last_finite = [z.detach().clone(), theta.detach().clone()]
+ 
+     def latent():
+@@ -402,13 +429,13 @@
+         history.append(row)
+         for view in train_views:
+             mu = forward(latent(), relative(view.source_id), view.query, config)
+-            loss = _nll(mu, code_tensors[view.source_id], view.query, config)/len(train_views)
++            loss = data_term(mu, code_tensors[view.source_id], view.query, config, total_training_sensels)
+             if not bool(torch.isfinite(loss)):
+                 raise FloatingPointError("nonfinite original-CFA likelihood")
+             loss.backward()
+             total = total+loss.detach()
+         data = float(total)
+-        prior = _prior(latent(), config)
++        prior = prior_term(latent(), config, total_training_sensels)
+         if not bool(torch.isfinite(prior)):
+             raise FloatingPointError("nonfinite matrix prior")
+         prior.backward()

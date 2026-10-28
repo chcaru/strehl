@@ -1,0 +1,77 @@
+{
+  "index": 298,
+  "selection": "Alignment anchor149 or bracket endpoint0/298, as allocated by root; not a focus maximum.",
+  "original": {
+    "index": 298,
+    "mtime_ns": 1792989504380000000,
+    "path": "D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00299.ARW",
+    "sha256": "1a05b50ad90120b91eec298a39c5517ecece70942ff4beb74458855942836e7e",
+    "bytes": 34398208
+  },
+  "raw_decodes_unique_originals_this_lane": 3,
+  "active_shape": [
+    4688,
+    7028
+  ],
+  "metadata": {
+    "pattern": [
+      [
+        0,
+        1
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "color_desc": "RGBG",
+    "black": [
+      512,
+      512,
+      512,
+      512
+    ],
+    "white": 16383,
+    "camera_wb": [
+      1637.0,
+      1024.0,
+      2774.0,
+      1024.0
+    ],
+    "daylight_wb": [
+      2.4478163719177246,
+      0.9319279193878174,
+      1.2933659553527832,
+      0.0
+    ],
+    "sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+    "rawpy_version": "0.27.0",
+    "libraw_version": [
+      0,
+      22,
+      1
+    ]
+  },
+  "persisted_cfa": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source-298\\active-cfa-u16.npy",
+    "sha256": "c1e9c537dae84fad843fd9eaf80ba1dc15f1316bd436c04d1ed2f9ea8d87f2ca"
+  },
+  "cfa_pixel_sha256": "5dadce60157c53fce572dcdca8c5ed237251888793e1e604e65e2f1831d0aadd",
+  "independent_decode": {
+    "command": [
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+      "D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00299.ARW",
+      "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source-298",
+      "298",
+      "0",
+      "0",
+      "4688",
+      "7028"
+    ],
+    "exit_code": 0,
+    "executable_sha256": "ecf20e1b1e639fc3b86fe82d26a3e3ca02fd326549aa6353e80ad4480682d89d",
+    "differing_sensels": 0
+  },
+  "script_sha256": "9e77500abce1cd4630dbd5c1d20695321c3c8ce860f53896ec0f737f56ea189d",
+  "original_hash_and_mtime_unchanged": true
+}

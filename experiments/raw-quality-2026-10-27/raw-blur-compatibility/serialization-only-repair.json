@@ -1,0 +1,11 @@
+{
+  "scope": "NumPy scalar JSON serialization only; no operator, fit, gate, stimulus, budget, display or selection changes.",
+  "failed_run": "outputs/raw-quality-2026-10-27/raw-blur-controls-1",
+  "before_sha256": "edcaf5869ccc88c3ae82608437c472d90ffeae0297b01f32f22f96949bf4e7b9",
+  "after_sha256": "fe9428750e557cfd8839c6be2e0a7cbaaea905d8bd3760e3aca21fdc07705b9f",
+  "diff_sha256": "e421bfa5115e2cc93153fbac0304a2c527b94806f07681c0d58ffc495ab16a77",
+  "model_sha256": "659da66d343908564b16262482dc55e3220dd15f8318bf49623a7b2d8d8106cc",
+  "execution": "AST parse only; no model import, numerical execution or rerun",
+  "retained_failed_source": "independent-controls-run1.py",
+  "retained_failed_source_sha256": "edcaf5869ccc88c3ae82608437c472d90ffeae0297b01f32f22f96949bf4e7b9"
+}

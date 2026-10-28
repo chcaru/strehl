@@ -1,0 +1,134 @@
+--- ../counted-likelihood/model-counted.py
++++ model-oracle.py
+@@ -342,6 +342,8 @@
+     training_predictions: dict
+     direct_query_support_rgb: np.ndarray
+     fit_counts: dict
++    oracle_training_variances_supplied: dict
++    oracle_training_variances_consumed_f32: dict
+ 
+     def save(self, out):
+         """Save before any caller quality judgment; no native-baseline claim."""
+@@ -353,7 +355,8 @@
+             output_support_mask=np.ones(self.output_rgb_dn.shape[:2], dtype=np.uint8))
+         np.savez(path/"training-predictions.npz", **{str(k): v for k, v in self.training_predictions.items()})
+         receipt = {k: getattr(self, k) for k in ("variances", "status", "converged",
+-            "unsupported", "evaluations", "history", "calibration", "source_hashes", "fit_counts")}
++            "unsupported", "evaluations", "history", "calibration", "source_hashes", "fit_counts",
++            "oracle_training_variances_supplied", "oracle_training_variances_consumed_f32")}
+         receipt.update(schema=1, config=self.config.public(), actual_native_baseline=False,
+             original_storage="u16 host and GPU", arithmetic="f32 one current observation view",
+             target="reference-cell-integrated",
+@@ -363,7 +366,10 @@
+             objective_formulation="(sum training original-sensel NLL + unchanged sum matrix-Cauchy edge terms) / training sensel count",
+             data_normalization="each view mean NLL times its eligible original-sensel count / total training count",
+             prior_normalization="existing observed-area prior times observed area / total training sensel count; prior counted once",
+-            source_parent_sha256="659da66d343908564b16262482dc55e3220dd15f8318bf49623a7b2d8d8106cc",
++            source_parent_sha256="e66ce20112592f8c0913ac01265d538b3fc073661247b94f972accd9e661befd",
++            oracle_meaning="independently supplied synthetic training blur only; not estimated, not Sony calibration; held blur is fitted only on spatial calibration cells",
++            optimized_parameter_names=["z"], theta_parameter_present=False,
++            photographic_qualification=False,
+             direct_query_support_definition="nonzero pre-blur training-query basis coefficients; not identifiability",
+             direct_query_unsupported_scalar_count=int((~self.direct_query_support_rgb).sum()),
+             blurred_observations_can_constrain_apron=True,
+@@ -378,14 +384,29 @@
+         return receipt
+ 
+ 
+-def fit(train_views, calibration_views, config):
+-    """Train codes only; calibration values fit scalar v with X frozen."""
++def fit(train_views, calibration_views, config, *, fixed_training_variances):
++    """Supplied training blur; optimize only radiance, then unchanged calibration."""
+     if not (len(train_views) == 5 and len(calibration_views) == 2):
+         raise ValueError("exactly five fit views and two spatial calibration views")
+     views = list(train_views)+list(calibration_views)
+     ids = [v.source_id for v in views]
+     if len(set(ids)) != 7 or config.anchor_id not in [v.source_id for v in train_views]:
+         raise ValueError("unique seven source IDs with anchor in training")
++    train_ids = {v.source_id for v in train_views}
++    if (not isinstance(fixed_training_variances, dict)
++            or any(type(k) is not int for k in fixed_training_variances)
++            or set(fixed_training_variances) != train_ids):
++        raise ValueError("supplied variance mapping must contain exactly the five training IDs")
++    supplied = {}
++    for identity, value in fixed_training_variances.items():
++        if (isinstance(value, (bool, np.bool_))
++                or not isinstance(value, (int, float, np.integer, np.floating))
++                or not math.isfinite(float(value)) or not 0 <= float(value) <= MAX_VARIANCE):
++            raise ValueError("supplied training variances must be finite numbers in [0,256]")
++        supplied[identity] = float(value)
++    if supplied[config.anchor_id] != 0:
++        raise ValueError("supplied anchor variance must be exactly zero")
++    consumed = {identity: float(np.float32(value)) for identity, value in supplied.items()}
+     if not torch.cuda.is_available():
+         raise RuntimeError("CUDA unavailable; no CPU fallback")
+     torch.backends.cuda.matmul.allow_tf32 = False
+@@ -401,22 +422,18 @@
+     scale = np.float32(config.saturation-sum(config.black4)/4)
+     normalized = (initial/float(scale)).clamp_min(1e-8)
+     z = torch.nn.Parameter(torch.log(torch.expm1(normalized)).contiguous())
+-    varying = [v.source_id for v in train_views if v.source_id != config.anchor_id]
+-    theta = torch.nn.Parameter(torch.full((len(varying),), math.log(1/255),
+-        dtype=torch.float32, device=config.device))
+-    positions = {identity: p for p, identity in enumerate(varying)}
+     code_tensors = {v.source_id: torch.from_numpy(v.codes.copy()).to(config.device) for v in views}
+-    optimizer = torch.optim.LBFGS([z, theta], lr=1, history_size=10, max_iter=64,
++    optimizer = torch.optim.LBFGS([z], lr=1, history_size=10, max_iter=64,
+         max_eval=150, tolerance_grad=1e-6, tolerance_change=1e-11, line_search_fn="strong_wolfe")
+     history = []
+     total_training_sensels = sum(len(view.codes) for view in train_views)
+-    last_finite = [z.detach().clone(), theta.detach().clone()]
++    last_finite = [z.detach().clone()]
+ 
+     def latent():
+         return F.softplus(z)*float(scale)
+ 
+     def relative(identity):
+-        return z.new_zeros(()) if identity == config.anchor_id else MAX_VARIANCE*torch.sigmoid(theta[positions[identity]])
++        return z.new_tensor(consumed[identity])
+ 
+     def evaluate(tag):
+         # Reserve one final-state observation under the fixed160 total cap.
+@@ -440,7 +457,7 @@
+             raise FloatingPointError("nonfinite matrix prior")
+         prior.backward()
+         gradient_max = 0.
+-        for p in (z, theta):
++        for p in (z,):
+             if p.grad is None or not bool(torch.isfinite(p.grad).all()):
+                 raise FloatingPointError("nonfinite/missing gradient")
+             old = p.grad.detach().reshape(-1)
+@@ -453,7 +470,6 @@
+         row.update(complete=True, data_nll=data, prior=float(prior), total=float(total),
+             gradient_max=gradient_max, optimizer_iteration=int(optimizer.state.get(z, {}).get("n_iter", 0)))
+         last_finite[0].copy_(z.detach())
+-        last_finite[1].copy_(theta.detach())
+         return total  # Explicitly f32; optimizer reads gradients already accumulated.
+ 
+     status, failure = "FIT_RETURNED", None
+@@ -469,7 +485,6 @@
+         # is not silently promoted to a converged optimizer result.
+         with torch.no_grad():
+             z.copy_(last_finite[0])
+-            theta.copy_(last_finite[1])
+     evaluate("final")
+     iterations = int(optimizer.state.get(z, {}).get("n_iter", 0))
+     converged = history[-1]["gradient_max"] <= 1e-6 and failure is None
+@@ -545,13 +560,15 @@
+     counts = dict(radiance_parameters=field_pixels*3,
+         observed_rectangle_rgb_parameters=ow*oh*3,
+         free_apron_rgb_parameters=(field_pixels-ow*oh)*3,
+-        joint_variance_parameters=len(varying), calibration_variance_parameters=2,
++        joint_variance_parameters=0, supplied_training_variances=len(consumed),
++        calibration_variance_parameters=2,
+         joint_fit_original_sensels=sum(len(v.codes) for v in train_views),
+         calibration_original_sensels=sum(len(v.codes) for v in calibration_views),
+         source_views=7, train_views=5, calibration_views=2,
+         original_codes_gpu_bytes=sum(v.numel()*v.element_size() for v in code_tensors.values()))
+     return FitResult(x.cpu().numpy().copy(), output, initial_output, variances, status,
+-        converged, unsupported, len(history), history, calibration, hashes, config, predictions, support, counts)
++        converged, unsupported, len(history), history, calibration, hashes, config, predictions, support, counts,
++        supplied, consumed)
+ 
+ 
+ def predict(result, query, *, source_id):

@@ -1,0 +1,36 @@
+# Complete flat60 photographic comparison
+
+**VERIFIED visual observation:** B gives clearer edges to the same large QR blocks, dots and radial wedges across this complete chart. This is a useful practical workflow gap. It does not establish newly resolved fine bars, recover the lower star's unresolved convergence, or deliver an overall clean replacement: vendor red/cyan fringes are substantially stronger. C adds broad bright shoulders and is less convincing. Native softness and the fine-pattern defects remain unresolved; no Strehl improvement or SOTA result is demonstrated.
+
+The reviewer viewed the three complete JPEGs first, in native/B/C order, then every one of the eight previously frozen features at native384 pixels for each arm. Complete images were displayed at1920x1280 for composition only. No additional feature search, crop relocation, retone, resampling, numerical registration or RAW read followed the observations.
+
+| Complete workflow | Full JPEG | Full-resolution RGB16 master |
+| --- | --- | --- |
+| Native,6932x4620 | [Complete photograph](../../../../outputs/raw-quality-2026-10-26/flat-1s-baseline/stack-full.jpg) | [Master](../../../../outputs/raw-quality-2026-10-26/flat-1s-baseline/stack-master.tiff) |
+| Helicon B,7032x4688 | [Complete photograph](../../../../outputs/raw-quality-2026-10-26/flat-1s-comparator/b-desktop/stack-full.jpg) | [Master](../../../../outputs/raw-quality-2026-10-26/flat-1s-comparator/b-desktop/stack-master.tiff) |
+| Helicon C,7032x4688 | [Complete photograph](../../../../outputs/raw-quality-2026-10-26/flat-1s-comparator/c-desktop/stack-full.jpg) | [Master](../../../../outputs/raw-quality-2026-10-26/flat-1s-comparator/c-desktop/stack-master.tiff) |
+
+## What survives native inspection
+
+Every listed rectangle is384x384. Coordinates are `(x,y)` in that arm's delivered master. Each linked PNG is an unresampled8-bit display of its exact RGB16 TIFF sibling.
+
+| Frozen feature | Native / B,C origins | Observation; native/B/C evidence |
+| --- | --- | --- |
+| Gray field and weak step |1460,400 /1484,408 | All retain the weak vertical step and fine mottling/specks. B shows slightly more visible fine texture; this is not a calibrated noise measurement or proof of artificial texture. [Native](../../flat-baseline/baseline-native/gray-field-step.png), [B](b/gray-field-step.png), [C](c/gray-field-step.png). |
+| QR block boundary |4200,780 /4264,794 | B's existing block edges/corners are distinctly steeper and clearer. Red/cyan edging is more conspicuous. C has broad pale shoulders that intrude into dark regions around corners and the long lower bar. No extra block is recovered. [Native](../../flat-baseline/baseline-native/qr-block-boundary.png), [B](b/qr-block-boundary.png), [C](c/qr-block-boundary.png). |
+| Central fine bars |2670,2020 /2712,2044 | Changes are much smaller than at the QR blocks. Larger bar groups remain separated; the smallest groups stay soft/unresolved. B gives no defensible large resolution gain. C adds bright surrounds to numerals and fine groups. [Native](../../flat-baseline/baseline-native/central-fine-bars.png), [B](b/central-fine-bars.png), [C](c/central-fine-bars.png). |
+| Central micro target |3850,2040 /3908,2070 | Same recognizable larger bars and leader lines; smallest groups remain ambiguous. B slightly firms existing transitions. C's luminous shoulders do not establish extra structure. [Native](../../flat-baseline/baseline-native/central-micro-target.png), [B](b/central-micro-target.png), [C](c/central-micro-target.png). |
+| Right bar target |5700,1900 /5784,1924 | B firms existing bars but both vendors show strong red/cyan separation on bars/numerals and the white square. Native has weaker fringes but broad soft transitions. No new smallest-bar group is convincingly resolved. [Native](../../flat-baseline/baseline-native/right-bar-target.png), [B](b/right-bar-target.png), [C](c/right-bar-target.png). |
+| Upper-right star |5260,20 /5340,24 | B's radial wedge boundaries are visibly clearer, with the same single convergence. Strong colored rims accompany that gain. C has broader soft shoulders. [Native](../../flat-baseline/baseline-native/upper-right-star.png), [B](b/upper-right-star.png), [C](c/upper-right-star.png). |
+| Bottom radial center |1280,4236 /1312,4290 | Outer spoke edges are firmer in B/C but substantially more colored. The broad pale convergence disk and dark center dot persist in all arms; no reconstruction of its fine spokes is established. [Native](../../flat-baseline/baseline-native/bottom-radial-center.png), [B](b/bottom-radial-center.png), [C](c/bottom-radial-center.png). |
+| Dot field |4600,3400 /4670,3444 | B's existing circle contours are clearer, with stronger cyan/red rims and visible fine texture. C's broad pale surrounds soften that benefit. Dot identity is preserved; specks may belong to the target. [Native](../../flat-baseline/baseline-native/dot-field.png), [B](b/dot-field.png), [C](c/dot-field.png). |
+
+## Scope and provenance
+
+**VERIFIED:** [mapped-witnesses.json](mapped-witnesses.json) was frozen after the three complete views and before extraction. Manual correspondence uses the same chart features. Native is reference30 with active-origin offset(50,34); each vendor has its own full-output geometry. Dimension ratios7032/6932 and4688/4620 only convert overview coordinates. Local physical scale and correspondence error are unmeasured;384 pixels need not cover identical target width. This is not a placement measurement or a numerical resolution ranking.
+
+All60 originals and fixed WB/tone parameters match the [audited workflows](../independent-review.md). Native merges RAW with its CA-on profile before development. Vendor inputs are MHC-developed RGB16 with no CA warp and the exact native fixed tone applied before vendor alignment/merge. Those operations do not commute. Stronger vendor fringes therefore cannot identify a merger defect or measure CA quality in isolation. Settings are B radius8/smoothing4 and C smoothing4, not an exhaustive vendor optimization. No speed ranking follows from overlapping work or the failed earlier startup attempt.
+
+**VERIFIED export:** `python -B -X faulthandler experiments/raw-quality-2026-10-26/flat-comparator/photographic-review/export-mapped-crops.py` exited0. The [receipt](crop-export-receipt.json) binds source/code/manifest hashes, unchanged input metadata and content, all16 exact RGB16 subarrays, preserved sRGB ICC, and PNG conversion `(RGB16+128)//257`. Native crops retain their prior receipt. No sharpening/filtering was applied. Complete master SHA256 values are native `01e576315fdf8242b9d008c06a0ad9b52f837f84d8d28e05d59d13b97379dbdc`, B `054ff371ff7c3fe4e0fd32d568d635c204b702a64c16ba94a8999e293bfc62ac`, C `ecdb2622995ef290fd65c9b7edb77c8e2019a728cd4604694a0797d1ed7c20d4`.
+
+**ARGUED next use:** retain B as a concrete full-workflow edge-clarity comparator while preserving native's lower fringe burden. A subsequent native candidate must improve complete chart structure, keep the eight guards and color/background behavior, and demonstrate genuine detail on insects. Raising contrast alone or copying C's bright shoulders would not meet that requirement. This review does not identify whether placement, CA resampling, focus fusion or development accounts for the native softness.

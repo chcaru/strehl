@@ -1,0 +1,154 @@
+{
+  "schema": 1,
+  "source_index": 298,
+  "selection": "Reference anchor or endpoint, not chosen using image sharpness.",
+  "placement": {
+    "a": [
+      0.990805898572032,
+      -0.0003040607308759088
+    ],
+    "b_plane": [
+      -2.0603360237566406,
+      -2.79513213162181
+    ],
+    "scale": 0.9908059452274497
+  },
+  "source_to_reference": "Crop center mapped reference->source using pinned similarity, rounded even. No source rotation/scale interpolation or CA correction; endpoints have native framing differences.",
+  "matched_display": "Both source and baseline LINEAR sRGB: fixed gain3.434 then standard sRGB transfer, clamp0..1, round8; no local fitting, sharpening, resizing or denoising.",
+  "source_development": "Baseline levels512/15360, as-shot WB, repository M95 f32 MHC port with8pixel plugin halo, row-neutralized baseline camera matrix; no sensor clipping repair.",
+  "scope": "Structure-support witness. Not byte-identical native product development: source lacks baseline CA gather/merge/final-MHC chain; float operation order may differ. Fixed display differs from baseline automatic-tone master equally for both arms.",
+  "wb": [
+    1.5986328125,
+    1.0,
+    2.708984375
+  ],
+  "xyz_to_camera": [
+    [
+      0.7459999918937683,
+      -0.23649999499320984,
+      -0.058800000697374344
+    ],
+    [
+      -0.5687000155448914,
+      1.3442000150680542,
+      0.24740000069141388
+    ],
+    [
+      -0.06239999830722809,
+      0.11559999734163284,
+      0.6583999991416931
+    ]
+  ],
+  "camera_to_srgb": [
+    [
+      1.6360617876052856,
+      -0.44861873984336853,
+      -0.18744300305843353
+    ],
+    [
+      -0.11516476422548294,
+      1.4889707565307617,
+      -0.37380602955818176
+    ],
+    [
+      -0.004740227945148945,
+      -0.32360124588012695,
+      1.3283414840698242
+    ]
+  ],
+  "mhc_source_sha256": "12639cc3e76b8ed95952d45e78a6b1f6e72bee1729119902e9e93ec2b304f466",
+  "rows": [
+    {
+      "name": "turquoise-scales",
+      "baseline_native_xywh": [
+        2120,
+        1340,
+        384,
+        384
+      ],
+      "source_active_xywh": [
+        2194,
+        1388,
+        384,
+        384
+      ],
+      "mapped_source_center": [
+        2386.090916654807,
+        1579.7978304208548
+      ],
+      "resampled": false,
+      "greens_native_pitch": 2,
+      "rgb_native_pitch": 1,
+      "known_cfa_sites_preserved": true
+    },
+    {
+      "name": "elytron-seam",
+      "baseline_native_xywh": [
+        2950,
+        1960,
+        384,
+        384
+      ],
+      "source_active_xywh": [
+        3016,
+        2002,
+        384,
+        384
+      ],
+      "mapped_source_center": [
+        3208.6483301227368,
+        2193.8451171288875
+      ],
+      "resampled": false,
+      "greens_native_pitch": 2,
+      "rgb_native_pitch": 1,
+      "known_cfa_sites_preserved": true
+    },
+    {
+      "name": "thorax-texture",
+      "baseline_native_xywh": [
+        4520,
+        2560,
+        384,
+        384
+      ],
+      "source_active_xywh": [
+        4572,
+        2596,
+        384,
+        384
+      ],
+      "mapped_source_center": [
+        4764.396027319353,
+        2787.8512809246317
+      ],
+      "resampled": false,
+      "greens_native_pitch": 2,
+      "rgb_native_pitch": 1,
+      "known_cfa_sites_preserved": true
+    },
+    {
+      "name": "upper-leg-hairs",
+      "baseline_native_xywh": [
+        1820,
+        640,
+        384,
+        384
+      ],
+      "source_active_xywh": [
+        1896,
+        694,
+        384,
+        384
+      ],
+      "mapped_source_center": [
+        2088.6363045715843,
+        886.3249196396953
+      ],
+      "resampled": false,
+      "greens_native_pitch": 2,
+      "rgb_native_pitch": 1,
+      "known_cfa_sites_preserved": true
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "status": "ACTUAL_GATHER_SPLIT_READY_FOR_NATIVE_VISUAL_REVIEW",
+  "capture_receipt_sha256": "b453d78399ad2ce7e0d50eef25326c29e177d28d025a956c298f0ee045578d69",
+  "source_original_matches_independent_rawpy_cfa": true,
+  "display": "All arms: fixed gain3.434, standard sRGB transfer, round8, originalICC; no sharpening or local fit.",
+  "development": "Original/gathered capture u16 -> levels512/15360 and as-shotWB -> same repositoryMHC port -> same camera matrix. Stack is retained actual linear master. Gather is actual product capture, not Python reproduction.",
+  "limits": "One anchor and two regions; different source depths remain in stack. MHC port f32 order may differ from native writer. This does not isolate CA versus firstMHC/resampling without another actual consumer arm.",
+  "script_sha256": "113c006ab4bfa7018552cdc09c6b6dcf515bf655a5b3e270d992cdf21d04b385",
+  "mhc_source_sha256": "12639cc3e76b8ed95952d45e78a6b1f6e72bee1729119902e9e93ec2b304f466",
+  "rows": [
+    {
+      "name": "background-black",
+      "native_master_xywh": [
+        3800,
+        500,
+        384,
+        384
+      ],
+      "resampled": false,
+      "outputs": [
+        {
+          "arm": "stack",
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source149-gather-1\\background-black-stack.png",
+          "png_sha256": "d07f6e229e443ac996769b77a2b1f7dd02974cce9390b3e86a8af101acc25c1f",
+          "linear": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source149-gather-1\\background-black-stack-linear.npy",
+          "linear_sha256": "0f462a7db021486a134641d850df8c66b543d73505ed7bcdefd74564e906d111"
+        },
+        {
+          "arm": "original",
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source149-gather-1\\background-black-original.png",
+          "png_sha256": "234a89e9d9bc556f00edff52e293072b800920c1264675bd6faa0c6260fc2147",
+          "linear": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source149-gather-1\\background-black-original-linear.npy",
+          "linear_sha256": "3a79f18682100adf1081a33c3e10a93a6a9c5dfdb1e05241c089f79f8607a654"
+        },
+        {
+          "arm": "gathered",
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source149-gather-1\\background-black-gathered.png",
+          "png_sha256": "d1933041472b970228b1876154f76657a793607c86bb8ceb0dad9d2f7c5312bb",
+          "linear": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source149-gather-1\\background-black-gathered-linear.npy",
+          "linear_sha256": "dd982401f70774a99a9d9e77509134dbb1331a677908734a09d7d5f702c652fe"
+        }
+      ]
+    },
+    {
+      "name": "upper-leg-hairs",
+      "native_master_xywh": [
+        1820,
+        640,
+        384,
+        384
+      ],
+      "resampled": false,
+      "outputs": [
+        {
+          "arm": "stack",
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source149-gather-1\\upper-leg-hairs-stack.png",
+          "png_sha256": "2843d5ddca8fd16a4b2a71ae6fb5c0b2a4a08afcbc61426c75722d01cdd02e56",
+          "linear": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source149-gather-1\\upper-leg-hairs-stack-linear.npy",
+          "linear_sha256": "cc1a5ab3d5837c28fa3f11b76cc316bfa89188c6cecd3e55001d3f8a2002149c"
+        },
+        {
+          "arm": "original",
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source149-gather-1\\upper-leg-hairs-original.png",
+          "png_sha256": "cf1f0a10273cdcc99ae67445e25bcac0f602611d4afdd70c0fd35262378c9a03",
+          "linear": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source149-gather-1\\upper-leg-hairs-original-linear.npy",
+          "linear_sha256": "1794a964c4c106bdee60c849b87f75c39402edb82373b15faf61fda7d840ed30"
+        },
+        {
+          "arm": "gathered",
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source149-gather-1\\upper-leg-hairs-gathered.png",
+          "png_sha256": "14135786c5ef8e9d15539c886f83e6b8cf9daf091f28c4e971f24d856411ca07",
+          "linear": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source149-gather-1\\upper-leg-hairs-gathered-linear.npy",
+          "linear_sha256": "be594b5deb30c80ef607586be54aa17265f553944b25d7fa5f992d682375fcc6"
+        }
+      ]
+    }
+  ]
+}

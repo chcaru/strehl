@@ -1,0 +1,179 @@
+{
+  "schema": 1,
+  "status": "BASELINE_ONLY_NO_GAIN_CLAIM",
+  "command": "python -X faulthandler experiments/raw-quality-2026-10-26/photo-review/verify-baseline.py",
+  "cwd": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl",
+  "source_master_sha256": "ecfae13e937f44445f3fe2a83a2e72861c4cd6cd9f56f02139f3f5e3dc0f9665",
+  "manifest_sha256": "826c4ab6c620122449f6575cdd18c0f9ee9cb460f29f6d895e832325d6405888",
+  "verifier_sha256": "2b2d445076df167d859bd6dd237ccaf61b0c3230c8770ad350f309e838517efe",
+  "versions": {
+    "python": "3.12.10",
+    "numpy": "2.4.4",
+    "pillow": "12.2.0",
+    "tifffile": "2026.5.2"
+  },
+  "visual_observations": "Human-readable model review in baseline-review.md; flags record actual prior view_image calls, not an automated quality metric.",
+  "full_output_viewed_first": true,
+  "full_output_tool_display_dimensions": [
+    1920,
+    1280
+  ],
+  "complete_output_dimensions": [
+    6896,
+    4596
+  ],
+  "full_view_is_orientation_only": true,
+  "commission": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\viewer-commission-384.png",
+    "sha256": "3bfea0bf278f1a3ecab6712d17ecef70a4dd7e35533f2dd57d1cbc50fd31439e",
+    "native_dimensions": [
+      384,
+      384
+    ],
+    "observed": "Vertical/horizontal one-pixel stripe directions, diagonal pattern and checker pattern distinguishable; no screen color calibration claimed."
+  },
+  "candidate_seen": false,
+  "raw_decodes": 0,
+  "witnesses": [
+    {
+      "name": "background-black",
+      "rect_xywh": [
+        3800,
+        500,
+        384,
+        384
+      ],
+      "rgb16_exact": true,
+      "png8_exact": true,
+      "icc_exact": true,
+      "one_bit_mutation_rejected": true,
+      "visually_inspected_individually_detail_original": true
+    },
+    {
+      "name": "dark-elytron",
+      "rect_xywh": [
+        2750,
+        2120,
+        384,
+        384
+      ],
+      "rgb16_exact": true,
+      "png8_exact": true,
+      "icc_exact": true,
+      "one_bit_mutation_rejected": true,
+      "visually_inspected_individually_detail_original": true
+    },
+    {
+      "name": "turquoise-scales",
+      "rect_xywh": [
+        2120,
+        1340,
+        384,
+        384
+      ],
+      "rgb16_exact": true,
+      "png8_exact": true,
+      "icc_exact": true,
+      "one_bit_mutation_rejected": true,
+      "visually_inspected_individually_detail_original": true
+    },
+    {
+      "name": "elytron-seam",
+      "rect_xywh": [
+        2950,
+        1960,
+        384,
+        384
+      ],
+      "rgb16_exact": true,
+      "png8_exact": true,
+      "icc_exact": true,
+      "one_bit_mutation_rejected": true,
+      "visually_inspected_individually_detail_original": true
+    },
+    {
+      "name": "bright-wing-rim",
+      "rect_xywh": [
+        4050,
+        1810,
+        384,
+        384
+      ],
+      "rgb16_exact": true,
+      "png8_exact": true,
+      "icc_exact": true,
+      "one_bit_mutation_rejected": true,
+      "visually_inspected_individually_detail_original": true
+    },
+    {
+      "name": "thorax-texture",
+      "rect_xywh": [
+        4520,
+        2560,
+        384,
+        384
+      ],
+      "rgb16_exact": true,
+      "png8_exact": true,
+      "icc_exact": true,
+      "one_bit_mutation_rejected": true,
+      "visually_inspected_individually_detail_original": true
+    },
+    {
+      "name": "upper-leg-hairs",
+      "rect_xywh": [
+        1820,
+        640,
+        384,
+        384
+      ],
+      "rgb16_exact": true,
+      "png8_exact": true,
+      "icc_exact": true,
+      "one_bit_mutation_rejected": true,
+      "visually_inspected_individually_detail_original": true
+    },
+    {
+      "name": "blue-joint",
+      "rect_xywh": [
+        2680,
+        850,
+        384,
+        384
+      ],
+      "rgb16_exact": true,
+      "png8_exact": true,
+      "icc_exact": true,
+      "one_bit_mutation_rejected": true,
+      "visually_inspected_individually_detail_original": true
+    },
+    {
+      "name": "upper-occlusion",
+      "rect_xywh": [
+        3850,
+        1300,
+        384,
+        384
+      ],
+      "rgb16_exact": true,
+      "png8_exact": true,
+      "icc_exact": true,
+      "one_bit_mutation_rejected": true,
+      "visually_inspected_individually_detail_original": true
+    },
+    {
+      "name": "eye-and-antenna",
+      "rect_xywh": [
+        5350,
+        2920,
+        384,
+        384
+      ],
+      "rgb16_exact": true,
+      "png8_exact": true,
+      "icc_exact": true,
+      "one_bit_mutation_rejected": true,
+      "visually_inspected_individually_detail_original": true
+    }
+  ]
+}

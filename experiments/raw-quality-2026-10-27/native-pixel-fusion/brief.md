@@ -1,0 +1,27 @@
+# Actual native pixel fusion: complete photographic observation
+
+2026-10-27, root schedules. Source30/reference30 of the flat60 stack already contains the compact QR, circle and wedge contours that the current complete native result softens. The frozen source observation does not locate the responsible stage. Test a concrete reconstruction-order change, not another sharpening filter or optical inverse.
+
+## Fixed intervention
+
+In the current actual BandWorker consumer, accumulate each gathered R/G1/G2/B pixel tuple with the unchanged canonical finest-band noise-gated SoftPower weight w[i,0]. Use one common denominator and average all source tuples where no source clears the gate. No raw argmax, per-color election, new noise estimate, independent RGB development, private geometry or prealigned frame volume. Preserve u16 original storage, f32 arithmetic, actual native gather/probe and the baseline's complete map/crop, CA, WB and fixed development. Accumulate the normal seven-band Pyramid alongside it from the same prepared source. This replaces multiscale coefficient synthesis with direct radiometric weighted averaging; it is not the legacy FocusField estimator.
+
+Noise-gated averaging is required, not a statistical guarantee: the canonical finest weights can still select noise. A finest-source prior can lose far/coarse detail. Do not call this a general replacement or raise selection powers to rescue a failure. The full photograph decides practical merit. Preserve baseline/candidate sensor and RGB masters, all resolved settings and processing receipts.
+
+## Execution and safeguards
+
+First commission zero/neutral behavior, equal-source identity, pure noise/flat fields and an explicit wrong-source foil. Use actual injected noise with the actual consumer and existing known-truth fixtures, including colored structure, compact glints, thin bright/dark lines and two-depth fine/coarse structures. Quantify both components separately; gradient gain is not detail. Reuse existing tests rather than devise a new metric. A generated loss narrows the interpretation; severe erasure of real thin structures prevents a general promotion and must be disclosed even if the complete flat image improves.
+
+Before the complete60 observation, actual source30 under the held reference30 geometry must give single-source CFA identity (subject to actual CA sampling, which is held) and ordinary writer parity. The complete canonical arm must reproduce the retained6932x4620 baseline pixels. A test-only adapter may write exact sensor arrays and fixed-tone RGB16/RGB32, with all originals/maps unchanged. First complete flat60, then all299 weevil if the complete flat image shows a useful source-retention benefit without losing bars, circles or colors. Root may still authorize a disclosed complete weevil diagnostic despite a bounded synthetic weakness; synthetic scores never establish photographic success. No crop-only replay or parameter sweep.
+
+Complete-image review precedes all frozen native witnesses. Flat uses the established eight sites and full Helicon B/C context; weevil uses its ten sites and full B/C context. Preserve hairs at different depths and dark texture; reject glint growth, broader pale contours, new background traces or erased structures. Current weevil CA-off is the held experimental condition, not a general CA policy. Final native implementation/default requires independent photographic benefit on insects and adverse transfer.
+
+## Prior art and changed question
+
+Root executed unified searches for source prior / focus curve correlation / temporal correlation and mechanical `temporal covariance source prior`; also read cross-scale-source-prior design/results/chip-results, source-gradient-target closure, current BandWorker and the optical-restoration audit. The old coarse-source prior modified only coarser coefficient weights with reduced finest support and lost far/coarse detail despite some chip edge gains. The legacy native-coherent-estimator used FocusField radius13, regularise8, Gate4 and a two-pass value-admission path; it failed its tested far/coarse behavior. This experiment uses the existing current actual finest weight without those estimators and averages full CFA values before one final demosaic. These failures motivate the separate-depth controls; they are not ignored or generalized to an entire family. V-DILUTE rejects a dilution explanation, so no such mechanism is asserted.
+
+The preceding CFA edge-transport recipe was refused algebraically before execution because bilinear resampling erases tangential color texture. It supplies no quality result or modified image. The present intervention adds no new resampling.
+
+## Ownership/resources
+
+cfa-residual owns implementation.rs, full-adapter.rs and design.md here. photo-review owns independent-plan.md and independent-controls.rs. integration-review audits the actual source/writer/binding and whether claims distinguish noise gating from a guarantee; root owns test registration, wrappers, build, execution and results. No default edits. Root alone schedules heavy jobs. Initial generated screen120s/4GiB, source30 checkpoint120s/8GiB, complete60 observation600s/12GiB, four workers and actual GPU gather when available. At most one original/current gathered frame is live per worker; never retain an aligned volume. Full299 is separately bounded after actual cost and independent review.

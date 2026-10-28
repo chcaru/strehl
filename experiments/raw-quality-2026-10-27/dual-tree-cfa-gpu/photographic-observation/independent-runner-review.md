@@ -1,0 +1,17 @@
+# Independent photographic-observation runner review
+
+VERIFIED by source inspection, 2026-10-27. No job, RAW read, build or image computation was performed for this review. No release blocker found.
+
+Reviewed `run.py` SHA256 `fa7e1b123b27f115d9c4917c8ff8fa549412073f66b5b00f850e463809279765` and `brief.md` SHA256 `8517645d4a802869fd2dc6760c2fe9b70afea9c19f55fbd7ff7fe5ea00ca98dc`. The runner uses the unchanged build2 executable `84b8a52c6027179fd7808f70ceceed721437d26ec3e670146e2beacc9b7ae8a7` and checks every frozen source binding before and after execution. The new subdirectory does not change the parent's frozen Python source set; its own runner and brief are explicitly bound.
+
+The changed question is explicit. The runner requires the original projection to remain above 1200 seconds and at most 4800 seconds; it records the original practical-speed failure and generated quality failure. It does not rename these failures as passes. Screen2 mechanics, exact executable identity, successful cost1 and all their referenced reports/runtime/worker bindings remain prerequisites. The current projection, 3814.36 seconds, fits the new observation budget; it is not a measured full-run duration or guaranteed completion time.
+
+The only executable route is a no-argument, fixed `full` mode and fresh `dual-tree-cfa-gpu-photograph-1` directory. Although the copied tail retains unreachable screen/cost branches, no argument selects them. There is no automatic retry, parameter sweep, budget extension or fallback. The exact ignored full299 test remains one test with one Rust test thread, four pipeline workers, the same CA-off CPU gather, sixteen actual original-u16 probes per source, map, crop, bank, weights, hull and writer.
+
+The owned Windows job enforces 4800 seconds wall, 19200 seconds CPU and 16 GiB host commitment. The CUDA worker retains its 24 GiB Torch allocator cap and the runner requires 26 GiB whole-device free memory on device0 before launch. Driver module memory remains separately disclosed. The output-local CUDA cache and normal inherited child job are unchanged. The host cap provides more room than the singleton cost's 14,253,887,488-byte peak; it does not prove memory across all four canonical chunks. Whole-host load is recorded, and the brief prohibits overlapping heavy work.
+
+Terminal success requires one complete worker and bridge, clean process/pipe/job termination, source IDs exactly 0 through 298, 4784 actual probe draws, unchanged source/runtime/runner bindings, complete full299 receipt and the baseline pixel golden. The unchanged full adapter additionally enforces complete finite planes, the pre-hull uniform null, all299 original hashes/stat preservation, exact CFA/RGB16/linear baseline pixels and material metadata. A successful process is not photographic admission.
+
+The existing `run-views.py` and `prepare-views.py` accept this output without a filename assumption: they require an `output` directory with successful full-mode sibling completion/process receipts, the two worker receipts, full299 census and all three complete master bindings. They preserve the three full views and ten native crops per arm. No display exporter or frozen implementation change is needed.
+
+Release conclusion: one bounded photographic observation is supported. Its actual photographs must decide usefulness; the retained generated colour/glint failures, practical-speed failure and unproven cross-stack generality remain limitations regardless of process success.

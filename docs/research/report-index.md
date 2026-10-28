@@ -8,7 +8,7 @@ verdicts, freshness or evidence of execution. Read source amendments and reviews
 
 [Alignment and geometry](#alignment) · [Merge and reconstruction](#reconstruction) · [Focus evidence and admission](#focus) · [Noise and sensor calibration](#noise) · [Optics and capture design](#optics) · [RAW, color and development](#color-raw) · [Artifacts and source visibility](#artifacts) · [Detail metrics and ground truth](#quality) · [Performance and execution](#systems) · [Architecture and extensions](#architecture) · [Comparators and scorecards](#comparators) · [Verification and research integrity](#integrity) · [Other research and uncategorized notes](#general)
 
-396 report/decision documents, each listed once under its primary topic.
+397 report/decision documents, each listed once under its primary topic.
 
 <a id="alignment"></a>
 
@@ -495,4 +495,5 @@ verdicts, freshness or evidence of execution. Read source amendments and reviews
 | [cover-default.md](cover-default.md) — COVER — exact cover-mode evidence and default decision | report |  |
 | [M-PHASE0-ZFIELD.md](M-PHASE0-ZFIELD.md) — M-PHASE0-ZFIELD — A5 survives phase 0, and the substrate nearly killed it by artefact | report |  |
 | [M164-m2-repair.md](M164-m2-repair.md) — M164 — repairing M2's blur-rewarding statistic | report |  |
+| [metadata-continuation-2026-10-25.md](metadata-continuation-2026-10-25.md) — Metadata and core research status, 2026-10-25 | report |  |
 | [OWNER-QUESTIONS.md](OWNER-QUESTIONS.md) — Questions for the owner | report |  |

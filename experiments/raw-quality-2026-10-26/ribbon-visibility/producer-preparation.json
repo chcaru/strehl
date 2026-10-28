@@ -1,0 +1,25 @@
+{
+  "independent_entry": "independent-controls.py",
+  "root_execution_required": true,
+  "status": "producer-source-prepared-no-execution",
+  "inference": "fixed2capsules;73maxevaluations;12geometry+9constantradiance;512maxtrainqueries",
+  "numerical_execution": false,
+  "raw_reads": 0,
+  "python_ast_parse_exit": 0,
+  "schema": 1,
+  "quadrature": "paired2048 Sobol4D uniformdisk/unitsquare; sharedray and footprint before firsthit",
+  "bindings": [
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\ribbon-visibility\\model.py",
+      "sha256": "193c0e2746ecd843b4365133839213312caa0de6a54fd1dc30894f0942e437bb",
+      "bytes": 18098
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\ribbon-visibility\\implementation-plan.md",
+      "sha256": "c81260d172be653e9b762dc9f3720acd80ee12a6741c4f38911ace44c309ecf1",
+      "bytes": 9518
+    }
+  ],
+  "cuda_imported": false,
+  "entry_owner": "photo_review"
+}

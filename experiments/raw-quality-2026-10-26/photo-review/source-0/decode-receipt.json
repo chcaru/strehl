@@ -1,0 +1,77 @@
+{
+  "index": 0,
+  "selection": "Alignment anchor149 or bracket endpoint0/298, as allocated by root; not a focus maximum.",
+  "original": {
+    "index": 0,
+    "mtime_ns": 1792988893440000000,
+    "path": "D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00001.ARW",
+    "sha256": "666488a4937105b72e1a242049e199b612b134d2f2a52a3c3e51b3a06e634551",
+    "bytes": 34508800
+  },
+  "raw_decodes_unique_originals_this_lane": 2,
+  "active_shape": [
+    4688,
+    7028
+  ],
+  "metadata": {
+    "pattern": [
+      [
+        0,
+        1
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "color_desc": "RGBG",
+    "black": [
+      512,
+      512,
+      512,
+      512
+    ],
+    "white": 16383,
+    "camera_wb": [
+      1637.0,
+      1024.0,
+      2774.0,
+      1024.0
+    ],
+    "daylight_wb": [
+      2.4478163719177246,
+      0.9319279193878174,
+      1.2933659553527832,
+      0.0
+    ],
+    "sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+    "rawpy_version": "0.27.0",
+    "libraw_version": [
+      0,
+      22,
+      1
+    ]
+  },
+  "persisted_cfa": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source-0\\active-cfa-u16.npy",
+    "sha256": "1936869702bcbf8ae01ff4437dac0b2c715609edeaeb7ed442b2f32f4683c474"
+  },
+  "cfa_pixel_sha256": "5238b3c6c5df34e7ad190c98ccfcf916be0a27f1ef70a73f269333e9a8658072",
+  "independent_decode": {
+    "command": [
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+      "D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00001.ARW",
+      "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source-0",
+      "0",
+      "0",
+      "0",
+      "4688",
+      "7028"
+    ],
+    "exit_code": 0,
+    "executable_sha256": "ecf20e1b1e639fc3b86fe82d26a3e3ca02fd326549aa6353e80ad4480682d89d",
+    "differing_sensels": 0
+  },
+  "script_sha256": "9e77500abce1cd4630dbd5c1d20695321c3c8ce860f53896ec0f737f56ea189d",
+  "original_hash_and_mtime_unchanged": true
+}

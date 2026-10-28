@@ -1,0 +1,39 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\locate-sources.py",
+    "--sources-json",
+    "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-tiff-export\\receipt.json",
+    "--encoding",
+    "srgb",
+    "--out",
+    "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source-locator-1"
+  ],
+  "fields": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "RAYON_NUM_THREADS": "4"
+  },
+  "removed_environment": [],
+  "script": {
+    "sha256": "4c87df26681a4c3ef7647a57360198f8cbbe915ce6e251bd5d848772eee9e487",
+    "bytes": 9207
+  },
+  "helper": {
+    "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+    "bytes": 12664
+  },
+  "harness": {
+    "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+    "bytes": 117908
+  },
+  "limits": {
+    "wall_seconds": 180,
+    "cpu_seconds": 360,
+    "committed_bytes": 4294967296
+  }
+}

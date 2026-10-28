@@ -1,0 +1,6 @@
+{
+  "crates/strehl-core/src/cfa-lattice.rs": "d94cbebcf5c4654a2ec7c4fe9f417333d8e468fc7ae846eeadc43bfd3bda9440",
+  "crates/strehl-core/src/demosaic.rs": "bc1de5d6844a0c2f5ad994949a861dbfc8ea113e6322a55302968abcdc6d5150",
+  "experiments/raw-quality-2026-10-26/cfa-controls.rs": "b461740270ff3486ca0c2a5d8f3869f8ef4519428b27fb5534a1187607482fee",
+  "outputs/raw-quality-2026-10-26/cfa-independent-controls.log": "7fe8c5f932bbe11292c0d1b0a24382d13be67db98a8f5768a43be20ebc7978e5"
+}

@@ -1,0 +1,497 @@
+{
+  "schema": 1,
+  "status": "PAIRED_COMPLETE_COMMON_DISPLAY_READY_NO_VERDICT",
+  "frames": 299,
+  "dimensions": [
+    6896,
+    4596
+  ],
+  "display": "Both retained pre-tone linear BT.709/D65 masters -> fixed gain3.434 -> clamp0..1 -> standard sRGB transfer -> roundRGB16; PNG/JPEG conversion (RGB16+128)//257. No source-specific tone, sharpening, filtering, alignment or resize except labeled overviews.",
+  "warning": "Original auto-tone differs across runs; original developed TIFFs must not be used for a tone-matched verdict.",
+  "gauge": "Delivered native RGB, common origin corresponds to reference-native(68,46), reference149, same map/executable/source order.",
+  "input_order_sha256": "0235564cf5131e7eb5e4ea251c16ea9272f6a55a9d8cc6efc717970615a30d6f",
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "ca_off_capture": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-anchor149-gather-ca-off\\capture.json",
+    "sha256": "9bbbbfbaf786cbcbc442550ce17bba96600fbf07b83137bab5937cc53944f654",
+    "bytes": 6123
+  },
+  "ca_off_entire_cfa_original_equals_gathered": true,
+  "script": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\prepare-common-display.py",
+    "sha256": "16e40fedaeb8529ec93269c9d3ab1966999ce2ed1549d46eb5e22751890e6560",
+    "bytes": 6294
+  },
+  "command": "python -B -X faulthandler experiments/raw-quality-2026-10-26/photo-review/ca-off-review/prepare-common-display.py",
+  "operational_seconds": 4.436999999999898,
+  "arms": {
+    "baseline-ca-on": {
+      "source_completion": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-baseline\\completion.json",
+        "sha256": "c85dc98146f1c2b161acd96e017ddabb981c35b9d13e17386b8d6b911e5ae36a",
+        "bytes": 1757
+      },
+      "original_developed_master": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-baseline\\stack-master.tiff",
+        "sha256": "ecfae13e937f44445f3fe2a83a2e72861c4cd6cd9f56f02139f3f5e3dc0f9665",
+        "bytes": 190169209
+      },
+      "source_linear_master": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-baseline\\linear-master.tiff",
+        "sha256": "6df37c2bcc84b993521d3da759e9f65ee23c5e4e53827d1258b0cf8f9568445e",
+        "bytes": 380332244
+      },
+      "common_master": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\common-display-master.tiff",
+        "sha256": "8adbb0435f7b2b2a46c6d58e22475e744d3389c3e2c30733848b7ef2f5f80e60",
+        "bytes": 190229632
+      },
+      "complete_jpeg": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\complete-stack.jpg",
+        "sha256": "cd1981de2595607a8860b1491333d25991f5025722e329efde7c2fffb4058788",
+        "bytes": 20125599
+      },
+      "overview": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\overview.jpg",
+        "sha256": "cb4a9d35d84a022ce837bca68647ff412011218c10bb7219ab659926e81d3910",
+        "bytes": 744250
+      },
+      "witnesses": [
+        {
+          "name": "background-black",
+          "native_xywh": [
+            3800,
+            500,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\background-black.png",
+            "sha256": "d07f6e229e443ac996769b77a2b1f7dd02974cce9390b3e86a8af101acc25c1f",
+            "bytes": 149459
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\background-black.tiff",
+            "sha256": "e0d34014eed6670b1664e91b22673e3b721025dd13cb6e70315b79d73faeae47",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "dark-elytron",
+          "native_xywh": [
+            2750,
+            2120,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\dark-elytron.png",
+            "sha256": "213a686c6b320c5343987545beef048a35a2df000e2544d6781d54bba18416a9",
+            "bytes": 277758
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\dark-elytron.tiff",
+            "sha256": "26496e8984905193ba3c874a56253a34c84e8202f1405ade03c2eb4ddcdb360a",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "turquoise-scales",
+          "native_xywh": [
+            2120,
+            1340,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\turquoise-scales.png",
+            "sha256": "5f9a0b501860438e34acfabf317f056a97a5e86aefae4d7cbc62e3cb3ec78d68",
+            "bytes": 299692
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\turquoise-scales.tiff",
+            "sha256": "a8349d00cc89bd16d35cf02ab8b0ab5764b39dfddf39dfd4d6b25622fa8cdaf2",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "elytron-seam",
+          "native_xywh": [
+            2950,
+            1960,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\elytron-seam.png",
+            "sha256": "dbe6f18b5a460fe123f304e010dae43f7b2d3283a043c1e7b3870e05242aa795",
+            "bytes": 293608
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\elytron-seam.tiff",
+            "sha256": "64ae5366379fa50b8f1d811b6a93e3f9633dc47794cc8ea71a5733a9687675e0",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "bright-wing-rim",
+          "native_xywh": [
+            4050,
+            1810,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\bright-wing-rim.png",
+            "sha256": "2a8a2be0ae33fe3ec8f1e8a1af2152a6b7f1190e0168c308fc2cff1547a9a125",
+            "bytes": 297288
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\bright-wing-rim.tiff",
+            "sha256": "06e5816b2d817227231d83e6683c666687f7b59375f7250d33f499be30f429d8",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "thorax-texture",
+          "native_xywh": [
+            4520,
+            2560,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\thorax-texture.png",
+            "sha256": "4a04965e368acbab24db709916cec046b89071e1d09ea089060515233e9c66b5",
+            "bytes": 314563
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\thorax-texture.tiff",
+            "sha256": "b4247d17f8433c8177d0d598dc645f09acecba409b7060bc09230e5725ca9ec6",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "upper-leg-hairs",
+          "native_xywh": [
+            1820,
+            640,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\upper-leg-hairs.png",
+            "sha256": "2843d5ddca8fd16a4b2a71ae6fb5c0b2a4a08afcbc61426c75722d01cdd02e56",
+            "bytes": 198664
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\upper-leg-hairs.tiff",
+            "sha256": "9e56931aee351986c97b2cec05e8530676dc6b4ca4c0af3ee5e41c8e7a7a0a14",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "blue-joint",
+          "native_xywh": [
+            2680,
+            850,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\blue-joint.png",
+            "sha256": "89397492dfd72b2c86e250ced78b1ad86a7502f3999ff2af2d5a2cdca6062697",
+            "bytes": 281987
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\blue-joint.tiff",
+            "sha256": "60e183c94954d63bca40e85a93ae8a11216cf9e2da58ee5fa83a769835e41a82",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "upper-occlusion",
+          "native_xywh": [
+            3850,
+            1300,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\upper-occlusion.png",
+            "sha256": "b2f14efc9ffe2a391edcaa5b8c903cccab9e27e5a14a2411c0f8e7ed88c71dee",
+            "bytes": 272135
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\upper-occlusion.tiff",
+            "sha256": "84da38714c21789773da890bc1f32032c4d43ec9207dd2bd20cc9fa55033f8e3",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "eye-and-antenna",
+          "native_xywh": [
+            5350,
+            2920,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\eye-and-antenna.png",
+            "sha256": "af67e57ed709136f16745e38479b51ab23274caa15cf6c9d5b47adfcd436ff47",
+            "bytes": 257817
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\baseline-ca-on\\eye-and-antenna.tiff",
+            "sha256": "96a4a0cd3d9fdd1f360bf8a7347fa3a9a82bd3dd4e5d54e5f71dd2df0a665039",
+            "bytes": 887680
+          }
+        }
+      ]
+    },
+    "ca-off": {
+      "source_completion": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-ca-off\\completion.json",
+        "sha256": "67b7056865d541c88e7ea2e41cb6517399f38276921cf0a9a078453f8f4c3f67",
+        "bytes": 1773
+      },
+      "original_developed_master": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-ca-off\\stack-master.tiff",
+        "sha256": "5dc571cce0d9e310f1f06b6e7f3c78faae8fb4ee4f12c94ff76d1d0c0e3fb655",
+        "bytes": 190169209
+      },
+      "source_linear_master": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-ca-off\\linear-master.tiff",
+        "sha256": "8f3d9ec977f06d8fd44e070f27ab97e398611436cef17271fa6b889067ea1960",
+        "bytes": 380332245
+      },
+      "common_master": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\common-display-master.tiff",
+        "sha256": "0d66423543bc7f8ec443545702194f7b3def88e88ebf32c59f0ddfe52f8974ca",
+        "bytes": 190229632
+      },
+      "complete_jpeg": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\complete-stack.jpg",
+        "sha256": "cfacaa14eb1aed351df485768c9a90c95484a565ee71b3aef6838942b1f80dab",
+        "bytes": 19368642
+      },
+      "overview": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\overview.jpg",
+        "sha256": "cc0218d2a7a0f8cded18d2fcd917e15831f5b98a2d3351652aeb2bec1f297644",
+        "bytes": 734681
+      },
+      "witnesses": [
+        {
+          "name": "background-black",
+          "native_xywh": [
+            3800,
+            500,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\background-black.png",
+            "sha256": "cb1f986a2f63dabc9b50ace1df8833d85808288d5526ca3ecb459d1a8997fce8",
+            "bytes": 159790
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\background-black.tiff",
+            "sha256": "dac2f25e40262b058af2ff1aab6c23ebf57e3e068df4cd8fbfc3057047880bce",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "dark-elytron",
+          "native_xywh": [
+            2750,
+            2120,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\dark-elytron.png",
+            "sha256": "3f71a97f200d3d8ad20becb17737368df47b8d27cad97aab097a9ce5a2951ac9",
+            "bytes": 277614
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\dark-elytron.tiff",
+            "sha256": "f4c312b22434bdc0e6289cc4c7df5f6e84e25c36b6aae67c5618c734bccb7441",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "turquoise-scales",
+          "native_xywh": [
+            2120,
+            1340,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\turquoise-scales.png",
+            "sha256": "91f75c965f98af1f993ff0778b53cc3abfb91561df6bdfaeb04223e0e20ad7ee",
+            "bytes": 298270
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\turquoise-scales.tiff",
+            "sha256": "e23058a2cf0bad7cee5dbf460db1933eb1db7c425f13253fa2e8372c3072393c",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "elytron-seam",
+          "native_xywh": [
+            2950,
+            1960,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\elytron-seam.png",
+            "sha256": "d7e3cd3a25906caf03b7dbfc8dcd8d8321cba80bccb555720887ec4fdef3429f",
+            "bytes": 293461
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\elytron-seam.tiff",
+            "sha256": "a48a6d8d766db80f5e2b82d8636fa61e5cba5cbe5b8626b2c10d0e78e669ef74",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "bright-wing-rim",
+          "native_xywh": [
+            4050,
+            1810,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\bright-wing-rim.png",
+            "sha256": "a6597f6874424d942e3d7ee47f65b0274bb6555febd440aaef86a37bfe18ee26",
+            "bytes": 296525
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\bright-wing-rim.tiff",
+            "sha256": "1173a3e40896b39f68db53946130ba77a41fe1b8344ee6f7eca9ff214c418396",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "thorax-texture",
+          "native_xywh": [
+            4520,
+            2560,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\thorax-texture.png",
+            "sha256": "5e75ac39a35b0b2d4583176ef80b524713341662a54008210475b4ee6a5ee93b",
+            "bytes": 311451
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\thorax-texture.tiff",
+            "sha256": "842273871965491b2026bba30d489cc469299fd283c2b1775a44d041c6361c83",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "upper-leg-hairs",
+          "native_xywh": [
+            1820,
+            640,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\upper-leg-hairs.png",
+            "sha256": "34f08dc8408bea8083b067b1c2694ae4c5217074d1817cdbc700aea472b99353",
+            "bytes": 198057
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\upper-leg-hairs.tiff",
+            "sha256": "ed3c7d382f87d98ec6b278bfc0416e97fcfff6a5ba8daa407c0a65729c43ea82",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "blue-joint",
+          "native_xywh": [
+            2680,
+            850,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\blue-joint.png",
+            "sha256": "96cff30d4bf40b9371508b9c717ac4c4d15d0fcc7cf1c8c9235a63c4cef526a0",
+            "bytes": 281721
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\blue-joint.tiff",
+            "sha256": "1bd02c70a37702f5e378d26f64cf5c139f44195a0de8453663363f836182fa37",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "upper-occlusion",
+          "native_xywh": [
+            3850,
+            1300,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\upper-occlusion.png",
+            "sha256": "f9152bca88aece83bc1f154111db35e445087cc92f9a7a870477df08893445e8",
+            "bytes": 271757
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\upper-occlusion.tiff",
+            "sha256": "31256c35674c17d6247ec48f3c75e4b058d8484356ee14c992f4520ea08aee86",
+            "bytes": 887680
+          }
+        },
+        {
+          "name": "eye-and-antenna",
+          "native_xywh": [
+            5350,
+            2920,
+            384,
+            384
+          ],
+          "resized": false,
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\eye-and-antenna.png",
+            "sha256": "68a64a7510466e7ff8a7ce9c3079627e8dc6eaa664af657731b918ec86111343",
+            "bytes": 254233
+          },
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\ca-off-review\\ca-off\\eye-and-antenna.tiff",
+            "sha256": "b7179117e17033467e5ac0b200c3d88372f5411f70bd7babb729f10252c37edf",
+            "bytes": 887680
+          }
+        }
+      ]
+    }
+  }
+}

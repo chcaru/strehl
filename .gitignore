@@ -92,3 +92,9 @@ venv/
 
 # Do not ignore all ZIP/JSON/text files: research source archives and compact
 # measurement receipts are intentional reproducibility evidence.
+
+# Local decoded sensor buffers and process logs from the October RAW campaign.
+/experiments/raw-quality-2026-10-26/**/*.bin
+/experiments/raw-quality-2026-10-27/**/*.bin
+/experiments/raw-quality-2026-10-26/**/*.log
+/experiments/raw-quality-2026-10-27/**/*.log

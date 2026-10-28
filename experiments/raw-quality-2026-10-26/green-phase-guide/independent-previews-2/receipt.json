@@ -1,0 +1,508 @@
+{
+  "screen_sha256": "03660b8acd0c9ad33bc4b1edccf14222a2d1929884597e47b86874214338b63d",
+  "script_sha256": "3f37e2c65636d02e91e1a86247fdefcae491496764018b31f648f2260104b201",
+  "display": "identical unit gain, clip display only to0..1, sRGB transfer on camera-RGB diagnostic channels; no calibrated color claim",
+  "resize": false,
+  "source_pixels_unchanged": true,
+  "panels": [
+    {
+      "scene": "flat",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\green-phase-guide\\independent-previews-2\\flat.png",
+      "sha256": "7d99743359ec80ae3072d1484a977998f6d90936ba91852556bb0880cd473505",
+      "inputs": [
+        [
+          "truth",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\flat-truth.f32",
+            "sha256": "8527a7281b0b54471db9811f42f8368dcc69fe0af8d046786054eb38b2df0066",
+            "width": 290
+          }
+        ],
+        [
+          "canonical",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\flat-canonical.f32",
+            "sha256": "06b4f6bfe979fb64374054717e3f69f40b5caef4b8c1f68acbccb662a99de55c",
+            "width": 290
+          }
+        ],
+        [
+          "matched-mean",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\flat-matched-mean.f32",
+            "sha256": "24270134c9f052fba711523c2fae387fef2cb7cc8fa1c0c74be113a124cfc23a",
+            "width": 290
+          }
+        ],
+        [
+          "phase-energy",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\flat-phase-energy.f32",
+            "sha256": "c556364408fe53cb06cba7b4b3db2a30798a280dbe9f280388a26ec3dfdb8811",
+            "width": 290
+          }
+        ]
+      ]
+    },
+    {
+      "scene": "zero-offset-neutral",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\green-phase-guide\\independent-previews-2\\zero-offset-neutral.png",
+      "sha256": "e144dc64a42c032f798d89b2538af58e72980526aad632b5fadcee908e0b9ae1",
+      "inputs": [
+        [
+          "truth",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\zero-offset-neutral-truth.f32",
+            "sha256": "a3945d1ca97fd55354f71876019b2db066dab49993f664ab5734553410ad0847",
+            "width": 290
+          }
+        ],
+        [
+          "canonical",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\zero-offset-neutral-canonical.f32",
+            "sha256": "a7a4bf96ffc2b7bef8f9034b09bf53e9705d7456695a144dd5008b7fbbe9f853",
+            "width": 290
+          }
+        ],
+        [
+          "matched-mean",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\zero-offset-neutral-matched-mean.f32",
+            "sha256": "39445ccacdf92cf5302974f9481575d866323d0738d15178ace3f387b91bbdb3",
+            "width": 290
+          }
+        ],
+        [
+          "phase-energy",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\zero-offset-neutral-phase-energy.f32",
+            "sha256": "2721b9f7546619b0a65e2b78557b498bae0aeb0b7695b9ba88dd4872662ab1b4",
+            "width": 290
+          }
+        ]
+      ]
+    },
+    {
+      "scene": "cofocused-colour-positive",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\green-phase-guide\\independent-previews-2\\cofocused-colour-positive.png",
+      "sha256": "42e1daa7db3396864aa702b6d08acc5628a53f024f63020079ccff0e4901904d",
+      "inputs": [
+        [
+          "truth",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\cofocused-colour-positive-truth.f32",
+            "sha256": "b75ff39f2f32301e306851e4aa7e96ad2c282e3fd1ba34de277463f095f3aa7f",
+            "width": 290
+          }
+        ],
+        [
+          "canonical",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\cofocused-colour-positive-canonical.f32",
+            "sha256": "72aa7bed6e7e1f331404122dde61eb8d0ac01400567bbe91ff6643360b8ca015",
+            "width": 290
+          }
+        ],
+        [
+          "matched-mean",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\cofocused-colour-positive-matched-mean.f32",
+            "sha256": "bb4acdfb71540642b045f3e4a9ceee1e734acce86c8c05445418f7226344b8fa",
+            "width": 290
+          }
+        ],
+        [
+          "phase-energy",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\cofocused-colour-positive-phase-energy.f32",
+            "sha256": "ac67a8688becba305eb1aa96db0a5d1094591dc5b607a323f351d65ed96d4fb3",
+            "width": 290
+          }
+        ]
+      ]
+    },
+    {
+      "scene": "different-source-colour-adverse",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\green-phase-guide\\independent-previews-2\\different-source-colour-adverse.png",
+      "sha256": "7b8b3588c4421584c187299c34692d9ac78a22c4fd6c1fc973b8966f4dcada19",
+      "inputs": [
+        [
+          "truth",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\different-source-colour-adverse-truth.f32",
+            "sha256": "b75ff39f2f32301e306851e4aa7e96ad2c282e3fd1ba34de277463f095f3aa7f",
+            "width": 290
+          }
+        ],
+        [
+          "canonical",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\different-source-colour-adverse-canonical.f32",
+            "sha256": "4e71bca59a5ae41a62d0dd41201470a0a8ceadfc0d08d20ac3ceef5809e1ebb0",
+            "width": 290
+          }
+        ],
+        [
+          "matched-mean",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\different-source-colour-adverse-matched-mean.f32",
+            "sha256": "98a9d3368817723a4b80d5bfab894ecd60b394704d207fde905900ff8e28901c",
+            "width": 290
+          }
+        ],
+        [
+          "phase-energy",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\different-source-colour-adverse-phase-energy.f32",
+            "sha256": "87e35ae39b728d6067a08b2cc31a9f44169ef2fde57f3d4fd491ca069d945e8b",
+            "width": 290
+          }
+        ]
+      ]
+    },
+    {
+      "scene": "crossed-thin-depths",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\green-phase-guide\\independent-previews-2\\crossed-thin-depths.png",
+      "sha256": "52eac39efb43fdc4bc4447d645315e4294bf6cba6c4daf7457abb18b8e6f1121",
+      "inputs": [
+        [
+          "truth",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\crossed-thin-depths-truth.f32",
+            "sha256": "a87d0a118b6b8c29f75c25bd96ab1ee340134666e573cb153218a6152cc1f1a1",
+            "width": 290
+          }
+        ],
+        [
+          "canonical",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\crossed-thin-depths-canonical.f32",
+            "sha256": "93b0a9efefdf58e92bb3a1204d7f1336d57d5926190f03a4329bd037c3045021",
+            "width": 290
+          }
+        ],
+        [
+          "matched-mean",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\crossed-thin-depths-matched-mean.f32",
+            "sha256": "8bc084a73d0c8422536981750b74e1449bcfd2326738777a0465888cda93af3b",
+            "width": 290
+          }
+        ],
+        [
+          "phase-energy",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\crossed-thin-depths-phase-energy.f32",
+            "sha256": "2af0ac784665bb37b4f8fa71d79c50a46d8478023db28e810e1025c431b59498",
+            "width": 290
+          }
+        ]
+      ]
+    },
+    {
+      "scene": "thin-foils",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\green-phase-guide\\independent-previews-2\\thin-foils.png",
+      "sha256": "d90ed8eff6e7862d1139792487764f9058565067323e4dcf96b992bf14bb7748",
+      "inputs": [
+        [
+          "phase-energy",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\crossed-thin-depths-phase-energy.f32",
+            "sha256": "2af0ac784665bb37b4f8fa71d79c50a46d8478023db28e810e1025c431b59498",
+            "width": 290
+          }
+        ],
+        [
+          "wrong-source",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\thin-wrong-source.f32",
+            "sha256": "a7368a16296e7b246bdb4cd8044b2bb757581ec5b704ced8596ec10d8f2464ba",
+            "width": 290
+          }
+        ],
+        [
+          "wrong-phase",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\thin-wrong-phase.f32",
+            "sha256": "961d20c60f4b2015c47e5e2937aae39208c4b348b181a8f07d6a7f664d6a19f2",
+            "width": 290
+          }
+        ]
+      ]
+    },
+    {
+      "scene": "genuine-coloured-rays",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\green-phase-guide\\independent-previews-2\\genuine-coloured-rays.png",
+      "sha256": "eced98593cc837d96096663af3782e9860da0920f948da1ab0600849e87cc481",
+      "inputs": [
+        [
+          "truth",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\genuine-coloured-rays-truth.f32",
+            "sha256": "b9489eab2b9d2fb6c53fac39c1ea571d8c742dde5d6557782467696b276042e8",
+            "width": 290
+          }
+        ],
+        [
+          "canonical",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\genuine-coloured-rays-canonical.f32",
+            "sha256": "153f2ec4698eb36a3c107d7b6e611dfd9059e59ff7079c6b739f9144e7845b0e",
+            "width": 290
+          }
+        ],
+        [
+          "matched-mean",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\genuine-coloured-rays-matched-mean.f32",
+            "sha256": "628e35502c9e032b5db1ecc6b82df8d6aadc32513b217e580e159eadca3f7caa",
+            "width": 290
+          }
+        ],
+        [
+          "phase-energy",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\genuine-coloured-rays-phase-energy.f32",
+            "sha256": "17b43e869f693a2fdd9bb4db773b2ce1973ad3f7ea00c74fc1edf6ca50947776",
+            "width": 290
+          }
+        ]
+      ]
+    },
+    {
+      "scene": "clipped-glint-adjacent-detail",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\green-phase-guide\\independent-previews-2\\clipped-glint-adjacent-detail.png",
+      "sha256": "db29b5d6531c009458d1a133366b6bb6eb9c658ca8fcf5497140947f41e38d5a",
+      "inputs": [
+        [
+          "truth",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\clipped-glint-adjacent-detail-truth.f32",
+            "sha256": "579122a33382af07276af12dcebb4f5035bcadc53a10b4e56e0e594c78a20cd0",
+            "width": 290
+          }
+        ],
+        [
+          "canonical",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\clipped-glint-adjacent-detail-canonical.f32",
+            "sha256": "6d3f33b6535cfff4305b6b1a69ad18eb421f3e8d950d4d3ca545f072cdc67fab",
+            "width": 290
+          }
+        ],
+        [
+          "matched-mean",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\clipped-glint-adjacent-detail-matched-mean.f32",
+            "sha256": "be01bd2834519adcbc723de13592b23aa480bba115ff8ff9f18793db5d9e66d8",
+            "width": 290
+          }
+        ],
+        [
+          "phase-energy",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\clipped-glint-adjacent-detail-phase-energy.f32",
+            "sha256": "7c7558f2967e6008c8a7eee95e5eb86319e6ee34eb48caa260eb957e1c65ecf9",
+            "width": 290
+          }
+        ]
+      ]
+    },
+    {
+      "scene": "diagonal-moderate",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\green-phase-guide\\independent-previews-2\\diagonal-moderate.png",
+      "sha256": "492efac86e624073a742c8754cae0e7345cb37d86d12c91257c6d9be98250cae",
+      "inputs": [
+        [
+          "truth",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\diagonal-moderate-truth.f32",
+            "sha256": "f9d766ddb880b4d006808571f4ac7ebf956ca31f00b9ae31bb389e47c1d73a88",
+            "width": 290
+          }
+        ],
+        [
+          "canonical",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\diagonal-moderate-canonical.f32",
+            "sha256": "19fb5a550cbc8548193bb684891b61b2b193192983e2d6bd221198f18073d423",
+            "width": 290
+          }
+        ],
+        [
+          "matched-mean",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\diagonal-moderate-matched-mean.f32",
+            "sha256": "dd79e88e44e9a8577c81b857e4aa51f5367ed898edfa66284767d6e9247afe7e",
+            "width": 290
+          }
+        ],
+        [
+          "phase-energy",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\diagonal-moderate-phase-energy.f32",
+            "sha256": "cd7413538b88c2a177dc14512b22dadc57415dde86573be589fda8b63bf9eff6",
+            "width": 290
+          }
+        ]
+      ]
+    },
+    {
+      "scene": "diagonal-low",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\green-phase-guide\\independent-previews-2\\diagonal-low.png",
+      "sha256": "5c48805899052d2922da4dcd4c94e7b76b55e3baf4e873fe8379f2fed5eda623",
+      "inputs": [
+        [
+          "truth",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\diagonal-low-truth.f32",
+            "sha256": "2602fdc3f2e511d806cf8ec480e1c8f94a05d8c83d691745b7a8b07b41001b95",
+            "width": 290
+          }
+        ],
+        [
+          "canonical",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\diagonal-low-canonical.f32",
+            "sha256": "a34decaf4db02b5597099e5aad07e7bcc126180589f32a2adc551c74361b41b2",
+            "width": 290
+          }
+        ],
+        [
+          "matched-mean",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\diagonal-low-matched-mean.f32",
+            "sha256": "b1d9a3296a85e04ff244f4ab3f9f216fea43ff55aab5bfc1c0010abd73c411d6",
+            "width": 290
+          }
+        ],
+        [
+          "phase-energy",
+          {
+            "complete_generated_output": true,
+            "format": "row-major camera RGB f32 little-endian",
+            "height": 250,
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\green-phase-screen-3\\output\\diagonal-low-phase-energy.f32",
+            "sha256": "46db94e129a01ad371ee7dea566c6c96b49c61a339c9247373e98f02f6c326cc",
+            "width": 290
+          }
+        ]
+      ]
+    }
+  ]
+}

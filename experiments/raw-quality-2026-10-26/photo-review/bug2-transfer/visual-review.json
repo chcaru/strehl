@@ -1,0 +1,32 @@
+{
+  "status": "ADVERSE_TRANSFER_REJECT_BLANKET_CA_OFF",
+  "frozen_manifest_sha256": "97c72bc13cdc9af946573c8c5f42d73e243acc4b1d432b3b0627f2dd356ed053",
+  "baseline_inspection_sha256": "ceff77aadb3bc6b7568b2dca7695d855e4d1f55c214caff14686d41076ce0748",
+  "full_images_viewed_before_native_verdict": true,
+  "background_inspected_first": true,
+  "native_sites_viewed_in_both_arms": [
+    "dark-background",
+    "green-fine-texture",
+    "left-green-rim",
+    "junction-white-strands",
+    "orange-network-upper",
+    "orange-network-lower",
+    "central-green-orange-rim",
+    "central-seam",
+    "right-reflective-orange",
+    "right-outer-fibres"
+  ],
+  "baseline_master": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\baseline\\common-display-master.tiff",
+    "sha256": "3f06466e7b36119e9c66de349b5eec3eca6e2d1465efeec1cb0f1dcd1f6b9ba9",
+    "bytes": 172462432
+  },
+  "ca_off_master": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\common-display-master.tiff",
+    "sha256": "2b7673bc4a9cfcdfd196ac163220cc1b089dcc97d667bef693bf0962f3eb1059",
+    "bytes": 172462432
+  },
+  "review_sha256": "f1da637b6ed5c54fde6e289144ed192f3a487f0c1b76c62efdf7ab598999a513",
+  "original_raw_reads": 0,
+  "conclusion": "CA-off increases visible red/cyan splitting in pale fibres/flecks on opposite field sides. Orange softness/haze and coarse contours remain. No transferable global disable."
+}

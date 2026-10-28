@@ -1,0 +1,62 @@
+{
+  "status": "FROZEN_BEFORE_RAW_PROFILES_OR_FITS",
+  "source_indices_zero_based": [
+    104,
+    105,
+    106
+  ],
+  "source_crop_xywh": [
+    4592,
+    2608,
+    384,
+    384
+  ],
+  "features": {
+    "A": {
+      "source105_center": [
+        4770,
+        2807
+      ],
+      "crop_local_center": [
+        178,
+        199
+      ],
+      "role": "nominates"
+    },
+    "B": {
+      "source105_center": [
+        4680,
+        2813
+      ],
+      "crop_local_center": [
+        88,
+        205
+      ],
+      "role": "held challenge"
+    }
+  },
+  "viewed_sources": [
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source-locator-1\\thorax-texture-source-104.png",
+      "sha256": "6bb23df0a9d4266d5c501973ee8ea635d93ef02dde9ab39620cdc5bc16a69030"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source-locator-1\\thorax-texture-source-105.png",
+      "sha256": "48b74f207ed3a7288625f679704be06486144627727e63cd56be2a2c337d411f"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source-locator-1\\thorax-texture-source-106.png",
+      "sha256": "54d35308af4ff6c4106df2ef111d5721eeca2053e39145702b72102c7cf1c396"
+    }
+  ],
+  "contexts": [
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-placement\\nomination-a-context.png",
+      "sha256": "bb7a38189426a5c4041b890893e94a8a7effddbc5a7e07d5d6882052748cd07e"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-placement\\nomination-b-context.png",
+      "sha256": "bd2895239cc648127bed5caff633a637ad75f0aa2d6b4a8d33f08ddd3289a60c"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "status": "HELD_NO_RUN_SINGLE_WINDOW",
+  "scope": "same-color temporal common-point motion; not absolute or radial CA calibration",
+  "retained_root": "C:/Users/chris/AppData/Local/Temp/strehl-core-main-0d466788",
+  "native_manifest": "outputs/rea-a7c2-i/native-roi-2/manifest.json",
+  "native_manifest_sha256": "684d191e76e1d29858d9a5a7d09edb485468a955bc6242ea57fdb7e580d2134e",
+  "crosscheck": "experiments/rea-a7c2-2026-10-24-i/optics/crosscheck-2/crosscheck.json",
+  "crosscheck_sha256": "a9c199fe821caed3885dbc72cfd6e4e4eb338f05adac78f41328c38ec3cae063",
+  "source_identities": "experiments/rea-a7c2-2026-10-24-i/native-roi/source-identities.json",
+  "support_receipt": "experiments/rea-a7c2-2026-10-24-j/optics/support-2/support.json",
+  "sources": [
+    {
+      "source_index": 2,
+      "original_name": "DSC00075.ARW",
+      "original_sha256": "020add189e34ec0aa97fc38d05ddd9669a4a3695c6d00e1aba8296f892aac803",
+      "cfa_cache": "outputs/rea-a7c2-i/native-roi-2/source-2-roi-5.u16le",
+      "cfa_sha256": "6d9bddbf8256ee74b6389f9e6f28d693a920ec132b9ba824769cd8a50c4d3ab3"
+    },
+    {
+      "source_index": 3,
+      "original_name": "DSC00225.ARW",
+      "original_sha256": "80ca4e7b7063ecda5d5a7b3ddecca26094e9c81ce4cfac137c2877ba8abbf6d1",
+      "cfa_cache": "outputs/rea-a7c2-i/native-roi-2/source-3-roi-5.u16le",
+      "cfa_sha256": "41b559025b2d7d63b97b65b3aaaaf21f9343e04f6352032780e9e05b5fc063ba"
+    }
+  ],
+  "cache_bytes_each": 294912,
+  "cache_dtype": "uint16 little endian",
+  "active_native_xywh": [
+    384,
+    1536,
+    384,
+    384
+  ],
+  "cfa": "RGGB at physical integer native coordinates",
+  "common_reference_xy": [
+    576,
+    1728
+  ],
+  "noise_authority": "unchanged native manifest camera/ISO/profile injection",
+  "candidate_predictions": [
+    "no table-state change",
+    "exact two-table composition under retained uncalibrated2^-21 convention"
+  ],
+  "optical_parameters_fit": [],
+  "new_raw_reads": 0,
+  "cache_pixels_read_by_author": false,
+  "prerequisites": [
+    "Root releases a conditional local effective-motion question",
+    "Source-only shared feature support at both focus positions",
+    "A disjoint held subfeature within the frozen window",
+    "Common-point physical-CFA breathing and known-shift controls",
+    "Explicit asymmetric-PSF ambiguity retained"
+  ],
+  "cannot_establish": [
+    "absolute CA",
+    "radial field",
+    "Sony units",
+    "table freshness",
+    "capture-wide correction applicability",
+    "photographic quality"
+  ],
+  "hold_reason": "Root declined another run on the same single old slide window; retained for reference only. Historical BUILD-CHROMA stack/table identity audit is documented in prior-evidence.md."
+}

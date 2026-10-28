@@ -1,0 +1,594 @@
+{
+  "source_manifest_sha256": "826c4ab6c620122449f6575cdd18c0f9ee9cb460f29f6d895e832325d6405888",
+  "command": "python -X faulthandler experiments/raw-quality-2026-10-26/comparator/photo-review/export-corresponding.py",
+  "arms": {
+    "b": {
+      "master": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-comparator\\b\\stack-master.tiff",
+      "master_sha256": "56e6f5be1c98f7670b81dfe458d734d0bd782e0bc2a801bb7cd1dcf30a89165a",
+      "native_dimensions": [
+        7020,
+        4676
+      ],
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "mapping": {
+        "native_baseline_to_vendor_matrix": [
+          [
+            1.0190244940146669,
+            -0.00010426171462506562,
+            -11.516686386106619
+          ],
+          [
+            0.00010426171462506562,
+            1.0190244940146669,
+            -17.05644023201535
+          ]
+        ],
+        "scale": 1.019024499348447,
+        "rotation_degrees": 0.0058622302280817,
+        "matches": 3273,
+        "inliers": 2755,
+        "native_inlier_error_median": 1.263937753432272,
+        "native_inlier_error_p95": 3.2790015979957823,
+        "wrong_100px_xy_translation_error_median": 141.67102763577702,
+        "purpose": "landmark locator only, not a quality metric or accepted pixelwise registration"
+      },
+      "witnesses": [
+        {
+          "name": "background-black",
+          "baseline_xywh": [
+            3800,
+            500,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            3864,
+            497,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 0,
+          "local_native_translation": [
+            0.0,
+            0.0
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\background-black.png",
+          "png_sha256": "aa9b608fb1b6de9f75d4d2cb45b9e0e99da35d04fa160c1d43fcee9c7ed80ec3",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\background-black.tiff",
+          "tiff_sha256": "5697be6f978a080cfc7a77fa0f959148190c5ccbc0785aa948bb3cdb39598a71",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "dark-elytron",
+          "baseline_xywh": [
+            2750,
+            2120,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            2795,
+            2147,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 110,
+          "local_native_translation": [
+            1.1148530505076906,
+            -0.48735575925343255
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\dark-elytron.png",
+          "png_sha256": "158d18ed1cea93a356d3b80fd6948cf551f96b9b6df78cb9558d13bac04b8cc6",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\dark-elytron.tiff",
+          "tiff_sha256": "c27605e03aee3e9e249cf3900265306c72ee6fdd915730720dff2edbfbb620c9",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "turquoise-scales",
+          "baseline_xywh": [
+            2120,
+            1340,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            2152,
+            1353,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 62,
+          "local_native_translation": [
+            0.010145517516775726,
+            0.33357462109040625
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\turquoise-scales.png",
+          "png_sha256": "f08f9ab590e744c4435f0aa52b793913830c89dcabc8c2c4873989b6ce30dd5b",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\turquoise-scales.tiff",
+          "tiff_sha256": "eb80964e7a14d05d9f085265fc71bfd2b59fc582b5474ae5a47c3b6fbc6520ba",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "elytron-seam",
+          "baseline_xywh": [
+            2950,
+            1960,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            2998,
+            1984,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 163,
+          "local_native_translation": [
+            0.19838734191625917,
+            -0.2626133997860052
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\elytron-seam.png",
+          "png_sha256": "add6e88fe701659c917477a18cb52ce8b720cace6fa1e9633abce49b3fce0431",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\elytron-seam.tiff",
+          "tiff_sha256": "d240103ed56cfd95285aaf39689a7d6931e55260ba62edf7c316a72f9157fdf8",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "bright-wing-rim",
+          "baseline_xywh": [
+            4050,
+            1810,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            4118,
+            1831,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 118,
+          "local_native_translation": [
+            -1.0822761826048009,
+            -0.04052022364680852
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\bright-wing-rim.png",
+          "png_sha256": "c7691fc34c3e473ca2074d1a3cce58048f228f1efc54774dc46b86bc2e2a9750",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\bright-wing-rim.tiff",
+          "tiff_sha256": "84b74351232ede0b6d1592ad521d2ffdb95a44e662474ef7856f4faf0c786e2a",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "thorax-texture",
+          "baseline_xywh": [
+            4520,
+            2560,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            4597,
+            2595,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 224,
+          "local_native_translation": [
+            -0.8718851243684185,
+            -0.3081577144741914
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\thorax-texture.png",
+          "png_sha256": "4ba648e83a87f0029f0d19b275d95bcbf9a2b84ddfe3f7d29fa7a505dc298a94",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\thorax-texture.tiff",
+          "tiff_sha256": "da732104adad0ac9b6e08daacb35648f6eec3700ade95157a53ff915c6102203",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "upper-leg-hairs",
+          "baseline_xywh": [
+            1820,
+            640,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            1846,
+            638,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 18,
+          "local_native_translation": [
+            -1.0095877227975052,
+            -0.6382083100966156
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\upper-leg-hairs.png",
+          "png_sha256": "7a0392cf8d47c794814ed317f56e256bfe223efa15c8318c451c59645f89c907",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\upper-leg-hairs.tiff",
+          "tiff_sha256": "bd2155018135c8dfc6a9457cd9305b1d1a9309302a34848100892c2e4d8c9406",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "blue-joint",
+          "baseline_xywh": [
+            2680,
+            850,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            2722,
+            853,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 53,
+          "local_native_translation": [
+            -0.7322952674326189,
+            -0.06036491326324267
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\blue-joint.png",
+          "png_sha256": "e36f9d1a2fb0b528233334b48168f2606bcf6d5d77afa17d743afb7c810092f6",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\blue-joint.tiff",
+          "tiff_sha256": "1fb99e6bcdb22a66f89b44f62c47c02f03fc260289ced5dc7774eee483fe89e1",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "upper-occlusion",
+          "baseline_xywh": [
+            3850,
+            1300,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            3914,
+            1312,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 30,
+          "local_native_translation": [
+            -0.7512407594097112,
+            0.05180371847995957
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\upper-occlusion.png",
+          "png_sha256": "f32885ed0b82cf24097c7d7de45ec497e0446b2ccae0299dd67ab478dfe42d5f",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\upper-occlusion.tiff",
+          "tiff_sha256": "321a78eaacf273cf50637b4c0cf705a527925c79eb1e28907d7158a712a4b28d",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "eye-and-antenna",
+          "baseline_xywh": [
+            5350,
+            2920,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            5445,
+            2963,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 61,
+          "local_native_translation": [
+            1.6231665788645842,
+            0.5654845447661501
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\eye-and-antenna.png",
+          "png_sha256": "cf45d9ac98cbe3416895c2c0c68d119dc83101a0ef27b64a80dfb240daea52c4",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\b\\eye-and-antenna.tiff",
+          "tiff_sha256": "04262f9c85649e9ac5b798cc6d5d0806b7179417fed36813ddf458bb6735c68f",
+          "pixels_exact": true,
+          "icc_exact": true
+        }
+      ]
+    },
+    "c": {
+      "master": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-comparator\\c\\stack-master.tiff",
+      "master_sha256": "cadccec36051a9ade00800b8e8d2b9caf186e50846329dab787f566d8dbb2a45",
+      "native_dimensions": [
+        7020,
+        4676
+      ],
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "mapping": {
+        "native_baseline_to_vendor_matrix": [
+          [
+            1.0201294231271307,
+            -6.362554255821899e-05,
+            -15.380563666545452
+          ],
+          [
+            6.362554255821899e-05,
+            1.0201294231271307,
+            -19.527499722089118
+          ]
+        ],
+        "scale": 1.0201294251112956,
+        "rotation_degrees": 0.0035735417197496587,
+        "matches": 2554,
+        "inliers": 2388,
+        "native_inlier_error_median": 2.1449730865292898,
+        "native_inlier_error_p95": 4.348801573060968,
+        "wrong_100px_xy_translation_error_median": 141.43548407145886,
+        "purpose": "landmark locator only, not a quality metric or accepted pixelwise registration"
+      },
+      "witnesses": [
+        {
+          "name": "background-black",
+          "baseline_xywh": [
+            3800,
+            500,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            3865,
+            495,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 0,
+          "local_native_translation": [
+            0.0,
+            0.0
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\background-black.png",
+          "png_sha256": "ae32aca9f815bf4ba437f51aee16b7931b97a34e0d08eb3d4986588a80a13c52",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\background-black.tiff",
+          "tiff_sha256": "8aa0d46a3c8a6f14acef40b20bfe1a9f536a704c9e6d1933a4d9ec60ea2e65b6",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "dark-elytron",
+          "baseline_xywh": [
+            2750,
+            2120,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            2795,
+            2147,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 66,
+          "local_native_translation": [
+            1.2730213549762084,
+            -0.2032659937488006
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\dark-elytron.png",
+          "png_sha256": "cd6b2e34a0bbd785a52fb4e098ede75b8492083c3da7df667b49837cff062846",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\dark-elytron.tiff",
+          "tiff_sha256": "ebf14ce7fdd54922db449fcad129789099fdb77141d32db01714057c888ad198",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "turquoise-scales",
+          "baseline_xywh": [
+            2120,
+            1340,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            2152,
+            1353,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 49,
+          "local_native_translation": [
+            1.3941101000918934,
+            1.202095519362274
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\turquoise-scales.png",
+          "png_sha256": "9ae040bf88bfda45b6c98b611e813c411326537593fbc744c2a6ff8c643adb4d",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\turquoise-scales.tiff",
+          "tiff_sha256": "f245341a0a61107979b63a7687612eaf4c02b114f806f50b9390ecc26b0c0a6d",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "elytron-seam",
+          "baseline_xywh": [
+            2950,
+            1960,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            2998,
+            1984,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 121,
+          "local_native_translation": [
+            0.31968734051179126,
+            0.25515473388168175
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\elytron-seam.png",
+          "png_sha256": "4ef18570fbf40cbcd8629aa5b7e85980fbd9baef7f349b4ce44f8dd63fababc0",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\elytron-seam.tiff",
+          "tiff_sha256": "c7efb6ae0e0f5398b24f2906f02a871c16610d0606febfc4c7c42f3aec2e4c7c",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "bright-wing-rim",
+          "baseline_xywh": [
+            4050,
+            1810,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            4118,
+            1831,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 97,
+          "local_native_translation": [
+            -2.0041695073268784,
+            0.29921317030175487
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\bright-wing-rim.png",
+          "png_sha256": "a6debc5edea9e2356262d26e1b039f38e0131eca18f1fd3e9d74561340a29836",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\bright-wing-rim.tiff",
+          "tiff_sha256": "869fe518575353b378fd4998adf3c48bf7c10583c31b8773100f50d53e1ae674",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "thorax-texture",
+          "baseline_xywh": [
+            4520,
+            2560,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            4597,
+            2595,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 132,
+          "local_native_translation": [
+            -2.259509265357792,
+            -0.8721440001136216
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\thorax-texture.png",
+          "png_sha256": "551d6c6de507e78bc7f42d087da59f3852c0c488baa41dac84081735e5d0fd45",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\thorax-texture.tiff",
+          "tiff_sha256": "d681eb4209b5a77aba6c7d86119606b24afa096cc4e99c3eedbcde23f1c8c9a4",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "upper-leg-hairs",
+          "baseline_xywh": [
+            1820,
+            640,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            1844,
+            637,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 13,
+          "local_native_translation": [
+            -0.7483566393584624,
+            -0.028630453304913317
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\upper-leg-hairs.png",
+          "png_sha256": "a72793f7457f090468b587b8b48b4c1e211561c1e15c80f487c673ead7c6e4f7",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\upper-leg-hairs.tiff",
+          "tiff_sha256": "b5d0f48d70cf183b847a1f8f6ddab4e6fe3a47eb2760cf24aa9ba7782f28dee9",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "blue-joint",
+          "baseline_xywh": [
+            2680,
+            850,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            2722,
+            853,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 42,
+          "local_native_translation": [
+            -0.28235592831310896,
+            1.1003660134581423
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\blue-joint.png",
+          "png_sha256": "2bff2cc41ca13552353edbceb502daed8eef96e9c5a28f5d8f7c6f54653d207a",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\blue-joint.tiff",
+          "tiff_sha256": "c7ec4bedec7476241e7a46faac2e0945582e4fddba046896000869dfba799990",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "upper-occlusion",
+          "baseline_xywh": [
+            3850,
+            1300,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            3915,
+            1311,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 20,
+          "local_native_translation": [
+            -1.3622957430843599,
+            0.6343164609013456
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\upper-occlusion.png",
+          "png_sha256": "8425a43f1ad8a176a23e4b1507f938afdfb5a72fbfb5f9878587a4ce1149c009",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\upper-occlusion.tiff",
+          "tiff_sha256": "29172e4b80b283a1bdf71f622a1d9a517ac193411bca1d89f67e92e3ab23e2dd",
+          "pixels_exact": true,
+          "icc_exact": true
+        },
+        {
+          "name": "eye-and-antenna",
+          "baseline_xywh": [
+            5350,
+            2920,
+            384,
+            384
+          ],
+          "vendor_xywh": [
+            5447,
+            2964,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 101,
+          "local_native_translation": [
+            0.705593856780979,
+            0.20832428460107622
+          ],
+          "png": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\eye-and-antenna.png",
+          "png_sha256": "3ff5cc5d5ccf4be82d4d33d420ab718b4efc346a820cf37f6c51bb268aab9321",
+          "tiff": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\c\\eye-and-antenna.tiff",
+          "tiff_sha256": "8efdb10aea0f9dfb1eb4ff64f0b5eef2f6c8cc3ca0e3d65c339720abedbcd194",
+          "pixels_exact": true,
+          "icc_exact": true
+        }
+      ]
+    }
+  },
+  "elapsed_seconds": 2.5,
+  "display": "Unresampled384-square original subarrays; RGB16 round/257 for PNG; original ICC. Similarity only locates centers; physical footprints differ by fitted scale and local depth effects."
+}

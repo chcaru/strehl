@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "status": "MANUAL_FEATURE_MAPPING_FROZEN_AFTER_THREE_WHOLE_VIEWS_BEFORE_VENDOR_CROP_EXTRACTION",
+  "all_three_complete_outputs_viewed": true,
+  "native_manifest": "experiments/raw-quality-2026-10-26/flat-baseline/frozen-witnesses.json",
+  "native_manifest_sha256": "fde6bb02b6ca12793176b3e30ef8d60bba5aed3ed86dd1d4e3ea080c736a297e",
+  "native_dimensions": [6932, 4620],
+  "vendor_dimensions": [7032, 4688],
+  "native_gauge": "Reference30 delivered crop; add(50,34) for native reference active coordinates.",
+  "vendor_gauge": "Each vendor's own complete output; reference and internal alignment not equated to native reference30.",
+  "mapping_method": "Manual corresponding-feature locations from the three complete views displayed at1920x1280. Nominal thumbnail-coordinate conversion uses output extents7032/6932 in x and4688/4620 in y, with small visually chosen center offsets. No numerical registration or reconstruction fit. B/C share the visually matching crop centers, not an asserted identical geometry.",
+  "scale_limit": "The dimension ratios are display-coordinate conversions, not measured physical magnification. Actual local physical scale/correspondence errors remain unmeasured.384vendor pixels need not cover exactly the same physical width as384native pixels; no equal-footprint resolution metric is admissible.",
+  "display": "Unmodified RGB16 subarrays and original ICC; PNG (RGB16+128)//257. No resampling, retone, gain, filtering or rotation.",
+  "master_sha256": {
+    "native": "01e576315fdf8242b9d008c06a0ad9b52f837f84d8d28e05d59d13b97379dbdc",
+    "b": "054ff371ff7c3fe4e0fd32d568d635c204b702a64c16ba94a8999e293bfc62ac",
+    "c": "ecdb2622995ef290fd65c9b7edb77c8e2019a728cd4604694a0797d1ed7c20d4"
+  },
+  "witnesses": [
+    {"name": "gray-field-step", "native_xywh": [1460,400,384,384], "b_xywh": [1484,408,384,384], "c_xywh": [1484,408,384,384], "landmark": "Broad gray field to left of first vertical gray step; weak/extended feature, no point-registration claim."},
+    {"name": "qr-block-boundary", "native_xywh": [4200,780,384,384], "b_xywh": [4264,794,384,384], "c_xywh": [4264,794,384,384], "landmark": "Same interlocking QR-like black blocks and adjacent white openings."},
+    {"name": "central-fine-bars", "native_xywh": [2670,2020,384,384], "b_xywh": [2712,2044,384,384], "c_xywh": [2712,2044,384,384], "landmark": "First central resolution group and its nested bar/numeral arrangement."},
+    {"name": "central-micro-target", "native_xywh": [3850,2040,384,384], "b_xywh": [3908,2070,384,384], "c_xywh": [3908,2070,384,384], "landmark": "Second central micro-bar group with radial leader lines."},
+    {"name": "right-bar-target", "native_xywh": [5700,1900,384,384], "b_xywh": [5784,1924,384,384], "c_xywh": [5784,1924,384,384], "landmark": "Right nested chart's large bar/numeral column and finer groups to its right."},
+    {"name": "upper-right-star", "native_xywh": [5260,20,384,384], "b_xywh": [5340,24,384,384], "c_xywh": [5340,24,384,384], "landmark": "Small radial star at upper-left of the large pinwheel chart."},
+    {"name": "bottom-radial-center", "native_xywh": [1280,4236,384,384], "b_xywh": [1312,4290,384,384], "c_xywh": [1312,4290,384,384], "landmark": "Large lower-left radial target convergence and dark center dot; preserves delivered lower-edge context."},
+    {"name": "dot-field", "native_xywh": [4600,3400,384,384], "b_xywh": [4670,3444,384,384], "c_xywh": [4670,3444,384,384], "landmark": "Corresponding lower dot-field neighborhood; periodic circles are not unique point-registration landmarks."}
+  ]
+}

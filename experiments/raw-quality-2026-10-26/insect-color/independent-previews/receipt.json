@@ -1,0 +1,670 @@
+{
+  "screen_sha256": "107aedc8b537e7d00ee1de2fffb1d70df9be2df3321c51496c5270649c5b824e",
+  "command": "python -B experiments/raw-quality-2026-10-26/insect-color/independent-preview.py",
+  "script_sha256": "87593d8e4a7230d1b96d77bdf0329506fc300cfb7015cdb4419f85338f4f7471",
+  "rows": [
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\flat-iso100-canonical.f32",
+      "source_sha256": "06b4f6bfe979fb64374054717e3f69f40b5caef4b8c1f68acbccb662a99de55c",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\flat-iso100-canonical.png",
+      "preview_sha256": "6c8905e120ca24ebf7501e4642c822a281d86679db17616cc75fb874a165fa51",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\flat-iso100-canonical-replay.f32",
+      "source_sha256": "06b4f6bfe979fb64374054717e3f69f40b5caef4b8c1f68acbccb662a99de55c",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\flat-iso100-canonical-replay.png",
+      "preview_sha256": "6c8905e120ca24ebf7501e4642c822a281d86679db17616cc75fb874a165fa51",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\flat-iso100-matched-green.f32",
+      "source_sha256": "6da159ec96b5aeb342402fd251e36b0af416721514417aa4b63b251d73401d1d",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\flat-iso100-matched-green.png",
+      "preview_sha256": "e5106905227b2a0bc3fcb65d8e725ee784429b4f090e68a2951cc9a8e7f6c82e",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\flat-iso100-joint.f32",
+      "source_sha256": "26fb7d3dbbefc67251af9739c4d5c949cdcbbd0aa0b09484013c7769085de510",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\flat-iso100-joint.png",
+      "preview_sha256": "5ecf7f68d0c00c3740d3bd17804f1fc21d0367be9eb49bc9bd155c5525698df9",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\flat-iso100-uniform.f32",
+      "source_sha256": "9035360e62a351c7215b0e41f5b8d63c153de7981afe7a7f6e660d077ef08058",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\flat-iso100-uniform.png",
+      "preview_sha256": "171ca094beac1a0ba5832ea70e3d70380a58c82ff64a01c4f152090ec188cc96",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\flat-iso400-canonical.f32",
+      "source_sha256": "c2cd25677d237fef0c0ddee8e9ce739f800d4fbbd0665ab0bb77e93f94b7ebdc",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\flat-iso400-canonical.png",
+      "preview_sha256": "036d54ce2f051e486312c0a4a0b26a62390f3646b1e1a3dc589a93aced6fd4e9",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\flat-iso400-canonical-replay.f32",
+      "source_sha256": "c2cd25677d237fef0c0ddee8e9ce739f800d4fbbd0665ab0bb77e93f94b7ebdc",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\flat-iso400-canonical-replay.png",
+      "preview_sha256": "036d54ce2f051e486312c0a4a0b26a62390f3646b1e1a3dc589a93aced6fd4e9",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\flat-iso400-matched-green.f32",
+      "source_sha256": "ebf648ebe3e953d271d1d3b046a539aeac899e7214491033b0de1b4bfabe39f5",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\flat-iso400-matched-green.png",
+      "preview_sha256": "cdae53db3415ace8f2f88b72fccd2d73902def609b811b042faa0b0b9f0cc1bf",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\flat-iso400-joint.f32",
+      "source_sha256": "7ca324248517d0fed5990fbbb37d5765603222dbb093e4f13a8fd57f6a36b33c",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\flat-iso400-joint.png",
+      "preview_sha256": "aa93eef4dfa33af5f821e02c230f8b86aae7a36392c339867e0bc466a328acad",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\flat-iso400-uniform.f32",
+      "source_sha256": "7b3cfc89e8fab96d1784e69306931678aedbd68b3da351d228349e5ea4c4f182",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\flat-iso400-uniform.png",
+      "preview_sha256": "d9279530dd10eef8dcc60c4ec3425aae89149aa377590d8734c4ed3e41992ecf",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\cofocused-colour-positive-iso100-canonical.f32",
+      "source_sha256": "72aa7bed6e7e1f331404122dde61eb8d0ac01400567bbe91ff6643360b8ca015",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\cofocused-colour-positive-iso100-canonical.png",
+      "preview_sha256": "355eee8a8b5ee1875cbce646f22d92a8746decb59f6e5bdb402cbb55983d5ff1",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\cofocused-colour-positive-iso100-canonical-replay.f32",
+      "source_sha256": "72aa7bed6e7e1f331404122dde61eb8d0ac01400567bbe91ff6643360b8ca015",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\cofocused-colour-positive-iso100-canonical-replay.png",
+      "preview_sha256": "355eee8a8b5ee1875cbce646f22d92a8746decb59f6e5bdb402cbb55983d5ff1",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\cofocused-colour-positive-iso100-matched-green.f32",
+      "source_sha256": "4c2dd326523d4c4a1efa9f49736a14a93926665ab5b2fb084f802e17407d2b51",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\cofocused-colour-positive-iso100-matched-green.png",
+      "preview_sha256": "198ebf1de71c5305eaf46a2573117dd4b21111792b6c0e02878ee18459b1d797",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\cofocused-colour-positive-iso100-joint.f32",
+      "source_sha256": "a07bfcef1b1eea66e577ab2da4df5f779d56c10a3f9fc967f30c253c09c58513",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\cofocused-colour-positive-iso100-joint.png",
+      "preview_sha256": "eff6f7d28c7028b4a9306b9827382177b0dbbae108c842f3a4ba2df5f10eae25",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\cofocused-colour-positive-iso100-uniform.f32",
+      "source_sha256": "fd35a12d5ef227647bb0fc700a13c093779e960210a75c3dfd1eebe31483bd62",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\cofocused-colour-positive-iso100-uniform.png",
+      "preview_sha256": "d8585bf27db9f87c7a9bf2179b700f8eb8712d96663150229b243d73a9cab1ff",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\zero-offset-neutral-iso100-canonical.f32",
+      "source_sha256": "a7a4bf96ffc2b7bef8f9034b09bf53e9705d7456695a144dd5008b7fbbe9f853",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\zero-offset-neutral-iso100-canonical.png",
+      "preview_sha256": "cced6b3da4fcc6ac226214b0589c8b749bb820758aa8cffa29d17f333d2e5919",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\zero-offset-neutral-iso100-canonical-replay.f32",
+      "source_sha256": "a7a4bf96ffc2b7bef8f9034b09bf53e9705d7456695a144dd5008b7fbbe9f853",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\zero-offset-neutral-iso100-canonical-replay.png",
+      "preview_sha256": "cced6b3da4fcc6ac226214b0589c8b749bb820758aa8cffa29d17f333d2e5919",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\zero-offset-neutral-iso100-matched-green.f32",
+      "source_sha256": "e1a375f2569493d140a32fc3f75018dd27d4b3e2dbee30dd159169535612ab56",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\zero-offset-neutral-iso100-matched-green.png",
+      "preview_sha256": "700ea299f181c07e9394227e9cfe4fc5cf423b19a3a22362dc77aa959c8eb904",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\zero-offset-neutral-iso100-joint.f32",
+      "source_sha256": "e94e5f64c7e2b65ee069c00083ff638b95caeca230435885dcaba6447665d894",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\zero-offset-neutral-iso100-joint.png",
+      "preview_sha256": "19fc41fc2506161e13a475f15b8cf04787577e8722b848f8514ae9ba6c35251e",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\zero-offset-neutral-iso100-uniform.f32",
+      "source_sha256": "bd11a6bdf1936e86aa1692b15999e0ab6bffccf2944504b03d3b362b7901b21f",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\zero-offset-neutral-iso100-uniform.png",
+      "preview_sha256": "bddfaaa677d7f93e79bdd5fc71fde0ec8a42924050e6bf6e4c58f2c7b5b49150",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\crossed-thin-depths-iso100-canonical.f32",
+      "source_sha256": "93b0a9efefdf58e92bb3a1204d7f1336d57d5926190f03a4329bd037c3045021",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\crossed-thin-depths-iso100-canonical.png",
+      "preview_sha256": "7aec1d7785b7d9c8482b947dade765a9a1d61b26a79159bdd07a6c0183593600",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\crossed-thin-depths-iso100-canonical-replay.f32",
+      "source_sha256": "93b0a9efefdf58e92bb3a1204d7f1336d57d5926190f03a4329bd037c3045021",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\crossed-thin-depths-iso100-canonical-replay.png",
+      "preview_sha256": "7aec1d7785b7d9c8482b947dade765a9a1d61b26a79159bdd07a6c0183593600",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\crossed-thin-depths-iso100-matched-green.f32",
+      "source_sha256": "7c99828a6fbb7e8e110c4ebe3afb0c6faae42636e9143083d50eff9a534ef395",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\crossed-thin-depths-iso100-matched-green.png",
+      "preview_sha256": "b5e1b6e814d1a687ab0a2cfa46086d147c5a4491926616cf87fd3984a44f0650",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\crossed-thin-depths-iso100-joint.f32",
+      "source_sha256": "9a90f8c9498b0374c6bfbf058146b31375203de5d633408d5bd3c239229f3d10",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\crossed-thin-depths-iso100-joint.png",
+      "preview_sha256": "8285eef04c592a2e6a444f53659a592799e7a2b3705ae60a39035d115f3c49b0",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\crossed-thin-depths-iso100-uniform.f32",
+      "source_sha256": "db77c1fcc22955e570d6c93c607d4931fdc15f86fed5aa9a79c9e3bc5ef05fd6",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\crossed-thin-depths-iso100-uniform.png",
+      "preview_sha256": "1a339b4d2a5027417be830373dbd8fc94582e440cadf737043d46fe56ad4226b",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\weak-single-source-red-iso100-canonical.f32",
+      "source_sha256": "4297d39103ead59c81ad6462102a29fb49ea5b68ec5c6eec6d0636d5b60b6ed2",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\weak-single-source-red-iso100-canonical.png",
+      "preview_sha256": "47c31ec539211e1e32a7954f8724bebdf654703d3587353bfc58f26bf38e3a49",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\weak-single-source-red-iso100-canonical-replay.f32",
+      "source_sha256": "4297d39103ead59c81ad6462102a29fb49ea5b68ec5c6eec6d0636d5b60b6ed2",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\weak-single-source-red-iso100-canonical-replay.png",
+      "preview_sha256": "47c31ec539211e1e32a7954f8724bebdf654703d3587353bfc58f26bf38e3a49",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\weak-single-source-red-iso100-matched-green.f32",
+      "source_sha256": "b641600ceea1885497d645c34ee037774b8094eff3708ddc9e7ca7819291d125",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\weak-single-source-red-iso100-matched-green.png",
+      "preview_sha256": "4419966d0d6cb73d9010f32478b56e47733d6fc4e69d7e8bf667c946ad2999fb",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\weak-single-source-red-iso100-joint.f32",
+      "source_sha256": "f70893d6fd3739565d9bdd7c5d80b0bdac49dde9a80ea9a1d87d50d98463c9b6",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\weak-single-source-red-iso100-joint.png",
+      "preview_sha256": "6041df63052fd6a9e1b1158b1dfad2dffc4a97a1d0fa793b911e07c7ebfd35f4",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\weak-single-source-red-iso100-uniform.f32",
+      "source_sha256": "3826ef1ea71e5cf32b3c834444b9af0adf375c2ca4618b7a9ba0e16a97ecfa1e",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\weak-single-source-red-iso100-uniform.png",
+      "preview_sha256": "b66c74761ba81265fa870c21e4e1704813e44fc93cd8466be0ba17e163dcc491",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\different-source-colour-adverse-iso100-canonical.f32",
+      "source_sha256": "4e71bca59a5ae41a62d0dd41201470a0a8ceadfc0d08d20ac3ceef5809e1ebb0",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\different-source-colour-adverse-iso100-canonical.png",
+      "preview_sha256": "c59c117b0b00289a99045c3b8fe847e12c6aca4e6f4e49dafa983e4b0c056a30",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\different-source-colour-adverse-iso100-canonical-replay.f32",
+      "source_sha256": "4e71bca59a5ae41a62d0dd41201470a0a8ceadfc0d08d20ac3ceef5809e1ebb0",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\different-source-colour-adverse-iso100-canonical-replay.png",
+      "preview_sha256": "c59c117b0b00289a99045c3b8fe847e12c6aca4e6f4e49dafa983e4b0c056a30",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\different-source-colour-adverse-iso100-matched-green.f32",
+      "source_sha256": "f08b387aa3a3d6e7a58c04a3d9dacab21a9823b7bf7ce26b66009eee4a48758c",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\different-source-colour-adverse-iso100-matched-green.png",
+      "preview_sha256": "b29e830464d44d680449a619e8e0a4e3305249b76f8ef475c469f97186362927",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\different-source-colour-adverse-iso100-joint.f32",
+      "source_sha256": "8591000b25864326457b2771e2e02e8cfd18adef6d01c9cbf44ed6758ecbef6f",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\different-source-colour-adverse-iso100-joint.png",
+      "preview_sha256": "57ab6a1a35e5bc20b78705e433b17432defd765b9a5fc85adf2385fea404efa9",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\different-source-colour-adverse-iso100-uniform.f32",
+      "source_sha256": "ef0b137e35f6b079ef796df29b23880db6f195733605541be8cc93b5d2c585ef",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\different-source-colour-adverse-iso100-uniform.png",
+      "preview_sha256": "22c1704cc7dbcfdfa93f3e6093820bf693844ecdcfaa922eb2a33197eb9358d5",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\cofocused-colour-positive-iso400-canonical.f32",
+      "source_sha256": "f648faf3317e940868a79bc39b6d11d155f00ba39723cbb9d3488a512a5129e4",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\cofocused-colour-positive-iso400-canonical.png",
+      "preview_sha256": "5e7cf3d3c2611631ae261853517ef0a628cb01b408a50ea37a67eabcd94c5596",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\cofocused-colour-positive-iso400-canonical-replay.f32",
+      "source_sha256": "f648faf3317e940868a79bc39b6d11d155f00ba39723cbb9d3488a512a5129e4",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\cofocused-colour-positive-iso400-canonical-replay.png",
+      "preview_sha256": "5e7cf3d3c2611631ae261853517ef0a628cb01b408a50ea37a67eabcd94c5596",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\cofocused-colour-positive-iso400-matched-green.f32",
+      "source_sha256": "a780d6f27b8393f270980c872bce179138878a0bf530cc2574202802efc00bb5",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\cofocused-colour-positive-iso400-matched-green.png",
+      "preview_sha256": "3e09a26eb10344224c4734ca051e4f429dd06a0a778dc449b743a037b2a7fda8",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\cofocused-colour-positive-iso400-joint.f32",
+      "source_sha256": "00cd30799cfb7d8c231fb21b3392649372fdfe8700ceb15e0738cce0552061b6",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\cofocused-colour-positive-iso400-joint.png",
+      "preview_sha256": "6bc49122f211d4ed83e39802c3cd8cd3b23c39f602a983406f0c1e97ae72a51d",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\cofocused-colour-positive-iso400-uniform.f32",
+      "source_sha256": "ac78bfe46233b1007ef02ccc960fb5d0cc79b2eb80aff953e1dc4ce296acd957",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\cofocused-colour-positive-iso400-uniform.png",
+      "preview_sha256": "ef7cdfeb4c89611cc457feed307991e922b05cae4f9f195616c97d68be8ddbdb",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\zero-offset-neutral-iso400-canonical.f32",
+      "source_sha256": "ca17f52272610a27a7ed77580f52801eaf51b460b228e75a55305b08ab08a243",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\zero-offset-neutral-iso400-canonical.png",
+      "preview_sha256": "03f669274f55f57754ec26c5ac0ab939bc70f8932ddebb6e60f81a81c0cb1a64",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\zero-offset-neutral-iso400-canonical-replay.f32",
+      "source_sha256": "ca17f52272610a27a7ed77580f52801eaf51b460b228e75a55305b08ab08a243",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\zero-offset-neutral-iso400-canonical-replay.png",
+      "preview_sha256": "03f669274f55f57754ec26c5ac0ab939bc70f8932ddebb6e60f81a81c0cb1a64",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\zero-offset-neutral-iso400-matched-green.f32",
+      "source_sha256": "fac5c08d90124db793f4ba4231a3a0af66cc8f04441df50eea20a31faeb700b9",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\zero-offset-neutral-iso400-matched-green.png",
+      "preview_sha256": "55cbf5d4cb068102bea5b4c5bd06321700e0362d811a079dfa7a5ef08e2cf2e8",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\zero-offset-neutral-iso400-joint.f32",
+      "source_sha256": "55f0a0ec502a282c284ff059160109f4331a3fa9c5158aac5f6c825751ec2e6c",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\zero-offset-neutral-iso400-joint.png",
+      "preview_sha256": "87bd04cbdbc6a11a5782eae9c0b2cbb6f66b3de52d4d55d3749cc6bd50c653cf",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\zero-offset-neutral-iso400-uniform.f32",
+      "source_sha256": "e36be12aa7873822c11074bc3d7d86f86e5f114ce6cdca51239fd039e5e1ec70",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\zero-offset-neutral-iso400-uniform.png",
+      "preview_sha256": "80ab7dcaf8c82a2bed1e06e0e0a82ac6b493fc10e307c19acba4d12b7319ee5a",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\crossed-thin-depths-iso400-canonical.f32",
+      "source_sha256": "c3b0666fc1cfaaef9a0c7c9443f179063a5a223292b0bfe897a5d02f9b2eb9b2",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\crossed-thin-depths-iso400-canonical.png",
+      "preview_sha256": "64b889a6c48c7e9c7b8bb20d3f94b625b5f78e4bcee397f21aa01120f7f49388",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\crossed-thin-depths-iso400-canonical-replay.f32",
+      "source_sha256": "c3b0666fc1cfaaef9a0c7c9443f179063a5a223292b0bfe897a5d02f9b2eb9b2",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\crossed-thin-depths-iso400-canonical-replay.png",
+      "preview_sha256": "64b889a6c48c7e9c7b8bb20d3f94b625b5f78e4bcee397f21aa01120f7f49388",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\crossed-thin-depths-iso400-matched-green.f32",
+      "source_sha256": "96c7b0698111d2097868e5ce77d753abb6789a9dd147c0aff57a8830f6a19a13",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\crossed-thin-depths-iso400-matched-green.png",
+      "preview_sha256": "d11d0cdc9db7effb66e7253164fa29b33715a1d06605331c9fd55b7ec61186e7",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\crossed-thin-depths-iso400-joint.f32",
+      "source_sha256": "46aa844c572ce7a4fa42596406a24f0e0a5c5ec2aabbafbb7459a5a1ab82a306",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\crossed-thin-depths-iso400-joint.png",
+      "preview_sha256": "b0cd32e5973aafe12eee6d6da0474fe7a84cf5e3776807f674b738746d47760f",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\crossed-thin-depths-iso400-uniform.f32",
+      "source_sha256": "cb8d62e405b7745cd9340922f0614c9df6ecc3d3ceeda69650373d8ea70ab4ca",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\crossed-thin-depths-iso400-uniform.png",
+      "preview_sha256": "35ba8d1a2e99d1a57a1a09575ebff11107f5931deb34f4bcb1c1bb6d6fee5109",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\weak-single-source-red-iso400-canonical.f32",
+      "source_sha256": "053adbfab6d1cdd34adcb8f6d036640018b9cc9c17c172ffec625a799ca9c7a1",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\weak-single-source-red-iso400-canonical.png",
+      "preview_sha256": "6ade92518aa9415e153d952dd04d87552f3b1c2b26e4ea78998e53cfa02df9d0",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\weak-single-source-red-iso400-canonical-replay.f32",
+      "source_sha256": "053adbfab6d1cdd34adcb8f6d036640018b9cc9c17c172ffec625a799ca9c7a1",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\weak-single-source-red-iso400-canonical-replay.png",
+      "preview_sha256": "6ade92518aa9415e153d952dd04d87552f3b1c2b26e4ea78998e53cfa02df9d0",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\weak-single-source-red-iso400-matched-green.f32",
+      "source_sha256": "68168f8cb9b211d6084aa6a25c480fb279cebfe4cd4a3181535b5e8e532ffda4",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\weak-single-source-red-iso400-matched-green.png",
+      "preview_sha256": "ebb37a3e6338431f2aefa3f956ede4138440f81f3797468295e7fe1f560be4eb",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\weak-single-source-red-iso400-joint.f32",
+      "source_sha256": "3b3910c7b386efe7db50de39af8387a12e4cd70636e42576267939ef6f019cae",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\weak-single-source-red-iso400-joint.png",
+      "preview_sha256": "2fbc26ef95c1b4d40332992903083292c7542604d24e34068947cf60075b696c",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\weak-single-source-red-iso400-uniform.f32",
+      "source_sha256": "55271f034a8e9cf34ff2425853dd234c095736142673c5c99642cd49aa7516e8",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\weak-single-source-red-iso400-uniform.png",
+      "preview_sha256": "b2ac9bb2c64b947c0b91019c5f6040a2d0272094e48a78878932aaad8e697136",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\different-source-colour-adverse-iso400-canonical.f32",
+      "source_sha256": "a70796248f61f5e2be17f3ed2e8de06894d03bdb3b42a7836e7fdbd06987c26e",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\different-source-colour-adverse-iso400-canonical.png",
+      "preview_sha256": "fdd44540e7df80faba7b9c01cc4756456459758bc29dba086a0e534eda4e662d",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\different-source-colour-adverse-iso400-canonical-replay.f32",
+      "source_sha256": "a70796248f61f5e2be17f3ed2e8de06894d03bdb3b42a7836e7fdbd06987c26e",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\different-source-colour-adverse-iso400-canonical-replay.png",
+      "preview_sha256": "fdd44540e7df80faba7b9c01cc4756456459758bc29dba086a0e534eda4e662d",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\different-source-colour-adverse-iso400-matched-green.f32",
+      "source_sha256": "8f2d3838b132257765e97097318e629fb090778ac33beede961db4708e74ce52",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\different-source-colour-adverse-iso400-matched-green.png",
+      "preview_sha256": "9b7106a160cac0ad5f74b76d478c53929d9b34c60e1ca8d8745ba19fb9042612",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\different-source-colour-adverse-iso400-joint.f32",
+      "source_sha256": "149020cd752f5fd8dfe9bc794d2054ffa844c29c075cb7dd2318681dd28f99a8",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\different-source-colour-adverse-iso400-joint.png",
+      "preview_sha256": "08476928f6a071fedfb6091f9356b73b5579c3f7363bd4cc45441d39f29124a9",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\different-source-colour-adverse-iso400-uniform.f32",
+      "source_sha256": "db076221a4dbb29ad679ebd91d3747f589afd25ddc5955588cb53d7fe8a8a3ad",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\different-source-colour-adverse-iso400-uniform.png",
+      "preview_sha256": "74df1767819f0d547e4922fea1980722db9076f1a20bca48494e3050b99d61ac",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\independent-noiseless-cofocused\\cofocused-colour-positive-iso100-canonical.f32",
+      "source_sha256": "b498fbac9449623b32ba0408b2c23ea96a4eb83ab3c9d0baf1f0dece48140162",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\noiseless-cofocused-canonical.png",
+      "preview_sha256": "8a3ce168b06eee7875bcdd7768706ce85578fa826177dbf3ce87d6704c9b49c0",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\independent-noiseless-cofocused\\cofocused-colour-positive-iso100-canonical-replay.f32",
+      "source_sha256": "b498fbac9449623b32ba0408b2c23ea96a4eb83ab3c9d0baf1f0dece48140162",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\noiseless-cofocused-canonical-replay.png",
+      "preview_sha256": "8a3ce168b06eee7875bcdd7768706ce85578fa826177dbf3ce87d6704c9b49c0",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\independent-noiseless-cofocused\\cofocused-colour-positive-iso100-matched-green.f32",
+      "source_sha256": "c269306f5a234838418c63506e6c81fc1beb178f56b97e18f8bd0e8419744609",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\noiseless-cofocused-matched-green.png",
+      "preview_sha256": "f01ea7e14b6796354b46c70d97beabcffed6ada29ceeccc718c496df5c4b9994",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\independent-noiseless-cofocused\\cofocused-colour-positive-iso100-joint.f32",
+      "source_sha256": "52ad31f31214ec16505d2d914faf104bbc3f78a74775fa557bc780f48d82451a",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\noiseless-cofocused-joint.png",
+      "preview_sha256": "9a521994bf13e761a370086bcd127c5c68af2196250208dc2a09a48fda319a45",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\independent-noiseless-cofocused\\cofocused-colour-positive-iso100-uniform.f32",
+      "source_sha256": "00a022dd7dfac6a6b846a14b9ad56546f835e81dade8a5efee335073114d9397",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\noiseless-cofocused-uniform.png",
+      "preview_sha256": "d12b321d51be6680e2d9b20e935e7199b0eb4daf4bf1b6d5999f86faf6918a32",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    },
+    {
+      "source": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\insect-color-observed-screen-1\\output\\independent-noiseless-cofocused\\focused-source-2-camera-rgb.f32",
+      "source_sha256": "346f688443a8df60316a556fa1ebcddaa561e080e770f922502dd73a741d995d",
+      "preview": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-previews\\noiseless-cofocused-focused-source-2.png",
+      "preview_sha256": "1ac4a2dee6810a7c5648b7b3b5d53892f4af235284ff6a73e7b07a507cccc0a3",
+      "width": 290,
+      "height": 250,
+      "resized": false,
+      "clipped_components": 0
+    }
+  ],
+  "display": "unit gain; clip [0,1]; sRGB OETF; rounded RGB8; same ICC; no resize",
+  "scope": "complete generated camera-RGB structural previews; not calibrated photograph colours",
+  "elapsed_seconds": 0.8280000000004293
+}

@@ -1,0 +1,266 @@
+{
+  "status": "EIGHT_EXACT_NATIVE_BASELINE_CROPS_READY_NO_VERDICT",
+  "quality_claim": false,
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "experiments/raw-quality-2026-10-26/flat-baseline/export-frozen-crops.py"
+  ],
+  "inputs": [
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\frozen-witnesses.json",
+      "bytes": 2417,
+      "mtime_ns": 1793083443977085100,
+      "sha256": "fde6bb02b6ca12793176b3e30ef8d60bba5aed3ed86dd1d4e3ea080c736a297e"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-baseline\\completion.json",
+      "bytes": 1768,
+      "mtime_ns": 1793083213808625200,
+      "sha256": "969bc19f2b608fcd2455a83b67c85898bf183d0afd4c8a138d1b333fc9ef8183"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-baseline\\input-order.json",
+      "bytes": 18895,
+      "mtime_ns": 1793083114419817700,
+      "sha256": "7a7f6474eca174c5dd9c9d4cabc6eb1ae15e8385c7395472a793175c59a107fe"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-baseline\\alignment.txt",
+      "bytes": 8561,
+      "mtime_ns": 1793083144347576100,
+      "sha256": "658501d70e5623b168bdee327219382952ca0887f5eafec4d02650343f0dd36b"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-baseline\\stack-master.tiff",
+      "bytes": 192160160,
+      "mtime_ns": 1793083211599243600,
+      "sha256": "01e576315fdf8242b9d008c06a0ad9b52f837f84d8d28e05d59d13b97379dbdc"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-baseline\\linear-master.tiff",
+      "bytes": 384314146,
+      "mtime_ns": 1793083210857527300,
+      "sha256": "51fd1f3e281c10def359af38a2064055de11b8788ff5ce7c0428d9e5a9e417ab"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\export-frozen-crops.py",
+      "bytes": 6215,
+      "mtime_ns": 1793083481630634000,
+      "sha256": "8fdc49746f2d334356e72bf33dbd7c844b80e3f51d373ce7b8ac118089c03248"
+    }
+  ],
+  "input_files_unchanged": true,
+  "original_raw_reads": 0,
+  "display": "Exact existing RGB16 baseline pixels and original ICC; PNG conversion (value+128)//257 only. No new display fit, gain, filter, orientation change or resize. Exact product DisplayBaseline metadata retained separately for future common-display comparison.",
+  "linear_master": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-baseline\\linear-master.tiff",
+    "bytes": 384314146,
+    "mtime_ns": 1793083210857527300,
+    "sha256": "51fd1f3e281c10def359af38a2064055de11b8788ff5ce7c0428d9e5a9e417ab",
+    "pages": 1,
+    "shape": [
+      4620,
+      6932,
+      3
+    ],
+    "dtype": "float32",
+    "pixel_analysis": false
+  },
+  "exact_product_display_baseline": {
+    "black": 0.008842854,
+    "white": 0.36849296,
+    "contrast": 0.55,
+    "exposure_gain": 1.0
+  },
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "witnesses": [
+    {
+      "name": "gray-field-step",
+      "native_xywh": [
+        1460,
+        400,
+        384,
+        384
+      ],
+      "role": "Broad gray field and first weak step transition; visible grain/low-contrast guard, not a certified uniform noise flat.",
+      "resized": false,
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\baseline-native\\gray-field-step.png",
+        "bytes": 143432,
+        "mtime_ns": 1793083493236952800,
+        "sha256": "13c62ec6574d36fa1a02b19cdbfb50ee874cc20a983069323a033ba2816eaf99"
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\baseline-native\\gray-field-step.tiff",
+        "bytes": 887680,
+        "mtime_ns": 1793083493236952800,
+        "sha256": "0dc5c499be9fbd1ad0afb10c2d3322e4188e6642523f8140d49bc62a0d098226"
+      }
+    },
+    {
+      "name": "qr-block-boundary",
+      "native_xywh": [
+        4200,
+        780,
+        384,
+        384
+      ],
+      "role": "Black-white QR-like block edges and corners in upper central field.",
+      "resized": false,
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\baseline-native\\qr-block-boundary.png",
+        "bytes": 146202,
+        "mtime_ns": 1793083493268379000,
+        "sha256": "cab41145cfdc4b6d24d6a749b9b4292dc464d6fa9fcbf012d8d5c45f9cc7e77a"
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\baseline-native\\qr-block-boundary.tiff",
+        "bytes": 887680,
+        "mtime_ns": 1793083493268379000,
+        "sha256": "91006fa50ece48a55c86a06bef56a9db8fcfd5d57ffa2ee2f385d47c8770af59"
+      }
+    },
+    {
+      "name": "central-fine-bars",
+      "native_xywh": [
+        2670,
+        2020,
+        384,
+        384
+      ],
+      "role": "First central resolution group: fine bars in both orientations and nearby numerals.",
+      "resized": false,
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\baseline-native\\central-fine-bars.png",
+        "bytes": 176546,
+        "mtime_ns": 1793083493300331400,
+        "sha256": "9a3741278a050eb056aafe4ae2cec2305447f9cf6edb34232b47bdeb8b061287"
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\baseline-native\\central-fine-bars.tiff",
+        "bytes": 887680,
+        "mtime_ns": 1793083493300331400,
+        "sha256": "ca2dfde78b615a8b552463d8ab08b30600ab92d9e59e9c803d2ea86ffaf24a6b"
+      }
+    },
+    {
+      "name": "central-micro-target",
+      "native_xywh": [
+        3850,
+        2040,
+        384,
+        384
+      ],
+      "role": "Second central micro-bar target and its fine radial leader lines.",
+      "resized": false,
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\baseline-native\\central-micro-target.png",
+        "bytes": 192277,
+        "mtime_ns": 1793083493335743100,
+        "sha256": "34e27c061394422a04be68bf977f04a0c75f9f50d3f25a9c1dacbca03160f3ee"
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\baseline-native\\central-micro-target.tiff",
+        "bytes": 887680,
+        "mtime_ns": 1793083493337746600,
+        "sha256": "b17bc6b47c7ad605c5a282e7676a37d5a1fed6ac394b8aae0c95273c88c64e05"
+      }
+    },
+    {
+      "name": "right-bar-target",
+      "native_xywh": [
+        5700,
+        1900,
+        384,
+        384
+      ],
+      "role": "Right-field nested fine-bar target for orientation and field variation.",
+      "resized": false,
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\baseline-native\\right-bar-target.png",
+        "bytes": 194395,
+        "mtime_ns": 1793083493363454700,
+        "sha256": "e413182522d4126aafcad1768866a02523467b70c6a68f4744b20d8e68f37d53"
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\baseline-native\\right-bar-target.tiff",
+        "bytes": 887680,
+        "mtime_ns": 1793083493363454700,
+        "sha256": "af3c909612cdc47d867a0c9a5b74fe6a6e31cc88d6502ba1011867f905762db9"
+      }
+    },
+    {
+      "name": "upper-right-star",
+      "native_xywh": [
+        5260,
+        20,
+        384,
+        384
+      ],
+      "role": "Small upper-right radial star, bright/dark wedge transitions and convergence.",
+      "resized": false,
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\baseline-native\\upper-right-star.png",
+        "bytes": 172012,
+        "mtime_ns": 1793083493379218500,
+        "sha256": "9d9fc6428c0a0f0d6a8263eb15aad285e301cf7106016859b67016ad58f33dbb"
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\baseline-native\\upper-right-star.tiff",
+        "bytes": 887680,
+        "mtime_ns": 1793083493394928400,
+        "sha256": "a801fc28ae624a7efe49dccab5e58b6d411627ba2f7b438989914b315c994eda"
+      }
+    },
+    {
+      "name": "bottom-radial-center",
+      "native_xywh": [
+        1280,
+        4236,
+        384,
+        384
+      ],
+      "role": "Large lower-left radial target's near-center fine spokes, retaining the delivered bottom boundary.",
+      "resized": false,
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\baseline-native\\bottom-radial-center.png",
+        "bytes": 213972,
+        "mtime_ns": 1793083493410577300,
+        "sha256": "fe6c87f818ae17f79cb5844b0c571173f11f7c3aeb491e132167f49411ca6686"
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\baseline-native\\bottom-radial-center.tiff",
+        "bytes": 887680,
+        "mtime_ns": 1793083493410577300,
+        "sha256": "03eddc384b41194e349facf18ab3e2064955059b882bdccff570c492307fc32d"
+      }
+    },
+    {
+      "name": "dot-field",
+      "native_xywh": [
+        4600,
+        3400,
+        384,
+        384
+      ],
+      "role": "Repeated round marks and intervening dark field across the large lower chart area.",
+      "resized": false,
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\baseline-native\\dot-field.png",
+        "bytes": 157434,
+        "mtime_ns": 1793083493442208700,
+        "sha256": "9b59dd196b3db3c08fcb22c1542ce69173d9bf1e05daab1c4f45fe0f1f1e33ed"
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\baseline-native\\dot-field.tiff",
+        "bytes": 887680,
+        "mtime_ns": 1793083493442208700,
+        "sha256": "78f902c29d09c0c8442e8415e3499f7d16365e0e260b274d6e220d4fe9642d68"
+      }
+    }
+  ],
+  "operational_seconds": 0.9210000000002765
+}

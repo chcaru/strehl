@@ -1,0 +1,16 @@
+{
+  "all_five_complete_views_seen": true,
+  "before_source_crop_view": true,
+  "independent_and_root_whole_view_concurrence": true,
+  "source_indices": [
+    74,
+    149
+  ],
+  "selection": "74 has focused dorsal scales;149 has focused upper legs. Both retain all three fixed witnesses. Neither establishes a focused thorax reference. No best-of-stack or optical ceiling claim.",
+  "witnesses": [
+    "turquoise-scales",
+    "thorax-texture",
+    "upper-leg-hairs"
+  ],
+  "overview_receipt_sha256": "48ce71e0d446e9fb3d719bcfc838399c5d188f53b51c9fa00fa330689d4b46c9"
+}

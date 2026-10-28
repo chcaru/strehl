@@ -1,0 +1,365 @@
+{
+  "status": "CROPS_READY_NO_VERDICT",
+  "quality_claim": false,
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\export-source-views.py",
+    "crops"
+  ],
+  "inputs": [
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-tiff-export\\receipt.json",
+      "bytes": 291498,
+      "mtime_ns": 1793072664238196500,
+      "sha256": "461ecb3a8e44a82005ed6883718aa85276a74a2ebfca31fb0628809c4ba315a0"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-witnesses.json",
+      "bytes": 12213,
+      "mtime_ns": 1793071347179153000,
+      "sha256": "826c4ab6c620122449f6575cdd18c0f9ee9cb460f29f6d895e832325d6405888"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-ca-off-alignment.txt",
+      "bytes": 40799,
+      "mtime_ns": 1793073316984290900,
+      "sha256": "4a76cd0c56c3a525e70f5bf72b965adb706131618c5bf49d0ae853fbf341c225"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\export-source-views.py",
+      "bytes": 7163,
+      "mtime_ns": 1793090744092692500,
+      "sha256": "551ae127a4af4c6c1d9ba4e95007ba32a200b71224cc55c328f181bf8ebb7351"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\nominees.json",
+      "bytes": 568,
+      "mtime_ns": 1793090858163206400,
+      "sha256": "266c2c8a7e0a6bea67d3b21e2045078dd5ee38de6b34f71e2b5d1e61f99240a0"
+    }
+  ],
+  "source_tiffs_unchanged": true,
+  "original_raw_reads": 0,
+  "records": [
+    {
+      "index": 74,
+      "source": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-tiff-export\\frames\\DSC00075.tiff",
+        "bytes": 197801325,
+        "mtime_ns": 1793072509169829800,
+        "sha256": "0f3074ebfb04bc553719ea45221afd169817c5fcfe1cec7f49c4a054240b9e4c"
+      },
+      "original_raw_identity_metadata_only": {
+        "bytes": 35356672,
+        "index": 74,
+        "mtime_ns": 1792989045220000000,
+        "path": "D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00075.ARW",
+        "sha256": "50440e16d8eec8bf5e784d242d9123d46b22e8eb4bfed513fa6e20a9a6233878"
+      },
+      "transform_f64_bits": [
+        "3ff018b8dc3be820",
+        "bf30fe51b89e37ec",
+        "3fcc9a5250940dec",
+        "bfc572cdae248dc0"
+      ],
+      "native_center": [
+        3516.0,
+        2344.0
+      ],
+      "native_translation": [
+        0.446919039430411,
+        -0.33513204580432543
+      ],
+      "scale": 1.0060357049261974,
+      "rotation_radians": -0.0002577435706958209,
+      "witnesses": [
+        {
+          "name": "turquoise-scales",
+          "baseline_xywh": [
+            2120,
+            1340,
+            384,
+            384
+          ],
+          "reference_active_center": [
+            2379.5,
+            1577.5
+          ],
+          "mapped_source_center": [
+            2372.8886255071943,
+            1572.833219319029
+          ],
+          "source_xywh": [
+            2181,
+            1381,
+            384,
+            384
+          ],
+          "center_rounding_error": [
+            -0.38862550719431965,
+            -0.3332193190290127
+          ],
+          "resized": false,
+          "exact_subarray": true,
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\crops\\source-074-turquoise-scales.tiff",
+            "bytes": 887680,
+            "mtime_ns": 1793090858795573700,
+            "sha256": "3df0c303672d72ba005ef0620f434e1c1171e6f9e989ca32c7ce328406ba835a"
+          },
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\crops\\source-074-turquoise-scales.png",
+            "bytes": 245269,
+            "mtime_ns": 1793090858813890600,
+            "sha256": "7a9be2bbe5bd41a467eca26689918a2021449b1e9f5a852ad0e49141ee802e77"
+          }
+        },
+        {
+          "name": "thorax-texture",
+          "baseline_xywh": [
+            4520,
+            2560,
+            384,
+            384
+          ],
+          "reference_active_center": [
+            4779.5,
+            2797.5
+          ],
+          "mapped_source_center": [
+            4787.690582193811,
+            2799.5744204043226
+          ],
+          "source_xywh": [
+            4596,
+            2608,
+            384,
+            384
+          ],
+          "center_rounding_error": [
+            -0.19058219381076924,
+            -0.0744204043226091
+          ],
+          "resized": false,
+          "exact_subarray": true,
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\crops\\source-074-thorax-texture.tiff",
+            "bytes": 887680,
+            "mtime_ns": 1793090858829934100,
+            "sha256": "94f8293be1aa1efdf1657959d32fc6079d1d806f7320e7a04d414ae9aa87fd4c"
+          },
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\crops\\source-074-thorax-texture.png",
+            "bytes": 215886,
+            "mtime_ns": 1793090858845269100,
+            "sha256": "d16ad4e9f1082f62519828967661dae7ca00a09d50fd422c0440b83a8894d894"
+          }
+        },
+        {
+          "name": "upper-leg-hairs",
+          "baseline_xywh": [
+            1820,
+            640,
+            384,
+            384
+          ],
+          "reference_active_center": [
+            2079.5,
+            877.5
+          ],
+          "mapped_source_center": [
+            2070.8964145918662,
+            868.6860390317288
+          ],
+          "source_xywh": [
+            1879,
+            677,
+            384,
+            384
+          ],
+          "center_rounding_error": [
+            -0.3964145918662325,
+            -0.18603903172879654
+          ],
+          "resized": false,
+          "exact_subarray": true,
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\crops\\source-074-upper-leg-hairs.tiff",
+            "bytes": 887680,
+            "mtime_ns": 1793090858847249200,
+            "sha256": "d87cd25e745c47f6c3ab1cd9d90718c05f4bfffcfc59e04ffb57e3abd5b6161f"
+          },
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\crops\\source-074-upper-leg-hairs.png",
+            "bytes": 177359,
+            "mtime_ns": 1793090858872672700,
+            "sha256": "32020ba3221bb0615990f3b7fced0088b91a93fdffe93475660d336869535fa5"
+          }
+        }
+      ]
+    },
+    {
+      "index": 149,
+      "source": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-tiff-export\\frames\\DSC00150.tiff",
+        "bytes": 197801325,
+        "mtime_ns": 1793072559241094300,
+        "sha256": "9c6c3753630cb8a95b12cc2221007889676dc4635f03d2c8ced2013ca6f552dc"
+      },
+      "original_raw_identity_metadata_only": {
+        "bytes": 35184640,
+        "index": 149,
+        "mtime_ns": 1792989198950000000,
+        "path": "D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00150.ARW",
+        "sha256": "e85572179c8a98f5a2de2be5c81cd0b1bdeae67999aa00e585c6dde35f531154"
+      },
+      "transform_f64_bits": [
+        "3ff0000000000000",
+        "bc00000000000000",
+        "3ca0000000000000",
+        "0000000000000000"
+      ],
+      "native_center": [
+        3516.0,
+        2344.0
+      ],
+      "native_translation": [
+        2.220446049250313e-16,
+        0.0
+      ],
+      "scale": 1.0,
+      "rotation_radians": -1.0842021724855044e-19,
+      "witnesses": [
+        {
+          "name": "turquoise-scales",
+          "baseline_xywh": [
+            2120,
+            1340,
+            384,
+            384
+          ],
+          "reference_active_center": [
+            2379.5,
+            1577.5
+          ],
+          "mapped_source_center": [
+            2379.5,
+            1577.5
+          ],
+          "source_xywh": [
+            2188,
+            1386,
+            384,
+            384
+          ],
+          "center_rounding_error": [
+            0.0,
+            0.0
+          ],
+          "resized": false,
+          "exact_subarray": true,
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\crops\\source-149-turquoise-scales.tiff",
+            "bytes": 887680,
+            "mtime_ns": 1793090859095607200,
+            "sha256": "e859a9b2de7b42f02742191185a413885c67752f02b995af4556f05e53e54459"
+          },
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\crops\\source-149-turquoise-scales.png",
+            "bytes": 209648,
+            "mtime_ns": 1793090859110907600,
+            "sha256": "0d36c8ad99801cd2098ccbbf2578e16547aa5898ea4e8d0e1f8419c81174b9bf"
+          }
+        },
+        {
+          "name": "thorax-texture",
+          "baseline_xywh": [
+            4520,
+            2560,
+            384,
+            384
+          ],
+          "reference_active_center": [
+            4779.5,
+            2797.5
+          ],
+          "mapped_source_center": [
+            4779.5,
+            2797.5
+          ],
+          "source_xywh": [
+            4588,
+            2606,
+            384,
+            384
+          ],
+          "center_rounding_error": [
+            0.0,
+            0.0
+          ],
+          "resized": false,
+          "exact_subarray": true,
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\crops\\source-149-thorax-texture.tiff",
+            "bytes": 887680,
+            "mtime_ns": 1793090859126389900,
+            "sha256": "9f505e5d4a6d021e64564e9ffd3ccabd327376fdbb55b5c57f22bc91a3c18d02"
+          },
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\crops\\source-149-thorax-texture.png",
+            "bytes": 218197,
+            "mtime_ns": 1793090859126389900,
+            "sha256": "76f71821547af9356988dc211fa3e724d5a4f8441757aea6954d6c44e60578af"
+          }
+        },
+        {
+          "name": "upper-leg-hairs",
+          "baseline_xywh": [
+            1820,
+            640,
+            384,
+            384
+          ],
+          "reference_active_center": [
+            2079.5,
+            877.5
+          ],
+          "mapped_source_center": [
+            2079.5,
+            877.5
+          ],
+          "source_xywh": [
+            1888,
+            686,
+            384,
+            384
+          ],
+          "center_rounding_error": [
+            0.0,
+            0.0
+          ],
+          "resized": false,
+          "exact_subarray": true,
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\crops\\source-149-upper-leg-hairs.tiff",
+            "bytes": 887680,
+            "mtime_ns": 1793090859147265600,
+            "sha256": "f991744833d3d6baad93bdc60a470a0b1b68d5cd80e0cf01414a360fbb48abba"
+          },
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\crops\\source-149-upper-leg-hairs.png",
+            "bytes": 216018,
+            "mtime_ns": 1793090859162273300,
+            "sha256": "cd948692f6cbbe03010d49e84fbd7ebd9f3694921fcd7472c1896b9ebef3b068"
+          }
+        }
+      ]
+    }
+  ],
+  "seconds": 0.6089999999967404,
+  "display": "Unmodified developed RGB16 and original ICC; PNG (value+128)//257. Complete overviews only are resized.",
+  "mapping": "Reference149 native pixel center plus(68,46); q=C+a*(p-C)+2b, C=(3516,2344); round crop origin. Map locates context only. No source pixel warp, CA, fit, scale normalization or equal-footprint metric."
+}

@@ -1433,6 +1433,88 @@ pub enum AlignFailure {
     CoarseStageFailed { level: usize },
 }
 
+/// One actual tile call, retained in the original grid order.
+#[derive(Clone, Debug)]
+pub struct TileTrace {
+    pub ordinal: usize,
+    pub probe: TileProbe,
+    /// The estimator's fitting centre, not the sample-support centroid.
+    pub fit_center: (f64, f64),
+    pub centered_offset: (f64, f64),
+    pub measurement: TileMeasurement,
+    pub observation_index: Option<usize>,
+    pub observation: Option<Observation>,
+}
+
+/// Copies of quantities evaluated by one stage; `None` means not evaluated.
+/// Residual and keep arrays index correlated observations, not all tile rows.
+#[derive(Clone, Debug)]
+pub struct StageMeasurements {
+    pub reference_dimensions: (usize, usize),
+    pub moving_dimensions: (usize, usize),
+    pub plane_center: (f64, f64),
+    pub tile: usize,
+    pub radius: i32,
+    pub seed: Option<SimilarityParams>,
+    pub config: AlignConfig,
+    pub warped_tiles_used: bool,
+    pub tiles: Vec<TileTrace>,
+    pub initial_fit: Option<SimilarityParams>,
+    pub initial_residuals: Option<Vec<f32>>,
+    pub median: Option<f32>,
+    /// The existing floored MAD used by the cutoff expression.
+    pub mad: Option<f32>,
+    pub cutoff: Option<f32>,
+    pub keep: Option<Vec<bool>>,
+    pub final_fit: Option<SimilarityParams>,
+    /// Survivor order, corresponding to the true entries of `keep`.
+    pub final_residuals: Option<Vec<f32>>,
+    pub census: TileCensus,
+}
+
+/// One completed stage, including an honest refusal and partial measurements.
+#[derive(Clone, Debug)]
+pub struct StageTrace {
+    pub measurements: StageMeasurements,
+    pub result: Result<StageFit, AlignFailure>,
+}
+
+/// One attempted fine pass. The first or a failed pass has no corner movement.
+#[derive(Clone, Debug)]
+pub struct FinePassTrace {
+    pub index: usize,
+    pub stage: StageTrace,
+    pub corner_moved: Option<f64>,
+}
+
+/// The actual branch that ended the pair's coarse-to-fine calculation.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum PairTermination {
+    CoarseGridTooSmall { level: usize },
+    CoarseStageFailed { level: usize, cause: AlignFailure },
+    FineStageFailed { pass: usize, cause: AlignFailure },
+    FinePassFailedRetained { pass: usize, cause: AlignFailure },
+    FineConverged { pass: usize },
+    FinePassLimit,
+}
+
+/// An immutable completed pair observation. Floating fields retain their
+/// original types/bits, including NaNs; serialization is the caller's concern.
+#[derive(Clone, Debug)]
+pub struct PairTrace {
+    pub fine_passes: Vec<FinePassTrace>,
+    pub selected_fine_pass: Option<usize>,
+    pub termination: PairTermination,
+    pub result: Result<StageFit, AlignFailure>,
+}
+
+#[derive(Default)]
+struct PairCapture {
+    fine_passes: Vec<FinePassTrace>,
+    selected_fine_pass: Option<usize>,
+    termination: Option<PairTermination>,
+}
+
 /// Anchor grid: `gx` by `gy` tile origins, inset by `margin` from every edge.
 pub fn tile_grid(
     plane: PlaneRef<'_>,
@@ -1471,7 +1553,77 @@ pub fn fit_stage(
     seed: Option<SimilarityParams>,
     cfg: &AlignConfig,
 ) -> Result<StageFit, AlignFailure> {
+    fit_stage_impl(reference, moving, tile, spots, radius, seed, cfg, None)
+}
+
+/// The ordinary stage with an optional immutable completed observation. It
+/// makes no additional correlation, fit or residual evaluation.
+#[allow(clippy::too_many_arguments)]
+pub fn fit_stage_observed(
+    reference: PlaneRef<'_>,
+    moving: PlaneRef<'_>,
+    tile: usize,
+    spots: &[(usize, usize)],
+    radius: i32,
+    seed: Option<SimilarityParams>,
+    cfg: &AlignConfig,
+    observer: Option<&mut dyn FnMut(&StageTrace)>,
+) -> Result<StageFit, AlignFailure> {
+    let Some(observer) = observer else {
+        return fit_stage(reference, moving, tile, spots, radius, seed, cfg);
+    };
+    let mut measurements = StageMeasurements {
+        reference_dimensions: (reference.width, reference.height),
+        moving_dimensions: (moving.width, moving.height),
+        plane_center: (0.0, 0.0),
+        tile,
+        radius,
+        seed,
+        config: cfg.clone(),
+        warped_tiles_used: cfg.warp_tiles && seed.is_some(),
+        tiles: Vec::with_capacity(spots.len()),
+        initial_fit: None,
+        initial_residuals: None,
+        median: None,
+        mad: None,
+        cutoff: None,
+        keep: None,
+        final_fit: None,
+        final_residuals: None,
+        census: TileCensus::default(),
+    };
+    let result = fit_stage_impl(
+        reference,
+        moving,
+        tile,
+        spots,
+        radius,
+        seed,
+        cfg,
+        Some(&mut measurements),
+    );
+    observer(&StageTrace {
+        measurements,
+        result: result.clone(),
+    });
+    result
+}
+
+#[allow(clippy::too_many_arguments)]
+fn fit_stage_impl(
+    reference: PlaneRef<'_>,
+    moving: PlaneRef<'_>,
+    tile: usize,
+    spots: &[(usize, usize)],
+    radius: i32,
+    seed: Option<SimilarityParams>,
+    cfg: &AlignConfig,
+    mut trace: Option<&mut StageMeasurements>,
+) -> Result<StageFit, AlignFailure> {
     let (cx, cy) = (reference.width as f64 * 0.5, reference.height as f64 * 0.5);
+    if let Some(t) = trace.as_deref_mut() {
+        t.plane_center = (cx, cy);
+    }
 
     let mut obs: Vec<Observation> = Vec::with_capacity(spots.len());
     let mut peaks: Vec<f32> = Vec::with_capacity(spots.len());
@@ -1513,6 +1665,19 @@ pub fn fit_stage(
             TileStatus::Border => census.border += 1,
             TileStatus::Oob => census.oob += 1,
         }
+        if let Some(t) = trace.as_deref_mut() {
+            let observation_index = (m.status == TileStatus::Ok).then(|| obs.len() - 1);
+            t.tiles.push(TileTrace {
+                ordinal: t.tiles.len(),
+                probe: tp,
+                fit_center: (mx, my),
+                centered_offset: (mx - cx, my - cy),
+                measurement: m,
+                observation_index,
+                observation: observation_index.map(|i| obs[i]),
+            });
+            t.census = census;
+        }
     }
 
     let total = spots.len();
@@ -1525,6 +1690,10 @@ pub fn fit_stage(
     let f0 = fit_similarity(&obs).ok_or(AlignFailure::Singular)?;
     let res = residuals(&obs, f0);
     let raw_n = obs.len();
+    if let Some(t) = trace.as_deref_mut() {
+        t.initial_fit = Some(f0);
+        t.initial_residuals = Some(res.clone());
+    }
 
     let mut sorted = res.clone();
     sorted.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
@@ -1542,6 +1711,13 @@ pub fn fit_stage(
         .map(|(o, _)| *o)
         .collect();
     census.outlier = raw_n - kept.len();
+    if let Some(t) = trace.as_deref_mut() {
+        t.median = Some(med);
+        t.mad = Some(mad);
+        t.cutoff = Some(cut);
+        t.keep = Some(keep.clone());
+        t.census = census;
+    }
     if kept.len() < cfg.min_tiles {
         return Err(AlignFailure::TooFewAfterOutliers {
             survivors: kept.len(),
@@ -1549,6 +1725,10 @@ pub fn fit_stage(
     }
     let fit = fit_similarity(&kept).ok_or(AlignFailure::Singular)?;
     let kres = residuals(&kept, fit);
+    if let Some(t) = trace {
+        t.final_fit = Some(fit);
+        t.final_residuals = Some(kres.clone());
+    }
     let rms = (kres.iter().map(|r| r * r).sum::<f32>() / kres.len() as f32).sqrt();
     let lever_rms = (kept
         .iter()
@@ -1596,14 +1776,98 @@ fn fit_stage_iterated(
     seed: Option<SimilarityParams>,
     cfg: &AlignConfig,
 ) -> Result<StageFit, AlignFailure> {
-    let mut best = fit_stage(reference, moving, tile, spots, radius, seed, cfg)?;
+    fit_stage_iterated_impl(reference, moving, tile, spots, radius, seed, cfg, None)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn fit_stage_recorded(
+    reference: PlaneRef<'_>,
+    moving: PlaneRef<'_>,
+    tile: usize,
+    spots: &[(usize, usize)],
+    radius: i32,
+    seed: Option<SimilarityParams>,
+    cfg: &AlignConfig,
+    index: usize,
+    trace: Option<&mut PairCapture>,
+) -> Result<StageFit, AlignFailure> {
+    match trace {
+        Some(trace) => fit_stage_observed(
+            reference,
+            moving,
+            tile,
+            spots,
+            radius,
+            seed,
+            cfg,
+            Some(&mut |stage| {
+                trace.fine_passes.push(FinePassTrace {
+                    index,
+                    stage: stage.clone(),
+                    corner_moved: None,
+                });
+            }),
+        ),
+        None => fit_stage(reference, moving, tile, spots, radius, seed, cfg),
+    }
+}
+
+#[allow(clippy::too_many_arguments)]
+fn fit_stage_iterated_impl(
+    reference: PlaneRef<'_>,
+    moving: PlaneRef<'_>,
+    tile: usize,
+    spots: &[(usize, usize)],
+    radius: i32,
+    seed: Option<SimilarityParams>,
+    cfg: &AlignConfig,
+    mut trace: Option<&mut PairCapture>,
+) -> Result<StageFit, AlignFailure> {
+    let mut best = match fit_stage_recorded(
+        reference,
+        moving,
+        tile,
+        spots,
+        radius,
+        seed,
+        cfg,
+        0,
+        trace.as_deref_mut(),
+    ) {
+        Ok(best) => best,
+        Err(cause) => {
+            if let Some(t) = trace {
+                t.termination = Some(PairTermination::FineStageFailed { pass: 0, cause });
+            }
+            return Err(cause);
+        }
+    };
+    if let Some(t) = trace.as_deref_mut() {
+        t.selected_fine_pass = Some(0);
+        t.termination = Some(PairTermination::FinePassLimit);
+    }
     let hw = reference.width as f64 * 0.5;
     let hh = reference.height as f64 * 0.5;
-    for _ in 1..cfg.fine_iters.max(1) {
+    for pass in 1..cfg.fine_iters.max(1) {
         let prev = best.fit;
-        let next = match fit_stage(reference, moving, tile, spots, radius, Some(prev), cfg) {
+        let next = match fit_stage_recorded(
+            reference,
+            moving,
+            tile,
+            spots,
+            radius,
+            Some(prev),
+            cfg,
+            pass,
+            trace.as_deref_mut(),
+        ) {
             Ok(n) => n,
-            Err(_) => break,
+            Err(cause) => {
+                if let Some(t) = trace.as_deref_mut() {
+                    t.termination = Some(PairTermination::FinePassFailedRetained { pass, cause });
+                }
+                break;
+            }
         };
         let (dg, dr) = (next.fit.g - prev.g, next.fit.rot - prev.rot);
         let (dx, dy) = (next.fit.ax - prev.ax, next.fit.ay - prev.ay);
@@ -1616,7 +1880,14 @@ fn fit_stage_iterated(
             })
             .fold(0.0f64, f64::max);
         best = next;
+        if let Some(t) = trace.as_deref_mut() {
+            t.fine_passes[pass].corner_moved = Some(moved);
+            t.selected_fine_pass = Some(pass);
+        }
         if moved < FINE_CONVERGE_PX {
+            if let Some(t) = trace.as_deref_mut() {
+                t.termination = Some(PairTermination::FineConverged { pass });
+            }
             break;
         }
     }
@@ -1636,6 +1907,42 @@ pub fn align_pair(
     spots: &[(usize, usize)],
     cfg: &AlignConfig,
 ) -> Result<StageFit, AlignFailure> {
+    align_pair_impl(reference, moving, spots, cfg, None)
+}
+
+/// Observe the actual fine passes and terminal pair decision without adding
+/// any NCC, fit or residual calculation. The callback borrows immutable data
+/// only after the pair completes; `None` does not allocate trace storage.
+pub fn align_pair_observed(
+    reference: AlignFrame<'_>,
+    moving: AlignFrame<'_>,
+    spots: &[(usize, usize)],
+    cfg: &AlignConfig,
+    observer: Option<&mut dyn FnMut(&PairTrace)>,
+) -> Result<StageFit, AlignFailure> {
+    let Some(observer) = observer else {
+        return align_pair(reference, moving, spots, cfg);
+    };
+    let mut trace = PairCapture::default();
+    let result = align_pair_impl(reference, moving, spots, cfg, Some(&mut trace));
+    observer(&PairTrace {
+        fine_passes: trace.fine_passes,
+        selected_fine_pass: trace.selected_fine_pass,
+        termination: trace
+            .termination
+            .expect("completed pair has a termination branch"),
+        result: result.clone(),
+    });
+    result
+}
+
+fn align_pair_impl(
+    reference: AlignFrame<'_>,
+    moving: AlignFrame<'_>,
+    spots: &[(usize, usize)],
+    cfg: &AlignConfig,
+    mut trace: Option<&mut PairCapture>,
+) -> Result<StageFit, AlignFailure> {
     let mut seed: Option<SimilarityParams> = None;
     for (li, f) in reference.pyramid.factors.iter().enumerate() {
         let rc = reference.pyramid.levels[li].as_ref();
@@ -1647,7 +1954,12 @@ pub fn align_pair(
             cfg.coarse_grid.1,
             cfg.coarse_radius as usize + 4,
         )
-        .ok_or(AlignFailure::GridTooSmall)?;
+        .ok_or_else(|| {
+            if let Some(t) = trace.as_deref_mut() {
+                t.termination = Some(PairTermination::CoarseGridTooSmall { level: li });
+            }
+            AlignFailure::GridTooSmall
+        })?;
         // Carry the previous level's translation down into this level's units.
         // Scale and rotation are dimensionless and carry unchanged.
         let lseed = seed.map(|s| SimilarityParams {
@@ -1664,14 +1976,19 @@ pub fn align_pair(
             lseed,
             cfg,
         )
-        .map_err(|_| AlignFailure::CoarseStageFailed { level: li })?;
+        .map_err(|cause| {
+            if let Some(t) = trace.as_deref_mut() {
+                t.termination = Some(PairTermination::CoarseStageFailed { level: li, cause });
+            }
+            AlignFailure::CoarseStageFailed { level: li }
+        })?;
         seed = Some(SimilarityParams {
             ax: st.fit.ax * *f as f64,
             ay: st.fit.ay * *f as f64,
             ..st.fit
         });
     }
-    fit_stage_iterated(
+    fit_stage_iterated_impl(
         reference.plane,
         moving.plane,
         cfg.fine_tile,
@@ -1679,6 +1996,7 @@ pub fn align_pair(
         cfg.fine_radius,
         seed,
         cfg,
+        trace,
     )
 }
 
@@ -4379,3 +4697,7 @@ mod quadratic_peak_tests {
 #[cfg(test)]
 #[path = "../../../experiments/rea-a7c2-2026-10-24-v/component-tests.rs"]
 mod measured_component_tests;
+
+#[cfg(test)]
+#[path = "../../../experiments/raw-quality-2026-10-27/insect-placement-observer/core-controls.rs"]
+mod insect_placement_controls;

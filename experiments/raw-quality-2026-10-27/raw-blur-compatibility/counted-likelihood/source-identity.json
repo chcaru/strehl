@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "parent_path": "experiments\\raw-quality-2026-10-27\\raw-blur-compatibility\\model.py",
+  "parent_sha256": "659da66d343908564b16262482dc55e3220dd15f8318bf49623a7b2d8d8106cc",
+  "candidate_path": "experiments\\raw-quality-2026-10-27\\raw-blur-compatibility\\counted-likelihood\\model-counted.py",
+  "candidate_sha256": "e66ce20112592f8c0913ac01265d538b3fc073661247b94f972accd9e661befd",
+  "exact_diff_sha256": "2d28e8e7b4c22282965eb76c64a837b05296f2343c75ba9440be062e906ca59c",
+  "verification": "AST parse and source/whitespace checks only; no model import or numerical execution"
+}

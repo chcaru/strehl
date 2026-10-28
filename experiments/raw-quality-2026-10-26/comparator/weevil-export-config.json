@@ -1,0 +1,52 @@
+{
+  "input_order": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-baseline\\input-order.json",
+  "input_order_sha256": "0235564cf5131e7eb5e4ea251c16ea9272f6a55a9d8cc6efc717970615a30d6f",
+  "input_dir": "D:\\personal\\macro\\insects\\bug-3\\107MSDCF",
+  "out": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-tiff-export",
+  "expected_xyz_to_cam": [
+    [
+      0.746,
+      -0.2365,
+      -0.0588
+    ],
+    [
+      -0.5687,
+      1.3442,
+      0.2474
+    ],
+    [
+      -0.0624,
+      0.1156,
+      0.6584
+    ]
+  ],
+  "tone": [
+    -0.00026,
+    0.2703,
+    0.55
+  ],
+  "fixture_dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-matched-source-1\\output",
+  "fixture_original_u16": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-porous-translation-1\\porous-grain\\rawler-129.bin",
+  "fixture_bindings": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-matched-source-1\\output\\receipt.json",
+      "sha256": "44c1351388b05bf21edf5d24e0707a6ef760248cbb7d099f08e906e6bf4dd0c1",
+      "bytes": 8840
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-matched-source-1\\output\\porous-source-129-frame129-raw-cfa.f32",
+      "sha256": "73b0677ed475541f5e5158117ac15b1b70662feed0455d2bb70b3dac93898fd8",
+      "bytes": 451584
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-matched-source-1\\output\\porous-source-129-frame129-raw.tiff",
+      "sha256": "cd7b587d95648db2a05c3a63c78529e5dcc5f712b9c02b0ce58ea8c978103b19",
+      "bytes": 681008
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-porous-translation-1\\porous-grain\\rawler-129.bin",
+      "sha256": "b966b02f4e27bdf386ff3d90f16fbd4772f1f2aaa95804e1c1e6aff1c3f9e357",
+      "bytes": 332944
+    }
+  ]
+}

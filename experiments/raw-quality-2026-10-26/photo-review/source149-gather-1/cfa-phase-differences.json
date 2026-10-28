@@ -1,0 +1,26 @@
+{
+  "R": {
+    "changed": 31228,
+    "total": 36864,
+    "mean_abs_DN": 21.49660915798611,
+    "max_abs_DN": 7121
+  },
+  "G1": {
+    "changed": 0,
+    "total": 36864,
+    "mean_abs_DN": 0.0,
+    "max_abs_DN": 0
+  },
+  "G2": {
+    "changed": 0,
+    "total": 36864,
+    "mean_abs_DN": 0.0,
+    "max_abs_DN": 0
+  },
+  "B": {
+    "changed": 17971,
+    "total": 36864,
+    "mean_abs_DN": 5.462212456597222,
+    "max_abs_DN": 1192
+  }
+}

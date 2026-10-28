@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "status": "BASELINE_WITNESSES_FROZEN_AFTER_COMPLETE_VIEW_BEFORE_NATIVE_CROP_VIEW",
+  "candidate_seen": false,
+  "complete_baseline_viewed": true,
+  "complete_view": "outputs/raw-quality-2026-10-26/flat-1s-baseline/overview.jpg; orientation only, 1617x1078",
+  "frames": 60,
+  "dimensions": [6932, 4620],
+  "reference_index": 30,
+  "crop_quad_xywh": [25, 17, 3466, 2310],
+  "reference_active_offset_xy": [50, 34],
+  "master_sha256": "01e576315fdf8242b9d008c06a0ad9b52f837f84d8d28e05d59d13b97379dbdc",
+  "map_sha256": "658501d70e5623b168bdee327219382952ca0887f5eafec4d02650343f0dd36b",
+  "input_order_sha256": "7a7f6474eca174c5dd9c9d4cabc6eb1ae15e8385c7395472a793175c59a107fe",
+  "executable_sha256": "89a0d92aad1628cfdfe75f39d2627ed3679990c5b3381d8839f6cce61b7f2388",
+  "display": "Exact existing RGB16 baseline pixels and original ICC; PNG conversion (value+128)//257 only. No new display fit, gain, filter, orientation change or resize. Exact product DisplayBaseline metadata retained separately for future common-display comparison.",
+  "witnesses": [
+    {"name": "gray-field-step", "native_xywh": [1460, 400, 384, 384], "role": "Broad gray field and first weak step transition; visible grain/low-contrast guard, not a certified uniform noise flat."},
+    {"name": "qr-block-boundary", "native_xywh": [4200, 780, 384, 384], "role": "Black-white QR-like block edges and corners in upper central field."},
+    {"name": "central-fine-bars", "native_xywh": [2670, 2020, 384, 384], "role": "First central resolution group: fine bars in both orientations and nearby numerals."},
+    {"name": "central-micro-target", "native_xywh": [3850, 2040, 384, 384], "role": "Second central micro-bar target and its fine radial leader lines."},
+    {"name": "right-bar-target", "native_xywh": [5700, 1900, 384, 384], "role": "Right-field nested fine-bar target for orientation and field variation."},
+    {"name": "upper-right-star", "native_xywh": [5260, 20, 384, 384], "role": "Small upper-right radial star, bright/dark wedge transitions and convergence."},
+    {"name": "bottom-radial-center", "native_xywh": [1280, 4236, 384, 384], "role": "Large lower-left radial target's near-center fine spokes, retaining the delivered bottom boundary."},
+    {"name": "dot-field", "native_xywh": [4600, 3400, 384, 384], "role": "Repeated round marks and intervening dark field across the large lower chart area."}
+  ]
+}

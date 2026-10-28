@@ -1,0 +1,61 @@
+{
+  "display": "signalDN/(15360-512), fixedgain2, sRGB OETF, roundedRGB8, ICC; no clipping",
+  "scope": "Complete generated images; native32x28 and labelled8x nearest replication for visibility; not calibrated photograph colors",
+  "input_hashes": {
+    "fit-outputs.npz": "f9001b5c39b11482e22ea211f2351228513e0c39a07f8cd614362098c0730d57",
+    "forward-outputs.npz": "e370357248c4261a649d944bce13f5b9eda53b40922364ebf17beeef8968dcc5",
+    "observations.json": "d44fea333d923147fca5520500ea21be0a821919c29ce5ed217877422a64a194"
+  },
+  "source_hashes_verified": {
+    "independent-controls.py": "206e2732ae6db374f6cc2198899658792203b4ff95e92ecb6719b13eaab6b4d3",
+    "model.py": "193c0e2746ecd843b4365133839213312caa0de6a54fd1dc30894f0942e437bb"
+  },
+  "outputs": [
+    {
+      "name": "truth_pinhole",
+      "native_path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\ribbon-visibility\\saved-previews\\truth_pinhole.png",
+      "native_sha256": "ec80d23030dd2c663e1ebbddb2e731c7a0383323b43eb1dc4b214d9d54fd16b1",
+      "replicated_path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\ribbon-visibility\\saved-previews\\truth_pinhole-nearest8.png",
+      "replicated_sha256": "141e1511bc1d5bd143f5fab806751a0afae2740d9034231697c0e2f79dc07839",
+      "native_dimensions": [
+        32,
+        28
+      ]
+    },
+    {
+      "name": "final_pinhole",
+      "native_path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\ribbon-visibility\\saved-previews\\final_pinhole.png",
+      "native_sha256": "f0e5244d2a786d37719ceaee767bc0d5c61e5de3536859dd04fc7f5cc79ed4df",
+      "replicated_path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\ribbon-visibility\\saved-previews\\final_pinhole-nearest8.png",
+      "replicated_sha256": "f7ecc350643f31d80a213d4132d61e74d0b2d9b3be19846e02cb1f9a2df64b15",
+      "native_dimensions": [
+        32,
+        28
+      ]
+    },
+    {
+      "name": "initial_pinhole",
+      "native_path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\ribbon-visibility\\saved-previews\\initial_pinhole.png",
+      "native_sha256": "5a7a9a362b6c96d2855a31729c48cbb00bc35237f868a4092c53834a37c3e51c",
+      "replicated_path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\ribbon-visibility\\saved-previews\\initial_pinhole-nearest8.png",
+      "replicated_sha256": "325ea35ed0c1eebb849f224ebdd943d2521b2b0564a03d81843cd1efd79d75b2",
+      "native_dimensions": [
+        32,
+        28
+      ]
+    },
+    {
+      "name": "known_geometry_forward_pinhole",
+      "native_path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\ribbon-visibility\\saved-previews\\known_geometry_forward_pinhole.png",
+      "native_sha256": "3a3083bfc5ca933939232fa6c28a6b62dc9807557f12b243ce25721f44ef1d51",
+      "replicated_path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\ribbon-visibility\\saved-previews\\known_geometry_forward_pinhole-nearest8.png",
+      "replicated_sha256": "b0830db78f277e50269e3272cebbaeeb243996aff7851d7c779ceb140510d4fb",
+      "native_dimensions": [
+        32,
+        28
+      ]
+    }
+  ],
+  "model_import": false,
+  "original_raw_reads": 0
+}

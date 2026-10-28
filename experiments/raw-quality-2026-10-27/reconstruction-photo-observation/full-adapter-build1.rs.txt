@@ -1,0 +1,812 @@
+// Root-authorized finite synthesis DIAGNOSTIC, not numerical/quality admission.
+// Frozen operator policy exception is scoped by this experiment's brief only.
+use super::*;
+use phase_packed_rgb::full_stack::{absorb_chunk, chunk_plan, full_source_supported};
+use serde::Deserialize;
+use serde_json::{Value, json};
+use sha2::{Digest, Sha256};
+use std::{
+    fs::{File, OpenOptions},
+    io::{BufReader, BufWriter, Read, Write},
+    time::SystemTime,
+};
+use strehl_core::pyramid::rb_own_guide_diagnostic as core;
+const ORDER_SHA: &str = "7a7f6474eca174c5dd9c9d4cabc6eb1ae15e8385c7395472a793175c59a107fe";
+const MAP_SHA: &str = "658501d70e5623b168bdee327219382952ca0887f5eafec4d02650343f0dd36b";
+const MASTER_SHA: &str = "01e576315fdf8242b9d008c06a0ad9b52f837f84d8d28e05d59d13b97379dbdc";
+const LINEAR_SHA: &str = "51fd1f3e281c10def359af38a2064055de11b8788ff5ce7c0428d9e5a9e417ab";
+const EXPORT_SHA: &str = "c18a216ebebfb37a09a6d4b6e252b2abfe73a2a9d20d9e28480607b8212bc759";
+const CROP: [usize; 4] = [25, 17, 3466, 2310];
+const WB_BITS: [u32; 3] = [1076994048, 1065353216, 1069719552];
+const TONE_BITS: [u32; 3] = [1007739294, 1052551964, 1057803469];
+const OPERATOR_SHA: &str = "2ef0ef4237be81ad3febc06140cd36e1469a9d73f3beee567f2f336fdf790a0b";
+const MATRIX: [[f32; 3]; 3] = [
+    [0.746, -0.2365, -0.0588],
+    [-0.5687, 1.3442, 0.2474],
+    [-0.0624, 0.1156, 0.6584],
+];
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Config {
+    schema: u32,
+    out_dir: PathBuf,
+    expected_test_executable_sha256: String,
+}
+fn digest(h: Sha256) -> String {
+    h.finalize().iter().map(|v| format!("{v:02x}")).collect()
+}
+fn sha(path: &Path) -> Result<String> {
+    let mut f = File::open(path)?;
+    let mut h = Sha256::new();
+    let mut b = vec![0u8; 1 << 20];
+    loop {
+        let n = f.read(&mut b)?;
+        if n == 0 {
+            break;
+        }
+        h.update(&b[..n]);
+    }
+    Ok(digest(h))
+}
+fn save(path: &Path, v: &Value) -> Result<()> {
+    let mut f = OpenOptions::new().write(true).create_new(true).open(path)?;
+    serde_json::to_writer_pretty(&mut f, v)?;
+    writeln!(f)?;
+    Ok(())
+}
+fn stamp(path: &Path) -> Result<(u64, SystemTime)> {
+    let m = std::fs::metadata(path)?;
+    Ok((m.len(), m.modified()?))
+}
+fn record(path: &Path) -> Result<Value> {
+    Ok(json!({"path":path,"bytes":std::fs::metadata(path)?.len(),"sha256":sha(path)?}))
+}
+fn same(a: &[Vec<f32>], b: &[Vec<f32>]) -> bool {
+    a.len() == b.len()
+        && a.iter().zip(b).all(|(a, b)| {
+            a.len() == b.len() && a.iter().zip(b).all(|(a, b)| a.to_bits() == b.to_bits())
+        })
+}
+fn pixel_hash(path: &Path, float: bool) -> Result<String> {
+    let mut limits = tiff::decoder::Limits::default();
+    limits.decoding_buffer_size = 6932 * 4620 * 3 * 4;
+    let mut d = tiff::decoder::Decoder::new(BufReader::new(File::open(path)?))?.with_limits(limits);
+    ensure!(
+        d.dimensions()? == (6932, 4620)
+            && d.colortype()? == tiff::ColorType::RGB(if float { 32 } else { 16 }),
+        "full output geometry/type"
+    );
+    let mut h = Sha256::new();
+    let mut bytes = vec![0u8; 65536];
+    match d.read_image()? {
+        tiff::decoder::DecodingResult::F32(v) if float => {
+            ensure!(v.len() == 6932 * 4620 * 3, "complete float payload");
+            for chunk in v.chunks(bytes.len() / 4) {
+                for (dst, x) in bytes.chunks_exact_mut(4).zip(chunk) {
+                    dst.copy_from_slice(&x.to_bits().to_le_bytes());
+                }
+                h.update(&bytes[..chunk.len() * 4]);
+            }
+        }
+        tiff::decoder::DecodingResult::U16(v) if !float => {
+            ensure!(v.len() == 6932 * 4620 * 3, "complete u16 payload");
+            for chunk in v.chunks(bytes.len() / 2) {
+                for (dst, x) in bytes.chunks_exact_mut(2).zip(chunk) {
+                    dst.copy_from_slice(&x.to_le_bytes());
+                }
+                h.update(&bytes[..chunk.len() * 2]);
+            }
+        }
+        _ => bail!("wrong TIFF sample storage"),
+    }
+    ensure!(!d.more_images(), "one image required");
+    Ok(digest(h))
+}
+fn display(path: &Path) -> Result<strehl_edit::DisplayBaseline> {
+    let mut d = tiff::decoder::Decoder::new(BufReader::new(File::open(path)?))?;
+    let description = d.get_tag_ascii_string(tiff::tags::Tag::ImageDescription)?;
+    let line = description
+        .lines()
+        .find_map(|l| l.strip_prefix("DisplayBaseline: "))
+        .context("display baseline absent")?;
+    let v: strehl_edit::DisplayBaseline = serde_json::from_str(line)?;
+    ensure!(
+        [v.black, v.white, v.contrast].map(f32::to_bits) == TONE_BITS
+            && v.exposure_gain.to_bits() == 1f32.to_bits(),
+        "held exact tone changed"
+    );
+    Ok(v)
+}
+fn material_metadata(path: &Path) -> Result<Value> {
+    use tiff::tags::Tag;
+    let mut d = tiff::decoder::Decoder::new(BufReader::new(File::open(path)?))?;
+    let description = d.get_tag_ascii_string(Tag::ImageDescription)?;
+    let icc = d.get_tag_u8_vec(Tag::IccProfile)?;
+    ensure!(!icc.is_empty(), "missing material ICC profile");
+    let mut h = Sha256::new();
+    h.update(&icc);
+    let mut tags = std::collections::BTreeMap::new();
+    for tag in [
+        Tag::BitsPerSample,
+        Tag::PhotometricInterpretation,
+        Tag::SamplesPerPixel,
+        Tag::SampleFormat,
+        Tag::Orientation,
+        Tag::XResolution,
+        Tag::YResolution,
+        Tag::ResolutionUnit,
+    ] {
+        tags.insert(format!("{tag:?}"), format!("{:?}", d.get_tag(tag).ok()));
+    }
+    Ok(json!({"description":description,"icc_sha256":digest(h),"material_tags":tags}))
+}
+fn software_tag(path: &Path) -> Result<Option<String>> {
+    let mut d = tiff::decoder::Decoder::new(BufReader::new(File::open(path)?))?;
+    Ok(d.get_tag_ascii_string(tiff::tags::Tag::Software).ok())
+}
+fn write_target_cache(
+    out: &Path,
+    targets: &[Pyramid],
+    sizes: &[LevelSize],
+    merge: &BandMerge,
+) -> Result<Value> {
+    ensure!(targets.len() == 4, "all four canonical targets required");
+    let path = out.join("canonical-coefficients.f32");
+    let mut f = BufWriter::new(
+        OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&path)?,
+    );
+    let mut bytes = vec![0u8; 65536];
+    let mut layout = Vec::new();
+    let mut offset = 0u64;
+    for (c, p) in targets.iter().enumerate() {
+        ensure!(p.levels() == sizes.len(), "target level count");
+        for (k, size) in sizes.iter().enumerate() {
+            let values = p.level(k);
+            ensure!(
+                values.len() == size.pixels() && values.iter().all(|v| v.is_finite()),
+                "invalid target"
+            );
+            let length = values.len() as u64 * 4;
+            layout.push(
+                json!({"plane":c,"level":k,"size":[size.width,size.height],"offset_bytes":offset,
+                "bytes":length,"sha256":hash32(values)}),
+            );
+            for chunk in values.chunks(bytes.len() / 4) {
+                for (dst, v) in bytes.chunks_exact_mut(4).zip(chunk) {
+                    dst.copy_from_slice(&v.to_bits().to_le_bytes());
+                }
+                f.write_all(&bytes[..chunk.len() * 4])?;
+            }
+            offset += length;
+        }
+    }
+    f.flush()?;
+    drop(f);
+    ensure!(
+        std::fs::metadata(&path)?.len() == offset,
+        "target cache length"
+    );
+    let hull = out.join("canonical-input-hull.f32");
+    let mut f = BufWriter::new(
+        OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&hull)?,
+    );
+    for j in 0..sizes[0].pixels() {
+        for pair in retained::hull(merge, j) {
+            ensure!(
+                pair[0].is_finite() && pair[1].is_finite() && pair[0] <= pair[1],
+                "invalid actual hull"
+            );
+            for v in pair {
+                f.write_all(&v.to_bits().to_le_bytes())?;
+            }
+        }
+    }
+    f.flush()?;
+    drop(f);
+    let receipt = json!({"schema":1,"encoding":"little-endian f32","coefficient_order":"plane R,G1,G2,B; finest AC through base",
+        "units":"black-subtracted camera DN before synthesis/hull","layout":layout,"coefficients":record(&path)?,
+        "input_hull":record(&hull)?,"hull_order":"quad row-major; Rlo,Rhi,G1lo,G1hi,G2lo,G2hi,Blo,Bhi",
+        "crop_quad_xywh":CROP,"map_sha256":MAP_SHA,"order_sha256":ORDER_SHA,"operator_sha256":OPERATOR_SHA});
+    save(&out.join("canonical-coefficients.json"), &receipt)?;
+    Ok(receipt)
+}
+fn solve_record(plane: usize, solve: &operator::Solve, seconds: f64) -> Value {
+    json!({"plane":plane,"converged":solve.converged,"iterations":solve.iterations,
+        "restart_applied":solve.restart_applied,"refusal":solve.refusal,"relative_residual":solve.relative_residual,
+        "error_bound_rms":solve.error_bound_rms,"correction_rhs_norm":solve.correction_rhs_norm,
+        "correction_residual_norm":solve.correction_residual_norm,"correction_objective":solve.correction_objective,
+        "final_rounding_bound":solve.final_rounding_bound,"initial_objective":solve.initial_objective,
+        "objective":solve.objective,"residual_trace":solve.residual_trace,"image_sha256":hash32(&solve.image),
+        "scalar_f64_bits":[solve.relative_residual.to_bits(),solve.error_bound_rms.to_bits(),solve.correction_rhs_norm.to_bits(),
+            solve.correction_residual_norm.to_bits(),solve.correction_objective.to_bits(),solve.final_rounding_bound.to_bits(),
+            solve.initial_objective.to_bits(),solve.objective.to_bits()],
+        "trace_f64_bits":solve.residual_trace.iter().map(|r|[r.actual_residual_norm.to_bits(),r.recursive_residual_norm.to_bits(),
+            r.residual_gap_norm.to_bits(),r.error_bound_rms.to_bits(),r.objective.to_bits()]).collect::<Vec<_>>(),
+        "seconds":seconds,"admission":false,"purpose":"finite research diagnostic; numerical refusal is not changed"})
+}
+fn diagnostic_safe(solve: &operator::Solve, pixels: usize) -> bool {
+    solve.image.len() == pixels
+        && solve.image.iter().all(|v| v.is_finite())
+        && solve.iterations <= operator::MAX_ITERATIONS
+        && [
+            solve.relative_residual,
+            solve.error_bound_rms,
+            solve.correction_rhs_norm,
+            solve.correction_residual_norm,
+            solve.correction_objective,
+            solve.final_rounding_bound,
+            solve.initial_objective,
+            solve.objective,
+        ]
+        .iter()
+        .all(|v| v.is_finite())
+        && solve.objective <= solve.initial_objective
+        && ((solve.converged && solve.refusal.is_none())
+            || (!solve.converged && solve.refusal == Some("iteration-cap")))
+        && solve.residual_trace.iter().all(|r| {
+            [
+                r.actual_residual_norm,
+                r.recursive_residual_norm,
+                r.residual_gap_norm,
+                r.error_bound_rms,
+                r.objective,
+            ]
+            .iter()
+            .all(|v| v.is_finite())
+        })
+}
+fn write_result(
+    out: &Path,
+    name: &str,
+    planes: &[Vec<f32>],
+    levels: Levels,
+    gain: [f32; 3],
+    dev: &image_out::Develop,
+) -> Result<Value> {
+    let (w, h) = (2 * CROP[2], 2 * CROP[3]);
+    let sensor = out.join(format!("{name}-sensor.f32le"));
+    let mut f = BufWriter::new(
+        OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&sensor)?,
+    );
+    let mut row = vec![0u8; w * 4];
+    let mut mosaic = vec![0.; w * h];
+    let gains = [gain[0], gain[1], gain[1], gain[2]];
+    for y in 0..h {
+        for x in 0..w {
+            let p = 2 * (y % 2) + x % 2;
+            let v = planes[p][(y / 2) * CROP[2] + x / 2];
+            row[4 * x..4 * x + 4].copy_from_slice(&v.to_bits().to_le_bytes());
+            mosaic[y * w + x] = v.max(0.) * gains[p] * 1.0 / levels.range();
+        }
+        f.write_all(&row)?;
+    }
+    f.flush()?;
+    drop(f);
+    save(
+        &out.join(format!("{name}-sensor.json")),
+        &json!({"format":"row-major RGGB signed f32 little-endian black-subtracted DN",
+        "width":w,"height":h,"active_native_origin":[2*CROP[0],2*CROP[1]],"before":["WB","MHC","development"],"payload":record(&sensor)?}),
+    )?;
+    let master = out.join(format!("{name}-master.tiff"));
+    let linear = out.join(format!("{name}-linear.tiff"));
+    image_out::write_demosaiced_with_master(&master, w, h, &mosaic, dev, Some(&linear), None)?;
+    drop(mosaic);
+    Ok(
+        json!({"sensor":record(&sensor)?,"rgb16":record(&master)?,"linear":record(&linear)?,
+        "rgb16_pixels_sha256":pixel_hash(&master,false)?,"linear_pixels_sha256":pixel_hash(&linear,true)?,"entire_output":true}),
+    )
+}
+fn route() -> Result<()> {
+    ensure!(
+        align_cmd::fullres_gather_enabled()
+            && gatefloor::enabled()
+            && align_cmd::direct_plane_mode()? == align_cmd::DirectPlaneMode::Rounded
+            && align_cmd::native_gpu_integration::gpu_gather_enabled()?,
+        "actual rounded GPU/probe route required"
+    );
+    ensure!(
+        strehl_core::pyramid::fine_support_candidate::environment_mode()
+            == strehl_core::pyramid::fine_support_candidate::Mode::Off
+            && align_cmd::native_gpu_integration::ca_stage::mode()?
+                == align_cmd::native_gpu_integration::ca_stage::Mode::Current,
+        "competing treatment must be off"
+    );
+    ensure!(
+        std::env::var_os("STREHL_LOCAL_PLACEMENT_FILE").is_none()
+            && std::env::var_os("STREHL_ONLY_FRAME").is_none()
+            && matches!(
+                std::env::var(strehl_core::demosaic::DEMOSAIC_ENV).as_deref(),
+                Err(std::env::VarError::NotPresent) | Ok("malvar")
+            ),
+        "held MHC/placement/source support"
+    );
+    Ok(())
+}
+fn config_guard(cfg: MergeConfig) -> Result<()> {
+    ensure!(
+        cfg.select == SelectMode::SoftPower
+            && cfg.admission == AdmissionMode::HardFloor
+            && cfg.base == BaseBand::Mean
+            && cfg.fallback == Fallback::Mean
+            && cfg.hull == Hull::InputRange
+            && cfg.mean_coarse == 0
+            && cfg.significance_scale == 0.0,
+        "canonical merge settings required"
+    );
+    Ok(())
+}
+struct Source<'a> {
+    frame: &'a Frame,
+    index: usize,
+}
+impl PyramidFrameSource for Source<'_> {
+    fn len(&self) -> usize {
+        60
+    }
+    fn decode(&self, index: usize) -> Result<Frame> {
+        ensure!(index == self.index, "one original decode");
+        Ok(self.frame.clone())
+    }
+}
+
+fn run(complete: bool) -> Result<()> {
+    let start = Instant::now();
+    route()?;
+    let config_path = PathBuf::from(
+        std::env::var_os("STREHL_RECONSTRUCTION_PHOTO_CONFIG").context("config required")?,
+    );
+    let config: Config = serde_json::from_slice(&std::fs::read(&config_path)?)?;
+    ensure!(
+        config.schema == 1
+            && sha(&std::env::current_exe()?)? == config.expected_test_executable_sha256,
+        "schema/test executable binding"
+    );
+    let repo = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .canonicalize()?;
+    let campaign = repo.join("outputs/raw-quality-2026-10-26");
+    let operator_path =
+        repo.join("experiments/raw-quality-2026-10-27/reconstruction-restart/operator.rs");
+    ensure!(
+        sha(&operator_path)? == OPERATOR_SHA,
+        "frozen restart operator changed"
+    );
+    let base = campaign.join("flat-1s-baseline");
+    let order_path = base.join("input-order.json");
+    let map_path = base.join("alignment.txt");
+    let held_master = base.join("stack-master.tiff");
+    let held_linear = base.join("linear-master.tiff");
+    let export_receipt = campaign.join("flat-1s-tiff-export/receipt.json");
+    ensure!(
+        sha(&order_path)? == ORDER_SHA
+            && sha(&map_path)? == MAP_SHA
+            && sha(&held_master)? == MASTER_SHA
+            && sha(&held_linear)? == LINEAR_SHA
+            && sha(&export_receipt)? == EXPORT_SHA,
+        "held file binding changed"
+    );
+    let view = display(&held_linear)?;
+    let exported: Value = serde_json::from_slice(&std::fs::read(&export_receipt)?)?;
+    ensure!(
+        exported["wb_bits"] == json!(WB_BITS) && exported["input_order_sha256"] == ORDER_SHA,
+        "held first-source WB binding"
+    );
+    let order: Vec<Value> = serde_json::from_slice(&std::fs::read(&order_path)?)?;
+    ensure!(order.len() == 60, "complete60 order");
+    let paths = order
+        .iter()
+        .map(|v| v["path"].as_str().map(PathBuf::from).context("source path"))
+        .collect::<Result<Vec<_>>>()?;
+    let before = paths.iter().map(|p| stamp(p)).collect::<Result<Vec<_>>>()?;
+    for (i, p) in paths.iter().enumerate() {
+        ensure!(
+            order[i]["index"].as_u64() == Some(i as u64)
+                && p.file_name().and_then(|v| v.to_str())
+                    == Some(format!("DSC{:05}.ARW", i + 16).as_str())
+                && order[i]["bytes"].as_u64() == Some(before[i].0)
+                && order[i]["mtime_ns"].as_u64()
+                    == Some(
+                        before[i]
+                            .1
+                            .duration_since(SystemTime::UNIX_EPOCH)?
+                            .as_nanos() as u64
+                    )
+                && order[i]["sha256"].as_str() == Some(sha(p)?.as_str()),
+            "source manifest differs at {i}"
+        );
+    }
+    let original = WarpMap::load(&map_path)?;
+    original.check_stack(&StackIdentity::from_paths("flat-et1s-sw4-cpl", &paths)?)?;
+    ensure!(
+        original.len() == 60
+            && original.placed_count() == 60
+            && original.provenance().reference == 30
+            && original.resampler() == Resampler::CatmullRom,
+        "held map gauge"
+    );
+    let (map, fit) = align_cmd::cover_or_explain(original, align_cmd::CoverMode::Crop);
+    let crop = fit.rect().context("crop")?;
+    ensure!(
+        [crop.x, crop.y, crop.width, crop.height] == CROP,
+        "held crop changed"
+    );
+    let full = map.geometry();
+    ensure!(
+        full == PlaneGeometry {
+            width: 3516,
+            height: 2344
+        },
+        "held full extent"
+    );
+    for (i, p) in paths.iter().enumerate() {
+        let id = strehl_raw::identity(p);
+        let ca = strehl_core::optics::profile_for_capture_env(id.model.as_deref(), id.lens_type3)?;
+        ensure!(
+            ca.is_some_and(|p| p.key == "a7c2-fe100gm-2xtc-x4cpl")
+                && full_source_supported(map.placement(i)?, full, crop, ca),
+            "held CA-on/support differs at {i}"
+        );
+    }
+    let cfg = MergeConfig::default();
+    config_guard(cfg)?;
+    ensure!(
+        cfg.bands == 7 && cfg.gate == 2. && cfg.exponent == 2. && cfg.sharpen_per_octave == 1.4,
+        "held7-band defaults"
+    );
+    ensure!(
+        std::env::var("RAYON_NUM_THREADS").as_deref() == Ok("4")
+            && std::env::var("STREHL_PYRAMID_WORKERS").as_deref() == Ok("4"),
+        "four workers required"
+    );
+    let pool = ThreadPoolBuilder::new().num_threads(4).build()?;
+    let indices = if complete {
+        (0..60).collect::<Vec<_>>()
+    } else {
+        vec![30]
+    };
+    let first = strehl_raw::decode(&paths[indices[0]])?;
+    let levels = first.levels;
+    ensure!(
+        first.camera == "ILCE-7CM2"
+            && first.iso == Some(100.)
+            && levels
+                == Levels {
+                    black: 512.,
+                    white: 15360.
+                }
+            && first.geometry() == full
+            && first.active.width == 7032
+            && first.active.height == 4688
+            && first.xyz_to_cam_rgb() == Some(MATRIX),
+        "fixed camera metadata"
+    );
+    if complete {
+        ensure!(
+            first.wb_gains().context("first WB")?.map(f32::to_bits) == WB_BITS,
+            "first-source WB differs"
+        );
+    }
+    let gain = WB_BITS.map(f32::from_bits);
+    let active = first.active;
+    let stride = first.stride;
+    let buffer_height = first.buffer_height;
+    let noise = profile::noise_model_for(&first.camera, first.iso, levels);
+    ensure!(
+        noise.is_trustworthy() && noise.prnu().is_none(),
+        "one injected temporal profile"
+    );
+    let plan = chunk_plan(full, first.allocated_bytes(), 60, cfg);
+    ensure!(
+        plan.canonical_chunks == 4 && plan.per_chunk == 15,
+        "held canonical4 chunks"
+    );
+    let domain = PyramidDomain::cropped(full, crop)?;
+    let sizes = level_sizes(crop.width, crop.height, cfg.bands);
+    let mut dev = image_out::OutputSpace::Srgb.develop(Some(
+        color::camera_to_srgb(MATRIX)
+            .context("matrix")?
+            .with_saturation(levels, gain, 1.),
+    ));
+    dev.tone = Some(image_out::Tone {
+        black: view.black,
+        white: view.white,
+        contrast: view.contrast,
+    });
+    dev.exposure_gain = view.exposure_gain;
+    ensure!(
+        config.out_dir.is_absolute()
+            && !config.out_dir.exists()
+            && config
+                .out_dir
+                .parent()
+                .context("output parent")?
+                .canonicalize()?
+                .starts_with(repo.join("outputs").canonicalize()?),
+        "fresh workspace output required"
+    );
+    std::fs::create_dir(&config.out_dir)?;
+    save(
+        &config.out_dir.join("started.json"),
+        &json!({"schema":1,"phase":if complete{"complete60"}else{"source30-checkpoint"},
+        "expected_sources":indices.len(),"probe_source_count":60,"probe_source_index":"original stack index",
+        "map_sha256":MAP_SHA,"order_sha256":ORDER_SHA,"baseline_master_sha256":MASTER_SHA,"baseline_linear_sha256":LINEAR_SHA,
+        "test_executable_sha256":config.expected_test_executable_sha256,"config":record(&config_path)?,
+        "crop_quad_xywh":CROP,"native_dimensions":[6932,4620],"reference":30,"plan":plan,"threads":4,"operator_workers":1,
+        "noise_model":format!("{noise:?}"),"resolved_config":format!("{cfg:?}"),
+        "level_sizes":sizes.iter().map(|s|[s.width,s.height]).collect::<Vec<_>>(),
+        "exponents":(0..sizes.len()-1).map(|k|cfg.exponent_at(k,sizes.len()-1)).collect::<Vec<_>>(),
+        "fixed_first_source_wb_bits":WB_BITS,"display_baseline":view,"tone_bits":TONE_BITS,"optical_ca":"a7c2-fe100gm-2xtc-x4cpl",
+        "environment":std::env::vars().filter(|(k,_)|k.starts_with("STREHL_")||k=="RAYON_NUM_THREADS").collect::<std::collections::BTreeMap<_,_>>(),
+        "quality_claim":false}),
+    )?;
+    let mut baseline = BandWorker::new(domain, cfg);
+    let mut total = None;
+    let mut first = Some(first);
+    let mut receipts = Vec::new();
+    let mut witness = None;
+    let processing = Instant::now();
+    pool.install(||->Result<()>{for(position,&index)in indices.iter().enumerate(){let tick=Instant::now();
+        let frame=match first.take(){Some(f)=>f,None=>strehl_raw::decode(&paths[index])?};
+        ensure!(frame.camera=="ILCE-7CM2" && frame.iso==Some(100.) && frame.levels==levels && frame.active==active
+            && frame.stride==stride && frame.buffer_height==buffer_height && frame.xyz_to_cam_rgb()==Some(MATRIX),"source metadata drift");
+        let source_hash=rb_own_guide::active_hash(&frame);let source=Source{frame:&frame,index};
+        ensure!(baseline.fold(&source,index,levels,&noise,Some(&map),None)?,"canonical source refused");
+        let fields=core::canonical_fields(&baseline.merge,&baseline.fws,(!baseline.beta.is_empty()).then_some(baseline.beta.as_slice()));
+        if !complete{witness=Some(baseline.planes.clone());}
+        ensure!(rb_own_guide::active_hash(&frame)==source_hash,"decoded source changed");
+        receipts.push(json!({"index":index,"source_sha256":source_hash,"known4_sha256":baseline.planes.iter().map(|v|hash32(v)).collect::<Vec<_>>(),
+            "canonical_weight_sha256":fields.weights.iter().map(|v|hash32(v)).collect::<Vec<_>>(),"guide_sha256":hash32(&baseline.luma),
+            "variance_sha256":hash32(&baseline.var),"beta":baseline.beta,"reported_wb_bits":frame.wb_gains().context("reported WB")?.map(f32::to_bits),
+            "source_unchanged":true,"seconds":tick.elapsed().as_secs_f64()}));
+        let last=position+1==indices.len();if last || (index+1)%plan.per_chunk==0{absorb_chunk(&mut total,&mut baseline.merge,crop.width,crop.height,4,cfg);if !last{baseline.reset_chunk();}}
+        eprintln!("RECONSTRUCTION_PHOTO {}/{} index{} {:.3}s",position+1,indices.len(),index,tick.elapsed().as_secs_f64());
+    }Ok(())})?;
+    let processing_seconds = processing.elapsed().as_secs_f64();
+    drop(baseline);
+    let merge = total.context("baseline absent")?;
+    let accumulator_before = accumulator_hash(&merge, &sizes);
+    let hull_before = hull_hash(&merge, crop.width * crop.height);
+    // Actual finish BEFORE observation, then after target extraction.
+    let baseline = pool.install(|| merge.finish(&mut Workspace::new(&sizes)));
+    let targets = donor::resolved_coefficients(&merge);
+    let target_hashes = coefficient_hashes(&targets);
+    ensure!(
+        same(
+            &baseline,
+            &pool.install(|| merge.finish(&mut Workspace::new(&sizes)))
+        ),
+        "canonical finish changed after coefficient extraction"
+    );
+    ensure!(
+        accumulator_hash(&merge, &sizes) == accumulator_before
+            && hull_hash(&merge, crop.width * crop.height) == hull_before,
+        "coefficient extraction changed canonical state or hull"
+    );
+    let target_cache = write_target_cache(&config.out_dir, &targets, &sizes, &merge)?;
+    let pre_hull = pool.install(|| {
+        targets
+            .iter()
+            .map(|p| p.collapse(&mut Workspace::new(&sizes)))
+            .collect::<Vec<_>>()
+    });
+    let mut target_collapse_check = pre_hull.clone();
+    apply_input_hull(&mut target_collapse_check, &merge)?;
+    ensure!(
+        same(&target_collapse_check, &baseline),
+        "target collapse with actual hull differs from canonical finish"
+    );
+    drop(target_collapse_check);
+    let solve_started = Instant::now();
+    let mut solve_records = Vec::new();
+    let mut candidate = Vec::new();
+    for (c, target) in targets.iter().enumerate() {
+        let tick = Instant::now();
+        let bands = (0..target.levels())
+            .map(|k| target.level(k).to_vec())
+            .collect::<Vec<_>>();
+        let solved = pool.install(|| operator::reconstruct(&sizes, &bands, &pre_hull[c]))?;
+        let row = solve_record(c, &solved, tick.elapsed().as_secs_f64());
+        save(&config.out_dir.join(format!("solver-plane-{c}.json")), &row)?;
+        if !diagnostic_safe(&solved, crop.width * crop.height) {
+            save(
+                &config.out_dir.join("diagnostic-refused.json"),
+                &json!({"status":"HARD_SOLVER_FAILURE_NO_IMAGE",
+                "plane":c,"solver":row,"admission":false,"quality_claim":false}),
+            )?;
+            bail!("hard solver failure on plane {c}; no image development");
+        }
+        eprintln!(
+            "RECONSTRUCTION_PHOTO_SOLVE plane{c} iterations{} converged{} bound{} refusal{:?} {:.3}s",
+            solved.iterations,
+            solved.converged,
+            solved.error_bound_rms,
+            solved.refusal,
+            tick.elapsed().as_secs_f64()
+        );
+        solve_records.push(row);
+        candidate.push(solved.image);
+    }
+    ensure!(candidate.len() == 4, "all four diagnostic planes required");
+    let solve_seconds = solve_started.elapsed().as_secs_f64();
+    let pre_hull_delta = image_delta_l2(&pre_hull, &candidate);
+    let before_hull_hashes = consumer_hashes(&candidate);
+    apply_input_hull(&mut candidate, &merge)?;
+    let post_hull_delta = image_delta_l2(&baseline, &candidate);
+    let all_converged = solve_records.iter().all(|r| r["converged"] == true);
+    save(
+        &config.out_dir.join("solver-results.json"),
+        &json!({"schema":1,"planes":solve_records,
+        "operator_sha256":OPERATOR_SHA,"iterations_cap":operator::MAX_ITERATIONS,
+        "restart_iteration":operator::RESTART_ITERATION,"error_rms_limit":operator::ERROR_RMS_LIMIT,
+        "all_solver_converged":all_converged,"rendered_even_if_iteration_cap_refused":true,
+        "pre_hull_image_sha256":before_hull_hashes,"post_hull_image_sha256":consumer_hashes(&candidate),
+        "pre_hull_delta_l2":pre_hull_delta,"post_hull_delta_l2":post_hull_delta,
+        "seconds":solve_seconds,"admission":false,"quality_claim":false,
+        "bound_qualification":"source-derived RMS bound; not an interval enclosure of arbitrary f32 error"}),
+    )?;
+    ensure!(
+        coefficient_hashes(&targets) == target_hashes
+            && coefficient_hashes(&donor::resolved_coefficients(&merge)) == target_hashes
+            && accumulator_hash(&merge, &sizes) == accumulator_before
+            && hull_hash(&merge, crop.width * crop.height) == hull_before,
+        "solver/observation changed canonical targets, accumulators or hull"
+    );
+    ensure!(
+        same(
+            &baseline,
+            &pool.install(|| merge.finish(&mut Workspace::new(&sizes)))
+        ),
+        "canonical finish changed after synthesis observation"
+    );
+    let observer = json!({"accumulator_before_sha256":accumulator_before,"accumulator_after_sha256":accumulator_before,
+        "hull_before_sha256":hull_before,"hull_after_sha256":hull_before,"target_sha256":target_hashes,
+        "finish_before_after_extraction_exact":true,"finish_before_after_solve_exact":true,
+        "canonical_target_collapse_hull_exact":true,"state_weights_hull_targets_exact":true,
+        "actual_input_hull_applied":true,"observer_nonperturbation_exact":true});
+    save(&config.out_dir.join("observer-placebo.json"), &observer)?;
+    drop(pre_hull);
+    drop(targets);
+    drop(merge);
+    let checkpoint = if let Some(w) = witness.as_ref() {
+        ensure!(
+            same(&candidate, w),
+            "single-source candidate not exact gathered tuple"
+        );
+        ensure!(
+            same(&baseline, w),
+            "single-source canonical hull not exact gathered tuple"
+        );
+        let matrix = (MATRIX, "D65".to_owned());
+        for (name, planes) in [("source30-writer", w), ("candidate-writer", &candidate)] {
+            pool.install(|| {
+                write_merged_observed(
+                    Merged::Bands { domain, planes },
+                    levels,
+                    Some(gain),
+                    Some(&matrix),
+                    image_out::OutputSpace::Srgb,
+                    true,
+                    Exposure::None,
+                    None,
+                    &config.out_dir.join(format!("{name}.tiff")),
+                    None,
+                    Some(&config.out_dir.join(format!("{name}-linear.tiff"))),
+                    None,
+                )
+            })?;
+        }
+        ensure!(
+            pixel_hash(&config.out_dir.join("source30-writer.tiff"), false)?
+                == pixel_hash(&config.out_dir.join("candidate-writer.tiff"), false)?,
+            "ordinary writer parity failed"
+        );
+        true
+    } else {
+        false
+    };
+    let baseline_files =
+        pool.install(|| write_result(&config.out_dir, "baseline", &baseline, levels, gain, &dev))?;
+    drop(baseline);
+    if complete {
+        ensure!(
+            baseline_files["rgb16_pixels_sha256"].as_str()
+                == Some(pixel_hash(&held_master, false)?.as_str())
+                && baseline_files["linear_pixels_sha256"].as_str()
+                    == Some(pixel_hash(&held_linear, true)?.as_str()),
+            "complete canonical baseline pixel golden failed"
+        );
+    }
+    let baseline_material = material_metadata(&config.out_dir.join("baseline-master.tiff"))?;
+    let baseline_linear_material = material_metadata(&config.out_dir.join("baseline-linear.tiff"))?;
+    if complete {
+        ensure!(
+            baseline_material == material_metadata(&held_master)?
+                && baseline_linear_material == material_metadata(&held_linear)?,
+            "complete baseline material metadata golden failed"
+        );
+    }
+    let candidate_files = pool
+        .install(|| write_result(&config.out_dir, "candidate", &candidate, levels, gain, &dev))?;
+    ensure!(
+        material_metadata(&config.out_dir.join("candidate-master.tiff"))? == baseline_material
+            && material_metadata(&config.out_dir.join("candidate-linear.tiff"))?
+                == baseline_linear_material,
+        "pair material metadata/ICC differs"
+    );
+    if !complete {
+        ensure!(
+            baseline_files["rgb16_pixels_sha256"] == candidate_files["rgb16_pixels_sha256"]
+                && baseline_files["linear_pixels_sha256"]
+                    == candidate_files["linear_pixels_sha256"]
+                && baseline_files["sensor"]["sha256"] == candidate_files["sensor"]["sha256"],
+            "single-source fixed-tone/sensor parity failed"
+        );
+        ensure!(
+            candidate_files["linear_pixels_sha256"].as_str()
+                == Some(
+                    pixel_hash(&config.out_dir.join("source30-writer-linear.tiff"), true)?.as_str()
+                ),
+            "fixed-tone normalization differs from ordinary writer pre-tone payload"
+        );
+    }
+    for (i, p) in paths.iter().enumerate() {
+        ensure!(
+            stamp(p)? == before[i] && order[i]["sha256"].as_str() == Some(sha(p)?.as_str()),
+            "original changed after run"
+        );
+    }
+    ensure!(
+        sha(&order_path)? == ORDER_SHA
+            && sha(&map_path)? == MAP_SHA
+            && sha(&held_master)? == MASTER_SHA
+            && sha(&held_linear)? == LINEAR_SHA
+            && sha(&export_receipt)? == EXPORT_SHA
+            && sha(&std::env::current_exe()?)? == config.expected_test_executable_sha256
+            && sha(&operator_path)? == OPERATOR_SHA,
+        "held inputs changed"
+    );
+    save(
+        &config.out_dir.join("receipt.json"),
+        &json!({"schema":1,"status":if complete{"COMPLETE60_FINITE_RECONSTRUCTION_DIAGNOSTIC"}else{"SOURCE30_CHECKPOINT_EXACT"},
+        "source_count":indices.len(),"frames":receipts,"one_actual_gather_per_source":true,"canonical_and_candidate_share_known4":true,
+        "candidate_association":"same resolved canonical4-chunk targets; frozen consistency synthesis only",
+        "candidate_role":"finite reconstruction diagnostic; solver refusal preserved","admission":false,
+        "solver_results":solve_records,"all_solver_converged":all_converged,"rendered_cfa_planes":4,
+        "hard_solver_gate_passed":true,"observer":observer,"observer_nonperturbation_exact":true,
+        "target_cache":target_cache,"operator_sha256":OPERATOR_SHA,"solve_seconds":solve_seconds,
+        "actual_input_hull_applied":true,"baseline_material_metadata_golden_exact":complete,
+        "pair_material_metadata_exact":true,"baseline_material_metadata":baseline_material,
+        "baseline_linear_material_metadata":baseline_linear_material,
+        "software_provenance":{"baseline":software_tag(&config.out_dir.join("baseline-master.tiff"))?,
+            "candidate":software_tag(&config.out_dir.join("candidate-master.tiff"))?,"held":software_tag(&held_master)?},
+        "baseline_pixel_golden_required":complete,"baseline_pixel_golden_exact":complete,
+        "single_source_gathered_cfa_exact":checkpoint,"single_source_canonical_hull_exact":checkpoint,
+        "single_source_fixed_tone_rgb_linear_sensor_exact":checkpoint,"single_source_ordinary_writer_parity":checkpoint,
+        "single_source_ordinary_vs_fixed_writer_linear_exact":checkpoint,
+        "ordinary_writer_parity_display":"ordinary automatic tone on identical input; delivered pair independently uses fixed held tone",
+        "baseline":baseline_files,"candidate":candidate_files,"original_bytes_and_metadata_unchanged":true,
+        "held_map_order_baseline_unchanged":true,"processing_seconds":processing_seconds,"seconds":start.elapsed().as_secs_f64(),
+        "input_count":60,"native_dimensions":[6932,4620],"crop_quad_xywh":CROP,"fixed_first_source_wb_bits":WB_BITS,
+        "reported_per_source_wb_does_not_change_development":true,"quality_claim":false}),
+    )?;
+    Ok(())
+}
+#[test]
+#[ignore = "root-owned source30 checkpoint, strict config"]
+fn flat_source30_checkpoint() -> Result<()> {
+    run(false)
+}
+#[test]
+#[ignore = "root-owned complete flat60 observation, strict config"]
+fn flat60_complete_observation() -> Result<()> {
+    run(true)
+}

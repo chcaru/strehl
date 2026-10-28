@@ -1,0 +1,602 @@
+// Test-only generated fixture bridge. Root owns registration, build and execution.
+use super::*;
+use serde::Deserialize;
+use serde_json::{Value, json};
+use sha2::{Digest, Sha256};
+use std::{
+    collections::BTreeSet,
+    fs::{File, OpenOptions},
+    io::{Read, Write},
+    time::SystemTime,
+};
+use strehl_core::align::{Cx, Similarity};
+use strehl_core::noise::{PlaneNoise, Provenance};
+use strehl_core::pyramid::{Fallback, Hull};
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Config {
+    schema: u32,
+    fixture_manifest: PathBuf,
+    fixture_manifest_sha256: String,
+    out_dir: PathBuf,
+    expected_test_executable_sha256: String,
+}
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Manifest {
+    schema: u32,
+    cases: Vec<Case>,
+}
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Noise {
+    phase_order: [String; 4],
+    gain_dn_per_e4: [f32; 4],
+    read_noise_e4: [f32; 4],
+}
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Case {
+    id: String,
+    width: usize,
+    height: usize,
+    black: f32,
+    white: f32,
+    wb_rgb: [f32; 3],
+    iso: f32,
+    source_to_reference_center: [f64; 2],
+    noise: Noise,
+    sources: Vec<Original>,
+}
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Original {
+    source_id: usize,
+    path: PathBuf,
+    sha256: String,
+    bytes: u64,
+    source_to_reference: [f64; 4],
+}
+fn digest(bytes: &[u8]) -> String {
+    Sha256::digest(bytes)
+        .iter()
+        .map(|v| format!("{v:02x}"))
+        .collect()
+}
+fn sha(path: &Path) -> Result<String> {
+    let mut f = File::open(path)?;
+    let mut h = Sha256::new();
+    let mut buf = [0u8; 65536];
+    loop {
+        let n = f.read(&mut buf)?;
+        if n == 0 {
+            break;
+        }
+        h.update(&buf[..n]);
+    }
+    Ok(h.finalize().iter().map(|v| format!("{v:02x}")).collect())
+}
+fn stamp(path: &Path) -> Result<(u64, SystemTime)> {
+    let m = std::fs::metadata(path)?;
+    Ok((m.len(), m.modified()?))
+}
+fn record(path: &Path) -> Result<Value> {
+    Ok(json!({"path":path,"sha256":sha(path)?,"bytes":std::fs::metadata(path)?.len()}))
+}
+fn write_json(path: &Path, value: &Value) -> Result<()> {
+    let mut f = OpenOptions::new().write(true).create_new(true).open(path)?;
+    serde_json::to_writer_pretty(&mut f, value)?;
+    writeln!(f)?;
+    Ok(())
+}
+fn write_f32(path: &Path, values: &[f32]) -> Result<Value> {
+    ensure!(
+        values.iter().all(|v| v.is_finite()),
+        "nonfinite baseline output"
+    );
+    let mut f = OpenOptions::new().write(true).create_new(true).open(path)?;
+    for v in values {
+        f.write_all(&v.to_le_bytes())?;
+    }
+    f.flush()?;
+    record(path)
+}
+fn bytes16(values: &[u16]) -> Vec<u8> {
+    values.iter().flat_map(|v| v.to_le_bytes()).collect()
+}
+fn same(a: &[Vec<f32>], b: &[Vec<f32>]) -> bool {
+    a.len() == b.len()
+        && a.iter().zip(b).all(|(x, y)| {
+            x.len() == y.len() && x.iter().zip(y).all(|(u, v)| u.to_bits() == v.to_bits())
+        })
+}
+fn crop() -> align_cmd::CropRect {
+    align_cmd::CropRect {
+        x: 8,
+        y: 8,
+        width: 48,
+        height: 48,
+    }
+}
+fn runtime() -> Result<Value> {
+    let mut fields = serde_json::Map::new();
+    for (name, expected) in [
+        ("RAYON_NUM_THREADS", "4"),
+        ("STREHL_ALIGN", "1"),
+        ("STREHL_FULLRES_GATHER", "1"),
+        ("STREHL_DIRECT_PLANES", "off"),
+        ("STREHL_GPU_GATHER", "off"),
+        ("STREHL_FIX_CA", "off"),
+        ("STREHL_DEFECT", "off"),
+        ("STREHL_TEMPORAL_ENERGY", "off"),
+        ("STREHL_SPATIAL_NOISE_FLOOR", "off"),
+        ("STREHL_DEMOSAIC", "malvar"),
+        ("STREHL_PROBE_GATHER", "green"),
+        ("STREHL_WARP_WRITEBACK", "parallel"),
+    ] {
+        let actual = std::env::var(name).with_context(|| format!("missing {name}"))?;
+        ensure!(actual == expected, "{name} must be {expected}");
+        fields.insert(name.into(), json!(actual));
+    }
+    ensure!(
+        std::env::var_os("STREHL_GATE_FLOOR").is_none(),
+        "measured default gate floor required"
+    );
+    ensure!(
+        align_cmd::align_enabled() && align_cmd::fullres_gather_enabled() && gatefloor::enabled(),
+        "actual default align/gather/probe path"
+    );
+    ensure!(
+        align_cmd::direct_plane_mode()? == align_cmd::DirectPlaneMode::Off
+            && !align_cmd::native_gpu_integration::gpu_gather_enabled()?
+            && !align_cmd::direct_cfa::enabled()?,
+        "held CPU/remosaic route"
+    );
+    ensure!(
+        rayon::current_num_threads() == 4,
+        "actual Rayon worker count"
+    );
+    for key in [
+        "STREHL_ONLY_FRAME",
+        "STREHL_LOCAL_PLACEMENT_FILE",
+        "STREHL_NATIVE_LENS_CONFIG",
+        "STREHL_NATIVE_SENSOR_OUT",
+        "STREHL_SIGNED_BLACK",
+    ] {
+        ensure!(
+            std::env::var_os(key).is_none(),
+            "unexpected competing setting {key}"
+        );
+    }
+    fields.insert("STREHL_GATE_FLOOR".into(), Value::Null);
+    Ok(Value::Object(fields))
+}
+fn config() -> Result<MergeConfig> {
+    let c = MergeConfig::default();
+    ensure!(
+        c.bands == 7
+            && c.gate == 2.
+            && c.exponent == 2.
+            && c.sharpen_per_octave == 1.4
+            && c.select == SelectMode::SoftPower
+            && c.admission == AdmissionMode::HardFloor
+            && c.base == BaseBand::Mean
+            && c.fallback == Fallback::Mean
+            && c.hull == Hull::InputRange
+            && c.mean_coarse == 0
+            && c.significance_scale == 0.,
+        "changed product defaults"
+    );
+    Ok(c)
+}
+fn pull(s: [f64; 4]) -> Result<Similarity> {
+    ensure!(
+        s.iter().all(|v| v.is_finite()),
+        "nonfinite supplied geometry"
+    );
+    let forward = Similarity {
+        a: Cx::new(s[0], s[1]),
+        b: Cx::new(s[2], s[3]),
+    };
+    ensure!(
+        (0.98..=1.02).contains(&forward.scale())
+            && forward.rotation().abs() <= 0.02
+            && s[2].abs() <= 0.75
+            && s[3].abs() <= 0.75,
+        "outside fixed fixture geometry"
+    );
+    let inv = forward.invert().context("singular supplied geometry")?;
+    Ok(Similarity {
+        a: inv.a,
+        b: Cx::new(inv.b.re * 0.5, inv.b.im * 0.5),
+    })
+}
+fn geometry_evidence(s: [f64; 4], t: Similarity, full: PlaneGeometry) -> Result<Value> {
+    ensure!(
+        phase_packed_rgb::full_stack::full_source_supported(t, full, crop(), None),
+        "source does not cover fixed96 crop"
+    );
+    let f = Similarity {
+        a: Cx::new(s[0], s[1]),
+        b: Cx::new(s[2], s[3]),
+    };
+    let mut phases = Vec::new();
+    let mut worst = 0.0f64;
+    for (phase, (dx, dy)) in BAND_PLANE_OFFSETS.iter().copied().enumerate() {
+        let mut corners = Vec::new();
+        for x in [16 + dx, 110 + dx] {
+            for y in [16 + dy, 110 + dy] {
+                let (sx, sy) = t.apply_at(x as f64 / 2., y as f64 / 2., 32., 32.);
+                let source = [2. * sx, 2. * sy];
+                let (rx, ry) = f.apply_at(source[0], source[1], 64., 64.);
+                worst = worst.max((rx - x as f64).abs()).max((ry - y as f64).abs());
+                corners.push(json!({"reference_native":[x,y],"source_native":source}));
+            }
+        }
+        phases.push(json!({"physical_phase":phase,"native_offset":[dx,dy],"corners":corners}));
+    }
+    ensure!(worst <= 1e-10, "native/quad/map-direction roundtrip failed");
+    Ok(
+        json!({"source_to_reference":s,"reference_to_source_quad":[t.a.re,t.a.im,t.b.re,t.b.im],
+        "pull_bits":[t.a.re.to_bits(),t.a.im.to_bits(),t.b.re.to_bits(),t.b.im.to_bits()],
+        "roundtrip_max_native_px":worst,"fully_supported_crop":true,"phases":phases}),
+    )
+}
+struct Sources<'a>(&'a [Frame]);
+impl PyramidFrameSource for Sources<'_> {
+    fn len(&self) -> usize {
+        self.0.len()
+    }
+    fn decode(&self, index: usize) -> Result<Frame> {
+        Ok(self.0[index].clone())
+    }
+}
+fn gathered(frame: &Frame, t: Similarity) -> Result<(Vec<Vec<f32>>, f64)> {
+    let mut f = frame.clone();
+    let full = f.geometry();
+    let coverage = align_cmd::warp_frame_in_place(
+        &mut f,
+        t,
+        full,
+        Resampler::CatmullRom,
+        &mut WarpScratch::new(full),
+    )?;
+    let mut p = vec![vec![0.; 48 * 48]; 4];
+    extract_planes(
+        &f.data,
+        f.stride,
+        0,
+        0,
+        f.levels.black,
+        PyramidDomain::cropped(full, crop())?,
+        &BAND_PLANE_OFFSETS,
+        &mut p,
+    )?;
+    Ok((p, coverage))
+}
+fn rgb_dn(rgb: &[f32], levels: Levels, wb: [f32; 3]) -> Vec<f32> {
+    let gains = [wb[0] / wb[1], 1., wb[2] / wb[1]];
+    rgb.iter()
+        .enumerate()
+        .map(|(i, v)| v * levels.range() / gains[i % 3])
+        .collect()
+}
+fn run_case(case: &Case, out: &Path, cfg: MergeConfig) -> Result<Value> {
+    ensure!(
+        !case.id.is_empty()
+            && case.id.len() <= 64
+            && case
+                .id
+                .bytes()
+                .all(|b| b.is_ascii_alphanumeric() || b == b'-' || b == b'_'),
+        "unsafe case ID"
+    );
+    ensure!(
+        case.width == 128
+            && case.height == 128
+            && case.source_to_reference_center == [64., 64.]
+            && (1..=7).contains(&case.sources.len()),
+        "fixed source extent/count/gauge"
+    );
+    ensure!(
+        case.black.is_finite()
+            && case.white.is_finite()
+            && case.black >= 0.
+            && case.white > case.black
+            && case.white <= 65535.
+            && case.iso.is_finite()
+            && case.iso > 0.
+            && case.wb_rgb.iter().all(|v| v.is_finite() && *v > 0.),
+        "invalid levels/WB/ISO"
+    );
+    ensure!(
+        case.noise.phase_order == ["R", "G1", "G2", "B"].map(String::from)
+            && case
+                .noise
+                .gain_dn_per_e4
+                .iter()
+                .all(|v| v.is_finite() && *v > 0.)
+            && case
+                .noise
+                .read_noise_e4
+                .iter()
+                .all(|v| v.is_finite() && *v >= 0.),
+        "invalid injected model"
+    );
+    let levels = Levels {
+        black: case.black,
+        white: case.white,
+    };
+    let physical: [PlaneNoise; 4] = std::array::from_fn(|p| PlaneNoise {
+        gain_dn_per_e: case.noise.gain_dn_per_e4[p],
+        read_noise_e: case.noise.read_noise_e4[p],
+        levels,
+    });
+    ensure!(
+        physical
+            .iter()
+            .all(|p| p.variance(levels.range()).is_finite()),
+        "noise variance overflow"
+    );
+    let noise = NoiseModel::new(
+        [physical[0], physical[1], physical[3], physical[2]],
+        case.iso,
+        Provenance::Measured,
+    );
+    let wb = [case.wb_rgb[0], case.wb_rgb[1], case.wb_rgb[2], f32::NAN];
+    let mut frames = Vec::new();
+    let mut pulls = Vec::new();
+    let mut bindings = Vec::new();
+    let mut ids = BTreeSet::new();
+    for (i, src) in case.sources.iter().enumerate() {
+        ensure!(
+            ids.insert(src.source_id)
+                && src.path.is_absolute()
+                && src.path.extension().and_then(|s| s.to_str()) == Some("u16le")
+                && src.bytes == 32768,
+            "original fixture identity/format"
+        );
+        let before = stamp(&src.path)?;
+        let bytes = std::fs::read(&src.path)?;
+        ensure!(
+            before.0 == src.bytes && bytes.len() == 32768 && digest(&bytes) == src.sha256,
+            "original fixture binding"
+        );
+        let data = bytes
+            .chunks_exact(2)
+            .map(|c| u16::from_le_bytes([c[0], c[1]]))
+            .collect::<Vec<_>>();
+        let logical = out.join(format!("nonexistent-original-{}-{i}.ARW", case.id));
+        ensure!(!logical.exists(), "logical frame path must not exist");
+        frames.push(Frame {
+            data,
+            stride: 128,
+            buffer_height: 128,
+            active: strehl_raw::Region {
+                x: 0,
+                y: 0,
+                width: 128,
+                height: 128,
+            },
+            levels,
+            iso: Some(case.iso),
+            wb_coeffs: wb,
+            xyz_to_cam_rgbe: [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.], [0.; 3]],
+            color_matrices: Vec::new(),
+            camera: "generated-original-CFA".into(),
+            path: logical,
+        });
+        pulls.push(pull(src.source_to_reference)?);
+        bindings.push(before);
+    }
+    let full = frames[0].geometry();
+    let source = Sources(&frames);
+    let entries = frames
+        .iter()
+        .map(|f| (f.path.to_string_lossy(), f.allocated_bytes() as u64))
+        .collect::<Vec<_>>();
+    let map = WarpMap::new(
+        strehl_core::warpmap::Provenance {
+            stack: StackIdentity::from_entries("joint-cfa-band-residual-generated", &entries),
+            strategy: "supplied source-to-reference inverse; no geometry fit".into(),
+            heldout_px: None,
+            cycle_floor_px: None,
+            reference: 0,
+            note: "logical gauge only; original reference centre64,64".into(),
+        },
+        full,
+        Resampler::CatmullRom,
+        pulls.iter().copied().map(FrameWarp::Placed).collect(),
+    );
+    let domain = PyramidDomain::cropped(full, crop())?;
+    let sizes = level_sizes(48, 48, cfg.bands);
+    ensure!(
+        sizes
+            .iter()
+            .map(|s| [s.width, s.height])
+            .collect::<Vec<_>>()
+            == vec![[48, 48], [24, 24], [12, 12]],
+        "actual small ladder changed"
+    );
+    let mut worker = BandWorker::new(domain, cfg);
+    let mut rows = Vec::new();
+    let mut source0 = None;
+    for i in 0..frames.len() {
+        let geom = geometry_evidence(case.sources[i].source_to_reference, pulls[i], full)?;
+        ensure!(
+            worker.fold(&source, i, levels, &noise, Some(&map), None)?,
+            "actual product refused placed source"
+        );
+        let (p, coverage) = gathered(&frames[i], pulls[i])?;
+        ensure!(
+            same(&p, &worker.planes),
+            "actual fold differs from explicit same production gather"
+        );
+        if i == 0 {
+            source0 = Some(p);
+        }
+        rows.push(json!({"ordinal":i,"source_id":case.sources[i].source_id,"original":record(&case.sources[i].path)?,
+            "geometry":geom,"full_active_warp_coverage":coverage,"crop_supported":true,"gathered_plane_exact":true,"measured_beta":worker.beta}));
+    }
+    let merged = worker.merge.finish(&mut Workspace::new(&sizes));
+    let mut singleton = BandWorker::new(domain, cfg);
+    ensure!(
+        singleton.fold(&source, 0, levels, &noise, Some(&map), None)?,
+        "singleton refused"
+    );
+    let one = singleton.merge.finish(&mut Workspace::new(&sizes));
+    ensure!(
+        same(&one, &source0.context("source0 missing")?),
+        "single-source actual hull is not gathered identity"
+    );
+    let normalized = phase_packed_rgb::camera_rgb(&merged, 48, 48, levels, wb)?;
+    let dn = rgb_dn(&normalized, levels, case.wb_rgb);
+    let anchor = rgb_dn(
+        &phase_packed_rgb::camera_rgb(&one, 48, 48, levels, wb)?,
+        levels,
+        case.wb_rgb,
+    );
+    let dir = out.join(&case.id);
+    std::fs::create_dir(&dir)?;
+    let outputs = json!({"camera_rgb_dn":write_f32(&dir.join("camera-rgb-dn.f32le"),&dn)?,
+        "camera_rgb_normalized":write_f32(&dir.join("camera-rgb-normalized.f32le"),&normalized)?,
+        "cfa_planes":write_f32(&dir.join("cfa-planes.f32le"),&merged.iter().flatten().copied().collect::<Vec<_>>())?,
+        "source0_camera_rgb_dn":write_f32(&dir.join("source0-camera-rgb-dn.f32le"),&anchor)?});
+    for (i, src) in case.sources.iter().enumerate() {
+        ensure!(
+            stamp(&src.path)? == bindings[i]
+                && sha(&src.path)? == src.sha256
+                && digest(&bytes16(&frames[i].data)) == src.sha256,
+            "original file or in-memory source changed"
+        );
+    }
+    let mut receipt = json!({"schema":1,"status":"COMPLETE_ACTUAL_PRODUCT_BASELINE","case_id":case.id,"mechanical_pass":true,
+        "source_count":frames.len(),"sources":rows,"original_inputs_unchanged":true,"original_memory_unchanged":true,"RAW_reads":0,
+        "consumer":"actual BandWorker/MHC-Catmull-u16-remosaic; final MHC camera RGB","source_geometry":[128,128],
+        "output_native_geometry":[96,96],"output_native_origin":[16,16],"quad_crop":[8,8,48,48],"output_rgb_order":"HWC RGB",
+        "output_cfa_order":["R","G1","G2","B"],"source0_singleton_gather_exact":true,"signal_gather_exact":true,
+        "black":case.black,"white":case.white,"wb_rgb":case.wb_rgb,"iso":case.iso});
+    let receipt_details = json!({
+        "noise_gain_physical":case.noise.gain_dn_per_e4,"noise_read_e_physical":case.noise.read_noise_e4,
+        "noise_gain_bits_physical":case.noise.gain_dn_per_e4.map(f32::to_bits),
+        "noise_read_e_bits_physical":case.noise.read_noise_e4.map(f32::to_bits),
+        "noise_read_variance_dn2_physical":physical.map(|p|p.variance(0.)),
+        "noise_read_variance_bits_physical":physical.map(|p|p.variance(0.).to_bits()),
+        "noise_physical_to_core_slots":[0,1,3,2],"noise_provenance":"synthetic supplied coefficients; Measured enum is not camera calibration","noise_added_quantization_variance":0.,
+        "level_sizes":sizes.iter().map(|s|[s.width,s.height]).collect::<Vec<_>>(),"actual_ac_bands":sizes.len()-1,
+        "requested_bands":cfg.bands,"effective_exponents":(0..sizes.len()-1).map(|k|cfg.exponent_at(k,sizes.len()-1)).collect::<Vec<_>>(),
+        "default_config_debug":format!("{cfg:?}"),"arithmetic_chunk_count":1,"source_fold_order":"manifest order",
+        "camera_dn_conversion":"actual normalized camera RGB * (white-black) / relative WB; no post-conversion clamp",
+        "writer_scope":"camera RGB helper only; no CCM/exposure/tone/TIFF/ICC/export quantization",
+        "boundary_scope":"actual final MHC reflects at96 output boundary; candidate96 is interior of128 output; no equality of boundary operators claimed","outputs":outputs,
+        "quality_claim":false,"admission":false});
+    receipt
+        .as_object_mut()
+        .expect("literal receipt object")
+        .extend(
+            receipt_details
+                .as_object()
+                .expect("literal details object")
+                .clone(),
+        );
+    write_json(&dir.join("receipt.json"), &receipt)?;
+    record(&dir.join("receipt.json"))
+}
+#[test]
+#[ignore = "root-owned bounded generated fixture baseline; no RAW decoding"]
+fn actual_product_fixture_baseline() -> Result<()> {
+    let path = PathBuf::from(
+        std::env::var("STREHL_JOINT_CFA_BASELINE_CONFIG").context("missing baseline config")?,
+    );
+    let config_bytes = std::fs::read(&path)?;
+    let config_stamp = stamp(&path)?;
+    let c: Config = serde_json::from_slice(&config_bytes)?;
+    ensure!(
+        c.schema == 1
+            && c.fixture_manifest.is_absolute()
+            && c.out_dir.is_absolute()
+            && !c.out_dir.exists(),
+        "fixed schema/absolute fresh output"
+    );
+    ensure!(
+        !c.out_dir
+            .to_string_lossy()
+            .replace('/', "\\")
+            .to_ascii_lowercase()
+            .starts_with("d:\\personal\\macro"),
+        "capture corpus is read-only"
+    );
+    let exe = std::env::current_exe()?;
+    ensure!(
+        sha(&exe)? == c.expected_test_executable_sha256,
+        "test executable identity"
+    );
+    let manifest_stamp = stamp(&c.fixture_manifest)?;
+    let bytes = std::fs::read(&c.fixture_manifest)?;
+    ensure!(
+        digest(&bytes) == c.fixture_manifest_sha256,
+        "fixture manifest identity"
+    );
+    let manifest: Manifest = serde_json::from_slice(&bytes)?;
+    ensure!(
+        manifest.schema == 1 && (1..=32).contains(&manifest.cases.len()),
+        "fixed manifest bound"
+    );
+    let mut ids = BTreeSet::new();
+    ensure!(
+        manifest
+            .cases
+            .iter()
+            .all(|case| ids.insert(case.id.clone())),
+        "duplicate case ID"
+    );
+    let mut originals_before = Vec::new();
+    for case in &manifest.cases {
+        ensure!(
+            (1..=7).contains(&case.sources.len()),
+            "bounded source count before reads"
+        );
+        for src in &case.sources {
+            ensure!(
+                src.path.is_absolute()
+                    && src.path.extension().and_then(|s| s.to_str()) == Some("u16le")
+                    && src.bytes == 32768,
+                "bounded generated input only"
+            );
+            let st = stamp(&src.path)?;
+            ensure!(
+                st.0 == src.bytes && sha(&src.path)? == src.sha256,
+                "pre-run original identity"
+            );
+            originals_before.push((&src.path, st, &src.sha256));
+        }
+    }
+    let env = runtime()?;
+    let cfg = config()?;
+    std::fs::create_dir(&c.out_dir)?;
+    let mut cases = Vec::new();
+    for case in &manifest.cases {
+        cases.push(json!({"case_id":case.id,"receipt":run_case(case,&c.out_dir,cfg)?}));
+    }
+    for (original, st, expected) in originals_before {
+        ensure!(
+            stamp(original)? == st && sha(original)? == *expected,
+            "post-run original identity"
+        );
+    }
+    ensure!(
+        stamp(&path)? == config_stamp
+            && std::fs::read(&path)? == config_bytes
+            && stamp(&c.fixture_manifest)? == manifest_stamp
+            && std::fs::read(&c.fixture_manifest)? == bytes
+            && sha(&exe)? == c.expected_test_executable_sha256,
+        "bound configuration/manifest/executable changed"
+    );
+    let receipt = json!({"schema":1,"status":"COMPLETE_ACTUAL_PRODUCT_BASELINES","mechanical_pass":true,
+        "case_count":cases.len(),"cases":cases,"fixture_manifest":record(&c.fixture_manifest)?,"config":record(&path)?,
+        "test_executable":record(&exe)?,"environment":env,"rayon_workers":rayon::current_num_threads(),
+        "original_inputs_unchanged":true,"RAW_reads":0,"admission":false,"quality_claim":false});
+    write_json(&c.out_dir.join("receipt.json"), &receipt)?;
+    Ok(())
+}

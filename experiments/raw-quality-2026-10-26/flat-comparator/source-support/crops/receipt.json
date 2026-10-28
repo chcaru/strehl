@@ -1,0 +1,447 @@
+{
+  "status": "CROPS_READY_NO_VERDICT",
+  "quality_claim": false,
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\export-source-views.py",
+    "crops"
+  ],
+  "inputs": [
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-tiff-export\\receipt.json",
+      "bytes": 74449,
+      "mtime_ns": 1793084385437537900,
+      "sha256": "c18a216ebebfb37a09a6d4b6e252b2abfe73a2a9d20d9e28480607b8212bc759"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\frozen-witnesses.json",
+      "bytes": 2417,
+      "mtime_ns": 1793083443977085100,
+      "sha256": "fde6bb02b6ca12793176b3e30ef8d60bba5aed3ed86dd1d4e3ea080c736a297e"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-baseline\\alignment.txt",
+      "bytes": 8561,
+      "mtime_ns": 1793083144347576100,
+      "sha256": "658501d70e5623b168bdee327219382952ca0887f5eafec4d02650343f0dd36b"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\export-source-views.py",
+      "bytes": 7172,
+      "mtime_ns": 1793086789402231100,
+      "sha256": "0cbf259aed6509bc45dc2d4c5546c8d7053f296eee881f1ec93c0aef0c8a5178"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\nominees.json",
+      "bytes": 1242,
+      "mtime_ns": 1793087032602352400,
+      "sha256": "87452ebdc27dfb79111409ae06fc727f34404ba75cce18fd8cbafa8d3b9a0058"
+    }
+  ],
+  "source_tiffs_unchanged": true,
+  "original_raw_reads": 0,
+  "records": [
+    {
+      "index": 15,
+      "source": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-tiff-export\\frames\\DSC00031.tiff",
+        "bytes": 197801322,
+        "mtime_ns": 1793084341613697200,
+        "sha256": "ff4084d354621388de798beaa2217c8572e2106ed348064ef3346d5e4999f192"
+      },
+      "original_raw_identity_metadata_only": {
+        "bytes": 38490112,
+        "index": 15,
+        "mtime_ns": 1788406141320000000,
+        "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl\\DSC00031.ARW",
+        "sha256": "a10f31c6b86df199e1d4ed94ded72119b8d79f9608d7053df388895a367a9185"
+      },
+      "transform_f64_bits": [
+        "3ff01367d0a580ab",
+        "bf29f9f0ef5a258e",
+        "3fcc2d611895067c",
+        "bfe679e815005ea2"
+      ],
+      "native_center": [
+        3516.0,
+        2344.0
+      ],
+      "native_translation": [
+        0.44026973152731563,
+        -1.4047623463028818
+      ],
+      "scale": 1.0047376971441375,
+      "rotation_radians": -0.00019724918446498106,
+      "witnesses": [
+        {
+          "name": "qr-block-boundary",
+          "baseline_xywh": [
+            4200,
+            780,
+            384,
+            384
+          ],
+          "reference_active_center": [
+            4441.5,
+            1005.5
+          ],
+          "mapped_source_center": [
+            4446.0597214796335,
+            997.5704371831363
+          ],
+          "source_xywh": [
+            4255,
+            806,
+            384,
+            384
+          ],
+          "center_rounding_error": [
+            0.44027852036651893,
+            -0.07043718313627778
+          ],
+          "resized": false,
+          "exact_subarray": true,
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\crops\\source-015-qr-block-boundary.tiff",
+            "bytes": 887680,
+            "mtime_ns": 1793087033548802700,
+            "sha256": "6fc22fdd49bd97949465980d0d94fb53f2c613c1f1308c0d06f8a96f02c6abc2"
+          },
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\crops\\source-015-qr-block-boundary.png",
+            "bytes": 180304,
+            "mtime_ns": 1793087033569512500,
+            "sha256": "2522dbdb06e02d9d3c28ba69fd0860172d5be8ca9a947e609e8718d002401a70"
+          }
+        },
+        {
+          "name": "central-fine-bars",
+          "baseline_xywh": [
+            2670,
+            2020,
+            384,
+            384
+          ],
+          "reference_active_center": [
+            2911.5,
+            2245.5
+          ],
+          "mapped_source_center": [
+            2909.056822529851,
+            2243.7483784509113
+          ],
+          "source_xywh": [
+            2718,
+            2052,
+            384,
+            384
+          ],
+          "center_rounding_error": [
+            0.44317747014883935,
+            -0.24837845091133204
+          ],
+          "resized": false,
+          "exact_subarray": true,
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\crops\\source-015-central-fine-bars.tiff",
+            "bytes": 887680,
+            "mtime_ns": 1793087033585349800,
+            "sha256": "09b658778b8a4e947e49cc5414aa75f00d29d7abdd3d300010b3488b20e67e56"
+          },
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\crops\\source-015-central-fine-bars.png",
+            "bytes": 191825,
+            "mtime_ns": 1793087033597845800,
+            "sha256": "d2441958f8736e52ab513e656cee5375ae363f7c2ca1722a4d36157bd62e4307"
+          }
+        },
+        {
+          "name": "upper-right-star",
+          "baseline_xywh": [
+            5260,
+            20,
+            384,
+            384
+          ],
+          "reference_active_center": [
+            5501.5,
+            245.5
+          ],
+          "mapped_source_center": [
+            5510.931040129427,
+            233.75972749690627
+          ],
+          "source_xywh": [
+            5319,
+            42,
+            384,
+            384
+          ],
+          "center_rounding_error": [
+            -0.4310401294269468,
+            -0.2597274969062653
+          ],
+          "resized": false,
+          "exact_subarray": true,
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\crops\\source-015-upper-right-star.tiff",
+            "bytes": 887680,
+            "mtime_ns": 1793087033614509900,
+            "sha256": "3f00a6b90f042031fbd6e7a7a4b2f53614df9b587022ddb233c9ef41f57a91a3"
+          },
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\crops\\source-015-upper-right-star.png",
+            "bytes": 187821,
+            "mtime_ns": 1793087033626032800,
+            "sha256": "e917ca5ac923ee4db02e082e92092a020e9992f7e9ffbbcc2730443d359aa86c"
+          }
+        },
+        {
+          "name": "dot-field",
+          "baseline_xywh": [
+            4600,
+            3400,
+            384,
+            384
+          ],
+          "reference_active_center": [
+            4841.5,
+            3625.5
+          ],
+          "mapped_source_center": [
+            4848.474033786977,
+            3629.903879014787
+          ],
+          "source_xywh": [
+            4657,
+            3438,
+            384,
+            384
+          ],
+          "center_rounding_error": [
+            0.02596621302291169,
+            -0.4038790147869804
+          ],
+          "resized": false,
+          "exact_subarray": true,
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\crops\\source-015-dot-field.tiff",
+            "bytes": 887680,
+            "mtime_ns": 1793087033642676700,
+            "sha256": "c9a211e9d361c76eb48e485ced3d45c07557a9ee88033569869e0c0262b8b7ce"
+          },
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\crops\\source-015-dot-field.png",
+            "bytes": 177850,
+            "mtime_ns": 1793087033655198900,
+            "sha256": "c62fa0582a08d578de8d832dfd1715cf3030a28774b145727908cb5781e0a105"
+          }
+        }
+      ]
+    },
+    {
+      "index": 30,
+      "source": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-tiff-export\\frames\\DSC00046.tiff",
+        "bytes": 197801322,
+        "mtime_ns": 1793084355595933000,
+        "sha256": "e569e87c6bb293cbcf3799731ede3d310f1f8ab5a6a24aca86965876d8d289bd"
+      },
+      "original_raw_identity_metadata_only": {
+        "bytes": 38871040,
+        "index": 30,
+        "mtime_ns": 1788406163170000000,
+        "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl\\DSC00046.ARW",
+        "sha256": "3a5fc6993d0ec24468fd24684aabe7783fe06d3d85eec040584330af0153a03b"
+      },
+      "transform_f64_bits": [
+        "3fefffffffffffff",
+        "3be0000000000000",
+        "bc80000000000000",
+        "3cb0000000000000"
+      ],
+      "native_center": [
+        3516.0,
+        2344.0
+      ],
+      "native_translation": [
+        -5.551115123125783e-17,
+        4.440892098500626e-16
+      ],
+      "scale": 0.9999999999999999,
+      "rotation_radians": 2.7105054312137617e-20,
+      "witnesses": [
+        {
+          "name": "qr-block-boundary",
+          "baseline_xywh": [
+            4200,
+            780,
+            384,
+            384
+          ],
+          "reference_active_center": [
+            4441.5,
+            1005.5
+          ],
+          "mapped_source_center": [
+            4441.5,
+            1005.5000000000002
+          ],
+          "source_xywh": [
+            4250,
+            814,
+            384,
+            384
+          ],
+          "center_rounding_error": [
+            0.0,
+            -2.2737367544323206e-13
+          ],
+          "resized": false,
+          "exact_subarray": true,
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\crops\\source-030-qr-block-boundary.tiff",
+            "bytes": 887680,
+            "mtime_ns": 1793087033898629900,
+            "sha256": "1716f9fa2f4170695cdd0834c99e983c96886abd7e40b77d4ccab22949915494"
+          },
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\crops\\source-030-qr-block-boundary.png",
+            "bytes": 186842,
+            "mtime_ns": 1793087033910995400,
+            "sha256": "19e4d793e93701696d30f5fb9ab819554efcb5148cd834b3993f78890a800b05"
+          }
+        },
+        {
+          "name": "central-fine-bars",
+          "baseline_xywh": [
+            2670,
+            2020,
+            384,
+            384
+          ],
+          "reference_active_center": [
+            2911.5,
+            2245.5
+          ],
+          "mapped_source_center": [
+            2911.5,
+            2245.5
+          ],
+          "source_xywh": [
+            2720,
+            2054,
+            384,
+            384
+          ],
+          "center_rounding_error": [
+            0.0,
+            0.0
+          ],
+          "resized": false,
+          "exact_subarray": true,
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\crops\\source-030-central-fine-bars.tiff",
+            "bytes": 887680,
+            "mtime_ns": 1793087033931203500,
+            "sha256": "7744af3606618f39206fb0d6e157e2e48c25d5b397da5864868887b13f4afe3e"
+          },
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\crops\\source-030-central-fine-bars.png",
+            "bytes": 198410,
+            "mtime_ns": 1793087033941425500,
+            "sha256": "c841fc4f9cf1d806728c576af1c06f2f31f567f413b2bfd490083fc21ac9a499"
+          }
+        },
+        {
+          "name": "upper-right-star",
+          "baseline_xywh": [
+            5260,
+            20,
+            384,
+            384
+          ],
+          "reference_active_center": [
+            5501.5,
+            245.5
+          ],
+          "mapped_source_center": [
+            5501.5,
+            245.50000000000045
+          ],
+          "source_xywh": [
+            5310,
+            54,
+            384,
+            384
+          ],
+          "center_rounding_error": [
+            0.0,
+            -4.547473508864641e-13
+          ],
+          "resized": false,
+          "exact_subarray": true,
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\crops\\source-030-upper-right-star.tiff",
+            "bytes": 887680,
+            "mtime_ns": 1793087033956220200,
+            "sha256": "38d5aa346bcc62d60c59e8612335f6adda7578534f8b910fe560c32b8c6f6c32"
+          },
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\crops\\source-030-upper-right-star.png",
+            "bytes": 207529,
+            "mtime_ns": 1793087033969328200,
+            "sha256": "51268d0e2d0900d35acdd10b28962bad2c3e870d35e33f125dec0305e6b1a7f8"
+          }
+        },
+        {
+          "name": "dot-field",
+          "baseline_xywh": [
+            4600,
+            3400,
+            384,
+            384
+          ],
+          "reference_active_center": [
+            4841.5,
+            3625.5
+          ],
+          "mapped_source_center": [
+            4841.5,
+            3625.5
+          ],
+          "source_xywh": [
+            4650,
+            3434,
+            384,
+            384
+          ],
+          "center_rounding_error": [
+            0.0,
+            0.0
+          ],
+          "resized": false,
+          "exact_subarray": true,
+          "rgb16": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\crops\\source-030-dot-field.tiff",
+            "bytes": 887680,
+            "mtime_ns": 1793087033985839200,
+            "sha256": "3a2d4e4c2f9ffe7fdc75101cae0e1d926e170974e8e6d12647b82b1069f93ba0"
+          },
+          "png": {
+            "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\crops\\source-030-dot-field.png",
+            "bytes": 189925,
+            "mtime_ns": 1793087033997716600,
+            "sha256": "00701d1611276b39ee2b2a7f85fbcf3310f924125161909f73fed21860652547"
+          }
+        }
+      ]
+    }
+  ],
+  "seconds": 0.7189999999991414,
+  "display": "Unmodified developed RGB16 and original ICC; PNG (value+128)//257. Complete overviews only are resized.",
+  "mapping": "Reference30 native pixel center plus(50,34); q=C+a*(p-C)+2b, C=(3516,2344); round crop origin. Map locates context only. No source pixel warp, CA, fit, scale normalization or equal-footprint metric."
+}

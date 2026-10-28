@@ -1,0 +1,254 @@
+{
+  "status": "COMPLETE_COMMON_DISPLAY_READY",
+  "arm": "ca-off",
+  "frozen_plan": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\frozen-witnesses.json",
+    "sha256": "97c72bc13cdc9af946573c8c5f42d73e243acc4b1d432b3b0627f2dd356ed053",
+    "bytes": 3267
+  },
+  "source_completion": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\bug2-100-ca-off\\completion.json",
+    "sha256": "ca20c13472ea15594d0d432fe3333c58f25936386cf97e563fdec2f72d26a15d",
+    "bytes": 1767
+  },
+  "source_linear": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\bug2-100-ca-off\\linear-master.tiff",
+    "sha256": "92a144f4de1529f499d7abde2be4b74e1805dc69fc7734a08b641c59d76e5a98",
+    "bytes": 344797710
+  },
+  "common_master": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\common-display-master.tiff",
+    "sha256": "2b7673bc4a9cfcdfd196ac163220cc1b089dcc97d667bef693bf0962f3eb1059",
+    "bytes": 172462432
+  },
+  "complete_jpeg": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\complete-stack.jpg",
+    "sha256": "b067b3fc79b60c9ed0b9ccf6c62382a719051a19f7feca3bc1df90f04524c86a",
+    "bytes": 19698576
+  },
+  "overview": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\overview.jpg",
+    "sha256": "7c07f10e861393460cad273055b8b927a70093db18fe522a84fb3e249b6f0243",
+    "bytes": 1198454
+  },
+  "display": "Both arms use baseline-chosen gain4.993, clamp0..1, standard sRGB transfer, roundRGB16; PNG/JPEG=(RGB16+128)//257. SameICC, no filtering/sharpening or local fit. Native384 crops are exact subarrays.",
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "crops": [
+    {
+      "name": "dark-background",
+      "native_xywh": [
+        6180,
+        40,
+        384,
+        384
+      ],
+      "role": "Far-right dark control; not a calibrated noise flat.",
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\dark-background.png",
+        "sha256": "89b5ae6735892809b3fc155f2b86a68f77bfdf9d614f6ee2c86129ca20708b83",
+        "bytes": 231699
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\dark-background.tiff",
+        "sha256": "993b9da24e12bd48e8103b610c060fe4a21dc6b4a6d6bb4a90433998978cf07a",
+        "bytes": 887680
+      },
+      "resized": false
+    },
+    {
+      "name": "green-fine-texture",
+      "native_xywh": [
+        380,
+        720,
+        384,
+        384
+      ],
+      "role": "Left-field green surface microtexture and small marks.",
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\green-fine-texture.png",
+        "sha256": "06d89d0a0f8d7b0a101f351d61be10eab521efa37cbd41eb03b07995f8134427",
+        "bytes": 201447
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\green-fine-texture.tiff",
+        "sha256": "0fa0fdc7fd42a300077347ff5651dd657a1e4710622d0137aa2a7658c5172d5d",
+        "bytes": 887680
+      },
+      "resized": false
+    },
+    {
+      "name": "left-green-rim",
+      "native_xywh": [
+        100,
+        2970,
+        384,
+        384
+      ],
+      "role": "Far-left green edge, dark surround and fine fibres.",
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\left-green-rim.png",
+        "sha256": "3c5249b16198a6a66ceb0cf3d68820acd08e2f5ee4f7fa00304470df7a83e7c4",
+        "bytes": 232009
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\left-green-rim.tiff",
+        "sha256": "15d62f1c49ea1aec1ddf3af2c21edd8ff9c8eda6ce01067f6f93045b02bc7090",
+        "bytes": 887680
+      },
+      "resized": false
+    },
+    {
+      "name": "junction-white-strands",
+      "native_xywh": [
+        990,
+        2040,
+        384,
+        384
+      ],
+      "role": "Three-surface junction and white strands at distinct depths.",
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\junction-white-strands.png",
+        "sha256": "d0cbfa7ee1e157f9bb7abfb2016d882e131268dd7e37336ff277d41b7bcacd3a",
+        "bytes": 235496
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\junction-white-strands.tiff",
+        "sha256": "19d2780850d26dbd7e3ea591574c8783ffc8a81b50df116a09cd237006acdc65",
+        "bytes": 887680
+      },
+      "resized": false
+    },
+    {
+      "name": "orange-network-upper",
+      "native_xywh": [
+        2820,
+        430,
+        384,
+        384
+      ],
+      "role": "Orange branched surface pattern in upper field.",
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\orange-network-upper.png",
+        "sha256": "d5944ea02eca7c8370025f9015a70f442b9b118e7a741584cd2a44ced9084282",
+        "bytes": 215613
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\orange-network-upper.tiff",
+        "sha256": "9f52a1484b97bc5de479869070ff69d1efc4af0a939e58fbd8f531c7ff831319",
+        "bytes": 887680
+      },
+      "resized": false
+    },
+    {
+      "name": "orange-network-lower",
+      "native_xywh": [
+        1530,
+        3460,
+        384,
+        384
+      ],
+      "role": "Orange fine network in lower-left field.",
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\orange-network-lower.png",
+        "sha256": "2422f945f0ca31a428c03761a6a7d82d5bfbec8de4417c20f03a6df4bac98a5d",
+        "bytes": 218574
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\orange-network-lower.tiff",
+        "sha256": "c12fc1c67d013a3a183000fec8634d15c76f9ce5751ba3f30b290c8d054b4f65",
+        "bytes": 887680
+      },
+      "resized": false
+    },
+    {
+      "name": "central-green-orange-rim",
+      "native_xywh": [
+        2790,
+        2160,
+        384,
+        384
+      ],
+      "role": "Green/orange meeting edge and broad dark contour.",
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\central-green-orange-rim.png",
+        "sha256": "f5184422ec0ef1fe4f9ae8bf336b6c23759e8884c0872a471b7e888a5e4efdb2",
+        "bytes": 232576
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\central-green-orange-rim.tiff",
+        "sha256": "7d1ff006f73fef77e623de67122567db90cee0b6af2233606454a788e83c875f",
+        "bytes": 887680
+      },
+      "resized": false
+    },
+    {
+      "name": "central-seam",
+      "native_xywh": [
+        4250,
+        2970,
+        384,
+        384
+      ],
+      "role": "Diagonal seam, fine edge colour and coarse occlusion contour.",
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\central-seam.png",
+        "sha256": "5b239e270da991793aa37c8b3554398409801edbb1f29e612e7fad3ab2664153",
+        "bytes": 214844
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\central-seam.tiff",
+        "sha256": "cc18cd40e33398e37c34850c6f9eedd6343fddcfb154b5a8ad63f7d78f19875d",
+        "bytes": 887680
+      },
+      "resized": false
+    },
+    {
+      "name": "right-reflective-orange",
+      "native_xywh": [
+        5560,
+        2560,
+        384,
+        384
+      ],
+      "role": "Right-field reflective orange microtexture and bright haze.",
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\right-reflective-orange.png",
+        "sha256": "bab96ee150c0273c242426b616096bb700f2e4a691b0d35ebf30774ea9958524",
+        "bytes": 225868
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\right-reflective-orange.tiff",
+        "sha256": "442657e013c3436ba23177dc626a45bd0397fc8bca3b30b29689e3140813b3c6",
+        "bytes": 887680
+      },
+      "resized": false
+    },
+    {
+      "name": "right-outer-fibres",
+      "native_xywh": [
+        5960,
+        900,
+        384,
+        384
+      ],
+      "role": "Far-right outer boundary, white fibres and glints.",
+      "png": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\right-outer-fibres.png",
+        "sha256": "974046cc15ac4e5954ff9204f7c12779882c66595db57931c0c14523dd90fc50",
+        "bytes": 246487
+      },
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\ca-off\\right-outer-fibres.tiff",
+        "sha256": "4ddd79940051df0306f14e3e8ca79058763d81d097ba2e3a8e611333f4590f02",
+        "bytes": 887680
+      },
+      "resized": false
+    }
+  ],
+  "script": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\bug2-transfer\\prepare-display.py",
+    "sha256": "a25ace996baefb464e04111303ed9ea179493e5c3808e20e51d6f996bdc55d2a",
+    "bytes": 6582
+  },
+  "command": "python -B -X faulthandler experiments/raw-quality-2026-10-26/photo-review/bug2-transfer/prepare-display.py ca-off"
+}

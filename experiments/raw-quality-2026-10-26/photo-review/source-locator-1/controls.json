@@ -1,0 +1,21 @@
+{
+  "values": {
+    "flat": [
+      0.0,
+      0.0
+    ],
+    "structure": [
+      1.8315534031242085e-06,
+      1.3229420205181713e-05
+    ],
+    "blurred": [
+      6.637827396206124e-08,
+      5.528008012165587e-07
+    ],
+    "noisy_flat": [
+      0.0005011113781908667,
+      0.00011968391140811026
+    ]
+  },
+  "interpretation": "Blur lowers structure response, but noisy-flat raises fine response above real structure. This locator cannot establish quality."
+}

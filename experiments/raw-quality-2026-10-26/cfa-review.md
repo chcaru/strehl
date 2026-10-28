@@ -1,0 +1,33 @@
+# Independent direct-CFA sampler controls and source review
+
+2026-10-26. Allocation cfa-review. Independent reviewer owns only this note and cfa-controls.rs. Read cfa-brief.md and the actual author cfa-lattice.rs. No build or numerical execution was performed by reviewer; root owns execution. Source findings below are VERIFIED by inspection; effect on actual photographs remains UNVERIFIED.
+
+## Source review
+
+ActiveCfa stores an immutable u16 slice and validated active bounds. It returns f32 raw DN, uses RGB channel0/1/2 in active-area coordinates, and never reads synthetic padding. R/B use their stride2 rectangular lattices; green uses u=(x+y-1)/2,v=(x-y-1)/2 with inverse x=u+v+1,y=u-v. These expressions map both actual green phases to integer sites. The constructor checks stride containment and all size arithmetic; native coordinate rejection precedes lattice conversion. Nonzero-support checks reject missing actual sensels. Exact zero weights are skipped, so an identity pull retains physically measured edge sites. No immediate source safety/phase defect was found.
+
+Important remaining conditions:
+
+- G1/G2 are distinct measured sensor populations. Interpolating them as one green field is a model choice, not phase-response calibration. The existing camera model has separate phase entries; single common WB green does not establish equal response. The suite exposes a100DN phase-offset input.
+- At fractional positions green diagonal support and R/B stride2 support differ from native RGB Catmull support. Actual coverage/crop and fallback must reflect the taps used. Preserving integer edge samples is correct but not permission to clamp unsupported fractional samples.
+- Per-source MHC borrows cross-colour high frequencies; same-colour R/B cannot generally preserve that achromatic detail above its own Nyquist. Conversely MHC can put other-channel structure into independently varying R/B. Both cases are included; theoretical all-frequency dominance is neither expected nor required.
+- Root integration must keep source immutable across all four destination phase sinks, apply per-channel runtime CA in the same native gauge, preserve black/WB ordering, and make GREEN_ONLY execute the same direct-green sampler. Leaving old MHC noise probes active would miscalibrate the changed consumer. Off must remain exact.
+- The sampler computes raw DN including black. Subtraction before versus after f32 interpolation can differ in low bits; compare actual quantized sinks and signed/below-black controls rather than assert mathematical equality implies bit identity.
+
+## Frozen bounded controls
+
+The include file uses the public ActiveCfa API and actual production demosaic_malvar_row, Resampler::CatmullRom and BandMerge. Root registers it as align_cmd::cfa_lattice_tests. One single test cfa_lattice_independent_suite establishes order without environment changes. Suggested execution filter after a fresh targeted build: cargo test --locked -p strehl-cli --lib cfa_lattice_independent_suite -- --nocapture --test-threads=1. Root determines offline/feature/build-profile flags from actual dependencies and records them.
+
+1. **Flat first.** Manufactured PlaneNoise gain0.25DN/e, read4e, black512, white15360; levels1000 and4096DN;384 independent draws and12 fixed channel/position probes. Compare temporal sample variance with independently evaluated piecewise Keys convolution taps, including u16 rounding variance. The aggregate ratio must lie within0.12 of1; deliberately omitted interpolation attenuation must disagree. This validates implementation of an injected model, not physical A7CII calibration. Individual ratios are printed so aggregate agreement cannot hide a phase/channel problem.
+2. **Mechanics.** Exact identity at every own-channel physical sensel, active origin(5,3) embedded in poisonous padding, independent RGB affine fields, fractional coordinates, invalid/nonfinite requests, immutable source. A swapped red/blue query must differ by more than2500DN; the foil must fail rather than merely producing a valid number.
+3. **42 fixed reconstruction diagnostics.** Neutral gratings at0.08/0.18/0.30cycles per native pixel, angles0/45/73degrees; R-only and B-only at0.08/0.18 with other channels flat. Two transforms: translation(+0.25,-0.375), and translation(-0.375,+0.25),scale1.015,rotation1.2degrees. Both arms use the same u16 source, quantizing CFA sink and final MHC. Report CFA truth RMS and each RGB truth RMS against the analytic scene, interior48x48 only. No parameter sweep or rescue choice. High-frequency neutral losses and low-frequency chroma contamination must be retained in the report.
+4. **Green phase imbalance.** G1/G2 values1512/1612 rawDN, R/B9000; exact integer preservation plus fractional outputs reported. This is a stress case, not a measured sensor offset.
+5. **Weak single-sharp-frame line.**73degree Gaussian line with peak100DN on2000DN background, focused sigma0.65 in the middle source, flux-preserving sigma2/3 neighbours, three fixed subpixel pulls. Render both samplers then actual default BandMerge and same final MHC. Report per-channel truth RMS/peak response. This is a **noiseless signal-isolation run with zero variance**, deliberately not a qualification of the warped noise gate. Root's actual gathered noise-probe control is still required.
+
+Hard assertions cover mechanics/propagation/fixture presence. The42 diagnostic comparisons and weak-line scores are **evidence to inspect, not green quality assertions**. A passing Rust test can coexist with severe comparative losses. Do not write all-controls-pass as photographic qualification. Catastrophic or broad below-Nyquist colour/detail loss should stop the fixed whole-image candidate; narrower above-Nyquist tradeoffs may justify one bounded complete photograph with those exact risks inspected. Root chooses the photographic scope prospectively after reading actual numerical output.
+
+## Acceptance and next review
+
+Use the complete299-source weevil107 Off/On outputs with the same map and matched display only after actual integration routing/probe controls pass. Inspect complete output, then native microstructure, scales, hair boundaries, highlights and colour patches; any cleaner texture needs original focus-source support. Flat diagnostics and marigold/mineral adverse transfer are required before a general claim. The newly generated noise metrics and synthetic high-frequency cases cannot discharge those photographic gates.
+
+No numerical result is recorded here yet. Preliminary negatives must be added from actual stdout with source/build/command identity, including failed runs. No source or receipt of older completed studies was changed.

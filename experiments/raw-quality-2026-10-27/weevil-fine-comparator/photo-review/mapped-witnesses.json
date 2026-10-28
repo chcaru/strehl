@@ -1,0 +1,795 @@
+{
+  "status": "MAPPINGS_FROZEN_AFTER_THREE_COMPLETE_VIEWS_BEFORE_CROP_EXPORT",
+  "inputs": [
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\photo-review\\export-corresponding.py",
+      "sha256": "cf48bac2cbbe5489edf3525f0452aa9550d018317fda45bae91b63df82aac172",
+      "bytes": 8765,
+      "mtime_ns": 1793089948248225800
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-witnesses.json",
+      "sha256": "826c4ab6c620122449f6575cdd18c0f9ee9cb460f29f6d895e832325d6405888",
+      "bytes": 12213,
+      "mtime_ns": 1793071347179153000
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\photo-review\\export-corresponding.py",
+      "sha256": "4a7df974014431fcefff4803f1ad8dcc394644856d8927dcab7015c26fba7244",
+      "bytes": 6206,
+      "mtime_ns": 1793073128000656100
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-ca-off\\completion.json",
+      "sha256": "67b7056865d541c88e7ea2e41cb6517399f38276921cf0a9a078453f8f4c3f67",
+      "bytes": 1773,
+      "mtime_ns": 1793073559086672500
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-ca-off\\stack-master.tiff",
+      "sha256": "5dc571cce0d9e310f1f06b6e7f3c78faae8fb4ee4f12c94ff76d1d0c0e3fb655",
+      "bytes": 190169209,
+      "mtime_ns": 1793073552900423200
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-ca-off\\stack-full.jpg",
+      "sha256": "64471fe73f1e059c004cc88f4f009f699a24a7863f8bc8d402dc72c5cfad79f0",
+      "bytes": 16227838,
+      "mtime_ns": 1793073553283782900
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-comparator\\b\\completion.json",
+      "sha256": "c21f3af01d81ac24cb64c8ffec6b1eb93ab20053c712f4a98755a1bcf31ae510",
+      "bytes": 651,
+      "mtime_ns": 1793072859371700100
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-comparator\\b\\stack-master.tiff",
+      "sha256": "56e6f5be1c98f7670b81dfe458d734d0bd782e0bc2a801bb7cd1dcf30a89165a",
+      "bytes": 196984074,
+      "mtime_ns": 1793072816535605500
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-comparator\\b\\stack-full.jpg",
+      "sha256": "eda196df3a5fecc65714e7f4f402e5cbefb7c282e5b019471f4e11a8fead8918",
+      "bytes": 17607230,
+      "mtime_ns": 1793072821650998800
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-27\\weevil-107-fine-comparator\\b-r4-desktop-2\\completion.json",
+      "sha256": "b5dd1c3a004a4462a4654b695460b70243f58c6d1e88290a0be508eff3682d85",
+      "bytes": 2738,
+      "mtime_ns": 1793089780608184500
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-27\\weevil-107-fine-comparator\\b-r4-desktop-2\\stack-master.tiff",
+      "sha256": "d24e944825fe5e8405dbf26a7339e7d69af4f70dea6607db1af81ea809a274ff",
+      "bytes": 196984074,
+      "mtime_ns": 1793089741991634600
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-27\\weevil-107-fine-comparator\\b-r4-desktop-2\\stack-full.jpg",
+      "sha256": "903800dd2f801cec3ef17ffefd04fb1779b24debef76224d31acd98be9f689d0",
+      "bytes": 17624891,
+      "mtime_ns": 1793089780360282600
+    }
+  ],
+  "arms": {
+    "native-ca-off": {
+      "master": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-ca-off\\stack-master.tiff",
+        "sha256": "5dc571cce0d9e310f1f06b6e7f3c78faae8fb4ee4f12c94ff76d1d0c0e3fb655",
+        "bytes": 190169209,
+        "mtime_ns": 1793073552900423200
+      },
+      "complete_jpeg": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-ca-off\\stack-full.jpg",
+        "sha256": "64471fe73f1e059c004cc88f4f009f699a24a7863f8bc8d402dc72c5cfad79f0",
+        "bytes": 16227838,
+        "mtime_ns": 1793073553283782900
+      },
+      "dimensions": [
+        6896,
+        4596
+      ],
+      "mapping": {
+        "purpose": "Held native gauge, exact frozen coordinates; no registration"
+      },
+      "witnesses": [
+        {
+          "name": "background-black",
+          "native_ca_off_xywh": [
+            3800,
+            500,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            3800,
+            500,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 0,
+          "local_native_translation": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "dark-elytron",
+          "native_ca_off_xywh": [
+            2750,
+            2120,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            2750,
+            2120,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 0,
+          "local_native_translation": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "turquoise-scales",
+          "native_ca_off_xywh": [
+            2120,
+            1340,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            2120,
+            1340,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 0,
+          "local_native_translation": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "elytron-seam",
+          "native_ca_off_xywh": [
+            2950,
+            1960,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            2950,
+            1960,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 0,
+          "local_native_translation": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "bright-wing-rim",
+          "native_ca_off_xywh": [
+            4050,
+            1810,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            4050,
+            1810,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 0,
+          "local_native_translation": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "thorax-texture",
+          "native_ca_off_xywh": [
+            4520,
+            2560,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            4520,
+            2560,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 0,
+          "local_native_translation": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "upper-leg-hairs",
+          "native_ca_off_xywh": [
+            1820,
+            640,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            1820,
+            640,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 0,
+          "local_native_translation": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "blue-joint",
+          "native_ca_off_xywh": [
+            2680,
+            850,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            2680,
+            850,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 0,
+          "local_native_translation": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "upper-occlusion",
+          "native_ca_off_xywh": [
+            3850,
+            1300,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            3850,
+            1300,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 0,
+          "local_native_translation": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "eye-and-antenna",
+          "native_ca_off_xywh": [
+            5350,
+            2920,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            5350,
+            2920,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 0,
+          "local_native_translation": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "b8": {
+      "master": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-comparator\\b\\stack-master.tiff",
+        "sha256": "56e6f5be1c98f7670b81dfe458d734d0bd782e0bc2a801bb7cd1dcf30a89165a",
+        "bytes": 196984074,
+        "mtime_ns": 1793072816535605500
+      },
+      "complete_jpeg": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-comparator\\b\\stack-full.jpg",
+        "sha256": "eda196df3a5fecc65714e7f4f402e5cbefb7c282e5b019471f4e11a8fead8918",
+        "bytes": 17607230,
+        "mtime_ns": 1793072821650998800
+      },
+      "dimensions": [
+        7020,
+        4676
+      ],
+      "mapping": {
+        "native_baseline_to_vendor_matrix": [
+          [
+            1.0198492602192806,
+            -0.0001290476514449765,
+            -14.047113359771771
+          ],
+          [
+            0.0001290476514449765,
+            1.0198492602192806,
+            -19.031904399273202
+          ]
+        ],
+        "scale": 1.0198492683838676,
+        "rotation_degrees": 0.007249979024175235,
+        "matches": 3346,
+        "inliers": 3059,
+        "native_inlier_error_median": 1.831801103928012,
+        "native_inlier_error_p95": 3.7717196133058395,
+        "wrong_100px_xy_translation_error_median": 141.68360324142702,
+        "purpose": "landmark locator only, not a quality metric or accepted pixelwise registration"
+      },
+      "witnesses": [
+        {
+          "name": "background-black",
+          "native_ca_off_xywh": [
+            3800,
+            500,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            3865,
+            495,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 0,
+          "local_native_translation": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "dark-elytron",
+          "native_ca_off_xywh": [
+            2750,
+            2120,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            2795,
+            2147,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 113,
+          "local_native_translation": [
+            1.1165167620479224,
+            -0.5019950213550146
+          ]
+        },
+        {
+          "name": "turquoise-scales",
+          "native_ca_off_xywh": [
+            2120,
+            1340,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            2152,
+            1352,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 64,
+          "local_native_translation": [
+            0.3213029756859669,
+            0.7959044943190747
+          ]
+        },
+        {
+          "name": "elytron-seam",
+          "native_ca_off_xywh": [
+            2950,
+            1960,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            2998,
+            1984,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 163,
+          "local_native_translation": [
+            0.03569830489686865,
+            -0.17395311014161052
+          ]
+        },
+        {
+          "name": "bright-wing-rim",
+          "native_ca_off_xywh": [
+            4050,
+            1810,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            4118,
+            1831,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 132,
+          "local_native_translation": [
+            -1.7266014810736579,
+            0.09325155010765229
+          ]
+        },
+        {
+          "name": "thorax-texture",
+          "native_ca_off_xywh": [
+            4520,
+            2560,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            4597,
+            2596,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 230,
+          "local_native_translation": [
+            -1.8846032696574184,
+            -0.6281009985625587
+          ]
+        },
+        {
+          "name": "upper-leg-hairs",
+          "native_ca_off_xywh": [
+            1820,
+            640,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            1845,
+            638,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 15,
+          "local_native_translation": [
+            -0.6602717705341092,
+            0.09057742085815335
+          ]
+        },
+        {
+          "name": "blue-joint",
+          "native_ca_off_xywh": [
+            2680,
+            850,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            2722,
+            853,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 47,
+          "local_native_translation": [
+            -0.5165422381442113,
+            0.7522046321885227
+          ]
+        },
+        {
+          "name": "upper-occlusion",
+          "native_ca_off_xywh": [
+            3850,
+            1300,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            3915,
+            1312,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 32,
+          "local_native_translation": [
+            -1.237584871043964,
+            0.4708679013898518
+          ]
+        },
+        {
+          "name": "eye-and-antenna",
+          "native_ca_off_xywh": [
+            5350,
+            2920,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            5447,
+            2964,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 111,
+          "local_native_translation": [
+            1.9034735207515041,
+            0.43352205207429506
+          ]
+        }
+      ]
+    },
+    "b4": {
+      "master": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-27\\weevil-107-fine-comparator\\b-r4-desktop-2\\stack-master.tiff",
+        "sha256": "d24e944825fe5e8405dbf26a7339e7d69af4f70dea6607db1af81ea809a274ff",
+        "bytes": 196984074,
+        "mtime_ns": 1793089741991634600
+      },
+      "complete_jpeg": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-27\\weevil-107-fine-comparator\\b-r4-desktop-2\\stack-full.jpg",
+        "sha256": "903800dd2f801cec3ef17ffefd04fb1779b24debef76224d31acd98be9f689d0",
+        "bytes": 17624891,
+        "mtime_ns": 1793089780360282600
+      },
+      "dimensions": [
+        7020,
+        4676
+      ],
+      "mapping": {
+        "native_baseline_to_vendor_matrix": [
+          [
+            1.01997919061181,
+            -6.460797856965066e-05,
+            -14.11925716259955
+          ],
+          [
+            6.460797856965066e-05,
+            1.01997919061181,
+            -18.856666249963364
+          ]
+        ],
+        "scale": 1.019979192658024,
+        "rotation_degrees": 0.003629254914251159,
+        "matches": 3329,
+        "inliers": 2411,
+        "native_inlier_error_median": 1.7909730146323355,
+        "native_inlier_error_p95": 3.145437933844761,
+        "wrong_100px_xy_translation_error_median": 141.5841310653775,
+        "purpose": "landmark locator only, not a quality metric or accepted pixelwise registration"
+      },
+      "witnesses": [
+        {
+          "name": "background-black",
+          "native_ca_off_xywh": [
+            3800,
+            500,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            3866,
+            495,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 0,
+          "local_native_translation": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "dark-elytron",
+          "native_ca_off_xywh": [
+            2750,
+            2120,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            2795,
+            2147,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 112,
+          "local_native_translation": [
+            0.5924037674042211,
+            -0.8575074357868289
+          ]
+        },
+        {
+          "name": "turquoise-scales",
+          "native_ca_off_xywh": [
+            2120,
+            1340,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            2152,
+            1353,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 65,
+          "local_native_translation": [
+            0.03377934946138339,
+            0.6164950742647761
+          ]
+        },
+        {
+          "name": "elytron-seam",
+          "native_ca_off_xywh": [
+            2950,
+            1960,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            2998,
+            1984,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 161,
+          "local_native_translation": [
+            -0.42385204683341726,
+            -0.3934545193346821
+          ]
+        },
+        {
+          "name": "bright-wing-rim",
+          "native_ca_off_xywh": [
+            4050,
+            1810,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            4118,
+            1831,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 101,
+          "local_native_translation": [
+            -2.232227526996212,
+            -0.04158766538216696
+          ]
+        },
+        {
+          "name": "thorax-texture",
+          "native_ca_off_xywh": [
+            4520,
+            2560,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            4598,
+            2596,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 21,
+          "local_native_translation": [
+            -1.9256317092695099,
+            -0.7197688486962761
+          ]
+        },
+        {
+          "name": "upper-leg-hairs",
+          "native_ca_off_xywh": [
+            1820,
+            640,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            1845,
+            638,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 16,
+          "local_native_translation": [
+            -0.9424905788227989,
+            -0.07319074547149285
+          ]
+        },
+        {
+          "name": "blue-joint",
+          "native_ca_off_xywh": [
+            2680,
+            850,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            2722,
+            853,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 39,
+          "local_native_translation": [
+            -0.9400484582765785,
+            0.9601830122259116
+          ]
+        },
+        {
+          "name": "upper-occlusion",
+          "native_ca_off_xywh": [
+            3850,
+            1300,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            3915,
+            1311,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 31,
+          "local_native_translation": [
+            -1.8607415983415194,
+            0.23649705627371986
+          ]
+        },
+        {
+          "name": "eye-and-antenna",
+          "native_ca_off_xywh": [
+            5350,
+            2920,
+            384,
+            384
+          ],
+          "arm_xywh": [
+            5448,
+            2964,
+            384,
+            384
+          ],
+          "nearby_feature_inliers": 108,
+          "local_native_translation": [
+            1.227130728369957,
+            0.3572734820158985
+          ]
+        }
+      ]
+    }
+  },
+  "whole_view_order": [
+    "native-ca-off",
+    "b8",
+    "b4"
+  ],
+  "native_condition": "CA-off native reconstruction, original automatic tone; same held reference149 crop active68,46 as frozen coordinates",
+  "display": "Original RGB16/ICC, PNG(value+128)//257; no common-display gain variant or retone",
+  "comparison_limit": "B8/B4 use identical predeveloped299 TIFFs and tone; native is developed after RAW fusion. Pre/postdevelopment and original native tone remain workflow differences.",
+  "locator_limit": "SIFT similarity/local translation locates crop centers only. Native384 pixels retained; physical footprints vary by fitted scale and local depth. No placement-accuracy, equal-footprint resolution or image-quality metric."
+}

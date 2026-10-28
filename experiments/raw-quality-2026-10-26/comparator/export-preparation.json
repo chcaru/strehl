@@ -1,0 +1,33 @@
+{
+  "status": "SOURCE_PREPARED_NOT_BUILT_OR_RUN",
+  "source": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\crates\\strehl-cli\\examples\\weevil-batch-develop.rs",
+    "sha256": "36048da273521fe8ef9f1c3ee70ac9b2a443a8c36cdd2b1b1487b0f83485968d",
+    "bytes": 16983
+  },
+  "preserved_source": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\crates\\strehl-cli\\examples\\quality-batch-develop.rs",
+    "sha256": "844eba34900d01d21978225d643c6faf5ef0263a500264f8140877fb075cc485",
+    "bytes": 11077
+  },
+  "config": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\comparator\\weevil-export-config.json",
+    "sha256": "78abddc81bf0b76f11aa0f0926724cc835fa4e8461d261b5397cbbefff15508b",
+    "bytes": 2212
+  },
+  "baseline_manifest": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-baseline\\input-order.json",
+    "sha256": "0235564cf5131e7eb5e4ea251c16ea9272f6a55a9d8cc6efc717970615a30d6f",
+    "bytes": 74645
+  },
+  "old_fixture_configuration": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\develop-config.json",
+    "sha256": "9d8e0fc0ab74e3af1deda3b4e02ab0814c216d95509709ee172740c15c728840",
+    "bytes": 7551
+  },
+  "baseline_render_log": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-baseline\\render.log",
+    "sha256": "04a5cff8bb497eb3e9145f32ed59f4a4ca866871c40b2e64ae782abcca4f308e",
+    "bytes": 98203
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "schema": 1,
+  "status": "VISUALLY_VERIFIED_SUPPORT_ONLY_NO_SPREAD_ESTIMATE",
+  "frozen_before_any_spread_fit": true,
+  "feature_count": 1,
+  "feature": {
+    "id": "upper-outline-isolated-bristle",
+    "description": "Short outward bristle above the upper leg, slanting up-left from the boundary into dark background; not a dark gap or reflective bead.",
+    "context_local_support_xywh": [
+      100,
+      108,
+      28,
+      24
+    ],
+    "delivered_master_support_xywh": [
+      1920,
+      748,
+      28,
+      24
+    ],
+    "source149_active_support_xywh": [
+      1988,
+      794,
+      28,
+      24
+    ],
+    "descriptive_axis_endpoints_context_local_approx": [
+      [
+        105,
+        114
+      ],
+      [
+        119,
+        128
+      ]
+    ],
+    "axis_status": "visual orientation only, not measured centers, exact endpoints, width or fitted trace",
+    "phase": "even origin and extent; RGGB. In original active native coordinates R(even,even),G1(odd,even),G2(even,odd),B(odd,odd).",
+    "support_caveat": "Small bristle meets appendage boundary near lower-right support. No automatic single-edge or isolated-PSF assumption admitted.",
+    "eligibility": "Quantity audit and numerical commissioning remain required. Current appearance establishes persistence, not added merge softness or missing recoverable detail."
+  },
+  "gauge": {
+    "map_sha256": "4a76cd0c56c3a525e70f5bf72b965adb706131618c5bf49d0ae853fbf341c225",
+    "reference_source_zero_based": 149,
+    "delivered_crop_native_xywh": [
+      68,
+      46,
+      6896,
+      4596
+    ],
+    "reference_transform": {
+      "a": [
+        1.0,
+        -1.0842021724855044e-19
+      ],
+      "b": [
+        1.1102230246251565e-16,
+        0.0
+      ],
+      "bits": [
+        4607182418800017408,
+        13546827679130451968,
+        4368491638549381120,
+        0
+      ]
+    },
+    "capture_receipt_path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-anchor149-gather\\capture.json",
+    "capture_receipt_sha256": "b453d78399ad2ce7e0d50eef25326c29e177d28d025a956c298f0ee045578d69",
+    "original_u16": {
+      "bytes": 63388032,
+      "cfa_at_crop_origin": "RGGB",
+      "format": "headerless u16 little-endian CFA, row-major, no padding",
+      "height": 4596,
+      "path": "C:/Users/chris/.codex/worktrees/raw-quality-october26/strehl/outputs/raw-quality-2026-10-26/weevil-anchor149-gather\\original-crop.u16le",
+      "reference_native_crop_xywh": [
+        68,
+        46,
+        6896,
+        4596
+      ],
+      "row_stride_samples": 6896,
+      "sha256": "5a488782976e13a7693b46b26084f12631cec4fbc90a28996e7069c99b13ca72",
+      "width": 6896
+    },
+    "actual_gather_u16": {
+      "bytes": 63388032,
+      "cfa_at_crop_origin": "RGGB",
+      "format": "headerless u16 little-endian CFA, row-major, no padding",
+      "height": 4596,
+      "path": "C:/Users/chris/.codex/worktrees/raw-quality-october26/strehl/outputs/raw-quality-2026-10-26/weevil-anchor149-gather\\gathered-crop.u16le",
+      "reference_native_crop_xywh": [
+        68,
+        46,
+        6896,
+        4596
+      ],
+      "row_stride_samples": 6896,
+      "sha256": "bf8b94353a637f6a56f562ddeb487ba54c4e943d44d154f8fae3eefba5a21479",
+      "width": 6896
+    }
+  },
+  "evidence": [
+    {
+      "role": "original",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source149-gather-1\\upper-leg-hairs-original.png",
+      "sha256": "cf1f0a10273cdcc99ae67445e25bcac0f602611d4afdd70c0fd35262378c9a03",
+      "native_context_xywh_master": [
+        1820,
+        640,
+        384,
+        384
+      ],
+      "display": "fixedgain3.434+sRGB; noresize"
+    },
+    {
+      "role": "gathered",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source149-gather-1\\upper-leg-hairs-gathered.png",
+      "sha256": "14135786c5ef8e9d15539c886f83e6b8cf9daf091f28c4e971f24d856411ca07",
+      "native_context_xywh_master": [
+        1820,
+        640,
+        384,
+        384
+      ],
+      "display": "fixedgain3.434+sRGB; noresize"
+    },
+    {
+      "role": "stack",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source149-gather-1\\upper-leg-hairs-stack.png",
+      "sha256": "2843d5ddca8fd16a4b2a71ae6fb5c0b2a4a08afcbc61426c75722d01cdd02e56",
+      "native_context_xywh_master": [
+        1820,
+        640,
+        384,
+        384
+      ],
+      "display": "fixedgain3.434+sRGB; noresize"
+    },
+    {
+      "role": "source-neighborhood-context",
+      "source_index_zero_based": 142,
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source-locator-1\\upper-leg-hairs-source-142.png",
+      "sha256": "0a705f223e4ad04948270878f3d9a64248617fdc3c34f2e40d6a7e072de15f6c",
+      "original_active_context_xywh": [
+        1888,
+        684,
+        384,
+        384
+      ],
+      "display": "exporter fixedpremerge tone; noresize; nativegeometry retained",
+      "numeric_use": "persistence context only; do not equate toned RGB or copy rounded local coordinates to source149"
+    },
+    {
+      "role": "source-neighborhood-context",
+      "source_index_zero_based": 143,
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source-locator-1\\upper-leg-hairs-source-143.png",
+      "sha256": "4e2863178babb47e795fac3930e6dc4f9f7a064a2e2986ae2bdffdbc2df0619a",
+      "original_active_context_xywh": [
+        1888,
+        684,
+        384,
+        384
+      ],
+      "display": "exporter fixedpremerge tone; noresize; nativegeometry retained",
+      "numeric_use": "persistence context only; do not equate toned RGB or copy rounded local coordinates to source149"
+    },
+    {
+      "role": "source-neighborhood-context",
+      "source_index_zero_based": 144,
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source-locator-1\\upper-leg-hairs-source-144.png",
+      "sha256": "1cff424609ca669c7ab867ff3328382c423ff54e673563fdfdf63065b2a91cab",
+      "original_active_context_xywh": [
+        1888,
+        686,
+        384,
+        384
+      ],
+      "display": "exporter fixedpremerge tone; noresize; nativegeometry retained",
+      "numeric_use": "persistence context only; do not equate toned RGB or copy rounded local coordinates to source149"
+    }
+  ],
+  "locator_receipt_sha256": "910e4b4ecf533e7acfb70b2f1575ad1477231c7748c83b260877904982582d00",
+  "excluded": {
+    "second_feature": "Not nominated: other upper-rim arcs overlap the body boundary; thorax marks are bead/glint dominated. No crop or metric search followed.",
+    "old_gap_recipe": "insect-placement/results.md remains a closed nomination/shape failure; no old zero placeholder is a motion estimate."
+  },
+  "existing_causal_control": "Original149 and actualgather149 G1/G2 are exact across the larger frozen384hairROI per source149-gather-1/cfa-phase-differences.json; R/B changes are already a known premerge color-fringe effect.",
+  "limits": [
+    "Neighbor142/143/144 tonedTIFFs are continuity witnesses, not originalCFA numerical measurements.",
+    "Source149 is not a focused ceiling for the whole appendage or fullstack.",
+    "No fixed point or source energy maximum was chosen by metric outcome.",
+    "No RAW decode, fit, new crop, reconstruction or build occurred."
+  ]
+}

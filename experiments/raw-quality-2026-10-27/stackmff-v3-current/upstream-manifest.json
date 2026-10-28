@@ -1,0 +1,54 @@
+{
+  "repository": "Xinzhe99/StackMFF-V3",
+  "commit": "6e1d7211f7634f60245706ebe3b839b320df9d00",
+  "sources": [
+    {
+      "path": "LICENSE",
+      "bytes": 1067,
+      "git_blob_sha1": "2ff4a73607352755ae7314fab70db8d13c26619d",
+      "url": "https://raw.githubusercontent.com/Xinzhe99/StackMFF-V3/6e1d7211f7634f60245706ebe3b839b320df9d00/LICENSE"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "bytes": 6182,
+      "git_blob_sha1": "4ce6e5d7428e2107b052a5ae5ff6e07eb24ab654",
+      "url": "https://raw.githubusercontent.com/Xinzhe99/StackMFF-V3/6e1d7211f7634f60245706ebe3b839b320df9d00/THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "path": "README.md",
+      "bytes": 23593,
+      "git_blob_sha1": "f071f33c4baa661702e853d841656433fa58451e",
+      "url": "https://raw.githubusercontent.com/Xinzhe99/StackMFF-V3/6e1d7211f7634f60245706ebe3b839b320df9d00/README.md"
+    },
+    {
+      "path": "fuse.py",
+      "bytes": 7963,
+      "git_blob_sha1": "ad95bd6a922a70cb853917a99abbce0d3af8c7f1",
+      "url": "https://raw.githubusercontent.com/Xinzhe99/StackMFF-V3/6e1d7211f7634f60245706ebe3b839b320df9d00/fuse.py"
+    },
+    {
+      "path": "stackmff_v3/__init__.py",
+      "bytes": 437,
+      "git_blob_sha1": "19bc2e194598b82520943a042986a975e82337c3",
+      "url": "https://raw.githubusercontent.com/Xinzhe99/StackMFF-V3/6e1d7211f7634f60245706ebe3b839b320df9d00/stackmff_v3/__init__.py"
+    },
+    {
+      "path": "stackmff_v3/model_io.py",
+      "bytes": 4460,
+      "git_blob_sha1": "fb319b28f1b868a782c8bdf60509de17504aa5c1",
+      "url": "https://raw.githubusercontent.com/Xinzhe99/StackMFF-V3/6e1d7211f7634f60245706ebe3b839b320df9d00/stackmff_v3/model_io.py"
+    },
+    {
+      "path": "stackmff_v3/network.py",
+      "bytes": 22701,
+      "git_blob_sha1": "9f806f9b11829ffde0a849d02f070e739cc3ccb0",
+      "url": "https://raw.githubusercontent.com/Xinzhe99/StackMFF-V3/6e1d7211f7634f60245706ebe3b839b320df9d00/stackmff_v3/network.py"
+    }
+  ],
+  "checkpoint": {
+    "path": "weights/stackmff_v3_final.pth",
+    "bytes": 658587,
+    "sha256": "39b2ea3738e8fea1676c379238d6be81a87988fc9952dbd6ac3825d5d7249f46",
+    "url": "https://github.com/Xinzhe99/StackMFF-V3/releases/download/v2.0/stackmff_v3_final.pth"
+  }
+}

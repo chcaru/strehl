@@ -1,0 +1,180 @@
+{
+  "status": "OVERVIEWS_READY_NO_VERDICT",
+  "quality_claim": false,
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\export-source-views.py",
+    "overviews"
+  ],
+  "inputs": [
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-tiff-export\\receipt.json",
+      "bytes": 291498,
+      "mtime_ns": 1793072664238196500,
+      "sha256": "461ecb3a8e44a82005ed6883718aa85276a74a2ebfca31fb0628809c4ba315a0"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-witnesses.json",
+      "bytes": 12213,
+      "mtime_ns": 1793071347179153000,
+      "sha256": "826c4ab6c620122449f6575cdd18c0f9ee9cb460f29f6d895e832325d6405888"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-ca-off-alignment.txt",
+      "bytes": 40799,
+      "mtime_ns": 1793073316984290900,
+      "sha256": "4a76cd0c56c3a525e70f5bf72b965adb706131618c5bf49d0ae853fbf341c225"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\export-source-views.py",
+      "bytes": 7163,
+      "mtime_ns": 1793090744092692500,
+      "sha256": "551ae127a4af4c6c1d9ba4e95007ba32a200b71224cc55c328f181bf8ebb7351"
+    }
+  ],
+  "source_tiffs_unchanged": true,
+  "original_raw_reads": 0,
+  "records": [
+    {
+      "index": 0,
+      "source": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-tiff-export\\frames\\DSC00001.tiff",
+        "bytes": 197801325,
+        "mtime_ns": 1793072459452471100,
+        "sha256": "b6f70c65eb78bc1fa764d7db99c5eb1d405f8b4fac5b45841c922d9fe71b4df7"
+      },
+      "original_raw_identity_metadata_only": {
+        "bytes": 34508800,
+        "index": 0,
+        "mtime_ns": 1792988893440000000,
+        "path": "D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00001.ARW",
+        "sha256": "666488a4937105b72e1a242049e199b612b134d2f2a52a3c3e51b3a06e634551"
+      },
+      "complete_source_view": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\overviews\\source-000.png",
+        "bytes": 1690171,
+        "mtime_ns": 1793090745163106800,
+        "sha256": "f9bbc3461aa7ab999b81c54bbc1c9454d5135d35b78742ddd73a428e5ae3a825"
+      },
+      "overview_dimensions": [
+        1617,
+        1078
+      ],
+      "resized": true
+    },
+    {
+      "index": 74,
+      "source": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-tiff-export\\frames\\DSC00075.tiff",
+        "bytes": 197801325,
+        "mtime_ns": 1793072509169829800,
+        "sha256": "0f3074ebfb04bc553719ea45221afd169817c5fcfe1cec7f49c4a054240b9e4c"
+      },
+      "original_raw_identity_metadata_only": {
+        "bytes": 35356672,
+        "index": 74,
+        "mtime_ns": 1792989045220000000,
+        "path": "D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00075.ARW",
+        "sha256": "50440e16d8eec8bf5e784d242d9123d46b22e8eb4bfed513fa6e20a9a6233878"
+      },
+      "complete_source_view": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\overviews\\source-074.png",
+        "bytes": 1940954,
+        "mtime_ns": 1793090745814686600,
+        "sha256": "1661b5a3d4edc2f4d389452f794f25dc08da9bc3446c3e712e27c31b25014d80"
+      },
+      "overview_dimensions": [
+        1617,
+        1078
+      ],
+      "resized": true
+    },
+    {
+      "index": 149,
+      "source": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-tiff-export\\frames\\DSC00150.tiff",
+        "bytes": 197801325,
+        "mtime_ns": 1793072559241094300,
+        "sha256": "9c6c3753630cb8a95b12cc2221007889676dc4635f03d2c8ced2013ca6f552dc"
+      },
+      "original_raw_identity_metadata_only": {
+        "bytes": 35184640,
+        "index": 149,
+        "mtime_ns": 1792989198950000000,
+        "path": "D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00150.ARW",
+        "sha256": "e85572179c8a98f5a2de2be5c81cd0b1bdeae67999aa00e585c6dde35f531154"
+      },
+      "complete_source_view": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\overviews\\source-149.png",
+        "bytes": 1923111,
+        "mtime_ns": 1793090746464114100,
+        "sha256": "2cbf49c11f73b454bfa945382a7116acfc7bbe1193742f8f2cf1eb0a489cf734"
+      },
+      "overview_dimensions": [
+        1617,
+        1078
+      ],
+      "resized": true
+    },
+    {
+      "index": 224,
+      "source": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-tiff-export\\frames\\DSC00225.tiff",
+        "bytes": 197801325,
+        "mtime_ns": 1793072608509974700,
+        "sha256": "a20cd594d97ec056607b702717de584b925ff89384360c485cdadc0ae20d7fe7"
+      },
+      "original_raw_identity_metadata_only": {
+        "bytes": 34492416,
+        "index": 224,
+        "mtime_ns": 1792989352720000000,
+        "path": "D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00225.ARW",
+        "sha256": "a7b7457a70647e5eb199d62a20204142581b1fa41aaa0336602cf76689d8fba7"
+      },
+      "complete_source_view": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\overviews\\source-224.png",
+        "bytes": 1725936,
+        "mtime_ns": 1793090747116406700,
+        "sha256": "48992a114b881784ce8cda83e03b7993302387893315f3f6fdb4112c94915fcc"
+      },
+      "overview_dimensions": [
+        1617,
+        1078
+      ],
+      "resized": true
+    },
+    {
+      "index": 298,
+      "source": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-tiff-export\\frames\\DSC00299.tiff",
+        "bytes": 197801325,
+        "mtime_ns": 1793072659337879000,
+        "sha256": "9b99d4d7eef0a3d16b1792ef20640854edba70f56a0f5f14d97f746729eca928"
+      },
+      "original_raw_identity_metadata_only": {
+        "bytes": 34398208,
+        "index": 298,
+        "mtime_ns": 1792989504380000000,
+        "path": "D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00299.ARW",
+        "sha256": "1a05b50ad90120b91eec298a39c5517ecece70942ff4beb74458855942836e7e"
+      },
+      "complete_source_view": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-27\\weevil-fine-comparator\\source-support\\overviews\\source-298.png",
+        "bytes": 1656196,
+        "mtime_ns": 1793090747781475500,
+        "sha256": "4a02d8e4cd06bdf013d0284321d41a9c47c20afea0e08cb9b6307b18e878cbf4"
+      },
+      "overview_dimensions": [
+        1617,
+        1078
+      ],
+      "resized": true
+    }
+  ],
+  "seconds": 3.313000000001921,
+  "display": "Unmodified developed RGB16 and original ICC; PNG (value+128)//257. Complete overviews only are resized.",
+  "mapping": "Reference149 native pixel center plus(68,46); q=C+a*(p-C)+2b, C=(3516,2344); round crop origin. Map locates context only. No source pixel warp, CA, fit, scale normalization or equal-footprint metric."
+}

@@ -1,0 +1,61 @@
+--- gpu-server-convolution.py.txt
++++ gpu-server.py
+@@ -13,10 +13,12 @@
+ import sys
+ import time
+ import traceback
++import types
+ 
+ LIMIT = 24 * 1024**3
+ CPU_TRANSFORM = "d49b6fe8ae336e2e25c3df506e38756201ad86ac7365543037b1390bc9598c65"
+ CPU_CONSUMER = "eb6a51dbee5e65af9aec06c8e9e8a12dc4d29784572caa835c522df4029391e6"
++ORDERED_FIR_HELPER_SHA256 = "16688f2bf6b555c2fe5c90e4d141415ddc0b59d0d7574f847f55a13bbd715dce"
+ EXPONENT_BITS = [1090519040, 1090519040, 1089854661, 1085250994,
+                  1081794887, 1077097267, 1073741824]
+ FIRST_LOW = [
+@@ -162,6 +164,17 @@
+         self.source_records = []
+         self.device_name = properties.name
+         self.device_total = properties.total_memory
++        helper_path = Path(__file__).with_name("ordered-fir.py")
++        helper_bytes = helper_path.read_bytes()
++        need(hashlib.sha256(helper_bytes).hexdigest() == ORDERED_FIR_HELPER_SHA256,
++             "ordered FIR helper binding differs")
++        helper = types.ModuleType("strehl_ordered_fir")
++        helper.__file__ = str(helper_path)
++        # Execute the exact bytes just hashed; do not import an unbound pyc.
++        exec(compile(helper_bytes, str(helper_path), "exec"), helper.__dict__)
++        self.ordered_fir = helper.OrderedFir(torch)
++        need(self.ordered_fir.helper_sha256 == ORDERED_FIR_HELPER_SHA256,
++             "ordered FIR helper changed during initialization")
+         self.check_memory()
+ 
+     def scalars(self):
+@@ -255,12 +268,10 @@
+         for k in range(7):
+             hx, hy, minimum, maximum = self.filters(k, bank_foil)
+             h, w = current.shape[-2:]
+-            xp = current.index_select(3, self.indices(w, minimum, maximum))
+-            x = self.F.conv2d(xp, hx, stride=(1, 2), groups=4)
+-            del xp, current
+-            yp = x.index_select(2, self.indices(h, minimum, maximum))
+-            y = self.F.conv2d(yp, hy, stride=(2, 1), groups=8)
+-            del yp, x
++            x = self.ordered_fir.horizontal(current, hx, minimum)
++            del current
++            y = self.ordered_fir.vertical(x, hy, minimum)
++            del x
+             y = y.reshape(4, 4, h // 2, w // 2)
+             current = y[:, 0].unsqueeze(0).contiguous()
+             aa, ab, ba, bb = (y[j, 1:] for j in range(4))
+@@ -528,7 +539,9 @@
+                 "device": self.device_name, "device_total_bytes": self.device_total,
+                 "tf32": False, "autocast": False, "autograd": False, "f16": False,
+                 "deterministic_algorithms": True, "cudnn_benchmark": False,
+-                "arithmetic_difference": "grouped FIR convolution/adjoint reductions and device log-exp order differ from CPU",
++                "arithmetic_difference": "forward explicit CPU tap-order f32 multiply/add; unchanged grouped adjoint reductions and device log-exp order still differ from CPU",
++                "ordered_fir_helper_sha256": ORDERED_FIR_HELPER_SHA256,
++                "ordered_fir": self.ordered_fir.metadata(strict),
+                 "cpu_transform_sha256": CPU_TRANSFORM, "cpu_consumer_sha256": CPU_CONSUMER,
+                 "bank": "published first-stage Farras10 and local-signed Q14; literal frozen constants",
+                 **self.memory(strict)}

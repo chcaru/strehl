@@ -1,0 +1,77 @@
+{
+  "index": 149,
+  "selection": "Alignment anchor149 chosen before original sensor pixels were viewed; not a focus maximum.",
+  "original": {
+    "index": 149,
+    "mtime_ns": 1792989198950000000,
+    "path": "D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00150.ARW",
+    "sha256": "e85572179c8a98f5a2de2be5c81cd0b1bdeae67999aa00e585c6dde35f531154",
+    "bytes": 35184640
+  },
+  "raw_decodes_unique_originals_this_lane": 1,
+  "active_shape": [
+    4688,
+    7028
+  ],
+  "metadata": {
+    "pattern": [
+      [
+        0,
+        1
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "color_desc": "RGBG",
+    "black": [
+      512,
+      512,
+      512,
+      512
+    ],
+    "white": 16383,
+    "camera_wb": [
+      1637.0,
+      1024.0,
+      2774.0,
+      1024.0
+    ],
+    "daylight_wb": [
+      2.4478163719177246,
+      0.9319279193878174,
+      1.2933659553527832,
+      0.0
+    ],
+    "sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+    "rawpy_version": "0.27.0",
+    "libraw_version": [
+      0,
+      22,
+      1
+    ]
+  },
+  "persisted_cfa": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source-149\\active-cfa-u16.npy",
+    "sha256": "15c33bdd558df9b4f9a303b294e3a6504ba14f1ef4d71cf8c52888111c50667f"
+  },
+  "cfa_pixel_sha256": "e50df37f6aa25eccd66e914eb25c19bbd87ef2881127b0d5bae3c9c9986bc059",
+  "independent_decode": {
+    "command": [
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+      "D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00150.ARW",
+      "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\source-149",
+      "149",
+      "0",
+      "0",
+      "4688",
+      "7028"
+    ],
+    "exit_code": 0,
+    "executable_sha256": "ecf20e1b1e639fc3b86fe82d26a3e3ca02fd326549aa6353e80ad4480682d89d",
+    "differing_sensels": 0
+  },
+  "script_sha256": "4136fb775a1829ed785bd11ce47babccbd99839c2a918b8fda51a0a8b50a88ff",
+  "original_hash_and_mtime_unchanged": true
+}

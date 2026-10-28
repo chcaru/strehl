@@ -12,6 +12,8 @@
 
 pub mod align;
 pub mod boxfilter;
+#[path = "cfa-lattice.rs"]
+pub mod cfa_lattice;
 pub mod clip;
 pub mod color;
 pub mod defect_map;

@@ -1,0 +1,163 @@
+{
+  "status": "STOP_SECOND_INDEPENDENT_STRAND_NOT_ANCHORED",
+  "source_revision": "4813e46bdc9aaf5f9220115911df5cd5aa3fd808",
+  "producer": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\run-1\\output\\receipt.json",
+    "bytes": 3107730,
+    "sha256": "09e53e7f22d64b199ad20c55957c713700144d6a41a0c974419721a5c81188db"
+  },
+  "postflight": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\views-1\\result.json",
+    "bytes": 683872,
+    "sha256": "e492a771f625a3e8dab4bc72eb4bc7f8d8c667702435c7a15de3f2e539498e3a"
+  },
+  "reference_frame": 244,
+  "delivered_search_xywh": [
+    3394,
+    3140,
+    192,
+    136
+  ],
+  "crop_offset_native": [
+    382,
+    256
+  ],
+  "gathered_phases": {
+    "G1": [
+      1,
+      0
+    ],
+    "G2": [
+      0,
+      1
+    ]
+  },
+  "rows": [
+    {
+      "ordinal": 156,
+      "original_path_from_receipt_only": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00177.ARW",
+      "gathered_cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\run-1\\output\\frame-156-gathered-cfa.f32",
+        "bytes": 614656,
+        "sha256": "87f29cf3e6c555e0a85054bff48aa7e7024f2db6544921e0e8c29df645f3c3f5"
+      },
+      "dimensions": [
+        392,
+        392
+      ],
+      "padded_origin_xy": [
+        3292,
+        3068
+      ],
+      "reference_output_xywh": [
+        3296,
+        3072,
+        384,
+        384
+      ],
+      "viewed_images": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\views-1\\frame-156-gathered-native.png",
+          "bytes": 103210,
+          "sha256": "321a2fef50d9c67c96135799aca3449698adec45d702d4849af821eb926259cf"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\views-1\\frame-156-g1-native.png",
+          "bytes": 46526,
+          "sha256": "4a15ce70f97289872d4843e605bbba91402a4251e39125158dc2a67318c3fc1b"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\views-1\\frame-156-g2-native.png",
+          "bytes": 46471,
+          "sha256": "39a0787556f280ed20427397854017aabc0cbd2feb20a31019a568e9cf860756"
+        }
+      ]
+    },
+    {
+      "ordinal": 160,
+      "original_path_from_receipt_only": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00181.ARW",
+      "gathered_cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\run-1\\output\\frame-160-gathered-cfa.f32",
+        "bytes": 614656,
+        "sha256": "08e626c9300b94b6967bf995727baaddd21f1d0da2e0cee9fc7bc670688544a2"
+      },
+      "dimensions": [
+        392,
+        392
+      ],
+      "padded_origin_xy": [
+        3292,
+        3068
+      ],
+      "reference_output_xywh": [
+        3296,
+        3072,
+        384,
+        384
+      ],
+      "viewed_images": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\views-1\\frame-160-gathered-native.png",
+          "bytes": 102985,
+          "sha256": "d97eb71a7d90a1be0941a0a40f347e3356e20c1822e8301439a78a1539d01840"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\views-1\\frame-160-g1-native.png",
+          "bytes": 46476,
+          "sha256": "b3ff09e4b333417a27be50b65e51488d8c5522fe1efd24cbb262d3934dbd44d0"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\views-1\\frame-160-g2-native.png",
+          "bytes": 46418,
+          "sha256": "4b3eb5eaca6d40ea14ddeb9ebc4346544f15721eedc2661e64d871ef5dc5844b"
+        }
+      ]
+    },
+    {
+      "ordinal": 164,
+      "original_path_from_receipt_only": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00185.ARW",
+      "gathered_cfa": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\run-1\\output\\frame-164-gathered-cfa.f32",
+        "bytes": 614656,
+        "sha256": "eccb84e5163468f62576b4657cfdf57077b81f5022bbe4de8268d8e5bf6dce7b"
+      },
+      "dimensions": [
+        392,
+        392
+      ],
+      "padded_origin_xy": [
+        3292,
+        3068
+      ],
+      "reference_output_xywh": [
+        3296,
+        3072,
+        384,
+        384
+      ],
+      "viewed_images": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\views-1\\frame-164-gathered-native.png",
+          "bytes": 102502,
+          "sha256": "ab40c60c44434041c2eed7abe0c5590077fd67b870ac159997880351f244ec8c"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\views-1\\frame-164-g1-native.png",
+          "bytes": 46452,
+          "sha256": "f0d1e487da3b6b2a8996b45b82852f4713b9d303c4ffd487433defe19cba4607"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\views-1\\frame-164-g2-native.png",
+          "bytes": 46405,
+          "sha256": "98a51a06bf07a4cbf3089b3e6508aa4a25beb6637dd5292edd63504647921736"
+        }
+      ]
+    }
+  ],
+  "correspondence_script_implemented": false,
+  "numeric_fit_executed": false,
+  "original_raw_reads": 0,
+  "new_photograph": false,
+  "quality_improvement": false,
+  "source_checks": "Hash audit of the three saved arrays and nine viewed PNGs only; no original RAW hash/read or numerical array loading."
+}

@@ -1,0 +1,27 @@
+# Independent controls for one level-balanced candidate
+
+SOURCE PREPARATION ONLY, before any output. Root executes `python -B -X faulthandler experiments/raw-quality-2026-10-27/direct-cfa-level-balanced/controls.py --out <fresh workspace outputs directory>` under 300 s, 1200 CPU-seconds, 16 GiB host and 8 GiB Torch bounds. Four CPU workers, one interop worker, f32, TF32/autocast off. This author runs no numerical, import, GPU, RAW or build job.
+
+Terminal schema: `receipt.json`, status `COMPLETE_LEVEL_BALANCED_CONTROLS`, `complete`, `all_cases_completed`, `controls_pass`, separate `quality_pass`, and unconditional `quality_claim:false`, `photographic_admission:false`, `admission:false`. Exceptions retain completed per-case/control artifacts and an incomplete receipt. Mechanical pass is distinct from quality scores or numerical convergence.
+
+## Exact photographic controls first
+
+Reuse the previously saved original seven-source128x128 u16 cases `flat-neutral`, `independent-colour`, and `fine-far`, in that order. They are independent analytic continuous fields, original sensor-cell integration and fixed injected noise, not A(X) plants. No new seeds or geometry are invented. A fourth fit is the frozen no-focus `fine-far` placebo. All use the actual new StreamedProblem and maximum4-step solver, exact original128 geometry with latent144 and eight-pixel apron. The as-consumed gain/read-variance bits are identical to the retained product baseline. No per-stage noise estimate is introduced.
+
+Complete144 latent/correction fields and complete128 reference-cell RGB/PNG outputs are retained for every arm. Score the same central96 cells against the existing actual BandWorker/MHC product output at native origin(16,16). The actual product baseline remains two AC bands versus the candidate's six original-phase Haar levels, and its96-pixel final MHC boundary differs from the candidate interior; this is not a basis-only comparison. Original source files/hashes and metadata are checked, and arrays remain unchanged.
+
+Use the exact frozen `image_score` and `quality_guard`: flat RGB/green/chroma errors must be at most1.10 times actual baseline plus0.5 DN; structured cases use plus1 DN, eligible component retention and the existing independent weak-green limit. All failures remain explicit. Frozen destroying controls exercise added flat noise, erased far detail, erased weak green, false green and overcontrast through these same guards; these are scoring foils, not producing reconstruction arms. A passed metric is not a new image-quality claim. The prior failed flat/noise recipe remains recorded.
+
+## Independent transform and metric mechanics
+
+The NumPy f32 count-aware Haar reference derives child support counts directly from clipped original-coordinate bins at each dyadic scale. It imports no producing pair/inverse code. Test the actual7032x4688 extent and a19x23 extent at odd physical origin(3,5), covering every phase and odd carry. Complete signal coefficients, independent inverse coefficients, marginal variance propagation and Boolean support plus3x3 admission neighborhoods are compared. Signed structured fields, a unit constant and nonuniform positive variance are fixed prospectively.
+
+Forward/inverse/roundtrip/variance comparison bars are normalized maximum1e-5 and RMS2e-6, with reference scales floored at1. Dot and Parseval relative bars are3e-6. Unit-constant AC maximum is bounded by `64*epsilon_f32*128` (0.0009765625), an explicit rounding allowance at the largest128-sample per-axis support, not exact-zero arithmetic. The frozen legacy unequal carry must fail that same constant check. Rolling the coefficient vector only before the actual inverse must fail the same field comparison; relabeling both sides is not accepted as a foil.
+
+For each actual small candidate/placebo, the independent CPU transform, variance, replicated3x3 energy, support and original focus formula reconstruct Q/R and the single shared seven multipliers. Compare every balanced source metric, unchanged LL and restored shared-level precision mass, with relative L2 bar3e-5 (a zero reference requires exact equality). These tests preserve cross-source/color/orientation preferences; they do not normalize each source separately. A producing helper with level0 multiplier times8 must fail the same comparison. Actual all-clipped u16 input stays wholly omitted; fabricated empty strata produce zero multipliers, while positive R/zero Q and nonfinite Q refuse. The no-focus producer independently predicts Q=R and unit active multipliers.
+
+## Checkpoint isolation and limits
+
+Run the actual new solver twice on the retained deterministic SPD algebra fixture. The second callback deliberately overwrites its received correction clone and metadata copy after recording the schedule. Final x/z bytes, history and status must equal the callback-free result, with visits1/2/4 as reached. This isolates callback mutation without falsely demanding bit identity from separately recomputed atomic sensor adjoints. The photographic worker must still use the commissioned read-only restore/delivery path and preserve refusals.
+
+No guard relaxes the unchanged true-normal1e-5 criterion. Four-step image scores and no-focus differences do not establish a correct converged objective, depth visibility, physical defocus, weak-phase identifiability, noise control, or broad photographic quality. Mechanical controls may authorize only the separately bounded complete-image pilot; all1/2/4 photographs remain decisive before any longer work.

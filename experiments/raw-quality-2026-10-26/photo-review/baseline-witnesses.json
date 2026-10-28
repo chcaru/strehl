@@ -1,0 +1,270 @@
+{
+  "schema": 1,
+  "state": "BASELINE_ONLY_WITNESSES_FROZEN_BEFORE_CANDIDATE",
+  "master": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-baseline\\stack-master.tiff",
+    "bytes": 190169209,
+    "sha256": "ecfae13e937f44445f3fe2a83a2e72861c4cd6cd9f56f02139f3f5e3dc0f9665"
+  },
+  "complete_rgb16_dimensions": [
+    6896,
+    4596
+  ],
+  "frames": 299,
+  "map": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\weevil-107-baseline\\alignment.txt",
+    "sha256": "4a76cd0c56c3a525e70f5bf72b965adb706131618c5bf49d0ae853fbf341c225",
+    "bytes": 40799
+  },
+  "source_crop_quad_xywh": [
+    34,
+    23,
+    3448,
+    2298
+  ],
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "display": {
+    "png8": "round RGB16/257 via (value+128)//257; original ICC retained; no exposure/tone/contrast changes",
+    "rgb16": "exact source subarray copied losslessly; original ICC retained",
+    "viewer": "view_image detail original at384x384; whole image view is resized orientation only"
+  },
+  "producer": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\export-baseline.py",
+    "bytes": 3921,
+    "sha256": "1d36eda5d54efbf79b108842f108cb86491f5b89288cd1a72925de5d2f2d0a13"
+  },
+  "witnesses": [
+    {
+      "name": "background-black",
+      "rect_xywh": [
+        3800,
+        500,
+        384,
+        384
+      ],
+      "gauge": "delivered native RGB pixels; origin at cropped master top-left",
+      "role": "Visually dark background; clipping/faint speck guard, not a certified flat-noise measurement.",
+      "resized": false,
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\background-black.tiff",
+        "bytes": 887680,
+        "sha256": "a45a49a7ae7e3fb18e4780dba1d89e572be8858b03e1c2a226cfd8e8a5381f70"
+      },
+      "png8": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\background-black.png",
+        "bytes": 102301,
+        "sha256": "69363285ef741119f4cb5c1caa04eccc1476000c61383d9247d38bb96c854823"
+      },
+      "rgb16_pixel_sha256": "dca69bec9ddfc98ab987eeea228fc7697f23a20cec21513658ed8368ba8934fb"
+    },
+    {
+      "name": "dark-elytron",
+      "rect_xywh": [
+        2750,
+        2120,
+        384,
+        384
+      ],
+      "gauge": "delivered native RGB pixels; origin at cropped master top-left",
+      "role": "Weak dark material texture and faint specks; smoothing must not be mistaken for detail recovery.",
+      "resized": false,
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\dark-elytron.tiff",
+        "bytes": 887680,
+        "sha256": "d45ba228c75fc8deaae9783d1c60f82687e93cf88a68d4730619f3e26affadb0"
+      },
+      "png8": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\dark-elytron.png",
+        "bytes": 273523,
+        "sha256": "d6578c9b946ed5fda956f8f6dbc71a45215bd2db65329e4032ef5c0dcede5e29"
+      },
+      "rgb16_pixel_sha256": "b35fefc7c4262c80db5c884aee679960c237284f8152cde86dea28d10412b073"
+    },
+    {
+      "name": "turquoise-scales",
+      "rect_xywh": [
+        2120,
+        1340,
+        384,
+        384
+      ],
+      "gauge": "delivered native RGB pixels; origin at cropped master top-left",
+      "role": "Individual bright scale shapes and gaps, not aggregate high-frequency energy.",
+      "resized": false,
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\turquoise-scales.tiff",
+        "bytes": 887680,
+        "sha256": "1d4d10091d13a38e588bf4b76085d806d062dd02cccd903fe92424170ea86157"
+      },
+      "png8": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\turquoise-scales.png",
+        "bytes": 302068,
+        "sha256": "d425a9913d3f32f0a0fd3146ef75e11b4d79a9555ec19cad52ce54a8f1ce41f9"
+      },
+      "rgb16_pixel_sha256": "c29f282d6aab8bb9fe4b58004e6b74857aeaa4e6dd8229e20747e713f94b2b12"
+    },
+    {
+      "name": "elytron-seam",
+      "rect_xywh": [
+        2950,
+        1960,
+        384,
+        384
+      ],
+      "gauge": "delivered native RGB pixels; origin at cropped master top-left",
+      "role": "Long diagonal seam and nearby scales at distinct depths; continuity and double rims.",
+      "resized": false,
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\elytron-seam.tiff",
+        "bytes": 887680,
+        "sha256": "d1f22d0b6aa117f3b96a7331ec7d517391c76afa6dcb5bbaeb9a52fb7b3e3907"
+      },
+      "png8": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\elytron-seam.png",
+        "bytes": 296994,
+        "sha256": "3088b589c4bfc73cd5746207d30332c339deb298ac2051462aa2d8f6646df083"
+      },
+      "rgb16_pixel_sha256": "ec42d70fefa5632bac6246e48238a77681804950534c3169633a2005b5dc0620"
+    },
+    {
+      "name": "bright-wing-rim",
+      "rect_xywh": [
+        4050,
+        1810,
+        384,
+        384
+      ],
+      "gauge": "delivered native RGB pixels; origin at cropped master top-left",
+      "role": "Bright glints and pale scale texture near the body edge; color and highlight structure.",
+      "resized": false,
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\bright-wing-rim.tiff",
+        "bytes": 887680,
+        "sha256": "9662d36e8b131ecdffc1ebcb03f827ff6aa4e8ffd5ea125b31409e6e842373bd"
+      },
+      "png8": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\bright-wing-rim.png",
+        "bytes": 301879,
+        "sha256": "951eb6a3722f0976f05653a865b549d3811b16726d2d22e48ec3a3117595544f"
+      },
+      "rgb16_pixel_sha256": "12afeca380c85268ab5a82cf407bf0783dcb1c3d9aa9618a46910a575c450d3d"
+    },
+    {
+      "name": "thorax-texture",
+      "rect_xywh": [
+        4520,
+        2560,
+        384,
+        384
+      ],
+      "gauge": "delivered native RGB pixels; origin at cropped master top-left",
+      "role": "Dense fine scale/texture pattern on curved thorax.",
+      "resized": false,
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\thorax-texture.tiff",
+        "bytes": 887680,
+        "sha256": "255411c033b7f9991bb9c3df3869ca186124b4e30f7a03a7fec14330f93d1f9e"
+      },
+      "png8": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\thorax-texture.png",
+        "bytes": 320515,
+        "sha256": "93ba6bb5e0ea6c6e14545de77c00d606d2de538e15512f5343f094c5d1a0e7d9"
+      },
+      "rgb16_pixel_sha256": "e556dcad34c9cd02e56e933e4f243ca95b85214dba1c2c83e81fec5129234c62"
+    },
+    {
+      "name": "upper-leg-hairs",
+      "rect_xywh": [
+        1820,
+        640,
+        384,
+        384
+      ],
+      "gauge": "delivered native RGB pixels; origin at cropped master top-left",
+      "role": "Slender hairs, leg surface marks and dark edge surround.",
+      "resized": false,
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\upper-leg-hairs.tiff",
+        "bytes": 887680,
+        "sha256": "0925a2e642ba4e0753fefe6b4f8aa54f56fdd342d631901206cf12b7ad34404c"
+      },
+      "png8": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\upper-leg-hairs.png",
+        "bytes": 187234,
+        "sha256": "ff7c2d913a148eca3217d32a5c1769a81940270924487a50ae8b880872a1b574"
+      },
+      "rgb16_pixel_sha256": "c01990eec9cc134815d51e81c565ce288012afb6fb0029b9d0f80d6ff8565a9a"
+    },
+    {
+      "name": "blue-joint",
+      "rect_xywh": [
+        2680,
+        850,
+        384,
+        384
+      ],
+      "gauge": "delivered native RGB pixels; origin at cropped master top-left",
+      "role": "Saturated blue/cyan transition and small dark/bright marks.",
+      "resized": false,
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\blue-joint.tiff",
+        "bytes": 887680,
+        "sha256": "ee700ffb0665ffa9ca0a5dd7655a94897956d6e72ef5c5e9543e70fb891e869a"
+      },
+      "png8": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\blue-joint.png",
+        "bytes": 288849,
+        "sha256": "51cb4692033a6c87755d8b385fd4f69831096b558432e5682a505f7ae562a0ec"
+      },
+      "rgb16_pixel_sha256": "120efc101ede64592bffeab13a6a8bc93ba52d42a77990ba2acf232732d93e90"
+    },
+    {
+      "name": "upper-occlusion",
+      "rect_xywh": [
+        3850,
+        1300,
+        384,
+        384
+      ],
+      "gauge": "delivered native RGB pixels; origin at cropped master top-left",
+      "role": "Overlap between raised blue limb, elytron edge and dark cavity; edge multiplicity and shading.",
+      "resized": false,
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\upper-occlusion.tiff",
+        "bytes": 887680,
+        "sha256": "5609214e6552b32e0a8e362016ad6779f3f05d8adc4810d32cb58d232828b489"
+      },
+      "png8": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\upper-occlusion.png",
+        "bytes": 274378,
+        "sha256": "1aef9af26397cd5ddc091073f8c2257ff7507fdc3dabfb922b35f51917be0dd6"
+      },
+      "rgb16_pixel_sha256": "67f8d157ccdfa47ed96b515f99623e28cb2f9d3b17d6c2ad0b1164c9dfd4edb5"
+    },
+    {
+      "name": "eye-and-antenna",
+      "rect_xywh": [
+        5350,
+        2920,
+        384,
+        384
+      ],
+      "gauge": "delivered native RGB pixels; origin at cropped master top-left",
+      "role": "Eye outline, adjacent head texture and hair/antenna strands; cross-depth preservation.",
+      "resized": false,
+      "rgb16": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\eye-and-antenna.tiff",
+        "bytes": 887680,
+        "sha256": "c797f8b6ec9178474d229cd54388e0c20866b2acc9063903b1868538cd669b7b"
+      },
+      "png8": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\photo-review\\baseline-native\\eye-and-antenna.png",
+        "bytes": 248515,
+        "sha256": "70935aedebd7f965aad254701c030a5b26f4b40fed015d90cfc4d99d6c26fe46"
+      },
+      "rgb16_pixel_sha256": "cf093f9328e4f84f9b0d846f31b8fc0422e53a106ab7265b4fe9dd344fa0ce5d"
+    }
+  ],
+  "candidate_seen": false,
+  "raw_decodes": 0
+}

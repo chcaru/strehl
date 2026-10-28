@@ -1,0 +1,162 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\compact-surface-bracket\\renderer-build-1\\matched-exposure-rgb-render.exe",
+    "sha256": "60c1e4b3dc19553dd686ae7fcd31a0cd9ce0f0774259777b73060686e98b7099",
+    "bytes": 912896
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\model.py",
+    "sha256": "5710146ffcf463de85e317050bc81357922965d6006c7b4cf311f4d80d8ee512",
+    "bytes": 16869
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\pupil-stencil.py",
+    "sha256": "2be60901ed7a3ee8eb007c8611a4d690fe1ecc859ecaf6e375cb5cd0603e14d6",
+    "bytes": 17014
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-constrained-raw\\model.py",
+    "sha256": "9e169c75d1b707964af22fc0787f611a252540da8a6efcfdaf5eb988d4de94c4",
+    "bytes": 9440
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-constrained-raw\\pupil.py",
+    "sha256": "a092ed94ff6c5d3a6f89824763fc41b8b86a93209bca21cdec76e221a6a050f5",
+    "bytes": 4805
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-constrained-raw\\run-1\\current-camera-rgb.f32",
+    "sha256": "7547165e155ef4d2751880bd247c25e92a4226825dcb040795a63fcd5ccd5a9b",
+    "bytes": 186624
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-constrained-raw\\run-1\\current-expected.tiff",
+    "sha256": "88b5afaf0d73c45d17b1db02be20fd29a73cdca4cbeb70386a5177cfe05e0c7e",
+    "bytes": 96320
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-constrained-raw\\run-1\\final-fields.npz",
+    "sha256": "975a2863d83222aae14d5e1f6b1ff08f782a5ac08a551cb6583dc4e79003efd1",
+    "bytes": 2823142
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-constrained-raw\\run-1\\held-104-final.npz",
+    "sha256": "8759836954e347d2b9a6dc74d7229dff21d27b40c80f9d8d81a40ec869bb21f8",
+    "bytes": 1011216
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-constrained-raw\\run-1\\held-120-final.npz",
+    "sha256": "19e3617dd2703466179dae73d0d33ebc1196a946b82e7c0e4d0265d17fee3c12",
+    "bytes": 999756
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-constrained-raw\\run-1\\held-136-final.npz",
+    "sha256": "7cfbf5b3bd33ed280eab934d18d669381e70fb155dc97fb1eb329fdbd8f8953c",
+    "bytes": 984846
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-constrained-raw\\run-1\\held-152-final.npz",
+    "sha256": "824465d4710254fa8108e266bccef154680e0e55e713df760e17248925a37cb2",
+    "bytes": 972306
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-constrained-raw\\run-1\\held.json",
+    "sha256": "3a7a39e8a293fc0219f375d6d2cd52fcedf19313daddbb5dcb431e543944395b",
+    "bytes": 9452
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-constrained-raw\\run-1\\initial.npz",
+    "sha256": "fd69cc4e8687582ee333edc750910f98cd301c3cafa0e363e8efa7d84b5d88c3",
+    "bytes": 2924184
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-constrained-raw\\run-1\\optics.json",
+    "sha256": "a0bbfe028736fe75fa0d61fe070e6ce7cf711c322dee1bf63db6529f0a65187b",
+    "bytes": 8856
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-constrained-raw\\run-1\\render\\reconstructed.tiff",
+    "sha256": "af7890ea6e21f716128d029772c52c33e7d38c5e5e3647007a5989c73004bee8",
+    "bytes": 96985
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-constrained-raw\\run-1\\render-config.json",
+    "sha256": "d9f9c3cce624a6312c4f19a71fb70daaf4d12dccd1ab9c93a47445b6b7856ebd",
+    "bytes": 1662
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-constrained-raw\\run.py",
+    "sha256": "96d2c564a838c75096e6705daa6d3d781a87ae2fb4d27cd23103c949d17c13e3",
+    "bytes": 21629
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\photo-1\\baseline.json",
+    "sha256": "b77bbc4b5bd194c3b7e2d1630f145e76b55ed4e0bfe76104f69a4f47c46bfacf",
+    "bytes": 903
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\photo-1\\current-expected.tiff",
+    "sha256": "b2e0cdc4e8856d209fddea52f12146eec461ca5e065157fe00b10bfac8256521",
+    "bytes": 887680
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\photo-1\\render-development.json",
+    "sha256": "e83bdf4592fefa0d99e2b4d2800606fdf2a4fc23d65e6360cd84c44e93544c97",
+    "bytes": 234
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-fan-learned\\run-1\\output\\receipt.json",
+    "sha256": "09e53e7f22d64b199ad20c55957c713700144d6a41a0c974419721a5c81188db",
+    "bytes": 3107730
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-foreground-inputs\\stage-1\\patches\\frame-096-cfa.npy",
+    "sha256": "33e2ca2519e1d262dc59c7af0a3dde85dbf0ce09d5f3ac3fad44c22590f52f31",
+    "bytes": 1733648
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-foreground-inputs\\stage-1\\patches\\frame-104-cfa.npy",
+    "sha256": "b77d39d19caf8472bc537d62638728eade3a9a13e3a3f98ecc9616c5ad12683b",
+    "bytes": 1722496
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-foreground-inputs\\stage-1\\patches\\frame-112-cfa.npy",
+    "sha256": "91cd45fb5a86239c4521fcc7aed9c6a12bf724826f6aa802d180f38239b85c75",
+    "bytes": 1711376
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-foreground-inputs\\stage-1\\patches\\frame-120-cfa.npy",
+    "sha256": "476d07505d9eb2275949631fec341c317567aee6ccc9524ea3d1c379cb9ebd53",
+    "bytes": 1700296
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-foreground-inputs\\stage-1\\patches\\frame-128-cfa.npy",
+    "sha256": "7029a8ab12f7f5b22cd0484d59949e52574a8d4d10e4ae1969e89d9151970bdf",
+    "bytes": 1685576
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-foreground-inputs\\stage-1\\patches\\frame-136-cfa.npy",
+    "sha256": "29fd69a7146181bd9876bfed9349e464a51f6c6602b32e30c94ea5c5f1fbdaf6",
+    "bytes": 1674576
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-foreground-inputs\\stage-1\\patches\\frame-144-cfa.npy",
+    "sha256": "3876013b3b51813bb3b45ebe0bd7611b0fd90ac23b3fc5046d9922be50cdd291",
+    "bytes": 1663616
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-foreground-inputs\\stage-1\\patches\\frame-152-cfa.npy",
+    "sha256": "b597823f7df3fb1b99a8d0bdae8c33902f560122b965cc64df086dfe7926263c",
+    "bytes": 1652688
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-foreground-inputs\\stage-1\\patches\\frame-160-cfa.npy",
+    "sha256": "b9ebadcbf7b5bba526682e3592a101bfd3f73b8fe34d4ece1f9fc497a839bf3a",
+    "bytes": 1641800
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-foreground-inputs\\stage-1\\receipt.json",
+    "sha256": "ca496e45b0d7d326c0c177a8736701739129f63dc6ebfe5194a7955a27f51c4a",
+    "bytes": 23777
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "state": "BASELINE_ALL10_NATIVE_VIEWED_BEFORE_CA_OFF",
+  "candidate_seen": false,
+  "frozen_manifest_sha256": "97c72bc13cdc9af946573c8c5f42d73e243acc4b1d432b3b0627f2dd356ed053",
+  "baseline_note_sha256": "39d1e50c02fce8cf20f396e9897da2d3eda421e0677a8049f44c95434840a5d1",
+  "full_image_viewed_first": true,
+  "viewed_native_sites": [
+    "dark-background",
+    "green-fine-texture",
+    "left-green-rim",
+    "junction-white-strands",
+    "orange-network-upper",
+    "orange-network-lower",
+    "central-green-orange-rim",
+    "central-seam",
+    "right-reflective-orange",
+    "right-outer-fibres"
+  ],
+  "display_gain": 4.993,
+  "original_raw_reads": 0
+}

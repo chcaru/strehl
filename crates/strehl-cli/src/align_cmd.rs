@@ -17,6 +17,9 @@
 //! guard for it is in [`AlignArgs::guard_subject`] rather than only in prose,
 //! because a guard that lives in a report is not a guard.
 
+#[path = "direct-cfa-gather.rs"]
+pub(crate) mod direct_cfa;
+
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::path::{Path, PathBuf};
@@ -411,6 +414,29 @@ fn measure_edges_observed(
     threads: usize,
     progress: Option<&crate::ui_progress::Progress>,
 ) -> Result<Vec<AlignEdge>> {
+    measure_edges_traced(st, pairs, cfg, threads, progress, None)
+}
+
+/// Pair-local producing observations. Serialization belongs to the caller,
+/// after measurement; unavailable inputs are distinct from an NCC refusal.
+#[derive(Debug)]
+#[allow(dead_code)] // Read by the test-only diagnostic adapter, never a product switch.
+struct PairMeasurementTrace {
+    ordinal: usize,
+    i: usize,
+    j: usize,
+    unavailable: Option<&'static str>,
+    core: Option<strehl_core::align::PairTrace>,
+}
+
+fn measure_edges_traced(
+    st: &Stack,
+    pairs: &[(usize, usize)],
+    cfg: &AlignConfig,
+    threads: usize,
+    progress: Option<&crate::ui_progress::Progress>,
+    collector: Option<&(dyn Fn(PairMeasurementTrace) + Sync)>,
+) -> Result<Vec<AlignEdge>> {
     let pool = rayon::ThreadPoolBuilder::new()
         .num_threads(threads)
         .build()
@@ -454,21 +480,52 @@ fn measure_edges_observed(
     let edges: Vec<AlignEdge> = pool.install(|| {
         pairs
             .par_iter()
-            .filter_map(|&(i, j)| {
+            .enumerate()
+            .filter_map(|(ordinal, &(i, j))| {
                 if let Some(progress) = progress {
                     progress.alignment_pair_started(i, j, pairs.len());
                 }
+                let mut unavailable = None;
+                let mut core = None;
                 let edge = (|| {
-                    let (pi, pj) = (pyramids[i].as_ref()?, pyramids[j].as_ref()?);
+                    let Some(pi) = pyramids[i].as_ref() else {
+                        unavailable = Some("reference-pyramid-unavailable");
+                        return None;
+                    };
+                    let Some(pj) = pyramids[j].as_ref() else {
+                        unavailable = Some("moving-pyramid-unavailable");
+                        return None;
+                    };
+                    let Some(reference_plane) = PlaneRef::from_geometry(&st.planes[i], geom) else {
+                        unavailable = Some("reference-plane-unavailable");
+                        return None;
+                    };
+                    let Some(moving_plane) = PlaneRef::from_geometry(&st.planes[j], geom) else {
+                        unavailable = Some("moving-plane-unavailable");
+                        return None;
+                    };
                     let a = AlignFrame {
-                        plane: PlaneRef::from_geometry(&st.planes[i], geom)?,
+                        plane: reference_plane,
                         pyramid: pi,
                     };
                     let b = AlignFrame {
-                        plane: PlaneRef::from_geometry(&st.planes[j], geom)?,
+                        plane: moving_plane,
                         pyramid: pj,
                     };
-                    let fit = align_pair(a, b, &spots, cfg).ok()?;
+                    let result = if collector.is_some() {
+                        strehl_core::align::align_pair_observed(
+                            a,
+                            b,
+                            &spots,
+                            cfg,
+                            Some(&mut |trace| core = Some(trace.clone())),
+                        )
+                    } else {
+                        align_pair(a, b, &spots, cfg)
+                    };
+                    // The observed callback retains an actual failure before
+                    // the ordinary edge-admission conversion below.
+                    let fit = result.ok()?;
                     Some(AlignEdge {
                         i,
                         j,
@@ -480,6 +537,15 @@ fn measure_edges_observed(
                 })();
                 if let Some(progress) = progress {
                     progress.alignment_pair_finished(i, j, edge.is_some(), pairs.len());
+                }
+                if let Some(collector) = collector {
+                    collector(PairMeasurementTrace {
+                        ordinal,
+                        i,
+                        j,
+                        unavailable,
+                        core,
+                    });
                 }
                 edge
             })
@@ -1751,23 +1817,40 @@ fn solve_map_observed(
         );
     }
 
+    finish_measured_map(
+        identity, st.geom, n, reference, spans, resampler, &edges, progress,
+    )
+}
+
+/// The normal measured-component solve, shared with the observation adapter.
+#[allow(clippy::too_many_arguments)]
+fn finish_measured_map(
+    identity: StackIdentity,
+    geom: PlaneGeometry,
+    n: usize,
+    reference: usize,
+    spans: &[usize],
+    resampler: Resampler,
+    edges: &[AlignEdge],
+    progress: Option<&crate::ui_progress::Progress>,
+) -> Result<WarpMap> {
     if let Some(progress) = progress {
         progress.alignment_phase("cycle-check", edges.len());
     }
-    let component_edges = measured_reference_edges(&edges, n, reference);
-    let floor = cycle_floor(&component_edges, st.geom);
-    let mut opts = GlobalOptions::new(st.geom);
+    let component_edges = measured_reference_edges(edges, n, reference);
+    let floor = cycle_floor(&component_edges, geom);
+    let mut opts = GlobalOptions::new(geom);
     opts.weighting = Weighting::Unit;
     apply_smooth_env(&mut opts);
     if let Some(progress) = progress {
         progress.alignment_phase("solve", n);
     }
-    let placements = solve_global_in_component(&edges, n, &opts, reference)
+    let placements = solve_global_in_component(edges, n, &opts, reference)
         .context("the global system is not full rank; the edge ladder is too sparse")?;
     if let Some(progress) = progress {
         progress.alignment_phase("validate", edges.len());
     }
-    let heldout = heldout_error(&component_edges, n, &opts, st.geom, Some(reference));
+    let heldout = heldout_error(&component_edges, n, &opts, geom, Some(reference));
 
     let warps = ordinary_component_warps(&placements, reference)?;
 
@@ -1780,7 +1863,7 @@ fn solve_map_observed(
             reference,
             note: format!("strehl align, M86b, spans {spans:?}"),
         },
-        st.geom,
+        geom,
         resampler,
         warps,
     ))
@@ -2481,6 +2564,7 @@ fn warp_frame_in_place_fullres_outputs<const GREEN_ONLY: bool>(
     resampler: Resampler,
     scratch: &mut WarpScratch,
 ) -> Result<f64> {
+    direct_cfa::preflight()?;
     #[cfg(feature = "native-gpu-gather")]
     if let Some(covered) =
         native_gpu_integration::gpu_remosaic::<GREEN_ONLY>(frame, t, geom, resampler)?
@@ -2644,6 +2728,23 @@ where
         WarpWriteback,
     ) -> Result<usize>,
 {
+    #[cfg(feature = "direct-cfa-gather")]
+    if direct_cfa::enabled()? {
+        #[cfg(feature = "research-lens-warp")]
+        anyhow::ensure!(
+            lens_pull.is_none(),
+            "direct CFA does not support a research lens pull"
+        );
+        #[cfg(all(test, feature = "native-gpu-gather"))]
+        anyhow::ensure!(
+            ca_override.is_none(),
+            "direct CFA does not support the GPU test CA override"
+        );
+        let ident = strehl_raw::identity(&frame.path);
+        let ca =
+            strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?;
+        return direct_cfa::warp::<GREEN_ONLY, F>(frame, t, geom, resampler, scratch, sink, ca);
+    }
     let (gw, gh) = (geom.width, geom.height);
     if frame.active.width / 2 != gw || frame.active.height / 2 != gh {
         bail!(
@@ -3837,3 +3938,43 @@ pub(crate) fn solve_lens_guides(
 #[cfg(test)]
 #[path = "../../../experiments/rea-a7c2-2026-10-24-v/cli-tests.rs"]
 mod measured_component_tests;
+
+#[cfg(all(test, feature = "direct-cfa-gather"))]
+mod cfa_lattice_tests {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/raw-quality-2026-10-26/cfa-controls.rs"
+    ));
+}
+
+#[cfg(all(test, feature = "direct-cfa-gather"))]
+mod cfa_residual_tests {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/raw-quality-2026-10-26/cfa-residual/fixed-green-falsifier.rs"
+    ));
+}
+
+#[cfg(all(test, feature = "direct-cfa-gather"))]
+#[path = "../../../experiments/raw-quality-2026-10-26/cfa-integration-controls.rs"]
+mod cfa_integration_tests;
+
+#[cfg(test)]
+#[path = "../../../experiments/raw-quality-2026-10-26/photo-review/capture-gather.rs"]
+mod weevil_capture_gather;
+
+#[cfg(test)]
+#[path = "../../../experiments/raw-quality-2026-10-26/photo-review/capture-gather-ca-off.rs"]
+mod weevil_capture_gather_ca_off;
+
+#[cfg(test)]
+#[path = "../../../experiments/raw-quality-2026-10-26/insect-consumer-spread/capture-gather143.rs"]
+mod weevil_source143_capture_gather_ca_off;
+
+#[cfg(test)]
+#[path = "../../../experiments/raw-quality-2026-10-27/insect-placement-observer/adapter.rs"]
+mod insect_placement_observer;
+
+#[cfg(test)]
+#[path = "../../../experiments/raw-quality-2026-10-27/insect-blur-phase/full/graph.rs"]
+mod insect_blur_phase_graph;

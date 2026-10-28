@@ -3098,6 +3098,12 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         cfg!(feature = "temporal-energy"),
     )?;
     sensor_master::preflight(opts, &[])?;
+    if align_cmd::direct_cfa::preflight()? {
+        ensure!(opts.backend == MergeBackend::Pyramid, "direct CFA requires --merge pyramid");
+        ensure!(opts.region_recipe.is_none(), "direct CFA does not support source-region repair");
+        eprintln!("EXPERIMENTAL direct original-CFA lattice gather; no photographic quality promotion");
+    }
+
     if let Some(path) = &opts.region_recipe {
         ensure!(
             opts.backend == MergeBackend::Pyramid,
@@ -5536,6 +5542,19 @@ mod consistent_reconstruction_full {
     feature = "native-correction-variance",
     feature = "native-gpu-gather"
 ))]
+mod insect_color {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/raw-quality-2026-10-26/insect-color/implementation.rs"
+    ));
+}
+
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
 mod illuminant_aware_color {
     include!(concat!(
         env!("CARGO_MANIFEST_DIR"),
@@ -7192,6 +7211,10 @@ fn run_pyramid_prepared_with_sensor(
         source.len() == paths.len(),
         "Pyramid source count differs from prepared inputs"
     );
+    #[cfg(feature = "direct-cfa-gather")]
+    if align_cmd::direct_cfa::enabled()? {
+        align_cmd::direct_cfa::validate_domain(paths, alignment.as_ref().map(|(map, _, _)| map), domain.rect)?;
+    }
     let cfg = opts.pyramid;
     #[cfg(feature = "temporal-energy")]
     let temporal_mode = temporal_cpu::environment_mode()?;
@@ -11469,3 +11492,144 @@ mod lens_research_tests;
 #[cfg(test)]
 #[path = "../../../experiments/rea-a7c2-2026-10-24-v/override-tests.rs"]
 mod measured_component_override_tests;
+
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
+mod green_phase_guide {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/raw-quality-2026-10-26/green-phase-guide/implementation.rs"
+    ));
+}
+
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
+mod native_pixel_fusion {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/raw-quality-2026-10-27/native-pixel-fusion/implementation.rs"
+    ));
+}
+
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
+mod reconstruction_restart {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/raw-quality-2026-10-27/reconstruction-restart/implementation.rs"
+    ));
+    mod photo_observation {
+        include!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../experiments/raw-quality-2026-10-27/reconstruction-photo-observation/full-adapter.rs"
+        ));
+    }
+}
+
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
+mod native_restoration {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/raw-quality-2026-10-27/native-restoration/implementation.rs"
+    ));
+}
+
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
+mod dual_tree_cfa {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/raw-quality-2026-10-27/dual-tree-cfa/implementation.rs"
+    ));
+    mod full {
+        include!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../experiments/raw-quality-2026-10-27/dual-tree-cfa/full-adapter.rs"
+        ));
+    }
+    mod independent_controls {
+        include!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../experiments/raw-quality-2026-10-27/dual-tree-cfa/controls.rs"
+        ));
+    }
+}
+
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
+mod dual_tree_cfa_gpu {
+    use super::*;
+    use super::dual_tree_cfa::*;
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/raw-quality-2026-10-27/dual-tree-cfa-gpu/bridge.rs"
+    ));
+    mod full {
+        include!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../experiments/raw-quality-2026-10-27/dual-tree-cfa/full-adapter.rs"
+        ));
+    }
+    mod independent_controls {
+        include!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../experiments/raw-quality-2026-10-27/dual-tree-cfa-gpu/controls.rs"
+        ));
+    }
+}
+
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
+mod joint_cfa_band_residual_baseline {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/raw-quality-2026-10-27/joint-cfa-local-fit/band-residual/baseline-bridge.rs"
+    ));
+}
+
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
+#[path = "../../../experiments/raw-quality-2026-10-27/insect-blur-phase/full/render.rs"]
+mod insect_blur_phase_render;
+
+#[cfg(all(
+    test,
+    feature = "native-direct-planes",
+    feature = "native-correction-variance",
+    feature = "native-gpu-gather"
+))]
+#[path = "../../../experiments/raw-quality-2026-10-27/weevil-fusion-order/implementation.rs"]
+mod weevil_fusion_order;

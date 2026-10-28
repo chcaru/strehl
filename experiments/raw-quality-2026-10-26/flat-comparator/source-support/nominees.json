@@ -1,0 +1,12 @@
+{
+  "status": "FROZEN_BEFORE_NATIVE_SOURCE_CROPS",
+  "all_five_complete_views_seen": true,
+  "complete_source_indices_seen": [0, 15, 30, 45, 59],
+  "overview_receipt_sha256": "65fceabe9dfaa94ab4999be9e4996f1b9f2623a17e3123fc89fe025a5c5ac0f4",
+  "before_source_crop_view": true,
+  "source_indices": [15, 30],
+  "reason": "Source 30 has visibly coherent chart structure across the complete view; source 15 is an earlier-focus companion where the same chart groups remain recognizable. This is a fixed two-source observation selected from whole-view appearance, not a per-feature maximum or sharpness score. Neither source is designated ground truth or a resolution ceiling.",
+  "witnesses": ["qr-block-boundary", "central-fine-bars", "upper-right-star", "dot-field"],
+  "mapping": "Use the saved reference-30 similarity only to locate each fixed witness center in the source active-pixel gauge: p=(baseline center)+(50,34); q=C+a*(p-C)+2b with C=(3516,2344). Round the source crop origin; retain its original 384-by-384 pixels and ICC without warp or resampling.",
+  "stop": "No additional source nominations, witness moves, focus search, motion fit, PSF fit, or RAW reads. These developed source TIFFs support structural observations only."
+}

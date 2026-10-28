@@ -1,0 +1,61 @@
+{
+  "input_order": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-baseline\\input-order.json",
+  "input_order_sha256": "7a7f6474eca174c5dd9c9d4cabc6eb1ae15e8385c7395472a793175c59a107fe",
+  "input_dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl",
+  "out": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-tiff-export",
+  "expected_xyz_to_cam": [
+    [
+      0.746,
+      -0.2365,
+      -0.0588
+    ],
+    [
+      -0.5687,
+      1.3442,
+      0.2474
+    ],
+    [
+      -0.0624,
+      0.1156,
+      0.6584
+    ]
+  ],
+  "fixture_dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-matched-source-1\\output",
+  "fixture_original_u16": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-porous-translation-1\\porous-grain\\rawler-129.bin",
+  "fixture_bindings": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-matched-source-1\\output\\receipt.json",
+      "sha256": "44c1351388b05bf21edf5d24e0707a6ef760248cbb7d099f08e906e6bf4dd0c1",
+      "bytes": 8840
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-matched-source-1\\output\\porous-source-129-frame129-raw-cfa.f32",
+      "sha256": "73b0677ed475541f5e5158117ac15b1b70662feed0455d2bb70b3dac93898fd8",
+      "bytes": 451584
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-matched-source-1\\output\\porous-source-129-frame129-raw.tiff",
+      "sha256": "cd7b587d95648db2a05c3a63c78529e5dcc5f712b9c02b0ce58ea8c978103b19",
+      "bytes": 681008
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-porous-translation-1\\porous-grain\\rawler-129.bin",
+      "sha256": "b966b02f4e27bdf386ff3d90f16fbd4772f1f2aaa95804e1c1e6aff1c3f9e357",
+      "bytes": 332944
+    }
+  ],
+  "expected_active_wh": [
+    7032,
+    4688
+  ],
+  "tone_source_linear_master": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-baseline\\linear-master.tiff",
+  "tone_source_linear_sha256": "51fd1f3e281c10def359af38a2064055de11b8788ff5ce7c0428d9e5a9e417ab",
+  "tone_metadata_receipt": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\crop-export-receipt.json",
+  "tone_metadata_receipt_sha256": "2d090fbd1b9fbbd67ea14f910a87f6480bed631cb9fbb80c3e17c029fd92a64a",
+  "tone_bits": [
+    1007739294,
+    1052551964,
+    1057803469
+  ],
+  "exposure_gain_bits": 1065353216
+}

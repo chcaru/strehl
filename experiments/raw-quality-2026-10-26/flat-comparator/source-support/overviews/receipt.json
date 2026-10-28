@@ -1,0 +1,180 @@
+{
+  "status": "OVERVIEWS_READY_NO_VERDICT",
+  "quality_claim": false,
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\export-source-views.py",
+    "overviews"
+  ],
+  "inputs": [
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-tiff-export\\receipt.json",
+      "bytes": 74449,
+      "mtime_ns": 1793084385437537900,
+      "sha256": "c18a216ebebfb37a09a6d4b6e252b2abfe73a2a9d20d9e28480607b8212bc759"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-baseline\\frozen-witnesses.json",
+      "bytes": 2417,
+      "mtime_ns": 1793083443977085100,
+      "sha256": "fde6bb02b6ca12793176b3e30ef8d60bba5aed3ed86dd1d4e3ea080c736a297e"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-baseline\\alignment.txt",
+      "bytes": 8561,
+      "mtime_ns": 1793083144347576100,
+      "sha256": "658501d70e5623b168bdee327219382952ca0887f5eafec4d02650343f0dd36b"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\export-source-views.py",
+      "bytes": 7172,
+      "mtime_ns": 1793086789402231100,
+      "sha256": "0cbf259aed6509bc45dc2d4c5546c8d7053f296eee881f1ec93c0aef0c8a5178"
+    }
+  ],
+  "source_tiffs_unchanged": true,
+  "original_raw_reads": 0,
+  "records": [
+    {
+      "index": 0,
+      "source": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-tiff-export\\frames\\DSC00016.tiff",
+        "bytes": 197801322,
+        "mtime_ns": 1793084327781253400,
+        "sha256": "d8a521015c97508045053edd351fe6235ed73d9813068b75ef1fc87fa375737e"
+      },
+      "original_raw_identity_metadata_only": {
+        "bytes": 38002688,
+        "index": 0,
+        "mtime_ns": 1788406119500000000,
+        "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl\\DSC00016.ARW",
+        "sha256": "1c74975f7836a86d4cff2089db15ebd3314102c1daea3744a1c9c0f7d7450adf"
+      },
+      "complete_source_view": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\overviews\\source-000.png",
+        "bytes": 2116058,
+        "mtime_ns": 1793086790819624700,
+        "sha256": "437f203788ba6a05ac35d50de26f2d63e2484b00ecb9a823e7d78a2455b6e67d"
+      },
+      "overview_dimensions": [
+        1617,
+        1078
+      ],
+      "resized": true
+    },
+    {
+      "index": 15,
+      "source": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-tiff-export\\frames\\DSC00031.tiff",
+        "bytes": 197801322,
+        "mtime_ns": 1793084341613697200,
+        "sha256": "ff4084d354621388de798beaa2217c8572e2106ed348064ef3346d5e4999f192"
+      },
+      "original_raw_identity_metadata_only": {
+        "bytes": 38490112,
+        "index": 15,
+        "mtime_ns": 1788406141320000000,
+        "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl\\DSC00031.ARW",
+        "sha256": "a10f31c6b86df199e1d4ed94ded72119b8d79f9608d7053df388895a367a9185"
+      },
+      "complete_source_view": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\overviews\\source-015.png",
+        "bytes": 2276208,
+        "mtime_ns": 1793086791532023800,
+        "sha256": "b22d1d0d26a6476a4afd1a40b9d5561f37a4d902aa559df69516f98980ff7be2"
+      },
+      "overview_dimensions": [
+        1617,
+        1078
+      ],
+      "resized": true
+    },
+    {
+      "index": 30,
+      "source": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-tiff-export\\frames\\DSC00046.tiff",
+        "bytes": 197801322,
+        "mtime_ns": 1793084355595933000,
+        "sha256": "e569e87c6bb293cbcf3799731ede3d310f1f8ab5a6a24aca86965876d8d289bd"
+      },
+      "original_raw_identity_metadata_only": {
+        "bytes": 38871040,
+        "index": 30,
+        "mtime_ns": 1788406163170000000,
+        "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl\\DSC00046.ARW",
+        "sha256": "3a5fc6993d0ec24468fd24684aabe7783fe06d3d85eec040584330af0153a03b"
+      },
+      "complete_source_view": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\overviews\\source-030.png",
+        "bytes": 2398815,
+        "mtime_ns": 1793086792240918200,
+        "sha256": "f07cc2d367996c451587d30bb73a01566976e98d8668125833aef1a8c62899c1"
+      },
+      "overview_dimensions": [
+        1617,
+        1078
+      ],
+      "resized": true
+    },
+    {
+      "index": 45,
+      "source": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-tiff-export\\frames\\DSC00061.tiff",
+        "bytes": 197801322,
+        "mtime_ns": 1793084369707719800,
+        "sha256": "2fe26483dc4f7f1a9f30a4a0412cffa60d97d070234076eb8b258ba7b38fe997"
+      },
+      "original_raw_identity_metadata_only": {
+        "bytes": 38363136,
+        "index": 45,
+        "mtime_ns": 1788406185000000000,
+        "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl\\DSC00061.ARW",
+        "sha256": "5a0aaf7ae445c73061a23ca3dd7a7933238818d2ee8c1edcb5435be301518a65"
+      },
+      "complete_source_view": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\overviews\\source-045.png",
+        "bytes": 2198420,
+        "mtime_ns": 1793086792957137300,
+        "sha256": "5c583202d0d4952eb46e9e439a7abfd4e25a9d6a48012386909d58adeb451775"
+      },
+      "overview_dimensions": [
+        1617,
+        1078
+      ],
+      "resized": true
+    },
+    {
+      "index": 59,
+      "source": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\flat-1s-tiff-export\\frames\\DSC00075.tiff",
+        "bytes": 197801322,
+        "mtime_ns": 1793084383875272400,
+        "sha256": "67b7909dffb2cbc212532d6804d9cfaba2e92fdeeae3a7931043587408c37c47"
+      },
+      "original_raw_identity_metadata_only": {
+        "bytes": 38027264,
+        "index": 59,
+        "mtime_ns": 1788406205390000000,
+        "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl\\DSC00075.ARW",
+        "sha256": "1264cc16d2347e993fe2f49c4d28d62428129e67488654730a81c55be9e8f884"
+      },
+      "complete_source_view": {
+        "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\flat-comparator\\source-support\\overviews\\source-059.png",
+        "bytes": 2122874,
+        "mtime_ns": 1793086793727856900,
+        "sha256": "2e9aa036b192d59ab09f00850f58fe7257d32cfad1f669274f2fcb7d6e4f0d0f"
+      },
+      "overview_dimensions": [
+        1617,
+        1078
+      ],
+      "resized": true
+    }
+  ],
+  "seconds": 3.6409999999996217,
+  "display": "Unmodified developed RGB16 and original ICC; PNG (value+128)//257. Complete overviews only are resized.",
+  "mapping": "Reference30 native pixel center plus(50,34); q=C+a*(p-C)+2b, C=(3516,2344); round crop origin. Map locates context only. No source pixel warp, CA, fit, scale normalization or equal-footprint metric."
+}

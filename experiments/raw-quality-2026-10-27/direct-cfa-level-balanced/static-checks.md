@@ -1,0 +1,9 @@
+# Root static checks
+
+2026-10-27. No photographic conclusion follows from these checks.
+
+- VERIFIED: AST parsing of root `run-controls.py` and `run-photograph.py` passed before execution. Command: `python -B -c "import ast; from pathlib import Path; paths=[Path('experiments/raw-quality-2026-10-27/direct-cfa-level-balanced')/n for n in ('run-controls.py','run-photograph.py')]; [ast.parse(p.read_text(encoding='utf-8'), filename=str(p)) for p in paths]; print('Root wrappers parse:', len(paths))"`, exit0. Later wrapper receipt guards are reviewed separately before dispatch.
+- MEASURED: `python -B scripts/corpus_lint.py` exited1:16 existing violations (S1=7,S3=2,S6=7), none reported in the changed milestone ledger. Historical table issues occur in M-PHASE0-SPLIT, M-PHASE0-SPLIT2, M135, M169 and M182; missing terminal newlines occur in M185 and M186. Those files are not changed in the explicit-worktree Git status. Git-backed committed line-ending checks were skipped because the sandbox could not access shared Git metadata. This is not a repository-wide lint pass.
+- VERIFIED: explicit-worktree Git inspection has HEAD and origin/main at4813e46bdc9aaf5f9220115911df5cd5aa3fd808, branch codex/raw-quality-october26, consistent with the earlier requested pull. The default Git worktree resolution points into metadata and its mass-deletion listing was invalid; `git --work-tree=C:/Users/chris/.codex/worktrees/raw-quality-october26/strehl -c submodule.recurse=false status --short --ignore-submodules --untracked-files=no` showed only the existing scoped modifications. No reset, checkout, commit or Git configuration mutation was performed here.
+
+The experiment remains conditional on independent source/control review and complete actual photographs. No Rust implementation changed in this continuation; the previously commissioned native renderer is reused by hash.

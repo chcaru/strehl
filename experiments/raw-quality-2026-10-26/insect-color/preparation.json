@@ -1,0 +1,29 @@
+{
+  "no_numerical_execution": true,
+  "independent_review": "independent-review.md",
+  "test_filter": "merge_cmd::insect_color::controls::fixed_shared_snr_actual_consumer_screen",
+  "source_files": [
+    {
+      "sha256": "77de853d95969c21534e57d22dc859f18f062dc903093aba410aee8fffab8460",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\controls.rs"
+    },
+    {
+      "sha256": "63e9f09181312c1034cf18d03285d1bba7e5520c84947ddd811a1ee2ec6869f2",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\fixtures.rs"
+    },
+    {
+      "sha256": "fa5c77b2c5c7d94a1f2459e200f2751740091802597073b27bc841117f0b1bc3",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\guide-fields.rs"
+    },
+    {
+      "sha256": "7af76a20ef83808682b6b9521eaf0b5521507381acaaa0ad2b2ab7ac4c4ccd81",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\implementation.rs"
+    },
+    {
+      "sha256": "38da8ee5968e7f0feeb0d8dcd4d06a56cd435090c9c8f658f491e33a04513d23",
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\experiments\\raw-quality-2026-10-26\\insect-color\\independent-controls.rs"
+    }
+  ],
+  "status": "source-ready-uncompiled",
+  "format_exit_code": 0
+}

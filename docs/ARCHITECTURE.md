@@ -105,10 +105,12 @@ These are `AGENTS.md` rules 1–3, and they explain most of the structure that f
 promotion happens at use, e.g. `(f32::from(...) - black).max(0.0)` in the deinterleave
 (`merge_cmd.rs:4780`).
 
-**2. Never materialise aligned frames.** Gather at consumption inside each kernel.
-Materialising 60 aligned RGB frames is 24 GB and demosaics 60 times instead of once. This
-is why alignment is a *sidecar* and not a preprocessing pass, and why demosaic is the last
-stage rather than the first.
+**2. Never materialise an aligned-frame volume.** Keep geometry in a sidecar and
+consume one source at a time. The current full-resolution consumer nevertheless
+uses per-source RGB reconstruction and an aligned CFA scratch buffer; avoiding
+a retained frame volume does not mean it avoids those reconstruction stages.
+Direct original-CFA reconstruction with only a final demosaic remains the
+required architecture, rather than a property established by bounded storage.
 
 **3. The noise model is injected, never re-derived per stage.** A private per-stage noise
 estimate is the exact mechanism behind the prior project's 2–5× defect. The model is
@@ -165,11 +167,20 @@ constructed once, in `profile.rs`, and passed by value.
     requested, exposure statistic, optional Wiener restore, then one of three mutually
     exclusive output branches.
 
-**Demosaic runs exactly once, at the end, on the merged planes** — and on the *default
-measurement path it does not run at all*, because the default output is binned 2×2
-(`merge_cmd.rs:7337-7341`). It executes only when `demosaic || (srgb && !binned)`
-(`main.rs:1144`). The fold is on CFA planes throughout, which is what "CFA-native"
-means.
+**Final development demosaics the merged planes for each requested RGB output,
+but this is not the total demosaic count of the default aligned path.** The default full-resolution gather
+(`STREHL_FULLRES_GATHER=1`) first reconstructs each source with MHC, samples its
+RGB channels with the selected resampler, and rounds/clips the result back into
+u16 CFA storage before plane extraction and merging. `native-direct-planes`
+changes that destination storage/precision; it does not remove the per-source
+color reconstruction. Binned measurement output omits the final demosaic, not
+the upstream reconstruction.
+
+Thus the current default is CFA-domain fusion after per-source reconstruction,
+not direct fusion of original CFA samples with one final demosaic. Keeping the
+originals as u16 and arithmetic as f32 does not establish the stronger contract.
+The experimental original-CFA sampler is a distinct, quality-rejected arm and
+is not active here. See the [independent source trace and prior boundaries](../experiments/raw-quality-2026-10-27/dual-tree-cfa-gpu/photographic-observation/native-contract-review.md).
 
 ### What the default path prints as NOT applied
 
@@ -530,9 +541,12 @@ accessor that turns a refusal into a transform. Consumers must drop the frame, a
 
 ### One resampling pass, ever
 
-The transform is applied by **gathering at the point of consumption**, never by
-materialising a warped copy. Interpolation is a lowpass; applying it twice — once to
-register, once to output — throws away exactly the fine detail the project exists to keep.
+The stored transform is applied at source consumption. The current default
+full-resolution route reconstructs and gathers source RGB, then writes a
+temporary aligned CFA buffer; the direct-plane option can omit that buffer.
+Neither route retains an aligned-frame volume. Avoiding an extra registration
+resample is distinct from avoiding the source reconstruction and final demosaic
+described above; the present implementation does not satisfy the latter goal.
 
 Kernel is Catmull-Rom (`a = −1/2`). Every stored `Similarity` is a **placement**
 (reference coords → that frame's coords) and the resampler is a *pull*, so registering
@@ -751,7 +765,7 @@ backends, so any unintended change to the merge is caught as a hash movement.
 | `merge_cmd/gatefloor.rs` | **DEFAULT** (opt-out) | Per-frame measured band-noise floor |
 | `align.rs`, `warpmap.rs` | **DEFAULT** (sidecar-cached) | Solve once, gather at consumption |
 | `optics.rs` (lateral CA) | **DEFAULT** for matching gear | Composed into the alignment similarity |
-| `demosaic.rs` (Malvar) | **DEFAULT** when developing | Runs once, at the end; not at all on the binned measurement path |
+| `demosaic.rs` (Malvar) | **DEFAULT** in full-resolution alignment and development | Per-source reconstruction during full-resolution gather, plus final demosaic when developing; binned output omits only the latter |
 | `color.rs`, `highlight.rs`, `clip.rs` | **DEFAULT** in the writer | Roll-off is identity below the knee |
 | `noise.rs`, `profile.rs` | **DEFAULT** | Injected once; PRNU term measured but off |
 | `defect_map.rs` | **OPT-IN**, off | Dust arm real; hot arm a measured null on this body |

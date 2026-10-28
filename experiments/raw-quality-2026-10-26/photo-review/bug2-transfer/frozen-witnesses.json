@@ -1,0 +1,136 @@
+{
+  "status": "FROZEN_BEFORE_CA_OFF_VIEW",
+  "candidate_seen": false,
+  "gain": 4.993,
+  "gain_source": "Baseline log auto-exposure suggestion4.993; no per-arm fit.",
+  "dimensions": [
+    6566,
+    4376
+  ],
+  "crop_quad_xywh": [
+    117,
+    78,
+    3283,
+    2188
+  ],
+  "native_reference_offset": [
+    234,
+    156
+  ],
+  "baseline_completion": {
+    "path": "C:\\Users\\chris\\.codex\\worktrees\\raw-quality-october26\\strehl\\outputs\\raw-quality-2026-10-26\\bug2-100-baseline\\completion.json",
+    "sha256": "4b97040aba31b037c5889d632796039d508f11af819388fa04c6265dd2da9fa1",
+    "bytes": 1776
+  },
+  "baseline_source_master_sha256": "42269774c8051a5c537c049d943e87f5aa35eb91f4b697cd786ecfc368e217f5",
+  "map_sha256": "5bbb0abcaeff627b25d7e4f94433ec9a5d010bce2f334f43a2a1601c1d17d459",
+  "executable_sha256": "89a0d92aad1628cfdfe75f39d2627ed3679990c5b3381d8839f6cce61b7f2388",
+  "input_order_sha256": "ec1c6536506da535761b78df6e89b8a0f5925f254175e1d77692914b65801f79",
+  "whole_baseline_viewed_before_selection": true,
+  "whole_tool_display": [
+    1920,
+    1280
+  ],
+  "witnesses": [
+    {
+      "name": "dark-background",
+      "native_xywh": [
+        6180,
+        40,
+        384,
+        384
+      ],
+      "role": "Far-right dark control; not a calibrated noise flat."
+    },
+    {
+      "name": "green-fine-texture",
+      "native_xywh": [
+        380,
+        720,
+        384,
+        384
+      ],
+      "role": "Left-field green surface microtexture and small marks."
+    },
+    {
+      "name": "left-green-rim",
+      "native_xywh": [
+        100,
+        2970,
+        384,
+        384
+      ],
+      "role": "Far-left green edge, dark surround and fine fibres."
+    },
+    {
+      "name": "junction-white-strands",
+      "native_xywh": [
+        990,
+        2040,
+        384,
+        384
+      ],
+      "role": "Three-surface junction and white strands at distinct depths."
+    },
+    {
+      "name": "orange-network-upper",
+      "native_xywh": [
+        2820,
+        430,
+        384,
+        384
+      ],
+      "role": "Orange branched surface pattern in upper field."
+    },
+    {
+      "name": "orange-network-lower",
+      "native_xywh": [
+        1530,
+        3460,
+        384,
+        384
+      ],
+      "role": "Orange fine network in lower-left field."
+    },
+    {
+      "name": "central-green-orange-rim",
+      "native_xywh": [
+        2790,
+        2160,
+        384,
+        384
+      ],
+      "role": "Green/orange meeting edge and broad dark contour."
+    },
+    {
+      "name": "central-seam",
+      "native_xywh": [
+        4250,
+        2970,
+        384,
+        384
+      ],
+      "role": "Diagonal seam, fine edge colour and coarse occlusion contour."
+    },
+    {
+      "name": "right-reflective-orange",
+      "native_xywh": [
+        5560,
+        2560,
+        384,
+        384
+      ],
+      "role": "Right-field reflective orange microtexture and bright haze."
+    },
+    {
+      "name": "right-outer-fibres",
+      "native_xywh": [
+        5960,
+        900,
+        384,
+        384
+      ],
+      "role": "Far-right outer boundary, white fibres and glints."
+    }
+  ]
+}

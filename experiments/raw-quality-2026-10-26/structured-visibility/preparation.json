@@ -1,0 +1,71 @@
+{
+  "status": "SOURCE_SYNTAX_CHECKED_NO_EXECUTION",
+  "input_count": 32,
+  "array_headers": {
+    "initial.npz": {
+      "near.npy": {
+        "descr": "<f4",
+        "fortran_order": false,
+        "shape": [
+          300,
+          336,
+          3
+        ]
+      },
+      "far.npy": {
+        "descr": "<f4",
+        "fortran_order": false,
+        "shape": [
+          300,
+          336,
+          3
+        ]
+      },
+      "alpha.npy": {
+        "descr": "<f4",
+        "fortran_order": false,
+        "shape": [
+          300,
+          336
+        ]
+      },
+      "seeds.npy": {
+        "descr": "|i1",
+        "fortran_order": false,
+        "shape": [
+          300,
+          336
+        ]
+      }
+    },
+    "final-fields.npz": {
+      "near.npy": {
+        "descr": "<f4",
+        "fortran_order": false,
+        "shape": [
+          300,
+          336,
+          3
+        ]
+      },
+      "far.npy": {
+        "descr": "<f4",
+        "fortran_order": false,
+        "shape": [
+          300,
+          336,
+          3
+        ]
+      },
+      "alpha.npy": {
+        "descr": "<f4",
+        "fortran_order": false,
+        "shape": [
+          300,
+          336
+        ]
+      }
+    }
+  },
+  "script_sha256": "2bfab73f488abc5ac611e9b84da74f7010e9cface89338b7eb68baa1b7f661cd"
+}

@@ -1,0 +1,24 @@
+# Frozen independent stationarity controls
+
+Prospective, before numerical execution. Root owns the single bounded control job and any later saved-data job. These controls qualify the literal six-scalar measured-residual discriminator, not its physical interpretation. No RAW, photography render, fitted noise model or new field family is involved.
+
+`controls.py --out <fresh workspace output>` imports the sibling `analyze.py` and calls its actual `analyze_rows`, `fit_rows`, `score_rows` and `validate_disjoint` seams. Preserve every synthetic row and score before the final control assertion. Use the root brief's exact sites15/41/56, all nine existing spans,299 acquisition identities and2,340 pairs:7,020 site rows per complete population. All generated statuses are `Ok` unless the declared refusal foil changes one. MAD flags remain present; no survivor filtering is allowed.
+
+The training interval is[0,95], primary held[112,207], replication[224,298]. Both acquisitions must belong to an interval. Training uses span8 only,88 rows per site. Held primary counts are95/88 per site at spans1/8; replication74/67. Retain span32 and all unused/cross-boundary rows descriptively. The production20percent MSE reduction at all12 primary cells is unchanged. A zero-null energy gives no affirmative result. No p-value or IID precision claim follows from the number of correlated rows.
+
+## Literal constants and population
+
+Known per-step vectors, in guide pixels, are site15=(0.045,0.015), site41=(-0.020,0.040), site56=(0.010,-0.050). They were chosen independently of the saved real signed residuals. For each site/component, generate independent acquisition errors `e_i` and pair errors `eta_ij`. The observation is `(j-i)*v + e_j-e_i + eta_ij`. Thus pairs sharing an acquisition really share noise. Both error sources use sigma0.002 guide pixels; this is a declared synthetic perturbation, not the Sony sensor model.
+
+The deterministic32-bit LCG is `state=(1664525*state+1013904223) mod2^32`; a standard-deviation-one draw is the sum of12 successive `(state+0.5)/2^32` values minus6. Acquisition seed is0x6387A1D4; pair seed0xC29E4B17. Acquisition draws are ordered source0..298, then sites15/41/56, then x/y. Pair draws are ordered ascending(i,j), then site, then x/y. MAD-outlier flags are independently assigned by `(i+j+site) mod13 == 0`; compare the fitted coefficients with the literal mean of all88 training rows to absolute1e-12, so these flags cannot silently select the fit. The same frozen draws are reused across explicitly related arms. No seed or magnitude changes after inspection.
+
+## Fixed checks, in execution order
+
+1. Exact zero, then zero field plus the declared correlated noise. Both must reject affirmative stationarity. Exact zero must retain null MSE0 and no defined positive reduction. No real-data result is read first.
+2. Stable known vectors plus the same noise must pass every primary held cell. Each fitted component must be within0.001 guide pixels per step of its declared value. This is a coarse numerical recovery check, not a fitted statistical interval.
+3. Held signal reversal keeps training unchanged and replaces the deterministic field by its negative in both held intervals; the shared noise stays the same. Every primary cell must fail the unchanged scorer.
+4. Wrong-site predictions cyclically permute the three fitted vectors and call the actual `score_rows` on the unchanged stable rows. Every primary cell must fail. Wrong-span predictions multiply each fitted per-step vector by8, the error produced by treating the span8 training residual as a per-step residual; the same actual scorer must reject every primary cell. No alternate coefficient path enters actual-data analysis.
+5. A complete inventory with the site15 pair(112,113) marked `Border` and residuals unavailable must refuse the primary population, even if the remaining data predict well. A physically omitted row must raise inventory rejection. Intervals with primary held changed to[95,190] must raise acquisition-overlap rejection at the shared source95.
+6. The persistent-bias lookalike has exactly the same numeric rows as the stable positive but is labelled as a deterministic focus-dependent matching bias with zero physical movement. It must produce the same passing numeric result while attribution, physical and quality claims remain false. This deliberately demonstrates that the gate cannot identify the cause of a predictable residual.
+
+The final receipt is `controls.json`, status `COMPLETE_INSECT_FIELD_CONTROLS`, with `all_cases_completed` and `control_pass`. Failure remains a saved scientific control failure before a nonzero exit. Every arm remains `admission=false`; no photographic release follows from a pass. No additional cases, threshold sweep or field fitting are authorized by this protocol.
