@@ -13,6 +13,16 @@ pub(crate) use summary::SessionSummary;
 pub(crate) struct SessionDraft {
     pub manifest: SessionSpec,
     pub memory_limit_gib: f64,
+    #[serde(default)]
+    pub precision_weights: bool,
+    #[serde(default)]
+    pub contribution_maps: bool,
+    #[serde(default)]
+    pub focus_evidence: bool,
+    #[serde(default)]
+    pub reproducibility: bool,
+    #[serde(default)]
+    pub original_cfa_reconstruction: bool,
     /// A scan snapshot, replaced only by an explicit source/layout reload.
     #[serde(default)]
     pub sources: Vec<SourceIdentity>,
@@ -43,11 +53,35 @@ impl SessionDraft {
                 ..Default::default()
             },
             memory_limit_gib: 16.0,
+            precision_weights: false,
+            contribution_maps: false,
+            focus_evidence: false,
+            reproducibility: false,
+            original_cfa_reconstruction: false,
             sources: Vec::new(),
         }
     }
     pub(crate) fn validate(&self) -> Result<()> {
         self.manifest.validate()?;
+        ensure!(
+            !self.precision_weights
+                || precision_available(self.manifest.mode, self.manifest.passes.len()),
+            "Precision weighting needs at least two repeated or exposure passes"
+        );
+        ensure!(
+            !(self.contribution_maps || self.focus_evidence)
+                || !managed_evidence(self.manifest.mode),
+            "Mosaics and independent views manage their own focus evidence"
+        );
+        ensure!(
+            !self.reproducibility
+                || reproducibility_available(self.manifest.mode, self.manifest.passes.len()),
+            "Automatic comparison needs two combine, interleaved, repeat or layer passes"
+        );
+        ensure!(
+            !self.original_cfa_reconstruction || reconstruction_available(self.manifest.mode),
+            "Original-CFA reconstruction is available for combine, interleaved, repeated and exposure passes",
+        );
         ensure!(
             self.manifest.passes.len() <= 64,
             "A desktop session supports at most 64 passes"
@@ -65,6 +99,24 @@ impl SessionDraft {
         );
         Ok(())
     }
+    /// Apply only after an explicit mode/layout edit. Saved jobs are immutable.
+    pub(crate) fn normalize_mode_options(&mut self) {
+        if managed_evidence(self.manifest.mode) {
+            self.manifest.primary_pass = None;
+            self.contribution_maps = false;
+            self.focus_evidence = false;
+        }
+        if !reconstruction_available(self.manifest.mode) {
+            self.original_cfa_reconstruction = false;
+        }
+        if !precision_available(self.manifest.mode, self.manifest.passes.len()) {
+            self.precision_weights = false;
+        }
+        if !reproducibility_available(self.manifest.mode, self.manifest.passes.len()) {
+            self.reproducibility = false;
+        }
+    }
+
     pub(crate) fn groups(&self, scan: &StackScan) -> Result<Vec<CaptureGroup>> {
         let mut cursor = 0;
         let mut groups = Vec::new();
@@ -119,29 +171,80 @@ impl SessionDraft {
                 Some(primary - usize::from(primary > index))
             }
         });
+        self.normalize_mode_options();
     }
     pub(crate) fn first_directory(&self) -> &Path {
         &self.manifest.passes[0].directories[0]
     }
 }
 
-pub(crate) const MODES: [SessionMode; 4] = [
+pub(crate) const MODES: [SessionMode; 7] = [
     SessionMode::Combine,
+    SessionMode::Interleave,
     SessionMode::Repeat,
     SessionMode::Hdr,
     SessionMode::Layers,
+    SessionMode::Mosaic,
+    SessionMode::IndependentViews,
 ];
+
+pub(crate) fn output_prefix(mode: SessionMode) -> Option<&'static str> {
+    match mode {
+        SessionMode::Layers => Some("layer"),
+        SessionMode::IndependentViews => Some("view"),
+        _ => None,
+    }
+}
+
+pub(crate) fn primary_available(mode: SessionMode) -> bool {
+    !matches!(mode, SessionMode::Mosaic | SessionMode::IndependentViews)
+}
+
+pub(crate) fn managed_evidence(mode: SessionMode) -> bool {
+    !primary_available(mode)
+}
+
+pub(crate) fn reconstruction_available(mode: SessionMode) -> bool {
+    matches!(
+        mode,
+        SessionMode::Combine | SessionMode::Interleave | SessionMode::Repeat | SessionMode::Hdr
+    )
+}
+
+pub(crate) fn precision_available(mode: SessionMode, pass_count: usize) -> bool {
+    pass_count >= 2 && matches!(mode, SessionMode::Repeat | SessionMode::Hdr)
+}
+
+pub(crate) fn reproducibility_available(mode: SessionMode, pass_count: usize) -> bool {
+    pass_count >= 2
+        && matches!(
+            mode,
+            SessionMode::Combine
+                | SessionMode::Interleave
+                | SessionMode::Repeat
+                | SessionMode::Layers
+        )
+}
 pub(crate) fn mode_label(mode: SessionMode) -> &'static str {
     match mode {
         SessionMode::Combine => "Combine detail",
+        SessionMode::Interleave => "Interleaved focus",
         SessionMode::Repeat => "Repeated captures",
         SessionMode::Hdr => "Exposure range",
         SessionMode::Layers => "Aligned layers",
+        SessionMode::Mosaic => "Wider mosaic",
+        SessionMode::IndependentViews => "Independent views",
     }
 }
 pub(crate) fn mode_description(mode: SessionMode) -> &'static str {
     match mode {
+        SessionMode::IndependentViews => {
+            "Keep each viewpoint in its own coordinates, with a photograph, linear master and focus evidence. No views are joined."
+        }
         SessionMode::Combine => "Gather useful detail from related passes of the same subject.",
+        SessionMode::Interleave => {
+            "Combine complementary focus positions across passes. Each pass keeps its own capture order."
+        }
         SessionMode::Repeat => {
             "Test proposed repeats for agreement before combining their observations. Uncertain matches stay separate."
         }
@@ -150,6 +253,9 @@ pub(crate) fn mode_description(mode: SessionMode) -> &'static str {
         }
         SessionMode::Layers => {
             "Save one aligned photograph and linear master per pass, with a shared frame."
+        }
+        SessionMode::Mosaic => {
+            "Join overlapping views into a wider photograph. Unsupported regions remain transparent."
         }
     }
 }

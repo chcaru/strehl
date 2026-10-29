@@ -1,0 +1,23 @@
+# Existing-cache HDR temporal observer: first scope refused
+
+MEASURED command, one numerical worker, no RAW decoder or render:
+
+    python -X faulthandler -I experiments/multi-stack-2026-10-28/completion/review/hdr-cache-temporal-observer.py --out experiments/multi-stack-2026-10-28/completion/review/hdr-cache-observer-01
+
+OMP_NUM_THREADS, OPENBLAS_NUM_THREADS and MKL_NUM_THREADS were all 1. The command exited 0 in 2.953 s, reading 18 original cached images for source-only guides/validation. The frozen protocol uses seven guide frames spanning 22 focus steps, two disjoint validation frames and twelve intended measurement pairs. No measurement frame was opened: source-only qualification accepted 0 of 117 fixed 64×64-quad tile interiors. [Command log](hdr-cache-observer-01-command.log), [frozen protocol](hdr-cache-observer-01/protocol-frozen.json), [qualification](hdr-cache-observer-01/source-only-qualification.json), [result](hdr-cache-observer-01/result.json).
+
+Historical cache binding was explicit. Exact ef655050 Cargo.lock and RAW library bytes with CRLF reproduce the saved decoder key. The current RAW source is unchanged after line-ending normalization; the only parsed lock change is adding sha2 to strehl-core. Every read checks exact saved source identity, original byte length/mtime before and after, envelope geometry/length, and SHA256 of the complete header and payload. No cache was rewritten or relabeled. [Binding proof](historical-hdr-cache-binding.json).
+
+The experiment did **not** measure product noise reduction or establish absence of usable repeated evidence. It tested a conservative unregistered, long-sweep flat-source scope. Minimum source-guide temporal range was 1.156 raw-sample sigma for short exposure and 1.501 for long; minimum spatial-gradient score was 0.174 and 0.283. All tiles failed at least one constancy requirement. Several cross-exposure mean gaps were below 0.15 combined sigma, so mean exposure normalization alone did not explain the failure. Focus change, movement of texture under breathing/registration, optical changes and an overly strict observer remain live causes. The failed scope is preserved; it does not authorize skipping real benefit validation.
+
+## Threshold sanity and missing qualification control
+
+The range statistic follows independent two-dimensional Gaussian smoothing with sigma 3 quad pixels; no frame-axis filtering occurs. DERIVED: its noise-only SD is approximately 0.094 times original single-sample sigma, so a seven-frame range is expected near 0.25 raw sigma. The 0.5 threshold was therefore not a requirement that a seven-frame **raw** noise range stay below one sigma. Nevertheless the first commissioning exercised variance means and blur/sharpen/constant/displacement foils, not the exact source-qualification gate. Its null acceptance rate remains UNVERIFIED. Root explicitly stopped further observer analysis and will schedule a short-window/registered follow-up. No dataset-absence conclusion may be drawn from these uncommissioned gates.
+
+## Follow-up frozen real-signal contract
+
+Use the existing twelve [native witness coordinates](../../review/hdr-roi-mapped-frozen.json), particularly gray-ramp-middle, qr-white-black-grid, qr-corner-boundary and the retained adverse-flare-p12. Keep the existing joint geometry, physical gauge, source IDs, common exposure normalization and identical display. Select a short focus window from independent source evidence; score disjoint originals. Registration or sampler changes need their own placement/variance controls. Do not tune eligibility on measured candidate noise.
+
+Commission the actual qualification gate on independent injected sensor noise over a constant real-signal guide first, then on planted illumination drift, translated texture and focus-dependent blur. Preserve signal under identity/equal-noise placebo and reject constant output, blur, sharpening and displaced structure. Incremental independent noise on a fixed real photograph can establish a controlled algorithm benefit; label it separately from real camera temporal-noise calibration.
+
+For real outputs, compare both single-exposure controls, equal averaging, precision weighting and the unchanged product on one geometry. A noise gain must retain a source-anchored line/edge or colored-grid response on the named witnesses, actual uncensored source support and final-band contribution maps. Candidate-minus-a-constituent is correlated and is not an error-to-truth measure. Model variance remains conditional on frozen weights/admission and fixed calibration. Complete masters and native photographic review remain required before a product-quality claim.

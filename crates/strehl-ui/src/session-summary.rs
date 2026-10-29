@@ -13,6 +13,7 @@ pub(crate) struct SessionSummary {
     pub ordinary_delegate: bool,
     pub geometry: Option<SummaryGeometry>,
     pub report_error: Option<String>,
+    pub provenance: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -60,7 +61,21 @@ struct GeometryPass {
 
 impl SessionSummary {
     pub fn load(directory: &Path, fallback: &SessionDraft) -> Self {
-        let saved: Result<SessionDraft> = read(&directory.join("session-recipe.json"));
+        Self::load_with_provenance(directory, fallback, None)
+    }
+    pub fn load_imported(directory: &Path, fallback: &SessionDraft, scope: &str) -> Self {
+        Self::load_with_provenance(directory, fallback, Some(scope))
+    }
+    fn load_with_provenance(
+        directory: &Path,
+        fallback: &SessionDraft,
+        scope: Option<&str>,
+    ) -> Self {
+        let saved: Result<SessionDraft> = if scope.is_some() {
+            Ok(fallback.clone())
+        } else {
+            read(&directory.join("session-recipe.json"))
+        };
         let draft = saved.as_ref().unwrap_or(fallback);
         let mut start = 0;
         let passes = draft
@@ -86,18 +101,23 @@ impl SessionSummary {
                 }
             })
             .collect();
-        let output = directory.join("session-output");
-        let outputs = if draft.manifest.mode == SessionMode::Layers {
-            (0..draft.manifest.passes.len())
-                .map(|i| {
-                    output
-                        .join(format!("layer-{:02}", i + 1))
-                        .join("photograph.tiff")
-                })
-                .collect()
+        let output = if scope.is_some() {
+            directory.to_path_buf()
         } else {
-            vec![output.join("photograph.tiff")]
+            directory.join("session-output")
         };
+        let outputs =
+            if let Some(prefix) = crate::session_workspace::output_prefix(draft.manifest.mode) {
+                (0..draft.manifest.passes.len())
+                    .map(|i| {
+                        output
+                            .join(format!("{prefix}-{:02}", i + 1))
+                            .join("photograph.tiff")
+                    })
+                    .collect()
+            } else {
+                vec![output.join("photograph.tiff")]
+            };
         let mut summary = Self {
             mode: draft.manifest.mode,
             frames: draft.sources.len(),
@@ -108,6 +128,7 @@ impl SessionSummary {
             ordinary_delegate: false,
             geometry: None,
             report_error: None,
+            provenance: scope.map(str::to_owned),
         };
         let receipt = (|| -> Result<()> {
             saved
@@ -170,7 +191,7 @@ impl SessionSummary {
     }
 
     pub fn layer(&self, output: Option<&Path>) -> Option<usize> {
-        (self.mode == SessionMode::Layers)
+        (crate::session_workspace::output_prefix(self.mode).is_some())
             .then(|| {
                 self.outputs
                     .iter()

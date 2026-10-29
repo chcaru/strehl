@@ -1,0 +1,32 @@
+[
+  {
+    "path": "crates/strehl-cli/src/session-alpha-output.rs",
+    "before_sha256": "e8b2bf9c0cc99081e5c660c7673acf27d2551618e39a0ee533b387e7475dfa4d",
+    "after_sha256": "1094155e9119706ee8fefb57017efe59e53c54f3fbb01828cd7aec2b38a5e343",
+    "replacements": [
+      {
+        "old": "rgb.chunks_exact(3).enumerate()",
+        "new": "rgb.as_chunks::<3>().0.iter().enumerate()"
+      },
+      {
+        "old": "rgba.chunks_exact(4).enumerate()",
+        "new": "rgba.as_chunks::<4>().0.iter().enumerate()"
+      },
+      {
+        "old": "x >= 2 && x < 10 && y >= 2 && y < 9",
+        "new": "(2..10).contains(&x) && (2..9).contains(&y)"
+      }
+    ]
+  },
+  {
+    "path": "crates/strehl-cli/src/image_out.rs",
+    "before_sha256": "ad2ae4c20cbfa4fd539254a868d461ab2ee560528048888a531ed62645479963",
+    "after_sha256": "9ee181b62e594a0b5911def456b032fa1aa947d8f1e07344ab8ae638f95874c8",
+    "replacements": [
+      {
+        "old": "width%2==0 && height%2==0",
+        "new": "width.is_multiple_of(2) && height.is_multiple_of(2)"
+      }
+    ]
+  }
+]

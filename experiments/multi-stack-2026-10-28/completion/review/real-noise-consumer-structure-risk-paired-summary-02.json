@@ -1,0 +1,2518 @@
+{
+  "schema": "strehl.asymmetric-structure-risk-summary.v1",
+  "input": "outputs/multi-stack/completion/rn-sp-all-02",
+  "numeric_rows_exact_after_reporting_only_change": true,
+  "risk_reference": "separate independent R trajectory of each pass, compared with the corresponding single-pass consumer; no optional-primary override was exercised",
+  "replicate_scope": "Two synthetic acquisition seeds90/91; component/state values share inputs, no pixel or row independence/CI. Signed per-component/state rows remain in producer JSON.",
+  "summary": [
+    {
+      "case": "flat",
+      "hdr": false,
+      "arm": "equal",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -686.5346728831848,
+      "known_risk_delta": -676.4467064462135,
+      "projection_min_max": null,
+      "projection_by_color": null
+    },
+    {
+      "case": "flat",
+      "hdr": false,
+      "arm": "equal",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -573.1685987868135,
+      "known_risk_delta": -576.1414015859327,
+      "projection_min_max": null,
+      "projection_by_color": null
+    },
+    {
+      "case": "flat",
+      "hdr": false,
+      "arm": "precision",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -686.42348963274,
+      "known_risk_delta": -676.3405756917513,
+      "projection_min_max": null,
+      "projection_by_color": null
+    },
+    {
+      "case": "flat",
+      "hdr": false,
+      "arm": "precision",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -573.0503208716234,
+      "known_risk_delta": -576.0352708314706,
+      "projection_min_max": null,
+      "projection_by_color": null
+    },
+    {
+      "case": "flat",
+      "hdr": false,
+      "arm": "constant",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -1311.262775780221,
+      "known_risk_delta": -1297.7384512004446,
+      "projection_min_max": null,
+      "projection_by_color": null
+    },
+    {
+      "case": "flat",
+      "hdr": false,
+      "arm": "constant",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -1189.012285353407,
+      "known_risk_delta": -1197.4331463401638,
+      "projection_min_max": null,
+      "projection_by_color": null
+    },
+    {
+      "case": "flat",
+      "hdr": false,
+      "arm": "blue-only-blur",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -810.4155139104997,
+      "known_risk_delta": -802.4770253187947,
+      "projection_min_max": null,
+      "projection_by_color": null
+    },
+    {
+      "case": "flat",
+      "hdr": false,
+      "arm": "blue-only-blur",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -701.4798812097936,
+      "known_risk_delta": -702.1717204585141,
+      "projection_min_max": null,
+      "projection_by_color": null
+    },
+    {
+      "case": "flat",
+      "hdr": true,
+      "arm": "equal",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -2273.5535109927314,
+      "known_risk_delta": -2251.3946819355906,
+      "projection_min_max": null,
+      "projection_by_color": null
+    },
+    {
+      "case": "flat",
+      "hdr": true,
+      "arm": "equal",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -50.887536027221486,
+      "known_risk_delta": -53.21935162406966,
+      "projection_min_max": null,
+      "projection_by_color": null
+    },
+    {
+      "case": "flat",
+      "hdr": true,
+      "arm": "precision",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -2544.2472983608914,
+      "known_risk_delta": -2512.171424282132,
+      "projection_min_max": null,
+      "projection_by_color": null
+    },
+    {
+      "case": "flat",
+      "hdr": true,
+      "arm": "precision",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -312.7196409597631,
+      "known_risk_delta": -313.9960939706112,
+      "projection_min_max": null,
+      "projection_by_color": null
+    },
+    {
+      "case": "flat",
+      "hdr": true,
+      "arm": "constant",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -3429.1538952655715,
+      "known_risk_delta": -3395.6084766516847,
+      "projection_min_max": null,
+      "projection_by_color": null
+    },
+    {
+      "case": "flat",
+      "hdr": true,
+      "arm": "constant",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -1189.012285353407,
+      "known_risk_delta": -1197.4331463401638,
+      "projection_min_max": null,
+      "projection_by_color": null
+    },
+    {
+      "case": "flat",
+      "hdr": true,
+      "arm": "blue-only-blur",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -2727.303406398736,
+      "known_risk_delta": -2700.333751951124,
+      "projection_min_max": null,
+      "projection_by_color": null
+    },
+    {
+      "case": "flat",
+      "hdr": true,
+      "arm": "blue-only-blur",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -502.93371433108103,
+      "known_risk_delta": -502.1584216396035,
+      "projection_min_max": null,
+      "projection_by_color": null
+    },
+    {
+      "case": "common",
+      "hdr": false,
+      "arm": "equal",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -688.9814191157446,
+      "known_risk_delta": -679.0788007284305,
+      "projection_min_max": [
+        0.9854101964926144,
+        1.000982495526618
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9932755674630755,
+          1.000982495526618
+        ],
+        "1": [
+          0.9854101964926144,
+          0.9979600316479604
+        ],
+        "2": [
+          0.9883066364481142,
+          0.9990279412248768
+        ],
+        "3": [
+          0.992938099943075,
+          1.0000290735035962
+        ]
+      }
+    },
+    {
+      "case": "common",
+      "hdr": false,
+      "arm": "equal",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -576.0450244139251,
+      "known_risk_delta": -579.3756675436523,
+      "projection_min_max": [
+        0.9854101964926144,
+        1.000982495526618
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9932755674630755,
+          1.000982495526618
+        ],
+        "1": [
+          0.9854101964926144,
+          0.9979600316479604
+        ],
+        "2": [
+          0.9883066364481142,
+          0.9990279412248768
+        ],
+        "3": [
+          0.992938099943075,
+          1.0000290735035962
+        ]
+      }
+    },
+    {
+      "case": "common",
+      "hdr": false,
+      "arm": "precision",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -688.8711240403042,
+      "known_risk_delta": -678.9733498423357,
+      "projection_min_max": [
+        0.9854111311396726,
+        1.000996177933715
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9932775867694459,
+          1.000996177933715
+        ],
+        "1": [
+          0.9854111311396726,
+          0.9979726370888053
+        ],
+        "2": [
+          0.9883089209161784,
+          0.9990233125764549
+        ],
+        "3": [
+          0.9929426344692655,
+          1.0000501426435433
+        ]
+      }
+    },
+    {
+      "case": "common",
+      "hdr": false,
+      "arm": "precision",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -575.9259364282062,
+      "known_risk_delta": -579.2702166575575,
+      "projection_min_max": [
+        0.9854111311396726,
+        1.000996177933715
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9932775867694459,
+          1.000996177933715
+        ],
+        "1": [
+          0.9854111311396726,
+          0.9979726370888053
+        ],
+        "2": [
+          0.9883089209161784,
+          0.9990233125764549
+        ],
+        "3": [
+          0.9929426344692655,
+          1.0000501426435433
+        ]
+      }
+    },
+    {
+      "case": "common",
+      "hdr": false,
+      "arm": "constant",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 4667.739447099399,
+      "known_risk_delta": 4718.763734168841,
+      "projection_min_max": [
+        0.0,
+        0.0
+      ],
+      "projection_by_color": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          0.0,
+          0.0
+        ],
+        "2": [
+          0.0,
+          0.0
+        ],
+        "3": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "common",
+      "hdr": false,
+      "arm": "constant",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 4737.885595173189,
+      "known_risk_delta": 4818.46686735362,
+      "projection_min_max": [
+        0.0,
+        0.0
+      ],
+      "projection_by_color": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          0.0,
+          0.0
+        ],
+        "2": [
+          0.0,
+          0.0
+        ],
+        "3": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "common",
+      "hdr": false,
+      "arm": "blue-only-blur",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -692.1448849420632,
+      "known_risk_delta": -682.9048410166382,
+      "projection_min_max": [
+        0.7211097050004155,
+        1.000996177933715
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9932775867694459,
+          1.000996177933715
+        ],
+        "1": [
+          0.9854111311396726,
+          0.9979726370888053
+        ],
+        "2": [
+          0.7211097050004155,
+          0.7369249254953395
+        ],
+        "3": [
+          0.9929426344692655,
+          1.0000501426435433
+        ]
+      }
+    },
+    {
+      "case": "common",
+      "hdr": false,
+      "arm": "blue-only-blur",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -590.564742854441,
+      "known_risk_delta": -583.2017078318601,
+      "projection_min_max": [
+        0.7211097050004155,
+        1.000996177933715
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9932775867694459,
+          1.000996177933715
+        ],
+        "1": [
+          0.9854111311396726,
+          0.9979726370888053
+        ],
+        "2": [
+          0.7211097050004155,
+          0.7369249254953395
+        ],
+        "3": [
+          0.9929426344692655,
+          1.0000501426435433
+        ]
+      }
+    },
+    {
+      "case": "common",
+      "hdr": true,
+      "arm": "equal",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -2283.7189903225885,
+      "known_risk_delta": -2260.9138345950855,
+      "projection_min_max": [
+        0.981338564617884,
+        1.0040742538694785
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9904776594165139,
+          1.0035146091292502
+        ],
+        "1": [
+          0.981338564617884,
+          1.0001800886817824
+        ],
+        "2": [
+          0.9860264252612253,
+          0.9996926750571871
+        ],
+        "3": [
+          0.9920838621253236,
+          1.0040742538694785
+        ]
+      }
+    },
+    {
+      "case": "common",
+      "hdr": true,
+      "arm": "equal",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -51.754123580094955,
+      "known_risk_delta": -53.92811328206277,
+      "projection_min_max": [
+        0.981338564617884,
+        1.0040742538694785
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9904776594165139,
+          1.0035146091292502
+        ],
+        "1": [
+          0.981338564617884,
+          1.0001800886817824
+        ],
+        "2": [
+          0.9860264252612253,
+          0.9996926750571871
+        ],
+        "3": [
+          0.9920838621253236,
+          1.0040742538694785
+        ]
+      }
+    },
+    {
+      "case": "common",
+      "hdr": true,
+      "arm": "precision",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -2555.6111332715705,
+      "known_risk_delta": -2522.613150291114,
+      "projection_min_max": [
+        0.9838167581036354,
+        1.0012081302194105
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9930335033234444,
+          0.9997591517300173
+        ],
+        "1": [
+          0.9838167581036354,
+          0.996139405921515
+        ],
+        "2": [
+          0.9880488264518942,
+          1.000503558562148
+        ],
+        "3": [
+          0.9914838904568488,
+          1.0012081302194105
+        ]
+      }
+    },
+    {
+      "case": "common",
+      "hdr": true,
+      "arm": "precision",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -314.4278866571983,
+      "known_risk_delta": -315.627428978091,
+      "projection_min_max": [
+        0.9838167581036354,
+        1.0012081302194105
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9930335033234444,
+          0.9997591517300173
+        ],
+        "1": [
+          0.9838167581036354,
+          0.996139405921515
+        ],
+        "2": [
+          0.9880488264518942,
+          1.000503558562148
+        ],
+        "3": [
+          0.9914838904568488,
+          1.0012081302194105
+        ]
+      }
+    },
+    {
+      "case": "common",
+      "hdr": true,
+      "arm": "constant",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 2540.2104284594006,
+      "known_risk_delta": 2611.481146040595,
+      "projection_min_max": [
+        0.0,
+        0.0
+      ],
+      "projection_by_color": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          0.0,
+          0.0
+        ],
+        "2": [
+          0.0,
+          0.0
+        ],
+        "3": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "common",
+      "hdr": true,
+      "arm": "constant",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 4737.885595173189,
+      "known_risk_delta": 4818.46686735362,
+      "projection_min_max": [
+        0.0,
+        0.0
+      ],
+      "projection_by_color": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          0.0,
+          0.0
+        ],
+        "2": [
+          0.0,
+          0.0
+        ],
+        "3": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "common",
+      "hdr": true,
+      "arm": "blue-only-blur",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -2617.6661931412677,
+      "known_risk_delta": -2588.810023655782,
+      "projection_min_max": [
+        0.7209112915990857,
+        1.0012081302194105
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9930335033234444,
+          0.9997591517300173
+        ],
+        "1": [
+          0.9838167581036354,
+          0.996139405921515
+        ],
+        "2": [
+          0.7209112915990857,
+          0.7380871822177507
+        ],
+        "3": [
+          0.9914838904568488,
+          1.0012081302194105
+        ]
+      }
+    },
+    {
+      "case": "common",
+      "hdr": true,
+      "arm": "blue-only-blur",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -391.24416884203555,
+      "known_risk_delta": -381.82430234275904,
+      "projection_min_max": [
+        0.7209112915990857,
+        1.0012081302194105
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9930335033234444,
+          0.9997591517300173
+        ],
+        "1": [
+          0.9838167581036354,
+          0.996139405921515
+        ],
+        "2": [
+          0.7209112915990857,
+          0.7380871822177507
+        ],
+        "3": [
+          0.9914838904568488,
+          1.0012081302194105
+        ]
+      }
+    },
+    {
+      "case": "unequal",
+      "hdr": false,
+      "arm": "equal",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 293.0000810512393,
+      "known_risk_delta": 305.28000106603014,
+      "projection_min_max": [
+        0.8734207918539729,
+        0.9708006867849692
+      ],
+      "projection_by_color": {
+        "0": [
+          0.8815924948112484,
+          0.9708006867849692
+        ],
+        "1": [
+          0.8734207918539729,
+          0.9679731504352345
+        ],
+        "2": [
+          0.8762004266697209,
+          0.9690927445413259
+        ],
+        "3": [
+          0.8850273437758016,
+          0.9701257735503067
+        ]
+      }
+    },
+    {
+      "case": "unequal",
+      "hdr": false,
+      "arm": "equal",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 337.2944037709354,
+      "known_risk_delta": 325.0408517809128,
+      "projection_min_max": [
+        0.8068462631352032,
+        0.8206599186307949
+      ],
+      "projection_by_color": {
+        "0": [
+          0.8149905864669085,
+          0.8202396884173145
+        ],
+        "1": [
+          0.8068462631352032,
+          0.8150054343426526
+        ],
+        "2": [
+          0.8104050820683106,
+          0.8171883890694646
+        ],
+        "3": [
+          0.8121135802434115,
+          0.8206599186307949
+        ]
+      }
+    },
+    {
+      "case": "unequal",
+      "hdr": false,
+      "arm": "precision",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 292.97639772263625,
+      "known_risk_delta": 305.25153763574514,
+      "projection_min_max": [
+        0.8733335454539718,
+        0.9710402345154504
+      ],
+      "projection_by_color": {
+        "0": [
+          0.8815064234775893,
+          0.9710402345154504
+        ],
+        "1": [
+          0.8733335454539718,
+          0.9682112126405514
+        ],
+        "2": [
+          0.8761146497555656,
+          0.9693133641388049
+        ],
+        "3": [
+          0.8849498628224705,
+          0.9703714121565293
+        ]
+      }
+    },
+    {
+      "case": "unequal",
+      "hdr": false,
+      "arm": "precision",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 337.4837516926327,
+      "known_risk_delta": 325.21099206622057,
+      "projection_min_max": [
+        0.8067894451870321,
+        0.820608721796262
+      ],
+      "projection_by_color": {
+        "0": [
+          0.8151183451752957,
+          0.8201762883357545
+        ],
+        "1": [
+          0.8067894451870321,
+          0.8151343551175262
+        ],
+        "2": [
+          0.8103498846666775,
+          0.8173077949949514
+        ],
+        "3": [
+          0.812238098362459,
+          0.820608721796262
+        ]
+      }
+    },
+    {
+      "case": "unequal",
+      "hdr": false,
+      "arm": "constant",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 4667.739447099399,
+      "known_risk_delta": 4718.763734168841,
+      "projection_min_max": [
+        0.0,
+        0.0
+      ],
+      "projection_by_color": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          0.0,
+          0.0
+        ],
+        "2": [
+          0.0,
+          0.0
+        ],
+        "3": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "unequal",
+      "hdr": false,
+      "arm": "constant",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 6877.191666561033,
+      "known_risk_delta": 6926.158146181104,
+      "projection_min_max": [
+        0.0,
+        0.0
+      ],
+      "projection_by_color": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          0.0,
+          0.0
+        ],
+        "2": [
+          0.0,
+          0.0
+        ],
+        "3": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "unequal",
+      "hdr": false,
+      "arm": "blue-only-blur",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 334.99028820400366,
+      "known_risk_delta": 346.43127089264914,
+      "projection_min_max": [
+        0.6357324915128789,
+        0.9710402345154504
+      ],
+      "projection_by_color": {
+        "0": [
+          0.8815064234775893,
+          0.9710402345154504
+        ],
+        "1": [
+          0.8733335454539718,
+          0.9682112126405514
+        ],
+        "2": [
+          0.6357324915128789,
+          0.7331879344995169
+        ],
+        "3": [
+          0.8849498628224705,
+          0.9703714121565293
+        ]
+      }
+    },
+    {
+      "case": "unequal",
+      "hdr": false,
+      "arm": "blue-only-blur",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 226.65669605791948,
+      "known_risk_delta": 223.00644850183807,
+      "projection_min_max": [
+        0.6529594673094854,
+        0.820608721796262
+      ],
+      "projection_by_color": {
+        "0": [
+          0.8151183451752957,
+          0.8201762883357545
+        ],
+        "1": [
+          0.8067894451870321,
+          0.8151343551175262
+        ],
+        "2": [
+          0.6529594673094854,
+          0.6898676334078516
+        ],
+        "3": [
+          0.812238098362459,
+          0.820608721796262
+        ]
+      }
+    },
+    {
+      "case": "unequal",
+      "hdr": true,
+      "arm": "equal",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -1298.3524983501866,
+      "known_risk_delta": -1273.8494501092284,
+      "projection_min_max": [
+        0.8693491142056319,
+        0.9741709602058483
+      ],
+      "projection_by_color": {
+        "0": [
+          0.8787945601986367,
+          0.9733328094016904
+        ],
+        "1": [
+          0.8693491142056319,
+          0.9701931972692567
+        ],
+        "2": [
+          0.8739202670314989,
+          0.9697574909667851
+        ],
+        "3": [
+          0.8814645284236452,
+          0.9741709602058483
+        ]
+      }
+    },
+    {
+      "case": "unequal",
+      "hdr": true,
+      "arm": "equal",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 858.5902435491507,
+      "known_risk_delta": 847.4124115947857,
+      "projection_min_max": [
+        0.8047419875619931,
+        0.8223557670493391
+      ],
+      "projection_by_color": {
+        "0": [
+          0.8155963783632791,
+          0.8223557670493391
+        ],
+        "1": [
+          0.8047419875619931,
+          0.8158238253804353
+        ],
+        "2": [
+          0.8083960797049392,
+          0.81740944287143
+        ],
+        "3": [
+          0.812483057261037,
+          0.8218283148895786
+        ]
+      }
+    },
+    {
+      "case": "unequal",
+      "hdr": true,
+      "arm": "precision",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -1390.901454739344,
+      "known_risk_delta": -1356.045379510069,
+      "projection_min_max": [
+        0.8308491692326658,
+        0.9355167606463748
+      ],
+      "projection_by_color": {
+        "0": [
+          0.8394661350121237,
+          0.9332241669430132
+        ],
+        "1": [
+          0.8308491692326658,
+          0.931482136423598
+        ],
+        "2": [
+          0.8348335044332481,
+          0.9355167606463748
+        ],
+        "3": [
+          0.84768671420214,
+          0.9328884380528463
+        ]
+      }
+    },
+    {
+      "case": "unequal",
+      "hdr": true,
+      "arm": "precision",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 497.35725226575465,
+      "known_risk_delta": 490.28778834696686,
+      "projection_min_max": [
+        0.7920417722361449,
+        0.8111458362468743
+      ],
+      "projection_by_color": {
+        "0": [
+          0.8044211167511348,
+          0.8077204019156686
+        ],
+        "1": [
+          0.7920417722361449,
+          0.8041230630269393
+        ],
+        "2": [
+          0.7963420485902428,
+          0.8090396142296962
+        ],
+        "3": [
+          0.8012329212624352,
+          0.8111458362468743
+        ]
+      }
+    },
+    {
+      "case": "unequal",
+      "hdr": true,
+      "arm": "constant",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 2540.2104284594006,
+      "known_risk_delta": 2611.481146040595,
+      "projection_min_max": [
+        0.0,
+        0.0
+      ],
+      "projection_by_color": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          0.0,
+          0.0
+        ],
+        "2": [
+          0.0,
+          0.0
+        ],
+        "3": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "unequal",
+      "hdr": true,
+      "arm": "constant",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 6877.191666561033,
+      "known_risk_delta": 6926.158146181104,
+      "projection_min_max": [
+        0.0,
+        0.0
+      ],
+      "projection_by_color": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          0.0,
+          0.0
+        ],
+        "2": [
+          0.0,
+          0.0
+        ],
+        "3": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "unequal",
+      "hdr": true,
+      "arm": "blue-only-blur",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -1397.027177548048,
+      "known_risk_delta": -1366.264055795368,
+      "projection_min_max": [
+        0.6054754393063551,
+        0.9332241669430132
+      ],
+      "projection_by_color": {
+        "0": [
+          0.8394661350121237,
+          0.9332241669430132
+        ],
+        "1": [
+          0.8308491692326658,
+          0.931482136423598
+        ],
+        "2": [
+          0.6054754393063551,
+          0.7094920326507073
+        ],
+        "3": [
+          0.84768671420214,
+          0.9328884380528463
+        ]
+      }
+    },
+    {
+      "case": "unequal",
+      "hdr": true,
+      "arm": "blue-only-blur",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 341.99518592347886,
+      "known_risk_delta": 343.0759154296866,
+      "projection_min_max": [
+        0.6461218563321196,
+        0.8111458362468743
+      ],
+      "projection_by_color": {
+        "0": [
+          0.8044211167511348,
+          0.8077204019156686
+        ],
+        "1": [
+          0.7920417722361449,
+          0.8041230630269393
+        ],
+        "2": [
+          0.6461218563321196,
+          0.6870911474739548
+        ],
+        "3": [
+          0.8012329212624352,
+          0.8111458362468743
+        ]
+      }
+    },
+    {
+      "case": "opposite",
+      "hdr": false,
+      "arm": "equal",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 5775.020251833673,
+      "known_risk_delta": 5822.332374028299,
+      "projection_min_max": [
+        -0.014177244011483344,
+        0.06530495821237807
+      ],
+      "projection_by_color": {
+        "0": [
+          -0.00511379390034454,
+          0.06530495821237807
+        ],
+        "1": [
+          -0.014177244011483344,
+          0.0427578612508827
+        ],
+        "2": [
+          -0.005297364579206372,
+          0.03587275936049413
+        ],
+        "3": [
+          0.006658056621781899,
+          0.03961207214243005
+        ]
+      }
+    },
+    {
+      "case": "opposite",
+      "hdr": false,
+      "arm": "equal",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 6133.967775508621,
+      "known_risk_delta": 6197.315126003683,
+      "projection_min_max": [
+        -0.02379064890670308,
+        0.022446240204049644
+      ],
+      "projection_by_color": {
+        "0": [
+          -0.010473342555701348,
+          0.008753689928396988
+        ],
+        "1": [
+          -0.02379064890670308,
+          0.022446240204049644
+        ],
+        "2": [
+          -0.018921470883510875,
+          0.013585851287917797
+        ],
+        "3": [
+          -0.022037439180057603,
+          0.003553264977215479
+        ]
+      }
+    },
+    {
+      "case": "opposite",
+      "hdr": false,
+      "arm": "precision",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 5770.450467577817,
+      "known_risk_delta": 5817.76590243441,
+      "projection_min_max": [
+        -0.014838322454798958,
+        0.06656014292417957
+      ],
+      "projection_by_color": {
+        "0": [
+          -0.005774085973945979,
+          0.06656014292417957
+        ],
+        "1": [
+          -0.014838322454798958,
+          0.04402601415868155
+        ],
+        "2": [
+          -0.005955110538913016,
+          0.03713437599626895
+        ],
+        "3": [
+          0.005994939573996299,
+          0.04087813233701292
+        ]
+      }
+    },
+    {
+      "case": "opposite",
+      "hdr": false,
+      "arm": "precision",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 6138.661790624654,
+      "known_risk_delta": 6202.027198356789,
+      "projection_min_max": [
+        -0.025080142258014842,
+        0.023107243837651958
+      ],
+      "projection_by_color": {
+        "0": [
+          -0.011021113655425052,
+          0.008773862747083113
+        ],
+        "1": [
+          -0.025080142258014842,
+          0.023107243837651958
+        ],
+        "2": [
+          -0.02020596410929231,
+          0.014243538775886713
+        ],
+        "3": [
+          -0.023323066638136738,
+          0.0021805043360395636
+        ]
+      }
+    },
+    {
+      "case": "opposite",
+      "hdr": false,
+      "arm": "constant",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 4667.739447099399,
+      "known_risk_delta": 4718.763734168841,
+      "projection_min_max": [
+        0.0,
+        0.0
+      ],
+      "projection_by_color": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          0.0,
+          0.0
+        ],
+        "2": [
+          0.0,
+          0.0
+        ],
+        "3": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "opposite",
+      "hdr": false,
+      "arm": "constant",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 4762.2310760089795,
+      "known_risk_delta": 4818.434936553545,
+      "projection_min_max": [
+        0.0,
+        0.0
+      ],
+      "projection_by_color": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          0.0,
+          0.0
+        ],
+        "2": [
+          0.0,
+          0.0
+        ],
+        "3": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "opposite",
+      "hdr": false,
+      "arm": "blue-only-blur",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 5566.486191648088,
+      "known_risk_delta": 5611.624012976214,
+      "projection_min_max": [
+        -0.014838322454798958,
+        0.06656014292417957
+      ],
+      "projection_by_color": {
+        "0": [
+          -0.005774085973945979,
+          0.06656014292417957
+        ],
+        "1": [
+          -0.014838322454798958,
+          0.04402601415868155
+        ],
+        "2": [
+          -0.0035116882712679233,
+          0.029527655708001505
+        ],
+        "3": [
+          0.005994939573996299,
+          0.04087813233701292
+        ]
+      }
+    },
+    {
+      "case": "opposite",
+      "hdr": false,
+      "arm": "blue-only-blur",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 5917.4416397204395,
+      "known_risk_delta": 5981.774226457173,
+      "projection_min_max": [
+        -0.025080142258014842,
+        0.023107243837651958
+      ],
+      "projection_by_color": {
+        "0": [
+          -0.011021113655425052,
+          0.008773862747083113
+        ],
+        "1": [
+          -0.025080142258014842,
+          0.023107243837651958
+        ],
+        "2": [
+          -0.01260792669720488,
+          0.011818957247842729
+        ],
+        "3": [
+          -0.023323066638136738,
+          0.0021805043360395636
+        ]
+      }
+    },
+    {
+      "case": "opposite",
+      "hdr": true,
+      "arm": "equal",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 8885.384538617398,
+      "known_risk_delta": 8957.853415712309,
+      "projection_min_max": [
+        -0.3844911629866109,
+        -0.3313086546721853
+      ],
+      "projection_by_color": {
+        "0": [
+          -0.37245785568392586,
+          -0.3354848701463297
+        ],
+        "1": [
+          -0.3844911629866109,
+          -0.3370070966629567
+        ],
+        "2": [
+          -0.3801279153895468,
+          -0.3327583953896925
+        ],
+        "3": [
+          -0.3684821676713816,
+          -0.3313086546721853
+        ]
+      }
+    },
+    {
+      "case": "opposite",
+      "hdr": true,
+      "arm": "equal",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 2190.727494189999,
+      "known_risk_delta": 2232.4550519457725,
+      "projection_min_max": [
+        0.3695037531778116,
+        0.4042528729261169
+      ],
+      "projection_by_color": {
+        "0": [
+          0.36965126214919825,
+          0.399335432956678
+        ],
+        "1": [
+          0.37976921960928567,
+          0.39513738553073274
+        ],
+        "2": [
+          0.37944946174530986,
+          0.4042528729261169
+        ],
+        "3": [
+          0.3695037531778116,
+          0.39755714459429137
+        ]
+      }
+    },
+    {
+      "case": "opposite",
+      "hdr": true,
+      "arm": "precision",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 13386.149954950271,
+      "known_risk_delta": 13477.831066830882,
+      "projection_min_max": [
+        -0.6485653787795789,
+        -0.5866325087224776
+      ],
+      "projection_by_color": {
+        "0": [
+          -0.6376992980643502,
+          -0.5913388005385152
+        ],
+        "1": [
+          -0.6485653787795789,
+          -0.5916977343528298
+        ],
+        "2": [
+          -0.6440796968536187,
+          -0.5866325087224776
+        ],
+        "3": [
+          -0.6340973619688435,
+          -0.589383766959817
+        ]
+      }
+    },
+    {
+      "case": "opposite",
+      "hdr": true,
+      "arm": "precision",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 458.60865914464364,
+      "known_risk_delta": 482.15889095612005,
+      "projection_min_max": [
+        0.6312577681704222,
+        0.6604901625740568
+      ],
+      "projection_by_color": {
+        "0": [
+          0.6388667452667521,
+          0.6551051406266902
+        ],
+        "1": [
+          0.6476047094336673,
+          0.6515422001331456
+        ],
+        "2": [
+          0.642987281422158,
+          0.6604901625740568
+        ],
+        "3": [
+          0.6312577681704222,
+          0.6525548980891002
+        ]
+      }
+    },
+    {
+      "case": "opposite",
+      "hdr": true,
+      "arm": "constant",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 2540.2104284594006,
+      "known_risk_delta": 2611.481146040595,
+      "projection_min_max": [
+        0.0,
+        0.0
+      ],
+      "projection_by_color": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          0.0,
+          0.0
+        ],
+        "2": [
+          0.0,
+          0.0
+        ],
+        "3": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "opposite",
+      "hdr": true,
+      "arm": "constant",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 4762.2310760089795,
+      "known_risk_delta": 4818.434936553545,
+      "projection_min_max": [
+        0.0,
+        0.0
+      ],
+      "projection_by_color": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          0.0,
+          0.0
+        ],
+        "2": [
+          0.0,
+          0.0
+        ],
+        "3": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "opposite",
+      "hdr": true,
+      "arm": "blue-only-blur",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 12422.758257564312,
+      "known_risk_delta": 12508.868085745253,
+      "projection_min_max": [
+        -0.6485653787795789,
+        -0.4235726253432456
+      ],
+      "projection_by_color": {
+        "0": [
+          -0.6376992980643502,
+          -0.5913388005385152
+        ],
+        "1": [
+          -0.6485653787795789,
+          -0.5916977343528298
+        ],
+        "2": [
+          -0.47382855129034995,
+          -0.4235726253432456
+        ],
+        "3": [
+          -0.6340973619688435,
+          -0.589383766959817
+        ]
+      }
+    },
+    {
+      "case": "opposite",
+      "hdr": true,
+      "arm": "blue-only-blur",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 491.5740061088668,
+      "known_risk_delta": 520.4653271254971,
+      "projection_min_max": [
+        0.4736696492904347,
+        0.6551051406266902
+      ],
+      "projection_by_color": {
+        "0": [
+          0.6388667452667521,
+          0.6551051406266902
+        ],
+        "1": [
+          0.6476047094336673,
+          0.6515422001331456
+        ],
+        "2": [
+          0.4736696492904347,
+          0.49358344811591853
+        ],
+        "3": [
+          0.6312577681704222,
+          0.6525548980891002
+        ]
+      }
+    },
+    {
+      "case": "slope",
+      "hdr": false,
+      "arm": "equal",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -687.9938127584077,
+      "known_risk_delta": -678.3359392488788,
+      "projection_min_max": [
+        0.9890472953897153,
+        1.0034546439123115
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9969796473410808,
+          1.0034546439123115
+        ],
+        "1": [
+          0.9890472953897153,
+          1.0004864836810974
+        ],
+        "2": [
+          0.9920321554303472,
+          1.0017684158415736
+        ],
+        "3": [
+          0.9955367306384845,
+          1.0025459090862054
+        ]
+      }
+    },
+    {
+      "case": "slope",
+      "hdr": false,
+      "arm": "equal",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -574.5407581757981,
+      "known_risk_delta": -577.6272679200133,
+      "projection_min_max": [
+        0.9817224164115866,
+        0.9979586350355117
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9896355099423602,
+          0.9979586350355117
+        ],
+        "1": [
+          0.9817224164115866,
+          0.9948974053373711
+        ],
+        "2": [
+          0.9846973716330664,
+          0.9960715081634216
+        ],
+        "3": [
+          0.989930962920026,
+          0.9968099285167862
+        ]
+      }
+    },
+    {
+      "case": "slope",
+      "hdr": false,
+      "arm": "precision",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -687.8812378523667,
+      "known_risk_delta": -678.2284121747456,
+      "projection_min_max": [
+        0.9890514214339646,
+        1.0034554104841054
+      ],
+      "projection_by_color": {
+        "0": [
+          0.99698500787411,
+          1.0034554104841054
+        ],
+        "1": [
+          0.9890514214339646,
+          1.0004859525010015
+        ],
+        "2": [
+          0.9920378531742291,
+          1.0017500523125793
+        ],
+        "3": [
+          0.9955280111757037,
+          1.0025539276990947
+        ]
+      }
+    },
+    {
+      "case": "slope",
+      "hdr": false,
+      "arm": "precision",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -574.4204241909749,
+      "known_risk_delta": -577.5193347029103,
+      "projection_min_max": [
+        0.9817265139223508,
+        0.9979594297765487
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9896408344673652,
+          0.9979594297765487
+        ],
+        "1": [
+          0.9817265139223508,
+          0.9948967933416804
+        ],
+        "2": [
+          0.9847030340437989,
+          0.9960530979812937
+        ],
+        "3": [
+          0.9899221879280511,
+          0.9968179192782491
+        ]
+      }
+    },
+    {
+      "case": "slope",
+      "hdr": false,
+      "arm": "constant",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 4667.739447099399,
+      "known_risk_delta": 4718.763734168841,
+      "projection_min_max": [
+        0.0,
+        0.0
+      ],
+      "projection_by_color": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          0.0,
+          0.0
+        ],
+        "2": [
+          0.0,
+          0.0
+        ],
+        "3": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "slope",
+      "hdr": false,
+      "arm": "constant",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 4814.684130974677,
+      "known_risk_delta": 4897.816743655935,
+      "projection_min_max": [
+        0.0,
+        0.0
+      ],
+      "projection_by_color": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          0.0,
+          0.0
+        ],
+        "2": [
+          0.0,
+          0.0
+        ],
+        "3": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "slope",
+      "hdr": false,
+      "arm": "blue-only-blur",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -693.9472300142085,
+      "known_risk_delta": -684.9445211419694,
+      "projection_min_max": [
+        0.7238033341476492,
+        1.0034554104841054
+      ],
+      "projection_by_color": {
+        "0": [
+          0.99698500787411,
+          1.0034554104841054
+        ],
+        "1": [
+          0.9890514214339646,
+          1.0004859525010015
+        ],
+        "2": [
+          0.7238033341476492,
+          0.7380583395954742
+        ],
+        "3": [
+          0.9955280111757037,
+          1.0025539276990947
+        ]
+      }
+    },
+    {
+      "case": "slope",
+      "hdr": false,
+      "arm": "blue-only-blur",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -584.2094004078465,
+      "known_risk_delta": -576.5528883853409,
+      "projection_min_max": [
+        0.7184193445725194,
+        0.9979594297765487
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9896408344673652,
+          0.9979594297765487
+        ],
+        "1": [
+          0.9817265139223508,
+          0.9948967933416804
+        ],
+        "2": [
+          0.7184193445725194,
+          0.7323379411088453
+        ],
+        "3": [
+          0.9899221879280511,
+          0.9968179192782491
+        ]
+      }
+    },
+    {
+      "case": "slope",
+      "hdr": true,
+      "arm": "equal",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -2282.6352682309234,
+      "known_risk_delta": -2260.1587547316917,
+      "projection_min_max": [
+        0.9849755943636413,
+        1.00659109534088
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9941817029925193,
+          1.0059867614680378
+        ],
+        "1": [
+          0.9849755943636413,
+          1.0027065005664904
+        ],
+        "2": [
+          0.9897520199932951,
+          1.002433241013185
+        ],
+        "3": [
+          0.9946824566239177,
+          1.00659109534088
+        ]
+      }
+    },
+    {
+      "case": "slope",
+      "hdr": true,
+      "arm": "equal",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -50.23468341965183,
+      "known_risk_delta": -52.218086218114344,
+      "projection_min_max": [
+        0.9776838788975959,
+        1.0007556129847783
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9868708246345907,
+          1.0005427763681305
+        ],
+        "1": [
+          0.9776838788975959,
+          0.9971434826149287
+        ],
+        "2": [
+          0.982430558242769,
+          0.9967457562316967
+        ],
+        "3": [
+          0.9890201092598359,
+          1.0007556129847783
+        ]
+      }
+    },
+    {
+      "case": "slope",
+      "hdr": true,
+      "arm": "precision",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -2553.970091116955,
+      "known_risk_delta": -2521.5014080733545,
+      "projection_min_max": [
+        0.9890817720272109,
+        1.0066687837965027
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9983971019216842,
+          1.0040531778077215
+        ],
+        "1": [
+          0.9890817720272109,
+          1.0003783936207427
+        ],
+        "2": [
+          0.9934421147383793,
+          1.005042790467724
+        ],
+        "3": [
+          0.9958636906082114,
+          1.0066687837965027
+        ]
+      }
+    },
+    {
+      "case": "slope",
+      "hdr": true,
+      "arm": "precision",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -313.62977729940405,
+      "known_risk_delta": -314.67833362242084,
+      "projection_min_max": [
+        0.9817591551625701,
+        0.9994888290844518
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9910550558197027,
+          0.9986997463214141
+        ],
+        "1": [
+          0.9817591551625701,
+          0.9950211899567917
+        ],
+        "2": [
+          0.9861053766427954,
+          0.9994888290844518
+        ],
+        "3": [
+          0.9904546367082403,
+          0.9992628809878794
+        ]
+      }
+    },
+    {
+      "case": "slope",
+      "hdr": true,
+      "arm": "constant",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 2540.2104284594006,
+      "known_risk_delta": 2611.481146040595,
+      "projection_min_max": [
+        0.0,
+        0.0
+      ],
+      "projection_by_color": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          0.0,
+          0.0
+        ],
+        "2": [
+          0.0,
+          0.0
+        ],
+        "3": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "slope",
+      "hdr": true,
+      "arm": "constant",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": 4814.684130974677,
+      "known_risk_delta": 4897.816743655935,
+      "projection_min_max": [
+        0.0,
+        0.0
+      ],
+      "projection_by_color": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          0.0,
+          0.0
+        ],
+        "2": [
+          0.0,
+          0.0
+        ],
+        "3": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "slope",
+      "hdr": true,
+      "arm": "blue-only-blur",
+      "target_pass": 0,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -2620.119677856143,
+      "known_risk_delta": -2591.773041761371,
+      "projection_min_max": [
+        0.7248082457416596,
+        1.0066687837965027
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9983971019216842,
+          1.0040531778077215
+        ],
+        "1": [
+          0.9890817720272109,
+          1.0003783936207427
+        ],
+        "2": [
+          0.7248082457416596,
+          0.7403203344890452
+        ],
+        "3": [
+          0.9958636906082114,
+          1.0066687837965027
+        ]
+      }
+    },
+    {
+      "case": "slope",
+      "hdr": true,
+      "arm": "blue-only-blur",
+      "target_pass": 1,
+      "rows": 16,
+      "acquisition_seeds": [
+        90,
+        91
+      ],
+      "independent_risk_delta": -386.8801217493394,
+      "known_risk_delta": -377.2511301148831,
+      "projection_min_max": [
+        0.719424608103445,
+        0.9992628809878794
+      ],
+      "projection_by_color": {
+        "0": [
+          0.9910550558197027,
+          0.9986997463214141
+        ],
+        "1": [
+          0.9817591551625701,
+          0.9950211899567917
+        ],
+        "2": [
+          0.719424608103445,
+          0.7347397584114229
+        ],
+        "3": [
+          0.9904546367082403,
+          0.9992628809878794
+        ]
+      }
+    }
+  ],
+  "input_hashes": {
+    "common.json": "8175916bb2f2b4214304174e6d33bc5eca68d4054e0404950dadb20ba0651de7",
+    "flat.json": "df44d462b013ddc3cbb0dc21c26a0089c9d5ec0207f6cda9bd7717930aeb0f5d",
+    "opposite.json": "26401c0fd22f9523211cdbb4eb4ee32a731e744e2ed425a578983189215502fd",
+    "protocol-frozen.json": "abe2f8f70e9aecbb47122099efc794d5181364b21e4c3c878c88e9f33760eddb",
+    "qualification-common-90-false.json": "f7313e4c25bcdf4b3bdebadef1a818d95d33e3715659c810bed0c3bad1879048",
+    "qualification-common-90-true.json": "a1ce5a7700ef0c8db29f1124ddb7631884c6e726dcf573a737f2cae70df8faea",
+    "qualification-common-91-false.json": "e501a25fe4a5bf7231353a985bd160494adc39ee2ab53183d95f4e0807112492",
+    "qualification-common-91-true.json": "0c3010a4581c93bfe1372c19b764e94f6bc444b3086557bbd13eaf85b937a546",
+    "qualification-flat-90-false.json": "630041d1834275997e69be9b0a60a51c2055a4572f3cf78bd93e430ee35b4a76",
+    "qualification-flat-90-true.json": "39d0519d4febc74268d5516dbd104a16bda3d679f0995f41f7ce8421996c221a",
+    "qualification-flat-91-false.json": "9ff0e1c96f405a71bff4ff6b8a2bca3be516ee08765443f05e3a3da18fbac3c8",
+    "qualification-flat-91-true.json": "2e3580c697fcb15c8b7f26398863a32c027417b8e1b3fea27e529810f77648ed",
+    "qualification-opposite-90-false.json": "c6a6ede050ab9e0f510a169cb28af6e6bd3668b982bd82161ec4bd7f022856b8",
+    "qualification-opposite-90-true.json": "5fa1fb915f99d7a616f5f0066fcb4c9fefdd92ab2e7c0248d46ac1eca6fa9aaf",
+    "qualification-opposite-91-false.json": "9018fda3a0af2a9477d3adc33897522b5145ddd866cfd3321b9173c9e1947232",
+    "qualification-opposite-91-true.json": "ce6efa641eac9207c931e60ea9f0b9d3c31f5a608925de3bd64275ea092d71e1",
+    "qualification-slope-90-false.json": "f3f2dc1170bbce0d25cf5b4b8bfda92a59117f8cd9e9d4d2ccccca6bd42fa643",
+    "qualification-slope-90-true.json": "57a6233783b50220272594ac707ea4d6e474f79530b5b1787f0992e0b8a1798d",
+    "qualification-slope-91-false.json": "377f83baa3fb767493a40d02b2168501658252d3d5fe57cae2a8b479ac7e1e02",
+    "qualification-slope-91-true.json": "4083a4a0aec1face19afb0d1041c67e528fdb8fc7ec97a7ce7a0aca18726400d",
+    "qualification-unequal-90-false.json": "59ce002df194efa652ca451c3d39a45738ec4f4e69b8312a81fa0fec731e21b8",
+    "qualification-unequal-90-true.json": "a4013b21e260e08cb8ed0093e3cb6cacc1d4c6f1417df9acec91202e47909dbc",
+    "qualification-unequal-91-false.json": "62edab1ecf99eb65a80ac1fe3248bfe14c82d61dfc39879be7f1ae2fa0d837ab",
+    "qualification-unequal-91-true.json": "1a32e05760bb882caee1db298c2926badc48ea350c14c25af6427b1913bf0a86",
+    "report.json": "01efcbaa3cbee6a5cd766cb97ac76d492b4b75cffcea4067a8c52d7bd8225d4d",
+    "slope.json": "d278ae870ae5f84aa3e1d7baa838d43924fed7cb87781adc4fa3558abb0c29aa",
+    "unequal.json": "9ea9e9f5cde9cb58fd0fea8a5f9f867066df30065d4141bb42868e1233c9d839"
+  }
+}

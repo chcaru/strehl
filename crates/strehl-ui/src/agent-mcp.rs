@@ -524,8 +524,28 @@ pub(crate) fn tool_definitions() -> Value {
             json!({"center":point(),"zoom":{"type":"number","minimum":1,"maximum":8}}),
             &["center", "zoom"],
         ),
+        command(
+            "inspect_session_diagnostic",
+            json!({
+                "map":{"anyOf":[{"type":"null"},{"type":"string","maxLength":256}],"description":"Exact saved_diagnostics.available name; null returns to photograph only."},
+                "opacity":{"type":"number","minimum":0,"maximum":1},
+                "sample_uv":{"type":"array","minItems":2,"maxItems":2,"items":{"type":"number","minimum":0,"maximum":1}}
+            }),
+            &[],
+        ),
+        command(
+            "select_session_output",
+            json!({"index":{"type":"integer","minimum":0,"maximum":63}}),
+            &["index"],
+        ),
         command("start_stack", json!({}), &[]),
         command("cancel_stack", json!({}), &[]),
+        command(
+            "export_view_bundle",
+            json!({"grant_id":string(80), "relative_parent":string(1024), "folder_name":string(200)}),
+            &["grant_id", "relative_parent", "folder_name"],
+        ),
+        command("cancel_view_bundle_export", json!({}), &[]),
         command("shutdown", json!({}), &[]),
         command("save_edit_version", json!({"name":string(120)}), &["name"]),
         command(
@@ -555,6 +575,11 @@ pub(crate) fn tool_definitions() -> Value {
             &["id", "name"],
         ),
         command(
+            "import_completed_session",
+            json!({"grant_id":string(80),"relative_path":string(1024),"parent_id":id_schema()}),
+            &["grant_id", "relative_path"],
+        ),
+        command(
             "import_stack",
             json!({"grant_id":string(80),"relative_path":string(1024),"name":string(160),"parent_id":id_schema()}),
             &["grant_id", "relative_path", "name"],
@@ -569,9 +594,14 @@ pub(crate) fn tool_definitions() -> Value {
             json!({
                 "name":string(160),
                 "passes":{"type":"array","minItems":1,"maxItems":64,"items":object(json!({"name":string(160),"stack_ids":{"type":"array","minItems":1,"maxItems":256,"items":id_schema()}}), &["name","stack_ids"])},
-                "mode":{"enum":["combine","repeat","hdr","layers"]},
+                "mode":{"enum":["combine","interleave","repeat","hdr","layers","mosaic","independent_views"]},
                 "primary_pass":{"anyOf":[{"type":"null"},{"type":"integer","minimum":0,"maximum":63}]},
                 "memory_limit_gib":{"type":"number","minimum":1,"maximum":4096},
+                "precision_weights":{"type":"boolean"},
+                "contribution_maps":{"type":"boolean"},
+                "focus_evidence":{"type":"boolean"},
+                "reproducibility":{"type":"boolean"},
+                "original_cfa_reconstruction":{"type":"boolean"},
                 "parent_id":id_schema()
             }),
             &["name", "passes", "mode", "memory_limit_gib"],

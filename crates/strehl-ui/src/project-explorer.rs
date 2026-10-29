@@ -1091,7 +1091,12 @@ impl ProjectExplorer {
             ui.allocate_exact_size(egui::vec2(ui.available_width(), 24.0), Sense::hover());
         let hit = ui.interact(rect, ui.id().with(("project-captures", id)), Sense::click());
         let indent = (depth as f32 * 14.0).min(ui.available_width() * 0.42);
-        let source = draft.sources.first().map(|s| s.path.as_path());
+        let external = catalog
+            .latest_run(id)
+            .is_some_and(|run| run.imported.is_some());
+        let source = (!external)
+            .then(|| draft.sources.first().map(|s| s.path.as_path()))
+            .flatten();
         let thumbnail = source
             .filter(|_| ui.is_rect_visible(rect))
             .and_then(|path| self.previews.file(path, true));
@@ -1107,7 +1112,11 @@ impl ProjectExplorer {
             ui,
             rect,
             indent + 42.0,
-            "Captures",
+            if external {
+                "Captures · not loaded"
+            } else {
+                "Captures"
+            },
             &format!("{} photos", draft.sources.len()),
             MUTED,
         );

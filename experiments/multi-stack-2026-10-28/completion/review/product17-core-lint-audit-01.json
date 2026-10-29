@@ -1,0 +1,2195 @@
+{
+  "baselines": [
+    "ef655050",
+    "c149e52834fc1c86c2af0fe022713c39fa25f33c"
+  ],
+  "reports": [
+    {
+      "name": "core-strict-clippy-17",
+      "log_sha256": "0b08ac37ef40707af0b179b1b90f3590019e741ae725202000ffb27dc6f8369f",
+      "raw_message_count": 68,
+      "unique_diagnostics": 43,
+      "counts": {
+        "unchanged_remote_main": 43
+      },
+      "build_finished": [
+        {
+          "reason": "build-finished",
+          "success": false
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": "clippy::unusual_byte_groupings",
+          "message": "digits of hex, binary or octal literal not in groups of equal size",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/align.rs",
+              "line": 4498,
+              "end": 4498,
+              "column": 27,
+              "text": [
+                "        let mut rng = Lcg(0x172c_a7);"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "51c5b58427053837d8c87789744d6037af326b5354fdeb527bdd8c8b3d7c3875",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 4498,
+                      "baseline_line": 4498,
+                      "unchanged_block_lines": 4921
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "51c5b58427053837d8c87789744d6037af326b5354fdeb527bdd8c8b3d7c3875",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 4498,
+                      "baseline_line": 4284,
+                      "unchanged_block_lines": 1931
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::empty_line_after_doc_comments",
+          "message": "empty line after doc comment",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/edgeaware.rs",
+              "line": 2117,
+              "end": 2119,
+              "column": 5,
+              "text": [
+                "    /// The two terms of `min(r_noise, r_geom)` must each bind where they should.",
+                "    // -- the radius rule -------------------------------------------------",
+                ""
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 2117,
+                      "baseline_line": 2117,
+                      "unchanged_block_lines": 2379
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 2117,
+                      "baseline_line": 2117,
+                      "unchanged_block_lines": 2379
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::if_same_then_else",
+          "message": "this `if` has identical blocks",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/align.rs",
+              "line": 3562,
+              "end": 3564,
+              "column": 21,
+              "text": [
+                "    if acc.is_nan() {",
+                "        lo",
+                "    } else if acc < lo {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "51c5b58427053837d8c87789744d6037af326b5354fdeb527bdd8c8b3d7c3875",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 3562,
+                      "baseline_line": 3562,
+                      "unchanged_block_lines": 4921
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "51c5b58427053837d8c87789744d6037af326b5354fdeb527bdd8c8b3d7c3875",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 3562,
+                      "baseline_line": 3348,
+                      "unchanged_block_lines": 1931
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::explicit_counter_loop",
+          "message": "the variable `k` is used as a loop counter",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/defect_map.rs",
+              "line": 1728,
+              "end": 1737,
+              "column": 9,
+              "text": [
+                "        for (dx, dy) in [",
+                "            (-1i64, -1i64),",
+                "            (0, -1),",
+                "            (1, -1),",
+                "            (-1, 0),",
+                "            (1, 0),",
+                "            (-1, 1),",
+                "            (0, 1),",
+                "            (1, 1),",
+                "        ] {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "1738c770c9f316a6aeac3f742bf7abc9581ea386b4e07ec128e50df35c2ffb14",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1728,
+                      "baseline_line": 1728,
+                      "unchanged_block_lines": 4370
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "1738c770c9f316a6aeac3f742bf7abc9581ea386b4e07ec128e50df35c2ffb14",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1728,
+                      "baseline_line": 1728,
+                      "unchanged_block_lines": 4370
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::too_many_arguments",
+          "message": "this function has too many arguments (8/7)",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/edgeaware.rs",
+              "line": 175,
+              "end": 184,
+              "column": 1,
+              "text": [
+                "pub fn domain_transform(",
+                "    focus: &[f32],",
+                "    luma: &[f32],",
+                "    geom: PlaneGeometry,",
+                "    sigma_s: f32,",
+                "    dst: &mut [f32],",
+                "    scratch: &mut [f32],",
+                "    tmp: &mut [f32],",
+                "    dom: &mut [f32],",
+                ") {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 175,
+                      "baseline_line": 175,
+                      "unchanged_block_lines": 2379
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 175,
+                      "baseline_line": 175,
+                      "unchanged_block_lines": 2379
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::needless_range_loop",
+          "message": "the loop variable `x` is used to index `out`",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/edgeaware.rs",
+              "line": 748,
+              "end": 748,
+              "column": 18,
+              "text": [
+                "        for x in 0..w {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 232,
+                      "baseline_line": 232,
+                      "unchanged_block_lines": 2379
+                    },
+                    {
+                      "current_line": 748,
+                      "baseline_line": 748,
+                      "unchanged_block_lines": 2379
+                    },
+                    {
+                      "current_line": 761,
+                      "baseline_line": 761,
+                      "unchanged_block_lines": 2379
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 232,
+                      "baseline_line": 232,
+                      "unchanged_block_lines": 2379
+                    },
+                    {
+                      "current_line": 748,
+                      "baseline_line": 748,
+                      "unchanged_block_lines": 2379
+                    },
+                    {
+                      "current_line": 761,
+                      "baseline_line": 761,
+                      "unchanged_block_lines": 2379
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::needless_range_loop",
+          "message": "the loop variable `i` is used to index `response`",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/edgeaware.rs",
+              "line": 999,
+              "end": 999,
+              "column": 18,
+              "text": [
+                "        for i in 0..response.len() {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 999,
+                      "baseline_line": 999,
+                      "unchanged_block_lines": 2379
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 999,
+                      "baseline_line": 999,
+                      "unchanged_block_lines": 2379
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::neg_cmp_op_on_partial_ord",
+          "message": "the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/edgeaware.rs",
+              "line": 1055,
+              "end": 1055,
+              "column": 20,
+              "text": [
+                "                if !(sd > 0.0) {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1055,
+                      "baseline_line": 1055,
+                      "unchanged_block_lines": 2379
+                    },
+                    {
+                      "current_line": 1075,
+                      "baseline_line": 1075,
+                      "unchanged_block_lines": 2379
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1055,
+                      "baseline_line": 1055,
+                      "unchanged_block_lines": 2379
+                    },
+                    {
+                      "current_line": 1075,
+                      "baseline_line": 1075,
+                      "unchanged_block_lines": 2379
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::neg_cmp_op_on_partial_ord",
+          "message": "the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/edgeaware.rs",
+              "line": 1075,
+              "end": 1075,
+              "column": 20,
+              "text": [
+                "                if !(sd > 0.0) {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1055,
+                      "baseline_line": 1055,
+                      "unchanged_block_lines": 2379
+                    },
+                    {
+                      "current_line": 1075,
+                      "baseline_line": 1075,
+                      "unchanged_block_lines": 2379
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1055,
+                      "baseline_line": 1055,
+                      "unchanged_block_lines": 2379
+                    },
+                    {
+                      "current_line": 1075,
+                      "baseline_line": 1075,
+                      "unchanged_block_lines": 2379
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::neg_cmp_op_on_partial_ord",
+          "message": "the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/edgeaware.rs",
+              "line": 1181,
+              "end": 1181,
+              "column": 8,
+              "text": [
+                "    if !(hi > lo) {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1181,
+                      "baseline_line": 1181,
+                      "unchanged_block_lines": 2379
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1181,
+                      "baseline_line": 1181,
+                      "unchanged_block_lines": 2379
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::needless_range_loop",
+          "message": "the loop variable `l` is used to index `per_layer`",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/edgeaware.rs",
+              "line": 1316,
+              "end": 1316,
+              "column": 22,
+              "text": [
+                "            for l in 0..N_LAYERS {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1316,
+                      "baseline_line": 1316,
+                      "unchanged_block_lines": 2379
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1316,
+                      "baseline_line": 1316,
+                      "unchanged_block_lines": 2379
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::neg_cmp_op_on_partial_ord",
+          "message": "the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/merge.rs",
+              "line": 2486,
+              "end": 2486,
+              "column": 20,
+              "text": [
+                "                if !(d > 0.0) {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 2486,
+                      "baseline_line": 2486,
+                      "unchanged_block_lines": 5433
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 2486,
+                      "baseline_line": 2486,
+                      "unchanged_block_lines": 5433
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::neg_cmp_op_on_partial_ord",
+          "message": "the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/merge.rs",
+              "line": 2516,
+              "end": 2516,
+              "column": 64,
+              "text": [
+                "        if !backdrop.is_finite() || !foreground.is_finite() || !(backdrop - foreground > need) {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 2516,
+                      "baseline_line": 2516,
+                      "unchanged_block_lines": 5433
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 2516,
+                      "baseline_line": 2516,
+                      "unchanged_block_lines": 5433
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::neg_cmp_op_on_partial_ord",
+          "message": "the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/merge.rs",
+              "line": 2526,
+              "end": 2526,
+              "column": 16,
+              "text": [
+                "            if !(w > 0.0) {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 2526,
+                      "baseline_line": 2526,
+                      "unchanged_block_lines": 5433
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 2526,
+                      "baseline_line": 2526,
+                      "unchanged_block_lines": 5433
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::neg_cmp_op_on_partial_ord",
+          "message": "the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/merge.rs",
+              "line": 2538,
+              "end": 2538,
+              "column": 16,
+              "text": [
+                "            if !(divisor > 0.0) {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 2538,
+                      "baseline_line": 2538,
+                      "unchanged_block_lines": 5433
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 2538,
+                      "baseline_line": 2538,
+                      "unchanged_block_lines": 5433
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::manual_is_multiple_of",
+          "message": "manual implementation of `.is_multiple_of()`",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/pyramid.rs",
+              "line": 418,
+              "end": 418,
+              "column": 8,
+              "text": [
+                "    if x % 2 == 0 {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "a758b2e6c24575e2dca4d74812264f383653c318190e34b639cf3605d8c00a1f",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 418,
+                      "baseline_line": 418,
+                      "unchanged_block_lines": 5383
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "a758b2e6c24575e2dca4d74812264f383653c318190e34b639cf3605d8c00a1f",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 418,
+                      "baseline_line": 415,
+                      "unchanged_block_lines": 5314
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::collapsible_if",
+          "message": "this `if` statement can be collapsed",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/pyramid.rs",
+              "line": 636,
+              "end": 640,
+              "column": 9,
+              "text": [
+                "        if let Ok(c) = cache.lock() {",
+                "            if let Some((_, g)) = c.iter().find(|(b, _)| *b == bands) {",
+                "                return g.clone();",
+                "            }",
+                "        }"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "a758b2e6c24575e2dca4d74812264f383653c318190e34b639cf3605d8c00a1f",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 636,
+                      "baseline_line": 636,
+                      "unchanged_block_lines": 5383
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "a758b2e6c24575e2dca4d74812264f383653c318190e34b639cf3605d8c00a1f",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 636,
+                      "baseline_line": 633,
+                      "unchanged_block_lines": 5314
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::needless_range_loop",
+          "message": "the loop variable `k` is only used to index `sizes`",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/pyramid.rs",
+              "line": 1713,
+              "end": 1713,
+              "column": 26,
+              "text": [
+                "                for k in 1..sizes.len() {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "a758b2e6c24575e2dca4d74812264f383653c318190e34b639cf3605d8c00a1f",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1713,
+                      "baseline_line": 1713,
+                      "unchanged_block_lines": 5383
+                    },
+                    {
+                      "current_line": 1724,
+                      "baseline_line": 1724,
+                      "unchanged_block_lines": 5383
+                    },
+                    {
+                      "current_line": 1735,
+                      "baseline_line": 1735,
+                      "unchanged_block_lines": 5383
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "a758b2e6c24575e2dca4d74812264f383653c318190e34b639cf3605d8c00a1f",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1713,
+                      "baseline_line": 1710,
+                      "unchanged_block_lines": 5314
+                    },
+                    {
+                      "current_line": 1724,
+                      "baseline_line": 1721,
+                      "unchanged_block_lines": 5314
+                    },
+                    {
+                      "current_line": 1735,
+                      "baseline_line": 1732,
+                      "unchanged_block_lines": 5314
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::needless_range_loop",
+          "message": "the loop variable `k` is only used to index `sizes`",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/pyramid.rs",
+              "line": 1724,
+              "end": 1724,
+              "column": 26,
+              "text": [
+                "                for k in 1..sizes.len() {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "a758b2e6c24575e2dca4d74812264f383653c318190e34b639cf3605d8c00a1f",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1713,
+                      "baseline_line": 1713,
+                      "unchanged_block_lines": 5383
+                    },
+                    {
+                      "current_line": 1724,
+                      "baseline_line": 1724,
+                      "unchanged_block_lines": 5383
+                    },
+                    {
+                      "current_line": 1735,
+                      "baseline_line": 1735,
+                      "unchanged_block_lines": 5383
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "a758b2e6c24575e2dca4d74812264f383653c318190e34b639cf3605d8c00a1f",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1713,
+                      "baseline_line": 1710,
+                      "unchanged_block_lines": 5314
+                    },
+                    {
+                      "current_line": 1724,
+                      "baseline_line": 1721,
+                      "unchanged_block_lines": 5314
+                    },
+                    {
+                      "current_line": 1735,
+                      "baseline_line": 1732,
+                      "unchanged_block_lines": 5314
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::needless_range_loop",
+          "message": "the loop variable `k` is only used to index `sizes`",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/pyramid.rs",
+              "line": 1735,
+              "end": 1735,
+              "column": 26,
+              "text": [
+                "                for k in 1..sizes.len() {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "a758b2e6c24575e2dca4d74812264f383653c318190e34b639cf3605d8c00a1f",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1713,
+                      "baseline_line": 1713,
+                      "unchanged_block_lines": 5383
+                    },
+                    {
+                      "current_line": 1724,
+                      "baseline_line": 1724,
+                      "unchanged_block_lines": 5383
+                    },
+                    {
+                      "current_line": 1735,
+                      "baseline_line": 1735,
+                      "unchanged_block_lines": 5383
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "a758b2e6c24575e2dca4d74812264f383653c318190e34b639cf3605d8c00a1f",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1713,
+                      "baseline_line": 1710,
+                      "unchanged_block_lines": 5314
+                    },
+                    {
+                      "current_line": 1724,
+                      "baseline_line": 1721,
+                      "unchanged_block_lines": 5314
+                    },
+                    {
+                      "current_line": 1735,
+                      "baseline_line": 1732,
+                      "unchanged_block_lines": 5314
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::needless_range_loop",
+          "message": "the loop variable `c` is used to index `planes`",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/pyramid.rs",
+              "line": 2350,
+              "end": 2350,
+              "column": 22,
+              "text": [
+                "            for c in 0..self.planes {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "a758b2e6c24575e2dca4d74812264f383653c318190e34b639cf3605d8c00a1f",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 2350,
+                      "baseline_line": 2350,
+                      "unchanged_block_lines": 5383
+                    },
+                    {
+                      "current_line": 2533,
+                      "baseline_line": 2533,
+                      "unchanged_block_lines": 5383
+                    },
+                    {
+                      "current_line": 2651,
+                      "baseline_line": 2651,
+                      "unchanged_block_lines": 5383
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "a758b2e6c24575e2dca4d74812264f383653c318190e34b639cf3605d8c00a1f",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 2350,
+                      "baseline_line": 2347,
+                      "unchanged_block_lines": 5314
+                    },
+                    {
+                      "current_line": 2533,
+                      "baseline_line": 2530,
+                      "unchanged_block_lines": 5314
+                    },
+                    {
+                      "current_line": 2651,
+                      "baseline_line": 2648,
+                      "unchanged_block_lines": 5314
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::neg_cmp_op_on_partial_ord",
+          "message": "the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/pyramid.rs",
+              "line": 3293,
+              "end": 3293,
+              "column": 8,
+              "text": [
+                "    if !(gate > 0.0) {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "a758b2e6c24575e2dca4d74812264f383653c318190e34b639cf3605d8c00a1f",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 3293,
+                      "baseline_line": 3293,
+                      "unchanged_block_lines": 5383
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "a758b2e6c24575e2dca4d74812264f383653c318190e34b639cf3605d8c00a1f",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 3293,
+                      "baseline_line": 3290,
+                      "unchanged_block_lines": 5314
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::neg_cmp_op_on_partial_ord",
+          "message": "the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/restore.rs",
+              "line": 278,
+              "end": 278,
+              "column": 12,
+              "text": [
+                "        if !(self.grid_factor > 1.0) {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 278,
+                      "baseline_line": 278,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 278,
+                      "baseline_line": 278,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::neg_cmp_op_on_partial_ord",
+          "message": "the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/restore.rs",
+              "line": 295,
+              "end": 295,
+              "column": 12,
+              "text": [
+                "        if !(signal_power > 0.0) || !self.gain_cap.is_finite() {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 295,
+                      "baseline_line": 295,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 295,
+                      "baseline_line": 295,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::neg_cmp_op_on_partial_ord",
+          "message": "the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/restore.rs",
+              "line": 311,
+              "end": 311,
+              "column": 12,
+              "text": [
+                "        if !(signal_power > 0.0) {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 311,
+                      "baseline_line": 311,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 311,
+                      "baseline_line": 311,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::needless_range_loop",
+          "message": "the loop variable `k` is only used to index `a`",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/restore.rs",
+              "line": 486,
+              "end": 486,
+              "column": 22,
+              "text": [
+                "            for k in i..n {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 486,
+                      "baseline_line": 486,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 486,
+                      "baseline_line": 486,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::neg_cmp_op_on_partial_ord",
+          "message": "the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/restore.rs",
+              "line": 600,
+              "end": 600,
+              "column": 8,
+              "text": [
+                "    if !(cfg.gain_cap > 1.0) {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 600,
+                      "baseline_line": 600,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 600,
+                      "baseline_line": 600,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::needless_range_loop",
+          "message": "the loop variable `case` is used to index `DELTAS`",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "experiments/alignment-quadratic-peak/consumer-tests.rs",
+              "line": 151,
+              "end": 151,
+              "column": 25,
+              "text": [
+                "            for case in 0..6 {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "c47a9eca945caacd5c2dd4a3bce85af60fe6c656c97a3f55be2c961e9740d307",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 151,
+                      "baseline_line": 151,
+                      "unchanged_block_lines": 338
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "c47a9eca945caacd5c2dd4a3bce85af60fe6c656c97a3f55be2c961e9740d307",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 151,
+                      "baseline_line": 151,
+                      "unchanged_block_lines": 338
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::manual_is_multiple_of",
+          "message": "manual implementation of `.is_multiple_of()`",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/merge.rs",
+              "line": 3268,
+              "end": 3268,
+              "column": 34,
+              "text": [
+                "        let subject = |i: usize| i % 4 == 0;"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 3268,
+                      "baseline_line": 3268,
+                      "unchanged_block_lines": 5433
+                    },
+                    {
+                      "current_line": 3288,
+                      "baseline_line": 3288,
+                      "unchanged_block_lines": 5433
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 3268,
+                      "baseline_line": 3268,
+                      "unchanged_block_lines": 5433
+                    },
+                    {
+                      "current_line": 3288,
+                      "baseline_line": 3288,
+                      "unchanged_block_lines": 5433
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::manual_is_multiple_of",
+          "message": "manual implementation of `.is_multiple_of()`",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/merge.rs",
+              "line": 3288,
+              "end": 3288,
+              "column": 34,
+              "text": [
+                "        let subject = |i: usize| i % 4 == 0;"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 3268,
+                      "baseline_line": 3268,
+                      "unchanged_block_lines": 5433
+                    },
+                    {
+                      "current_line": 3288,
+                      "baseline_line": 3288,
+                      "unchanged_block_lines": 5433
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 3268,
+                      "baseline_line": 3268,
+                      "unchanged_block_lines": 5433
+                    },
+                    {
+                      "current_line": 3288,
+                      "baseline_line": 3288,
+                      "unchanged_block_lines": 5433
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::needless_range_loop",
+          "message": "the loop variable `index` is used to index `actual`",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/pyramid-observer-tests.rs",
+              "line": 243,
+              "end": 243,
+              "column": 34,
+              "text": [
+                "                    for index in 0..band.size.pixels() {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "5680622ea680574cf1362859ad2f70fdbbcef4a0b6a8830e3a453127a48fcc5d",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 243,
+                      "baseline_line": 243,
+                      "unchanged_block_lines": 417
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "5680622ea680574cf1362859ad2f70fdbbcef4a0b6a8830e3a453127a48fcc5d",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 243,
+                      "baseline_line": 243,
+                      "unchanged_block_lines": 417
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::needless_range_loop",
+          "message": "the loop variable `index` is used to index `expected`",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/pyramid-observer-tests.rs",
+              "line": 350,
+              "end": 350,
+              "column": 22,
+              "text": [
+                "        for index in 0..band.size.pixels() {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "5680622ea680574cf1362859ad2f70fdbbcef4a0b6a8830e3a453127a48fcc5d",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 350,
+                      "baseline_line": 350,
+                      "unchanged_block_lines": 417
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "5680622ea680574cf1362859ad2f70fdbbcef4a0b6a8830e3a453127a48fcc5d",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 350,
+                      "baseline_line": 350,
+                      "unchanged_block_lines": 417
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::needless_range_loop",
+          "message": "the loop variable `index` is used to index `expected`",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/pyramid-observer-tests.rs",
+              "line": 404,
+              "end": 404,
+              "column": 26,
+              "text": [
+                "            for index in 0..band.size.pixels() {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "5680622ea680574cf1362859ad2f70fdbbcef4a0b6a8830e3a453127a48fcc5d",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 404,
+                      "baseline_line": 404,
+                      "unchanged_block_lines": 417
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "5680622ea680574cf1362859ad2f70fdbbcef4a0b6a8830e3a453127a48fcc5d",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 404,
+                      "baseline_line": 404,
+                      "unchanged_block_lines": 417
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::manual_is_multiple_of",
+          "message": "manual implementation of `.is_multiple_of()`",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "experiments/pyramid-accumulator-range/independent-controls.rs",
+              "line": 22,
+              "end": 22,
+              "column": 36,
+              "text": [
+                "        (0..W*H).map(|i| gain * if ((i % W) + (i / W)) % 2 == 0 { low } else { high }).collect()"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "33342eec31829827f25377ff95c994c120d4335cefa290fdd292d8688313b0eb",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 22,
+                      "baseline_line": 22,
+                      "unchanged_block_lines": 174
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "33342eec31829827f25377ff95c994c120d4335cefa290fdd292d8688313b0eb",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 22,
+                      "baseline_line": 22,
+                      "unchanged_block_lines": 174
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::needless_range_loop",
+          "message": "the loop variable `c` is used to index `decomposed`",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "experiments/pyramid-accumulator-range/independent-controls.rs",
+              "line": 75,
+              "end": 75,
+              "column": 26,
+              "text": [
+                "                for c in 0..CHANNELS {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "33342eec31829827f25377ff95c994c120d4335cefa290fdd292d8688313b0eb",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 75,
+                      "baseline_line": 75,
+                      "unchanged_block_lines": 174
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "33342eec31829827f25377ff95c994c120d4335cefa290fdd292d8688313b0eb",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 75,
+                      "baseline_line": 75,
+                      "unchanged_block_lines": 174
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::manual_is_multiple_of",
+          "message": "manual implementation of `.is_multiple_of()`",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "experiments/pyramid-accumulator-range/range-bound-controls.rs",
+              "line": 67,
+              "end": 67,
+              "column": 30,
+              "text": [
+                "        (0..N*N).map(|i|g*if (i%N+i/N)%2==0 {low}else{high}).collect()).collect()"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "b81b1e8f7acee4bea657fc930207c6f3ac953e38802df9610d314dde2a9232eb",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 67,
+                      "baseline_line": 67,
+                      "unchanged_block_lines": 141
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "b81b1e8f7acee4bea657fc930207c6f3ac953e38802df9610d314dde2a9232eb",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 67,
+                      "baseline_line": 67,
+                      "unchanged_block_lines": 141
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::needless_range_loop",
+          "message": "the loop variable `c` is used to index `pyramids`",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "experiments/pyramid-accumulator-range/range-bound-controls.rs",
+              "line": 96,
+              "end": 96,
+              "column": 22,
+              "text": [
+                "            for c in 0..4 {let i=k*4+c;let coefficient=pyramids[c].level(k)[j];"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "b81b1e8f7acee4bea657fc930207c6f3ac953e38802df9610d314dde2a9232eb",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 96,
+                      "baseline_line": 96,
+                      "unchanged_block_lines": 141
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "b81b1e8f7acee4bea657fc930207c6f3ac953e38802df9610d314dde2a9232eb",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 96,
+                      "baseline_line": 96,
+                      "unchanged_block_lines": 141
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::needless_range_loop",
+          "message": "the loop variable `x` is used to index `out`",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/pyramid.rs",
+              "line": 3512,
+              "end": 3512,
+              "column": 18,
+              "text": [
+                "        for x in 4..28 {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "a758b2e6c24575e2dca4d74812264f383653c318190e34b639cf3605d8c00a1f",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 3512,
+                      "baseline_line": 3512,
+                      "unchanged_block_lines": 5383
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "a758b2e6c24575e2dca4d74812264f383653c318190e34b639cf3605d8c00a1f",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 3512,
+                      "baseline_line": 3509,
+                      "unchanged_block_lines": 5314
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::items_after_test_module",
+          "message": "items after a test module",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/restore.rs",
+              "line": 730,
+              "end": 730,
+              "column": 1,
+              "text": [
+                "mod tests {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 730,
+                      "baseline_line": 730,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 730,
+                      "baseline_line": 730,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "file": "crates/strehl-core/src/restore.rs",
+              "line": 1286,
+              "end": 1286,
+              "column": 1,
+              "text": [
+                "pub const RESTORE_ENV: &str = \"STREHL_RESTORE\";"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1286,
+                      "baseline_line": 1286,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1286,
+                      "baseline_line": 1286,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "file": "crates/strehl-core/src/restore.rs",
+              "line": 1300,
+              "end": 1300,
+              "column": 1,
+              "text": [
+                "pub fn gain_cap_from_env() -> Option<f64> {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1300,
+                      "baseline_line": 1300,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1300,
+                      "baseline_line": 1300,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "file": "crates/strehl-core/src/restore.rs",
+              "line": 1339,
+              "end": 1339,
+              "column": 1,
+              "text": [
+                "pub const RESTORE_SIGMA_ENV: &str = \"STREHL_RESTORE_SIGMA\";"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1339,
+                      "baseline_line": 1339,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1339,
+                      "baseline_line": 1339,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "file": "crates/strehl-core/src/restore.rs",
+              "line": 1345,
+              "end": 1345,
+              "column": 1,
+              "text": [
+                "pub fn sigma_scale_from_env() -> f64 {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1345,
+                      "baseline_line": 1345,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1345,
+                      "baseline_line": 1345,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "file": "crates/strehl-core/src/restore.rs",
+              "line": 1370,
+              "end": 1370,
+              "column": 1,
+              "text": [
+                "pub struct RestorePlan<'a> {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1370,
+                      "baseline_line": 1370,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1370,
+                      "baseline_line": 1370,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "file": "crates/strehl-core/src/restore.rs",
+              "line": 1379,
+              "end": 1379,
+              "column": 1,
+              "text": [
+                "impl RestorePlan<'_> {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1379,
+                      "baseline_line": 1379,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 1379,
+                      "baseline_line": 1379,
+                      "unchanged_block_lines": 1405
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::excessive_precision",
+          "message": "float has excessive precision",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/softgate.rs",
+              "line": 473,
+              "end": 473,
+              "column": 22,
+              "text": [
+                "            (0.0625, 0.998_048_78),"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 473,
+                      "baseline_line": 473,
+                      "unchanged_block_lines": 597
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 473,
+                      "baseline_line": 473,
+                      "unchanged_block_lines": 597
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::excessive_precision",
+          "message": "float has excessive precision",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/softgate.rs",
+              "line": 474,
+              "end": 474,
+              "column": 20,
+              "text": [
+                "            (0.25, 0.969_233_23),"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 474,
+                      "baseline_line": 474,
+                      "unchanged_block_lines": 597
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 474,
+                      "baseline_line": 474,
+                      "unchanged_block_lines": 597
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::excessive_precision",
+          "message": "float has excessive precision",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/softgate.rs",
+              "line": 475,
+              "end": 475,
+              "column": 19,
+              "text": [
+                "            (0.5, 0.882_496_90),"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 475,
+                      "baseline_line": 475,
+                      "unchanged_block_lines": 597
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 475,
+                      "baseline_line": 475,
+                      "unchanged_block_lines": 597
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::excessive_precision",
+          "message": "float has excessive precision",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-core/src/softgate.rs",
+              "line": 476,
+              "end": 476,
+              "column": 20,
+              "text": [
+                "            (0.75, 0.754_839_60),"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 476,
+                      "baseline_line": 476,
+                      "unchanged_block_lines": 597
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 476,
+                      "baseline_line": 476,
+                      "unchanged_block_lines": 597
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        }
+      ]
+    }
+  ]
+}

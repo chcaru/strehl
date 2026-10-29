@@ -1,0 +1,4 @@
+{
+  "root_source_sha256": "0edf320de86ef2d6294f2c91461ef8c978d7bf1fba7d910d908dfba59784ec55",
+  "extraction": "Exact UTF-8 prefix before fn main; inner-doc markers converted to comments; Gate exposes unchanged Qualification new/observe/result; beta fixed1 as original real qualifier."
+}

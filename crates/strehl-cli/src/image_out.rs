@@ -99,6 +99,13 @@ use strehl_core::demosaic::{Mosaic, demosaic_row};
 use tiff::encoder::{Rational, TiffEncoder, colortype};
 use tiff::tags::{ResolutionUnit, Tag};
 
+#[path = "session-alpha-output.rs"]
+mod session_alpha_output;
+pub(crate) use session_alpha_output::apply_mosaic_coverage;
+
+#[path = "session-reconstruction-output.rs"]
+pub(crate) mod session_reconstruction_output;
+
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
 pub(crate) mod highlight_rendering {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/highlight-rendering/image-out-bridge.rs"));
@@ -1404,13 +1411,29 @@ pub fn write_demosaiced_with_master(
     linear_master: Option<&Path>,
     baked_recipe: Option<&strehl_edit::DevelopmentRecipe>,
 ) -> Result<()> {
+    write_demosaiced_with_master_coverage(path,width,height,mosaic,dev,linear_master,baked_recipe,None)
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn write_demosaiced_with_master_coverage(
+    path: &Path, width: usize, height: usize, mosaic: &[f32], dev: &Develop,
+    linear_master: Option<&Path>, baked_recipe: Option<&strehl_edit::DevelopmentRecipe>,
+    coverage: Option<&[bool]>,
+) -> Result<()> {
     assert_eq!(mosaic.len(), width * height);
     let m = Mosaic {
         data: mosaic,
         width,
         height,
     };
-    let dev = &resolve_tone(dev, || tone_from_mosaic(&m, dev));
+    if let Some(mask)=coverage {
+        anyhow::ensure!(width.is_multiple_of(2) && height.is_multiple_of(2) && mask.len()==width/2*(height/2)
+            && mask.iter().any(|&v|v),"invalid union tone support");
+    }
+    let dev = &resolve_tone(dev, || match coverage {
+        Some(mask)=>session_alpha_output::tone_from_supported_mosaic(&m,dev,mask),
+        None=>tone_from_mosaic(&m,dev),
+    });
     if let Some(master) = linear_master {
         let matrix = dev.matrix.context("scene-linear master requires a camera color matrix")?;
         // This is one final merged image, never a volume of aligned source frames.

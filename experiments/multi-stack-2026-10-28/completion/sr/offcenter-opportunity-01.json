@@ -1,0 +1,2162 @@
+{
+  "schema": "strehl.sr-offcenter-opportunity.v1",
+  "command": [
+    "experiments/multi-stack-2026-10-28/completion/sr/focus-census-opportunity.py",
+    "outputs/multi-stack/completion/sr-census-01",
+    "--out",
+    "experiments/multi-stack-2026-10-28/completion/sr/offcenter-opportunity-01.json"
+  ],
+  "workers": 1,
+  "elapsed_seconds": 0.6878787000023294,
+  "scope": "DERIVED opportunity from measured complete-track focus and saved placements. Exact positive isotropic Gaussian.35sensor taper and hard one-width mode membership. Equal calibration/exposure permits precision cancellation. All four output CFA parities sampled. No source-clipping, motion, local geometry certificate, anisotropic guide or measured photographic quality.",
+  "inputs": {
+    "census": "f2376b7e9ec97daa5a55c01cd91a132d27ae86f9a34e5653d83c704ab5be2d7b",
+    "alignment": "7c06ed37d92f3a1dde0a03e5b6f2f5eaf71d2c5ab4ef494bac51441400e2ef82",
+    "calibration": "b099595114f3abcd25b7f5b1b00ea94993b325ca36fbbe29b2bd3be6dcbbafe7"
+  },
+  "rois": [
+    {
+      "index": 0,
+      "roi_sensor": [
+        1970,
+        2090,
+        192,
+        192
+      ],
+      "eligible_native_pixels": 36862,
+      "usable_pixels_per_pass": [
+        6136,
+        6876
+      ],
+      "both_passes_usable_pixels": 2148,
+      "top_focus_mode_pairs": [
+        [
+          112,
+          103,
+          180
+        ],
+        [
+          108,
+          100,
+          168
+        ],
+        [
+          109,
+          101,
+          164
+        ],
+        [
+          110,
+          101,
+          148
+        ],
+        [
+          111,
+          102,
+          128
+        ],
+        [
+          109,
+          100,
+          108
+        ],
+        [
+          113,
+          104,
+          104
+        ],
+        [
+          106,
+          98,
+          84
+        ],
+        [
+          113,
+          103,
+          72
+        ],
+        [
+          110,
+          102,
+          72
+        ],
+        [
+          101,
+          92,
+          64
+        ],
+        [
+          112,
+          104,
+          60
+        ]
+      ],
+      "summaries": [
+        {
+          "mode_centers_ordinal": [
+            112,
+            103
+          ],
+          "native_pixels_with_this_pair": 180,
+          "sources": [
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            399,
+            400,
+            401,
+            402,
+            403,
+            404,
+            405
+          ],
+          "independent_guide_candidates": [
+            108,
+            116,
+            398,
+            406
+          ],
+          "tested_points": 2304,
+          "passed_rgb": [
+            19,
+            423,
+            17
+          ],
+          "passed_all_rgb": 6,
+          "parity_counts": [
+            {
+              "parity": [
+                0,
+                0
+              ],
+              "tested": 576,
+              "passed_all_rgb": 0
+            },
+            {
+              "parity": [
+                1,
+                0
+              ],
+              "tested": 576,
+              "passed_all_rgb": 3
+            },
+            {
+              "parity": [
+                0,
+                1
+              ],
+              "tested": 576,
+              "passed_all_rgb": 0
+            },
+            {
+              "parity": [
+                1,
+                1
+              ],
+              "tested": 576,
+              "passed_all_rgb": 3
+            }
+          ],
+          "best_all_rgb": [
+            {
+              "local_sensor": [
+                1,
+                1
+              ],
+              "conditions": [
+                18.387173908517237,
+                3.3427144093580177,
+                17.301837413198466
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                9,
+                25
+              ],
+              "conditions": [
+                18.540317815819442,
+                3.7360837689869344,
+                18.380586029978232
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                1,
+                0
+              ],
+              "conditions": [
+                18.02648380817466,
+                2.111865498971539,
+                18.68784473606513
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                33,
+                48
+              ],
+              "conditions": [
+                18.772574299822562,
+                2.701389806565888,
+                19.214353927113372
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                9,
+                24
+              ],
+              "conditions": [
+                18.41418958789153,
+                2.27615352274384,
+                19.266857805156675
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                33,
+                49
+              ],
+              "conditions": [
+                18.026697385538295,
+                4.055300350841663,
+                19.287484606366018
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "mode_centers_ordinal": [
+            108,
+            100
+          ],
+          "native_pixels_with_this_pair": 168,
+          "sources": [
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            396,
+            397,
+            398,
+            399,
+            400,
+            401,
+            402
+          ],
+          "independent_guide_candidates": [
+            104,
+            112,
+            395,
+            403
+          ],
+          "tested_points": 2304,
+          "passed_rgb": [
+            125,
+            556,
+            122
+          ],
+          "passed_all_rgb": 87,
+          "parity_counts": [
+            {
+              "parity": [
+                0,
+                0
+              ],
+              "tested": 576,
+              "passed_all_rgb": 24
+            },
+            {
+              "parity": [
+                1,
+                0
+              ],
+              "tested": 576,
+              "passed_all_rgb": 20
+            },
+            {
+              "parity": [
+                0,
+                1
+              ],
+              "tested": 576,
+              "passed_all_rgb": 22
+            },
+            {
+              "parity": [
+                1,
+                1
+              ],
+              "tested": 576,
+              "passed_all_rgb": 21
+            }
+          ],
+          "best_all_rgb": [
+            {
+              "local_sensor": [
+                73,
+                153
+              ],
+              "conditions": [
+                5.8663872580292775,
+                5.75102451598132,
+                4.9863871092910275
+              ],
+              "acquisitions": [
+                12,
+                12,
+                12
+              ]
+            },
+            {
+              "local_sensor": [
+                57,
+                161
+              ],
+              "conditions": [
+                6.0875411154342025,
+                4.430243849793366,
+                6.582864429496597
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                89,
+                160
+              ],
+              "conditions": [
+                5.473275627077684,
+                4.587779887984025,
+                6.641283140919044
+              ],
+              "acquisitions": [
+                11,
+                11,
+                11
+              ]
+            },
+            {
+              "local_sensor": [
+                89,
+                161
+              ],
+              "conditions": [
+                5.669163928946909,
+                6.740931340835283,
+                5.608415504280949
+              ],
+              "acquisitions": [
+                11,
+                11,
+                11
+              ]
+            },
+            {
+              "local_sensor": [
+                25,
+                177
+              ],
+              "conditions": [
+                5.9900171212103785,
+                4.8960254463820405,
+                6.911753838118853
+              ],
+              "acquisitions": [
+                12,
+                12,
+                12
+              ]
+            },
+            {
+              "local_sensor": [
+                24,
+                177
+              ],
+              "conditions": [
+                6.869266103499209,
+                3.9153209254548784,
+                7.05538518925854
+              ],
+              "acquisitions": [
+                12,
+                12,
+                12
+              ]
+            },
+            {
+              "local_sensor": [
+                24,
+                176
+              ],
+              "conditions": [
+                7.080177698346029,
+                4.921432380205913,
+                5.199750127443835
+              ],
+              "acquisitions": [
+                12,
+                12,
+                12
+              ]
+            },
+            {
+              "local_sensor": [
+                65,
+                137
+              ],
+              "conditions": [
+                7.188847300072645,
+                4.735759096291236,
+                5.627374703832347
+              ],
+              "acquisitions": [
+                13,
+                13,
+                13
+              ]
+            },
+            {
+              "local_sensor": [
+                41,
+                137
+              ],
+              "conditions": [
+                7.211173882983429,
+                4.761145968229636,
+                6.495258364543712
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                25,
+                176
+              ],
+              "conditions": [
+                7.329775028765847,
+                3.906347429737317,
+                5.892279775603827
+              ],
+              "acquisitions": [
+                12,
+                12,
+                12
+              ]
+            },
+            {
+              "local_sensor": [
+                57,
+                160
+              ],
+              "conditions": [
+                6.9250644260751235,
+                3.3539120429613587,
+                7.348079750933128
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                73,
+                152
+              ],
+              "conditions": [
+                5.118117963050671,
+                3.418159242670745,
+                7.367058419805967
+              ],
+              "acquisitions": [
+                12,
+                12,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "mode_centers_ordinal": [
+            110,
+            101
+          ],
+          "native_pixels_with_this_pair": 148,
+          "sources": [
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            397,
+            398,
+            399,
+            400,
+            401,
+            402,
+            403
+          ],
+          "independent_guide_candidates": [
+            106,
+            114,
+            396,
+            404
+          ],
+          "tested_points": 2304,
+          "passed_rgb": [
+            175,
+            538,
+            169
+          ],
+          "passed_all_rgb": 139,
+          "parity_counts": [
+            {
+              "parity": [
+                0,
+                0
+              ],
+              "tested": 576,
+              "passed_all_rgb": 45
+            },
+            {
+              "parity": [
+                1,
+                0
+              ],
+              "tested": 576,
+              "passed_all_rgb": 23
+            },
+            {
+              "parity": [
+                0,
+                1
+              ],
+              "tested": 576,
+              "passed_all_rgb": 48
+            },
+            {
+              "parity": [
+                1,
+                1
+              ],
+              "tested": 576,
+              "passed_all_rgb": 23
+            }
+          ],
+          "best_all_rgb": [
+            {
+              "local_sensor": [
+                89,
+                161
+              ],
+              "conditions": [
+                8.439144925837002,
+                8.870056100672869,
+                6.7538190501004385
+              ],
+              "acquisitions": [
+                10,
+                10,
+                10
+              ]
+            },
+            {
+              "local_sensor": [
+                56,
+                160
+              ],
+              "conditions": [
+                9.28500993094791,
+                5.1154579612187305,
+                7.594459505208194
+              ],
+              "acquisitions": [
+                12,
+                12,
+                12
+              ]
+            },
+            {
+              "local_sensor": [
+                56,
+                136
+              ],
+              "conditions": [
+                9.303879770156321,
+                5.090775915257512,
+                9.267545385325858
+              ],
+              "acquisitions": [
+                10,
+                10,
+                10
+              ]
+            },
+            {
+              "local_sensor": [
+                24,
+                177
+              ],
+              "conditions": [
+                7.414727613870882,
+                4.879638984159479,
+                9.388793436539434
+              ],
+              "acquisitions": [
+                13,
+                13,
+                13
+              ]
+            },
+            {
+              "local_sensor": [
+                24,
+                176
+              ],
+              "conditions": [
+                9.40367005839834,
+                6.312653116116735,
+                6.575041207983236
+              ],
+              "acquisitions": [
+                13,
+                13,
+                13
+              ]
+            },
+            {
+              "local_sensor": [
+                56,
+                161
+              ],
+              "conditions": [
+                7.427339802193446,
+                3.864864365111054,
+                9.432226494126157
+              ],
+              "acquisitions": [
+                12,
+                12,
+                12
+              ]
+            },
+            {
+              "local_sensor": [
+                56,
+                137
+              ],
+              "conditions": [
+                7.601565517524324,
+                3.6430048873526277,
+                9.708284958442345
+              ],
+              "acquisitions": [
+                10,
+                10,
+                10
+              ]
+            },
+            {
+              "local_sensor": [
+                57,
+                161
+              ],
+              "conditions": [
+                9.80882849365329,
+                5.108620654249167,
+                9.854541360936414
+              ],
+              "acquisitions": [
+                12,
+                12,
+                12
+              ]
+            },
+            {
+              "local_sensor": [
+                48,
+                120
+              ],
+              "conditions": [
+                9.945343943353127,
+                4.849638958440679,
+                9.797938526165842
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                73,
+                153
+              ],
+              "conditions": [
+                9.97420599048947,
+                6.762539679564665,
+                6.971325669403416
+              ],
+              "acquisitions": [
+                11,
+                11,
+                11
+              ]
+            },
+            {
+              "local_sensor": [
+                40,
+                136
+              ],
+              "conditions": [
+                9.995256223034055,
+                5.29089491066563,
+                8.902910281019272
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                32,
+                128
+              ],
+              "conditions": [
+                10.135722381372627,
+                5.398583701066104,
+                9.624180699503864
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "mode_centers_ordinal": [
+            106,
+            98
+          ],
+          "native_pixels_with_this_pair": 84,
+          "sources": [
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            394,
+            395,
+            396,
+            397,
+            398,
+            399,
+            400
+          ],
+          "independent_guide_candidates": [
+            102,
+            110,
+            393,
+            401
+          ],
+          "tested_points": 2304,
+          "passed_rgb": [
+            103,
+            517,
+            105
+          ],
+          "passed_all_rgb": 81,
+          "parity_counts": [
+            {
+              "parity": [
+                0,
+                0
+              ],
+              "tested": 576,
+              "passed_all_rgb": 20
+            },
+            {
+              "parity": [
+                1,
+                0
+              ],
+              "tested": 576,
+              "passed_all_rgb": 22
+            },
+            {
+              "parity": [
+                0,
+                1
+              ],
+              "tested": 576,
+              "passed_all_rgb": 20
+            },
+            {
+              "parity": [
+                1,
+                1
+              ],
+              "tested": 576,
+              "passed_all_rgb": 19
+            }
+          ],
+          "best_all_rgb": [
+            {
+              "local_sensor": [
+                24,
+                176
+              ],
+              "conditions": [
+                5.764583085097643,
+                5.53195457541603,
+                4.638764978775234
+              ],
+              "acquisitions": [
+                10,
+                10,
+                10
+              ]
+            },
+            {
+              "local_sensor": [
+                73,
+                152
+              ],
+              "conditions": [
+                5.628284737410864,
+                3.30152202792135,
+                6.037233165593394
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                41,
+                136
+              ],
+              "conditions": [
+                6.0370593946309805,
+                3.4167785395427632,
+                6.239743998247956
+              ],
+              "acquisitions": [
+                13,
+                13,
+                13
+              ]
+            },
+            {
+              "local_sensor": [
+                57,
+                161
+              ],
+              "conditions": [
+                6.252527418130831,
+                5.357374924865429,
+                5.843126775103917
+              ],
+              "acquisitions": [
+                12,
+                12,
+                12
+              ]
+            },
+            {
+              "local_sensor": [
+                24,
+                177
+              ],
+              "conditions": [
+                6.477626364381375,
+                3.3350288887351347,
+                5.616173521976002
+              ],
+              "acquisitions": [
+                10,
+                10,
+                10
+              ]
+            },
+            {
+              "local_sensor": [
+                57,
+                160
+              ],
+              "conditions": [
+                5.993798113386286,
+                3.579816307507075,
+                6.516247327116637
+              ],
+              "acquisitions": [
+                12,
+                12,
+                12
+              ]
+            },
+            {
+              "local_sensor": [
+                40,
+                137
+              ],
+              "conditions": [
+                5.258395537810224,
+                3.422557211706531,
+                6.581792137489805
+              ],
+              "acquisitions": [
+                13,
+                13,
+                13
+              ]
+            },
+            {
+              "local_sensor": [
+                73,
+                153
+              ],
+              "conditions": [
+                6.622173116703497,
+                5.770025826714703,
+                6.135331864021133
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                65,
+                137
+              ],
+              "conditions": [
+                6.013672869090382,
+                5.357072706063412,
+                6.623019768906241
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                65,
+                136
+              ],
+              "conditions": [
+                5.868350255469348,
+                3.247473369490236,
+                6.6448921223116715
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                56,
+                160
+              ],
+              "conditions": [
+                6.691194388555612,
+                5.35799254349055,
+                5.567237575204325
+              ],
+              "acquisitions": [
+                12,
+                12,
+                12
+              ]
+            },
+            {
+              "local_sensor": [
+                73,
+                129
+              ],
+              "conditions": [
+                5.967584120239072,
+                5.339448436597357,
+                6.717369348618084
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "roi_sensor": [
+        2350,
+        1330,
+        192,
+        192
+      ],
+      "eligible_native_pixels": 36863,
+      "usable_pixels_per_pass": [
+        4368,
+        7240
+      ],
+      "both_passes_usable_pixels": 1736,
+      "top_focus_mode_pairs": [
+        [
+          101,
+          92,
+          140
+        ],
+        [
+          114,
+          106,
+          128
+        ],
+        [
+          100,
+          91,
+          108
+        ],
+        [
+          102,
+          93,
+          96
+        ],
+        [
+          102,
+          92,
+          88
+        ],
+        [
+          99,
+          90,
+          80
+        ],
+        [
+          113,
+          106,
+          60
+        ],
+        [
+          103,
+          94,
+          60
+        ],
+        [
+          95,
+          87,
+          60
+        ],
+        [
+          100,
+          92,
+          56
+        ],
+        [
+          99,
+          91,
+          56
+        ],
+        [
+          105,
+          96,
+          48
+        ]
+      ],
+      "summaries": [
+        {
+          "mode_centers_ordinal": [
+            101,
+            92
+          ],
+          "native_pixels_with_this_pair": 140,
+          "sources": [
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            388,
+            389,
+            390,
+            391,
+            392,
+            393,
+            394
+          ],
+          "independent_guide_candidates": [
+            97,
+            105,
+            387,
+            395
+          ],
+          "tested_points": 2304,
+          "passed_rgb": [
+            71,
+            340,
+            67
+          ],
+          "passed_all_rgb": 55,
+          "parity_counts": [
+            {
+              "parity": [
+                0,
+                0
+              ],
+              "tested": 576,
+              "passed_all_rgb": 12
+            },
+            {
+              "parity": [
+                1,
+                0
+              ],
+              "tested": 576,
+              "passed_all_rgb": 16
+            },
+            {
+              "parity": [
+                0,
+                1
+              ],
+              "tested": 576,
+              "passed_all_rgb": 12
+            },
+            {
+              "parity": [
+                1,
+                1
+              ],
+              "tested": 576,
+              "passed_all_rgb": 15
+            }
+          ],
+          "best_all_rgb": [
+            {
+              "local_sensor": [
+                113,
+                96
+              ],
+              "conditions": [
+                14.505043454323634,
+                4.545883745250819,
+                14.440061996010765
+              ],
+              "acquisitions": [
+                12,
+                12,
+                12
+              ]
+            },
+            {
+              "local_sensor": [
+                65,
+                96
+              ],
+              "conditions": [
+                14.896698552786145,
+                3.6284493494545753,
+                14.930213629708115
+              ],
+              "acquisitions": [
+                13,
+                13,
+                13
+              ]
+            },
+            {
+              "local_sensor": [
+                185,
+                40
+              ],
+              "conditions": [
+                15.22990911594196,
+                5.064585697470984,
+                15.076633523234728
+              ],
+              "acquisitions": [
+                10,
+                10,
+                10
+              ]
+            },
+            {
+              "local_sensor": [
+                73,
+                104
+              ],
+              "conditions": [
+                14.919650958620549,
+                3.882860944468672,
+                15.359691833975452
+              ],
+              "acquisitions": [
+                13,
+                13,
+                13
+              ]
+            },
+            {
+              "local_sensor": [
+                113,
+                97
+              ],
+              "conditions": [
+                15.680427784199418,
+                7.1864327556923175,
+                11.947384984833224
+              ],
+              "acquisitions": [
+                12,
+                12,
+                12
+              ]
+            },
+            {
+              "local_sensor": [
+                185,
+                41
+              ],
+              "conditions": [
+                14.845355794474571,
+                5.122203501256979,
+                15.681111688328237
+              ],
+              "acquisitions": [
+                10,
+                10,
+                10
+              ]
+            },
+            {
+              "local_sensor": [
+                184,
+                40
+              ],
+              "conditions": [
+                14.944211436629672,
+                5.1526692971971135,
+                15.990820192266305
+              ],
+              "acquisitions": [
+                10,
+                10,
+                10
+              ]
+            },
+            {
+              "local_sensor": [
+                25,
+                152
+              ],
+              "conditions": [
+                15.48133321513663,
+                3.5035423637480267,
+                16.04314123626145
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                25,
+                144
+              ],
+              "conditions": [
+                15.525467511580361,
+                3.6228448111246436,
+                16.066703663093595
+              ],
+              "acquisitions": [
+                13,
+                13,
+                13
+              ]
+            },
+            {
+              "local_sensor": [
+                41,
+                152
+              ],
+              "conditions": [
+                15.386424256412516,
+                3.65644725526397,
+                16.176881337647483
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                64,
+                96
+              ],
+              "conditions": [
+                16.20243197299383,
+                7.923200683009331,
+                16.114246631111264
+              ],
+              "acquisitions": [
+                13,
+                13,
+                13
+              ]
+            },
+            {
+              "local_sensor": [
+                81,
+                136
+              ],
+              "conditions": [
+                15.127242297665335,
+                4.032639357271316,
+                16.274989797203933
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "mode_centers_ordinal": [
+            114,
+            106
+          ],
+          "native_pixels_with_this_pair": 128,
+          "sources": [
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            402,
+            403,
+            404,
+            405,
+            406,
+            407,
+            408
+          ],
+          "independent_guide_candidates": [
+            110,
+            118,
+            401,
+            409
+          ],
+          "tested_points": 2304,
+          "passed_rgb": [
+            28,
+            86,
+            28
+          ],
+          "passed_all_rgb": 28,
+          "parity_counts": [
+            {
+              "parity": [
+                0,
+                0
+              ],
+              "tested": 576,
+              "passed_all_rgb": 7
+            },
+            {
+              "parity": [
+                1,
+                0
+              ],
+              "tested": 576,
+              "passed_all_rgb": 7
+            },
+            {
+              "parity": [
+                0,
+                1
+              ],
+              "tested": 576,
+              "passed_all_rgb": 7
+            },
+            {
+              "parity": [
+                1,
+                1
+              ],
+              "tested": 576,
+              "passed_all_rgb": 7
+            }
+          ],
+          "best_all_rgb": [
+            {
+              "local_sensor": [
+                40,
+                8
+              ],
+              "conditions": [
+                7.069413777029488,
+                3.1764294434624722,
+                6.233797908562997
+              ],
+              "acquisitions": [
+                12,
+                12,
+                12
+              ]
+            },
+            {
+              "local_sensor": [
+                48,
+                8
+              ],
+              "conditions": [
+                7.783292194704285,
+                2.8767565177055077,
+                7.156060724120779
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                40,
+                0
+              ],
+              "conditions": [
+                7.831149708777424,
+                2.8004032315274485,
+                7.003224210290045
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                48,
+                0
+              ],
+              "conditions": [
+                7.832456238494558,
+                2.9031288844580234,
+                7.15001037086447
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                40,
+                16
+              ],
+              "conditions": [
+                7.847670151047406,
+                2.8749993775047384,
+                7.125425272226308
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                32,
+                8
+              ],
+              "conditions": [
+                8.670555942395296,
+                2.7464769108579374,
+                7.798284650206633
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                40,
+                24
+              ],
+              "conditions": [
+                8.910879669101472,
+                2.799607108241524,
+                8.747472017833793
+              ],
+              "acquisitions": [
+                13,
+                13,
+                13
+              ]
+            },
+            {
+              "local_sensor": [
+                49,
+                0
+              ],
+              "conditions": [
+                9.595982944151121,
+                3.148877617406844,
+                6.454707982819371
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                33,
+                8
+              ],
+              "conditions": [
+                9.634593280863355,
+                3.0041196539158923,
+                6.720335803457889
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                48,
+                9
+              ],
+              "conditions": [
+                9.905539390863517,
+                3.210774519158867,
+                7.658402653323848
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                49,
+                8
+              ],
+              "conditions": [
+                9.937032541084042,
+                3.2183336455540563,
+                6.728516697974663
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                41,
+                24
+              ],
+              "conditions": [
+                10.001667236252999,
+                2.561098086325317,
+                6.828186985908686
+              ],
+              "acquisitions": [
+                13,
+                13,
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "mode_centers_ordinal": [
+            99,
+            90
+          ],
+          "native_pixels_with_this_pair": 80,
+          "sources": [
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            386,
+            387,
+            388,
+            389,
+            390,
+            391,
+            392
+          ],
+          "independent_guide_candidates": [
+            95,
+            103,
+            385,
+            393
+          ],
+          "tested_points": 2304,
+          "passed_rgb": [
+            27,
+            320,
+            12
+          ],
+          "passed_all_rgb": 9,
+          "parity_counts": [
+            {
+              "parity": [
+                0,
+                0
+              ],
+              "tested": 576,
+              "passed_all_rgb": 0
+            },
+            {
+              "parity": [
+                1,
+                0
+              ],
+              "tested": 576,
+              "passed_all_rgb": 6
+            },
+            {
+              "parity": [
+                0,
+                1
+              ],
+              "tested": 576,
+              "passed_all_rgb": 0
+            },
+            {
+              "parity": [
+                1,
+                1
+              ],
+              "tested": 576,
+              "passed_all_rgb": 3
+            }
+          ],
+          "best_all_rgb": [
+            {
+              "local_sensor": [
+                33,
+                168
+              ],
+              "conditions": [
+                18.744101836667255,
+                3.441959873381352,
+                18.750399547658198
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                73,
+                105
+              ],
+              "conditions": [
+                18.762221285117846,
+                8.927226703848694,
+                17.580369969861955
+              ],
+              "acquisitions": [
+                11,
+                11,
+                11
+              ]
+            },
+            {
+              "local_sensor": [
+                41,
+                176
+              ],
+              "conditions": [
+                18.919726542481474,
+                3.1693380990758193,
+                18.38016892179744
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                57,
+                168
+              ],
+              "conditions": [
+                19.09911808883736,
+                3.0674965438860027,
+                17.880722148415742
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                25,
+                152
+              ],
+              "conditions": [
+                18.8905409869293,
+                3.821417981697362,
+                19.1088126878523
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                81,
+                137
+              ],
+              "conditions": [
+                18.04734253162478,
+                5.6407025406441536,
+                19.200289110863952
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                57,
+                160
+              ],
+              "conditions": [
+                19.475082560303136,
+                3.1762636010839733,
+                18.125796800366707
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                65,
+                160
+              ],
+              "conditions": [
+                19.58288110818197,
+                3.0303465875801114,
+                17.983906739470324
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                25,
+                145
+              ],
+              "conditions": [
+                19.687298819101997,
+                4.975984169763877,
+                19.493693856168132
+              ],
+              "acquisitions": [
+                11,
+                11,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "mode_centers_ordinal": [
+            103,
+            94
+          ],
+          "native_pixels_with_this_pair": 60,
+          "sources": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            390,
+            391,
+            392,
+            393,
+            394,
+            395,
+            396
+          ],
+          "independent_guide_candidates": [
+            99,
+            107,
+            389,
+            397
+          ],
+          "tested_points": 2304,
+          "passed_rgb": [
+            57,
+            318,
+            62
+          ],
+          "passed_all_rgb": 56,
+          "parity_counts": [
+            {
+              "parity": [
+                0,
+                0
+              ],
+              "tested": 576,
+              "passed_all_rgb": 15
+            },
+            {
+              "parity": [
+                1,
+                0
+              ],
+              "tested": 576,
+              "passed_all_rgb": 16
+            },
+            {
+              "parity": [
+                0,
+                1
+              ],
+              "tested": 576,
+              "passed_all_rgb": 14
+            },
+            {
+              "parity": [
+                1,
+                1
+              ],
+              "tested": 576,
+              "passed_all_rgb": 11
+            }
+          ],
+          "best_all_rgb": [
+            {
+              "local_sensor": [
+                24,
+                145
+              ],
+              "conditions": [
+                12.64723757475526,
+                4.080316744917648,
+                12.919108977691005
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                113,
+                96
+              ],
+              "conditions": [
+                13.09693011046454,
+                5.488481423135673,
+                13.055293115523837
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                24,
+                153
+              ],
+              "conditions": [
+                12.255155221117972,
+                4.028155597662896,
+                13.15033570071778
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                64,
+                96
+              ],
+              "conditions": [
+                12.450064172971917,
+                6.43795752580791,
+                13.404363254397676
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                65,
+                96
+              ],
+              "conditions": [
+                13.481799403470765,
+                4.836340123589646,
+                13.55716882221706
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                73,
+                104
+              ],
+              "conditions": [
+                13.372591531244339,
+                4.919375597829289,
+                13.682009179885661
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                40,
+                153
+              ],
+              "conditions": [
+                13.001967748254483,
+                4.230594055406756,
+                13.820932273836608
+              ],
+              "acquisitions": [
+                13,
+                13,
+                13
+              ]
+            },
+            {
+              "local_sensor": [
+                72,
+                104
+              ],
+              "conditions": [
+                12.463637180563413,
+                6.185960103987106,
+                14.149859430357001
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                24,
+                144
+              ],
+              "conditions": [
+                13.152323995348018,
+                4.414014327217848,
+                14.467870518106666
+              ],
+              "acquisitions": [
+                14,
+                14,
+                14
+              ]
+            },
+            {
+              "local_sensor": [
+                32,
+                169
+              ],
+              "conditions": [
+                11.864823379764209,
+                4.247799791312196,
+                14.471146291567003
+              ],
+              "acquisitions": [
+                13,
+                13,
+                13
+              ]
+            },
+            {
+              "local_sensor": [
+                81,
+                136
+              ],
+              "conditions": [
+                13.73758380950871,
+                4.711272651049127,
+                14.471977518865328
+              ],
+              "acquisitions": [
+                13,
+                13,
+                13
+              ]
+            },
+            {
+              "local_sensor": [
+                49,
+                144
+              ],
+              "conditions": [
+                14.027344210037203,
+                4.908513176141271,
+                14.689885211968104
+              ],
+              "acquisitions": [
+                11,
+                11,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "roi_sensor": [
+        4620,
+        2600,
+        192,
+        192
+      ],
+      "eligible_native_pixels": 36844,
+      "usable_pixels_per_pass": [
+        608,
+        216
+      ],
+      "both_passes_usable_pixels": 0,
+      "top_focus_mode_pairs": [],
+      "summaries": []
+    }
+  ]
+}

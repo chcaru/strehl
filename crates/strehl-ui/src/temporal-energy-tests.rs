@@ -64,6 +64,7 @@ fn temporal_energy_legacy_settings_and_saved_run_drafts_keep_their_own_mode() {
         gate: None,
         workers: 3,
         pinned: false,
+        imported: None,
     };
     let encoded = serde_json::to_value(&run).unwrap();
     assert_eq!(encoded["settings"]["temporal_energy"], true);

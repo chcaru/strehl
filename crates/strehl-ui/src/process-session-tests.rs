@@ -246,3 +246,58 @@ fn session_saved_summary_refuses_mismatched_geometry_counts_without_inventing_ze
     let saved = crate::session_workspace::SessionSummary::load(root.path(), &changed);
     assert_eq!(saved.passes[0].name, "Wide pass");
 }
+
+#[test]
+fn session_imported_canvas_keeps_provenance_without_contact_requests() {
+    let root = tempfile::tempdir().unwrap();
+    let summary = saved_summary(root.path());
+    let mut space = ProcessSpace::default();
+    space.set_session_summary(Some(&summary));
+    let ctx = egui::Context::default();
+    let mut progress = PipelineProgress::default();
+    progress.stage = Stage::Complete;
+    progress.frames_total = Some(6);
+    let output = ctx.run(
+        egui::RawInput {
+            screen_rect: Some(Rect::from_min_size(
+                egui::Pos2::ZERO,
+                egui::vec2(1060., 720.),
+            )),
+            ..Default::default()
+        },
+        |ctx| {
+            egui::CentralPanel::default().show(ctx, |ui| {
+                space.show(
+                    ui,
+                    Input {
+                        epoch: 1,
+                        progress: &progress,
+                        frame_count: 0,
+                        selected: 0,
+                        inspected_pair: None,
+                        photos: &[],
+                        inspection_photos: &[],
+                        surfaces: &[],
+                        output: None,
+                        output_size: None,
+                    },
+                );
+            });
+        },
+    );
+    let labels = output
+        .shapes
+        .iter()
+        .filter_map(|shape| match &shape.shape {
+            egui::Shape::Text(t) => Some(t.galley.text()),
+            _ => None,
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(labels.contains("2 passes · 6 captures"));
+    assert!(labels.contains("CAPTURE PROVENANCE · camera previews not loaded"));
+    assert!(
+        space.contact_indices().is_empty(),
+        "unloaded RAWs must not stall screenshot readiness"
+    );
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "strehl.sr-spatial-selection.v1",
+  "selection_basis": "Existing complete native primary photograph texture and radial distance only; no reconstructed candidate used",
+  "source": "experiments\\multi-stack-2026-10-28\\review\\full-displays\\insect-primary-6\\complete-fixed-display.png",
+  "sha256": "5f4fef0819a0a1ec1f1ba8d1394a8785d84a4522a3bf72c723b82c160089cee9",
+  "master_sha256": "6320cdf459c5fc8c2c5e4fa15822b5774954b37cd59e8ecf916e51ad7d0d1d77",
+  "canvas_quad": [
+    38,
+    26,
+    3440,
+    2292
+  ],
+  "origins_sensor": [
+    [
+      1970,
+      2090
+    ],
+    [
+      2350,
+      1330
+    ],
+    [
+      4620,
+      2600
+    ]
+  ],
+  "size_sensor": [
+    192,
+    192
+  ],
+  "native_crops_resized": false,
+  "overview_orientation_only": true
+}

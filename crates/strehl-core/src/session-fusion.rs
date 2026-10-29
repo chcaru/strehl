@@ -10,6 +10,7 @@
 //! scene truth or in the absence of shared fixed-pattern noise.
 
 use std::collections::{BTreeMap, BTreeSet};
+use std::mem::size_of;
 
 use rayon::prelude::*;
 use thiserror::Error;
@@ -19,7 +20,13 @@ use super::{
     SOFT_NUMERATOR_SCALE, SelectMode, Workspace, band_energy, level_sizes, select_weight,
     significance_floor, smooth5,
 };
+use crate::precision_mean::{PrecisionMean, PrecisionResult};
 use crate::{CfaPlane, noise::NoiseModel};
+
+#[path = "session-attribution.rs"]
+mod attribution;
+pub use attribution::{AttributionKind, BandAttribution, CoefficientAttribution};
+use attribution::{DualAccumulator, DualSources, SourceMoments};
 
 /// Caller-interned identity of an independent acquisition, not a pathname.
 /// Aliases/copies of one RAW must have the same acquisition identity.
@@ -35,6 +42,19 @@ pub enum GroupMode {
     Repeat,
     /// Each source enters ordinary noise-gated focus selection independently.
     Combine,
+}
+
+/// The observation used for cross-group focus weighting. Delivered coefficients
+/// and their propagated noise always retain the requested repeat estimator.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum GroupFocusReference {
+    /// Score the delivered mean using its own propagated temporal variance.
+    Delivered,
+    /// Freeze the focus score to the equal-observation group mean and its
+    /// injected, propagated variance. This separates a precision-mean change
+    /// from its feedback into the cross-focus selector. It does not make those
+    /// focus decisions independent of the participating measurements.
+    EqualObservation,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -160,8 +180,12 @@ impl MemoryEstimate {
                 .ok_or(FusionError::InvalidInput("pyramid sample count overflows"))
         })?;
         // Four original planes + seven pyramids + workspace and scalar field.
-        let prepared_source_bytes =
-            byte_terms(&[(p, 7 * 4 + 5), (n, 7 * 4 + 1), (width, 4), (sizes.len(), 4)])?;
+        let prepared_source_bytes = byte_terms(&[
+            (p, 7 * 4 + 5),
+            (n, 7 * 4 + 1),
+            (width, 4),
+            (sizes.len(), 12),
+        ])?;
         let group_fields = 21 + usize::from(policy.primary.is_some()) * 10;
         // One extra full f32 field conservatively bounds group working storage.
         let group_bytes = byte_terms(&[(p, group_fields * 4), (n, 6 * 4 + 2), (width, 4)])?;
@@ -221,10 +245,97 @@ pub fn workspace_bytes(
     Ok(MemoryEstimate::estimate(width, height, cfg, policy)?.peak_bytes)
 }
 
+/// Additional opt-in storage: predicted noise pyramids/masks and bounded group
+/// precision statistics. No source frame volume is retained.
+pub fn precision_workspace_bytes(width: usize, height: usize, cfg: MergeConfig) -> Result<usize> {
+    let sizes = validate_config(width, height, cfg)?;
+    let p = sizes
+        .iter()
+        .try_fold(0usize, |sum, s| sum.checked_add(s.pixels()))
+        .ok_or(FusionError::InvalidInput("precision size overflow"))?;
+    byte_terms(&[(p, std::mem::size_of::<PrecisionMean>() + 10)])
+}
+
+/// Additional optional payload for group attribution, final-band accumulation
+/// and simultaneously returned coefficient maps. Add this to both the baseline
+/// and (if used) precision reservations. Caller collection overhead is separate.
+pub fn attribution_workspace_bytes(
+    width: usize,
+    height: usize,
+    cfg: MergeConfig,
+    policy: GroupPolicy,
+) -> Result<usize> {
+    validate_policy(policy)?;
+    let sizes = validate_config(width, height, cfg)?;
+    let p = sizes
+        .iter()
+        .try_fold(0usize, |sum, s| sum.checked_add(s.pixels()))
+        .ok_or(FusionError::InvalidInput("attribution size overflow"))?;
+    let group = size_of::<DualSources>() * (1 + usize::from(policy.primary.is_some()));
+    let bytes = byte_terms(&[(
+        p,
+        group + size_of::<DualAccumulator>() + size_of::<CoefficientAttribution>(),
+    )])?;
+    if bytes > isize::MAX as usize {
+        return Err(FusionError::InvalidInput(
+            "attribution exceeds addressable allocation size",
+        ));
+    }
+    Ok(bytes)
+}
+
+#[derive(Debug)]
+struct PreparedModel {
+    noise: NoiseModel,
+    gain: f32,
+    beta: Vec<[f32; 2]>,
+}
+
+fn same_noise_model(a: &NoiseModel, b: &NoiseModel) -> bool {
+    a.iso.to_bits() == b.iso.to_bits()
+        && a.provenance == b.provenance
+        && CfaPlane::ALL.iter().all(|&c| {
+            let a = a.plane(c);
+            let b = b.plane(c);
+            a.gain_dn_per_e.to_bits() == b.gain_dn_per_e.to_bits()
+                && a.read_noise_e.to_bits() == b.read_noise_e.to_bits()
+                && a.levels.black.to_bits() == b.levels.black.to_bits()
+                && a.levels.white.to_bits() == b.levels.white.to_bits()
+        })
+        && match (a.prnu(), b.prnu()) {
+            (None, None) => true,
+            (Some(a), Some(b)) => CfaPlane::ALL
+                .iter()
+                .all(|&c| a.kappa(c).to_bits() == b.kappa(c).to_bits()),
+            _ => false,
+        }
+}
+
+#[derive(Debug)]
+struct PreparedPrecision {
+    guide_acquisition: u64,
+    variance: Pyramid,
+    color_variance: Pyramid,
+    support: Vec<Vec<bool>>,
+    gaussian_support: Vec<Vec<bool>>,
+}
+
+/// Expected signal in this source's black-subtracted DN, frozen using original
+/// acquisitions excluded from this entire repeat group. All guide taps must be
+/// supported. A matching shape/visibility check remains the caller's job.
+pub struct FrozenPrediction<'a> {
+    pub acquisition: u64,
+    pub signal: [&'a [f32]; 4],
+    pub support: &'a [bool],
+}
+
 /// Reusable preparation storage for one source. Planes use [R, G1, B, G2].
 #[derive(Debug)]
 pub struct PreparedSource {
     key: Option<SourceKey>,
+    model: Option<PreparedModel>,
+    precision: Option<PreparedPrecision>,
+    precision_ready: bool,
     sizes: Vec<LevelSize>,
     pixels: [Vec<f32>; 4],
     planes: [Pyramid; 4],
@@ -248,6 +359,9 @@ impl PreparedSource {
         let n = sizes[0].pixels();
         Ok(Self {
             key: None,
+            model: None,
+            precision: None,
+            precision_ready: false,
             pixels: std::array::from_fn(|_| vec![0.0; n]),
             planes: std::array::from_fn(|_| Pyramid::zeros(&sizes)),
             green: Pyramid::zeros(&sizes),
@@ -346,6 +460,7 @@ impl PreparedSource {
         photometric_gain: f32,
     ) -> Result<()> {
         self.key = None;
+        self.precision_ready = false;
         let n = self.sizes[0].pixels();
         if coverage.len() != n || uncensored.len() != n || planes.iter().any(|p| p.len() != n) {
             return Err(FusionError::InvalidInput("source dimensions differ"));
@@ -494,12 +609,170 @@ impl PreparedSource {
             }
             erode_support(&self.support[k], self.sizes[k], &mut self.energy_support[k]);
         }
+        self.model = Some(PreparedModel {
+            noise: noise.clone(),
+            gain: photometric_gain,
+            beta: (0..self.sizes.len())
+                .map(|k| {
+                    [
+                        frame_beta
+                            .and_then(|v| v.get(k))
+                            .copied()
+                            .unwrap_or(self.gain.beta(k)),
+                        color_beta
+                            .and_then(|v| v.get(k))
+                            .copied()
+                            .unwrap_or(self.gain.beta(k)),
+                    ]
+                })
+                .collect(),
+        });
         self.key = Some(key);
         Ok(())
     }
 
     pub fn key(&self) -> Option<SourceKey> {
         self.key
+    }
+
+    /// Add a separate fixed-guide precision model. Existing focus and residual
+    /// admission continue to use their original model; the new variance is used
+    /// only for averaging already-compatible observations and its energy floor.
+    #[allow(clippy::too_many_arguments)]
+    pub fn predict_precision(
+        &mut self,
+        prediction: FrozenPrediction<'_>,
+        noise: &NoiseModel,
+        gain: f32,
+        frame_beta: Option<&[f32]>,
+        color_beta: Option<&[f32]>,
+    ) -> Result<()> {
+        self.precision_ready = false;
+        let key = self.key.ok_or(FusionError::InvalidInput(
+            "prediction needs prepared source",
+        ))?;
+        let n = self.sizes[0].pixels();
+        if prediction.acquisition == key.acquisition
+            || prediction.signal.iter().any(|p| p.len() != n)
+            || prediction.support.len() != n
+            || !gain.is_finite()
+            || gain <= 0.0
+            || !(gain * gain).is_finite()
+        {
+            return Err(FusionError::InvalidInput(
+                "invalid independent precision prediction",
+            ));
+        }
+        for i in 0..n {
+            if prediction.support[i] && prediction.signal.iter().any(|p| !p[i].is_finite()) {
+                return Err(FusionError::InvalidInput("nonfinite precision guide"));
+            }
+        }
+        if [frame_beta, color_beta]
+            .into_iter()
+            .flatten()
+            .any(|b| b.iter().any(|v| !v.is_finite() || *v < 0.0))
+        {
+            return Err(FusionError::InvalidInput("invalid precision band gain"));
+        }
+        let model = self
+            .model
+            .as_ref()
+            .ok_or(FusionError::InvalidInput("missing prepared model"))?;
+        let same_beta = model.beta.iter().enumerate().all(|(k, expected)| {
+            [frame_beta, color_beta]
+                .into_iter()
+                .enumerate()
+                .all(|(c, supplied)| {
+                    supplied
+                        .and_then(|v| v.get(k))
+                        .copied()
+                        .unwrap_or(self.gain.beta(k))
+                        .to_bits()
+                        == expected[c].to_bits()
+                })
+        });
+        if !same_noise_model(&model.noise, noise)
+            || model.gain.to_bits() != gain.to_bits()
+            || !same_beta
+        {
+            return Err(FusionError::InvalidInput(
+                "precision model differs from prepared source",
+            ));
+        }
+        let p = self.precision.get_or_insert_with(|| PreparedPrecision {
+            guide_acquisition: prediction.acquisition,
+            variance: Pyramid::zeros(&self.sizes),
+            color_variance: Pyramid::zeros(&self.sizes),
+            support: self.sizes.iter().map(|s| vec![false; s.pixels()]).collect(),
+            gaussian_support: self.sizes.iter().map(|s| vec![false; s.pixels()]).collect(),
+        });
+        p.guide_acquisition = prediction.acquisition;
+        for i in 0..n {
+            let s = (prediction.signal[1][i] + prediction.signal[3][i]) * 0.5;
+            let sigma = noise.green_luma_sigma(s);
+            self.scalar[i] = if prediction.support[i] {
+                sigma * sigma * gain * gain
+            } else {
+                0.0
+            };
+        }
+        p.variance.build_gaussian(&self.scalar, &mut self.workspace);
+        for i in 0..n {
+            self.scalar[i] = if prediction.support[i] {
+                CfaPlane::ALL
+                    .iter()
+                    .enumerate()
+                    .map(|(c, plane)| {
+                        noise.plane(*plane).variance(prediction.signal[c][i]) * gain * gain
+                    })
+                    .fold(0.0_f32, f32::max)
+            } else {
+                0.0
+            };
+        }
+        p.color_variance
+            .build_gaussian(&self.scalar, &mut self.workspace);
+        // Original Gaussian support remains live in SessionMerge's hull logic.
+        // Guide support has its own bounded scratch and cannot relabel originals.
+        p.gaussian_support[0].copy_from_slice(prediction.support);
+        for k in 1..self.sizes.len() {
+            let (before, after) = p.gaussian_support.split_at_mut(k);
+            reduce_support(&before[k - 1], self.sizes[k - 1], &mut after[0]);
+        }
+        let last = self.sizes.len() - 1;
+        for k in 0..=last {
+            if k == last {
+                p.support[k].copy_from_slice(&p.gaussian_support[k]);
+            } else {
+                expand_support(
+                    &p.gaussian_support[k + 1],
+                    self.sizes[k + 1],
+                    &mut p.support[k],
+                    self.sizes[k],
+                );
+                for (v, g) in p.support[k].iter_mut().zip(&p.gaussian_support[k]) {
+                    *v &= *g;
+                }
+            }
+            for (field, beta) in [
+                (p.variance.level_mut(k), frame_beta),
+                (p.color_variance.level_mut(k), color_beta),
+            ] {
+                let b = beta
+                    .and_then(|v| v.get(k))
+                    .copied()
+                    .unwrap_or(self.gain.beta(k));
+                for v in field {
+                    *v *= b;
+                    if !v.is_finite() || *v < 0.0 {
+                        return Err(FusionError::Nonfinite);
+                    }
+                }
+            }
+        }
+        self.precision_ready = true;
+        Ok(())
     }
 
     pub fn sizes(&self) -> &[LevelSize] {
@@ -521,7 +794,14 @@ impl PreparedSource {
     pub fn buffer_bytes(&self) -> usize {
         let p: usize = self.sizes.iter().map(LevelSize::pixels).sum();
         let n = self.sizes[0].pixels();
-        (7 * p + 7 * n + self.sizes[0].width) * 4 + 5 * p + n
+        (7 * p + 7 * n + self.sizes[0].width) * 4
+            + 5 * p
+            + n
+            + usize::from(self.precision.is_some()) * 10 * p
+            + self
+                .model
+                .as_ref()
+                .map_or(0, |m| m.beta.len() * size_of::<[f32; 2]>())
     }
 }
 
@@ -660,6 +940,32 @@ impl Contributions {
 }
 
 #[derive(Debug)]
+struct GroupAttribution {
+    ordinary: Vec<DualSources>,
+    primary: Option<Vec<DualSources>>,
+}
+
+impl GroupAttribution {
+    fn zeros(n: usize, primary: bool) -> Self {
+        Self {
+            ordinary: vec![DualSources::default(); n],
+            primary: primary.then(|| vec![DualSources::default(); n]),
+        }
+    }
+
+    fn clear(&mut self) {
+        self.ordinary.fill(DualSources::default());
+        if let Some(p) = &mut self.primary {
+            p.fill(DualSources::default());
+        }
+    }
+
+    fn buffer_bytes(&self) -> usize {
+        (self.ordinary.len() + self.primary.as_ref().map_or(0, Vec::len)) * size_of::<DualSources>()
+    }
+}
+
+#[derive(Debug)]
 struct GroupLevel {
     mean: [Vec<f32>; 4],
     m2: [Vec<f32>; 4],
@@ -668,10 +974,18 @@ struct GroupLevel {
     count: Vec<u32>,
     ordinary: Contributions,
     primary: Option<Contributions>,
+    precision: Option<Vec<PrecisionMean>>,
+    attribution: Option<GroupAttribution>,
 }
 
 impl GroupLevel {
-    fn zeros(n: usize, primary: bool) -> Self {
+    fn precision_at(&self, i: usize) -> Option<PrecisionResult> {
+        self.precision
+            .as_ref()
+            .and_then(|p| p[i].result())
+            .filter(|p| p.count == self.count[i])
+    }
+    fn zeros(n: usize, primary: bool, precision: bool, attribution: bool) -> Self {
         Self {
             mean: std::array::from_fn(|_| vec![0.0; n]),
             m2: std::array::from_fn(|_| vec![0.0; n]),
@@ -680,6 +994,8 @@ impl GroupLevel {
             count: vec![0; n],
             ordinary: Contributions::zeros(n),
             primary: primary.then(|| Contributions::zeros(n)),
+            precision: precision.then(|| vec![PrecisionMean::default(); n]),
+            attribution: attribution.then(|| GroupAttribution::zeros(n, primary)),
         }
     }
 
@@ -691,6 +1007,12 @@ impl GroupLevel {
         self.color_variance_sum.fill(0.0);
         self.count.fill(0);
         self.ordinary.clear();
+        if let Some(p) = &mut self.precision {
+            p.fill(PrecisionMean::default());
+        }
+        if let Some(a) = &mut self.attribution {
+            a.clear();
+        }
         if let Some(p) = &mut self.primary {
             p.clear();
         }
@@ -706,6 +1028,7 @@ pub struct GroupWorkspace {
     policy: GroupPolicy,
     levels: Vec<GroupLevel>,
     sources: BTreeSet<SourceKey>,
+    guide_ids: BTreeSet<u64>,
     energy: Vec<f32>,
     scratch: Vec<f32>,
     residual: Vec<f32>,
@@ -717,17 +1040,43 @@ pub struct GroupWorkspace {
 
 impl GroupWorkspace {
     pub fn new(width: usize, height: usize, cfg: MergeConfig, policy: GroupPolicy) -> Result<Self> {
+        Self::new_with_precision(width, height, cfg, policy, false)
+    }
+
+    pub fn new_with_precision(
+        width: usize,
+        height: usize,
+        cfg: MergeConfig,
+        policy: GroupPolicy,
+        precision: bool,
+    ) -> Result<Self> {
+        Self::new_with_options(width, height, cfg, policy, precision, false)
+    }
+
+    /// Opt-in coefficient attribution is orthogonal to precision weighting.
+    /// Reserve attribution_workspace_bytes before enabling it on a consumer.
+    pub fn new_with_options(
+        width: usize,
+        height: usize,
+        cfg: MergeConfig,
+        policy: GroupPolicy,
+        precision: bool,
+        attribution: bool,
+    ) -> Result<Self> {
         let sizes = validate_config(width, height, cfg)?;
         validate_policy(policy)?;
         let n = sizes[0].pixels();
         Ok(Self {
             levels: sizes
                 .iter()
-                .map(|s| GroupLevel::zeros(s.pixels(), policy.primary.is_some()))
+                .map(|s| {
+                    GroupLevel::zeros(s.pixels(), policy.primary.is_some(), precision, attribution)
+                })
                 .collect(),
             cfg,
             policy,
             sources: BTreeSet::new(),
+            guide_ids: BTreeSet::new(),
             energy: vec![0.0; n],
             scratch: vec![0.0; n + sizes[0].width],
             residual: vec![0.0; n],
@@ -747,6 +1096,22 @@ impl GroupWorkspace {
         let key = source
             .key
             .ok_or(FusionError::InvalidInput("source not prepared"))?;
+        if self.guide_ids.contains(&key.acquisition) {
+            return Err(FusionError::InvalidInput(
+                "precision guide is a member of its weighted group",
+            ));
+        }
+        let guide_id = if source.precision_ready && self.levels[0].precision.is_some() {
+            let id = source.precision.as_ref().expect("ready").guide_acquisition;
+            if self.sources.iter().any(|s| s.acquisition == id) || key.acquisition == id {
+                return Err(FusionError::InvalidInput(
+                    "precision guide is a member of its weighted group",
+                ));
+            }
+            Some(id)
+        } else {
+            None
+        };
         if self
             .sources
             .iter()
@@ -761,6 +1126,9 @@ impl GroupWorkspace {
         }
         if self.sources.len() >= u32::MAX as usize {
             return Err(FusionError::InvalidInput("too many group members"));
+        }
+        if let Some(id) = guide_id {
+            self.guide_ids.insert(id);
         }
         self.sources.insert(key);
         let bands = self.sizes.len() - 1;
@@ -784,6 +1152,8 @@ impl GroupWorkspace {
                 count,
                 ordinary,
                 primary,
+                precision,
+                attribution,
             } = &mut self.levels[k];
             let chunks = (
                 channel_chunks_mut(mean, ACCUMULATION_CHUNK),
@@ -843,12 +1213,69 @@ impl GroupWorkspace {
                     .enumerate()
                     .for_each(|(block, fields)| accumulate(block, fields, None));
             }
+            if let Some(a) = attribution {
+                let is_primary = self.policy.primary == Some(key.bracket);
+                for i in 0..n {
+                    if !source.support[k][i] {
+                        continue;
+                    }
+                    let weight = if is_mean || !source.energy_support[k][i] {
+                        0.0
+                    } else {
+                        ordinary_weight(
+                            self.cfg,
+                            k,
+                            bands,
+                            self.energy[i],
+                            source.variance.level(k)[i],
+                        )
+                    };
+                    let moment = SourceMoments::single(
+                        key.acquisition,
+                        [
+                            source.variance.level(k)[i],
+                            source.color_variance.level(k)[i],
+                        ],
+                        is_primary,
+                    );
+                    a.ordinary[i].add_source(moment, weight);
+                    if let Some(primary) = a.primary.as_mut().filter(|_| is_primary) {
+                        primary[i].add_source(moment, weight);
+                    }
+                }
+            }
+            if let Some(values) = precision.as_mut().filter(|_| source.precision_ready) {
+                let predicted = source.precision.as_ref().expect("ready");
+                let primary = self.policy.primary == Some(key.bracket);
+                let source_id = key.acquisition;
+                values
+                    .par_iter_mut()
+                    .enumerate()
+                    .try_for_each(|(i, value)| -> Result<()> {
+                        if source.support[k][i] && predicted.support[k][i] {
+                            value
+                                .push(
+                                    std::array::from_fn(|c| source.planes[c].level(k)[i]),
+                                    predicted.variance.level(k)[i],
+                                    [
+                                        predicted.variance.level(k)[i],
+                                        predicted.color_variance.level(k)[i],
+                                    ],
+                                    source_id,
+                                    primary,
+                                )
+                                .map_err(FusionError::InvalidInput)?;
+                        }
+                        Ok(())
+                    })?;
+            }
         }
         Ok(())
     }
 
     fn clear(&mut self) {
         self.sources.clear();
+        self.guide_ids.clear();
         for level in &mut self.levels {
             level.clear();
         }
@@ -858,7 +1285,20 @@ impl GroupWorkspace {
         let p: usize = self.sizes.iter().map(LevelSize::pixels).sum();
         let n = self.sizes[0].pixels();
         let per_level = 21 + usize::from(self.policy.primary.is_some()) * 10;
-        (per_level * p + 6 * n + self.sizes[0].width) * 4 + 2 * n
+        (per_level * p + 6 * n + self.sizes[0].width) * 4
+            + 2 * n
+            + self
+                .levels
+                .iter()
+                .filter_map(|l| l.precision.as_ref())
+                .map(|p| p.capacity() * std::mem::size_of::<PrecisionMean>())
+                .sum::<usize>()
+            + self
+                .levels
+                .iter()
+                .filter_map(|l| l.attribution.as_ref())
+                .map(GroupAttribution::buffer_bytes)
+                .sum::<usize>()
     }
 }
 
@@ -875,6 +1315,8 @@ fn ordinary_weight(cfg: MergeConfig, k: usize, bands: usize, energy: f32, varian
 #[derive(Debug, Clone, Default)]
 pub struct LevelDiagnostics {
     pub averaged_coefficients: u64,
+    pub precision_averaged_coefficients: u64,
+    pub missing_prediction_coefficients: u64,
     pub single_source_coefficients: u64,
     pub primary_fallback_coefficients: u64,
     pub ordinary_fallback_coefficients: u64,
@@ -889,6 +1331,8 @@ pub struct LevelDiagnostics {
 impl LevelDiagnostics {
     fn absorb(&mut self, other: &Self) {
         self.averaged_coefficients += other.averaged_coefficients;
+        self.precision_averaged_coefficients += other.precision_averaged_coefficients;
+        self.missing_prediction_coefficients += other.missing_prediction_coefficients;
         self.single_source_coefficients += other.single_source_coefficients;
         self.primary_fallback_coefficients += other.primary_fallback_coefficients;
         self.ordinary_fallback_coefficients += other.ordinary_fallback_coefficients;
@@ -937,14 +1381,30 @@ pub struct SessionMerge {
     folded_sources: usize,
     groups: usize,
     diagnostics: Vec<LevelDiagnostics>,
+    attribution: Option<Vec<Vec<DualAccumulator>>>,
 }
 
 impl SessionMerge {
     pub fn new(width: usize, height: usize, cfg: MergeConfig) -> Result<Self> {
+        Self::new_with_attribution(width, height, cfg, false)
+    }
+
+    pub fn new_with_attribution(
+        width: usize,
+        height: usize,
+        cfg: MergeConfig,
+        attribution: bool,
+    ) -> Result<Self> {
         let sizes = validate_config(width, height, cfg)?;
         let n = sizes[0].pixels();
         Ok(Self {
             cfg,
+            attribution: attribution.then(|| {
+                sizes
+                    .iter()
+                    .map(|s| vec![DualAccumulator::default(); s.pixels()])
+                    .collect()
+            }),
             levels: sizes
                 .iter()
                 .map(|s| Contributions::zeros(s.pixels()))
@@ -979,6 +1439,11 @@ impl SessionMerge {
         {
             return Err(FusionError::InvalidInput(
                 "source/group recipe or dimensions differ",
+            ));
+        }
+        if self.attribution.is_some() && group.levels.iter().any(|l| l.attribution.is_none()) {
+            return Err(FusionError::InvalidInput(
+                "session attribution needs group attribution",
             ));
         }
         let key = source
@@ -1064,6 +1529,14 @@ impl SessionMerge {
 
     /// Finish one group and reset its buffers for the next one.
     pub fn fold_group(&mut self, group: &mut GroupWorkspace) -> Result<Vec<LevelDiagnostics>> {
+        self.fold_group_with_focus_reference(group, GroupFocusReference::Delivered)
+    }
+
+    /// Explicit causal control for separating within-group estimation from
+    /// cross-group selection. The ordinary entry point retains its arithmetic.
+    pub fn fold_group_with_focus_reference(
+        &mut self, group: &mut GroupWorkspace, focus_reference: GroupFocusReference,
+    ) -> Result<Vec<LevelDiagnostics>> {
         if self.sizes != group.sizes || !same_recipe(self.cfg, group.cfg) {
             return Err(FusionError::InvalidInput(
                 "group recipe or dimensions differ",
@@ -1094,8 +1567,16 @@ impl SessionMerge {
             if group.policy.mode == GroupMode::Repeat && group.sources.len() >= 2 {
                 for i in 0..n {
                     let count = level.count[i] as f32;
-                    group.energy[i] = (level.mean[1][i] + level.mean[3][i]) * 0.5;
-                    group.grouped_variance[i] = if count > 0.0 {
+                    let precision = if focus_reference == GroupFocusReference::Delivered {
+                        level.precision_at(i)
+                    } else { None };
+                    group.energy[i] = precision
+                        .map_or((level.mean[1][i] + level.mean[3][i]) * 0.5, |p| {
+                            (p.mean[1] + p.mean[3]) * 0.5
+                        });
+                    group.grouped_variance[i] = if let Some(p) = precision {
+                        p.temporal_variance[0]
+                    } else if count > 0.0 {
                         level.variance_sum[i] / (count * count)
                     } else {
                         0.0
@@ -1135,7 +1616,14 @@ impl SessionMerge {
                 let average =
                     group.policy.mode == GroupMode::Repeat && count >= 2 && group.guarded[i];
                 if average {
-                    let coefficients = std::array::from_fn(|c| level.mean[c][i]);
+                    let precision = level.precision_at(i);
+                    let coefficients = precision
+                        .map_or_else(|| std::array::from_fn(|c| level.mean[c][i]), |p| p.mean);
+                    if precision.is_some() {
+                        diag.precision_averaged_coefficients += 1;
+                    } else if level.precision.is_some() {
+                        diag.missing_prediction_coefficients += 1;
+                    }
                     let weight = if is_mean {
                         0.0
                     } else {
@@ -1148,6 +1636,28 @@ impl SessionMerge {
                         )
                     };
                     output.add(i, coefficients, weight);
+                    if let Some(all) = &mut self.attribution {
+                        let source_moments = precision.map_or_else(
+                            || {
+                                level
+                                    .attribution
+                                    .as_ref()
+                                    .expect("registration checked")
+                                    .ordinary[i]
+                                    .plain
+                            },
+                            SourceMoments::precision,
+                        );
+                        all[k][i].weighted.add_group(
+                            source_moments,
+                            weight,
+                            self.groups as u64,
+                            true,
+                        );
+                        all[k][i]
+                            .plain
+                            .add_group(source_moments, 1.0, self.groups as u64, true);
+                    }
                     diag.averaged_coefficients += 1;
                     *diag.averaged_independent_counts.entry(count).or_default() += 1;
                 } else if group.policy.mode == GroupMode::Repeat
@@ -1155,9 +1665,49 @@ impl SessionMerge {
                     && level.primary.as_ref().is_some_and(|p| p.count[i] > 0.0)
                 {
                     output.absorb_at(i, level.primary.as_ref().expect("primary checked"));
+                    if let Some(all) = &mut self.attribution {
+                        let a = level
+                            .attribution
+                            .as_ref()
+                            .expect("registration checked")
+                            .primary
+                            .as_ref()
+                            .expect("primary checked")[i];
+                        all[k][i].weighted.add_group(
+                            a.weighted,
+                            a.weighted.weight,
+                            self.groups as u64,
+                            false,
+                        );
+                        all[k][i].plain.add_group(
+                            a.plain,
+                            a.plain.weight,
+                            self.groups as u64,
+                            false,
+                        );
+                    }
                     diag.primary_fallback_coefficients += 1;
                 } else {
                     output.absorb_at(i, &level.ordinary);
+                    if let Some(all) = &mut self.attribution {
+                        let a = level
+                            .attribution
+                            .as_ref()
+                            .expect("registration checked")
+                            .ordinary[i];
+                        all[k][i].weighted.add_group(
+                            a.weighted,
+                            a.weighted.weight,
+                            self.groups as u64,
+                            false,
+                        );
+                        all[k][i].plain.add_group(
+                            a.plain,
+                            a.plain.weight,
+                            self.groups as u64,
+                            false,
+                        );
+                    }
                     if count == 1 {
                         diag.single_source_coefficients += 1;
                     } else {
@@ -1242,8 +1792,38 @@ impl SessionMerge {
                 }
             }
         }
+        let attribution = self.attribution.as_ref().map(|all| {
+            self.sizes
+                .iter()
+                .enumerate()
+                .map(|(k, size)| BandAttribution {
+                    width: size.width,
+                    height: size.height,
+                    coefficients: (0..size.pixels())
+                        .map(|i| {
+                            if self.levels[k].denominator[i] > 0.0 {
+                                all[k][i].weighted.finish(AttributionKind::Weighted)
+                            } else if self.levels[k].count[i] > 0.0 {
+                                all[k][i].plain.finish(AttributionKind::PlainMean)
+                            } else {
+                                let fallback = &self.coverage_fallback[k];
+                                let kind = if fallback.count[i] <= 0.0 {
+                                    AttributionKind::Uncovered
+                                } else if fallback.primary[i] {
+                                    AttributionKind::SaturatedPrimary
+                                } else {
+                                    AttributionKind::SaturatedMean
+                                };
+                                CoefficientAttribution::unavailable(kind)
+                            }
+                        })
+                        .collect(),
+                })
+                .collect()
+        });
         Ok(FusionResult {
             planes,
+            attribution,
             valid,
             diagnostics,
             sources: self.source_ids.len(),
@@ -1253,13 +1833,24 @@ impl SessionMerge {
 
     pub fn buffer_bytes(&self) -> usize {
         let p: usize = self.sizes.iter().map(LevelSize::pixels).sum();
-        (15 * p + 8 * self.sizes[0].pixels()) * 4 + p + self.sizes[0].pixels()
+        (15 * p + 8 * self.sizes[0].pixels()) * 4
+            + p
+            + self.sizes[0].pixels()
+            + self.attribution.as_ref().map_or(0, |levels| {
+                levels
+                    .iter()
+                    .map(|l| l.len() * size_of::<DualAccumulator>())
+                    .sum::<usize>()
+            })
     }
 }
 
 #[derive(Debug)]
 pub struct FusionResult {
     pub planes: [Vec<f32>; 4],
+    /// Optional fixed-size final-band contribution maps, before collapse and
+    /// hull clamping. Not a final-pixel variance or confidence field.
+    pub attribution: Option<Vec<BandAttribution>>,
     /// Conservative reconstruction support. Invalid output samples are zero only
     /// as a storage placeholder; consumers must crop/mask/refuse them explicitly.
     pub valid: Vec<bool>,
@@ -1322,6 +1913,813 @@ fn erode_support(src: &[bool], size: LevelSize, dst: &mut [bool]) {
 mod tests {
     use super::*;
     use crate::noise::{Levels, PlaneNoise, Provenance};
+
+    #[test]
+    fn equal_observation_reference_separates_precision_delivery_from_focus_weights() {
+        let (w,h)=(48,40);let config=cfg();let support=vec![true;w*h];
+        let run=|precision:bool,reference:GroupFocusReference| {
+            let mut merge=SessionMerge::new(w,h,config).unwrap();
+            let mut group=GroupWorkspace::new_with_precision(w,h,config,GroupPolicy::default(),precision).unwrap();
+            let mut source=PreparedSource::new(w,h,config).unwrap();
+            for slice in 0..3 {
+                let amplitude=[160.,65.,18.][slice];
+                let signal=image(w,h,|c,x,y|2000.+c as f32*100.+amplitude*((x as f32*0.73).sin()+(y as f32*0.41).cos()));
+                for bracket in 0..2 {
+                    let model=noise(if bracket==0 {20.}else{10.});
+                    source.prepare(SourceKey {acquisition:(slice*2+bracket) as u64,bracket},
+                        std::array::from_fn(|c|signal[c].as_slice()),&model,None,&support,1.).unwrap();
+                    if precision {source.predict_precision(FrozenPrediction {acquisition:(100+slice) as u64,
+                        signal:std::array::from_fn(|c|signal[c].as_slice()),support:&support},&model,1.,None,None).unwrap();}
+                    merge.add_source(&mut group,&source).unwrap();
+                }
+                merge.fold_group_with_focus_reference(&mut group,reference).unwrap();
+            }
+            let weights:Vec<_>=merge.levels.iter().flat_map(|l|l.denominator.iter().copied()).collect();
+            (merge.finish().unwrap(),weights)
+        };
+        let (equal,weights)=run(false,GroupFocusReference::Delivered);
+        let (frozen,frozen_weights)=run(true,GroupFocusReference::EqualObservation);
+        let (_,delivered_weights)=run(true,GroupFocusReference::Delivered);
+        assert_eq!(weights.iter().map(|v|v.to_bits()).collect::<Vec<_>>(),frozen_weights.iter().map(|v|v.to_bits()).collect::<Vec<_>>());
+        assert!(weights.iter().zip(&delivered_weights).any(|(a,b)|(a-b).abs()>0.01));
+        for (a,b) in equal.planes.iter().flatten().zip(frozen.planes.iter().flatten()) {assert!((a-b).abs()<0.002);}
+        assert!(frozen.diagnostics.iter().any(|d|d.precision_averaged_coefficients>0));
+    }
+
+    #[test]
+    fn a_precision_flat_consumer_matches_fixed_mean_variance_and_missing_guide_fallback() {
+        let (w, h) = (256, 256);
+        let n = w * h;
+        let mut config = cfg();
+        config.bands = 0;
+        let a = flat(71, w, h, 20.0);
+        let b = flat(822, w, h, 10.0);
+        let guide = image(w, h, |_, _, _| 2000.0);
+        let support = vec![true; n];
+        for present in [true, false] {
+            let mut source = PreparedSource::new(w, h, config).unwrap();
+            let mut group =
+                GroupWorkspace::new_with_precision(w, h, config, GroupPolicy::default(), true)
+                    .unwrap();
+            let mut merge = SessionMerge::new(w, h, config).unwrap();
+            for (index, (image, sigma)) in [(&a, 20.0), (&b, 10.0)].into_iter().enumerate() {
+                source
+                    .prepare(
+                        SourceKey {
+                            acquisition: index as u64,
+                            bracket: index,
+                        },
+                        std::array::from_fn(|c| image[c].as_slice()),
+                        &noise(sigma),
+                        None,
+                        &support,
+                        1.0,
+                    )
+                    .unwrap();
+                if present {
+                    source
+                        .predict_precision(
+                            FrozenPrediction {
+                                acquisition: 99,
+                                signal: std::array::from_fn(|c| guide[c].as_slice()),
+                                support: &support,
+                            },
+                            &noise(sigma),
+                            1.0,
+                            None,
+                            None,
+                        )
+                        .unwrap();
+                }
+                merge.add_source(&mut group, &source).unwrap();
+            }
+            let base = workspace_bytes(w, h, config, GroupPolicy::default()).unwrap();
+            let extra = precision_workspace_bytes(w, h, config).unwrap();
+            assert!(
+                base + extra >= source.buffer_bytes() + group.buffer_bytes() + merge.buffer_bytes()
+            );
+            merge.fold_group(&mut group).unwrap();
+            let result = merge.finish().unwrap();
+            let weight = if present {
+                (100.0_f32 + 0.002) / (500.0 + 0.004)
+            } else {
+                0.5
+            };
+            let mut sum = 0.0_f64;
+            let mut sq = 0.0_f64;
+            for i in 0..n {
+                let expected = a[0][i] * weight + b[0][i] * (1.0 - weight);
+                assert!((result.planes[0][i] - expected).abs() < 0.001);
+                let residual = f64::from(result.planes[0][i]) - 2000.0;
+                sum += residual;
+                sq += residual * residual;
+            }
+            let mean = sum / n as f64;
+            let variance = sq / n as f64 - mean * mean;
+            let target = if present { 80.0 } else { 125.0 };
+            assert!(mean.abs() < 0.15);
+            assert!(
+                (variance / target - 1.0).abs() < 0.03,
+                "present {present}: {variance}"
+            );
+            assert_eq!(
+                result.diagnostics[0].precision_averaged_coefficients,
+                if present { n as u64 } else { 0 }
+            );
+            assert_eq!(
+                result.diagnostics[0].missing_prediction_coefficients,
+                if present { 0 } else { n as u64 }
+            );
+        }
+    }
+
+    #[test]
+    fn precision_guide_cannot_reenter_its_group_or_admit_invalid_guide_pixels() {
+        let (w, h) = (32, 32);
+        let n = w * h;
+        let mut config = cfg();
+        config.bands = 0;
+        let planes = image(w, h, |_, _, _| 2000.0);
+        let support = vec![true; n];
+        let mut missing = support.clone();
+        missing[37] = false;
+        let mut source = PreparedSource::new(w, h, config).unwrap();
+        source
+            .prepare(
+                SourceKey {
+                    acquisition: 0,
+                    bracket: 0,
+                },
+                std::array::from_fn(|c| planes[c].as_slice()),
+                &noise(4.0),
+                None,
+                &support,
+                1.0,
+            )
+            .unwrap();
+        assert!(
+            source
+                .predict_precision(
+                    FrozenPrediction {
+                        acquisition: 0,
+                        signal: std::array::from_fn(|c| planes[c].as_slice()),
+                        support: &support
+                    },
+                    &noise(4.0),
+                    1.0,
+                    None,
+                    None
+                )
+                .is_err()
+        );
+        source
+            .predict_precision(
+                FrozenPrediction {
+                    acquisition: 1,
+                    signal: std::array::from_fn(|c| planes[c].as_slice()),
+                    support: &missing,
+                },
+                &noise(4.0),
+                1.0,
+                None,
+                None,
+            )
+            .unwrap();
+        let mut group =
+            GroupWorkspace::new_with_precision(w, h, config, GroupPolicy::default(), true).unwrap();
+        group.add(&source).unwrap();
+        assert!(group.levels[0].precision_at(37).is_none());
+        assert!(group.levels[0].precision_at(38).is_some());
+        source
+            .prepare(
+                SourceKey {
+                    acquisition: 1,
+                    bracket: 1,
+                },
+                std::array::from_fn(|c| planes[c].as_slice()),
+                &noise(4.0),
+                None,
+                &support,
+                1.0,
+            )
+            .unwrap();
+        assert!(group.add(&source).is_err());
+    }
+
+    #[test]
+    fn precision_prediction_preserves_original_clipping_hull_in_both_orders() {
+        let (w, h) = (32, 32);
+        let n = w * h;
+        let mut config = cfg();
+        config.bands = 0;
+        let supported = vec![true; n];
+        let missing = vec![false; n];
+        for order in [[false, true], [true, false]] {
+            let mut source = PreparedSource::new(w, h, config).unwrap();
+            let mut group =
+                GroupWorkspace::new_with_precision(w, h, config, GroupPolicy::default(), true)
+                    .unwrap();
+            let mut merge = SessionMerge::new(w, h, config).unwrap();
+            for (index, clean) in order.into_iter().enumerate() {
+                let value = if clean { 2000.0 } else { 15000.0 };
+                let pixels = image(w, h, |_, _, _| value);
+                let original = if clean { &supported } else { &missing };
+                let guide = if clean { &missing } else { &supported };
+                source
+                    .prepare_with_masks(
+                        SourceKey {
+                            acquisition: index as u64,
+                            bracket: index,
+                        },
+                        std::array::from_fn(|c| pixels[c].as_slice()),
+                        &noise(4.0),
+                        None,
+                        None,
+                        &supported,
+                        original,
+                        1.0,
+                    )
+                    .unwrap();
+                source
+                    .predict_precision(
+                        FrozenPrediction {
+                            acquisition: 99,
+                            signal: std::array::from_fn(|c| pixels[c].as_slice()),
+                            support: guide,
+                        },
+                        &noise(4.0),
+                        1.0,
+                        None,
+                        None,
+                    )
+                    .unwrap();
+                assert_eq!(&source.gaussian_support[0], original);
+                merge.add_source(&mut group, &source).unwrap();
+            }
+            assert!(merge.hull_uncensored.iter().all(|&v| v));
+            assert!(merge.hull_low.iter().flatten().all(|&v| v == 2000.0));
+            assert!(merge.hull_high.iter().flatten().all(|&v| v == 2000.0));
+            merge.fold_group(&mut group).unwrap();
+            let result = merge.finish().unwrap();
+            assert!(result.planes.iter().flatten().all(|&v| v == 2000.0));
+        }
+    }
+
+    #[test]
+    fn precision_model_is_bound_to_prepared_noise_gain_and_resolved_beta() {
+        let (w, h) = (32, 32);
+        let mut config = cfg();
+        config.bands = 0;
+        let pixels = image(w, h, |_, _, _| 2000.0);
+        let supported = vec![true; w * h];
+        let mut source = PreparedSource::new(w, h, config).unwrap();
+        source
+            .prepare_with_noise_gains(
+                SourceKey {
+                    acquisition: 0,
+                    bracket: 0,
+                },
+                std::array::from_fn(|c| pixels[c].as_slice()),
+                &noise(4.0),
+                Some(&[0.5]),
+                Some(&[0.75]),
+                &supported,
+                2.0,
+            )
+            .unwrap();
+        let prediction = || FrozenPrediction {
+            acquisition: 99,
+            signal: std::array::from_fn(|c| pixels[c].as_slice()),
+            support: &supported,
+        };
+        assert!(
+            source
+                .predict_precision(prediction(), &noise(4.0), 1.0, Some(&[0.5]), Some(&[0.75]))
+                .is_err()
+        );
+        assert!(
+            source
+                .predict_precision(prediction(), &noise(5.0), 2.0, Some(&[0.5]), Some(&[0.75]))
+                .is_err()
+        );
+        assert!(
+            source
+                .predict_precision(prediction(), &noise(4.0), 2.0, Some(&[0.4]), Some(&[0.75]))
+                .is_err()
+        );
+        assert!(
+            source
+                .predict_precision(prediction(), &noise(4.0), 2.0, Some(&[0.5]), Some(&[0.5]))
+                .is_err()
+        );
+        let mut changed_iso = noise(4.0);
+        changed_iso.iso = 200.0;
+        assert!(
+            source
+                .predict_precision(prediction(), &changed_iso, 2.0, Some(&[0.5]), Some(&[0.75]))
+                .is_err()
+        );
+        assert!(!source.precision_ready);
+        source
+            .predict_precision(prediction(), &noise(4.0), 2.0, Some(&[0.5]), Some(&[0.75]))
+            .unwrap();
+        assert!(source.precision_ready);
+        // The same resolved default is accepted regardless of Option spelling.
+        source
+            .prepare(
+                SourceKey {
+                    acquisition: 0,
+                    bracket: 0,
+                },
+                std::array::from_fn(|c| pixels[c].as_slice()),
+                &noise(4.0),
+                None,
+                &supported,
+                1.0,
+            )
+            .unwrap();
+        let beta = source.gain.beta(0);
+        source
+            .predict_precision(prediction(), &noise(4.0), 1.0, Some(&[beta]), Some(&[beta]))
+            .unwrap();
+    }
+
+    #[test]
+    fn rejected_duplicate_does_not_insert_guide_and_u64_sources_remain_valid() {
+        let (w, h) = (32, 32);
+        let mut config = cfg();
+        config.bands = 0;
+        let pixels = image(w, h, |_, _, _| 2000.0);
+        let supported = vec![true; w * h];
+        let id = u64::from(u32::MAX) + 7;
+        let mut source = PreparedSource::new(w, h, config).unwrap();
+        let mut group =
+            GroupWorkspace::new_with_precision(w, h, config, GroupPolicy::default(), true).unwrap();
+        for guide in [99, 100] {
+            source
+                .prepare(
+                    SourceKey {
+                        acquisition: id,
+                        bracket: 0,
+                    },
+                    std::array::from_fn(|c| pixels[c].as_slice()),
+                    &noise(4.0),
+                    None,
+                    &supported,
+                    1.0,
+                )
+                .unwrap();
+            source
+                .predict_precision(
+                    FrozenPrediction {
+                        acquisition: guide,
+                        signal: std::array::from_fn(|c| pixels[c].as_slice()),
+                        support: &supported,
+                    },
+                    &noise(4.0),
+                    1.0,
+                    None,
+                    None,
+                )
+                .unwrap();
+            if guide == 99 {
+                group.add(&source).unwrap();
+            } else {
+                assert!(group.add(&source).is_err());
+            }
+        }
+        assert!(!group.guide_ids.contains(&100));
+        assert_eq!(group.source_count(), 1);
+        assert_eq!(group.levels[0].precision_at(0).unwrap().dominant_source, id);
+        source
+            .prepare(
+                SourceKey {
+                    acquisition: 100,
+                    bracket: 1,
+                },
+                std::array::from_fn(|c| pixels[c].as_slice()),
+                &noise(4.0),
+                None,
+                &supported,
+                1.0,
+            )
+            .unwrap();
+        group.add(&source).unwrap();
+        assert_eq!(group.source_count(), 2);
+    }
+
+    #[test]
+    fn zero_noise_precision_preserves_constant_signal_without_invented_floor() {
+        let (w, h) = (32, 32);
+        let mut config = cfg();
+        config.bands = 0;
+        let zero = NoiseModel::new(
+            [PlaneNoise {
+                gain_dn_per_e: 0.0,
+                read_noise_e: 0.0,
+                levels: Levels {
+                    black: 0.0,
+                    white: 16384.0,
+                },
+            }; 4],
+            100.0,
+            Provenance::Profile,
+        );
+        let pixels = image(w, h, |_, _, _| 2000.0);
+        let supported = vec![true; w * h];
+        let mut source = PreparedSource::new(w, h, config).unwrap();
+        let mut group =
+            GroupWorkspace::new_with_precision(w, h, config, GroupPolicy::default(), true).unwrap();
+        let mut merge = SessionMerge::new(w, h, config).unwrap();
+        for i in 0..2 {
+            source
+                .prepare(
+                    SourceKey {
+                        acquisition: i as u64,
+                        bracket: i,
+                    },
+                    std::array::from_fn(|c| pixels[c].as_slice()),
+                    &zero,
+                    None,
+                    &supported,
+                    1.0,
+                )
+                .unwrap();
+            source
+                .predict_precision(
+                    FrozenPrediction {
+                        acquisition: 99,
+                        signal: std::array::from_fn(|c| pixels[c].as_slice()),
+                        support: &supported,
+                    },
+                    &zero,
+                    1.0,
+                    None,
+                    None,
+                )
+                .unwrap();
+            merge.add_source(&mut group, &source).unwrap();
+        }
+        let precision = group.levels[0].precision_at(0).unwrap();
+        assert_eq!(precision.temporal_variance, [0.0; 2]);
+        assert_eq!(precision.positive_count, 2);
+        merge.fold_group(&mut group).unwrap();
+        assert!(
+            merge
+                .finish()
+                .unwrap()
+                .planes
+                .iter()
+                .flatten()
+                .all(|&v| v == 2000.0)
+        );
+    }
+
+    #[test]
+    fn attribution_retains_final_normalized_source_and_group_weights_without_pixel_changes() {
+        let (w, h) = (32, 32);
+        let mut config = cfg();
+        config.bands = 0;
+        let policy = GroupPolicy {
+            primary: Some(1),
+            ..GroupPolicy::default()
+        };
+        let pixels = image(w, h, |_, _, _| 2000.0);
+        let supported = vec![true; w * h];
+        for complete_guide in [true, false] {
+            let run = |attribution| {
+                let mut source = PreparedSource::new(w, h, config).unwrap();
+                let mut group =
+                    GroupWorkspace::new_with_options(w, h, config, policy, true, attribution)
+                        .unwrap();
+                let mut merge =
+                    SessionMerge::new_with_attribution(w, h, config, attribution).unwrap();
+                let mut pair_variance = [0.0; 2];
+                let mut singleton_variance = [0.0; 2];
+                for i in 0..3 {
+                    let sigma = if i == 0 { 20.0 } else { 10.0 };
+                    source
+                        .prepare(
+                            SourceKey {
+                                acquisition: 50 + i as u64,
+                                bracket: i % 2,
+                            },
+                            std::array::from_fn(|c| pixels[c].as_slice()),
+                            &noise(sigma),
+                            None,
+                            &supported,
+                            1.0,
+                        )
+                        .unwrap();
+                    if complete_guide || i == 0 {
+                        source
+                            .predict_precision(
+                                FrozenPrediction {
+                                    acquisition: 99,
+                                    signal: std::array::from_fn(|c| pixels[c].as_slice()),
+                                    support: &supported,
+                                },
+                                &noise(sigma),
+                                1.0,
+                                None,
+                                None,
+                            )
+                            .unwrap();
+                    }
+                    merge.add_source(&mut group, &source).unwrap();
+                    if i == 1 {
+                        pair_variance = if let Some(p) = group.levels[0].precision_at(0) {
+                            p.temporal_variance
+                        } else {
+                            [
+                                group.levels[0].variance_sum[0] / 4.0,
+                                group.levels[0].color_variance_sum[0] / 4.0,
+                            ]
+                        };
+                        merge.fold_group(&mut group).unwrap();
+                    }
+                    if i == 2 {
+                        singleton_variance = [
+                            source.variance.level(0)[0],
+                            source.color_variance.level(0)[0],
+                        ];
+                    }
+                }
+                let live_bytes =
+                    source.buffer_bytes() + group.buffer_bytes() + merge.buffer_bytes();
+                merge.fold_group(&mut group).unwrap();
+                (
+                    merge.finish().unwrap(),
+                    live_bytes,
+                    pair_variance,
+                    singleton_variance,
+                )
+            };
+            let (off, off_bytes, _, _) = run(false);
+            let (on, on_bytes, pair_variance, singleton_variance) = run(true);
+            assert!(off.attribution.is_none());
+            assert_eq!(off.valid, on.valid);
+            for c in 0..4 {
+                assert!(
+                    off.planes[c]
+                        .iter()
+                        .zip(&on.planes[c])
+                        .all(|(a, b)| a.to_bits() == b.to_bits())
+                );
+            }
+            let maps = on.attribution.as_ref().unwrap();
+            let map = &maps[0].coefficients[0];
+            assert_eq!(map.kind, AttributionKind::PlainMean);
+            assert_eq!(map.contributing_sources, 3);
+            assert_eq!(map.contributing_groups, 2);
+            assert_eq!(map.dominant_source, 52);
+            assert_eq!(map.dominant_source_fraction, 0.5);
+            assert_eq!(map.dominant_group_fraction, 0.5);
+            assert_eq!(map.effective_groups, 2.0);
+            assert_eq!(map.accepted_repeat_fraction, 0.5);
+            let a = if complete_guide {
+                (100.0_f32 + 0.002) / (500.0 + 0.004)
+            } else {
+                0.5
+            };
+            let expected_ess = 1.0 / ((0.5 * a).powi(2) + (0.5 * (1.0 - a)).powi(2) + 0.25);
+            assert!((map.effective_sources - expected_ess).abs() < 1e-5);
+            assert!((map.primary_fraction - 0.5 * (1.0 - a)).abs() < 1e-6);
+            assert_eq!(
+                map.fixed_guide_fraction,
+                if complete_guide { 0.5 } else { 0.0 }
+            );
+            assert!(map.variance_valid);
+            for c in 0..2 {
+                let expected = 0.25 * (pair_variance[c] + singleton_variance[c]);
+                assert!((map.conditional_variance[c] - expected).abs() < 1e-4);
+            }
+            let map_bytes: usize = maps
+                .iter()
+                .map(|m| m.coefficients.len() * size_of::<CoefficientAttribution>())
+                .sum();
+            let reserved = attribution_workspace_bytes(w, h, config, policy).unwrap();
+            assert!(on_bytes - off_bytes + map_bytes <= reserved);
+        }
+    }
+
+    #[test]
+    fn attribution_observes_ordinary_and_primary_fallback_and_censored_display() {
+        let (w, h) = (16, 16);
+        let mut config = cfg();
+        config.bands = 0;
+        let supported = vec![true; w * h];
+        for primary in [None, Some(0)] {
+            let policy = GroupPolicy {
+                primary,
+                ..GroupPolicy::default()
+            };
+            let mut source = PreparedSource::new(w, h, config).unwrap();
+            let mut group =
+                GroupWorkspace::new_with_options(w, h, config, policy, false, true).unwrap();
+            let mut merge = SessionMerge::new_with_attribution(w, h, config, true).unwrap();
+            for i in 0..2 {
+                let pixels = image(w, h, |_, _, _| if i == 0 { 1000.0 } else { 5000.0 });
+                source
+                    .prepare(
+                        SourceKey {
+                            acquisition: i as u64,
+                            bracket: i,
+                        },
+                        std::array::from_fn(|c| pixels[c].as_slice()),
+                        &noise(1.0),
+                        None,
+                        &supported,
+                        1.0,
+                    )
+                    .unwrap();
+                merge.add_source(&mut group, &source).unwrap();
+            }
+            merge.fold_group(&mut group).unwrap();
+            let out = merge.finish().unwrap();
+            let a = &out.attribution.as_ref().unwrap()[0].coefficients[0];
+            assert_eq!(a.kind, AttributionKind::PlainMean);
+            assert_eq!(a.accepted_repeat_fraction, 0.0);
+            assert_eq!(a.fixed_guide_fraction, 0.0);
+            assert_eq!(
+                a.contributing_sources,
+                if primary.is_some() { 1 } else { 2 }
+            );
+            assert_eq!(
+                a.primary_fraction,
+                if primary.is_some() { 1.0 } else { 0.0 }
+            );
+            assert_eq!(
+                out.planes[0][0],
+                if primary.is_some() { 1000.0 } else { 3000.0 }
+            );
+
+            let mut coverage = supported.clone();
+            coverage[0] = false;
+            let clipped = vec![false; w * h];
+            let pixels = image(w, h, |_, _, _| 15000.0);
+            let mut group =
+                GroupWorkspace::new_with_options(w, h, config, policy, false, true).unwrap();
+            let mut merge = SessionMerge::new_with_attribution(w, h, config, true).unwrap();
+            source
+                .prepare_with_masks(
+                    SourceKey {
+                        acquisition: 7,
+                        bracket: 0,
+                    },
+                    std::array::from_fn(|c| pixels[c].as_slice()),
+                    &noise(1.0),
+                    None,
+                    None,
+                    &coverage,
+                    &clipped,
+                    1.0,
+                )
+                .unwrap();
+            merge.add_source(&mut group, &source).unwrap();
+            merge.fold_group(&mut group).unwrap();
+            let out = merge.finish().unwrap();
+            let maps = out.attribution.as_ref().unwrap();
+            assert_eq!(maps[0].coefficients[0].kind, AttributionKind::Uncovered);
+            let a = &maps[0].coefficients[1];
+            assert_eq!(
+                a.kind,
+                if primary.is_some() {
+                    AttributionKind::SaturatedPrimary
+                } else {
+                    AttributionKind::SaturatedMean
+                }
+            );
+            assert!(!a.variance_valid);
+            assert!(a.conditional_variance[0].is_nan());
+            assert!(a.effective_sources.is_nan());
+            assert_eq!(a.contributing_sources, 0);
+        }
+    }
+
+    #[test]
+    fn attribution_is_bitwise_nonperturbing_on_textured_multiband_fusion() {
+        let (w, h) = (64, 64);
+        let config = cfg();
+        let support = vec![true; w * h];
+        let policy = GroupPolicy {
+            agreement_sigma: 1.0,
+            ..GroupPolicy::default()
+        };
+        let run = |attribution| {
+            let mut source = PreparedSource::new(w, h, config).unwrap();
+            let mut group =
+                GroupWorkspace::new_with_options(w, h, config, policy, true, attribution).unwrap();
+            let mut merge = SessionMerge::new_with_attribution(w, h, config, attribution).unwrap();
+            for i in 0..4 {
+                let pixels = image(w, h, |c, x, y| {
+                    2000.0
+                        + c as f32 * 20.0
+                        + 100.0 * (x as f32 * 0.4).sin()
+                        + 150.0 * (y as f32 * 0.3).cos()
+                        + if x > 32 && i % 2 == 1 {
+                            50.0 * ((x + y) % 2) as f32
+                        } else {
+                            0.0
+                        }
+                });
+                source
+                    .prepare(
+                        SourceKey {
+                            acquisition: i as u64,
+                            bracket: i % 2,
+                        },
+                        std::array::from_fn(|c| pixels[c].as_slice()),
+                        &noise(4.0),
+                        None,
+                        &support,
+                        1.0,
+                    )
+                    .unwrap();
+                merge.add_source(&mut group, &source).unwrap();
+                if i % 2 == 1 {
+                    merge.fold_group(&mut group).unwrap();
+                }
+            }
+            merge.finish().unwrap()
+        };
+        let off = run(false);
+        let on = run(true);
+        assert_eq!(off.valid, on.valid);
+        for c in 0..4 {
+            assert!(
+                off.planes[c]
+                    .iter()
+                    .zip(&on.planes[c])
+                    .all(|(a, b)| a.to_bits() == b.to_bits())
+            );
+        }
+        let maps = on.attribution.unwrap();
+        assert!(
+            maps.iter()
+                .flat_map(|m| &m.coefficients)
+                .any(|a| a.kind == AttributionKind::Weighted)
+        );
+        assert!(
+            maps.iter()
+                .flat_map(|m| &m.coefficients)
+                .any(|a| a.kind == AttributionKind::PlainMean)
+        );
+        let averaged: Vec<_> = maps
+            .iter()
+            .flat_map(|m| &m.coefficients)
+            .filter(|a| a.kind == AttributionKind::Weighted && a.accepted_repeat_fraction == 1.0)
+            .collect();
+        assert!(!averaged.is_empty());
+        for a in averaged {
+            assert_eq!(a.contributing_sources, 4);
+            assert_eq!(a.contributing_groups, 2);
+            assert!((a.effective_sources - 4.0).abs() < 1e-5);
+            assert!((a.effective_groups - 2.0).abs() < 1e-6);
+            assert!((a.dominant_group_fraction - 0.5).abs() < 1e-6);
+        }
+
+        assert_eq!(
+            off.diagnostics
+                .iter()
+                .map(|d| d.averaged_coefficients)
+                .collect::<Vec<_>>(),
+            on.diagnostics
+                .iter()
+                .map(|d| d.averaged_coefficients)
+                .collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn attribution_requires_group_tracking_before_any_registration_mutation() {
+        let (w, h) = (16, 16);
+        let config = cfg();
+        let pixels = image(w, h, |_, _, _| 2000.0);
+        let support = vec![true; w * h];
+        let mut source = PreparedSource::new(w, h, config).unwrap();
+        source
+            .prepare(
+                SourceKey {
+                    acquisition: 0,
+                    bracket: 0,
+                },
+                std::array::from_fn(|c| pixels[c].as_slice()),
+                &noise(4.0),
+                None,
+                &support,
+                1.0,
+            )
+            .unwrap();
+        let mut group = GroupWorkspace::new(w, h, config, GroupPolicy::default()).unwrap();
+        let mut merge = SessionMerge::new_with_attribution(w, h, config, true).unwrap();
+        assert!(merge.add_source(&mut group, &source).is_err());
+        assert_eq!(group.source_count(), 0);
+        assert!(merge.source_ids.is_empty());
+        assert!(
+            attribution_workspace_bytes(usize::MAX, 2, config, GroupPolicy::default()).is_err()
+        );
+    }
 
     fn cfg() -> MergeConfig {
         MergeConfig {

@@ -24,6 +24,22 @@ pub(crate) fn validate_automation_launch(launch: &mut LaunchOptions) -> Result<(
         launch.agent || (launch.agent_session_out.is_none() && launch.agent_grants.is_empty()),
         "Agent session and grant options require --agent or --headless"
     );
+    crate::agent_interface::AgentCommand::InspectSessionDiagnostic {
+        map: launch.diagnostic_map.clone(),
+        opacity: launch.diagnostic_opacity,
+        sample_uv: launch.diagnostic_sample,
+    }
+    .validate()
+    .map_err(anyhow::Error::msg)?;
+    ensure!(
+        launch
+            .photo_zoom
+            .is_none_or(|v| v.is_finite() && (1.0..=8.0).contains(&v))
+            && launch
+                .photo_center
+                .is_none_or(|p| p.iter().all(|v| v.is_finite() && (0.0..=1.0).contains(v))),
+        "Photograph zoom must be 1..8 and its center normalized"
+    );
     for path in &mut launch.agent_grants {
         *path = path
             .canonicalize()
@@ -37,6 +53,16 @@ pub(crate) fn validate_automation_launch(launch: &mut LaunchOptions) -> Result<(
             "Session publication already exists; choose a fresh --agent-session-out path"
         );
     }
+    ensure!(
+        launch.diagnostic_map.is_none()
+            || (!launch.headless && launch.screenshot.is_some() && launch.open_run.is_some()),
+        "Diagnostic screenshot selection requires --open-run and a screenshot destination"
+    );
+    ensure!(
+        (launch.diagnostic_opacity.is_none() && launch.diagnostic_sample.is_none())
+            || launch.diagnostic_map.is_some(),
+        "Diagnostic opacity/sample requires --diagnostic-map"
+    );
     if launch.headless {
         ensure!(
             launch.agent_session_out.is_some(),
@@ -196,6 +222,7 @@ impl StrehlApp {
                 && self.pending_result.is_none()
                 && self.editor.loading.is_none()
                 && self.editor.developing.is_none()
+                && !self.process_space.diagnostics_loading()
                 && self.editor.exporting.is_none()
                 && self.editor.preset.is_none()
                 && self.editor.saving.is_none()

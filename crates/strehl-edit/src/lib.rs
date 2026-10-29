@@ -7,6 +7,8 @@ mod color;
 #[path = "display-region.rs"]
 mod display_region;
 mod export;
+#[path = "scalar-tiff.rs"]
+mod scalar_tiff;
 mod icc;
 mod image;
 #[path = "learned-asset.rs"]
@@ -32,7 +34,8 @@ pub use adaptive::{
 pub use avif::{HdrExportReport, export_hdr_avif};
 pub use color::OutputColorSpace;
 pub use display_region::{DisplayRegion, DisplayRegionRequest};
-pub use export::{ExportFormat, ExportReport, ExportSettings, export_image};
+pub use export::{ExportFormat, ExportReport, ExportSettings, export_image, export_image_with_coverage};
+pub use scalar_tiff::{ScalarImage, ScalarSamples, read_scalar_tiff};
 pub use image::{
     DisplayBaseline, ImageOrigin, LinearImage, load_tiff, load_tiff_thumbnail, save_linear_tiff,
     save_sdr_tiff,

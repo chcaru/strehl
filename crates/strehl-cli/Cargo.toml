@@ -88,3 +88,7 @@ path = "../../experiments/rea-a7c2-2026-10-24-q/native-roi/raw-roi-export.rs"
 [[example]]
 name = "native-cfa-develop"
 path = "../../experiments/raw-quality-2026-10-27/native-spectral-fusion/pilot/native-cfa-develop.rs"
+
+[[example]]
+name = "session-reconstruction-roi"
+path = "../../experiments/multi-stack-2026-10-28/completion/sr/roi-pilot.rs"

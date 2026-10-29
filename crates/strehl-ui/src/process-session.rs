@@ -68,7 +68,7 @@ impl ProcessSpace {
                 .id_salt("session-saved-summary")
                 .show(ui, |ui| {
                     ui.label(
-                        egui::RichText::new("JOINT ALIGNMENT")
+                        egui::RichText::new(if summary.mode == SessionMode::Mosaic { "MOSAIC COVERAGE" } else if summary.mode == SessionMode::IndependentViews { "INDEPENDENT VIEWS" } else { "JOINT ALIGNMENT" })
                             .monospace()
                             .size(10.0)
                             .color(ACCENT),
@@ -82,12 +82,18 @@ impl ProcessSpace {
                         ui.label(format!("{} measured pair fits", geometry.measured_edges));
                         ui.label(format!("{} independent graph cycles", geometry.cycle_rank));
                     } else {
-                        ui.label(if summary.ordinary_delegate {
+                        ui.label(if summary.mode == SessionMode::Mosaic {
+                            "Per-view focus alignment and measured view overlap. Inspect saved coverage and join status."
+                        } else if summary.mode == SessionMode::IndependentViews {
+                            "Each photograph has its own alignment and focus coordinates. Relative pose and intrinsics are not inferred."
+                        } else if summary.ordinary_delegate {
                             "Ordinary single-pass alignment"
                         } else {
                             "Joint alignment report unavailable"
                         });
                     }
+                    if let Some(scope) = &summary.provenance { ui.label(egui::RichText::new(scope).size(10.0).color(MUTED)); }
+                    self.saved_diagnostics.controls(ui, self.output_path.as_deref());
                     ui.add_space(10.0);
                     ui.label(
                         egui::RichText::new("SAVED PASSES")
@@ -126,7 +132,11 @@ impl ProcessSpace {
                     }
                     ui.add_space(7.0);
                     ui.label(
-                        egui::RichText::new(if summary.primary.is_some() {
+                        egui::RichText::new(if summary.mode == SessionMode::Mosaic {
+                            "No primary pass. Checkerboard denotes unsupported coverage."
+                        } else if summary.mode == SessionMode::IndependentViews {
+                            "Separate view coordinates; no common primary or metric depth."
+                        } else if summary.primary.is_some() {
                             if summary.mode == SessionMode::Layers {
                                 "★ Primary sets the common reference and initially displayed layer."
                             } else {
@@ -148,13 +158,13 @@ impl ProcessSpace {
                     }
                     ui.add_space(12.0);
                     ui.label(
-                        egui::RichText::new(format!("CAMERA ORIGINAL {:03}", input.selected + 1))
+                        egui::RichText::new(if input.frame_count == 0 { "CAMERA ORIGINALS · not loaded".into() } else { format!("CAMERA ORIGINAL {:03}", input.selected + 1) })
                             .monospace()
                             .size(10.0)
                             .color(MUTED),
                     );
                     ui.label(
-                        egui::RichText::new("Unregistered capture preview")
+                        egui::RichText::new(if input.frame_count == 0 { "Saved provenance does not load original captures." } else { "Unregistered capture preview" })
                             .size(9.0)
                             .color(MUTED),
                     );
@@ -176,7 +186,12 @@ impl ProcessSpace {
         let photo = Rect::from_min_max(egui::pos2(side.right() + 16.0, body.top()), body.max);
         let title = if let Some(index) = layer {
             format!(
-                "Layer {} of {} · {} · {} captures",
+                "{} {} of {} · {} · {} captures",
+                if summary.mode == SessionMode::IndependentViews {
+                    "View"
+                } else {
+                    "Layer"
+                },
                 index + 1,
                 summary.outputs.len(),
                 summary.passes[index].name,
@@ -210,6 +225,12 @@ impl ProcessSpace {
             self.theater
                 .show_with_ribbon(ui, photograph, &saved, response, None);
             self.theater.update_balance(ui.ctx(), None, None);
+            self.saved_diagnostics.overlay(
+                ui,
+                self.theater.edit_mapping,
+                photograph,
+                self.theater.saved_overlay_exclusion,
+            );
         } else {
             ui.painter().text(
                 photograph.center(),
@@ -224,7 +245,9 @@ impl ProcessSpace {
             scene.max - egui::vec2(12.0, 5.0),
         );
         ui.scope_builder(egui::UiBuilder::new().max_rect(timeline), |ui| {
-            ui.label(egui::RichText::new(if layer.is_some() {
+            ui.label(egui::RichText::new(if input.frame_count == 0 {
+                "CAPTURE PROVENANCE · camera previews not loaded"
+            } else if layer.is_some() {
                 "ALL SESSION CAPTURES · other-pass thumbnails dimmed · admission overlays unavailable"
             } else { "ALL SESSION CAPTURES · camera previews · admission overlays unavailable" }).monospace().size(9.0).color(MUTED));
             let (strip, _) = ui.allocate_exact_size(egui::vec2(ui.available_width(), 20.0), egui::Sense::hover());
@@ -236,14 +259,14 @@ impl ProcessSpace {
                 ui.painter().with_clip_rect(rect).text(rect.center(), egui::Align2::CENTER_CENTER,
                     format!("{}{} · {}–{}", if summary.primary == Some(i) { "★ " } else { "" }, pass.name, pass.range.start + 1, pass.range.end),
                     egui::FontId::proportional(10.0), if layer == Some(i) { ACCENT } else { MUTED });
-                if ui.interact(rect, ui.id().with(("saved-session-pass", i)), egui::Sense::click()).clicked() {
+                if input.frame_count > pass.range.start && ui.interact(rect, ui.id().with(("saved-session-pass", i)), egui::Sense::click()).clicked() {
                     response.selected = Some(pass.range.start + pass.range.len() / 2);
                 }
             }
             self.session_contacts.clear();
             egui::ScrollArea::horizontal().id_salt("saved-session-captures").auto_shrink([false, false]).show_viewport(ui, |ui, viewport| {
                 let stride = 112.0_f32;
-                let (row, _) = ui.allocate_exact_size(egui::vec2(summary.frames as f32 * stride, 91.0), egui::Sense::hover());
+                let (row, _) = ui.allocate_exact_size(egui::vec2(summary.frames.min(input.frame_count) as f32 * stride, 91.0), egui::Sense::hover());
                 let first = (viewport.left() / stride).floor().max(0.0) as usize;
                 let last = ((viewport.right() / stride).ceil() as usize).min(summary.frames).min(input.frame_count);
                 for index in first..last {

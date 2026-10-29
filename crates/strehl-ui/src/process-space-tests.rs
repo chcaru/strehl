@@ -2154,3 +2154,38 @@ fn completed_source_drag_links_actual_camera_pixels_to_admission_and_is_undoable
 
 #[path = "process-metadata-tests.rs"]
 mod camera_metadata;
+
+#[test]
+fn session_view_process_canvas_labels_local_scope_and_resets_previous_phase() {
+    let ctx = egui::Context::default();
+    let mut space = ProcessSpace::default();
+    let mut progress = PipelineProgress::default();
+    progress.ingest("STREHL_UI_VIEW {\"schema\":\"strehl.ui-view-progress.v1\",\"index\":0,\"count\":2,\"name\":\"First\",\"source_offset\":0,\"source_count\":2,\"parent_total\":5}\nSTREHL_UI_PROGRESS event=stage name=render total=2\n");
+    draw(
+        &mut space,
+        &ctx,
+        Input {
+            frame_count: 2,
+            ..input(&progress)
+        },
+        0.0,
+        vec![],
+    );
+    assert!(space.visited.contains(&Stage::Rendering));
+    progress.ingest("STREHL_UI_VIEW {\"schema\":\"strehl.ui-view-progress.v1\",\"index\":1,\"count\":2,\"name\":\"Top green\",\"source_offset\":2,\"source_count\":3,\"parent_total\":5}\n");
+    let (_, output) = draw(
+        &mut space,
+        &ctx,
+        Input {
+            frame_count: 3,
+            ..input(&progress)
+        },
+        0.1,
+        vec![],
+    );
+    assert!(!space.visited.contains(&Stage::Rendering));
+    text(
+        &output,
+        "View 2 / 2 · Top green · 3 captures in this view · parent captures 3–5 of 5 · local phase and capture numbers below",
+    );
+}

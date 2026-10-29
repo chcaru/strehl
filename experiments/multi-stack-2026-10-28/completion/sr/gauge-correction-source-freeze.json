@@ -1,0 +1,26 @@
+{
+  "schema": "strehl.sr-gauge-correction-source-freeze.v1",
+  "status": "source-only; root numerical checks pending",
+  "old_kernel_sha256": "52d7eedbe25f18db72b901ee7e91b0a444fd69f4750d99e1f2a0f23d7e311b8c",
+  "native_contract": [
+    "crates/strehl-core/src/align.rs fitting centre width/2",
+    "crates/strehl-core/src/warpmap.rs gather_checked centre width/2",
+    "crates/strehl-cli/src/session-sampling.rs NativeSampler centre width/2"
+  ],
+  "files": {
+    "kernel-reconstruction.rs": "f2d367468354f4866e0dbedf561bf65fd6cd6fe9ea7acde14e47c838c736034e",
+    "kernel-reconstruction-tests.rs": "83bd289bceb0f47e21db5468a2384fd53de8e9c0da88d2221bb7557ec05a59a8",
+    "gauge-integration-tests.rs": "50bcbf91be7e9f86abffc7611fcd35e6f9b36d77039825c2c8819c3198c87b59",
+    "roi-pilot.rs": "9576cfac111da94ade39e9107833ed1505a7b5454aec551c05d0162135e30b46",
+    "phase-opportunity.py": "b6aa83e6273143f3f1595fea509310b6a3fdc9996b7b70152416919171f35f76",
+    "phase-opportunity.json": "ba176de0207a4d66eba4b43cccee6b2c379a267fe76cdfa8e093a7309a246303",
+    "phase-opportunity-centroid-v0.json": "40c029b37e718ed6a383795a2653b0379bb6f6e65e31ebb1be18ee9d9e327bec"
+  },
+  "phase_rerun": {
+    "command": "python -X faulthandler -I experiments/multi-stack-2026-10-28/completion/sr/phase-opportunity.py",
+    "exit_code": 0,
+    "workers": 1,
+    "elapsed_seconds": 0.16584660002263263,
+    "headline_counts_unchanged": true
+  }
+}

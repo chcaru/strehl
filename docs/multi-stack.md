@@ -10,9 +10,12 @@ in development builds; the alpha.6 download predates them.
 | Mode | Result | Suitable inputs |
 | --- | --- | --- |
 | Combine detail | One photograph and scene-linear master, with captures admitted separately across focus. | Related passes with equal camera, lens, ISO, aperture and shutter time. |
+| Interleaved focus | One photograph from complementary focus positions, retaining each pass's order. | Offset focus ladders that fill one another's missing focus coverage. |
 | Repeated captures | One photograph and master; proposed matching observations are averaged only where their coefficients agree with the injected noise model. | Repeated focus sweeps of a static subject under stable lighting. |
 | Exposure range | One photograph and master from compatible exposure passes, excluding clipped samples when an unclipped observation is available. | The same camera, lens, ISO and aperture, with different shutter times and stable lighting. |
 | Aligned layers | One photograph and master per pass on a shared canvas. | Aperture, exposure, polarizer or lighting changes that should retain separate appearances. |
+| Wider mosaic | An experimental wider canvas with measured overlap, focus-dependent geometry and explicit coverage. | Overlapping views with enough independently supported native correspondence; unsuitable overlap is refused. |
+| Independent views | One photograph, master and focus/geometry bundle per viewpoint, each in its own coordinates. | Different subject angles that should remain separate, including inputs for external photogrammetry. |
 
 Exposure range validates a bounded correction to the nominal shutter ratio.
 It tests supported color/brightness consistency on separate spatial patches
@@ -46,8 +49,8 @@ focus captures can still contribute. This preference does not lock every pixel
 to the primary photograph, and it cannot replace missing focus coverage.
 
 For aligned layers, the choice sets the shared reference and initially viewed
-layer; each layer keeps its own appearance. Sessions do not currently provide
-stitching, so a primary preference is never applied to a mosaic.
+layer; each layer keeps its own appearance. Wider mosaic and Independent views
+have no primary preference. Switching to either mode clears it.
 
 ## In the desktop
 
@@ -60,6 +63,9 @@ stitching, so a primary preference is never applied to a mosaic.
    primary and resources. Each new run has its own outputs and reports.
 5. For aligned layers, choose the saved layer to inspect or develop. Source
    groups on the timeline retain pass boundaries and continuation order.
+6. For independent views, select a view to inspect its own photograph and maps.
+   **Export view bundle…** copies the complete bound result to a fresh folder;
+   the copied bundle can be imported again after relocation.
 
 A changed source list requires a reload. The worker verifies its completed
 source census before publishing a saved result. Returning to an ordinary stack
@@ -70,6 +76,41 @@ limits, automatic exposure, source-repair recipes and ordinary coverage controls
 are unavailable for sessions. Develop and export the retained photographs
 after stacking. Session controls explain these restrictions rather than
 silently ignoring settings.
+
+## Optional evidence and reconstruction
+
+**Weight repeats by predicted noise** uses separate guide acquisitions to predict
+noise for compatible repeated observations. It is available for Repeated
+captures and Exposure range. Disagreement still prevents averaging. The guides
+and adaptive admission mean a saved conditional variance is not an unconditional
+noise estimate for the final developed photograph.
+
+**Save contribution maps** records source/group influence by detail scale.
+It also retains `sensor-master.tiff`: the signed, black-subtracted native CFA
+merge before demosaicing, white balance and display exposure. The report records
+its coordinate origin and applied per-pass photometric gains. When original-CFA
+reconstruction is enabled, this diagnostic remains the native merge baseline;
+the later reconstructed RGB photograph and linear master are separate outputs.
+**Save focus evidence** records per-pass focus ordinals, support and ambiguity.
+An ordinal identifies a position in that pass's capture order; it is not a
+distance or metric depth. **Compare the first two passes** adds reproducible
+detail and disagreement maps and frequency curves. Shared processing or fixed
+pattern noise can increase agreement, so these curves are not resolution tests.
+
+**Original-CFA reconstruction (experimental)** estimates supported color directly
+from the original sensor samples in Combine, Interleaved, Repeated and Exposure
+range modes. It retains native output dimensions and keeps the ordinary stacked
+RGB pixel wherever focus, phase diversity, geometry or appearance support fails.
+Saved support and fallback-reason overlays show where it was used. It adds work
+and does not guarantee more detail; the complete chart experiment so far showed
+verified sparse replacement without a clearly visible detail improvement.
+
+Wider mosaic computes its own focus and coverage evidence. Its implementation
+and supplied-capture validation are still under active development; a connected
+overlap graph alone is not sufficient to publish a qualified mosaic. Unsupported
+canvas regions remain transparent. Independent views always retain separate
+gauges, with unknown relative pose explicitly recorded; the bundle does not
+perform 3-D reconstruction.
 
 ## Command line
 
@@ -88,8 +129,9 @@ absolute paths are also accepted.
 }
 ```
 
-The mode values are `combine`, `repeat`, `hdr` and `layers`.
-`primary_pass` is null or a zero-based pass index.
+The mode values are `combine`, `interleave`, `repeat`, `hdr`, `layers`, `mosaic`
+and `independent_views`. `primary_pass` is null or a zero-based pass index;
+it must be null for `mosaic` and `independent_views`.
 
 ```powershell
 strehl session inspect session.json --hash-sources --out inspection.json
@@ -112,6 +154,14 @@ resampler, settings and implementation binding. Otherwise the command refuses
 it. Without `--alignment`, the persistent cache reuses only geometry that passes
 the same checks.
 
+Optional flags are `--precision-weights`, `--contribution-maps`,
+`--focus-evidence`, `--reproducibility` and `--original-cfa-reconstruction`.
+The CLI validates mode/option combinations before processing. For example:
+
+```powershell
+strehl session stack repeat-session.json --out-dir results/repeat-02 --cache cache/session --threads 16 --memory-limit-gib 32 --precision-weights --contribution-maps --focus-evidence
+```
+
 Ordinary one-pass, one-folder Combine/Repeat sessions delegate to the unchanged
 single-stack pipeline. Their session memory limit does not change that
 pipeline's existing memory planner.
@@ -121,6 +171,10 @@ pipeline's existing memory planner.
 A fused run contains `photograph.tiff` and `master.tiff`. Layers contain these
 files in `layer-01`, `layer-02`, and so on. The photograph is an SDR rendering;
 the master retains scene-linear values for later development and HDR export.
+Independent views use one child result per view and a parent manifest binding
+their own source identities, calibration, coordinate systems and focus maps.
+The view bundle export copies these completed results, without copying RAW files
+or personal development edits. A preexisting destination is refused.
 
 The run also retains the resolved session, full original-file hashes,
 calibration, alignment, fusion diagnostics and a completion receipt. A failed
@@ -142,8 +196,10 @@ Cache corruption is rejected. Removing an idle session cache causes later
 renders to rebuild it.
 
 CPU workers handle the engine's direct gathers and coefficient fusion; the
-desktop viewer uses the GPU. This implementation does not promise GPU fusion,
-super-resolution, calibrated depth or depth-aware stitching.
+desktop viewer uses the GPU. Original-CFA reconstruction can retain more original
+sources when the memory budget permits, which avoids repeated cache reads across
+concurrent tiles. Its per-estimator source cap remains bounded. The implementation
+does not currently use the GPU for engine fusion or provide calibrated depth.
 
 ## Evidence and limitations
 
@@ -154,3 +210,6 @@ hypotheses. Large viewpoint changes, uncontrolled motion and changing
 reflections may not fit the shared geometry. Aligned layers preserve useful
 separate results when fusion is inappropriate; they are not a 3-D registration
 or reconstruction system.
+
+Current completion status and the limits of the measured outcomes are recorded
+in the [requirements and evidence matrix](../experiments/multi-stack-2026-10-28/completion/review/requirements-completion.md).

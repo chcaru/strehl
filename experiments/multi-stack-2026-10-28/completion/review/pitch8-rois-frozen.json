@@ -1,0 +1,207 @@
+{
+  "schema": "strehl.completion-photographic-rois.v1",
+  "selection": "Frozen after viewing first-half even8 locator ONLY. Reuse nine preregistered broad scene regions from previous controls; no candidate pixels seen. New map slightly changes scene gauge; same coordinate in both halves and fusion, dense mapping approximate landmark-only.",
+  "transform_file": "outputs/multi-stack/completion/pitch8-independent-review/transform.json",
+  "transform_sha256": "4718d2059d66728a57a1542866b9ce1a7430e7a39b137729272d27e23f80acb3",
+  "dense_gauge": "Different fitted map and full7032x4688 domain. Dense centers are normalized broad-landmark matching to its control overview, not registered pixel correspondences. Native pixel slices only; no dense/candidate pixel differences permitted.",
+  "rois": [
+    {
+      "name": "flat-gray",
+      "size": 384,
+      "origins": {
+        "even8": [
+          1058,
+          408
+        ],
+        "offset4": [
+          1058,
+          408
+        ],
+        "combined": [
+          1058,
+          408
+        ],
+        "dense": [
+          1101,
+          428
+        ]
+      }
+    },
+    {
+      "name": "qr-grid",
+      "size": 384,
+      "origins": {
+        "even8": [
+          3908,
+          458
+        ],
+        "offset4": [
+          3908,
+          458
+        ],
+        "combined": [
+          3908,
+          458
+        ],
+        "dense": [
+          4048,
+          480
+        ]
+      }
+    },
+    {
+      "name": "qr-corner",
+      "size": 384,
+      "origins": {
+        "even8": [
+          4608,
+          1108
+        ],
+        "offset4": [
+          4608,
+          1108
+        ],
+        "combined": [
+          4608,
+          1108
+        ],
+        "dense": [
+          4772,
+          1152
+        ]
+      }
+    },
+    {
+      "name": "fine-radial-labels",
+      "size": 384,
+      "origins": {
+        "even8": [
+          3708,
+          1908
+        ],
+        "offset4": [
+          3708,
+          1908
+        ],
+        "combined": [
+          3708,
+          1908
+        ],
+        "dense": [
+          3841,
+          1979
+        ]
+      }
+    },
+    {
+      "name": "fine-bars",
+      "size": 384,
+      "origins": {
+        "even8": [
+          5708,
+          1908
+        ],
+        "offset4": [
+          5708,
+          1908
+        ],
+        "combined": [
+          5708,
+          1908
+        ],
+        "dense": [
+          5909,
+          1979
+        ]
+      }
+    },
+    {
+      "name": "bright-dots",
+      "size": 384,
+      "origins": {
+        "even8": [
+          1108,
+          2208
+        ],
+        "offset4": [
+          1108,
+          2208
+        ],
+        "combined": [
+          1108,
+          2208
+        ],
+        "dense": [
+          1152,
+          2290
+        ]
+      }
+    },
+    {
+      "name": "dark-dot-field",
+      "size": 384,
+      "origins": {
+        "even8": [
+          4008,
+          3258
+        ],
+        "offset4": [
+          4008,
+          3258
+        ],
+        "combined": [
+          4008,
+          3258
+        ],
+        "dense": [
+          4151,
+          3375
+        ]
+      }
+    },
+    {
+      "name": "lower-radial",
+      "size": 384,
+      "origins": {
+        "even8": [
+          1208,
+          4008
+        ],
+        "offset4": [
+          1208,
+          4008
+        ],
+        "combined": [
+          1208,
+          4008
+        ],
+        "dense": [
+          1256,
+          4151
+        ]
+      }
+    },
+    {
+      "name": "fine-grid",
+      "size": 384,
+      "origins": {
+        "even8": [
+          2658,
+          1908
+        ],
+        "offset4": [
+          2658,
+          1908
+        ],
+        "combined": [
+          2658,
+          1908
+        ],
+        "dense": [
+          2755,
+          1979
+        ]
+      }
+    }
+  ]
+}

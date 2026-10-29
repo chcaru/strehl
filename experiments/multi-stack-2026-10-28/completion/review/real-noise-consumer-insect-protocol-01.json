@@ -1,0 +1,394 @@
+{
+  "schema": "strehl.real-noise-insect-qualification-protocol.v1",
+  "render": "outputs\\multi-stack\\insect-repeat-7",
+  "cache": "outputs/multi-stack/full-source-cache",
+  "historical_cache_policy": "Explicit existing audited historical reader only; exact lock-minus-core-sha2/raw decoder equivalence, source identities/stamps, full cache envelope/payload digests; no cache relabel and no RAW decode.",
+  "windows": [
+    {
+      "base": 36,
+      "guides_local": [
+        36,
+        38,
+        40,
+        42,
+        44
+      ],
+      "validation_local": [
+        37,
+        41
+      ],
+      "measurement_local_not_loaded": [
+        39,
+        43
+      ]
+    },
+    {
+      "base": 76,
+      "guides_local": [
+        76,
+        78,
+        80,
+        82,
+        84
+      ],
+      "validation_local": [
+        77,
+        81
+      ],
+      "measurement_local_not_loaded": [
+        79,
+        83
+      ]
+    },
+    {
+      "base": 116,
+      "guides_local": [
+        116,
+        118,
+        120,
+        122,
+        124
+      ],
+      "validation_local": [
+        117,
+        121
+      ],
+      "measurement_local_not_loaded": [
+        119,
+        123
+      ]
+    },
+    {
+      "base": 156,
+      "guides_local": [
+        156,
+        158,
+        160,
+        162,
+        164
+      ],
+      "validation_local": [
+        157,
+        161
+      ],
+      "measurement_local_not_loaded": [
+        159,
+        163
+      ]
+    },
+    {
+      "base": 196,
+      "guides_local": [
+        196,
+        198,
+        200,
+        202,
+        204
+      ],
+      "validation_local": [
+        197,
+        201
+      ],
+      "measurement_local_not_loaded": [
+        199,
+        203
+      ]
+    },
+    {
+      "base": 236,
+      "guides_local": [
+        236,
+        238,
+        240,
+        242,
+        244
+      ],
+      "validation_local": [
+        237,
+        241
+      ],
+      "measurement_local_not_loaded": [
+        239,
+        243
+      ]
+    }
+  ],
+  "pass_global_offsets": [
+    0,
+    299
+  ],
+  "rois": [
+    {
+      "name": "dark-flat-background",
+      "original_witness_origin_sensor": [
+        5750,
+        600
+      ],
+      "domain_quad": [
+        2907,
+        332,
+        128,
+        128
+      ]
+    },
+    {
+      "name": "cyan-wing-scales",
+      "original_witness_origin_sensor": [
+        3100,
+        2050
+      ],
+      "domain_quad": [
+        1582,
+        1057,
+        128,
+        128
+      ]
+    },
+    {
+      "name": "dark-wing-band",
+      "original_witness_origin_sensor": [
+        2730,
+        2150
+      ],
+      "domain_quad": [
+        1397,
+        1107,
+        128,
+        128
+      ]
+    },
+    {
+      "name": "upper-leg-hairs",
+      "original_witness_origin_sensor": [
+        1570,
+        690
+      ],
+      "domain_quad": [
+        817,
+        377,
+        128,
+        128
+      ]
+    },
+    {
+      "name": "wing-leg-occlusion",
+      "original_witness_origin_sensor": [
+        2500,
+        2800
+      ],
+      "domain_quad": [
+        1282,
+        1432,
+        128,
+        128
+      ]
+    },
+    {
+      "name": "bright-wing-glint",
+      "original_witness_origin_sensor": [
+        3400,
+        1460
+      ],
+      "domain_quad": [
+        1732,
+        762,
+        128,
+        128
+      ]
+    },
+    {
+      "name": "blue-cyan-chroma",
+      "original_witness_origin_sensor": [
+        2480,
+        810
+      ],
+      "domain_quad": [
+        1272,
+        437,
+        128,
+        128
+      ]
+    },
+    {
+      "name": "face-edge",
+      "original_witness_origin_sensor": [
+        5100,
+        2990
+      ],
+      "domain_quad": [
+        2582,
+        1527,
+        128,
+        128
+      ]
+    },
+    {
+      "name": "antenna-hairs",
+      "original_witness_origin_sensor": [
+        5290,
+        2470
+      ],
+      "domain_quad": [
+        2677,
+        1267,
+        128,
+        128
+      ]
+    }
+  ],
+  "nomination": "All nine earlier whole-photo witnesses retained; central256sensor area of each384 witness in shared full sensor gauge. Nominal subject selection only, not ground-truth correspondence. No region discarded for darkness/texture/appearance.",
+  "recipe": "Unchanged frozen source gate and thresholds; source-only guides/validation first, current measurement photons excluded. Stream each source across all nine ROIs.",
+  "workers": 4,
+  "memory_limit_bytes": 2147483648,
+  "calibrated_levels": [
+    {
+      "black": 512.0,
+      "camera": "ILCE-7CM2",
+      "color_matrix": [
+        [
+          [
+            0.7459999918937683,
+            -0.23649999499320984,
+            -0.058800000697374344
+          ],
+          [
+            -0.5687000155448914,
+            1.3442000150680542,
+            0.24740000069141388
+          ],
+          [
+            -0.06239999830722809,
+            0.11559999734163284,
+            0.6583999991416931
+          ]
+        ],
+        "decoder color_matrix[D65]"
+      ],
+      "iso": 100.0,
+      "noise_model": "NoiseModel { planes: [PlaneNoise { gain_dn_per_e: 0.22893773, read_noise_e: 4.2, levels: Levels { black: 512.0, white: 15360.0 } }, PlaneNoise { gain_dn_per_e: 0.22893773, read_noise_e: 4.2, levels: Levels { black: 512.0, white: 15360.0 } }, PlaneNoise { gain_dn_per_e: 0.22893773, read_noise_e: 4.2, levels: Levels { black: 512.0, white: 15360.0 } }, PlaneNoise { gain_dn_per_e: 0.22893773, read_noise_e: 4.2, levels: Levels { black: 512.0, white: 15360.0 } }], prnu: None, iso: 100.0, provenance: Profile }",
+      "noise_planes": [
+        {
+          "black": 512.0,
+          "gain_dn_per_e": 0.22893773019313812,
+          "plane": "R",
+          "read_noise_e": 4.199999809265137,
+          "white": 15360.0
+        },
+        {
+          "black": 512.0,
+          "gain_dn_per_e": 0.22893773019313812,
+          "plane": "G1",
+          "read_noise_e": 4.199999809265137,
+          "white": 15360.0
+        },
+        {
+          "black": 512.0,
+          "gain_dn_per_e": 0.22893773019313812,
+          "plane": "B",
+          "read_noise_e": 4.199999809265137,
+          "white": 15360.0
+        },
+        {
+          "black": 512.0,
+          "gain_dn_per_e": 0.22893773019313812,
+          "plane": "G2",
+          "read_noise_e": 4.199999809265137,
+          "white": 15360.0
+        }
+      ],
+      "optical_profile": {
+        "applied_record": "OpticalProfile { key: \"a7c2-fe100gm-2xtc-x4cpl\", optical_path: \"Sony A7C II + FE 100mm F2.8 Macro GM + 2x Viltrox teleconverter + Breakthrough X4 circular polariser\", measured_from: \"M107 Instrument A: 20 gated ROIs over tweezers-cpl and bee-3-cpl (red); BUILD-CHROMA: 1071 gated tiles over six stacks (blue)\", measured_at: Some(\"f/5.6 (5 stacks) and f/8 (1 stack), 200 mm effective; f/11 untested\"), version: 1, support_r_max: Some(0.788), eps_r: -0.0005084, eps_b: Some(0.0001744), translation: (0.0, 0.0), fit_r: FitStats { r_squared: 0.908, permutation_p: 0.0005, residual_rms_sensel: 0.0651, n_regions: 514 }, fit_b: Some(FitStats { r_squared: 0.579, permutation_p: 0.0005, residual_rms_sensel: 0.152, n_regions: 1071 }), body_model: \"ILCE-7CM2\", lens_type3: 33094 }",
+        "eps_b": 0.0001744,
+        "eps_r": -0.0005084,
+        "key": "a7c2-fe100gm-2xtc-x4cpl",
+        "version": 1
+      },
+      "pass": 0,
+      "shutter_seconds": 1.6,
+      "white": 15360.0,
+      "white_balance": [
+        1.5986328125,
+        1.0,
+        2.708984375
+      ],
+      "white_balance_policy": "applied once after fusion from the explicit primary or automatic geometry reference"
+    },
+    {
+      "black": 512.0,
+      "camera": "ILCE-7CM2",
+      "color_matrix": [
+        [
+          [
+            0.7459999918937683,
+            -0.23649999499320984,
+            -0.058800000697374344
+          ],
+          [
+            -0.5687000155448914,
+            1.3442000150680542,
+            0.24740000069141388
+          ],
+          [
+            -0.06239999830722809,
+            0.11559999734163284,
+            0.6583999991416931
+          ]
+        ],
+        "decoder color_matrix[D65]"
+      ],
+      "iso": 100.0,
+      "noise_model": "NoiseModel { planes: [PlaneNoise { gain_dn_per_e: 0.22893773, read_noise_e: 4.2, levels: Levels { black: 512.0, white: 15360.0 } }, PlaneNoise { gain_dn_per_e: 0.22893773, read_noise_e: 4.2, levels: Levels { black: 512.0, white: 15360.0 } }, PlaneNoise { gain_dn_per_e: 0.22893773, read_noise_e: 4.2, levels: Levels { black: 512.0, white: 15360.0 } }, PlaneNoise { gain_dn_per_e: 0.22893773, read_noise_e: 4.2, levels: Levels { black: 512.0, white: 15360.0 } }], prnu: None, iso: 100.0, provenance: Profile }",
+      "noise_planes": [
+        {
+          "black": 512.0,
+          "gain_dn_per_e": 0.22893773019313812,
+          "plane": "R",
+          "read_noise_e": 4.199999809265137,
+          "white": 15360.0
+        },
+        {
+          "black": 512.0,
+          "gain_dn_per_e": 0.22893773019313812,
+          "plane": "G1",
+          "read_noise_e": 4.199999809265137,
+          "white": 15360.0
+        },
+        {
+          "black": 512.0,
+          "gain_dn_per_e": 0.22893773019313812,
+          "plane": "B",
+          "read_noise_e": 4.199999809265137,
+          "white": 15360.0
+        },
+        {
+          "black": 512.0,
+          "gain_dn_per_e": 0.22893773019313812,
+          "plane": "G2",
+          "read_noise_e": 4.199999809265137,
+          "white": 15360.0
+        }
+      ],
+      "optical_profile": {
+        "applied_record": "OpticalProfile { key: \"a7c2-fe100gm-2xtc-x4cpl\", optical_path: \"Sony A7C II + FE 100mm F2.8 Macro GM + 2x Viltrox teleconverter + Breakthrough X4 circular polariser\", measured_from: \"M107 Instrument A: 20 gated ROIs over tweezers-cpl and bee-3-cpl (red); BUILD-CHROMA: 1071 gated tiles over six stacks (blue)\", measured_at: Some(\"f/5.6 (5 stacks) and f/8 (1 stack), 200 mm effective; f/11 untested\"), version: 1, support_r_max: Some(0.788), eps_r: -0.0005084, eps_b: Some(0.0001744), translation: (0.0, 0.0), fit_r: FitStats { r_squared: 0.908, permutation_p: 0.0005, residual_rms_sensel: 0.0651, n_regions: 514 }, fit_b: Some(FitStats { r_squared: 0.579, permutation_p: 0.0005, residual_rms_sensel: 0.152, n_regions: 1071 }), body_model: \"ILCE-7CM2\", lens_type3: 33094 }",
+        "eps_b": 0.0001744,
+        "eps_r": -0.0005084,
+        "key": "a7c2-fe100gm-2xtc-x4cpl",
+        "version": 1
+      },
+      "pass": 1,
+      "shutter_seconds": 1.6,
+      "white": 15360.0,
+      "white_balance": [
+        1.5986328125,
+        1.0,
+        2.708984375
+      ],
+      "white_balance_policy": "applied once after fusion from the explicit primary or automatic geometry reference"
+    }
+  ],
+  "alignment_sha256": "7c06ed37d92f3a1dde0a03e5b6f2f5eaf71d2c5ab4ef494bac51441400e2ef82",
+  "source_identities_sha256": "f3cb48fa5cfd592f3bb3facc4fc8efac247c90272afd9b03aa2188b2e1efb672",
+  "witness_sha256": "9c6b92a876a18a726c61543634d63f16de96898be728b93492bf63512ed25569",
+  "existing_whole_view": "outputs/multi-stack/independent-review/insect-repeat-4/overview-fixed-display.png",
+  "whole_view_use": "Viewed for composition only; no resolution/noise inference."
+}

@@ -16,10 +16,20 @@ pub mod session_cache;
 mod session_cmd;
 #[path = "session-input.rs"]
 pub mod session_input;
+#[path = "session-focus.rs"]
+pub mod session_focus;
+#[path = "session-reproducibility.rs"]
+mod session_reproducibility;
+#[path = "session-mapped-sampling.rs"]
+pub mod session_mapped_sampling;
+#[path = "session-mosaic-geometry.rs"]
+pub mod session_mosaic_geometry;
 #[path = "session-photometry.rs"]
 pub mod session_photometry;
 #[path = "session-sampling.rs"]
 pub mod session_sampling;
+#[path = "session-reconstruction-sampling.rs"]
+pub mod session_reconstruction_sampling;
 #[path = "sony-focus-cmd.rs"]
 mod sony_focus_cmd;
 #[path = "sony-focus-report.rs"]

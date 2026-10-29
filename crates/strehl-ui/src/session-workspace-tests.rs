@@ -37,6 +37,11 @@ fn fixture() -> (tempfile::TempDir, SessionDraft, StackScan) {
             ..Default::default()
         },
         memory_limit_gib: 24.0,
+        precision_weights: false,
+        contribution_maps: false,
+        focus_evidence: false,
+        reproducibility: false,
+        original_cfa_reconstruction: false,
         sources: crate::workspace_history::source_identities(&scan),
     };
     (root, draft, scan)
@@ -125,4 +130,135 @@ fn session_workspace_invalid_budget_and_primary_are_refused() {
     draft.memory_limit_gib = 16.0;
     draft.manifest.primary_pass = Some(2);
     assert!(draft.validate().is_err());
+}
+
+#[test]
+fn session_workspace_new_options_default_off_for_old_saved_sessions() {
+    let (_root, draft, _) = fixture();
+    let mut old = serde_json::to_value(&draft).unwrap();
+    for key in [
+        "precision_weights",
+        "contribution_maps",
+        "focus_evidence",
+        "reproducibility",
+        "original_cfa_reconstruction",
+    ] {
+        old.as_object_mut().unwrap().remove(key);
+    }
+    let restored: SessionDraft = serde_json::from_value(old).unwrap();
+    assert_eq!(restored, draft);
+    assert!(
+        !restored.precision_weights
+            && !restored.contribution_maps
+            && !restored.focus_evidence
+            && !restored.reproducibility
+            && !restored.original_cfa_reconstruction
+    );
+}
+
+#[test]
+fn session_workspace_options_are_immutable_and_mode_transitions_clear_invalid_preferences() {
+    let (_root, mut draft, _) = fixture();
+    draft.manifest.mode = SessionMode::Repeat;
+    draft.precision_weights = true;
+    draft.contribution_maps = true;
+    draft.focus_evidence = true;
+    draft.reproducibility = true;
+    draft.original_cfa_reconstruction = true;
+    draft.validate().unwrap();
+    let saved = draft.clone();
+    let bytes = serde_json::to_vec(&saved).unwrap();
+    draft.manifest.mode = SessionMode::Mosaic;
+    assert!(draft.validate().is_err());
+    draft.normalize_mode_options();
+    draft.validate().unwrap();
+    assert_eq!(draft.manifest.primary_pass, None);
+    assert!(
+        !draft.precision_weights
+            && !draft.contribution_maps
+            && !draft.focus_evidence
+            && !draft.reproducibility
+            && !draft.original_cfa_reconstruction
+    );
+    assert_eq!(serde_json::to_vec(&saved).unwrap(), bytes);
+    let mut reduced = saved;
+    reduced.remove_pass(1);
+    assert!(!reduced.precision_weights && !reduced.reproducibility);
+    assert!(reduced.contribution_maps && reduced.focus_evidence);
+    assert_eq!(mode_label(SessionMode::Mosaic), "Wider mosaic");
+}
+
+#[test]
+fn session_workspace_mode_guards_are_explicit_for_first_two_pass_comparison() {
+    for mode in MODES {
+        assert!(!precision_available(mode, 1));
+        assert!(!reproducibility_available(mode, 1));
+        assert_eq!(
+            precision_available(mode, 2),
+            matches!(mode, SessionMode::Repeat | SessionMode::Hdr)
+        );
+        assert_eq!(
+            reproducibility_available(mode, 3),
+            matches!(
+                mode,
+                SessionMode::Combine
+                    | SessionMode::Interleave
+                    | SessionMode::Repeat
+                    | SessionMode::Layers
+            )
+        );
+    }
+}
+
+#[test]
+fn session_reconstruction_default_guard_preserves_single_and_multi_pass_jobs() {
+    let (_root, mut draft, _) = fixture();
+    for mode in MODES {
+        draft.manifest.mode = mode;
+        draft.manifest.primary_pass = None;
+        draft.original_cfa_reconstruction = true;
+        let supported = matches!(
+            mode,
+            SessionMode::Combine | SessionMode::Interleave | SessionMode::Repeat | SessionMode::Hdr
+        );
+        assert_eq!(reconstruction_available(mode), supported);
+        assert_eq!(draft.validate().is_ok(), supported);
+        let saved = draft.clone();
+        draft.normalize_mode_options();
+        assert_eq!(draft.original_cfa_reconstruction, supported);
+        assert!(saved.original_cfa_reconstruction);
+    }
+}
+
+#[test]
+fn session_workspace_independent_views_clear_cross_view_flags_and_primary() {
+    let (_root, mut draft, scan) = fixture();
+    draft.manifest.mode = SessionMode::IndependentViews;
+    draft.precision_weights = true;
+    draft.contribution_maps = true;
+    draft.focus_evidence = true;
+    draft.reproducibility = true;
+    draft.original_cfa_reconstruction = true;
+    assert!(draft.validate().is_err());
+    draft.normalize_mode_options();
+    draft.validate().unwrap();
+    assert_eq!(draft.manifest.primary_pass, None);
+    assert!(
+        !draft.precision_weights
+            && !draft.contribution_maps
+            && !draft.focus_evidence
+            && !draft.reproducibility
+            && !draft.original_cfa_reconstruction
+    );
+    assert_eq!(draft.groups(&scan).unwrap()[1].range, 3..5);
+    assert_eq!(output_prefix(draft.manifest.mode), Some("view"));
+    assert_eq!(
+        serde_json::to_value(draft.manifest.mode).unwrap(),
+        "independent_views"
+    );
+    draft.manifest.passes.pop();
+    draft.sources.truncate(3);
+    draft.validate().unwrap();
+    assert_eq!(draft.manifest.passes.len(), 1);
+    assert_eq!(output_prefix(draft.manifest.mode), Some("view"));
 }

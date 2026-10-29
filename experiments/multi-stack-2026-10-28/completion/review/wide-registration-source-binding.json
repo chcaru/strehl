@@ -1,0 +1,14 @@
+{
+  "scope": "Source read at audit write; footprint witness applies to reviewed original spacing guard. Later author fixes are not covered.",
+  "files": {
+    "crates/strehl-core/src/align.rs": "51c5b58427053837d8c87789744d6037af326b5354fdeb527bdd8c8b3d7c3875",
+    "crates/strehl-core/src/reconstruction-registration.rs": "84fde3d358b501994d7d33b45dc8df519c47c4d49420013834b32f5f4227f5a9",
+    "experiments/multi-stack-2026-10-28/completion/sr/local-registration.rs": "eded3747d853c9d720f356c7b46518ce0674bfd1226980e2b70528e08ebc846b",
+    "experiments/multi-stack-2026-10-28/completion/sr/continuous-translation.rs": "7dac63816a4ca29b2a8e7c665d7885956e3c0bf55ec89d196f316620d2664c07",
+    "experiments/multi-stack-2026-10-28/completion/sr/local-registration-continuous.rs": "2ef84c34f60266ce9e2b908cf566630d145d1d603881bb586579ada709251326",
+    "experiments/multi-stack-2026-10-28/completion/sr/continuous-wide-geometry-controls.rs": "7787360e63ad9f1133c82c0fc649b629fbf094799519e7a793033aa6b5803d59",
+    "experiments/multi-stack-2026-10-28/completion/sr/continuous-wide-chart-controls.rs": "10208838058b60af662030c4d392e629fafc1467cad23ec5ec1e8acdf3dcae67",
+    "experiments/multi-stack-2026-10-28/completion/sr/discrete-wide-geometry-controls.rs": "b8bfba4022d0995a7b85e3741daffc6a49c1114865a19d1e917ea9dffb88f10e",
+    "experiments/multi-stack-2026-10-28/completion/sr/discrete-wide-chart-controls.rs": "70313494e16b820a9dba8c5303d45f60074c85386bd8c20f6150ca1a1d50ad18"
+  }
+}

@@ -187,13 +187,26 @@ def screenshot(args):
         raise ControlError("Screenshot already exists; choose a fresh --png path")
     if not png.parent.is_dir():
         raise ControlError("Create the --png parent directory before rendering")
-    source = args.source.resolve(strict=True)
-    if not source.is_dir():
-        raise ControlError("--source must name a directory")
+    target = args.source or args.open_run
+    target = target.resolve(strict=True)
+    if not target.is_dir():
+        raise ControlError("--source/--open-run must name a directory")
+    if args.open_run is not None and args.catalog is None:
+        raise ControlError("--open-run requires the isolated catalog containing that saved run")
+    if args.metadata and args.source is None:
+        raise ControlError("--metadata requires --source")
+    if args.diagnostic_map is not None and args.open_run is None:
+        raise ControlError("--diagnostic-map requires --open-run")
+    if (args.diagnostic_opacity is not None or args.diagnostic_sample is not None) and args.diagnostic_map is None:
+        raise ControlError("--diagnostic-opacity/sample requires --diagnostic-map")
     log_path = png.with_name(png.name + ".log")
     catalog = (args.catalog or png.with_suffix(".projects.json")).resolve()
     command = [str(args.exe), "--offscreen-screenshot", str(png),
-               "--source", str(source), "--catalog", str(catalog)]
+               "--source" if args.source is not None else "--open-run", str(target), "--catalog", str(catalog)]
+    for option,value in (("--diagnostic-map",args.diagnostic_map),("--diagnostic-opacity",args.diagnostic_opacity),
+                         ("--diagnostic-sample",args.diagnostic_sample),("--photo-zoom",args.photo_zoom),("--photo-center",args.photo_center)):
+        if value is not None:
+            command += [option,str(value)]
     if args.metadata:
         command.append("--metadata")
     if args.output_dir is not None:
@@ -265,7 +278,14 @@ def parser():
                         help="bounded launch/control wait in seconds (default: 30)")
     commands = result.add_subparsers(dest="command", required=True)
     capture = commands.add_parser("screenshot", help="render the real workspace offscreen and wait up to 70 seconds")
-    capture.add_argument("--source", required=True, type=Path, help="source directory to import")
+    capture_target = capture.add_mutually_exclusive_group(required=True)
+    capture_target.add_argument("--source", type=Path, help="source directory to import")
+    capture_target.add_argument("--open-run", type=Path, help="completed run already present in --catalog")
+    capture.add_argument("--diagnostic-map", help="exact saved_diagnostics.available label from a current snapshot")
+    capture.add_argument("--diagnostic-opacity", type=float, help="overlay opacity from 0 to 1")
+    capture.add_argument("--diagnostic-sample", metavar="X,Y", help="normalized photograph coordinate for exact value and tile curves")
+    capture.add_argument("--photo-zoom", type=float, help="linked photograph zoom, 1 to 8")
+    capture.add_argument("--photo-center", metavar="X,Y", help="normalized photograph center")
     capture.add_argument("--png", required=True, type=Path, help="fresh PNG output path")
     capture.add_argument("--metadata", action="store_true", help="open the native camera metadata panel")
     capture.add_argument("--output-dir", type=Path, help="generated results and metadata reports")

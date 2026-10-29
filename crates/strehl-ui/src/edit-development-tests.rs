@@ -13,6 +13,7 @@ fn editor() -> EditorState {
     EditorState {
         path: Some("same-path.tiff".into()),
         loaded: Some(LoadedPhoto {
+            coverage: None,
             preview: Arc::new(image.preview(16)),
             image,
             recipe: Default::default(),

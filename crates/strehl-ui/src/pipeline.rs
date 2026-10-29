@@ -7,6 +7,10 @@
 
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
+#[path = "pipeline-view.rs"]
+mod view;
+pub(crate) use view::ViewProgress;
+
 #[path = "pipeline-confidence.rs"]
 mod confidence;
 #[path = "pipeline-diagnostics.rs"]
@@ -174,6 +178,9 @@ pub enum CoveragePlan {
 
 #[derive(Debug, Default)]
 pub struct PipelineProgress {
+    pub(crate) view: Option<ViewProgress>,
+    pub(crate) view_observations_missing: bool,
+    pub(crate) view_expected: bool,
     pub stage: Stage,
     pub observed_stages: BTreeSet<Stage>,
     pub diagnostic_surfaces: VecDeque<DiagnosticSurface>,
@@ -276,6 +283,7 @@ impl PipelineProgress {
         // A queue/backlog gap must never splice the beginning and end of
         // unrelated lines into what looks like a real observation.
         let chunk = if let Some(chunk) = chunk.strip_prefix(LOG_GAP) {
+            self.view_gap();
             self.pending.clear();
             // File reads resume at an arbitrary byte, so the first resumed
             // line is incomplete too. Resume parsing after its terminator.
@@ -356,6 +364,13 @@ impl PipelineProgress {
 
     fn line(&mut self, line: &str) {
         let line = line.trim();
+        if let Some(context) = line.strip_prefix("STREHL_UI_VIEW ") {
+            self.view_context(context);
+            return;
+        }
+        if self.view_observations_missing {
+            return;
+        }
         if let Some(fields) = line.strip_prefix("STREHL_UI_PROGRESS ") {
             self.progress_event(fields);
             return;
@@ -402,7 +417,7 @@ impl PipelineProgress {
                 if !value.contains(" from ") {
                     return;
                 }
-                if count == 0 {
+                if count == 0 || self.view.as_ref().is_some_and(|v| count != v.source_count) {
                     return;
                 }
                 self.observed_stages.insert(Stage::Preparing);

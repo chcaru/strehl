@@ -1,0 +1,76 @@
+{
+  "baselines": [
+    "ef655050",
+    "c149e52834fc1c86c2af0fe022713c39fa25f33c"
+  ],
+  "reports": [
+    {
+      "name": "ui-strict-clippy-01",
+      "log_sha256": "cdbb883f012546bf5e68553f32b89bb3210d77f512a296666ab3692af7045f2d",
+      "raw_message_count": 2,
+      "unique_diagnostics": 2,
+      "counts": {
+        "new_or_changed_span": 1,
+        "unchanged_remote_main": 1
+      },
+      "build_finished": [
+        {
+          "reason": "build-finished",
+          "success": false
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": null,
+          "message": "hard linking files in the incremental compilation cache failed. copying files instead. consider moving the cache directory to a file system which supports hard linking in session dir `\\\\?\\C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\target\\debug\\incremental\\strehl_edit-38m7hqeck810y\\s-hnngxhepun-0ewf3hq-working`",
+          "level": "warning",
+          "occurrences": 1,
+          "spans": [],
+          "classification": "new_or_changed_span"
+        },
+        {
+          "code": "dead_code",
+          "message": "function `prepare` is never used",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-ui/src/photo-viewport.rs",
+              "line": 68,
+              "end": 68,
+              "column": 15,
+              "text": [
+                "pub(super) fn prepare("
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "9b82b00b7cfa4c704bfca108270cf66b56cb48afab55dd1fd735a93cebe8a368",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 68,
+                      "baseline_line": 67,
+                      "unchanged_block_lines": 12
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "9b82b00b7cfa4c704bfca108270cf66b56cb48afab55dd1fd735a93cebe8a368",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 68,
+                      "baseline_line": 67,
+                      "unchanged_block_lines": 12
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        }
+      ]
+    }
+  ]
+}

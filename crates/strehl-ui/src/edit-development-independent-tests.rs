@@ -21,6 +21,7 @@ fn photo(bright: bool) -> LoadedPhoto {
         baked_recipe: None,
     });
     LoadedPhoto {
+        coverage: None,
         preview: Arc::new(image.preview(17)),
         image,
         recipe: Default::default(),

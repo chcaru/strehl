@@ -67,6 +67,20 @@ pub(super) fn session_command(
         )
         .arg("--resampler")
         .arg(request.settings.resampler.cli_name());
+    for (enabled, flag) in [
+        (session.precision_weights, "--precision-weights"),
+        (session.contribution_maps, "--contribution-maps"),
+        (session.focus_evidence, "--focus-evidence"),
+        (session.reproducibility, "--reproducibility"),
+        (
+            session.original_cfa_reconstruction,
+            "--original-cfa-reconstruction",
+        ),
+    ] {
+        if enabled {
+            command.arg(flag);
+        }
+    }
     if let Some(value) = request.exposure_ev {
         command.arg(format!("--exposure={value}"));
     }
@@ -180,17 +194,18 @@ pub(super) fn run_session_render(
         write_new(&directory.join("session-recipe.json"), session)?;
         // The engine reserves this fresh directory; the UI must not create it.
         let engine_output = directory.join("session-output");
-        let outputs: Vec<_> = if session.manifest.mode == SessionMode::Layers {
-            (0..session.manifest.passes.len())
-                .map(|i| {
-                    engine_output
-                        .join(format!("layer-{:02}", i + 1))
-                        .join("photograph.tiff")
-                })
-                .collect()
-        } else {
-            vec![engine_output.join("photograph.tiff")]
-        };
+        let outputs: Vec<_> =
+            if let Some(prefix) = crate::session_workspace::output_prefix(session.manifest.mode) {
+                (0..session.manifest.passes.len())
+                    .map(|i| {
+                        engine_output
+                            .join(format!("{prefix}-{:02}", i + 1))
+                            .join("photograph.tiff")
+                    })
+                    .collect()
+            } else {
+                vec![engine_output.join("photograph.tiff")]
+            };
         let displayed = if session.manifest.mode == SessionMode::Layers {
             session.manifest.primary_pass.unwrap_or(0)
         } else {
@@ -232,6 +247,18 @@ pub(super) fn run_session_render(
                     "Session cancelled before publication"
                 );
                 validate_completed_sources(&engine_output, session)?;
+                if session.manifest.mode == SessionMode::IndependentViews {
+                    let verified = crate::session_import::load(&engine_output, cancelled)?;
+                    ensure!(
+                        verified.sources == session.sources
+                            && verified
+                                .settings
+                                .session
+                                .as_ref()
+                                .is_some_and(|s| s.manifest == session.manifest),
+                        "Independent view bundle differs from the frozen job"
+                    );
+                }
                 for photograph in &outputs {
                     ensure!(
                         photograph.is_file() && photograph.metadata()?.len() > 0,

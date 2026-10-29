@@ -91,6 +91,13 @@ pub fn show_dock(
     };
     ui.label(RichText::new(title).size(23.0).color(INK))
         .on_hover_text(purpose);
+    if let Some(view) = progress.active_view() {
+        small(ui, view.label());
+        small(
+            ui,
+            "Phase and capture numbers below belong only to this view.",
+        );
+    }
     ui.add_space(9.0);
     timeline(ui, progress);
     ui.add_space(8.0);

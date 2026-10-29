@@ -147,6 +147,26 @@ impl Controls {
                 optional_float(ui, "Coarse power", &mut self.settings.pyramid_exponent, 2.0, 0.5..=8.0, "Band-weight exponent.");
                 optional_float(ui, "Fine-scale ramp", &mut self.settings.pyramid_sharpen, 1.4, 1.0..=2.0, "Selection exponent increase toward finer bands.");
                 optional_float(ui, "Exposure", &mut self.exposure, 0.0, -12.0..=12.0, "Manual output exposure in stops; camera previews keep camera processing.");
+                let session = self.settings.session.as_mut().expect("session controls");
+                let mode = session.manifest.mode;
+                let passes = session.manifest.passes.len();
+                ui.add_enabled(crate::session_workspace::precision_available(mode, passes),
+                    egui::Checkbox::new(&mut session.precision_weights, "Weight repeats by predicted noise"))
+                    .on_hover_text("Available for repeated captures and exposure range. Compatible observations use a separate source to predict their relative noise; unsupported predictions keep equal averaging.");
+                if crate::session_workspace::managed_evidence(mode) {
+                    note(ui, if mode == crate::session_workspace::SessionMode::IndependentViews { "Each view includes its own focus evidence and coordinates." } else { "Mosaic includes focus evidence and transparent coverage." });
+                } else {
+                    ui.checkbox(&mut session.contribution_maps, "Save contribution maps")
+                        .on_hover_text("Retain the source and pass contributions used at each detail scale. These maps describe coefficients, not final-image uncertainty.");
+                    ui.checkbox(&mut session.focus_evidence, "Save focus evidence")
+                        .on_hover_text("Retain measured focus position, support and ambiguity for each pass. Focus position is a capture ordinal, not physical depth.");
+                }
+                ui.add_enabled(crate::session_workspace::reproducibility_available(mode, passes),
+                    egui::Checkbox::new(&mut session.reproducibility, "Compare the first two passes"))
+                    .on_hover_text("Compare independent output detail from the first two declared passes. Save correlations, differences and qualification; this is not a measured resolution cutoff. Available for combine, interleaved, repeated and layer passes.");
+                ui.add_enabled(crate::session_workspace::reconstruction_available(mode),
+                    egui::Checkbox::new(&mut session.original_cfa_reconstruction, "Original-CFA reconstruction (experimental)"))
+                    .on_hover_text("Uses original sensor samples where registration and local support qualify. Unsupported pixels retain the native result. Keeps the same output dimensions; no resolution improvement is promised. Saves coherent RGB support and fallback reasons.");
                 note(ui, "Full resolution · 16-bit photograph + linear master");
                 note(ui, "Each pass is calibrated independently. Source repairs and temporal smoothing are unavailable in a session.");
                 note(ui, "New session renders start from these merge settings. Develop each saved photograph afterwards; previous edits stay with their saved result.");

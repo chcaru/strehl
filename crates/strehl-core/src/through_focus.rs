@@ -462,6 +462,24 @@ impl ThroughFocus {
         self.subframe_offset(i).map(|d| self.anchor[i] as f32 + d)
     }
 
+    /// Local baseline-subtracted log-Gaussian width in acquisition frames.
+    /// This describes the three-sample curve, not calibrated depth uncertainty.
+    /// Missing, nonpositive or nonconcave triples have no measured width.
+    pub fn local_peak_width(&self, i: usize) -> Option<f32> {
+        let [l, c, r] = self.triple[i];
+        let floor = self.floor[i];
+        let [l, c, r] = [l - floor, c - floor, r - floor];
+        if ![l, c, r].into_iter().all(|v| v.is_finite() && v > 0.0) {
+            return None;
+        }
+        let curvature = 0.5 * (l.ln() + r.ln()) - c.ln();
+        if !curvature.is_finite() || curvature >= 0.0 {
+            return None;
+        }
+        let width = (-0.5 / curvature).sqrt();
+        width.is_finite().then_some(width)
+    }
+
     /// Fraction of the true peak response given up by landing between frames.
     ///
     /// Confidence channel **C3** of M34's vector, and the reason the log domain

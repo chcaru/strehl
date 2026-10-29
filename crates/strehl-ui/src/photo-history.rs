@@ -212,8 +212,13 @@ pub(crate) fn save_version(
     write_version_payload(&temporary, &destination, &body, cancelled)?;
     // The immutable recipe is already safe. A small navigation derivative is
     // best-effort and must never turn a successful version save into failure.
-    let job = crate::development_job::DevelopmentJob::native(image.clone(), recipe);
-    let _ = crate::preview::explorer::save_version(root, &version, &job);
+    if let Ok(coverage) =
+        crate::photo_coverage::Coverage::load(&version.owner.output, [image.width, image.height])
+    {
+        let job = crate::development_job::DevelopmentJob::native(image.clone(), recipe)
+            .with_coverage(coverage);
+        let _ = crate::preview::explorer::save_version(root, &version, &job);
+    }
     Ok(version)
 }
 

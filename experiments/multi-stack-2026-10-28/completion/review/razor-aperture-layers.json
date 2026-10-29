@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "mode": "layers",
+  "passes": [
+    {
+      "name": "Razor f5.6",
+      "directories": [
+        "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl"
+      ]
+    },
+    {
+      "name": "Razor f8",
+      "directories": [
+        "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl"
+      ]
+    }
+  ],
+  "primary_pass": null
+}

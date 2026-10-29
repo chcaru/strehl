@@ -1,0 +1,1721 @@
+{
+  "schema": "strehl.frozen-witness-contributions.v1",
+  "scope": "Exact normalized source and group summaries for each band before pyramid collapse, demosaic and hull clamp. Conditional variance uses injected fixed-weight temporal models and excludes adaptive selection, shared guides and spatial/cross-band covariance. It is not final-pixel uncertainty.",
+  "report_sha256": "b081aa71ebf75ee0cd446537d1638694c0a0cb01dc0d12693fadb2cbfd6bd4c0",
+  "argv": [
+    "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\experiments\\multi-stack-2026-10-28\\completion\\review\\inspect-precision-contributions.py"
+  ],
+  "bands": [
+    {
+      "band": 0,
+      "step_sensor": 2,
+      "witnesses": {
+        "gray-ramp-middle": {
+          "effective-sources": {
+            "samples": 36672,
+            "finite": 36672,
+            "min": 1.0,
+            "median": 2.359893798828125,
+            "max": 21.453805923461914
+          },
+          "contributing-sources": {
+            "samples": 36672,
+            "finite": 36672,
+            "min": 4.0,
+            "median": 31.0,
+            "max": 109.0
+          },
+          "dominant-source-fraction": {
+            "samples": 36672,
+            "finite": 36672,
+            "min": 0.08439712226390839,
+            "median": 0.5947332382202148,
+            "max": 1.0
+          },
+          "accepted-repeat-fraction": {
+            "samples": 36672,
+            "finite": 36672,
+            "min": 1.0185564573288061e-16,
+            "median": 0.9994955062866211,
+            "max": 1.0000003576278687
+          },
+          "fixed-guide-fraction": {
+            "samples": 36672,
+            "finite": 36672,
+            "min": 1.0185564573288061e-16,
+            "median": 0.9993431568145752,
+            "max": 1.0000003576278687
+          },
+          "kind": {
+            "samples": 36672,
+            "finite": 36672,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 36672
+            }
+          }
+        },
+        "adverse-flare-p12": {
+          "effective-sources": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 1.0011897087097168,
+            "median": 4.111385822296143,
+            "max": 27.98271942138672
+          },
+          "contributing-sources": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 9.0,
+            "median": 53.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 0.06415937095880508,
+            "median": 0.3925778567790985,
+            "max": 0.999405562877655
+          },
+          "accepted-repeat-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 0.0,
+            "median": 0.9999999403953552,
+            "max": 1.0000004768371582
+          },
+          "fixed-guide-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 0.0,
+            "median": 0.9999999403953552,
+            "max": 1.0000004768371582
+          },
+          "kind": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 36481
+            }
+          }
+        },
+        "qr-white-black-grid": {
+          "effective-sources": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 1.000101089477539,
+            "median": 5.87611722946167,
+            "max": 35.3547477722168
+          },
+          "contributing-sources": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 8.0,
+            "median": 100.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 0.05497109144926071,
+            "median": 0.3043636679649353,
+            "max": 0.9999494552612305
+          },
+          "accepted-repeat-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 0.0,
+            "median": 0.9999566078186035,
+            "max": 1.0000003576278687
+          },
+          "fixed-guide-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 0.0,
+            "median": 0.9999253749847412,
+            "max": 1.0000003576278687
+          },
+          "kind": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 36481
+            }
+          }
+        },
+        "qr-corner-boundary": {
+          "effective-sources": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 1.0,
+            "median": 3.4055535793304443,
+            "max": 60.999996185302734
+          },
+          "contributing-sources": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 1.0,
+            "median": 58.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 0.016393445432186127,
+            "median": 0.4395437240600586,
+            "max": 1.0
+          },
+          "accepted-repeat-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 1.000000238418579
+          },
+          "fixed-guide-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 1.000000238418579
+          },
+          "kind": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 2.0,
+            "counts": {
+              "1": 36478,
+              "2": 3
+            }
+          }
+        },
+        "large-radial-star": {
+          "effective-sources": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 1.0000014305114746,
+            "median": 6.518099308013916,
+            "max": 37.32106018066406
+          },
+          "contributing-sources": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 4.0,
+            "median": 99.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 0.047795217484235764,
+            "median": 0.26952555775642395,
+            "max": 0.9999992847442627
+          },
+          "accepted-repeat-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 0.0,
+            "median": 0.9999959468841553,
+            "max": 1.0000004768371582
+          },
+          "fixed-guide-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 0.0,
+            "median": 0.9999829530715942,
+            "max": 1.0000004768371582
+          },
+          "kind": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 36481
+            }
+          }
+        },
+        "fine-resolution-bars": {
+          "effective-sources": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 1.0109061002731323,
+            "median": 4.557992935180664,
+            "max": 26.282020568847656
+          },
+          "contributing-sources": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 31.0,
+            "median": 94.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 0.06707314401865005,
+            "median": 0.3329174816608429,
+            "max": 0.9945893883705139
+          },
+          "accepted-repeat-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 2.638224300962918e-29,
+            "median": 0.00868481770157814,
+            "max": 1.0000003576278687
+          },
+          "fixed-guide-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 2.590269548127337e-29,
+            "median": 0.002059194492176175,
+            "max": 1.0000003576278687
+          },
+          "kind": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 36481
+            }
+          }
+        },
+        "bright-dot-field": {
+          "effective-sources": {
+            "samples": 36672,
+            "finite": 36672,
+            "min": 1.0069814920425415,
+            "median": 5.815404415130615,
+            "max": 27.798038482666016
+          },
+          "contributing-sources": {
+            "samples": 36672,
+            "finite": 36672,
+            "min": 15.0,
+            "median": 77.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 36672,
+            "finite": 36672,
+            "min": 0.06854648143053055,
+            "median": 0.27970385551452637,
+            "max": 0.9965261816978455
+          },
+          "accepted-repeat-fraction": {
+            "samples": 36672,
+            "finite": 36672,
+            "min": 0.0,
+            "median": 0.30517977476119995,
+            "max": 1.0000003576278687
+          },
+          "fixed-guide-fraction": {
+            "samples": 36672,
+            "finite": 36672,
+            "min": 0.0,
+            "median": 0.05069635063409805,
+            "max": 1.0000003576278687
+          },
+          "kind": {
+            "samples": 36672,
+            "finite": 36672,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 36672
+            }
+          }
+        },
+        "low-contrast-dot-field": {
+          "effective-sources": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 1.0000085830688477,
+            "median": 5.072061538696289,
+            "max": 34.31858825683594
+          },
+          "contributing-sources": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 6.0,
+            "median": 76.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 0.05890081077814102,
+            "median": 0.3378351628780365,
+            "max": 0.9999957084655762
+          },
+          "accepted-repeat-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 5.22496238983261e-12,
+            "median": 0.9999999403953552,
+            "max": 1.0000004768371582
+          },
+          "fixed-guide-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 5.22496238983261e-12,
+            "median": 0.9999999403953552,
+            "max": 1.0000004768371582
+          },
+          "kind": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 36481
+            }
+          }
+        },
+        "lower-radial-spokes": {
+          "effective-sources": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 1.003170371055603,
+            "median": 8.067407608032227,
+            "max": 38.950538635253906
+          },
+          "contributing-sources": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 74.0,
+            "median": 123.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 0.04931418225169182,
+            "median": 0.21466690301895142,
+            "max": 0.9984184503555298
+          },
+          "accepted-repeat-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 6.173723641686446e-13,
+            "median": 0.9999843239784241,
+            "max": 1.0000004768371582
+          },
+          "fixed-guide-fraction": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 1.1954402311803447e-13,
+            "median": 0.9999404549598694,
+            "max": 1.0000004768371582
+          },
+          "kind": {
+            "samples": 36481,
+            "finite": 36481,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 36481
+            }
+          }
+        },
+        "clipped-core": {
+          "effective-sources": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 1.0,
+            "median": 1.2878406047821045,
+            "max": 22.066513061523438
+          },
+          "contributing-sources": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 1.0,
+            "median": 11.0,
+            "max": 58.0
+          },
+          "dominant-source-fraction": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 0.07710389792919159,
+            "median": 0.8752412796020508,
+            "max": 1.0
+          },
+          "accepted-repeat-fraction": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "fixed-guide-fraction": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "kind": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 36864
+            }
+          }
+        },
+        "blue-clipped-core": {
+          "effective-sources": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 1.0,
+            "median": 1.3342068195343018,
+            "max": 20.807737350463867
+          },
+          "contributing-sources": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 1.0,
+            "median": 12.0,
+            "max": 60.0
+          },
+          "dominant-source-fraction": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 0.07141140103340149,
+            "median": 0.8578487038612366,
+            "max": 1.0
+          },
+          "accepted-repeat-fraction": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "fixed-guide-fraction": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "kind": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 36864
+            }
+          }
+        },
+        "clipped-boundary": {
+          "effective-sources": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 1.0000015497207642,
+            "median": 2.2792985439300537,
+            "max": 12.827645301818848
+          },
+          "contributing-sources": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 3.0,
+            "median": 24.0,
+            "max": 91.0
+          },
+          "dominant-source-fraction": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 0.13502933084964752,
+            "median": 0.5886201858520508,
+            "max": 0.9999992251396179
+          },
+          "accepted-repeat-fraction": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 1.0000003576278687
+          },
+          "fixed-guide-fraction": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 1.0000003576278687
+          },
+          "kind": {
+            "samples": 36864,
+            "finite": 36864,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 36864
+            }
+          }
+        }
+      }
+    },
+    {
+      "band": 2,
+      "step_sensor": 8,
+      "witnesses": {
+        "gray-ramp-middle": {
+          "effective-sources": {
+            "samples": 2256,
+            "finite": 2256,
+            "min": 1.013799786567688,
+            "median": 11.786554336547852,
+            "max": 50.86583709716797
+          },
+          "contributing-sources": {
+            "samples": 2256,
+            "finite": 2256,
+            "min": 61.0,
+            "median": 124.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 2256,
+            "finite": 2256,
+            "min": 0.04922089725732803,
+            "median": 0.17934483289718628,
+            "max": 0.9931665658950806
+          },
+          "accepted-repeat-fraction": {
+            "samples": 2256,
+            "finite": 2256,
+            "min": 0.0,
+            "median": 0.920624315738678,
+            "max": 1.000000238418579
+          },
+          "fixed-guide-fraction": {
+            "samples": 2256,
+            "finite": 2256,
+            "min": 0.0,
+            "median": 0.9129247069358826,
+            "max": 1.000000238418579
+          },
+          "kind": {
+            "samples": 2256,
+            "finite": 2256,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 2256
+            }
+          }
+        },
+        "adverse-flare-p12": {
+          "effective-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.000717282295227,
+            "median": 13.767129898071289,
+            "max": 62.691123962402344
+          },
+          "contributing-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 61.0,
+            "median": 126.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.025160659104585648,
+            "median": 0.13842236995697021,
+            "max": 0.9996415376663208
+          },
+          "accepted-repeat-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 0.8494768142700195,
+            "max": 1.0000003576278687
+          },
+          "fixed-guide-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 0.8494768142700195,
+            "max": 1.0000003576278687
+          },
+          "kind": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 2209
+            }
+          }
+        },
+        "qr-white-black-grid": {
+          "effective-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.3063673973083496,
+            "median": 12.11401081085205,
+            "max": 56.893333435058594
+          },
+          "contributing-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 61.0,
+            "median": 126.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.024968769401311874,
+            "median": 0.13109365105628967,
+            "max": 0.8682804703712463
+          },
+          "accepted-repeat-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 7.663701398996636e-05,
+            "max": 0.9833175539970398
+          },
+          "fixed-guide-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 7.663701398996636e-05,
+            "max": 0.9774935245513916
+          },
+          "kind": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 2209
+            }
+          }
+        },
+        "qr-corner-boundary": {
+          "effective-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.003255844116211,
+            "median": 13.76148796081543,
+            "max": 55.323734283447266
+          },
+          "contributing-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 42.0,
+            "median": 61.0,
+            "max": 67.0
+          },
+          "dominant-source-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.027650993317365646,
+            "median": 0.10897266119718552,
+            "max": 0.9983758330345154
+          },
+          "accepted-repeat-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "fixed-guide-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "kind": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 2209
+            }
+          }
+        },
+        "large-radial-star": {
+          "effective-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.4474514722824097,
+            "median": 10.548136711120605,
+            "max": 67.87828826904297
+          },
+          "contributing-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 61.0,
+            "median": 126.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.024645309895277023,
+            "median": 0.15458859503269196,
+            "max": 0.8290264010429382
+          },
+          "accepted-repeat-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 0.09655999392271042,
+            "max": 0.9939473867416382
+          },
+          "fixed-guide-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 0.09655999392271042,
+            "max": 0.9939473867416382
+          },
+          "kind": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 2209
+            }
+          }
+        },
+        "fine-resolution-bars": {
+          "effective-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 2.555241823196411,
+            "median": 12.586060523986816,
+            "max": 32.769287109375
+          },
+          "contributing-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 69.0,
+            "median": 90.0,
+            "max": 102.0
+          },
+          "dominant-source-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0487867034971714,
+            "median": 0.12614743411540985,
+            "max": 0.5424076914787292
+          },
+          "accepted-repeat-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.5337541103363037
+          },
+          "fixed-guide-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.5337541103363037
+          },
+          "kind": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 2209
+            }
+          }
+        },
+        "bright-dot-field": {
+          "effective-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.0013731718063354,
+            "median": 14.345953941345215,
+            "max": 57.595375061035156
+          },
+          "contributing-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 61.0,
+            "median": 61.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.024523848667740822,
+            "median": 0.10269234329462051,
+            "max": 0.9993140697479248
+          },
+          "accepted-repeat-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.7908607721328735
+          },
+          "fixed-guide-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.6016830205917358
+          },
+          "kind": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 2209
+            }
+          }
+        },
+        "low-contrast-dot-field": {
+          "effective-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.7842072248458862,
+            "median": 20.8701114654541,
+            "max": 87.62755584716797
+          },
+          "contributing-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 126.0,
+            "median": 126.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.018477290868759155,
+            "median": 0.0884220153093338,
+            "max": 0.7251455187797546
+          },
+          "accepted-repeat-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0008783181547187269,
+            "median": 0.9560219645500183,
+            "max": 1.0000003576278687
+          },
+          "fixed-guide-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0008783181547187269,
+            "median": 0.9560219645500183,
+            "max": 1.0000003576278687
+          },
+          "kind": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 2209
+            }
+          }
+        },
+        "lower-radial-spokes": {
+          "effective-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.4928549528121948,
+            "median": 6.653632640838623,
+            "max": 38.16775131225586
+          },
+          "contributing-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 104.0,
+            "median": 125.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.05819740146398544,
+            "median": 0.21407322585582733,
+            "max": 0.8009285926818848
+          },
+          "accepted-repeat-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 7.163017315942728e-23,
+            "median": 4.092097147245788e-11,
+            "max": 0.9998838901519775
+          },
+          "fixed-guide-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 7.163017315942728e-23,
+            "median": 4.092097147245788e-11,
+            "max": 0.9933834075927734
+          },
+          "kind": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 2209
+            }
+          }
+        },
+        "clipped-core": {
+          "effective-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.0282597541809082,
+            "median": 4.889585494995117,
+            "max": 50.38617706298828
+          },
+          "contributing-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 41.0,
+            "median": 61.0,
+            "max": 61.0
+          },
+          "dominant-source-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.048850107938051224,
+            "median": 0.35339194536209106,
+            "max": 0.9861308336257935
+          },
+          "accepted-repeat-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "fixed-guide-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "kind": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 2209
+            }
+          }
+        },
+        "blue-clipped-core": {
+          "effective-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.0233064889907837,
+            "median": 5.638147354125977,
+            "max": 46.438175201416016
+          },
+          "contributing-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 40.0,
+            "median": 61.0,
+            "max": 61.0
+          },
+          "dominant-source-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.046559277921915054,
+            "median": 0.31255459785461426,
+            "max": 0.9884966611862183
+          },
+          "accepted-repeat-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "fixed-guide-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "kind": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 2209
+            }
+          }
+        },
+        "clipped-boundary": {
+          "effective-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.0624911785125732,
+            "median": 8.113032341003418,
+            "max": 34.94071960449219
+          },
+          "contributing-sources": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 48.0,
+            "median": 61.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.04764871299266815,
+            "median": 0.21299417316913605,
+            "max": 0.970068097114563
+          },
+          "accepted-repeat-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 1.000000238418579
+          },
+          "fixed-guide-fraction": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 1.000000238418579
+          },
+          "kind": {
+            "samples": 2209,
+            "finite": 2209,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 2209
+            }
+          }
+        }
+      }
+    },
+    {
+      "band": 5,
+      "step_sensor": 64,
+      "witnesses": {
+        "gray-ramp-middle": {
+          "effective-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 58.977264404296875,
+            "median": 60.518798828125,
+            "max": 60.983802795410156
+          },
+          "contributing-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 61.0,
+            "median": 61.0,
+            "max": 61.0
+          },
+          "dominant-source-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.01684536039829254,
+            "median": 0.01840524561703205,
+            "max": 0.021924784407019615
+          },
+          "accepted-repeat-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "fixed-guide-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "kind": {
+            "samples": 25,
+            "finite": 25,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 25
+            }
+          }
+        },
+        "adverse-flare-p12": {
+          "effective-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 59.96352767944336,
+            "median": 60.66920852661133,
+            "max": 60.91836166381836
+          },
+          "contributing-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 61.0,
+            "median": 61.0,
+            "max": 61.0
+          },
+          "dominant-source-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.01721498928964138,
+            "median": 0.017963672056794167,
+            "max": 0.0215731430798769
+          },
+          "accepted-repeat-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "fixed-guide-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "kind": {
+            "samples": 25,
+            "finite": 25,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 25
+            }
+          }
+        },
+        "qr-white-black-grid": {
+          "effective-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 58.38157653808594,
+            "median": 59.68735885620117,
+            "max": 60.574462890625
+          },
+          "contributing-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 61.0,
+            "median": 61.0,
+            "max": 61.0
+          },
+          "dominant-source-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.017926296219229698,
+            "median": 0.019453708082437515,
+            "max": 0.02094843052327633
+          },
+          "accepted-repeat-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "fixed-guide-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "kind": {
+            "samples": 25,
+            "finite": 25,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 25
+            }
+          }
+        },
+        "qr-corner-boundary": {
+          "effective-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 57.41037368774414,
+            "median": 58.46271896362305,
+            "max": 60.34708023071289
+          },
+          "contributing-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 61.0,
+            "median": 61.0,
+            "max": 61.0
+          },
+          "dominant-source-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.018340356647968292,
+            "median": 0.020661089569330215,
+            "max": 0.021710311993956566
+          },
+          "accepted-repeat-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "fixed-guide-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "kind": {
+            "samples": 25,
+            "finite": 25,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 25
+            }
+          }
+        },
+        "large-radial-star": {
+          "effective-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 53.95732498168945,
+            "median": 57.33769607543945,
+            "max": 59.75490951538086
+          },
+          "contributing-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 61.0,
+            "median": 61.0,
+            "max": 61.0
+          },
+          "dominant-source-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.01875641942024231,
+            "median": 0.021144162863492966,
+            "max": 0.024222662672400475
+          },
+          "accepted-repeat-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "fixed-guide-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "kind": {
+            "samples": 25,
+            "finite": 25,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 25
+            }
+          }
+        },
+        "fine-resolution-bars": {
+          "effective-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 57.46012496948242,
+            "median": 58.59423065185547,
+            "max": 64.81507873535156
+          },
+          "contributing-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 61.0,
+            "median": 61.0,
+            "max": 69.0
+          },
+          "dominant-source-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.01873529888689518,
+            "median": 0.02022254839539528,
+            "max": 0.021240215748548508
+          },
+          "accepted-repeat-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "fixed-guide-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "kind": {
+            "samples": 25,
+            "finite": 25,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 25
+            }
+          }
+        },
+        "bright-dot-field": {
+          "effective-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 51.137123107910156,
+            "median": 51.8448371887207,
+            "max": 52.66023635864258
+          },
+          "contributing-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 61.0,
+            "median": 61.0,
+            "max": 61.0
+          },
+          "dominant-source-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.024148844182491302,
+            "median": 0.024915896356105804,
+            "max": 0.02566767856478691
+          },
+          "accepted-repeat-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "fixed-guide-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "kind": {
+            "samples": 25,
+            "finite": 25,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 25
+            }
+          }
+        },
+        "low-contrast-dot-field": {
+          "effective-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 72.54315948486328,
+            "median": 76.58038330078125,
+            "max": 93.31718444824219
+          },
+          "contributing-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 104.0,
+            "median": 104.0,
+            "max": 126.0
+          },
+          "dominant-source-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.014902000315487385,
+            "median": 0.02077961526811123,
+            "max": 0.021814540028572083
+          },
+          "accepted-repeat-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.20653218030929565,
+            "median": 0.2953792214393616,
+            "max": 0.35409727692604065
+          },
+          "fixed-guide-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.20653218030929565,
+            "median": 0.2953792214393616,
+            "max": 0.35409727692604065
+          },
+          "kind": {
+            "samples": 25,
+            "finite": 25,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 25
+            }
+          }
+        },
+        "lower-radial-spokes": {
+          "effective-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 86.915771484375,
+            "median": 92.4199447631836,
+            "max": 98.2032699584961
+          },
+          "contributing-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 98.0,
+            "median": 99.0,
+            "max": 99.0
+          },
+          "dominant-source-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.011527875438332558,
+            "median": 0.014602472074329853,
+            "max": 0.02045014500617981
+          },
+          "accepted-repeat-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.2249945104122162,
+            "max": 0.4162963330745697
+          },
+          "fixed-guide-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.4162963330745697
+          },
+          "kind": {
+            "samples": 25,
+            "finite": 25,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 25
+            }
+          }
+        },
+        "clipped-core": {
+          "effective-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 58.566959381103516,
+            "median": 60.7597770690918,
+            "max": 60.98074722290039
+          },
+          "contributing-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 61.0,
+            "median": 61.0,
+            "max": 61.0
+          },
+          "dominant-source-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.016916777938604355,
+            "median": 0.01790298894047737,
+            "max": 0.022791380062699318
+          },
+          "accepted-repeat-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "fixed-guide-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "kind": {
+            "samples": 25,
+            "finite": 25,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 25
+            }
+          }
+        },
+        "blue-clipped-core": {
+          "effective-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 56.4737548828125,
+            "median": 60.68581771850586,
+            "max": 60.863990783691406
+          },
+          "contributing-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 61.0,
+            "median": 61.0,
+            "max": 61.0
+          },
+          "dominant-source-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.017633462324738503,
+            "median": 0.018179167062044144,
+            "max": 0.02575802430510521
+          },
+          "accepted-repeat-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "fixed-guide-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "kind": {
+            "samples": 25,
+            "finite": 25,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 25
+            }
+          }
+        },
+        "clipped-boundary": {
+          "effective-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 49.46806335449219,
+            "median": 59.86616516113281,
+            "max": 60.869781494140625
+          },
+          "contributing-sources": {
+            "samples": 25,
+            "finite": 25,
+            "min": 61.0,
+            "median": 61.0,
+            "max": 61.0
+          },
+          "dominant-source-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.017503738403320312,
+            "median": 0.020526979118585587,
+            "max": 0.03615459054708481
+          },
+          "accepted-repeat-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "fixed-guide-fraction": {
+            "samples": 25,
+            "finite": 25,
+            "min": 0.0,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "kind": {
+            "samples": 25,
+            "finite": 25,
+            "min": 1.0,
+            "median": 1.0,
+            "max": 1.0,
+            "counts": {
+              "1": 25
+            }
+          }
+        }
+      }
+    }
+  ]
+}

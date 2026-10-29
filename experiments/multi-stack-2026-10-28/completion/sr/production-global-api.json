@@ -1,0 +1,16 @@
+{
+  "schema": "strehl.sr.production-global-contract.v1",
+  "files": {
+    "crates/strehl-core/src/reconstruction.rs": "101ddeb4fb9dc4deb2e8c19430490da89b8e903c8134d0e0a500435e68f12f83",
+    "crates/strehl-core/src/reconstruction-registration.rs": "4a33c5a1a143777bb0f27a3065f2a7244cad479380a36c0e8ae07f3763cf34f4",
+    "crates/strehl-core/src/reconstruction-registration-footprint.rs": "4384e0e6bf31acaeab9d832b84d526e53bff0fa04259d0c2cdb7fb1ac11c159d",
+    "crates/strehl-core/src/reconstruction-registration-global.rs": "30a63bc0cf9eebb52c6d813eb1db88074b0ab8952f9eec670a2b8e82f9c0e9f9",
+    "crates/strehl-core/src/reconstruction-registration-graph.rs": "a46122650f2990a8cd84e3d2756702f8d78e303ba157a58e88dc0706fad87863"
+  },
+  "controls": {
+    "core": "outputs/multi-stack/completion/sr-global-promoted-core-01",
+    "registered_global": "outputs/multi-stack/completion/sr-global-promoted-example-01"
+  },
+  "real_roi": "outputs/multi-stack/completion/sr-chart-constant-01",
+  "default_unchanged": true
+}

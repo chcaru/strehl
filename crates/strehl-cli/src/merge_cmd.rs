@@ -9036,6 +9036,44 @@ fn write_merged_observed(
     linear_master: Option<&Path>,
     baked_recipe: Option<&strehl_edit::DevelopmentRecipe>,
 ) -> Result<()> {
+    write_merged_observed_with_coverage(merged,levels,wb,xyz_to_cam,space,demosaic,
+        exposure,restore,path,progress,linear_master,baked_recipe,None)
+}
+
+/// Optional union-canvas writer. The ordinary wrapper supplies no mask.
+#[allow(clippy::too_many_arguments)]
+fn write_merged_observed_with_coverage(
+    merged: Merged<'_>, levels: Levels, wb: Option<[f32;3]>,
+    xyz_to_cam: Option<&([[f32;3];3],String)>, space: image_out::OutputSpace,
+    demosaic: bool, exposure: Exposure, restore: Option<strehl_core::restore::RestorePlan<'_>>,
+    path: &Path, progress: Option<&crate::ui_progress::Progress>, linear_master: Option<&Path>,
+    baked_recipe: Option<&strehl_edit::DevelopmentRecipe>, coverage: Option<&[bool]>,
+) -> Result<()> {
+    write_merged_observed_with_reconstruction(merged,levels,wb,xyz_to_cam,space,demosaic,
+        exposure,restore,path,progress,linear_master,baked_recipe,coverage,None)
+}
+
+#[cfg(test)]
+#[path = "session-reconstruction-writer-tests.rs"]
+mod session_reconstruction_writer_tests;
+
+/// The optional callback runs after the existing native WB/MHC calculation and
+/// before color/highlight/tone development. Ordinary callers supply None.
+#[allow(clippy::too_many_arguments)]
+fn write_merged_observed_with_reconstruction(
+    merged: Merged<'_>, levels: Levels, wb: Option<[f32;3]>,
+    xyz_to_cam: Option<&([[f32;3];3],String)>, space: image_out::OutputSpace,
+    demosaic: bool, exposure: Exposure, restore: Option<strehl_core::restore::RestorePlan<'_>>,
+    path: &Path, progress: Option<&crate::ui_progress::Progress>, linear_master: Option<&Path>,
+    baked_recipe: Option<&strehl_edit::DevelopmentRecipe>, coverage: Option<&[bool]>,
+    reconstruction: Option<image_out::session_reconstruction_output::NativeReconstruction<'_>>,
+) -> Result<()> {
+    ensure!(reconstruction.is_none() || (demosaic && restore.is_none() && coverage.is_none()),
+        "original-CFA reconstruction requires native-size, single-view output without restoration");
+    if let Some(mask)=coverage {
+        ensure!(demosaic && restore.is_none() && mask.len()==merged.geometry().pixels()
+            && mask.iter().any(|&v|v),"union output needs supported full-resolution samples and no restoration");
+    }
     if let Some(progress) = progress {
         progress.render_step("develop", "started");
     }
@@ -9152,6 +9190,7 @@ fn write_merged_observed(
     let choose = || {
         let norm = |v: f32, gain: f32| v * gain / range;
         let mut luma: Vec<f32> = (0..n)
+            .filter(|&i|coverage.is_none_or(|mask|mask[i]))
             .map(|i| {
                 color::display_luminance(
                     [
@@ -9397,7 +9436,15 @@ fn write_merged_observed(
             progress.render_step("develop", "finished");
             progress.render_step("write", "started");
         }
-        image_out::write_demosaiced_with_master(
+        if let Some(reconstruction) = reconstruction {
+            use image_out::session_reconstruction_output::{NativeNormalization,prepare_native_camera_image,write_reconstructed_camera_image};
+            let mut image = prepare_native_camera_image(mw,mh,&mosaic,&dev,reconstruction.output_memory_budget)?;
+            (reconstruction.transform)(&mut image,NativeNormalization {
+                white_balance:gains,exposure_gain:eg,range,
+            })?;
+            write_reconstructed_camera_image(path,image,linear_master,baked_recipe)?;
+        } else {
+        image_out::write_demosaiced_with_master_coverage(
             path,
             mw,
             mh,
@@ -9405,7 +9452,9 @@ fn write_merged_observed(
             &dev,
             linear_master,
             baked_recipe,
+            coverage,
         )?;
+        }
         if let Some(progress) = progress {
             progress.render_step("write", "finished");
         }

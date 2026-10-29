@@ -101,9 +101,34 @@ pub fn export_image(
     settings: &ExportSettings,
     cancel: &AtomicBool,
 ) -> Result<ExportReport> {
+    export_image_with_coverage(path, image, recipe, settings, cancel, None)
+}
+
+/// Preserve an explicit final binary coverage mask as straight alpha. This
+/// mask is already the consumer's final support; export performs no erosion.
+/// Formats without supported alpha delivery refuse before creating any file.
+pub fn export_image_with_coverage(
+    path: &Path,
+    image: &LinearImage,
+    recipe: &DevelopmentRecipe,
+    settings: &ExportSettings,
+    cancel: &AtomicBool,
+    coverage: Option<&[u8]>,
+) -> Result<ExportReport> {
     check_cancel(cancel)?;
     settings.validate()?;
     image.validate()?;
+    if let Some(mask) = coverage {
+        ensure!(
+            mask.len() == image.width as usize * image.height as usize
+                && mask.iter().all(|&v| v == 0 || v == 255),
+            "Coverage must match the photograph and contain binary 0/255 support"
+        );
+        ensure!(
+            matches!(settings.format, ExportFormat::Tiff | ExportFormat::Png) && !settings.hdr,
+            "This photograph has transparent coverage. Choose SDR TIFF or PNG to preserve it; JPEG and AVIF delivery do not currently retain this mask"
+        );
+    }
     recipe.validate()?;
     image.validate_source_repairs(recipe)?;
     ensure!(
@@ -119,7 +144,7 @@ pub fn export_image(
         let report = crate::avif::export_avif(path, image, recipe, settings, cancel)?;
         settings.hdr.then_some(report)
     } else {
-        save_sdr(path, image, recipe, settings, cancel)?;
+        save_sdr(path, image, recipe, settings, cancel, coverage)?;
         None
     };
     Ok(ExportReport {
@@ -144,6 +169,7 @@ fn save_sdr(
     recipe: &DevelopmentRecipe,
     settings: &ExportSettings,
     cancel: &AtomicBool,
+    coverage: Option<&[u8]>,
 ) -> Result<()> {
     let mut pixels = vec![0u16; image.pixels.len()];
     pixels
@@ -180,34 +206,59 @@ fn save_sdr(
                         encoder::{TiffEncoder, colortype},
                         tags::Tag,
                     };
-                    let mut encoder = TiffEncoder::new(&mut buffered)?;
-                    let mut output =
-                        encoder.new_image::<colortype::RGB16>(image.width, image.height)?;
                     let description = format!(
                         "{} primaries, D65, sRGB transfer; Strehl development recipe: {}",
                         settings.color_space.label(),
                         serde_json::to_string(recipe)?
                     );
-                    output
-                        .encoder()
-                        .write_tag(Tag::ImageDescription, description.as_str())?;
-                    output
-                        .encoder()
-                        .write_tag(Tag::Software, "Strehl development v1")?;
-                    output
-                        .encoder()
-                        .write_tag(Tag::IccProfile, crate::image::IccBytes(&profile))?;
-                    output.write_data(&pixels)?;
+                    macro_rules! write_tiff {
+                        ($color:ty, $data:expr) => {{
+                            let mut encoder = TiffEncoder::new(&mut buffered)?;
+                            let mut output =
+                                encoder.new_image::<$color>(image.width, image.height)?;
+                            output
+                                .encoder()
+                                .write_tag(Tag::ImageDescription, description.as_str())?;
+                            output
+                                .encoder()
+                                .write_tag(Tag::Software, "Strehl development v1")?;
+                            output
+                                .encoder()
+                                .write_tag(Tag::IccProfile, crate::image::IccBytes(&profile))?;
+                            if coverage.is_some() {
+                                output
+                                    .encoder()
+                                    .write_tag(Tag::ExtraSamples, &[2_u16][..])?;
+                            }
+                            output.write_data($data)?;
+                        }};
+                    }
+                    if let Some(mask) = coverage {
+                        let rgba = rgba16(&pixels, mask);
+                        write_tiff!(colortype::RGBA16, &rgba);
+                    } else {
+                        write_tiff!(colortype::RGB16, &pixels);
+                    }
                 }
                 ExportFormat::Png => {
-                    let bytes: Vec<u8> = pixels.iter().flat_map(|v| v.to_ne_bytes()).collect();
+                    let rgba = coverage.map(|mask| rgba16(&pixels, mask));
+                    let bytes: Vec<u8> = rgba
+                        .as_deref()
+                        .unwrap_or(&pixels)
+                        .iter()
+                        .flat_map(|v| v.to_ne_bytes())
+                        .collect();
                     let mut encoder = image::codecs::png::PngEncoder::new(&mut buffered);
                     encoder.set_icc_profile(profile)?;
                     encoder.write_image(
                         &bytes,
                         image.width,
                         image.height,
-                        image::ExtendedColorType::Rgb16,
+                        if coverage.is_some() {
+                            image::ExtendedColorType::Rgba16
+                        } else {
+                            image::ExtendedColorType::Rgb16
+                        },
                     )?;
                 }
                 ExportFormat::Jpeg => {
@@ -237,3 +288,14 @@ fn save_sdr(
         || check_cancel(cancel),
     )
 }
+
+fn rgba16(rgb: &[u16], coverage: &[u8]) -> Vec<u16> {
+    rgb.chunks_exact(3)
+        .zip(coverage)
+        .flat_map(|(p, &a)| [p[0], p[1], p[2], u16::from(a) * 257])
+        .collect()
+}
+
+#[cfg(test)]
+#[path = "export-coverage-tests.rs"]
+mod coverage_tests;

@@ -1,0 +1,25 @@
+{
+  "seed": 2026102841,
+  "temporal_expected": [
+    400.0,
+    100.0,
+    125.0,
+    80.0,
+    400.0
+  ],
+  "temporal_measured": [
+    401.20675740986326,
+    100.00382207385246,
+    125.07429702758895,
+    79.90457623755802,
+    401.20675740986326
+  ],
+  "signal_foil_rmse": {
+    "identity": 0.0,
+    "blur": 1.9846128225326538,
+    "sharpen": 0.9923064708709717,
+    "constant": 9.039688110351562,
+    "shift": 5.411961078643799
+  },
+  "scope": "observer mechanics, not product or camera validation"
+}

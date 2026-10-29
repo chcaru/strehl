@@ -72,7 +72,7 @@ impl StrehlApp {
             "selected_region":self.editor.selected,
             "export_directory":self.export_destination_for_current(),
             "view":self.process_space.history_revision(), "projects":self.project_explorer.history_revision(),
-            "running":self.job.is_some(), "opening":self.scan.is_some() || self.replay.is_some()
+            "running":self.job.is_some(), "opening":self.scan.is_some() || self.replay.is_some() || self.session_import.is_some()
         });
         let mut hash = std::collections::hash_map::DefaultHasher::new();
         state.to_string().hash(&mut hash);
@@ -157,9 +157,18 @@ impl StrehlApp {
                 incoming.reply(AgentReply::error(error));
                 continue;
             }
-            if self.picker_active() && !incoming.request.command.is_read_only() {
+            if self.picker_active()
+                && !incoming.request.command.is_read_only()
+                && !(self.session_import.is_some()
+                    && matches!(incoming.request.command, AgentCommand::CancelStack {}))
+                && !(self.view_bundle_export.is_some()
+                    && matches!(
+                        incoming.request.command,
+                        AgentCommand::CancelViewBundleExport {}
+                    ))
+            {
                 incoming.reply(AgentReply::error(
-                    "The human is choosing a file. Read state and retry after the dialog closes.",
+                    "A file selection or completed-session import is active. Read state and retry when it finishes.",
                 ));
                 continue;
             }
@@ -342,7 +351,10 @@ impl StrehlApp {
         })).collect();
         let export_capabilities = json!({"formats":["avif","tiff","png","jpeg"],"color_spaces":["srgb","display_p3","rec2020"],
                 "destination":self.export_destination_for_current(),
+                "view_bundle":{"available":self.view_bundle_source().is_some(),"busy":self.view_bundle_export.is_some(),"last_export":self.last_view_bundle_export,"scope":"Complete bound artifacts; no original RAWs or developed edit versions"},
                 "defaults":strehl_edit::ExportSettings::default(),
+                "transparent_coverage":self.editor.loaded.as_ref().is_some_and(|p|p.coverage.is_some()),
+                "coverage_preserving_formats":["tiff","png"],
                 "hdr_available":self.editor.loaded.as_ref().is_some_and(|p|self.agent_photo_is_current() && p.image.origin==strehl_edit::ImageOrigin::SceneLinear)});
         let diagnostics = json!({"admission_packets":self.progress.admission_archive.len(),
                 "omitted_packets":self.progress.admission_archive.dropped(),
@@ -350,16 +362,17 @@ impl StrehlApp {
                     "meaning":"folded aligned-observation rank: 0 one-sided, 1000 balanced; ties can also read 0; neither end is a quality grade"})),
                 "alignment":self.progress.alignment,"placed":self.progress.placed,"refused":self.progress.refused,
                 "noise_model":self.progress.noise_model,"geometry_error":self.progress.alignment_error});
-        json!({
+        let session = self.controls.settings.session.as_ref().map(|session|json!({"mode":session.manifest.mode,"primary_pass":session.manifest.primary_pass,"memory_limit_gib":session.memory_limit_gib,"precision_weights":session.precision_weights,"contribution_maps":session.contribution_maps,"focus_evidence":session.focus_evidence,"reproducibility":session.reproducibility,"original_cfa_reconstruction":session.original_cfa_reconstruction,"capture_groups":self.session_ui.groups,"layers":self.session_ui.layers,"selected_output":self.result,"selection_busy":self.session_output_selection.is_some(),"primary_scope":if session.manifest.mode == crate::session_workspace::SessionMode::IndependentViews {"Independent view coordinates and focus; no primary or cross-view geometry."} else if session.manifest.mode == crate::session_workspace::SessionMode::Mosaic {"No primary preference; framing follows measured overlap and coverage."} else if session.manifest.mode == crate::session_workspace::SessionMode::Layers {"Common reference frame and first displayed layer; each layer retains its own appearance."} else {"Framing, appearance and disagreement fallback; automatic reference has no fusion preference."}}));
+        let mut snapshot = json!({
             "revision":self.agent.revision, "application":"Strehl", "version":env!("CARGO_PKG_VERSION"),
             "headless":self.headless,"output_directory":self.output,
             "active_stack":self.active_stack, "projects":projects, "project_list_truncated":self.catalog.nodes.len()>256,
             "source_count":self.stack.as_ref().map(|s|s.frames.len()), "selected_frame":self.selected,
             "frame_index_base":0, "status":self.status, "stage":format!("{:?}",self.progress.stage),
-            "busy":{"stack":self.job.is_some(),"opening":self.scan.is_some()||self.replay.is_some(),
+            "busy":{"stack":self.job.is_some(),"opening":self.scan.is_some()||self.replay.is_some()||self.session_import.is_some(),
                 "photo":self.editor.loading.is_some(),"preset":self.editor.preset.is_some()||self.presets_busy(),"export":self.editor.exporting.is_some() || self.photo_history_busy()},
             "stack_blocker":self.stack_start_blocker(), "settings":self.controls.settings,
-            "session":self.controls.settings.session.as_ref().map(|session|json!({"mode":session.manifest.mode,"primary_pass":session.manifest.primary_pass,"memory_limit_gib":session.memory_limit_gib,"capture_groups":self.session_ui.groups,"layers":self.session_ui.layers,"primary_scope":if session.manifest.mode == crate::session_workspace::SessionMode::Layers {"Common reference frame and first displayed layer; each layer retains its own appearance."} else {"Framing, appearance and disagreement fallback; automatic reference has no fusion preference."}})),
+            "session":session,
             "exposure_ev":self.controls.exposure,"pyramid_gate":self.controls.gate,"workers":self.controls.workers,
             "photo_history":self.photo_history_snapshot(), "development":self.editor.recipe,"before_preview":self.editor.before, "photo_ready":self.agent_photo_is_current(),
             "selected_region":self.editor.selected,
@@ -372,8 +385,18 @@ impl StrehlApp {
             "export_capabilities":export_capabilities,
             "grants":self.agent.grants.iter().map(|(id,p)|json!({"id":id,"name":p.file_name()})).collect::<Vec<_>>(),
             "diagnostics":diagnostics,
+            "saved_diagnostics":self.process_space.diagnostic_snapshot(),
             "semantics":"Camera previews are unregistered. Admission is sampled gate evidence, not fractional ownership. Annotations use final-photo normalized coordinates. Exports and new runs preserve originals."
-        })
+        });
+        snapshot["view_progress"] =
+            serde_json::to_value(self.progress.view.as_ref()).expect("Serializable view progress");
+        snapshot["view_progress_observations_missing"] =
+            json!(self.progress.view_observations_missing);
+        snapshot["progress_source_identity"] = json!({"local_frame":self.progress.processing_frame,
+            "parent_frame":self.progress.processing_frame.and_then(|i|self.progress.parent_frame(i)),
+            "scope":"Child-local diagnostics map to parent original captures through view_progress"});
+        snapshot["imported_session"] = serde_json::to_value(self.expected_run.as_ref().and_then(|r|r.imported.as_ref()).map(|p|json!({"scope":p.scope(),"renderer_bound":p.renderer_bound,"imported_at":p.imported_at,"diagnostic_warnings":p.diagnostic_warnings}))).expect("Serializable import provenance");
+        snapshot
     }
 
     fn apply_agent_command(&mut self, command: AgentCommand) -> anyhow::Result<Value> {
@@ -418,6 +441,12 @@ impl StrehlApp {
                     .ok_or_else(|| anyhow::anyhow!("Saved run is unavailable"))?
                     .clone();
                 self.reopen_run(run);
+            }
+            SelectSessionOutput { index } => {
+                self.select_session_output(index)?;
+                return Ok(
+                    json!({"state":"queued","operation":"select_session_output","index":index}),
+                );
             }
             SelectSource { frame } => {
                 anyhow::ensure!(
@@ -551,6 +580,24 @@ impl StrehlApp {
                 recipe.clear_adaptive_scope(Some(&id));
                 self.editor.replace(recipe)?;
             }
+            InspectSessionDiagnostic {
+                map,
+                opacity,
+                sample_uv,
+            } => {
+                anyhow::ensure!(
+                    self.session_ui
+                        .summary
+                        .as_ref()
+                        .is_some_and(|s| s.completed)
+                        && self.result.is_some()
+                        && self.image_path == self.result,
+                    "Open a completed session photograph first"
+                );
+                self.process_space
+                    .inspect_diagnostic(map.as_deref(), opacity, sample_uv)?;
+                self.process_view = true;
+            }
             SetView { center, zoom } => {
                 anyhow::ensure!(zoom <= 8.0, "The linked photo viewer supports 1..8× zoom");
                 self.process_space.set_photo_view(center, zoom);
@@ -565,6 +612,12 @@ impl StrehlApp {
                 return Ok(json!({"state":"queued","operation":"stack"}));
             }
             CancelStack {} => {
+                if let Some((_, _, task)) = &self.session_import {
+                    task.cancel();
+                    return Ok(
+                        json!({"state":"cancellation_requested","operation":"completed_session_import"}),
+                    );
+                }
                 let job = self
                     .job
                     .as_ref()
@@ -579,6 +632,31 @@ impl StrehlApp {
             RestoreEditVersion { id } => {
                 self.restore_edit_version(&id)?;
                 return Ok(json!({"state":"queued","operation":"restore_edit_version"}));
+            }
+            ExportViewBundle {
+                grant_id,
+                relative_parent,
+                folder_name,
+            } => {
+                let root = self
+                    .agent
+                    .grants
+                    .get(&grant_id)
+                    .ok_or_else(|| anyhow::anyhow!("Unknown shared destination folder"))?;
+                let parent = crate::agent_interface::resolve_granted_path(root, &relative_parent)?;
+                anyhow::ensure!(parent.is_dir(), "Choose an existing destination parent");
+                self.start_view_bundle_export(parent.join(folder_name))?;
+                return Ok(json!({"state":"queued","operation":"export_view_bundle"}));
+            }
+            CancelViewBundleExport {} => {
+                let task = self
+                    .view_bundle_export
+                    .as_ref()
+                    .ok_or_else(|| anyhow::anyhow!("No bundle export is running"))?;
+                task.cancel();
+                return Ok(
+                    json!({"state":"cancellation_requested","operation":"export_view_bundle"}),
+                );
             }
             Export {
                 file_name,
@@ -648,6 +726,20 @@ impl StrehlApp {
                     .organize(&mut self.catalog, |catalog| catalog.rename(id, &name))?;
                 self.persist_catalog();
             }
+            ImportCompletedSession {
+                grant_id,
+                relative_path,
+                parent_id,
+            } => {
+                let root = self
+                    .agent
+                    .grants
+                    .get(&grant_id)
+                    .ok_or_else(|| anyhow::anyhow!("This folder is not shared"))?;
+                let path = crate::agent_interface::resolve_granted_path(root, &relative_path)?;
+                self.start_completed_import(path, parent_id)?;
+                return Ok(json!({"state":"queued", "operation":"completed_session_import"}));
+            }
             ImportStack {
                 grant_id,
                 relative_path,
@@ -703,6 +795,11 @@ impl StrehlApp {
                 mode,
                 primary_pass,
                 memory_limit_gib,
+                precision_weights,
+                contribution_maps,
+                focus_evidence,
+                reproducibility,
+                original_cfa_reconstruction,
                 parent_id,
             } => {
                 anyhow::ensure!(
@@ -755,6 +852,11 @@ impl StrehlApp {
                             ..Default::default()
                         },
                         memory_limit_gib,
+                        precision_weights,
+                        contribution_maps,
+                        focus_evidence,
+                        reproducibility,
+                        original_cfa_reconstruction,
                         sources: Vec::new(),
                     },
                     false,

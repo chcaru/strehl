@@ -269,7 +269,12 @@ impl ExplorerPreviews {
                         })?;
                         let recipe = photographs::read_preview_recipe(&root, &version)?;
                         image.validate_source_repairs(&recipe)?;
-                        let job = crate::development_job::DevelopmentJob::native(image, recipe);
+                        let coverage = crate::photo_coverage::Coverage::load(
+                            &version.owner.output,
+                            [image.width, image.height],
+                        )?;
+                        let job = crate::development_job::DevelopmentJob::native(image, recipe)
+                            .with_coverage(coverage);
                         preview::explorer::save_version(&root, &version, &job)
                     }
                 },

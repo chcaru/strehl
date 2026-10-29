@@ -146,6 +146,7 @@ pub(crate) struct ProcessTheater {
     wheel_edit: Option<f64>,
     primary_destination: Option<Rect>,
     pub(crate) edit_mapping: Option<(Rect, Rect)>,
+    pub(crate) saved_overlay_exclusion: Option<Rect>,
     pub(crate) annotation_mode: bool,
     pub(crate) edit_navigation: bool,
     pub(crate) edit_focus: bool,
@@ -224,6 +225,7 @@ impl Default for ProcessTheater {
             wheel_edit: None,
             primary_destination: None,
             edit_mapping: None,
+            saved_overlay_exclusion: None,
             annotation_mode: false,
             edit_navigation: false,
             edit_focus: false,
@@ -2011,6 +2013,7 @@ impl ProcessTheater {
         );
         self.primary_destination = None;
         self.edit_mapping = None;
+        self.saved_overlay_exclusion = None;
         let p = ui.painter_at(rect);
         p.rect_filled(rect, 0.0, crate::theme::BG);
         let final_owned = input.progress.stage == Stage::Complete
@@ -2744,6 +2747,7 @@ impl ProcessTheater {
             return;
         }
         let action = self.result_photo.show(ui, image_box, evidence);
+        self.saved_overlay_exclusion = self.result_photo.overview_rect();
         if returning {
             self.result_photo.paint_inspection_evidence(
                 ui,

@@ -109,6 +109,28 @@ pub(crate) fn spawn_task<T: Send + 'static>(
     }
 }
 
+/// A publication worker reports its terminal result even if cancellation races
+/// with a completed commit. The work itself must check the cancellation token.
+pub(crate) fn spawn_reporting_task<T: Send + 'static>(
+    name: &str,
+    work: impl FnOnce(Arc<AtomicBool>) -> Result<T> + Send + 'static,
+) -> Task<T> {
+    let (sender, receiver) = mpsc::sync_channel(1);
+    let cancelled = Arc::new(AtomicBool::new(false));
+    let worker_cancelled = Arc::clone(&cancelled);
+    let errors = sender.clone();
+    if let Err(error) = thread::Builder::new().name(name.into()).spawn(move || {
+        let result = work(worker_cancelled).map_err(|error| format!("{error:#}"));
+        let _ = sender.send(result);
+    }) {
+        let _ = errors.send(Err(format!("Starting background work: {error}")));
+    }
+    Task {
+        receiver,
+        cancelled,
+    }
+}
+
 struct CompletionNotice<T> {
     sender: Option<SyncSender<Result<T, String>>>,
     notify: Arc<dyn Fn() + Send + Sync>,
@@ -862,7 +884,7 @@ fn path_is_within(path: &Path, root: &Path) -> bool {
     }
 }
 
-fn validate_output_parent(source: &Path, output_parent: &Path) -> Result<()> {
+pub(crate) fn validate_output_parent(source: &Path, output_parent: &Path) -> Result<()> {
     ensure!(
         !path_is_within(output_parent, source),
         "Choose an output folder outside the input stack"
@@ -1135,7 +1157,7 @@ fn publish_output(partial: &Path, output: &Path, cancelled: &AtomicBool) -> Resu
         .context("Publishing the completed TIFF without replacing existing files")
 }
 
-fn publish_no_replace(partial: &Path, output: &Path) -> Result<()> {
+pub(crate) fn publish_no_replace(partial: &Path, output: &Path) -> Result<()> {
     ensure!(
         partial.parent() == output.parent(),
         "The completed image must stay in its reserved render folder"

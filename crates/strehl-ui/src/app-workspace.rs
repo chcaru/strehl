@@ -77,7 +77,7 @@ impl StrehlApp {
             .job
             .as_ref()
             .is_some_and(jobs::RenderJob::is_cancelling);
-        let opening = self.scan.is_some() || self.replay.is_some();
+        let opening = self.scan.is_some() || self.replay.is_some() || self.session_import.is_some();
         let name = self
             .active_stack
             .and_then(|id| self.catalog.node(id))
@@ -397,7 +397,10 @@ impl StrehlApp {
             return;
         }
         let id = self.catalog.stack_for_run(&run.directory);
-        if let Some(session) = run.settings.session.clone() {
+        if run.imported.is_some() {
+            self.prepare_session_controls();
+            self.reset_capture();
+        } else if let Some(session) = run.settings.session.clone() {
             self.reload_session(session, false);
         } else {
             self.import(run.source.clone());
@@ -421,6 +424,15 @@ impl StrehlApp {
     }
     pub(super) fn open_project_stack(&mut self, id: NodeId) {
         if self.job.is_some() || self.picker_active() {
+            return;
+        }
+        if let Some(run) = self
+            .catalog
+            .latest_run(id)
+            .filter(|r| r.imported.is_some())
+            .cloned()
+        {
+            self.reopen_run(run);
             return;
         }
         let Some(draft) = self.catalog.node(id).and_then(|n| n.stack.clone()) else {
@@ -593,6 +605,11 @@ impl StrehlApp {
                         self.editor.loaded.as_ref().map(|photo| &photo.preview),
                     );
                     let busy = self.job.is_some() || self.picker_active() || self.scan.is_some();
+                    if ui.add_enabled(!busy && self.replay.is_none(), egui::Button::new("Open completed CLI session…")).on_hover_text("Import saved photographs and diagnostics without opening original capture folders.").clicked() { self.pick(Dialog::CompletedSession); }
+                    if let Some((_,_,task)) = &self.session_import {
+                        ui.label("Verifying imported artifacts…");
+                        if ui.button("Cancel import").clicked() { task.cancel(); }
+                    }
                     let response = self.project_explorer.show(ui, &mut self.catalog, busy);
                     changed = response.changed;
                     action = response.action;
@@ -694,7 +711,11 @@ impl StrehlApp {
             return;
         }
         if let Some(focus) = crate::controls::show_review(ui, &self.progress) {
-            self.process_space.review_focus(focus, self.selected);
+            let selected = self
+                .progress
+                .active_view()
+                .map_or(self.selected, |v| v.local_frame(self.selected).unwrap_or(0));
+            self.process_space.review_focus(focus, selected);
         }
         if let Some(output) = &self.result {
             ui.separator();

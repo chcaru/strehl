@@ -1,0 +1,146 @@
+{
+  "schema": "strehl.sr-focus-artifact-seal.v1",
+  "command": [
+    "experiments/multi-stack-2026-10-28/completion/sr/seal-chart-focus-census.py",
+    "outputs/multi-stack/completion/sr-tilted-focus-census-01",
+    "outputs/multi-stack/completion/sr-tilted-focus-census-run-01/receipt.json",
+    "outputs/multi-stack/completion/product-16",
+    "--direct-build",
+    "outputs/multi-stack/completion/sr-chart-decomposition-build-17c/build-receipt.json",
+    "--out",
+    "experiments/multi-stack-2026-10-28/completion/sr/tilted-focus-census-01-seal.json"
+  ],
+  "census_report_sha256": "04414c27bcd71aacf515606a863576eb2a285dc0fa80454cab1b5c17097a7918",
+  "run_receipt_sha256": "77b8e7bfd3ffbef34c8a7c83fcd94ac27069e18d2797fe641ac8389ecbb7093d",
+  "binary_sha256": "2b5c7ac47df2f195fcb9a08f04a84eb86ccf7009d7d6ebbb0f340e51351fe9ca",
+  "snapshot_sha256": "3afe1bb3fffee6bbde227c74064bd9133dd601db1b7b5210bad3aa9ff37f682d",
+  "source_archive_sha256": "5baf05855dda6085f525fead360af8111ce10b320b6ddd46cc09944311504e57",
+  "producer_sources": {
+    "experiments/multi-stack-2026-10-28/completion/sr/focus-census.rs": "1b0accd353ef8bc37229bb46b76676cbac813dec2f8c3a16df28891ba890c2ca",
+    "crates/strehl-core/src/focus.rs": "71e63def76e40f18df440617a9dba7013d799ceabd30bf805149223433384e3e",
+    "crates/strehl-core/src/focus-evidence.rs": "435e892d28ac9994673d7de250145ba7bb155abde26fa12c3351d52f1ae1e9fc",
+    "crates/strehl-core/src/through_focus.rs": "9dfbd0ec6bf57148ba29206bf48a7a3d17a86dcea580c837fc00eea1a14f7dcf",
+    "crates/strehl-core/src/boxfilter.rs": "430f1c68ebfbb72a2a789ecdd78cf11e7ef237113e50b7e65dd53d6d6d4309e0",
+    "crates/strehl-core/src/merge.rs": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+    "crates/strehl-core/src/noise.rs": "d88dc9cf419a8fdb1e3ff2c51f0b0ac80d785c17de7f9e71e905fc977fce0ecc",
+    "crates/strehl-core/src/plane.rs": "8c219f9c4d2c8c0da19416998b0f369a9f9d44e305740664f29caaba69203dc4",
+    "crates/strehl-core/src/optics.rs": "1884fd98c7a2adf903c152b3d877051cfeba71316bdbb797fd2f1ba1433a5524",
+    "crates/strehl-cli/src/session-sampling.rs": "939922ad4f4616197ef47804d256cae4db8397930ca400996f94513007cc568a",
+    "crates/strehl-cli/src/session-focus.rs": "e8ff80e88ddd77db7890ea3690214c030de3039109635e5b86f7d80feef43689"
+  },
+  "alignment_sha256": "bdab4f260edf2ff5d0e303d8da21af1edcbbb2abc44c7fe7895fd326e1b8ce33",
+  "calibration_sha256": "48832ace20bbf1a72c02b88a3527aea6eba8c63e424a550724e4ada712b02151",
+  "source_identities_sha256": "88cdd83df87dea3f899b5e4d5650dc896c77bb494a2ad94b9801ce001935098c",
+  "files": {
+    "report.json": "04414c27bcd71aacf515606a863576eb2a285dc0fa80454cab1b5c17097a7918",
+    "roi-0/focus-pass-0-flags.u8": "cb07b004c89f72c66583fe9f4264f276ffb643ced00756ae6b36604ec406fa94",
+    "roi-0/focus-pass-0-mode-boundary.u8": "65412500a9fb84ba63a77fb96a57fe4cc2ed0d6c5f7f9895d7b7eead86fb3f11",
+    "roi-0/focus-pass-0-mode-ordinals.f32": "0e355d54a92308db713b3ece53cea52a5705721d13c376d400e2c5f611227d34",
+    "roi-0/focus-pass-0-mode-prominence.f32": "cedf375467231353e52fed5812065e6e9ffb982c27dc0930811d864e329eb107",
+    "roi-0/focus-pass-0-ordinal.f32": "2375a1dc00484c25d85b7f0af0b57bd03c3550067aaeea06d589cb554a35f61b",
+    "roi-0/focus-pass-0-perplexity.f32": "2ded55a74a3e4a805899bdf152515783e067eafbcc18e331c44683617cb454a7",
+    "roi-0/focus-pass-0-prominence.f32": "e1428a4852ca3b4e7a252b54cf7a2318314eeb47e2c08fa8ebe80462e4dcff10",
+    "roi-0/focus-pass-0-unresolved.f32": "428aa51a7f0020570bf1b1e34efd291e9c421198b1c562e2cd03ddfe47359d6a",
+    "roi-0/focus-pass-0-width.f32": "5b35898b90696eab50453974db0eba0b712ce18947df49937c8943feb0beb384",
+    "roi-0/focus-pass-1-flags.u8": "5dda5ccc14e38f5352fff853f6409ef8b645c74ce9a33361932554be9a9bbfed",
+    "roi-0/focus-pass-1-mode-boundary.u8": "fa6d96255f37bd2b8edafca33ce50e2b2812d6428606a1f1d2495447baf63fdf",
+    "roi-0/focus-pass-1-mode-ordinals.f32": "2ee93be31f60019aedcb2b248532f88cf55141edc92b70628f10597ec396ae9c",
+    "roi-0/focus-pass-1-mode-prominence.f32": "a33b931426dbb51cc934639b2dafb8f31a470a114f6ad3428643082bd87fd76a",
+    "roi-0/focus-pass-1-ordinal.f32": "94d3d75a7a3276b65ca3d3f82fba9db3767466852647371f16833504a5e5ca64",
+    "roi-0/focus-pass-1-perplexity.f32": "12c8accfe88b2f572b51cbc815c495bf9d0ef1af5cd5963c8f5a1281cedf89ab",
+    "roi-0/focus-pass-1-prominence.f32": "94617d50e31c690db8160357fd3fc593ea779a945c82ea625a30b26d66209e3d",
+    "roi-0/focus-pass-1-unresolved.f32": "60295f9d85ee9dd581aeae08055057ca4193d6ca60f0a1004cd0a146b1edd4d5",
+    "roi-0/focus-pass-1-width.f32": "476260f68ea5eadee517e77dc1006f699a79630ed59396424531f715ab010d71",
+    "roi-0/native-linear-eligible.u8": "357480255fddd5c0111a4b8682cb465bfb4bf3ed7824f1c24887ce8b0fb22161",
+    "roi-0/native.tiff": "41bd8e91166c794aad297c8be81ceb6432617a67f5378bc2b2169fbd83a941ad",
+    "roi-1/focus-pass-0-flags.u8": "e2154de39cba400b9a56b24f54a198b533837e7bcc09fc484223ad299d3b517d",
+    "roi-1/focus-pass-0-mode-boundary.u8": "b97b4df95e7d5143004463eed90dd6f1e1db4543f132e79163fcfb8fd07483b1",
+    "roi-1/focus-pass-0-mode-ordinals.f32": "47a949c4473623d76f6d7e6876958103dc81dc4df3323e684cb4d08654be7885",
+    "roi-1/focus-pass-0-mode-prominence.f32": "9cd005c371ebf2dfbed6449d95357c8fba7f3f1257b1f2af4595c512dd64eda4",
+    "roi-1/focus-pass-0-ordinal.f32": "4f9085fa7d4e225e6481bbcb63ef4de57a6408a001679e5c5c74ba8f21dcae86",
+    "roi-1/focus-pass-0-perplexity.f32": "7a4dcef46b65db8708cac8dcf219a1a00b54271adb0ede02e2d219aea1f0106a",
+    "roi-1/focus-pass-0-prominence.f32": "44be3d0e9815fd6b2c0f22dbeb455dc06bfeea1754cb17502874d9c7476c3361",
+    "roi-1/focus-pass-0-unresolved.f32": "387430dc33fe49b501ee5678dbbf4923eac1c1072aacd4ebd42040f4cd0a641d",
+    "roi-1/focus-pass-0-width.f32": "ab5cff24acd44c3d61025231625755c82421a3eacd204d40da17810f848606cb",
+    "roi-1/focus-pass-1-flags.u8": "f702cd892576b680ae4eeff8eaabc8a4d69682814d57cb19be3fabcf2fabd4d2",
+    "roi-1/focus-pass-1-mode-boundary.u8": "ada5f04f7594adbf4a5263689be16d656d50a8a5da9eadd54865325d3b698e02",
+    "roi-1/focus-pass-1-mode-ordinals.f32": "b9928f6436a3d56c564f43af5285375f0feffe0ef98bf0f427007a2bf613a003",
+    "roi-1/focus-pass-1-mode-prominence.f32": "35e9e03fbf13281f795aa98927cd6daae20cf0183aca10338c16d1d48d1eb910",
+    "roi-1/focus-pass-1-ordinal.f32": "9e389e15c1a2ab162c5eef69c691e1d6c8fbd7e9e86210a408785345548f3f88",
+    "roi-1/focus-pass-1-perplexity.f32": "c3f396cd3b1807689c134c1eafd8c18336403d9d23e9d45faf3af7f2cabba6b8",
+    "roi-1/focus-pass-1-prominence.f32": "852fca23ed4c2ff858f88c7a50d6df00f87be49bd5787ab47710de842e23509f",
+    "roi-1/focus-pass-1-unresolved.f32": "27bca181e62bd6a84efd936da151f455bbf26e35693579a7fc3cad322146660d",
+    "roi-1/focus-pass-1-width.f32": "ccf273d42349ad752cbb331aeb7ee0bb09156c7ae600e2cf41b7a0bd11c311f2",
+    "roi-1/native-linear-eligible.u8": "357480255fddd5c0111a4b8682cb465bfb4bf3ed7824f1c24887ce8b0fb22161",
+    "roi-1/native.tiff": "f5e9614c216e257916853ebec2f1f8d45720cec87c2e273a9b278956a35415e6",
+    "roi-2/focus-pass-0-flags.u8": "a82a23286a77272050a273c26c5c62a2a1659dc917d1e55f7d22b65cfb4ca087",
+    "roi-2/focus-pass-0-mode-boundary.u8": "2531fbece7fc427a10b9033051caf00a8f87f24162cb51912927b19fcb7c7806",
+    "roi-2/focus-pass-0-mode-ordinals.f32": "37d4db5b2c4dc8acd8a0652d80b790bf63bd12152c14c5ce097ccd750d5a62b4",
+    "roi-2/focus-pass-0-mode-prominence.f32": "9a8f3beee94ee20db3c8c90fd171f9dc06d0324c2c0428916c9a0270501d7570",
+    "roi-2/focus-pass-0-ordinal.f32": "8f66376b23ec2b916bc646577a4c6a3f978f6f5a7c85ecfb2317edbaa5299250",
+    "roi-2/focus-pass-0-perplexity.f32": "b86b2ebaab35e775ad3f23b4e6068c48b057f2797f23e0d385b9a5af93f3237f",
+    "roi-2/focus-pass-0-prominence.f32": "de3a85caa4942ce43d2edf3b905a3b579eafb066c85991933d4df9a4089dfffb",
+    "roi-2/focus-pass-0-unresolved.f32": "3afcd9f9628f3546403daa42ca522015ce38204336f4b45493b1fe80b959f375",
+    "roi-2/focus-pass-0-width.f32": "572688e515c438cfdd6e03b50991eecabd692d889c375de209b513c32e5bee8c",
+    "roi-2/focus-pass-1-flags.u8": "ebfff983aa57f1c3a175cfb8d6c9da56778887d3da49e4805055409ecba90eb0",
+    "roi-2/focus-pass-1-mode-boundary.u8": "e3f060ffc3b31b89d428a449787083c0e2ec0231e300163a0e567417db4b542e",
+    "roi-2/focus-pass-1-mode-ordinals.f32": "b2c25db032cb9c7bae620d0be2d5aabe51683887522a599c79f53f99d857d495",
+    "roi-2/focus-pass-1-mode-prominence.f32": "9e5612f51384a9e23479353777cd4748856fc7e53d4dd54a1aae07bb8af6807e",
+    "roi-2/focus-pass-1-ordinal.f32": "7e2daea677fd5222dea1ba24100b1c093ace0a7df08b21d299a43630ca0cd8e7",
+    "roi-2/focus-pass-1-perplexity.f32": "d04f038417e9c5321117241bcf5102d8d29b48d5f7fda89b2546f630f5ead402",
+    "roi-2/focus-pass-1-prominence.f32": "a9ccf6613a32cbf13b0a277395fd2da92dc81c8f65f5558e01bbf72c2154c262",
+    "roi-2/focus-pass-1-unresolved.f32": "76385cfcaca10749f95829bbdbb724f0e1f242c8ba26b4e4f487207471ad321b",
+    "roi-2/focus-pass-1-width.f32": "f974df58947d2aca49f3b740639835dfbb99616d9072519ac74caefb78af3f46",
+    "roi-2/native-linear-eligible.u8": "357480255fddd5c0111a4b8682cb465bfb4bf3ed7824f1c24887ce8b0fb22161",
+    "roi-2/native.tiff": "0ffbbd344141d3c1766d8cdee01904434e623c40e393fb27be752cbfd91272b1"
+  },
+  "scope": "Exact completed research artifact; producer fingerprints verified against frozen implementation archive and compiled binary, without requiring current working files to remain unchanged; not a new RAW decode or production cache binding",
+  "direct_link_build": {
+    "receipt_sha256": "362b626ae8ba072acc40ad13a41afa1229ac266a601ed5d481aab7682718c403",
+    "fingerprint_sha256": "b3615842da5965d72a96ff67befac46b65c73dab98719985cd7adf04e2157c5f",
+    "libraries": {
+      "strehl_cli": {
+        "file": "target\\release\\deps\\libstrehl_cli-63ce8e1d9f947ed6.rlib",
+        "sha256": "28de31f574dfbcdb3903ce1e7f0cb84bcd1ecf288ff83cbcbe1e990fcb0c36a9"
+      },
+      "tiff": {
+        "file": "target\\release\\deps\\libtiff-ade59db8315c6832.rlib",
+        "sha256": "f8301e3059b04ba71f0485b1deedb00fc339572144c76e1d4ca3513bd47550e5"
+      },
+      "strehl_core": {
+        "file": "target\\release\\deps\\libstrehl_core-3a63d792a43513a7.rlib",
+        "sha256": "a05d58cc1d08dc0fbe0419f5942747722feaf0d543f4877d2cd15b3a0d43245f"
+      },
+      "sha2": {
+        "file": "target\\release\\deps\\libsha2-89cfe27a78b29335.rlib",
+        "sha256": "5124415797c897f4b72d2f765dd44a3d53d2a1cc2ffaf6ab5c2ef8bc14f77321"
+      },
+      "serde_json": {
+        "file": "target\\release\\deps\\libserde_json-7e98cd514b179af1.rlib",
+        "sha256": "34a6321fbf59d7cf8cf5265298bb4d0ef4aaafdd876dbdcb3d1a7c1595c31d0a"
+      },
+      "serde": {
+        "file": "target\\release\\deps\\libserde-d9e14b9f50dfca36.rlib",
+        "sha256": "d16922acc5bd9bae446d414837209f4b83a23eb38103554f2f0050ba44bdc5ad"
+      },
+      "anyhow": {
+        "file": "target\\release\\deps\\libanyhow-c3757cab843c3f49.rlib",
+        "sha256": "2b2d4a246dc4363cadef124f0f649d91a015db3075b2920cf2a392b94c1e08e2"
+      },
+      "rayon": {
+        "file": "target\\release\\deps\\librayon-4dab81100f734655.rlib",
+        "sha256": "eaa9ce62d3b92a068939e2d7b6f3dbd8ca6dbb475be9a6e28139eae66f1483bf"
+      },
+      "strehl_edit": {
+        "file": "target\\release\\deps\\libstrehl_edit-3c5c6c65216bffc3.rlib",
+        "sha256": "a0f6aec251968797246d76f5bcec8b3e27fbe74356e9b49778b320961ee2eca6"
+      },
+      "clap": {
+        "file": "target\\release\\deps\\libclap-25ea056d176c9aec.rlib",
+        "sha256": "b98b0eb7ae6cadf7f11e9b7f16eeab57f026ac13e0c1decbe23c504b0e4adbf1"
+      }
+    },
+    "build_id": "product16-support-current-decomposition17c",
+    "scope": "Research executable compiled from locally bound sources and the recorded frozen support libraries; listed focus-producing sources equal the support snapshot archive. The snapshot does not claim to contain this later research executable."
+  }
+}

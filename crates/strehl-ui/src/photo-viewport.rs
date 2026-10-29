@@ -53,7 +53,7 @@ pub(super) fn prepare_job(
     hdr: bool,
     retain_fallback: bool,
 ) -> anyhow::Result<PreparedPhoto> {
-    prepare(
+    prepare_covered(
         job.image(coarse),
         job.recipe(),
         request,
@@ -61,6 +61,7 @@ pub(super) fn prepare_job(
         presenter,
         hdr,
         retain_fallback,
+        job.coverage(),
     )
 }
 
@@ -73,8 +74,57 @@ pub(super) fn prepare(
     hdr: bool,
     retain_fallback: bool,
 ) -> anyhow::Result<PreparedPhoto> {
+    prepare_covered(
+        source,
+        recipe,
+        request,
+        cancelled,
+        presenter,
+        hdr,
+        retain_fallback,
+        None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn prepare_covered(
+    source: &LinearImage,
+    recipe: &DevelopmentRecipe,
+    request: DisplayRegionRequest,
+    cancelled: &std::sync::atomic::AtomicBool,
+    presenter: Option<&PhotoPresenter>,
+    hdr: bool,
+    retain_fallback: bool,
+    coverage: Option<&crate::photo_coverage::Coverage>,
+) -> anyhow::Result<PreparedPhoto> {
     let start = Instant::now();
-    let image = source.render_display_region_mode(recipe, request, cancelled, hdr)?;
+    let mut image = source.render_display_region_mode(recipe, request, cancelled, hdr)?;
+    if let Some(coverage) = coverage {
+        for y in 0..image.size[1] {
+            anyhow::ensure!(
+                !cancelled.load(std::sync::atomic::Ordering::Relaxed),
+                "Display refinement cancelled"
+            );
+            for x in 0..image.size[0] {
+                let min = [
+                    request.min[0] + x * request.stride,
+                    request.min[1] + y * request.stride,
+                ];
+                let max = [0, 1].map(|c| (min[c] + request.stride).min(request.max[c]));
+                if !coverage.supported([source.width, source.height], min, max) {
+                    let value = coverage.checker_rgb([source.width, source.height], min);
+                    let i = (y * image.size[0] + x) as usize;
+                    image.rgb[i * 3..i * 3 + 3].fill(value);
+                    if hdr {
+                        let encoded = f32::from(value) / 255.0;
+                        let linear = ((encoded + 0.055) / 1.055).powf(2.4);
+                        image.rgba_linear[i * 4..i * 4 + 3].fill(linear);
+                        image.rgba_linear[i * 4 + 3] = 1.0;
+                    }
+                }
+            }
+        }
+    }
     let uv = [
         [
             request.min[0] as f32 / source.width as f32,

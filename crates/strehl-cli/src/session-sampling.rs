@@ -383,7 +383,7 @@ fn sinc(x: f64) -> f64 {
         p.sin() / p
     }
 }
-fn footprint_clipped(mask: &[bool], geom: PlaneGeometry, x: f64, y: f64, r: Resampler) -> bool {
+pub(crate) fn footprint_clipped(mask: &[bool], geom: PlaneGeometry, x: f64, y: f64, r: Resampler) -> bool {
     let r = effective_resampler(r, geom);
     let tx = axis_taps(x, geom.width, r);
     let ty = axis_taps(y, geom.height, r);

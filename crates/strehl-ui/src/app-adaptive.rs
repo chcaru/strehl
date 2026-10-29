@@ -613,6 +613,7 @@ mod tests {
         app.image_path = Some(path.clone());
         app.editor.path = Some(path.clone());
         app.editor.loaded = Some(crate::edit_workspace::LoadedPhoto {
+            coverage: None,
             image: Arc::clone(&image),
             preview: image,
             recipe: Default::default(),

@@ -618,3 +618,38 @@ found useful capability and retained artifacts, but no general resolution,
 deghosting or noise-gain claim. Stitching, depth and super-resolution remain
 unimplemented hypotheses. Final commands, qualifiers and inherited style debt
 are in experiments/multi-stack-2026-10-28/results.md and its evidence links.
+
+## Multi-stack completion continuation (2026-10-28)
+
+The owner explicitly rejected the previous stopping boundary: remaining
+unimplemented capabilities and unrealized outcomes must be completed. The
+previous completion record is a checkpoint, not completion of the owner's goal.
+The resumed work preserves its tested feature and evidence, and continues from
+local commit ef655050 on the remote-main base c149e528. The proposal remains
+fungible; its hypotheses are not guarantees and its suggested deferrals do not
+authorize ending this task. No automatic expansion to rail capture, rotation
+panoramas or full 3-D reconstruction is implied.
+
+| Identifier | Question and scope | Owned paths | Owner and state |
+| --- | --- | --- | --- |
+| multi-stack-2026-10-28-completion | Finish omitted capabilities and useful outcomes; core then UI, full-output independent review and performance. | experiments/multi-stack-2026-10-28/completion/; root integration paths | root; ACTIVE until intended outcomes are addressed, not merely controls exposed |
+| multi-stack-2026-10-28-completion-mosaic | Depth/focus-aware common-canvas stitching, visibility, spatially bounded consumption and loop/held-out placement checks. | experiments/multi-stack-2026-10-28/completion/mosaic/; new core mosaic modules after contract | architecture agent; read/design and bounded supplied-preview overlap measurements first |
+| multi-stack-2026-10-28-completion-sr | Direct original-CFA kernel-regression reconstruction with local phase conditioning, fallback and measurable color/alias benefit. | experiments/multi-stack-2026-10-28/completion/sr/; new core reconstruction modules after contract | corpus agent; primary-art/source audit and falsifiable operator prototype first |
+| multi-stack-2026-10-28-completion-outcomes | Audit all user-intended outcomes and prior false stopping decisions; independently choose useful controls, references and acceptance evidence. | experiments/multi-stack-2026-10-28/completion/review/ | independent reviewer; requirements/evidence challenge and repeat/HDR benefit investigation |
+| multi-stack-2026-10-28-completion-focus | Shared regularized focus evidence with uncertainty, missing coverage and original-frame identities for reconstruction and mosaics. | crates/strehl-core/src/focus-evidence.rs; additive ThroughFocus accessor; completion/focus/ | root; source and commissioned controls |
+| multi-stack-2026-10-28-completion-weighting | Realize repeat/HDR noise benefit with frozen or validated precision weighting and explicit output-contribution evidence. | session-fusion.rs and additive CLI diagnostics; completion/weighting/ | root; independent reviewer commissions observer before campaign |
+| multi-stack-2026-10-28-completion-reproducibility | Inspect reproducible structure and disagreement with independent-acquisition qualifications; expose frequency curves without a resolution certificate. | crates/strehl-core/src/reproducibility.rs; additive CLI/UI evidence readers; completion/reproducibility/ | root; primary-source and estimator controls before real maps |
+| multi-stack-2026-10-28-completion-interleave | Demonstrate complementary real focus sampling with disjoint even/odd original acquisitions and the complete dense set. | completion/interleave/; opt-in session interleave role and desktop choice | root; prepare immutable input copies and matched-geometry controls before full photographs |
+| multi-stack-2026-10-28-completion-diversity | Useful aperture/appearance Layers and independent-view export with separate gauges; full-output review and UI selection. | completion/review/diversity-*; scoped UI integration after engine contract | independent reviewer; root released sequential CLI13 Layers at <=8 workers/16GiB, then independent review |
+| multi-stack-2026-10-28-completion-mosaic-affine | Test actual local affine-warped native NCC against similarity-warped observations; retain native residual/reciprocal bars, complete source/holdout footprints, independent placement controls and final loops. | new crates/strehl-cli/src/session-mosaic-native-affine.rs and child helpers; scoped native/support/geometry seams; experiments/multi-stack-2026-10-28/completion/mosaic/affine-* | architecture agent; root authorized synthetic/cached-only execution at <=4 workers/4GiB; no ordinary alignment edits or full RAW output before model/control review |
+| multi-stack-2026-10-28-completion-sr-insect-global | Revisit the previously sealed insect focus/phase nominations with the newly commissioned global correction; distinguish missing witness coverage from contradictory displacement. | completion/sr/insect-global-plan.md; ROI harness; sr-insect-global receipts | root; cache-only <=4 workers/2GiB, unchanged geometry bars, exact product RGB motion arm and retained legacy replay; independent reviewer challenges the next estimator |
+| multi-stack-2026-10-28-completion-sr-chart-decomposition | Separate same-exposure original-CFA neighborhoods from their HDR union; diagnose original sampled bandwidth and actual held registration on frozen dot/bar regions. | completion/sr/single-exposure-plan.md; ROI harness and original-patch diagnostics | root; cache-only <=4 workers/2GiB, unchanged numerical operators and residual bars, retained complete refusals and prior14-source compatibility arm |
+| multi-stack-2026-10-28-completion-sr-tilted-chart | Test original-CFA reconstruction at three pre-SR physical witnesses in the existing complete182-source tilted-chart interleave. | completion/sr/tilted-chart-plan.md; bounded census and ROI harness | root; cache-only <=4 workers/2GiB, frozen locations, complete-track nomination, unchanged registration and native fallback; no new RAW campaign |
+| multi-stack-2026-10-28-completion-sr-repeat-plateau | Diagnose fixed-focus repeat sampling and geometry; implement explicit evidence-backed repeat compatibility without inventing a focus peak. | completion/sr/bee-repeat-plan.md; shared compatibility contract with repeat matching | root and corpus lane; Q/V-only identities, nine fixed witnesses, geometry-only <=4 workers/2GiB before compatibility controls; reserved R/M assay untouched |
+| multi-stack-2026-10-28-completion-repeat-proposals | Test geometry-only repeat assignment through the unchanged native coefficient consumer; retain strict compatibility and SR as separate evidence. | completion/review/repeat-geometry-proposal-plan.md; session-repeat-proposals.rs; repeat-evidence.rs | root integration, corpus estimator controls, independent oracle/review; continuation of weighting lane; bounded synthetic/metadata controls before full native three-arm photographs; no default promotion from pair count or noise alone |
+
+Root alone schedules compute. Initial permission covers read-only existing
+artifacts and small synthetic/embedded-preview calculations, with at most four
+CPU workers per lane. No new full RAW render, GPU campaign or package build is
+released until the root records the exact arm, controls, resources and outputs.
+All capture roots remain read-only. The sealed407 corpus stays untouched.

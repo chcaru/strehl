@@ -1,0 +1,9 @@
+{
+  "schema": "strehl.sr-opportunity-vector-controls.v1",
+  "source_sha256": "ce00d52282a03558e70aa19d537b55ff87fd29a970ba37fbe133f43fbe02a463",
+  "workers": 1,
+  "cases": 12,
+  "independent_scalar_bound_enumeration_max_condition_difference": 6.661338147750939e-15,
+  "cfa_acquisition_counts_exact": true,
+  "scope": "Implementation equivalence on synthetic curved maps and nonzero optical scale, not photographic quality"
+}

@@ -72,18 +72,62 @@ pub(crate) struct StackArgs {
     pub agreement_sigma: f32,
     #[arg(long)]
     pub binned: bool,
+    /// Weight compatible repeated observations by a frozen, independent-guide noise prediction.
+    #[arg(long)]
+    pub precision_weights: bool,
+    /// Retain source/group contributions, conditional noise maps and the native CFA merge.
+    #[arg(long)]
+    pub contribution_maps: bool,
+    /// Save per-pass focus position, shape, ambiguity and original-source maps.
+    #[arg(long)]
+    pub focus_evidence: bool,
+    /// Compare independently reconstructed first and second passes on the same canvas.
+    #[arg(long)]
+    pub reproducibility: bool,
+    /// Reconstruct supported color detail directly from original CFA samples.
+    /// Unsupported regions retain the normal stacked photograph.
+    #[arg(long)]
+    pub original_cfa_reconstruction: bool,
     /// Research control: use the session sampler even for a single pass.
     #[arg(long, hide = true)]
     pub native_single: bool,
     /// Research control: admit all sources separately without repeat grouping.
     #[arg(long, hide = true)]
     pub no_repeat_grouping: bool,
+    /// Research control: geometry-only uncertainty proposals; not repeat/SR evidence.
+    #[arg(long, hide = true)]
+    pub uncertainty_repeat_proposals: bool,
+    /// Research control: omit original indices from pixels/selection, retaining saved geometry ancestry.
+    #[arg(long, hide = true)]
+    pub omit_acquisition: Vec<usize>,
     /// Research control: render one pass using the complete session's joint geometry.
     #[arg(long, hide = true)]
     pub only_pass: Option<usize>,
 }
 impl StackArgs {
     pub fn merge_config(&self) -> Result<strehl_core::pyramid::MergeConfig> {
+        ensure!(
+            self.omit_acquisition.is_empty()
+                || (self.alignment.is_some()
+                    && !self.focus_evidence
+                    && !self.precision_weights
+                    && !self.original_cfa_reconstruction
+                    && !self.reproducibility
+                    && self.only_pass.is_none()),
+            "research omission needs saved alignment and disables focus, precision, reconstruction, reproducibility and one-pass controls"
+        );
+        ensure!(
+            !self.uncertainty_repeat_proposals
+                || (!self.no_repeat_grouping
+                    && !self.original_cfa_reconstruction
+                    && self.only_pass.is_none()
+                    && !self.reproducibility),
+            "geometry proposal experiment cannot disable grouping, select one pass, or enable reconstruction/reproducibility"
+        );
+        ensure!(
+            !self.original_cfa_reconstruction || (!self.binned && self.only_pass.is_none()),
+            "original-CFA reconstruction requires a native-size complete session output"
+        );
         ensure!(
             (1..=12).contains(&self.pyramid_bands),
             "--pyramid-bands must be 1..12"
@@ -133,12 +177,19 @@ pub(crate) unsafe fn route_single_pass(
     args.merge_config()?;
     let session = SessionSpec::load(&args.manifest)?.resolve(&args.manifest)?;
     if args.native_single
+        || args.precision_weights
+        || args.contribution_maps
+        || args.focus_evidence
+        || args.reproducibility
+        || args.original_cfa_reconstruction
+        || args.uncertainty_repeat_proposals
+        || !args.omit_acquisition.is_empty()
         || args.only_pass.is_some()
         || session.passes.len() != 1
         || session.passes[0].directories.len() != 1
         || !matches!(
             session.spec.mode,
-            SessionMode::Combine | SessionMode::Repeat
+            SessionMode::Combine | SessionMode::Repeat | SessionMode::Interleave
         )
     {
         return Ok((command, None));
@@ -277,15 +328,23 @@ pub(crate) fn reserve_output_directory(
 }
 
 pub(crate) fn write_json_new(path: &std::path::Path, value: &impl Serialize) -> Result<()> {
-    let mut file = OpenOptions::new().write(true).create_new(true).open(path)?;
-    serde_json::to_writer_pretty(&mut file, value)?;
-    file.write_all(b"\n")?;
-    file.sync_all()?;
+    // A diagnostic report can contain tens of MB of ring curves. Serializing
+    // each token directly to File turns that into millions of tiny OS writes.
+    let file = OpenOptions::new().write(true).create_new(true).open(path)?;
+    let mut writer = std::io::BufWriter::with_capacity(256 << 10, file);
+    serde_json::to_writer_pretty(&mut writer, value)?;
+    writer.write_all(b"\n")?;
+    writer.flush()?;
+    writer.get_ref().sync_all()?;
     Ok(())
 }
 
 #[derive(Subcommand)]
 pub(crate) enum Action {
+    /// Inspect repeated structure from two independent passes on the same canvas.
+    Compare(crate::session_reproducibility::CompareArgs),
+    /// Export per-pass focus-index, shape and support maps with their original source mapping.
+    Evidence(crate::session_focus::EvidenceArgs),
     /// Fit all passes together using direct native measurements and separate focus tracks.
     Align {
         manifest: PathBuf,
@@ -320,6 +379,8 @@ struct Inspection {
 
 pub(crate) fn run(action: Action) -> Result<()> {
     match action {
+        Action::Compare(args) => crate::session_reproducibility::run(&args),
+        Action::Evidence(args) => crate::session_focus::run(&args),
         Action::Stack(args) => crate::merge_cmd::session_consumer::run(&args),
         Action::Align {
             manifest,
@@ -327,6 +388,10 @@ pub(crate) fn run(action: Action) -> Result<()> {
             resources,
         } => {
             let session = SessionSpec::load(&manifest)?.resolve(&manifest)?;
+            ensure!(
+                session.spec.mode != SessionMode::IndependentViews,
+                "independent views have separate alignments; use session stack to export each view"
+            );
             let out = session.ensure_fresh_output(&out)?;
             let config = resources.config()?;
             let resampler = crate::align_cmd::parse_resampler(&resources.resampler)?;
@@ -422,6 +487,54 @@ pub(crate) fn run(action: Action) -> Result<()> {
 mod tests {
     use super::*;
     use clap::Parser;
+
+    #[test]
+    fn session_research_omission_requires_frozen_geometry_and_no_secondary_pixel_consumers() {
+        let parse = |extra: &[&str]| {
+            let mut argv = vec![
+                "strehl",
+                "session",
+                "stack",
+                "session.json",
+                "--out-dir",
+                "out",
+                "--omit-acquisition",
+                "2",
+            ];
+            argv.extend_from_slice(extra);
+            let crate::Command::Session {
+                action: Action::Stack(args),
+            } = crate::Cli::try_parse_from(argv).unwrap().command
+            else {
+                panic!("session stack")
+            };
+            args
+        };
+        assert!(parse(&[]).merge_config().is_err());
+        assert!(
+            parse(&["--alignment", "frozen.json"])
+                .merge_config()
+                .is_ok()
+        );
+        for option in [
+            "--focus-evidence",
+            "--precision-weights",
+            "--original-cfa-reconstruction",
+            "--reproducibility",
+        ] {
+            assert!(
+                parse(&["--alignment", "frozen.json", option])
+                    .merge_config()
+                    .is_err(),
+                "{option}"
+            );
+        }
+        assert!(
+            parse(&["--alignment", "frozen.json", "--only-pass", "0"])
+                .merge_config()
+                .is_err()
+        );
+    }
 
     #[test]
     fn session_single_pass_publication_checks_census_hashes_and_completion() {

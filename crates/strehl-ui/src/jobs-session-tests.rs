@@ -181,3 +181,51 @@ fn session_worker_checks_actual_completed_census_before_publication() {
     overflow.sources[0].modified_ns = Some(u128::from(u64::MAX) + 1);
     assert!(validate_completed_sources(&output, &overflow).is_err());
 }
+
+#[test]
+fn session_worker_new_flags_follow_the_immutable_snapshot_and_default_off() {
+    let (_root, mut request) = fixture();
+    let args = |request: &RenderRequest| {
+        session_command(request, Path::new("manifest.json"), Path::new("out"))
+            .unwrap()
+            .get_args()
+            .map(|a| a.to_string_lossy().into_owned())
+            .collect::<Vec<_>>()
+    };
+    let flags = [
+        "--precision-weights",
+        "--contribution-maps",
+        "--focus-evidence",
+        "--reproducibility",
+        "--original-cfa-reconstruction",
+    ];
+    assert!(args(&request).iter().all(|a| !flags.contains(&a.as_str())));
+    let session = request.settings.session.as_mut().unwrap();
+    session.manifest.mode = SessionMode::Repeat;
+    session
+        .manifest
+        .passes
+        .push(crate::session_workspace::PassSpec {
+            name: "Second".into(),
+            directories: vec![request.source.with_file_name("second-source")],
+        });
+    session.precision_weights = true;
+    session.contribution_maps = true;
+    session.focus_evidence = true;
+    session.reproducibility = true;
+    session.original_cfa_reconstruction = true;
+    let saved_settings = request.settings.clone();
+    for flag in flags {
+        assert_eq!(args(&request).iter().filter(|a| *a == flag).count(), 1);
+    }
+    let session = request.settings.session.as_mut().unwrap();
+    session.manifest.mode = SessionMode::Mosaic;
+    session.normalize_mode_options();
+    assert!(args(&request).iter().all(|a| !flags.contains(&a.as_str())));
+    request.settings = saved_settings;
+    for flag in flags {
+        assert_eq!(args(&request).iter().filter(|a| *a == flag).count(), 1);
+    }
+    request.settings.session.as_mut().unwrap().manifest.mode = SessionMode::Hdr;
+    assert!(session_command(&request, Path::new("manifest.json"), Path::new("out")).is_err());
+}

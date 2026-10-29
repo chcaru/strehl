@@ -128,6 +128,7 @@ fn app() -> StrehlApp {
     let mut app = StrehlApp::from_launch(4096, LaunchOptions::default());
     app.catalog = Default::default(); // In-memory catalog; never save the real one.
     app.editor.loaded = Some(crate::edit_workspace::LoadedPhoto {
+        coverage: None,
         image: Arc::new(image()),
         preview: Arc::new(image()),
         recipe: Default::default(),

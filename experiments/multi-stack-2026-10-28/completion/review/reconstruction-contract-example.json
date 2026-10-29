@@ -1,0 +1,82 @@
+{
+  "example_only": true,
+  "scope": "Small synthetic schema fixture, not a render or quality result.",
+  "map_directory": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\completion\\reconstruction-schema-example",
+  "render_report_fragment": {
+    "canvas": [
+      2,
+      3,
+      4,
+      4
+    ],
+    "recipe": {
+      "original_cfa_reconstruction": true
+    },
+    "reconstruction": {
+      "requested": true,
+      "enabled": true,
+      "total_rgb_pixels": 64,
+      "replaced_rgb_pixels": 16,
+      "native_fallback_pixels": 48,
+      "registration_supported_tiles": 1,
+      "reason_counts": {
+        "Reconstructed": 16,
+        "Too few independent acquisitions": 48
+      },
+      "limitations": [
+        "Native-size output; no resolution increase is certified.",
+        "All RGB channels are reconstructed together; other pixels retain native output bits.",
+        "Support is conditional on the declared registration, focus and motion checks.",
+        "Reported h-squared variance is conditional before photon-dependent admission and fallback."
+      ],
+      "geometry_sha256": "9e75a2844e523a0999a464c1cc1ead5005303f5ee66027011bd6f8acf05d53e0"
+    }
+  },
+  "geometry_json": {
+    "schema": "strehl.original-cfa-reconstruction.v1",
+    "full_quad_geometry": [
+      16,
+      12
+    ],
+    "origin_sensor": [
+      4,
+      6
+    ],
+    "dimensions": [
+      8,
+      8
+    ],
+    "step_sensor": [
+      1,
+      1
+    ],
+    "files": [
+      {
+        "path": "support.tiff",
+        "bytes": 480,
+        "sha256": "7afb392ea23dba550e60b163d6d5e82b4d23a1395b1a6fc3ea100d0c62fccd76"
+      },
+      {
+        "path": "fallback-reason.tiff",
+        "bytes": 480,
+        "sha256": "3963ce151c15ecdb7c950d049f430bf612e8323a830f77954213b63c21dbd099"
+      }
+    ],
+    "fallback_reasons": {
+      "0": "Reconstructed",
+      "1": "Too few independent acquisitions",
+      "2": "Ill-conditioned sampling or regression",
+      "3": "Rejected or missing support",
+      "4": "Excess conditional variance",
+      "5": "Missing native fallback",
+      "6": "Kernel overshoot"
+    }
+  },
+  "publication_order": [
+    "Write and close support/fallback maps",
+    "Hash exact map bytes and write geometry.json",
+    "Hash exact geometry bytes into render-report.reconstruction.geometry_sha256",
+    "Write immutable report and normal render binding",
+    "Publish aggregate completed.json only after all output bindings and source recheck"
+  ]
+}

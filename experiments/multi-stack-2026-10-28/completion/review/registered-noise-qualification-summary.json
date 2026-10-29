@@ -1,0 +1,630 @@
+{
+  "scope": "Source-only qualifications, not delivered temporal-noise gain",
+  "rows": [
+    {
+      "window_base": 12,
+      "roi": "gray-ramp-middle",
+      "accepted_R_G1_B_G2": [
+        4,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        12,
+        14,
+        16,
+        18,
+        20
+      ],
+      "validation": [
+        13,
+        17
+      ],
+      "measurement_not_loaded": [
+        15,
+        19
+      ]
+    },
+    {
+      "window_base": 12,
+      "roi": "qr-white-black-grid",
+      "accepted_R_G1_B_G2": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        12,
+        14,
+        16,
+        18,
+        20
+      ],
+      "validation": [
+        13,
+        17
+      ],
+      "measurement_not_loaded": [
+        15,
+        19
+      ]
+    },
+    {
+      "window_base": 12,
+      "roi": "low-contrast-dot-field",
+      "accepted_R_G1_B_G2": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        12,
+        14,
+        16,
+        18,
+        20
+      ],
+      "validation": [
+        13,
+        17
+      ],
+      "measurement_not_loaded": [
+        15,
+        19
+      ]
+    },
+    {
+      "window_base": 12,
+      "roi": "adverse-flare-p12",
+      "accepted_R_G1_B_G2": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        12,
+        14,
+        16,
+        18,
+        20
+      ],
+      "validation": [
+        13,
+        17
+      ],
+      "measurement_not_loaded": [
+        15,
+        19
+      ]
+    },
+    {
+      "window_base": 20,
+      "roi": "gray-ramp-middle",
+      "accepted_R_G1_B_G2": [
+        2,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        20,
+        22,
+        24,
+        26,
+        28
+      ],
+      "validation": [
+        21,
+        25
+      ],
+      "measurement_not_loaded": [
+        23,
+        27
+      ]
+    },
+    {
+      "window_base": 20,
+      "roi": "qr-white-black-grid",
+      "accepted_R_G1_B_G2": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        20,
+        22,
+        24,
+        26,
+        28
+      ],
+      "validation": [
+        21,
+        25
+      ],
+      "measurement_not_loaded": [
+        23,
+        27
+      ]
+    },
+    {
+      "window_base": 20,
+      "roi": "low-contrast-dot-field",
+      "accepted_R_G1_B_G2": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        20,
+        22,
+        24,
+        26,
+        28
+      ],
+      "validation": [
+        21,
+        25
+      ],
+      "measurement_not_loaded": [
+        23,
+        27
+      ]
+    },
+    {
+      "window_base": 20,
+      "roi": "adverse-flare-p12",
+      "accepted_R_G1_B_G2": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        20,
+        22,
+        24,
+        26,
+        28
+      ],
+      "validation": [
+        21,
+        25
+      ],
+      "measurement_not_loaded": [
+        23,
+        27
+      ]
+    },
+    {
+      "window_base": 28,
+      "roi": "gray-ramp-middle",
+      "accepted_R_G1_B_G2": [
+        4,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        28,
+        30,
+        32,
+        34,
+        36
+      ],
+      "validation": [
+        29,
+        33
+      ],
+      "measurement_not_loaded": [
+        31,
+        35
+      ]
+    },
+    {
+      "window_base": 28,
+      "roi": "qr-white-black-grid",
+      "accepted_R_G1_B_G2": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        28,
+        30,
+        32,
+        34,
+        36
+      ],
+      "validation": [
+        29,
+        33
+      ],
+      "measurement_not_loaded": [
+        31,
+        35
+      ]
+    },
+    {
+      "window_base": 28,
+      "roi": "low-contrast-dot-field",
+      "accepted_R_G1_B_G2": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        28,
+        30,
+        32,
+        34,
+        36
+      ],
+      "validation": [
+        29,
+        33
+      ],
+      "measurement_not_loaded": [
+        31,
+        35
+      ]
+    },
+    {
+      "window_base": 28,
+      "roi": "adverse-flare-p12",
+      "accepted_R_G1_B_G2": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        28,
+        30,
+        32,
+        34,
+        36
+      ],
+      "validation": [
+        29,
+        33
+      ],
+      "measurement_not_loaded": [
+        31,
+        35
+      ]
+    },
+    {
+      "window_base": 36,
+      "roi": "gray-ramp-middle",
+      "accepted_R_G1_B_G2": [
+        3,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        36,
+        38,
+        40,
+        42,
+        44
+      ],
+      "validation": [
+        37,
+        41
+      ],
+      "measurement_not_loaded": [
+        39,
+        43
+      ]
+    },
+    {
+      "window_base": 36,
+      "roi": "qr-white-black-grid",
+      "accepted_R_G1_B_G2": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        36,
+        38,
+        40,
+        42,
+        44
+      ],
+      "validation": [
+        37,
+        41
+      ],
+      "measurement_not_loaded": [
+        39,
+        43
+      ]
+    },
+    {
+      "window_base": 36,
+      "roi": "low-contrast-dot-field",
+      "accepted_R_G1_B_G2": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        36,
+        38,
+        40,
+        42,
+        44
+      ],
+      "validation": [
+        37,
+        41
+      ],
+      "measurement_not_loaded": [
+        39,
+        43
+      ]
+    },
+    {
+      "window_base": 36,
+      "roi": "adverse-flare-p12",
+      "accepted_R_G1_B_G2": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        36,
+        38,
+        40,
+        42,
+        44
+      ],
+      "validation": [
+        37,
+        41
+      ],
+      "measurement_not_loaded": [
+        39,
+        43
+      ]
+    },
+    {
+      "window_base": 44,
+      "roi": "gray-ramp-middle",
+      "accepted_R_G1_B_G2": [
+        2,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        44,
+        46,
+        48,
+        50,
+        52
+      ],
+      "validation": [
+        45,
+        49
+      ],
+      "measurement_not_loaded": [
+        47,
+        51
+      ]
+    },
+    {
+      "window_base": 44,
+      "roi": "qr-white-black-grid",
+      "accepted_R_G1_B_G2": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        44,
+        46,
+        48,
+        50,
+        52
+      ],
+      "validation": [
+        45,
+        49
+      ],
+      "measurement_not_loaded": [
+        47,
+        51
+      ]
+    },
+    {
+      "window_base": 44,
+      "roi": "low-contrast-dot-field",
+      "accepted_R_G1_B_G2": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        44,
+        46,
+        48,
+        50,
+        52
+      ],
+      "validation": [
+        45,
+        49
+      ],
+      "measurement_not_loaded": [
+        47,
+        51
+      ]
+    },
+    {
+      "window_base": 44,
+      "roi": "adverse-flare-p12",
+      "accepted_R_G1_B_G2": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        44,
+        46,
+        48,
+        50,
+        52
+      ],
+      "validation": [
+        45,
+        49
+      ],
+      "measurement_not_loaded": [
+        47,
+        51
+      ]
+    },
+    {
+      "window_base": 52,
+      "roi": "gray-ramp-middle",
+      "accepted_R_G1_B_G2": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        52,
+        54,
+        56,
+        58,
+        60
+      ],
+      "validation": [
+        53,
+        57
+      ],
+      "measurement_not_loaded": [
+        55,
+        59
+      ]
+    },
+    {
+      "window_base": 52,
+      "roi": "qr-white-black-grid",
+      "accepted_R_G1_B_G2": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        52,
+        54,
+        56,
+        58,
+        60
+      ],
+      "validation": [
+        53,
+        57
+      ],
+      "measurement_not_loaded": [
+        55,
+        59
+      ]
+    },
+    {
+      "window_base": 52,
+      "roi": "low-contrast-dot-field",
+      "accepted_R_G1_B_G2": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        52,
+        54,
+        56,
+        58,
+        60
+      ],
+      "validation": [
+        53,
+        57
+      ],
+      "measurement_not_loaded": [
+        55,
+        59
+      ]
+    },
+    {
+      "window_base": 52,
+      "roi": "adverse-flare-p12",
+      "accepted_R_G1_B_G2": [
+        3,
+        0,
+        2,
+        0
+      ],
+      "all_rgb_tiles": 0,
+      "guides": [
+        52,
+        54,
+        56,
+        58,
+        60
+      ],
+      "validation": [
+        53,
+        57
+      ],
+      "measurement_not_loaded": [
+        55,
+        59
+      ]
+    }
+  ],
+  "measurement_loaded": false
+}

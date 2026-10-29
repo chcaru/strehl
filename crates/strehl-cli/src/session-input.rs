@@ -26,9 +26,15 @@ fn version_one() -> u32 {
 pub enum SessionMode {
     #[default]
     Combine,
+    /// Complementary focus positions, retaining each acquisition's own track.
+    Interleave,
     Repeat,
     Layers,
     Hdr,
+    /// Overlapping viewpoints on a union canvas; no primary appearance target.
+    Mosaic,
+    /// Independently reconstructed viewpoints; no shared image coordinates.
+    IndependentViews,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -158,6 +164,14 @@ impl SessionSpec {
             SESSION_VERSION
         );
         ensure!(!self.passes.is_empty(), "a session needs at least one pass");
+        ensure!(
+            self.mode != SessionMode::Mosaic || self.primary_pass.is_none(),
+            "mosaic sessions do not use a primary target pass"
+        );
+        ensure!(
+            self.mode != SessionMode::IndependentViews || self.primary_pass.is_none(),
+            "independent views do not use a primary target pass"
+        );
         if let Some(primary) = self.primary_pass {
             ensure!(
                 primary < self.passes.len(),

@@ -1,7 +1,7 @@
 //! Core types for `strehl`.
 //!
 //! Two decisions in here are architecturally irreversible and are documented as
-//! such in `docs/research/SYNTHESIS.md` §9:
+//! such in `docs/research/SYNTHESIS.md` Â§9:
 //!
 //! - **Storage is `u16` CFA, arithmetic is `f32`.** `f16` is wrong for linear
 //!   14-bit sensor data: a 10-bit mantissa quantises to roughly 8 LSB steps near
@@ -22,16 +22,25 @@ pub mod edgeaware;
 pub mod election_coherence;
 pub mod flat_ratio;
 pub mod focus;
+#[path = "focus-evidence.rs"]
+pub mod focus_evidence;
 pub mod highlight;
 pub mod merge;
+pub mod mosaic;
 pub mod noise;
 pub mod optics;
 pub mod outlier;
 pub mod photometric;
 pub mod plane;
+#[path = "precision-mean.rs"]
+pub mod precision_mean;
 pub mod profile;
 pub mod pyramid;
 pub mod restore;
+pub mod reproducibility;
+pub mod reconstruction;
+#[path = "repeat-evidence.rs"]
+pub mod repeat_evidence;
 pub mod robust;
 pub mod softgate;
 #[cfg(feature = "spatial-noise-floor")]
@@ -74,7 +83,7 @@ impl CfaPlane {
 /// no global 2D transform is correct.
 ///
 /// v1 implements [`CaptureMode::FocusBracket`] only. [`CaptureMode::Rail`] is a
-/// deliberate seam, not a supported path — there is no rail hardware to test
+/// deliberate seam, not a supported path â€” there is no rail hardware to test
 /// against, and an untested geometry model is worse than an absent one. Detect
 /// the mode and refuse or warn; never silently apply the breathing model to rail
 /// data.

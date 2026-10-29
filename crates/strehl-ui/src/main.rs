@@ -26,6 +26,8 @@ mod hdr_display;
 #[path = "image-gesture.rs"]
 mod image_gesture;
 mod jobs;
+#[path = "photo-coverage.rs"]
+mod photo_coverage;
 #[path = "photo-viewport.rs"]
 mod photo_viewport;
 mod pipeline;
@@ -74,6 +76,10 @@ mod processing_view;
 mod project_explorer;
 #[path = "reveal-path.rs"]
 mod reveal_path;
+#[path = "session-diagnostics.rs"]
+mod session_diagnostics;
+#[path = "session-import.rs"]
+mod session_import;
 #[path = "session-workspace.rs"]
 mod session_workspace;
 #[path = "source-browser.rs"]
@@ -111,6 +117,11 @@ pub struct LaunchOptions {
     pub screenshot: Option<PathBuf>,
     pub screenshot_hover: Option<[f32; 2]>,
     pub screenshot_ranges: Option<Vec<[usize; 2]>>,
+    pub diagnostic_map: Option<String>,
+    pub diagnostic_opacity: Option<f32>,
+    pub diagnostic_sample: Option<[f32; 2]>,
+    pub photo_zoom: Option<f32>,
+    pub photo_center: Option<[f32; 2]>,
     pub size: Option<[f32; 2]>,
     pub activity_log: Option<PathBuf>,
     pub draft: bool,
@@ -212,6 +223,53 @@ fn main() -> eframe::Result {
                 "The experimental 3D viewer has been retired. Open the process workspace instead."
             );
             std::process::exit(2);
+        }
+        if arg == "--diagnostic-map" {
+            launch.diagnostic_map = args.next().and_then(|v| v.to_str().map(str::to_owned));
+            if !launch.diagnostic_map.as_ref().is_some_and(|v| {
+                !v.trim().is_empty() && v.len() <= 256 && !v.chars().any(char::is_control)
+            }) {
+                eprintln!("Use --diagnostic-map with an exact saved diagnostic label");
+                std::process::exit(2);
+            }
+            continue;
+        }
+        if arg == "--diagnostic-opacity" || arg == "--photo-zoom" {
+            let value = args
+                .next()
+                .and_then(|v| v.to_str().and_then(|v| v.parse::<f32>().ok()));
+            let bounds = if arg == "--photo-zoom" {
+                1.0..=8.0
+            } else {
+                0.0..=1.0
+            };
+            if !value.is_some_and(|v| v.is_finite() && bounds.contains(&v)) {
+                eprintln!("Invalid normalized diagnostic opacity or photo zoom (1..8)");
+                std::process::exit(2);
+            }
+            if arg == "--photo-zoom" {
+                launch.photo_zoom = value;
+            } else {
+                launch.diagnostic_opacity = value;
+            }
+            continue;
+        }
+        if arg == "--diagnostic-sample" || arg == "--photo-center" {
+            let point = args.next().and_then(|v| {
+                v.to_str()
+                    .and_then(|v| v.split_once(','))
+                    .and_then(|(x, y)| Some([x.parse::<f32>().ok()?, y.parse::<f32>().ok()?]))
+            });
+            if !point.is_some_and(|p| p.iter().all(|v| v.is_finite() && (0.0..=1.0).contains(v))) {
+                eprintln!("Use normalized X,Y coordinates");
+                std::process::exit(2);
+            }
+            if arg == "--photo-center" {
+                launch.photo_center = point;
+            } else {
+                launch.diagnostic_sample = point;
+            }
+            continue;
         }
         if arg == "--screenshot-ranges" {
             launch.screenshot_ranges = args

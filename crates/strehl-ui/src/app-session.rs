@@ -141,11 +141,13 @@ impl StrehlApp {
             egui::ComboBox::from_id_salt("session-mode").selected_text(mode_label(session.manifest.mode)).show_ui(ui, |ui| {
                 for mode in MODES { ui.selectable_value(&mut session.manifest.mode, mode, mode_label(mode)); }
             });
+            if session.manifest.mode != before.manifest.mode { session.normalize_mode_options(); }
             theme::caption(ui, mode_description(session.manifest.mode));
-            if session.manifest.mode != SessionMode::Layers {
+            if !matches!(session.manifest.mode, SessionMode::Layers | SessionMode::Mosaic | SessionMode::IndependentViews) {
                 theme::caption(ui, "Combine uses matching aperture and ISO. Exposure range may vary shutter time. Keep other differences as aligned layers.");
             }
             ui.add_space(4.0);
+            if crate::session_workspace::primary_available(session.manifest.mode) {
             let selected = session.manifest.primary_pass.and_then(|i| session.manifest.passes.get(i)).map_or("Automatic · no preferred pass", |pass| pass.name.as_str()).to_owned();
             egui::ComboBox::from_id_salt("session-primary").selected_text(selected).show_ui(ui, |ui| {
                 ui.selectable_value(&mut session.manifest.primary_pass, None, "Automatic · no preferred pass");
@@ -156,6 +158,9 @@ impl StrehlApp {
             } else {
                 "Primary sets framing and appearance, and keeps its reliable content when matched sources disagree. Automatic framing gives no pass that preference."
             });
+            } else {
+                theme::caption(ui, if session.manifest.mode == SessionMode::IndependentViews { "Each view keeps its own coordinates and focus evidence; no primary or cross-view alignment." } else { "Mosaic uses measured overlap and coverage; no pass has primary preference." });
+            }
             ui.add_space(6.0);
             let pass_count = session.manifest.passes.len();
             for (i, pass) in session.manifest.passes.iter_mut().enumerate() {
@@ -222,15 +227,31 @@ impl StrehlApp {
         let Some(session) = &self.controls.settings.session else {
             return;
         };
-        self.session_ui.summary = Some(crate::session_workspace::SessionSummary::load(
-            directory, session,
-        ));
-        if session.manifest.mode == SessionMode::Layers {
+        let imported = self
+            .catalog
+            .runs
+            .iter()
+            .find(|run| run.directory == directory)
+            .and_then(|run| run.imported.as_ref());
+        self.session_ui.summary = Some(if let Some(provenance) = imported {
+            crate::session_workspace::SessionSummary::load_imported(
+                directory,
+                session,
+                provenance.scope(),
+            )
+        } else {
+            crate::session_workspace::SessionSummary::load(directory, session)
+        });
+        let output = if imported.is_some() {
+            directory.to_path_buf()
+        } else {
+            directory.join("session-output")
+        };
+        if let Some(prefix) = crate::session_workspace::output_prefix(session.manifest.mode) {
             self.session_ui.layers = (0..session.manifest.passes.len())
                 .map(|i| {
-                    directory
-                        .join("session-output")
-                        .join(format!("layer-{:02}", i + 1))
+                    output
+                        .join(format!("{prefix}-{:02}", i + 1))
                         .join("photograph.tiff")
                 })
                 .filter(|path| path.is_file())
@@ -245,10 +266,21 @@ impl StrehlApp {
         let mut selected = self.result.clone();
         ui.horizontal(|ui| {
             ui.label(
-                RichText::new("ALIGNED LAYER")
-                    .monospace()
-                    .size(9.0)
-                    .color(MUTED),
+                RichText::new(
+                    if self
+                        .session_ui
+                        .summary
+                        .as_ref()
+                        .is_some_and(|s| s.mode == SessionMode::IndependentViews)
+                    {
+                        "INDEPENDENT VIEW"
+                    } else {
+                        "ALIGNED LAYER"
+                    },
+                )
+                .monospace()
+                .size(9.0)
+                .color(MUTED),
             );
             let current = self
                 .session_ui
@@ -269,26 +301,24 @@ impl StrehlApp {
                 })
                 .unwrap_or_default();
             egui::ComboBox::from_id_salt("session-layer-view")
-                .selected_text(names.get(current).map_or("Layer", String::as_str))
+                .selected_text(names.get(current).map_or("Photograph", String::as_str))
                 .show_ui(ui, |ui| {
                     for (index, path) in self.session_ui.layers.iter().enumerate() {
                         ui.selectable_value(
                             &mut selected,
                             Some(path.clone()),
-                            names.get(index).map_or("Layer", String::as_str),
+                            names.get(index).map_or("Photograph", String::as_str),
                         );
                     }
                 });
         });
+        self.view_bundle_export_action(ui);
         if selected != self.result
             && let Some(path) = selected
+            && let Some(index) = self.session_ui.layers.iter().position(|p| p == &path)
+            && let Err(error) = self.select_session_output(index)
         {
-            if let Err(error) = self.editor.ensure_saved_on_close() {
-                self.error = Some(error.to_string());
-                return;
-            }
-            self.result = Some(path.clone());
-            self.open_result(path);
+            self.error = Some(error.to_string());
         }
     }
 }

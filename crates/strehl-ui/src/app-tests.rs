@@ -183,6 +183,7 @@ fn bounded_legacy_result_canvas_uses_developed_pixels_and_requests_visible_nativ
     });
     app.editor.path = Some(path.clone());
     app.editor.loaded = Some(crate::edit_workspace::LoadedPhoto {
+        coverage: None,
         preview: std::sync::Arc::new(image.preview(32)),
         image,
         recipe: Default::default(),
