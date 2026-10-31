@@ -189,7 +189,10 @@ pub(crate) unsafe fn route_single_pass(
         || session.passes[0].directories.len() != 1
         || !matches!(
             session.spec.mode,
-            SessionMode::Combine | SessionMode::Repeat | SessionMode::Interleave
+            SessionMode::Auto
+                | SessionMode::Combine
+                | SessionMode::Repeat
+                | SessionMode::Interleave
         )
     {
         return Ok((command, None));

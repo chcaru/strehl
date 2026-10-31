@@ -24,6 +24,10 @@ fn version_one() -> u32 {
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum SessionMode {
+    /// Analyze every pass and plan what each contributes (focus, repeats,
+    /// calibrated exposure differences); unsupported passes are excluded with
+    /// a stated reason instead of failing the session. The desktop default.
+    Auto,
     #[default]
     Combine,
     /// Complementary focus positions, retaining each acquisition's own track.

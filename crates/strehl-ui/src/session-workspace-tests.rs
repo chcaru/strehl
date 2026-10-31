@@ -195,13 +195,17 @@ fn session_workspace_mode_guards_are_explicit_for_first_two_pass_comparison() {
         assert!(!reproducibility_available(mode, 1));
         assert_eq!(
             precision_available(mode, 2),
-            matches!(mode, SessionMode::Repeat | SessionMode::Hdr)
+            matches!(
+                mode,
+                SessionMode::Auto | SessionMode::Repeat | SessionMode::Hdr
+            )
         );
         assert_eq!(
             reproducibility_available(mode, 3),
             matches!(
                 mode,
-                SessionMode::Combine
+                SessionMode::Auto
+                    | SessionMode::Combine
                     | SessionMode::Interleave
                     | SessionMode::Repeat
                     | SessionMode::Layers
@@ -219,7 +223,11 @@ fn session_reconstruction_default_guard_preserves_single_and_multi_pass_jobs() {
         draft.original_cfa_reconstruction = true;
         let supported = matches!(
             mode,
-            SessionMode::Combine | SessionMode::Interleave | SessionMode::Repeat | SessionMode::Hdr
+            SessionMode::Auto
+                | SessionMode::Combine
+                | SessionMode::Interleave
+                | SessionMode::Repeat
+                | SessionMode::Hdr
         );
         assert_eq!(reconstruction_available(mode), supported);
         assert_eq!(draft.validate().is_ok(), supported);

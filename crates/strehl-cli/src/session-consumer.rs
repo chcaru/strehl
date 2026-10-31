@@ -30,6 +30,8 @@ use strehl_core::warpmap::{FrameWarp, WarpMap};
 #[path = "session-transfer-cache.rs"]
 mod transfer_cache;
 
+#[path = "session-plan.rs"]
+mod auto_plan;
 #[path = "session-contribution-export.rs"]
 mod contribution_export;
 #[path = "session-independent-views.rs"]
@@ -117,6 +119,10 @@ pub(crate) fn validate_capture_headers(
 
 fn validate_headers(session: &ResolvedSession, metadata: &[SourceMetadata]) -> Result<()> {
     validate_capture_headers(session, metadata)?;
+    if session.spec.mode == SessionMode::Auto {
+        // Cross-pass ISO, shutter and aperture are planned after alignment.
+        return Ok(());
+    }
     let first = &metadata[0];
     for pass in &session.passes {
         let lead = &metadata[pass.global_range.start];
@@ -231,11 +237,13 @@ fn groups(
     alignment: &SessionAlignment,
     candidates: &[crate::session_align::FocusPairCandidate],
     cohort: &research_cohort::Cohort,
+    excluded_passes: &[bool],
     enabled: bool,
     only_pass: Option<usize>,
 ) -> Vec<Vec<usize>> {
     let allowed = |index: usize| {
         cohort.mask[index]
+            && !excluded_passes[session.frames[index].pass_index]
             && alignment.map.warps()[index].placed().is_some()
             && only_pass.is_none_or(|pass| session.frames[index].pass_index == pass)
     };
@@ -316,17 +324,25 @@ fn render(
     cache: &mut SourceCache,
     calibrations: &[Calibration],
     photometric_gains: &[f32],
+    excluded_passes: &[bool],
     reconstruction_focus: &[reconstruction_plan::FocusSummary],
     domain: SamplingDomain,
     only_pass: Option<usize>,
     destination: &Path,
 ) -> Result<Value> {
     let started = Instant::now();
+    ensure!(
+        excluded_passes.len() == session.passes.len()
+            && only_pass.is_none_or(|pass| !excluded_passes[pass]),
+        "excluded pass cannot be rendered"
+    );
     let cfg = args.merge_config()?;
     let primary = session.primary_pass_index();
     let grouped = !args.no_repeat_grouping
-        && (matches!(session.spec.mode, SessionMode::Repeat | SessionMode::Hdr)
-            || primary.is_some());
+        && (matches!(
+            session.spec.mode,
+            SessionMode::Repeat | SessionMode::Hdr | SessionMode::Auto
+        ) || primary.is_some());
     let policy = GroupPolicy {
         mode: if grouped {
             GroupMode::Repeat
@@ -355,7 +371,15 @@ fn render(
     let candidates = retained_candidates
         .as_deref()
         .unwrap_or(&alignment.pair_candidates);
-    let legacy_plan = groups(session, alignment, candidates, &cohort, grouped, only_pass);
+    let legacy_plan = groups(
+        session,
+        alignment,
+        candidates,
+        &cohort,
+        excluded_passes,
+        grouped,
+        only_pass,
+    );
     let proposal_plan = if args.uncertainty_repeat_proposals {
         ensure!(
             session.spec.mode == SessionMode::Repeat
@@ -488,7 +512,9 @@ fn render(
         .memory_limit_bytes
         .checked_sub(phase_overhead)
         .context("no memory remains for transfer probes")?;
-    let progress = crate::ui_progress::Progress::new(if cohort.omitted.is_empty() {
+    // Progress counts only consumed sources whenever a cohort or plan omits any.
+    let sparse = !cohort.omitted.is_empty() || excluded_passes.iter().any(|&e| e);
+    let progress = crate::ui_progress::Progress::new(if !sparse {
         session.len()
     } else {
         consumed_indices.len()
@@ -596,7 +622,7 @@ fn render(
         }
         for &index in members {
             cohort.require(index)?;
-            let progress_index = if cohort.omitted.is_empty() {
+            let progress_index = if !sparse {
                 index
             } else {
                 consumed_indices
@@ -768,6 +794,7 @@ fn render(
             "coordinate_semantics":"Full session active-image gauge; sensor site equals 2*quad plus CFA-site offset; green-guide center equals (2*x+0.5,2*y+0.5)",
             "units":"black-subtracted native DN after the recorded per-pass photometric gain",
             "photometric_gains_by_pass":photometric_gains,
+            "excluded_passes":excluded_passes,
             "development_reference_pass":anchor,
             "black_subtracted":true,"white_balance_applied":false,
             "color_matrix_applied":false,"display_exposure_applied":false,
@@ -861,12 +888,13 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
         !args.original_cfa_reconstruction
             || matches!(
                 requested_mode,
-                SessionMode::Combine
+                SessionMode::Auto
+                    | SessionMode::Combine
                     | SessionMode::Repeat
                     | SessionMode::Interleave
                     | SessionMode::Hdr
             ),
-        "original-CFA reconstruction supports combine, repeat, interleave and exposure-range sessions"
+        "original-CFA reconstruction supports automatic, combine, repeat, interleave and exposure-range sessions"
     );
     if requested_mode == SessionMode::Mosaic {
         return mosaic::run(args);
@@ -894,20 +922,24 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
     );
     ensure!(
         !args.precision_weights
-            || matches!(session.spec.mode, SessionMode::Repeat | SessionMode::Hdr),
-        "precision weights require repeated captures or exposure range mode"
+            || matches!(
+                session.spec.mode,
+                SessionMode::Repeat | SessionMode::Hdr | SessionMode::Auto
+            ),
+        "precision weights require automatic, repeated-capture or exposure-range mode"
     );
     ensure!(
         !args.reproducibility
             || (session.passes.len() >= 2
                 && matches!(
                     session.spec.mode,
-                    SessionMode::Combine
+                    SessionMode::Auto
+                        | SessionMode::Combine
                         | SessionMode::Interleave
                         | SessionMode::Repeat
                         | SessionMode::Layers
                 )),
-        "automatic reproducibility compares the first two passes in combine, interleave, repeat or layers mode"
+        "automatic reproducibility compares the first two passes in automatic, combine, interleave, repeat or layers mode"
     );
     let metadata = session.read_metadata()?;
     validate_headers(&session, &metadata)?;
@@ -955,7 +987,9 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
         };
         cohort.validate_placed(&cohort_passes, |i| alignment.map.warps()[i].placed().is_some())?;
         alignment.save(&destination.join("alignment.json"), &session)?;
-        ensure!(alignment.report.passes.iter().all(|pass| pass.placed > 0),
+        let automatic = session.spec.mode == SessionMode::Auto;
+        // The automatic planner excludes an unplaced pass instead of failing.
+        ensure!(automatic || alignment.report.passes.iter().all(|pass| pass.placed > 0),
             "one or more passes could not join the measured alignment component; see alignment report");
         let mut calibrations = Vec::new();
         for pass in &session.passes {
@@ -964,7 +998,7 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
             let first = cohort.load(index, &mut cache, &session.frames[index], &identities[index])?;
             calibrations.push(calibration(&first, &metadata[index], config.memory_limit_bytes / 8)?);
         }
-        if session.spec.mode != SessionMode::Layers {
+        if !automatic && session.spec.mode != SessionMode::Layers {
             let shared = &calibrations[0];
             for calibration in &calibrations[1..] {
                 ensure!(calibration.levels == shared.levels && calibration.iso == shared.iso
@@ -990,7 +1024,54 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
         let reconstruction_focus = if args.focus_evidence || args.original_cfa_reconstruction {
             save_focus_fields(&destination,&session,&identities,&alignment,&mut cache,&calibrations,domain,config.memory_limit_bytes,args.original_cfa_reconstruction)?
         } else { Vec::new() };
-        let photometric_gains = if session.spec.mode == SessionMode::Hdr {
+        let mut plan = if automatic {
+            let anchor = session.primary_pass_index().unwrap_or(alignment.report.reference_pass);
+            let lead = &calibrations[anchor];
+            let facts: Vec<_> = session.passes.iter().enumerate().map(|(pass, p)| {
+                let c = &calibrations[pass];
+                let m = &metadata[p.global_range.start];
+                auto_plan::PassFacts {
+                    name: p.name.clone(), frames: p.global_range.len(),
+                    placed: alignment.report.passes[pass].placed,
+                    iso: m.iso, shutter: m.exposure_time, aperture: m.aperture,
+                    calibration_matches_anchor: c.levels == lead.levels && c.iso == lead.iso
+                        && c.camera == lead.camera
+                        && c.metadata.xyz_to_cam_bits == lead.metadata.xyz_to_cam_bits
+                        && c.metadata.color_matrices_bits == lead.metadata.color_matrices_bits,
+                }
+            }).collect();
+            Some(auto_plan::plan(&facts, anchor, session.primary_pass_index().is_some())?)
+        } else { None };
+        if let Some(plan) = plan.as_mut() && plan.photometry_selection().iter().any(|&s| s) {
+            let anchor = plan.anchor_pass;
+            let photometry_config = crate::session_photometry::PhotometryConfig::default();
+            let phase_bytes = crate::session_photometry::workspace_bytes(domain.full, &photometry_config)?
+                .checked_add(crate::session_photometry::report_bytes(session.passes.len(), &photometry_config)?)
+                .and_then(|n| n.checked_add(cache.budget_bytes())).and_then(|n| n.checked_add(512 << 20))
+                .context("exposure calibration memory reservation overflow")?;
+            ensure!(phase_bytes <= config.memory_limit_bytes,
+                "exposure calibration exceeds the session memory budget");
+            let inputs: Vec<_> = calibrations.iter().map(|calibration| {
+                crate::session_photometry::PassPhotometryInput {
+                    nominal_gain: (calibrations[anchor].shutter / calibration.shutter) as f32,
+                    noise: &calibration.noise, profile: calibration.profile,
+                }
+            }).collect();
+            eprintln!("session automatic plan: calibrating differing shutter passes on held-out spatial patches");
+            let selection = plan.photometry_selection();
+            let photometry = crate::session_photometry::calibrate_selected(
+                &session, &identities, &alignment, &mut cache, anchor, &inputs, Some(&selection), &photometry_config)?;
+            write_json_new(&destination.join("photometry.json"), &photometry)?;
+            plan.apply_photometry(&photometry)?;
+        }
+        if let Some(plan) = &plan {
+            write_json_new(&destination.join("plan.json"), plan)?;
+            for line in plan.summary() { eprintln!("{line}"); }
+        }
+        let excluded = plan.as_ref().map_or_else(|| vec![false; session.passes.len()], |p| p.excluded());
+        let photometric_gains = if let Some(plan) = &plan {
+            plan.gains()?
+        } else if session.spec.mode == SessionMode::Hdr {
             let anchor = session.primary_pass_index().unwrap_or(alignment.report.reference_pass);
             let photometry_config = crate::session_photometry::PhotometryConfig::default();
             let phase_bytes = crate::session_photometry::workspace_bytes(domain.full, &photometry_config)?
@@ -1016,10 +1097,10 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
             for pass in 0..session.passes.len() {
                 let layer = destination.join(format!("layer-{:02}", pass + 1));
                 std::fs::create_dir(&layer)?;
-                outputs.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &reconstruction_focus, domain, Some(pass), &layer)?);
+                outputs.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &excluded, &reconstruction_focus, domain, Some(pass), &layer)?);
             }
         } else {
-            outputs.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &reconstruction_focus, domain, args.only_pass, &destination)?);
+            outputs.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &excluded, &reconstruction_focus, domain, args.only_pass, &destination)?);
         }
         if args.reproducibility {
             let mut diagnostic_args=args.clone();
@@ -1029,7 +1110,7 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
             let paths:Vec<_>=if session.spec.mode==SessionMode::Layers {(0..2).map(|i|destination.join(format!("layer-{:02}",i+1))).collect()}else{
                 let mut paths=Vec::new();for pass in 0..2 {
                     let path=destination.join(format!("independent-pass-{:02}",pass+1));std::fs::create_dir(&path)?;
-                    render(&diagnostic_args,&session,&identities,&metadata,&alignment,&mut cache,&calibrations,&photometric_gains,&[],domain,Some(pass),&path)?;paths.push(path);
+                    render(&diagnostic_args,&session,&identities,&metadata,&alignment,&mut cache,&calibrations,&photometric_gains,&excluded,&[],domain,Some(pass),&path)?;paths.push(path);
                 }paths
             };
             crate::session_reproducibility::compare_generated(&crate::session_reproducibility::CompareArgs{

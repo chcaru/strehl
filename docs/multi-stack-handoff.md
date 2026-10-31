@@ -81,10 +81,20 @@ metadata rather than assuming all differences are shutter-only. Start with bound
 analysis and controlled subsets; do not blindly launch a costly all-source render
 or claim all these passes are mutually mergeable before measuring them.
 
-This user message asks to add the target to the handoff, not to claim the automatic
-planner already exists. It is **unimplemented and required future work**. Complete
-the already-running actionable-error replacement build, update the remote handoff,
-and leave long research/implementation continuation to the next authorized agent.
+**October 31 continuation status.** A first planner slice exists: `SessionMode::Auto`
+("Best result", the new desktop default) plans each pass against the anchor,
+combines equal settings, admits shutter differences only through held-out
+calibrated photometry, and excludes unsupported passes with stated reasons instead
+of failing. Equal-setting Auto output is bit-identical to Combine on a real
+107+106 control. Measured on bounded subsets, the regression case is **not
+primarily HDR**: all seven passes share ISO/aperture/lens; 100/102 are roughly
+2.5--3x close-ups of the elytra, and 103--105 differ from 107 by translation and
+magnification. Every cross probe from 107 except to 106 fails at the coarse
+stage, so Auto currently uses 107+106 only. The calibrated-exposure path has not
+yet run on real aligned data. Next: a scale/translation-robust coarse cross-pass
+initializer, then multi-scale detail insertion. Evidence, commands and limits:
+[first-slice-2026-10-31.md](../experiments/multi-stack-2026-10-28/completion/auto-plan/first-slice-2026-10-31.md).
+The complete automatic best-result workflow remains required future work.
 
 ## Mission and user intent
 

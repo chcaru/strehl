@@ -633,7 +633,38 @@ pub fn calibrate(
     inputs: &[PassPhotometryInput<'_>],
     cfg: &PhotometryConfig,
 ) -> Result<PhotometryReport> {
+    calibrate_selected(
+        session,
+        identities,
+        alignment,
+        cache,
+        anchor_pass,
+        inputs,
+        None,
+        cfg,
+    )
+}
+
+/// As [`calibrate`], evaluating only `selected` non-anchor passes. Unselected
+/// passes are reported as not evaluated (never accepted), so the aggregate
+/// `calibrated_gains` is `None` whenever any pass was skipped.
+#[allow(clippy::too_many_arguments)]
+pub fn calibrate_selected(
+    session: &ResolvedSession,
+    identities: &[SourceIdentity],
+    alignment: &SessionAlignment,
+    cache: &mut SourceCache,
+    anchor_pass: usize,
+    inputs: &[PassPhotometryInput<'_>],
+    selected: Option<&[bool]>,
+    cfg: &PhotometryConfig,
+) -> Result<PhotometryReport> {
     cfg.validate()?;
+    ensure!(
+        selected.is_none_or(|s| s.len() == session.passes.len()),
+        "photometry selection shape mismatch"
+    );
+    let evaluated = |pass: usize| pass == anchor_pass || selected.is_none_or(|s| s[pass]);
     ensure!(
         anchor_pass < session.passes.len()
             && inputs.len() == session.passes.len()
@@ -648,7 +679,11 @@ pub fn calibrate(
         unique.len() == identities.len(),
         "photometry refuses repeated original source identity"
     );
-    for input in inputs {
+    for (_, input) in inputs
+        .iter()
+        .enumerate()
+        .filter(|(pass, _)| evaluated(*pass))
+    {
         ensure!(
             input.nominal_gain.is_finite()
                 && input.nominal_gain > 0.0
@@ -682,6 +717,24 @@ pub fn calibrate(
                 validation: None,
                 accepted: true,
                 refusal: None,
+                pairs: Vec::new(),
+            });
+            continue;
+        }
+        if !evaluated(pass) {
+            reports.push(PassPhotometryReport {
+                pass,
+                nominal_gain: inputs[pass].nominal_gain,
+                corrected_gain: None,
+                correction_ev: None,
+                stability_relative: None,
+                anchor_rank_span: None,
+                source_rank_span: None,
+                validation: None,
+                accepted: false,
+                refusal: Some(
+                    "not evaluated: pass was not selected for exposure calibration".into(),
+                ),
                 pairs: Vec::new(),
             });
             continue;

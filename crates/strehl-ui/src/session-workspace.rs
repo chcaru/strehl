@@ -50,6 +50,9 @@ impl SessionDraft {
                     name,
                     directories: vec![directory],
                 }],
+                // New desktop sessions plan automatically; saved manifests keep
+                // their recorded mode, and a missing mode still reads as Combine.
+                mode: SessionMode::Auto,
                 ..Default::default()
             },
             memory_limit_gib: 16.0,
@@ -178,7 +181,8 @@ impl SessionDraft {
     }
 }
 
-pub(crate) const MODES: [SessionMode; 7] = [
+pub(crate) const MODES: [SessionMode; 8] = [
+    SessionMode::Auto,
     SessionMode::Combine,
     SessionMode::Interleave,
     SessionMode::Repeat,
@@ -207,19 +211,28 @@ pub(crate) fn managed_evidence(mode: SessionMode) -> bool {
 pub(crate) fn reconstruction_available(mode: SessionMode) -> bool {
     matches!(
         mode,
-        SessionMode::Combine | SessionMode::Interleave | SessionMode::Repeat | SessionMode::Hdr
+        SessionMode::Auto
+            | SessionMode::Combine
+            | SessionMode::Interleave
+            | SessionMode::Repeat
+            | SessionMode::Hdr
     )
 }
 
 pub(crate) fn precision_available(mode: SessionMode, pass_count: usize) -> bool {
-    pass_count >= 2 && matches!(mode, SessionMode::Repeat | SessionMode::Hdr)
+    pass_count >= 2
+        && matches!(
+            mode,
+            SessionMode::Auto | SessionMode::Repeat | SessionMode::Hdr
+        )
 }
 
 pub(crate) fn reproducibility_available(mode: SessionMode, pass_count: usize) -> bool {
     pass_count >= 2
         && matches!(
             mode,
-            SessionMode::Combine
+            SessionMode::Auto
+                | SessionMode::Combine
                 | SessionMode::Interleave
                 | SessionMode::Repeat
                 | SessionMode::Layers
@@ -227,6 +240,7 @@ pub(crate) fn reproducibility_available(mode: SessionMode, pass_count: usize) ->
 }
 pub(crate) fn mode_label(mode: SessionMode) -> &'static str {
     match mode {
+        SessionMode::Auto => "Best result",
         SessionMode::Combine => "Combine detail",
         SessionMode::Interleave => "Interleaved focus",
         SessionMode::Repeat => "Repeated captures",
@@ -240,6 +254,9 @@ pub(crate) fn mode_description(mode: SessionMode) -> &'static str {
     match mode {
         SessionMode::IndependentViews => {
             "Keep each viewpoint in its own coordinates, with a photograph, linear master and focus evidence. No views are joined."
+        }
+        SessionMode::Auto => {
+            "Analyze every pass and combine what each contributes: focus coverage, repeated captures and calibrated shutter differences. Passes that cannot be combined safely are listed after processing."
         }
         SessionMode::Combine => "Gather useful detail from related passes of the same subject.",
         SessionMode::Interleave => {
