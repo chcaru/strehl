@@ -21,6 +21,11 @@ Open `Strehl.exe`; Python is not needed to use the desktop.
 7. Stack, inspect the saved photograph, then use the layer/view selector where
    applicable. Develop/export the retained native photograph or linear master.
 
+Combine, Interleaved focus and Repeated captures require matching shutter time,
+aperture and ISO across passes. If shutter times differ, select **Exposure range**
+or **Aligned layers**; changing the reconstruction checkbox does not change this
+requirement. Exposure range also checks that the passes have compatible lighting.
+
 For a first trial, use a small related pair and leave optional diagnostics and
 reconstruction off. Add contribution/focus evidence later to inspect support;
 these maps can occupy substantial space. The separate decoded-CFA cache is shared

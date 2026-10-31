@@ -1,5 +1,48 @@
 use super::*;
 
+#[test]
+fn session_failure_shows_engine_reason_and_preserves_log_location() {
+    let root = tempfile::tempdir().unwrap();
+    let log = root.path().join("render.log");
+    fs::write(&log, "Strehl desktop multi-stack session\nArguments: []\nError: combined passes have different shutter times; use HDR or aligned layers\n").unwrap();
+    let message = session_exit_message("exit code: 1", &log);
+    assert!(message.starts_with(
+        "combined passes have different shutter times; choose Exposure range or Aligned layers"
+    ));
+    assert!(message.contains("exit code: 1"));
+    assert!(message.contains(&log.display().to_string()));
+    // A later concrete error wins over earlier messages, even in a large log.
+    fs::write(
+        &log,
+        format!(
+            "Error: old error\n{}\nError: source changed; reload the session\n",
+            "progress\n".repeat(20_000)
+        ),
+    )
+    .unwrap();
+    assert!(session_exit_message("1", &log).starts_with("source changed; reload the session"));
+    // Progress text alone must never be presented as the reason for a failure.
+    fs::write(&log, "session groups 11/28\n").unwrap();
+    assert!(session_exit_message("1", &log).starts_with("Session engine exited"));
+    fs::remove_file(&log).unwrap();
+    assert!(session_exit_message("1", &log).contains("full output:"));
+}
+
+#[test]
+fn session_failure_bounds_diagnostics_and_tolerates_non_utf8_log_bytes() {
+    let root = tempfile::tempdir().unwrap();
+    let log = root.path().join("render.log");
+    fs::write(
+        &log,
+        [b"\xff\xfe\nError: ".as_slice(), "é".repeat(3000).as_bytes()].concat(),
+    )
+    .unwrap();
+    let message = session_exit_message("1", &log);
+    assert!(message.starts_with(&"é".repeat(1200)));
+    assert!(message.contains('…'));
+    assert!(message.chars().count() < 1500);
+}
+
 fn fixture() -> (tempfile::TempDir, RenderRequest) {
     let root = tempfile::tempdir().unwrap();
     let source = root.path().join("source");

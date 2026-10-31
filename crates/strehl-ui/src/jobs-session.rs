@@ -116,6 +116,53 @@ fn write_new(path: &Path, value: &impl serde::Serialize) -> Result<()> {
     Ok(())
 }
 
+fn session_exit_message(status: impl std::fmt::Display, log: &Path) -> String {
+    use std::io::{Seek, SeekFrom};
+    // Retain the original log, but bring the engine's actionable error into the
+    // failure shown by the workspace. Never load an unbounded render log.
+    let reason = (|| -> std::io::Result<Option<String>> {
+        let mut file = File::open(log)?;
+        let start = file.metadata()?.len().saturating_sub(64 * 1024);
+        file.seek(SeekFrom::Start(start))?;
+        let mut bytes = Vec::new();
+        file.take(64 * 1024).read_to_end(&mut bytes)?;
+        Ok(String::from_utf8_lossy(&bytes)
+            .lines()
+            .rev()
+            .find_map(|line| {
+                let reason = line.trim().strip_prefix("Error:")?.trim();
+                if reason.is_empty() {
+                    return None;
+                }
+                let reason = reason.replace(
+                    "use HDR or aligned layers",
+                    "choose Exposure range or Aligned layers",
+                );
+                let mut message: String = reason
+                    .chars()
+                    .filter(|c| !c.is_control())
+                    .take(1200)
+                    .collect();
+                if reason.chars().count() > 1200 {
+                    message.push('…');
+                }
+                Some(message)
+            }))
+    })()
+    .ok()
+    .flatten();
+    match reason {
+        Some(reason) => format!(
+            "{reason}. Session engine exited with {status}; full output: {}",
+            log.display()
+        ),
+        None => format!(
+            "Session engine exited with {status}; full output: {}",
+            log.display()
+        ),
+    }
+}
+
 fn validate_completed_sources(output: &Path, session: &SessionDraft) -> Result<()> {
     let identities: Vec<strehl_cli::session_input::SourceIdentity> = serde_json::from_reader(
         File::open(output.join("source-identities.json"))
@@ -237,11 +284,7 @@ pub(super) fn run_session_render(
         match run_process(&mut command, cancelled, sender, &log)? {
             ProcessResult::Cancelled => Ok(RenderOutcome::Cancelled { directory }),
             ProcessResult::Exited(status) => {
-                ensure!(
-                    status.success(),
-                    "Session engine exited with {status}; full output: {}",
-                    log.display()
-                );
+                ensure!(status.success(), "{}", session_exit_message(status, &log));
                 ensure!(
                     !cancelled.load(Ordering::Relaxed),
                     "Session cancelled before publication"

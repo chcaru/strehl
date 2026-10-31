@@ -144,7 +144,11 @@ impl StrehlApp {
             if session.manifest.mode != before.manifest.mode { session.normalize_mode_options(); }
             theme::caption(ui, mode_description(session.manifest.mode));
             if !matches!(session.manifest.mode, SessionMode::Layers | SessionMode::Mosaic | SessionMode::IndependentViews) {
-                theme::caption(ui, "Combine uses matching aperture and ISO. Exposure range may vary shutter time. Keep other differences as aligned layers.");
+                theme::caption(ui, if session.manifest.mode == SessionMode::Hdr {
+                    "Exposure range allows different shutter times, with matching aperture and ISO and compatible lighting. Keep other differences as aligned layers."
+                } else {
+                    "Combine, interleaved and repeated captures require matching shutter time, aperture and ISO. For different shutter times choose Exposure range; preserve different appearances as Aligned layers."
+                });
             }
             ui.add_space(4.0);
             if crate::session_workspace::primary_available(session.manifest.mode) {
