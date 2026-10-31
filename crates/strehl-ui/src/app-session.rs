@@ -45,6 +45,27 @@ impl StrehlApp {
         self.controls.settings.correct_lateral_ca = false;
     }
 
+    /// Discover every capture folder below `root` as a pass of one automatic
+    /// session. The planner, not this discovery, decides what contributes.
+    pub(super) fn stack_everything(&mut self, root: PathBuf) {
+        match strehl_cli::session_discover::discover(std::slice::from_ref(&root)) {
+            Ok(spec) => {
+                let mut draft = SessionDraft::from_directory(spec.passes[0].directories[0].clone());
+                let count = spec.passes.len();
+                draft.manifest = spec;
+                self.reload_session(draft, false);
+                if self.error.is_none() {
+                    self.session_ui.pending_name = Some(format!(
+                        "Best result · {}",
+                        root.file_name().unwrap_or_default().to_string_lossy()
+                    ));
+                    self.status = format!("Found {count} capture folder(s); reading passes…");
+                }
+            }
+            Err(error) => self.error = Some(error.to_string()),
+        }
+    }
+
     pub(super) fn add_session_directory(&mut self, path: PathBuf, choose: SessionChoose) {
         let Some(mut session) = self.controls.settings.session.clone() else {
             return;

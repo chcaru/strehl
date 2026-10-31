@@ -18,6 +18,8 @@ mod session_cmd;
 pub mod session_focus;
 #[path = "session-input.rs"]
 pub mod session_input;
+#[path = "session-discover.rs"]
+pub mod session_discover;
 #[path = "session-mapped-sampling.rs"]
 pub mod session_mapped_sampling;
 #[path = "session-mosaic-geometry.rs"]

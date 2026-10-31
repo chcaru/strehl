@@ -48,6 +48,8 @@ impl Resources {
 
 #[derive(Args, Debug, Clone)]
 pub(crate) struct StackArgs {
+    /// Session manifest, or a folder: every RAW folder below it becomes a pass
+    /// of an automatic Best result session (manifest written as <out-dir>.session.json).
     pub manifest: PathBuf,
     /// Fresh output directory for the photograph, linear master and session report.
     #[arg(long)]
@@ -162,12 +164,50 @@ impl StackArgs {
     }
 }
 
+/// `session stack <folder>`: discover every capture folder below it, write the
+/// automatic manifest beside the output as `<out-dir>.session.json`, and stack
+/// that. The written manifest records exactly what was discovered.
+fn discover_folder_argument(mut command: crate::Command) -> Result<crate::Command> {
+    if let crate::Command::Session {
+        action: Action::Stack(args),
+    } = &mut command
+        && args.manifest.is_dir()
+    {
+        let root = args.manifest.clone();
+        let spec = crate::session_discover::discover(std::slice::from_ref(&root))?;
+        let destination = crate::session_input::canonical_destination(&args.out_dir)?;
+        let mut name = destination
+            .file_name()
+            .context("output directory has no name")?
+            .to_os_string();
+        name.push(".session.json");
+        let manifest = destination.with_file_name(name);
+        let parent = manifest.parent().context("manifest has no parent")?;
+        std::fs::create_dir_all(parent)?;
+        spec.resolve_from(parent)?
+            .ensure_output_outside_sources(&manifest)?;
+        write_json_new(&manifest, &spec)?;
+        eprintln!(
+            "session: discovered {} capture folder(s) under {}; manifest {}",
+            spec.passes.len(),
+            root.display(),
+            manifest.display()
+        );
+        for pass in &spec.passes {
+            eprintln!("  {}", pass.name);
+        }
+        args.manifest = manifest;
+    }
+    Ok(command)
+}
+
 /// Resolve a one-pass session into the unchanged ordinary command at process startup.
 /// # Safety
 /// Must run before any worker or GUI thread: it isolates legacy sidecar environment.
 pub(crate) unsafe fn route_single_pass(
     command: crate::Command,
 ) -> Result<(crate::Command, Option<SinglePassCompletion>)> {
+    let command = discover_folder_argument(command)?;
     let crate::Command::Session {
         action: Action::Stack(args),
     } = &command

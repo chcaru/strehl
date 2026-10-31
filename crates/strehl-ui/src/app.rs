@@ -94,6 +94,7 @@ enum Dialog {
     Output,
     CompletedSession,
     ViewBundleExport,
+    StackEverything,
 }
 #[derive(Clone)]
 struct CachedImage {
@@ -631,6 +632,9 @@ impl StrehlApp {
                 Dialog::CompletedSession => {
                     dialog.set_title("Open completed CLI session").pick_folder()
                 }
+                Dialog::StackEverything => dialog
+                    .set_title("Stack everything in a folder")
+                    .pick_folder(),
             };
             let _ = sender.send((kind, path));
         });
@@ -805,6 +809,7 @@ impl StrehlApp {
                             self.error = Some(error.to_string());
                         }
                     }
+                    Dialog::StackEverything => self.stack_everything(path),
                 }
             }
         }
