@@ -42,6 +42,12 @@ SOURCE_PATHS = (
     "docs/desktop-build.md", "docs/raw-decoder-notice.md", "docs/public-release.md",
     "docs/development-and-hdr.md", "docs/agent-interface.md", "docs/sony-focus-metadata.md",
     "docs/desktop-control.md", "docs/temporal-energy.md",
+    "docs/multi-stack.md", "docs/multi-stack-tryout.md",
+    # Cargo example targets and their owned sibling modules must remain rebuildable.
+    # Select source/protocol text only, never generated photographs or RAW/cache data.
+    ":(glob)experiments/multi-stack-2026-10-28/**/*.rs",
+    ":(glob)experiments/multi-stack-2026-10-28/**/*.md",
+    "experiments/raw-quality-2026-10-27/native-spectral-fusion/pilot/native-cfa-develop.rs",
     "docs/research/metadata-continuation-2026-10-25.md", "scripts/strehl-control.py",
     "scripts/package-desktop.ps1", "scripts/rebuild-desktop.ps1",
     "experiments/rea-a7c2-2026-10-24-c/noise-floor-oracle.rs",

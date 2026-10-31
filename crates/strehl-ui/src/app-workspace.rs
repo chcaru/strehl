@@ -605,14 +605,21 @@ impl StrehlApp {
                         self.editor.loaded.as_ref().map(|photo| &photo.preview),
                     );
                     let busy = self.job.is_some() || self.picker_active() || self.scan.is_some();
+                    // Keep the primary source workflow beside the Projects heading.
+                    // Reserve a footer for completed-result import instead of
+                    // pushing New stack down with an unrelated action row.
+                    let import_height = if self.session_import.is_some() { 76.0 } else { 30.0 };
+                    let response = ui.allocate_ui(
+                        egui::vec2(ui.available_width(), (ui.available_height() - import_height).max(70.0)),
+                        |ui| self.project_explorer.show(ui, &mut self.catalog, busy),
+                    ).inner;
+                    changed = response.changed;
+                    action = response.action;
                     if ui.add_enabled(!busy && self.replay.is_none(), egui::Button::new("Open completed CLI session…")).on_hover_text("Import saved photographs and diagnostics without opening original capture folders.").clicked() { self.pick(Dialog::CompletedSession); }
                     if let Some((_,_,task)) = &self.session_import {
                         ui.label("Verifying imported artifacts…");
                         if ui.button("Cancel import").clicked() { task.cancel(); }
                     }
-                    let response = self.project_explorer.show(ui, &mut self.catalog, busy);
-                    changed = response.changed;
-                    action = response.action;
                 } else if pane == Sidebar::Edit {
                     self.edit_panel(ui);
                 } else if pane == Sidebar::Export {

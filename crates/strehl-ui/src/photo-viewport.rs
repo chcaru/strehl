@@ -65,6 +65,7 @@ pub(super) fn prepare_job(
     )
 }
 
+#[cfg(test)]
 pub(super) fn prepare(
     source: &LinearImage,
     recipe: &DevelopmentRecipe,

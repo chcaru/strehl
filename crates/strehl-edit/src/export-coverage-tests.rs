@@ -80,7 +80,13 @@ fn coverage_export_preserves_supported_rgb_metadata_alpha_and_ordinary_bytes() {
                 image::open(&alpha).unwrap().into_rgba16().into_raw(),
             )
         };
-        for (i, (p, a)) in rgb.chunks_exact(3).zip(rgba.chunks_exact(4)).enumerate() {
+        for (i, (p, a)) in rgb
+            .as_chunks::<3>()
+            .0
+            .iter()
+            .zip(rgba.as_chunks::<4>().0)
+            .enumerate()
+        {
             assert_eq!(p, &a[..3]);
             assert_eq!(a[3], u16::from(mask[i]) * 257);
         }

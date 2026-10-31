@@ -290,7 +290,9 @@ fn save_sdr(
 }
 
 fn rgba16(rgb: &[u16], coverage: &[u8]) -> Vec<u16> {
-    rgb.chunks_exact(3)
+    rgb.as_chunks::<3>()
+        .0
+        .iter()
         .zip(coverage)
         .flat_map(|(p, &a)| [p[0], p[1], p[2], u16::from(a) * 257])
         .collect()
