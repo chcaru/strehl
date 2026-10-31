@@ -9,6 +9,7 @@ in development builds; the alpha.6 download predates them.
 
 | Mode | Result | Suitable inputs |
 | --- | --- | --- |
+| Best result (default) | One photograph and master. Strehl plans each pass against the primary (or geometry reference): equal settings combine, different shutter times combine after validated exposure correction, and passes that cannot be fused safely are left out with a reason in `plan.json`. | Any related passes of one subject; no manual classification needed. |
 | Combine detail | One photograph and scene-linear master, with captures admitted separately across focus. | Related passes with equal camera, lens, ISO, aperture and shutter time. |
 | Interleaved focus | One photograph from complementary focus positions, retaining each pass's order. | Offset focus ladders that fill one another's missing focus coverage. |
 | Repeated captures | One photograph and master; proposed matching observations are averaged only where their coefficients agree with the injected noise model. | Repeated focus sweeps of a static subject under stable lighting. |
@@ -16,6 +17,16 @@ in development builds; the alpha.6 download predates them.
 | Aligned layers | One photograph and master per pass on a shared canvas. | Aperture, exposure, polarizer or lighting changes that should retain separate appearances. |
 | Wider mosaic | An experimental wider canvas with measured overlap, focus-dependent geometry and explicit coverage. | Overlapping views with enough independently supported native correspondence; unsuitable overlap is refused. |
 | Independent views | One photograph, master and focus/geometry bundle per viewpoint, each in its own coordinates. | Different subject angles that should remain separate, including inputs for external photogrammetry. |
+
+Best result also recovers passes whose framing or magnification differs too
+much for the ordinary cross-pass search: a global scale/rotation/translation
+search proposes a placement, and only a direct native measurement accepts it.
+Registration is not enough to fuse. A pass joined this way must agree with the
+anchor across its overlap; one that matches only locally (typically because
+the subject's pose changed between sessions) is left out to prevent ghosting.
+Passes beyond 1.5x magnification relative to the anchor are also left out
+until close-up detail insertion exists. Different ISO or aperture is not yet
+pooled; choose Aligned layers to keep such appearances.
 
 Exposure range validates a bounded correction to the nominal shutter ratio.
 It tests supported color/brightness consistency on separate spatial patches
@@ -129,8 +140,8 @@ absolute paths are also accepted.
 }
 ```
 
-The mode values are `combine`, `interleave`, `repeat`, `hdr`, `layers`, `mosaic`
-and `independent_views`. `primary_pass` is null or a zero-based pass index;
+The mode values are `auto`, `combine`, `interleave`, `repeat`, `hdr`, `layers`,
+`mosaic` and `independent_views`. A manifest without `mode` is `combine`. `primary_pass` is null or a zero-based pass index;
 it must be null for `mosaic` and `independent_views`.
 
 ```powershell

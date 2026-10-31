@@ -91,8 +91,16 @@ primarily HDR**: all seven passes share ISO/aperture/lens; 100/102 are roughly
 2.5--3x close-ups of the elytra, and 103--105 differ from 107 by translation and
 magnification. Every cross probe from 107 except to 106 fails at the coarse
 stage, so Auto currently uses 107+106 only. The calibrated-exposure path has not
-yet run on real aligned data. Next: a scale/translation-robust coarse cross-pass
-initializer, then multi-scale detail insertion. Evidence, commands and limits:
+yet run on real aligned data. A wide-baseline initializer (`strehl-core` `align_global`, seeds confirmed by
+direct refinement) now joins 103--105 (x1.22--1.24, about -2 deg), but review and
+residual fields showed a **pose change**: fusing them ghosted. A cross/intra
+tile-support gate (compatible 1.17, pose-changed 0.15--0.28, bar 0.5) excludes
+them in Auto and refuses them in fused manual modes. The complete seven-pass
+manifest now completes in Auto (43.6 min, 10.8 GiB peak): 107+106 fused cleanly,
+five passes excluded with reasons; close-ups 100/102 are not found by the global
+search. Next candidates: locally deformable cross-pass registration (to use
+pose-changed passes), close-up detail insertion, cross-ISO/aperture treatment and
+in-pass setting splits. Evidence, commands and limits:
 [first-slice-2026-10-31.md](../experiments/multi-stack-2026-10-28/completion/auto-plan/first-slice-2026-10-31.md).
 The complete automatic best-result workflow remains required future work.
 

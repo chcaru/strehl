@@ -81,3 +81,65 @@ cross-pass initializer (then direct pairwise fits in the global solve as now),
 followed by a multi-scale consumer able to insert close-up detail (100/102) into
 the whole-body canvas. Changing `session-align.rs` invalidates archived map
 bindings (handoff: archived17 hash) and needs fresh controlled maps.
+
+## Second slice: wide-baseline registration and the pose-change gate
+
+Source: commit `fc7eb5a74`; release `strehl.exe` SHA256
+`fa78fa817a6d019f435a5d53e75735524eafdf9004bceb0cd988beb6e5dae954` (fresh
+`Compiling`, built from that tree). The later rustfmt commit `1d1966f29` changes
+no file hashed into a binding and no behavior.
+
+**Implementation.** `strehl-core/src/align-global.rs` proposes reference->moving
+similarities by masked FFT NCC (Padfield form, gain/offset invariant) over
+magnification up to 4x either way, +-12 deg and all translations, coarse (128 px)
+then local refinement (256 px). Proposals never become placements:
+`session-align.rs` searches only passes with no accepted cross probe, keeps the
+first candidate a direct seeded guide refinement confirms, re-measures that
+pass's refused probes and candidates from it, and tiles the more magnified frame
+for such pairs (`guide-wide`/`native-wide` receipts). Ordinary passes keep the
+old path. Passes joined this way carry `cross_support_ratio` (median native
+cross-edge tiles / the pass's median intra-edge tiles) and `relative_scale`;
+below 0.5 they are `geometry_consistent: false`. Auto excludes those and passes
+beyond x1.5 magnification; fused manual modes refuse them.
+
+**Unit evidence.** VERIFIED: 5 new core tests on analytic value-noise scenes
+(rotated 2.6x close-up and its inverse within 8/4 moving px, partial overlap with
+gain/offset change within 4 px, unrelated scene NCC < 0.6 vs true > 0.9, flat and
+invalid-bound refusal, FFT vs direct circular correlation). Breaking the swapped
+inversion fails the close-up test (mutation check). After the slice: 55 core
+alignment, 165 CLI and 66 UI session tests pass; clippy reports nothing in the
+changed files.
+
+**Five-pass subset (107/106/105/104/103, 120 frames).** MEASURED: before the
+gate, 120/120 placed in one component; seeds x1.217/x1.229/x1.242, about -1.9 deg;
+the true candidate scored NCC 0.93 vs 0.61--0.66 for alternatives; about 7 s per
+search. Orienting wide pairs on the magnified frame lowered cross-edge median RMS
+from 3.3--4.5 to 2.9--3.1 plane px (intra 2.8). **But the fused photograph
+ghosted**: frozen-gain (6.081, sRGB) overview and native 400 px crops showed
+patchwork bands and displaced hairs absent from the 107+106 result. Residual
+fields after placement (frame 15 vs mid frames; phase correlation on 192 px tiles;
+commissioned on a known (+7,-3) shift, recovered exactly): 106 control median
+2.0 px, similarity residual 1.5 px; 104 median 26.6 px, similarity and affine
+residuals about 23 px; 105 no usable tiles. A red/cyan overlay showed legs aligned
+but wing-cover bands offset non-uniformly. ARGUED: the specimen's pose changed
+between sessions, so one 2-D placement per frame cannot register it. Support
+ratios: 106 1.17; 105/104/103 0.16/0.28/0.15. With the gate: 2 of 5 contribute,
+three excluded with the ghosting reason.
+
+**Close-up subset (107 + 100).** MEASURED: no confirmed seed; all candidates near
+x0.27 (the wrong direction) at NCC about 0.70, comparable to false candidates.
+The true roughly 2.7x relation is not found at 128/256 px search sizes. Even if
+found, the earlier sessions likely share the pose change, and Auto excludes
+magnifications beyond x1.5.
+
+**Complete regression manifest (7 passes, 1,650 frames), Auto.** MEASURED: exit 0,
+43.6 min, sampled peak private 10.79 GiB, 16 threads, cache on D:. 1104/1650
+placed; 105/104/103 joined by wide seeds and excluded (support 0.18/0.16/0.15);
+102/100 not joined. Fused 598 sources (107+106) in 475 groups, 6892x4596 canvas,
+finite master. Author review (not independent) of the frozen-gain overview and two
+native crops: coherent subject, no ghosting or seams.
+
+**Still not established.** Any gain from the fused 107+106 result over 107 alone
+(no single-pass comparison yet); use of pose-changed passes (needs locally
+deformable registration with its own validation); close-up insertion; cross-ISO
+or aperture pooling; independent review.
