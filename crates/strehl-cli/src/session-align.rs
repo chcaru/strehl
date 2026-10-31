@@ -20,6 +20,7 @@ use strehl_core::align::{
     Resampler, Similarity, StageFit, align_pair, graph_stats, lift_box_decimated_similarity,
     refine_pair_observed, solve_global_in_tracks, tile_grid,
 };
+use strehl_core::align_global::{GlobalSearchConfig, global_similarity_candidates};
 use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma};
 use strehl_core::warpmap::{FrameWarp, Provenance, StackIdentity, WarpMap};
 
@@ -56,6 +57,9 @@ pub struct SessionAlignConfig {
     pub smooth_huber_plane_px: Option<f64>,
     pub edge_huber_plane_px: f64,
     pub irls_iterations: usize,
+    /// Representative pass frames searched by the wide-baseline initializer
+    /// when a pass has no accepted cross probe; zero disables it.
+    pub wide_baseline_searches: usize,
 }
 
 impl Default for SessionAlignConfig {
@@ -84,6 +88,7 @@ impl Default for SessionAlignConfig {
             smooth_huber_plane_px: Some(1.0),
             edge_huber_plane_px: 3.0,
             irls_iterations: 3,
+            wide_baseline_searches: 3,
         }
     }
 }
@@ -147,6 +152,10 @@ impl SessionAlignConfig {
         ensure!(
             (2..=32).contains(&self.cross_probes) && self.cross_neighbor_radius <= 4,
             "invalid cross-pass search bounds"
+        );
+        ensure!(
+            self.wide_baseline_searches <= 8,
+            "wide-baseline searches must be 0..8"
         );
         ensure!(
             self.native_iterations > 0
@@ -283,6 +292,43 @@ pub struct PassAlignmentReport {
     pub measured_cross_edges: usize,
     pub intra_components: usize,
     pub intra_cycle_rank: usize,
+    /// Joined to the anchor only through wide-baseline seeds.
+    #[serde(default)]
+    pub wide_baseline: bool,
+    /// Median tiles retained by accepted native cross edges divided by the
+    /// pass's own median intra-edge tiles. Self-normalizes texture, exposure
+    /// and tile geometry; a low value means one 2-D placement explains only a
+    /// local part of the overlap (for example a pose change between sessions).
+    #[serde(default)]
+    pub cross_support_ratio: Option<f64>,
+    /// Median placed-frame magnification relative to the anchor pass.
+    #[serde(default)]
+    pub relative_scale: Option<f64>,
+    /// False when a wide-baseline pass fails the support bar; fused outputs
+    /// must not consume it (ghosting). Ordinary passes are never flagged.
+    #[serde(default = "default_true")]
+    pub geometry_consistent: bool,
+}
+
+fn default_true() -> bool {
+    true
+}
+
+/// Minimum [`PassAlignmentReport::cross_support_ratio`] for a wide-baseline
+/// pass. Bug-3 subsets: a compatible pass measured 1.17; pose-changed passes
+/// 0.15-0.28. An engineering bar, not a calibrated constant.
+pub const WIDE_SUPPORT_RATIO: f64 = 0.5;
+
+fn median_usize(mut values: Vec<usize>) -> Option<f64> {
+    values.sort_unstable();
+    (!values.is_empty()).then(|| {
+        let mid = values.len() / 2;
+        if values.len() % 2 == 1 {
+            values[mid] as f64
+        } else {
+            0.5 * (values[mid - 1] + values[mid]) as f64
+        }
+    })
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -308,6 +354,34 @@ pub struct SessionAlignmentReport {
     pub source_decodes: u64,
     pub source_disk_hits: u64,
     pub elapsed_seconds: f64,
+    /// Wide-baseline proposals for passes without an accepted cross probe.
+    #[serde(default)]
+    pub wide_baseline: Vec<WideBaselineReport>,
+}
+
+/// One global-search attempt. Candidates are proposals; only `validated`
+/// candidates were confirmed by a direct seeded guide refinement.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct WideBaselineCandidate {
+    pub scale: f64,
+    pub rotation_degrees: f64,
+    pub ncc: f64,
+    pub overlap_px: f64,
+    pub validated: bool,
+    pub used_tiles: usize,
+    pub rms_guide_px: Option<f32>,
+    pub refusal: Option<String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct WideBaselineReport {
+    pub pass: usize,
+    pub anchor_frame: usize,
+    pub pass_frame: usize,
+    pub elapsed_seconds: f64,
+    pub candidates: Vec<WideBaselineCandidate>,
+    /// Seed (anchor frame -> pass frame, guide-centred) used for re-measurement.
+    pub selected_seed_bits: Option<[u64; 4]>,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -525,7 +599,10 @@ impl SessionAlignment {
             ensure!(
                 edge.i < edge.j
                     && edge.j < session.len()
-                    && matches!(edge.stage.as_str(), "guide" | "native")
+                    && matches!(
+                        edge.stage.as_str(),
+                        "guide" | "native" | "guide-wide" | "native-wide"
+                    )
                     && seen.insert((edge.i, edge.j, edge.stage.as_str())),
                 "alignment edge report has invalid or duplicate indices"
             );
@@ -534,7 +611,7 @@ impl SessionAlignment {
                 (edge.purpose == PairPurpose::IntraPass) == intra,
                 "alignment edge purpose disagrees with its pass indices"
             );
-            if edge.accepted && edge.stage == "native" {
+            if edge.accepted && matches!(edge.stage.as_str(), "native" | "native-wide") {
                 let bits = edge
                     .transform_bits
                     .context("accepted native edge lacks transform")?;
@@ -1032,6 +1109,219 @@ struct PairMeasurement {
     edge: Option<AlignEdge>,
 }
 
+/// Seeds magnifying beyond this are measured with the more magnified frame as
+/// the tile reference, so its tiles fall inside the other frame. Ordinary focus
+/// breathing stays far below this, leaving those measurements unchanged.
+const ORIENTATION_SWAP_SCALE: f64 = 1.25;
+/// Wide-baseline pairs always tile the more magnified frame: their fields of
+/// view differ by construction. Only pairs recovered by the wide-baseline
+/// initializer use this; ordinary pairs keep [`ORIENTATION_SWAP_SCALE`].
+const WIDE_ORIENTATION_SWAP_SCALE: f64 = 1.0;
+const WIDE_STAGE_GUIDE: &str = "guide-wide";
+
+/// Direct fine refinement from `seed` (reference -> moving, centred). When the
+/// seed magnifies strongly, measure moving -> reference and invert, so the
+/// result keeps the caller's orientation. Tile statistics are then stated in
+/// the moving frame's pixels.
+fn refine_oriented(
+    reference: PlaneRef<'_>,
+    moving: PlaneRef<'_>,
+    cfg: &AlignConfig,
+    seed: Similarity,
+    swap_above: f64,
+) -> std::result::Result<StageFit, AlignFailure> {
+    let swap = seed.scale() > swap_above;
+    let (fixed, other, seed) = if swap {
+        (
+            moving,
+            reference,
+            seed.invert().ok_or(AlignFailure::InvalidSeed)?,
+        )
+    } else {
+        (reference, moving, seed)
+    };
+    let spots = tile_grid(
+        fixed,
+        cfg.fine_tile,
+        cfg.fine_grid.0,
+        cfg.fine_grid.1,
+        cfg.margin,
+    )
+    .ok_or(AlignFailure::GridTooSmall)?;
+    let mut fit = refine_pair_observed(fixed, other, &spots, cfg, seed, None)?;
+    if swap {
+        let inverse = fit.similarity().invert().ok_or(AlignFailure::InvalidSeed)?;
+        fit.fit = inverse.to_params();
+    }
+    Ok(fit)
+}
+
+/// Re-measure explicit pairs at guide resolution from supplied seeds.
+fn measure_guides_seeded(
+    jobs: &[(usize, usize, PairPurpose, Similarity)],
+    inputs: &PlaneInputs<'_>,
+    sources: &mut SourceCache,
+    planes: &mut BoundedPlanes<Guide>,
+    workers: usize,
+    pool: &rayon::ThreadPool,
+) -> Result<Vec<PairMeasurement>> {
+    let mut measured = Vec::with_capacity(jobs.len());
+    for batch in jobs.chunks(workers.max(1)) {
+        let mut loaded = Vec::with_capacity(batch.len());
+        for &(i, j, purpose, seed) in batch {
+            loaded.push((
+                i,
+                j,
+                purpose,
+                seed,
+                inputs.guide(i, sources, planes)?,
+                inputs.guide(j, sources, planes)?,
+            ));
+        }
+        let mut results = pool.install(|| {
+            loaded
+                .par_iter()
+                .map(|(i, j, purpose, seed, a, b)| {
+                    let reference =
+                        PlaneRef::from_geometry(&a.data, a.geometry).expect("constructed guide");
+                    let moving =
+                        PlaneRef::from_geometry(&b.data, b.geometry).expect("constructed guide");
+                    let result = refine_oriented(
+                        reference,
+                        moving,
+                        &inputs.guide_config,
+                        *seed,
+                        WIDE_ORIENTATION_SWAP_SCALE,
+                    );
+                    let (receipt, edge) = receipt(
+                        *i,
+                        *j,
+                        *purpose,
+                        WIDE_STAGE_GUIDE,
+                        &result,
+                        inputs.geometry,
+                        inputs.factor,
+                    );
+                    PairMeasurement { receipt, edge }
+                })
+                .collect::<Vec<_>>()
+        });
+        measured.append(&mut results);
+    }
+    Ok(measured)
+}
+
+/// For a pass with no accepted guide cross probe, propose global similarities
+/// between representative anchor/pass frames and keep the first candidate that
+/// a direct seeded guide refinement confirms. Returns the guide-centred seed
+/// (anchor frame -> pass frame) and the audit record of every attempt.
+#[allow(clippy::too_many_arguments)]
+fn wide_baseline_seed(
+    session: &ResolvedSession,
+    config: &SessionAlignConfig,
+    inputs: &PlaneInputs<'_>,
+    sources: &mut SourceCache,
+    planes: &mut BoundedPlanes<Guide>,
+    reference_pass: usize,
+    pass: usize,
+    pool: &rayon::ThreadPool,
+) -> Result<(Option<Similarity>, Vec<WideBaselineReport>)> {
+    let anchor_range = session.passes[reference_pass].global_range.clone();
+    let anchor = anchor_range.start + anchor_range.len() / 2;
+    let range = session.passes[pass].global_range.clone();
+    let count = config.wide_baseline_searches.min(range.len());
+    let mut frames: Vec<usize> = (0..count)
+        .map(|k| range.start + (2 * k + 1) * range.len() / (2 * count))
+        .collect();
+    // Search the middle of the pass first: it is the likeliest to share sharp
+    // structure with the middle of the anchor.
+    frames.sort_by_key(|&f| f.abs_diff(range.start + range.len() / 2));
+    let search = GlobalSearchConfig::default();
+    let mut reports = Vec::new();
+    for frame in frames {
+        let started = Instant::now();
+        let a = inputs.guide(anchor, sources, planes)?;
+        let b = inputs.guide(frame, sources, planes)?;
+        let reference = PlaneRef::from_geometry(&a.data, a.geometry).expect("constructed guide");
+        let moving = PlaneRef::from_geometry(&b.data, b.geometry).expect("constructed guide");
+        let found = pool.install(|| global_similarity_candidates(reference, moving, &search));
+        let mut candidates = Vec::new();
+        let mut selected: Option<(Similarity, usize, f32)> = None;
+        for candidate in &found {
+            let result = refine_oriented(
+                reference,
+                moving,
+                &inputs.guide_config,
+                candidate.transform,
+                WIDE_ORIENTATION_SWAP_SCALE,
+            );
+            let mut record = WideBaselineCandidate {
+                scale: candidate.transform.scale(),
+                rotation_degrees: candidate.transform.rotation().to_degrees(),
+                ncc: candidate.ncc,
+                overlap_px: candidate.overlap,
+                validated: false,
+                used_tiles: 0,
+                rms_guide_px: None,
+                refusal: None,
+            };
+            match result {
+                Ok(fit) => {
+                    record.validated = true;
+                    record.used_tiles = fit.used;
+                    record.rms_guide_px = Some(fit.rms);
+                    let better = selected.is_none_or(|(_, used, rms)| {
+                        fit.used > used || (fit.used == used && fit.rms < rms)
+                    });
+                    if better {
+                        selected = Some((fit.similarity(), fit.used, fit.rms));
+                    }
+                }
+                Err(error) => record.refusal = Some(format!("{error:?}")),
+            }
+            candidates.push(record);
+        }
+        let seed = selected.map(|(seed, _, _)| seed);
+        reports.push(WideBaselineReport {
+            pass,
+            anchor_frame: anchor,
+            pass_frame: frame,
+            elapsed_seconds: started.elapsed().as_secs_f64(),
+            candidates,
+            selected_seed_bits: seed.map(|t| {
+                [
+                    t.a.re.to_bits(),
+                    t.a.im.to_bits(),
+                    t.b.re.to_bits(),
+                    t.b.im.to_bits(),
+                ]
+            }),
+        });
+        if seed.is_some() {
+            return Ok((seed, reports));
+        }
+    }
+    Ok((None, reports))
+}
+
+/// Orient a pass-level seed (anchor -> pass) for pair `(i, j)`.
+fn oriented_seed(
+    session: &ResolvedSession,
+    reference_pass: usize,
+    seeds: &BTreeMap<usize, Similarity>,
+    i: usize,
+    j: usize,
+) -> Option<Similarity> {
+    let (pi, pj) = (session.frames[i].pass_index, session.frames[j].pass_index);
+    if pi == reference_pass {
+        seeds.get(&pj).copied()
+    } else if pj == reference_pass {
+        seeds.get(&pi).and_then(|s| s.invert())
+    } else {
+        None
+    }
+}
+
 fn measure_guides(
     pairs: &BTreeMap<(usize, usize), PairPurpose>,
     inputs: &PlaneInputs<'_>,
@@ -1293,47 +1583,58 @@ fn measure_native(
     let pairs: Vec<_> = seeds
         .iter()
         .filter_map(|measurement| {
-            measurement
-                .edge
-                .map(|edge| (edge, measurement.receipt.purpose))
+            measurement.edge.map(|edge| {
+                let wide = measurement.receipt.stage == WIDE_STAGE_GUIDE;
+                (edge, measurement.receipt.purpose, wide)
+            })
         })
         .collect();
     let mut measured = Vec::with_capacity(pairs.len());
     let cfg = config.estimator(false);
     for batch in pairs.chunks(workers) {
         let mut jobs = Vec::with_capacity(batch.len());
-        for &(edge, purpose) in batch {
+        for &(edge, purpose, wide) in batch {
             jobs.push((
                 edge,
                 purpose,
+                wide,
                 inputs.native(edge.i, sources, planes)?,
                 inputs.native(edge.j, sources, planes)?,
             ));
         }
         let mut results = pool.install(|| {
             jobs.par_iter()
-                .map(|(edge, purpose, a, b)| {
+                .map(|(edge, purpose, wide, a, b)| {
                     let reference = PlaneRef::from_geometry(&a.data, a.geometry)
                         .expect("constructed native plane");
                     let moving = PlaneRef::from_geometry(&b.data, b.geometry)
                         .expect("constructed native plane");
-                    let result = match tile_grid(
-                        reference,
-                        cfg.fine_tile,
-                        cfg.fine_grid.0,
-                        cfg.fine_grid.1,
-                        cfg.margin,
-                    ) {
-                        Some(spots) => {
-                            refine_pair_observed(reference, moving, &spots, &cfg, edge.t, None)
+                    let swap_above = if *wide {
+                        WIDE_ORIENTATION_SWAP_SCALE
+                    } else {
+                        ORIENTATION_SWAP_SCALE
+                    };
+                    let result = if *wide || edge.t.scale() > ORIENTATION_SWAP_SCALE {
+                        refine_oriented(reference, moving, &cfg, edge.t, swap_above)
+                    } else {
+                        match tile_grid(
+                            reference,
+                            cfg.fine_tile,
+                            cfg.fine_grid.0,
+                            cfg.fine_grid.1,
+                            cfg.margin,
+                        ) {
+                            Some(spots) => {
+                                refine_pair_observed(reference, moving, &spots, &cfg, edge.t, None)
+                            }
+                            None => Err(AlignFailure::GridTooSmall),
                         }
-                        None => Err(AlignFailure::GridTooSmall),
                     };
                     let (receipt, edge) = receipt(
                         edge.i,
                         edge.j,
                         *purpose,
-                        "native",
+                        if *wide { "native-wide" } else { "native" },
                         &result,
                         inputs.geometry,
                         1,
@@ -1466,6 +1767,89 @@ pub fn align_session(
         memory.guide_workers,
         &pool,
     )?;
+    // Wide-baseline recovery: a pass whose every probe against the anchor was
+    // refused gets globally searched seeds, confirmed by direct refinement.
+    let mut wide_seeds = BTreeMap::new();
+    let mut wide_reports = Vec::new();
+    if config.wide_baseline_searches > 0 {
+        for pass in 0..session.passes.len() {
+            if pass == reference_pass {
+                continue;
+            }
+            let spans = |i: usize, j: usize| {
+                let (pi, pj) = (session.frames[i].pass_index, session.frames[j].pass_index);
+                (pi, pj) == (reference_pass, pass) || (pi, pj) == (pass, reference_pass)
+            };
+            let joined = guide_measurements
+                .iter()
+                .any(|m| m.edge.is_some() && spans(m.receipt.i, m.receipt.j));
+            if joined {
+                continue;
+            }
+            eprintln!(
+                "session alignment: pass '{}' has no accepted cross probe; searching wide-baseline seeds",
+                session.passes[pass].name
+            );
+            let (seed, mut reports) = wide_baseline_seed(
+                session,
+                config,
+                &inputs,
+                cache,
+                &mut guides,
+                reference_pass,
+                pass,
+                &pool,
+            )?;
+            wide_reports.append(&mut reports);
+            match seed {
+                Some(seed) => {
+                    eprintln!(
+                        "session alignment: pass '{}' wide-baseline seed scale {:.3}, rotation {:.2} deg",
+                        session.passes[pass].name,
+                        seed.scale(),
+                        seed.rotation().to_degrees()
+                    );
+                    wide_seeds.insert(pass, seed);
+                }
+                None => eprintln!(
+                    "session alignment: pass '{}' has no confirmed wide-baseline seed",
+                    session.passes[pass].name
+                ),
+            }
+        }
+    }
+    let reseed =
+        |measurements: &[PairMeasurement]| -> Vec<(usize, usize, PairPurpose, Similarity)> {
+            measurements
+                .iter()
+                .filter(|m| m.edge.is_none())
+                .filter_map(|m| {
+                    oriented_seed(
+                        session,
+                        reference_pass,
+                        &wide_seeds,
+                        m.receipt.i,
+                        m.receipt.j,
+                    )
+                    .map(|seed| (m.receipt.i, m.receipt.j, m.receipt.purpose, seed))
+                })
+                .collect()
+        };
+    if !wide_seeds.is_empty() {
+        let jobs = reseed(&guide_measurements);
+        eprintln!(
+            "session alignment: re-measuring {} refused cross probes from wide-baseline seeds",
+            jobs.len()
+        );
+        guide_measurements.extend(measure_guides_seeded(
+            &jobs,
+            &inputs,
+            cache,
+            &mut guides,
+            memory.guide_workers,
+            &pool,
+        )?);
+    }
     let initial_edges: Vec<_> = guide_measurements.iter().filter_map(|m| m.edge).collect();
     let mut candidates =
         cross_candidates(session, config, &initial_edges, geometry, reference_pass)?;
@@ -1474,14 +1858,30 @@ pub fn align_session(
         "session alignment: measuring {} additional cross-pass guide candidates",
         candidates.len()
     );
-    guide_measurements.extend(measure_guides(
+    let candidate_measurements = measure_guides(
         &candidates,
         &inputs,
         cache,
         &mut guides,
         memory.guide_workers,
         &pool,
-    )?);
+    )?;
+    let candidate_jobs = reseed(&candidate_measurements);
+    guide_measurements.extend(candidate_measurements);
+    if !candidate_jobs.is_empty() {
+        eprintln!(
+            "session alignment: re-measuring {} refused cross candidates from wide-baseline seeds",
+            candidate_jobs.len()
+        );
+        guide_measurements.extend(measure_guides_seeded(
+            &candidate_jobs,
+            &inputs,
+            cache,
+            &mut guides,
+            memory.guide_workers,
+            &pool,
+        )?);
+    }
     guide_measurements.sort_by_key(|m| (m.receipt.i, m.receipt.j));
     memory.peak_guide_bytes = guides.peak;
     // Guide residency is no longer needed; only compact accepted seed records live.
@@ -1556,12 +1956,27 @@ pub fn align_session(
                 })
                 .collect();
             let intra_stats = graph_stats(&intra_edges, pass.global_range.len());
-            let cross = edges
+            let cross_edges: Vec<_> = edges
                 .iter()
                 .filter(|edge| {
                     pass.global_range.contains(&edge.i) != pass.global_range.contains(&edge.j)
                 })
-                .count();
+                .collect();
+            let cross_support_ratio = if index == reference_pass {
+                None
+            } else {
+                median_usize(cross_edges.iter().map(|e| e.used).collect())
+                    .zip(median_usize(intra_edges.iter().map(|e| e.used).collect()))
+                    .filter(|&(_, intra)| intra > 0.0)
+                    .map(|(cross, intra)| cross / intra)
+            };
+            let scale = |range: std::ops::Range<usize>| {
+                median(range.filter_map(|i| poses[i].map(|p| p.scale())).collect())
+            };
+            let relative_scale = scale(pass.global_range.clone())
+                .zip(scale(session.passes[reference_pass].global_range.clone()))
+                .map(|(s, anchor)| s / anchor);
+            let wide_baseline = wide_seeds.contains_key(&index);
             PassAlignmentReport {
                 pass_index: index,
                 name: pass.name.clone(),
@@ -1569,9 +1984,14 @@ pub fn align_session(
                 placed,
                 refused: pass.global_range.len() - placed,
                 measured_intra_edges: intra_edges.len(),
-                measured_cross_edges: cross,
+                measured_cross_edges: cross_edges.len(),
                 intra_components: intra_stats.components,
                 intra_cycle_rank: intra_stats.cycle_rank,
+                wide_baseline,
+                cross_support_ratio,
+                relative_scale,
+                geometry_consistent: !wide_baseline
+                    || cross_support_ratio.is_some_and(|r| r >= WIDE_SUPPORT_RATIO),
             }
         })
         .collect();
@@ -1604,6 +2024,7 @@ pub fn align_session(
         source_decodes: cache_stats.decodes - initial_cache_stats.decodes,
         source_disk_hits: cache_stats.disk_hits - initial_cache_stats.disk_hits,
         elapsed_seconds: started.elapsed().as_secs_f64(),
+        wide_baseline: wide_reports,
     };
     let map = WarpMap::new(Provenance { stack: StackIdentity::from_paths("multi-stack session", &session.paths())?, strategy: GENERATION.into(), heldout_px: None, cycle_floor_px: None, reference: reference_frame, note: "Direct native-green pair measurements; explicit per-pass tracks; common reference gauge. Geometry focus candidates remain unvalidated. Camera model/decoded geometry checked; physical body identity is not established.".into() }, geometry, resampler, poses.into_iter().map(|pose| pose.map_or_else(|| FrameWarp::Refused("outside reference's measured edge component".into()), FrameWarp::Placed)).collect());
     eprintln!(
@@ -2119,6 +2540,10 @@ mod tests {
                         measured_cross_edges: 0,
                         intra_components: pass.global_range.len(),
                         intra_cycle_rank: 0,
+                        wide_baseline: false,
+                        cross_support_ratio: None,
+                        relative_scale: None,
+                        geometry_consistent: true,
                     }
                 })
                 .collect(),
@@ -2129,6 +2554,7 @@ mod tests {
             source_decodes: 0,
             source_disk_hits: 0,
             elapsed_seconds: 0.0,
+            wide_baseline: Vec::new(),
         };
         let map = WarpMap::new(
             Provenance {

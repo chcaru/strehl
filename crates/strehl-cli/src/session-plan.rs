@@ -25,7 +25,17 @@ pub struct PassFacts {
     pub aperture: Option<[u32; 2]>,
     /// Decoded levels, sensor identity and colour calibration equal the anchor.
     pub calibration_matches_anchor: bool,
+    /// Alignment found one 2-D placement consistent across the overlap.
+    pub geometry_consistent: bool,
+    pub cross_support_ratio: Option<f64>,
+    /// Median magnification relative to the anchor pass.
+    pub relative_scale: Option<f64>,
 }
+
+/// Largest magnification ratio (either way) fused into the anchor canvas.
+/// Beyond it a pass needs close-up detail insertion, which the consumer does
+/// not provide yet; resampling it into the canvas would discard or alias detail.
+pub const MAX_RELATIVE_SCALE: f64 = 1.5;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -53,6 +63,8 @@ pub struct PassPlan {
     pub aperture_f_number: Option<f64>,
     /// Anchor shutter divided by this pass's shutter.
     pub nominal_gain: Option<f64>,
+    pub relative_scale: Option<f64>,
+    pub cross_support_ratio: Option<f64>,
     pub role: Role,
     /// Signal-unit gain applied by the consumer; `None` when not consumed.
     pub photometric_gain: Option<f32>,
@@ -119,6 +131,25 @@ pub fn plan(facts: &[PassFacts], anchor: usize, anchor_is_primary: bool) -> Resu
                     Role::Excluded,
                     Some("no frame joined the anchor's measured alignment".to_string()),
                 )
+            } else if !f.geometry_consistent {
+                (
+                    Role::Excluded,
+                    Some(format!(
+                        "one 2-D placement matches the anchor only locally (support {}); the subject's pose or shape likely changed between passes, and fusing would ghost",
+                        f.cross_support_ratio.map_or_else(|| "unmeasured".into(), |r| format!("{r:.2}"))
+                    )),
+                )
+            } else if f
+                .relative_scale
+                .is_some_and(|s| !(1.0 / MAX_RELATIVE_SCALE..=MAX_RELATIVE_SCALE).contains(&s))
+            {
+                (
+                    Role::Excluded,
+                    Some(format!(
+                        "magnification x{:.2} relative to the anchor needs close-up detail insertion, which is not yet supported",
+                        f.relative_scale.unwrap_or(f64::NAN)
+                    )),
+                )
             } else if !f.calibration_matches_anchor {
                 (
                     Role::Excluded,
@@ -164,6 +195,8 @@ pub fn plan(facts: &[PassFacts], anchor: usize, anchor_is_primary: bool) -> Resu
                 shutter_seconds: f.shutter.and_then(ratio),
                 aperture_f_number: f.aperture.and_then(ratio),
                 nominal_gain,
+                relative_scale: f.relative_scale,
+                cross_support_ratio: f.cross_support_ratio,
                 photometric_gain: matches!(role, Role::Anchor | Role::Combine).then_some(1.0),
                 role,
                 reason,
@@ -304,6 +337,9 @@ mod tests {
             shutter: Some(shutter),
             aperture: Some([56, 10]),
             calibration_matches_anchor: true,
+            geometry_consistent: true,
+            cross_support_ratio: Some(1.0),
+            relative_scale: Some(1.0),
         }
     }
 
@@ -448,6 +484,30 @@ mod tests {
 
     fn plan_for_gain_check() -> AutoPlan {
         plan(&[facts("a", [16, 10]), facts("b", [2, 1])], 0, false).unwrap()
+    }
+
+    #[test]
+    fn auto_plan_excludes_locally_registered_and_strongly_magnified_passes() {
+        let mut posed = facts("posed", [16, 10]);
+        posed.geometry_consistent = false;
+        posed.cross_support_ratio = Some(0.2);
+        let mut closeup = facts("closeup", [2, 1]);
+        closeup.relative_scale = Some(2.7);
+        let mut wider = facts("wider", [16, 10]);
+        wider.relative_scale = Some(0.6);
+        let mut near = facts("near", [16, 10]);
+        near.relative_scale = Some(1.22);
+        let plan = plan(
+            &[facts("a", [16, 10]), posed, closeup, wider, near],
+            0,
+            true,
+        )
+        .unwrap();
+        assert_eq!(plan.excluded(), [false, true, true, true, false]);
+        assert!(plan.passes[1].reason.as_deref().unwrap().contains("ghost"));
+        assert!(plan.passes[2].reason.as_deref().unwrap().contains("x2.70"));
+        // A close-up never reaches exposure calibration.
+        assert_eq!(plan.photometry_selection(), [false; 5]);
     }
 
     #[test]

@@ -11,6 +11,8 @@
 //!   mechanism behind the prior project's measured 2-5x noise defect.
 
 pub mod align;
+#[path = "align-global.rs"]
+pub mod align_global;
 pub mod boxfilter;
 #[path = "cfa-lattice.rs"]
 pub mod cfa_lattice;

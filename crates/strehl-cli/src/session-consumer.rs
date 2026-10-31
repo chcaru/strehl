@@ -991,6 +991,12 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
         // The automatic planner excludes an unplaced pass instead of failing.
         ensure!(automatic || alignment.report.passes.iter().all(|pass| pass.placed > 0),
             "one or more passes could not join the measured alignment component; see alignment report");
+        if let Some(pass) = alignment.report.passes.iter().find(|p| !p.geometry_consistent)
+            && !automatic && session.spec.mode != SessionMode::Layers
+        {
+            anyhow::bail!("pass '{}' matches the anchor only locally after wide-baseline alignment (support {:.2}); fusing it would ghost. Use Best result, Aligned layers or Independent views",
+                pass.name, pass.cross_support_ratio.unwrap_or(f64::NAN));
+        }
         let mut calibrations = Vec::new();
         for pass in &session.passes {
             let index = pass.global_range.start;
@@ -1038,6 +1044,9 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                         && c.camera == lead.camera
                         && c.metadata.xyz_to_cam_bits == lead.metadata.xyz_to_cam_bits
                         && c.metadata.color_matrices_bits == lead.metadata.color_matrices_bits,
+                    geometry_consistent: alignment.report.passes[pass].geometry_consistent,
+                    cross_support_ratio: alignment.report.passes[pass].cross_support_ratio,
+                    relative_scale: alignment.report.passes[pass].relative_scale,
                 }
             }).collect();
             Some(auto_plan::plan(&facts, anchor, session.primary_pass_index().is_some())?)
