@@ -1,0 +1,9 @@
+{
+  "path": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\Strehl-multi-stack-2026-10-31-windows-x64.zip",
+  "bytes": 31922860,
+  "sha256": "301ad35f62b707ba0d3cb1a34d51b55faa44180977ff460790af1d7bad15bdad",
+  "source_commit": "9f81063231b78b9244874ccfa4bb939b60517ef5",
+  "build_id": "desktop-129ddfd67a3f75a5",
+  "archive_crc_verified": true,
+  "scope": "Windows local development tryout with matching source and notices; not a public release."
+}

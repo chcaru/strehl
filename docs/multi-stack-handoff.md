@@ -321,3 +321,22 @@ Finish engine, usable UI, positive and negative evidence, ordinary regression an
 appropriate optimization for every intended outcome, or obtain an explicit user
 scope change. A new agent should advance the pending work above rather than
 relabeling the implemented controls as completion.
+
+## October 31 delivery verification
+
+The tryout is now built from committed `9f81063231b78b9244874ccfa4bb939b60517ef5`,
+build ID `desktop-129ddfd67a3f75a5`, at
+`outputs/strehl-multi-stack-2026-10-31/Strehl.exe` with its source/relink package.
+PR https://github.com/chcaru/strehl/pull/3 prepares integration into main; verify
+its live state/checks before choosing the next base.
+
+Fresh local verification passed 1,034 UI and 140 edit tests (15 UI tests ignored),
+desktop/edit strict clippy and formatting, and 12 source-package controls.
+The actual packaged CLI's complete ordinary photograph/master/sensor pixels match
+the previously baseline-equal product16. Full 32-source photo/master bits match
+with native sensor export off/on and match product17 legacy. A completed-output-
+only UI grant successfully imported the new four-output result, saved/reopened
+it and rendered an inspected actual GPU screenshot. These close the previously
+pending native-export release/UI checks. The 24-source held comparison remains
+unrun; new photographic HDR/SR/mosaic outcomes remain open. See the integration
+report for exact commands, hashes, resource receipts and initial failures/fixes.

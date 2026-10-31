@@ -1,0 +1,183 @@
+{
+  "schema": "strehl.tryout-repeat-verification.v1",
+  "executable_sha256": "0458141bfacb444b2397373b797dfdb01d3f75f720742522ea56f6d68e51441a",
+  "comparisons": [
+    {
+      "left": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\export-off\\photograph.tiff",
+      "right": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\export-on\\photograph.tiff",
+      "shape": [
+        4668,
+        7004,
+        3
+      ],
+      "dtype": "uint16",
+      "pixel_bits_equal": true,
+      "left_sha256": "ff5e07f20feb7c2d4f48db451ce55986ddd1d84b5c42169e5b29952363769f6d",
+      "right_sha256": "ff5e07f20feb7c2d4f48db451ce55986ddd1d84b5c42169e5b29952363769f6d",
+      "pixel_sha256": "78779b2c848d8392ae76e695309fd74e26753187e1fd8abb92daebe0bd0da893"
+    },
+    {
+      "left": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\export-on\\photograph.tiff",
+      "right": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\overflow\\repeat-proposals-17\\legacy\\photograph.tiff",
+      "shape": [
+        4668,
+        7004,
+        3
+      ],
+      "dtype": "uint16",
+      "pixel_bits_equal": true,
+      "left_sha256": "ff5e07f20feb7c2d4f48db451ce55986ddd1d84b5c42169e5b29952363769f6d",
+      "right_sha256": "073d641e036bfe0710c5e400671a1c2934fccbd9d4ff4ed63dfda5d6c7f4cad0",
+      "pixel_sha256": "78779b2c848d8392ae76e695309fd74e26753187e1fd8abb92daebe0bd0da893"
+    },
+    {
+      "left": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\export-off\\master.tiff",
+      "right": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\export-on\\master.tiff",
+      "shape": [
+        4668,
+        7004,
+        3
+      ],
+      "dtype": "float32",
+      "pixel_bits_equal": true,
+      "left_sha256": "55ad07a249794628889adf4b28289125eedb33fe1e97e3919baff67625cfab92",
+      "right_sha256": "55ad07a249794628889adf4b28289125eedb33fe1e97e3919baff67625cfab92",
+      "pixel_sha256": "8b4000ef19cbbd27a6a74c7c2b1ab83a42c0d56a712667989cd935fba3382c74"
+    },
+    {
+      "left": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\export-on\\master.tiff",
+      "right": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\overflow\\repeat-proposals-17\\legacy\\master.tiff",
+      "shape": [
+        4668,
+        7004,
+        3
+      ],
+      "dtype": "float32",
+      "pixel_bits_equal": true,
+      "left_sha256": "55ad07a249794628889adf4b28289125eedb33fe1e97e3919baff67625cfab92",
+      "right_sha256": "55ad07a249794628889adf4b28289125eedb33fe1e97e3919baff67625cfab92",
+      "pixel_sha256": "8b4000ef19cbbd27a6a74c7c2b1ab83a42c0d56a712667989cd935fba3382c74"
+    }
+  ],
+  "sensor_shape": [
+    4668,
+    7004
+  ],
+  "sensor_dtype": "float32",
+  "sensor_finite": true,
+  "sensor_sha256": "b4b1402b1b0f1ebd07822fb62fa64357416239952e01c34bf87ad4f8806cbe55",
+  "sensor_contract": {
+    "additional_clamping_applied": false,
+    "alignment": "alignment.json",
+    "black_subtracted": true,
+    "canvas_quad": [
+      7,
+      5,
+      3502,
+      2334
+    ],
+    "cfa": "RGGB",
+    "color_matrix_applied": false,
+    "coordinate_semantics": "Full session active-image gauge; sensor site equals 2*quad plus CFA-site offset; green-guide center equals (2*x+0.5,2*y+0.5)",
+    "development_reference_pass": 0,
+    "dimensions": [
+      7004,
+      4668
+    ],
+    "display_exposure_applied": false,
+    "file": "sensor-master.tiff",
+    "full_quad_geometry": [
+      3516,
+      2344
+    ],
+    "origin_sensor": [
+      14,
+      10
+    ],
+    "photograph_reconstruction_requested": false,
+    "photometric_gains_by_pass": [
+      1.0,
+      1.0
+    ],
+    "plane_order": [
+      "R",
+      "G1",
+      "B",
+      "G2"
+    ],
+    "reconstruction_applied": false,
+    "renderer_source_sha256": "c4634e4476740cdf9f2200bcda3dda13b6c1929ecf400b5c7bb3f6139238730d",
+    "schema": "strehl.session-native-sensor-master.v1",
+    "sources": "source-identities.json",
+    "stage": "native-merge-before-demosaic",
+    "storage": "signed-f32",
+    "units": "black-subtracted native DN after the recorded per-pass photometric gain",
+    "white_balance_applied": false
+  },
+  "commands": {
+    "export-off": [
+      "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\strehl-multi-stack-2026-10-31\\strehl-cli.exe",
+      "session",
+      "stack",
+      "outputs/multi-stack/completion/noise-bee-repeat-01/inputs/manifest.json",
+      "--out-dir",
+      "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\export-off",
+      "--alignment",
+      "outputs/multi-stack/completion/noise-bee-repeat-01/alignment.json",
+      "--memory-limit-gib",
+      "16",
+      "--threads",
+      "8",
+      "--cache",
+      "outputs/multi-stack/completion/noise-bee-repeat-01/source-cache",
+      "--resampler",
+      "catmull-rom",
+      "--pyramid-gate",
+      "2",
+      "--pyramid-bands",
+      "7",
+      "--pyramid-exponent",
+      "2",
+      "--pyramid-sharpen",
+      "1.4",
+      "--exposure",
+      "0",
+      "--agreement-sigma",
+      "4",
+      "--focus-evidence"
+    ],
+    "export-on": [
+      "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\strehl-multi-stack-2026-10-31\\strehl-cli.exe",
+      "session",
+      "stack",
+      "outputs/multi-stack/completion/noise-bee-repeat-01/inputs/manifest.json",
+      "--out-dir",
+      "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\export-on",
+      "--alignment",
+      "outputs/multi-stack/completion/noise-bee-repeat-01/alignment.json",
+      "--memory-limit-gib",
+      "16",
+      "--threads",
+      "8",
+      "--cache",
+      "outputs/multi-stack/completion/noise-bee-repeat-01/source-cache",
+      "--resampler",
+      "catmull-rom",
+      "--pyramid-gate",
+      "2",
+      "--pyramid-bands",
+      "7",
+      "--pyramid-exponent",
+      "2",
+      "--pyramid-sharpen",
+      "1.4",
+      "--exposure",
+      "0",
+      "--agreement-sigma",
+      "4",
+      "--focus-evidence",
+      "--contribution-maps"
+    ]
+  },
+  "scope": "Exact complete output compatibility; no new photographic-quality or noise claim."
+}
