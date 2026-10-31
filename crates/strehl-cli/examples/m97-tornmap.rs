@@ -55,9 +55,7 @@ fn report(label: &str, path: &Path, want_len: usize) -> bool {
             } else {
                 "*** ACCEPTED A SHORT MAP ***"
             };
-            println!(
-                "  {label:<14} {bytes:>8} bytes  -> Ok, {n} frames (want {want_len})  {flag}"
-            );
+            println!("  {label:<14} {bytes:>8} bytes  -> Ok, {n} frames (want {want_len})  {flag}");
             n != want_len
         }
         Err(e) => {
@@ -70,9 +68,9 @@ fn report(label: &str, path: &Path, want_len: usize) -> bool {
 }
 
 fn main() -> Result<()> {
-    let arg = std::env::args().nth(1).context(
-        "usage: m97-tornmap <SIDECAR.txt>   (a warp-map sidecar to truncate copies of)",
-    )?;
+    let arg = std::env::args()
+        .nth(1)
+        .context("usage: m97-tornmap <SIDECAR.txt>   (a warp-map sidecar to truncate copies of)")?;
     let src_path = PathBuf::from(&arg);
     let src = std::fs::read(&src_path).with_context(|| format!("reading {arg}"))?;
 

@@ -440,11 +440,9 @@ pub fn shift_tiles(
                     let gy = f64::from(0.5 * (b[i + w] - b[i - w]));
                     // Five-point Laplacian: the direction a symmetric defocus
                     // kernel moves the samples in, to first order.
-                    let lap =
-                        f64::from(b[i + 1] + b[i - 1] + b[i + w] + b[i - w] - 4.0 * b[i]);
+                    let lap = f64::from(b[i + 1] + b[i - 1] + b[i + w] + b[i - w] - 4.0 * b[i]);
                     let d = f64::from(a[i] - b[i]);
-                    let var =
-                        f64::from(luma_variance(noise, a[i]) + luma_variance(noise, b[i]));
+                    let var = f64::from(luma_variance(noise, a[i]) + luma_variance(noise, b[i]));
                     if var <= 0.0 {
                         continue;
                     }
@@ -548,11 +546,7 @@ fn null_sd(n_eff: f64) -> f64 {
 /// Each tile gets its own bar because partial edge tiles pool fewer samples and
 /// therefore have a wider null. A single global threshold would make the frame
 /// border fire first on every stack.
-pub fn thresholds(
-    geom: PlaneGeometry,
-    params: Params,
-    disc: Discriminator,
-) -> Vec<f32> {
+pub fn thresholds(geom: PlaneGeometry, params: Params, disc: Discriminator) -> Vec<f32> {
     let grid = TileGrid::new(geom, params.tile);
     if matches!(disc, Discriminator::Shift | Discriminator::ShiftFree) {
         // Two degrees of freedom whatever the tile pools, so the null spread is
@@ -583,11 +577,12 @@ pub fn thresholds(
 
 /// Tiles whose disagreement exceeds their own threshold.
 pub fn mask(chi2: &[f32], thresholds: &[f32]) -> Vec<bool> {
-    assert_eq!(chi2.len(), thresholds.len(), "chi2 and thresholds must agree");
-    chi2.iter()
-        .zip(thresholds)
-        .map(|(c, t)| *c > *t)
-        .collect()
+    assert_eq!(
+        chi2.len(),
+        thresholds.len(),
+        "chi2 and thresholds must agree"
+    );
+    chi2.iter().zip(thresholds).map(|(c, t)| *c > *t).collect()
 }
 
 /// Default minimum displacement, in plane pixels, for a tile to be called
@@ -743,7 +738,11 @@ mod tests {
             .flat_map(|y| (0..w).map(move |x| (x, y)))
             .map(|(x, y)| {
                 let (dx, dy) = (x as f32 - cx, y as f32 - cy);
-                if (dx * dx + dy * dy).sqrt() <= r { hi } else { lo }
+                if (dx * dx + dy * dy).sqrt() <= r {
+                    hi
+                } else {
+                    lo
+                }
             })
             .collect()
     }
@@ -752,7 +751,15 @@ mod tests {
     /// abstains on flat tiles by design, so a test that wants every tile to
     /// carry an estimate has to give every tile something to measure.
     fn textured(w: usize, h: usize, dx: f32) -> Vec<f32> {
-        let base = disc(w, h, w as f32 / 2.0 + dx, h as f32 / 2.0, 30.0, 200.0, 900.0);
+        let base = disc(
+            w,
+            h,
+            w as f32 / 2.0 + dx,
+            h as f32 / 2.0,
+            30.0,
+            200.0,
+            900.0,
+        );
         base.iter()
             .enumerate()
             .map(|(i, v)| {
@@ -1123,7 +1130,10 @@ mod tests {
             big[0],
             small[0]
         );
-        assert!(small[0] > 1.0 && big[0] > 1.0, "both bars sit above the null mean");
+        assert!(
+            small[0] > 1.0 && big[0] > 1.0,
+            "both bars sit above the null mean"
+        );
     }
 
     /// Partial edge tiles pool fewer samples, so they must carry their own

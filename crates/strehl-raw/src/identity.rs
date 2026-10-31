@@ -201,7 +201,9 @@ pub fn identity(path: &Path) -> CaptureIdentity {
 /// [`identity`] over anything seekable — the form the tests use, and the form
 /// to reach for when the bytes are already in hand.
 pub fn identity_from_reader<R: Read + Seek>(r: &mut R) -> CaptureIdentity {
-    Reader { inner: r }.identity().unwrap_or(CaptureIdentity::EMPTY)
+    Reader { inner: r }
+        .identity()
+        .unwrap_or(CaptureIdentity::EMPTY)
 }
 
 /// Sony's byte substitution, inverted, generated from `c = p^3 mod 249`.

@@ -64,14 +64,19 @@ const CROP: usize = 1024;
 const PAIRS: usize = 6;
 
 fn load(path: &Path) -> Result<(Vec<f32>, PlaneGeometry, NoiseModel)> {
-    let frame =
-        strehl_raw::decode(path).with_context(|| format!("decoding {}", path.display()))?;
+    let frame = strehl_raw::decode(path).with_context(|| format!("decoding {}", path.display()))?;
     let geom = frame.geometry();
     let levels = frame.levels;
     let noise = profile::noise_model_for(&frame.camera, frame.iso, levels);
     let mut luma = vec![0.0f32; geom.pixels()];
     let mut clipped = vec![false; geom.pixels()];
-    green_luma_with_clip(&frame, levels.black, CONTAINER_MAX_DN, &mut luma, &mut clipped);
+    green_luma_with_clip(
+        &frame,
+        levels.black,
+        CONTAINER_MAX_DN,
+        &mut luma,
+        &mut clipped,
+    );
     let (x0, y0) = ((geom.width - CROP) / 2, (geom.height - CROP) / 2);
     let mut out = vec![0.0f32; CROP * CROP];
     for row in 0..CROP {
@@ -105,7 +110,9 @@ fn arws(dir: &Path) -> Result<Vec<PathBuf>> {
 /// Tiles trustworthy enough to enter the fit: informative, and precise enough
 /// that the gate would have been willing to judge them.
 fn usable(t: &TileShift) -> bool {
-    t.informative && t.sigma_px.is_finite() && t.sigma_px * RESOLUTION_MARGIN <= DEFAULT_MIN_SHIFT_PX
+    t.informative
+        && t.sigma_px.is_finite()
+        && t.sigma_px * RESOLUTION_MARGIN <= DEFAULT_MIN_SHIFT_PX
 }
 
 struct Fit {
@@ -183,10 +190,22 @@ fn fit_similarity(tiles: &[TileShift], grid: &TileGrid) -> Option<Fit> {
 fn main() -> Result<()> {
     let params = Params::default();
     println!("M123b - is the apparent displacement a global transform or is it local?");
-    println!("crop {CROP}x{CROP} green luma, tile {}px, usable = informative and sigma_px*{RESOLUTION_MARGIN} <= {DEFAULT_MIN_SHIFT_PX}\n", params.tile);
+    println!(
+        "crop {CROP}x{CROP} green luma, tile {}px, usable = informative and sigma_px*{RESOLUTION_MARGIN} <= {DEFAULT_MIN_SHIFT_PX}\n",
+        params.tile
+    );
     println!(
         "{:<16} {:>5} {:>6} {:>8} {:>8} {:>10} {:>9} {:>9} {:>9} {:>8}",
-        "stack", "pair", "tiles", "tx px", "ty px", "scale ppm", "rot urad", "rms|s|", "rms resid", "expl%"
+        "stack",
+        "pair",
+        "tiles",
+        "tx px",
+        "ty px",
+        "scale ppm",
+        "rot urad",
+        "rms|s|",
+        "rms resid",
+        "expl%"
     );
     println!("{}", "-".repeat(104));
 

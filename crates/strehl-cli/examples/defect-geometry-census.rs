@@ -68,7 +68,10 @@ fn main() {
         let name = s.file_name().unwrap().to_string_lossy().to_string();
         examined += 1;
         let Some(raw) = first_raw(s) else {
-            buckets.entry("no raw frames".into()).or_default().push(name);
+            buckets
+                .entry("no raw frames".into())
+                .or_default()
+                .push(name);
             continue;
         };
         match strehl_raw::decode(&raw) {

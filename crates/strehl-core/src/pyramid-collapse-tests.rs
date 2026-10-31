@@ -93,15 +93,23 @@ fn recycled_collapse_matches_old_bits_with_odd_sizes_and_dirty_workspaces() {
 fn recycled_collapse_preserves_large_workspace_across_small_odd_level_calls() {
     // Independent-review adversary: an odd count of swaps formerly shrank the
     // caller's workspace and made its next full-sized reconstruction panic.
-    let large=varied_pyramid(257,193,5);
-    let small=varied_pyramid(129,97,3);
-    assert_eq!((small.levels()-1)%2,1,"adversary needs an odd number of swaps");
-    let mut shared=Workspace::new(large.sizes());
-    let mut reference=Workspace::new(large.sizes());
-    let original_len=shared.expanded.len();
-    for p in [&large,&small,&large,&small,&large] {
-        bits_equal(&old_collapse(p,&mut reference),&p.collapse(&mut shared));
-        assert_eq!(shared.expanded.len(),original_len,"caller workspace shrank");
+    let large = varied_pyramid(257, 193, 5);
+    let small = varied_pyramid(129, 97, 3);
+    assert_eq!(
+        (small.levels() - 1) % 2,
+        1,
+        "adversary needs an odd number of swaps"
+    );
+    let mut shared = Workspace::new(large.sizes());
+    let mut reference = Workspace::new(large.sizes());
+    let original_len = shared.expanded.len();
+    for p in [&large, &small, &large, &small, &large] {
+        bits_equal(&old_collapse(p, &mut reference), &p.collapse(&mut shared));
+        assert_eq!(
+            shared.expanded.len(),
+            original_len,
+            "caller workspace shrank"
+        );
     }
 }
 
@@ -153,7 +161,10 @@ fn recycled_bounded_collapse_matches_every_clamp_placement_and_has_active_bounds
                     }
                 }
             }
-            assert!(active_lower && active_upper, "fixture never exercised both bounds");
+            assert!(
+                active_lower && active_upper,
+                "fixture never exercised both bounds"
+            );
         });
 }
 
@@ -167,7 +178,13 @@ fn recycled_collapse_preserves_impulses_ramps_and_zero_bits() {
             .map(|i| match pattern {
                 0 => 0.0,
                 1 => -0.0,
-                2 => if i == 64 * 129 + 47 { 16383.0 } else { 512.0 },
+                2 => {
+                    if i == 64 * 129 + 47 {
+                        16383.0
+                    } else {
+                        512.0
+                    }
+                }
                 _ => 512.0 + (i % 129) as f32 * 31.37 + (i / 129) as f32 * 2.11,
             })
             .collect();

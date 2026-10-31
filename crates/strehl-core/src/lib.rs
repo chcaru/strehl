@@ -38,11 +38,11 @@ pub mod plane;
 pub mod precision_mean;
 pub mod profile;
 pub mod pyramid;
-pub mod restore;
-pub mod reproducibility;
 pub mod reconstruction;
 #[path = "repeat-evidence.rs"]
 pub mod repeat_evidence;
+pub mod reproducibility;
+pub mod restore;
 pub mod robust;
 pub mod softgate;
 #[cfg(feature = "spatial-noise-floor")]

@@ -282,7 +282,10 @@ impl SelectionScale {
     /// narrow radius without a second code path.
     #[must_use]
     pub fn uniform(geom: PlaneGeometry, level: u8) -> Self {
-        assert!((level as usize) < LEVEL_RADII.len(), "level {level} unknown");
+        assert!(
+            (level as usize) < LEVEL_RADII.len(),
+            "level {level} unknown"
+        );
         Self {
             geom,
             level: vec![level; geom.pixels()],
@@ -334,7 +337,10 @@ impl SelectionScale {
         assert_eq!(winner.len(), geom.pixels());
         assert_eq!(response.len(), geom.pixels());
         assert!(tau > 0.0, "tau must be positive, got {tau}");
-        assert!((min_level as usize) < LEVEL_RADII.len(), "min_level {min_level}");
+        assert!(
+            (min_level as usize) < LEVEL_RADII.len(),
+            "min_level {min_level}"
+        );
         let px = geom.pixels();
 
         // Speckle-smooth the guide. `u16::MAX` is `FocusStats`' "no frame"
@@ -391,7 +397,13 @@ impl SelectionScale {
                 *v = 0.0;
             }
         }
-        box_extremum(&mut sharp, geom, LEVEL_RADII[FULL_LEVEL as usize], &mut scratch, true);
+        box_extremum(
+            &mut sharp,
+            geom,
+            LEVEL_RADII[FULL_LEVEL as usize],
+            &mut scratch,
+            true,
+        );
         let floor = conf * percentile(&sharp, FLOOR_Q);
         for i in 0..px {
             level[i] = if sharp[i] > floor {
@@ -712,7 +724,9 @@ fn percentile(v: &[f32], q: f32) -> f32 {
     if w.is_empty() {
         return 0.0;
     }
-    let k = (((w.len() - 1) as f32) * q).round().clamp(0.0, (w.len() - 1) as f32) as usize;
+    let k = (((w.len() - 1) as f32) * q)
+        .round()
+        .clamp(0.0, (w.len() - 1) as f32) as usize;
     w.select_nth_unstable_by(k, |a, b| a.total_cmp(b));
     w[k]
 }
@@ -864,9 +878,10 @@ pub fn feather() -> f32 {
     *CACHED.get_or_init(|| match std::env::var(FEATHER_ENV) {
         Err(_) => FEATHER,
         Ok(s) => {
-            let v: f32 = s.trim().parse().unwrap_or_else(|_| {
-                panic!("{FEATHER_ENV}={s:?} is not a number")
-            });
+            let v: f32 = s
+                .trim()
+                .parse()
+                .unwrap_or_else(|_| panic!("{FEATHER_ENV}={s:?} is not a number"));
             assert!(
                 v > 1.0 && v.is_finite(),
                 "{FEATHER_ENV}={v} must exceed 1.0; at 1.0 the guards are hard \
@@ -958,7 +973,8 @@ impl BimodalStats {
 
     #[inline]
     fn offer(&mut self, i: usize, r: f32, k: u16) {
-        let far = |a: u16, b: u16| a != u16::MAX && b != u16::MAX && a.abs_diff(b) >= MODE_SEPARATION;
+        let far =
+            |a: u16, b: u16| a != u16::MAX && b != u16::MAX && a.abs_diff(b) >= MODE_SEPARATION;
         if self.k1[i] == u16::MAX || !far(k, self.k1[i]) {
             // Same mode as the incumbent leader (or the first sample seen).
             if r > self.r1[i] {
@@ -1144,7 +1160,13 @@ impl BimodalStats {
         let z1 = self.first_mode_z();
         let z2 = self.second_mode_z();
         (0..self.geom.pixels())
-            .map(|i| if z1[i] > 0.0 { (z2[i] / z1[i]).clamp(0.0, 1.0) } else { 0.0 })
+            .map(|i| {
+                if z1[i] > 0.0 {
+                    (z2[i] / z1[i]).clamp(0.0, 1.0)
+                } else {
+                    0.0
+                }
+            })
             .collect()
     }
 
@@ -1247,7 +1269,13 @@ impl LayerSupport {
 
         let mut w: Vec<f32> = winner
             .iter()
-            .map(|&k| if k == u16::MAX { f32::NAN } else { f32::from(k) })
+            .map(|&k| {
+                if k == u16::MAX {
+                    f32::NAN
+                } else {
+                    f32::from(k)
+                }
+            })
             .collect();
         let fill = percentile(&w, 0.5);
         for v in w.iter_mut() {
@@ -1340,11 +1368,7 @@ impl LayerSupport {
                 .iter()
                 .map(|(_, f)| (1.0 - a) * f[l0][i] + a * f[l1][i])
                 .fold(f32::INFINITY, f32::min);
-            blend[i] *= smoothstep(
-                MIN_LAYER_FRACTION,
-                feather() * MIN_LAYER_FRACTION,
-                thinnest,
-            );
+            blend[i] *= smoothstep(MIN_LAYER_FRACTION, feather() * MIN_LAYER_FRACTION, thinnest);
             if blend[i] <= 0.0 {
                 layer[i] = UNTREATED;
             }
@@ -1701,7 +1725,10 @@ mod tests {
                 );
             }
         }
-        assert!(treated > 0, "nothing was treated, so the invariant is vacuous");
+        assert!(
+            treated > 0,
+            "nothing was treated, so the invariant is vacuous"
+        );
     }
 
     #[test]
@@ -1767,10 +1794,7 @@ mod tests {
                 continue;
             }
             let b = s.blend[i];
-            assert!(
-                (0.0..=1.0).contains(&b),
-                "blend {b} out of range at {i}"
-            );
+            assert!((0.0..=1.0).contains(&b), "blend {b} out of range at {i}");
             if b > 0.02 && b < 0.98 {
                 partial += 1;
             } else if b >= 0.98 {
@@ -1781,7 +1805,10 @@ mod tests {
             partial > 0,
             "no pixel is partially treated -- treatment is still a hard switch"
         );
-        assert!(full > 0, "no pixel is fully treated -- the ramp never reaches strength");
+        assert!(
+            full > 0,
+            "no pixel is fully treated -- the ramp never reaches strength"
+        );
     }
 
     #[test]
@@ -2085,7 +2112,13 @@ mod tests {
         let luma = vec![500.0f32; w * h];
         // Deterministic zero-mean chequer: pure "noise" with no edges.
         let focus: Vec<f32> = (0..w * h)
-            .map(|i| if (i % 7 == 0) ^ (i % 3 == 0) { 1.0 } else { -1.0 })
+            .map(|i| {
+                if (i % 7 == 0) ^ (i % 3 == 0) {
+                    1.0
+                } else {
+                    -1.0
+                }
+            })
             .collect();
         let (mut dst, mut s1, mut s2, mut s3) = (
             vec![0.0f32; w * h],
@@ -2150,8 +2183,12 @@ mod tests {
     #[test]
     fn a_plane_with_no_depth_step_is_the_shipped_operator() {
         let g = geom(64, 64);
-        let s =
-            SelectionScale::from_silhouettes(&vec![100u16; g.pixels()], &vec![true; g.pixels()], g, 4.0);
+        let s = SelectionScale::from_silhouettes(
+            &vec![100u16; g.pixels()],
+            &vec![true; g.pixels()],
+            g,
+            4.0,
+        );
         assert!(s.is_full_everywhere(), "histogram {:?}", s.histogram());
     }
 
@@ -2198,8 +2235,7 @@ mod tests {
             prev = cur;
         }
         assert_eq!(
-            LEVEL_RADII[prev as usize],
-            WINDOW_RADIUS,
+            LEVEL_RADII[prev as usize], WINDOW_RADIUS,
             "the walk must reach the shipped radius"
         );
         assert!(
@@ -2288,8 +2324,12 @@ mod tests {
     #[test]
     fn a_peak_that_clears_no_noise_floor_keeps_the_shipped_window() {
         let g = geom(64, 64);
-        let mut s =
-            SelectionScale::from_silhouettes(&vec![100u16; g.pixels()], &vec![true; g.pixels()], g, 4.0);
+        let mut s = SelectionScale::from_silhouettes(
+            &vec![100u16; g.pixels()],
+            &vec![true; g.pixels()],
+            g,
+            4.0,
+        );
         assert!(s.is_full_everywhere(), "fixture must start unconstrained");
         s.tighten_by_acuity(&vec![0.0f32; g.pixels()], 4.0);
         assert!(

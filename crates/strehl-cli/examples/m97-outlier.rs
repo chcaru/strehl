@@ -22,8 +22,8 @@
 use strehl_core::boxfilter::box_mean;
 use strehl_core::noise::{Levels, NoiseModel, PlaneNoise, Provenance};
 use strehl_core::outlier::{
-    DEFAULT_MIN_SHIFT_PX, Discriminator, Params, Scratch, TileGrid, chi2_map, fired_fraction,
-    mask, mask_tiles, shift_tiles, thresholds,
+    DEFAULT_MIN_SHIFT_PX, Discriminator, Params, Scratch, TileGrid, chi2_map, fired_fraction, mask,
+    mask_tiles, shift_tiles, thresholds,
 };
 use strehl_core::plane::PlaneGeometry;
 
@@ -127,9 +127,7 @@ fn main() {
         p.tile,
         p.threshold_k
     );
-    println!(
-        "placebo=static (inert)  trap=defocus (must be inert)  plant=motion (must fire)\n"
-    );
+    println!("placebo=static (inert)  trap=defocus (must be inert)  plant=motion (must fire)\n");
     println!(
         "{:<8} {:<10} {:>8} {:>8} {:>10} {:>10} {:>9} {:>5} {:>6}",
         "case", "arm", "chi2only", "gated", "mean chi2", "mean|s|px", "max|s|px", "live", "magonly"
@@ -158,8 +156,7 @@ fn main() {
             };
             let mags: Vec<f32> = match disc {
                 Discriminator::Shift | Discriminator::ShiftFree => {
-                    let tiles =
-                        shift_tiles(a, b, g, &n, p, disc == Discriminator::ShiftFree);
+                    let tiles = shift_tiles(a, b, g, &n, p, disc == Discriminator::ShiftFree);
                     gated = Some(fired_fraction(&mask_tiles(
                         &tiles,
                         DEFAULT_MIN_SHIFT_PX,

@@ -263,7 +263,10 @@ fn main() {
     );
 
     let motes = mapped_motes();
-    println!("mapped motes : {} (clearance required: {CLEAN_CLEARANCE} quads)", motes.len());
+    println!(
+        "mapped motes : {} (clearance required: {CLEAN_CLEARANCE} quads)",
+        motes.len()
+    );
 
     // --- commission the cleanliness statistic BEFORE certifying with it ----
     //
@@ -283,8 +286,14 @@ fn main() {
         std::process::exit(2);
     }
     println!();
-    println!("-- commissioning the cleanliness statistic (floor {:.5}%) --", CLEAN_RESIDUAL_MAX * 100.0);
-    println!("halves       : a={} frames, b={} frames (interleaved, so cloud drift is shared)", fa.used_a, fa.used_b);
+    println!(
+        "-- commissioning the cleanliness statistic (floor {:.5}%) --",
+        CLEAN_RESIDUAL_MAX * 100.0
+    );
+    println!(
+        "halves       : a={} frames, b={} frames (interleaved, so cloud drift is shared)",
+        fa.used_a, fa.used_b
+    );
     let (ccx, ccy) = (share_w / 2, fqh / 2);
     let arms = commission_cleanliness(&fa, fqw, fqh, ccx, ccy, COMMISSION_DEPTH, PLANT_R);
     let mut arms_failed = 0usize;
@@ -310,7 +319,10 @@ fn main() {
         );
         std::process::exit(4);
     }
-    println!("  all {} arms pass -- the statistic reads a planted defect, ignores a", arms.len());
+    println!(
+        "  all {} arms pass -- the statistic reads a planted defect, ignores a",
+        arms.len()
+    );
     println!("  non-reproducible one, and scores a repair better than the defect.");
     println!();
 
@@ -357,18 +369,24 @@ fn main() {
         std::process::exit(3);
     };
     let (cx, cy) = site;
-    println!("clean site   : quad ({cx},{cy})  disc response {:.5}%  (worst single quad in the same region {:.5}%, which is the PRNU the disc average cancels)",
+    println!(
+        "clean site   : quad ({cx},{cy})  disc response {:.5}%  (worst single quad in the same region {:.5}%, which is the PRNU the disc average cancels)",
         disc_response(&rep, fqw, cx, cy, PLANT_R) * 100.0,
-        worst_quad_residual(&rep, fqw, cx, cy, MEASURE_R) * 100.0);
+        worst_quad_residual(&rep, fqw, cx, cy, MEASURE_R) * 100.0
+    );
 
     // A second certified-clean site, far from the first, for the containment null.
-    let (null_opt, nsc) = find_clean_site_excluding(&rep, &field, fqw, share_w, fqh, &motes, &subj, site);
+    let (null_opt, nsc) =
+        find_clean_site_excluding(&rep, &field, fqw, share_w, fqh, &motes, &subj, site);
     println!("null search  : {}", nsc.describe());
     let Some(nullsite) = null_opt else {
         println!("REFUSED: no second clean site for the containment null");
         std::process::exit(3);
     };
-    println!("null site    : quad ({},{})  (containment arm measures here)", nullsite.0, nullsite.1);
+    println!(
+        "null site    : quad ({},{})  (containment arm measures here)",
+        nullsite.0, nullsite.1
+    );
 
     // ---- signal check at the site, on the SUBJECT ------------------------
     let truth = f.data.clone();
@@ -377,7 +395,9 @@ fn main() {
     println!("site signal  : {sig:.1} DN = {:.3} of range", sigfrac);
     if !(SIGNAL_MIN_FRAC..=SIGNAL_MAX_FRAC).contains(&sigfrac) {
         println!();
-        println!("REFUSED: site signal {sigfrac:.3} outside [{SIGNAL_MIN_FRAC}, {SIGNAL_MAX_FRAC}].");
+        println!(
+            "REFUSED: site signal {sigfrac:.3} outside [{SIGNAL_MIN_FRAC}, {SIGNAL_MAX_FRAC}]."
+        );
         println!("  A multiplicative correction cannot be tested at the black floor");
         println!("  (every gain returns black) or against clipping (every gain clips).");
         std::process::exit(3);
@@ -399,26 +419,65 @@ fn main() {
     let f0_samples = planted_g.clone();
     let mut f_samples = planted_g.clone();
 
-    let corr = Correction { hot: false, dust: true };
+    let corr = Correction {
+        hot: false,
+        dust: true,
+    };
     // `gain_dn_per_e` converts a hot site's stored electron excess to DN. The
     // hot arm is off here, so no code path reads it; passing 1.0 is not a
     // calibration choice, it is an argument to a branch that does not run.
     let g = 1.0;
 
     let rb = map_exact
-        .apply(&mut b_samples, f.stride, active, black, white, g, corr, HotFloor::CENSUS)
+        .apply(
+            &mut b_samples,
+            f.stride,
+            active,
+            black,
+            white,
+            g,
+            corr,
+            HotFloor::CENSUS,
+        )
         .expect("arm B correction");
     let re = map_strong
-        .apply(&mut e_samples, f.stride, active, black, white, g, corr, HotFloor::CENSUS)
+        .apply(
+            &mut e_samples,
+            f.stride,
+            active,
+            black,
+            white,
+            g,
+            corr,
+            HotFloor::CENSUS,
+        )
         .expect("arm E correction");
     // Arm C applies the SAME map, naming site (cx, cy), to an unplanted frame,
     // then measures at the distant null site. The map is not the variable here;
     // the measurement location is.
     let rc = map_exact
-        .apply(&mut c_samples, f.stride, active, black, white, g, corr, HotFloor::CENSUS)
+        .apply(
+            &mut c_samples,
+            f.stride,
+            active,
+            black,
+            white,
+            g,
+            corr,
+            HotFloor::CENSUS,
+        )
         .expect("arm C correction");
     let rf = map_exact
-        .apply(&mut f_samples, f.stride, active, black, white, g, corr, HotFloor::CENSUS)
+        .apply(
+            &mut f_samples,
+            f.stride,
+            active,
+            black,
+            white,
+            g,
+            corr,
+            HotFloor::CENSUS,
+        )
         .expect("arm F correction");
     let _ = &mut a_samples; // arm A is deliberately uncorrected.
 
@@ -432,7 +491,11 @@ fn main() {
         let (sums, _) = r.check_partition();
         println!(
             "  {name:<14} examined {} = corrected {} + no-change {} + clipped {} + outside {}  [{}]",
-            r.dust_examined, r.dust_corrected, r.dust_no_change, r.dust_clipped, r.dust_outside,
+            r.dust_examined,
+            r.dust_corrected,
+            r.dust_no_change,
+            r.dust_clipped,
+            r.dust_outside,
             if sums { "sums" } else { "DOES NOT SUM" }
         );
         if !sums {
@@ -446,7 +509,9 @@ fn main() {
     let a_res = rms(&a_samples, &truth, f.stride, active, cx, cy, MEASURE_R);
     let b_res = rms(&b_samples, &truth, f.stride, active, cx, cy, MEASURE_R);
     let e_res = rms(&e_samples, &truth, f.stride, active, cx, cy, MEASURE_R);
-    let c_moved = count_moved(&c_samples, &truth, f.stride, active, nullsite.0, nullsite.1, MEASURE_R);
+    let c_moved = count_moved(
+        &c_samples, &truth, f.stride, active, nullsite.0, nullsite.1, MEASURE_R,
+    );
 
     let a_ring = ring_step(&a_samples, &truth, f.stride, active, cx, cy, black);
     let b_ring = ring_step(&b_samples, &truth, f.stride, active, cx, cy, black);
@@ -463,13 +528,23 @@ fn main() {
     println!("{}", "-".repeat(72));
     println!("ARM RESULTS  (residual vs truth, RMS in DN over r={MEASURE_R} quads)");
     println!("{}", "-".repeat(72));
-    println!("  A CHARGE       planted, uncorrected   residual {a_res:9.3} DN   ring {a_ring:8.3} DN");
-    println!("  B FIDELITY     planted, exact gain    residual {b_res:9.3} DN   ring {b_ring:8.3} DN");
-    println!("  E PERVERSE     planted, 2x gain       residual {e_res:9.3} DN   ring {e_ring:8.3} DN");
+    println!(
+        "  A CHARGE       planted, uncorrected   residual {a_res:9.3} DN   ring {a_ring:8.3} DN"
+    );
+    println!(
+        "  B FIDELITY     planted, exact gain    residual {b_res:9.3} DN   ring {b_ring:8.3} DN"
+    );
+    println!(
+        "  E PERVERSE     planted, 2x gain       residual {e_res:9.3} DN   ring {e_ring:8.3} DN"
+    );
     println!("  C CONTAINMENT  distant clean site     moved    {c_moved} sample(s)");
     println!("  D INVENTION    HF energy   truth {t_hf:.4}  B {b_hf:.4}  E {e_hf:.4}");
-    println!("  F0 MISMATCH    gaussian mote, raw     residual {f0_res:9.3} DN   ring {f0_ring:8.3} DN");
-    println!("  F  MISMATCH    gaussian, parabolic fix residual {f_res:8.3} DN   ring {f_ring:8.3} DN");
+    println!(
+        "  F0 MISMATCH    gaussian mote, raw     residual {f0_res:9.3} DN   ring {f0_ring:8.3} DN"
+    );
+    println!(
+        "  F  MISMATCH    gaussian, parabolic fix residual {f_res:8.3} DN   ring {f_ring:8.3} DN"
+    );
     println!();
 
     // ---- verdicts: every arm gated, nothing merely printed ---------------
@@ -479,29 +554,50 @@ fn main() {
 
     // A: the metric must charge for an uncorrected planted defect.
     let a_ok = a_res > 4.0 * b_res.max(1e-6) && a_res > 1.0;
-    verdicts.push(("A CHARGE", a_ok, format!(
-        "{a_res:.3} DN must exceed both 1.0 DN and 4x arm B ({:.3})", 4.0 * b_res)));
+    verdicts.push((
+        "A CHARGE",
+        a_ok,
+        format!(
+            "{a_res:.3} DN must exceed both 1.0 DN and 4x arm B ({:.3})",
+            4.0 * b_res
+        ),
+    ));
 
     // B: residual must be quantisation-scale. The plant is the algebraic
     // inverse of the correction, so anything beyond rounding is a real defect.
     let b_ok = b_res <= 1.0;
-    verdicts.push(("B FIDELITY", b_ok, format!(
-        "{b_res:.3} DN must be <= 1.0 DN (quantisation only)")));
+    verdicts.push((
+        "B FIDELITY",
+        b_ok,
+        format!("{b_res:.3} DN must be <= 1.0 DN (quantisation only)"),
+    ));
 
     // C: containment is exact, not tolerant.
     let c_ok = c_moved == 0;
-    verdicts.push(("C CONTAINMENT", c_ok, format!(
-        "{c_moved} samples moved at a site the map does not name; must be exactly 0")));
+    verdicts.push((
+        "C CONTAINMENT",
+        c_ok,
+        format!("{c_moved} samples moved at a site the map does not name; must be exactly 0"),
+    ));
 
     // D: the corrector must not add HF the truth does not have.
     let d_ok = b_hf <= t_hf * 1.05;
-    verdicts.push(("D INVENTION", d_ok, format!(
-        "B HF {b_hf:.4} must be <= truth HF x1.05 ({:.4})", t_hf * 1.05)));
+    verdicts.push((
+        "D INVENTION",
+        d_ok,
+        format!(
+            "B HF {b_hf:.4} must be <= truth HF x1.05 ({:.4})",
+            t_hf * 1.05
+        ),
+    ));
 
     // E: a wrong-amplitude correction must score WORSE than a right one.
     let e_ok = e_res > b_res && e_ring > b_ring;
-    verdicts.push(("E PERVERSE", e_ok, format!(
-        "residual {e_res:.3} > {b_res:.3} AND ring {e_ring:.3} > {b_ring:.3}")));
+    verdicts.push((
+        "E PERVERSE",
+        e_ok,
+        format!("residual {e_res:.3} > {b_res:.3} AND ring {e_ring:.3} > {b_ring:.3}"),
+    ));
 
     // F: the arm that stops B from being self-confirming.
     //
@@ -523,18 +619,27 @@ fn main() {
 
     println!("{}", "-".repeat(72));
     for (name, ok, why) in &verdicts {
-        println!("  {:<14} {}   {why}", name, if *ok { "PASS" } else { "FAIL" });
+        println!(
+            "  {:<14} {}   {why}",
+            name,
+            if *ok { "PASS" } else { "FAIL" }
+        );
         if *ok { pass += 1 } else { fail += 1 }
     }
     println!("{}", "-".repeat(72));
-    println!("partition: {} arms = {pass} pass + {fail} fail + 0 undefined", verdicts.len());
+    println!(
+        "partition: {} arms = {pass} pass + {fail} fail + 0 undefined",
+        verdicts.len()
+    );
     if fail == 0 {
         println!();
         println!("VERDICT: the corrector restores a planted mote to within quantisation,");
         println!("  touches nothing it does not name, adds no high-frequency content the");
         println!("  truth lacks, and is charged more when its amplitude is wrong.");
-        println!("  Arm F additionally shows it removes {:.1}% of a mote whose profile it",
-            100.0 * (1.0 - f_res / f0_res.max(1e-9)));
+        println!(
+            "  Arm F additionally shows it removes {:.1}% of a mote whose profile it",
+            100.0 * (1.0 - f_res / f0_res.max(1e-9))
+        );
         println!("  does not model, without leaving a worse footprint edge than the mote.");
         println!("  THIS IS A STATEMENT ABOUT A PLANTED MOTE AT A CERTIFIED CLEAN SITE.");
         println!("  It does not transfer to the two real motes, for which no clean");
@@ -595,8 +700,7 @@ struct FlatAccum {
 impl FlatAccum {
     /// The counts must sum to the total examined, or the report is unreadable.
     fn partitions(&self) -> bool {
-        self.used + self.no_decode + self.outside_window + self.geometry_mismatch
-            == self.examined
+        self.used + self.no_decode + self.outside_window + self.geometry_mismatch == self.examined
     }
 
     fn describe(&self) -> String {
@@ -607,7 +711,11 @@ impl FlatAccum {
             self.no_decode,
             self.outside_window,
             self.geometry_mismatch,
-            if self.partitions() { "sums" } else { "DOES NOT SUM" }
+            if self.partitions() {
+                "sums"
+            } else {
+                "DOES NOT SUM"
+            }
         )
     }
 }
@@ -656,8 +764,7 @@ fn accumulate_flats(dir: &Path, limit: usize) -> FlatAccum {
             continue;
         };
         let a = (f.active.x, f.active.y, f.active.width, f.active.height);
-        let (q, w, h) =
-            strehl_core::defect_map::quad_mean(&f.data, f.stride, a, f.levels.black);
+        let (q, w, h) = strehl_core::defect_map::quad_mean(&f.data, f.stride, a, f.levels.black);
         let range = f.levels.white - f.levels.black;
         let m = mean(&q);
         // Exposure window: the same [0.06, 0.90] the census uses. Outside it a
@@ -765,11 +872,7 @@ fn reproducible_hp(a: &[f32], b: &[f32]) -> Vec<f32> {
         .map(|(x, y)| {
             if (*x >= 0.0) == (*y >= 0.0) {
                 let m = x.abs().min(y.abs());
-                if *x >= 0.0 {
-                    m
-                } else {
-                    -m
-                }
+                if *x >= 0.0 { m } else { -m }
             } else {
                 0.0
             }
@@ -971,7 +1074,11 @@ fn high_pass(field: &[f32], w: usize, h: usize, radius: usize) -> Vec<f32> {
 /// The two motes the shipping map names, in quad coordinates.
 fn mapped_motes() -> Vec<(usize, usize)> {
     match DefectMap::embedded_for("ILCE-7CM2") {
-        Some(m) => m.dust.iter().map(|d| (d.px as usize, d.py as usize)).collect(),
+        Some(m) => m
+            .dust
+            .iter()
+            .map(|d| (d.px as usize, d.py as usize))
+            .collect(),
         None => Vec::new(),
     }
 }
@@ -1024,7 +1131,11 @@ impl SiteCensus {
             self.no_signal,
             self.no_subject_signal,
             self.accepted,
-            if self.partitions() { "sums" } else { "DOES NOT SUM" }
+            if self.partitions() {
+                "sums"
+            } else {
+                "DOES NOT SUM"
+            }
         )
     }
 }
@@ -1038,7 +1149,16 @@ fn find_clean_site(
     motes: &[(usize, usize)],
     subj: &SubjectSignal,
 ) -> (Option<(usize, usize)>, SiteCensus) {
-    find_clean_site_excluding(hp, field, w, scan_w, h, motes, subj, (usize::MAX, usize::MAX))
+    find_clean_site_excluding(
+        hp,
+        field,
+        w,
+        scan_w,
+        h,
+        motes,
+        subj,
+        (usize::MAX, usize::MAX),
+    )
 }
 
 /// The subject's per-quad signal above black, with its own stride.
@@ -1119,12 +1239,11 @@ fn find_clean_site_excluding(
         let mut x = BORDER + MEASURE_R;
         while x + BORDER + MEASURE_R < scan_w {
             census.scanned += 1;
-            let far_from_motes = motes
-                .iter()
-                .all(|(mx, my)| dist2(x, y, *mx, *my) >= (CLEAN_CLEARANCE * CLEAN_CLEARANCE) as i64);
+            let far_from_motes = motes.iter().all(|(mx, my)| {
+                dist2(x, y, *mx, *my) >= (CLEAN_CLEARANCE * CLEAN_CLEARANCE) as i64
+            });
             let far_from_exclude = exclude.0 == usize::MAX
-                || dist2(x, y, exclude.0, exclude.1)
-                    >= (4 * MEASURE_R * 4 * MEASURE_R) as i64;
+                || dist2(x, y, exclude.0, exclude.1) >= (4 * MEASURE_R * 4 * MEASURE_R) as i64;
             if !far_from_motes {
                 census.near_mote += 1;
             } else if !far_from_exclude {
@@ -1380,7 +1499,11 @@ fn rms(
             }
         }
     }
-    if n == 0 { 0.0 } else { (sum / n as f64).sqrt() as f32 }
+    if n == 0 {
+        0.0
+    } else {
+        (sum / n as f64).sqrt() as f32
+    }
 }
 
 fn count_moved(
@@ -1481,5 +1604,9 @@ fn hf_energy(
             n += 1;
         }
     }
-    if n == 0 { 0.0 } else { (sum / n as f64).sqrt() as f32 }
+    if n == 0 {
+        0.0
+    } else {
+        (sum / n as f64).sqrt() as f32
+    }
 }

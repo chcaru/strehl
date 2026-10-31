@@ -931,8 +931,11 @@ fn selected_freezes(rows: &[Freeze]) -> Vec<&Freeze> {
     let Ok(raw) = std::env::var(FREEZE_IDS_ENV) else {
         return rows.iter().collect();
     };
-    let requested: BTreeSet<&str> =
-        raw.split(',').map(str::trim).filter(|id| !id.is_empty()).collect();
+    let requested: BTreeSet<&str> = raw
+        .split(',')
+        .map(str::trim)
+        .filter(|id| !id.is_empty())
+        .collect();
     assert!(
         !requested.is_empty(),
         "{FREEZE_IDS_ENV} was set but selected no byte-freeze rows"
@@ -943,7 +946,9 @@ fn selected_freezes(rows: &[Freeze]) -> Vec<&Freeze> {
             "{FREEZE_IDS_ENV} requested unknown row {id:?}"
         );
     }
-    rows.iter().filter(|row| requested.contains(row.id.as_str())).collect()
+    rows.iter()
+        .filter(|row| requested.contains(row.id.as_str()))
+        .collect()
 }
 
 // ---------------------------------------------------------------------------

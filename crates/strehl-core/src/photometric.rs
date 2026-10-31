@@ -124,8 +124,8 @@
 //! scaled, so the dark floor genuinely scales with it. Preserving the floor
 //! here would be the bug.
 
-use crate::noise::{Levels, NoiseModel, PlaneNoise};
 use crate::CfaPlane;
+use crate::noise::{Levels, NoiseModel, PlaneNoise};
 
 /// A gain outside this band is refused rather than applied. A real bracket on
 /// this rig moves by tens of percent; a factor of two means the flux
@@ -648,9 +648,7 @@ impl PhotometricMap {
         for (k, f) in flux.iter().enumerate() {
             let why = match f.mean() {
                 None => Some("no samples above black".to_string()),
-                Some(m) if m <= 0.0 || !m.is_finite() => {
-                    Some(format!("flux {m} is not usable"))
-                }
+                Some(m) if m <= 0.0 || !m.is_finite() => Some(format!("flux {m} is not usable")),
                 Some(_) if f.clipped_fraction() > MAX_CLIPPED_FRACTION => Some(format!(
                     "clipped fraction {:.3e} exceeds {:.3e}; the flux is biased low",
                     f.clipped_fraction(),
@@ -839,10 +837,9 @@ pub fn erode_mask(mask: &[bool], width: usize, radius: usize, out: &mut [bool]) 
     for y in 0..h {
         for x in 0..width {
             let (lo, hi) = (x.saturating_sub(radius), (x + radius).min(width - 1));
-            mid[y * width + x] =
-                x >= radius && x + radius < width && mask[y * width + lo..=y * width + hi]
-                    .iter()
-                    .all(|&b| b);
+            mid[y * width + x] = x >= radius
+                && x + radius < width
+                && mask[y * width + lo..=y * width + hi].iter().all(|&b| b);
         }
     }
     let mut n = 0usize;
@@ -1598,7 +1595,10 @@ mod tests {
         // The frames differ by a known multiplicative ladder; the estimator has
         // to return its inverse, normalised to the reference.
         let truth: Vec<f64> = (0..9).map(|k| 1.0 + 0.05 * f64::from(k)).collect();
-        let flux: Vec<Flux> = truth.iter().map(|&g| flux_of(1000.0 * g, 1 << 20)).collect();
+        let flux: Vec<Flux> = truth
+            .iter()
+            .map(|&g| flux_of(1000.0 * g, 1 << 20))
+            .collect();
         let map = PhotometricMap::from_flux(&flux, 4).unwrap();
         for k in 0..9 {
             let want = (truth[4] / truth[k]) as f32;
@@ -1676,7 +1676,11 @@ mod tests {
 
         let mut fl = Vec::new();
         for rad in [0usize, 3, 9, 21] {
-            let data = if rad == 0 { sharp.clone() } else { blur(&sharp, rad) };
+            let data = if rad == 0 {
+                sharp.clone()
+            } else {
+                blur(&sharp, rad)
+            };
             let mut f = Flux::new();
             f.fold_plane(&data, 1e9);
             fl.push(f);
@@ -1724,7 +1728,11 @@ mod tests {
         let b = flux_of(10.0, 4096); // would demand a gain of 100
         let map = PhotometricMap::from_flux(&[a, b], 0).unwrap();
         assert_eq!(map.gain(1).unwrap(), 1.0);
-        assert!(map.refusal(1).unwrap().contains("outside the plausible band"));
+        assert!(
+            map.refusal(1)
+                .unwrap()
+                .contains("outside the plausible band")
+        );
     }
 
     #[test]
@@ -1749,10 +1757,7 @@ mod tests {
         let f = vec![flux_of(1.0, 8); 3];
         assert_eq!(
             PhotometricMap::from_flux(&f, 3).unwrap_err(),
-            PhotometricError::BadReference {
-                reference: 3,
-                n: 3
-            }
+            PhotometricError::BadReference { reference: 3, n: 3 }
         );
         let map = PhotometricMap::from_flux(&f, 0).unwrap();
         assert_eq!(
@@ -1798,7 +1803,10 @@ mod tests {
         let mut d = vec![512u16, 1024, 15360, 16000];
         apply_to_u16(&mut d, 512.0, 15360.0, 2.0);
         assert_eq!(d[0], 512, "black must map to black exactly");
-        assert_eq!(d[1], 1536, "512 above black must double to 1024 above black");
+        assert_eq!(
+            d[1], 1536,
+            "512 above black must double to 1024 above black"
+        );
         assert_eq!(d[2], 15360, "white must clamp at white, not wrap");
         assert_eq!(d[3], 15360, "above white must clamp at white");
     }
@@ -1926,7 +1934,10 @@ mod tests {
         let sig = 8000.0f32;
         let truth = 1.3 * 1.3 * m.variance_with_fixed_pattern(CfaPlane::G1, sig);
         let got = s.variance_with_fixed_pattern(CfaPlane::G1, sig * 1.3);
-        assert!((got - truth).abs() / truth < 1e-5, "got {got}, truth {truth}");
+        assert!(
+            (got - truth).abs() / truth < 1e-5,
+            "got {got}, truth {truth}"
+        );
         // And a model with no PRNU attached does not acquire one.
         let bare = NoiseModel::new([plane(0.229, 1.47); 4], 100.0, Provenance::Profile);
         assert!(scale_noise_model(&bare, 1.3).prnu().is_none());
