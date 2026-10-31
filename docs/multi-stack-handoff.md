@@ -7,6 +7,85 @@ Linked reports provide reproducible detail; this document states the objective,
 current truth, constraints and next decisions. Historical agent dispatch wording
 does not authorize independent jobs or override the current user's instructions.
 
+## Latest user direction: automatic best-result workflow is the priority
+
+The user tried combining seven related bug-3 stacks. The engine refused mixed
+shutter times and suggested choosing HDR or Layers. The user explicitly rejected
+having to manage these distinctions and instructed:
+
+> i want Strehl to just hand it all for me and give me the absolute best result
+> possible given the inputs.
+
+They want the different benefits **at the same time**, with intelligent merging
+where possible. This supersedes any interpretation that separate manual modes,
+metadata refusals, or telling the user to remove passes completes the product.
+The current mode selection is an implementation limitation, not a necessary
+photographic workflow. Do not solve this request merely by better error messages,
+automatically selecting today's HDR mode, or routing all heterogeneous input to
+separate Layers. Those may be useful fallbacks, not the requested combined result.
+
+**Required target:** the user supplies related stacks and normally presses Stack.
+Strehl analyzes what each acquisition can contribute, plans compatible geometry
+and appearance relationships, then produces its best supported default photograph
+using the available information. Exposure fusion, repeat averaging, complementary
+focus, aperture diversity and supported original-sample reconstruction must be
+composable within one session and, where warranted, within one image region.
+For overlapping framing it should also compose these benefits with stitching.
+Do not require the user to classify every pass or know why shutter/ISO/PSF differs.
+Retain manual modes and policy overrides as optional advanced controls.
+
+The next agent should implement an automatic analysis/planning layer and adapt
+the consumers rather than just relaxing the existing same-exposure guard:
+
+1. Inspect exposure/shutter, ISO, aperture, camera/sensor/CFA identity, focus
+   coverage, clipping, noise, reflectance/lighting and framing/viewpoint. Infer
+   per-pass, per-capture and local relationships with uncertainty. Split internally
+   when a folder changes acquisition settings rather than requiring manual folder
+   classification. Metadata is useful evidence, not proof of optical equivalence.
+2. Fit geometry and calibrated per-source photometry/noise in appropriate common
+   coordinates. Different shutter times should trigger normalization and local
+   usable-signal reasoning, not an immediate whole-session rejection. ISO, PSF and
+   aperture differences need their actual response/noise/support treatment, not
+   unconditional pooling. Do not average genuine reflection or illumination
+   changes into invented common radiance.
+3. Choose contribution locally: recover supported unclipped highlights, improve
+   supported shadows/repeat noise, fill missing focus, retain the best supported
+   fine structure and use sampling diversity only where it delivers a demonstrated
+   benefit. Coverage, calibration and optical eligibility are separate evidence.
+   Contribution should reflect information delivered, not a requirement that every
+   input affect every pixel. Avoid blur, ghosts, seams and color drift.
+4. Provide local fallback when an acquisition or hypothesis is unhelpful. Preserve
+   a coherent supported result rather than failing the whole session on one bad
+   relationship. Genuinely unrelated viewpoints cannot safely become one 2-D photo;
+   detect and explain that case, retain useful views, and keep diagnostics/optional
+   alternative outputs available without making them the default user's burden.
+5. Preserve the optional primary target for simple same-subject multi-stack work;
+   it is a framing/appearance preference, not a prerequisite. It still does not
+   apply to stitching. Automatic planning must retain immutable source identities,
+   deduplication/independence accounting, recipes/cache bindings, cancellation,
+   memory planning, progress and reopening. Explain material exclusions succinctly
+   after processing; avoid making internal algorithm choices mandatory setup.
+6. Establish the automatic default through complete-image comparisons against the
+   best credible individual/manual results, not merely successful execution.
+   Include mixed-exposure repeat/interleave cases and compatible aperture/lighting
+   cases together, positive/negative controls, ordinary no-regression and independent
+   full/native review. "Best possible" is the user's quality objective; it is not a
+   claim of a universal optimizer or permission to fabricate unsupported detail.
+
+First concrete regression case: the exact seven-pass manifest at
+`C:/Users/chris/Pictures/Strehl/strehl-1793474770086-32624-1/session-manifest.json`;
+its ordered pass folders are bug-3 107/106/105/104/103/102/100 under
+`D:/personal/macro/insects`, with optional primary 107. Source directories remain
+read-only. The census records 1.6 s for 103--107 and 2 s for 100/102; verify current
+metadata rather than assuming all differences are shutter-only. Start with bounded
+analysis and controlled subsets; do not blindly launch a costly all-source render
+or claim all these passes are mutually mergeable before measuring them.
+
+This user message asks to add the target to the handoff, not to claim the automatic
+planner already exists. It is **unimplemented and required future work**. Complete
+the already-running actionable-error replacement build, update the remote handoff,
+and leave long research/implementation continuation to the next authorized agent.
+
 ## Mission and user intent
 
 Extend Strehl to use several stacks of the same subject for useful photographic
