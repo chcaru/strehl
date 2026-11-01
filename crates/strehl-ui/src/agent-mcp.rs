@@ -594,7 +594,7 @@ pub(crate) fn tool_definitions() -> Value {
             json!({
                 "name":string(160),
                 "passes":{"type":"array","minItems":1,"maxItems":64,"items":object(json!({"name":string(160),"stack_ids":{"type":"array","minItems":1,"maxItems":256,"items":id_schema()}}), &["name","stack_ids"])},
-                "mode":{"enum":["combine","interleave","repeat","hdr","layers","mosaic","independent_views"]},
+                "mode":{"enum":["auto","combine","interleave","repeat","hdr","layers","mosaic","independent_views"]},
                 "primary_pass":{"anyOf":[{"type":"null"},{"type":"integer","minimum":0,"maximum":63}]},
                 "memory_limit_gib":{"type":"number","minimum":1,"maximum":4096},
                 "precision_weights":{"type":"boolean"},
@@ -602,6 +602,7 @@ pub(crate) fn tool_definitions() -> Value {
                 "focus_evidence":{"type":"boolean"},
                 "reproducibility":{"type":"boolean"},
                 "original_cfa_reconstruction":{"type":"boolean"},
+                "anchor_lighting_only":{"type":"boolean"},
                 "parent_id":id_schema()
             }),
             &["name", "passes", "mode", "memory_limit_gib"],

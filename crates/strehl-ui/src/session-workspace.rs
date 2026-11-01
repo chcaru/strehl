@@ -23,6 +23,9 @@ pub(crate) struct SessionDraft {
     pub reproducibility: bool,
     #[serde(default)]
     pub original_cfa_reconstruction: bool,
+    /// Best result: use only passes lit and posed like the primary.
+    #[serde(default)]
+    pub anchor_lighting_only: bool,
     /// A scan snapshot, replaced only by an explicit source/layout reload.
     #[serde(default)]
     pub sources: Vec<SourceIdentity>,
@@ -61,6 +64,7 @@ impl SessionDraft {
             focus_evidence: false,
             reproducibility: false,
             original_cfa_reconstruction: false,
+            anchor_lighting_only: false,
             sources: Vec::new(),
         }
     }
@@ -111,6 +115,9 @@ impl SessionDraft {
         }
         if !reconstruction_available(self.manifest.mode) {
             self.original_cfa_reconstruction = false;
+        }
+        if self.manifest.mode != SessionMode::Auto {
+            self.anchor_lighting_only = false;
         }
         if !precision_available(self.manifest.mode, self.manifest.passes.len()) {
             self.precision_weights = false;
@@ -256,7 +263,7 @@ pub(crate) fn mode_description(mode: SessionMode) -> &'static str {
             "Keep each viewpoint in its own coordinates, with a photograph, linear master and focus evidence. No views are joined."
         }
         SessionMode::Auto => {
-            "Analyze every pass and combine what each contributes: focus coverage, repeated captures and calibrated shutter differences. Passes that cannot be combined safely are listed after processing."
+            "Analyze every pass and combine what each contributes: focus coverage, repeated captures, calibrated shutter differences, other lighting and moved poses. What each pass contributed is shown after processing."
         }
         SessionMode::Combine => "Gather useful detail from related passes of the same subject.",
         SessionMode::Interleave => {

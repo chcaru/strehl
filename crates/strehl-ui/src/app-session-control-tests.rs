@@ -68,6 +68,7 @@ fn command(project: u64, ids: &[u64]) -> AgentCommand {
         precision_weights: false,
         contribution_maps: false,
         focus_evidence: false,
+        anchor_lighting_only: false,
         reproducibility: false,
         original_cfa_reconstruction: false,
         parent_id: Some(project),

@@ -166,7 +166,7 @@ impl StrehlApp {
             theme::caption(ui, mode_description(session.manifest.mode));
             if !matches!(session.manifest.mode, SessionMode::Layers | SessionMode::Mosaic | SessionMode::IndependentViews) {
                 theme::caption(ui, if session.manifest.mode == SessionMode::Auto {
-                    "Different shutter times are calibrated against the primary or reference pass. Passes with a different ISO, aperture or sensor calibration are left out of this photograph and named in the result."
+                    "Different shutter times are calibrated against the primary or reference pass; other lighting and moved poses are aligned and averaged in. Passes with a different ISO, aperture or sensor calibration are left out and named in the result."
                 } else if session.manifest.mode == SessionMode::Hdr {
                     "Exposure range allows different shutter times, with matching aperture and ISO and compatible lighting. Keep other differences as aligned layers."
                 } else {

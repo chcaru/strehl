@@ -362,7 +362,7 @@ impl StrehlApp {
                     "meaning":"folded aligned-observation rank: 0 one-sided, 1000 balanced; ties can also read 0; neither end is a quality grade"})),
                 "alignment":self.progress.alignment,"placed":self.progress.placed,"refused":self.progress.refused,
                 "noise_model":self.progress.noise_model,"geometry_error":self.progress.alignment_error});
-        let session = self.controls.settings.session.as_ref().map(|session|json!({"mode":session.manifest.mode,"primary_pass":session.manifest.primary_pass,"memory_limit_gib":session.memory_limit_gib,"precision_weights":session.precision_weights,"contribution_maps":session.contribution_maps,"focus_evidence":session.focus_evidence,"reproducibility":session.reproducibility,"original_cfa_reconstruction":session.original_cfa_reconstruction,"capture_groups":self.session_ui.groups,"layers":self.session_ui.layers,"selected_output":self.result,"selection_busy":self.session_output_selection.is_some(),"primary_scope":if session.manifest.mode == crate::session_workspace::SessionMode::IndependentViews {"Independent view coordinates and focus; no primary or cross-view geometry."} else if session.manifest.mode == crate::session_workspace::SessionMode::Mosaic {"No primary preference; framing follows measured overlap and coverage."} else if session.manifest.mode == crate::session_workspace::SessionMode::Layers {"Common reference frame and first displayed layer; each layer retains its own appearance."} else {"Framing, appearance and disagreement fallback; automatic reference has no fusion preference."}}));
+        let session = self.controls.settings.session.as_ref().map(|session|json!({"mode":session.manifest.mode,"primary_pass":session.manifest.primary_pass,"memory_limit_gib":session.memory_limit_gib,"precision_weights":session.precision_weights,"contribution_maps":session.contribution_maps,"focus_evidence":session.focus_evidence,"reproducibility":session.reproducibility,"original_cfa_reconstruction":session.original_cfa_reconstruction,"anchor_lighting_only":session.anchor_lighting_only,"capture_groups":self.session_ui.groups,"layers":self.session_ui.layers,"selected_output":self.result,"selection_busy":self.session_output_selection.is_some(),"primary_scope":if session.manifest.mode == crate::session_workspace::SessionMode::IndependentViews {"Independent view coordinates and focus; no primary or cross-view geometry."} else if session.manifest.mode == crate::session_workspace::SessionMode::Mosaic {"No primary preference; framing follows measured overlap and coverage."} else if session.manifest.mode == crate::session_workspace::SessionMode::Layers {"Common reference frame and first displayed layer; each layer retains its own appearance."} else {"Framing, appearance and disagreement fallback; automatic reference has no fusion preference."}}));
         let mut snapshot = json!({
             "revision":self.agent.revision, "application":"Strehl", "version":env!("CARGO_PKG_VERSION"),
             "headless":self.headless,"output_directory":self.output,
@@ -800,6 +800,7 @@ impl StrehlApp {
                 focus_evidence,
                 reproducibility,
                 original_cfa_reconstruction,
+                anchor_lighting_only,
                 parent_id,
             } => {
                 anyhow::ensure!(
@@ -857,6 +858,7 @@ impl StrehlApp {
                         focus_evidence,
                         reproducibility,
                         original_cfa_reconstruction,
+                        anchor_lighting_only,
                         sources: Vec::new(),
                     },
                     false,

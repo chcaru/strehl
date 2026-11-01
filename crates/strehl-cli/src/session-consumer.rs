@@ -713,6 +713,19 @@ fn render(
         }
     }
     let result = merge.finish()?;
+    let recipe = json!({"bands":cfg.bands,"gate":cfg.gate,"exponent":cfg.exponent,
+               "sharpen_per_octave":cfg.sharpen_per_octave,"select":format!("{:?}",cfg.select),
+               "admission":format!("{:?}",cfg.admission),"base":format!("{:?}",cfg.base),
+               "fallback":format!("{:?}",cfg.fallback),"hull":format!("{:?}",cfg.hull),
+               "mean_coarse":cfg.mean_coarse,"significance_scale":cfg.significance_scale,
+               "agreement_sigma":policy.agreement_sigma,"grouping_enabled":grouped,
+               "precision_weights":args.precision_weights,"contribution_maps":args.contribution_maps,
+               "original_cfa_reconstruction":args.original_cfa_reconstruction,
+               "precision_focus_reference":if args.precision_weights {"equal-observation"}else{"disabled"},
+               "exposure_ev":args.exposure,"resampler":format!("{:?}",alignment.map.resampler()),
+               "workers":args.resources.threads,"memory_limit_gib":args.resources.memory_limit_gib,
+               "noise_probe":{"bands":probe.bands,"realizations":probe.realizations,"seed":probe.seed,
+                   "min_samples_per_band":probe.min_samples_per_band}});
     if let Some(slot) = capture {
         // Lighting-fusion group: hand back merged planes and coverage only.
         let mut gains: Vec<f32> = consumed_indices.iter().map(|&k| frame_gains[k]).collect();
@@ -723,6 +736,7 @@ fn render(
             "passes": session.passes.iter().enumerate().filter(|(p, _)| !excluded_passes[*p]).map(|(_, p)| p.name.clone()).collect::<Vec<_>>(),
             "sources": result.sources, "groups": result.groups, "uncovered_pixels": invalid,
             "median_frame_gain": gain, "elapsed_seconds": started.elapsed().as_secs_f64(),
+            "recipe": recipe, "primary_pass": primary, "reference_pass": alignment.report.reference_pass,
         });
         *slot = Some(crate::session_lighting_fusion::GroupPlanes {
             planes: result.planes,
@@ -746,19 +760,7 @@ fn render(
     let mut report = json!({
            "schema": "strehl.session-render.v1",
            "build":crate::VERSION,"renderer_source_sha256":renderer_source_hash(),
-           "recipe":{"bands":cfg.bands,"gate":cfg.gate,"exponent":cfg.exponent,
-               "sharpen_per_octave":cfg.sharpen_per_octave,"select":format!("{:?}",cfg.select),
-               "admission":format!("{:?}",cfg.admission),"base":format!("{:?}",cfg.base),
-               "fallback":format!("{:?}",cfg.fallback),"hull":format!("{:?}",cfg.hull),
-               "mean_coarse":cfg.mean_coarse,"significance_scale":cfg.significance_scale,
-               "agreement_sigma":policy.agreement_sigma,"grouping_enabled":grouped,
-               "precision_weights":args.precision_weights,"contribution_maps":args.contribution_maps,
-               "original_cfa_reconstruction":args.original_cfa_reconstruction,
-               "precision_focus_reference":if args.precision_weights {"equal-observation"}else{"disabled"},
-               "exposure_ev":args.exposure,"resampler":format!("{:?}",alignment.map.resampler()),
-               "workers":args.resources.threads,"memory_limit_gib":args.resources.memory_limit_gib,
-               "noise_probe":{"bands":probe.bands,"realizations":probe.realizations,"seed":probe.seed,
-                   "min_samples_per_band":probe.min_samples_per_band}},
+           "recipe": recipe,
     "primary_pass": primary, "reference_pass": alignment.report.reference_pass,
            "layer_pass": only_pass, "development_reference_pass": anchor, "mode": session.spec.mode, "canvas": [domain.x,domain.y,domain.width,domain.height],
            "sources": result.sources, "groups": result.groups, "proposed_groups": plan,
@@ -1084,7 +1086,16 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                     log_brightness_range: r.log_brightness_range,
                 }
             }).collect();
-            Some(auto_plan::plan(&facts, anchor, session.primary_pass_index().is_some())?.with_lighting_fusion(!args.anchor_lighting_only))
+            let plan = auto_plan::plan(&facts, anchor, session.primary_pass_index().is_some())?
+                .with_lighting_fusion(!args.anchor_lighting_only);
+            // Requested evidence outputs do not yet combine with layers: keep
+            // the outputs, set the layers aside and say so in the plan.
+            let plan = if plan.lighting_fusion
+                && (args.contribution_maps || args.original_cfa_reconstruction || args.reproducibility || args.focus_evidence)
+            {
+                plan.withhold_layers("contribution maps, focus evidence, reconstruction and pass comparison do not yet combine with layers")
+            } else { plan };
+            Some(plan)
         } else { None };
         if let Some(plan) = &plan {
             write_json_new(&destination.join("plan.json"), plan)?;
@@ -1173,8 +1184,14 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                         layer.group, layer.outcome, layer.fine_over_coarse, residual(&layer.residual_before), residual(&layer.residual_after));
                 }
                 drop(captured);
-                outputs.push(write_fused(args, &session, &alignment, &calibrations, domain, planes,
-                    json!({"lighting_fusion": fusion, "lighting_groups": summaries}), &destination)?);
+                // The anchor group's recipe and references describe this
+                // render, so the result imports and reopens like any other.
+                let mut report = json!({"lighting_fusion": fusion, "lighting_groups": summaries});
+                for key in ["recipe", "primary_pass", "reference_pass"] {
+                    if let Some(value) = summaries.first().and_then(|s| s.get(key)) { report[key] = value.clone(); }
+                }
+                report["sources"] = json!(summaries.iter().filter_map(|s| s["sources"].as_u64()).sum::<u64>());
+                outputs.push(write_fused(args, &session, &alignment, &calibrations, domain, planes, report, &destination)?);
             } else {
                 outputs.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &frame_gains, &excluded, &reconstruction_focus, domain, args.only_pass, &destination, None)?);
             }

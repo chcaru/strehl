@@ -37,6 +37,7 @@ fn fixture() -> (tempfile::TempDir, SessionDraft, StackScan) {
             ..Default::default()
         },
         memory_limit_gib: 24.0,
+        anchor_lighting_only: false,
         precision_weights: false,
         contribution_maps: false,
         focus_evidence: false,
@@ -269,4 +270,41 @@ fn session_workspace_independent_views_clear_cross_view_flags_and_primary() {
     draft.validate().unwrap();
     assert_eq!(draft.manifest.passes.len(), 1);
     assert_eq!(output_prefix(draft.manifest.mode), Some("view"));
+}
+
+#[test]
+fn best_result_contributions_name_each_pass_role_and_layer_outcome() {
+    let root = tempfile::tempdir().unwrap();
+    std::fs::write(
+        root.path().join("plan.json"),
+        r#"{"passes":[
+            {"pass":0,"role":"lighting_layer","reason":"lighting differs in shape"},
+            {"pass":1,"role":"anchor","reason":null},
+            {"pass":2,"role":"pose_layer","reason":"the subject moved"},
+            {"pass":3,"role":"excluded","reason":"ISO differs"}]}"#,
+    )
+    .unwrap();
+    std::fs::write(
+        root.path().join("render-report.json"),
+        r#"{"lighting_fusion":{"layers":[
+            {"group":1,"outcome":"superposed","residual_before":{"median_px":2.6},"residual_after":{"median_px":0.3},"coverage":0.32,"agreement":null,"sharp_fraction":0.99},
+            {"group":2,"outcome":"defocused","residual_before":null,"residual_after":null,"coverage":null,"agreement":null,"sharp_fraction":null}]},
+          "lighting_groups":[{"passes":["b"]},{"passes":["a"]},{"passes":["c"]}]}"#,
+    )
+    .unwrap();
+    let names: Vec<String> = ["a", "b", "c", "d"].map(String::from).to_vec();
+    let list = summary::contributions(root.path(), &names).expect("plan");
+    assert_eq!(list[0].label, "Lighting layer · averaged in");
+    assert!(list[0].used);
+    assert_eq!(
+        list[0].detail.as_deref(),
+        Some("aligned 2.6 → 0.3 px · sharp 99% · covers 32%")
+    );
+    assert!(list[1].label.starts_with("Primary"));
+    assert_eq!(list[2].label, "Pose layer · not used: out of focus");
+    assert!(!list[2].used);
+    assert_eq!(list[3].label, "Not used");
+    assert_eq!(list[3].reason.as_deref(), Some("ISO differs"));
+    // Other modes save no plan.
+    assert!(summary::contributions(&root.path().join("missing"), &names).is_none());
 }

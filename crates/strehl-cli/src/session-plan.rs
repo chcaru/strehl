@@ -107,6 +107,8 @@ pub struct AutoPlan {
     /// superposed ("all lights on"); with `--anchor-lighting-only` they are
     /// reported but not consumed.
     pub lighting_fusion: bool,
+    /// Why lighting and pose layers are withheld, when they are.
+    pub layers_withheld: Option<&'static str>,
     pub limitations: Vec<&'static str>,
 }
 
@@ -300,6 +302,7 @@ pub fn plan(facts: &[PassFacts], anchor: usize, anchor_is_primary: bool) -> Resu
         passes,
         per_frame_gains,
         lighting_fusion: true,
+        layers_withheld: None,
         limitations: vec![
             "Equal metadata is evidence for combination, not proof of equal focus, illumination or subject rigidity; the consumer still gates averaging by noise.",
             "Per-frame brightness comes from block-mean ratios over geometry-confirmed overlaps, solved jointly; it is not held out from alignment.",
@@ -311,6 +314,17 @@ pub fn plan(facts: &[PassFacts], anchor: usize, anchor_is_primary: bool) -> Resu
 impl AutoPlan {
     pub fn with_lighting_fusion(mut self, on: bool) -> Self {
         self.lighting_fusion = on;
+        if !on && self.layers_withheld.is_none() {
+            self.layers_withheld = Some("--anchor-lighting-only");
+        }
+        self
+    }
+
+    /// Withhold layers for a stated reason (e.g. an output that does not yet
+    /// combine with them).
+    pub fn withhold_layers(mut self, reason: &'static str) -> Self {
+        self.lighting_fusion = false;
+        self.layers_withheld = Some(reason);
         self
     }
 
@@ -400,7 +414,8 @@ impl AutoPlan {
                     p.reason.as_deref().unwrap_or("lighting differs")
                 ),
                 Role::LightingLayer => format!(
-                    "lighting layer, not used (--anchor-lighting-only){range}: {}",
+                    "lighting layer, not used ({}){range}: {}",
+                    self.layers_withheld.unwrap_or("--anchor-lighting-only"),
                     p.reason.as_deref().unwrap_or("lighting differs")
                 ),
                 Role::PoseLayer if self.lighting_fusion => format!(
@@ -408,7 +423,8 @@ impl AutoPlan {
                     p.reason.as_deref().unwrap_or("pose differs")
                 ),
                 Role::PoseLayer => format!(
-                    "pose layer, not used (--anchor-lighting-only){range}: {}",
+                    "pose layer, not used ({}){range}: {}",
+                    self.layers_withheld.unwrap_or("--anchor-lighting-only"),
                     p.reason.as_deref().unwrap_or("pose differs")
                 ),
                 Role::Excluded => {

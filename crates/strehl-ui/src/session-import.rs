@@ -621,6 +621,11 @@ pub(crate) fn load(directory: &Path, cancelled: &AtomicBool) -> Result<Run> {
         original_cfa_reconstruction: recipe["original_cfa_reconstruction"]
             .as_bool()
             .unwrap_or(false),
+        // A Best result plan records when layers were withheld on request.
+        anchor_lighting_only: std::fs::read(root.join("plan.json"))
+            .ok()
+            .and_then(|bytes| serde_json::from_slice::<serde_json::Value>(&bytes).ok())
+            .is_some_and(|plan| plan["layers_withheld"] == "--anchor-lighting-only"),
         sources: sources.clone(),
     };
     // Mosaic's inherent exports do not enable non-Mosaic command switches.

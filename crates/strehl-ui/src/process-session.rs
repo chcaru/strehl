@@ -128,6 +128,19 @@ impl ProcessSpace {
                             .size(10.0)
                             .color(MUTED),
                         );
+                        if let Some(c) = &pass.contribution {
+                            let label = ui.label(
+                                egui::RichText::new(&c.label)
+                                    .size(10.0)
+                                    .color(if c.used { GREEN } else { MUTED }),
+                            );
+                            if let Some(reason) = &c.reason {
+                                label.on_hover_text(reason);
+                            }
+                            if let Some(detail) = &c.detail {
+                                ui.label(egui::RichText::new(detail).size(9.5).color(MUTED));
+                            }
+                        }
                         ui.add_space(5.0);
                     }
                     ui.add_space(7.0);

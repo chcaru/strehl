@@ -150,6 +150,15 @@ impl Controls {
                 let session = self.settings.session.as_mut().expect("session controls");
                 let mode = session.manifest.mode;
                 let passes = session.manifest.passes.len();
+                if mode == crate::session_workspace::SessionMode::Auto {
+                    let mut layers = !session.anchor_lighting_only;
+                    ui.checkbox(&mut layers, "Combine other lighting and moved poses")
+                        .on_hover_text("Passes lit differently from the primary are aligned to it and averaged as if every lamp were on at once, lowering noise. Passes where the subject moved are used only where they still match. Out-of-focus areas of any pass are not used.");
+                    session.anchor_lighting_only = !layers;
+                    if layers && (session.contribution_maps || session.focus_evidence || session.reproducibility || session.original_cfa_reconstruction) {
+                        note(ui, "Evidence outputs below do not yet combine with other lighting or poses; those passes will be set aside.");
+                    }
+                }
                 ui.add_enabled(crate::session_workspace::precision_available(mode, passes),
                     egui::Checkbox::new(&mut session.precision_weights, "Weight repeats by predicted noise"))
                     .on_hover_text("Available for repeated captures and exposure range. Compatible observations use a separate source to predict their relative noise; unsupported predictions keep equal averaging.");

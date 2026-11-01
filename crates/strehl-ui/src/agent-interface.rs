@@ -217,6 +217,8 @@ pub(crate) enum AgentCommand {
         #[serde(default)]
         original_cfa_reconstruction: bool,
         #[serde(default)]
+        anchor_lighting_only: bool,
+        #[serde(default)]
         parent_id: Option<u64>,
     },
     /// Inspect a saved map from snapshot.saved_diagnostics.available; no caller path.

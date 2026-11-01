@@ -76,6 +76,7 @@ pub(super) fn session_command(
             session.original_cfa_reconstruction,
             "--original-cfa-reconstruction",
         ),
+        (session.anchor_lighting_only, "--anchor-lighting-only"),
     ] {
         if enabled {
             command.arg(flag);
