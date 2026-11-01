@@ -1185,7 +1185,7 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                     lane_args.resources.memory_limit_gib = args.resources.memory_limit_gib / lanes as f64;
                     lane_args.resources.threads = args.resources.threads.div_ceil(lanes).max(1);
                     let lane_budget = lane_args.resources.cache_budget()?;
-                    let results: Vec<std::sync::Mutex<Option<Result<(Value, crate::session_lighting_fusion::GroupPlanes)>>>> =
+                    let results: Vec<std::sync::Mutex<Option<LaneResult>>> =
                         (0..merge_groups.len()).map(|_| std::sync::Mutex::new(None)).collect();
                     let next = std::sync::atomic::AtomicUsize::new(0);
                     let lane_cache_root = cache.root().to_path_buf();
@@ -1454,6 +1454,9 @@ fn cached_alignment(
     }
     Ok(alignment)
 }
+
+/// One lighting group's merge summary and planes, from a concurrent lane.
+type LaneResult = Result<(Value, crate::session_lighting_fusion::GroupPlanes)>;
 
 /// Concurrent lighting-group merges that fit the memory budget: one merge
 /// reserves about 8 GiB on a 24-megapixel canvas, so each lane needs 9 GiB.
