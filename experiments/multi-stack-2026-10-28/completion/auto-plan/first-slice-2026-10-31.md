@@ -400,6 +400,15 @@ builds the photograph on the 102+103 top view and reports 100 as another view
 (`out-auto-03`, 841 s with cached alignments, peak RSS 13.3 GB; author review of
 overview and native crops: no ghosting or seams, 103's green sheen present).
 
-**Open.** Alternative appearances (bug-2) and other views (bug-1 underside, 104)
-are reported, not delivered as extra photographs; delivering them needs
-multi-output Best result in the desktop. Placement costs about 36 s per pair.
+**Alternatives delivered** (`7bb667c12`). Passes Best result does not blend are
+written as their own photograph and master (`alternative-NN/`, own canvas and
+calibration, no resampling) and listed in `completed.json`. VERIFIED: bug-1
+`out-auto-05` (829 s) delivers 100 (underside) and 104; bug-2 `out-auto-05`
+(911 s) delivers 102 and 103 as other colour appearances; the bug-2 result
+imports into a headless desktop and the saved-session view lists them under
+"Also saved". Regression: bug-4 with the final build (`out-auto-11`, 549 s) is
+bit-identical to `out-auto-10`.
+
+**Open.** Opening an alternative in the desktop viewer; placement costs about
+36 s per pair; super-resolution still needs multi-observation original-CFA
+reconstruction in the core gather (group-level merges are already resampled).
