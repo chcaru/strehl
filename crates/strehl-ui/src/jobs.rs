@@ -43,6 +43,28 @@ impl MachineResources {
     pub(crate) fn maximum_workers(self) -> usize {
         self.logical_processors.clamp(1, 1024)
     }
+
+    /// Default session RAM budget: half of physical memory within 8..=48 GiB
+    /// (16 GiB when unknown). Best result merges lighting and pose groups
+    /// concurrently in 9 GiB shares, so a larger budget is also faster.
+    pub(crate) fn default_session_memory_gib(self) -> f64 {
+        self.physical_memory_bytes.map_or(16.0, |bytes| {
+            (bytes as f64 / (1u64 << 30) as f64 / 2.0).floor().clamp(8.0, 48.0)
+        })
+    }
+}
+
+#[cfg(test)]
+#[test]
+fn default_session_memory_is_half_of_physical_within_bounds() {
+    let machine = |gib: Option<u64>| MachineResources {
+        logical_processors: 8,
+        physical_memory_bytes: gib.map(|g| g << 30),
+    };
+    assert_eq!(machine(Some(64)).default_session_memory_gib(), 32.0);
+    assert_eq!(machine(Some(8)).default_session_memory_gib(), 8.0);
+    assert_eq!(machine(Some(256)).default_session_memory_gib(), 48.0);
+    assert_eq!(machine(None).default_session_memory_gib(), 16.0);
 }
 
 #[cfg(windows)]

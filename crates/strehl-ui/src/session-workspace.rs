@@ -58,7 +58,7 @@ impl SessionDraft {
                 mode: SessionMode::Auto,
                 ..Default::default()
             },
-            memory_limit_gib: 16.0,
+            memory_limit_gib: crate::jobs::MachineResources::detect().default_session_memory_gib(),
             precision_weights: false,
             contribution_maps: false,
             focus_evidence: false,
