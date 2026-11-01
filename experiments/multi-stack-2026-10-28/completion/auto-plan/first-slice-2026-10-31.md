@@ -311,3 +311,50 @@ unplaced: no confirmed wide-baseline seed despite a 4x scale range) and
 multi-observation original-CFA reconstruction in the core gather, which the
 architecture names as required and which an earlier single-frame sampler failed
 for neutral-detail loss. Neither is started.
+
+## Sixth slice: close-ups, merge speed, iterative registration (2026-11-01)
+
+**Close-up placement (bug-3 100/102).** Each close-up pass was stacked alone
+(`outputs/multi-stack/closeup-01`, single-pass sessions, 148 s for 100; held-out
+corner error 5.43 plane px for 100, not measured for 102) and located in the
+anchor photograph by a scale x rotation x translation NCC template search on
+band-passed log luma (`closeup_find.py`, Python prototype). MEASURED: with
++-15 degrees no candidate (NCC 0.32 at the range edge); the close-up is rotated
+about 175 degrees relative to the anchor, outside the engine's +-12 degree
+wide-baseline range. With full rotation and sigma-1 features no consistent
+placement (iridescent scale sparkle does not match across sessions); with
+sigma-4 features (16 anchor px) a consistent placement: x2.85--2.95,
+176 degrees, centred on the elytra, NCC 0.65 (coarse). The registered pair shows
+the same bands and suture with visible non-rigid differences (pose change).
+**Negative result:** the close-up downsampled to anchor scale is not sharper
+than the anchor (author review of the pair; the close-up's native crops resolve
+individual scales but are soft). ARGUED: at a fixed f-number, object-space
+diffraction blur barely improves with magnification, and this close-up stack
+is itself imperfectly aligned. Close-up insertion is therefore not built for
+this data; the rotation-range gap is recorded (widening it costs about 15x
+search time per unplaced pass).
+
+**Detail headroom of the core merge.** Three single frames of bug-4 102 were
+developed through the same pipeline and compared with the merged anchor on 192 px
+tiles where a frame is in focus (`headroom.py`). Merged/single fine-band energy
+median 0.83, mid-band 0.85 (66 in-focus tiles of 265 matched). Inconclusive:
+single-frame noise and exposure inflate the single-frame energies, and native
+crops show the merge as crisp as or crisper than the in-focus frame. No detail
+loss was established.
+
+**Fusion detail metric.** Commissioned on the bug-4 dump: a 0.6 px blur lowers
+fine energy on the most structured 5% of the subject to 0.84; added noise raises
+flat-region fine energy to 1.20 with structure unchanged. The current fusion
+measures 1.04 (fine) and 1.08 (mid) on structure and 0.80 on flat regions: no
+measurable softening (band energy can also rise from added specular contrast).
+
+**Concurrent group merges** (`e90b17f15`). A single group merge keeps about 7 of
+32 threads busy (host CPU 21% over five sequential ~200 s merges; cache reads
+from NVMe at 2.5 GB/s are not the limit; per frame gather 0.085 s, prepare
+0.31 s, accumulate 0.13 s). Groups now merge in lanes of 9 GiB budget shares.
+bug-4 cached run 937 -> 547 s, peak RSS 12.5 GB, photograph and master
+bit-identical.
+
+**Iterative registration** (`86a036904`). bug-3 104: residual 0.87 -> 0.30 plane
+px and pose agreement 0.30 -> 0.43; bug-4 unchanged (converges in one round).
+Mutation-checked test.
