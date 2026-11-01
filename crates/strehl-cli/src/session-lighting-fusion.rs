@@ -95,6 +95,10 @@ pub struct FusionConfig {
     pub stride: usize,
     pub search: usize,
     pub coarse_search: usize,
+    /// Extra registration rounds while the residual median exceeds
+    /// `converged_px` (plane px).
+    pub registration_rounds: usize,
+    pub converged_px: f64,
     /// Distance (plane px) from the neighbourhood median that rejects a tile.
     pub outlier_px: f32,
     /// Gaussian sigma (plane px) of the relighting ratio field.
@@ -128,6 +132,8 @@ impl Default for FusionConfig {
             stride: 32,
             search: 4,
             coarse_search: 8,
+            registration_rounds: 2,
+            converged_px: 0.35,
             outlier_px: 1.5,
             ratio_sigma: 24.0,
             feather: 24,
@@ -563,6 +569,37 @@ fn residual_field(
     })
 }
 
+/// Field equivalent to warping by `first` and then by `second`:
+/// `layer(p + d2(p) + d1(p + d2(p)))`.
+fn compose(first: &Field, second: &Field, width: usize, height: usize) -> Field {
+    let sample = |grid: &[f32], y: f32, x: f32| {
+        let y = y.clamp(0.0, (height - 1) as f32);
+        let x = x.clamp(0.0, (width - 1) as f32);
+        let (y0, x0) = ((y as usize).min(height - 2), (x as usize).min(width - 2));
+        let (fy, fx) = (y - y0 as f32, x - x0 as f32);
+        let at = |yy: usize, xx: usize| grid[yy * width + xx];
+        (at(y0, x0) * (1.0 - fx) + at(y0, x0 + 1) * fx) * (1.0 - fy)
+            + (at(y0 + 1, x0) * (1.0 - fx) + at(y0 + 1, x0 + 1) * fx) * fy
+    };
+    let n = width * height;
+    let (dy, dx): (Vec<f32>, Vec<f32>) = (0..n)
+        .into_par_iter()
+        .map(|i| {
+            let (y, x) = ((i / width) as f32, (i % width) as f32);
+            let (sy, sx) = (y + second.dy[i], x + second.dx[i]);
+            (
+                second.dy[i] + sample(&first.dy, sy, sx),
+                second.dx[i] + sample(&first.dx, sy, sx),
+            )
+        })
+        .unzip();
+    Field {
+        dy,
+        dx,
+        stats: second.stats.clone(),
+    }
+}
+
 /// Catmull-Rom weights for a fractional offset `t` (taps -1, 0, 1, 2).
 fn cubic_weights(t: f32) -> [f32; 4] {
     let (t2, t3) = (t * t, t * t * t);
@@ -874,11 +911,33 @@ pub fn fuse_with(
         ) {
             Some(field) => {
                 report.residual_before = Some(field.stats.clone());
-                let warped = warp(original, &field, width, height);
-                let after = feature(&luma(&warped), width, height, floor);
-                report.residual_after =
-                    register(&anchor_feature, &after, &warped.valid, width, height, cfg)
-                        .map(|f| f.stats);
+                // Large pose changes do not converge in one measurement:
+                // re-measure on the warped layer and compose the fields, then
+                // resample the original once (no repeated interpolation).
+                let mut field = field;
+                let mut warped = warp(original, &field, width, height);
+                let mut after = None;
+                for round in 0..=cfg.registration_rounds {
+                    let feature_now = feature(&luma(&warped), width, height, floor);
+                    let residual = register(
+                        &anchor_feature,
+                        &feature_now,
+                        &warped.valid,
+                        width,
+                        height,
+                        cfg,
+                    );
+                    let converged = residual
+                        .as_ref()
+                        .is_none_or(|r| r.stats.median_px <= cfg.converged_px);
+                    if converged || round == cfg.registration_rounds {
+                        after = residual.map(|r| r.stats);
+                        break;
+                    }
+                    field = compose(&field, &residual.expect("residual"), width, height);
+                    warped = warp(original, &field, width, height);
+                }
+                report.residual_after = after;
                 warped
             }
             None => original.clone(),
@@ -1268,6 +1327,22 @@ mod tests {
         );
         let worst = worst_interior(&fused[2], |i| f((i % W) as f32, (i / W) as f32), 24);
         assert!(worst < 0.03, "registered superposition blurred: {worst}");
+    }
+
+    #[test]
+    fn a_smoothly_deformed_layer_is_registered_in_composed_rounds() {
+        let f = |x: f32, y: f32| 500.0 * texture(x, y);
+        let anchor = group(f);
+        // A smooth non-rigid deformation of up to ~5 px (a pose change).
+        let shift = |x: f32, y: f32| (4.0 * (y / 70.0).sin() + 1.5, 3.0 * (x / 90.0).cos());
+        let layer = group(|x, y| {
+            let (sx, sy) = shift(x, y);
+            f(x - sx, y - sy)
+        });
+        let kinds = [LayerKind::Lighting, LayerKind::Pose];
+        let (_, report) = fuse(&[anchor, layer], &kinds, W, H);
+        let after = report.layers[0].residual_after.as_ref().expect("residual");
+        assert!(after.median_px <= 0.5, "{report:?}");
     }
 
     #[test]
