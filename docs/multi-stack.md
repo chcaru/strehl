@@ -22,7 +22,12 @@ Best result also recovers passes whose framing or magnification differs too
 much for the ordinary cross-pass search: a global scale/rotation/translation
 search proposes a placement, and only a direct native measurement accepts it.
 A pass that matches the anchor only locally (typically because the subject's
-pose changed between sessions) becomes a *pose layer*. Passes beyond 1.5x
+pose changed between sessions) becomes a *pose layer*. A pass that cannot join
+the alignment at all (turned around, strongly magnified, lit very differently)
+becomes a *detached layer*: it is stacked on its own and its finished
+photograph is located on the anchor's by a search over position, scale and a
+full turn of rotation, using coarse structure that survives a change of
+lighting. Passes beyond 1.5x
 magnification relative to the anchor are left out until close-up detail
 insertion exists. Different ISO or aperture is not yet pooled; choose Aligned
 layers to keep such appearances.
@@ -50,7 +55,11 @@ less noise where they overlap. Before averaging, Strehl:
   bounds;
 - for a pose layer, uses it only where it matches the relit anchor after
   registration; a moved limb or an occlusion falls back to the anchor instead
-  of ghosting.
+  of ghosting, and a detached layer only where its local structure agrees;
+- leaves out a layer whose color rendition differs strongly from the anchor's
+  (iridescence seen under another lighting angle). Averaging such passes
+  washes out what each lighting reveals, so they are reported as a different
+  appearance instead of being blended.
 
 `render-report.json` records each layer's outcome, residual displacement before
 and after registration, brightness, coverage and (for pose layers) agreement.

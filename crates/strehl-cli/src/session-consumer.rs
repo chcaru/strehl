@@ -1231,7 +1231,7 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                     else { plan.as_ref().map(|p| p.detached_passes()).unwrap_or_default() };
                 // Stack every detached pass first (independent sub-sessions,
                 // concurrent within the memory budget), then place each.
-                let stacked: Vec<Result<(Value, crate::session_lighting_fusion::GroupPlanes, usize, usize)>> = {
+                let stacked: Vec<Result<(Value, crate::session_lighting_fusion::GroupPlanes, SamplingDomain)>> = {
                     let lanes = lighting_merge_lanes(args.resources.memory_limit_gib, detached.len());
                     let mut lane_args = args.clone();
                     lane_args.resources.memory_limit_gib = args.resources.memory_limit_gib / lanes as f64;
@@ -1257,44 +1257,103 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                 };
                 // Placements are independent; each searches only four quarter
                 // turns in parallel, so run them concurrently.
-                let anchor_planes = &captured[0];
                 use rayon::prelude::*;
-                let placed_all: Vec<_> = detached.par_iter().zip(stacked.into_par_iter())
-                    .map(|(&pass, stacked)| stacked.and_then(|(summary, planes, lw, lh)| {
+                use crate::session_lighting_fusion::{place_detached, DetachedPlacement, GroupPlanes, LayerKind};
+                let anchor_planes = &captured[0];
+                let on_anchor: Vec<Option<(Option<GroupPlanes>, DetachedPlacement)>> = detached.par_iter().zip(stacked.par_iter())
+                    .map(|(&pass, stacked)| {
+                        let (_, planes, d) = stacked.as_ref().ok()?;
                         // Diagnostic: keep the separately stacked planes beside the lighting dump.
                         if let Some(dir) = std::env::var_os("STREHL_LIGHTING_DUMP") {
                             let dir = Path::new(&dir).join(format!("detached-{}", pass + 1));
-                            crate::session_lighting_fusion::dump(std::slice::from_ref(&planes), &[], lw, lh, &dir)?;
+                            let _ = crate::session_lighting_fusion::dump(std::slice::from_ref(planes), &[], d.width, d.height, &dir);
                         }
-                        let (placed, placement) = crate::session_lighting_fusion::place_detached(anchor_planes, &planes, lw, lh, domain.width, domain.height);
-                        Ok((summary, placed, placement))
-                    }))
+                        Some(place_detached(anchor_planes, planes, d.width, d.height, domain.width, domain.height))
+                    })
                     .collect();
-                for (pass, outcome) in detached.into_iter().zip(placed_all) {
-                    let name = session.passes[pass].name.clone();
-                    match outcome {
-                        Ok((mut summary, placed, placement)) => {
-                            eprintln!("session detached layer: '{name}' {} (x{:.3}, {:.1} deg, NCC {:.2})",
-                                if placed.is_some() { "placed" } else { "not placed" }, placement.scale, placement.rotation_deg, placement.ncc);
-                            summary["placement"] = json!(placement);
-                            detached_reports.push(json!({"pass": name, "placement": placement}));
-                            if let Some(planes) = placed {
-                                summaries.push(summary);
-                                captured.push(planes);
-                                kinds.push(crate::session_lighting_fusion::LayerKind::Detached);
-                            }
-                        }
-                        Err(error) => {
+                for (i, &pass) in detached.iter().enumerate() {
+                    let name = &session.passes[pass].name;
+                    match (&stacked[i], &on_anchor[i]) {
+                        (Err(error), _) => {
                             eprintln!("session detached layer: '{name}' could not be stacked on its own: {error:#}");
                             detached_reports.push(json!({"pass": name, "error": format!("{error:#}")}));
                         }
+                        (Ok(_), Some((placed, placement))) => eprintln!("session detached layer: '{name}' {} (x{:.3}, {:.1} deg, NCC {:.2})",
+                            if placed.is_some() { "placed" } else { "not placed" }, placement.scale, placement.rotation_deg, placement.ncc),
+                        _ => {}
                     }
                 }
+                // Majority view: when passes that did not place on the anchor
+                // place on one another (another side of the specimen, say),
+                // and that view gathers more passes than the anchor's, the
+                // photograph is built on that view; the anchor's is reported.
+                let anchor_view = 1 + on_anchor.iter().filter(|p| matches!(p, Some((Some(_), _)))).count();
+                let unplaced: Vec<usize> = (0..detached.len())
+                    .filter(|&i| stacked[i].is_ok() && matches!(on_anchor[i], Some((None, _))))
+                    .collect();
+                // (reference index, placements of the other unplaced passes on it)
+                type View = (usize, Vec<(usize, Option<GroupPlanes>, DetachedPlacement)>);
+                let mut view: Option<View> = None;
+                if unplaced.len() >= 2 {
+                    let mut candidates = unplaced.clone();
+                    candidates.sort_by_key(|&i| std::cmp::Reverse(session.passes[detached[i]].global_range.len()));
+                    for &c in &candidates {
+                        let (_, reference, rd) = stacked[c].as_ref().expect("stacked");
+                        let others: Vec<(usize, Option<GroupPlanes>, DetachedPlacement)> = unplaced.par_iter().filter(|&&j| j != c)
+                            .map(|&j| {
+                                let (_, planes, d) = stacked[j].as_ref().expect("stacked");
+                                let (placed, placement) = place_detached(reference, planes, d.width, d.height, rd.width, rd.height);
+                                (j, placed, placement)
+                            })
+                            .collect();
+                        let size = 1 + others.iter().filter(|o| o.1.is_some()).count();
+                        let best = view.as_ref().map_or(anchor_view, |(_, o)| 1 + o.iter().filter(|o| o.1.is_some()).count());
+                        if size > best {
+                            view = Some((c, others));
+                        }
+                    }
+                }
+                let (fuse_domain, development_pass) = if let Some((c, others)) = view {
+                    let original = session.passes[session.primary_pass_index().unwrap_or(alignment.report.reference_pass)].name.clone();
+                    let mut stacked = stacked;
+                    let (mut summary, planes, d) = std::mem::replace(&mut stacked[c], Err(anyhow::anyhow!("moved")))?;
+                    eprintln!("session detached layer: '{}' and {} other pass(es) show a view the anchor '{original}' does not; building the photograph on '{}'",
+                        session.passes[detached[c]].name, others.iter().filter(|o| o.1.is_some()).count(), session.passes[detached[c]].name);
+                    summary["view_anchor"] = json!(true);
+                    summaries = vec![summary];
+                    captured = vec![planes];
+                    kinds = vec![LayerKind::Lighting];
+                    detached_reports.push(json!({"pass": session.passes[detached[c]].name, "view_anchor": true, "replaces": original}));
+                    for (j, placed, placement) in others {
+                        let name = session.passes[detached[j]].name.clone();
+                        detached_reports.push(json!({"pass": name, "placement": placement, "placed_on": session.passes[detached[c]].name}));
+                        if let Some(planes) = placed {
+                            let (mut summary, _, _) = std::mem::replace(&mut stacked[j], Err(anyhow::anyhow!("moved")))?;
+                            summary["placement"] = json!(placement);
+                            summaries.push(summary);
+                            captured.push(planes);
+                            kinds.push(LayerKind::Detached);
+                        }
+                    }
+                    (d, detached[c])
+                } else {
+                    for ((i, stacked), placement) in stacked.into_iter().enumerate().zip(on_anchor) {
+                        let (Ok((mut summary, _, _)), Some((placed, placement))) = (stacked, placement) else { continue };
+                        summary["placement"] = json!(placement);
+                        detached_reports.push(json!({"pass": session.passes[detached[i]].name, "placement": placement}));
+                        if let Some(planes) = placed {
+                            summaries.push(summary);
+                            captured.push(planes);
+                            kinds.push(LayerKind::Detached);
+                        }
+                    }
+                    (domain, session.primary_pass_index().unwrap_or(alignment.report.reference_pass))
+                };
                 if let Some(dir) = std::env::var_os("STREHL_LIGHTING_DUMP") {
-                    crate::session_lighting_fusion::dump(&captured, &kinds, domain.width, domain.height, Path::new(&dir))?;
+                    crate::session_lighting_fusion::dump(&captured, &kinds, fuse_domain.width, fuse_domain.height, Path::new(&dir))?;
                 }
                 eprintln!("session lighting fusion: superposing {} lighting groups", captured.len());
-                let (planes, fusion) = crate::session_lighting_fusion::fuse(&captured, &kinds, domain.width, domain.height);
+                let (planes, fusion) = crate::session_lighting_fusion::fuse(&captured, &kinds, fuse_domain.width, fuse_domain.height);
                 for layer in &fusion.layers {
                     let residual = |s: &Option<crate::session_lighting_fusion::FieldStats>| s.as_ref().map_or("-".to_string(), |s| format!("{:.2}", s.median_px));
                     eprintln!("  lighting group {}: {} (fine/coarse contrast {:.2}; residual {} -> {} plane px)",
@@ -1307,13 +1366,16 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                 for key in ["recipe", "primary_pass", "reference_pass"] {
                     if let Some(value) = summaries.first().and_then(|s| s.get(key)) { report[key] = value.clone(); }
                 }
+                if development_pass != session.primary_pass_index().unwrap_or(alignment.report.reference_pass) {
+                    report["view_anchor_pass"] = json!(development_pass);
+                }
                 // Lanes split the requested resources; record what was asked for.
                 if report["recipe"].is_object() {
                     report["recipe"]["workers"] = json!(args.resources.threads);
                     report["recipe"]["memory_limit_gib"] = json!(args.resources.memory_limit_gib);
                 }
                 report["sources"] = json!(summaries.iter().filter_map(|s| s["sources"].as_u64()).sum::<u64>());
-                outputs.push(write_fused(args, &session, &alignment, &calibrations, domain, planes, report, &destination)?);
+                outputs.push(write_fused(args, &session, &calibrations, fuse_domain, development_pass, planes, report, &destination)?);
             } else {
                 outputs.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &frame_gains, &excluded, &reconstruction_focus, domain, args.only_pass, &destination, None)?);
             }
@@ -1360,14 +1422,13 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
 fn write_fused(
     args: &StackArgs,
     session: &ResolvedSession,
-    alignment: &SessionAlignment,
     calibrations: &[Calibration],
     domain: SamplingDomain,
+    anchor: usize,
     planes: [Vec<f32>; 4],
     mut report: Value,
     destination: &Path,
 ) -> Result<Value> {
-    let anchor = session.primary_pass_index().unwrap_or(alignment.report.reference_pass);
     let reference = &calibrations[anchor];
     let [r, g1, b, g2] = planes;
     let planes = [r, g1, g2, b];
@@ -1536,7 +1597,7 @@ fn detached_group(
     destination: &Path,
     config: &crate::session_align::SessionAlignConfig,
     resampler: Resampler,
-) -> Result<(Value, crate::session_lighting_fusion::GroupPlanes, usize, usize)> {
+) -> Result<(Value, crate::session_lighting_fusion::GroupPlanes, SamplingDomain)> {
     let declared = &session.passes[pass];
     let spec = crate::session_input::SessionSpec {
         passes: vec![crate::session_input::PassSpec {
@@ -1595,7 +1656,7 @@ fn detached_group(
     summary["passes"] = json!([declared.name]);
     summary["detached"] = json!(true);
     let planes = slot.context("detached pass produced no planes")?;
-    Ok((summary, planes, domain.width, domain.height))
+    Ok((summary, planes, domain))
 }
 
 /// One lighting group's merge summary and planes, from a concurrent lane.

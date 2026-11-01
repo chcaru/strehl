@@ -55,6 +55,10 @@ struct RenderReport {
     lighting_groups: Vec<GroupSummary>,
     #[serde(default)]
     detached_layers: Vec<DetachedReport>,
+    /// Set when the photograph was built on another view than the planned
+    /// anchor's (more passes agreed with it).
+    #[serde(default)]
+    view_anchor_pass: Option<usize>,
 }
 #[derive(Deserialize)]
 struct DetachedReport {
@@ -120,7 +124,18 @@ pub(crate) fn contributions(output: &Path, names: &[String]) -> Option<Vec<PassC
             continue;
         };
         let percent = |v: f64| format!("{:.0}%", 100.0 * v);
+        let view = report.view_anchor_pass;
         let (label, used, detail) = match p.role.as_str() {
+            _ if view == Some(p.pass) => (
+                "Primary reference · the view most passes share".to_owned(),
+                true,
+                None,
+            ),
+            "anchor" if view.is_some() => (
+                "Not used: shows another view of the subject".to_owned(),
+                false,
+                None,
+            ),
             "anchor" => (
                 "Primary reference · framing and colour".to_owned(),
                 true,
