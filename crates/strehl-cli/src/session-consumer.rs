@@ -1255,18 +1255,23 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                     });
                     slots.into_iter().map(|s| s.into_inner().unwrap().unwrap_or_else(|| Err(anyhow::anyhow!("not stacked")))).collect()
                 };
-                for (pass, stacked) in detached.into_iter().zip(stacked) {
+                // Placements are independent; each searches only four quarter
+                // turns in parallel, so run them concurrently.
+                let anchor_planes = &captured[0];
+                use rayon::prelude::*;
+                let placed_all: Vec<_> = detached.par_iter().zip(stacked.into_par_iter())
+                    .map(|(&pass, stacked)| stacked.and_then(|(summary, planes, lw, lh)| {
+                        // Diagnostic: keep the separately stacked planes beside the lighting dump.
+                        if let Some(dir) = std::env::var_os("STREHL_LIGHTING_DUMP") {
+                            let dir = Path::new(&dir).join(format!("detached-{}", pass + 1));
+                            crate::session_lighting_fusion::dump(std::slice::from_ref(&planes), &[], lw, lh, &dir)?;
+                        }
+                        let (placed, placement) = crate::session_lighting_fusion::place_detached(anchor_planes, &planes, lw, lh, domain.width, domain.height);
+                        Ok((summary, placed, placement))
+                    }))
+                    .collect();
+                for (pass, outcome) in detached.into_iter().zip(placed_all) {
                     let name = session.passes[pass].name.clone();
-                    let outcome = stacked
-                        .and_then(|(summary, planes, lw, lh)| {
-                            // Diagnostic: keep the separately stacked planes beside the lighting dump.
-                            if let Some(dir) = std::env::var_os("STREHL_LIGHTING_DUMP") {
-                                let dir = Path::new(&dir).join(format!("detached-{}", pass + 1));
-                                crate::session_lighting_fusion::dump(std::slice::from_ref(&planes), &[], lw, lh, &dir)?;
-                            }
-                            let (placed, placement) = crate::session_lighting_fusion::place_detached(&captured[0], &planes, lw, lh, domain.width, domain.height);
-                            Ok((summary, placed, placement))
-                        });
                     match outcome {
                         Ok((mut summary, placed, placement)) => {
                             eprintln!("session detached layer: '{name}' {} (x{:.3}, {:.1} deg, NCC {:.2})",

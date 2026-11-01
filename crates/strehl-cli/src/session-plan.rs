@@ -455,7 +455,7 @@ impl AutoPlan {
                     p.reason.as_deref().unwrap_or("pose differs")
                 ),
                 Role::DetachedLayer if self.lighting_fusion => format!(
-                    "detached layer, stacked on its own and placed on the anchor after merging: {}",
+                    "detached layer: {}",
                     p.reason.as_deref().unwrap_or("not joined")
                 ),
                 Role::DetachedLayer => format!(
