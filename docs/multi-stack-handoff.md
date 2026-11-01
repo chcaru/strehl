@@ -145,6 +145,17 @@ then a measured spike on multi-observation original-CFA reconstruction (the
 architecture's stated requirement; the earlier single-frame sampler was
 rejected for neutral-detail loss).
 
+**Sixth and seventh slices.** Close-ups placed (x2.9, 176 degrees) but not
+sharper than the anchor at its scale: insertion not built. Group merges run in
+concurrent memory-bounded lanes (bug-4 cached 937 -> 547 s, bit-identical);
+registration iterates. Passes that never join the alignment become detached
+layers (stacked alone, placed by a full-turn global search verified on finer
+structure); layers whose colour appearance differs strongly are reported, not
+blended; and Best result builds on the view most passes share. bug-1 now
+renders its top view from two passes; bug-2 keeps its anchor (iridescent
+alternatives). Next: deliver alternative appearances and other views as extra
+Best result photographs (desktop multi-output), and the original-CFA spike.
+
 ## Mission and user intent
 
 Extend Strehl to use several stacks of the same subject for useful photographic

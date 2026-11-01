@@ -358,3 +358,48 @@ bit-identical.
 **Iterative registration** (`86a036904`). bug-3 104: residual 0.87 -> 0.30 plane
 px and pose agreement 0.30 -> 0.43; bug-4 unchanged (converges in one round).
 Mutation-checked test.
+
+## Seventh slice: detached layers, appearance gate, majority view (2026-11-01)
+
+Commits `abcd8b773`, `9b52bb42e`, `316cd900f`, `d98c6aefa` (and the RAM-default
+`d81a86989`). Inputs read-only under `D:/personal/macro/insects`; caches on D:.
+
+**Generalization failure found.** Best result on bug-1 (4 passes, 1,196 frames)
+and bug-2 (3 passes, 897 frames) kept the anchor alone: every other pass formed
+its own alignment component ("no confirmed wide-baseline seed"). Causes, from
+previews: bug-2's passes are the same region under lighting that turns the
+iridescent wing covers orange in one pass and green in the others, with large
+translations; bug-1's anchor shows the underside and the other passes the top.
+
+**Detached layers.** A pass with no placed frame but matching calibration, ISO
+and aperture is stacked on its own (one-pass sub-session, same merge with plane
+capture, concurrent lanes) and placed on the anchor by the existing FFT
+similarity search on band-passed log luma at 0.5--2% of the canvas width, over
+four quarter-turn pre-rotations (full circle, 1/4..4x), then re-scored on 8--32
+plane px structure with a +-12 px translation search weighted by the square
+root of the overlap. MEASURED (bug-2): the coarse winners were 180-degree
+slivers at NCC 0.80, the true placement 0.59; verified, 102 is placed x1.000 at
+0 degrees (0.37 vs runner-up 0.12) and 103 x0.980 at 2 degrees (0.42 vs 0.16);
+phase correlation independently gives the 102 offset within 6 px. Synthetic
+tests: half turn at 1.6x and quarter turn at 1.3x, relit per channel.
+
+**Appearance gate.** Fusing bug-2's placed layers: partial structural gating
+produced cyan patches; full superposition washed the anchor's orange
+reticulate pattern to a third of its contrast (native crops, author review).
+Log-chromaticity difference on 32 px blocks of the bright subject separates the
+cases by an order of magnitude: bug-4 lighting layers shift <= 0.07 / spread
+<= 0.05, bug-3 pose layer 0.01 / 0.03, bug-2 detached 0.40--0.47 / 0.47--0.49.
+Layers above 0.15 / 0.2 are reported `appearance_differs` and not blended
+(bug-2 Best result: the anchor alone). bug-4 and bug-3 outcomes unchanged.
+
+**Majority view.** bug-1: none of 102/103/104 places on the underside anchor
+(verified 0.05--0.07). Trying each unplaced pass as reference: 103 places on 102
+(0.94 vs 0.06), registers 3.30 -> 0.11 plane px, agreement 0.99, coverage 0.94,
+colour shift 0.01; 104 (closer, rotated) places on neither. Best result now
+builds the photograph on the 102+103 top view and reports 100 as another view
+(`out-auto-03`, 841 s with cached alignments, peak RSS 13.3 GB; author review of
+overview and native crops: no ghosting or seams, 103's green sheen present).
+
+**Open.** Alternative appearances (bug-2) and other views (bug-1 underside, 104)
+are reported, not delivered as extra photographs; delivering them needs
+multi-output Best result in the desktop. Placement costs about 36 s per pair.
