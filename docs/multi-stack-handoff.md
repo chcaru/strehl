@@ -121,6 +121,18 @@ Auto on bug-4 is bit-identical to the anchor-only render. Next: brightness-match
 detail transfer for lighting layers, locally deformable registration, close-up
 insertion.
 
+**Fourth slice (light superposition, pose layers).** Superseding the above:
+lighting layers are now consumed by default through equal-weight light
+superposition after a lighting-independent defocus gate, coarse-to-fine dense
+residual registration and a relit coverage fill; pose-changed passes become
+pose layers, superposed only where they match the relit anchor. On bug-4 this is
+the first combination that beats the anchor alone (background noise -23%,
+detail intact, no seams or holes). On bug-3 the gate drops the blurry merges of
+103/105 and uses 104 where it agrees; the close-ups 100/102 are still unplaced.
+`--anchor-lighting-only` opts out. Next: close-up detail insertion (100/102),
+why some separately merged passes come out blurry (bug-3 103/105, bug-4 105),
+and desktop surfacing of layer outcomes.
+
 ## Mission and user intent
 
 Extend Strehl to use several stacks of the same subject for useful photographic

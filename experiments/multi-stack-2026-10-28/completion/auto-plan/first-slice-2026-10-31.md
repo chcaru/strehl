@@ -209,3 +209,64 @@ include a seam test that fails when the anchor fill is removed (mutation check).
 experiment controls needing private corpus or output-root setup; this slice does
 not touch them. Clippy with toolchain 1.98.0 reports nothing in changed files and
 existing findings in `image_out.rs`, `merge_cmd.rs` and frozen experiment sources.
+
+## Fourth slice: light superposition and pose layers (2026-11-01)
+
+Commit `f967526ab`; release `strehl.exe` SHA256
+`e124d4b97484088bfd8016c70097708aec4758693dd195b28d4deae9f39ef41a` (the commit
+adds only a clippy type alias after this build). 32 threads, 32 GiB limit.
+
+**Diagnosis.** MEASURED on the bug-4 dump: group 4 (pass 105) is out of focus;
+the other lightings differ mainly in where speculars fall. Tile NCC on
+band-passed log brightness found residual misregistration between merged groups
+after the joint solve: median 0.78/0.80/2.62 plane px (p90 1.1/1.4/4.9) for
+100/103/104. Averaging without registration measurably softened hairs
+(Python prototype, `nowarp` arm).
+
+**Method.** Light adds linearly, so equal-weight averaging of brightness
+normalised lighting groups is the "every lamp on" image. Per layer: defocus
+gate (fine band sigma 0.7 / coarse band sigma 2.8 contrast ratio against the
+anchor; lighting scales both, defocus only the fine; drop below 0.75 or fine
+ratio below 0.3); coarse-to-fine dense residual field (quarter-resolution seed
+search, full-resolution refinement, neighbourhood-median outlier rejection,
+smooth fill) and bicubic warp; uncovered canvas predicted as anchor x smooth
+per-channel ratio, with a 24 px coverage feather; anchor near-clipped
+highlights kept. Pose layers additionally yield to the relit anchor where the
+smoothed log difference exceeds 0.1--0.25, with the ratio refitted on agreeing
+pixels.
+
+**Tests.** Six fusion tests; mutation checks: removing registration fails the
+misregistration test, removing both fill and feather fails the seam test,
+removing the highlight keep fails the highlight test, removing the pose gate
+fails the ghost test (ghost error 1.81). The seam test first asserted equality
+with full coverage far from the edge; a smooth ratio cannot extrapolate a
+lighting ramp, so it now asserts continuity across the edge. 180 CLI session
+tests pass.
+
+**bug-4** (`out-auto-08`, 2,994 s including a one-off re-alignment after the
+cache-key change; peak RSS 26.9 GB). Plan 5 of 5. MEASURED: residual
+0.78/0.81/2.60 -> 0.13/0.09/0.30 plane px after warping (same estimator:
+convergence, not independent accuracy); 105 dropped (fine/coarse 0.38).
+Against the anchor-only photograph on one frozen display transform: background
+high-pass SD 135.5 -> 104.6; mean -7% (darker speculars averaged with other
+lights). Native 400 px crops (spec, c0, glow, head, hairs; author review, not
+independent): hairs and edges as crisp as the anchor's, specular texture
+intact, no holes, haze or seams, more even light at the head. The offline v5
+development (`out-dev-v5`, single-level registration) differs from
+`out-auto-08` by mean 7/65535.
+
+**bug-3 seven passes** (`out7-auto-02`, 2,858 s). Plan 5 of 7: 107 anchor, 106
+combined, 103/104/105 pose layers, 100/102 unplaced. MEASURED: 105 and 103
+dropped as defocused (0.43, 0.22; their separate merges are visibly blurry),
+104 superposed with residual 11.16 -> 0.87 plane px and agreement 0.30 (6.9%
+of the canvas). No ghosting in native crops at the largest changes; the canvas
+is 4 px smaller than `out7-auto-01`, so pixel differences against it are not
+meaningful.
+
+**Cache identity.** Restoring sources with `git checkout` converted them to
+CRLF and changed every include_bytes hash, forcing a full re-alignment. The
+alignment binding and the consumer's alignment and renderer keys now normalise
+CRLF to LF (other hashed sites, such as mosaic and transfer caches, do not yet).
+
+**Open.** Why some separately merged passes come out blurry (bug-3 103/105,
+bug-4 105) is not diagnosed; close-up passes are still unplaced.
