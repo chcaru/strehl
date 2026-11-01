@@ -1165,12 +1165,62 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                     captured = loaded;
                 }
                 let merge_groups = if summaries.is_empty() { groups.as_slice() } else { &[] };
-                for (index, mask) in merge_groups.iter().enumerate() {
-                    eprintln!("session lighting fusion: merging lighting group {}/{}", index + 1, groups.len());
-                    let group_excluded: Vec<bool> = mask.iter().map(|&m| !m).collect();
-                    let mut slot = None;
-                    summaries.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &frame_gains, &group_excluded, &reconstruction_focus, domain, None, &destination, Some(&mut slot))?);
-                    captured.push(slot.context("lighting group produced no planes")?);
+                // One group merge keeps only about a quarter of the CPU busy, so
+                // independent groups (disjoint passes and sources) merge
+                // concurrently. Each lane receives an equal share of the memory
+                // budget and threads and its own resident cache, so the sum of
+                // lane reservations stays within --memory-limit-gib.
+                let lanes = lighting_merge_lanes(args.resources.memory_limit_gib, merge_groups.len());
+                if lanes <= 1 {
+                    for (index, mask) in merge_groups.iter().enumerate() {
+                        eprintln!("session lighting fusion: merging lighting group {}/{}", index + 1, groups.len());
+                        let group_excluded: Vec<bool> = mask.iter().map(|&m| !m).collect();
+                        let mut slot = None;
+                        summaries.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &frame_gains, &group_excluded, &reconstruction_focus, domain, None, &destination, Some(&mut slot))?);
+                        captured.push(slot.context("lighting group produced no planes")?);
+                    }
+                } else {
+                    eprintln!("session lighting fusion: merging {} lighting groups in {lanes} concurrent lanes", merge_groups.len());
+                    let mut lane_args = args.clone();
+                    lane_args.resources.memory_limit_gib = args.resources.memory_limit_gib / lanes as f64;
+                    lane_args.resources.threads = args.resources.threads.div_ceil(lanes).max(1);
+                    let lane_budget = lane_args.resources.cache_budget()?;
+                    let results: Vec<std::sync::Mutex<Option<Result<(Value, crate::session_lighting_fusion::GroupPlanes)>>>> =
+                        (0..merge_groups.len()).map(|_| std::sync::Mutex::new(None)).collect();
+                    let next = std::sync::atomic::AtomicUsize::new(0);
+                    let lane_cache_root = cache.root().to_path_buf();
+                    rayon::scope(|scope| {
+                        for _ in 0..lanes {
+                            scope.spawn(|_| {
+                                let mut lane_cache = match SourceCache::new(&lane_cache_root, &session, lane_budget) {
+                                    Ok(c) => c,
+                                    Err(error) => {
+                                        let index = next.fetch_add(merge_groups.len(), std::sync::atomic::Ordering::SeqCst);
+                                        if index < merge_groups.len() { *results[index].lock().unwrap() = Some(Err(anyhow::anyhow!("{error}"))); }
+                                        return;
+                                    }
+                                };
+                                loop {
+                                    let index = next.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                                    if index >= merge_groups.len() { break; }
+                                    eprintln!("session lighting fusion: merging lighting group {}/{}", index + 1, groups.len());
+                                    let group_excluded: Vec<bool> = merge_groups[index].iter().map(|&m| !m).collect();
+                                    let outcome = (|| -> Result<_> {
+                                        let mut slot = None;
+                                        let summary = render(&lane_args, &session, &identities, &metadata, &alignment, &mut lane_cache, &calibrations, &photometric_gains, &frame_gains, &group_excluded, &reconstruction_focus, domain, None, &destination, Some(&mut slot))?;
+                                        Ok((summary, slot.context("lighting group produced no planes")?))
+                                    })();
+                                    *results[index].lock().unwrap() = Some(outcome);
+                                }
+                            });
+                        }
+                    });
+                    for (index, result) in results.into_iter().enumerate() {
+                        let (summary, planes) = result.into_inner().unwrap()
+                            .with_context(|| format!("lighting group {} was not merged", index + 1))??;
+                        summaries.push(summary);
+                        captured.push(planes);
+                    }
                 }
                 ensure!(captured[0].valid.iter().all(|&v| v), "the anchor lighting group does not cover the canvas");
                 if let Some(dir) = std::env::var_os("STREHL_LIGHTING_DUMP") {
@@ -1189,6 +1239,11 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                 let mut report = json!({"lighting_fusion": fusion, "lighting_groups": summaries});
                 for key in ["recipe", "primary_pass", "reference_pass"] {
                     if let Some(value) = summaries.first().and_then(|s| s.get(key)) { report[key] = value.clone(); }
+                }
+                // Lanes split the requested resources; record what was asked for.
+                if report["recipe"].is_object() {
+                    report["recipe"]["workers"] = json!(args.resources.threads);
+                    report["recipe"]["memory_limit_gib"] = json!(args.resources.memory_limit_gib);
                 }
                 report["sources"] = json!(summaries.iter().filter_map(|s| s["sources"].as_u64()).sum::<u64>());
                 outputs.push(write_fused(args, &session, &alignment, &calibrations, domain, planes, report, &destination)?);
@@ -1398,6 +1453,25 @@ fn cached_alignment(
             .with_context(|| format!("publishing alignment cache: {error}"))?;
     }
     Ok(alignment)
+}
+
+/// Concurrent lighting-group merges that fit the memory budget: one merge
+/// reserves about 8 GiB on a 24-megapixel canvas, so each lane needs 9 GiB.
+fn lighting_merge_lanes(memory_limit_gib: f64, groups: usize) -> usize {
+    if groups <= 1 || !memory_limit_gib.is_finite() {
+        return 1;
+    }
+    ((memory_limit_gib / 9.0).floor() as usize).clamp(1, groups)
+}
+
+#[cfg(test)]
+#[test]
+fn lighting_merge_lanes_fit_the_memory_budget() {
+    assert_eq!(lighting_merge_lanes(32.0, 5), 3);
+    assert_eq!(lighting_merge_lanes(16.0, 5), 1);
+    assert_eq!(lighting_merge_lanes(64.0, 2), 2);
+    assert_eq!(lighting_merge_lanes(64.0, 1), 1);
+    assert_eq!(lighting_merge_lanes(f64::NAN, 4), 1);
 }
 
 fn renderer_source_hash() -> String {
