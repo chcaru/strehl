@@ -104,6 +104,23 @@ in-pass setting splits. Evidence, commands and limits:
 [first-slice-2026-10-31.md](../experiments/multi-stack-2026-10-28/completion/auto-plan/first-slice-2026-10-31.md).
 The complete automatic best-result workflow remains required future work.
 
+**Third slice (bug-4, five passes, 1,231 frames).** All frames now place in one
+component (identity-seed retry for intra-pass pairs the coarse ladder refuses;
+exposure-relative contrast floor). Per-frame brightness is solved jointly over
+geometry-confirmed overlaps (residual 0.0004 ln over 11,042 overlaps), replacing
+per-pass gains, so in-pass lighting drift and shutter differences combine without
+manual classification. A direct post-placement residual check replaces the support
+proxy as the pose gate (relit 104/105: 1.0/1.4 guide px, consistent). Bug-4's
+other four passes are lit differently in *shape* (cross spread 0.27--0.35 vs
+about 0.01 within a pass); they become `lighting_layer` roles. Four blends of
+separately merged lighting groups were measured against the anchor's developed
+photograph and **none beat it** (haze, glow, seams; then dark holes at speculars
+and softer grain). Lighting layers are therefore reported but not consumed by
+default; `--lighting-fusion` enables the experimental detail-only blend. Default
+Auto on bug-4 is bit-identical to the anchor-only render. Next: brightness-matched
+detail transfer for lighting layers, locally deformable registration, close-up
+insertion.
+
 ## Mission and user intent
 
 Extend Strehl to use several stacks of the same subject for useful photographic

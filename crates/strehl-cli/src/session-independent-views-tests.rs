@@ -233,6 +233,7 @@ fn args() -> StackArgs {
         precision_weights: false,
         contribution_maps: false,
         focus_evidence: false,
+        lighting_fusion: false,
         reproducibility: false,
         original_cfa_reconstruction: false,
         native_single: false,

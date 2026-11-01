@@ -20,6 +20,7 @@ use strehl_core::align::{
     Resampler, Similarity, StageFit, align_pair, graph_stats, lift_box_decimated_similarity,
     refine_pair_observed, solve_global_in_tracks, tile_grid,
 };
+use crate::session_frame_photometry::{self as frame_photometry, EdgePhotometry, FramePhotometry};
 use strehl_core::align_global::{GlobalSearchConfig, global_similarity_candidates};
 use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma};
 use strehl_core::warpmap::{FrameWarp, Provenance, StackIdentity, WarpMap};
@@ -308,6 +309,27 @@ pub struct PassAlignmentReport {
     /// must not consume it (ghosting). Ordinary passes are never flagged.
     #[serde(default = "default_true")]
     pub geometry_consistent: bool,
+    /// Multiplier applied to the featureless-tile contrast floor for this pass.
+    #[serde(default = "default_one")]
+    pub contrast_scale: f32,
+    /// Remaining local displacement (guide px) of the pass's focus-nearest
+    /// frame against the reference frame after placement.
+    #[serde(default)]
+    pub geometric_residual: Option<crate::session_geometry_check::GeometricResidual>,
+    /// Median spatial spread of block brightness ratios on edges to the anchor
+    /// pass (natural log). Large values mean shading, not only level, differs.
+    #[serde(default)]
+    pub cross_photometric_spread: Option<f64>,
+    /// Median absolute residual of those edges after the per-frame solve.
+    #[serde(default)]
+    pub cross_photometric_residual: Option<f64>,
+    /// Solved per-frame log brightness range within the pass.
+    #[serde(default)]
+    pub log_brightness_range: Option<[f64; 2]>,
+}
+
+fn default_one() -> f32 {
+    1.0
 }
 
 fn default_true() -> bool {
@@ -318,6 +340,11 @@ fn default_true() -> bool {
 /// pass. Bug-3 subsets: a compatible pass measured 1.17; pose-changed passes
 /// 0.15-0.28. An engineering bar, not a calibrated constant.
 pub const WIDE_SUPPORT_RATIO: f64 = 0.5;
+
+/// Largest median post-placement displacement (guide px) for a wide-baseline
+/// pass; the direct test, preferred over the support proxy whenever measurable.
+/// Bug-3 pose-changed passes measured about 6.5; bug-4's relit 104 about 0.5.
+pub const WIDE_RESIDUAL_GUIDE_PX: f64 = 1.5;
 
 fn median_usize(mut values: Vec<usize>) -> Option<f64> {
     values.sort_unstable();
@@ -357,6 +384,11 @@ pub struct SessionAlignmentReport {
     /// Wide-baseline proposals for passes without an accepted cross probe.
     #[serde(default)]
     pub wide_baseline: Vec<WideBaselineReport>,
+    /// Per-frame brightness relative to the reference frame, from overlaps.
+    #[serde(default)]
+    pub frame_photometry: Option<FramePhotometry>,
+    #[serde(default)]
+    pub photometric_edges: Vec<EdgePhotometry>,
 }
 
 /// One global-search attempt. Candidates are proposals; only `validated`
@@ -437,6 +469,9 @@ fn binding(
     let mut algorithm = Sha256::new();
     algorithm.update(include_bytes!("session-align.rs"));
     algorithm.update(include_bytes!("../../strehl-core/src/align.rs"));
+    algorithm.update(include_bytes!("../../strehl-core/src/align-global.rs"));
+    algorithm.update(include_bytes!("session-frame-photometry.rs"));
+    algorithm.update(include_bytes!("session-geometry-check.rs"));
     algorithm.update(include_bytes!("../../strehl-core/src/plane.rs"));
     algorithm.update(include_bytes!("../../strehl-core/src/warpmap.rs"));
     algorithm.update(include_bytes!("../../strehl-raw/src/lib.rs"));
@@ -601,7 +636,7 @@ impl SessionAlignment {
                     && edge.j < session.len()
                     && matches!(
                         edge.stage.as_str(),
-                        "guide" | "native" | "guide-wide" | "native-wide"
+                        "guide" | "native" | "guide-wide" | "native-wide" | "guide-identity"
                     )
                     && seen.insert((edge.i, edge.j, edge.stage.as_str())),
                 "alignment edge report has invalid or duplicate indices"
@@ -698,6 +733,8 @@ struct Guide {
     data: Vec<f32>,
     geometry: PlaneGeometry,
     pyramid: AlignPyramid,
+    /// Black-subtracted clipping level in guide units.
+    ceiling: f32,
 }
 impl Guide {
     fn bytes(&self) -> usize {
@@ -926,9 +963,63 @@ struct PlaneInputs<'a> {
     geometry: PlaneGeometry,
     factor: usize,
     guide_config: AlignConfig,
+    /// Per-frame multiplier on the featureless-tile contrast floor (DN^2).
+    /// NCC is gain-invariant but the floor is absolute, so a substantially
+    /// darker pass would lose tiles to exposure alone. Empty means 1.
+    contrast_scale: Vec<f32>,
+}
+
+/// Passes at least this fraction of the brightest pass's signal level keep the
+/// unscaled contrast floor, so equal-exposure sessions are measured unchanged.
+const CONTRAST_SCALE_ONSET: f32 = 0.8;
+
+/// Robust bright-signal level of a guide: its 99th percentile on a sparse sample.
+fn signal_level(data: &[f32]) -> f32 {
+    let mut sample: Vec<f32> = data.iter().step_by(7).copied().filter(|v| v.is_finite()).collect();
+    if sample.is_empty() {
+        return 0.0;
+    }
+    let k = (sample.len() * 99 / 100).min(sample.len() - 1);
+    *sample.select_nth_unstable_by(k, f32::total_cmp).1
+}
+
+/// Per-pass contrast-floor multipliers from per-frame guide levels.
+fn contrast_scales(session: &ResolvedSession, levels: &[f32]) -> Vec<f32> {
+    let pass_levels: Vec<f32> = session
+        .passes
+        .iter()
+        .map(|pass| {
+            let mut v: Vec<f32> = levels[pass.global_range.clone()].to_vec();
+            v.sort_by(f32::total_cmp);
+            v.get(v.len() / 2).copied().unwrap_or(0.0)
+        })
+        .collect();
+    let brightest = pass_levels.iter().copied().fold(0.0f32, f32::max);
+    pass_levels
+        .iter()
+        .map(|&level| {
+            let ratio = if brightest > 0.0 { level / brightest } else { 1.0 };
+            if ratio.is_finite() && ratio > 0.0 && ratio < CONTRAST_SCALE_ONSET {
+                ratio * ratio
+            } else {
+                1.0
+            }
+        })
+        .collect()
 }
 
 impl PlaneInputs<'_> {
+    /// Estimator for pair `(i, j)` with the darker frame's contrast floor.
+    fn pair_config(&self, base: &AlignConfig, i: usize, j: usize) -> AlignConfig {
+        let mut cfg = base.clone();
+        let scale = |k: usize| self.contrast_scale.get(k).copied().unwrap_or(1.0);
+        let s = scale(i).min(scale(j));
+        if s < 1.0 {
+            cfg.min_contrast *= s;
+        }
+        cfg
+    }
+
     fn guide(
         &self,
         index: usize,
@@ -955,10 +1046,12 @@ impl PlaneInputs<'_> {
             &self.guide_config,
         )
         .context("guide is too small for the configured pyramid")?;
+        let levels = source.levels();
         let guide = Guide {
             data,
             geometry,
             pyramid,
+            ceiling: (levels.white - levels.black).max(1.0),
         };
         ensure!(guide.bytes() == bytes, "guide accounting mismatch");
         Ok(planes.insert(index, guide, bytes))
@@ -1107,6 +1200,30 @@ fn receipt(
 struct PairMeasurement {
     receipt: EdgeReceipt,
     edge: Option<AlignEdge>,
+    /// Relative brightness over the overlap, from the accepted guide fit.
+    photometry: Option<EdgePhotometry>,
+}
+
+/// Block-mean brightness ratio through an accepted guide fit (guide-centred).
+fn guide_photometry(
+    i: usize,
+    j: usize,
+    reference: PlaneRef<'_>,
+    moving: PlaneRef<'_>,
+    a: &Guide,
+    b: &Guide,
+    result: &std::result::Result<StageFit, AlignFailure>,
+) -> Option<EdgePhotometry> {
+    let fit = result.as_ref().ok()?;
+    let (log_ratio, spread, blocks) =
+        frame_photometry::measure(reference, moving, fit.similarity(), a.ceiling, b.ceiling)?;
+    Some(EdgePhotometry {
+        i,
+        j,
+        log_ratio,
+        spread,
+        blocks,
+    })
 }
 
 /// Seeds magnifying beyond this are measured with the more magnified frame as
@@ -1118,6 +1235,8 @@ const ORIENTATION_SWAP_SCALE: f64 = 1.25;
 /// initializer use this; ordinary pairs keep [`ORIENTATION_SWAP_SCALE`].
 const WIDE_ORIENTATION_SWAP_SCALE: f64 = 1.0;
 const WIDE_STAGE_GUIDE: &str = "guide-wide";
+/// Intra-pass guide pair measured from identity after the coarse ladder failed.
+const IDENTITY_STAGE_GUIDE: &str = "guide-identity";
 
 /// Direct fine refinement from `seed` (reference -> moving, centred). When the
 /// seed magnifies strongly, measure moving -> reference and invert, so the
@@ -1189,7 +1308,7 @@ fn measure_guides_seeded(
                     let result = refine_oriented(
                         reference,
                         moving,
-                        &inputs.guide_config,
+                        &inputs.pair_config(&inputs.guide_config, *i, *j),
                         *seed,
                         WIDE_ORIENTATION_SWAP_SCALE,
                     );
@@ -1202,7 +1321,12 @@ fn measure_guides_seeded(
                         inputs.geometry,
                         inputs.factor,
                     );
-                    PairMeasurement { receipt, edge }
+                    let photometry = guide_photometry(*i, *j, reference, moving, a, b, &result);
+                    PairMeasurement {
+                        receipt,
+                        edge,
+                        photometry,
+                    }
                 })
                 .collect::<Vec<_>>()
         });
@@ -1251,7 +1375,7 @@ fn wide_baseline_seed(
             let result = refine_oriented(
                 reference,
                 moving,
-                &inputs.guide_config,
+                &inputs.pair_config(&inputs.guide_config, anchor, frame),
                 candidate.transform,
                 WIDE_ORIENTATION_SWAP_SCALE,
             );
@@ -1353,7 +1477,8 @@ fn measure_guides(
                         PlaneRef::from_geometry(&a.data, a.geometry).expect("constructed guide");
                     let moving =
                         PlaneRef::from_geometry(&b.data, b.geometry).expect("constructed guide");
-                    let cfg = &inputs.guide_config;
+                    let cfg = &inputs.pair_config(&inputs.guide_config, *i, *j);
+                    let mut identity_retry = false;
                     let result = match tile_grid(
                         reference,
                         cfg.fine_tile,
@@ -1361,30 +1486,57 @@ fn measure_guides(
                         cfg.fine_grid.1,
                         cfg.margin,
                     ) {
-                        Some(spots) => align_pair(
-                            AlignFrame {
-                                plane: reference,
-                                pyramid: &a.pyramid,
-                            },
-                            AlignFrame {
-                                plane: moving,
-                                pyramid: &b.pyramid,
-                            },
-                            &spots,
-                            cfg,
-                        ),
+                        Some(spots) => {
+                            let ladder = align_pair(
+                                AlignFrame {
+                                    plane: reference,
+                                    pyramid: &a.pyramid,
+                                },
+                                AlignFrame {
+                                    plane: moving,
+                                    pyramid: &b.pyramid,
+                                },
+                                &spots,
+                                cfg,
+                            );
+                            // The coarse ladder only brings the fine stage into
+                            // capture range. Within one sweep identity already is,
+                            // and a dark or sparse frame can starve the 24-tile
+                            // coarse grid; retry the direct fine stage from it.
+                            match ladder {
+                                Err(AlignFailure::CoarseStageFailed { .. })
+                                    if *purpose == PairPurpose::IntraPass =>
+                                {
+                                    identity_retry = true;
+                                    refine_pair_observed(
+                                        reference,
+                                        moving,
+                                        &spots,
+                                        cfg,
+                                        Similarity::IDENTITY,
+                                        None,
+                                    )
+                                }
+                                other => other,
+                            }
+                        }
                         None => Err(AlignFailure::GridTooSmall),
                     };
                     let (receipt, edge) = receipt(
                         *i,
                         *j,
                         *purpose,
-                        "guide",
+                        if identity_retry { IDENTITY_STAGE_GUIDE } else { "guide" },
                         &result,
                         inputs.geometry,
                         inputs.factor,
                     );
-                    PairMeasurement { receipt, edge }
+                    let photometry = guide_photometry(*i, *j, reference, moving, a, b, &result);
+                    PairMeasurement {
+                        receipt,
+                        edge,
+                        photometry,
+                    }
                 })
                 .collect::<Vec<_>>()
         });
@@ -1590,7 +1742,7 @@ fn measure_native(
         })
         .collect();
     let mut measured = Vec::with_capacity(pairs.len());
-    let cfg = config.estimator(false);
+    let native_config = config.estimator(false);
     for batch in pairs.chunks(workers) {
         let mut jobs = Vec::with_capacity(batch.len());
         for &(edge, purpose, wide) in batch {
@@ -1609,6 +1761,7 @@ fn measure_native(
                         .expect("constructed native plane");
                     let moving = PlaneRef::from_geometry(&b.data, b.geometry)
                         .expect("constructed native plane");
+                    let cfg = inputs.pair_config(&native_config, edge.i, edge.j);
                     let swap_above = if *wide {
                         WIDE_ORIENTATION_SWAP_SCALE
                     } else {
@@ -1639,7 +1792,11 @@ fn measure_native(
                         inputs.geometry,
                         1,
                     );
-                    PairMeasurement { receipt, edge }
+                    PairMeasurement {
+                        receipt,
+                        edge,
+                        photometry: None,
+                    }
                 })
                 .collect::<Vec<_>>()
         });
@@ -1711,13 +1868,15 @@ pub fn align_session(
         .max(geometry.height)
         .div_ceil(config.guide_max_side)
         .max(1);
-    let inputs = PlaneInputs {
+    let mut inputs = PlaneInputs {
         session,
         identities,
         geometry,
         factor,
         guide_config: config.estimator(true),
+        contrast_scale: Vec::new(),
     };
+    let mut levels = Vec::with_capacity(session.len());
     let mut guides = BoundedPlanes::new(memory.guide_cache_reserved_bytes);
     eprintln!(
         "session alignment: preparing {} sources; reserved {:.2} GiB of {:.2} GiB, {} native pair workers",
@@ -1745,12 +1904,28 @@ pub fn align_session(
             item.path.display()
         );
         drop(cached);
-        let _ = inputs.guide(i, cache, &mut guides)?;
+        let guide = inputs.guide(i, cache, &mut guides)?;
+        levels.push(signal_level(&guide.data));
+        drop(guide);
         if (i + 1) % 100 == 0 {
             eprintln!(
                 "session alignment: prepared {}/{} original CFA sources",
                 i + 1,
                 session.len()
+            );
+        }
+    }
+    let pass_contrast_scale = contrast_scales(session, &levels);
+    inputs.contrast_scale = session
+        .frames
+        .iter()
+        .map(|frame| pass_contrast_scale[frame.pass_index])
+        .collect();
+    for (pass, scale) in pass_contrast_scale.iter().enumerate() {
+        if *scale < 1.0 {
+            eprintln!(
+                "session alignment: pass '{}' is darker than the brightest pass; contrast floor x{scale:.3}",
+                session.passes[pass].name
             );
         }
     }
@@ -1927,6 +2102,51 @@ pub fn align_session(
         .collect();
     let pair_candidates =
         focus_candidates(session, &poses, reference_pass, config.focus_step_fraction);
+    // Per-frame photometry over geometry-confirmed overlaps only.
+    let confirmed: BTreeSet<(usize, usize)> = edges.iter().map(|e| (e.i, e.j)).collect();
+    let photometric_edges: Vec<EdgePhotometry> = guide_measurements
+        .iter()
+        .filter_map(|m| m.photometry)
+        .filter(|p| {
+            confirmed.contains(&(p.i, p.j)) && poses[p.i].is_some() && poses[p.j].is_some()
+        })
+        .collect();
+    let photometry = frame_photometry::solve(session.len(), reference_frame, &photometric_edges);
+    eprintln!(
+        "session alignment: per-frame photometry from {} overlaps, residual {:.4} ln",
+        photometry.edges_used, photometry.residual_rms
+    );
+    // Direct post-placement geometry check of each non-reference pass: the
+    // reference frame against the pass's focus-nearest placed frame.
+    let mut check_planes = BoundedPlanes::new(memory.guide_cache_reserved_bytes.max(1 << 28));
+    let mut geometric_residuals = vec![None; session.passes.len()];
+    for (index, pass) in session.passes.iter().enumerate() {
+        if index == reference_pass {
+            continue;
+        }
+        let Some(frame) = pass
+            .global_range
+            .clone()
+            .filter_map(|k| poses[k].map(|p| (k, p.scale().ln().abs())))
+            .min_by(|a, b| a.1.total_cmp(&b.1))
+            .map(|(k, _)| k)
+        else {
+            continue;
+        };
+        let pose = poses[frame].expect("placed frame");
+        let a = inputs.guide(reference_frame, cache, &mut check_planes)?;
+        let b = inputs.guide(frame, cache, &mut check_planes)?;
+        let reference = PlaneRef::from_geometry(&a.data, a.geometry).expect("constructed guide");
+        let moving = PlaneRef::from_geometry(&b.data, b.geometry).expect("constructed guide");
+        // Full-plane centred placement expressed on the guide lattice.
+        let t = Similarity {
+            a: pose.a,
+            b: pose.b.scale(1.0 / inputs.factor as f64),
+        };
+        geometric_residuals[index] = crate::session_geometry_check::measure(reference, moving, t);
+        drop((a, b));
+    }
+    drop(check_planes);
     let stats = graph_stats(&edges, session.len());
     let placed = poses.iter().filter(|pose| pose.is_some()).count();
     let anchor_edges = edges
@@ -1977,6 +2197,43 @@ pub fn align_session(
                 .zip(scale(session.passes[reference_pass].global_range.clone()))
                 .map(|(s, anchor)| s / anchor);
             let wide_baseline = wide_seeds.contains_key(&index);
+            let anchor_range = &session.passes[reference_pass].global_range;
+            let cross_photometry: Vec<&EdgePhotometry> = if index == reference_pass {
+                Vec::new()
+            } else {
+                photometric_edges
+                    .iter()
+                    .filter(|p| {
+                        (pass.global_range.contains(&p.i) && anchor_range.contains(&p.j))
+                            || (pass.global_range.contains(&p.j) && anchor_range.contains(&p.i))
+                    })
+                    .collect()
+            };
+            let cross_photometric_spread =
+                median(cross_photometry.iter().map(|p| p.spread).collect());
+            let cross_photometric_residual = median(
+                cross_photometry
+                    .iter()
+                    .filter_map(|p| {
+                        Some(
+                            (photometry.log_brightness[p.j]? - photometry.log_brightness[p.i]?
+                                - p.log_ratio)
+                                .abs(),
+                        )
+                    })
+                    .collect(),
+            );
+            let brightness: Vec<f64> = pass
+                .global_range
+                .clone()
+                .filter_map(|k| photometry.log_brightness[k])
+                .collect();
+            let log_brightness_range = (!brightness.is_empty()).then(|| {
+                [
+                    brightness.iter().copied().fold(f64::INFINITY, f64::min),
+                    brightness.iter().copied().fold(f64::NEG_INFINITY, f64::max),
+                ]
+            });
             PassAlignmentReport {
                 pass_index: index,
                 name: pass.name.clone(),
@@ -1991,7 +2248,15 @@ pub fn align_session(
                 cross_support_ratio,
                 relative_scale,
                 geometry_consistent: !wide_baseline
-                    || cross_support_ratio.is_some_and(|r| r >= WIDE_SUPPORT_RATIO),
+                    || match geometric_residuals[index] {
+                        Some(residual) => residual.median <= WIDE_RESIDUAL_GUIDE_PX,
+                        None => cross_support_ratio.is_some_and(|r| r >= WIDE_SUPPORT_RATIO),
+                    },
+                geometric_residual: geometric_residuals[index],
+                contrast_scale: pass_contrast_scale[index],
+                cross_photometric_spread,
+                cross_photometric_residual,
+                log_brightness_range,
             }
         })
         .collect();
@@ -2025,6 +2290,8 @@ pub fn align_session(
         source_disk_hits: cache_stats.disk_hits - initial_cache_stats.disk_hits,
         elapsed_seconds: started.elapsed().as_secs_f64(),
         wide_baseline: wide_reports,
+        frame_photometry: Some(photometry),
+        photometric_edges,
     };
     let map = WarpMap::new(Provenance { stack: StackIdentity::from_paths("multi-stack session", &session.paths())?, strategy: GENERATION.into(), heldout_px: None, cycle_floor_px: None, reference: reference_frame, note: "Direct native-green pair measurements; explicit per-pass tracks; common reference gauge. Geometry focus candidates remain unvalidated. Camera model/decoded geometry checked; physical body identity is not established.".into() }, geometry, resampler, poses.into_iter().map(|pose| pose.map_or_else(|| FrameWarp::Refused("outside reference's measured edge component".into()), FrameWarp::Placed)).collect());
     eprintln!(
@@ -2162,6 +2429,86 @@ mod tests {
             width: 512,
             height: 384,
         }
+    }
+
+    /// Diagnostic only: `STREHL_PAIR_TRACE_DIR` holds two real ARWs (copies).
+    /// Traces the guide estimator's termination at several contrast floors.
+    #[test]
+    #[ignore = "requires private RAW copies"]
+    fn session_align_trace_real_guide_pair() {
+        let Some(dir) = std::env::var_os("STREHL_PAIR_TRACE_DIR") else {
+            return;
+        };
+        let dir = PathBuf::from(dir);
+        let session = SessionSpec {
+            passes: vec![PassSpec {
+                name: "pair".into(),
+                directories: vec![dir.clone()],
+            }],
+            ..Default::default()
+        }
+        .resolve_from(&dir)
+        .unwrap();
+        let identities = session.hash_sources(true).unwrap();
+        let cache_dir = std::env::temp_dir().join(format!("strehl-pair-trace-{}", std::process::id()));
+        let mut cache = SourceCache::new(&cache_dir, &session, 2 << 30).unwrap();
+        let config = SessionAlignConfig::default();
+        let first = source(0, &session, &identities, &mut cache).unwrap();
+        let geometry = first.geometry();
+        drop(first);
+        let factor = geometry.width.max(geometry.height).div_ceil(config.guide_max_side);
+        let inputs = PlaneInputs {
+            session: &session,
+            identities: &identities,
+            geometry,
+            factor,
+            guide_config: config.estimator(true),
+            contrast_scale: Vec::new(),
+        };
+        let mut planes = BoundedPlanes::new(1 << 30);
+        let a = inputs.guide(0, &mut cache, &mut planes).unwrap();
+        let b = inputs.guide(1, &mut cache, &mut planes).unwrap();
+        eprintln!("levels {} {}", signal_level(&a.data), signal_level(&b.data));
+        for scale in [1.0f32, 0.1, 0.01] {
+            let mut cfg = config.estimator(true);
+            cfg.min_contrast *= scale;
+            let reference = PlaneRef::from_geometry(&a.data, a.geometry).unwrap();
+            let moving = PlaneRef::from_geometry(&b.data, b.geometry).unwrap();
+            let spots =
+                tile_grid(reference, cfg.fine_tile, cfg.fine_grid.0, cfg.fine_grid.1, cfg.margin)
+                    .unwrap();
+            let mut seen = None;
+            let mut observe = |t: &strehl_core::align::PairTrace| {
+                seen = Some(format!("{:?}", t.termination));
+            };
+            let result = strehl_core::align::align_pair_observed(
+                AlignFrame { plane: reference, pyramid: &a.pyramid },
+                AlignFrame { plane: moving, pyramid: &b.pyramid },
+                &spots,
+                &cfg,
+                Some(&mut observe),
+            );
+            eprintln!(
+                "contrast x{scale}: {} -> {:?}",
+                seen.unwrap_or_default(),
+                result.map(|f| (f.used, f.rms, f.rejected))
+            );
+        }
+    }
+
+    #[test]
+    fn session_align_contrast_floor_scales_only_substantially_darker_passes() {
+        let fixture = Fixture::new(&[2, 2, 2]);
+        // Pass levels 1000, 900 (within the onset band) and 400.
+        let levels = [1000.0, 1000.0, 900.0, 900.0, 400.0, 400.0];
+        let scales = contrast_scales(&fixture.session, &levels);
+        assert_eq!(scales[0], 1.0);
+        assert_eq!(scales[1], 1.0, "a 10% darker pass keeps the exact floor");
+        assert!((scales[2] - 0.16).abs() < 1e-6);
+        // Equal levels are untouched; a degenerate session does not divide by zero.
+        assert_eq!(contrast_scales(&fixture.session, &[5.0; 6]), vec![1.0; 3]);
+        assert_eq!(contrast_scales(&fixture.session, &[0.0; 6]), vec![1.0; 3]);
+        assert!((signal_level(&(0..1000).map(|v| v as f32).collect::<Vec<_>>()) - 987.0).abs() < 10.0);
     }
 
     #[test]
@@ -2417,6 +2764,7 @@ mod tests {
             geometry,
             factor: 2,
             guide_config: config.estimator(true),
+            contrast_scale: Vec::new(),
         };
         let guide_geometry = PlaneGeometry {
             width: 256,
@@ -2544,6 +2892,11 @@ mod tests {
                         cross_support_ratio: None,
                         relative_scale: None,
                         geometry_consistent: true,
+                        contrast_scale: 1.0,
+                        geometric_residual: None,
+                        cross_photometric_spread: None,
+                        cross_photometric_residual: None,
+                        log_brightness_range: None,
                     }
                 })
                 .collect(),
@@ -2555,6 +2908,8 @@ mod tests {
             source_disk_hits: 0,
             elapsed_seconds: 0.0,
             wide_baseline: Vec::new(),
+            frame_photometry: None,
+            photometric_edges: Vec::new(),
         };
         let map = WarpMap::new(
             Provenance {

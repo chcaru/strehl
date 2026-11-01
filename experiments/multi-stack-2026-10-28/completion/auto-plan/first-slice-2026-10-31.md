@@ -143,3 +143,65 @@ native crops: coherent subject, no ghosting or seams.
 (no single-pass comparison yet); use of pose-changed passes (needs locally
 deformable registration with its own validation); close-up insertion; cross-ISO
 or aperture pooling; independent review.
+
+## Third slice: bug-4, per-frame photometry and lighting layers
+
+Input: `D:/personal/macro/insects/bug-4` (read-only), five passes 100/102/103/104/105
+(279/299/299/299/55 frames; ISO 100, f/5.6; 0.625/0.5/0.4/0.33/0.33 s), manifest
+`outputs/multi-stack/bug4-01/manifest-auto.json`, cache `D:/codex-work/bug4-01/cache`,
+32 threads, 32 GiB limit. Builds are dirty trees on `7baad0c99`; final release
+`strehl.exe` SHA256 `cc7a7aaf20197ecc63e0223c197e600dfd122f53976a92911091394407c28950`.
+
+**Registration.** MEASURED: before this slice 102/103 intra-pass edges failed
+(trace: coarse level 1 correlated 7 tiles where 8 were required). An identity-seed
+retry for intra-pass pairs refused by the coarse ladder, and a contrast floor
+scaled to the pass's signal level, placed 1,231/1,231 frames in one component.
+
+**Photometry.** `session-frame-photometry.rs` solves log brightness per frame from
+block-mean ratios over native-confirmed overlaps (Huber, then redescending
+rejection; conjugate gradient). MEASURED: residual 0.0004 ln over 11,042 overlaps;
+anchor 102 itself drifts x0.80--1.26 within the pass. Cross-pass brightness ratio
+varies 27--35% across the overlap (intra about 1%): the lighting changed shape.
+
+**Pose gate.** `session-geometry-check.rs` measures remaining local displacement
+(48 px tiles, NCC, +-10 px) of each pass's focus-nearest frame against the
+reference frame after placement. Synthetic: consistent geometry under a shading
+ramp < 0.5 px; a bend up to 8 px reports median > 2. MEASURED on bug-4: 100/103
+0.0, 104 1.0, 105 1.4 guide px (bar 1.5); the support proxy had flagged 104/105
+(0.38/0.37). UNVERIFIED: bug-3's pose-changed passes under this check (expected
+about 6.5 guide px from the earlier residual field); rerun pending.
+
+**Lighting fusion.** Each lighting group is merged separately (merged CFA planes
+before development) and blended through Laplacian pyramids. MEASURED against the
+anchor-only developed photograph (identical frozen display transform, native
+400 px crops; author review, not independent):
+
+| Arm | Weights | Result |
+| --- | --- | --- |
+| v1 | Mertens detail x exposure x saturation | Hazier (-9% subject high-pass), glow beside the silhouette, hard seam at a layer coverage edge |
+| v2 | Anchor-first pooled detail, feathered coverage, uncovered pixels filled from the anchor | No seams; flat-region noise halved but background lifted (ring mean 0.037 -> 0.070) |
+| v3b | + detail-band consistency gate; coarse tone from the anchor except where clipped | Ring unchanged, DoG energy +2--5%; developed photograph shows dark holes at speculars, softer grain |
+| v4 | Detail-only; coarse tone always the anchor's | Same holes and softness as v3b |
+
+The band-energy gains are not evidence of quality (mixing inconsistent content
+also raises energy). ARGUED cause of the remaining defects: a layer's fine
+Laplacian bands are relative to its own local brightness, so they do not sit on the
+anchor's base where lighting differs. Decision: `lighting_layer` passes are
+reported and not consumed unless `--lighting-fusion` is given. VERIFIED: default
+Auto on bug-4 (`out-auto-06`, 352 s) is bit-identical to the anchor-only render
+(`out-auto-03`).
+
+**Tooling.** `STREHL_LIGHTING_DUMP` writes captured group planes;
+`STREHL_LIGHTING_FROM_DUMP` (optionally `STREHL_LIGHTING_DUMP_GROUPS`) develops
+from them without re-merging; the ignored test `lighting_fusion_from_dump` fuses
+a dump offline in about 3 s. Alignment and render cache bindings now hash
+`align-global.rs`, `session-frame-photometry.rs`, `session-geometry-check.rs`,
+`session-plan.rs` and `session-lighting-fusion.rs` (previously edits to them could
+reuse stale caches).
+
+**Checks.** 177 CLI session tests and 1,036 UI tests pass. The four fusion tests
+include a seam test that fails when the anchor fill is removed (mutation check).
+`cargo test -p strehl-cli --lib`: 390 passed, 8 failed, all in `merge_cmd`
+experiment controls needing private corpus or output-root setup; this slice does
+not touch them. Clippy with toolchain 1.98.0 reports nothing in changed files and
+existing findings in `image_out.rs`, `merge_cmd.rs` and frozen experiment sources.

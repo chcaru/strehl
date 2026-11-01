@@ -28,6 +28,14 @@ Passes beyond 1.5x magnification relative to the anchor are also left out
 until close-up detail insertion exists. Different ISO or aperture is not yet
 pooled; choose Aligned layers to keep such appearances.
 
+Brightness is measured per frame across the overlaps the alignment confirmed,
+so lighting that drifts during a pass, or a different shutter time, is corrected
+automatically. A pass lit differently in *shape* (a moved or re-aimed lamp) is
+reported as a lighting layer and not used: no blend of differently lit stacks has
+yet beaten the best single lighting. The experimental CLI flag
+`--lighting-fusion` blends such layers' fine detail where it agrees with the
+anchor; it can soften fine grain and darken some speculars.
+
 Exposure range validates a bounded correction to the nominal shutter ratio.
 It tests supported color/brightness consistency on separate spatial patches
 and across several proposed focus pairs. A measured contradiction refuses the

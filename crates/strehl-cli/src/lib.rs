@@ -20,6 +20,12 @@ pub mod session_focus;
 pub mod session_input;
 #[path = "session-discover.rs"]
 pub mod session_discover;
+#[path = "session-frame-photometry.rs"]
+pub mod session_frame_photometry;
+#[path = "session-geometry-check.rs"]
+pub mod session_geometry_check;
+#[path = "session-lighting-fusion.rs"]
+pub mod session_lighting_fusion;
 #[path = "session-mapped-sampling.rs"]
 pub mod session_mapped_sampling;
 #[path = "session-mosaic-geometry.rs"]
@@ -122,6 +128,8 @@ enum FocusAction {
     },
 }
 
+// Parsed once per process; variant size is irrelevant.
+#[allow(clippy::large_enum_variant)]
 #[derive(Subcommand)]
 enum Command {
     /// Work with explicitly grouped passes of one subject.

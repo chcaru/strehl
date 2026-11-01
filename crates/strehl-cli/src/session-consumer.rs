@@ -324,11 +324,13 @@ fn render(
     cache: &mut SourceCache,
     calibrations: &[Calibration],
     photometric_gains: &[f32],
+    frame_gains: &[f32],
     excluded_passes: &[bool],
     reconstruction_focus: &[reconstruction_plan::FocusSummary],
     domain: SamplingDomain,
     only_pass: Option<usize>,
     destination: &Path,
+    capture: Option<&mut Option<crate::session_lighting_fusion::GroupPlanes>>,
 ) -> Result<Value> {
     let started = Instant::now();
     ensure!(
@@ -652,7 +654,7 @@ fn render(
                 calibration.profile,
                 alignment.map.resampler(),
             )?;
-            let gain = photometric_gains[pass];
+            let gain = frame_gains[index];
             let gather_seconds = phase_started.elapsed().as_secs_f64();
             let phase_started = Instant::now();
             prepared.prepare_with_masks(
@@ -711,6 +713,24 @@ fn render(
         }
     }
     let result = merge.finish()?;
+    if let Some(slot) = capture {
+        // Lighting-fusion group: hand back merged planes and coverage only.
+        let mut gains: Vec<f32> = consumed_indices.iter().map(|&k| frame_gains[k]).collect();
+        gains.sort_by(f32::total_cmp);
+        let gain = gains.get(gains.len() / 2).copied().unwrap_or(1.0);
+        let invalid = result.valid.iter().filter(|&&v| !v).count();
+        let summary = json!({
+            "passes": session.passes.iter().enumerate().filter(|(p, _)| !excluded_passes[*p]).map(|(_, p)| p.name.clone()).collect::<Vec<_>>(),
+            "sources": result.sources, "groups": result.groups, "uncovered_pixels": invalid,
+            "median_frame_gain": gain, "elapsed_seconds": started.elapsed().as_secs_f64(),
+        });
+        *slot = Some(crate::session_lighting_fusion::GroupPlanes {
+            planes: result.planes,
+            valid: result.valid,
+            ceiling: (reference.levels.white - reference.levels.black) * gain,
+        });
+        return Ok(summary);
+    }
     if let Some(bands) = &result.attribution {
         contribution_export::save(destination, bands, domain)?;
     }
@@ -794,6 +814,9 @@ fn render(
             "coordinate_semantics":"Full session active-image gauge; sensor site equals 2*quad plus CFA-site offset; green-guide center equals (2*x+0.5,2*y+0.5)",
             "units":"black-subtracted native DN after the recorded per-pass photometric gain",
             "photometric_gains_by_pass":photometric_gains,
+            "frame_gain_range":[
+                consumed_indices.iter().map(|&k| frame_gains[k]).fold(f32::INFINITY, f32::min),
+                consumed_indices.iter().map(|&k| frame_gains[k]).fold(f32::NEG_INFINITY, f32::max)],
             "excluded_passes":excluded_passes,
             "development_reference_pass":anchor,
             "black_subtracted":true,"white_balance_applied":false,
@@ -1030,56 +1053,47 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
         let reconstruction_focus = if args.focus_evidence || args.original_cfa_reconstruction {
             save_focus_fields(&destination,&session,&identities,&alignment,&mut cache,&calibrations,domain,config.memory_limit_bytes,args.original_cfa_reconstruction)?
         } else { Vec::new() };
-        let mut plan = if automatic {
+        let plan = if automatic {
             let anchor = session.primary_pass_index().unwrap_or(alignment.report.reference_pass);
             let lead = &calibrations[anchor];
+            let photometry = alignment.report.frame_photometry.as_ref();
             let facts: Vec<_> = session.passes.iter().enumerate().map(|(pass, p)| {
                 let c = &calibrations[pass];
                 let m = &metadata[p.global_range.start];
+                let r = &alignment.report.passes[pass];
+                let brightness_measured = photometry.is_some_and(|ph| {
+                    p.global_range.clone()
+                        .filter(|&k| alignment.map.warps()[k].placed().is_some())
+                        .all(|k| ph.log_brightness[k].is_some())
+                });
                 auto_plan::PassFacts {
                     name: p.name.clone(), frames: p.global_range.len(),
-                    placed: alignment.report.passes[pass].placed,
+                    placed: r.placed,
                     iso: m.iso, shutter: m.exposure_time, aperture: m.aperture,
                     calibration_matches_anchor: c.levels == lead.levels && c.iso == lead.iso
                         && c.camera == lead.camera
                         && c.metadata.xyz_to_cam_bits == lead.metadata.xyz_to_cam_bits
                         && c.metadata.color_matrices_bits == lead.metadata.color_matrices_bits,
-                    geometry_consistent: alignment.report.passes[pass].geometry_consistent,
-                    cross_support_ratio: alignment.report.passes[pass].cross_support_ratio,
-                    relative_scale: alignment.report.passes[pass].relative_scale,
+                    geometry_consistent: r.geometry_consistent,
+                    cross_support_ratio: r.cross_support_ratio,
+                    relative_scale: r.relative_scale,
+                    brightness_measured,
+                    photometric_spread: r.cross_photometric_spread,
+                    photometric_residual: r.cross_photometric_residual,
+                    log_brightness_range: r.log_brightness_range,
                 }
             }).collect();
-            Some(auto_plan::plan(&facts, anchor, session.primary_pass_index().is_some())?)
+            Some(auto_plan::plan(&facts, anchor, session.primary_pass_index().is_some())?.with_lighting_fusion(args.lighting_fusion))
         } else { None };
-        if let Some(plan) = plan.as_mut() && plan.photometry_selection().iter().any(|&s| s) {
-            let anchor = plan.anchor_pass;
-            let photometry_config = crate::session_photometry::PhotometryConfig::default();
-            let phase_bytes = crate::session_photometry::workspace_bytes(domain.full, &photometry_config)?
-                .checked_add(crate::session_photometry::report_bytes(session.passes.len(), &photometry_config)?)
-                .and_then(|n| n.checked_add(cache.budget_bytes())).and_then(|n| n.checked_add(512 << 20))
-                .context("exposure calibration memory reservation overflow")?;
-            ensure!(phase_bytes <= config.memory_limit_bytes,
-                "exposure calibration exceeds the session memory budget");
-            let inputs: Vec<_> = calibrations.iter().map(|calibration| {
-                crate::session_photometry::PassPhotometryInput {
-                    nominal_gain: (calibrations[anchor].shutter / calibration.shutter) as f32,
-                    noise: &calibration.noise, profile: calibration.profile,
-                }
-            }).collect();
-            eprintln!("session automatic plan: calibrating differing shutter passes on held-out spatial patches");
-            let selection = plan.photometry_selection();
-            let photometry = crate::session_photometry::calibrate_selected(
-                &session, &identities, &alignment, &mut cache, anchor, &inputs, Some(&selection), &photometry_config)?;
-            write_json_new(&destination.join("photometry.json"), &photometry)?;
-            plan.apply_photometry(&photometry)?;
-        }
         if let Some(plan) = &plan {
             write_json_new(&destination.join("plan.json"), plan)?;
             for line in plan.summary() { eprintln!("{line}"); }
+            ensure!(!(plan.per_frame_gains && args.precision_weights),
+                "precision weights are not yet combined with measured per-frame brightness; omit --precision-weights");
         }
         let excluded = plan.as_ref().map_or_else(|| vec![false; session.passes.len()], |p| p.excluded());
-        let photometric_gains = if let Some(plan) = &plan {
-            plan.gains()?
+        let photometric_gains = if plan.is_some() {
+            vec![1.0; session.passes.len()]
         } else if session.spec.mode == SessionMode::Hdr {
             let anchor = session.primary_pass_index().unwrap_or(alignment.report.reference_pass);
             let photometry_config = crate::session_photometry::PhotometryConfig::default();
@@ -1101,15 +1115,61 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
             write_json_new(&destination.join("photometry.json"), &photometry)?;
             photometry.require_gains()?.to_vec()
         } else { vec![1.0; session.passes.len()] };
+        // Per-source gains: measured per-frame brightness when the plan asks
+        // for it, otherwise the per-pass gain (unity outside exposure modes).
+        let frame_gains: Vec<f32> = match &plan {
+            Some(plan) if plan.per_frame_gains => {
+                let photometry = alignment.report.frame_photometry.as_ref()
+                    .context("automatic plan requested per-frame gains without measured photometry")?;
+                (0..session.len()).map(|k| photometry.gain(k).unwrap_or(1.0)).collect()
+            }
+            _ => session.frames.iter().map(|f| photometric_gains[f.pass_index]).collect(),
+        };
         let mut outputs = Vec::new();
         if session.spec.mode == SessionMode::Layers {
             for pass in 0..session.passes.len() {
                 let layer = destination.join(format!("layer-{:02}", pass + 1));
                 std::fs::create_dir(&layer)?;
-                outputs.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &excluded, &reconstruction_focus, domain, Some(pass), &layer)?);
+                outputs.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &frame_gains, &excluded, &reconstruction_focus, domain, Some(pass), &layer, None)?);
             }
         } else {
-            outputs.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &excluded, &reconstruction_focus, domain, args.only_pass, &destination)?);
+            let groups = plan.as_ref().map(|p| p.lighting_groups()).unwrap_or_default();
+            if groups.len() >= 2 && args.only_pass.is_none() {
+                ensure!(!args.contribution_maps && !args.original_cfa_reconstruction && !args.reproducibility && !args.focus_evidence,
+                    "lighting fusion does not yet combine with contribution maps, focus evidence, reconstruction or reproducibility");
+                let mut captured = Vec::new();
+                let mut summaries = Vec::new();
+                // Diagnostic: develop from a previous STREHL_LIGHTING_DUMP instead of
+                // re-merging (optionally only its first N groups).
+                if let Some(dir) = std::env::var_os("STREHL_LIGHTING_FROM_DUMP") {
+                    let (mut loaded, width, height) = crate::session_lighting_fusion::load_dump(Path::new(&dir))?;
+                    ensure!((width, height) == (domain.width, domain.height), "lighting dump does not match the canvas");
+                    if let Some(n) = std::env::var("STREHL_LIGHTING_DUMP_GROUPS").ok().and_then(|v| v.parse::<usize>().ok()) {
+                        loaded.truncate(n.max(1));
+                    }
+                    summaries.push(json!({"from_dump": Path::new(&dir).display().to_string(), "groups": loaded.len()}));
+                    captured = loaded;
+                }
+                let merge_groups = if summaries.is_empty() { groups.as_slice() } else { &[] };
+                for (index, mask) in merge_groups.iter().enumerate() {
+                    eprintln!("session lighting fusion: merging lighting group {}/{}", index + 1, groups.len());
+                    let group_excluded: Vec<bool> = mask.iter().map(|&m| !m).collect();
+                    let mut slot = None;
+                    summaries.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &frame_gains, &group_excluded, &reconstruction_focus, domain, None, &destination, Some(&mut slot))?);
+                    captured.push(slot.context("lighting group produced no planes")?);
+                }
+                ensure!(captured[0].valid.iter().all(|&v| v), "the anchor lighting group does not cover the canvas");
+                if let Some(dir) = std::env::var_os("STREHL_LIGHTING_DUMP") {
+                    crate::session_lighting_fusion::dump(&captured, domain.width, domain.height, Path::new(&dir))?;
+                }
+                eprintln!("session lighting fusion: blending {} lighting groups (experimental: may soften fine grain and darken some speculars)", captured.len());
+                let (planes, fusion) = crate::session_lighting_fusion::fuse(&captured, domain.width, domain.height);
+                drop(captured);
+                outputs.push(write_fused(args, &session, &alignment, &calibrations, domain, planes,
+                    json!({"lighting_fusion": fusion, "lighting_groups": summaries}), &destination)?);
+            } else {
+                outputs.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &frame_gains, &excluded, &reconstruction_focus, domain, args.only_pass, &destination, None)?);
+            }
         }
         if args.reproducibility {
             let mut diagnostic_args=args.clone();
@@ -1119,7 +1179,7 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
             let paths:Vec<_>=if session.spec.mode==SessionMode::Layers {(0..2).map(|i|destination.join(format!("layer-{:02}",i+1))).collect()}else{
                 let mut paths=Vec::new();for pass in 0..2 {
                     let path=destination.join(format!("independent-pass-{:02}",pass+1));std::fs::create_dir(&path)?;
-                    render(&diagnostic_args,&session,&identities,&metadata,&alignment,&mut cache,&calibrations,&photometric_gains,&excluded,&[],domain,Some(pass),&path)?;paths.push(path);
+                    render(&diagnostic_args,&session,&identities,&metadata,&alignment,&mut cache,&calibrations,&photometric_gains,&frame_gains,&excluded,&[],domain,Some(pass),&path,None)?;paths.push(path);
                 }paths
             };
             crate::session_reproducibility::compare_generated(&crate::session_reproducibility::CompareArgs{
@@ -1146,6 +1206,53 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
         write_json_new(&destination.join("completed.json"), &completion)?;
         Ok(())
     })
+}
+
+/// Develop fused native planes (R, G1, B, G2) exactly as an ordinary render.
+#[allow(clippy::too_many_arguments)]
+fn write_fused(
+    args: &StackArgs,
+    session: &ResolvedSession,
+    alignment: &SessionAlignment,
+    calibrations: &[Calibration],
+    domain: SamplingDomain,
+    planes: [Vec<f32>; 4],
+    mut report: Value,
+    destination: &Path,
+) -> Result<Value> {
+    let anchor = session.primary_pass_index().unwrap_or(alignment.report.reference_pass);
+    let reference = &calibrations[anchor];
+    let [r, g1, b, g2] = planes;
+    let planes = [r, g1, g2, b];
+    let writer_domain = PyramidDomain::cropped(
+        domain.full,
+        CropRect { x: domain.x, y: domain.y, width: domain.width, height: domain.height },
+    )?;
+    super::write_merged_observed_with_reconstruction(
+        Merged::Bands { domain: writer_domain, planes: &planes },
+        reference.levels,
+        reference.wb,
+        reference.matrix.as_ref(),
+        crate::image_out::OutputSpace::from_flags(true, false)?,
+        !args.binned,
+        Exposure::resolve(true, args.exposure, false)?,
+        None,
+        &destination.join("photograph.tiff"),
+        None,
+        Some(&destination.join("master.tiff")),
+        None,
+        None,
+        None,
+    )?;
+    report["schema"] = json!("strehl.session-render.v1");
+    report["build"] = json!(crate::VERSION);
+    report["renderer_source_sha256"] = json!(renderer_source_hash());
+    report["mode"] = json!(session.spec.mode);
+    report["development_reference_pass"] = json!(anchor);
+    report["canvas"] = json!([domain.x, domain.y, domain.width, domain.height]);
+    write_json_new(&destination.join("render-report.json"), &report)?;
+    crate::session_reproducibility::publish_render_binding(destination)?;
+    Ok(report)
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -1226,6 +1333,9 @@ fn cached_alignment(
         include_bytes!("session-cache.rs").as_slice(),
         include_bytes!("session-input.rs").as_slice(),
         include_bytes!("../../strehl-core/src/align.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/align-global.rs").as_slice(),
+        include_bytes!("session-frame-photometry.rs").as_slice(),
+        include_bytes!("session-geometry-check.rs").as_slice(),
         include_bytes!("../../strehl-core/src/plane.rs").as_slice(),
         include_bytes!("../../strehl-core/src/warpmap.rs").as_slice(),
         include_bytes!("../../strehl-raw/src/lib.rs").as_slice(),
@@ -1291,6 +1401,8 @@ fn renderer_source_hash() -> String {
         include_bytes!("session-focus.rs").as_slice(),
         include_bytes!("session-alpha-output.rs").as_slice(),
         include_bytes!("session-photometry.rs").as_slice(),
+        include_bytes!("session-plan.rs").as_slice(),
+        include_bytes!("session-lighting-fusion.rs").as_slice(),
         include_bytes!("session-cache.rs").as_slice(),
         include_bytes!("session-input.rs").as_slice(),
         include_bytes!("merge_cmd.rs").as_slice(),
