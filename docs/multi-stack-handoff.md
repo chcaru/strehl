@@ -133,6 +133,18 @@ detail intact, no seams or holes). On bug-3 the gate drops the blurry merges of
 why some separately merged passes come out blurry (bug-3 103/105, bug-4 105),
 and desktop surfacing of layer outcomes.
 
+**Fifth slice (local sharpness, desktop).** Layers are gated per pixel by local
+sharpness, so a short pass contributes where it is in focus. The blurry merges
+above are short or off-focus passes (bug-3 103: 22 frames; bug-4 105: 55), not a
+merge defect. The desktop shows each pass's role and layer outcome in the saved
+session view and offers "Combine other lighting and moved poses"; layered
+results now import and reopen. Next, in order: place the bug-3 close-ups
+(100/102 fail the wide-baseline seed search) and render detail at their
+magnification, which is where real extra resolution exists in these captures;
+then a measured spike on multi-observation original-CFA reconstruction (the
+architecture's stated requirement; the earlier single-frame sampler was
+rejected for neutral-detail loss).
+
 ## Mission and user intent
 
 Extend Strehl to use several stacks of the same subject for useful photographic

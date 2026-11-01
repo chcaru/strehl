@@ -270,3 +270,44 @@ CRLF to LF (other hashed sites, such as mosaic and transfer caches, do not yet).
 
 **Open.** Why some separately merged passes come out blurry (bug-3 103/105,
 bug-4 105) is not diagnosed; close-up passes are still unplaced.
+
+## Fifth slice: local sharpness gate and desktop integration (2026-11-01)
+
+Commits `385e28956` (local gate) and `a8706839a` (desktop, report fix). Release
+`strehl.exe` SHA256 prefix `23adf74311a8edef`.
+
+**Blurry layers diagnosed.** bug-3 103 has 22 frames and 105 sits at x1.21
+magnification; bug-4 105 has 55 frames. Their separate merges are blurred
+because the passes do not span the subject's focus, not because of a merge
+defect. Such a pass is still sharp over the depth it covers.
+
+**Local gate.** Per pixel, the layer's fine (sigma 0.7) over coarse (sigma 2.8)
+band contrast, relative to the anchor's and pooled over 24 px; low-structure
+areas stay eligible; canvas borders (clamped filters read as sharp; found by a
+failing test, all 2,166 false pixels within 40 px of the edge) are not judged.
+Test: a layer sharp left and blurred right keeps the anchor's fine detail on the
+right (0.61 without the gate: mutation check) and halves noise on the left.
+MEASURED on dumps: bug-4 layers 99--100% locally sharp, 105 still dropped
+(no usable fine contrast); bug-3 103/105 blurred throughout. Gate cost under 4 s.
+
+**Desktop.** The saved-session view lists each pass's role and outcome from
+`plan.json` and `render-report.json` (alignment, sharpness, coverage,
+agreement, or the reason it was not used). Best result has a "Combine other
+lighting and moved poses" control (`--anchor-lighting-only`), saved in the
+recipe and available to agents; the agent `create_session` schema lacked the
+`auto` mode and now has it. VERIFIED: `out-auto-09` (937 s, cached alignment)
+imported into a headless desktop through `scripts/strehl-control.py`, and an
+offscreen GPU screenshot shows the contributions. Exercising the app found that
+layered reports lacked the recipe fields an import requires; fixed. Evidence
+outputs now set layers aside with a recorded reason instead of failing.
+1,037 UI and 181 CLI session tests pass; UI clippy clean.
+
+**Extra detail: assessment.** ARGUED from the decision record and these runs:
+(1) deconvolution is bounded at the apertures used (MTF at Nyquist is zero at
+f/8--f/11; unguarded Wiener loses to selection), so restoration is not the
+lever; (2) group-level shift-and-add would work on already resampled merges and
+promises little; (3) the real sources are magnification (bug-3 100/102 close-ups,
+unplaced: no confirmed wide-baseline seed despite a 4x scale range) and
+multi-observation original-CFA reconstruction in the core gather, which the
+architecture names as required and which an earlier single-frame sampler failed
+for neutral-detail loss. Neither is started.
