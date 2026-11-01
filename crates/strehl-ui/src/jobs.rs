@@ -49,7 +49,9 @@ impl MachineResources {
     /// concurrently in 9 GiB shares, so a larger budget is also faster.
     pub(crate) fn default_session_memory_gib(self) -> f64 {
         self.physical_memory_bytes.map_or(16.0, |bytes| {
-            (bytes as f64 / (1u64 << 30) as f64 / 2.0).floor().clamp(8.0, 48.0)
+            (bytes as f64 / (1u64 << 30) as f64 / 2.0)
+                .floor()
+                .clamp(8.0, 48.0)
         })
     }
 }
