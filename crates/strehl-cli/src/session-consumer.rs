@@ -1076,6 +1076,7 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                         && c.metadata.color_matrices_bits == lead.metadata.color_matrices_bits,
                     geometry_consistent: r.geometry_consistent,
                     cross_support_ratio: r.cross_support_ratio,
+                    geometric_residual: r.geometric_residual.map(|g| g.median),
                     relative_scale: r.relative_scale,
                     brightness_measured,
                     photometric_spread: r.cross_photometric_spread,

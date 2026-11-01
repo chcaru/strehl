@@ -40,6 +40,8 @@ pub struct PassFacts {
     /// Alignment found one 2-D placement consistent across the overlap.
     pub geometry_consistent: bool,
     pub cross_support_ratio: Option<f64>,
+    /// Median remaining displacement (guide px) after placement, when measured.
+    pub geometric_residual: Option<f64>,
     /// Median magnification relative to the anchor pass.
     pub relative_scale: Option<f64>,
     /// Every placed frame received a solved per-frame brightness.
@@ -132,10 +134,17 @@ fn role_for(pass: usize, anchor: usize, f: &PassFacts, lead: &PassFacts) -> (Rol
         return excluded("no frame joined the anchor's measured alignment".into());
     }
     if !f.geometry_consistent {
+        let evidence = match (f.geometric_residual, f.cross_support_ratio) {
+            (Some(px), _) => format!(
+                "after placement the subject still moves {px:.1} guide px (median) against the anchor"
+            ),
+            (None, Some(r)) => {
+                format!("one 2-D placement matches the anchor only locally (support {r:.2})")
+            }
+            (None, None) => "one 2-D placement does not match the anchor across the overlap".into(),
+        };
         return excluded(format!(
-            "one 2-D placement matches the anchor only locally (support {}); the subject's pose or shape likely changed between passes, and fusing would ghost",
-            f.cross_support_ratio
-                .map_or_else(|| "unmeasured".into(), |r| format!("{r:.2}"))
+            "{evidence}; the subject's pose or shape likely changed between passes, and fusing would ghost"
         ));
     }
     if let Some(s) = f.relative_scale
@@ -370,6 +379,7 @@ mod tests {
             calibration_matches_anchor: true,
             geometry_consistent: true,
             cross_support_ratio: Some(1.0),
+            geometric_residual: None,
             relative_scale: Some(1.0),
             brightness_measured: true,
             photometric_spread: Some(0.01),
@@ -473,6 +483,17 @@ mod tests {
         let mut posed = facts("posed", [16, 10]);
         posed.geometry_consistent = false;
         posed.cross_support_ratio = Some(0.2);
+        let mut moved = facts("moved", [16, 10]);
+        moved.geometry_consistent = false;
+        moved.geometric_residual = Some(4.0);
+        let moved_plan = plan_of(&[facts("a", [16, 10]), moved]);
+        assert!(
+            moved_plan.passes[1]
+                .reason
+                .as_deref()
+                .unwrap()
+                .contains("4.0 guide px")
+        );
         let mut closeup = facts("closeup", [2, 1]);
         closeup.relative_scale = Some(2.7);
         let mut wider = facts("wider", [16, 10]);

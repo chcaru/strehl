@@ -168,8 +168,12 @@ varies 27--35% across the overlap (intra about 1%): the lighting changed shape.
 reference frame after placement. Synthetic: consistent geometry under a shading
 ramp < 0.5 px; a bend up to 8 px reports median > 2. MEASURED on bug-4: 100/103
 0.0, 104 1.0, 105 1.4 guide px (bar 1.5); the support proxy had flagged 104/105
-(0.38/0.37). UNVERIFIED: bug-3's pose-changed passes under this check (expected
-about 6.5 guide px from the earlier residual field); rerun pending.
+(0.38/0.37). MEASURED on the bug-3 five-pass subset (`manifest5-auto.json`,
+release SHA256 `4c3fb4e64eedc7201b2c8453e0661fa31caed8cb8ab4603d2ecd0937c434613f`,
+32 threads, 183 s, `out5-residual-01`): 106 median 0.0 (86 tiles), combined;
+pose-changed 104 median 4.0, p90 6.1 guide px (18 tiles), excluded by the residual;
+105/103 had too few usable tiles and fell back to support (0.16/0.15), excluded.
+Plan reasons now name the residual when it was measured.
 
 **Lighting fusion.** Each lighting group is merged separately (merged CFA planes
 before development) and blended through Laplacian pyramids. MEASURED against the
