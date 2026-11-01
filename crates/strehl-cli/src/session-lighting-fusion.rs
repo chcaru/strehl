@@ -71,6 +71,10 @@ pub struct LayerReport {
     pub agreement: Option<f64>,
     /// Fraction of the common subject where the layer is locally sharp.
     pub sharp_fraction: Option<f64>,
+    /// Log-chromaticity difference from the anchor over the bright subject
+    /// (32 px block medians): global shift and local spread about it.
+    pub chroma_shift: Option<f64>,
+    pub chroma_spread: Option<f64>,
 }
 
 #[derive(Clone, Debug, serde::Serialize)]
@@ -123,6 +127,18 @@ pub struct FusionConfig {
     /// a pixel starts, and fully stops, contributing.
     pub pose_agree: f32,
     pub pose_disagree: f32,
+    /// Detached layers: window radius (plane px) and local feature NCC at
+    /// which structure starts to, and fully does, agree.
+    /// Appearance gate: largest global and local log-chromaticity
+    /// difference from the anchor that is still superposed.
+    pub max_chroma_shift: f64,
+    pub max_chroma_spread: f64,
+    pub structure_radius: usize,
+    /// Fine scale (plane px) of the band-passed log luma compared (coarse is
+    /// four times larger).
+    pub structure_sigma: f32,
+    pub structure_reject: f32,
+    pub structure_accept: f32,
 }
 
 impl Default for FusionConfig {
@@ -146,6 +162,12 @@ impl Default for FusionConfig {
             highlight_full: 0.95,
             pose_agree: 0.1,
             pose_disagree: 0.25,
+            max_chroma_shift: 0.15,
+            max_chroma_spread: 0.2,
+            structure_radius: 24,
+            structure_sigma: 4.0,
+            structure_reject: 0.2,
+            structure_accept: 0.5,
         }
     }
 }
@@ -806,6 +828,107 @@ pub enum LayerKind {
     /// The subject moved between passes: superposed only where it matches
     /// the anchor after registration.
     Pose,
+    /// Stacked on its own and placed by a global search; lighting may differ
+    /// arbitrarily (iridescence), so it is superposed where its local
+    /// structure agrees with the anchor's after registration, whatever the
+    /// brightness or colour.
+    Detached,
+}
+
+/// Global shift and local spread of the log chromaticity (R/G, B/G) of
+/// `layer` against `anchor` over `mask`, from 32 px block medians so residual
+/// misregistration and noise do not count. `None` without enough blocks.
+fn chroma_difference(
+    anchor: &GroupPlanes,
+    layer: &GroupPlanes,
+    mask: &[bool],
+    width: usize,
+    height: usize,
+) -> Option<(f64, f64)> {
+    const BLOCK: usize = 32;
+    let chroma = |g: &GroupPlanes, i: usize| {
+        let green = (0.5 * (g.planes[1][i] + g.planes[3][i])).max(1e-3);
+        (
+            (g.planes[0][i].max(1e-3) / green).ln(),
+            (g.planes[2][i].max(1e-3) / green).ln(),
+        )
+    };
+    let mut blocks = Vec::new();
+    for by in 0..height / BLOCK {
+        for bx in 0..width / BLOCK {
+            let mut dr = Vec::new();
+            let mut db = Vec::new();
+            for y in by * BLOCK..(by + 1) * BLOCK {
+                for x in bx * BLOCK..(bx + 1) * BLOCK {
+                    let i = y * width + x;
+                    if mask[i] && layer.valid[i] {
+                        let (ra, ba) = chroma(anchor, i);
+                        let (rl, bl) = chroma(layer, i);
+                        dr.push(rl - ra);
+                        db.push(bl - ba);
+                    }
+                }
+            }
+            if dr.len() >= BLOCK * BLOCK / 2 {
+                blocks.push((quantile(dr, 0.5)?, quantile(db, 0.5)?));
+            }
+        }
+    }
+    if blocks.len() < 8 {
+        return None;
+    }
+    let mr = quantile(blocks.iter().map(|b| b.0).collect(), 0.5)?;
+    let mb = quantile(blocks.iter().map(|b| b.1).collect(), 0.5)?;
+    let spread = quantile(
+        blocks.iter().map(|b| (b.0 - mr).hypot(b.1 - mb)).collect(),
+        0.5,
+    )?;
+    Some((f64::from(mr.hypot(mb)), f64::from(spread)))
+}
+
+/// Local structural agreement in [0, 1]: normalised cross-correlation of the
+/// band-passed log-luma features over a window, insensitive to brightness and
+/// colour. Where neither image has structure (flat background), agreement
+/// cannot be judged and is granted; a moved limb over flat background brings
+/// structure to one image only and is rejected.
+fn structural_agreement(
+    a: &[f32],
+    b: &[f32],
+    width: usize,
+    height: usize,
+    cfg: &FusionConfig,
+) -> Vec<f32> {
+    let r = cfg.structure_radius;
+    let product =
+        |x: &[f32], y: &[f32]| -> Vec<f32> { x.iter().zip(y).map(|(x, y)| x * y).collect() };
+    let (ma, mb) = (box_mean(a, width, height, r), box_mean(b, width, height, r));
+    let (maa, mbb, mab) = (
+        box_mean(&product(a, a), width, height, r),
+        box_mean(&product(b, b), width, height, r),
+        box_mean(&product(a, b), width, height, r),
+    );
+    let n = a.len();
+    let sa: Vec<f32> = (0..n)
+        .map(|i| (maa[i] - ma[i] * ma[i]).max(0.0).sqrt())
+        .collect();
+    let sb: Vec<f32> = (0..n)
+        .map(|i| (mbb[i] - mb[i] * mb[i]).max(0.0).sqrt())
+        .collect();
+    let typical = quantile(sa.clone(), 0.5).unwrap_or(0.0).max(1e-9);
+    let agree: Vec<f32> = (0..n)
+        .map(|i| {
+            let structure = sa[i].max(sb[i]) / typical;
+            let flat = 1.0 - smoothstep(0.25, 0.5, structure);
+            let ncc = (mab[i] - ma[i] * mb[i]) / (sa[i] * sb[i]).max(1e-12);
+            flat + (1.0 - flat) * smoothstep(cfg.structure_reject, cfg.structure_accept, ncc)
+        })
+        .collect();
+    // Shrink agreement away from disagreement so no fringe ghosts.
+    box_mean(&agree, width, height, 6)
+        .into_iter()
+        .zip(agree)
+        .map(|(m, a)| a.min(smoothstep(0.5, 1.0, m)))
+        .collect()
 }
 
 /// `kinds[k]` describes group `k` (entry 0, the anchor, is ignored; missing
@@ -847,6 +970,8 @@ pub fn fuse_with(
             coverage: None,
             agreement: None,
             sharp_fraction: None,
+            chroma_shift: None,
+            chroma_spread: None,
         };
         // Defocus gate on the common bright subject.
         let common: Vec<bool> = anchor
@@ -945,6 +1070,19 @@ pub fn fuse_with(
         drop(layer_feature);
         let layer = &registered;
         let layer_luma = luma(layer);
+        // Appearance gate: superposition sums lamps of compatible colour. A
+        // pass whose colour rendition differs strongly (iridescence seen from
+        // another lighting angle) is an alternative appearance; averaging it
+        // would wash out what each lighting shows.
+        if let Some((shift, spread)) = chroma_difference(anchor, layer, &subject, width, height) {
+            report.chroma_shift = Some(shift);
+            report.chroma_spread = Some(spread);
+            if shift > cfg.max_chroma_shift || spread > cfg.max_chroma_spread {
+                report.outcome = "appearance_differs";
+                layers.push(report);
+                continue;
+            }
+        }
         // Relighting ratio over trusted overlap: covered, unclipped, not dark.
         let overlap: Vec<bool> = anchor
             .valid
@@ -1057,6 +1195,27 @@ pub fn fuse_with(
         // other lamps' light.
         let alpha = match kinds.get(index).copied().unwrap_or(LayerKind::Lighting) {
             LayerKind::Lighting => alpha,
+            LayerKind::Detached => {
+                let band = |l: &[f32]| -> Vec<f32> {
+                    let log: Vec<f32> = l.iter().map(|&v| v.max(floor).ln()).collect();
+                    let fine = gaussian_blur(&log, width, height, cfg.structure_sigma);
+                    let coarse = gaussian_blur(&log, width, height, 4.0 * cfg.structure_sigma);
+                    fine.iter().zip(&coarse).map(|(f, c)| f - c).collect()
+                };
+                let agree = structural_agreement(
+                    &band(&anchor_luma),
+                    &band(&layer_luma),
+                    width,
+                    height,
+                    cfg,
+                );
+                let covered = (0..n).filter(|&i| alpha[i] > 0.5).count().max(1);
+                report.agreement = Some(
+                    (0..n).filter(|&i| alpha[i] > 0.5 && agree[i] > 0.5).count() as f64
+                        / covered as f64,
+                );
+                alpha.iter().zip(&agree).map(|(a, g)| a * g).collect()
+            }
             LayerKind::Pose => {
                 let agreement = |predicted: &[Vec<f32>; 4]| -> Vec<f32> {
                     let difference: Vec<f32> = (0..n)
@@ -1843,6 +2002,34 @@ mod tests {
     }
 
     #[test]
+    fn a_layer_of_different_colour_appearance_is_not_superposed() {
+        let f = |x: f32, y: f32| 500.0 * texture(x, y);
+        let anchor = group(f);
+        // Same geometry, other lighting colour: red down, blue up (log
+        // chromaticity shift about 0.7, as iridescence under another angle).
+        let mut shifted = group(f);
+        for (plane, gain) in shifted.planes.iter_mut().zip([0.6f32, 1.0, 1.5, 1.0]) {
+            plane.iter_mut().for_each(|v| *v *= gain);
+        }
+        let (fused, report) = fuse(&[anchor.clone(), shifted], &[], W, H);
+        assert_eq!(report.layers[0].outcome, "appearance_differs", "{report:?}");
+        assert!(
+            fused[0]
+                .iter()
+                .zip(&anchor.planes[0])
+                .all(|(a, b)| (a - b).abs() < 1e-3)
+        );
+        // A brightness-only change (a lamp moved, same colour) is superposed.
+        let mut dimmer = group(f);
+        dimmer
+            .planes
+            .iter_mut()
+            .for_each(|p| p.iter_mut().for_each(|v| *v *= 0.6));
+        let (_, report) = fuse(&[anchor, dimmer], &[], W, H);
+        assert_eq!(report.layers[0].outcome, "superposed", "{report:?}");
+    }
+
+    #[test]
     fn a_defocused_layer_is_not_superposed() {
         let anchor = group(|x, y| 500.0 * texture(x, y) + 30.0 * noise(x, y, 7).signum());
         let sharp = anchor.planes[0].clone();
@@ -2000,23 +2187,66 @@ mod tests {
     }
 }
 
-/// Offline placement of a detached layer: `STREHL_DETACHED_ANCHOR` (a dump
-/// whose group 0 is the anchor) and `STREHL_DETACHED_LAYER` (a one-group dump).
+/// Offline placement of detached layers: `STREHL_DETACHED_ANCHOR` (a dump
+/// whose group 0 is the anchor), `STREHL_DETACHED_LAYER` (one-group dumps
+/// separated by `;`) and optional `STREHL_DETACHED_OUT` (fused planes as a
+/// one-group dump, for development with `STREHL_LIGHTING_FROM_DUMP`).
 #[cfg(test)]
 #[test]
 #[ignore = "needs lighting-fusion dumps"]
 fn detached_placement_from_dump() {
     let anchor = std::env::var_os("STREHL_DETACHED_ANCHOR").expect("STREHL_DETACHED_ANCHOR");
-    let layer = std::env::var_os("STREHL_DETACHED_LAYER").expect("STREHL_DETACHED_LAYER");
+    let layers = std::env::var("STREHL_DETACHED_LAYER").expect("STREHL_DETACHED_LAYER");
     let (anchor, _, w, h) = load_dump(std::path::Path::new(&anchor)).unwrap();
-    let (layer, _, lw, lh) = load_dump(std::path::Path::new(&layer)).unwrap();
-    let started = std::time::Instant::now();
-    let (placed, report) = place_detached(&anchor[0], &layer[0], lw, lh, w, h);
-    eprintln!(
-        "{report:?} in {:.1} s; covered {}",
-        started.elapsed().as_secs_f64(),
-        placed.map_or(0, |p| p.valid.iter().filter(|&&v| v).count())
-    );
+    let mut groups = vec![anchor[0].clone()];
+    let mut kinds = vec![LayerKind::Lighting];
+    for path in layers.split(';') {
+        let (layer, _, lw, lh) = load_dump(std::path::Path::new(path)).unwrap();
+        let started = std::time::Instant::now();
+        let (placed, report) = place_detached(&anchor[0], &layer[0], lw, lh, w, h);
+        eprintln!(
+            "{path}: {report:?} in {:.1} s",
+            started.elapsed().as_secs_f64()
+        );
+        if let Some(placed) = placed {
+            groups.push(placed);
+            kinds.push(
+                if std::env::var_os("STREHL_DETACHED_AS_LIGHTING").is_some() {
+                    LayerKind::Lighting
+                } else {
+                    LayerKind::Detached
+                },
+            );
+        }
+    }
+    if let Some(out) = std::env::var_os("STREHL_DETACHED_PLACED_OUT") {
+        dump(&groups, &kinds, w, h, std::path::Path::new(&out)).unwrap();
+    }
+    let mut cfg = FusionConfig::default();
+    if let Ok(text) = std::env::var("STREHL_FUSION_STRUCTURE") {
+        let v: Vec<f32> = text.split(',').map(|t| t.parse().unwrap()).collect();
+        (
+            cfg.structure_sigma,
+            cfg.structure_radius,
+            cfg.structure_reject,
+            cfg.structure_accept,
+        ) = (v[0], v[1] as usize, v[2], v[3]);
+    }
+    let (planes, report) = fuse_with(&groups, &kinds, w, h, &cfg);
+    for layer in &report.layers {
+        eprintln!(
+            "group {} {} coverage {:?} agreement {:?} sharp {:?}",
+            layer.group, layer.outcome, layer.coverage, layer.agreement, layer.sharp_fraction
+        );
+    }
+    if let Some(out) = std::env::var_os("STREHL_DETACHED_OUT") {
+        let fused = GroupPlanes {
+            planes,
+            valid: vec![true; w * h],
+            ceiling: groups[0].ceiling,
+        };
+        dump(&[fused], &[], w, h, std::path::Path::new(&out)).unwrap();
+    }
 }
 
 /// Offline study of a [`dump`]: `STREHL_LIGHTING_DUMP_IN` (input) and

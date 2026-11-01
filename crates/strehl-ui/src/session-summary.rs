@@ -163,6 +163,11 @@ pub(crate) fn contributions(output: &Path, names: &[String]) -> Option<Vec<PassC
                             Some(parts.join(" · ")),
                         )
                     }
+                    Some(l) if l.outcome == "appearance_differs" => (
+                        format!("{kind} · not used: colour differs (another lighting)"),
+                        false,
+                        None,
+                    ),
                     Some(l) if l.outcome == "defocused" => {
                         (format!("{kind} · not used: out of focus"), false, None)
                     }

@@ -1229,10 +1229,35 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                 let mut detached_reports = Vec::new();
                 let detached = if summaries.first().is_some_and(|s| s.get("from_dump").is_some()) { Vec::new() }
                     else { plan.as_ref().map(|p| p.detached_passes()).unwrap_or_default() };
-                for pass in detached {
+                // Stack every detached pass first (independent sub-sessions,
+                // concurrent within the memory budget), then place each.
+                let stacked: Vec<Result<(Value, crate::session_lighting_fusion::GroupPlanes, usize, usize)>> = {
+                    let lanes = lighting_merge_lanes(args.resources.memory_limit_gib, detached.len());
+                    let mut lane_args = args.clone();
+                    lane_args.resources.memory_limit_gib = args.resources.memory_limit_gib / lanes as f64;
+                    lane_args.resources.threads = args.resources.threads.div_ceil(lanes).max(1);
+                    let lane_config = lane_args.resources.config()?;
+                    let slots: Vec<std::sync::Mutex<Option<Result<_>>>> = detached.iter().map(|_| std::sync::Mutex::new(None)).collect();
+                    let next = std::sync::atomic::AtomicUsize::new(0);
+                    let root = cache.root().to_path_buf();
+                    if lanes > 1 { eprintln!("session detached layer: stacking {} passes in {lanes} concurrent lanes", detached.len()); }
+                    rayon::scope(|scope| {
+                        for _ in 0..lanes {
+                            scope.spawn(|_| loop {
+                                let index = next.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                                if index >= detached.len() { break; }
+                                let pass = detached[index];
+                                eprintln!("session detached layer: stacking '{}' on its own", session.passes[pass].name);
+                                let (a, c) = if lanes > 1 { (&lane_args, &lane_config) } else { (args, &config) };
+                                *slots[index].lock().unwrap() = Some(detached_group(a, &session, pass, &identities, &root, &destination, c, resampler));
+                            });
+                        }
+                    });
+                    slots.into_iter().map(|s| s.into_inner().unwrap().unwrap_or_else(|| Err(anyhow::anyhow!("not stacked")))).collect()
+                };
+                for (pass, stacked) in detached.into_iter().zip(stacked) {
                     let name = session.passes[pass].name.clone();
-                    eprintln!("session detached layer: stacking '{name}' on its own");
-                    let outcome = detached_group(args, &session, pass, &identities, cache.root(), &destination, &config, resampler)
+                    let outcome = stacked
                         .and_then(|(summary, planes, lw, lh)| {
                             // Diagnostic: keep the separately stacked planes beside the lighting dump.
                             if let Some(dir) = std::env::var_os("STREHL_LIGHTING_DUMP") {
@@ -1251,7 +1276,7 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                             if let Some(planes) = placed {
                                 summaries.push(summary);
                                 captured.push(planes);
-                                kinds.push(crate::session_lighting_fusion::LayerKind::Pose);
+                                kinds.push(crate::session_lighting_fusion::LayerKind::Detached);
                             }
                         }
                         Err(error) => {
