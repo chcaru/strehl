@@ -14,6 +14,22 @@ pub(crate) struct SessionSummary {
     pub geometry: Option<SummaryGeometry>,
     pub report_error: Option<String>,
     pub provenance: Option<String>,
+    /// Best result photographs of passes it did not blend.
+    pub alternatives: Vec<SummaryAlternative>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) struct SummaryAlternative {
+    pub pass: String,
+    pub reason: String,
+    pub photograph: PathBuf,
+}
+
+#[derive(Deserialize)]
+struct CompletionAlternative {
+    directory: String,
+    pass: String,
+    reason: String,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -230,6 +246,8 @@ struct Completion {
     outputs: usize,
     primary_pass: Option<usize>,
     pipeline: Option<String>,
+    #[serde(default)]
+    alternatives: Vec<CompletionAlternative>,
 }
 #[derive(Deserialize)]
 struct Alignment {
@@ -321,6 +339,7 @@ impl SessionSummary {
             geometry: None,
             report_error: None,
             provenance: scope.map(str::to_owned),
+            alternatives: Vec::new(),
         };
         let receipt = (|| -> Result<()> {
             saved
@@ -340,6 +359,23 @@ impl SessionSummary {
                 "Completion report does not match the saved session"
             );
             summary.completed = true;
+            summary.alternatives = completion
+                .alternatives
+                .iter()
+                .filter(|a| {
+                    // Only plain sibling directories of this result.
+                    !a.directory.is_empty()
+                        && a.directory
+                            .chars()
+                            .all(|c| c.is_ascii_alphanumeric() || c == '-')
+                })
+                .map(|a| SummaryAlternative {
+                    pass: a.pass.clone(),
+                    reason: a.reason.clone(),
+                    photograph: output.join(&a.directory).join("photograph.tiff"),
+                })
+                .filter(|a| a.photograph.is_file())
+                .collect();
             let names: Vec<String> = summary.passes.iter().map(|p| p.name.clone()).collect();
             if let Some(list) = contributions(&output, &names) {
                 for (pass, contribution) in summary.passes.iter_mut().zip(list) {

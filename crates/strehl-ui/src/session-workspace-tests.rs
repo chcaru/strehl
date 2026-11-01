@@ -328,8 +328,17 @@ fn best_result_contributions_name_each_pass_role_and_layer_outcome() {
     .unwrap();
     let list = summary::contributions(root.path(), &names[..3]).expect("plan");
     assert_eq!(list[1].label, "Detached layer · averaged in");
-    assert!(list[1].detail.as_deref().unwrap().starts_with("placed x1.02 at -3°"));
-    assert_eq!(list[2].label, "Detached layer · not used: not found on the primary");
+    assert!(
+        list[1]
+            .detail
+            .as_deref()
+            .unwrap()
+            .starts_with("placed x1.02 at -3°")
+    );
+    assert_eq!(
+        list[2].label,
+        "Detached layer · not used: not found on the primary"
+    );
     // Built on another view: that pass is the reference, the anchor is not used.
     std::fs::write(
         root.path().join("render-report.json"),

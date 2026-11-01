@@ -143,6 +143,25 @@ impl ProcessSpace {
                         }
                         ui.add_space(5.0);
                     }
+                    if !summary.alternatives.is_empty() {
+                        ui.add_space(4.0);
+                        ui.label(
+                            egui::RichText::new("ALSO SAVED")
+                                .monospace()
+                                .size(10.0)
+                                .color(ACCENT),
+                        );
+                        for alternative in &summary.alternatives {
+                            ui.label(egui::RichText::new(&alternative.pass).color(INK))
+                                .on_hover_text(alternative.photograph.display().to_string());
+                            ui.label(
+                                egui::RichText::new(format!("Own photograph · {}", alternative.reason))
+                                    .size(10.0)
+                                    .color(MUTED),
+                            );
+                            ui.add_space(5.0);
+                        }
+                    }
                     ui.add_space(7.0);
                     ui.label(
                         egui::RichText::new(if summary.mode == SessionMode::Mosaic {

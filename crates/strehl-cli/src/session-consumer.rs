@@ -1138,6 +1138,9 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
             _ => session.frames.iter().map(|f| photometric_gains[f.pass_index]).collect(),
         };
         let mut outputs = Vec::new();
+        // Best result photographs of passes it could not blend (another
+        // colour appearance, another view): delivered, not discarded.
+        let mut alternatives: Vec<Value> = Vec::new();
         if session.spec.mode == SessionMode::Layers {
             for pass in 0..session.passes.len() {
                 let layer = destination.join(format!("layer-{:02}", pass + 1));
@@ -1229,6 +1232,7 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                 let mut detached_reports = Vec::new();
                 let detached = if summaries.first().is_some_and(|s| s.get("from_dump").is_some()) { Vec::new() }
                     else { plan.as_ref().map(|p| p.detached_passes()).unwrap_or_default() };
+                let detached_all = detached.clone();
                 // Stack every detached pass first (independent sub-sessions,
                 // concurrent within the memory budget), then place each.
                 let stacked: Vec<Result<(Value, crate::session_lighting_fusion::GroupPlanes, SamplingDomain)>> = {
@@ -1255,6 +1259,12 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                     });
                     slots.into_iter().map(|s| s.into_inner().unwrap().unwrap_or_else(|| Err(anyhow::anyhow!("not stacked")))).collect()
                 };
+                // Each detached pass's own photograph planes, for delivery as
+                // an alternative if it is not blended.
+                let raw_detached: Vec<Option<(crate::session_lighting_fusion::GroupPlanes, SamplingDomain)>> = stacked
+                    .iter()
+                    .map(|s| s.as_ref().ok().map(|(_, planes, d)| (planes.clone(), *d)))
+                    .collect();
                 // Placements are independent; each searches only four quarter
                 // turns in parallel, so run them concurrently.
                 use rayon::prelude::*;
@@ -1313,8 +1323,13 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                         }
                     }
                 }
+                let planned_anchor = session.primary_pass_index().unwrap_or(alignment.report.reference_pass);
+                let mut other_views: Vec<(usize, crate::session_lighting_fusion::GroupPlanes, SamplingDomain)> = Vec::new();
+                let mut fused_detached: Vec<usize> = Vec::new();
                 let (fuse_domain, development_pass) = if let Some((c, others)) = view {
-                    let original = session.passes[session.primary_pass_index().unwrap_or(alignment.report.reference_pass)].name.clone();
+                    let original = session.passes[planned_anchor].name.clone();
+                    other_views.push((planned_anchor, captured[0].clone(), domain));
+                    fused_detached.push(c);
                     let mut stacked = stacked;
                     let (mut summary, planes, d) = std::mem::replace(&mut stacked[c], Err(anyhow::anyhow!("moved")))?;
                     eprintln!("session detached layer: '{}' and {} other pass(es) show a view the anchor '{original}' does not; building the photograph on '{}'",
@@ -1328,6 +1343,7 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                         let name = session.passes[detached[j]].name.clone();
                         detached_reports.push(json!({"pass": name, "placement": placement, "placed_on": session.passes[detached[c]].name}));
                         if let Some(planes) = placed {
+                            fused_detached.push(j);
                             let (mut summary, _, _) = std::mem::replace(&mut stacked[j], Err(anyhow::anyhow!("moved")))?;
                             summary["placement"] = json!(placement);
                             summaries.push(summary);
@@ -1342,6 +1358,7 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                         summary["placement"] = json!(placement);
                         detached_reports.push(json!({"pass": session.passes[detached[i]].name, "placement": placement}));
                         if let Some(planes) = placed {
+                            fused_detached.push(i);
                             summaries.push(summary);
                             captured.push(planes);
                             kinds.push(LayerKind::Detached);
@@ -1375,7 +1392,35 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                     report["recipe"]["memory_limit_gib"] = json!(args.resources.memory_limit_gib);
                 }
                 report["sources"] = json!(summaries.iter().filter_map(|s| s["sources"].as_u64()).sum::<u64>());
+                // Which fused groups came out as another colour appearance.
+                let different: Vec<String> = fusion.layers.iter()
+                    .filter(|l| l.outcome == "appearance_differs")
+                    .filter_map(|l| summaries.get(l.group)?["passes"].get(0)?.as_str().map(str::to_owned))
+                    .collect();
                 outputs.push(write_fused(args, &session, &calibrations, fuse_domain, development_pass, planes, report, &destination)?);
+                // Deliver what was not blended: the planned anchor's view when
+                // the photograph moved to another, detached passes that placed
+                // nowhere, and detached passes of another colour appearance.
+                let mut deliver: Vec<(usize, crate::session_lighting_fusion::GroupPlanes, SamplingDomain, &str)> = other_views
+                    .into_iter().map(|(p, planes, d)| (p, planes, d, "another view of the subject")).collect();
+                for (i, raw) in raw_detached.into_iter().enumerate() {
+                    let Some((planes, d)) = raw else { continue };
+                    let name = &session.passes[detached_all[i]].name;
+                    if !fused_detached.contains(&i) {
+                        deliver.push((detached_all[i], planes, d, "another view or framing (not found on the photograph)"));
+                    } else if different.contains(name) {
+                        deliver.push((detached_all[i], planes, d, "another colour appearance (other lighting)"));
+                    }
+                }
+                for (n, (pass, group, d, reason)) in deliver.into_iter().enumerate() {
+                    let name = format!("alternative-{:02}", n + 1);
+                    let directory = destination.join(&name);
+                    std::fs::create_dir(&directory)?;
+                    eprintln!("session alternative: {name} = '{}' ({reason})", session.passes[pass].name);
+                    write_fused(args, &session, &calibrations, d, pass, group.planes,
+                        json!({"alternative_of": session.passes[pass].name, "reason": reason}), &directory)?;
+                    alternatives.push(json!({"directory": name, "pass": session.passes[pass].name, "reason": reason}));
+                }
             } else {
                 outputs.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &frame_gains, &excluded, &reconstruction_focus, domain, args.only_pass, &destination, None)?);
             }
@@ -1407,6 +1452,9 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
             "primary_pass":session.primary_pass_index(),
             "render_bindings":crate::session_reproducibility::completion_bindings(&destination)?
         });
+        if !alternatives.is_empty() {
+            completion["alternatives"] = json!(alternatives);
+        }
         if !cohort.omitted.is_empty() {
             completion["consumed_frames"] = outputs[0]["sources"].clone();
             completion["omitted_acquisitions"] = json!(cohort.omitted);

@@ -215,7 +215,10 @@ fn bindings(
                 && components.last() == Some(&"render-completion.json")
                 && (components.len() == 1
                     || components[0].starts_with("layer-")
-                    || components[0].starts_with("independent-pass-")),
+                    || components[0].starts_with("independent-pass-")
+                    // Best result delivers passes it did not blend as their
+                    // own photographs; they are bound like any output.
+                    || (mode == SessionMode::Auto && components[0].starts_with("alternative-"))),
             "Unsupported renderer binding path"
         );
         bind(root, name, Some(valid_digest(digest)?), files, cancelled)?;
