@@ -1084,7 +1084,7 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                     log_brightness_range: r.log_brightness_range,
                 }
             }).collect();
-            Some(auto_plan::plan(&facts, anchor, session.primary_pass_index().is_some())?.with_lighting_fusion(args.lighting_fusion))
+            Some(auto_plan::plan(&facts, anchor, session.primary_pass_index().is_some())?.with_lighting_fusion(!args.anchor_lighting_only))
         } else { None };
         if let Some(plan) = &plan {
             write_json_new(&destination.join("plan.json"), plan)?;
@@ -1135,15 +1135,17 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
             }
         } else {
             let groups = plan.as_ref().map(|p| p.lighting_groups()).unwrap_or_default();
+            let mut kinds = plan.as_ref().map(|p| p.group_kinds()).unwrap_or_default();
             if groups.len() >= 2 && args.only_pass.is_none() {
                 ensure!(!args.contribution_maps && !args.original_cfa_reconstruction && !args.reproducibility && !args.focus_evidence,
-                    "lighting fusion does not yet combine with contribution maps, focus evidence, reconstruction or reproducibility");
+                    "lighting and pose layers do not yet combine with contribution maps, focus evidence, reconstruction or reproducibility; add --anchor-lighting-only");
                 let mut captured = Vec::new();
                 let mut summaries = Vec::new();
                 // Diagnostic: develop from a previous STREHL_LIGHTING_DUMP instead of
                 // re-merging (optionally only its first N groups).
                 if let Some(dir) = std::env::var_os("STREHL_LIGHTING_FROM_DUMP") {
-                    let (mut loaded, width, height) = crate::session_lighting_fusion::load_dump(Path::new(&dir))?;
+                    let (mut loaded, loaded_kinds, width, height) = crate::session_lighting_fusion::load_dump(Path::new(&dir))?;
+                    if !loaded_kinds.is_empty() { kinds = loaded_kinds; }
                     ensure!((width, height) == (domain.width, domain.height), "lighting dump does not match the canvas");
                     if let Some(n) = std::env::var("STREHL_LIGHTING_DUMP_GROUPS").ok().and_then(|v| v.parse::<usize>().ok()) {
                         loaded.truncate(n.max(1));
@@ -1161,10 +1163,15 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                 }
                 ensure!(captured[0].valid.iter().all(|&v| v), "the anchor lighting group does not cover the canvas");
                 if let Some(dir) = std::env::var_os("STREHL_LIGHTING_DUMP") {
-                    crate::session_lighting_fusion::dump(&captured, domain.width, domain.height, Path::new(&dir))?;
+                    crate::session_lighting_fusion::dump(&captured, &kinds, domain.width, domain.height, Path::new(&dir))?;
                 }
-                eprintln!("session lighting fusion: blending {} lighting groups (experimental: may soften fine grain and darken some speculars)", captured.len());
-                let (planes, fusion) = crate::session_lighting_fusion::fuse(&captured, domain.width, domain.height);
+                eprintln!("session lighting fusion: superposing {} lighting groups", captured.len());
+                let (planes, fusion) = crate::session_lighting_fusion::fuse(&captured, &kinds, domain.width, domain.height);
+                for layer in &fusion.layers {
+                    let residual = |s: &Option<crate::session_lighting_fusion::FieldStats>| s.as_ref().map_or("-".to_string(), |s| format!("{:.2}", s.median_px));
+                    eprintln!("  lighting group {}: {} (fine/coarse contrast {:.2}; residual {} -> {} plane px)",
+                        layer.group, layer.outcome, layer.fine_over_coarse, residual(&layer.residual_before), residual(&layer.residual_after));
+                }
                 drop(captured);
                 outputs.push(write_fused(args, &session, &alignment, &calibrations, domain, planes,
                     json!({"lighting_fusion": fusion, "lighting_groups": summaries}), &destination)?);
@@ -1342,8 +1349,9 @@ fn cached_alignment(
         include_bytes!("../../strehl-raw/src/lib.rs").as_slice(),
         include_bytes!("../../../Cargo.lock").as_slice(),
     ] {
+        let bytes = crate::session_align::source_text(bytes);
         hash.update((bytes.len() as u64).to_le_bytes());
-        hash.update(bytes);
+        hash.update(&bytes);
     }
     let key = crate::session_input::hex(&hash.finalize());
     let path = cache.root().join(format!("alignment-{key}.json"));
@@ -1418,8 +1426,9 @@ fn renderer_source_hash() -> String {
         include_bytes!("../../strehl-core/src/color.rs").as_slice(),
         include_bytes!("../../../Cargo.lock").as_slice(),
     ] {
+        let bytes = crate::session_align::source_text(bytes);
         hash.update((bytes.len() as u64).to_le_bytes());
-        hash.update(bytes);
+        hash.update(&bytes);
     }
     crate::session_input::hex(&hash.finalize())
 }

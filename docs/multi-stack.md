@@ -9,7 +9,7 @@ in development builds; the alpha.6 download predates them.
 
 | Mode | Result | Suitable inputs |
 | --- | --- | --- |
-| Best result (default) | One photograph and master. Strehl plans each pass against the primary (or geometry reference): equal settings combine, different shutter times combine after validated exposure correction, and passes that cannot be fused safely are left out with a reason in `plan.json`. | Any related passes of one subject; no manual classification needed. |
+| Best result (default) | One photograph and master. Strehl plans each pass against the primary (or geometry reference): equal settings combine, different shutter times combine after validated exposure correction, differently lit or moved passes are registered and superposed, and passes that cannot be used safely are left out with a reason in `plan.json`. | Any related passes of one subject; no manual classification needed. |
 | Combine detail | One photograph and scene-linear master, with captures admitted separately across focus. | Related passes with equal camera, lens, ISO, aperture and shutter time. |
 | Interleaved focus | One photograph from complementary focus positions, retaining each pass's order. | Offset focus ladders that fill one another's missing focus coverage. |
 | Repeated captures | One photograph and master; proposed matching observations are averaged only where their coefficients agree with the injected noise model. | Repeated focus sweeps of a static subject under stable lighting. |
@@ -21,20 +21,40 @@ in development builds; the alpha.6 download predates them.
 Best result also recovers passes whose framing or magnification differs too
 much for the ordinary cross-pass search: a global scale/rotation/translation
 search proposes a placement, and only a direct native measurement accepts it.
-Registration is not enough to fuse. A pass joined this way must agree with the
-anchor across its overlap; one that matches only locally (typically because
-the subject's pose changed between sessions) is left out to prevent ghosting.
-Passes beyond 1.5x magnification relative to the anchor are also left out
-until close-up detail insertion exists. Different ISO or aperture is not yet
-pooled; choose Aligned layers to keep such appearances.
+A pass that matches the anchor only locally (typically because the subject's
+pose changed between sessions) becomes a *pose layer*. Passes beyond 1.5x
+magnification relative to the anchor are left out until close-up detail
+insertion exists. Different ISO or aperture is not yet pooled; choose Aligned
+layers to keep such appearances.
 
 Brightness is measured per frame across the overlaps the alignment confirmed,
 so lighting that drifts during a pass, or a different shutter time, is corrected
-automatically. A pass lit differently in *shape* (a moved or re-aimed lamp) is
-reported as a lighting layer and not used: no blend of differently lit stacks has
-yet beaten the best single lighting. The experimental CLI flag
-`--lighting-fusion` blends such layers' fine detail where it agrees with the
-anchor; it can soften fine grain and darken some speculars.
+automatically. A pass lit differently in *shape* (a moved or re-aimed lamp)
+becomes a *lighting layer*.
+
+Each layer is merged on its own and then combined with the anchor's photograph
+before development. Light adds linearly, so averaging the lighting groups at
+equal brightness renders the subject as if every lamp had been on at once, with
+less noise where they overlap. Before averaging, Strehl:
+
+- drops a layer that is out of focus. Lighting scales contrast equally at every
+  scale, while defocus removes fine detail first, so the ratio of fine to coarse
+  contrast against the anchor measures blur whatever the lighting;
+- registers the layer onto the anchor with a dense residual displacement field
+  measured on band-passed log brightness, which lighting barely changes. The
+  global placement leaves about a pixel between passes, more after a pose
+  change, and averaging misplaced detail would soften it;
+- fills canvas the layer does not cover from the anchor relit by the layer's
+  smooth brightness ratio, so coverage edges leave no seams;
+- keeps the anchor's near-clipped highlights, whose values are only lower
+  bounds;
+- for a pose layer, uses it only where it matches the relit anchor after
+  registration; a moved limb or an occlusion falls back to the anchor instead
+  of ghosting.
+
+`render-report.json` records each layer's outcome, residual displacement before
+and after registration, brightness, coverage and (for pose layers) agreement.
+`--anchor-lighting-only` uses only passes lit and posed like the anchor.
 
 Exposure range validates a bounded correction to the nominal shutter ratio.
 It tests supported color/brightness consistency on separate spatial patches

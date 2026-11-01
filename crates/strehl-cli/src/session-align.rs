@@ -443,6 +443,22 @@ pub struct SessionAlignment {
     binding: Binding,
 }
 
+/// Source bytes as bound into cache identities, with CRLF line endings
+/// normalised to LF so a checkout's line-ending conversion cannot change a
+/// cache key (it once forced a full re-alignment).
+pub(crate) fn source_text(bytes: &[u8]) -> std::borrow::Cow<'_, [u8]> {
+    if !bytes.contains(&b'\r') {
+        return std::borrow::Cow::Borrowed(bytes);
+    }
+    let mut out = Vec::with_capacity(bytes.len());
+    for (i, &b) in bytes.iter().enumerate() {
+        if !(b == b'\r' && bytes.get(i + 1) == Some(&b'\n')) {
+            out.push(b);
+        }
+    }
+    std::borrow::Cow::Owned(out)
+}
+
 fn binding(
     session: &ResolvedSession,
     identities: &[SourceIdentity],
@@ -467,17 +483,21 @@ fn binding(
         );
     }
     let mut algorithm = Sha256::new();
-    algorithm.update(include_bytes!("session-align.rs"));
-    algorithm.update(include_bytes!("../../strehl-core/src/align.rs"));
-    algorithm.update(include_bytes!("../../strehl-core/src/align-global.rs"));
-    algorithm.update(include_bytes!("session-frame-photometry.rs"));
-    algorithm.update(include_bytes!("session-geometry-check.rs"));
-    algorithm.update(include_bytes!("../../strehl-core/src/plane.rs"));
-    algorithm.update(include_bytes!("../../strehl-core/src/warpmap.rs"));
-    algorithm.update(include_bytes!("../../strehl-raw/src/lib.rs"));
-    algorithm.update(include_bytes!("../../../Cargo.lock"));
-    algorithm.update(include_bytes!("session-cache.rs"));
-    algorithm.update(include_bytes!("session-input.rs"));
+    for bytes in [
+        include_bytes!("session-align.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/align.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/align-global.rs").as_slice(),
+        include_bytes!("session-frame-photometry.rs").as_slice(),
+        include_bytes!("session-geometry-check.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/plane.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/warpmap.rs").as_slice(),
+        include_bytes!("../../strehl-raw/src/lib.rs").as_slice(),
+        include_bytes!("../../../Cargo.lock").as_slice(),
+        include_bytes!("session-cache.rs").as_slice(),
+        include_bytes!("session-input.rs").as_slice(),
+    ] {
+        algorithm.update(source_text(bytes));
+    }
     Ok(Binding {
         generation: GENERATION.into(),
         algorithm_sha256: hex(&algorithm.finalize()),
@@ -3070,4 +3090,11 @@ mod tests {
             results.into_iter().find(|(ok, _)| *ok).unwrap().1
         );
     }
+}
+
+#[cfg(test)]
+#[test]
+fn cache_identity_ignores_line_endings() {
+    assert_eq!(&*source_text(b"a\r\nb\n\rc"), b"a\nb\n\rc");
+    assert!(matches!(source_text(b"a\nb"), std::borrow::Cow::Borrowed(_)));
 }

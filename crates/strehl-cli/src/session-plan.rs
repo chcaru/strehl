@@ -24,6 +24,9 @@ pub const MAX_PHOTOMETRIC_RESIDUAL: f64 = 0.05;
 /// Measured brightness variation (natural log) above which per-frame gains are
 /// applied even when every contributing pass shares the anchor's settings.
 pub const DRIFT_THRESHOLD: f64 = 0.01;
+/// Remaining post-placement displacement (guide px) beyond which a moved
+/// pass is out of reach of the fusion's dense residual registration.
+pub const MAX_POSE_RESIDUAL: f64 = 8.0;
 
 /// Per-pass facts gathered before the plan is drawn.
 #[derive(Clone, Debug, PartialEq)]
@@ -62,8 +65,12 @@ pub enum Role {
     /// Different shutter time; combined through measured per-frame gains.
     ExposureNormalized,
     /// Geometrically consistent but lit differently (shading, not only level):
-    /// merged on its own and blended into the photograph by lighting fusion.
+    /// merged on its own and superposed into the photograph by lighting fusion.
     LightingLayer,
+    /// The subject moved between passes (one 2-D placement does not fit the
+    /// whole overlap): merged on its own, registered densely onto the anchor
+    /// and superposed only where it then matches the anchor.
+    PoseLayer,
     /// Retained in the report, not consumed by the photograph.
     Excluded,
 }
@@ -96,9 +103,9 @@ pub struct AutoPlan {
     pub passes: Vec<PassPlan>,
     /// Consumer applies the solved per-frame gains (otherwise unity).
     pub per_frame_gains: bool,
-    /// Lighting layers are blended (`--lighting-fusion`); otherwise they are
-    /// reported but not consumed. Off by default: on bug-4 no blend tried so
-    /// far beat the anchor's developed photograph.
+    /// Lighting layers are merged on their own, registered onto the anchor and
+    /// superposed ("all lights on"); with `--anchor-lighting-only` they are
+    /// reported but not consumed.
     pub lighting_fusion: bool,
     pub limitations: Vec<&'static str>,
 }
@@ -133,7 +140,20 @@ fn role_for(pass: usize, anchor: usize, f: &PassFacts, lead: &PassFacts) -> (Rol
     if f.placed == 0 {
         return excluded("no frame joined the anchor's measured alignment".into());
     }
-    if !f.geometry_consistent {
+    let pose_changed = !f.geometry_consistent;
+    let pose_evidence = || match (f.geometric_residual, f.cross_support_ratio) {
+        (Some(px), _) => format!(
+            "after placement the subject still moves {px:.1} guide px (median) against the anchor"
+        ),
+        (None, Some(r)) => {
+            format!("one 2-D placement matches the anchor only locally (support {r:.2})")
+        }
+        (None, None) => "one 2-D placement does not match the anchor across the overlap".into(),
+    };
+    if pose_changed
+        && f.geometric_residual
+            .is_some_and(|px| px > MAX_POSE_RESIDUAL)
+    {
         let evidence = match (f.geometric_residual, f.cross_support_ratio) {
             (Some(px), _) => format!(
                 "after placement the subject still moves {px:.1} guide px (median) against the anchor"
@@ -144,7 +164,7 @@ fn role_for(pass: usize, anchor: usize, f: &PassFacts, lead: &PassFacts) -> (Rol
             (None, None) => "one 2-D placement does not match the anchor across the overlap".into(),
         };
         return excluded(format!(
-            "{evidence}; the subject's pose or shape likely changed between passes, and fusing would ghost"
+            "{evidence}; the subject's pose or shape changed beyond the reach of dense registration"
         ));
     }
     if let Some(s) = f.relative_scale
@@ -172,6 +192,15 @@ fn role_for(pass: usize, anchor: usize, f: &PassFacts, lead: &PassFacts) -> (Rol
             f_number(f.aperture),
             f_number(lead.aperture)
         ));
+    }
+    if pose_changed {
+        return (
+            Role::PoseLayer,
+            Some(format!(
+                "{}; the subject's pose or shape likely changed between passes",
+                pose_evidence()
+            )),
+        );
     }
     if let Some(spread) = f.photometric_spread
         && spread > MAX_PHOTOMETRIC_SPREAD
@@ -258,17 +287,19 @@ pub fn plan(facts: &[PassFacts], anchor: usize, anchor_is_primary: bool) -> Resu
         }
     }
     let drift = hi - lo;
-    let per_frame_gains = passes
-        .iter()
-        .any(|p| matches!(p.role, Role::ExposureNormalized | Role::LightingLayer))
-        || (drift.is_finite() && drift > DRIFT_THRESHOLD);
+    let per_frame_gains = passes.iter().any(|p| {
+        matches!(
+            p.role,
+            Role::ExposureNormalized | Role::LightingLayer | Role::PoseLayer
+        )
+    }) || (drift.is_finite() && drift > DRIFT_THRESHOLD);
     Ok(AutoPlan {
         schema: SCHEMA,
         anchor_pass: anchor,
         anchor_is_primary,
         passes,
         per_frame_gains,
-        lighting_fusion: false,
+        lighting_fusion: true,
         limitations: vec![
             "Equal metadata is evidence for combination, not proof of equal focus, illumination or subject rigidity; the consumer still gates averaging by noise.",
             "Per-frame brightness comes from block-mean ratios over geometry-confirmed overlaps, solved jointly; it is not held out from alignment.",
@@ -298,21 +329,39 @@ impl AutoPlan {
                 })
                 .collect::<Vec<_>>(),
         ];
-        for p in self
-            .passes
-            .iter()
-            .filter(|p| self.lighting_fusion && p.role == Role::LightingLayer)
-        {
+        for p in self.layers() {
             groups.push(self.passes.iter().map(|q| q.pass == p.pass).collect());
         }
         groups
+    }
+
+    fn layers(&self) -> impl Iterator<Item = &PassPlan> {
+        self.passes.iter().filter(|p| {
+            self.lighting_fusion && matches!(p.role, Role::LightingLayer | Role::PoseLayer)
+        })
+    }
+
+    /// Fusion kind of each lighting group, in [`Self::lighting_groups`] order.
+    pub fn group_kinds(&self) -> Vec<crate::session_lighting_fusion::LayerKind> {
+        use crate::session_lighting_fusion::LayerKind;
+        std::iter::once(LayerKind::Lighting)
+            .chain(self.layers().map(|p| {
+                if p.role == Role::PoseLayer {
+                    LayerKind::Pose
+                } else {
+                    LayerKind::Lighting
+                }
+            }))
+            .collect()
     }
 
     pub fn excluded(&self) -> Vec<bool> {
         self.passes
             .iter()
             .map(|p| {
-                p.role == Role::Excluded || (p.role == Role::LightingLayer && !self.lighting_fusion)
+                p.role == Role::Excluded
+                    || (matches!(p.role, Role::LightingLayer | Role::PoseLayer)
+                        && !self.lighting_fusion)
             })
             .collect()
     }
@@ -347,12 +396,20 @@ impl AutoPlan {
                     p.nominal_gain.map_or(f64::NAN, |g| 1.0 / g)
                 ),
                 Role::LightingLayer if self.lighting_fusion => format!(
-                    "lighting layer, adds detail where it agrees with the anchor{range}: {}",
+                    "lighting layer, registered and superposed with the anchor's lighting{range}: {}",
                     p.reason.as_deref().unwrap_or("lighting differs")
                 ),
                 Role::LightingLayer => format!(
-                    "lighting layer, not blended (--lighting-fusion blends it){range}: {}",
+                    "lighting layer, not used (--anchor-lighting-only){range}: {}",
                     p.reason.as_deref().unwrap_or("lighting differs")
+                ),
+                Role::PoseLayer if self.lighting_fusion => format!(
+                    "pose layer, registered densely and superposed where it matches the anchor{range}: {}",
+                    p.reason.as_deref().unwrap_or("pose differs")
+                ),
+                Role::PoseLayer => format!(
+                    "pose layer, not used (--anchor-lighting-only){range}: {}",
+                    p.reason.as_deref().unwrap_or("pose differs")
                 ),
                 Role::Excluded => {
                     format!("not used: {}", p.reason.as_deref().unwrap_or("unspecified"))
@@ -430,10 +487,11 @@ mod tests {
             unmeasured,
             equal_unmeasured,
         ]);
-        assert_eq!(plan.excluded(), [false, true, true, true, false]);
-        assert_eq!(plan.lighting_groups().len(), 1);
-        let plan = plan.with_lighting_fusion(true);
         assert_eq!(plan.excluded(), [false, false, false, true, false]);
+        assert_eq!(plan.lighting_groups().len(), 3);
+        let anchor_only = plan.clone().with_lighting_fusion(false);
+        assert_eq!(anchor_only.excluded(), [false, true, true, true, false]);
+        assert_eq!(anchor_only.lighting_groups().len(), 1);
         assert_eq!(plan.passes[1].role, Role::LightingLayer);
         assert_eq!(plan.passes[2].role, Role::LightingLayer);
         assert!(plan.passes[1].reason.as_deref().unwrap().contains("shape"));
@@ -479,20 +537,43 @@ mod tests {
     }
 
     #[test]
-    fn auto_plan_excludes_locally_registered_and_strongly_magnified_passes() {
+    fn auto_plan_layers_moved_passes_and_excludes_strongly_magnified_ones() {
         let mut posed = facts("posed", [16, 10]);
         posed.geometry_consistent = false;
         posed.cross_support_ratio = Some(0.2);
         let mut moved = facts("moved", [16, 10]);
         moved.geometry_consistent = false;
         moved.geometric_residual = Some(4.0);
-        let moved_plan = plan_of(&[facts("a", [16, 10]), moved]);
+        let mut far = facts("far", [16, 10]);
+        far.geometry_consistent = false;
+        far.geometric_residual = Some(12.0);
+        let moved_plan = plan_of(&[facts("a", [16, 10]), moved, far]);
+        assert_eq!(moved_plan.passes[1].role, Role::PoseLayer);
         assert!(
             moved_plan.passes[1]
                 .reason
                 .as_deref()
                 .unwrap()
                 .contains("4.0 guide px")
+        );
+        assert_eq!(moved_plan.passes[2].role, Role::Excluded);
+        assert!(
+            moved_plan.passes[2]
+                .reason
+                .as_deref()
+                .unwrap()
+                .contains("reach")
+        );
+        assert_eq!(
+            moved_plan.group_kinds(),
+            [
+                crate::session_lighting_fusion::LayerKind::Lighting,
+                crate::session_lighting_fusion::LayerKind::Pose
+            ]
+        );
+        assert_eq!(
+            moved_plan.clone().with_lighting_fusion(false).excluded(),
+            [false, true, true]
         );
         let mut closeup = facts("closeup", [2, 1]);
         closeup.relative_scale = Some(2.7);
@@ -501,8 +582,15 @@ mod tests {
         let mut near = facts("near", [16, 10]);
         near.relative_scale = Some(1.22);
         let plan = plan_of(&[facts("a", [16, 10]), posed, closeup, wider, near]);
-        assert_eq!(plan.excluded(), [false, true, true, true, false]);
-        assert!(plan.passes[1].reason.as_deref().unwrap().contains("ghost"));
+        assert_eq!(plan.excluded(), [false, false, true, true, false]);
+        assert_eq!(plan.passes[1].role, Role::PoseLayer);
+        assert!(
+            plan.passes[1]
+                .reason
+                .as_deref()
+                .unwrap()
+                .contains("support 0.20")
+        );
         assert!(plan.passes[2].reason.as_deref().unwrap().contains("x2.70"));
     }
 

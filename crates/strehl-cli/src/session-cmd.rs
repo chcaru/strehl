@@ -83,11 +83,11 @@ pub(crate) struct StackArgs {
     /// Save per-pass focus position, shape, ambiguity and original-source maps.
     #[arg(long)]
     pub focus_evidence: bool,
-    /// Auto mode: blend passes lit differently from the anchor, adding their
-    /// fine detail only where it agrees with the anchor. Experimental; off by
-    /// default because it has not yet beaten the anchor alone.
+    /// Auto mode: use only passes lit like the anchor. By default passes lit
+    /// differently are merged on their own, registered onto the anchor and
+    /// superposed with it, as if every lamp were on at once.
     #[arg(long)]
-    pub lighting_fusion: bool,
+    pub anchor_lighting_only: bool,
     /// Compare independently reconstructed first and second passes on the same canvas.
     #[arg(long)]
     pub reproducibility: bool,
