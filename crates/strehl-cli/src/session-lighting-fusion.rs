@@ -69,6 +69,8 @@ pub struct LayerReport {
     /// Pose layers: fraction of the covered canvas that agrees with the
     /// anchor after registration and relighting (the rest yields to it).
     pub agreement: Option<f64>,
+    /// Fraction of the common subject where the layer is locally sharp.
+    pub sharp_fraction: Option<f64>,
 }
 
 #[derive(Clone, Debug, serde::Serialize)]
@@ -99,10 +101,17 @@ pub struct FusionConfig {
     pub ratio_sigma: f32,
     /// Distance (plane px) over which a layer fades in from its coverage edge.
     pub feather: usize,
-    /// Fine-band contrast ratio and fine/coarse shape below which a layer is
-    /// defocused.
+    /// Fine-band contrast ratio below half of which a layer has no usable
+    /// contrast at all.
     pub min_fine_contrast: f32,
-    pub min_fine_over_coarse: f32,
+    /// Local defocus gate: pooling radius (plane px) and the local fine/coarse
+    /// shape relative to the anchor at which a layer starts, and fully
+    /// stops, being rejected as blurred.
+    pub sharp_radius: usize,
+    pub blur_reject: f32,
+    pub blur_accept: f32,
+    /// Fraction of the subject that must be locally sharp to use a layer.
+    pub min_sharp_fraction: f64,
     /// Anchor value/ceiling range over which the anchor takes over highlights.
     pub highlight_start: f32,
     pub highlight_full: f32,
@@ -123,7 +132,10 @@ impl Default for FusionConfig {
             ratio_sigma: 24.0,
             feather: 24,
             min_fine_contrast: 0.3,
-            min_fine_over_coarse: 0.75,
+            sharp_radius: 24,
+            blur_reject: 0.6,
+            blur_accept: 0.85,
+            min_sharp_fraction: 0.05,
             highlight_start: 0.8,
             highlight_full: 0.95,
             pose_agree: 0.1,
@@ -675,6 +687,65 @@ fn upsample_by(
     out
 }
 
+/// |DoG| of `luma` between Gaussian scales sigma and 2 sigma, pooled locally.
+fn local_band(luma: &[f32], width: usize, height: usize, sigma: f32, radius: usize) -> Vec<f32> {
+    let a = gaussian_blur(luma, width, height, sigma);
+    let b = gaussian_blur(luma, width, height, 2.0 * sigma);
+    let band: Vec<f32> = a.iter().zip(&b).map(|(a, b)| (a - b).abs()).collect();
+    box_mean(&band, width, height, radius)
+}
+
+/// Per-pixel weight in [0, 1] for where `layer` is locally as sharp as
+/// `anchor`: the ratio of fine to coarse band contrast, relative to the
+/// anchor's, is lighting-independent (lighting scales both bands) and falls
+/// with defocus. Where the anchor has little structure, blur cannot show and
+/// the weight returns to 1.
+fn local_sharpness(
+    anchor: &[f32],
+    layer: &[f32],
+    overlap: &[bool],
+    width: usize,
+    height: usize,
+    cfg: &FusionConfig,
+) -> (Vec<f32>, Vec<bool>) {
+    let r = cfg.sharp_radius;
+    let (fa, ca) = (
+        local_band(anchor, width, height, 0.7, r),
+        local_band(anchor, width, height, 2.8, r),
+    );
+    let (fl, cl) = (
+        local_band(layer, width, height, 0.7, r),
+        local_band(layer, width, height, 2.8, r),
+    );
+    let reference = quantile(
+        (0..anchor.len())
+            .filter(|&i| overlap[i])
+            .map(|i| ca[i])
+            .collect(),
+        0.5,
+    )
+    .unwrap_or(0.0)
+    .max(1e-12);
+    // Clamped borders flatten both bands within the pooling reach of the
+    // canvas edge, which reads as sharp: judge nothing there.
+    let margin = r + 6;
+    (0..anchor.len())
+        .map(|i| {
+            let (x, y) = (i % width, i / width);
+            if x < margin || y < margin || x + margin >= width || y + margin >= height {
+                return (0.0, false);
+            }
+            let shape = (fl[i] / cl[i].max(1e-12)) / (fa[i] / ca[i].max(1e-12)).max(1e-12);
+            let structure = ca[i] / (ca[i] + 0.25 * reference);
+            let blended = structure * shape + (1.0 - structure);
+            (
+                smoothstep(cfg.blur_reject, cfg.blur_accept, blended),
+                structure > 0.5,
+            )
+        })
+        .unzip()
+}
+
 /// Mean |band| of `luma` between Gaussian scales sigma and 2 sigma over `mask`.
 fn band_contrast(luma: &[f32], mask: &[bool], width: usize, height: usize, sigma: f32) -> f64 {
     let a = gaussian_blur(luma, width, height, sigma);
@@ -738,6 +809,7 @@ pub fn fuse_with(
             brightness_gain: None,
             coverage: None,
             agreement: None,
+            sharp_fraction: None,
         };
         // Defocus gate on the common bright subject.
         let common: Vec<bool> = anchor
@@ -781,9 +853,10 @@ pub fn fuse_with(
         let (fine, coarse) = (ratio(0.7), ratio(2.8));
         report.fine_contrast_ratio = fine;
         report.fine_over_coarse = fine / coarse.max(1e-12);
-        if fine < f64::from(cfg.min_fine_contrast)
-            || report.fine_over_coarse < f64::from(cfg.min_fine_over_coarse)
-        {
+        // Only a layer with no usable contrast at all is dropped here; a
+        // partly defocused one (a short pass covering part of the depth) is
+        // gated locally after registration.
+        if fine < f64::from(cfg.min_fine_contrast) * 0.5 {
             report.outcome = "defocused";
             layers.push(report);
             continue;
@@ -859,6 +932,24 @@ pub fn fuse_with(
             .map(|c| smoothstep(0.5, 1.0, c))
             .collect();
         drop(coverage);
+        // Local defocus gate: the layer contributes only where it is as sharp
+        // as the anchor, so a pass covering part of the depth adds where it is
+        // in focus and nowhere else.
+        let (sharp, structured) =
+            local_sharpness(&anchor_luma, &layer_luma, &overlap, width, height, cfg);
+        let judged = |i: usize| subject[i] && structured[i];
+        let judged_pixels = (0..n).filter(|&i| judged(i)).count().max(1);
+        report.sharp_fraction = Some(
+            (0..n).filter(|&i| judged(i) && sharp[i] > 0.5).count() as f64 / judged_pixels as f64,
+        );
+        drop(structured);
+        if report.sharp_fraction < Some(cfg.min_sharp_fraction) {
+            report.outcome = "defocused";
+            layers.push(report);
+            continue;
+        }
+        let alpha: Vec<f32> = alpha.iter().zip(&sharp).map(|(a, s)| a * s).collect();
+        drop(sharp);
         let scale = f64::from((-log_gain).exp());
         let relit = |trusted: &[bool]| -> [Vec<f32>; 4] {
             std::array::from_fn(|p| {
@@ -1195,6 +1286,66 @@ mod tests {
                 .zip(&sharp)
                 .all(|(a, b)| (a - b).abs() < 1e-3)
         );
+    }
+
+    #[test]
+    fn a_partly_defocused_layer_contributes_only_where_it_is_sharp() {
+        // A short pass: in focus on the left, blurred on the right.
+        let base = |x: f32, y: f32| 400.0 * texture(x, y) + 40.0 * noise(x, y, 9).signum();
+        let anchor = group(|x, y| base(x, y) + 15.0 * noise(x, y, 1));
+        let sharp_layer: Vec<f32> = (0..W * H)
+            .map(|i| {
+                let (x, y) = ((i % W) as f32, (i / W) as f32);
+                0.7 * (base(x, y) + 15.0 * noise(x, y, 2))
+            })
+            .collect();
+        let blurred = gaussian_blur(&sharp_layer, W, H, 2.5);
+        let mixed: Vec<f32> = (0..W * H)
+            .map(|i| {
+                if i % W < W / 2 {
+                    sharp_layer[i]
+                } else {
+                    blurred[i]
+                }
+            })
+            .collect();
+        let mut layer = anchor.clone();
+        layer.planes = std::array::from_fn(|_| mixed.clone());
+        let (fused, report) = fuse(&[anchor.clone(), layer], &[], W, H);
+        let l = &report.layers[0];
+        assert_eq!(l.outcome, "superposed", "{report:?}");
+        let fraction = l.sharp_fraction.unwrap();
+        assert!(fraction > 0.25 && fraction < 0.75, "{report:?}");
+        // Right half keeps the anchor's fine detail.
+        let fine = |plane: &[f32], x0: usize, x1: usize| {
+            let band = gaussian_blur(plane, W, H, 0.7);
+            let coarse = gaussian_blur(plane, W, H, 1.4);
+            let mut sum = 0.0f64;
+            for y in 32..H - 32 {
+                for x in x0..x1 {
+                    sum += f64::from((band[y * W + x] - coarse[y * W + x]).abs());
+                }
+            }
+            sum
+        };
+        let kept =
+            fine(&fused[0], W / 2 + 48, W - 32) / fine(&anchor.planes[0], W / 2 + 48, W - 32);
+        assert!(kept > 0.9, "blurred half softened the result: {kept}");
+        // Left half averages noise.
+        let rms = |values: &[f32]| {
+            let mut sum = 0.0f64;
+            let mut count = 0;
+            for y in 32..H - 32 {
+                for x in 32..W / 2 - 48 {
+                    let e = values[y * W + x] - base(x as f32, y as f32);
+                    sum += f64::from(e * e);
+                    count += 1;
+                }
+            }
+            (sum / f64::from(count)).sqrt()
+        };
+        let (before, after) = (rms(&anchor.planes[0]), rms(&fused[0]));
+        assert!(after < 0.85 * before, "noise {before} -> {after}");
     }
 
     #[test]
