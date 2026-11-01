@@ -53,6 +53,22 @@ struct RenderReport {
     lighting_fusion: Option<Fusion>,
     #[serde(default)]
     lighting_groups: Vec<GroupSummary>,
+    #[serde(default)]
+    detached_layers: Vec<DetachedReport>,
+}
+#[derive(Deserialize)]
+struct DetachedReport {
+    pass: String,
+    #[serde(default)]
+    placement: Option<Placement>,
+    #[serde(default)]
+    error: Option<String>,
+}
+#[derive(Deserialize)]
+struct Placement {
+    scale: f64,
+    rotation_deg: f64,
+    accepted: bool,
 }
 #[derive(Deserialize)]
 struct Fusion {
@@ -112,15 +128,20 @@ pub(crate) fn contributions(output: &Path, names: &[String]) -> Option<Vec<PassC
             ),
             "combine" => ("Combined".to_owned(), true, None),
             "exposure_normalized" => ("Combined · exposure corrected".to_owned(), true, None),
-            role @ ("lighting_layer" | "pose_layer") => {
-                let kind = if role == "pose_layer" {
-                    "Pose layer"
-                } else {
-                    "Lighting layer"
+            role @ ("lighting_layer" | "pose_layer" | "detached_layer") => {
+                let kind = match role {
+                    "pose_layer" => "Pose layer",
+                    "detached_layer" => "Detached layer",
+                    _ => "Lighting layer",
                 };
+                let detached = report.detached_layers.iter().find(|d| &d.pass == name);
+                let placed = detached
+                    .and_then(|d| d.placement.as_ref())
+                    .filter(|p| p.accepted)
+                    .map(|p| format!("placed x{:.2} at {:.0}°", p.scale, p.rotation_deg));
                 match layer_of(name) {
                     Some(l) if l.outcome == "superposed" => {
-                        let mut parts = Vec::new();
+                        let mut parts: Vec<String> = placed.into_iter().collect();
                         if let (Some(a), Some(b)) = (&l.residual_before, &l.residual_after) {
                             parts.push(format!(
                                 "aligned {:.1} → {:.1} px",
@@ -146,7 +167,19 @@ pub(crate) fn contributions(output: &Path, names: &[String]) -> Option<Vec<PassC
                         (format!("{kind} · not used: out of focus"), false, None)
                     }
                     Some(_) => (format!("{kind} · not used: no usable overlap"), false, None),
-                    None => (format!("{kind} · not used"), false, None),
+                    None => match detached {
+                        Some(d) if d.error.is_some() => (
+                            format!("{kind} · not used: could not be stacked on its own"),
+                            false,
+                            d.error.clone(),
+                        ),
+                        Some(_) => (
+                            format!("{kind} · not used: not found on the primary"),
+                            false,
+                            None,
+                        ),
+                        None => (format!("{kind} · not used"), false, None),
+                    },
                 }
             }
             _ => ("Not used".to_owned(), false, None),

@@ -1145,6 +1145,411 @@ pub fn fuse_with(
     (planes, report)
 }
 
+// --- detached layers --------------------------------------------------------
+
+/// Where a separately stacked pass sits on the anchor canvas.
+#[derive(Clone, Debug, serde::Serialize)]
+pub struct DetachedPlacement {
+    /// Layer plane px per canvas plane px.
+    pub scale: f64,
+    pub rotation_deg: f64,
+    /// Verified overlap-weighted NCC of the chosen proposal on finer
+    /// lighting-insensitive structure (8--32 plane px).
+    pub ncc: f64,
+    /// Verified NCC of the best clearly different proposal.
+    pub runner_up_ncc: Option<f64>,
+    pub accepted: bool,
+}
+
+/// Decimation of the coarse placement features (plane px per feature px).
+const DETACHED_FEATURE_FACTOR: usize = 4;
+/// Distinct coarse proposals re-scored on finer structure.
+const DETACHED_VERIFY: usize = 8;
+
+/// Finer verification of a placement: overlap-weighted masked NCC of
+/// band-passed log luma at 8--32 plane px (half resolution) between the anchor
+/// and the layer warped through the proposal, with a small translation search.
+struct Verifier {
+    anchor: Vec<f32>,
+    layer: Vec<f32>,
+    aw: usize,
+    ah: usize,
+    lw2: usize,
+    lh2: usize,
+    width: usize,
+    height: usize,
+    lw: usize,
+    lh: usize,
+}
+
+impl Verifier {
+    fn feature(group: &GroupPlanes, width: usize, height: usize) -> (Vec<f32>, usize, usize) {
+        let (w, h) = (width / 2, height / 2);
+        let l = luma(group);
+        let floor = (group.ceiling * 1e-4).max(1e-6);
+        let small: Vec<f32> = (0..w * h)
+            .map(|c| {
+                let (y, x) = (c / w * 2, c % w * 2);
+                let mean = 0.25
+                    * (l[y * width + x]
+                        + l[y * width + x + 1]
+                        + l[(y + 1) * width + x]
+                        + l[(y + 1) * width + x + 1]);
+                mean.max(floor).ln()
+            })
+            .collect();
+        // 8--32 plane px: finer than the search features, coarse enough to
+        // survive a change of lighting.
+        let a = gaussian_blur(&small, w, h, 4.0);
+        let b = gaussian_blur(&small, w, h, 16.0);
+        (a.iter().zip(&b).map(|(a, b)| a - b).collect(), w, h)
+    }
+
+    fn new(
+        anchor: &GroupPlanes,
+        layer: &GroupPlanes,
+        lw: usize,
+        lh: usize,
+        width: usize,
+        height: usize,
+    ) -> Self {
+        let (a, aw, ah) = Self::feature(anchor, width, height);
+        let (l, lw2, lh2) = Self::feature(layer, lw, lh);
+        Self {
+            anchor: a,
+            layer: l,
+            aw,
+            ah,
+            lw2,
+            lh2,
+            width,
+            height,
+            lw,
+            lh,
+        }
+    }
+
+    /// Masked NCC through `s` after shifting the canvas sample by `shift`
+    /// verification px, and the overlap as a fraction of the canvas.
+    fn ncc(&self, s: &strehl_core::align::Similarity, shift: (f64, f64)) -> (f64, f64) {
+        let (mut sa, mut sb, mut saa, mut sbb, mut sab, mut n) =
+            (0.0f64, 0.0f64, 0.0f64, 0.0f64, 0.0f64, 0.0f64);
+        for v in 0..self.ah {
+            for u in 0..self.aw {
+                // Verification pixel centre in canvas plane px, centred.
+                let p = strehl_core::align::Cx::new(
+                    2.0 * (u as f64 + shift.0) + 1.0 - self.width as f64 / 2.0,
+                    2.0 * (v as f64 + shift.1) + 1.0 - self.height as f64 / 2.0,
+                );
+                let q = s.apply(p);
+                let x = (q.re + self.lw as f64 / 2.0 - 1.0) / 2.0;
+                let y = (q.im + self.lh as f64 / 2.0 - 1.0) / 2.0;
+                if x < 0.0 || y < 0.0 || x >= (self.lw2 - 1) as f64 || y >= (self.lh2 - 1) as f64 {
+                    continue;
+                }
+                let (x0, y0) = (x as usize, y as usize);
+                let (fx, fy) = ((x - x0 as f64) as f32, (y - y0 as f64) as f32);
+                let at = |yy: usize, xx: usize| self.layer[yy * self.lw2 + xx];
+                let b = (at(y0, x0) * (1.0 - fx) + at(y0, x0 + 1) * fx) * (1.0 - fy)
+                    + (at(y0 + 1, x0) * (1.0 - fx) + at(y0 + 1, x0 + 1) * fx) * fy;
+                let a = self.anchor[v * self.aw + u];
+                let (a, b) = (f64::from(a), f64::from(b));
+                sa += a;
+                sb += b;
+                saa += a * a;
+                sbb += b * b;
+                sab += a * b;
+                n += 1.0;
+            }
+        }
+        let overlap = n / (self.aw * self.ah) as f64;
+        if overlap < 0.05 {
+            return (0.0, overlap);
+        }
+        let cov = sab / n - (sa / n) * (sb / n);
+        let va = saa / n - (sa / n).powi(2);
+        let vb = sbb / n - (sb / n).powi(2);
+        (cov / (va * vb).sqrt().max(1e-12), overlap)
+    }
+
+    /// Best overlap-weighted NCC over small translations (+-6 verification px,
+    /// +-12 plane px), and the proposal refined by that translation. Weighting
+    /// by the square root of the overlap keeps sliver overlaps, where a few
+    /// samples correlate by chance, from outscoring a broad true overlap.
+    fn score(&self, s: &strehl_core::align::Similarity) -> (f64, strehl_core::align::Similarity) {
+        let mut best = (f64::NEG_INFINITY, (0.0, 0.0));
+        for dy in (-6..=6).step_by(2) {
+            for dx in (-6..=6).step_by(2) {
+                let (ncc, overlap) = self.ncc(s, (f64::from(dx), f64::from(dy)));
+                let value = ncc * overlap.min(1.0).sqrt();
+                if value > best.0 {
+                    best = (value, (f64::from(dx), f64::from(dy)));
+                }
+            }
+        }
+        // Canvas shift d (plane px) maps to layer translation a*d.
+        let d = strehl_core::align::Cx::new(2.0 * best.1.0, 2.0 * best.1.1);
+        (
+            best.0,
+            strehl_core::align::Similarity {
+                a: s.a,
+                b: s.b + s.a * d,
+            },
+        )
+    }
+}
+/// Verified overlap-weighted NCC needed, and its margin over the runner-up.
+const DETACHED_MIN_NCC: f64 = 0.3;
+const DETACHED_MIN_MARGIN: f64 = 0.05;
+
+/// Coarse, lighting-insensitive structure for placement: band-passed log luma
+/// at 0.5--2% of the canvas width (fine texture such as iridescent scales does
+/// not repeat across sessions), made positive because the global search compresses
+/// intensities with a square root.
+fn placement_feature(group: &GroupPlanes, width: usize, height: usize) -> (Vec<f32>, usize, usize) {
+    let f = DETACHED_FEATURE_FACTOR;
+    let (w, h) = (width / f, height / f);
+    let l = luma(group);
+    let floor = (group.ceiling * 1e-4).max(1e-6);
+    let small: Vec<f32> = (0..w * h)
+        .map(|c| {
+            let (y, x) = (c / w * f, c % w * f);
+            let mean = (0..f * f)
+                .map(|k| l[(y + k / f) * width + x + k % f])
+                .sum::<f32>()
+                / (f * f) as f32;
+            mean.max(floor).ln()
+        })
+        .collect();
+    // About 0.5% and 2% of the canvas width (16 and 64 plane px on a
+    // 24-megapixel canvas), so small inputs keep proportionate structure.
+    let sigma = (width as f32 / (200 * f) as f32).max(1.0);
+    let a = gaussian_blur(&small, w, h, sigma);
+    let b = gaussian_blur(&small, w, h, 4.0 * sigma);
+    let band: Vec<f32> = a.iter().zip(&b).map(|(a, b)| a - b).collect();
+    let low = band.iter().copied().fold(f32::INFINITY, f32::min);
+    (
+        band.iter().map(|v| (v - low + 0.05).powi(2)).collect(),
+        w,
+        h,
+    )
+}
+
+/// `image` rotated by `k` quarter turns about its centre: output centred
+/// point `p` samples input centred point `i^k p` (complex `x + iy`).
+fn quarter_turn(image: &[f32], w: usize, h: usize, k: usize) -> (Vec<f32>, usize, usize) {
+    let (rw, rh) = if k % 2 == 1 { (h, w) } else { (w, h) };
+    let out = (0..rw * rh)
+        .map(|i| {
+            let (x, y) = (
+                (i % rw) as f64 + 0.5 - rw as f64 / 2.0,
+                (i / rw) as f64 + 0.5 - rh as f64 / 2.0,
+            );
+            let (qx, qy) = match k % 4 {
+                0 => (x, y),
+                1 => (-y, x),
+                2 => (-x, -y),
+                _ => (y, -x),
+            };
+            let sx = (qx + w as f64 / 2.0 - 0.5)
+                .round()
+                .clamp(0.0, (w - 1) as f64) as usize;
+            let sy = (qy + h as f64 / 2.0 - 0.5)
+                .round()
+                .clamp(0.0, (h - 1) as f64) as usize;
+            image[sy * w + sx]
+        })
+        .collect();
+    (out, rw, rh)
+}
+
+/// Locate a separately stacked layer (its own canvas, `lw` x `lh`) on the
+/// anchor canvas and resample it there. The search covers 1/4..4x scale and a
+/// full turn (four quarter-turn pre-rotations, each +-48 degrees), on
+/// lighting-insensitive coarse features. Each CFA plane is sampled at its own
+/// site phase, and minification is prefiltered so no aliasing is introduced.
+pub fn place_detached(
+    anchor: &GroupPlanes,
+    layer: &GroupPlanes,
+    lw: usize,
+    lh: usize,
+    width: usize,
+    height: usize,
+) -> (Option<GroupPlanes>, DetachedPlacement) {
+    let search = strehl_core::align_global::GlobalSearchConfig {
+        max_rotation: 48f64.to_radians(),
+        rotation_step: 4f64.to_radians(),
+        min_overlap_fraction: 0.2,
+        candidates: 6,
+        ..strehl_core::align_global::GlobalSearchConfig::default()
+    };
+    place_detached_with(anchor, layer, lw, lh, width, height, &search)
+}
+
+/// [`place_detached`] with an explicit search grid (each quarter turn).
+pub fn place_detached_with(
+    anchor: &GroupPlanes,
+    layer: &GroupPlanes,
+    lw: usize,
+    lh: usize,
+    width: usize,
+    height: usize,
+    cfg: &strehl_core::align_global::GlobalSearchConfig,
+) -> (Option<GroupPlanes>, DetachedPlacement) {
+    use strehl_core::align::{Cx, PlaneRef, Similarity, lift_box_decimated_similarity};
+    use strehl_core::align_global::global_similarity_candidates;
+    use strehl_core::plane::PlaneGeometry;
+    let mut placement = DetachedPlacement {
+        scale: 0.0,
+        rotation_deg: 0.0,
+        ncc: 0.0,
+        runner_up_ncc: None,
+        accepted: false,
+    };
+    let (af, aw, ah) = placement_feature(anchor, width, height);
+    let (lf, lfw, lfh) = placement_feature(layer, lw, lh);
+    let i_pow = |k: usize| {
+        [
+            Cx::new(1.0, 0.0),
+            Cx::new(0.0, 1.0),
+            Cx::new(-1.0, 0.0),
+            Cx::new(0.0, -1.0),
+        ][k % 4]
+    };
+    let mut proposals: Vec<(f64, Similarity)> = (0..4usize)
+        .into_par_iter()
+        .flat_map_iter(|k| {
+            let (rf, rw, rh) = quarter_turn(&lf, lfw, lfh, k);
+            let (Some(reference), Some(moving)) =
+                (PlaneRef::new(&af, aw, ah), PlaneRef::new(&rf, rw, rh))
+            else {
+                return Vec::new();
+            };
+            let (lgw, lgh) = if k % 2 == 1 { (lh, lw) } else { (lw, lh) };
+            global_similarity_candidates(reference, moving, cfg)
+                .into_iter()
+                .filter_map(|c| {
+                    let lifted = lift_box_decimated_similarity(
+                        c.transform,
+                        PlaneGeometry { width, height },
+                        PlaneGeometry {
+                            width: lgw,
+                            height: lgh,
+                        },
+                        DETACHED_FEATURE_FACTOR,
+                    )?;
+                    // Rotated-centred -> original layer-centred: multiply by i^k.
+                    let turn = i_pow(k);
+                    Some((
+                        c.ncc,
+                        Similarity {
+                            a: turn * lifted.a,
+                            b: turn * lifted.b,
+                        },
+                    ))
+                })
+                .collect::<Vec<_>>()
+        })
+        .collect();
+    proposals.sort_by(|a, b| b.0.total_cmp(&a.0));
+    let diag = ((width * width + height * height) as f64).sqrt();
+    let distinct = |s: &Similarity, t: &Similarity| {
+        (s.b - t.b).abs() > 0.1 * diag || (s.scale() / t.scale()).ln().abs() > 0.1 || {
+            let d = (s.rotation() - t.rotation()).abs();
+            d.min(std::f64::consts::TAU - d) > 10f64.to_radians()
+        }
+    };
+    // Coarse features can confuse mirror-like structure (a beetle's two wing
+    // covers); verify the strongest distinct proposals on finer structure.
+    let mut shortlist: Vec<Similarity> = Vec::new();
+    for (_, s) in &proposals {
+        if shortlist.len() < DETACHED_VERIFY && shortlist.iter().all(|t| distinct(s, t)) {
+            shortlist.push(*s);
+        }
+    }
+    let verifier = Verifier::new(anchor, layer, lw, lh, width, height);
+    let mut verified: Vec<(f64, Similarity)> =
+        shortlist.par_iter().map(|s| verifier.score(s)).collect();
+    verified.sort_by(|a, b| b.0.total_cmp(&a.0));
+    let Some(&(ncc, best)) = verified.first() else {
+        return (None, placement);
+    };
+    placement.scale = best.scale();
+    placement.rotation_deg = best.rotation().to_degrees();
+    placement.ncc = ncc;
+    placement.runner_up_ncc = verified.get(1).map(|(n, _)| *n);
+    placement.accepted = ncc >= DETACHED_MIN_NCC
+        && placement
+            .runner_up_ncc
+            .is_none_or(|r| ncc - r >= DETACHED_MIN_MARGIN);
+    if !placement.accepted {
+        return (None, placement);
+    }
+    // Resample: canvas plane px (centred) -> layer plane px (centred) by
+    // `best`; each plane at its CFA site phase (R, G1, B, G2 offsets in plane
+    // px), prefiltered by the minification.
+    let phase = [(0.0, 0.0), (0.5, 0.0), (0.5, 0.5), (0.0, 0.5)]; // (x, y)
+    let s = best.scale();
+    let sigma = if s > 1.05 {
+        0.5 * (s * s - 1.0).sqrt() as f32
+    } else {
+        0.0
+    };
+    let n = width * height;
+    let source = |i: usize, c: usize| -> Option<(f64, f64)> {
+        let (ox, oy) = phase[c];
+        let p = Cx::new(
+            (i % width) as f64 + ox - width as f64 / 2.0,
+            (i / width) as f64 + oy - height as f64 / 2.0,
+        );
+        let q = best.apply(p);
+        let (x, y) = (q.re + lw as f64 / 2.0 - ox, q.im + lh as f64 / 2.0 - oy);
+        (x >= 1.0 && y >= 1.0 && x <= (lw - 3) as f64 && y <= (lh - 3) as f64).then_some((x, y))
+    };
+    let planes: [Vec<f32>; 4] = std::array::from_fn(|c| {
+        let plane = gaussian_blur(&layer.planes[c], lw, lh, sigma);
+        (0..n)
+            .into_par_iter()
+            .map(|i| match source(i, c) {
+                Some((x, y)) => {
+                    let (x0, y0) = (x.floor() as usize, y.floor() as usize);
+                    let (wx, wy) = (
+                        cubic_weights((x - x0 as f64) as f32),
+                        cubic_weights((y - y0 as f64) as f32),
+                    );
+                    let mut v = 0.0f32;
+                    for (r, wy) in wy.iter().enumerate() {
+                        for (q, wx) in wx.iter().enumerate() {
+                            v += wy * wx * plane[(y0 + r - 1) * lw + x0 + q - 1];
+                        }
+                    }
+                    v
+                }
+                None => 0.0,
+            })
+            .collect()
+    });
+    let valid: Vec<bool> = (0..n)
+        .into_par_iter()
+        .map(|i| {
+            (0..4).all(|c| {
+                source(i, c).is_some_and(|(x, y)| {
+                    let (x0, y0) = (x.floor() as usize, y.floor() as usize);
+                    (0..4).all(|r| (0..4).all(|q| layer.valid[(y0 + r - 1) * lw + x0 + q - 1]))
+                })
+            })
+        })
+        .collect();
+    (
+        Some(GroupPlanes {
+            planes,
+            valid,
+            ceiling: layer.ceiling,
+        }),
+        placement,
+    )
+}
+
 /// Diagnostic dump of captured groups (`STREHL_LIGHTING_DUMP`), so fusion can
 /// be studied without re-merging: `meta.json` plus raw little-endian planes.
 pub fn dump(
@@ -1329,6 +1734,98 @@ mod tests {
         assert!(worst < 0.03, "registered superposition blurred: {worst}");
     }
 
+    /// Coarse aperiodic structure: pseudo-random blobs of 8..40 px radius, so
+    /// no rotation or reflection of the scene resembles itself.
+    fn scene(x: f32, y: f32) -> f32 {
+        let mut v = 300.0;
+        for k in 0..90u32 {
+            let r = |s: u32| (noise(k as f32, s as f32, 17 + s) + 1.0) * 0.5;
+            let (cx, cy) = (r(1) * 560.0 - 24.0, r(2) * 430.0 - 23.0);
+            let radius = 8.0 + 32.0 * r(3);
+            let amplitude = 400.0 * (r(4) - 0.4);
+            let d2 = ((x - cx).powi(2) + (y - cy).powi(2)) / (radius * radius);
+            v += amplitude * (-d2).exp();
+        }
+        v.max(40.0) + 20.0 * texture(x, y)
+    }
+
+    #[test]
+    fn a_detached_layer_is_found_through_rotation_magnification_and_relighting() {
+        // A half turn at 1.6x, and a quarter turn at 1.3x (odd turns swap the
+        // layer's axes, which a half turn cannot reveal).
+        detached_case(strehl_core::align::Cx::new(-1.6, 0.05), 180.0);
+        detached_case(strehl_core::align::Cx::new(0.04, 1.3), 90.0);
+    }
+
+    fn detached_case(a: strehl_core::align::Cx, rotation: f64) {
+        let (w, h) = (512usize, 384usize);
+        let anchor = GroupPlanes {
+            planes: std::array::from_fn(|_| {
+                (0..w * h)
+                    .map(|i| scene((i % w) as f32, (i / w) as f32))
+                    .collect()
+            }),
+            valid: vec![true; w * h],
+            ceiling: 4000.0,
+        };
+        // The layer is its own canvas: canvas-centred p maps to layer-centred
+        // q = a p + b with |a| = 1.6 and a half turn; lit differently per channel.
+        let b = strehl_core::align::Cx::new(14.0, -9.0);
+        let (lw, lh) = (320usize, 240usize);
+        let gains = [0.55f32, 0.7, 0.4, 0.7];
+        let inverse = strehl_core::align::Similarity { a, b }.invert().unwrap();
+        let layer = GroupPlanes {
+            planes: std::array::from_fn(|c| {
+                (0..lw * lh)
+                    .map(|i| {
+                        let q = strehl_core::align::Cx::new(
+                            (i % lw) as f64 - lw as f64 / 2.0,
+                            (i / lw) as f64 - lh as f64 / 2.0,
+                        );
+                        let p = inverse.apply(q);
+                        gains[c]
+                            * scene(
+                                (p.re + w as f64 / 2.0) as f32,
+                                (p.im + h as f64 / 2.0) as f32,
+                            )
+                    })
+                    .collect()
+            }),
+            valid: vec![true; lw * lh],
+            ceiling: 4000.0,
+        };
+        // A coarser grid than the default keeps this test fast in debug builds.
+        let search = strehl_core::align_global::GlobalSearchConfig {
+            max_rotation: 45f64.to_radians(),
+            rotation_step: 7.5f64.to_radians(),
+            log_scale_step: 0.08,
+            min_overlap_fraction: 0.2,
+            candidates: 6,
+            ..strehl_core::align_global::GlobalSearchConfig::default()
+        };
+        let (placed, report) = place_detached_with(&anchor, &layer, lw, lh, w, h, &search);
+        assert!(report.accepted, "{report:?}");
+        assert!((report.scale / a.abs() - 1.0).abs() < 0.04, "{report:?}");
+        let turn = (report.rotation_deg - rotation).rem_euclid(360.0);
+        assert!(turn.min(360.0 - turn) < 8.0, "{report:?}");
+        let placed = placed.expect("placed");
+        // Where valid, the placed layer is the anchor scene relit (gain only).
+        let (mut sum, mut count) = (0.0f64, 0usize);
+        for i in 0..w * h {
+            if placed.valid[i] {
+                let expected = gains[1] * anchor.planes[1][i];
+                sum += f64::from((placed.planes[1][i] - expected).abs() / expected);
+                count += 1;
+            }
+        }
+        assert!(count > 5000, "covered {count}");
+        assert!(
+            sum / (count as f64) < 0.08,
+            "mean relative error {}",
+            sum / count as f64
+        );
+    }
+
     #[test]
     fn a_smoothly_deformed_layer_is_registered_in_composed_rounds() {
         let f = |x: f32, y: f32| 500.0 * texture(x, y);
@@ -1501,6 +1998,25 @@ mod tests {
         let (before, after) = (rms(&anchor.planes[0]), rms(&fused[0]));
         assert!(after < 0.85 * before, "noise {before} -> {after}");
     }
+}
+
+/// Offline placement of a detached layer: `STREHL_DETACHED_ANCHOR` (a dump
+/// whose group 0 is the anchor) and `STREHL_DETACHED_LAYER` (a one-group dump).
+#[cfg(test)]
+#[test]
+#[ignore = "needs lighting-fusion dumps"]
+fn detached_placement_from_dump() {
+    let anchor = std::env::var_os("STREHL_DETACHED_ANCHOR").expect("STREHL_DETACHED_ANCHOR");
+    let layer = std::env::var_os("STREHL_DETACHED_LAYER").expect("STREHL_DETACHED_LAYER");
+    let (anchor, _, w, h) = load_dump(std::path::Path::new(&anchor)).unwrap();
+    let (layer, _, lw, lh) = load_dump(std::path::Path::new(&layer)).unwrap();
+    let started = std::time::Instant::now();
+    let (placed, report) = place_detached(&anchor[0], &layer[0], lw, lh, w, h);
+    eprintln!(
+        "{report:?} in {:.1} s; covered {}",
+        started.elapsed().as_secs_f64(),
+        placed.map_or(0, |p| p.valid.iter().filter(|&&v| v).count())
+    );
 }
 
 /// Offline study of a [`dump`]: `STREHL_LIGHTING_DUMP_IN` (input) and

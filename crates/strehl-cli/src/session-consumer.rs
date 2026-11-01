@@ -1147,7 +1147,8 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
         } else {
             let groups = plan.as_ref().map(|p| p.lighting_groups()).unwrap_or_default();
             let mut kinds = plan.as_ref().map(|p| p.group_kinds()).unwrap_or_default();
-            if groups.len() >= 2 && args.only_pass.is_none() {
+            let has_detached = plan.as_ref().is_some_and(|p| !p.detached_passes().is_empty());
+            if (groups.len() >= 2 || has_detached) && args.only_pass.is_none() {
                 ensure!(!args.contribution_maps && !args.original_cfa_reconstruction && !args.reproducibility && !args.focus_evidence,
                     "lighting and pose layers do not yet combine with contribution maps, focus evidence, reconstruction or reproducibility; add --anchor-lighting-only");
                 let mut captured = Vec::new();
@@ -1223,6 +1224,42 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                     }
                 }
                 ensure!(captured[0].valid.iter().all(|&v| v), "the anchor lighting group does not cover the canvas");
+                // Passes that never joined the alignment: stack each on its
+                // own, then place the merged result on the anchor.
+                let mut detached_reports = Vec::new();
+                let detached = if summaries.first().is_some_and(|s| s.get("from_dump").is_some()) { Vec::new() }
+                    else { plan.as_ref().map(|p| p.detached_passes()).unwrap_or_default() };
+                for pass in detached {
+                    let name = session.passes[pass].name.clone();
+                    eprintln!("session detached layer: stacking '{name}' on its own");
+                    let outcome = detached_group(args, &session, pass, &identities, cache.root(), &destination, &config, resampler)
+                        .and_then(|(summary, planes, lw, lh)| {
+                            // Diagnostic: keep the separately stacked planes beside the lighting dump.
+                            if let Some(dir) = std::env::var_os("STREHL_LIGHTING_DUMP") {
+                                let dir = Path::new(&dir).join(format!("detached-{}", pass + 1));
+                                crate::session_lighting_fusion::dump(std::slice::from_ref(&planes), &[], lw, lh, &dir)?;
+                            }
+                            let (placed, placement) = crate::session_lighting_fusion::place_detached(&captured[0], &planes, lw, lh, domain.width, domain.height);
+                            Ok((summary, placed, placement))
+                        });
+                    match outcome {
+                        Ok((mut summary, placed, placement)) => {
+                            eprintln!("session detached layer: '{name}' {} (x{:.3}, {:.1} deg, NCC {:.2})",
+                                if placed.is_some() { "placed" } else { "not placed" }, placement.scale, placement.rotation_deg, placement.ncc);
+                            summary["placement"] = json!(placement);
+                            detached_reports.push(json!({"pass": name, "placement": placement}));
+                            if let Some(planes) = placed {
+                                summaries.push(summary);
+                                captured.push(planes);
+                                kinds.push(crate::session_lighting_fusion::LayerKind::Pose);
+                            }
+                        }
+                        Err(error) => {
+                            eprintln!("session detached layer: '{name}' could not be stacked on its own: {error:#}");
+                            detached_reports.push(json!({"pass": name, "error": format!("{error:#}")}));
+                        }
+                    }
+                }
                 if let Some(dir) = std::env::var_os("STREHL_LIGHTING_DUMP") {
                     crate::session_lighting_fusion::dump(&captured, &kinds, domain.width, domain.height, Path::new(&dir))?;
                 }
@@ -1236,7 +1273,7 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                 drop(captured);
                 // The anchor group's recipe and references describe this
                 // render, so the result imports and reopens like any other.
-                let mut report = json!({"lighting_fusion": fusion, "lighting_groups": summaries});
+                let mut report = json!({"lighting_fusion": fusion, "lighting_groups": summaries, "detached_layers": detached_reports});
                 for key in ["recipe", "primary_pass", "reference_pass"] {
                     if let Some(value) = summaries.first().and_then(|s| s.get(key)) { report[key] = value.clone(); }
                 }
@@ -1453,6 +1490,82 @@ fn cached_alignment(
             .with_context(|| format!("publishing alignment cache: {error}"))?;
     }
     Ok(alignment)
+}
+
+/// Stack one pass that never joined the session alignment as its own
+/// one-pass sub-session (own alignment, calibration, canvas and per-frame
+/// brightness) and capture its merged planes. Returns the merge summary, the
+/// planes and their canvas size.
+#[allow(clippy::too_many_arguments)]
+fn detached_group(
+    args: &StackArgs,
+    session: &ResolvedSession,
+    pass: usize,
+    identities: &[SourceIdentity],
+    cache_root: &Path,
+    destination: &Path,
+    config: &crate::session_align::SessionAlignConfig,
+    resampler: Resampler,
+) -> Result<(Value, crate::session_lighting_fusion::GroupPlanes, usize, usize)> {
+    let declared = &session.passes[pass];
+    let spec = crate::session_input::SessionSpec {
+        passes: vec![crate::session_input::PassSpec {
+            name: declared.name.clone(),
+            directories: declared.directories.clone(),
+        }],
+        mode: SessionMode::Auto,
+        ..Default::default()
+    };
+    let sub = spec.resolve_from(&declared.directories[0])?;
+    let sub_identities = identities[declared.global_range.clone()].to_vec();
+    ensure!(
+        sub.frames.len() == sub_identities.len()
+            && sub.frames.iter().zip(&sub_identities).all(|(f, i)| f.path == i.path),
+        "detached pass '{}' changed since the session was hashed",
+        declared.name
+    );
+    let metadata = sub.read_metadata()?;
+    let mut cache = SourceCache::new(cache_root, &sub, args.resources.cache_budget()?)?;
+    let alignment = cached_alignment(&sub, &sub_identities, &mut cache, config, resampler)?;
+    ensure!(
+        alignment.report.passes[0].placed > 1,
+        "its frames could not be aligned to each other"
+    );
+    let first = cache.load_or_decode(&sub.frames[0], &sub_identities[0])?;
+    let calibrations = vec![calibration(&first, &metadata[0], config.memory_limit_bytes / 8)?];
+    let domain = domain(&sub, &alignment, &calibrations)?;
+    let frame_gains: Vec<f32> = (0..sub.len())
+        .map(|k| {
+            alignment
+                .report
+                .frame_photometry
+                .as_ref()
+                .and_then(|p| p.gain(k))
+                .unwrap_or(1.0)
+        })
+        .collect();
+    let mut slot = None;
+    let mut summary = render(
+        args,
+        &sub,
+        &sub_identities,
+        &metadata,
+        &alignment,
+        &mut cache,
+        &calibrations,
+        &[1.0],
+        &frame_gains,
+        &[false],
+        &[],
+        domain,
+        None,
+        destination,
+        Some(&mut slot),
+    )?;
+    summary["passes"] = json!([declared.name]);
+    summary["detached"] = json!(true);
+    let planes = slot.context("detached pass produced no planes")?;
+    Ok((summary, planes, domain.width, domain.height))
 }
 
 /// One lighting group's merge summary and planes, from a concurrent lane.

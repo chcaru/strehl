@@ -307,4 +307,27 @@ fn best_result_contributions_name_each_pass_role_and_layer_outcome() {
     assert_eq!(list[3].reason.as_deref(), Some("ISO differs"));
     // Other modes save no plan.
     assert!(summary::contributions(&root.path().join("missing"), &names).is_none());
+    // A detached pass: placed and averaged in, or not found.
+    std::fs::write(
+        root.path().join("plan.json"),
+        r#"{"passes":[
+            {"pass":0,"role":"anchor","reason":null},
+            {"pass":1,"role":"detached_layer","reason":"no frame joined"},
+            {"pass":2,"role":"detached_layer","reason":"no frame joined"}]}"#,
+    )
+    .unwrap();
+    std::fs::write(
+        root.path().join("render-report.json"),
+        r#"{"lighting_fusion":{"layers":[
+            {"group":1,"outcome":"superposed","residual_before":{"median_px":1.2},"residual_after":{"median_px":0.3},"coverage":0.6,"agreement":0.5,"sharp_fraction":0.9}]},
+          "lighting_groups":[{"passes":["a"]},{"passes":["b"]}],
+          "detached_layers":[
+            {"pass":"b","placement":{"scale":1.02,"rotation_deg":-3.0,"ncc":0.7,"runner_up_ncc":0.4,"accepted":true}},
+            {"pass":"c","placement":{"scale":2.1,"rotation_deg":90.0,"ncc":0.3,"runner_up_ncc":0.29,"accepted":false}}]}"#,
+    )
+    .unwrap();
+    let list = summary::contributions(root.path(), &names[..3]).expect("plan");
+    assert_eq!(list[1].label, "Detached layer · averaged in");
+    assert!(list[1].detail.as_deref().unwrap().starts_with("placed x1.02 at -3°"));
+    assert_eq!(list[2].label, "Detached layer · not used: not found on the primary");
 }

@@ -71,6 +71,10 @@ pub enum Role {
     /// whole overlap): merged on its own, registered densely onto the anchor
     /// and superposed only where it then matches the anchor.
     PoseLayer,
+    /// No frame joined the anchor's alignment (large rotation, magnification,
+    /// lighting or pose change): stacked on its own, placed on the anchor by a
+    /// global search on the merged photographs, then treated as a pose layer.
+    DetachedLayer,
     /// Retained in the report, not consumed by the photograph.
     Excluded,
 }
@@ -140,7 +144,21 @@ fn role_for(pass: usize, anchor: usize, f: &PassFacts, lead: &PassFacts) -> (Rol
         return (Role::Anchor, None);
     }
     if f.placed == 0 {
-        return excluded("no frame joined the anchor's measured alignment".into());
+        // Compatible settings are still worth placing after merging.
+        if !f.calibration_matches_anchor {
+            return excluded(
+                "no frame joined the anchor's alignment, and its sensor or colour calibration differs".into(),
+            );
+        }
+        if f.iso.is_none() || f.iso != lead.iso || !same_ratio(f.aperture, lead.aperture) {
+            return excluded(
+                "no frame joined the anchor's alignment, and its ISO or aperture differs".into(),
+            );
+        }
+        return (
+            Role::DetachedLayer,
+            Some("no frame joined the anchor's alignment; stacked on its own and placed on the anchor after merging".into()),
+        );
     }
     let pose_changed = !f.geometry_consistent;
     let pose_evidence = || match (f.geometric_residual, f.cross_support_ratio) {
@@ -355,6 +373,18 @@ impl AutoPlan {
         })
     }
 
+    /// Passes stacked on their own and placed after merging.
+    pub fn detached_passes(&self) -> Vec<usize> {
+        if !self.lighting_fusion {
+            return Vec::new();
+        }
+        self.passes
+            .iter()
+            .filter(|p| p.role == Role::DetachedLayer)
+            .map(|p| p.pass)
+            .collect()
+    }
+
     /// Fusion kind of each lighting group, in [`Self::lighting_groups`] order.
     pub fn group_kinds(&self) -> Vec<crate::session_lighting_fusion::LayerKind> {
         use crate::session_lighting_fusion::LayerKind;
@@ -373,7 +403,9 @@ impl AutoPlan {
         self.passes
             .iter()
             .map(|p| {
-                p.role == Role::Excluded
+                // Detached layers never join the joint merge; the fusion
+                // places them separately.
+                matches!(p.role, Role::Excluded | Role::DetachedLayer)
                     || (matches!(p.role, Role::LightingLayer | Role::PoseLayer)
                         && !self.lighting_fusion)
             })
@@ -382,7 +414,7 @@ impl AutoPlan {
 
     /// Short human summary for logs and the desktop explanation surface.
     pub fn summary(&self) -> Vec<String> {
-        let used = self.excluded().iter().filter(|&&e| !e).count();
+        let used = self.excluded().iter().filter(|&&e| !e).count() + self.detached_passes().len();
         let mut lines = vec![format!(
             "automatic plan: {used} of {} passes contribute; anchor '{}'{}{}",
             self.passes.len(),
@@ -421,6 +453,14 @@ impl AutoPlan {
                 Role::PoseLayer if self.lighting_fusion => format!(
                     "pose layer, registered densely and superposed where it matches the anchor{range}: {}",
                     p.reason.as_deref().unwrap_or("pose differs")
+                ),
+                Role::DetachedLayer if self.lighting_fusion => format!(
+                    "detached layer, stacked on its own and placed on the anchor after merging: {}",
+                    p.reason.as_deref().unwrap_or("not joined")
+                ),
+                Role::DetachedLayer => format!(
+                    "detached layer, not used ({})",
+                    self.layers_withheld.unwrap_or("--anchor-lighting-only")
                 ),
                 Role::PoseLayer => format!(
                     "pose layer, not used ({}){range}: {}",
@@ -549,7 +589,19 @@ mod tests {
         ]);
         assert_eq!(plan.excluded(), [false, true, true, true, true, true]);
         assert!(plan.passes[1..].iter().all(|p| p.reason.is_some()));
-        assert!(plan.summary()[0].contains("1 of 6 passes"));
+        // An unplaced pass with compatible settings is placed after merging.
+        assert_eq!(plan.passes[3].role, Role::DetachedLayer);
+        assert_eq!(plan.detached_passes(), [3]);
+        assert!(plan.summary()[0].contains("2 of 6 passes"));
+        let anchor_only = plan.clone().with_lighting_fusion(false);
+        assert!(anchor_only.detached_passes().is_empty());
+        assert!(anchor_only.summary()[0].contains("1 of 6 passes"));
+        let mut unplaced_iso = facts("unplaced-iso", [16, 10]);
+        unplaced_iso.placed = 0;
+        unplaced_iso.iso = Some(800);
+        let plan = plan_of(&[facts("anchor", [16, 10]), unplaced_iso]);
+        assert_eq!(plan.passes[1].role, Role::Excluded);
+        assert!(plan.passes[1].reason.as_deref().unwrap().contains("ISO"));
     }
 
     #[test]
