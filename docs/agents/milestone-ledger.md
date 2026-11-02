@@ -653,3 +653,9 @@ artifacts and small synthetic/embedded-preview calculations, with at most four
 CPU workers per lane. No new full RAW render, GPU campaign or package build is
 released until the root records the exact arm, controls, resources and outputs.
 All capture roots remain read-only. The sealed407 corpus stays untouched.
+
+## Focus-breathing super-resolution experiment (2026-11-01)
+
+| Identifier | Question and scope | Owned paths | Owner and state |
+| --- | --- | --- | --- |
+| super-resolution-2026-11-01 | Does joint reconstruction from original CFA samples of in-focus, breathing-offset frames give more real detail than per-frame demosaic + merge? Truth-scored synthetic and real-texture controls, held-out raw prediction, native crops against a real single-pass render. | experiments/super-resolution-2026-11-01/ | root; closed: small spatially limited gain, no visible improvement over sharpness-selected fusion, not integrated |
