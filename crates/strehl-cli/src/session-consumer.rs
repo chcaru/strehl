@@ -608,6 +608,7 @@ fn render(
         planned as f64 / (1_u64 << 30) as f64,
         args.resources.threads
     );
+    let mut fold_group_seconds = 0.0f64;
     for (ordinal, members) in plan.iter().enumerate() {
         if let Some(guide) = &mut precision_guide
             && let Some(receipt) = guide.prepare(
@@ -696,6 +697,7 @@ fn render(
             }));
             progress.frame_finished(progress_index, true);
         }
+        let fold_started = Instant::now();
         if args.precision_weights {
             // A cleaner estimate within one focus group must not change the
             // cross-group focus reference merely through its lower variance.
@@ -708,11 +710,14 @@ fn render(
         } else {
             merge.fold_group(&mut group)?;
         }
+        fold_group_seconds += fold_started.elapsed().as_secs_f64();
         if ordinal % 10 == 0 || ordinal + 1 == plan.len() {
             eprintln!("session groups {}/{}", ordinal + 1, plan.len());
         }
     }
+    let finish_started = Instant::now();
     let result = merge.finish()?;
+    let finish_seconds = finish_started.elapsed().as_secs_f64();
     let recipe = json!({"bands":cfg.bands,"gate":cfg.gate,"exponent":cfg.exponent,
                "sharpen_per_octave":cfg.sharpen_per_octave,"select":format!("{:?}",cfg.select),
                "admission":format!("{:?}",cfg.admission),"base":format!("{:?}",cfg.base),
@@ -736,6 +741,7 @@ fn render(
             "passes": session.passes.iter().enumerate().filter(|(p, _)| !excluded_passes[*p]).map(|(_, p)| p.name.clone()).collect::<Vec<_>>(),
             "sources": result.sources, "groups": result.groups, "uncovered_pixels": invalid,
             "median_frame_gain": gain, "elapsed_seconds": started.elapsed().as_secs_f64(),
+            "phase_seconds": phase_totals(&receipts, fold_group_seconds, finish_seconds),
             "recipe": recipe, "primary_pass": primary, "reference_pass": alignment.report.reference_pass,
         });
         *slot = Some(crate::session_lighting_fusion::GroupPlanes {
@@ -1705,6 +1711,17 @@ fn detached_group(
     summary["detached"] = json!(true);
     let planes = slot.context("detached pass produced no planes")?;
     Ok((summary, planes, domain))
+}
+
+/// Wall-time totals of a group render's phases, from its per-source receipts
+/// plus the group folds and the final collapse. Diagnostic only.
+fn phase_totals(receipts: &[Value], fold_group: f64, finish: f64) -> Value {
+    let sum = |key: &str| -> f64 { receipts.iter().filter_map(|r| r[key].as_f64()).sum() };
+    json!({
+        "probe": sum("probe_seconds"), "gather": sum("gather_seconds"),
+        "prepare": sum("prepare_seconds"), "accumulate": sum("accumulate_seconds"),
+        "fold_group": fold_group, "finish": finish,
+    })
 }
 
 /// One lighting group's merge summary and planes, from a concurrent lane.

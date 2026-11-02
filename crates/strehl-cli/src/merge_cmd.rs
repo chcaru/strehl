@@ -7713,11 +7713,17 @@ fn run_pyramid_prepared_with_sensor(
                 }
             } else {
                 let indices: Vec<usize> = (first..first + chunk.len()).collect();
-                for batch in indices.chunks(slots.len()) {
+                // Two half-size slot sets: while one set's frames are folded in
+                // index order, the next batch is prepared into the other set.
+                // A single slot cannot be split, so it degenerates to
+                // prepare-then-fold.
+                let half = (slots.len() / 2).max(1);
+                let batches: Vec<&[usize]> = indices.chunks(half).collect();
+                let prepare_batch = |set: &mut [FramePrep], batch: &[usize]| -> Result<()> {
                     for &index in batch {
                         progress.frame_started(index);
                     }
-                    slots[..batch.len()]
+                    set[..batch.len()]
                         .par_iter_mut()
                         .zip(batch.par_iter())
                         .try_for_each(|(slot, &index)| {
@@ -7731,19 +7737,46 @@ fn run_pyramid_prepared_with_sensor(
                                 defect,
                                 progress.observer(),
                             )
-                        })?;
+                        })
+                };
+                let (set_a, set_b) = slots.split_at_mut(half);
+                let pipelined = !set_b.is_empty();
+                for (b, batch) in batches.iter().enumerate() {
+                    let (current, next): (&mut [FramePrep], &mut [FramePrep]) =
+                        if !pipelined || b % 2 == 0 {
+                            (&mut *set_a, &mut *set_b)
+                        } else {
+                            (&mut *set_b, &mut *set_a)
+                        };
+                    if b == 0 || !pipelined {
+                        prepare_batch(current, batch)?;
+                    }
+                    let following = batches.get(b + 1).filter(|_| pipelined);
+                    let current: &[FramePrep] = current;
                     // Fold strictly in index order: the same additions, in
                     // the same order, as the serial loop above.
-                    for (slot, &index) in slots.iter().zip(batch) {
-                        if slot.accepted {
-                            worker.add_prepared(slot, index, progress.observer());
+                    let mut fold_batch = || {
+                        let mut accepted = 0usize;
+                        for (slot, &index) in current.iter().zip(batch.iter()) {
+                            if slot.accepted {
+                                worker.add_prepared(slot, index, progress.observer());
+                            }
+                            progress.frame_finished(index, slot.accepted);
+                            if slot.accepted {
+                                accepted += 1;
+                                progress.live_accumulator(merged.as_ref(), &worker.merge, index);
+                            }
                         }
-                        progress.frame_finished(index, slot.accepted);
-                        if slot.accepted {
-                            folded += 1;
-                            progress.live_accumulator(merged.as_ref(), &worker.merge, index);
+                        accepted
+                    };
+                    let (accepted, prepared) = match following {
+                        Some(next_batch) => {
+                            rayon::join(fold_batch, || prepare_batch(next, next_batch))
                         }
-                    }
+                        None => (fold_batch(), Ok(())),
+                    };
+                    folded += accepted;
+                    prepared?;
                 }
             }
             folded_total += folded;

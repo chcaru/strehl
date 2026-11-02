@@ -55,5 +55,53 @@ pins the new thread default and that a too-large worker still leaves one
 chunk. Byte-freeze rows other than the pre-existing
 `coffee-bean-20-gate2-unaligned` failure (identical on PR head `03c243f`) pass.
 
-**Cost.** About 3.5 GB more peak memory. Session implementation identity
+**Pipelining (second commit).** With batches, the serial pyramid add (24 s
+on bug-4) waited for each whole batch. The slots are now two half-size sets:
+while one set is folded in index order, the next batch is prepared into the
+other (`rayon::join`). Default 4 slots (2+2). MEASURED, pixels identical in
+every arm: bug-4 102MSDCF 79.4 s / 5.2 GB (8 slots 76.6 s / 8.0 GB, 12 slots
+76.4 s / 11.0 GB); leaf-2-cpl 128.3 -> 47.0 s (5.15 GB); 109MSDCF 17.2 -> 7.2 s
+(4.9 GB). Old arm: `STREHL_PYRAMID_WORKERS=4 STREHL_PYRAMID_LOOKAHEAD=1`, the
+previous default.
+
+**Cost.** About 2.4 GB more peak memory (2.8 -> 5.2 GB). Session implementation identity
 hashes `merge_cmd.rs`, so cached session group merges recompute once.
+
+## Investigated and not changed
+
+### Best result group merges: prepared-ahead sources (no gain, reverted)
+
+bug-4 Best result (5 passes, 1,231 sources, cached alignment, 32 threads,
+32 GiB): 549.6 s serial. The same per-source look-ahead in the session group
+fold (load serially, gather + prepare 4 sources concurrently, add in plan
+order) gave identical photograph and master pixels but 579.3 s and 20.6 GB
+peak against 12.0 GB. Reverted. Phase totals per 299-source group, now saved
+in each lighting group's summary as `phase_seconds` (diagnostic): prepare
+120 s, fold_group 72 s, gather 43 s, accumulate 42 s, probe 0.2 s of 302 s.
+Three concurrent lanes ran at about 15 cores; one group alone took 0.70 s per
+source against 1.01 s with three lanes, so the lanes contend for memory
+bandwidth rather than threads (ARGUED from those two rates). A faster session
+needs less memory traffic per source in `session_fusion`, not more
+concurrency.
+
+Side finding: the session alignment cache key includes the whole alignment
+config, including `memory_limit_bytes`, so changing only the RAM budget
+re-runs alignment (observed: 45 GiB re-aligned all 1,231 sources). Whether
+geometry depends on the budget was not tested; not changed.
+
+### Deep-stack softening is not present at HEAD on bug-4 102MSDCF
+
+SYNTHESIS facts 1789/1790/1794 report the pyramid merge getting softer as the
+stack deepens. Test: the same pass rendered from all 299 frames and from every
+second frame (150, same focus range), current default, `--srgb`. Instrument
+`depth-softening.py`: per 128 px block, phase-correlation registration (the
+two renders use reference frames 149 and 150), then fine-band luma power,
+binned by an independent coarser-band texture measure. Commissioned with
+`--self-test`: sub-pixel shift reads 1.00 in every decile, Gaussian blur 0.25,
+added white noise 1.41-1.51.
+
+MEASURED, 1,877 registered blocks, ratio full/half: 0.20-0.35 cyc/px
+0.986-1.035 across all ten texture deciles; 0.12-0.20 cyc/px 0.982-1.036.
+The deeper stack is not softer here, so no merge change is warranted on this
+evidence. Scope: one subject, one bracket; the record's softening was measured
+on other subjects with earlier builds.
