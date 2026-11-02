@@ -992,7 +992,7 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
         "session: hashing {} original RAW acquisitions",
         session.len()
     );
-    let identities = session.hash_sources(true)?;
+    let identities = hash_sources_parallel(&session)?;
     write_json_new(&destination.join("source-identities.json"), &identities)?;
     let config = args.resources.config()?;
     let cache_path = args
@@ -1451,7 +1451,7 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
             })?;
         }
         let current=session.spec.resolve_from(&session.passes[0].directories[0])?;
-        ensure!(current.frames==session.frames && current.hash_sources(true)?==identities,"session sources changed during rendering; completion withheld");
+        ensure!(current.frames==session.frames && hash_sources_parallel(&current)?==identities,"session sources changed during rendering; completion withheld");
         let mut completion = json!({
             "schema":"strehl.session-completion.v1", "elapsed_seconds":started.elapsed().as_secs_f64(),
             "outputs": outputs.len(), "frames": session.len(), "passes": session.passes.len(),
@@ -1574,6 +1574,30 @@ fn save_focus_fields(
         "coordinate_semantics":"Acquisition ordinal, not metric depth. Shape width is not calibrated uncertainty; missing or ambiguous sweeps retain flags and all retained modes."}),
     )?;
     Ok(summaries)
+}
+
+/// `ResolvedSession::hash_sources(true)`, with the files hashed concurrently.
+/// Identities come back in frame order and duplicate content is still refused
+/// in that order. (The serial original stays where it is: its source file is
+/// bound into the alignment cache identity.)
+fn hash_sources_parallel(session: &ResolvedSession) -> Result<Vec<SourceIdentity>> {
+    use rayon::prelude::*;
+    let identities = session
+        .frames
+        .par_iter()
+        .map(|frame| frame.hash())
+        .collect::<Result<Vec<_>>>()?;
+    let mut seen = std::collections::HashMap::<&str, &Path>::new();
+    for identity in &identities {
+        if let Some(previous) = seen.insert(identity.sha256.as_str(), identity.path.as_path()) {
+            anyhow::bail!(
+                "duplicate original RAW content: {} and {}; copied inputs are not independent observations",
+                previous.display(),
+                identity.path.display()
+            );
+        }
+    }
+    Ok(identities)
 }
 
 /// Content address of a saved alignment for these sources, settings and

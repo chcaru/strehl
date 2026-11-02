@@ -122,6 +122,22 @@ untouched; threads remain in the key (not tested).
 cache 4beb3c92...` and finished in 362 s instead of re-aligning. Photograph and
 master of both runs identical to `out-auto-11`.
 
+## 4. Best result hashes its RAW files concurrently (implemented)
+
+Every Best result run SHA-256 hashes every original RAW twice (identity at the
+start, an unchanged check before completion), one file at a time: 1,231 files,
+about 40 GB, for bug-4. An independent hashlib timing on one 299-file pass
+(warm cache) read 5.8 s serial against 1.0 s with 8 workers, identical digests.
+`session-consumer.rs` now hashes concurrently with results in frame order and
+the duplicate-content refusal applied in that order. The serial
+`ResolvedSession::hash_sources` is unchanged because `session-input.rs` is
+bound into the alignment cache identity (editing it would force every saved
+session to re-align).
+
+MEASURED, bug-4 Best result with cached alignment: 362.1 s -> 341.0 s;
+`source-identities.json` identical to `out-auto-11`'s; photograph and master
+identical.
+
 ## Investigated and not changed
 
 ### Best result group merges: prepared-ahead sources (no gain, reverted)
@@ -158,3 +174,13 @@ MEASURED, 1,877 registered blocks, ratio full/half: 0.20-0.35 cyc/px
 The deeper stack is not softer here, so no merge change is warranted on this
 evidence. Scope: one subject, one bracket; the record's softening was measured
 on other subjects with earlier builds.
+
+### Best result: parallel source-plane extraction in the sampler (no gain, reverted)
+
+`NativeSampler::gather` converts each source's CFA rows to a float plane on one
+thread. Doing it row-parallel cut gather from 55 s to 31 s per 299-source
+group, but the bug-4 Best result took 391.9 s against 362-397 s before
+(identical pixels): group wall time did not move, consistent with the memory-
+bandwidth limit above. Because `session-sampling.rs` is bound into the noise-
+transfer probe cache, the change also cost a one-time 280 s per-lane probe
+recompute for every existing session. Reverted.
