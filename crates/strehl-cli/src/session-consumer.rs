@@ -1576,13 +1576,14 @@ fn save_focus_fields(
     Ok(summaries)
 }
 
-fn cached_alignment(
+/// Content address of a saved alignment for these sources, settings and
+/// alignment implementation.
+fn alignment_cache_key(
     session: &ResolvedSession,
     identities: &[SourceIdentity],
-    cache: &mut SourceCache,
     config: &crate::session_align::SessionAlignConfig,
     resampler: Resampler,
-) -> Result<SessionAlignment> {
+) -> Result<String> {
     let mut hash = Sha256::new();
     hash.update(serde_json::to_vec(&(
         &session.spec,
@@ -1608,20 +1609,71 @@ fn cached_alignment(
         hash.update(&bytes);
     }
     let key = crate::session_input::hex(&hash.finalize());
+    Ok(key)
+}
+
+/// The memory budget a saved alignment envelope was bound with.
+fn stored_alignment_memory(path: &Path) -> Option<usize> {
+    #[derive(serde::Deserialize)]
+    struct Envelope {
+        binding: Binding,
+    }
+    #[derive(serde::Deserialize)]
+    struct Binding {
+        config: Config,
+    }
+    #[derive(serde::Deserialize)]
+    struct Config {
+        memory_limit_bytes: usize,
+    }
+    let file = std::fs::File::open(path).ok()?;
+    let envelope: Envelope = serde_json::from_reader(std::io::BufReader::new(file)).ok()?;
+    Some(envelope.binding.config.memory_limit_bytes)
+}
+
+fn cached_alignment(
+    session: &ResolvedSession,
+    identities: &[SourceIdentity],
+    cache: &mut SourceCache,
+    config: &crate::session_align::SessionAlignConfig,
+    resampler: Resampler,
+) -> Result<SessionAlignment> {
+    // The memory budget only bounds working memory: bug-4's 1,231-source
+    // alignment produced a byte-identical warp map at 32 and 45 GiB. So the
+    // cache file is addressed without it, and a saved envelope is verified
+    // against the budget it was bound with (every other field must still
+    // match exactly). Changing the RAM setting no longer re-aligns. Entries
+    // saved under the older budget-specific address are still found.
+    let canonical = crate::session_align::SessionAlignConfig {
+        memory_limit_bytes: 0,
+        ..config.clone()
+    };
+    let key = alignment_cache_key(session, identities, &canonical, resampler)?;
+    let legacy_key = alignment_cache_key(session, identities, config, resampler)?;
     let path = cache.root().join(format!("alignment-{key}.json"));
     let path = session.ensure_output_outside_sources(&path)?;
-    if std::fs::symlink_metadata(&path).is_ok() {
-        match SessionAlignment::load(&path, session, identities, config, resampler) {
+    let legacy = cache.root().join(format!("alignment-{legacy_key}.json"));
+    let legacy = session.ensure_output_outside_sources(&legacy)?;
+    for (candidate, label) in [(&path, key.as_str()), (&legacy, legacy_key.as_str())] {
+        if std::fs::symlink_metadata(candidate).is_err() {
+            continue;
+        }
+        let stored = crate::session_align::SessionAlignConfig {
+            memory_limit_bytes: stored_alignment_memory(candidate)
+                .unwrap_or(config.memory_limit_bytes),
+            ..config.clone()
+        };
+        match SessionAlignment::load(candidate, session, identities, &stored, resampler) {
             Ok(alignment) => {
-                eprintln!("session alignment: reusing verified geometry cache {key}");
+                eprintln!("session alignment: reusing verified geometry cache {label}");
                 return Ok(alignment);
             }
             Err(error) => {
                 eprintln!("session alignment: rejected derived cache ({error}); refitting");
                 // Only this content-addressed derived cache entry is removed.
                 // Unlinking a symlink/hardlink never changes its target contents.
-                std::fs::remove_file(&path).with_context(|| {
-                    format!("evicting invalid alignment cache {}", path.display())
+                std::fs::remove_file(candidate).with_context(|| {
+                    format!("evicting invalid alignment cache {}", candidate.display())
                 })?;
             }
         }
@@ -1631,7 +1683,12 @@ fn cached_alignment(
     if let Err(error) = alignment.save(&path, session) {
         // Another process may have published the same complete binding first.
         // Its file must pass every normal envelope check before it is accepted.
-        SessionAlignment::load(&path, session, identities, config, resampler)
+        let stored = crate::session_align::SessionAlignConfig {
+            memory_limit_bytes: stored_alignment_memory(&path)
+                .unwrap_or(config.memory_limit_bytes),
+            ..config.clone()
+        };
+        SessionAlignment::load(&path, session, identities, &stored, resampler)
             .with_context(|| format!("publishing alignment cache: {error}"))?;
     }
     Ok(alignment)

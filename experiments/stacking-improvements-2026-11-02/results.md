@@ -101,6 +101,27 @@ Per 299-source group after both: prepare 71 s, gather 55 s, fold_group 33 s,
 accumulate 31 s (218 s against 302 s). `strehl-core` 742 tests and
 `strehl-cli` 399 library tests pass.
 
+## 3. Changing the RAM budget no longer re-aligns a session (implemented)
+
+**Finding (MEASURED).** The session alignment cache was addressed by the whole
+alignment config, including `memory_limit_bytes`, so a different RAM budget
+(desktop setting, or another machine's half-of-memory default) re-ran the full
+alignment: 843 s at 45 GiB and 1,138 s at 40 GiB for bug-4's 1,231 sources.
+The warp maps from 32, 40 and 45 GiB are byte-identical (`warpmap_sha256`
+equal); only timings and the stored budget differ.
+
+**Change (`session-consumer.rs`, `cached_alignment`).** The cache file is
+addressed with the budget normalised out; a saved envelope is loaded against
+the budget it was bound with, so `SessionAlignment::load` still verifies every
+other binding field exactly. Entries saved under the older budget-specific
+address are still found. `session-align.rs` and its bound identity are
+untouched; threads remain in the key (not tested).
+
+**Evidence (MEASURED).** 40 GiB run: fresh alignment, saved as
+`alignment-4beb3c92...`; then a 32 GiB run printed `reusing verified geometry
+cache 4beb3c92...` and finished in 362 s instead of re-aligning. Photograph and
+master of both runs identical to `out-auto-11`.
+
 ## Investigated and not changed
 
 ### Best result group merges: prepared-ahead sources (no gain, reverted)
@@ -118,10 +139,8 @@ bandwidth rather than threads (ARGUED from those two rates). A faster session
 needs less memory traffic per source in `session_fusion`, not more
 concurrency.
 
-Side finding: the session alignment cache key includes the whole alignment
-config, including `memory_limit_bytes`, so changing only the RAM budget
-re-runs alignment (observed: 45 GiB re-aligned all 1,231 sources). Whether
-geometry depends on the budget was not tested; not changed.
+Side finding, since fixed (item 3): the session alignment cache key included
+the RAM budget.
 
 ### Deep-stack softening is not present at HEAD on bug-4 102MSDCF
 
