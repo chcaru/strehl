@@ -5776,44 +5776,26 @@ impl BandWorker {
         defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
         progress: Option<&crate::ui_progress::Progress>,
     ) -> Result<bool> {
-        self.beta.clear();
-        if let Some(p) = self.floor.as_mut() {
-            p.invalidate();
-        }
-        if !load_frame_impl_observed(
+        prepare_frame_into(
+            PrepBuffers {
+                domain: self.domain,
+                warp: &mut self.warp,
+                floor: self.floor.as_mut(),
+                planes: &mut self.planes,
+                luma: &mut self.luma,
+                var: &mut self.var,
+                beta: &mut self.beta,
+                #[cfg(feature = "native-green-cue")]
+                green_cue: &mut self.green_cue,
+            },
             source,
             index,
-            self.domain,
             levels,
+            noise,
             warps,
             defect,
-            &mut self.warp,
-            self.floor.as_mut(),
-            &mut self.planes,
-            &mut self.luma,
-            #[cfg(feature = "native-green-cue")]
-            Some((noise, &mut self.green_cue)),
             progress,
-        )? {
-            return Ok(false);
-        }
-        #[cfg(feature = "native-pyramid-profile")]
-        let variance_phase = native_pyramid_profile::start(native_pyramid_profile::VARIANCE);
-        luma_variance(&self.luma, noise, &mut self.var);
-        #[cfg(feature = "native-pyramid-profile")]
-        drop(variance_phase);
-
-        // The measured floor, truncated at the first band the probe could not
-        // speak for rather than skipping past it. `add_frame_with_gain` falls
-        // back to the white value beyond the slice's end, so truncating is how
-        // a partial measurement is expressed; substituting white *inside* the
-        // slice and continuing would silently mix two noise models across
-        // adjacent bands.
-        if let Some(p) = self.floor.as_ref() {
-            self.beta
-                .extend(p.last().iter().copied().take_while(|b| b.is_finite()));
-        }
-        Ok(true)
+        )
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -5901,6 +5883,194 @@ impl BandWorker {
         #[cfg(all(test, feature = "native-sensor-transfer"))]
         native_sensor_transfer::after(&self.var);
         Ok(true)
+    }
+
+    /// Fold a frame prepared by [`FramePrep::prepare`] into this worker's
+    /// accumulator. Exactly the arithmetic of [`Self::fold_observed`] after its
+    /// preparation step; only the buffers the inputs are read from differ.
+    fn add_prepared(
+        &mut self,
+        prep: &FramePrep,
+        index: usize,
+        progress: Option<&crate::ui_progress::Progress>,
+    ) {
+        let frame_beta = (!prep.beta.is_empty()).then_some(prep.beta.as_slice());
+        if let Some(b) = frame_beta {
+            if self.beta_sum.len() < b.len() {
+                self.beta_sum.resize(b.len(), 0.0);
+            }
+            for (acc, v) in self.beta_sum.iter_mut().zip(b) {
+                *acc += f64::from(*v);
+            }
+            self.beta_n += 1;
+        }
+        let refs: Vec<&[f32]> = prep.planes.iter().map(|v| v.as_slice()).collect();
+        #[cfg(feature = "native-pyramid-profile")]
+        let add_phase = native_pyramid_profile::start(native_pyramid_profile::ADD);
+        self.fws.next_frame();
+        let tap = progress.map(|progress| {
+            crate::ui_progress::FrameTap::new(progress, index, self.merge.sizes().len())
+        });
+        if let Some(tap) = tap.as_ref() {
+            self.merge.add_frame_with_gain_observed(
+                &refs,
+                &prep.luma,
+                &prep.var,
+                frame_beta,
+                &mut self.fws,
+                tap,
+            );
+        } else {
+            self.merge
+                .add_frame_with_gain(&refs, &prep.luma, &prep.var, frame_beta, &mut self.fws);
+        }
+        #[cfg(feature = "native-pyramid-profile")]
+        drop(add_phase);
+    }
+}
+
+/// The buffers one frame's preparation writes: decode, gather, floor probe,
+/// luma, variance and the measured band floor. Borrowed from a [`BandWorker`]
+/// on the serial path, or from a [`FramePrep`] slot when frames are prepared
+/// ahead in parallel.
+struct PrepBuffers<'a> {
+    domain: PyramidDomain,
+    warp: &'a mut WarpScratch,
+    floor: Option<&'a mut gatefloor::Probe>,
+    planes: &'a mut [Vec<f32>],
+    luma: &'a mut [f32],
+    var: &'a mut [f32],
+    beta: &'a mut Vec<f32>,
+    #[cfg(feature = "native-green-cue")]
+    green_cue: &'a mut Option<strehl_core::pyramid::native_green_cue::Cue>,
+}
+
+/// Prepare one frame for the band fold. A pure function of the frame and the
+/// stack's fixed inputs: nothing here reads or writes the accumulator, which is
+/// why preparing frames concurrently and folding them in index order produces
+/// the same arithmetic as the serial loop.
+#[allow(clippy::too_many_arguments)]
+fn prepare_frame_into(
+    b: PrepBuffers<'_>,
+    source: &impl PyramidFrameSource,
+    index: usize,
+    levels: Levels,
+    noise: &NoiseModel,
+    warps: Option<&WarpMap>,
+    defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
+    progress: Option<&crate::ui_progress::Progress>,
+) -> Result<bool> {
+    let PrepBuffers {
+        domain,
+        warp,
+        mut floor,
+        planes,
+        luma,
+        var,
+        beta,
+        #[cfg(feature = "native-green-cue")]
+        green_cue,
+    } = b;
+    beta.clear();
+    if let Some(p) = floor.as_deref_mut() {
+        p.invalidate();
+    }
+    if !load_frame_impl_observed(
+        source,
+        index,
+        domain,
+        levels,
+        warps,
+        defect,
+        warp,
+        floor.as_deref_mut(),
+        planes,
+        luma,
+        #[cfg(feature = "native-green-cue")]
+        Some((noise, green_cue)),
+        progress,
+    )? {
+        return Ok(false);
+    }
+    #[cfg(feature = "native-pyramid-profile")]
+    let variance_phase = native_pyramid_profile::start(native_pyramid_profile::VARIANCE);
+    luma_variance(luma, noise, var);
+    #[cfg(feature = "native-pyramid-profile")]
+    drop(variance_phase);
+
+    // The measured floor, truncated at the first band the probe could not
+    // speak for rather than skipping past it. `add_frame_with_gain` falls
+    // back to the white value beyond the slice's end, so truncating is how
+    // a partial measurement is expressed; substituting white *inside* the
+    // slice and continuing would silently mix two noise models across
+    // adjacent bands.
+    if let Some(p) = floor.as_deref() {
+        beta.extend(p.last().iter().copied().take_while(|b| b.is_finite()));
+    }
+    Ok(true)
+}
+
+/// One look-ahead slot: its own preparation buffers, so several frames can be
+/// decoded, gathered and probed at once while the fold stays in index order.
+struct FramePrep {
+    warp: WarpScratch,
+    planes: Vec<Vec<f32>>,
+    luma: Vec<f32>,
+    var: Vec<f32>,
+    floor: Option<gatefloor::Probe>,
+    beta: Vec<f32>,
+    accepted: bool,
+}
+
+impl FramePrep {
+    fn new(domain: PyramidDomain, cfg: MergeConfig) -> Self {
+        let px = domain.analysis().pixels();
+        Self {
+            warp: WarpScratch::new(domain.full),
+            planes: (0..BAND_PLANES).map(|_| vec![0.0; px]).collect(),
+            luma: vec![0.0; px],
+            var: vec![0.0; px],
+            floor: gatefloor::enabled().then(|| gatefloor::Probe::new(domain, cfg.bands)),
+            beta: Vec::new(),
+            accepted: false,
+        }
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn prepare(
+        &mut self,
+        domain: PyramidDomain,
+        source: &impl PyramidFrameSource,
+        index: usize,
+        levels: Levels,
+        noise: &NoiseModel,
+        warps: Option<&WarpMap>,
+        defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
+        progress: Option<&crate::ui_progress::Progress>,
+    ) -> Result<()> {
+        #[cfg(feature = "native-green-cue")]
+        let mut no_cue = None;
+        self.accepted = prepare_frame_into(
+            PrepBuffers {
+                domain,
+                warp: &mut self.warp,
+                floor: self.floor.as_mut(),
+                planes: &mut self.planes,
+                luma: &mut self.luma,
+                var: &mut self.var,
+                beta: &mut self.beta,
+                #[cfg(feature = "native-green-cue")]
+                green_cue: &mut no_cue,
+            },
+            source,
+            index,
+            levels,
+            noise,
+            warps,
+            defect,
+            progress,
+        )?;
+        Ok(())
     }
 }
 
@@ -6924,7 +7094,56 @@ fn band_workers(per_worker_bytes: usize, frames: usize) -> Result<usize> {
         ensure!(n >= 1, "{BAND_WORKERS_ENV} must be at least 1");
         return Ok(n.min(frames.max(1)));
     }
-    Ok(canonical_band_chunks(per_worker_bytes, frames))
+    // Execution threads only: the arithmetic is grouped by
+    // `canonical_band_chunks`, so using every core changes no output byte
+    // (bug-4 102MSDCF, 299 frames: identical pixels at 4, 16 and 32 threads).
+    // It used to default to the chunk count, which left most cores idle.
+    let cores = std::thread::available_parallelism().map_or(1, |n| n.get());
+    Ok(cores
+        .max(canonical_band_chunks(per_worker_bytes, frames))
+        .min(frames.max(1)))
+}
+
+/// Execution-only override for how many frames are prepared at once.
+const LOOKAHEAD_ENV: &str = "STREHL_PYRAMID_LOOKAHEAD";
+
+/// Frames prepared concurrently ahead of the fold (decode, gather, floor
+/// probe, luma, variance). Preparation reads no accumulator state and frames
+/// are still folded one at a time in index order, so this changes speed and
+/// memory only, never arithmetic. `1` is the serial path.
+///
+/// Bounded by a fixed 4 GiB allowance for the slots, and capped at 8:
+/// beyond that the serial fold dominates. Feature-gated research consumers
+/// that observe per-frame inputs keep the serial path.
+fn prepare_lookahead(workers: usize, domain: PyramidDomain) -> Result<usize> {
+    if cfg!(any(
+        feature = "native-green-cue",
+        feature = "native-direct-planes",
+        feature = "native-sensor-transfer",
+        feature = "temporal-energy"
+    )) {
+        return Ok(1);
+    }
+    if let Ok(v) = std::env::var(LOOKAHEAD_ENV)
+        && !v.trim().is_empty()
+    {
+        let n: usize = v
+            .trim()
+            .parse()
+            .with_context(|| format!("reading {LOOKAHEAD_ENV}={v:?}"))?;
+        ensure!(n >= 1, "{LOOKAHEAD_ENV} must be at least 1");
+        return Ok(n);
+    }
+    // Calibrated, not itemised: on bug-4 102MSDCF (3516x2344 planes) each
+    // extra slot raised measured peak private memory by about 1.0 GB
+    // (2.8 GB serial; 5.3 / 7.3 / 9.3 GB at 3 / 5 / 7 slots), i.e. about
+    // 128 bytes per full-plane site including decode and gather temporaries.
+    // Slots share a 4 GiB allowance, so the default is 4 there (84 s against
+    // 225 s serial, identical pixels).
+    const LOOKAHEAD_BYTES: usize = 4 << 30;
+    let slot = domain.full.pixels().max(domain.analysis().pixels()) * 128;
+    let by_memory = (LOOKAHEAD_BYTES / slot.max(1)).max(1);
+    Ok(workers.min(by_memory).clamp(1, 8))
 }
 
 /// The `lateral CA` prologue line, reporting the **resolved decision** rather
@@ -7401,6 +7620,7 @@ fn run_pyramid_prepared_with_sensor(
     let canonical_chunks = canonical_band_chunks(planning_bytes, paths.len());
     let workers = band_workers(planning_bytes, paths.len())?;
     let per_chunk = paths.len().div_ceil(canonical_chunks);
+    let lookahead = prepare_lookahead(workers, domain)?.min(per_chunk.max(1));
     #[cfg(feature = "temporal-energy")]
     if temporal_active {
         // Explicit extra-buffer preflight; never change canonical arithmetic chunks.
@@ -7421,7 +7641,8 @@ fn run_pyramid_prepared_with_sensor(
          1 retained + 1 scratch accumulator, {workers} execution threads\n                  \
          CONSTANT in the frame count and reduction order. Chunks run serially; spatial work \
          uses\n                  the execution pool. {BAND_WORKERS_ENV}=N changes threads, never \
-         arithmetic.",
+         arithmetic.\n                  {lookahead} frame(s) prepared ahead in parallel and folded in \
+         index order ({LOOKAHEAD_ENV}=1 is serial).",
     );
 
     let warps = alignment.as_ref().map(|(m, _, _)| m);
@@ -7463,25 +7684,66 @@ fn run_pyramid_prepared_with_sensor(
             beta_n = result.beta_n;
             return Ok(());
         }
+        let mut slots: Vec<FramePrep> = (0..lookahead.min(per_chunk))
+            .filter(|_| lookahead > 1)
+            .map(|_| FramePrep::new(domain, cfg))
+            .collect();
         let mut chunks = paths.chunks(per_chunk).enumerate().peekable();
         while let Some((chunk_index, chunk)) = chunks.next() {
             let mut folded = 0usize;
-            for (offset, _path) in chunk.iter().enumerate() {
-                let index = chunk_index * per_chunk + offset;
-                progress.frame_started(index);
-                let accepted = worker.fold_observed(
-                    source,
-                    index,
-                    levels,
-                    &noise,
-                    warps,
-                    defect,
-                    progress.observer(),
-                )?;
-                progress.frame_finished(index, accepted);
-                if accepted {
-                    folded += 1;
-                    progress.live_accumulator(merged.as_ref(), &worker.merge, index);
+            let first = chunk_index * per_chunk;
+            if slots.is_empty() {
+                for offset in 0..chunk.len() {
+                    let index = first + offset;
+                    progress.frame_started(index);
+                    let accepted = worker.fold_observed(
+                        source,
+                        index,
+                        levels,
+                        &noise,
+                        warps,
+                        defect,
+                        progress.observer(),
+                    )?;
+                    progress.frame_finished(index, accepted);
+                    if accepted {
+                        folded += 1;
+                        progress.live_accumulator(merged.as_ref(), &worker.merge, index);
+                    }
+                }
+            } else {
+                let indices: Vec<usize> = (first..first + chunk.len()).collect();
+                for batch in indices.chunks(slots.len()) {
+                    for &index in batch {
+                        progress.frame_started(index);
+                    }
+                    slots[..batch.len()]
+                        .par_iter_mut()
+                        .zip(batch.par_iter())
+                        .try_for_each(|(slot, &index)| {
+                            slot.prepare(
+                                domain,
+                                source,
+                                index,
+                                levels,
+                                &noise,
+                                warps,
+                                defect,
+                                progress.observer(),
+                            )
+                        })?;
+                    // Fold strictly in index order: the same additions, in
+                    // the same order, as the serial loop above.
+                    for (slot, &index) in slots.iter().zip(batch) {
+                        if slot.accepted {
+                            worker.add_prepared(slot, index, progress.observer());
+                        }
+                        progress.frame_finished(index, slot.accepted);
+                        if slot.accepted {
+                            folded += 1;
+                            progress.live_accumulator(merged.as_ref(), &worker.merge, index);
+                        }
+                    }
                 }
             }
             folded_total += folded;
@@ -11200,10 +11462,12 @@ mod tests {
             3,
             "the canonical reduction count did not follow the memory budget"
         );
+        let cores = std::thread::available_parallelism().map_or(1, |n| n.get());
         assert_eq!(
             band_workers(third, 64).unwrap(),
-            3,
-            "the unset execution count did not follow the canonical count"
+            cores.clamp(3, 64),
+            "the unset execution count must use the machine's cores, never fewer than the \
+             canonical count, bounded by the frames"
         );
         assert_eq!(
             band_workers(third, 2).unwrap(),
@@ -11211,9 +11475,17 @@ mod tests {
             "the frame count did not bound the worker count"
         );
         assert_eq!(
-            band_workers(usize::MAX, 8).unwrap(),
+            canonical_band_chunks(usize::MAX, 8),
             1,
-            "a worker too large to fit must still leave one"
+            "a worker too large to fit must still leave one chunk"
+        );
+        // Threads do not hold accumulators (chunks run serially), so they are
+        // not bounded by the per-worker size; look-ahead memory is bounded
+        // separately in `prepare_lookahead`.
+        assert_eq!(
+            band_workers(usize::MAX, 8).unwrap(),
+            cores.min(8),
+            "execution threads follow the cores, bounded by the frames"
         );
         assert_eq!(
             band_workers(1, 0).unwrap(),
@@ -11252,7 +11524,7 @@ mod tests {
         unsafe { std::env::remove_var(BAND_WORKERS_ENV) };
         assert_eq!(
             band_workers(third, 64).unwrap(),
-            3,
+            cores.clamp(3, 64),
             "band_workers did not return to its unset value"
         );
 
