@@ -1763,7 +1763,71 @@ fn measure_native(
         .collect();
     let mut measured = Vec::with_capacity(pairs.len());
     let native_config = config.estimator(false);
-    for batch in pairs.chunks(workers) {
+    let refine = |job: &(AlignEdge, PairPurpose, bool, Arc<NativePlane>, Arc<NativePlane>)| {
+        let (edge, purpose, wide, a, b) = job;
+        let reference = PlaneRef::from_geometry(&a.data, a.geometry)
+            .expect("constructed native plane");
+        let moving = PlaneRef::from_geometry(&b.data, b.geometry)
+            .expect("constructed native plane");
+        let cfg = inputs.pair_config(&native_config, edge.i, edge.j);
+        let swap_above = if *wide {
+            WIDE_ORIENTATION_SWAP_SCALE
+        } else {
+            ORIENTATION_SWAP_SCALE
+        };
+        let result = if *wide || edge.t.scale() > ORIENTATION_SWAP_SCALE {
+            refine_oriented(reference, moving, &cfg, edge.t, swap_above)
+        } else {
+            match tile_grid(
+                reference,
+                cfg.fine_tile,
+                cfg.fine_grid.0,
+                cfg.fine_grid.1,
+                cfg.margin,
+            ) {
+                Some(spots) => {
+                    refine_pair_observed(reference, moving, &spots, &cfg, edge.t, None)
+                }
+                None => Err(AlignFailure::GridTooSmall),
+            }
+        };
+        let (receipt, edge) = receipt(
+            edge.i,
+            edge.j,
+            *purpose,
+            if *wide { "native-wide" } else { "native" },
+            &result,
+            inputs.geometry,
+            1,
+        );
+        PairMeasurement {
+            receipt,
+            edge,
+            photometry: None,
+        }
+    };
+    // When the plane budget allows, the next batch's planes are loaded
+    // (serially: the caches need exclusive access) while the current batch
+    // refines, and batches are twice the workers. Each pair's refinement is a
+    // pure function of its two planes and results keep pair order, so the
+    // measurements equal those of the one-batch-at-a-time loop. Two batches
+    // in flight pin up to four planes per pair slot, so overlap needs a budget
+    // of four planes per worker (eight for double batches); a tighter budget
+    // keeps the original load-then-refine loop.
+    let plane_bytes = inputs.geometry.pixels().saturating_mul(4).max(1);
+    let capacity = planes.budget / plane_bytes;
+    let workers = workers.max(1);
+    let pipelined = capacity >= workers.saturating_mul(4);
+    let batch_size = if capacity >= workers.saturating_mul(8) {
+        workers.saturating_mul(2)
+    } else {
+        workers
+    };
+    let batches: Vec<_> = pairs.chunks(batch_size).collect();
+    let load = |batch: &[(AlignEdge, PairPurpose, bool)],
+                sources: &mut SourceCache,
+                planes: &mut BoundedPlanes<NativePlane>|
+     -> Result<Vec<_>> {
         let mut jobs = Vec::with_capacity(batch.len());
         for &(edge, purpose, wide) in batch {
             jobs.push((
@@ -1774,54 +1838,33 @@ fn measure_native(
                 inputs.native(edge.j, sources, planes)?,
             ));
         }
-        let mut results = pool.install(|| {
-            jobs.par_iter()
-                .map(|(edge, purpose, wide, a, b)| {
-                    let reference = PlaneRef::from_geometry(&a.data, a.geometry)
-                        .expect("constructed native plane");
-                    let moving = PlaneRef::from_geometry(&b.data, b.geometry)
-                        .expect("constructed native plane");
-                    let cfg = inputs.pair_config(&native_config, edge.i, edge.j);
-                    let swap_above = if *wide {
-                        WIDE_ORIENTATION_SWAP_SCALE
-                    } else {
-                        ORIENTATION_SWAP_SCALE
-                    };
-                    let result = if *wide || edge.t.scale() > ORIENTATION_SWAP_SCALE {
-                        refine_oriented(reference, moving, &cfg, edge.t, swap_above)
-                    } else {
-                        match tile_grid(
-                            reference,
-                            cfg.fine_tile,
-                            cfg.fine_grid.0,
-                            cfg.fine_grid.1,
-                            cfg.margin,
-                        ) {
-                            Some(spots) => {
-                                refine_pair_observed(reference, moving, &spots, &cfg, edge.t, None)
-                            }
-                            None => Err(AlignFailure::GridTooSmall),
-                        }
-                    };
-                    let (receipt, edge) = receipt(
-                        edge.i,
-                        edge.j,
-                        *purpose,
-                        if *wide { "native-wide" } else { "native" },
-                        &result,
-                        inputs.geometry,
-                        1,
-                    );
-                    PairMeasurement {
-                        receipt,
-                        edge,
-                        photometry: None,
-                    }
-                })
-                .collect::<Vec<_>>()
+        Ok(jobs)
+    };
+    let started = Instant::now();
+    let mut next = match batches.first() {
+        Some(batch) if pipelined => load(batch, sources, planes)?,
+        _ => Vec::new(),
+    };
+    for index in 0..batches.len() {
+        let jobs = if pipelined {
+            std::mem::take(&mut next)
+        } else {
+            load(batches[index], sources, planes)?
+        };
+        let following = batches.get(index + 1).copied().filter(|_| pipelined);
+        let (mut results, loaded) = pool.install(|| {
+            rayon::join(
+                || jobs.par_iter().map(refine).collect::<Vec<_>>(),
+                || following.map(|batch| load(batch, sources, planes)).transpose(),
+            )
         });
         measured.append(&mut results);
+        next = loaded?.unwrap_or_default();
     }
+    eprintln!(
+        "session alignment: native refinement {:.1} s",
+        started.elapsed().as_secs_f64()
+    );
     Ok(measured)
 }
 

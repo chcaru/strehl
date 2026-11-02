@@ -664,4 +664,4 @@ All capture roots remain read-only. The sealed407 corpus stays untouched.
 
 | Identifier | Question and scope | Owned paths | Owner and state |
 | --- | --- | --- | --- |
-| stacking-improvements-2026-11-02 | Owner request: find, test and implement the top five improvements to focus stacking, each with demonstrated gain and no regression. One results file records each item, its evidence and its regression controls. | experiments/stacking-improvements-2026-11-02/ | root; open |
+| stacking-improvements-2026-11-02 | Owner request: find, test and implement the top five improvements to focus stacking, each with demonstrated gain and no regression. One results file records each item, its evidence and its regression controls. | experiments/stacking-improvements-2026-11-02/ | root; closed: five speed/caching improvements with identical output; deep-stack softening absent on bug-4; session look-ahead and sampler extraction no gain |

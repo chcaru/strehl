@@ -138,6 +138,47 @@ MEASURED, bug-4 Best result with cached alignment: 362.1 s -> 341.0 s;
 `source-identities.json` identical to `out-auto-11`'s; photograph and master
 identical.
 
+## 5. Faster first-run session alignment (implemented)
+
+**Finding (MEASURED, timestamped log, bug-4, 1,231 sources, fresh alignment
+with a warm decoded-source cache).** Of 806 s alignment, native-resolution
+refinement of 12,266 accepted seeds took 716 s. Instrumented: serial plane
+loading 96.5 s, parallel refinement 633.9 s at about 13-20 of 32 cores. Pairs
+ran in batches of one per worker with a barrier after each, and the next
+batch's planes were loaded only after it.
+
+**Change (`session-align.rs`, `measure_native`).** When the native plane
+budget holds four planes per worker, the next batch's planes are loaded while
+the current batch refines (`rayon::join`); with eight per worker, batches are
+twice the workers. Otherwise the original loop runs. Refinement is a pure
+function of a pair's two planes and results stay in pair order. Editing this
+file changes the alignment algorithm identity, so saved session alignments are
+recomputed once.
+
+**Evidence (MEASURED).** Two fresh alignments of bug-4 at 32 GiB: alignment
+791.5 s -> 653.2 s and 661.1 s (native refinement 730 s -> 564 s and 572 s);
+warp map and all 27,774 edge receipts byte-identical to the previous
+alignment; photograph and master identical to `out-auto-11`; peak private
+memory 25.1 GB, as before. A unit test with a deliberately tight plane budget
+(`session_align_production_pair_consumers_reuse_original_cfa_and_refuse_flat_source`)
+failed with unconditional overlap and passes with the budget check.
+
+## Summary
+
+| # | Improvement | Before -> after (bug-4 unless noted) | Output |
+| --- | --- | --- | --- |
+| 1 | Ordinary stack: all cores, frames prepared ahead and pipelined | 225 s -> 79 s (leaf-2 128 -> 47 s, 109MSDCF 17 -> 7 s) | identical pixels |
+| 2 | Best result: parallel source preparation and group fold | 550 s -> 397 s (cached alignment) | identical |
+| 3 | Best result: alignment cache independent of RAM budget | 14-19 min re-alignment -> reuse | identical geometry |
+| 4 | Best result: concurrent RAW hashing | 362 s -> 341 s | identical |
+| 5 | Best result: overlapped native alignment refinement | alignment 791 s -> 653-661 s | identical geometry |
+
+A new five-pass bug-4 Best result therefore runs in about 650 + 340 s instead
+of about 790 + 550 s; a re-run with saved alignment in about 340 s instead of
+550 s. No change alters a pixel. None of these is a photographic quality
+improvement; the quality candidates examined (deep-stack softening, below) did
+not show a defect to fix on this data.
+
 ## Investigated and not changed
 
 ### Best result group merges: prepared-ahead sources (no gain, reverted)
