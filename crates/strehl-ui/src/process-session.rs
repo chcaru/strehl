@@ -78,7 +78,18 @@ impl ProcessSpace {
                             "{} / {} captures placed",
                             geometry.placed, summary.frames
                         ));
-                        ui.label(format!("{} refused", geometry.refused));
+                        if geometry.refused > 0 {
+                            // Best result places passes the joint alignment
+                            // cannot join separately (detached layers or their
+                            // own photographs), so "refused" overstates it.
+                            ui.label(if summary.mode == SessionMode::Auto {
+                                format!("{} not in the joint alignment", geometry.refused)
+                            } else {
+                                format!("{} refused", geometry.refused)
+                            });
+                        } else {
+                            ui.label("0 refused");
+                        }
                         ui.label(format!("{} measured pair fits", geometry.measured_edges));
                         ui.label(format!("{} independent graph cycles", geometry.cycle_rank));
                     } else {

@@ -193,20 +193,29 @@ impl StrehlApp {
             for (i, pass) in session.manifest.passes.iter_mut().enumerate() {
                 ui.push_id(("session-pass", i), |ui| {
                     egui::Frame::group(ui.style()).show(ui, |ui| {
+                        // Buttons are laid out first from the right, and the
+                        // name takes what remains. A fixed reservation let a
+                        // row overflow, which widened the scroll content and
+                        // every later row with it.
+                        let right_to_left = egui::Layout::right_to_left(egui::Align::Center);
                         ui.horizontal(|ui| {
                             ui.label(RichText::new(format!("{:02}", i + 1)).color(ACCENT));
-                            ui.add(egui::TextEdit::singleline(&mut pass.name).desired_width((ui.available_width() - 78.0).max(50.0)));
-                            if ui.add_enabled(i > 0, egui::Button::new("↑").small()).on_hover_text("Move pass earlier").clicked() { edit = Some(LayoutEdit::MovePass(i, i - 1)); }
-                            if ui.add_enabled(i + 1 < pass_count, egui::Button::new("↓").small()).on_hover_text("Move pass later").clicked() { edit = Some(LayoutEdit::MovePass(i, i + 1)); }
-                            if ui.add_enabled(pass_count > 1, egui::Button::new("×").small()).on_hover_text("Remove this pass from the session").clicked() { edit = Some(LayoutEdit::RemovePass(i)); }
+                            ui.with_layout(right_to_left, |ui| {
+                                if ui.add_enabled(pass_count > 1, egui::Button::new("×").small()).on_hover_text("Remove this pass from the session").clicked() { edit = Some(LayoutEdit::RemovePass(i)); }
+                                if ui.add_enabled(i + 1 < pass_count, egui::Button::new("↓").small()).on_hover_text("Move pass later").clicked() { edit = Some(LayoutEdit::MovePass(i, i + 1)); }
+                                if ui.add_enabled(i > 0, egui::Button::new("↑").small()).on_hover_text("Move pass earlier").clicked() { edit = Some(LayoutEdit::MovePass(i, i - 1)); }
+                                ui.add(egui::TextEdit::singleline(&mut pass.name).desired_width(ui.available_width().max(50.0)));
+                            });
                         });
                         if let Some(group) = self.session_ui.groups.get(i) { theme::caption(ui, &format!("{} captures · {}–{}", group.range.len(), group.range.start + 1, group.range.end)); }
                         for (segment, directory) in pass.directories.iter().enumerate() {
                             ui.horizontal(|ui| {
-                                ui.add_sized([(ui.available_width() - 78.0).max(40.0), 18.0], egui::Label::new(RichText::new(format!("{}  {}", segment + 1, directory.file_name().unwrap_or_default().to_string_lossy())).size(10.0).color(MUTED)).truncate()).on_hover_text(directory.display().to_string());
-                                if ui.add_enabled(segment > 0, egui::Button::new("↑").small()).on_hover_text("Move folder segment earlier").clicked() { edit = Some(LayoutEdit::MoveSegment(i, segment, segment - 1)); }
-                                if ui.add_enabled(segment + 1 < pass.directories.len(), egui::Button::new("↓").small()).on_hover_text("Move folder segment later").clicked() { edit = Some(LayoutEdit::MoveSegment(i, segment, segment + 1)); }
-                                if ui.add_enabled(pass.directories.len() > 1, egui::Button::new("×").small()).on_hover_text("Remove folder segment").clicked() { edit = Some(LayoutEdit::RemoveSegment(i, segment)); }
+                                ui.with_layout(right_to_left, |ui| {
+                                    if ui.add_enabled(pass.directories.len() > 1, egui::Button::new("×").small()).on_hover_text("Remove folder segment").clicked() { edit = Some(LayoutEdit::RemoveSegment(i, segment)); }
+                                    if ui.add_enabled(segment + 1 < pass.directories.len(), egui::Button::new("↓").small()).on_hover_text("Move folder segment later").clicked() { edit = Some(LayoutEdit::MoveSegment(i, segment, segment + 1)); }
+                                    if ui.add_enabled(segment > 0, egui::Button::new("↑").small()).on_hover_text("Move folder segment earlier").clicked() { edit = Some(LayoutEdit::MoveSegment(i, segment, segment - 1)); }
+                                    ui.add_sized([ui.available_width().max(40.0), 18.0], egui::Label::new(RichText::new(format!("{}  {}", segment + 1, directory.file_name().unwrap_or_default().to_string_lossy())).size(10.0).color(MUTED)).truncate()).on_hover_text(directory.display().to_string());
+                                });
                             });
                         }
                         if ui.small_button("Add continuation folder…").on_hover_text("Append a folder that continues this pass. Captures stay ordered within each folder.").clicked() { choose = Some(SessionChoose::Segment(i)); }

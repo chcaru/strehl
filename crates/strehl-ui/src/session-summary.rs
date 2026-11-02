@@ -378,7 +378,14 @@ impl SessionSummary {
                 .collect();
             let names: Vec<String> = summary.passes.iter().map(|p| p.name.clone()).collect();
             if let Some(list) = contributions(&output, &names) {
-                for (pass, contribution) in summary.passes.iter_mut().zip(list) {
+                for (pass, mut contribution) in summary.passes.iter_mut().zip(list) {
+                    if !contribution.used
+                        && contribution.detail.is_none()
+                        && summary.alternatives.iter().any(|a| a.pass == pass.name)
+                    {
+                        contribution.detail =
+                            Some("Saved as its own photograph (see Also saved)".to_owned());
+                    }
                     pass.contribution = Some(contribution);
                 }
             }
@@ -439,4 +446,55 @@ fn read<T: serde::de::DeserializeOwned>(path: &Path) -> Result<T> {
     let file = std::fs::File::open(path).with_context(|| format!("Reading {}", path.display()))?;
     serde_json::from_reader(std::io::BufReader::new(file))
         .with_context(|| format!("Parsing {}", path.display()))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn contributions_label_each_pass_from_plan_and_report() {
+        let dir = tempfile::tempdir().unwrap();
+        std::fs::write(
+            dir.path().join("plan.json"),
+            r#"{"passes":[
+                {"pass":0,"role":"anchor","reason":null},
+                {"pass":1,"role":"lighting_layer","reason":"other lighting"},
+                {"pass":2,"role":"lighting_layer","reason":null},
+                {"pass":3,"role":"detached_layer","reason":"not joined"}
+            ]}"#,
+        )
+        .unwrap();
+        std::fs::write(
+            dir.path().join("render-report.json"),
+            r#"{"lighting_groups":[{"passes":["a"]},{"passes":["b"]},{"passes":["c"]}],
+                "lighting_fusion":{"layers":[
+                    {"group":1,"outcome":"superposed","residual_before":{"median_px":0.8},
+                     "residual_after":{"median_px":0.1},"coverage":0.54,"agreement":null,"sharp_fraction":0.99},
+                    {"group":2,"outcome":"defocused","residual_before":null,"residual_after":null,
+                     "coverage":null,"agreement":null,"sharp_fraction":null}]},
+                "detached_layers":[{"pass":"d","placement":null,"error":"too few frames"}]}"#,
+        )
+        .unwrap();
+        let names: Vec<String> = ["a", "b", "c", "d"].map(String::from).to_vec();
+        let got = contributions(dir.path(), &names).expect("plan present");
+        assert_eq!(got[0].label, "Primary reference · framing and colour");
+        assert!(got[0].used);
+        assert_eq!(got[1].label, "Lighting layer · averaged in");
+        assert_eq!(
+            got[1].detail.as_deref(),
+            Some("aligned 0.8 → 0.1 px · sharp 99% · covers 54%")
+        );
+        assert_eq!(got[1].reason.as_deref(), Some("other lighting"));
+        assert_eq!(got[2].label, "Lighting layer · not used: out of focus");
+        assert!(!got[2].used);
+        assert_eq!(
+            got[3].label,
+            "Detached layer · not used: could not be stacked on its own"
+        );
+        assert_eq!(got[3].detail.as_deref(), Some("too few frames"));
+        // No plan: other modes and older results show no contributions.
+        let empty = tempfile::tempdir().unwrap();
+        assert!(contributions(empty.path(), &names).is_none());
+    }
 }

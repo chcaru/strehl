@@ -590,10 +590,17 @@ impl StrehlApp {
                 }
                 if pane == Sidebar::Projects {
                     if self.controls.settings.session.is_some() {
-                        egui::ScrollArea::vertical()
-                            .id_salt("project-session-editor")
-                            .max_height((ui.available_height() * 0.55).clamp(180.0, 420.0))
-                            .show(ui, |ui| self.session_panel(ui));
+                        // Always show the bar: a long pass list otherwise
+                        // ends at the clip edge with no sign that it scrolls.
+                        egui::Frame::NONE.inner_margin(egui::Margin::symmetric(8, 0)).show(ui, |ui| {
+                            egui::ScrollArea::vertical()
+                                .id_salt("project-session-editor")
+                                .max_height((ui.available_height() * 0.55).clamp(180.0, 420.0))
+                                .auto_shrink([false, true])
+                                .scroll_bar_visibility(egui::scroll_area::ScrollBarVisibility::AlwaysVisible)
+                                .show(ui, |ui| self.session_panel(ui));
+                        });
+                        ui.add_space(6.0);
                     } else {
                         self.session_panel(ui);
                     }

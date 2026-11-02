@@ -21,6 +21,25 @@ Sony A7C II (`ILCE-7CM2`) + Sony FE 100mm F2.8 Macro GM OSS (`SEL100M28GM`).
 Pixel pitch 5.12 um. RGGB. Black level 512, white level 15360, active area
 7032x4688. Confirmed by measurement, not by documentation.
 
+### Owner's working aperture (recorded 2026-11-01)
+
+The owner shoots **as wide open as the path allows**. With the 2x
+teleconverter that is **EXIF `FNumber` f/5.6**: the lens's f/2.8 doubled by the
+converter, which the body composes into `FNumber` and `FocalLength` (SYNTHESIS
+fact 26). There is no wider aperture available on this path, so "open up to
+gain resolution" is not an option to advise.
+
+EXIF does **not** include the magnification (bellows) factor (SYNTHESIS fact
+28). Near 2:1 the measured bellows factor is `B` in [2.41, 3.06], point estimate
+2.6-2.9 (fact 27), so the optical working aperture at the sensor is
+**`N_eff = 5.6 x B`, about f/13.5-17 (f/15-16 typical)**. Use `N_eff`, not
+`FNumber`, for diffraction, depth-of-field and step-size reasoning. At f/15-16
+the green diffraction cutoff (~121 lp/mm at 550 nm) sits just above the
+A7C II's 98 lp/mm Nyquist: the system is close to critically sampled, colour
+(R/B, 49 lp/mm Nyquist) is undersampled, and a denser sensor or pixel shift
+mainly buys colour resolution and less demosaic aliasing (see
+`experiments/super-resolution-2026-11-01/results.md`).
+
 **v1 targets in-camera focus bracketing only** — camera fixed, focus moves, so
 frames differ by magnification and occlusion never changes.
 
