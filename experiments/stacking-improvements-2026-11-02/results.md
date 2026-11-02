@@ -67,6 +67,40 @@ previous default.
 **Cost.** About 2.4 GB more peak memory (2.8 -> 5.2 GB). Session implementation identity
 hashes `merge_cmd.rs`, so cached session group merges recompute once.
 
+## 2. Best result: parallel source preparation and group fold (implemented)
+
+**Finding (MEASURED, bug-4 Best result, 5 passes, 1,231 sources, cached
+alignment, `--threads 32 --memory-limit-gib 32`).** With the phase totals now
+saved per lighting group, a 299-source group spent prepare 120 s, fold_group
+72 s, gather 43 s, accumulate 42 s of 302 s. Inside `PreparedSource::
+prepare_with_masks` the pixel copy with gain, green average, the two noise-
+variance fields, the band-gain scaling and finite checks were single-threaded
+element-wise loops, and the 5x5 support reduce/expand/erode masks were serial
+per-pixel loops. In `fold_group`, every coefficient of every level was absorbed
+serially. Best result groups are singletons (one source per group), so the
+fold ran once per source.
+
+**Change (`session-fusion.rs`).** The element-wise loops and the support-mask
+operators run in parallel (rows or elements; each output is a pure function of
+the same inputs). In `fold_group`, when repeat averaging cannot apply (fewer
+than two sources, or another mode) and no attribution is kept, only the
+"absorb ordinary contribution" branch is reachable; it now runs in parallel
+chunks with integer diagnostic counts reduced afterwards. Other cases keep the
+existing loop.
+
+**Evidence (MEASURED; decoded photograph and master compared with the earlier
+`out-auto-11`, which predates both changes):**
+
+| Build | Wall | CPU use | Peak | Photograph / master |
+| --- | --- | --- | --- | --- |
+| Before (serial arm, same commit otherwise) | 549.6 s | 36% | 12.0 GB | identical |
+| Parallel prepare | 467.7 s | 50% | 12.1 GB | identical |
+| + parallel ordinary fold | 397.0 s | 67% | 12.1 GB | identical |
+
+Per 299-source group after both: prepare 71 s, gather 55 s, fold_group 33 s,
+accumulate 31 s (218 s against 302 s). `strehl-core` 742 tests and
+`strehl-cli` 399 library tests pass.
+
 ## Investigated and not changed
 
 ### Best result group merges: prepared-ahead sources (no gain, reverted)

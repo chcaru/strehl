@@ -501,48 +501,65 @@ impl PreparedSource {
             return Err(FusionError::Nonfinite);
         }
         self.input_support.copy_from_slice(coverage);
+        // Element-wise passes run in parallel: each output element is a pure
+        // function of the same inputs, so values do not depend on scheduling.
         for (c, input) in planes.iter().enumerate() {
-            for i in 0..n {
-                let value = if coverage[i] {
-                    input[i] * photometric_gain
-                } else {
-                    0.0
-                };
-                if !value.is_finite() {
-                    return Err(FusionError::InvalidInput(
-                        "nonfinite supported source sample",
-                    ));
-                }
-                self.pixels[c][i] = value;
+            let finite = self.pixels[c]
+                .par_iter_mut()
+                .zip(input.par_iter().zip(coverage.par_iter()))
+                .map(|(out, (&value, &covered))| {
+                    let value = if covered {
+                        value * photometric_gain
+                    } else {
+                        0.0
+                    };
+                    *out = value;
+                    value.is_finite()
+                })
+                .reduce(|| true, |a, b| a && b);
+            if !finite {
+                return Err(FusionError::InvalidInput(
+                    "nonfinite supported source sample",
+                ));
             }
             self.planes[c].build(&self.pixels[c], &mut self.workspace);
         }
-        for i in 0..n {
-            self.scalar[i] = (self.pixels[1][i] + self.pixels[3][i]) * 0.5;
+        {
+            let (g1, g2) = (&self.pixels[1], &self.pixels[3]);
+            self.scalar
+                .par_iter_mut()
+                .zip(g1.par_iter().zip(g2.par_iter()))
+                .for_each(|(s, (a, b))| *s = (a + b) * 0.5);
         }
         self.green.build(&self.scalar, &mut self.workspace);
-        for i in 0..n {
-            self.scalar[i] = if coverage[i] {
-                let luma = (planes[1][i] + planes[3][i]) * 0.5;
-                let sigma = noise.green_luma_sigma(luma);
-                sigma * sigma * gain2
-            } else {
-                0.0
-            };
-        }
+        self.scalar
+            .par_iter_mut()
+            .enumerate()
+            .for_each(|(i, s)| {
+                *s = if coverage[i] {
+                    let luma = (planes[1][i] + planes[3][i]) * 0.5;
+                    let sigma = noise.green_luma_sigma(luma);
+                    sigma * sigma * gain2
+                } else {
+                    0.0
+                };
+            });
         self.variance
             .build_gaussian(&self.scalar, &mut self.workspace);
-        for i in 0..n {
-            self.scalar[i] = if coverage[i] {
-                CfaPlane::ALL
-                    .iter()
-                    .enumerate()
-                    .map(|(c, p)| noise.plane(*p).variance(planes[c][i]) * gain2)
-                    .fold(0.0_f32, f32::max)
-            } else {
-                0.0
-            };
-        }
+        self.scalar
+            .par_iter_mut()
+            .enumerate()
+            .for_each(|(i, s)| {
+                *s = if coverage[i] {
+                    CfaPlane::ALL
+                        .iter()
+                        .enumerate()
+                        .map(|(c, p)| noise.plane(*p).variance(planes[c][i]) * gain2)
+                        .fold(0.0_f32, f32::max)
+                } else {
+                    0.0
+                };
+            });
         self.color_variance
             .build_gaussian(&self.scalar, &mut self.workspace);
         for k in 0..self.sizes.len() {
@@ -558,18 +575,22 @@ impl PreparedSource {
                 (self.variance.level_mut(k), beta),
                 (self.color_variance.level_mut(k), color_beta),
             ] {
-                for value in field {
-                    *value *= gain;
-                    if !value.is_finite() {
-                        return Err(FusionError::Nonfinite);
-                    }
+                let finite = field
+                    .par_iter_mut()
+                    .map(|value| {
+                        *value *= gain;
+                        value.is_finite()
+                    })
+                    .reduce(|| true, |a, b| a && b);
+                if !finite {
+                    return Err(FusionError::Nonfinite);
                 }
             }
             if self
                 .planes
                 .iter()
-                .any(|p| p.level(k).iter().any(|v| !v.is_finite()))
-                || self.green.level(k).iter().any(|v| !v.is_finite())
+                .any(|p| p.level(k).par_iter().any(|v| !v.is_finite()))
+                || self.green.level(k).par_iter().any(|v| !v.is_finite())
             {
                 return Err(FusionError::Nonfinite);
             }
@@ -932,10 +953,9 @@ impl Contributions {
         self.numerator
             .iter()
             .chain(&self.plain)
-            .flatten()
-            .chain(&self.denominator)
-            .chain(&self.count)
-            .all(|v| v.is_finite())
+            .chain(std::iter::once(&self.denominator))
+            .chain(std::iter::once(&self.count))
+            .all(|values| values.par_iter().all(|v| v.is_finite()))
     }
 }
 
@@ -1607,6 +1627,53 @@ impl SessionMerge {
             }
             let output = &mut self.levels[k];
             let is_mean = k == bands || k + self.cfg.mean_coarse >= bands;
+            // Without repeat averaging (fewer than two sources, or another
+            // mode) and without attribution, only the final branch below is
+            // reachable: absorb the group's ordinary contribution. That is
+            // element-wise, so it runs in parallel chunks; the diagnostic
+            // counts are integers, so their reduction order cannot matter.
+            let ordinary_only = !(group.policy.mode == GroupMode::Repeat
+                && group.sources.len() >= 2)
+                && self.attribution.is_none();
+            if ordinary_only {
+                let ordinary = &level.ordinary;
+                let counts = &level.count[..n];
+                let (uncovered, single, fallback) = output
+                    .chunks_mut(ACCUMULATION_CHUNK)
+                    .enumerate()
+                    .map(|(block, chunk)| {
+                        let begin = block * ACCUMULATION_CHUNK;
+                        let mut tally = (0u64, 0u64, 0u64);
+                        for j in 0..chunk.count.len() {
+                            let i = begin + j;
+                            let count = counts[i];
+                            if count == 0 {
+                                tally.0 += 1;
+                                continue;
+                            }
+                            chunk.denominator[j] += ordinary.denominator[i];
+                            chunk.count[j] += ordinary.count[i];
+                            for c in 0..4 {
+                                chunk.numerator[c][j] += ordinary.numerator[c][i];
+                                chunk.plain[c][j] += ordinary.plain[c][i];
+                            }
+                            if count == 1 {
+                                tally.1 += 1;
+                            } else {
+                                tally.2 += 1;
+                            }
+                        }
+                        tally
+                    })
+                    .reduce(|| (0, 0, 0), |a, b| (a.0 + b.0, a.1 + b.1, a.2 + b.2));
+                diag.uncovered_coefficients += uncovered;
+                diag.single_source_coefficients += single;
+                diag.ordinary_fallback_coefficients += fallback;
+                if !output.finite() {
+                    return Err(FusionError::Nonfinite);
+                }
+                continue;
+            }
             for i in 0..n {
                 let count = level.count[i];
                 if count == 0 {
@@ -1871,42 +1938,54 @@ fn same_recipe(a: MergeConfig, b: MergeConfig) -> bool {
 
 // Boolean support follows every nonzero tap of the actual pyramid operators.
 // Replication at the real canvas edge is legal; invented source coverage is not.
+// Row-parallel: every output pixel is a pure function of `src`, so the result
+// does not depend on scheduling.
 fn reduce_support(src: &[bool], size: LevelSize, dst: &mut [bool]) {
     let out = size.reduced();
-    for y in 0..out.height {
-        for x in 0..out.width {
-            dst[y * out.width + x] = (0..5).all(|ty| {
-                let sy = super::clamp_tap(2 * y, ty, size.height);
-                (0..5).all(|tx| src[sy * size.width + super::clamp_tap(2 * x, tx, size.width)])
-            });
-        }
-    }
+    dst[..out.pixels()]
+        .par_chunks_mut(out.width)
+        .enumerate()
+        .for_each(|(y, row)| {
+            for (x, d) in row.iter_mut().enumerate() {
+                *d = (0..5).all(|ty| {
+                    let sy = super::clamp_tap(2 * y, ty, size.height);
+                    (0..5).all(|tx| src[sy * size.width + super::clamp_tap(2 * x, tx, size.width)])
+                });
+            }
+        });
 }
 
 fn expand_support(src: &[bool], size: LevelSize, dst: &mut [bool], out: LevelSize) {
-    for y in 0..out.height {
-        for x in 0..out.width {
-            let cy = (y / 2) as isize;
-            let cx = (x / 2) as isize;
-            let ymin = if y % 2 == 0 { cy - 1 } else { cy };
-            let xmin = if x % 2 == 0 { cx - 1 } else { cx };
-            dst[y * out.width + x] = (ymin..=cy + 1).all(|sy| {
-                let sy = super::clamp_idx(sy, size.height);
-                (xmin..=cx + 1).all(|sx| src[sy * size.width + super::clamp_idx(sx, size.width)])
-            });
-        }
-    }
+    dst[..out.pixels()]
+        .par_chunks_mut(out.width)
+        .enumerate()
+        .for_each(|(y, row)| {
+            for (x, d) in row.iter_mut().enumerate() {
+                let cy = (y / 2) as isize;
+                let cx = (x / 2) as isize;
+                let ymin = if y % 2 == 0 { cy - 1 } else { cy };
+                let xmin = if x % 2 == 0 { cx - 1 } else { cx };
+                *d = (ymin..=cy + 1).all(|sy| {
+                    let sy = super::clamp_idx(sy, size.height);
+                    (xmin..=cx + 1)
+                        .all(|sx| src[sy * size.width + super::clamp_idx(sx, size.width)])
+                });
+            }
+        });
 }
 
 fn erode_support(src: &[bool], size: LevelSize, dst: &mut [bool]) {
-    for y in 0..size.height {
-        for x in 0..size.width {
-            dst[y * size.width + x] = (0..5).all(|ty| {
-                let sy = super::clamp_tap(y, ty, size.height);
-                (0..5).all(|tx| src[sy * size.width + super::clamp_tap(x, tx, size.width)])
-            });
-        }
-    }
+    dst[..size.pixels()]
+        .par_chunks_mut(size.width)
+        .enumerate()
+        .for_each(|(y, row)| {
+            for (x, d) in row.iter_mut().enumerate() {
+                *d = (0..5).all(|ty| {
+                    let sy = super::clamp_tap(y, ty, size.height);
+                    (0..5).all(|tx| src[sy * size.width + super::clamp_tap(x, tx, size.width)])
+                });
+            }
+        });
 }
 
 #[cfg(test)]
