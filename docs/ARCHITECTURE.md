@@ -278,8 +278,11 @@ light kept or raised it beside bright and dark detail. The base band is now **we
 the coarsest band's selection and inherits that band's ensemble blend. Together they removed
 most of the glow around edges on a tilted calibration slide (+35% -> +14.5% dark-ground
 excess over a locally in-focus composite) and lowered error against truth on every synthetic
-cell; see `experiments/image-quality-2026-11-02/results.md` §1b. Session fusion keeps a mean
-base (its consumer supports only that).
+cell; see `experiments/image-quality-2026-11-02/results.md` §1b. Session fusion (Best result)
+can select with the same pooled evidence and weighted base, pinned coefficient for coefficient
+to the ordinary merge by a parity test, but sessions keep the previous selection (mean base, no
+pooling): session fusion has no ensemble gate yet, and without it the two select noise in flat
+dark ground.
 
 Other defaults: `BaseBand::WeightedFromCoarsest`, `SelectMode::SoftPower`,
 `Hull::InputRange` — output clamped to the frames' hull, because per-band convexity does

@@ -164,11 +164,16 @@ impl StackArgs {
             gate: self.pyramid_gate,
             exponent: self.pyramid_exponent,
             sharpen_per_octave: self.pyramid_sharpen,
-            // Session fusion has its own coefficient consumer, which supports
-            // only a mean base and its own selection; the ordinary stack's
-            // weighted base and pooled evidence do not apply to it.
+            // Session fusion's coefficient consumer can select with pooled
+            // evidence and a weighted base exactly as the ordinary merge does
+            // (pinned by a parity test), but it has no ensemble gate, and
+            // without that gate the two select noise in flat dark ground: on
+            // bug-4 (1231 frames) dark-ground noise rose ~3% RMS and the black
+            // level ~10% with no glow reduction. Sessions keep the previous
+            // selection until the gate is ported (image-quality-2026-11-02 §1b).
             base: strehl_core::pyramid::BaseBand::Mean,
             pooled_evidence: false,
+            ensemble: false,
             ..strehl_core::pyramid::MergeConfig::default()
         })
     }

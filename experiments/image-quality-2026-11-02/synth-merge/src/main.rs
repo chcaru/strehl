@@ -22,6 +22,12 @@ fn main() {
     if std::env::var("SYNTH_BASE").as_deref() == Ok("weighted") {
         cfg.base = strehl_core::pyramid::BaseBand::WeightedFromCoarsest;
     }
+    if let Some(p) = std::env::var("SYNTH_EXPONENT").ok().and_then(|v| v.parse().ok()) {
+        cfg.exponent = p;
+    }
+    if let Some(r) = std::env::var("SYNTH_SHARPEN").ok().and_then(|v| v.parse().ok()) {
+        cfg.sharpen_per_octave = r;
+    }
     let sizes = level_sizes(w, h, cfg.bands);
     let mut merge = BandMerge::new(w, h, 1, cfg);
     let mut fws = FrameWorkspace::new(&sizes, 1);

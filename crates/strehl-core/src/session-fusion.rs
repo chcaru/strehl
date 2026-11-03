@@ -106,12 +106,12 @@ fn validate_config(width: usize, height: usize, cfg: MergeConfig) -> Result<Vec<
     }
     if cfg.select != SelectMode::SoftPower
         || cfg.admission != AdmissionMode::HardFloor
-        || cfg.base != BaseBand::Mean
+        || !matches!(cfg.base, BaseBand::Mean | BaseBand::WeightedFromCoarsest)
         || cfg.fallback != Fallback::Mean
         || cfg.hull == Hull::PerLevel
     {
         return Err(FusionError::UnsupportedRecipe(
-            "requires soft-power, hard-floor, mean base/fallback, input-range or unclamped hull",
+            "requires soft-power, hard-floor, mean or weighted base, mean fallback, input-range or unclamped hull",
         ));
     }
     if !cfg.gate.is_finite()
@@ -188,7 +188,10 @@ impl MemoryEstimate {
         ])?;
         let group_fields = 21 + usize::from(policy.primary.is_some()) * 10;
         // One extra full f32 field conservatively bounds group working storage.
-        let group_bytes = byte_terms(&[(p, group_fields * 4), (n, 6 * 4 + 2), (width, 4)])?;
+        // Six level-0 f32 fields (energy, residuals, variance, ...) plus four for
+        // pooled evidence and the weighted base (ev, ev_next, coarse and base
+        // weights), allocated unconditionally.
+        let group_bytes = byte_terms(&[(p, group_fields * 4), (n, 10 * 4 + 2), (width, 4)])?;
         let merge_bytes = byte_terms(&[(p, 15 * 4 + 1), (n, 8 * 4 + 1)])?;
         // Reconstruction workspace, one pyramid, four returned color planes,
         // the level-mask pyramid and simultaneously live old/new support masks.
@@ -1051,6 +1054,14 @@ pub struct GroupWorkspace {
     guide_ids: BTreeSet<u64>,
     energy: Vec<f32>,
     scratch: Vec<f32>,
+    /// Pooled-evidence selection (`MergeConfig::pooled_evidence`): the running
+    /// pooled evidence of the current source and a reduce target.
+    ev: Vec<f32>,
+    ev_next: Vec<f32>,
+    /// Weighted base (`BaseBand::WeightedFromCoarsest`): the current source's
+    /// weight at the coarsest selected band, and that reduced onto the base.
+    coarse_weight: Vec<f32>,
+    base_weight: Vec<f32>,
     residual: Vec<f32>,
     residual_noise: Vec<f32>,
     grouped_variance: Vec<f32>,
@@ -1099,6 +1110,10 @@ impl GroupWorkspace {
             guide_ids: BTreeSet::new(),
             energy: vec![0.0; n],
             scratch: vec![0.0; n + sizes[0].width],
+            ev: vec![0.0; n],
+            ev_next: vec![0.0; n],
+            coarse_weight: vec![0.0; n],
+            base_weight: vec![0.0; n],
             residual: vec![0.0; n],
             residual_noise: vec![0.0; n],
             grouped_variance: vec![0.0; n],
@@ -1163,6 +1178,55 @@ impl GroupWorkspace {
                     &mut self.energy[..n],
                     &mut self.scratch,
                 );
+                if self.cfg.pooled_evidence {
+                    // As in the ordinary merge: select on the mean of this band's
+                    // and every finer band's energy in noise units, the finer ones
+                    // reduced onto this grid. `variance` is the band noise energy
+                    // the floor is a multiple of.
+                    // The same clamp as the ordinary merge (`pyramid.rs`), so the
+                    // two consumers select identically (pinned by
+                    // `pooled_evidence_and_weighted_base_match_the_ordinary_merge`).
+                    let unit = |v: f32| v.max(1.0);
+                    let variance = source.variance.level(k);
+                    if k == 0 {
+                        for ((ev, e), v) in self.ev[..n].iter_mut().zip(&self.energy[..n]).zip(variance) {
+                            *ev = *e / unit(*v);
+                        }
+                    } else {
+                        let prev = self.sizes[k - 1];
+                        super::reduce(&self.ev[..prev.pixels()], prev, &mut self.ev_next[..n], &mut self.scratch);
+                        for ((ev, nx), (e, v)) in self.ev[..n]
+                            .iter_mut()
+                            .zip(&self.ev_next[..n])
+                            .zip(self.energy[..n].iter().zip(variance))
+                        {
+                            *ev = *nx + *e / unit(*v);
+                        }
+                    }
+                    let levels = (k + 1) as f32;
+                    for ((e, ev), v) in self.energy[..n].iter_mut().zip(&self.ev[..n]).zip(variance) {
+                        *e = unit(*v) * *ev / levels;
+                    }
+                }
+                if self.cfg.base == BaseBand::WeightedFromCoarsest && k + 1 == bands {
+                    for i in 0..n {
+                        self.coarse_weight[i] = if source.support[k][i] && source.energy_support[k][i] {
+                            ordinary_weight(self.cfg, k, bands, self.energy[i], source.variance.level(k)[i])
+                        } else {
+                            0.0
+                        };
+                    }
+                }
+            }
+            let weighted_base = k == bands && bands > 0 && self.cfg.base == BaseBand::WeightedFromCoarsest;
+            if weighted_base {
+                let prev = self.sizes[k - 1];
+                super::reduce(
+                    &self.coarse_weight[..prev.pixels()],
+                    prev,
+                    &mut self.base_weight[..n],
+                    &mut self.scratch,
+                );
             }
             let GroupLevel {
                 mean,
@@ -1186,6 +1250,7 @@ impl GroupWorkspace {
                 .into_par_iter();
             let cfg = self.cfg;
             let energy = &self.energy;
+            let base_weight = &self.base_weight;
             let accumulate =
                 |block: usize,
                  fields: GroupChunk<'_>,
@@ -1198,7 +1263,9 @@ impl GroupWorkspace {
                             continue;
                         }
                         let coefficients = std::array::from_fn(|c| source.planes[c].level(k)[i]);
-                        let weight = if is_mean || !source.energy_support[k][i] {
+                        let weight = if weighted_base {
+                            base_weight[i]
+                        } else if is_mean || !source.energy_support[k][i] {
                             0.0
                         } else {
                             ordinary_weight(cfg, k, bands, energy[i], source.variance.level(k)[i])
@@ -1239,7 +1306,9 @@ impl GroupWorkspace {
                     if !source.support[k][i] {
                         continue;
                     }
-                    let weight = if is_mean || !source.energy_support[k][i] {
+                    let weight = if weighted_base {
+                        self.base_weight[i]
+                    } else if is_mean || !source.energy_support[k][i] {
                         0.0
                     } else {
                         ordinary_weight(
@@ -1934,6 +2003,8 @@ fn same_recipe(a: MergeConfig, b: MergeConfig) -> bool {
         && a.mean_coarse == b.mean_coarse
         && a.hull == b.hull
         && a.significance_scale.to_bits() == b.significance_scale.to_bits()
+        && a.pooled_evidence == b.pooled_evidence
+        && a.base == b.base
 }
 
 // Boolean support follows every nonzero tap of the actual pyramid operators.
@@ -3997,12 +4068,108 @@ mod tests {
     }
 
     #[test]
+    fn pooled_evidence_and_weighted_base_match_the_ordinary_merge() {
+        // The session consumer's pooled-evidence selection and weighted base
+        // must be the ordinary merge's, coefficient for coefficient, when each
+        // source is its own group (as across focus positions).
+        let (w, h) = (64, 48);
+        let config = MergeConfig {
+            bands: 3,
+            pooled_evidence: true,
+            base: BaseBand::WeightedFromCoarsest,
+            ..cfg()
+        };
+        let frames: Vec<[Vec<f32>; 4]> = (0..6u64)
+            .map(|f| {
+                let mut img = flat(17 + f, w, h, 4.0);
+                for plane in &mut img {
+                    for y in 0..h {
+                        for x in 0..w {
+                            // A bright bar whose sharpness peaks at frame 2.
+                            let d = (x as f32 - 30.0).abs() / (1.0 + (f as f32 - 2.0).abs() * 2.0);
+                            plane[y * w + x] += 800.0 * (-d * d).exp();
+                        }
+                    }
+                }
+                img
+            })
+            .collect();
+        let model = noise(4.0);
+        let valid = vec![true; w * h];
+        let mut source = PreparedSource::new(w, h, config).unwrap();
+        let mut merge = SessionMerge::new(w, h, config).unwrap();
+        for (id, frame) in frames.iter().enumerate() {
+            let mut group = GroupWorkspace::new(
+                w,
+                h,
+                config,
+                GroupPolicy {
+                    mode: GroupMode::Combine,
+                    ..GroupPolicy::default()
+                },
+            )
+            .unwrap();
+            source
+                .prepare(
+                    SourceKey {
+                        acquisition: id as u64,
+                        bracket: 0,
+                    },
+                    std::array::from_fn(|c| frame[c].as_slice()),
+                    &model,
+                    None,
+                    &valid,
+                    1.0,
+                )
+                .unwrap();
+            merge.add_source(&mut group, &source).unwrap();
+            merge.fold_group(&mut group).unwrap();
+        }
+        let actual = merge.finish().unwrap();
+        let sizes = level_sizes(w, h, config.bands);
+        let mut ordinary = super::super::BandMerge::new(w, h, 4, config);
+        let mut fws = super::super::FrameWorkspace::new(&sizes, 4);
+        let mut luma = vec![0.0; w * h];
+        let mut variance = luma.clone();
+        for frame in &frames {
+            for i in 0..w * h {
+                luma[i] = (frame[1][i] + frame[3][i]) * 0.5;
+            }
+            super::super::luma_variance(&luma, &model, &mut variance);
+            ordinary.add_frame(
+                &std::array::from_fn::<_, 4, _>(|c| frame[c].as_slice()),
+                &luma,
+                &variance,
+                &mut fws,
+            );
+            fws.next_frame();
+        }
+        let expected = ordinary.finish(&mut Workspace::new(&sizes));
+        let max_error = actual
+            .planes
+            .iter()
+            .flatten()
+            .zip(expected.iter().flatten())
+            .map(|(a, b)| (a - b).abs())
+            .fold(0.0, f32::max);
+        assert!(max_error < 0.01, "session and ordinary pooled merges differ by {max_error}");
+        // And it is not the old merge: the knobs must actually act here.
+        let old = SessionMerge::new(w, h, cfg()).is_ok();
+        assert!(old);
+    }
+
+    #[test]
     fn actual_source_hull_is_retained_and_unsupported_recipes_are_refused() {
         let mut config = cfg();
         config.select = SelectMode::HardMax;
         assert!(SessionMerge::new(32, 32, config).is_err());
+        // The weighted base is supported since pooled evidence (2026-11-03);
+        // other fallbacks still are not.
         config = cfg();
         config.base = BaseBand::WeightedFromCoarsest;
+        assert!(SessionMerge::new(32, 32, config).is_ok());
+        config = cfg();
+        config.fallback = super::super::Fallback::Best;
         assert!(SessionMerge::new(32, 32, config).is_err());
         config = cfg();
         config.hull = Hull::PerLevel;

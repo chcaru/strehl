@@ -242,6 +242,20 @@ select in-focus ones, so a little low-SNR noise comes back (coffee-bean mid band
 up to +9% power, ~4.5% amplitude, in weak tiles). Truth tests favour the change
 overall; the noise is the price of the glow.
 
+**Sessions (MEASURED; not enabled).** Session fusion (Best result) has its own
+coefficient consumer. It now implements pooled evidence and the weighted base, and
+`pooled_evidence_and_weighted_base_match_the_ordinary_merge` pins it to the
+ordinary merge (six sources, each its own group, max difference < 0.01). The parity
+test failed by 2.4 DN until the noise unit carried the ordinary merge's
+`.max(1.0)` clamp. Enabled on `insects/bug-4` (1231 frames, 6880x4584 master),
+against the previous commit's binary on the same alignment cache, it made
+dark-ground noise ~3% RMS higher (green high-pass 0.842e-4 -> 0.866e-4 at 3 px,
+1.560e-4 -> 1.615e-4 at 33 px) and the black level ~10% higher, with no glow
+reduction (dark ground new/old 1.02-1.04 at every distance from bright
+pixels). Session fusion has no ensemble gate, and without it the two select
+noise in flat dark ground. Sessions keep the previous selection
+(`session-cmd.rs`) until the gate is ported.
+
 ## 1c. Taming bright glints on gems (development control, 2026-11-03)
 
 Owner request: a way to reduce super-bright spots, as on the minerals.
@@ -307,6 +321,21 @@ reference free of the ghost needs occlusion order. The bracket order is known on
 this rig (Sony focus position rises monotonically; on bee-3 the antenna is sharp
 at frame ~40 and the hair behind it at ~260-280), so a depth-ordered first pass
 is the open lead.
+
+*Tried and archived (2026-11-03): a depth-ordered occlusion prior*
+(`occlusion-prior-experiment.patch`). A first pass (~6 s on 299 frames) decodes
+each frame's green per quad at half the analysis plane, pulls it onto the
+reference grid by its placement, scores a log local high-pass energy, and takes
+per cell the nearest frame whose score is within a factor of the best; at the
+three finest bands, frames more than 20 beyond that near surface lose weight.
+With the near surface "within 1/2 of best" the antenna map read the hair behind
+it (~frame 108) and nothing changed; "within 1/8" found the antenna and removed
+most of its ghost streaks -- but it also visibly softened mixed-depth hair (crops
+`bee3/o3-*`, `o4-*`): a hair mat is *porous*, and farther hair genuinely visible
+through its gaps was suppressed. A depth-coherence filter on the map (drop labels
+whose 13x13 neighbourhood spread exceeds 10 frames) did not separate the cases.
+The rule needs an opacity estimate (solid leg/antenna vs porous strands), which a
+quarter-resolution map cannot resolve. Not shipped.
 
 ## 4. Cost (MEASURED)
 
