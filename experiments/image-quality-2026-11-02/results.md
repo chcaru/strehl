@@ -645,6 +645,69 @@ line and blue on the other -- a residual *lateral* shift, which a focus offset c
 move. The lateral-CA record (facts 1414-1903; no scalar fix, scene-dependent effective
 wavelength, fact 1570) is the place for that defect. Not built.
 
+## 3c. Per-capture lateral-CA refinement (MEASURED, 2026-11-03; not yet built)
+
+While testing 3b, chroma-boosted crops of the flat slide showed red on one side of every
+line and blue on the other, near the centre -- a lateral offset the shipped correction
+leaves. SYNTHESIS fact 1570: no scalar CA fix exists (effective wavelength is
+scene-dependent); improvement must come from per-capture estimation.
+
+**Instrument (`ca-residual.py`).** On a linear master: per 256 px tile with enough green
+gradient, the sub-pixel shift of R and of B against G by phase correlation on gradient
+magnitude; a least-squares fit of displacement = translation + scale x (position from
+centre). Control: an integer roll of green is recovered exactly. On raw frames
+(`ca-raw-shift.py`), each CFA site set is bilinear-interpolated on its own so samples stay
+where they were taken; the null (G1 sites alone vs G2 sites alone, same sparsity as R or B)
+reads (+0.02, +0.02) px / -13 ppm against R's (-0.13, -0.19) px / -582 ppm on the flat slide.
+
+**What the shipped correction leaves (MEASURED, output residual, shipped constants
+eps_r -508.4 ppm, eps_b +174.4 ppm, translation not applied):**
+
+| subject | R residual t (px), scale | B residual t (px), scale |
+| --- | --- | --- |
+| flat slide | (+0.01, -0.28), -75 ppm | (-0.11, +0.19), +4 ppm |
+| slide-2 | (+0.04, -0.29), -103 | (-0.08, +0.25), +58 |
+| razor | (+0.09, -0.10), +75 | (-0.10, +0.05), -33 |
+| bee-3 | (+0.08, -0.13), +134 | (-0.02, +0.13), +11 |
+| bug-4 104MSDCF | (+0.05, 0.00), +250 | (-0.03, +0.04), -115 |
+| garnet | (+0.02, +0.01), +142 | (0.00, +0.09), -8 |
+| peacock 102MSDCF | (+0.08, +0.05), +106 | (-0.01, +0.06), -45 |
+| rutile | (+0.08, +0.04), +100 | (-0.02, +0.13), +37 |
+
+Red's native scale is -258 to -611 ppm across these captures against -508 shipped:
+over-corrected by 75-250 ppm on natural subjects (0.25-0.85 px at 0.8 field height).
+
+**Raw-frame estimates are not reliable enough.** On rutile one mid frame gave the right
+scale (-397 ppm; output-calibrated native -399) but a wrong translation (red residual
++0.04 -> +0.30 px when applied): a partial field couples translation and scale. Pooling 11
+frames gave -262 ppm; keeping each tile's sharpest frame gave -557. Not used.
+
+**Output-domain two-pass converges (MEASURED; experiment `ca-refine-experiment.patch`,
+`STREHL_CA_OVERRIDE`, script `ca-two-pass.sh`).** Pass 1 renders with the shipped
+correction; the residual measured on its linear master is added to the correction; pass
+2 re-renders. A control passing the shipped constants through the override is
+byte-identical to the default. Pass-2 residuals: <= 0.03 px and <= 32 ppm on six of
+seven subjects; bug-4 and peacock keep +71 / +48 ppm (response below 1:1; a second
+step would be needed). Fringe on the neutral targets (`fringe.py`):
+
+| subject | R fringe shipped -> refined | B fringe shipped -> refined |
+| --- | --- | --- |
+| flat slide | 4.267% -> 2.634% | 3.763% -> 2.056% |
+| slide-2 | 7.343% -> 3.154% | 5.371% -> 2.137% |
+| razor | 4.069% -> 3.746% | 4.456% -> 4.182% |
+
+Visible at 3x with chroma boost: the flat slide's diagonal bars lose their red-above /
+blue-below fringe (`loca/flat/trans-cmp.png`); bug-4 hairs at r 0.63, origin (980,1260),
+read more neutral (`ca/bug4/ca-edge0.png`). Caveat: whole-image fine energy in R/B fell
+3-7% on bee-3 and the razor (unchanged on slide-2); some of that is the demosaic's
+cross-channel overshoot at misaligned edges disappearing (the razor's edge colour error
+fell), but a resampling softening is not excluded.
+
+**Cost of measuring.** The residual from every 8th frame (16.5 s vs ~95 s for the full
+stack) matches the full stack on bug-4 (+248 vs +250 ppm) and is 42 ppm low on bee-3; a
+half stack matches both within 11 ppm. So a preview pass of a subset, then one render,
+is viable at roughly +20-30% time.
+
 ## 4. Cost (MEASURED)
 
 `insects/bug-4/102MSDCF`, 299 frames, `--srgb`, shared warp map, eight runs
