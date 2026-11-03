@@ -450,7 +450,7 @@ blades themselves are dimmed, not only their sparkle, because on dark hematite a
 whole blade is more than 2 stops above its cell's typical level. **Limitation:** the
 control's notion of "small" is a grid cell (~350 px on a 7000 px frame), so bright
 subjects smaller than a cell on a dark ground are treated as glints. Use a lower
-setting there.
+setting there. (Superseded for dark-ground images by the lit-subject level below.)
 
 *Tried and reverted:* fading the compression where a cell's bright slice is mostly
 *coloured* pixels (the lattice's existing colour moment; glints should be near
@@ -474,6 +474,45 @@ peacock 0.07 / 0.09 / 0.12, garnet 0.08 / 0.18 / 0.31. The cause is upstream: a 
 typical level is the mean log light including the dark ground, so on a black background
 any lit surface is "more than 2 stops above typical". A typical level of the lit subject
 alone is the place to start if this is revisited.
+
+**Fixed: a lit-subject typical level (SHIPPED, 2026-11-03).** Pure black never
+enters the lattice (luma below 0.002 is skipped), so garnet and peacock have no ground
+in it; hematite does. The analysis now splits the image's luminance histogram in two
+(Otsu over the 33 slices) and, when the two populations' means are at least 3.5 stops
+apart, takes each cell's typical level over the lit slices only, pulled toward the
+whole cell's mean with 5% of the cell's population. A cell holding only glints on the
+ground (tiny lit share) keeps its old level, so those glints are still tamed.
+Measured separations: peacock 2.2, garnet 2.9 (no ground: recipes **byte-identical**
+to before), rutile 4.2, opal 6.8 (ground).
+
+MEASURED (`glint-score.py`: share of pixels with any channel above 95% white, and the
+mean treated/untreated luma ratio per bin of untreated developed luma; same recipe pair
+as above, masters re-rendered with the current default merge):
+
+| subject | arm | above 95% | 0.05-0.2 | 0.2-0.4 | 0.4-0.6 | 0.6-0.8 | 0.8-0.9 | 0.9-1 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| rutile | untreated | 0.263% | 1 | 1 | 1 | 1 | 1 | 1 |
+| rutile | before | 0.000% | 0.997 | 0.955 | 0.938 | 0.921 | 0.875 | 0.852 |
+| rutile | lit level | 0.143% | 1.000 | 1.000 | 0.999 | 0.996 | 0.986 | 0.970 |
+| opal | before | 10.414% | 0.988 | 0.998 | 1.000 | 1.000 | 1.000 | 1.000 |
+| opal | lit level | 10.414% | 0.991 | 0.999 | 1.000 | 1.000 | 1.000 | 1.000 |
+
+(Opal's 10% above 95% is its high-key body, untouched by both arms, as designed.)
+Native crop on rutile's large golden blade, origin (5000,2300), 400 px
+(`iq3/rutile/bladeL.png`): before, the blade is flatter, dimmer and less saturated;
+now it matches the untreated development. The largest white rutile face, origin
+(1200,3600) (`cmpL.png`), is now only trimmed at the top; the shipped version had
+compressed the whole face and shown more of its texture. That is the price: on this
+subject the control now does little, because rutile has few highlights that are small
+*relative to the lit blades*. Dim specks on hematite next to a blade are no longer
+tamed (they sit below the blade's level); specks in cells without a blade still are.
+Prior sweep 0.02 / 0.05 / 0.1 on rutile: above-95% 0.155 / 0.143 / 0.117%, 0.4-0.6
+bin 1.000 / 0.999 / 0.998.
+
+Test `glint_compression_judges_a_lit_subject_on_dark_ground_by_its_own_level` (blades
+on a ground 3.7 stops below, glints on the blades). Mutation-checked: no ground split
+fails it (blade 0.066 -> 0.054); no prior fails the existing small-glint test (0 of
+100 glints lowered).
 
 ## 2. Fuse each source's reconstructed RGB instead of re-mosaicing (REJECTED)
 

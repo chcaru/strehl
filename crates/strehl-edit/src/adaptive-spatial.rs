@@ -165,7 +165,7 @@ pub(super) fn analyze_spatial(
                 changes.push(AdaptiveChange { control: "bright-tone compression".into(), before: 0.0, after: parameters.highlight_compression, reason: "A bounded smooth shoulder lowers existing bright light after balancing, without compensating by lifting the rest of the image. It cannot recover clipped texture.".into() });
             }
             if parameters.glint_compression > 0.0 {
-                changes.push(AdaptiveChange { control: "glint compression".into(), before: 0.0, after: parameters.glint_compression, reason: "Light more than two stops above its own neighbourhood's typical level is compressed by up to 2:1, so small specular highlights stay the brightest things locally but stop dominating. Large bright areas set their own neighbourhood level and are left alone. It cannot recover clipped texture.".into() });
+                changes.push(AdaptiveChange { control: "glint compression".into(), before: 0.0, after: parameters.glint_compression, reason: "Light more than two stops above its own neighbourhood's typical level is compressed by up to 2:1, so small specular highlights stay the brightest things locally but stop dominating. Large bright areas set their own neighbourhood level and are left alone; on a dark backdrop the level is the lit subject's, not the backdrop's. It cannot recover clipped texture.".into() });
             }
             if parameters.presence > 0.0 {
                 changes.push(AdaptiveChange { control: "scene-relative presence".into(), before: 0.0, after: parameters.presence, reason: "Robust light percentiles place a smooth contrast curve within this photograph's useful tones. The curve adds separation without sharpening pixels, while dark-floor and highlight protection remain active.".into() });
@@ -290,15 +290,32 @@ fn build_field(
     // Each cell's typical log light: the population mean over every luminance
     // slice of the spatially smoothed grid. Small bright features contribute
     // few samples, so they sit far above it; a large bright area pulls it up.
+    // On an image with a dark ground (`lit_ground`), the mean is over the lit
+    // slices instead, so a lit subject is not judged against the backdrop.
+    let ground = lit_ground(&global, log_min, log_max);
     let typical: Vec<Option<f32>> = fine
         .chunks_exact(levels)
         .map(|cell| {
-            let (mut log, mut weight) = (0.0f32, 0.0f32);
-            for m in cell {
+            let (mut lit_log, mut lit_weight, mut log, mut weight) = (0.0f32, 0.0, 0.0, 0.0);
+            for (z, m) in cell.iter().enumerate() {
                 log += m.log;
                 weight += m.weight;
+                if ground.is_some_and(|first_lit| z >= first_lit) {
+                    lit_log += m.log;
+                    lit_weight += m.weight;
+                }
             }
-            (weight > 0.5).then(|| log / weight)
+            if weight <= 0.5 {
+                return None;
+            }
+            let mean = log / weight;
+            if ground.is_none() {
+                return Some(mean);
+            }
+            // A cell whose lit share is small holds glints on the ground, not a
+            // lit subject: the prior keeps its level at the whole cell's mean.
+            let prior = GLINT_LIT_PRIOR * weight;
+            Some((lit_log + prior * mean) / (lit_weight + prior))
         })
         .collect();
     for (cell, cell_color) in color_gain.iter_mut().enumerate() {
@@ -491,6 +508,53 @@ fn build_field(
 
 /// How far above its cell's typical light (in stops) glint compression starts.
 const GLINT_KNEE_STOPS: f32 = 2.0;
+
+/// Minimum distance (stops) between the dark and lit populations' means for
+/// the darker one to count as ground rather than the subject's own shadows.
+/// Measured separations: peacock ore 2.2 and spessartine garnet 2.9 (no
+/// ground; unchanged), rutile on hematite 4.2 and opal cabochon 6.8 (ground).
+const GLINT_GROUND_SEPARATION: f32 = 3.5;
+/// A cell's lit typical level is pulled toward the whole cell's mean with this
+/// share of the cell's population, so a cell holding only glints on the ground
+/// (a tiny lit share) keeps its whole-cell level and its glints are tamed.
+const GLINT_LIT_PRIOR: f32 = 0.05;
+
+/// Split the image's luminance histogram in two (Otsu) and, when the lower
+/// population sits far below the upper one, return the first slice of the
+/// upper (lit) one. On a dark backdrop (hematite under rutile), the typical
+/// light a glint is judged against must be the lit subject's: with the ground
+/// in the mean, a whole lit blade reads as "far above typical" and is dimmed.
+fn lit_ground(global: &[Moment], log_min: f32, log_max: f32) -> Option<usize> {
+    let levels = global.len();
+    let center = |z: usize| log_min + (log_max - log_min) * z as f32 / (levels - 1) as f32;
+    let total: f32 = global.iter().map(|m| m.weight).sum();
+    if total <= 0.0 {
+        return None;
+    }
+    let mut best: Option<(f32, usize, f32, f32)> = None;
+    for split in 1..levels {
+        let (mut w0, mut s0, mut w1, mut s1) = (0.0f32, 0.0f32, 0.0f32, 0.0f32);
+        for (z, m) in global.iter().enumerate() {
+            if z < split {
+                w0 += m.weight;
+                s0 += m.weight * center(z);
+            } else {
+                w1 += m.weight;
+                s1 += m.weight * center(z);
+            }
+        }
+        if w0 <= 1e-3 * total || w1 <= 1e-3 * total {
+            continue;
+        }
+        let (m0, m1) = (s0 / w0, s1 / w1);
+        let between = w0 * w1 * (m1 - m0).powi(2);
+        if best.is_none_or(|b| between > b.0) {
+            best = Some((between, split, m0, m1));
+        }
+    }
+    let (_, first_lit, lower, upper) = best?;
+    (upper - lower >= GLINT_GROUND_SEPARATION).then_some(first_lit)
+}
 
 fn smooth_weight(x: f32) -> f32 {
     let x = x.clamp(0.0, 1.0);
