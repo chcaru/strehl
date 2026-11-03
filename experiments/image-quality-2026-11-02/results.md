@@ -419,6 +419,18 @@ down; crystal body and black ground unchanged (`garnet/gl-*.png`). Test
 (mutation-checked: a knee out of reach fails it); the strongest-controls
 order test now includes it. 80+ strehl-edit tests and 1039 strehl-ui tests pass.
 
+**Other minerals (MEASURED,** current default merge, same recipe pair
+`shadow_protection=0.85` with `glint_compression` 0 vs 0.85; `D:/codex-work/iq3/*`):
+*peacock-ore* 102MSDCF -- the blown white patch is toned down and shows texture,
+pixels above 95% white 0.133% -> 0.001%; *rainbow-opal-cabochon* -- no change (0.2%
+-> 0.2%): its bright area is large and sets its own cell level, as designed;
+*rutile-star-on-hematite* -- above-95% pixels 0.245% -> 0%, but the golden rutile
+blades themselves are dimmed, not only their sparkle, because on dark hematite a
+whole blade is more than 2 stops above its cell's typical level. **Limitation:** the
+control's notion of "small" is a grid cell (~350 px on a 7000 px frame), so bright
+subjects smaller than a cell on a dark ground are treated as glints. Use a lower
+setting there; a size- or saturation-aware glint mask is the open improvement.
+
 ## 2. Fuse each source's reconstructed RGB instead of re-mosaicing (REJECTED)
 
 **Hypothesis.** The default full-resolution gather demosaics each source (MHC),
