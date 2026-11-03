@@ -606,6 +606,45 @@ Pooled evidence makes the antenna ghost slightly *more* contrasty than before
 stacks): coarse bands now follow the frames where the background hair behind it
 is sharp. Disclosed as a cost of §1b.
 
+## 3b. Per-channel focus offset for longitudinal CA (REJECTED, 2026-11-03)
+
+SYNTHESIS fact 1417 proposed (ARGUED, unexplored) keeping the green-led selection but
+folding red and blue from a frame offset by the measured focus difference; the
+novelty list names per-channel stacking exploiting longitudinal CA.
+
+**The offset is real (MEASURED, `loca-focus-curves.py`).** Per 8 x 8 tile, a contrast-
+normalised band-pass energy per raw CFA channel per frame, sub-frame parabolic peak,
+tiles with a clear peak only. Flat calibration slide (`flat-et2.5s-sw4-cpl`, 60
+frames), mid band: R-G **-1.92** frames (IQR -2.01 to -1.79), B-G **-1.86** (-2.10 to
+-1.65), 64 tiles; finest band: R-G -2.16, B-G -1.62, and R and B keep only **0.882**
+and **0.927** of their own best energy at green's best frame. `bee-3-cpl` (299 frames,
+finer step), finest band: R-G -0.84, B-G -0.62 frames, 47 tiles; 0.973 / 0.990. Red and
+blue focus nearer than green, together -- the secondary-spectrum pattern -- and the
+offset in frames is stack-dependent, so it would need a runtime fit.
+
+**Folding them from the offset frame does not help (MEASURED).** Experiment
+(`loca-delay-experiment.patch`, `STREHL_LOCA_DELAY=dR,dB`): a ring buffer of past R and
+B planes in the frame workspace (chunks run serially, so it spans chunk boundaries);
+frame g's weights fold R and B from frame g-d, fractional d interpolating two frames.
+Flat slide, same warp map, linear masters, `fringe.py` (per-channel gains from bright
+flat pixels make the target grey; edge band = top 3% of green gradient):
+
+| arm | edge fringe R | edge fringe B | edge hp R/G | edge hp B/G |
+| --- | --- | --- | --- | --- |
+| default | 4.267% | 3.763% | 0.7656 | 0.7186 |
+| d = 2, 2 | 4.438% | 3.965% | 0.7851 | 0.6924 |
+| d = 2.16, 1.62 | 4.512% | 3.985% | 0.7877 | 0.7026 |
+| d = 2, 0 | 4.433% | 3.749% | 0.7900 | 0.6879 |
+| d = 1, 0 | 4.329% | 3.755% | 0.7823 | 0.7002 |
+
+Red gains ~3% edge energy and blue *loses* it even when blue is not delayed: the second
+(MHC) demosaic borrows red's local gradients to fill in blue, so the channels are
+coupled. Fringing rises in every arm. Chroma-boosted crops (`loca/flat/edge-cmp.png`,
+origin (4116,2224), 120 px, 3x) show why: the visible fringe is red on one side of each
+line and blue on the other -- a residual *lateral* shift, which a focus offset cannot
+move. The lateral-CA record (facts 1414-1903; no scalar fix, scene-dependent effective
+wavelength, fact 1570) is the place for that defect. Not built.
+
 ## 4. Cost (MEASURED)
 
 `insects/bug-4/102MSDCF`, 299 frames, `--srgb`, shared warp map, eight runs
