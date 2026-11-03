@@ -429,7 +429,24 @@ blades themselves are dimmed, not only their sparkle, because on dark hematite a
 whole blade is more than 2 stops above its cell's typical level. **Limitation:** the
 control's notion of "small" is a grid cell (~350 px on a 7000 px frame), so bright
 subjects smaller than a cell on a dark ground are treated as glints. Use a lower
-setting there; a size- or saturation-aware glint mask is the open improvement.
+setting there.
+
+*Tried and reverted:* fading the compression where a cell's bright slice is mostly
+*coloured* pixels (the lattice's existing colour moment; glints should be near
+neutral). No fade range separates the cases. Pixels above 95% white:
+
+| fade range | rutile | peacock | garnet |
+| --- | --- | --- | --- |
+| off (no taming) | 0.245% | 0.133% | 0.120% |
+| none (shipped, 0.85) | 0.000% | 0.001% | 0.005% |
+| 0.3-0.7 | 0.010% | 0.119% | 0.117% |
+| 0.6-0.95 | 0.000% | 0.090% | 0.113% |
+| 0.85-1.0 | 0.000% | 0.022% | 0.043% |
+
+Rutile's blades kept their level at 0.3-0.7 (mean 0.0776 vs 0.078 untreated, 0.0739
+shipped), but peacock's and garnet's speculars are tinted by the stone (and by blurred
+neighbours in the lattice), so they read as coloured too and lost the taming. The open
+improvement is a size-aware mask, not a colour one.
 
 ## 2. Fuse each source's reconstructed RGB instead of re-mosaicing (REJECTED)
 
