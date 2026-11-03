@@ -395,6 +395,27 @@ farther textured background) drew no glow at either ratio, so the bug-4 mechanis
 not reproduced by a unit test; the evidence is the measurements above. Byte freeze
 re-baselined and attributed bit-exactly (ratio 1.0 reproduces the previous row).
 
+## 1f. Regression sweep on subjects not used above (MEASURED, 2026-11-03)
+
+Start-of-night selection (gate on, `STREHL_PYRAMID_POOLED_EVIDENCE=0 --pyramid-base mean
+--pyramid-exponent 2`) against the current default (pooled, weighted base, exponent 4,
+ratio 2), one warp map per subject, full stacks, linear masters plus sRGB; the two
+256-px tiles with the largest coarse-scale difference were inspected at 1:1
+(`D:/codex-work/iq4/*-ab.png`, overviews `*-ov.png`).
+
+* **bug-3 104MSDCF** (coarse difference within -1.4%..+3.5% of white at the 0.1/99.9th
+  percentiles): leg spines and blue scales crisper, less haze over the black ground; no
+  artefact.
+* **maldon-sea-salt** (-2.8%..+3.2%): crystal surfaces slightly higher in contrast; no
+  artefact.
+* **bee-1** (-9.7%..+8.9%): the largest change is the tip of the left wing, which enters
+  focus only at the far end of the bracket. Single-frame renders (every 15th frame) show
+  no wing at frames 0-150 and its dark, blurred membrane from ~285. The old merge
+  averaged it with the ~250 wing-free frames into a semi-transparent ghost (mean green
+  202.6e-3 over the crop); the new merge shows it as the nearest-focus frames do (185.8e-3,
+  frame 285 at 188.5e-3). Correct, and more visible.
+* `flower-marigold-cpl` is a folder of sub-stacks, not a capture; not run.
+
 ## 1c. Taming bright glints on gems (development control, 2026-11-03)
 
 Owner request: a way to reduce super-bright spots, as on the minerals.
