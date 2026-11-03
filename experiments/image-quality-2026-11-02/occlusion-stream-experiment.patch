@@ -1,0 +1,84 @@
+diff --git a/crates/strehl-core/src/pyramid.rs b/crates/strehl-core/src/pyramid.rs
+index 0abf3529a..897468072 100644
+--- a/crates/strehl-core/src/pyramid.rs
++++ b/crates/strehl-core/src/pyramid.rs
+@@ -1669,6 +1669,9 @@ pub struct BandMerge {
+     /// floor, independent noise), over a central window of each level. Their
+     /// statistics' quantiles are the gate's thresholds. Empty when off.
+     null: Vec<NullWindow>,
++    /// EXPERIMENT (streaming occlusion): per fine level, the ordinal of the
++    /// first folded frame whose own band energy was significant there.
++    first_sig: Vec<Vec<u16>>,
+ }
+ 
+ /// One level's window of the ensemble gate's null accumulators.
+@@ -1885,6 +1888,7 @@ impl BandMerge {
+             } else {
+                 Vec::new()
+             },
++            first_sig: Vec::new(),
+             null: if cfg.ensemble {
+                 sizes[..nl - 1]
+                     .iter()
+@@ -2565,6 +2569,31 @@ impl BandMerge {
+                             }
+                         }
+                     });
++                if let Some(o) = occlusion_stream().filter(|o| k < o.levels) {
++                    if self.first_sig.len() <= k {
++                        self.first_sig.resize(k + 1, Vec::new());
++                    }
++                    if self.first_sig[k].len() != px {
++                        self.first_sig[k] = vec![u16::MAX; px];
++                    }
++                    let ord = self.frames as f32;
++                    let ordu = self.frames.min(u32::from(u16::MAX - 1)) as u16;
++                    w.par_iter_mut()
++                        .zip(self.first_sig[k].par_iter_mut())
++                        .zip(sq.par_iter().zip(vv))
++                        .for_each(|((wv, first), (e, v))| {
++                            let z = *e / (beta * v.max(0.0)).max(1.0);
++                            if *first == u16::MAX && z >= o.zsig {
++                                *first = ordu;
++                            }
++                            if *first != u16::MAX {
++                                let excess = ord - f32::from(*first) - o.margin;
++                                if excess > 0.0 {
++                                    *wv *= (-(excess / o.softness).powi(2)).exp();
++                                }
++                            }
++                        });
++                }
+                 if !self.zmax.is_empty() {
+                     // Energy in units of this frame's own expected noise energy
+                     // (the floor without the gate multiplier).
+@@ -3714,6 +3743,29 @@ pub fn pooled_evidence_default() -> bool {
+     })
+ }
+ 
++/// EXPERIMENT ONLY: streaming occlusion. `STREHL_OCCLUSION_STREAM=zsig,margin,softness,levels`.
++/// Frames fold near to far; once a coefficient's own energy has been `zsig`
++/// times its noise energy in some frame, frames more than `margin` folds later
++/// lose weight with a Gaussian of width `softness` folds, at the `levels`
++/// finest bands: a nearer in-focus surface hides what is behind it.
++#[derive(Debug, Clone, Copy)]
++struct OcclusionStream {
++    zsig: f32,
++    margin: f32,
++    softness: f32,
++    levels: usize,
++}
++
++fn occlusion_stream() -> Option<OcclusionStream> {
++    static V: std::sync::OnceLock<Option<OcclusionStream>> = std::sync::OnceLock::new();
++    *V.get_or_init(|| {
++        let raw = std::env::var("STREHL_OCCLUSION_STREAM").ok()?;
++        let v: Vec<f32> = raw.split(',').map(|t| t.trim().parse().expect("STREHL_OCCLUSION_STREAM")).collect();
++        assert_eq!(v.len(), 4, "STREHL_OCCLUSION_STREAM=zsig,margin,softness,levels");
++        Some(OcclusionStream { zsig: v[0], margin: v[1], softness: v[2], levels: v[3] as usize })
++    })
++}
++
+ /// Environment override for the ensemble gate's default (`0`/`off` disables).
+ pub const ENSEMBLE_ENV: &str = "STREHL_PYRAMID_ENSEMBLE";
+ 

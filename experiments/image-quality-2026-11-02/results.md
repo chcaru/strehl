@@ -201,6 +201,23 @@ plain mean only where the coarsest band is noise.
 | **pooled + weighted (shipped)** | 0.90 | 1.10 | 1.27 | 1.23 | 1.02 | 0.86 | **+14.5%** |
 | finer-only + weighted (rejected) | 0.82 | 1.05 | 1.25 | 1.21 | 0.99 | 0.85 | +11% |
 
+**The remaining 16-64 px "glow" is the tone curve, not the merge (MEASURED,
+2026-11-03).** The table above scores 16-bit sRGB renders, and each render, including
+every single-frame render in the composite, sets its own tone anchors.
+`localref-linear.py` rebuilds the composite from scene-linear single-frame masters
+(100 frames, every third, streamed and deleted) and scores linear masters (dark =
+composite 9x9 mean below 5% of its 99.5th percentile, 32% of pixels):
+
+| slide-2, scene-linear | 2-8 px | 8-16 | 16-32 | 32-64 | 64-128 |
+| --- | --- | --- | --- | --- | --- |
+| previous default (pooled off, mean base, exponent 2) | 1.16 | 1.08 | 1.04 | 1.05 | 1.08 |
+| current default (pooled, weighted base, exponent 4) | 0.96 | 0.93 | 0.94 | 0.94 | 0.93 |
+
+The current merge has no excess that falls off with distance from bright detail; it
+sits ~6% below the composite everywhere. Turning the ensemble gate off does not change
+the sRGB scores either (identical to two decimals). Glow is closed on this subject;
+use linear masters for any further glow measurement.
+
 **Truth.** Synthetic stacks (`synth-arms.py`, production `BandMerge`, 120 cells):
 pooled + weighted is worse than the previous default in **0 of 120** cells
 (geometric-mean error 0.852); *finer-only* evidence, which looked slightly better
@@ -387,6 +404,24 @@ through its gaps was suppressed. A depth-coherence filter on the map (drop label
 whose 13x13 neighbourhood spread exceeds 10 frames) did not separate the cases.
 The rule needs an opacity estimate (solid leg/antenna vs porous strands), which a
 quarter-resolution map cannot resolve. Not shipped.
+
+*Tried and archived (2026-11-03): a streaming, full-resolution occlusion rule*
+(`occlusion-stream-experiment.patch`, `STREHL_OCCLUSION_STREAM=zsig,margin,softness,levels`).
+Frames fold near to far, so per coefficient the merge recorded the first frame
+whose *own* band energy reached `zsig` times its noise energy, and frames more than
+20 folds later lost weight (Gaussian, 15 folds) at the three finest bands -- no
+map, no relative-to-best criterion. On `bee-3-cpl` (299 frames, current default
+otherwise) at zsig 8 and 4 it removed most antenna ghost streaks and softened the
+same porous hair as the map-based prior (crops `iq/bee3/xs-*`), plus the
+in-focus background hair fans beside the antenna. A hair mat has a nearer layer
+whose energy is significant within the smoothing reach of almost every gap pixel.
+The negative now covers both a coarse map and a per-coefficient rule. Any
+ordering rule needs an opacity estimate.
+
+Pooled evidence makes the antenna ghost slightly *more* contrasty than before
+(antenna-strip 99th percentile 59 -> 61 in 1e-3 linear units, both half
+stacks): coarse bands now follow the frames where the background hair behind it
+is sharp. Disclosed as a cost of §1b.
 
 ## 4. Cost (MEASURED)
 
