@@ -165,6 +165,7 @@ fn independent_options(out: PathBuf) -> MergeOptions {
             // base (FloorPedestalV1 requires a mean base); pinned.
             ensemble: false,
             pooled_evidence: false,
+            exponent: 2.0,
             base: strehl_core::pyramid::BaseBand::Mean,
             ..MergeConfig::default()
         },

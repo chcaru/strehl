@@ -510,6 +510,7 @@ fn options(out: PathBuf) -> MergeOptions {
             gate: 2.0,
             ensemble: false,
             pooled_evidence: false,
+            exponent: 2.0,
             base: strehl_core::pyramid::BaseBand::Mean,
             ..MergeConfig::default()
         },

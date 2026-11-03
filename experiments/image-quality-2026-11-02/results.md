@@ -256,6 +256,57 @@ pixels). Session fusion has no ensemble gate, and without it the two select
 noise in flat dark ground. Sessions keep the previous selection
 (`session-cmd.rs`) until the gate is ported.
 
+## 1d. A sharper coarse exponent now that coarse bands see focus (SHIPPED, 2026-11-03)
+
+**Hypothesis (ARGUED).** The coarsest-band exponent of 2 was chosen when coarse bands
+selected on their own energy, which barely depends on focus; soft selection there limited
+the damage of a wrong pick. With pooled evidence (§1b) a coarse band selects on its finer
+bands' focus evidence, so soft selection now just averages defocused frames back in.
+
+**Synthetic truth (MEASURED;** `synth-merge` with `SYNTH_EXPONENT`, 12 scenes x 10 cells,
+pooled + weighted base + ensemble gate in every arm; reference arm exponent 2):
+
+| coarse exponent | cells worse | worst cell | geo-mean error ratio |
+| --- | --- | --- | --- |
+| 3 | 12/120 | 1.022 (flat N22 coarse smooth) | 0.947 |
+| **4 (shipped)** | 10/120 | 1.037 (flat N22 coarse smooth) | **0.930** |
+| 6 | 10/120 | 1.041 | 0.923 |
+| 8 | 9/120 | 1.041 | 0.921 |
+| 3, sharpen 1.2 | 20/120 | 1.025 (mid strong texture) | 0.987 |
+| 4, sharpen 1.0 | 49/120 | 1.318 (coarse strong texture) | 1.017 |
+
+At 4 the gain is mostly coarse: strong texture 0.73x, boundary 0.82x, smooth 0.89x
+(but up to +3.7% on N22 flat/tilt), mid 0.96-0.98x, fine ~0.98-0.99x. The fine
+ramp must stay: flattening it (sharpen 1.0) is worse. Returns flatten past 4, and 4
+keeps the coarsest bands below the 8.0 cap.
+
+**Burst truth (MEASURED,** 8 in-focus frames vs held-out mean of 24): every cell within
+0.3% (coarse flat 2.243e-8 -> 2.250e-8). No noise cost where all frames agree.
+
+**Replicates, scene-linear (MEASURED,** current binary both arms, A = exponent 2,
+B = `--pyramid-exponent 4`, reports `D:/codex-work/iq2/x4-*.report`): texture and noise
+power B/A within 0.98-1.02 in every SNR bin on bee-3, 109, bug-4, coffee-bean and garnet;
+wrapped-text 0.94-0.96 for both texture *and* noise in its low-SNR bins (2 of 3978
+textured tiles below 0.85; the worst-cluster crop is visually identical). bee-3's 56 dark
+tiles fall to 0.63-0.85 (less haze).
+
+**By eye, with a reference (MEASURED).** bee-3: the milky veil of defocused light hair
+over the dark legs and thorax thins and contrast rises (`x4-bee3/ab-coarse.png`); the
+antenna ghost (§3) is unchanged to slightly fainter. Garnet: the glow ring in the black
+ground around the gem drops; one background patch reads 7% *redder*, and single-frame
+renders show that is the truth: frame 182, the one in focus there (local high-pass
+power 2.27 vs the merges' 2.15), has red 5.28e-4; exponent 4 gives 5.47/5.00 (half
+stacks), exponent 2 gives 4.17/3.88 -- below every single frame. Coffee bean: smooth
+coarse changes (rim darker where background light spilled in, interior +2-3%), no
+blotches. Slide-2 glow vs composite: 16-32 px 1.27 -> 1.25, 32-64 px 1.23 -> 1.20 --
+the residual glow is not soft coarse selection.
+
+**Unit test.** `pooled_evidence_and_a_weighted_base_remove_the_glow_around_bright_detail`
+now also folds at `DEFAULT_EXPONENT`: glow 2.0 -> 0.94 DN, bar error 33 -> 8.6 DN;
+mutation-checked (with the default at 2 it fails). Research configs pinned to the
+previous merge also pin `exponent: 2.0`; sessions keep their own default of 2 with
+their previous selection. Byte freeze re-baselined, attributed bit-exactly.
+
 ## 1c. Taming bright glints on gems (development control, 2026-11-03)
 
 Owner request: a way to reduce super-bright spots, as on the minerals.

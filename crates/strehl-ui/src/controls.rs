@@ -84,7 +84,7 @@ impl Controls {
                             } else if ui.small_button("Default").on_hover_text("Override the engine's pyramid scale count.").clicked() { self.settings.pyramid_bands=Some(7); }
                         });
                     });
-                    optional_float(ui,"Coarse power",&mut self.settings.pyramid_exponent,2.0,0.5..=8.0,
+                    optional_float(ui,"Coarse power",&mut self.settings.pyramid_exponent,strehl_core::pyramid::DEFAULT_EXPONENT,0.5..=8.0,
                         "Exponent applied to band weights. Increasing it concentrates selection; it does not promise better detail.");
                     optional_float(ui,"Fine-scale ramp",&mut self.settings.pyramid_sharpen,1.4,1.0..=2.0,
                         "Increase selection exponents toward finer bands. This is not post-process sharpening.");

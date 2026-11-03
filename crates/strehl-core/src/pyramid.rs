@@ -1213,7 +1213,17 @@ pub struct MergeConfig {
     /// a 300-frame stack, twenty defocused frames each carrying 5% of the
     /// in-focus frame's band power contribute 45% of the weight at exponent 1
     /// and 3% at exponent 2. Defocus is a low-pass, so that contamination is
-    /// *blur*, and 45% of it is visible. Hence the default of 2.
+    /// *blur*, and 45% of it is visible.
+    ///
+    /// The default is **4** since pooled evidence (`pooled_evidence`): a
+    /// coarse band now selects on its finer bands' focus evidence, not on its
+    /// own energy, so a sharper coarse selection follows focus rather than
+    /// defocus spread. Measured against 2 (image-quality-2026-11-02 §1d):
+    /// synthetic truth error 0.930x (geometric mean of 120 cells, coarse
+    /// strong texture 0.73x, worst cell +3.7% coarse smooth), burst truth
+    /// within 0.3%, scene-linear replicates within 2% on six subjects (5% on
+    /// low-SNR wrapped-text tiles), less glow on the slide and bee. With
+    /// `pooled_evidence` off, 2 remains the measured choice.
     ///
     /// See [`exponent_at`](MergeConfig::exponent_at): this is the floor of a
     /// ramp, not a single global value.
@@ -1448,6 +1458,10 @@ impl MergeConfig {
     }
 }
 
+/// Default [`MergeConfig::exponent`]: the coarsest band's selection exponent.
+/// See the field's documentation for why it is 4 with pooled evidence.
+pub const DEFAULT_EXPONENT: f32 = 4.0;
+
 /// Ceiling on the per-band selection exponent.
 ///
 /// Set by what `f32` can actually represent, not by taste. The weight spans
@@ -1469,7 +1483,7 @@ impl Default for MergeConfig {
         Self {
             bands: DEFAULT_BANDS,
             gate: 2.0,
-            exponent: 2.0,
+            exponent: DEFAULT_EXPONENT,
             // 1.4x per octave. Over a 7-band pyramid this runs 2.000, 2.800,
             // 3.920, 5.488, 7.683, 8.000, 8.000 from coarsest to finest -- the
             // last two capped from 10.756 and 15.059 by `MAX_EXPONENT`. So the
@@ -5975,6 +5989,7 @@ mod tests {
         // glow_around_bright_detail` and experiments/image-quality-2026-11-02.
         assert_eq!(MergeConfig::default().base, BaseBand::WeightedFromCoarsest);
         assert!(MergeConfig::default().pooled_evidence);
+        assert_eq!(MergeConfig::default().exponent, DEFAULT_EXPONENT);
     }
 
     /// The merge the hull plants were built to break: own-band selection and a
@@ -5983,6 +5998,7 @@ mod tests {
     fn legacy_merge() -> MergeConfig {
         MergeConfig {
             pooled_evidence: false,
+            exponent: 2.0,
             base: BaseBand::Mean,
             ..MergeConfig::default()
         }
@@ -6487,11 +6503,12 @@ mod tests {
             })
             .collect();
         let var = vec![sigma * sigma; w * h];
-        let fold = |pooled: bool, base: BaseBand| {
+        let fold = |pooled: bool, base: BaseBand, exponent: f32| {
             let cfg = MergeConfig {
                 bands: 6,
                 pooled_evidence: pooled,
                 base,
+                exponent,
                 ensemble: true,
                 ..Default::default()
             };
@@ -6528,8 +6545,8 @@ mod tests {
                 .collect();
             v.iter().sum::<f32>() / v.len() as f32
         };
-        let before = fold(false, BaseBand::Mean);
-        let after = fold(true, BaseBand::WeightedFromCoarsest);
+        let before = fold(false, BaseBand::Mean, 2.0);
+        let after = fold(true, BaseBand::WeightedFromCoarsest, 2.0);
         let (g0, g1) = (glow(&before), glow(&after));
         assert!(
             g0 > 5.0,
@@ -6543,5 +6560,13 @@ mod tests {
         // detail; the bars' level error against truth must fall substantially.
         let (e0, e1) = (1000.0 - bars(&before), 1000.0 - bars(&after));
         assert!(e1 < 0.6 * e0, "bar level error: before {e0}, after {e1}");
+        // With pooled evidence a coarse band selects on focus, so the sharper
+        // default coarse exponent follows focus further: the bars recover more
+        // of their level and the ground gains no glow.
+        let sharper = fold(true, BaseBand::WeightedFromCoarsest, DEFAULT_EXPONENT);
+        let (g2, e2) = (glow(&sharper), 1000.0 - bars(&sharper));
+        // Measured: glow 2.0 -> 0.94 DN, bar error 33 -> 8.6 DN.
+        assert!(g2 <= g1, "glow at the default exponent: {g1} at 2, {g2} at {DEFAULT_EXPONENT}");
+        assert!(e2 < 0.5 * e1, "bar level error: {e1} at 2, {e2} at {DEFAULT_EXPONENT}");
     }
 }

@@ -578,6 +578,7 @@ mod tests {
             // Session fusion supports only a mean base and its own selection.
             base: strehl_core::pyramid::BaseBand::Mean,
             pooled_evidence: false,
+            exponent: 2.0,
             ..MergeConfig::default()
         };
         let policy = GroupPolicy {
@@ -805,6 +806,7 @@ mod tests {
             // Session fusion supports only a mean base and its own selection.
             base: strehl_core::pyramid::BaseBand::Mean,
             pooled_evidence: false,
+            exponent: 2.0,
             ..MergeConfig::default()
         };
         let policy = GroupPolicy {

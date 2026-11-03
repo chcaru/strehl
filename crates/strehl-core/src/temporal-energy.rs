@@ -1033,6 +1033,7 @@ mod tests {
             significance_scale: 0.0,
             ensemble: false,
             pooled_evidence: false,
+            exponent: 2.0,
             base: super::super::BaseBand::Mean,
             mean_coarse: 0,
             hull: super::super::Hull::PerLevel,

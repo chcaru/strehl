@@ -274,6 +274,7 @@ fn fallback_output(beta: Option<&[f32]>, variance: f32, checkerboard: bool) -> V
         bands: 3,
         ensemble: false,
         pooled_evidence: false,
+        exponent: 2.0,
         base: strehl_core::pyramid::BaseBand::Mean,
         ..MergeConfig::default()
     };

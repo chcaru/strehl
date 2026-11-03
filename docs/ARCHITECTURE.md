@@ -58,8 +58,8 @@ mean across frames (`pyramid.rs:2641`, `pyramid.rs:2223-2233`; tests
 `pure_noise_is_averaged_not_selected` `pyramid.rs:3368` and
 `the_averaged_fraction_reports_where_the_gate_refused` `pyramid.rs:3627`).
 
-But above that floor the default exponent ladder runs at 7.683 / 8.0 / 8.0 in the three
-finest bands, which the module itself calls "already close to winner-take-all — a frame
+But above that floor the default exponent ladder runs at 8.0 in every band but the two
+coarsest (7.683 / 8.0 / 8.0 in the three finest before the coarse exponent moved to 4), which the module itself calls "already close to winner-take-all — a frame
 with twice another's band energy gets 256 times the weight" (`pyramid.rs:1241-1242`).
 
 And the project's own instrumentation measures selection concentration **higher in flat
@@ -256,9 +256,14 @@ signature idea:
 p(k) = min(exponent × sharpen_per_octave^(bands-1-k), MAX_EXPONENT)
 ```
 
-Defaults `exponent = 2.0`, `sharpen_per_octave = 1.4`, `MAX_EXPONENT = 8.0`. The ladder,
-coarsest → finest: **2.000, 2.800, 3.920, 5.488, 7.683, 8.000, 8.000** (last two capped
-from 10.756 and 15.059).
+Defaults `exponent = 4.0` (`DEFAULT_EXPONENT`), `sharpen_per_octave = 1.4`,
+`MAX_EXPONENT = 8.0`. The ladder, coarsest → finest: **4.000, 5.600, 7.840, 8.000, 8.000,
+8.000, 8.000**. Until 2026-11-03 the default was `exponent = 2.0` (ladder 2.000, 2.800, 3.920,
+5.488, 7.683, 8.000, 8.000), chosen when coarse bands selected on their own focus-blind
+energy. With pooled evidence they select on their finer bands' focus evidence, and the
+sharper coarse selection measured better against truth and drew less glow
+(`experiments/image-quality-2026-11-02/results.md` §1d). Session fusion keeps 2.0 with its
+previous selection.
 
 The ramp is geometric rather than linear because band power itself falls geometrically
 with scale, so a fixed *ratio* per octave is the scale-free choice. The justification is
