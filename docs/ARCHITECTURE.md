@@ -70,6 +70,17 @@ The fix is built (`STREHL_PYRAMID_SIGNIFICANCE`) and ships **off**, because at d
 strength it does not collapse the inversion — band 1's gap narrows 0.0657 → 0.0338 and
 bands 2–6 move under 0.2% (`pyramid.rs:1150-1190`).
 
+**Since 2026-11-02 the default runs the ensemble gate** (`MergeConfig::ensemble`,
+`STREHL_PYRAMID_ENSEMBLE=0` disables), which addresses that inversion at its source: the
+per-frame gate is a multiple-comparisons test that some noise frame passes at almost
+every flat coefficient. A coefficient now selects only where the stack as a whole shows
+signal (one frame dominating the rest, detail adding coherently across frames, or
+structure in every frame); elsewhere it is the plain mean of all frames. Thresholds are
+percentiles of a null measured from the floor probe's noise frames through each frame's
+own warp. Measured: flat-region noise power 0.03–0.05x of the old default on deep
+stacks, lower error against truth in 176 of 180 synthetic cells and on a held-out
+fixed-focus burst; see `experiments/image-quality-2026-11-02/results.md`.
+
 **So: the thesis is implemented and demonstrated on a backend that is not the default,
 and holds in a diluted form on the backend that is.** That is the central architectural
 fact about this system, and no other document in the repository states it plainly.
@@ -803,8 +814,9 @@ backends, so any unintended change to the merge is caught as a hash movement.
   scores only 11 of 26 are actually *clean* — 4 blind and 7 unmeasurable remain UNSCORED,
   which is not the same as clean. 13 subjects FAIL on a rim axis at ±12 px that the halo
   work never reached.
-- **The default backend still selects on noise in flat regions.** Measured, at every band.
-  The fix is built and off because at derived strength it does not collapse the inversion.
+- **The default backend selected on noise in flat regions** until the ensemble gate
+  (2026-11-02). Remaining: plateau regions, where every frame holds the same detail,
+  still select rather than average; multi-pass Best result sessions do not use the gate.
 - **`SELECTION_INFLATION` is 1.0** — the noise penalty for selecting is a known missing
   term.
 - **One profiled camera body, one optical path.** The gear-matching guard has never

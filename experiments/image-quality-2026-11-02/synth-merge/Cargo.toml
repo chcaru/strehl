@@ -1,0 +1,12 @@
+[package]
+name = "iq-synth-merge"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+strehl-core = { path = "../../../crates/strehl-core" }
+
+# Measurement harness outside the production workspace, compiled against the
+# production crate by path so the merge under test is the shipping one.
+[workspace]

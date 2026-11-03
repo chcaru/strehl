@@ -631,6 +631,32 @@ impl Probe {
     pub(super) fn last(&self) -> &[f32] {
         &self.beta
     }
+
+    /// The last measurement as a noise-only frame for the ensemble gate's
+    /// null: this frame's own warped probe bands (finest first), their floors
+    /// (measured where certified, white beyond), and the luma variance the
+    /// floors are relative to. `None` before a measurement or after
+    /// `invalidate`.
+    ///
+    /// Every Laplacian band is returned, not only the certified prefix: the
+    /// gate's dominance and coherence statistics are ratios, so a band whose
+    /// floor is the white value (exactly as the merge itself gates it) still
+    /// gives a correctly shaped null.
+    pub(super) fn null_frame(&self) -> Option<(Vec<&[f32]>, Vec<f32>, f32)> {
+        let n = self.beta.iter().take_while(|b| b.is_finite()).count();
+        (n > 0).then(|| {
+            let bands = self.sizes.len() - 1;
+            let white = strehl_core::pyramid::BandGain::measure(bands);
+            let beta = (0..bands)
+                .map(|k| if k < n { self.beta[k] } else { white.beta(k) })
+                .collect();
+            (
+                (0..bands).map(|k| self.pyr.level(k)).collect(),
+                beta,
+                (PROBE_SIGMA * PROBE_SIGMA * 0.5) as f32,
+            )
+        })
+    }
 }
 
 /// Mean square of a band's interior, or `None` if the crop leaves too little.

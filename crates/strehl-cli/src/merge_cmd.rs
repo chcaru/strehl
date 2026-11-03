@@ -5812,6 +5812,9 @@ impl BandWorker {
         if !self.prepare_observed(source, index, levels, noise, warps, defect, progress)? {
             return Ok(false);
         }
+        if let Some((levels, beta, var)) = self.floor.as_ref().and_then(|p| p.null_frame()) {
+            self.merge.add_null_frame(&levels, &beta, var);
+        }
         let frame_beta = (!self.beta.is_empty()).then_some(self.beta.as_slice());
         if let Some(b) = frame_beta {
             if self.beta_sum.len() < b.len() {
@@ -5894,6 +5897,9 @@ impl BandWorker {
         index: usize,
         progress: Option<&crate::ui_progress::Progress>,
     ) {
+        if let Some((levels, beta, var)) = prep.floor.as_ref().and_then(|p| p.null_frame()) {
+            self.merge.add_null_frame(&levels, &beta, var);
+        }
         let frame_beta = (!prep.beta.is_empty()).then_some(prep.beta.as_slice());
         if let Some(b) = frame_beta {
             if self.beta_sum.len() < b.len() {
@@ -5974,6 +5980,21 @@ fn prepare_frame_into(
     beta.clear();
     if let Some(p) = floor.as_deref_mut() {
         p.invalidate();
+    }
+    // Experiment-only: fold every other frame under the whole stack's own
+    // geometry, so two half-stack renders are pixel-aligned replicates.
+    if let Ok(parity) = std::env::var("STREHL_FRAME_PARITY") {
+        let keep = match parity.as_str() {
+            "even" => index % 2 == 0,
+            "odd" => index % 2 == 1,
+            other => match other.split_once('-').map(|(a, b)| (a.parse::<usize>(), b.parse::<usize>())) {
+                Some((Ok(a), Ok(b))) => (a..=b).contains(&index),
+                _ => anyhow::bail!("STREHL_FRAME_PARITY={other:?} is not even, odd or A-B"),
+            },
+        };
+        if !keep {
+            return Ok(false);
+        }
     }
     if !load_frame_impl_observed(
         source,
@@ -7520,6 +7541,17 @@ fn run_pyramid_prepared_with_sensor(
          single-frame noise.",
         cfg.gate
     );
+    eprintln!(
+        "ensemble gate   : {}",
+        if cfg.ensemble && cfg.select == SelectMode::SoftPower {
+            "ON -- a coefficient selects only where the stack as a whole shows signal \
+             (one\n                  frame dominating the rest, or detail adding coherently \
+             across\n                  frames); elsewhere it is the plain mean of every frame.\n\
+             \x20                 STREHL_PYRAMID_ENSEMBLE=0 turns it off."
+        } else {
+            "off"
+        }
+    );
     eprintln!("exponent        : {:.2}", cfg.exponent);
     eprintln!(
         "per-band exp    : {}   (coarsest -> finest)",
@@ -7922,7 +7954,26 @@ fn run_pyramid_prepared_with_sensor(
     let t_out = Instant::now();
     let mut ws = Workspace::new(&sizes);
     progress.render_step("reconstruct", "started");
-    let mut planes = merge.finish(&mut ws);
+    let (mut planes, ensemble_report) = merge.finish_with_report(&mut ws);
+    if let Some(levels) = ensemble_report {
+        for l in levels {
+            let t = l.thresholds;
+            eprintln!(
+                "ensemble band {} : {:.1}% of coefficients averaged, mean selection {:.3}; null {} \
+                 -- dominance {:.2}..{:.2}, coherence {:.2}..{:.2}, wide {:.3}..{:.3}",
+                l.level,
+                100.0 * l.averaged,
+                l.mean_blend,
+                if t.measured { "measured" } else { "parametric" },
+                t.dominance.0,
+                t.dominance.1,
+                t.coherence.0,
+                t.coherence.1,
+                t.wide.0,
+                t.wide.1
+            );
+        }
+    }
     drop(ws);
     drop(merge);
     ensure!(

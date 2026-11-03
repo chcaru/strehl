@@ -759,6 +759,7 @@ mod tests {
             sharpen_per_octave: 1.0,
             gate: 2.0,
             significance_scale: 0.0,
+            ensemble: false,
             mean_coarse: 0,
             ..Default::default()
         };
@@ -1028,6 +1029,7 @@ mod tests {
             bands: 4,
             gate: 2.0,
             significance_scale: 0.0,
+            ensemble: false,
             mean_coarse: 0,
             hull: super::super::Hull::PerLevel,
             ..Default::default()

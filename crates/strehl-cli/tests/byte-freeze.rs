@@ -603,6 +603,15 @@ const RENDER_ENV: &[&str] = &[
     // the reason the `sha256` column insists on it: this corpus already carries
     // a freeze recorded as `D99F5D82...76CA`, which no machine can check.
     "STREHL_PYRAMID_SIGNIFICANCE",
+    // The ensemble gate (2026-11-02) is read by `MergeConfig::default()` through
+    // a `OnceLock` and is ON by default: an ambient `STREHL_PYRAMID_ENSEMBLE=0`
+    // would render the previous pyramid while every pyramid row here names the
+    // current one. `_Q` moves its thresholds. `STREHL_FRAME_PARITY` folds only a
+    // subset of frames (an experiment instrument) and would render a different
+    // stack under the same command.
+    "STREHL_PYRAMID_ENSEMBLE",
+    "STREHL_PYRAMID_ENSEMBLE_Q",
+    "STREHL_FRAME_PARITY",
     // The rest of the pyramid's own environment, registered in the commit that
     // gives it something to hide -- the first pyramid row. Both are read by
     // `MergeConfig::default()` through a `OnceLock`, so an ambient value is

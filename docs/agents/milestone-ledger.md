@@ -665,3 +665,9 @@ All capture roots remain read-only. The sealed407 corpus stays untouched.
 | Identifier | Question and scope | Owned paths | Owner and state |
 | --- | --- | --- | --- |
 | stacking-improvements-2026-11-02 | Owner request: find, test and implement the top five improvements to focus stacking, each with demonstrated gain and no regression. One results file records each item, its evidence and its regression controls. | experiments/stacking-improvements-2026-11-02/ | root; closed: five speed/caching improvements with identical output; deep-stack softening absent on bug-4; session look-ahead and sampler extraction no gain |
+
+## Image-quality improvements (2026-11-02)
+
+| Identifier | Question and scope | Owned paths | Owner and state |
+| --- | --- | --- | --- |
+| image-quality-2026-11-02 | Owner request: find image-quality improvements, thinking past prior approaches. Truth-referenced (synthetic stacks through the production merge; held-out fixed-focus burst) and replicate-referenced (pixel-aligned half stacks) evidence for each candidate. | experiments/image-quality-2026-11-02/; pyramid.rs ensemble gate; gatefloor.rs null probe | root; ensemble gate shipped default-on; RGB-domain fusion rejected; occlusion see-through ghosting and frame-agreement averaging recorded as open |
