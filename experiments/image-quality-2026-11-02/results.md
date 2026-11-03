@@ -445,8 +445,14 @@ neutral). No fade range separates the cases. Pixels above 95% white:
 
 Rutile's blades kept their level at 0.3-0.7 (mean 0.0776 vs 0.078 untreated, 0.0739
 shipped), but peacock's and garnet's speculars are tinted by the stone (and by blurred
-neighbours in the lattice), so they read as coloured too and lost the taming. The open
-improvement is a size-aware mask, not a colour one.
+neighbours in the lattice), so they read as coloured too and lost the taming.
+
+*Measured, not built:* a size test using the share of each cell's samples above the knee
+does not separate them either. Per-cell share p50 / p90 / max: rutile 0.18 / 0.28 / 0.36,
+peacock 0.07 / 0.09 / 0.12, garnet 0.08 / 0.18 / 0.31. The cause is upstream: a cell's
+typical level is the mean log light including the dark ground, so on a black background
+any lit surface is "more than 2 stops above typical". A typical level of the lit subject
+alone is the place to start if this is revisited.
 
 ## 2. Fuse each source's reconstructed RGB instead of re-mosaicing (REJECTED)
 
