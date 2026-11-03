@@ -273,6 +273,15 @@ pixels). Session fusion has no ensemble gate, and without it the two select
 noise in flat dark ground. Sessions keep the previous selection
 (`session-cmd.rs`) until the gate is ported.
 
+Re-run after §1d/§1e with the *full* current selection (pooled, weighted base,
+exponent 4, ratio 2; experiment-only switch, same alignment cache) against the
+shipped session: dark-ground noise 0.842e-4 -> 0.865e-4 and black 1.573e-4 ->
+1.726e-4 again. The bright iridescent highlight that gained most in the ordinary
+merge kept a similar or slightly brighter halo; elsewhere the two are hard to tell
+apart. The ordinary merge's win does not carry over to session fusion, so this is
+not just the missing gate; porting the gate alone is not expected to change that
+and is not scheduled.
+
 ## 1d. A sharper coarse exponent now that coarse bands see focus (SHIPPED, 2026-11-03)
 
 **Hypothesis (ARGUED).** The coarsest-band exponent of 2 was chosen when coarse bands
@@ -371,6 +380,10 @@ the crops are visually identical; coffee-bean fine SNR < 0.3 texture 0.87 (noise
 1.005), mid 0.96-0.98; wrapped-text noise +1.7-2.5%. Slide-2 scene-linear glow:
 unchanged (0.94-0.96 of the composite at 2-128 px). bee-3 by eye: antenna, leg edge and
 porous hair indistinguishable from the §1d default at 1:1.
+
+**Exponent at ratio 2 (MEASURED,** synthetic, reference exponent 4): 3 is worse in
+114/120 cells (geo-mean 1.020); 6 is 0.991 with 5 cells worse by at most 0.3%. The
+shipped 4 stays within 1% of the best tested.
 
 **Tests.** `pooled_levels_is_the_total_weight_of_the_pooled_levels`; the default is pinned
 in `the_base_band_default_is_the_measured_one`. Session fusion implements the ratio, and
