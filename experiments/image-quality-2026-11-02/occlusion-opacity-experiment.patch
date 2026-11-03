@@ -1,0 +1,118 @@
+diff --git a/crates/strehl-core/src/pyramid.rs b/crates/strehl-core/src/pyramid.rs
+index 498b4cd8b..931e0f252 100644
+--- a/crates/strehl-core/src/pyramid.rs
++++ b/crates/strehl-core/src/pyramid.rs
+@@ -1685,6 +1685,10 @@ pub struct BandMerge {
+     /// floor, independent noise), over a central window of each level. Their
+     /// statistics' quantiles are the gate's thresholds. Empty when off.
+     null: Vec<NullWindow>,
++    /// EXPERIMENT (opacity-aware occlusion): per fine level, the ordinal of
++    /// the first frame significant there, and that frame's coarse luma.
++    occ_first: Vec<Vec<u16>>,
++    occ_ref: Vec<Vec<f32>>,
+ }
+ 
+ /// One level's window of the ensemble gate's null accumulators.
+@@ -1929,6 +1933,8 @@ impl BandMerge {
+             } else {
+                 Vec::new()
+             },
++            occ_first: Vec::new(),
++            occ_ref: Vec::new(),
+             sizes,
+         }
+     }
+@@ -2582,6 +2588,56 @@ impl BandMerge {
+                             }
+                         }
+                     });
++                if let Some(o) = occlusion_opacity().filter(|o| k < o.levels) {
++                    if k == 0 {
++                        ws.ghull.build_gaussian(luma, &mut ws.ws);
++                    }
++                    if self.occ_first.len() <= k {
++                        self.occ_first.resize(k + 1, Vec::new());
++                        self.occ_ref.resize(k + 1, Vec::new());
++                    }
++                    if self.occ_first[k].len() != px {
++                        self.occ_first[k] = vec![u16::MAX; px];
++                        self.occ_ref[k] = vec![0.0; px];
++                    }
++                    let j = (k + o.up).min(nb);
++                    let shift = j - k;
++                    let gsz = self.sizes[j];
++                    let g = ws.ghull.level(j);
++                    let gv = ws.var.level(j);
++                    let wk = sz.width;
++                    let ord = self.frames as f32;
++                    let ordu = self.frames.min(u32::from(u16::MAX - 1)) as u16;
++                    w.par_iter_mut()
++                        .zip(self.occ_first[k].par_iter_mut())
++                        .zip(self.occ_ref[k].par_iter_mut())
++                        .zip(sq.par_iter().zip(vv))
++                        .enumerate()
++                        .for_each(|(i, (((wv, first), rf), (e, v)))| {
++                            let (x, y) = (i % wk, i / wk);
++                            let pi = (y >> shift).min(gsz.height - 1) * gsz.width
++                                + (x >> shift).min(gsz.width - 1);
++                            let gl = g[pi];
++                            let z = *e / (beta * v.max(0.0)).max(1.0);
++                            if *first == u16::MAX {
++                                if z >= o.zsig {
++                                    *first = ordu;
++                                    *rf = gl;
++                                }
++                                return;
++                            }
++                            let excess = ord - f32::from(*first) - o.margin;
++                            if excess <= 0.0 {
++                                return;
++                            }
++                            let eps = o.noise * gv[pi].max(0.0).sqrt();
++                            let d = (gl - *rf).abs() / (0.5 * (gl.abs() + rf.abs()) + eps).max(1e-6);
++                            let t = ((d - o.d0) / (o.d1 - o.d0)).clamp(0.0, 1.0);
++                            let occl = t * t * (3.0 - 2.0 * t);
++                            let far = 1.0 - (-(excess / o.softness).powi(2)).exp();
++                            *wv *= 1.0 - occl * far;
++                        });
++                }
+                 if !self.zmax.is_empty() {
+                     // Energy in units of this frame's own expected noise energy
+                     // (the floor without the gate multiplier).
+@@ -3758,6 +3814,36 @@ pub fn pooled_evidence_default() -> bool {
+     })
+ }
+ 
++/// EXPERIMENT ONLY: opacity-aware occlusion.
++/// `STREHL_OCCLUSION_OPACITY=zsig,margin,softness,levels,up,d0,d1,noise`.
++/// Frames fold near to far. Per coefficient at the `levels` finest bands, the
++/// first frame whose own energy reaches `zsig` noise units records its luma
++/// `up` levels coarser. A later frame (beyond `margin` folds, Gaussian ramp of
++/// `softness`) loses weight where its own coarse luma disagrees with that
++/// record (relative difference smoothstepped from `d0` to `d1`): a solid
++/// occluder changes the light there, a gap in a porous one does not.
++#[derive(Debug, Clone, Copy)]
++struct OcclusionOpacity {
++    zsig: f32,
++    margin: f32,
++    softness: f32,
++    levels: usize,
++    up: usize,
++    d0: f32,
++    d1: f32,
++    noise: f32,
++}
++
++fn occlusion_opacity() -> Option<OcclusionOpacity> {
++    static V: std::sync::OnceLock<Option<OcclusionOpacity>> = std::sync::OnceLock::new();
++    *V.get_or_init(|| {
++        let raw = std::env::var("STREHL_OCCLUSION_OPACITY").ok()?;
++        let v: Vec<f32> = raw.split(',').map(|t| t.trim().parse().expect("STREHL_OCCLUSION_OPACITY")).collect();
++        assert_eq!(v.len(), 8, "STREHL_OCCLUSION_OPACITY=zsig,margin,softness,levels,up,d0,d1,noise");
++        Some(OcclusionOpacity { zsig: v[0], margin: v[1], softness: v[2], levels: v[3] as usize, up: v[4] as usize, d0: v[5], d1: v[6], noise: v[7] })
++    })
++}
++
+ /// Environment override for the ensemble gate's default (`0`/`off` disables).
+ pub const ENSEMBLE_ENV: &str = "STREHL_PYRAMID_ENSEMBLE";
+ 

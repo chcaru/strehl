@@ -584,6 +584,23 @@ whose energy is significant within the smoothing reach of almost every gap pixel
 The negative now covers both a coarse map and a per-coefficient rule. Any
 ordering rule needs an opacity estimate.
 
+*Tried and archived (2026-11-03): an opacity cue from light agreement*
+(`occlusion-opacity-experiment.patch`, `STREHL_OCCLUSION_OPACITY=zsig,margin,softness,levels,up,d0,d1,noise`).
+The idea: at a gap in a porous mat, the frame focused on the near layer already shows
+the blurred background, so a far frame's coarse light agrees with it; at a solid
+occluder it does not. Per coefficient at the three finest bands, the first frame
+significant there recorded its luma `up` levels coarser; frames more than 20 folds later
+lost weight where their own coarse luma disagreed (relative difference smoothstepped
+from `d0` to `d1`, plus `noise` x the level's noise sigma). On `bee-3-cpl` (current
+default otherwise, same warp map, experiment binary built from `a9fc6fc25`) four arms --
+zsig 8 and 4; `up` 2 and 1; `d0-d1` 0.25-0.6, 0.12-0.35 and 0.03-0.15 -- changed at most
+0.85% of pixels by more than 256/65535 and left the antenna interior unchanged at 3x
+(`iq/bee3/op-zoom.png`, `op4-zoom.png`, origin (4880,2900), 150 px); porous-hair
+high-pass energy moved by under 0.2%. The antenna is ~130 px wide, so in the frames that
+draw the ghost its interior stays dark at every coarse scale: the light barely shifts while
+any texture still shows on the dark surface. Light agreement does not measure what the
+ghost needs.
+
 Pooled evidence makes the antenna ghost slightly *more* contrasty than before
 (antenna-strip 99th percentile 59 -> 61 in 1e-3 linear units, both half
 stacks): coarse bands now follow the frames where the background hair behind it
