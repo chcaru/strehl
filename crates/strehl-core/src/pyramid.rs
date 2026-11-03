@@ -1334,6 +1334,12 @@ pub struct MergeConfig {
     /// select it: the ensemble gate. See [`ensemble_gate_default`]. Applies to
     /// [`SelectMode::SoftPower`] only.
     pub ensemble: bool,
+
+    /// Select every band on pooled focus evidence -- its own energy and every
+    /// finer band's, each in its own noise units, the finer ones reduced onto
+    /// this grid -- rather than on its own energy alone. See
+    /// [`pooled_evidence_default`].
+    pub pooled_evidence: bool,
 }
 
 /// Judge each coefficient against its own measurement noise before selecting.
@@ -1487,11 +1493,17 @@ impl Default for MergeConfig {
             sharpen_per_octave: 1.4,
             select: SelectMode::SoftPower,
             admission: AdmissionMode::HardFloor,
-            // Measured, not argued -- see `BaseBand`. Weighting the base band
-            // cost -475 DN of global level and 835 DN of position-dependent
-            // structure on flower-bud-alone-cpl, against +11 DN and 45 DN for
-            // the mean, with no difference in aura removal between them.
-            base: BaseBand::Mean,
+            // Weighted since 2026-11-02, together with pooled evidence. The
+            // earlier measurement (weighting cost -475 DN of global level on
+            // flower-bud-alone-cpl against the mean) took the mean as the
+            // reference; but the mean of every frame's base band includes every
+            // defocused frame's spread light, which is the glow around bright
+            // and dark features on deep stacks. Against truth (synthetic stacks,
+            // a held-out burst) and against a locally in-focus composite of a
+            // tilted calibration slide, pooled evidence with a weighted base is
+            // better: experiments/image-quality-2026-11-02/results.md.
+            // `--pyramid-base mean` keeps the earlier arm reachable.
+            base: BaseBand::WeightedFromCoarsest,
             // See `DEFAULT_MEAN_COARSE`. 0 until the ladder that chooses it has
             // been run, so this field cannot move a byte until it is measured.
             mean_coarse: mean_coarse_default(),
@@ -1513,6 +1525,7 @@ impl Default for MergeConfig {
             hull_from_level: 1,
             significance_scale: significance_scale_default(),
             ensemble: ensemble_gate_default(),
+            pooled_evidence: pooled_evidence_default(),
         }
     }
 }
@@ -2478,8 +2491,45 @@ impl BandMerge {
                 let vv = ws.var.level(k);
                 #[cfg(feature = "spatial-noise-floor")]
                 let vv = ws.spatial_noise_floor.level(k).unwrap_or(vv);
+                let pooled = self.cfg.pooled_evidence;
+                if pooled {
+                    // Pooled focus evidence: this band's energy in its own
+                    // noise units, plus the finer bands' evidence reduced onto
+                    // this grid. Coarse band energy barely depends on focus (a
+                    // defocused frame's blur spreads light, which can raise it),
+                    // while the finer bands it summarises do.
+                    let unit = |v: f32| (beta * v.max(0.0)).max(1.0);
+                    if k == 0 {
+                        for ((ev, e), v) in ws.ev[..px].iter_mut().zip(sq.iter()).zip(vv) {
+                            *ev = *e / unit(*v);
+                        }
+                    } else {
+                        let prev = self.sizes[k - 1];
+                        reduce(
+                            &ws.ev[..prev.pixels()],
+                            prev,
+                            &mut ws.ev_next[..px],
+                            &mut ws.smooth_scratch,
+                        );
+                        for ((ev, n), (e, v)) in ws.ev[..px]
+                            .iter_mut()
+                            .zip(&ws.ev_next[..px])
+                            .zip(sq.iter().zip(vv))
+                        {
+                            *ev = *n + *e / unit(*v);
+                        }
+                    }
+                    // The mean over the pooled levels, back in this band's
+                    // energy units: its noise expectation is unchanged, so the
+                    // floor and the weight need no other change.
+                    let levels = (k + 1) as f32;
+                    for ((out, ev), v) in ws.eff[..px].iter_mut().zip(&ws.ev[..px]).zip(vv) {
+                        *out = unit(*v) * *ev / levels;
+                    }
+                }
+                let sel: &[f32] = if pooled { &ws.eff[..px] } else { sq };
                 w.par_iter_mut()
-                    .zip(sq.par_iter())
+                    .zip(sel.par_iter())
                     .zip(vv)
                     .enumerate()
                     .for_each(|(_i, ((w, e), v))| {
@@ -2629,7 +2679,10 @@ impl BandMerge {
         let kb = nb;
         let szb = self.sizes[kb];
         match self.cfg.base {
+            // With no Laplacian band there is no selection to weight by: the
+            // base is the mean (and `nb - 1` below would underflow).
             BaseBand::Mean => ws.coarse[..szb.pixels()].fill(0.0),
+            BaseBand::WeightedFromCoarsest if nb == 0 => ws.coarse[..szb.pixels()].fill(0.0),
             BaseBand::WeightedFromCoarsest => {
                 let prev = self.sizes[nb - 1];
                 reduce(
@@ -3246,13 +3299,28 @@ impl BandMerge {
         self.dump_weights();
         // Per level, how far each coefficient may select (1) versus fall back to
         // the plain mean of every frame (0). Computed once, shared by planes.
-        let blends: Vec<Option<Vec<f32>>> = (0..self.sizes.len())
+        let mut blends: Vec<Option<Vec<f32>>> = (0..self.sizes.len())
             .map(|k| self.ensemble_blend_level(k))
             .collect();
+        // A weighted base band takes its weights from the coarsest band's
+        // selection, so it must also take that band's ensemble judgement:
+        // where the coarsest band is noise, the base is the plain mean too.
+        let nb = self.sizes.len() - 1;
+        if self.cfg.base == BaseBand::WeightedFromCoarsest
+            && nb >= 1
+            && let Some(coarsest) = blends[nb - 1].clone()
+        {
+            let from = self.sizes[nb - 1];
+            let mut base = vec![0.0f32; self.sizes[nb].pixels()];
+            let mut scratch = vec![0.0f32; from.pixels() + from.width];
+            reduce(&coarsest, from, &mut base, &mut scratch);
+            blends[nb] = Some(base);
+        }
         let report = (!self.zmax.is_empty()).then(|| {
             blends
                 .iter()
                 .enumerate()
+                .take(nb)
                 .filter_map(|(k, b)| {
                     b.as_ref().map(|b| EnsembleLevel {
                         level: k,
@@ -3494,6 +3562,12 @@ pub struct FrameWorkspace {
     weight: Vec<f32>,
     coarse: Vec<f32>,
     smooth_scratch: Vec<f32>,
+    /// Pooled-evidence selection (see [`pooled_evidence_default`]): the running pooled
+    /// evidence at the previous level, a reduce target, and the effective
+    /// energy the weight is computed from. Empty when the mode is off.
+    ev: Vec<f32>,
+    ev_next: Vec<f32>,
+    eff: Vec<f32>,
     /// Diagnostic storage is empty when disabled. Excluded from the legacy
     /// planning formula so the experiment cannot change arithmetic chunks.
     #[cfg(feature = "native-correction-variance")]
@@ -3522,6 +3596,9 @@ impl FrameWorkspace {
             weight: vec![0.0; n0],
             coarse: vec![0.0; n0],
             smooth_scratch: vec![0.0; n0 + sizes[0].width],
+            ev: vec![0.0; n0],
+            ev_next: vec![0.0; n0],
+            eff: vec![0.0; n0],
             #[cfg(feature = "native-correction-variance")]
             fine_support: fine_support_candidate::Scratch::default(),
             #[cfg(feature = "spatial-noise-floor")]
@@ -3597,6 +3674,32 @@ impl PlaneCache {
 
 // These are the actual ordinary guide producers, also used by the isolated
 // temporal-energy measurement API. Operation order stays identical.
+/// Environment override for pooled-evidence selection (`0`/`off` disables).
+pub const POOLED_EVIDENCE_ENV: &str = "STREHL_PYRAMID_POOLED_EVIDENCE";
+
+/// Whether bands select on pooled focus evidence. ON unless
+/// [`POOLED_EVIDENCE_ENV`] says otherwise.
+///
+/// A coarse band's own energy barely depends on focus: a defocused frame's
+/// blur spreads light, which keeps or even raises coarse-band energy beside a
+/// bright or dark feature. Selecting coarse bands on it blends in defocused
+/// frames and draws a glow (halo) around edges and fine structure, and lifts
+/// dark ground near bright detail. The finer bands at the same place do tell
+/// focus apart, so each band selects on the mean of its own and every finer
+/// band's energy in noise units, the finer ones reduced onto its grid. The
+/// shipping floor, gate and exponent ladder are unchanged.
+pub fn pooled_evidence_default() -> bool {
+    static CACHED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+    *CACHED.get_or_init(|| match std::env::var(POOLED_EVIDENCE_ENV) {
+        Err(_) => true,
+        Ok(raw) => match raw.trim() {
+            "" | "1" | "on" | "true" => true,
+            "0" | "off" | "false" => false,
+            other => panic!("{POOLED_EVIDENCE_ENV}={other:?} is not 0/1/off/on/false/true"),
+        },
+    })
+}
+
 /// Environment override for the ensemble gate's default (`0`/`off` disables).
 pub const ENSEMBLE_ENV: &str = "STREHL_PYRAMID_ENSEMBLE";
 
@@ -5480,7 +5583,7 @@ mod tests {
         let frames: Vec<Vec<f32>> = (0..nf).map(|f| disagreeing_bands(w, h, nf, f)).collect();
         let cfg = MergeConfig {
             hull,
-            ..MergeConfig::default()
+            ..legacy_merge()
         };
         let sizes = level_sizes(w, h, cfg.bands);
         let mut merge = BandMerge::new(w, h, 1, cfg);
@@ -5559,7 +5662,7 @@ mod tests {
         let frames: Vec<Vec<f32>> = (0..nf).map(|f| disagreeing_bands(w, h, nf, f)).collect();
         let cfg = MergeConfig {
             hull,
-            ..MergeConfig::default()
+            ..legacy_merge()
         };
         let sizes = level_sizes(w, h, cfg.bands);
         let mut merge = BandMerge::new(w, h, 1, cfg);
@@ -5618,7 +5721,7 @@ mod tests {
         // not stuck open or shut).
         let base = MergeConfig {
             hull: Hull::PerLevel,
-            ..MergeConfig::default()
+            ..legacy_merge()
         };
         let all = render_cfg(MergeConfig {
             hull_from_level: 1,
@@ -5630,7 +5733,7 @@ mod tests {
         });
         let flat = render_cfg(MergeConfig {
             hull: Hull::InputRange,
-            ..MergeConfig::default()
+            ..legacy_merge()
         });
 
         assert_eq!(
@@ -5655,7 +5758,7 @@ mod tests {
         // modes disagree must be one the symmetric bound pushed DOWN.
         let base = MergeConfig {
             hull: Hull::PerLevel,
-            ..MergeConfig::default()
+            ..legacy_merge()
         };
         let sym = render_cfg(MergeConfig {
             hull_low_only: false,
@@ -5734,7 +5837,7 @@ mod tests {
         let frame = disagreeing_bands(w, h, 4, 1);
         let cfg = MergeConfig {
             hull: Hull::PerLevel,
-            ..MergeConfig::default()
+            ..legacy_merge()
         };
         let sizes = level_sizes(w, h, cfg.bands);
         let mut merge = BandMerge::new(w, h, 1, cfg);
@@ -5813,8 +5916,8 @@ mod tests {
         // The diagnostic must move with the phenomenon, not merely exist.
         let (w, h, nf) = (192usize, 144usize, 8usize);
         let frames: Vec<Vec<f32>> = (0..nf).map(|f| disagreeing_bands(w, h, nf, f)).collect();
-        let sizes = level_sizes(w, h, MergeConfig::default().bands);
-        let mut m = BandMerge::new(w, h, 1, MergeConfig::default());
+        let sizes = level_sizes(w, h, legacy_merge().bands);
+        let mut m = BandMerge::new(w, h, 1, legacy_merge());
         let mut fws = FrameWorkspace::new(&sizes, 1);
         let var = vec![4.0f32; w * h];
         for f in &frames {
@@ -5867,7 +5970,22 @@ mod tests {
 
     #[test]
     fn the_base_band_default_is_the_measured_one() {
-        assert_eq!(MergeConfig::default().base, BaseBand::Mean);
+        // Weighted since 2026-11-02, measured against truth together with
+        // pooled evidence: see `pooled_evidence_and_a_weighted_base_remove_the_
+        // glow_around_bright_detail` and experiments/image-quality-2026-11-02.
+        assert_eq!(MergeConfig::default().base, BaseBand::WeightedFromCoarsest);
+        assert!(MergeConfig::default().pooled_evidence);
+    }
+
+    /// The merge the hull plants were built to break: own-band selection and a
+    /// plain-mean base. Its excursions are what the hull modes exist to bound,
+    /// so the hull tests keep exercising them on it.
+    fn legacy_merge() -> MergeConfig {
+        MergeConfig {
+            pooled_evidence: false,
+            base: BaseBand::Mean,
+            ..MergeConfig::default()
+        }
     }
 
     /// The arm the default was measured against has to stay reachable and has
@@ -6310,5 +6428,120 @@ mod tests {
                 assert!((fast[y * 9 + x] - s / c).abs() < 1e-4, "({x},{y})");
             }
         }
+    }
+
+    /// Separable Gaussian blur with clamped borders (test-only).
+    fn halo_blur(img: &[f32], w: usize, h: usize, sigma: f32) -> Vec<f32> {
+        let r = (3.0 * sigma).ceil() as isize;
+        let k: Vec<f32> = (-r..=r)
+            .map(|i| (-(i * i) as f32 / (2.0 * sigma * sigma)).exp())
+            .collect();
+        let sum: f32 = k.iter().sum();
+        let pass = |src: &[f32], horizontal: bool| -> Vec<f32> {
+            let mut out = vec![0.0f32; w * h];
+            for y in 0..h as isize {
+                for x in 0..w as isize {
+                    let mut acc = 0.0;
+                    for (t, kv) in (-r..=r).zip(&k) {
+                        let (xx, yy) = if horizontal {
+                            ((x + t).clamp(0, w as isize - 1), y)
+                        } else {
+                            (x, (y + t).clamp(0, h as isize - 1))
+                        };
+                        acc += kv * src[yy as usize * w + xx as usize];
+                    }
+                    out[y as usize * w + x as usize] = acc / sum;
+                }
+            }
+            out
+        };
+        pass(&pass(img, true), false)
+    }
+
+    #[test]
+    fn pooled_evidence_and_a_weighted_base_remove_the_glow_around_bright_detail() {
+        // Bright bars on dark ground, the left half in focus at frame 10 and
+        // the right half at frame 30. In every other frame each half's bars are
+        // blurred, spreading light into the dark ground beside them. A merge
+        // that selects coarse bands on their own (focus-blind) energy and
+        // averages the base over every frame paints that light back in as a
+        // glow; the dark ground of the truth is level.
+        let (w, h, n, sigma) = (192usize, 128usize, 41usize, 2.0f32);
+        let truth: Vec<f32> = (0..w * h)
+            .map(|j| {
+                if (j % w) % 32 < 5 && (j / w) % 64 > 8 {
+                    1000.0
+                } else {
+                    20.0
+                }
+            })
+            .collect();
+        let mut st = 5u64;
+        let frames: Vec<Vec<f32>> = (0..n)
+            .map(|i| {
+                let left = halo_blur(&truth, w, h, 0.6 + 1.2 * (i as f32 - 10.0).abs());
+                let right = halo_blur(&truth, w, h, 0.6 + 1.2 * (i as f32 - 30.0).abs());
+                (0..w * h)
+                    .map(|j| if j % w < w / 2 { left[j] } else { right[j] } + sigma * ens_normal(&mut st))
+                    .collect()
+            })
+            .collect();
+        let var = vec![sigma * sigma; w * h];
+        let fold = |pooled: bool, base: BaseBand| {
+            let cfg = MergeConfig {
+                bands: 6,
+                pooled_evidence: pooled,
+                base,
+                ensemble: true,
+                ..Default::default()
+            };
+            let sizes = level_sizes(w, h, cfg.bands);
+            let mut merge = BandMerge::new(w, h, 1, cfg);
+            let mut fws = FrameWorkspace::new(&sizes, 1);
+            for f in &frames {
+                fws.next_frame();
+                merge.add_frame(&[f.as_slice()], f, &var, &mut fws);
+            }
+            merge.finish(&mut Workspace::new(&sizes))[0].clone()
+        };
+        // Dark ground 3..14 px from a bar, away from the depth seam and borders.
+        let ground = |j: usize| {
+            let (x, y) = (j % w, j / w);
+            let d = (x % 32).saturating_sub(4);
+            truth[j] < 100.0
+                && (3..14).contains(&d)
+                && (16..h - 8).contains(&y)
+                && (16..w - 16).contains(&x)
+                && !(w / 2 - 12..w / 2 + 12).contains(&x)
+        };
+        let glow = |img: &[f32]| {
+            let v: Vec<f32> = (0..w * h)
+                .filter(|&j| ground(j))
+                .map(|j| img[j] - truth[j])
+                .collect();
+            v.iter().sum::<f32>() / v.len() as f32
+        };
+        let bars = |img: &[f32]| {
+            let v: Vec<f32> = (0..w * h)
+                .filter(|&j| truth[j] > 100.0 && (j / w) % 64 > 12 && (j % w) % 32 == 2)
+                .map(|j| img[j])
+                .collect();
+            v.iter().sum::<f32>() / v.len() as f32
+        };
+        let before = fold(false, BaseBand::Mean);
+        let after = fold(true, BaseBand::WeightedFromCoarsest);
+        let (g0, g1) = (glow(&before), glow(&after));
+        assert!(
+            g0 > 5.0,
+            "control: the focus-blind merge drew no glow ({g0})"
+        );
+        assert!(
+            g1 < 0.5 * g0,
+            "glow beside bright detail: before {g0}, after {g1}"
+        );
+        // Coarse bands chosen from defocused frames also dim narrow bright
+        // detail; the bars' level error against truth must fall substantially.
+        let (e0, e1) = (1000.0 - bars(&before), 1000.0 - bars(&after));
+        assert!(e1 < 0.6 * e0, "bar level error: before {e0}, after {e1}");
     }
 }

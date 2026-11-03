@@ -270,7 +270,18 @@ transition inside each band rather than a step in the image.
 on `p·ln(r)` is 80, so beyond about `p = 10` the sharpest coefficients all pin and get
 averaged. More selectivity is `SelectMode::HardMax`, not a bigger exponent.
 
-Other defaults: `BaseBand::Mean` (`pyramid.rs:1280`), `SelectMode::SoftPower`,
+**Since 2026-11-03 bands select on pooled focus evidence** (`MergeConfig::pooled_evidence`,
+`STREHL_PYRAMID_POOLED_EVIDENCE=0` disables): each band's weight is computed from the mean of
+its own and every finer band's energy in noise units, the finer ones reduced onto its grid,
+because a coarse band's own energy barely depends on focus and a defocused frame's spread
+light kept or raised it beside bright and dark detail. The base band is now **weighted** by
+the coarsest band's selection and inherits that band's ensemble blend. Together they removed
+most of the glow around edges on a tilted calibration slide (+35% -> +14.5% dark-ground
+excess over a locally in-focus composite) and lowered error against truth on every synthetic
+cell; see `experiments/image-quality-2026-11-02/results.md` §1b. Session fusion keeps a mean
+base (its consumer supports only that).
+
+Other defaults: `BaseBand::WeightedFromCoarsest`, `SelectMode::SoftPower`,
 `Hull::InputRange` — output clamped to the frames' hull, because per-band convexity does
 not imply reconstruction convexity.
 

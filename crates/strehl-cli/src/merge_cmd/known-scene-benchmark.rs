@@ -503,9 +503,14 @@ fn options(out: PathBuf) -> MergeOptions {
         backend: MergeBackend::Pyramid,
         cover: align_cmd::CoverMode::Crop,
         cover_source: SettingSource::Flag,
+        // The benchmark's registered merge predates the ensemble gate, pooled
+        // evidence and the weighted base; pin it so its arms stay comparable.
         pyramid: MergeConfig {
             bands: 3,
             gate: 2.0,
+            ensemble: false,
+            pooled_evidence: false,
+            base: strehl_core::pyramid::BaseBand::Mean,
             ..MergeConfig::default()
         },
     }

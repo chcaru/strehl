@@ -10,7 +10,7 @@ use strehl_edit::{
 #[path = "adaptive-effect.rs"]
 mod effect;
 
-fn treatment_choices() -> [(&'static str, AdaptiveParameters); 5] {
+fn treatment_choices() -> [(&'static str, AdaptiveParameters); 6] {
     [
         ("Signature", AdaptiveParameters::signature()),
         ("Natural", AdaptiveParameters::default()),
@@ -42,6 +42,18 @@ fn treatment_choices() -> [(&'static str, AdaptiveParameters); 5] {
                 tone_range: AdaptiveToneRange::Highlights,
                 shadow_protection: 1.0,
                 highlight_compression: 0.65,
+                ..Default::default()
+            },
+        ),
+        (
+            "Gems and glints",
+            AdaptiveParameters {
+                balance: 0.3,
+                local_contrast: 0.4,
+                color: 0.35,
+                shadow_protection: 0.85,
+                highlight_compression: 0.2,
+                glint_compression: 0.85,
                 ..Default::default()
             },
         ),
@@ -486,6 +498,7 @@ impl StrehlApp {
                         ("Color", &mut draft.value.color, defaults.color, "Enrich supported local color with protection for neutral and already saturated areas."),
                         ("Protect shadows", &mut draft.value.shadow_protection, defaults.shadow_protection, "Keep deep backgrounds dark while treating the subject."),
                         ("Soften highlights", &mut draft.value.highlight_compression, defaults.highlight_compression, "Compress bright light without lifting the rest of the image. This does not recover clipped detail."),
+                        ("Tame glints", &mut draft.value.glint_compression, defaults.glint_compression, "Compress small specular highlights that stand far above their surroundings, such as glints on gems and metal. Large bright areas are left alone. This does not recover clipped detail."),
                     ] {
                         super::editing::controls::slider(ui, label, value, 0.0..=1.0, default, 2, "").on_hover_text(help);
                     }

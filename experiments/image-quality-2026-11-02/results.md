@@ -161,6 +161,111 @@ any stack) every frame holds the same detail, coherence fires, and selection is
 kept although averaging equal frames would be optimal: a frame-agreement test
 is the natural next step, with its own risk for weak detail seen by a subset.
 
+## 1b. Halo and glow around edges: pooled evidence and a weighted base (FIXED, 2026-11-03)
+
+Owner report: haloing/ghosting around edges and fine structure, on the
+calibration slides and the bee.
+
+**Finding (MEASURED).** On `requests/misc-diagnostic/high-res-calibration-slide-2-cpl`
+(299 frames, tilted backlit slide) every bright bar sits in a grey glow and the
+black chrome is lifted. The frame in focus at that place shows near-black chrome
+(`slide2/cmp-1700-5300-400.png`). On the *flat* slide (`flat-et2.5s`, 60
+frames) the stack adds no glow over its in-focus frame (0.92% vs 0.95% of bright
+level within 40 px of edges): the effect needs depth variation and many frames
+far from focus.
+
+**Instrument.** `localref.py`: a composite of 100 single-frame renders (every
+third frame, `STREHL_FRAME_PARITY=i-i`, same warp map), taking per 64 px tile the
+frame with the most high-pass energy -- on a planar subject each tile is an
+in-focus observation including the lens's own veiling glare and no merge. Dark
+ground is binned by distance to bright pixels; arm mean / composite mean.
+
+**Cause (ARGUED, then tested).** Coarse bands select on their own energy, which
+barely depends on focus: a defocused frame's blur spreads a bright bar's light,
+keeping or raising coarse energy in the dark beside it. The base band was the
+plain mean of every frame, i.e. of every defocus state.
+
+**Change.** (a) *Pooled evidence* (`MergeConfig::pooled_evidence`, default on,
+`STREHL_PYRAMID_POOLED_EVIDENCE=0` disables): every band selects on the mean of
+its own and every finer band's energy, each in its own noise units, the finer
+ones reduced onto its grid; floor, gate and exponents unchanged. (b) The base
+band is *weighted* by the coarsest band's selection (`--pyramid-base weighted`,
+now the default), and inherits that band's ensemble-gate blend, so it is the
+plain mean only where the coarsest band is noise.
+
+| slide-2 dark ground vs composite | 2-8 px | 8-16 | 16-32 | 32-64 | 64-128 | 128-256 | mean excess |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| previous default | 1.14 | 1.34 | 1.41 | 1.47 | 1.30 | 1.28 | +35% |
+| weighted base only | 1.01 | 1.20 | 1.30 | 1.24 | 1.07 | 0.86 | +21% |
+| pooled (cumulative) only | 1.11 | 1.30 | 1.37 | 1.42 | 1.29 | 1.26 | +31% |
+| **pooled + weighted (shipped)** | 0.90 | 1.10 | 1.27 | 1.23 | 1.02 | 0.86 | **+14.5%** |
+| finer-only + weighted (rejected) | 0.82 | 1.05 | 1.25 | 1.21 | 0.99 | 0.85 | +11% |
+
+**Truth.** Synthetic stacks (`synth-arms.py`, production `BandMerge`, 120 cells):
+pooled + weighted is worse than the previous default in **0 of 120** cells
+(geometric-mean error 0.852); *finer-only* evidence, which looked slightly better
+on the slide, is worse in 40 of 120 (coarse strong texture up to 3.5x) and was
+rejected; the weighted base alone is neutral (0.986). Burst truth (8 frames):
+coarse-flat error 3.21e-8 -> 2.24e-8, every other cell within 0.03%.
+
+**Bee (MEASURED by eye, then attributed).** Pooled + weighted removes most of the
+light hairs that the previous default drew across the dark legs. Single-frame
+renders show those hairs sharp only at frames ~140, behind the leg (in focus at
+~frame 100, where the leg is solid dark): they were see-through ghosts. The
+antenna ghost (background hair inside the near antenna) is *not* fixed; see
+section 3.
+
+**Unit test.** `pooled_evidence_and_a_weighted_base_remove_the_glow_around_bright_detail`:
+41 frames, two depths, bright bars on dark: glow 9.5 -> 2.0 DN, bar-level error
+66 -> 33 DN against truth. Mutation-checked: without pooled evidence the bar
+error fails; without the weighted base the glow fails. Hull tests keep their
+excursion-producing plants on `legacy_merge()` (the new merge does not overshoot
+on them); registered research configs (m194d, known-scene benchmark, temporal
+energy, common-stack) are pinned to the previous merge.
+
+**Replicates, scene-linear masters** (`run-replicates-linear.sh`; arm A = the
+previous default: gate on, `STREHL_PYRAMID_POOLED_EVIDENCE=0 --pyramid-base
+mean`; B = shipped). Linear masters, because the SDR tone anchors move with the
+base band and scaled texture and noise together by ~0.97 on sRGB replicates.
+
+| subject | texture power B/A (bins with SNR >= 0.3) | noise power B/A |
+| --- | --- | --- |
+| bee-3-cpl | 1.000-1.010 | 1.000-1.013 |
+| 109MSDCF | 0.997-1.006 | 0.995-1.005 |
+| coffee-bean | 0.996-1.032 | 1.001-1.035; **1.093** in 1023 weak mid tiles |
+| wrapped-text-1 | 0.972-1.008 (0.97 on 12 tiles) | 0.96-1.013 |
+| bug-4 104MSDCF | 1.002-1.018 | 1.002-1.012 |
+| garnet | 1.002-1.018 | 1.002-1.018 |
+
+Cost disclosed: where coarse bands used to average defocused frames, they now
+select in-focus ones, so a little low-SNR noise comes back (coffee-bean mid band,
+up to +9% power, ~4.5% amplitude, in weak tiles). Truth tests favour the change
+overall; the noise is the price of the glow.
+
+## 1c. Taming bright glints on gems (development control, 2026-11-03)
+
+Owner request: a way to reduce super-bright spots, as on the minerals.
+
+Specular glints are real light; the merge should keep them. The control is in
+development, next to *Soften highlights*: **Tame glints**
+(`AdaptiveParameters::glint_compression`, desktop slider, agent-MCP schema, and a
+*Gems and glints* treatment preset). It lives in the existing spatial treatment
+(20 x ~13 cells x 33 half-stop luminance slices, a bilateral grid): per cell,
+light more than 2 stops above that cell's typical level is compressed at up to
+-0.5 EV per stop (2:1), after the centering solve so nothing else is lifted; the
+existing order limiter keeps every curve monotone (`SpatialTreatment::validate`).
+Large bright areas set their own cell level and are left alone. It cannot
+recover clipped texture; where a specular blob was not clipped, its surface
+texture reappears.
+
+MEASURED on `minerals/etched-spessartine-garnet` (183 frames), headless
+(`adaptive-recipe/` + `strehl develop`): the large specular facet goes from flat
+white to showing its surface texture; the V-shaped glint and sparkle are toned
+down; crystal body and black ground unchanged (`garnet/gl-*.png`). Test
+`glint_compression_lowers_small_bright_spots_but_not_large_bright_areas`
+(mutation-checked: a knee out of reach fails it); the strongest-controls
+order test now includes it. 80+ strehl-edit tests and 1039 strehl-ui tests pass.
+
 ## 2. Fuse each source's reconstructed RGB instead of re-mosaicing (REJECTED)
 
 **Hypothesis.** The default full-resolution gather demosaics each source (MHC),
@@ -187,8 +292,21 @@ At 1:1 on `bee-3-cpl` the most visible remaining defect is background hair
 showing through the near antenna and translucent-looking hairs over the shiny
 thorax: in far-focused frames a thin defocused occluder transmits the sharp
 background, whose band energy beats the occluder's own faint texture. This is
-the pyramid (PMax-like) transparency artefact. Not addressed here; the gate
-neither causes nor fixes it.
+the pyramid (PMax-like) transparency artefact. The ensemble gate neither causes
+nor fixes it. Pooled evidence with the weighted base (§1b) removes the variant
+where hairs *behind* a dark leg showed through it, but not the antenna case.
+
+*Tried and archived (2026-11-03): a coarse-consistency gate.* A frame's fine-band
+weight was multiplied by how well its own coarse luma (pyramid level 2) agreed
+with a reference coarse luma from a full render's sensor master, after removing a
+per-frame scale (`consistency-gate-experiment.py`, `coarse-reference.py`). It
+changed 1.1% of pixels by more than 256/65535 but left the antenna streaks
+unchanged: the streaks are 10-20 px wide and already present in the reference
+built from the same merge, so the frames that draw them read as consistent. A
+reference free of the ghost needs occlusion order. The bracket order is known on
+this rig (Sony focus position rises monotonically; on bee-3 the antenna is sharp
+at frame ~40 and the hair behind it at ~260-280), so a depth-ordered first pass
+is the open lead.
 
 ## 4. Cost (MEASURED)
 

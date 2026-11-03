@@ -125,12 +125,15 @@ pub(super) fn analyze_spatial(
     let flat = p90 - p10 < 0.002 || stats.dynamic_range_stops < 0.18;
     let dark = p99 < 0.008;
     let structure_enabled = !flat && !dark && stats.sampling_disagreement_stops <= 0.75;
-    if (!structure_enabled && parameters.highlight_compression == 0.0)
+    if (!structure_enabled
+        && parameters.highlight_compression == 0.0
+        && parameters.glint_compression == 0.0)
         || (parameters.balance == 0.0
             && parameters.local_contrast == 0.0
             && parameters.color == 0.0
             && parameters.presence == 0.0
-            && parameters.highlight_compression == 0.0)
+            && parameters.highlight_compression == 0.0
+            && parameters.glint_compression == 0.0)
     {
         limitations.push("There is insufficient sampled tonal variation for a spatial treatment, or all treatment controls are zero; ordinary controls remain unchanged.".into());
     } else {
@@ -160,6 +163,9 @@ pub(super) fn analyze_spatial(
             }
             if parameters.highlight_compression > 0.0 {
                 changes.push(AdaptiveChange { control: "bright-tone compression".into(), before: 0.0, after: parameters.highlight_compression, reason: "A bounded smooth shoulder lowers existing bright light after balancing, without compensating by lifting the rest of the image. It cannot recover clipped texture.".into() });
+            }
+            if parameters.glint_compression > 0.0 {
+                changes.push(AdaptiveChange { control: "glint compression".into(), before: 0.0, after: parameters.glint_compression, reason: "Light more than two stops above its own neighbourhood's typical level is compressed by up to 2:1, so small specular highlights stay the brightest things locally but stop dominating. Large bright areas set their own neighbourhood level and are left alone. It cannot recover clipped texture.".into() });
             }
             if parameters.presence > 0.0 {
                 changes.push(AdaptiveChange { control: "scene-relative presence".into(), before: 0.0, after: parameters.presence, reason: "Robust light percentiles place a smooth contrast curve within this photograph's useful tones. The curve adds separation without sharpening pixels, while dark-floor and highlight protection remain active.".into() });
@@ -281,6 +287,20 @@ fn build_field(
     };
     let mut tone_ev = vec![0.0; w * h * levels];
     let mut color_gain = vec![1.0; w * h];
+    // Each cell's typical log light: the population mean over every luminance
+    // slice of the spatially smoothed grid. Small bright features contribute
+    // few samples, so they sit far above it; a large bright area pulls it up.
+    let typical: Vec<Option<f32>> = fine
+        .chunks_exact(levels)
+        .map(|cell| {
+            let (mut log, mut weight) = (0.0f32, 0.0f32);
+            for m in cell {
+                log += m.log;
+                weight += m.weight;
+            }
+            (weight > 0.5).then(|| log / weight)
+        })
+        .collect();
     for (cell, cell_color) in color_gain.iter_mut().enumerate() {
         let mut color_sum = 0.0;
         let mut color_weight = 0.0;
@@ -413,6 +433,24 @@ fn build_field(
             (lo + hi) * 0.5
         },
     );
+    if parameters.glint_compression > 0.0 {
+        // After the centering solve, for the same reason as the shoulder below:
+        // lowering glints must not lift the rest of the image to compensate.
+        // Slope at most -0.5 EV per stop above the knee (2:1), so brightness
+        // order is preserved; the curve bound caps the total at 1 EV.
+        for (cell, curve) in field.tone_ev.chunks_exact_mut(levels).enumerate() {
+            let Some(level) = typical[cell] else { continue };
+            for (z, ev) in curve.iter_mut().enumerate() {
+                let log = log_min + (log_max - log_min) * z as f32 / (levels - 1) as f32;
+                let excess = log - (level + GLINT_KNEE_STOPS);
+                if excess > 0.0 {
+                    let total =
+                        *ev + field.centering_ev - 0.5 * parameters.glint_compression * excess;
+                    *ev = quantize(total.clamp(-1.0, 1.0) - field.centering_ev);
+                }
+            }
+        }
+    }
     if parameters.highlight_compression > 0.0 {
         // Apply after the centering solve: a highlight correction must never
         // cause a compensating lift elsewhere. Bake it into the frozen curves.
@@ -435,9 +473,24 @@ fn build_field(
         }
         field.centering_ev = 0.0;
     }
+    if parameters.glint_compression > 0.0 {
+        // The glint slope adds to whatever slope the curve already had,
+        // including the shoulder above; keep the combined drop inside the
+        // luminance-order bound (`SpatialTreatment::validate`: more than -0.8 of
+        // a level step). Curves that already satisfy it are untouched.
+        let floor = -0.75 * (log_max - log_min) / (levels - 1) as f32;
+        for curve in field.tone_ev.chunks_exact_mut(levels) {
+            for z in 1..levels {
+                curve[z] = curve[z].max(quantize(curve[z - 1] + floor));
+            }
+        }
+    }
     field.validate()?;
     Ok(field)
 }
+
+/// How far above its cell's typical light (in stops) glint compression starts.
+const GLINT_KNEE_STOPS: f32 = 2.0;
 
 fn smooth_weight(x: f32) -> f32 {
     let x = x.clamp(0.0, 1.0);

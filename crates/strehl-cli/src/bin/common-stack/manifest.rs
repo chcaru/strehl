@@ -135,6 +135,7 @@ impl Merge {
             hull_from_level: 1,
             significance_scale: 0.0,
             ensemble: false,
+            pooled_evidence: false,
         })
     }
 }

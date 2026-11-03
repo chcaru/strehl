@@ -164,6 +164,11 @@ impl StackArgs {
             gate: self.pyramid_gate,
             exponent: self.pyramid_exponent,
             sharpen_per_octave: self.pyramid_sharpen,
+            // Session fusion has its own coefficient consumer, which supports
+            // only a mean base and its own selection; the ordinary stack's
+            // weighted base and pooled evidence do not apply to it.
+            base: strehl_core::pyramid::BaseBand::Mean,
+            pooled_evidence: false,
             ..strehl_core::pyramid::MergeConfig::default()
         })
     }

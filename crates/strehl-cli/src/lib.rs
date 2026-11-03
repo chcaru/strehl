@@ -364,14 +364,19 @@ enum Command {
         #[arg(long, value_name = "MODE")]
         pyramid_select: Option<String>,
         /// How the `pyramid` merge combines the coarsest residual, the band
-        /// that carries overall tone: `mean` (the default) or `weighted`.
+        /// that carries overall tone: `weighted` (the default) or `mean`.
         ///
-        /// MEASURED on flower-bud-alone-cpl: weighting the base band cost
-        /// -475.0 DN of global level and 835.0 DN of position-dependent
-        /// structure, against +11.0 DN and 45.0 DN for the mean, with no
-        /// difference in aura removal between them. `weighted` is kept
-        /// reachable because a default chosen by measurement needs the arm it
-        /// beat to remain runnable.
+        /// `weighted` takes the base from the frames the coarsest band selects
+        /// (on pooled focus evidence), and averages where that band is noise.
+        /// The mean of every frame's base includes every defocused frame's
+        /// spread light, which shows as a glow around bright and dark detail
+        /// and lifted dark ground on deep stacks: on a tilted calibration slide
+        /// the weighted base with pooled evidence cut the dark-ground excess
+        /// over a locally in-focus composite from 35% to 14%, and it lowered
+        /// error against truth on synthetic stacks and a held-out burst
+        /// (experiments/image-quality-2026-11-02/results.md). An earlier
+        /// measurement preferred `mean`, scoring against the mean itself; it is
+        /// kept reachable here.
         #[arg(long, value_name = "MODE")]
         pyramid_base: Option<String>,
         /// Render for viewing: camera colour matrix (to sRGB/BT.709 primaries,

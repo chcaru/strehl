@@ -173,6 +173,7 @@ fn strongest_presence_is_valid_for_each_tonal_scope() {
             presence: 1.0,
             shadow_protection: 1.0,
             highlight_compression: 1.0,
+            glint_compression: 1.0,
             tone_range,
         };
         let result = analyze(&source, parameters);

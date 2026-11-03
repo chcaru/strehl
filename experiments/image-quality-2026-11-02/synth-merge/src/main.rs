@@ -18,7 +18,10 @@ fn main() {
     let a: Vec<String> = std::env::args().collect();
     let dir = &a[1];
     let (w, h, n): (usize, usize, usize) = (a[2].parse().unwrap(), a[3].parse().unwrap(), a[4].parse().unwrap());
-    let cfg = MergeConfig::default();
+    let mut cfg = MergeConfig::default();
+    if std::env::var("SYNTH_BASE").as_deref() == Ok("weighted") {
+        cfg.base = strehl_core::pyramid::BaseBand::WeightedFromCoarsest;
+    }
     let sizes = level_sizes(w, h, cfg.bands);
     let mut merge = BandMerge::new(w, h, 1, cfg);
     let mut fws = FrameWorkspace::new(&sizes, 1);

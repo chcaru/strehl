@@ -11,6 +11,11 @@ fn cfg(mode: AdmissionMode, p: f32) -> MergeConfig {
         hull: Hull::Unclamped,
         significance_scale: 0.0,
         mean_coarse: 0,
+        // The registered experiment predates the ensemble gate, pooled
+        // evidence and the weighted base (FloorPedestalV1 requires a mean base).
+        ensemble: false,
+        pooled_evidence: false,
+        base: BaseBand::Mean,
         ..MergeConfig::default()
     }
 }

@@ -575,6 +575,9 @@ mod tests {
         };
         let cfg = MergeConfig {
             bands: 4,
+            // Session fusion supports only a mean base and its own selection.
+            base: strehl_core::pyramid::BaseBand::Mean,
+            pooled_evidence: false,
             ..MergeConfig::default()
         };
         let policy = GroupPolicy {
@@ -799,6 +802,9 @@ mod tests {
         let cfg = MergeConfig {
             bands: 2,
             sharpen_per_octave: 1.0,
+            // Session fusion supports only a mean base and its own selection.
+            base: strehl_core::pyramid::BaseBand::Mean,
+            pooled_evidence: false,
             ..MergeConfig::default()
         };
         let policy = GroupPolicy {

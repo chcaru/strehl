@@ -760,6 +760,8 @@ mod tests {
             gate: 2.0,
             significance_scale: 0.0,
             ensemble: false,
+            pooled_evidence: false,
+            base: super::super::BaseBand::Mean,
             mean_coarse: 0,
             ..Default::default()
         };
@@ -1030,6 +1032,8 @@ mod tests {
             gate: 2.0,
             significance_scale: 0.0,
             ensemble: false,
+            pooled_evidence: false,
+            base: super::super::BaseBand::Mean,
             mean_coarse: 0,
             hull: super::super::Hull::PerLevel,
             ..Default::default()

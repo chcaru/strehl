@@ -7552,6 +7552,17 @@ fn run_pyramid_prepared_with_sensor(
             "off"
         }
     );
+    eprintln!(
+        "pooled evidence : {}",
+        if cfg.pooled_evidence {
+            "ON -- each band selects on its own and every finer band's energy, so coarse \
+             bands\n                  follow the frames that are in focus there instead of \
+             a defocused frame's\n                  spread light. STREHL_PYRAMID_POOLED_EVIDENCE=0 \
+             turns it off."
+        } else {
+            "off"
+        }
+    );
     eprintln!("exponent        : {:.2}", cfg.exponent);
     eprintln!(
         "per-band exp    : {}   (coarsest -> finest)",

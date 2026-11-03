@@ -400,7 +400,8 @@ fn spatial_schema() -> Value {
                 "tone_range":{"enum":["all","shadows","midtones","highlights"]},
                 "shadow_protection":{"type":"number","minimum":0,"maximum":1},
                 "highlight_compression":{"type":"number","minimum":0,"maximum":1},
-                "presence":{"type":"number","minimum":0,"maximum":1}
+                "presence":{"type":"number","minimum":0,"maximum":1},
+                "glint_compression":{"type":"number","minimum":0,"maximum":1}
             }), &[]),
             "amount":{"type":"number","minimum":0,"maximum":1},
             "bounds":{"type":"array","items":point(),"minItems":2,"maxItems":2},

@@ -24,8 +24,12 @@ from scipy.ndimage import uniform_filter
 
 
 def luma(p):
-    a = tifffile.imread(p).astype(np.float32) / 65535
-    a = np.where(a <= 0.04045, a / 12.92, ((a + 0.055) / 1.055) ** 2.4)
+    a = tifffile.imread(p)
+    if a.dtype == np.uint16:  # 16-bit sRGB delivery file
+        a = a.astype(np.float32) / 65535
+        a = np.where(a <= 0.04045, a / 12.92, ((a + 0.055) / 1.055) ** 2.4)
+    else:  # scene-linear float master: no tone curve can confound the arms
+        a = a.astype(np.float32)
     return 0.2126 * a[..., 0] + 0.7152 * a[..., 1] + 0.0722 * a[..., 2]
 
 

@@ -268,8 +268,13 @@ fn independent_actual_probe_layout_and_live_metadata() {
 
 fn fallback_output(beta: Option<&[f32]>, variance: f32, checkerboard: bool) -> Vec<u32> {
     let (w, h) = (72, 54);
+    // Registered before the ensemble gate, pooled evidence and the weighted
+    // base; its expected-failure arm depends on that merge's arithmetic.
     let cfg = MergeConfig {
         bands: 3,
+        ensemble: false,
+        pooled_evidence: false,
+        base: strehl_core::pyramid::BaseBand::Mean,
         ..MergeConfig::default()
     };
     let mut merge = BandMerge::new(w, h, 1, cfg);
