@@ -614,6 +614,7 @@ const RENDER_ENV: &[&str] = &[
     // Pooled-evidence selection (2026-11-03), ON by default, likewise read
     // once by `MergeConfig::default()`.
     "STREHL_PYRAMID_POOLED_EVIDENCE",
+    "STREHL_PYRAMID_POOLED_RATIO",
     "STREHL_FRAME_PARITY",
     // The rest of the pyramid's own environment, registered in the commit that
     // gives it something to hide -- the first pyramid row. Both are read by

@@ -1350,6 +1350,21 @@ pub struct MergeConfig {
     /// this grid -- rather than on its own energy alone. See
     /// [`pooled_evidence_default`].
     pub pooled_evidence: bool,
+    /// How much more each finer level counts than its next coarser one in
+    /// pooled evidence: level `j` enters band `k`'s evidence with weight
+    /// `ratio^(k - j)`, normalised. `1.0` is the plain mean over levels.
+    ///
+    /// Next to a very bright edge, frames a little out of focus spread light
+    /// several pixels into the dark beside it; their own mid-band energy there
+    /// is large, so with every level counted equally they still win part of
+    /// the coarse bands and draw a glow. Finer levels carry the focus cue, so
+    /// counting them more removes it. Measured (image-quality-2026-11-02 §1e):
+    /// `2.0` lowered synthetic truth error to 0.922x (1 of 120 cells worse,
+    /// +3.7%), cut coarse flat error on a fixed-focus burst by 14%, and halved
+    /// the glow 8-16 px beside a bright edge on bug-4; `4.0` (close to
+    /// finer-only evidence) made coarse texture up to 1.48x worse. Ignored when
+    /// `pooled_evidence` is off. See [`pooled_evidence_ratio_default`].
+    pub pooled_evidence_ratio: f32,
 }
 
 /// Judge each coefficient against its own measurement noise before selecting.
@@ -1540,6 +1555,7 @@ impl Default for MergeConfig {
             significance_scale: significance_scale_default(),
             ensemble: ensemble_gate_default(),
             pooled_evidence: pooled_evidence_default(),
+            pooled_evidence_ratio: pooled_evidence_ratio_default(),
         }
     }
 }
@@ -2513,6 +2529,7 @@ impl BandMerge {
                     // defocused frame's blur spreads light, which can raise it),
                     // while the finer bands it summarises do.
                     let unit = |v: f32| (beta * v.max(0.0)).max(1.0);
+                    let ratio = self.cfg.pooled_evidence_ratio;
                     if k == 0 {
                         for ((ev, e), v) in ws.ev[..px].iter_mut().zip(sq.iter()).zip(vv) {
                             *ev = *e / unit(*v);
@@ -2530,13 +2547,13 @@ impl BandMerge {
                             .zip(&ws.ev_next[..px])
                             .zip(sq.iter().zip(vv))
                         {
-                            *ev = *n + *e / unit(*v);
+                            *ev = ratio * *n + *e / unit(*v);
                         }
                     }
                     // The mean over the pooled levels, back in this band's
                     // energy units: its noise expectation is unchanged, so the
                     // floor and the weight need no other change.
-                    let levels = (k + 1) as f32;
+                    let levels = pooled_levels(ratio, k);
                     for ((out, ev), v) in ws.eff[..px].iter_mut().zip(&ws.ev[..px]).zip(vv) {
                         *out = unit(*v) * *ev / levels;
                     }
@@ -3690,6 +3707,33 @@ impl PlaneCache {
 // temporal-energy measurement API. Operation order stays identical.
 /// Environment override for pooled-evidence selection (`0`/`off` disables).
 pub const POOLED_EVIDENCE_ENV: &str = "STREHL_PYRAMID_POOLED_EVIDENCE";
+
+/// Environment override for [`pooled_evidence_ratio_default`].
+pub const POOLED_EVIDENCE_RATIO_ENV: &str = "STREHL_PYRAMID_POOLED_RATIO";
+
+/// Default [`MergeConfig::pooled_evidence_ratio`]: `2.0`, honouring
+/// [`POOLED_EVIDENCE_RATIO_ENV`] (a finite value of at least 1).
+#[must_use]
+pub fn pooled_evidence_ratio_default() -> f32 {
+    static CACHED: std::sync::OnceLock<f32> = std::sync::OnceLock::new();
+    *CACHED.get_or_init(|| match std::env::var(POOLED_EVIDENCE_RATIO_ENV) {
+        Err(_) => 2.0,
+        Ok(raw) => match raw.trim().parse::<f32>() {
+            Ok(v) if v.is_finite() && v >= 1.0 => v,
+            _ => panic!("{POOLED_EVIDENCE_RATIO_ENV}={raw:?} is not a finite number >= 1"),
+        },
+    })
+}
+
+/// The total weight of pooled levels `0..=k` when each finer level counts
+/// `ratio` times its next coarser one: `sum_{j<=k} ratio^(k-j)`.
+pub(crate) fn pooled_levels(ratio: f32, k: usize) -> f32 {
+    if ratio == 1.0 {
+        (k + 1) as f32
+    } else {
+        (ratio.powi(k as i32 + 1) - 1.0) / (ratio - 1.0)
+    }
+}
 
 /// Whether bands select on pooled focus evidence. ON unless
 /// [`POOLED_EVIDENCE_ENV`] says otherwise.
@@ -5989,6 +6033,7 @@ mod tests {
         // glow_around_bright_detail` and experiments/image-quality-2026-11-02.
         assert_eq!(MergeConfig::default().base, BaseBand::WeightedFromCoarsest);
         assert!(MergeConfig::default().pooled_evidence);
+        assert_eq!(MergeConfig::default().pooled_evidence_ratio, 2.0);
         assert_eq!(MergeConfig::default().exponent, DEFAULT_EXPONENT);
     }
 
@@ -6503,10 +6548,11 @@ mod tests {
             })
             .collect();
         let var = vec![sigma * sigma; w * h];
-        let fold = |pooled: bool, base: BaseBand, exponent: f32| {
+        let fold_ratio = |pooled: bool, base: BaseBand, exponent: f32, ratio: f32| {
             let cfg = MergeConfig {
                 bands: 6,
                 pooled_evidence: pooled,
+                pooled_evidence_ratio: ratio,
                 base,
                 exponent,
                 ensemble: true,
@@ -6521,6 +6567,7 @@ mod tests {
             }
             merge.finish(&mut Workspace::new(&sizes))[0].clone()
         };
+        let fold = |pooled: bool, base: BaseBand, exponent: f32| fold_ratio(pooled, base, exponent, 1.0);
         // Dark ground 3..14 px from a bar, away from the depth seam and borders.
         let ground = |j: usize| {
             let (x, y) = (j % w, j / w);
@@ -6568,5 +6615,15 @@ mod tests {
         // Measured: glow 2.0 -> 0.94 DN, bar error 33 -> 8.6 DN.
         assert!(g2 <= g1, "glow at the default exponent: {g1} at 2, {g2} at {DEFAULT_EXPONENT}");
         assert!(e2 < 0.5 * e1, "bar level error: {e1} at 2, {e2} at {DEFAULT_EXPONENT}");
+    }
+
+    #[test]
+    fn pooled_levels_is_the_total_weight_of_the_pooled_levels() {
+        for ratio in [1.0f32, 1.5, 2.0, 4.0] {
+            for k in 0..8 {
+                let direct: f32 = (0..=k).map(|j| ratio.powi((k - j) as i32)).sum();
+                assert!((pooled_levels(ratio, k) - direct).abs() <= 1e-4 * direct, "ratio {ratio} k {k}");
+            }
+        }
     }
 }

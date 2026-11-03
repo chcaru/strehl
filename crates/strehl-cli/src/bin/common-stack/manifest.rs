@@ -136,6 +136,7 @@ impl Merge {
             significance_scale: 0.0,
             ensemble: false,
             pooled_evidence: false,
+            pooled_evidence_ratio: 1.0,
         })
     }
 }

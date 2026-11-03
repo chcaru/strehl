@@ -1200,10 +1200,10 @@ impl GroupWorkspace {
                             .zip(&self.ev_next[..n])
                             .zip(self.energy[..n].iter().zip(variance))
                         {
-                            *ev = *nx + *e / unit(*v);
+                            *ev = self.cfg.pooled_evidence_ratio * *nx + *e / unit(*v);
                         }
                     }
-                    let levels = (k + 1) as f32;
+                    let levels = super::pooled_levels(self.cfg.pooled_evidence_ratio, k);
                     for ((e, ev), v) in self.energy[..n].iter_mut().zip(&self.ev[..n]).zip(variance) {
                         *e = unit(*v) * *ev / levels;
                     }
@@ -2004,6 +2004,7 @@ fn same_recipe(a: MergeConfig, b: MergeConfig) -> bool {
         && a.hull == b.hull
         && a.significance_scale.to_bits() == b.significance_scale.to_bits()
         && a.pooled_evidence == b.pooled_evidence
+        && a.pooled_evidence_ratio.to_bits() == b.pooled_evidence_ratio.to_bits()
         && a.base == b.base
 }
 
@@ -2891,6 +2892,7 @@ mod tests {
             significance_scale: 0.0,
             ensemble: false,
             pooled_evidence: false,
+            pooled_evidence_ratio: 1.0,
         }
     }
 
@@ -4076,6 +4078,7 @@ mod tests {
         let config = MergeConfig {
             bands: 3,
             pooled_evidence: true,
+            pooled_evidence_ratio: 2.0,
             base: BaseBand::WeightedFromCoarsest,
             ..cfg()
         };

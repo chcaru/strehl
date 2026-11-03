@@ -276,14 +276,17 @@ on `p·ln(r)` is 80, so beyond about `p = 10` the sharpest coefficients all pin 
 averaged. More selectivity is `SelectMode::HardMax`, not a bigger exponent.
 
 **Since 2026-11-03 bands select on pooled focus evidence** (`MergeConfig::pooled_evidence`,
-`STREHL_PYRAMID_POOLED_EVIDENCE=0` disables): each band's weight is computed from the mean of
-its own and every finer band's energy in noise units, the finer ones reduced onto its grid,
-because a coarse band's own energy barely depends on focus and a defocused frame's spread
+`STREHL_PYRAMID_POOLED_EVIDENCE=0` disables): each band's weight is computed from a weighted
+mean of its own and every finer band's energy in noise units, the finer ones reduced onto its
+grid and each counted `pooled_evidence_ratio` (default 2, `STREHL_PYRAMID_POOLED_RATIO`) times
+its next coarser one, because a coarse band's own energy barely depends on focus and a defocused frame's spread
 light kept or raised it beside bright and dark detail. The base band is now **weighted** by
 the coarsest band's selection and inherits that band's ensemble blend. Together they removed
 most of the glow around edges on a tilted calibration slide (+35% -> +14.5% dark-ground
 excess over a locally in-focus composite) and lowered error against truth on every synthetic
-cell; see `experiments/image-quality-2026-11-02/results.md` §1b. Session fusion (Best result)
+cell; see `experiments/image-quality-2026-11-02/results.md` §1b. On scene-linear masters the
+slide's remaining excess is gone. The ratio of 2 (§1e) roughly halved the glow still left within
+8-16 px of very bright edges on bug-4. Session fusion (Best result)
 can select with the same pooled evidence and weighted base, pinned coefficient for coefficient
 to the ordinary merge by a parity test, but sessions keep the previous selection (mean base, no
 pooling): session fusion has no ensemble gate yet, and without it the two select noise in flat

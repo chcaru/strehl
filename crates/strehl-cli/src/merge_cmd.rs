@@ -7563,6 +7563,13 @@ fn run_pyramid_prepared_with_sensor(
             "off"
         }
     );
+    if cfg.pooled_evidence {
+        eprintln!(
+            "pooled ratio    : {:.2} -- each finer level counts this many times its next \
+             coarser one (STREHL_PYRAMID_POOLED_RATIO).",
+            cfg.pooled_evidence_ratio
+        );
+    }
     eprintln!("exponent        : {:.2}", cfg.exponent);
     eprintln!(
         "per-band exp    : {}   (coarsest -> finest)",

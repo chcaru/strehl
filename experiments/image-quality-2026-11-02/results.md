@@ -324,6 +324,64 @@ mutation-checked (with the default at 2 it fails). Research configs pinned to th
 previous merge also pin `exponent: 2.0`; sessions keep their own default of 2 with
 their previous selection. Byte freeze re-baselined, attributed bit-exactly.
 
+## 1e. Counting finer levels more in pooled evidence (SHIPPED, 2026-11-03)
+
+**Finding (MEASURED).** On `insects/bug-4/104MSDCF` (even half, 150 frames) a bright
+iridescent edge still sat in a green glow after §1b/§1d. Single-frame linear renders
+(every 12th frame, same warp map, crop origin 1080,1848) put the edge in focus at frame
+~132 (local high-pass power 23,000 against ~40 for far frames). Green profile across the
+edge, mean of 150 rows, 1e-3 linear:
+
+| px from edge column 204 | 0 | +8 | +16 | +24 |
+| --- | --- | --- | --- | --- |
+| frame 132 (in focus) | 408 | 52 | 14.6 | 13.7 |
+| frames 84-96 / 156-168 (moderately defocused) | 604-727 | 186-577 | 25-286 | 14-78 |
+| pre-§1b default | 576 | 195 | 80 | 37.6 |
+| pooled, exponent 2 | 544 | 163 | 52 | 17.1 |
+| pooled, exponent 4 (shipped §1d) | 547 | 170 | 57 | 17.6 |
+| **pooled, ratio 2 (shipped)** | 484 | **100** | **22.5** | 11.6 |
+| pooled, ratio 4 | 428 | 65 | 13.0 | 11.3 |
+
+**Cause (ARGUED).** Pooled evidence took the plain mean over levels, and moderately
+defocused frames carry large mid-band energy in the light they spread beside a very
+bright edge, so they kept part of the coarse bands. Counting finer levels more
+(`MergeConfig::pooled_evidence_ratio`: level j enters band k with weight
+ratio^(k-j), normalised) follows the levels that carry focus.
+
+**Truth (MEASURED).** Synthetic stacks, current default otherwise, reference ratio 1:
+
+| ratio | cells worse | worst cell | geo-mean error |
+| --- | --- | --- | --- |
+| 1.5 | 1/120 | 1.000 | 0.948 |
+| **2 (shipped)** | 1/120 | 1.037 (flat N60 coarse weak texture) | **0.922** |
+| 2.5 | 14/120 | 1.107 | 0.911 |
+| 3 | 20/120 | 1.203 | 0.910 |
+| 4 | 24/120 | 1.476 (coarse weak texture) | 0.921 |
+
+2 is the knee: above it coarse texture starts to lose, which is the finer-only failure
+of §1b. Burst truth (8 in-focus frames): coarse flat 2.250e-8 -> 1.940e-8 (-14%),
+every other cell within 0.3%.
+
+**Replicates, scene-linear (MEASURED;** A = shipped §1d default, B = ratio 2;
+`D:/codex-work/iq2/l2-*.report`). Texture and noise power B/A within 0.98-1.03 in every
+bin with SNR >= 1 on all six subjects. Low-SNR bins: bee-3 SNR < 0.3 texture *and*
+noise 0.92/0.93 (fine) and 0.77/0.78 (mid), i.e. less noise; 109 mid SNR 0.3-1 texture
+0.95 with noise 0.99 -- its worst cluster is a near-white out-of-focus backdrop where
+the crops are visually identical; coffee-bean fine SNR < 0.3 texture 0.87 (noise
+1.005), mid 0.96-0.98; wrapped-text noise +1.7-2.5%. Slide-2 scene-linear glow:
+unchanged (0.94-0.96 of the composite at 2-128 px). bee-3 by eye: antenna, leg edge and
+porous hair indistinguishable from the §1d default at 1:1.
+
+**Tests.** `pooled_levels_is_the_total_weight_of_the_pooled_levels`; the default is pinned
+in `the_base_band_default_is_the_measured_one`. Session fusion implements the ratio, and
+its parity test now runs at ratio 2. Mutation-checked: a session consumer that ignores the
+ratio differs from the ordinary merge by 19.6 DN. The bars plant of §1b keeps ratio 1;
+at ratio 2 it reads glow 0.94 -> 1.29 DN and bar error 8.6 -> 6.2 DN, i.e. mixed and
+tiny. Two compact plants (a clean bright step, and a bright foreground edge over a
+farther textured background) drew no glow at either ratio, so the bug-4 mechanism is
+not reproduced by a unit test; the evidence is the measurements above. Byte freeze
+re-baselined and attributed bit-exactly (ratio 1.0 reproduces the previous row).
+
 ## 1c. Taming bright glints on gems (development control, 2026-11-03)
 
 Owner request: a way to reduce super-bright spots, as on the minerals.
