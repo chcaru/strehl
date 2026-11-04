@@ -43,6 +43,7 @@ impl StrehlApp {
         self.controls.settings.binned = false;
         self.controls.settings.confidence_map = false;
         self.controls.settings.correct_lateral_ca = false;
+        self.controls.settings.refine_lateral_ca = false;
     }
 
     /// Discover every capture folder below `root` as a pass of one automatic

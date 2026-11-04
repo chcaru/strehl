@@ -912,6 +912,7 @@ impl StrehlApp {
                 "workers" => workers = value.as_u64().unwrap() as usize,
                 "binned" => settings.binned = value.as_bool().unwrap(),
                 "correct_lateral_ca" => settings.correct_lateral_ca = value.as_bool().unwrap(),
+                "refine_lateral_ca" => settings.refine_lateral_ca = value.as_bool().unwrap(),
                 "crop_to_coverage" => settings.crop_to_coverage = value.as_bool().unwrap(),
                 "confidence_map" => settings.confidence_map = value.as_bool().unwrap(),
                 "auto_exposure" => {

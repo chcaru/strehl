@@ -454,6 +454,7 @@ fn settings_schema() -> Value {
     for name in [
         "binned",
         "correct_lateral_ca",
+        "refine_lateral_ca",
         "crop_to_coverage",
         "auto_exposure",
         "confidence_map",

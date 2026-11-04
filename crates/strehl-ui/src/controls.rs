@@ -99,6 +99,8 @@ impl Controls {
                         "Exposure in stops for the next TIFF. Click Default to override. Camera JPEG previews retain camera processing.");
                 });
                 ui.checkbox(&mut self.settings.correct_lateral_ca,"Correct colour fringing").on_hover_text("Use the engine's supported optical profile; unknown profiles follow its normal guard.");
+                ui.add_enabled(self.settings.correct_lateral_ca, egui::Checkbox::new(&mut self.settings.refine_lateral_ca,"Refine fringing per stack"))
+                    .on_hover_text("Measure the red and blue fringing the profile leaves on a quick preview of every 8th frame, then render with the correction fitted to this stack. About 18% more time; skipped for half-size TIFFs.");
                 note(ui,"As-shot WB / sRGB tone");
             });
             section(ui,"03","Geometry", |ui| {
@@ -303,6 +305,7 @@ mod tests {
             assert!(!controls.settings.binned);
             assert_eq!(controls.settings.resampler, Resampler::CatmullRom);
             assert!(controls.settings.correct_lateral_ca);
+            assert!(controls.settings.refine_lateral_ca);
             assert!(controls.exposure.is_none() && controls.gate.is_none());
         }
     }

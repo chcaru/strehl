@@ -29,6 +29,7 @@ mean better image quality.
 | `--srgb` | Always used for photographic output; as-shot white balance and the engine's sRGB development path |
 | `--demosaic` / `--binned` | Geometry → Half-size TIFF; full-resolution demosaic is the engine's default with `--srgb` |
 | `--fix-ca off` / normal automatic gear guard | Develop → Correct colour fringing; unsupported gear is not forced through a profile |
+| `--refine-ca on/off` (default on) | Develop → Refine fringing per stack, under Correct colour fringing and greyed while it is off; the desktop passes only `--refine-ca=off` |
 | `--resampler` | Geometry → Sampling; all six CLI interpolators available |
 | `--cover scale` / `--cover crop` | Geometry → Shared coverage crop; unchecked uses the engine's scale policy |
 | `--confidence-map` | Capture range & evidence → Save confidence map; extra decode/warp pass; writes `confidence.tiff` beside the photograph |

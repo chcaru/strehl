@@ -645,7 +645,7 @@ line and blue on the other -- a residual *lateral* shift, which a focus offset c
 move. The lateral-CA record (facts 1414-1903; no scalar fix, scene-dependent effective
 wavelength, fact 1570) is the place for that defect. Not built.
 
-## 3c. Per-capture lateral-CA refinement (BUILT, opt-in `STREHL_REFINE_CA=on`, 2026-11-03)
+## 3c. Per-capture lateral-CA refinement (SHIPPED, default on, 2026-11-03)
 
 While testing 3b, chroma-boosted crops of the flat slide showed red on one side of every
 line and blue on the other, near the centre -- a lateral offset the shipped correction
@@ -749,8 +749,19 @@ except this lane. Tests: six in `ca-refine-tests.rs` (planted translation and sc
 gain-only null, single orientation, edge tiles not voting along their edges, mosaic siting
 null and planted shift, featureless refusal); mutation-checked: a flipped displacement sign,
 removing the structure weighting, and an off-centre mosaic interpolation each fail a test.
-Not yet done: a default-on decision (it moves every render), and the desktop has no control
-for it.
+**Default on (owner decision, 2026-11-03),** with a desktop control ("Refine fringing per
+stack", under "Correct colour fringing", greyed when that is off; agent setting
+`refine_lateral_ca`) and a CLI flag `--refine-ca=on|off` that overrides the environment.
+It skips itself (no preview) where it cannot act: no matching profile or `--fix-ca=off`,
+alignment off, binned output. VERIFIED on the razor: the default render is byte-identical
+to the opt-in render, `--refine-ca=off` byte-identical to the profile-only render, and
+`--fix-ca=off` runs no preview. The preview is silent on the desktop's progress channel
+(its stage display only moves forward) after an alignment pass that reports normally, and
+the desktop's log parser skips the preview's banner (test
+`a_lateral_ca_preview_pass_is_not_read_as_the_render`, mutation-checked). Exercised in a
+headless workspace: the setting reads `true` by default and `false` after a `set_settings`
+call. Not exercised: a screenshot of the checkbox -- the screenshot command cannot open the
+Adjust panel.
 
 Checks: strehl-core 757 tests pass (`cargo test --locked -p strehl-core`); strehl-cli lib
 399 pass, the same 8 private-capture tests fail as before. **Byte-freeze:** the default
@@ -761,7 +772,13 @@ off): it renders `741F4984...` / 49450027 bytes against a recorded `88712017...`
 49450019 -- and so does the release binary built at `9fd5d744`, before any of this
 section's code. That row has been stale since before this lane (its baseline is from
 4c99cc40, 2026-08-26; the size change is 8 bytes, i.e. writer metadata, and several
-writer commits have landed since). Not re-baselined here: its move is not attributed.
+writer commits have landed since). Not re-baselined here: its move is not attributed. The three
+sidecar rows (`-sidecar`, `-pyramid-sidecar`, `-clamped-sidecar`) do not run at all: the engine
+refuses their committed warp maps as a legacy alignment policy (`S3-ba-unit`) -- also
+pre-existing. So `coffee-bean-20-gate2-pyramid` (alignment off, where the refinement skips
+itself) is the only runnable row, and it passes (`STREHL_FREEZE_IDS=coffee-bean-20-gate2-pyramid`).
+When the sidecar maps are regenerated, the pyramid-sidecar row will need a baseline that
+includes the default refinement.
 
 ## 4. Cost (MEASURED)
 

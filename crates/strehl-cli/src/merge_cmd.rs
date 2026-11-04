@@ -7265,7 +7265,7 @@ struct PreparedPyramid<'a> {
 /// * **No gate ladder.** Its gate is a band-power threshold, not the
 ///   estimator's focus-noise gate, and the two are not the same number.
 fn run_pyramid(opts: &MergeOptions) -> Result<()> {
-    if ca_refine::requested()? {
+    if ca_refine::requested()? && ca_refine::applicable(opts)? {
         return ca_refine::run_refined(opts);
     }
     run_pyramid_once(opts)
@@ -7435,7 +7435,8 @@ fn run_pyramid_prepared(
     run_pyramid_prepared_with_sensor(opts, prepared, source, None)
 }
 
-/// Per-capture lateral-CA refinement (`STREHL_REFINE_CA=on`, default off).
+/// Per-capture lateral-CA refinement (`--refine-ca` / `STREHL_REFINE_CA`,
+/// default ON).
 ///
 /// A preview merge of a subset of frames, rendered with the active profile,
 /// is measured for the red and blue displacement it still shows
@@ -7460,7 +7461,7 @@ mod ca_refine {
 
     pub(super) fn requested() -> Result<bool> {
         match std::env::var(ENV) {
-            Err(std::env::VarError::NotPresent) => Ok(false),
+            Err(std::env::VarError::NotPresent) => Ok(true),
             Err(e) => Err(e).context(ENV),
             Ok(v) => match v.trim() {
                 "" | "0" | "off" => Ok(false),
@@ -7468,6 +7469,27 @@ mod ca_refine {
                 other => anyhow::bail!("{ENV}={other:?} is not on or off"),
             },
         }
+    }
+
+    /// Whether a refinement can do anything for this render. The preview
+    /// measures the full-resolution mosaic, so binned output is out; the CA
+    /// correction runs inside warp application, so alignment must be on; and
+    /// the refinement adds to an active profile, so the capture's gear must
+    /// match one (and `--fix-ca` / `STREHL_FIX_CA` must not have turned it
+    /// off). Otherwise the render proceeds exactly as without the switch.
+    pub(super) fn applicable(opts: &MergeOptions) -> Result<bool> {
+        if !opts.demosaic || !align_cmd::align_enabled() {
+            return Ok(false);
+        }
+        let paths = only_frame(crate::raw_paths(&opts.dir, opts.limit)?);
+        let Some(first) = paths.first() else {
+            return Ok(false);
+        };
+        let ident = strehl_raw::identity(first);
+        Ok(
+            strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?
+                .is_some(),
+        )
     }
 
     pub(super) fn preview_active() -> bool {
@@ -7504,19 +7526,33 @@ mod ca_refine {
     }
 
     pub(super) fn run_refined(opts: &MergeOptions) -> Result<()> {
-        let frames = crate::raw_paths(&opts.dir, opts.limit)?.len();
+        let paths = only_frame(crate::raw_paths(&opts.dir, opts.limit)?);
+        let frames = paths.len();
         let stride = stride_for(frames);
+        // Align first, with progress, so a fresh stack's alignment is visible
+        // in the desktop; both passes below then load it from the cache.
+        {
+            let progress = crate::ui_progress::Progress::new(frames);
+            progress.stage("alignment");
+            alignment_for_observed(&opts.dir, &paths, opts.resampler, progress.observer())?;
+        }
         strehl_core::optics::set_ca_refinement(None);
         *RESULT.lock().unwrap_or_else(|e| e.into_inner()) = None;
         eprintln!(
             "CA refinement   : PREVIEW pass over every {stride}th of {frames} frames, measuring the \
-             lateral CA the profile leaves ({ENV}=on)"
+             lateral CA the profile leaves (default; --refine-ca=off skips it)"
         );
         STRIDE.store(stride, Ordering::Relaxed);
+        crate::ui_progress::set_muted(true);
         let preview = run_pyramid_once(opts);
+        crate::ui_progress::set_muted(false);
         STRIDE.store(0, Ordering::Relaxed);
         preview.context("lateral-CA refinement preview pass")?;
-        let measured = RESULT.lock().unwrap_or_else(|e| e.into_inner()).take().flatten();
+        let measured = RESULT
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .take()
+            .flatten();
         let refinement = match measured {
             None => {
                 eprintln!(
@@ -7561,6 +7597,9 @@ mod ca_refine {
         out
     }
 }
+
+/// The environment twin of `--refine-ca`.
+pub const REFINE_CA_ENV: &str = ca_refine::ENV;
 
 fn run_pyramid_prepared_with_sensor(
     opts: &MergeOptions,

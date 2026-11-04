@@ -461,6 +461,20 @@ enum Command {
         /// over the gear match, in BOTH directions.
         #[arg(long, value_name = "PROFILE")]
         fix_ca: Option<String>,
+        /// Refine the lateral-CA correction for this capture: `on` (the
+        /// default) or `off`.
+        ///
+        /// The profile's per-channel constants are right on average and wrong
+        /// per capture (a channel's effective wavelength depends on the
+        /// scene's spectrum). With `on`, a preview of every Nth frame is
+        /// merged first, the red and blue displacement it still shows against
+        /// green is measured, and the render uses the profile plus that
+        /// residual -- about +18% time. Skipped automatically where it cannot
+        /// help: no matching profile, `--fix-ca=off`, alignment off, binned
+        /// output. Takes precedence over the STREHL_REFINE_CA environment
+        /// variable.
+        #[arg(long, value_name = "on|off")]
+        refine_ca: Option<String>,
         /// Exposure for the viewing render, in STOPS. Requires --srgb.
         ///
         /// A gain of 2^STOPS applied in LINEAR light, before the sRGB transfer
@@ -1043,6 +1057,7 @@ where
             demosaic,
             binned,
             fix_ca,
+            refine_ca,
             exposure,
             auto_exposure,
             gates,
@@ -1074,6 +1089,14 @@ where
             // below, so the write strictly happens-before any reader exists.
             if let Some(key) = fix_ca.as_deref() {
                 unsafe { std::env::set_var(strehl_core::optics::CA_ENV, key) };
+            }
+            // Same mechanism and the same SAFETY argument as `--fix-ca` above.
+            if let Some(v) = refine_ca.as_deref() {
+                anyhow::ensure!(
+                    matches!(v, "on" | "off"),
+                    "--refine-ca takes on or off, not {v:?}"
+                );
+                unsafe { std::env::set_var(merge_cmd::REFINE_CA_ENV, v) };
             }
 
             // Resolved here, alongside `resampler` and `photometric`, so that

@@ -326,6 +326,10 @@ pub struct RenderSettings {
     pub resampler: Resampler,
     pub binned: bool,
     pub correct_lateral_ca: bool,
+    /// Measure what the CA profile leaves on a preview of every Nth frame and
+    /// render with the refined correction (`--refine-ca`). Only acts while
+    /// `correct_lateral_ca` is on.
+    pub refine_lateral_ca: bool,
     pub crop_to_coverage: bool,
     /// The first N captures in filename order. None keeps the whole bracket.
     pub frame_limit: Option<usize>,
@@ -345,6 +349,7 @@ impl Default for RenderSettings {
             resampler: Resampler::default(),
             binned: false,
             correct_lateral_ca: true,
+            refine_lateral_ca: true,
             crop_to_coverage: false,
             frame_limit: None,
             auto_exposure: false,
@@ -764,6 +769,11 @@ pub(crate) fn render_command(
     }
     if !request.settings.correct_lateral_ca {
         command.arg("--fix-ca=off");
+    }
+    // Only the departure from the engine default is passed, like `--fix-ca`;
+    // an inherited STREHL_REFINE_CA is removed with every other STREHL_ override.
+    if !(request.settings.correct_lateral_ca && request.settings.refine_lateral_ca) {
+        command.arg("--refine-ca=off");
     }
     if request.settings.crop_to_coverage {
         command.arg("--cover=crop");
@@ -1618,6 +1628,7 @@ pub(crate) mod tests {
             "--resampler=lanczos3",
             "--binned",
             "--fix-ca=off",
+            "--refine-ca=off",
             "--cover=crop",
         ] {
             assert!(

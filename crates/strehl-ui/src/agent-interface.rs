@@ -613,8 +613,8 @@ pub(crate) fn validate_settings(patch: &SettingsPatch) -> Result<(), String> {
             "pyramid_sharpen" => Some((1.0, 2.0, false, true)),
             "frame_limit" => Some((1.0, 100_000.0, true, true)),
             "workers" => Some((1.0, 1024.0, true, false)),
-            "binned" | "correct_lateral_ca" | "crop_to_coverage" | "auto_exposure"
-            | "confidence_map" => {
+            "binned" | "correct_lateral_ca" | "refine_lateral_ca" | "crop_to_coverage"
+            | "auto_exposure" | "confidence_map" => {
                 ensure(value.is_boolean(), &format!("{name} must be boolean"))?;
                 None
             }
