@@ -321,7 +321,11 @@ impl ProcessJourney {
         }
 
         let combine = &mut nodes[3];
-        if let (Some(done), Some(total)) = (p.frames_processed, p.frames_total) {
+        if let Some(preview) = p.fringe_preview.filter(|f| !f.finished) {
+            combine.count(preview.completed, preview.total, "preview frames");
+            combine.detail = "Measuring colour fringing on a quick preview".into();
+            combine.help = "Before the full merge, a preview of every few frames measures the red and blue colour fringing the lens profile leaves, so the merge can correct it for this stack (Refine fringing per stack).".into();
+        } else if let (Some(done), Some(total)) = (p.frames_processed, p.frames_total) {
             combine.count(done, total, "frames processed");
             combine.detail = p
                 .frames_accepted

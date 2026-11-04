@@ -31,6 +31,13 @@ const MAX_ALIGNMENT_EDGE_OBSERVATIONS: usize = 65_536;
 pub(crate) const LOG_GAP: &str = "\nLive output skipped ahead; the complete log is saved.\n";
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) struct FringePreviewProgress {
+    pub(crate) completed: usize,
+    pub(crate) total: usize,
+    pub(crate) finished: bool,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) struct SourceRepairProgress {
     pub region: usize,
     pub regions: usize,
@@ -207,6 +214,9 @@ pub struct PipelineProgress {
     pub render_step_state: Option<WorkState>,
     pub confidence: Option<ConfidenceProgress>,
     pub(crate) source_repair: Option<SourceRepairProgress>,
+    /// The engine's lateral-CA preview (`--refine-ca`): frames taken, frames
+    /// planned, and whether it has finished.
+    pub(crate) fringe_preview: Option<FringePreviewProgress>,
     pub frames_total: Option<usize>,
     pub folded: Option<(usize, usize)>,
     pub frames_processed: Option<usize>,
@@ -601,6 +611,34 @@ impl PipelineProgress {
                 (key == name).then_some(value)
             })
         };
+        if field("event") == Some("fringe-preview") {
+            let number = |name| field(name).and_then(|value| value.parse::<usize>().ok());
+            let (Some(completed), Some(total)) = (number("completed"), number("total")) else {
+                return;
+            };
+            let state = field("state");
+            if completed > total
+                || total > MAX_FRAME_OBSERVATIONS
+                || !matches!(state, Some("started" | "folded" | "finished"))
+            {
+                return;
+            }
+            let finished = state == Some("finished");
+            // Never rewinds within one preview.
+            if let Some(previous) = self.fringe_preview
+                && !previous.finished
+                && !finished
+                && completed < previous.completed
+            {
+                return;
+            }
+            self.fringe_preview = Some(FringePreviewProgress {
+                completed,
+                total,
+                finished,
+            });
+            return;
+        }
         if field("event") == Some("source-repair") {
             let number = |name| field(name).and_then(|value| value.parse::<usize>().ok());
             let (
@@ -1219,6 +1257,37 @@ memory plan     : 4 canonical chunks, 1 reusable frame worker, 1 retained + 1 sc
 folded          : 259 / 259 frames in 344.6 s (1.33 s per frame, 4 execution threads)\n\
 tone            : black 0.01568, white 0.51089 (linear), contrast 0.55\n\
 wrote           : result.partial.tiff (7032 x 4688, 16-bit RGB)\n";
+
+    #[test]
+    fn the_fringe_preview_reports_its_own_progress_and_never_rewinds() {
+        let mut progress = PipelineProgress::default();
+        let event = |state: &str, completed: usize| {
+            format!(
+                "STREHL_UI_PROGRESS event=fringe-preview state={state} \
+                 completed={completed} total=38\n"
+            )
+        };
+        progress.ingest(&event("started", 0));
+        assert_eq!(
+            progress.fringe_preview,
+            Some(FringePreviewProgress {
+                completed: 0,
+                total: 38,
+                finished: false
+            })
+        );
+        progress.ingest(&event("folded", 12));
+        // A lower count (out-of-order lines) does not rewind it.
+        progress.ingest(&event("folded", 7));
+        assert_eq!(progress.fringe_preview.unwrap().completed, 12);
+        // An impossible count is ignored.
+        progress.ingest(&event("folded", 40));
+        assert_eq!(progress.fringe_preview.unwrap().completed, 12);
+        progress.ingest(&event("finished", 38));
+        assert!(progress.fringe_preview.unwrap().finished);
+        // The preview's events do not touch the render's frame counts.
+        assert_eq!(progress.frames_processed, None);
+    }
 
     #[test]
     fn a_lateral_ca_preview_pass_is_not_read_as_the_render() {

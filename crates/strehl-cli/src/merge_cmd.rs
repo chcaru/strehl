@@ -77,6 +77,7 @@ pub(crate) mod halo;
 mod region_repair;
 #[path = "merge_cmd/sensor-master.rs"]
 pub(crate) mod sensor_master;
+#[cfg(feature = "multi-stack")]
 #[path = "session-consumer.rs"]
 pub(crate) mod session_consumer;
 #[cfg(feature = "temporal-energy")]
@@ -7457,6 +7458,9 @@ mod ca_refine {
     const MAX_TRANSLATION: f64 = 1.5;
 
     static STRIDE: AtomicUsize = AtomicUsize::new(0);
+    /// Frames the preview has taken so far, and how many it will take.
+    static TAKEN: AtomicUsize = AtomicUsize::new(0);
+    static TAKING: AtomicUsize = AtomicUsize::new(0);
     static RESULT: Mutex<Option<Option<Residual>>> = Mutex::new(None);
 
     pub(super) fn requested() -> Result<bool> {
@@ -7498,7 +7502,12 @@ mod ca_refine {
 
     pub(super) fn preview_keeps(index: usize) -> bool {
         let stride = STRIDE.load(Ordering::Relaxed);
-        stride <= 1 || index.is_multiple_of(stride)
+        let keep = stride <= 1 || index.is_multiple_of(stride);
+        if keep && stride > 0 {
+            let taken = TAKEN.fetch_add(1, Ordering::Relaxed) + 1;
+            crate::ui_progress::fringe_preview("folded", taken, TAKING.load(Ordering::Relaxed));
+        }
+        keep
     }
 
     pub(super) fn capture(width: usize, height: usize, mosaic: &[f32]) {
@@ -7555,6 +7564,9 @@ mod ca_refine {
             "CA refinement   : PREVIEW pass over every {stride}th of {frames} frames, measuring the \
              lateral CA the profile leaves (default; --refine-ca=off skips it)"
         );
+        TAKEN.store(0, Ordering::Relaxed);
+        TAKING.store(frames.div_ceil(stride), Ordering::Relaxed);
+        crate::ui_progress::fringe_preview("started", 0, frames.div_ceil(stride));
         STRIDE.store(stride, Ordering::Relaxed);
         crate::ui_progress::set_muted(true);
     }
@@ -7563,6 +7575,8 @@ mod ca_refine {
     pub(super) fn end_preview() -> Option<Residual> {
         crate::ui_progress::set_muted(false);
         STRIDE.store(0, Ordering::Relaxed);
+        let total = TAKING.load(Ordering::Relaxed);
+        crate::ui_progress::fringe_preview("finished", total, total);
         RESULT
             .lock()
             .unwrap_or_else(|e| e.into_inner())

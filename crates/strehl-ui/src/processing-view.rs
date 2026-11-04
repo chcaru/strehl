@@ -775,7 +775,15 @@ fn key(ui: &mut Ui, colour: Color32, label: &str) {
 fn frame_ledger(ui: &mut Ui, progress: &PipelineProgress) -> Option<usize> {
     ui.horizontal(|ui| {
         ui.label(RichText::new("Frames").size(9.0).color(MUTED).strong());
+        let preview = progress.fringe_preview.filter(|f| !f.finished);
         let summary = match (progress.frames_processed, progress.frames_total) {
+            (None, _) if preview.is_some() => {
+                let f = preview.unwrap();
+                format!(
+                    "Colour-fringing preview · {} / {} frames",
+                    f.completed, f.total
+                )
+            }
             (Some(done), Some(total)) => format!(
                 "{done} / {total} processed  ·  {} admitted",
                 progress.frames_accepted.unwrap_or(0)
