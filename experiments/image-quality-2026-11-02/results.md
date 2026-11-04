@@ -795,6 +795,15 @@ output shows; on a strongly coloured subject part of the measured shift is proba
 colour structure that differs between channels), and opal's blue scale moves from +3 to
 +41 ppm while its blue translation improves. Preview 14.8-16.9 s against 61-90 s renders.
 
+*Tried and not adopted:* gating tiles on the normalised cross-correlation of the two
+gradient-magnitude tiles at the found peak (computed from the spectra), to keep tiles whose
+red and green structure differ from voting. Output red residual scale, ungated -> gated at
+0.85 (ppm): peacock -53 -> -14, garnet -16 -> +2, **opal -27 -> +67** (only 44 tiles left;
+red under-corrected), bee-3 +38 -> +41, bug-4 +10 -> +10, razor -4 -> -4, rutile -4 -> +3,
+slide-2 +47 -> +47 (razor fringe 3.782/4.145% -> 3.774/4.141%). Summed red error 199 -> 188
+ppm with one subject clearly worse: a wash, not shipped. (0.5 and 0.7 dropped almost no
+tiles on peacock and changed nothing.)
+
 Checks: strehl-core 757 tests pass (`cargo test --locked -p strehl-core`); strehl-cli lib
 399 pass, the same 8 private-capture tests fail as before. **Byte-freeze:** the default
 pyramid row (`coffee-bean-20-gate2-pyramid`) reproduces bit-exactly with this build
