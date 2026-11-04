@@ -1,0 +1,84 @@
+{
+  "baselines": [
+    "ef655050",
+    "c149e52834fc1c86c2af0fe022713c39fa25f33c"
+  ],
+  "reports": [
+    {
+      "name": "ui-strict-clippy-03",
+      "log_sha256": "e751e45ee671ff5f87cd383de4d24cae2bc61f1f7ee03751161c5bfd8b0c3885",
+      "raw_message_count": 3,
+      "unique_diagnostics": 3,
+      "counts": {
+        "new_or_changed_span": 2,
+        "unchanged_remote_main": 1
+      },
+      "build_finished": [
+        {
+          "reason": "build-finished",
+          "success": false
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": null,
+          "message": "hard linking files in the incremental compilation cache failed. copying files instead. consider moving the cache directory to a file system which supports hard linking in session dir `\\\\?\\C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\target\\debug\\incremental\\strehl_edit-38m7hqeck810y\\s-hnngxhepun-0ewf3hq-working`",
+          "level": "warning",
+          "occurrences": 1,
+          "spans": [],
+          "classification": "new_or_changed_span"
+        },
+        {
+          "code": null,
+          "message": "hard linking files in the incremental compilation cache failed. copying files instead. consider moving the cache directory to a file system which supports hard linking in session dir `\\\\?\\C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\target\\debug\\incremental\\strehl_cli-3cy3qj1zu975c\\s-hnnh93hob4-1kydere-working`",
+          "level": "warning",
+          "occurrences": 1,
+          "spans": [],
+          "classification": "new_or_changed_span"
+        },
+        {
+          "code": "dead_code",
+          "message": "function `prepare` is never used",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-ui/src/photo-viewport.rs",
+              "line": 68,
+              "end": 68,
+              "column": 15,
+              "text": [
+                "pub(super) fn prepare("
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "9b82b00b7cfa4c704bfca108270cf66b56cb48afab55dd1fd735a93cebe8a368",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 68,
+                      "baseline_line": 67,
+                      "unchanged_block_lines": 12
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "9b82b00b7cfa4c704bfca108270cf66b56cb48afab55dd1fd735a93cebe8a368",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 68,
+                      "baseline_line": 67,
+                      "unchanged_block_lines": 12
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        }
+      ]
+    }
+  ]
+}

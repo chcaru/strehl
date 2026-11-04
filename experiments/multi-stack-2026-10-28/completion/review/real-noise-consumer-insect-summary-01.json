@@ -1,0 +1,1947 @@
+{
+  "schema": "strehl.real-noise-insect-source-census.v1",
+  "qualification_sha256": "1e04656de1a43b6e033197051a3199c8cd449769ae706d4c7e206f1fb2a9532a",
+  "cache_hits": 84,
+  "measurement_loaded": false,
+  "rows": [
+    {
+      "base": 36,
+      "roi": "dark-flat-background",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 36,
+      "roi": "cyan-wing-scales",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 36,
+      "roi": "dark-wing-band",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 36,
+      "roi": "upper-leg-hairs",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 36,
+      "roi": "wing-leg-occlusion",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 36,
+      "roi": "bright-wing-glint",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 36,
+      "roi": "blue-cyan-chroma",
+      "per_pass_components": [
+        [
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 36,
+      "roi": "face-edge",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 36,
+      "roi": "antenna-hairs",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 76,
+      "roi": "dark-flat-background",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 76,
+      "roi": "cyan-wing-scales",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 76,
+      "roi": "dark-wing-band",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 76,
+      "roi": "upper-leg-hairs",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 76,
+      "roi": "wing-leg-occlusion",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 76,
+      "roi": "bright-wing-glint",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 76,
+      "roi": "blue-cyan-chroma",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 76,
+      "roi": "face-edge",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 76,
+      "roi": "antenna-hairs",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 116,
+      "roi": "dark-flat-background",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 116,
+      "roi": "cyan-wing-scales",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 116,
+      "roi": "dark-wing-band",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 116,
+      "roi": "upper-leg-hairs",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 116,
+      "roi": "wing-leg-occlusion",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 116,
+      "roi": "bright-wing-glint",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 116,
+      "roi": "blue-cyan-chroma",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 116,
+      "roi": "face-edge",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 116,
+      "roi": "antenna-hairs",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 156,
+      "roi": "dark-flat-background",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 156,
+      "roi": "cyan-wing-scales",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 156,
+      "roi": "dark-wing-band",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 156,
+      "roi": "upper-leg-hairs",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 156,
+      "roi": "wing-leg-occlusion",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 156,
+      "roi": "bright-wing-glint",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 156,
+      "roi": "blue-cyan-chroma",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 156,
+      "roi": "face-edge",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 156,
+      "roi": "antenna-hairs",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 196,
+      "roi": "dark-flat-background",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 196,
+      "roi": "cyan-wing-scales",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 196,
+      "roi": "dark-wing-band",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 196,
+      "roi": "upper-leg-hairs",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 196,
+      "roi": "wing-leg-occlusion",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          0,
+          2
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 196,
+      "roi": "bright-wing-glint",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          3,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 196,
+      "roi": "blue-cyan-chroma",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 196,
+      "roi": "face-edge",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 196,
+      "roi": "antenna-hairs",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 236,
+      "roi": "dark-flat-background",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 236,
+      "roi": "cyan-wing-scales",
+      "per_pass_components": [
+        [
+          3,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 236,
+      "roi": "dark-wing-band",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 236,
+      "roi": "upper-leg-hairs",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 236,
+      "roi": "wing-leg-occlusion",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 236,
+      "roi": "bright-wing-glint",
+      "per_pass_components": [
+        [
+          5,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 236,
+      "roi": "blue-cyan-chroma",
+      "per_pass_components": [
+        [
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 236,
+      "roi": "face-edge",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "base": 236,
+      "roi": "antenna-hairs",
+      "per_pass_components": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "both_passes_before_mean_match": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "joint_components": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "failure_counts_nonexclusive": [
+    {
+      "pass": 0,
+      "color": "B",
+      "criterion": "guide_gradient_p95_sigma",
+      "count": 372
+    },
+    {
+      "pass": 0,
+      "color": "B",
+      "criterion": "guide_range_p95_sigma",
+      "count": 446
+    },
+    {
+      "pass": 0,
+      "color": "B",
+      "criterion": "mean_dn",
+      "count": 218
+    },
+    {
+      "pass": 0,
+      "color": "B",
+      "criterion": "mean_drift_sigma",
+      "count": 383
+    },
+    {
+      "pass": 0,
+      "color": "B",
+      "criterion": "support",
+      "count": 5
+    },
+    {
+      "pass": 0,
+      "color": "B",
+      "criterion": "validation_p95_sigma",
+      "count": 394
+    },
+    {
+      "pass": 0,
+      "color": "G1",
+      "criterion": "guide_gradient_p95_sigma",
+      "count": 402
+    },
+    {
+      "pass": 0,
+      "color": "G1",
+      "criterion": "guide_range_p95_sigma",
+      "count": 419
+    },
+    {
+      "pass": 0,
+      "color": "G1",
+      "criterion": "mean_dn",
+      "count": 170
+    },
+    {
+      "pass": 0,
+      "color": "G1",
+      "criterion": "mean_drift_sigma",
+      "count": 392
+    },
+    {
+      "pass": 0,
+      "color": "G1",
+      "criterion": "support",
+      "count": 5
+    },
+    {
+      "pass": 0,
+      "color": "G1",
+      "criterion": "validation_p95_sigma",
+      "count": 395
+    },
+    {
+      "pass": 0,
+      "color": "G2",
+      "criterion": "guide_gradient_p95_sigma",
+      "count": 403
+    },
+    {
+      "pass": 0,
+      "color": "G2",
+      "criterion": "guide_range_p95_sigma",
+      "count": 416
+    },
+    {
+      "pass": 0,
+      "color": "G2",
+      "criterion": "mean_dn",
+      "count": 169
+    },
+    {
+      "pass": 0,
+      "color": "G2",
+      "criterion": "mean_drift_sigma",
+      "count": 392
+    },
+    {
+      "pass": 0,
+      "color": "G2",
+      "criterion": "support",
+      "count": 5
+    },
+    {
+      "pass": 0,
+      "color": "G2",
+      "criterion": "validation_p95_sigma",
+      "count": 395
+    },
+    {
+      "pass": 0,
+      "color": "R",
+      "criterion": "guide_gradient_p95_sigma",
+      "count": 346
+    },
+    {
+      "pass": 0,
+      "color": "R",
+      "criterion": "guide_range_p95_sigma",
+      "count": 407
+    },
+    {
+      "pass": 0,
+      "color": "R",
+      "criterion": "mean_dn",
+      "count": 236
+    },
+    {
+      "pass": 0,
+      "color": "R",
+      "criterion": "mean_drift_sigma",
+      "count": 350
+    },
+    {
+      "pass": 0,
+      "color": "R",
+      "criterion": "support",
+      "count": 5
+    },
+    {
+      "pass": 0,
+      "color": "R",
+      "criterion": "validation_p95_sigma",
+      "count": 320
+    },
+    {
+      "pass": 1,
+      "color": "B",
+      "criterion": "guide_gradient_p95_sigma",
+      "count": 396
+    },
+    {
+      "pass": 1,
+      "color": "B",
+      "criterion": "guide_range_p95_sigma",
+      "count": 469
+    },
+    {
+      "pass": 1,
+      "color": "B",
+      "criterion": "mean_dn",
+      "count": 195
+    },
+    {
+      "pass": 1,
+      "color": "B",
+      "criterion": "mean_drift_sigma",
+      "count": 394
+    },
+    {
+      "pass": 1,
+      "color": "B",
+      "criterion": "support",
+      "count": 12
+    },
+    {
+      "pass": 1,
+      "color": "B",
+      "criterion": "validation_p95_sigma",
+      "count": 410
+    },
+    {
+      "pass": 1,
+      "color": "G1",
+      "criterion": "guide_gradient_p95_sigma",
+      "count": 423
+    },
+    {
+      "pass": 1,
+      "color": "G1",
+      "criterion": "guide_range_p95_sigma",
+      "count": 463
+    },
+    {
+      "pass": 1,
+      "color": "G1",
+      "criterion": "mean_dn",
+      "count": 98
+    },
+    {
+      "pass": 1,
+      "color": "G1",
+      "criterion": "mean_drift_sigma",
+      "count": 432
+    },
+    {
+      "pass": 1,
+      "color": "G1",
+      "criterion": "support",
+      "count": 12
+    },
+    {
+      "pass": 1,
+      "color": "G1",
+      "criterion": "validation_p95_sigma",
+      "count": 418
+    },
+    {
+      "pass": 1,
+      "color": "G2",
+      "criterion": "guide_gradient_p95_sigma",
+      "count": 423
+    },
+    {
+      "pass": 1,
+      "color": "G2",
+      "criterion": "guide_range_p95_sigma",
+      "count": 461
+    },
+    {
+      "pass": 1,
+      "color": "G2",
+      "criterion": "mean_dn",
+      "count": 99
+    },
+    {
+      "pass": 1,
+      "color": "G2",
+      "criterion": "mean_drift_sigma",
+      "count": 428
+    },
+    {
+      "pass": 1,
+      "color": "G2",
+      "criterion": "support",
+      "count": 12
+    },
+    {
+      "pass": 1,
+      "color": "G2",
+      "criterion": "validation_p95_sigma",
+      "count": 417
+    },
+    {
+      "pass": 1,
+      "color": "R",
+      "criterion": "guide_gradient_p95_sigma",
+      "count": 362
+    },
+    {
+      "pass": 1,
+      "color": "R",
+      "criterion": "guide_range_p95_sigma",
+      "count": 422
+    },
+    {
+      "pass": 1,
+      "color": "R",
+      "criterion": "mean_dn",
+      "count": 203
+    },
+    {
+      "pass": 1,
+      "color": "R",
+      "criterion": "mean_drift_sigma",
+      "count": 347
+    },
+    {
+      "pass": 1,
+      "color": "R",
+      "criterion": "support",
+      "count": 12
+    },
+    {
+      "pass": 1,
+      "color": "R",
+      "criterion": "validation_p95_sigma",
+      "count": 326
+    }
+  ],
+  "totals": {
+    "per_pass": [
+      [
+        11,
+        0,
+        0,
+        0
+      ],
+      [
+        4,
+        3,
+        0,
+        2
+      ]
+    ],
+    "both_before_mean_match": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "joint": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "interpretation": "Source-only gate refusal. No measurement outputs, no noise-gain inference and no threshold change."
+}

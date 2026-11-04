@@ -26,6 +26,7 @@ pub(crate) struct DevelopmentJob {
     image: Arc<LinearImage>,
     overview: Arc<LinearImage>,
     recipe: Arc<DevelopmentRecipe>,
+    coverage: Option<Arc<crate::photo_coverage::Coverage>>,
 }
 
 impl DevelopmentJob {
@@ -42,11 +43,23 @@ impl DevelopmentJob {
             image,
             overview,
             recipe: Arc::new(recipe),
+            coverage: None,
         }
     }
 
     pub(crate) fn native(image: Arc<LinearImage>, recipe: DevelopmentRecipe) -> Self {
         Self::new(image.clone(), image, recipe)
+    }
+
+    pub(crate) fn with_coverage(
+        mut self,
+        coverage: Option<Arc<crate::photo_coverage::Coverage>>,
+    ) -> Self {
+        self.coverage = coverage;
+        self
+    }
+    pub(crate) fn coverage(&self) -> Option<&crate::photo_coverage::Coverage> {
+        self.coverage.as_deref()
     }
 
     pub(crate) fn token(&self) -> DevelopmentToken {
@@ -68,12 +81,24 @@ impl DevelopmentJob {
         settings: &ExportSettings,
         cancelled: &AtomicBool,
     ) -> Result<ExportReport> {
-        strehl_edit::export_image(path, &self.image, &self.recipe, settings, cancelled)
+        strehl_edit::export_image_with_coverage(
+            path,
+            &self.image,
+            &self.recipe,
+            settings,
+            cancelled,
+            self.coverage.as_ref().map(|mask| mask.values.as_ref()),
+        )
     }
 
     pub(crate) fn thumbnail(&self, side: u32) -> Result<(u32, u32, Vec<u8>)> {
-        self.image
-            .render_region_sdr8(&self.recipe, [0., 0.], [1., 1.], side)
+        let (width, height, mut rgb) =
+            self.image
+                .render_region_sdr8(&self.recipe, [0., 0.], [1., 1.], side)?;
+        if let Some(coverage) = &self.coverage {
+            coverage.apply_rgb([width, height], &mut rgb);
+        }
+        Ok((width, height, rgb))
     }
 }
 

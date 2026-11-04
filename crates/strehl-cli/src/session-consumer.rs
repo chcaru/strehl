@@ -1,0 +1,1949 @@
+//! Session consumer; original single-directory stacking never calls this path.
+use super::{Merged, PyramidDomain};
+use crate::align_cmd::CropRect;
+use crate::session_align::SessionAlignment;
+use crate::session_cache::{CachedSource, SourceCache};
+use crate::session_cmd::{StackArgs, reserve_output_directory, write_json_new};
+use crate::session_input::{
+    ResolvedSession, SessionMode, SessionSpec, SourceIdentity, SourceMetadata,
+};
+use crate::session_sampling::{NativeSampler, ProbeConfig, SamplingDomain, measure_band_transfer};
+use crate::session_sampling::{ProbeMemoryEstimate, sampling_bytes};
+use anyhow::{Context, Result, ensure};
+use serde_json::{Value, json};
+use sha2::{Digest, Sha256};
+use std::collections::BTreeSet;
+use std::path::Path;
+use std::time::Instant;
+use strehl_core::CfaPlane;
+use strehl_core::align::{Cx, Resampler};
+use strehl_core::color::Exposure;
+use strehl_core::noise::{Levels, NoiseModel};
+use strehl_core::optics::{OpticalProfile, cfa_site_channel, profile_for_capture_env};
+use strehl_core::plane::QuadSource;
+use strehl_core::pyramid::session_fusion::{
+    GroupFocusReference, GroupMode, GroupPolicy, GroupWorkspace, PreparedSource, SessionMerge,
+    SourceKey, workspace_bytes,
+};
+use strehl_core::warpmap::{FrameWarp, WarpMap};
+
+#[path = "session-transfer-cache.rs"]
+mod transfer_cache;
+
+#[path = "session-plan.rs"]
+mod auto_plan;
+#[path = "session-contribution-export.rs"]
+mod contribution_export;
+#[path = "session-independent-views.rs"]
+mod independent_views;
+#[path = "session-mosaic-consumer.rs"]
+mod mosaic;
+#[path = "session-mosaic-output.rs"]
+mod native_output;
+#[path = "session-precision-guide.rs"]
+mod precision_guide;
+#[path = "session-reconstruction-consumer.rs"]
+mod reconstruction;
+#[path = "session-reconstruction-plan.rs"]
+mod reconstruction_plan;
+#[path = "session-repeat-proposals.rs"]
+mod repeat_proposals;
+#[path = "session-research-cohort.rs"]
+mod research_cohort;
+#[path = "session-transfer-prefetch.rs"]
+mod transfer_prefetch;
+
+struct Calibration {
+    camera: String,
+    levels: Levels,
+    iso: Option<f32>,
+    wb: Option<[f32; 3]>,
+    matrix: Option<([[f32; 3]; 3], String)>,
+    metadata: crate::session_cache::CachedFrameMetadata,
+    noise: NoiseModel,
+    profile: Option<&'static OpticalProfile>,
+    shutter: f64,
+}
+
+fn rational(value: Option<[u32; 2]>, label: &str) -> Result<f64> {
+    let [a, b] = value.with_context(|| format!("missing {label} metadata"))?;
+    ensure!(a > 0 && b > 0, "invalid {label} metadata");
+    Ok(f64::from(a) / f64::from(b))
+}
+fn same_rational(a: Option<[u32; 2]>, b: Option<[u32; 2]>) -> bool {
+    match (a, b) {
+        (Some([an, ad]), Some([bn, bd])) => {
+            ad > 0 && bd > 0 && u64::from(an) * u64::from(bd) == u64::from(bn) * u64::from(ad)
+        }
+        _ => false,
+    }
+}
+
+pub(crate) fn validate_capture_headers(
+    session: &ResolvedSession,
+    metadata: &[SourceMetadata],
+) -> Result<()> {
+    ensure!(metadata.len() == session.len(), "metadata count differs");
+    let first = &metadata[0];
+    ensure!(
+        first.camera_model.is_some(),
+        "session needs camera model metadata"
+    );
+    for pass in &session.passes {
+        let lead = &metadata[pass.global_range.start];
+        ensure!(
+            lead.camera_model == first.camera_model && lead.camera_make == first.camera_make,
+            "mixed camera models are not supported in a session"
+        );
+        ensure!(
+            lead.lens_type3 == first.lens_type3 && lead.lens_model == first.lens_model,
+            "session lens identities differ"
+        );
+        for index in pass.global_range.clone() {
+            let item = &metadata[index];
+            ensure!(
+                item.camera_model == lead.camera_model
+                    && item.lens_type3 == lead.lens_type3
+                    && item.lens_model == lead.lens_model
+                    && item.iso == lead.iso
+                    && same_rational(item.exposure_time, lead.exposure_time)
+                    && same_rational(item.aperture, lead.aperture),
+                "pass '{}' changes camera, ISO, exposure or aperture at frame {}; split captures into explicit passes",
+                pass.name,
+                index
+            );
+        }
+    }
+    Ok(())
+}
+
+fn validate_headers(session: &ResolvedSession, metadata: &[SourceMetadata]) -> Result<()> {
+    validate_capture_headers(session, metadata)?;
+    if session.spec.mode == SessionMode::Auto {
+        // Cross-pass ISO, shutter and aperture are planned after alignment.
+        return Ok(());
+    }
+    let first = &metadata[0];
+    for pass in &session.passes {
+        let lead = &metadata[pass.global_range.start];
+        if session.spec.mode != SessionMode::Layers {
+            ensure!(
+                lead.iso == first.iso && lead.iso.is_some(),
+                "combined passes currently require the same known ISO; use aligned layers for different ISO"
+            );
+            if session.spec.mode != SessionMode::Hdr {
+                ensure!(
+                    same_rational(lead.exposure_time, first.exposure_time),
+                    "combined passes have different shutter times; use HDR or aligned layers"
+                );
+            }
+            ensure!(
+                same_rational(lead.aperture, first.aperture),
+                "combined passes require equal aperture until measured photometric normalization is available; use aligned layers"
+            );
+        }
+    }
+    Ok(())
+}
+
+fn calibration(
+    source: &CachedSource,
+    metadata: &SourceMetadata,
+    max_copy: usize,
+) -> Result<Calibration> {
+    let frame = source.to_frame(max_copy)?;
+    Ok(Calibration {
+        camera: source.camera().to_owned(),
+        levels: source.levels(),
+        iso: source.iso(),
+        wb: frame.wb_gains(),
+        matrix: frame.xyz_to_cam_rgb_with_source(),
+        metadata: source.metadata.clone(),
+        noise: strehl_core::profile::noise_model_for(
+            source.camera(),
+            source.iso(),
+            source.levels(),
+        ),
+        profile: profile_for_capture_env(metadata.camera_model.as_deref(), metadata.lens_type3)?,
+        shutter: rational(metadata.exposure_time, "shutter time")?,
+    })
+}
+
+/// Crop is established from primary-pass coverage when explicitly selected.
+/// An automatic reference is geometric only and never becomes a fusion priority.
+fn domain(
+    session: &ResolvedSession,
+    alignment: &SessionAlignment,
+    calibration: &[Calibration],
+) -> Result<SamplingDomain> {
+    let pass = session
+        .primary_pass_index()
+        .unwrap_or(alignment.report.reference_pass);
+    let geometry = alignment.map.geometry();
+    let mut warps = Vec::new();
+    let selected: Vec<usize> = if session.spec.mode == SessionMode::Layers {
+        (0..session.len()).collect()
+    } else {
+        session.passes[pass].global_range.clone().collect()
+    };
+    for index in selected {
+        let Some(t) = alignment.map.warps()[index].placed() else {
+            continue;
+        };
+        for color in CfaPlane::ALL {
+            let (dx, dy) = color.rggb_offset();
+            let mut transform = OpticalProfile::compose(
+                calibration[session.frames[index].pass_index].profile,
+                cfa_site_channel(dx, dy),
+                t,
+            );
+            let delta = Cx::new(dx as f64 * 0.5 - 0.25, dy as f64 * 0.5 - 0.25);
+            transform.b = transform.b + transform.a * delta - delta;
+            warps.push(FrameWarp::Placed(transform));
+        }
+    }
+    ensure!(!warps.is_empty(), "framing pass has no placed frames");
+    let map = WarpMap::new(
+        alignment.map.provenance().clone(),
+        geometry,
+        alignment.map.resampler(),
+        warps,
+    );
+    let margin = if alignment.map.resampler() == Resampler::Lanczos3 {
+        4.0
+    } else {
+        3.0
+    };
+    let scale = crate::align_cmd::cover_scale(&map, margin)
+        .context("passes have no covered common canvas")?;
+    let rect = crate::align_cmd::cover_rect(geometry, scale);
+    ensure!(
+        rect.width >= 128 && rect.height >= 128,
+        "common canvas is too small for session stacking"
+    );
+    Ok(SamplingDomain {
+        full: geometry,
+        x: rect.x,
+        y: rect.y,
+        width: rect.width,
+        height: rect.height,
+    })
+}
+
+/// Form disjoint proposals with at most one acquisition from each pass.
+/// The coefficient consumer, not this geometric proposal, decides local agreement.
+fn groups(
+    session: &ResolvedSession,
+    alignment: &SessionAlignment,
+    candidates: &[crate::session_align::FocusPairCandidate],
+    cohort: &research_cohort::Cohort,
+    excluded_passes: &[bool],
+    enabled: bool,
+    only_pass: Option<usize>,
+) -> Vec<Vec<usize>> {
+    let allowed = |index: usize| {
+        cohort.mask[index]
+            && !excluded_passes[session.frames[index].pass_index]
+            && alignment.map.warps()[index].placed().is_some()
+            && only_pass.is_none_or(|pass| session.frames[index].pass_index == pass)
+    };
+    let mut sets: Vec<BTreeSet<usize>> = (0..session.len()).map(|i| BTreeSet::from([i])).collect();
+    let mut owner: Vec<usize> = (0..session.len()).collect();
+    if enabled && only_pass.is_none() {
+        let mut proposals: Vec<_> = candidates
+            .iter()
+            .filter(|p| p.candidate_same_focus && p.mutual_nearest && allowed(p.i) && allowed(p.j))
+            .collect();
+        proposals.sort_by(|a, b| {
+            a.log_scale_gap
+                .total_cmp(&b.log_scale_gap)
+                .then(a.i.cmp(&b.i))
+                .then(a.j.cmp(&b.j))
+        });
+        for proposal in proposals {
+            let (a, b) = (owner[proposal.i], owner[proposal.j]);
+            if a == b {
+                continue;
+            }
+            let passes: BTreeSet<_> = sets[a]
+                .iter()
+                .map(|&i| session.frames[i].pass_index)
+                .collect();
+            if sets[b]
+                .iter()
+                .any(|&i| passes.contains(&session.frames[i].pass_index))
+            {
+                continue;
+            }
+            let other = std::mem::take(&mut sets[b]);
+            for index in other {
+                sets[a].insert(index);
+                owner[index] = a;
+            }
+        }
+    }
+    let mut result: Vec<Vec<usize>> = sets
+        .into_iter()
+        .filter_map(|group| {
+            let members: Vec<_> = group.into_iter().filter(|&i| allowed(i)).collect();
+            (!members.is_empty()).then_some(members)
+        })
+        .collect();
+    result.sort_by_key(|g| g[0]);
+    result
+}
+
+fn check_source(
+    source: &CachedSource,
+    expected: &Calibration,
+    full: strehl_core::plane::PlaneGeometry,
+) -> Result<()> {
+    ensure!(source.geometry() == full, "source active geometry differs");
+    ensure!(
+        source.camera() == expected.camera
+            && source.iso() == expected.iso
+            && source.levels() == expected.levels,
+        "decoded source calibration changes inside its pass"
+    );
+    ensure!(
+        source.metadata.wb_bits == expected.metadata.wb_bits
+            && source.metadata.xyz_to_cam_bits == expected.metadata.xyz_to_cam_bits
+            && source.metadata.color_matrices_bits == expected.metadata.color_matrices_bits,
+        "decoded white balance or color calibration changes inside its pass"
+    );
+    Ok(())
+}
+
+#[allow(clippy::too_many_arguments)]
+fn render(
+    args: &StackArgs,
+    session: &ResolvedSession,
+    identities: &[SourceIdentity],
+    metadata: &[SourceMetadata],
+    alignment: &SessionAlignment,
+    cache: &mut SourceCache,
+    calibrations: &[Calibration],
+    photometric_gains: &[f32],
+    frame_gains: &[f32],
+    excluded_passes: &[bool],
+    reconstruction_focus: &[reconstruction_plan::FocusSummary],
+    domain: SamplingDomain,
+    only_pass: Option<usize>,
+    destination: &Path,
+    capture: Option<&mut Option<crate::session_lighting_fusion::GroupPlanes>>,
+) -> Result<Value> {
+    let started = Instant::now();
+    ensure!(
+        excluded_passes.len() == session.passes.len()
+            && only_pass.is_none_or(|pass| !excluded_passes[pass]),
+        "excluded pass cannot be rendered"
+    );
+    let cfg = args.merge_config()?;
+    let primary = session.primary_pass_index();
+    let grouped = !args.no_repeat_grouping
+        && (matches!(
+            session.spec.mode,
+            SessionMode::Repeat | SessionMode::Hdr | SessionMode::Auto
+        ) || primary.is_some());
+    let policy = GroupPolicy {
+        mode: if grouped {
+            GroupMode::Repeat
+        } else {
+            GroupMode::Combine
+        },
+        primary,
+        agreement_sigma: args.agreement_sigma,
+    };
+    let passes: Vec<_> = session
+        .passes
+        .iter()
+        .map(|p| p.global_range.clone())
+        .collect();
+    let cohort = research_cohort::Cohort::new(session.len(), &passes, &args.omit_acquisition)?;
+    cohort.validate_placed(&passes, |i| alignment.map.warps()[i].placed().is_some())?;
+    let retained_candidates = if cohort.omitted.is_empty() {
+        None
+    } else {
+        Some(cohort.focus_candidates(
+            session,
+            alignment,
+            args.resources.config()?.focus_step_fraction,
+        )?)
+    };
+    let candidates = retained_candidates
+        .as_deref()
+        .unwrap_or(&alignment.pair_candidates);
+    let legacy_plan = groups(
+        session,
+        alignment,
+        candidates,
+        &cohort,
+        excluded_passes,
+        grouped,
+        only_pass,
+    );
+    let proposal_plan = if args.uncertainty_repeat_proposals {
+        ensure!(
+            session.spec.mode == SessionMode::Repeat
+                && session.passes.len() == 2
+                && session.len() <= 128
+                && grouped
+                && only_pass.is_none(),
+            "geometry proposal experiment requires a complete two-pass repeat session, at most64 placed sources per pass"
+        );
+        let sources: Vec<_> = session
+            .frames
+            .iter()
+            .enumerate()
+            .filter(|(index, _)| cohort.mask[*index])
+            .filter_map(|(index, frame)| {
+                alignment.map.warps()[index]
+                    .placed()
+                    .map(|p| repeat_proposals::Source {
+                        index,
+                        pass: frame.pass_index,
+                        sha256: identities[index].sha256.clone(),
+                        log_scale: p.a.abs().ln(),
+                    })
+            })
+            .collect();
+        let old_radius = candidates
+            .iter()
+            .filter_map(|p| p.allowed_log_scale_gap)
+            .fold(0_f64, f64::max);
+        Some(repeat_proposals::plan(
+            &sources,
+            &alignment.report.edges,
+            old_radius,
+            args.resources.config()?.memory_limit_bytes,
+        )?)
+    } else {
+        None
+    };
+    let proposal_bytes = proposal_plan.as_ref().map_or(0, |p| p.reservation_bytes);
+    let plan = proposal_plan
+        .as_ref()
+        .map_or_else(|| legacy_plan.clone(), |p| p.groups.clone());
+    let mut consumed_indices: Vec<_> = plan.iter().flatten().copied().collect();
+    consumed_indices.sort_unstable();
+    let probe = ProbeConfig {
+        bands: cfg.bands,
+        ..ProbeConfig::default()
+    };
+    // Explicit conservative extra allowance for sampler, its full-domain operator
+    // probe, decoding, final RGB development, and allocator/collection overhead.
+    let pixels = domain.pixels();
+    let full_pixels = domain.full.pixels();
+    let sampler_bytes = sampling_bytes(domain)?;
+    let probe_bytes = ProbeMemoryEstimate::estimate(domain, cfg.bands)?.peak_bytes;
+    let extra = full_pixels
+        .checked_mul(32)
+        .and_then(|n| n.checked_add(pixels.checked_mul(256)?))
+        .and_then(|n| n.checked_add(sampler_bytes))
+        .and_then(|n| n.checked_add(probe_bytes))
+        .and_then(|n| n.checked_add(cache.budget_bytes()))
+        .and_then(|n| n.checked_add(512 << 20))
+        .context("session merge memory plan overflow")?;
+    let extra = extra
+        .checked_add(if args.original_cfa_reconstruction {
+            reconstruction_plan::summary_bytes(domain, session.passes.len())?
+        } else {
+            0
+        })
+        .context("reconstruction focus reservation overflow")?;
+    let merge_bytes = workspace_bytes(domain.width, domain.height, cfg, policy)?;
+    let precision_bytes = if args.precision_weights {
+        strehl_core::pyramid::session_fusion::precision_workspace_bytes(
+            domain.width,
+            domain.height,
+            cfg,
+        )?
+        .checked_add(precision_guide::Guide::reservation_bytes(domain)?)
+        .context("precision memory overflow")?
+    } else {
+        0
+    };
+    let attribution_bytes = if args.contribution_maps {
+        strehl_core::pyramid::session_fusion::attribution_workspace_bytes(
+            domain.width,
+            domain.height,
+            cfg,
+            policy,
+        )?
+    } else {
+        0
+    };
+    let sensor_export_bytes = if args.contribution_maps {
+        native_output::workspace_bytes(strehl_core::plane::PlaneGeometry {
+            width: domain.width,
+            height: domain.height,
+        })?
+    } else {
+        0
+    };
+    let planned = merge_bytes
+        .checked_add(extra)
+        .and_then(|n| n.checked_add(precision_bytes))
+        .and_then(|n| n.checked_add(attribution_bytes))
+        .and_then(|n| n.checked_add(proposal_bytes))
+        .and_then(|n| n.checked_add(sensor_export_bytes))
+        .context("session memory plan overflow")?;
+    ensure!(
+        planned <= args.resources.config()?.memory_limit_bytes,
+        "session merge reservation needs {:.2} GiB, exceeds {:.2} GiB; increase --memory-limit-gib",
+        planned as f64 / (1_u64 << 30) as f64,
+        args.resources.memory_limit_gib
+    );
+    // Research single-pass controls retain the fused session color basis.
+    // Exported layers intentionally develop using their own pass calibration.
+    let anchor = if session.spec.mode == SessionMode::Layers {
+        only_pass.or(primary)
+    } else {
+        primary
+    }
+    .unwrap_or(alignment.report.reference_pass);
+    let phase_overhead = cache
+        .budget_bytes()
+        .checked_add(proposal_bytes)
+        .context("proposal phase overhead overflow")?
+        .checked_add(512 << 20)
+        .context("transfer phase overhead overflow")?;
+    let available_phase_bytes = args
+        .resources
+        .config()?
+        .memory_limit_bytes
+        .checked_sub(phase_overhead)
+        .context("no memory remains for transfer probes")?;
+    // Progress counts only consumed sources whenever a cohort or plan omits any.
+    let sparse = !cohort.omitted.is_empty() || excluded_passes.iter().any(|&e| e);
+    let progress = crate::ui_progress::Progress::new(if !sparse {
+        session.len()
+    } else {
+        consumed_indices.len()
+    });
+    progress.stage("merge");
+    let jobs: Vec<_> = plan
+        .iter()
+        .flatten()
+        .map(|&index| {
+            cohort.require(index)?;
+            Ok(transfer_prefetch::TransferJob {
+                index,
+                placement: alignment.map.warps()[index]
+                    .placed()
+                    .context("unplaced source reached transfer prefetch")?,
+                profile: calibrations[session.frames[index].pass_index].profile,
+            })
+        })
+        .collect::<Result<_>>()?;
+    eprintln!(
+        "session noise transfer: preparing {} bounded operator probes",
+        jobs.len()
+    );
+    let mut transfers = transfer_prefetch::compute(
+        cache.root(),
+        domain,
+        alignment.map.resampler(),
+        probe,
+        &jobs,
+        available_phase_bytes,
+        args.resources.threads,
+    )?;
+    drop(jobs);
+    let planned = planned
+        .checked_add(transfers.retained_result_bytes)
+        .context("transfer receipt reservation overflow")?
+        .max(
+            transfers
+                .reserved_bytes
+                .checked_add(phase_overhead)
+                .context("transfer phase reservation overflow")?,
+        );
+    ensure!(
+        planned <= args.resources.config()?.memory_limit_bytes,
+        "session including transfer receipts exceeds the memory budget"
+    );
+    eprintln!(
+        "session noise transfer: {} lanes, {:.3}s, {} cache hits",
+        transfers.lanes,
+        transfers.elapsed_seconds,
+        transfers
+            .by_index
+            .values()
+            .filter(|receipt| receipt.cache_hit)
+            .count()
+    );
+    let reference = &calibrations[anchor];
+    let mut sampler = NativeSampler::new(domain)?;
+    let mut prepared = PreparedSource::new(domain.width, domain.height, cfg)?;
+    let mut group = GroupWorkspace::new_with_options(
+        domain.width,
+        domain.height,
+        cfg,
+        policy,
+        args.precision_weights,
+        args.contribution_maps,
+    )?;
+    let mut merge = SessionMerge::new_with_attribution(
+        domain.width,
+        domain.height,
+        cfg,
+        args.contribution_maps,
+    )?;
+    let mut precision_guide = args
+        .precision_weights
+        .then(|| precision_guide::Guide::new(domain))
+        .transpose()?;
+    let mut guide_receipts = Vec::new();
+    let mut receipts = Vec::new();
+    eprintln!(
+        "session fusion: {} sources in {} proposed groups; canvas {}x{} sensor pixels",
+        plan.iter().map(Vec::len).sum::<usize>(),
+        plan.len(),
+        domain.width * 2,
+        domain.height * 2
+    );
+    eprintln!(
+        "session merge reservation: {:.2} GiB; {} CPU workers",
+        planned as f64 / (1_u64 << 30) as f64,
+        args.resources.threads
+    );
+    let mut fold_group_seconds = 0.0f64;
+    for (ordinal, members) in plan.iter().enumerate() {
+        if let Some(guide) = &mut precision_guide
+            && let Some(receipt) = guide.prepare(
+                members,
+                session,
+                identities,
+                alignment,
+                cache,
+                calibrations,
+                photometric_gains,
+            )?
+        {
+            guide_receipts.push(receipt);
+        }
+        for &index in members {
+            // A lateral-CA preview (`merge_cmd::ca_refine`) fuses every Nth source.
+            if !super::ca_refine::preview_keeps(index) {
+                continue;
+            }
+            cohort.require(index)?;
+            let progress_index = if !sparse {
+                index
+            } else {
+                consumed_indices
+                    .binary_search(&index)
+                    .expect("planned cohort source")
+            };
+            progress.frame_started(progress_index);
+            let pass = session.frames[index].pass_index;
+            let source = cohort.load(index, cache, &session.frames[index], &identities[index])?;
+            let calibration = &calibrations[pass];
+            check_source(&source, calibration, domain.full)?;
+            let placement = alignment.map.warps()[index]
+                .placed()
+                .context("unplaced source reached fusion")?;
+            let transfer_receipt = transfers
+                .by_index
+                .remove(&index)
+                .context("prefetched transfer receipt missing")?;
+            let transfer = transfer_receipt.transfer;
+            let probe_cache_hit = transfer_receipt.cache_hit;
+            let probe_seconds = transfer_receipt.seconds;
+            let phase_started = Instant::now();
+            let sampled = sampler.gather(
+                source.as_ref(),
+                source.levels(),
+                placement,
+                calibration.profile,
+                alignment.map.resampler(),
+            )?;
+            let gain = frame_gains[index];
+            let gather_seconds = phase_started.elapsed().as_secs_f64();
+            let phase_started = Instant::now();
+            prepared.prepare_with_masks(
+                SourceKey {
+                    acquisition: index as u64,
+                    bracket: pass,
+                },
+                std::array::from_fn(|c| sampled.planes[c].as_slice()),
+                &calibration.noise,
+                Some(&transfer.luma_beta),
+                Some(&transfer.max_color_beta),
+                &sampled.coverage,
+                &sampled.support,
+                gain,
+            )?;
+            if let Some(guide) = &mut precision_guide
+                && let Some(prediction) = guide.prediction(gain)?
+            {
+                prepared.predict_precision(
+                    prediction,
+                    &calibration.noise,
+                    gain,
+                    Some(&transfer.luma_beta),
+                    Some(&transfer.max_color_beta),
+                )?;
+            }
+            let prepare_seconds = phase_started.elapsed().as_secs_f64();
+            let phase_started = Instant::now();
+            merge.add_source(&mut group, &prepared)?;
+            let accumulate_seconds = phase_started.elapsed().as_secs_f64();
+            receipts.push(json!({
+                "frame": index, "pass": pass, "path": metadata[index].path,
+                "photometric_gain": gain, "covered_pixels": sampled.coverage.iter().filter(|&&v|v).count(),
+                "clipped_pixels": sampled.clipped.iter().filter(|&&v|v).count(),
+                "luma_beta": transfer.luma_beta, "color_beta": transfer.max_color_beta,
+                "beta_samples": transfer.samples_per_band, "beta_realizations": transfer.realizations,
+                "probe_seconds":probe_seconds,"probe_cache_hit":probe_cache_hit,"gather_seconds":gather_seconds,
+                "prepare_seconds":prepare_seconds,"accumulate_seconds":accumulate_seconds,
+            }));
+            progress.frame_finished(progress_index, true);
+        }
+        if group.source_count() == 0 && super::ca_refine::preview_active() {
+            continue;
+        }
+        let fold_started = Instant::now();
+        if args.precision_weights {
+            // A cleaner estimate within one focus group must not change the
+            // cross-group focus reference merely through its lower variance.
+            // Eligibility and focus retain the equal-observation mean/model;
+            // delivery and coefficient attribution retain precision weights.
+            merge.fold_group_with_focus_reference(
+                &mut group,
+                GroupFocusReference::EqualObservation,
+            )?;
+        } else {
+            merge.fold_group(&mut group)?;
+        }
+        fold_group_seconds += fold_started.elapsed().as_secs_f64();
+        if ordinal % 10 == 0 || ordinal + 1 == plan.len() {
+            eprintln!("session groups {}/{}", ordinal + 1, plan.len());
+        }
+    }
+    let finish_started = Instant::now();
+    let result = merge.finish()?;
+    let finish_seconds = finish_started.elapsed().as_secs_f64();
+    let recipe = json!({"bands":cfg.bands,"gate":cfg.gate,"exponent":cfg.exponent,
+               "sharpen_per_octave":cfg.sharpen_per_octave,"select":format!("{:?}",cfg.select),
+               "admission":format!("{:?}",cfg.admission),"base":format!("{:?}",cfg.base),
+               "fallback":format!("{:?}",cfg.fallback),"hull":format!("{:?}",cfg.hull),
+               "mean_coarse":cfg.mean_coarse,"significance_scale":cfg.significance_scale,
+               "agreement_sigma":policy.agreement_sigma,"grouping_enabled":grouped,
+               "precision_weights":args.precision_weights,"contribution_maps":args.contribution_maps,
+               "original_cfa_reconstruction":args.original_cfa_reconstruction,
+               "precision_focus_reference":if args.precision_weights {"equal-observation"}else{"disabled"},
+               "exposure_ev":args.exposure,"resampler":format!("{:?}",alignment.map.resampler()),
+               "workers":args.resources.threads,"memory_limit_gib":args.resources.memory_limit_gib,
+               "noise_probe":{"bands":probe.bands,"realizations":probe.realizations,"seed":probe.seed,
+                   "min_samples_per_band":probe.min_samples_per_band}});
+    if let Some(slot) = capture {
+        // Lighting-fusion group: hand back merged planes and coverage only.
+        let mut gains: Vec<f32> = consumed_indices.iter().map(|&k| frame_gains[k]).collect();
+        gains.sort_by(f32::total_cmp);
+        let gain = gains.get(gains.len() / 2).copied().unwrap_or(1.0);
+        let invalid = result.valid.iter().filter(|&&v| !v).count();
+        let summary = json!({
+            "passes": session.passes.iter().enumerate().filter(|(p, _)| !excluded_passes[*p]).map(|(_, p)| p.name.clone()).collect::<Vec<_>>(),
+            "sources": result.sources, "groups": result.groups, "uncovered_pixels": invalid,
+            "median_frame_gain": gain, "elapsed_seconds": started.elapsed().as_secs_f64(),
+            "phase_seconds": phase_totals(&receipts, fold_group_seconds, finish_seconds),
+            "recipe": recipe, "primary_pass": primary, "reference_pass": alignment.report.reference_pass,
+        });
+        *slot = Some(crate::session_lighting_fusion::GroupPlanes {
+            planes: result.planes,
+            valid: result.valid,
+            ceiling: (reference.levels.white - reference.levels.black) * gain,
+        });
+        return Ok(summary);
+    }
+    if let Some(bands) = &result.attribution {
+        contribution_export::save(destination, bands, domain)?;
+    }
+    let invalid = result.valid.iter().filter(|&&valid| !valid).count();
+    let diagnostics: Vec<_> = result.diagnostics.iter().map(|d| json!({
+        "averaged": d.averaged_coefficients, "single_source": d.single_source_coefficients,
+        "precision_averaged":d.precision_averaged_coefficients,"missing_prediction":d.missing_prediction_coefficients,
+        "primary_fallback": d.primary_fallback_coefficients, "ordinary_fallback": d.ordinary_fallback_coefficients,
+        "uncovered": d.uncovered_coefficients, "independent_counts": d.averaged_independent_counts,
+            "saturated_fallback": d.saturated_fallback_coefficients,
+            "primary_saturated_fallback": d.primary_saturated_fallback_coefficients,
+    })).collect();
+    let mut report = json!({
+           "schema": "strehl.session-render.v1",
+           "build":crate::VERSION,"renderer_source_sha256":renderer_source_hash(),
+           "recipe": recipe,
+    "primary_pass": primary, "reference_pass": alignment.report.reference_pass,
+           "layer_pass": only_pass, "development_reference_pass": anchor, "mode": session.spec.mode, "canvas": [domain.x,domain.y,domain.width,domain.height],
+           "sources": result.sources, "groups": result.groups, "proposed_groups": plan,
+           "invalid_output_pixels": invalid, "diagnostics": diagnostics, "frames": receipts,
+           "precision_guides":guide_receipts,"precision_reservation_bytes":precision_bytes,"attribution_reservation_bytes":attribution_bytes,
+           "native_sensor_export_reservation_bytes":sensor_export_bytes,
+           "transfer_prefetch": {"lanes":transfers.lanes,"per_probe_bytes":transfers.per_probe_bytes,
+               "retained_result_bytes":transfers.retained_result_bytes,"reserved_bytes":transfers.reserved_bytes,
+               "elapsed_seconds":transfers.elapsed_seconds},
+           "working_memory_reservation_bytes": planned, "sampler_bytes": sampler_bytes, "probe_bytes": probe_bytes, "elapsed_before_output_seconds": started.elapsed().as_secs_f64(),
+           "limitations": [
+               "Scale proximity proposes focus groups; local agreement does not establish identical focus or subject rigidity.",
+               "Band noise transfer is a measured spatial average under stationary independent input noise, not exact spatial covariance.",
+               "Camera model metadata does not establish physical body identity when serial metadata is absent.",
+               "Primary preference applies to framing and disagreeing matched overlap, not arbitrary unmatched focus ranges.",
+               "HDR requires equal ISO/aperture and a bounded exposure correction validated on spatial holdouts across proposed focus pairs; this does not calibrate a general camera response."
+           ]
+       });
+    if let Some(proposals) = proposal_plan {
+        report["geometry_proposals"] = serde_json::to_value(proposals)?;
+        report["legacy_proposed_groups"] = json!(legacy_plan);
+    }
+    if !cohort.omitted.is_empty() {
+        report["research_cohort"] = json!({
+            "schema":"strehl.session-research-cohort.v1",
+            "declared_sources":session.len(),"consumed_indices":consumed_indices,
+            "retained_indices":cohort.retained,
+            "omitted":cohort.omitted.iter().map(|&i|json!({"index":i,"sha256":identities[i].sha256})).collect::<Vec<_>>(),
+            "retained_focus_candidates":candidates,
+            "scope":"Omitted originals are hashed/read for identity and metadata but not decoded, gathered or used for grouping/selection in this render. Retained pixel consumers require preexisting original-CFA cache entries; RAW decoding is disabled. Saved geometry/crop/reference retain their original all-source ancestry; this is conditional reference agreement, not an independent placement or unbiased noise certificate.",
+            "progress_index":"ordinal in sorted consumed_indices"
+        });
+    }
+    if invalid != 0 {
+        write_json_new(&destination.join("render-report.json"), &report)?;
+    }
+    ensure!(
+        invalid == 0,
+        "session reconstruction has {invalid} unsupported pixels; report saved, photograph withheld"
+    );
+    if args.contribution_maps {
+        // Exact final native merge, before the writer changes plane order or
+        // demosaics. Later RGB reconstruction does not change this baseline.
+        let sensor_metadata = json!({
+            "schema":"strehl.session-native-sensor-master.v1",
+            "file":"sensor-master.tiff","stage":"native-merge-before-demosaic",
+            "cfa":"RGGB","storage":"signed-f32",
+            "plane_order":["R","G1","B","G2"],
+            "full_quad_geometry":[domain.full.width,domain.full.height],
+            "canvas_quad":[domain.x,domain.y,domain.width,domain.height],
+            "origin_sensor":[domain.x*2,domain.y*2],
+            "dimensions":[domain.width*2,domain.height*2],
+            "coordinate_semantics":"Full session active-image gauge; sensor site equals 2*quad plus CFA-site offset; green-guide center equals (2*x+0.5,2*y+0.5)",
+            "units":"black-subtracted native DN after the recorded per-pass photometric gain",
+            "photometric_gains_by_pass":photometric_gains,
+            "frame_gain_range":[
+                consumed_indices.iter().map(|&k| frame_gains[k]).fold(f32::INFINITY, f32::min),
+                consumed_indices.iter().map(|&k| frame_gains[k]).fold(f32::NEG_INFINITY, f32::max)],
+            "excluded_passes":excluded_passes,
+            "development_reference_pass":anchor,
+            "black_subtracted":true,"white_balance_applied":false,
+            "color_matrix_applied":false,"display_exposure_applied":false,
+            "additional_clamping_applied":false,"reconstruction_applied":false,
+            "photograph_reconstruction_requested":args.original_cfa_reconstruction,
+            "alignment":"alignment.json","sources":"source-identities.json",
+            "renderer_source_sha256":renderer_source_hash()
+        });
+        native_output::save_sensor(
+            &destination.join("sensor-master.tiff"),
+            strehl_core::plane::PlaneGeometry {
+                width: domain.width,
+                height: domain.height,
+            },
+            &result.planes,
+            &sensor_metadata,
+        )?;
+        report["native_sensor_master"] = sensor_metadata;
+    }
+    drop(prepared);
+    drop(group);
+    drop(merge);
+    drop(sampler);
+    drop(precision_guide);
+    drop(result.attribution);
+    drop(result.valid);
+    drop(result.diagnostics);
+    // Native API order R,G1,B,G2 -> existing writer order R,G1,G2,B.
+    let [r, g1, b, g2] = result.planes;
+    let planes = [r, g1, g2, b];
+    let writer_domain = PyramidDomain::cropped(
+        domain.full,
+        CropRect {
+            x: domain.x,
+            y: domain.y,
+            width: domain.width,
+            height: domain.height,
+        },
+    )?;
+    let photograph = destination.join("photograph.tiff");
+    let master = destination.join("master.tiff");
+    let mut reconstruction_report = None;
+    let mut transform = |image: &mut crate::image_out::session_reconstruction_output::NativeCameraImage,
+                         normalization: crate::image_out::session_reconstruction_output::NativeNormalization| {
+        reconstruction_report = Some(reconstruction::run(args, session, identities, alignment,
+            cache, calibrations, photometric_gains, domain, reconstruction_focus,
+            destination, image, normalization)?);
+        Ok(())
+    };
+    super::write_merged_observed_with_reconstruction(
+        Merged::Bands {
+            domain: writer_domain,
+            planes: &planes,
+        },
+        reference.levels,
+        reference.wb,
+        reference.matrix.as_ref(),
+        crate::image_out::OutputSpace::from_flags(true, false)?,
+        !args.binned,
+        Exposure::resolve(true, args.exposure, false)?,
+        None,
+        &photograph,
+        Some(&progress),
+        Some(&master),
+        None,
+        None,
+        args.original_cfa_reconstruction.then_some(
+            crate::image_out::session_reconstruction_output::NativeReconstruction {
+                output_memory_budget: args.resources.config()?.memory_limit_bytes,
+                transform: &mut transform,
+            },
+        ),
+    )?;
+    if let Some(outcome) = reconstruction_report {
+        report["reconstruction"] = outcome;
+    }
+    write_json_new(&destination.join("render-report.json"), &report)?;
+    crate::session_reproducibility::publish_render_binding(destination)?;
+    Ok(report)
+}
+
+pub(crate) fn run(args: &StackArgs) -> Result<()> {
+    args.merge_config()?;
+    let requested_mode = SessionSpec::load(&args.manifest)?.mode;
+    ensure!(
+        (!args.uncertainty_repeat_proposals && args.omit_acquisition.is_empty())
+            || requested_mode == SessionMode::Repeat,
+        "geometry proposal experiment is restricted to native repeat sessions"
+    );
+    ensure!(
+        !args.original_cfa_reconstruction
+            || matches!(
+                requested_mode,
+                SessionMode::Auto
+                    | SessionMode::Combine
+                    | SessionMode::Repeat
+                    | SessionMode::Interleave
+                    | SessionMode::Hdr
+            ),
+        "original-CFA reconstruction supports automatic, combine, repeat, interleave and exposure-range sessions"
+    );
+    if requested_mode == SessionMode::Mosaic {
+        return mosaic::run(args);
+    }
+    if requested_mode == SessionMode::IndependentViews {
+        return independent_views::run(args);
+    }
+    ensure!(
+        !args.binned,
+        "multi-pass sessions currently retain full-resolution linear masters; omit --binned"
+    );
+    let session = SessionSpec::load(&args.manifest)?.resolve(&args.manifest)?;
+    let cohort_passes: Vec<_> = session
+        .passes
+        .iter()
+        .map(|p| p.global_range.clone())
+        .collect();
+    let cohort =
+        research_cohort::Cohort::new(session.len(), &cohort_passes, &args.omit_acquisition)?;
+    ensure!(
+        !args.uncertainty_repeat_proposals
+            || (session.passes.len() == 2
+                && session.passes.iter().all(|p| p.global_range.len() <= 64)),
+        "geometry proposal experiment requires exactly two declared passes with at most64 sources each; no truncation"
+    );
+    ensure!(
+        !args.precision_weights
+            || matches!(
+                session.spec.mode,
+                SessionMode::Repeat | SessionMode::Hdr | SessionMode::Auto
+            ),
+        "precision weights require automatic, repeated-capture or exposure-range mode"
+    );
+    ensure!(
+        !args.reproducibility
+            || (session.passes.len() >= 2
+                && matches!(
+                    session.spec.mode,
+                    SessionMode::Auto
+                        | SessionMode::Combine
+                        | SessionMode::Interleave
+                        | SessionMode::Repeat
+                        | SessionMode::Layers
+                )),
+        "automatic reproducibility compares the first two passes in automatic, combine, interleave, repeat or layers mode"
+    );
+    let metadata = session.read_metadata()?;
+    validate_headers(&session, &metadata)?;
+    ensure!(
+        args.only_pass
+            .is_none_or(|pass| pass < session.passes.len()),
+        "--only-pass lies outside this session"
+    );
+    ensure!(
+        args.only_pass.is_none() || session.spec.mode != SessionMode::Layers,
+        "--only-pass cannot combine with layer export"
+    );
+    let destination = reserve_output_directory(&session, &args.out_dir)?;
+    write_json_new(&destination.join("session.json"), &session)?;
+    let started = Instant::now();
+    let progress = crate::ui_progress::Progress::new(session.len());
+    progress.stage("read");
+    eprintln!(
+        "session: hashing {} original RAW acquisitions",
+        session.len()
+    );
+    let identities = hash_sources_parallel(&session)?;
+    write_json_new(&destination.join("source-identities.json"), &identities)?;
+    let config = args.resources.config()?;
+    let cache_path = args
+        .resources
+        .cache
+        .clone()
+        .unwrap_or_else(|| destination.join("source-cache"));
+    let mut cache = SourceCache::new(&cache_path, &session, args.resources.cache_budget()?)?;
+    let resampler = crate::align_cmd::parse_resampler(&args.resources.resampler)?;
+    ensure!(
+        resampler != Resampler::ClampedCatmullRom,
+        "session noise propagation requires a linear resampler"
+    );
+    let pool = rayon::ThreadPoolBuilder::new()
+        .num_threads(args.resources.threads)
+        .build()?;
+    pool.install(|| -> Result<()> {
+        progress.stage("alignment");
+        let alignment = if let Some(path) = &args.alignment {
+            SessionAlignment::load(path, &session, &identities, &config, resampler)?
+        } else {
+            cached_alignment(&session, &identities, &mut cache, &config, resampler)?
+        };
+        cohort.validate_placed(&cohort_passes, |i| alignment.map.warps()[i].placed().is_some())?;
+        alignment.save(&destination.join("alignment.json"), &session)?;
+        let automatic = session.spec.mode == SessionMode::Auto;
+        // The automatic planner excludes an unplaced pass instead of failing.
+        ensure!(automatic || alignment.report.passes.iter().all(|pass| pass.placed > 0),
+            "one or more passes could not join the measured alignment component; see alignment report");
+        if let Some(pass) = alignment.report.passes.iter().find(|p| !p.geometry_consistent)
+            && !automatic && session.spec.mode != SessionMode::Layers
+        {
+            anyhow::bail!("pass '{}' matches the anchor only locally after wide-baseline alignment (support {:.2}); fusing it would ghost. Use Best result, Aligned layers or Independent views",
+                pass.name, pass.cross_support_ratio.unwrap_or(f64::NAN));
+        }
+        let mut calibrations = Vec::new();
+        for pass in &session.passes {
+            let index = pass.global_range.start;
+            cohort.require(index)?;
+            let first = cohort.load(index, &mut cache, &session.frames[index], &identities[index])?;
+            calibrations.push(calibration(&first, &metadata[index], config.memory_limit_bytes / 8)?);
+        }
+        if !automatic && session.spec.mode != SessionMode::Layers {
+            let shared = &calibrations[0];
+            for calibration in &calibrations[1..] {
+                ensure!(calibration.levels == shared.levels && calibration.iso == shared.iso
+                    && calibration.camera == shared.camera
+                    && calibration.metadata.xyz_to_cam_bits == shared.metadata.xyz_to_cam_bits
+                    && calibration.metadata.color_matrices_bits == shared.metadata.color_matrices_bits,
+                    "combined passes have different decoded sensor or color calibration; use aligned layers");
+            }
+        }
+        let calibration_report: Vec<_> = calibrations.iter().enumerate().map(|(pass, c)| json!({
+            "pass":pass,"camera":c.camera,"iso":c.iso,"black":c.levels.black,"white":c.levels.white,
+            "white_balance":c.wb,"color_matrix":c.matrix,"shutter_seconds":c.shutter,
+            "optical_profile":c.profile.map(|p|json!({"key":p.key,"version":p.version,
+                "eps_r":p.eps_r,"eps_b":p.eps_b,"applied_record":format!("{p:?}")})),
+            "noise_model":format!("{:?}",c.noise),
+            "noise_planes":CfaPlane::ALL.map(|plane|{let n=c.noise.plane(plane);json!({
+                "plane":format!("{plane:?}"),"gain_dn_per_e":n.gain_dn_per_e,
+                "read_noise_e":n.read_noise_e,"black":n.levels.black,"white":n.levels.white})}),
+            "white_balance_policy":if session.spec.mode == SessionMode::Layers { "each layer uses its own pass after reconstruction" } else { "applied once after fusion from the explicit primary or automatic geometry reference" }
+        })).collect();
+        write_json_new(&destination.join("calibration.json"), &calibration_report)?;
+        let domain = domain(&session, &alignment, &calibrations)?;
+        let reconstruction_focus = if args.focus_evidence || args.original_cfa_reconstruction {
+            save_focus_fields(&destination,&session,&identities,&alignment,&mut cache,&calibrations,domain,config.memory_limit_bytes,args.original_cfa_reconstruction)?
+        } else { Vec::new() };
+        let plan = if automatic {
+            let anchor = session.primary_pass_index().unwrap_or(alignment.report.reference_pass);
+            let lead = &calibrations[anchor];
+            let photometry = alignment.report.frame_photometry.as_ref();
+            let facts: Vec<_> = session.passes.iter().enumerate().map(|(pass, p)| {
+                let c = &calibrations[pass];
+                let m = &metadata[p.global_range.start];
+                let r = &alignment.report.passes[pass];
+                let brightness_measured = photometry.is_some_and(|ph| {
+                    p.global_range.clone()
+                        .filter(|&k| alignment.map.warps()[k].placed().is_some())
+                        .all(|k| ph.log_brightness[k].is_some())
+                });
+                auto_plan::PassFacts {
+                    name: p.name.clone(), frames: p.global_range.len(),
+                    placed: r.placed,
+                    iso: m.iso, shutter: m.exposure_time, aperture: m.aperture,
+                    calibration_matches_anchor: c.levels == lead.levels && c.iso == lead.iso
+                        && c.camera == lead.camera
+                        && c.metadata.xyz_to_cam_bits == lead.metadata.xyz_to_cam_bits
+                        && c.metadata.color_matrices_bits == lead.metadata.color_matrices_bits,
+                    geometry_consistent: r.geometry_consistent,
+                    cross_support_ratio: r.cross_support_ratio,
+                    geometric_residual: r.geometric_residual.map(|g| g.median),
+                    relative_scale: r.relative_scale,
+                    brightness_measured,
+                    photometric_spread: r.cross_photometric_spread,
+                    photometric_residual: r.cross_photometric_residual,
+                    log_brightness_range: r.log_brightness_range,
+                }
+            }).collect();
+            let plan = auto_plan::plan(&facts, anchor, session.primary_pass_index().is_some())?
+                .with_lighting_fusion(!args.anchor_lighting_only);
+            // Requested evidence outputs do not yet combine with layers: keep
+            // the outputs, set the layers aside and say so in the plan.
+            let plan = if plan.lighting_fusion
+                && (args.contribution_maps || args.original_cfa_reconstruction || args.reproducibility || args.focus_evidence)
+            {
+                plan.withhold_layers("contribution maps, focus evidence, reconstruction and pass comparison do not yet combine with layers")
+            } else { plan };
+            Some(plan)
+        } else { None };
+        if let Some(plan) = &plan {
+            write_json_new(&destination.join("plan.json"), plan)?;
+            for line in plan.summary() { eprintln!("{line}"); }
+            ensure!(!(plan.per_frame_gains && args.precision_weights),
+                "precision weights are not yet combined with measured per-frame brightness; omit --precision-weights");
+        }
+        let excluded = plan.as_ref().map_or_else(|| vec![false; session.passes.len()], |p| p.excluded());
+        let photometric_gains = if plan.is_some() {
+            vec![1.0; session.passes.len()]
+        } else if session.spec.mode == SessionMode::Hdr {
+            let anchor = session.primary_pass_index().unwrap_or(alignment.report.reference_pass);
+            let photometry_config = crate::session_photometry::PhotometryConfig::default();
+            let phase_bytes = crate::session_photometry::workspace_bytes(domain.full, &photometry_config)?
+                .checked_add(crate::session_photometry::report_bytes(session.passes.len(), &photometry_config)?)
+                .and_then(|n| n.checked_add(cache.budget_bytes())).and_then(|n| n.checked_add(512 << 20))
+                .context("HDR calibration memory reservation overflow")?;
+            ensure!(phase_bytes <= config.memory_limit_bytes,
+                "HDR calibration exceeds the session memory budget");
+            let inputs: Vec<_> = calibrations.iter().map(|calibration| {
+                crate::session_photometry::PassPhotometryInput {
+                    nominal_gain: (calibrations[anchor].shutter / calibration.shutter) as f32,
+                    noise: &calibration.noise, profile: calibration.profile,
+                }
+            }).collect();
+            eprintln!("session HDR: validating exposure correction on held-out spatial patches");
+            let photometry = crate::session_photometry::calibrate(
+                &session, &identities, &alignment, &mut cache, anchor, &inputs, &photometry_config)?;
+            write_json_new(&destination.join("photometry.json"), &photometry)?;
+            photometry.require_gains()?.to_vec()
+        } else { vec![1.0; session.passes.len()] };
+        // Per-source gains: measured per-frame brightness when the plan asks
+        // for it, otherwise the per-pass gain (unity outside exposure modes).
+        let frame_gains: Vec<f32> = match &plan {
+            Some(plan) if plan.per_frame_gains => {
+                let photometry = alignment.report.frame_photometry.as_ref()
+                    .context("automatic plan requested per-frame gains without measured photometry")?;
+                (0..session.len()).map(|k| photometry.gain(k).unwrap_or(1.0)).collect()
+            }
+            _ => session.frames.iter().map(|f| photometric_gains[f.pass_index]).collect(),
+        };
+        let mut outputs = Vec::new();
+        // Best result photographs of passes it could not blend (another
+        // colour appearance, another view): delivered, not discarded.
+        let mut alternatives: Vec<Value> = Vec::new();
+        if session.spec.mode == SessionMode::Layers {
+            for pass in 0..session.passes.len() {
+                let layer = destination.join(format!("layer-{:02}", pass + 1));
+                std::fs::create_dir(&layer)?;
+                outputs.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &frame_gains, &excluded, &reconstruction_focus, domain, Some(pass), &layer, None)?);
+            }
+        } else {
+            // Per-capture lateral-CA refinement, as for an ordinary stack
+            // (`merge_cmd::ca_refine`): every Nth source fused by this same
+            // consumer -- whose gather samples original same-colour CFA sites,
+            // so its residual is its own -- measured on the fused planes, then
+            // installed for every render below (each lighting group included).
+            let anchor = session.primary_pass_index().unwrap_or(alignment.report.reference_pass);
+            let refine = super::ca_refine::requested()?
+                && !args.binned
+                && calibrations[anchor].profile.is_some();
+            if refine {
+                let lighting = plan.as_ref().map(|p| p.lighting_groups()).unwrap_or_default();
+                // One lighting appearance: the group holding the anchor pass.
+                let preview_excluded: Vec<bool> = match lighting
+                    .iter()
+                    .find(|mask| mask.get(anchor).copied().unwrap_or(false))
+                {
+                    Some(mask) if lighting.len() >= 2 => mask.iter().zip(&excluded).map(|(&m, &e)| !m || e).collect(),
+                    _ => excluded.clone(),
+                };
+                super::ca_refine::begin_preview(session.len());
+                let mut slot = None;
+                let preview = render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &frame_gains, &preview_excluded, &reconstruction_focus, domain, args.only_pass, &destination, Some(&mut slot));
+                let _ = super::ca_refine::end_preview();
+                preview.context("lateral-CA refinement preview of the session")?;
+                let measured = slot.and_then(|g| measure_planes(&g.planes, domain.width, domain.height));
+                super::ca_refine::install(measured);
+            }
+            let groups = plan.as_ref().map(|p| p.lighting_groups()).unwrap_or_default();
+            let mut kinds = plan.as_ref().map(|p| p.group_kinds()).unwrap_or_default();
+            let has_detached = plan.as_ref().is_some_and(|p| !p.detached_passes().is_empty());
+            if (groups.len() >= 2 || has_detached) && args.only_pass.is_none() {
+                ensure!(!args.contribution_maps && !args.original_cfa_reconstruction && !args.reproducibility && !args.focus_evidence,
+                    "lighting and pose layers do not yet combine with contribution maps, focus evidence, reconstruction or reproducibility; add --anchor-lighting-only");
+                let mut captured = Vec::new();
+                let mut summaries = Vec::new();
+                // Diagnostic: develop from a previous STREHL_LIGHTING_DUMP instead of
+                // re-merging (optionally only its first N groups).
+                if let Some(dir) = std::env::var_os("STREHL_LIGHTING_FROM_DUMP") {
+                    let (mut loaded, loaded_kinds, width, height) = crate::session_lighting_fusion::load_dump(Path::new(&dir))?;
+                    if !loaded_kinds.is_empty() { kinds = loaded_kinds; }
+                    ensure!((width, height) == (domain.width, domain.height), "lighting dump does not match the canvas");
+                    if let Some(n) = std::env::var("STREHL_LIGHTING_DUMP_GROUPS").ok().and_then(|v| v.parse::<usize>().ok()) {
+                        loaded.truncate(n.max(1));
+                    }
+                    summaries.push(json!({"from_dump": Path::new(&dir).display().to_string(), "groups": loaded.len()}));
+                    captured = loaded;
+                }
+                let merge_groups = if summaries.is_empty() { groups.as_slice() } else { &[] };
+                // One group merge keeps only about a quarter of the CPU busy, so
+                // independent groups (disjoint passes and sources) merge
+                // concurrently. Each lane receives an equal share of the memory
+                // budget and threads and its own resident cache, so the sum of
+                // lane reservations stays within --memory-limit-gib.
+                let lanes = lighting_merge_lanes(args.resources.memory_limit_gib, merge_groups.len());
+                if lanes <= 1 {
+                    for (index, mask) in merge_groups.iter().enumerate() {
+                        eprintln!("session lighting fusion: merging lighting group {}/{}", index + 1, groups.len());
+                        let group_excluded: Vec<bool> = mask.iter().map(|&m| !m).collect();
+                        let mut slot = None;
+                        summaries.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &frame_gains, &group_excluded, &reconstruction_focus, domain, None, &destination, Some(&mut slot))?);
+                        captured.push(slot.context("lighting group produced no planes")?);
+                    }
+                } else {
+                    eprintln!("session lighting fusion: merging {} lighting groups in {lanes} concurrent lanes", merge_groups.len());
+                    let mut lane_args = args.clone();
+                    lane_args.resources.memory_limit_gib = args.resources.memory_limit_gib / lanes as f64;
+                    lane_args.resources.threads = args.resources.threads.div_ceil(lanes).max(1);
+                    let lane_budget = lane_args.resources.cache_budget()?;
+                    let results: Vec<std::sync::Mutex<Option<LaneResult>>> =
+                        (0..merge_groups.len()).map(|_| std::sync::Mutex::new(None)).collect();
+                    let next = std::sync::atomic::AtomicUsize::new(0);
+                    let lane_cache_root = cache.root().to_path_buf();
+                    rayon::scope(|scope| {
+                        for _ in 0..lanes {
+                            scope.spawn(|_| {
+                                let mut lane_cache = match SourceCache::new(&lane_cache_root, &session, lane_budget) {
+                                    Ok(c) => c,
+                                    Err(error) => {
+                                        let index = next.fetch_add(merge_groups.len(), std::sync::atomic::Ordering::SeqCst);
+                                        if index < merge_groups.len() { *results[index].lock().unwrap() = Some(Err(anyhow::anyhow!("{error}"))); }
+                                        return;
+                                    }
+                                };
+                                loop {
+                                    let index = next.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                                    if index >= merge_groups.len() { break; }
+                                    eprintln!("session lighting fusion: merging lighting group {}/{}", index + 1, groups.len());
+                                    let group_excluded: Vec<bool> = merge_groups[index].iter().map(|&m| !m).collect();
+                                    let outcome = (|| -> Result<_> {
+                                        let mut slot = None;
+                                        let summary = render(&lane_args, &session, &identities, &metadata, &alignment, &mut lane_cache, &calibrations, &photometric_gains, &frame_gains, &group_excluded, &reconstruction_focus, domain, None, &destination, Some(&mut slot))?;
+                                        Ok((summary, slot.context("lighting group produced no planes")?))
+                                    })();
+                                    *results[index].lock().unwrap() = Some(outcome);
+                                }
+                            });
+                        }
+                    });
+                    for (index, result) in results.into_iter().enumerate() {
+                        let (summary, planes) = result.into_inner().unwrap()
+                            .with_context(|| format!("lighting group {} was not merged", index + 1))??;
+                        summaries.push(summary);
+                        captured.push(planes);
+                    }
+                }
+                ensure!(captured[0].valid.iter().all(|&v| v), "the anchor lighting group does not cover the canvas");
+                // Passes that never joined the alignment: stack each on its
+                // own, then place the merged result on the anchor.
+                let mut detached_reports = Vec::new();
+                let detached = if summaries.first().is_some_and(|s| s.get("from_dump").is_some()) { Vec::new() }
+                    else { plan.as_ref().map(|p| p.detached_passes()).unwrap_or_default() };
+                let detached_all = detached.clone();
+                // Stack every detached pass first (independent sub-sessions,
+                // concurrent within the memory budget), then place each.
+                let stacked: Vec<Result<(Value, crate::session_lighting_fusion::GroupPlanes, SamplingDomain)>> = {
+                    let lanes = lighting_merge_lanes(args.resources.memory_limit_gib, detached.len());
+                    let mut lane_args = args.clone();
+                    lane_args.resources.memory_limit_gib = args.resources.memory_limit_gib / lanes as f64;
+                    lane_args.resources.threads = args.resources.threads.div_ceil(lanes).max(1);
+                    let lane_config = lane_args.resources.config()?;
+                    let slots: Vec<std::sync::Mutex<Option<Result<_>>>> = detached.iter().map(|_| std::sync::Mutex::new(None)).collect();
+                    let next = std::sync::atomic::AtomicUsize::new(0);
+                    let root = cache.root().to_path_buf();
+                    if lanes > 1 { eprintln!("session detached layer: stacking {} passes in {lanes} concurrent lanes", detached.len()); }
+                    rayon::scope(|scope| {
+                        for _ in 0..lanes {
+                            scope.spawn(|_| loop {
+                                let index = next.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                                if index >= detached.len() { break; }
+                                let pass = detached[index];
+                                eprintln!("session detached layer: stacking '{}' on its own", session.passes[pass].name);
+                                let (a, c) = if lanes > 1 { (&lane_args, &lane_config) } else { (args, &config) };
+                                *slots[index].lock().unwrap() = Some(detached_group(a, &session, pass, &identities, &root, &destination, c, resampler));
+                            });
+                        }
+                    });
+                    slots.into_iter().map(|s| s.into_inner().unwrap().unwrap_or_else(|| Err(anyhow::anyhow!("not stacked")))).collect()
+                };
+                // Each detached pass's own photograph planes, for delivery as
+                // an alternative if it is not blended.
+                let raw_detached: Vec<Option<(crate::session_lighting_fusion::GroupPlanes, SamplingDomain)>> = stacked
+                    .iter()
+                    .map(|s| s.as_ref().ok().map(|(_, planes, d)| (planes.clone(), *d)))
+                    .collect();
+                // Placements are independent; each searches only four quarter
+                // turns in parallel, so run them concurrently.
+                use rayon::prelude::*;
+                use crate::session_lighting_fusion::{place_detached, DetachedPlacement, GroupPlanes, LayerKind};
+                let anchor_planes = &captured[0];
+                let on_anchor: Vec<Option<(Option<GroupPlanes>, DetachedPlacement)>> = detached.par_iter().zip(stacked.par_iter())
+                    .map(|(&pass, stacked)| {
+                        let (_, planes, d) = stacked.as_ref().ok()?;
+                        // Diagnostic: keep the separately stacked planes beside the lighting dump.
+                        if let Some(dir) = std::env::var_os("STREHL_LIGHTING_DUMP") {
+                            let dir = Path::new(&dir).join(format!("detached-{}", pass + 1));
+                            let _ = crate::session_lighting_fusion::dump(std::slice::from_ref(planes), &[], d.width, d.height, &dir);
+                        }
+                        Some(place_detached(anchor_planes, planes, d.width, d.height, domain.width, domain.height))
+                    })
+                    .collect();
+                for (i, &pass) in detached.iter().enumerate() {
+                    let name = &session.passes[pass].name;
+                    match (&stacked[i], &on_anchor[i]) {
+                        (Err(error), _) => {
+                            eprintln!("session detached layer: '{name}' could not be stacked on its own: {error:#}");
+                            detached_reports.push(json!({"pass": name, "error": format!("{error:#}")}));
+                        }
+                        (Ok(_), Some((placed, placement))) => eprintln!("session detached layer: '{name}' {} (x{:.3}, {:.1} deg, NCC {:.2})",
+                            if placed.is_some() { "placed" } else { "not placed" }, placement.scale, placement.rotation_deg, placement.ncc),
+                        _ => {}
+                    }
+                }
+                // Majority view: when passes that did not place on the anchor
+                // place on one another (another side of the specimen, say),
+                // and that view gathers more passes than the anchor's, the
+                // photograph is built on that view; the anchor's is reported.
+                let anchor_view = 1 + on_anchor.iter().filter(|p| matches!(p, Some((Some(_), _)))).count();
+                let unplaced: Vec<usize> = (0..detached.len())
+                    .filter(|&i| stacked[i].is_ok() && matches!(on_anchor[i], Some((None, _))))
+                    .collect();
+                // (reference index, placements of the other unplaced passes on it)
+                type View = (usize, Vec<(usize, Option<GroupPlanes>, DetachedPlacement)>);
+                let mut view: Option<View> = None;
+                if unplaced.len() >= 2 {
+                    let mut candidates = unplaced.clone();
+                    candidates.sort_by_key(|&i| std::cmp::Reverse(session.passes[detached[i]].global_range.len()));
+                    for &c in &candidates {
+                        let (_, reference, rd) = stacked[c].as_ref().expect("stacked");
+                        let others: Vec<(usize, Option<GroupPlanes>, DetachedPlacement)> = unplaced.par_iter().filter(|&&j| j != c)
+                            .map(|&j| {
+                                let (_, planes, d) = stacked[j].as_ref().expect("stacked");
+                                let (placed, placement) = place_detached(reference, planes, d.width, d.height, rd.width, rd.height);
+                                (j, placed, placement)
+                            })
+                            .collect();
+                        let size = 1 + others.iter().filter(|o| o.1.is_some()).count();
+                        let best = view.as_ref().map_or(anchor_view, |(_, o)| 1 + o.iter().filter(|o| o.1.is_some()).count());
+                        if size > best {
+                            view = Some((c, others));
+                        }
+                    }
+                }
+                let planned_anchor = session.primary_pass_index().unwrap_or(alignment.report.reference_pass);
+                let mut other_views: Vec<(usize, crate::session_lighting_fusion::GroupPlanes, SamplingDomain)> = Vec::new();
+                let mut fused_detached: Vec<usize> = Vec::new();
+                let (fuse_domain, development_pass) = if let Some((c, others)) = view {
+                    let original = session.passes[planned_anchor].name.clone();
+                    other_views.push((planned_anchor, captured[0].clone(), domain));
+                    fused_detached.push(c);
+                    let mut stacked = stacked;
+                    let (mut summary, planes, d) = std::mem::replace(&mut stacked[c], Err(anyhow::anyhow!("moved")))?;
+                    eprintln!("session detached layer: '{}' and {} other pass(es) show a view the anchor '{original}' does not; building the photograph on '{}'",
+                        session.passes[detached[c]].name, others.iter().filter(|o| o.1.is_some()).count(), session.passes[detached[c]].name);
+                    summary["view_anchor"] = json!(true);
+                    summaries = vec![summary];
+                    captured = vec![planes];
+                    kinds = vec![LayerKind::Lighting];
+                    detached_reports.push(json!({"pass": session.passes[detached[c]].name, "view_anchor": true, "replaces": original}));
+                    for (j, placed, placement) in others {
+                        let name = session.passes[detached[j]].name.clone();
+                        detached_reports.push(json!({"pass": name, "placement": placement, "placed_on": session.passes[detached[c]].name}));
+                        if let Some(planes) = placed {
+                            fused_detached.push(j);
+                            let (mut summary, _, _) = std::mem::replace(&mut stacked[j], Err(anyhow::anyhow!("moved")))?;
+                            summary["placement"] = json!(placement);
+                            summaries.push(summary);
+                            captured.push(planes);
+                            kinds.push(LayerKind::Detached);
+                        }
+                    }
+                    (d, detached[c])
+                } else {
+                    for ((i, stacked), placement) in stacked.into_iter().enumerate().zip(on_anchor) {
+                        let (Ok((mut summary, _, _)), Some((placed, placement))) = (stacked, placement) else { continue };
+                        summary["placement"] = json!(placement);
+                        detached_reports.push(json!({"pass": session.passes[detached[i]].name, "placement": placement}));
+                        if let Some(planes) = placed {
+                            fused_detached.push(i);
+                            summaries.push(summary);
+                            captured.push(planes);
+                            kinds.push(LayerKind::Detached);
+                        }
+                    }
+                    (domain, session.primary_pass_index().unwrap_or(alignment.report.reference_pass))
+                };
+                if let Some(dir) = std::env::var_os("STREHL_LIGHTING_DUMP") {
+                    crate::session_lighting_fusion::dump(&captured, &kinds, fuse_domain.width, fuse_domain.height, Path::new(&dir))?;
+                }
+                eprintln!("session lighting fusion: superposing {} lighting groups", captured.len());
+                let (planes, fusion) = crate::session_lighting_fusion::fuse(&captured, &kinds, fuse_domain.width, fuse_domain.height);
+                for layer in &fusion.layers {
+                    let residual = |s: &Option<crate::session_lighting_fusion::FieldStats>| s.as_ref().map_or("-".to_string(), |s| format!("{:.2}", s.median_px));
+                    eprintln!("  lighting group {}: {} (fine/coarse contrast {:.2}; residual {} -> {} plane px)",
+                        layer.group, layer.outcome, layer.fine_over_coarse, residual(&layer.residual_before), residual(&layer.residual_after));
+                }
+                drop(captured);
+                // The anchor group's recipe and references describe this
+                // render, so the result imports and reopens like any other.
+                let mut report = json!({"lighting_fusion": fusion, "lighting_groups": summaries, "detached_layers": detached_reports});
+                for key in ["recipe", "primary_pass", "reference_pass"] {
+                    if let Some(value) = summaries.first().and_then(|s| s.get(key)) { report[key] = value.clone(); }
+                }
+                if development_pass != session.primary_pass_index().unwrap_or(alignment.report.reference_pass) {
+                    report["view_anchor_pass"] = json!(development_pass);
+                }
+                // Lanes split the requested resources; record what was asked for.
+                if report["recipe"].is_object() {
+                    report["recipe"]["workers"] = json!(args.resources.threads);
+                    report["recipe"]["memory_limit_gib"] = json!(args.resources.memory_limit_gib);
+                }
+                report["sources"] = json!(summaries.iter().filter_map(|s| s["sources"].as_u64()).sum::<u64>());
+                // Which fused groups came out as another colour appearance.
+                let different: Vec<String> = fusion.layers.iter()
+                    .filter(|l| l.outcome == "appearance_differs")
+                    .filter_map(|l| summaries.get(l.group)?["passes"].get(0)?.as_str().map(str::to_owned))
+                    .collect();
+                outputs.push(write_fused(args, &session, &calibrations, fuse_domain, development_pass, planes, report, &destination)?);
+                // Deliver what was not blended: the planned anchor's view when
+                // the photograph moved to another, detached passes that placed
+                // nowhere, and detached passes of another colour appearance.
+                let mut deliver: Vec<(usize, crate::session_lighting_fusion::GroupPlanes, SamplingDomain, &str)> = other_views
+                    .into_iter().map(|(p, planes, d)| (p, planes, d, "another view of the subject")).collect();
+                for (i, raw) in raw_detached.into_iter().enumerate() {
+                    let Some((planes, d)) = raw else { continue };
+                    let name = &session.passes[detached_all[i]].name;
+                    if !fused_detached.contains(&i) {
+                        deliver.push((detached_all[i], planes, d, "another view or framing (not found on the photograph)"));
+                    } else if different.contains(name) {
+                        deliver.push((detached_all[i], planes, d, "another colour appearance (other lighting)"));
+                    }
+                }
+                for (n, (pass, group, d, reason)) in deliver.into_iter().enumerate() {
+                    let name = format!("alternative-{:02}", n + 1);
+                    let directory = destination.join(&name);
+                    std::fs::create_dir(&directory)?;
+                    eprintln!("session alternative: {name} = '{}' ({reason})", session.passes[pass].name);
+                    write_fused(args, &session, &calibrations, d, pass, group.planes,
+                        json!({"alternative_of": session.passes[pass].name, "reason": reason}), &directory)?;
+                    alternatives.push(json!({"directory": name, "pass": session.passes[pass].name, "reason": reason}));
+                }
+            } else {
+                outputs.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &frame_gains, &excluded, &reconstruction_focus, domain, args.only_pass, &destination, None)?);
+            }
+        }
+        strehl_core::optics::set_ca_refinement(None);
+        if args.reproducibility {
+            let mut diagnostic_args=args.clone();
+            diagnostic_args.no_repeat_grouping=true;diagnostic_args.precision_weights=false;
+            diagnostic_args.original_cfa_reconstruction=false;
+            diagnostic_args.contribution_maps=false;diagnostic_args.focus_evidence=false;diagnostic_args.reproducibility=false;
+            let paths:Vec<_>=if session.spec.mode==SessionMode::Layers {(0..2).map(|i|destination.join(format!("layer-{:02}",i+1))).collect()}else{
+                let mut paths=Vec::new();for pass in 0..2 {
+                    let path=destination.join(format!("independent-pass-{:02}",pass+1));std::fs::create_dir(&path)?;
+                    render(&diagnostic_args,&session,&identities,&metadata,&alignment,&mut cache,&calibrations,&photometric_gains,&frame_gains,&excluded,&[],domain,Some(pass),&path,None)?;paths.push(path);
+                }paths
+            };
+            crate::session_reproducibility::compare_generated(&crate::session_reproducibility::CompareArgs{
+                first:paths[0].clone(),second:paths[1].clone(),out_dir:destination.join("reproducibility"),
+                patch_size:64,memory_limit_gib:args.resources.memory_limit_gib,
+                threads:args.resources.threads,
+                focus_first:args.focus_evidence.then(||destination.join("focus/pass-01")),
+                focus_second:args.focus_evidence.then(||destination.join("focus/pass-02")),
+            })?;
+        }
+        let current=session.spec.resolve_from(&session.passes[0].directories[0])?;
+        ensure!(current.frames==session.frames && hash_sources_parallel(&current)?==identities,"session sources changed during rendering; completion withheld");
+        let mut completion = json!({
+            "schema":"strehl.session-completion.v1", "elapsed_seconds":started.elapsed().as_secs_f64(),
+            "outputs": outputs.len(), "frames": session.len(), "passes": session.passes.len(),
+            "primary_pass":session.primary_pass_index(),
+            "render_bindings":crate::session_reproducibility::completion_bindings(&destination)?
+        });
+        if !alternatives.is_empty() {
+            completion["alternatives"] = json!(alternatives);
+        }
+        if !cohort.omitted.is_empty() {
+            completion["consumed_frames"] = outputs[0]["sources"].clone();
+            completion["omitted_acquisitions"] = json!(cohort.omitted);
+            completion["frames_semantics"] = json!("frames counts declared and identity-checked originals; consumed_frames counts pixel consumers");
+        }
+        write_json_new(&destination.join("completed.json"), &completion)?;
+        Ok(())
+    })
+}
+
+/// Develop fused native planes (R, G1, B, G2) exactly as an ordinary render.
+#[allow(clippy::too_many_arguments)]
+/// Lateral-CA residual of fused session planes (`[R, G1, B, G2]`, as
+/// `SessionMerge::finish` returns them), interleaved into the RGGB mosaic the
+/// writer would build.
+fn measure_planes(
+    planes: &[Vec<f32>; 4],
+    width: usize,
+    height: usize,
+) -> Option<strehl_core::ca_refine::Residual> {
+    let [r, g1, b, g2] = planes;
+    let (mw, mh) = (width * 2, height * 2);
+    let mut mosaic = vec![0.0f32; mw * mh];
+    for y in 0..height {
+        for x in 0..width {
+            let i = y * width + x;
+            mosaic[(2 * y) * mw + 2 * x] = r[i];
+            mosaic[(2 * y) * mw + 2 * x + 1] = g1[i];
+            mosaic[(2 * y + 1) * mw + 2 * x] = g2[i];
+            mosaic[(2 * y + 1) * mw + 2 * x + 1] = b[i];
+        }
+    }
+    strehl_core::ca_refine::measure_mosaic(mw, mh, &mosaic)
+}
+
+fn write_fused(
+    args: &StackArgs,
+    session: &ResolvedSession,
+    calibrations: &[Calibration],
+    domain: SamplingDomain,
+    anchor: usize,
+    planes: [Vec<f32>; 4],
+    mut report: Value,
+    destination: &Path,
+) -> Result<Value> {
+    let reference = &calibrations[anchor];
+    let [r, g1, b, g2] = planes;
+    let planes = [r, g1, g2, b];
+    let writer_domain = PyramidDomain::cropped(
+        domain.full,
+        CropRect { x: domain.x, y: domain.y, width: domain.width, height: domain.height },
+    )?;
+    super::write_merged_observed_with_reconstruction(
+        Merged::Bands { domain: writer_domain, planes: &planes },
+        reference.levels,
+        reference.wb,
+        reference.matrix.as_ref(),
+        crate::image_out::OutputSpace::from_flags(true, false)?,
+        !args.binned,
+        Exposure::resolve(true, args.exposure, false)?,
+        None,
+        &destination.join("photograph.tiff"),
+        None,
+        Some(&destination.join("master.tiff")),
+        None,
+        None,
+        None,
+    )?;
+    report["schema"] = json!("strehl.session-render.v1");
+    report["build"] = json!(crate::VERSION);
+    report["renderer_source_sha256"] = json!(renderer_source_hash());
+    report["mode"] = json!(session.spec.mode);
+    report["development_reference_pass"] = json!(anchor);
+    report["canvas"] = json!([domain.x, domain.y, domain.width, domain.height]);
+    write_json_new(&destination.join("render-report.json"), &report)?;
+    crate::session_reproducibility::publish_render_binding(destination)?;
+    Ok(report)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn save_focus_fields(
+    destination: &Path,
+    session: &ResolvedSession,
+    identities: &[SourceIdentity],
+    alignment: &SessionAlignment,
+    cache: &mut SourceCache,
+    calibrations: &[Calibration],
+    domain: SamplingDomain,
+    budget: usize,
+    retain: bool,
+) -> Result<Vec<reconstruction_plan::FocusSummary>> {
+    let root = destination.join("focus");
+    std::fs::create_dir(&root)?;
+    let mut reports = Vec::new();
+    let mut summaries = Vec::new();
+    let available = budget
+        .checked_sub(cache.budget_bytes())
+        .and_then(|n| n.checked_sub(512 << 20))
+        .context("no memory for focus evidence")?;
+    let available = available
+        .checked_sub(if retain {
+            reconstruction_plan::summary_bytes(domain, session.passes.len())?
+        } else {
+            0
+        })
+        .context("no memory for compact reconstruction focus fields")?;
+    for (pass, calibration) in calibrations.iter().enumerate() {
+        let result = crate::session_focus::compute_pass(
+            session,
+            identities,
+            pass,
+            &alignment.map,
+            cache,
+            domain,
+            &calibration.noise,
+            calibration.profile,
+            available,
+        )?;
+        let path = root.join(format!("pass-{:02}", pass + 1));
+        std::fs::create_dir(&path)?;
+        reports.push(crate::session_focus::save(&path, &result, domain, pass)?);
+        if retain {
+            summaries.push(reconstruction_plan::FocusSummary::from_evidence(
+                &result.field,
+                session.passes[pass].global_range.clone(),
+                domain,
+            )?);
+        }
+    }
+    write_json_new(
+        &root.join("focus-evidence.json"),
+        &json!({"schema":"strehl.session-focus.v1","session":session,"sources":identities,"alignment_binding":alignment.report.binding_sha256,"passes":reports,
+        "algorithm_sha256":crate::session_focus::algorithm_sha256(),
+        "coordinate_semantics":"Acquisition ordinal, not metric depth. Shape width is not calibrated uncertainty; missing or ambiguous sweeps retain flags and all retained modes."}),
+    )?;
+    Ok(summaries)
+}
+
+/// `ResolvedSession::hash_sources(true)`, with the files hashed concurrently.
+/// Identities come back in frame order and duplicate content is still refused
+/// in that order. (The serial original stays where it is: its source file is
+/// bound into the alignment cache identity.)
+fn hash_sources_parallel(session: &ResolvedSession) -> Result<Vec<SourceIdentity>> {
+    use rayon::prelude::*;
+    let identities = session
+        .frames
+        .par_iter()
+        .map(|frame| frame.hash())
+        .collect::<Result<Vec<_>>>()?;
+    let mut seen = std::collections::HashMap::<&str, &Path>::new();
+    for identity in &identities {
+        if let Some(previous) = seen.insert(identity.sha256.as_str(), identity.path.as_path()) {
+            anyhow::bail!(
+                "duplicate original RAW content: {} and {}; copied inputs are not independent observations",
+                previous.display(),
+                identity.path.display()
+            );
+        }
+    }
+    Ok(identities)
+}
+
+/// Content address of a saved alignment for these sources, settings and
+/// alignment implementation.
+fn alignment_cache_key(
+    session: &ResolvedSession,
+    identities: &[SourceIdentity],
+    config: &crate::session_align::SessionAlignConfig,
+    resampler: Resampler,
+) -> Result<String> {
+    let mut hash = Sha256::new();
+    hash.update(serde_json::to_vec(&(
+        &session.spec,
+        identities,
+        config,
+        format!("{resampler:?}"),
+    ))?);
+    for bytes in [
+        include_bytes!("session-align.rs").as_slice(),
+        include_bytes!("session-cache.rs").as_slice(),
+        include_bytes!("session-input.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/align.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/align-global.rs").as_slice(),
+        include_bytes!("session-frame-photometry.rs").as_slice(),
+        include_bytes!("session-geometry-check.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/plane.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/warpmap.rs").as_slice(),
+        include_bytes!("../../strehl-raw/src/lib.rs").as_slice(),
+        include_bytes!("../../../Cargo.lock").as_slice(),
+    ] {
+        let bytes = crate::session_align::source_text(bytes);
+        hash.update((bytes.len() as u64).to_le_bytes());
+        hash.update(&bytes);
+    }
+    let key = crate::session_input::hex(&hash.finalize());
+    Ok(key)
+}
+
+/// The memory budget a saved alignment envelope was bound with.
+fn stored_alignment_memory(path: &Path) -> Option<usize> {
+    #[derive(serde::Deserialize)]
+    struct Envelope {
+        binding: Binding,
+    }
+    #[derive(serde::Deserialize)]
+    struct Binding {
+        config: Config,
+    }
+    #[derive(serde::Deserialize)]
+    struct Config {
+        memory_limit_bytes: usize,
+    }
+    let file = std::fs::File::open(path).ok()?;
+    let envelope: Envelope = serde_json::from_reader(std::io::BufReader::new(file)).ok()?;
+    Some(envelope.binding.config.memory_limit_bytes)
+}
+
+fn cached_alignment(
+    session: &ResolvedSession,
+    identities: &[SourceIdentity],
+    cache: &mut SourceCache,
+    config: &crate::session_align::SessionAlignConfig,
+    resampler: Resampler,
+) -> Result<SessionAlignment> {
+    // The memory budget only bounds working memory: bug-4's 1,231-source
+    // alignment produced a byte-identical warp map at 32 and 45 GiB. So the
+    // cache file is addressed without it, and a saved envelope is verified
+    // against the budget it was bound with (every other field must still
+    // match exactly). Changing the RAM setting no longer re-aligns. Entries
+    // saved under the older budget-specific address are still found.
+    let canonical = crate::session_align::SessionAlignConfig {
+        memory_limit_bytes: 0,
+        ..config.clone()
+    };
+    let key = alignment_cache_key(session, identities, &canonical, resampler)?;
+    let legacy_key = alignment_cache_key(session, identities, config, resampler)?;
+    let path = cache.root().join(format!("alignment-{key}.json"));
+    let path = session.ensure_output_outside_sources(&path)?;
+    let legacy = cache.root().join(format!("alignment-{legacy_key}.json"));
+    let legacy = session.ensure_output_outside_sources(&legacy)?;
+    for (candidate, label) in [(&path, key.as_str()), (&legacy, legacy_key.as_str())] {
+        if std::fs::symlink_metadata(candidate).is_err() {
+            continue;
+        }
+        let stored = crate::session_align::SessionAlignConfig {
+            memory_limit_bytes: stored_alignment_memory(candidate)
+                .unwrap_or(config.memory_limit_bytes),
+            ..config.clone()
+        };
+        match SessionAlignment::load(candidate, session, identities, &stored, resampler) {
+            Ok(alignment) => {
+                eprintln!("session alignment: reusing verified geometry cache {label}");
+                return Ok(alignment);
+            }
+            Err(error) => {
+                eprintln!("session alignment: rejected derived cache ({error}); refitting");
+                // Only this content-addressed derived cache entry is removed.
+                // Unlinking a symlink/hardlink never changes its target contents.
+                std::fs::remove_file(candidate).with_context(|| {
+                    format!("evicting invalid alignment cache {}", candidate.display())
+                })?;
+            }
+        }
+    }
+    let alignment =
+        crate::session_align::align_session(session, identities, cache, config, resampler)?;
+    if let Err(error) = alignment.save(&path, session) {
+        // Another process may have published the same complete binding first.
+        // Its file must pass every normal envelope check before it is accepted.
+        let stored = crate::session_align::SessionAlignConfig {
+            memory_limit_bytes: stored_alignment_memory(&path)
+                .unwrap_or(config.memory_limit_bytes),
+            ..config.clone()
+        };
+        SessionAlignment::load(&path, session, identities, &stored, resampler)
+            .with_context(|| format!("publishing alignment cache: {error}"))?;
+    }
+    Ok(alignment)
+}
+
+/// Stack one pass that never joined the session alignment as its own
+/// one-pass sub-session (own alignment, calibration, canvas and per-frame
+/// brightness) and capture its merged planes. Returns the merge summary, the
+/// planes and their canvas size.
+#[allow(clippy::too_many_arguments)]
+fn detached_group(
+    args: &StackArgs,
+    session: &ResolvedSession,
+    pass: usize,
+    identities: &[SourceIdentity],
+    cache_root: &Path,
+    destination: &Path,
+    config: &crate::session_align::SessionAlignConfig,
+    resampler: Resampler,
+) -> Result<(Value, crate::session_lighting_fusion::GroupPlanes, SamplingDomain)> {
+    let declared = &session.passes[pass];
+    let spec = crate::session_input::SessionSpec {
+        passes: vec![crate::session_input::PassSpec {
+            name: declared.name.clone(),
+            directories: declared.directories.clone(),
+        }],
+        mode: SessionMode::Auto,
+        ..Default::default()
+    };
+    let sub = spec.resolve_from(&declared.directories[0])?;
+    let sub_identities = identities[declared.global_range.clone()].to_vec();
+    ensure!(
+        sub.frames.len() == sub_identities.len()
+            && sub.frames.iter().zip(&sub_identities).all(|(f, i)| f.path == i.path),
+        "detached pass '{}' changed since the session was hashed",
+        declared.name
+    );
+    let metadata = sub.read_metadata()?;
+    let mut cache = SourceCache::new(cache_root, &sub, args.resources.cache_budget()?)?;
+    let alignment = cached_alignment(&sub, &sub_identities, &mut cache, config, resampler)?;
+    ensure!(
+        alignment.report.passes[0].placed > 1,
+        "its frames could not be aligned to each other"
+    );
+    let first = cache.load_or_decode(&sub.frames[0], &sub_identities[0])?;
+    let calibrations = vec![calibration(&first, &metadata[0], config.memory_limit_bytes / 8)?];
+    let domain = domain(&sub, &alignment, &calibrations)?;
+    let frame_gains: Vec<f32> = (0..sub.len())
+        .map(|k| {
+            alignment
+                .report
+                .frame_photometry
+                .as_ref()
+                .and_then(|p| p.gain(k))
+                .unwrap_or(1.0)
+        })
+        .collect();
+    let mut slot = None;
+    let mut summary = render(
+        args,
+        &sub,
+        &sub_identities,
+        &metadata,
+        &alignment,
+        &mut cache,
+        &calibrations,
+        &[1.0],
+        &frame_gains,
+        &[false],
+        &[],
+        domain,
+        None,
+        destination,
+        Some(&mut slot),
+    )?;
+    summary["passes"] = json!([declared.name]);
+    summary["detached"] = json!(true);
+    let planes = slot.context("detached pass produced no planes")?;
+    Ok((summary, planes, domain))
+}
+
+/// Wall-time totals of a group render's phases, from its per-source receipts
+/// plus the group folds and the final collapse. Diagnostic only.
+fn phase_totals(receipts: &[Value], fold_group: f64, finish: f64) -> Value {
+    let sum = |key: &str| -> f64 { receipts.iter().filter_map(|r| r[key].as_f64()).sum() };
+    json!({
+        "probe": sum("probe_seconds"), "gather": sum("gather_seconds"),
+        "prepare": sum("prepare_seconds"), "accumulate": sum("accumulate_seconds"),
+        "fold_group": fold_group, "finish": finish,
+    })
+}
+
+/// One lighting group's merge summary and planes, from a concurrent lane.
+type LaneResult = Result<(Value, crate::session_lighting_fusion::GroupPlanes)>;
+
+/// Concurrent lighting-group merges that fit the memory budget: one merge
+/// reserves about 8 GiB on a 24-megapixel canvas, so each lane needs 9 GiB.
+fn lighting_merge_lanes(memory_limit_gib: f64, groups: usize) -> usize {
+    if groups <= 1 || !memory_limit_gib.is_finite() {
+        return 1;
+    }
+    ((memory_limit_gib / 9.0).floor() as usize).clamp(1, groups)
+}
+
+#[cfg(test)]
+#[test]
+fn lighting_merge_lanes_fit_the_memory_budget() {
+    assert_eq!(lighting_merge_lanes(32.0, 5), 3);
+    assert_eq!(lighting_merge_lanes(16.0, 5), 1);
+    assert_eq!(lighting_merge_lanes(64.0, 2), 2);
+    assert_eq!(lighting_merge_lanes(64.0, 1), 1);
+    assert_eq!(lighting_merge_lanes(f64::NAN, 4), 1);
+}
+
+fn renderer_source_hash() -> String {
+    let mut hash = Sha256::new();
+    for bytes in [
+        include_bytes!("session-consumer.rs").as_slice(),
+        include_bytes!("session-repeat-proposals.rs").as_slice(),
+        include_bytes!("session-research-cohort.rs").as_slice(),
+        include_bytes!("session-mosaic-output.rs").as_slice(),
+        include_bytes!("session-independent-views.rs").as_slice(),
+        include_bytes!("session-sampling.rs").as_slice(),
+        include_bytes!("session-transfer-cache.rs").as_slice(),
+        include_bytes!("session-transfer-prefetch.rs").as_slice(),
+        include_bytes!("session-precision-guide.rs").as_slice(),
+        include_bytes!("session-contribution-export.rs").as_slice(),
+        include_bytes!("session-reconstruction-plan.rs").as_slice(),
+        include_bytes!("session-reconstruction-consumer.rs").as_slice(),
+        include_bytes!("session-reconstruction-motion.rs").as_slice(),
+        include_bytes!("session-reconstruction-output.rs").as_slice(),
+        include_bytes!("session-reconstruction-sampling.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/reconstruction.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/reconstruction-affine.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/reconstruction-registration.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/reconstruction-registration-footprint.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/reconstruction-registration-graph.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/reconstruction-registration-global.rs").as_slice(),
+        include_bytes!("session-focus.rs").as_slice(),
+        include_bytes!("session-alpha-output.rs").as_slice(),
+        include_bytes!("session-photometry.rs").as_slice(),
+        include_bytes!("session-plan.rs").as_slice(),
+        include_bytes!("session-lighting-fusion.rs").as_slice(),
+        include_bytes!("session-cache.rs").as_slice(),
+        include_bytes!("session-input.rs").as_slice(),
+        include_bytes!("merge_cmd.rs").as_slice(),
+        include_bytes!("image_out.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/session-fusion.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/precision-mean.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/session-attribution.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/pyramid.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/noise.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/profile.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/optics.rs").as_slice(),
+        include_bytes!("../../strehl-core/src/color.rs").as_slice(),
+        include_bytes!("../../../Cargo.lock").as_slice(),
+    ] {
+        let bytes = crate::session_align::source_text(bytes);
+        hash.update((bytes.len() as u64).to_le_bytes());
+        hash.update(&bytes);
+    }
+    crate::session_input::hex(&hash.finalize())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn exposure_ratios_compare_exact_rationals_without_float_rounding() {
+        assert!(same_rational(Some([1, 10]), Some([100, 1000])));
+        assert!(!same_rational(Some([1, 10]), Some([1, 11])));
+        assert!(!same_rational(None, None));
+        assert!(!same_rational(Some([1, 0]), Some([2, 0])));
+        assert_eq!(rational(Some([5, 2]), "test").unwrap(), 2.5);
+    }
+}

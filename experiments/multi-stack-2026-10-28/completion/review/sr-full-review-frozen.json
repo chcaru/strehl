@@ -1,0 +1,156 @@
+{
+  "schema": "strehl.full-sr-independent-review-freeze.v1",
+  "scope": "Twelve previously frozen HDR384 witnesses plus prior chart192 dot ROI. Complete images required; resized overviews orientation only.",
+  "native_reference": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\completion\\sr-chart-native-14c",
+  "reference_canvas": [
+    26,
+    17,
+    3464,
+    2310
+  ],
+  "reference_warpmap_sha256": "a8afec6897a6be67df7b0fc04071fc352e239443eb8685302c2b49c830552c08",
+  "transform": {
+    "schema": "strehl.independent-review-transform.v1",
+    "parameter_source": "Predeclared6s sensor-reference physical scale; no output histogram or image fitted",
+    "display_baseline": {
+      "black": 0.0,
+      "white": 4.0,
+      "contrast": 0.55,
+      "exposure_gain": 1.0
+    },
+    "display_icc_file": "display-srgb.icc",
+    "display_icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "policy": "Apply both predeclared views identically to fullHDR and both controls. No per-image fit."
+  },
+  "transform_sha256": "a30a38a691999a19424320bf8fcfdf75f6cd6c4d23e8a86c7d745071183a11a7",
+  "hdr_rois_sha256": "3042ba14c828a6c44cb391ac1d79f4014108fbcd4cd5f7c44763abe19db7ef71",
+  "prior_dot_report_sha256": "3fe961850fb0aab4f091ef3e3d65a196adcd6f3f6b5f5ed94e798370e229a9fe",
+  "prior_dot_full_sensor": [
+    4105,
+    3245,
+    192,
+    192
+  ],
+  "rois": [
+    {
+      "name": "gray-ramp-middle",
+      "origin": [
+        957,
+        416
+      ],
+      "size": 384,
+      "selection": "Existing1s-middle locator only; selected before fused HDR view"
+    },
+    {
+      "name": "adverse-flare-p12",
+      "origin": [
+        4157,
+        1565
+      ],
+      "size": 384,
+      "selection": "Existing1s-middle locator only; selected before fused HDR view"
+    },
+    {
+      "name": "qr-white-black-grid",
+      "origin": [
+        3957,
+        415
+      ],
+      "size": 384,
+      "selection": "Existing1s-middle locator only; selected before fused HDR view"
+    },
+    {
+      "name": "qr-corner-boundary",
+      "origin": [
+        4657,
+        1165
+      ],
+      "size": 384,
+      "selection": "Existing1s-middle locator only; selected before fused HDR view"
+    },
+    {
+      "name": "large-radial-star",
+      "origin": [
+        5857,
+        615
+      ],
+      "size": 384,
+      "selection": "Existing1s-middle locator only; selected before fused HDR view"
+    },
+    {
+      "name": "fine-resolution-bars",
+      "origin": [
+        5157,
+        1815
+      ],
+      "size": 384,
+      "selection": "Existing1s-middle locator only; selected before fused HDR view"
+    },
+    {
+      "name": "bright-dot-field",
+      "origin": [
+        558,
+        2015
+      ],
+      "size": 384,
+      "selection": "Existing1s-middle locator only; selected before fused HDR view"
+    },
+    {
+      "name": "low-contrast-dot-field",
+      "origin": [
+        3957,
+        3115
+      ],
+      "size": 384,
+      "selection": "Existing1s-middle locator only; selected before fused HDR view"
+    },
+    {
+      "name": "lower-radial-spokes",
+      "origin": [
+        1257,
+        4115
+      ],
+      "size": 384,
+      "selection": "Existing1s-middle locator only; selected before fused HDR view"
+    },
+    {
+      "name": "clipped-core",
+      "origin": [
+        44,
+        894
+      ],
+      "size": 384,
+      "selection": "Derived clipping-count report only; maximal count, raster-order tie break,384square fits,512px separation between selected clipping witnesses"
+    },
+    {
+      "name": "blue-clipped-core",
+      "origin": [
+        556,
+        894
+      ],
+      "size": 384,
+      "selection": "Derived clipping-count report only; maximal count, raster-order tie break,384square fits,512px separation between selected clipping witnesses"
+    },
+    {
+      "name": "clipped-boundary",
+      "origin": [
+        1580,
+        830
+      ],
+      "size": 384,
+      "selection": "Derived clipping-count report only; maximal count, raster-order tie break,384square fits,512px separation between selected clipping witnesses"
+    },
+    {
+      "name": "prior-physical-dot-roi",
+      "origin": [
+        4053,
+        3211
+      ],
+      "size": 192,
+      "selection": "Previously reviewed original chart192 ROI; exact saved warp gauge, integer crop offset only. No new image fit."
+    }
+  ],
+  "candidate_pixels_used_for_selection": false,
+  "negative_reading": "Unsupported pixels must remain exact native. More contrast or changed supported pixels alone cannot establish detail or noise improvement.",
+  "optional_boundary_rule": "Only if needed, add first raster-order transition and maximal mixed 384-window at stride192 (ties raster-order), selected solely from support; label diagnostic and retain all13 frozen witnesses."
+}

@@ -117,6 +117,7 @@ fn bounded_photo_paint_attachment_and_detachment_preserve_zoomed_panned_bounds()
         baked_recipe: None,
     });
     editor.loaded = Some(crate::edit_workspace::LoadedPhoto {
+        coverage: None,
         preview: std::sync::Arc::new(image.preview(8)),
         image,
         recipe: Default::default(),

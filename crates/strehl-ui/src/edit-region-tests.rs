@@ -21,6 +21,7 @@ impl Canvas {
             ctx: egui::Context::default(),
             editor: EditorState {
                 loaded: Some(LoadedPhoto {
+                    coverage: None,
                     image: image.clone(),
                     preview: image,
                     recipe: Default::default(),
@@ -605,6 +606,7 @@ fn magic_lasso_pointer_release_refines_the_drawn_enclosure_into_editable_detail(
         baked_recipe: None,
     });
     canvas.editor.loaded = Some(LoadedPhoto {
+        coverage: None,
         image: image.clone(),
         preview: image,
         recipe: Default::default(),

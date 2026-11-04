@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "mode": "layers",
+  "passes": [
+    {
+      "name": "Top view 5s appearance",
+      "directories": [
+        "D:\\personal\\macro\\insects\\bug-1\\102MSDCF"
+      ]
+    },
+    {
+      "name": "Top view 3.2s green appearance",
+      "directories": [
+        "D:\\personal\\macro\\insects\\bug-1\\103MSDCF"
+      ]
+    }
+  ],
+  "primary_pass": null
+}

@@ -134,6 +134,9 @@ impl Merge {
             fallback_power: 4.0,
             hull_from_level: 1,
             significance_scale: 0.0,
+            ensemble: false,
+            pooled_evidence: false,
+            pooled_evidence_ratio: 1.0,
         })
     }
 }

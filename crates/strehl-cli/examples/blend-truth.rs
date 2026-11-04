@@ -49,9 +49,9 @@
 
 use anyhow::Result;
 use strehl_core::focus::FocusField;
-use strehl_core::plane::PlaneGeometry;
 use strehl_core::merge::regularise;
 use strehl_core::noise::{Levels, NoiseModel, PlaneNoise, Provenance};
+use strehl_core::plane::PlaneGeometry;
 use strehl_core::pyramid::{BandMerge, FrameWorkspace, MergeConfig, Workspace, level_sizes};
 
 const W: usize = 512;
@@ -243,7 +243,14 @@ fn occluding_scene(name: &'static str, fg_level: f32, bg_level: f32) -> Scene {
     let truth: Vec<f32> = (0..n)
         .map(|i| alpha[i] * fg[i] + (1.0 - alpha[i]) * bg_best[i])
         .collect();
-    Scene { fg, bg, alpha, truth, has_edge: true, name }
+    Scene {
+        fg,
+        bg,
+        alpha,
+        truth,
+        has_edge: true,
+        name,
+    }
 }
 
 /// The `couch-fibers-cpl` analogue: dense multi-scale texture at a *range* of
@@ -261,7 +268,14 @@ fn texture_scene() -> Scene {
         }
     }
     let truth = fg.clone();
-    Scene { fg, bg: vec![0.0; n], alpha, truth, has_edge: false, name: "texture" }
+    Scene {
+        fg,
+        bg: vec![0.0; n],
+        alpha,
+        truth,
+        has_edge: false,
+        name: "texture",
+    }
 }
 
 /// Per-pixel depth for the texture scene.
@@ -317,8 +331,8 @@ fn render_frame(scene: &Scene, k: usize, out: &mut [f32], seed: u32) {
         let (mut tp, mut ta) = (vec![0.0f32; n], vec![0.0f32; n]);
         let mut last = usize::MAX;
         for y in 0..H {
-            let r = ((((k as f32 - fg_depth(y)).abs() * COC_PER_FRAME).round()) as usize)
-                .min(max_r);
+            let r =
+                ((((k as f32 - fg_depth(y)).abs() * COC_PER_FRAME).round()) as usize).min(max_r);
             if r != last {
                 disc_blur(&premult, W, H, r as f32, &mut tp);
                 disc_blur(&scene.alpha, W, H, r as f32, &mut ta);
@@ -336,9 +350,17 @@ fn render_frame(scene: &Scene, k: usize, out: &mut [f32], seed: u32) {
     let noise = synthetic_noise();
     for (i, v) in out.iter_mut().enumerate() {
         let sigma = noise.green_luma_sigma(*v);
-        let u1 = hash2((i % W) as i32, (i / W) as i32, seed.wrapping_add(k as u32 * 31 + 1))
-            .max(1e-6);
-        let u2 = hash2((i % W) as i32, (i / W) as i32, seed.wrapping_add(k as u32 * 31 + 2));
+        let u1 = hash2(
+            (i % W) as i32,
+            (i / W) as i32,
+            seed.wrapping_add(k as u32 * 31 + 1),
+        )
+        .max(1e-6);
+        let u2 = hash2(
+            (i % W) as i32,
+            (i / W) as i32,
+            seed.wrapping_add(k as u32 * 31 + 2),
+        );
         let g = (-2.0 * u1.ln()).sqrt() * (std::f32::consts::TAU * u2).cos();
         *v = (*v + sigma * g).max(0.0);
     }
@@ -346,8 +368,15 @@ fn render_frame(scene: &Scene, k: usize, out: &mut [f32], seed: u32) {
 
 /// A noise model in the same regime as the real A7C II profile at ISO 200.
 fn synthetic_noise() -> NoiseModel {
-    let levels = Levels { black: 512.0, white: 15360.0 };
-    let p = PlaneNoise { gain_dn_per_e: 0.62, read_noise_e: 3.4, levels };
+    let levels = Levels {
+        black: 512.0,
+        white: 15360.0,
+    };
+    let p = PlaneNoise {
+        gain_dn_per_e: 0.62,
+        read_noise_e: 3.4,
+        levels,
+    };
     NoiseModel::new([p, p, p, p], 200.0, Provenance::Profile)
 }
 
@@ -412,7 +441,11 @@ fn merge_multiband(frames: &[Vec<f32>], geom: PlaneGeometry, cfg: MergeConfig) -
 /// The true depth at a pixel, which the oracle is allowed to know.
 fn true_depth(scene: &Scene, x: usize, y: usize) -> f32 {
     if scene.has_edge {
-        if scene.alpha[y * W + x] > 0.5 { fg_depth(y) } else { BG_DEPTH }
+        if scene.alpha[y * W + x] > 0.5 {
+            fg_depth(y)
+        } else {
+            BG_DEPTH
+        }
     } else {
         texture_depth(x, y)
     }
@@ -455,13 +488,19 @@ fn rmse(a: &[f32], b: &[f32], mask: impl Fn(usize, usize) -> bool) -> f32 {
             }
         }
     }
-    if cnt == 0 { return f32::NAN; }
+    if cnt == 0 {
+        return f32::NAN;
+    }
     ((acc / cnt as f64).sqrt()) as f32
 }
 
 /// Pool-adjacent-violators isotonic regression.
 fn pava(y: &[f32], increasing: bool) -> Vec<f32> {
-    let s: Vec<f32> = if increasing { y.to_vec() } else { y.iter().map(|v| -v).collect() };
+    let s: Vec<f32> = if increasing {
+        y.to_vec()
+    } else {
+        y.iter().map(|v| -v).collect()
+    };
     let mut val: Vec<f32> = Vec::with_capacity(s.len());
     let mut wgt: Vec<f32> = Vec::with_capacity(s.len());
     for &v in &s {
@@ -514,7 +553,9 @@ fn gauss1d(v: &[f32], sigma: f32) -> Vec<f32> {
 fn score_iso(img: &[f32]) -> f32 {
     let mut scores: Vec<f32> = Vec::with_capacity(H);
     for y in 0..H {
-        let s: Vec<f32> = (0..=64).map(|d| img[y * W + (EDGE_X + d).min(W - 1)]).collect();
+        let s: Vec<f32> = (0..=64)
+            .map(|d| img[y * W + (EDGE_X + d).min(W - 1)])
+            .collect();
         let mut tail: Vec<f32> = s[48..=64].to_vec();
         tail.sort_by(|a, b| a.partial_cmp(b).unwrap());
         let asymptote = tail[tail.len() / 2];
@@ -562,7 +603,10 @@ fn max_index_jump(winner: &[u16]) -> (u16, f64) {
 // ---------------------------------------------------------------------------
 
 fn run_scene(scene: &Scene) -> Result<()> {
-    let geom = PlaneGeometry { width: W, height: H };
+    let geom = PlaneGeometry {
+        width: W,
+        height: H,
+    };
     println!("\n=== scene: {} ===", scene.name);
 
     let mut frames: Vec<Vec<f32>> = Vec::with_capacity(FRAMES);
@@ -587,7 +631,11 @@ fn run_scene(scene: &Scene) -> Result<()> {
     // floor that an arm captures. 100% is the oracle; 0% is the selection arm;
     // negative is worse than the selection arm.
     let headroom = |arm: f32, sel: f32, orc: f32| {
-        if (sel - orc).abs() < 1e-9 { f32::NAN } else { 100.0 * (sel - arm) / (sel - orc) }
+        if (sel - orc).abs() < 1e-9 {
+            f32::NAN
+        } else {
+            100.0 * (sel - arm) / (sel - orc)
+        }
     };
 
     let row = |label: &str, m: &dyn Fn(usize, usize) -> bool| {
@@ -671,8 +719,16 @@ fn main() -> Result<()> {
     );
     println!("lower RMSE is better; lower ISO is better; the nulls bound what ISO can mean");
 
-    run_scene(&occluding_scene("occluding, dark subject on bright backdrop", 0.18 * WHITE, 0.80 * WHITE))?;
-    run_scene(&occluding_scene("occluding, bright subject on dark backdrop", 0.80 * WHITE, 0.30 * WHITE))?;
+    run_scene(&occluding_scene(
+        "occluding, dark subject on bright backdrop",
+        0.18 * WHITE,
+        0.80 * WHITE,
+    ))?;
+    run_scene(&occluding_scene(
+        "occluding, bright subject on dark backdrop",
+        0.80 * WHITE,
+        0.30 * WHITE,
+    ))?;
     run_scene(&texture_scene())?;
     Ok(())
 }

@@ -314,3 +314,142 @@ fn default_wire_form_is_unchanged_and_version_two_is_portable_at_native_coordina
         "range change introduced a discrete Amount jump"
     );
 }
+
+#[test]
+fn glint_compression_lowers_small_bright_spots_but_not_large_bright_areas() {
+    // A dark surface scattered with tiny glints far above it, beside a large
+    // bright area. Glints must come down; the large area sets its own
+    // neighbourhood level and must not; brightness order must survive; and the
+    // dark surface must not be lifted to compensate.
+    let glint = |x: u32, y: u32| x % 16 == 5 && y % 16 == 7;
+    let image = make_image(320, 192, |x, y| {
+        let light = if x >= 200 {
+            0.6
+        } else if glint(x, y) {
+            0.9
+        } else {
+            0.02 + (x % 5) as f32 * 0.001
+        };
+        [light, light * 0.8, light * 0.6]
+    });
+    let parameters = AdaptiveParameters {
+        balance: 0.0,
+        local_contrast: 0.0,
+        color: 0.0,
+        glint_compression: 1.0,
+        ..Default::default()
+    };
+    let s = analyze(&image, parameters);
+    assert!(
+        s.suggested.adaptive_scope(None).is_some(),
+        "no treatment was produced"
+    );
+    let base = DevelopmentRecipe::default();
+    let at = |x: u32, y: u32| (y * 320 + x) as usize;
+    let mut lowered = 0usize;
+    let mut glints = 0usize;
+    for y in 16..176 {
+        for x in 16..180 {
+            let i = at(x, y);
+            let (before, after) = (
+                image.developed_pixel(i, &base),
+                image.developed_pixel(i, &s.suggested),
+            );
+            if glint(x, y) {
+                glints += 1;
+                lowered += usize::from(after[1] < 0.8 * before[1]);
+                // Still brighter than the surface around it.
+                let ground = image.developed_pixel(at(x + 2, y), &s.suggested);
+                assert!(
+                    after[1] > 4.0 * ground[1],
+                    "glint fell into its surroundings at ({x},{y})"
+                );
+            } else {
+                assert!(
+                    after[1] <= before[1] * 1.02 + 1e-5,
+                    "dark surface lifted at ({x},{y})"
+                );
+            }
+        }
+    }
+    assert!(
+        lowered * 10 >= glints * 9,
+        "only {lowered} of {glints} glints were lowered"
+    );
+    let (before, after) = (
+        image.developed_pixel(at(260, 96), &base),
+        image.developed_pixel(at(260, 96), &s.suggested),
+    );
+    assert!(
+        after[1] > 0.9 * before[1],
+        "large bright area was compressed: {} -> {}",
+        before[1],
+        after[1]
+    );
+    let off = analyze(
+        &image,
+        AdaptiveParameters {
+            glint_compression: 0.0,
+            ..parameters
+        },
+    );
+    assert!(
+        off.suggested.adaptive_scope(None).is_none(),
+        "all-zero controls produced a treatment"
+    );
+}
+
+#[test]
+fn glint_compression_judges_a_lit_subject_on_dark_ground_by_its_own_level() {
+    // Lit blades (4 px stripes, a quarter of the frame) on a near-black ground
+    // more than 3.5 stops below them, with tiny glints on the blades. Measured
+    // on rutile on hematite: judged against a cell mean that includes the
+    // ground, whole blades read as "far above typical" and were dimmed. The
+    // blades must keep their level; the glints on them must still come down.
+    let blade = |x: u32| x % 16 < 4;
+    let glint = |x: u32, y: u32| x % 16 == 1 && y % 16 == 7;
+    let image = make_image(320, 192, |x, y| {
+        let light = if glint(x, y) {
+            0.9
+        } else if blade(x) {
+            0.08 + (y % 5) as f32 * 0.002
+        } else {
+            0.006 + (x % 5) as f32 * 0.0002
+        };
+        [light, light * 0.8, light * 0.6]
+    });
+    let parameters = AdaptiveParameters {
+        balance: 0.0,
+        local_contrast: 0.0,
+        color: 0.0,
+        glint_compression: 1.0,
+        ..Default::default()
+    };
+    let s = analyze(&image, parameters);
+    let base = DevelopmentRecipe::default();
+    let (mut lowered, mut glints) = (0usize, 0usize);
+    for y in 16..176 {
+        for x in 16..304 {
+            let i = (y * 320 + x) as usize;
+            let (before, after) = (
+                image.developed_pixel(i, &base),
+                image.developed_pixel(i, &s.suggested),
+            );
+            if glint(x, y) {
+                glints += 1;
+                lowered += usize::from(after[1] < 0.8 * before[1]);
+            } else if blade(x) && !glint(x, y.wrapping_add(1)) && !glint(x, y.wrapping_sub(1)) {
+                assert!(
+                    after[1] >= 0.97 * before[1],
+                    "lit blade dimmed at ({x},{y}): {} -> {}",
+                    before[1],
+                    after[1]
+                );
+            }
+        }
+    }
+    assert!(
+        lowered * 10 >= glints * 9,
+        "only {lowered} of {glints} glints were lowered"
+    );
+}

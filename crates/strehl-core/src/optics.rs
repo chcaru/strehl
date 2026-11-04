@@ -357,6 +357,9 @@ impl OpticalProfile {
     #[inline]
     pub fn compose(profile: Option<&OpticalProfile>, ch: Channel, t: Similarity) -> Similarity {
         let Some(p) = profile else { return t };
+        if let Some(r) = ca_refinement() {
+            return compose_refined(p, ch, t, r);
+        }
         let Some(eps) = p.eps(ch) else { return t };
         let (tx, ty) = p.translation;
         if eps == 0.0 && tx == 0.0 && ty == 0.0 {
@@ -575,6 +578,60 @@ pub const A7C2_FE100GM_2XTC_X4CPL_RADIAL: OpticalProfile = OpticalProfile {
     translation: (0.0, 0.0),
     ..A7C2_FE100GM_2XTC_X4CPL
 };
+
+/// A per-capture correction on top of the active profile: for red and for
+/// blue, the residual displacement relative to green that a render with the
+/// profile alone still showed (`crate::ca_refine::measure`), as a scale minus
+/// one and a translation in full-resolution sensor pixels. See
+/// `experiments/image-quality-2026-11-02/results.md` section 3c.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct CaRefinement {
+    pub red: ChannelRefinement,
+    pub blue: ChannelRefinement,
+}
+
+/// One channel's refinement: added to the profile's coefficient, and a
+/// translation the profile does not carry.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct ChannelRefinement {
+    pub scale: f64,
+    pub translation: (f64, f64),
+}
+
+static CA_REFINEMENT: std::sync::RwLock<Option<CaRefinement>> = std::sync::RwLock::new(None);
+
+/// Install (or clear) the per-capture refinement that [`OpticalProfile::compose`]
+/// adds to the active profile. Process-wide: the CLI sets it between a
+/// preview pass and the render it refines, and clears it after.
+pub fn set_ca_refinement(r: Option<CaRefinement>) {
+    *CA_REFINEMENT.write().unwrap_or_else(|e| e.into_inner()) = r;
+}
+
+/// The installed per-capture refinement, if any.
+pub fn ca_refinement() -> Option<CaRefinement> {
+    *CA_REFINEMENT.read().unwrap_or_else(|e| e.into_inner())
+}
+
+/// [`OpticalProfile::compose`] with a refinement: the channel's coefficient
+/// becomes the profile's plus the measured residual scale, and the measured
+/// residual translation (sensor px; the pull runs in plane px, half that) is
+/// added after the scale, on top of the profile's own translation term.
+fn compose_refined(p: &OpticalProfile, ch: Channel, t: Similarity, r: CaRefinement) -> Similarity {
+    let c = match ch {
+        Channel::Green => return t,
+        Channel::Red => r.red,
+        Channel::Blue => r.blue,
+    };
+    let s = 1.0 + p.eps(ch).unwrap_or(0.0) + c.scale;
+    let (tx, ty) = (
+        p.translation.0 + c.translation.0 * 0.5,
+        p.translation.1 + c.translation.1 * 0.5,
+    );
+    Similarity {
+        a: Cx::new(t.a.re * s, t.a.im * s),
+        b: Cx::new(t.b.re * s + tx, t.b.im * s + ty),
+    }
+}
 
 /// The environment variable that selects a lateral-CA profile.
 ///

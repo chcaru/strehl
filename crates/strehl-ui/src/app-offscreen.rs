@@ -95,6 +95,9 @@ pub(crate) fn run_offscreen(launch: LaunchOptions) -> Result<()> {
                     None,
                 );
             });
+            if let Some(error) = &app.screenshot_error {
+                bail!("Offscreen diagnostic selection failed: {error}");
+            }
             let primitives = ctx.tessellate(output.shapes, output.pixels_per_point);
             let screen_descriptor = ScreenDescriptor {
                 size_in_pixels: size,
@@ -140,8 +143,30 @@ pub(crate) fn run_offscreen(launch: LaunchOptions) -> Result<()> {
             std::thread::sleep(FRAME_DELAY.min(deadline.saturating_duration_since(Instant::now())));
         }
         bail!(
-            "Offscreen screenshot did not become ready within 60 seconds (workspace status: {})",
-            app.status
+            "Offscreen screenshot did not become ready within 60 seconds (workspace status: {}; pending: import={}, scan={}, replay={}, result={}, queued_result={}, photo={}, develop={}, viewport={}, evidence={}, agent={}, metadata={}, draft={}, requested_draft={}, project_preview={}, process_transition={}, contacts={:?}; error={:?})",
+            app.status,
+            app.session_import.is_some(),
+            app.scan.is_some(),
+            app.replay.is_some(),
+            app.result_work.is_some(),
+            app.pending_result.is_some(),
+            app.editor.loading.is_some(),
+            app.editor.developing.is_some(),
+            !app.editor.viewport.settled(),
+            app.process_space.diagnostics_loading(),
+            app.agent.starting.is_some(),
+            app.metadata_requested || app.camera_metadata.is_loading(),
+            app.draft_job.is_some(),
+            app.draft_requested,
+            app.sidebar == Some(workspace::Sidebar::Projects)
+                && app.project_explorer.preview_pending(),
+            app.process_space.transitioning(),
+            app.process_contacts()
+                .into_iter()
+                .filter(|i| app.browser.native_thumbnail(*i).is_none()
+                    && app.browser.native_thumbnail_error(*i).is_none())
+                .collect::<Vec<_>>(),
+            app.editor.error.as_ref().or(app.error.as_ref())
         )
     })();
     // The 60-second rendering budget does not bypass cooperative retirement.

@@ -85,7 +85,10 @@ fn main() {
     println!("map declares : sensor {}x{}", map.sensor_w, map.sensor_h);
     println!("map coords   : {:?}", map.coords);
     println!("dust quads   : {}", map.dust.len());
-    println!("bar          : MAX_ACTIVE_MISMATCH_FRAC = {}", DefectMap::MAX_ACTIVE_MISMATCH_FRAC);
+    println!(
+        "bar          : MAX_ACTIVE_MISMATCH_FRAC = {}",
+        DefectMap::MAX_ACTIVE_MISMATCH_FRAC
+    );
     println!();
 
     // ---- 1. call the check, do not predict it ---------------------------
@@ -95,7 +98,11 @@ fn main() {
         let frac = (map.sensor_w as f64 - w as f64).abs() / map.sensor_w as f64;
         match map.check_geometry(w, h) {
             Ok(()) => {
-                println!("  {label}x{h}  ADMITTED   mismatch {:.4}% vs bar {:.2}%", frac * 100.0, DefectMap::MAX_ACTIVE_MISMATCH_FRAC * 100.0);
+                println!(
+                    "  {label}x{h}  ADMITTED   mismatch {:.4}% vs bar {:.2}%",
+                    frac * 100.0,
+                    DefectMap::MAX_ACTIVE_MISMATCH_FRAC * 100.0
+                );
                 if (w, h) == WIDE_ACTIVE {
                     admitted_wide = true;
                 }
@@ -144,7 +151,10 @@ fn main() {
     let width_delta = ww as i64 - nw as i64;
 
     println!("active origin same in both : {same_origin}  (narrow ({nx},{ny}), wide ({wx},{wy}))");
-    println!("active width delta         : {width_delta} photosites = {} quads", width_delta / 2);
+    println!(
+        "active width delta         : {width_delta} photosites = {} quads",
+        width_delta / 2
+    );
     println!();
 
     if admitted_wide {
@@ -161,8 +171,14 @@ fn main() {
             println!("  beyond the narrower width -- checked next.");
             let maxpx = map.dust.iter().map(|d| d.px).max().unwrap_or(0) as usize;
             let limit = nw / 2;
-            println!("  max mapped quad px {maxpx}, narrow quad limit {limit}  -> {}",
-                if maxpx < limit { "all named quads inside both" } else { "SOME NAMED QUADS OUTSIDE THE NARROW FRAME" });
+            println!(
+                "  max mapped quad px {maxpx}, narrow quad limit {limit}  -> {}",
+                if maxpx < limit {
+                    "all named quads inside both"
+                } else {
+                    "SOME NAMED QUADS OUTSIDE THE NARROW FRAME"
+                }
+            );
         } else {
             println!();
             println!("  The origins DIFFER, so an admitted map is applied at a");

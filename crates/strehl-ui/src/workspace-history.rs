@@ -56,8 +56,32 @@ pub(crate) struct Run {
     pub workers: usize,
     #[serde(default)]
     pub pinned: bool,
+    #[serde(default)]
+    pub imported: Option<crate::session_import::ImportedSession>,
 }
 impl Run {
+    pub(crate) fn output_directory(&self) -> PathBuf {
+        if self.imported.is_some() {
+            self.directory.clone()
+        } else {
+            self.directory.join("session-output")
+        }
+    }
+    pub(crate) fn owns_output(&self, output: &Path) -> bool {
+        self.output == output
+            || self.settings.session.as_ref().is_some_and(|session| {
+                crate::session_workspace::output_prefix(session.manifest.mode).is_some_and(
+                    |prefix| {
+                        (0..session.manifest.passes.len()).any(|index| {
+                            self.output_directory()
+                                .join(format!("{prefix}-{:02}", index + 1))
+                                .join("photograph.tiff")
+                                == output
+                        })
+                    },
+                )
+            })
+    }
     pub fn matches_scan(&self, stack: &jobs::StackScan) -> bool {
         !self.sources.is_empty()
             && self.frames
@@ -362,7 +386,7 @@ impl Catalog {
         let run = self
             .runs
             .iter()
-            .find(|run| run.output == output)
+            .find(|run| run.owns_output(output))
             .and_then(|run| {
                 self.stack_for_run(&run.directory)
                     .map(|stack| (stack, run.directory.clone()))
@@ -444,7 +468,7 @@ impl Catalog {
                     && self
                         .runs
                         .iter()
-                        .any(|r| &r.directory == directory && r.output == owner.output),
+                        .any(|r| &r.directory == directory && r.owns_output(&owner.output)),
                 "Photograph version belongs to a different stack or render"
             ),
             (None, None) => anyhow::ensure!(
@@ -536,6 +560,43 @@ impl Catalog {
         node.stack = Some(draft);
         Ok(())
     }
+    pub(crate) fn import_completed_run(
+        &mut self,
+        parent: Option<NodeId>,
+        run: Run,
+    ) -> anyhow::Result<NodeId> {
+        anyhow::ensure!(
+            run.imported.is_some() && run.status == "Saved",
+            "Only verified completed imports enter this path"
+        );
+        let rollback = (
+            self.nodes.clone(),
+            self.runs.clone(),
+            self.next_node_id,
+            self.selected,
+        );
+        let result = (|| {
+            let parent = match parent {
+                Some(id) => {
+                    self.check_container(id)?;
+                    id
+                }
+                None => self.create_project("Imported CLI sessions")?,
+            };
+            let id = self.create_stack(
+                parent,
+                &run.label.chars().take(120).collect::<String>(),
+                StackDraft::from_run(&run),
+            )?;
+            self.add_revision(id, run)?;
+            self.selected = Some(id);
+            Ok(id)
+        })();
+        if result.is_err() {
+            (self.nodes, self.runs, self.next_node_id, self.selected) = rollback;
+        }
+        result
+    }
     pub fn add_revision(&mut self, id: NodeId, run: Run) -> anyhow::Result<()> {
         anyhow::ensure!(
             self.node(id).is_some_and(|n| n.kind == NodeKind::Stack),
@@ -561,7 +622,8 @@ impl Catalog {
                     && saved.settings == run.settings
                     && saved.exposure == run.exposure
                     && saved.gate == run.gate
-                    && saved.workers == run.workers,
+                    && saved.workers == run.workers
+                    && saved.imported == run.imported,
                 "A saved revision cannot acquire a different recipe or source"
             );
         }
@@ -838,6 +900,12 @@ pub(crate) fn default_path() -> Option<PathBuf> {
 }
 pub(crate) fn reopen(run: Run) -> Task<(Run, PipelineProgress)> {
     jobs::spawn_task("strehl-reopen", move |cancelled| {
+        if let Some(provenance) = &run.imported {
+            crate::session_import::verify(&run.directory, provenance, &cancelled)?;
+            let mut progress = PipelineProgress::default();
+            progress.mark_complete();
+            return Ok((run, progress));
+        }
         let mut file = std::fs::File::open(&run.log)?;
         anyhow::ensure!(
             file.metadata()?.len() <= 512 * 1024 * 1024,

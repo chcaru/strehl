@@ -1,0 +1,13 @@
+{
+  "schema": "strehl.sr-focus-coherence-source-freeze.v1",
+  "status": "source frozen for root-scheduled controls/build; not measured photograph",
+  "files": {
+    "kernel-reconstruction.rs": "6a19edfcd2ab899b8cebd494ca0ff6599e05bcca08900cc6198c037ae0617e57",
+    "kernel-reconstruction-tests.rs": "fa61c1ec85d72c370ae39dc980e3380c44d17024c6632773889e636ae2af23c2",
+    "roi-pilot.rs": "daa5849838c3c98c9124a736815ad235af6bc31980abb5a8947151334d15038a",
+    "focus-census.rs": "074920109312f7d1d228a47d13e803ee2a955a5f388d1ddce5ca3071363f1416",
+    "local-registration.rs": "8e1c50f255393fe58d839dd7438bf573b38bfb2b7677e8d82e8ebb8d50aff908",
+    "local-registration-tests.rs": "a22a4fc361bc05148524abfaf2fdb55e9c714b5b81a6fa32a648f03146ebc1e5",
+    "local-registration-controls.rs": "170bc21eae78bed32fad9dfb9e61ed679b6ea8f03e7350e255501a6f0523b71a"
+  }
+}

@@ -1,0 +1,12 @@
+[package]
+name = "iq-adaptive-recipe"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+strehl-edit = { path = "../../../crates/strehl-edit" }
+serde_json = "1"
+
+# Measurement harness outside the production workspace.
+[workspace]

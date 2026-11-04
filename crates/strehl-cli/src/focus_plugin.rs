@@ -133,7 +133,12 @@ pub fn list(gate: f32) -> Result<()> {
     println!();
     println!(
         "{:<24} {:>14} {:>12} {:>9} {:>14} {:>6}",
-        "id", "noise sd", "rel sem", "k", &format!("tol @ gate {gate}"), "halo"
+        "id",
+        "noise sd",
+        "rel sem",
+        "k",
+        &format!("tol @ gate {gate}"),
+        "halo"
     );
     for id in registry.ids() {
         let entry = registry

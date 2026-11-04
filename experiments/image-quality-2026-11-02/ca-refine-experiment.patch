@@ -1,0 +1,57 @@
+diff --git a/crates/strehl-cli/src/merge_cmd.rs b/crates/strehl-cli/src/merge_cmd.rs
+index 71d497e37..d6b54a3ab 100644
+--- a/crates/strehl-cli/src/merge_cmd.rs
++++ b/crates/strehl-cli/src/merge_cmd.rs
+@@ -5987,6 +5987,9 @@ fn prepare_frame_into(
+         let keep = match parity.as_str() {
+             "even" => index % 2 == 0,
+             "odd" => index % 2 == 1,
++            other if other.starts_with("every") => {
++                index % other[5..].parse::<usize>().expect("everyN") == 0
++            }
+             other => match other.split_once('-').map(|(a, b)| (a.parse::<usize>(), b.parse::<usize>())) {
+                 Some((Ok(a), Ok(b))) => (a..=b).contains(&index),
+                 _ => anyhow::bail!("STREHL_FRAME_PARITY={other:?} is not even, odd or A-B"),
+diff --git a/crates/strehl-core/src/optics.rs b/crates/strehl-core/src/optics.rs
+index bc999c9c6..ca386abbf 100644
+--- a/crates/strehl-core/src/optics.rs
++++ b/crates/strehl-core/src/optics.rs
+@@ -356,6 +356,21 @@ impl OpticalProfile {
+     /// bitwise so.
+     #[inline]
+     pub fn compose(profile: Option<&OpticalProfile>, ch: Channel, t: Similarity) -> Similarity {
++        // EXPERIMENT ONLY: STREHL_CA_OVERRIDE=epsR,txR,tyR,epsB,txB,tyB, with the
++        // translations in full-resolution sensor px (channel displacement
++        // relative to green, as measured on raw).
++        if let Some(v) = ca_override() {
++            let (eps, tx, ty) = match ch {
++                Channel::Red => (v[0], v[1] * 0.5, v[2] * 0.5),
++                Channel::Blue => (v[3], v[4] * 0.5, v[5] * 0.5),
++                Channel::Green => return t,
++            };
++            let s = 1.0 + eps;
++            return Similarity {
++                a: Cx::new(t.a.re * s, t.a.im * s),
++                b: Cx::new(t.b.re * s + tx, t.b.im * s + ty),
++            };
++        }
+         let Some(p) = profile else { return t };
+         let Some(eps) = p.eps(ch) else { return t };
+         let (tx, ty) = p.translation;
+@@ -576,6 +591,16 @@ pub const A7C2_FE100GM_2XTC_X4CPL_RADIAL: OpticalProfile = OpticalProfile {
+     ..A7C2_FE100GM_2XTC_X4CPL
+ };
+ 
++fn ca_override() -> Option<[f64; 6]> {
++    static V: std::sync::OnceLock<Option<[f64; 6]>> = std::sync::OnceLock::new();
++    *V.get_or_init(|| {
++        let raw = std::env::var("STREHL_CA_OVERRIDE").ok()?;
++        let v: Vec<f64> = raw.split(',').map(|t| t.trim().parse().expect("STREHL_CA_OVERRIDE")).collect();
++        assert_eq!(v.len(), 6, "STREHL_CA_OVERRIDE=epsR,txR,tyR,epsB,txB,tyB");
++        Some([v[0], v[1], v[2], v[3], v[4], v[5]])
++    })
++}
++
+ /// The environment variable that selects a lateral-CA profile.
+ ///
+ /// Named here so the string lives in exactly one place: a switch whose name is

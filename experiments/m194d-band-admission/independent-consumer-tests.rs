@@ -161,6 +161,12 @@ fn independent_options(out: PathBuf) -> MergeOptions {
         cover_source: SettingSource::Default,
         pyramid: MergeConfig {
             bands: 3,
+            // Registered before the ensemble gate, pooled evidence and the weighted
+            // base (FloorPedestalV1 requires a mean base); pinned.
+            ensemble: false,
+            pooled_evidence: false,
+            exponent: 2.0,
+            base: strehl_core::pyramid::BaseBand::Mean,
             ..MergeConfig::default()
         },
     }

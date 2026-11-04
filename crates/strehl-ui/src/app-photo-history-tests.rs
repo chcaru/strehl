@@ -30,6 +30,7 @@ impl Files {
         app.result = Some(path.clone());
         app.image_path = Some(path.clone());
         app.editor.loaded = Some(crate::edit_workspace::LoadedPhoto {
+            coverage: None,
             image: image.clone(),
             preview: image,
             source: path,

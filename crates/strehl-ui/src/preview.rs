@@ -48,13 +48,24 @@ pub(crate) fn load_preview_image(
     ensure!(!cancelled.load(Ordering::Relaxed), "Preview cancelled");
     let source_size = [image.width(), image.height()];
     let is_overview = source_size.iter().any(|&side| side > max_texture_side);
-    let rgba = if is_overview {
+    let mut rgba = if is_overview {
         image
             .resize(max_texture_side, max_texture_side, FilterType::Triangle)
             .into_rgba8()
     } else {
         image.into_rgba8()
     };
+    if let Some(coverage) = crate::photo_coverage::Coverage::load(&path, source_size)? {
+        let size = [rgba.width(), rgba.height()];
+        for y in 0..size[1] {
+            for x in 0..size[0] {
+                if !coverage.supported(size, [x, y], [x + 1, y + 1]) {
+                    let value = coverage.checker_rgb(size, [x, y]);
+                    rgba.put_pixel(x, y, image::Rgba([value, value, value, 255]));
+                }
+            }
+        }
+    }
     ensure!(!cancelled.load(Ordering::Relaxed), "Preview cancelled");
     Ok(PreviewImage {
         path,

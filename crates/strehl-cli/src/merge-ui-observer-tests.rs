@@ -263,3 +263,151 @@ fn actual_worker_refusal_has_no_fold_and_observer_preserves_output() {
         assert_eq!(fields["compared"].parse::<usize>().unwrap(), compared);
     }
 }
+
+/// Preparing frames ahead in parallel and folding them in index order must be
+/// the serial fold, bit for bit: same accepted frames, same measured floors,
+/// same merged planes. Frames differ in content and sub-pixel placement, one
+/// is refused, and the measured band floor is on, so every preparation stage
+/// that writes per-frame state is exercised.
+#[test]
+fn lookahead_preparation_folds_bit_identically_to_the_serial_fold() {
+    let levels = Levels {
+        black: 64.0,
+        white: 16_000.0,
+    };
+    let full = PlaneGeometry {
+        width: 64,
+        height: 56,
+    };
+    let frames = 7usize;
+    let source = GeneratedSource(
+        (0..frames)
+            .map(|frame| Frame {
+                data: (0..128 * 112)
+                    .map(|i| {
+                        let x = (i % 128) as f32;
+                        let y = (i / 128) as f32;
+                        let k = frame as f32;
+                        let v = 1500.0
+                            + 900.0 * ((x * (0.21 + 0.03 * k)).sin() * (y * 0.17).cos())
+                            + 37.0 * ((i * (frame + 3)) % 13) as f32;
+                        v.round() as u16
+                    })
+                    .collect(),
+                stride: 128,
+                buffer_height: 112,
+                active: strehl_raw::Region {
+                    x: 0,
+                    y: 0,
+                    width: 128,
+                    height: 112,
+                },
+                levels,
+                iso: Some(100.0),
+                wb_coeffs: [1.0; 4],
+                xyz_to_cam_rgbe: [[0.0; 3]; 4],
+                color_matrices: Vec::new(),
+                camera: "GENERATED".into(),
+                path: PathBuf::from(format!("generated-lookahead-{frame}.arw")),
+            })
+            .collect(),
+    );
+    let entries: Vec<_> = source
+        .0
+        .iter()
+        .map(|frame| (frame.path.to_string_lossy(), frame.allocated_bytes() as u64))
+        .collect();
+    let placements = (0..frames)
+        .map(|k| {
+            if k == 4 {
+                FrameWarp::Refused("generated refusal".into())
+            } else {
+                FrameWarp::Placed(strehl_core::align::Similarity::from_params(
+                    strehl_core::align::SimilarityParams {
+                        ax: 0.13 * k as f64 - 0.4,
+                        ay: -0.07 * k as f64 + 0.2,
+                        g: 0.0004 * k as f64,
+                        rot: 0.0,
+                    },
+                ))
+            }
+        })
+        .collect();
+    let warps = WarpMap::new(
+        strehl_core::warpmap::Provenance {
+            stack: StackIdentity::from_entries("generated lookahead", &entries),
+            strategy: "fixed generated placements".into(),
+            heldout_px: None,
+            cycle_floor_px: None,
+            reference: 0,
+            note: "equivalence control, no alignment accuracy claim".into(),
+        },
+        full,
+        Resampler::CatmullRom,
+        placements,
+    );
+    let cfg = MergeConfig {
+        bands: 3,
+        ..MergeConfig::default()
+    };
+    let noise = profile::noise_model_for("GENERATED", Some(100.0), levels);
+    let domain = PyramidDomain::cropped(
+        full,
+        align_cmd::CropRect {
+            x: 6,
+            y: 6,
+            width: 52,
+            height: 44,
+        },
+    )
+    .unwrap();
+    let mut serial = BandWorker::new(domain, cfg);
+    let mut ahead = BandWorker::new(domain, cfg);
+    let floor_on = serial.floor.is_some();
+    let mut serial_accepted = Vec::new();
+    for index in 0..frames {
+        serial_accepted.push(
+            serial
+                .fold(&source, index, levels, &noise, Some(&warps), None)
+                .unwrap(),
+        );
+    }
+    let mut slots: Vec<FramePrep> = (0..3).map(|_| FramePrep::new(domain, cfg)).collect();
+    assert_eq!(slots[0].floor.is_some(), floor_on);
+    let mut ahead_accepted = Vec::new();
+    let indices: Vec<usize> = (0..frames).collect();
+    for batch in indices.chunks(slots.len()) {
+        slots[..batch.len()]
+            .par_iter_mut()
+            .zip(batch.par_iter())
+            .try_for_each(|(slot, &index)| {
+                slot.prepare(domain, &source, index, levels, &noise, Some(&warps), None, None)
+            })
+            .unwrap();
+        for (slot, &index) in slots.iter().zip(batch) {
+            if slot.accepted {
+                ahead.add_prepared(slot, index, None);
+            }
+            ahead_accepted.push(slot.accepted);
+        }
+    }
+    assert_eq!(serial_accepted, ahead_accepted);
+    assert_eq!(serial_accepted.iter().filter(|a| !**a).count(), 1);
+    assert_eq!(serial.beta_n, ahead.beta_n);
+    assert_eq!(
+        serial.beta_sum.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+        ahead.beta_sum.iter().map(|v| v.to_bits()).collect::<Vec<_>>()
+    );
+    let size = domain.analysis();
+    let sizes = level_sizes(size.width, size.height, cfg.bands);
+    let a = serial.merge.finish(&mut Workspace::new(&sizes));
+    let b = ahead.merge.finish(&mut Workspace::new(&sizes));
+    assert_eq!(a.len(), b.len());
+    for (pa, pb) in a.iter().zip(&b) {
+        assert!(pa.iter().any(|v| *v != 0.0), "merged plane must carry signal");
+        assert_eq!(
+            pa.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+            pb.iter().map(|v| v.to_bits()).collect::<Vec<_>>()
+        );
+    }
+}

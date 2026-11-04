@@ -1,0 +1,35 @@
+{
+  "canvas": [
+    784,
+    820
+  ],
+  "crop": [
+    384,
+    384
+  ],
+  "paste_only": true,
+  "no_spatial_resampling": true,
+  "files": {
+    "hdr-adverse-flare-p12.png": "6be09429d898f219f7025482f450658f87499cc7ed95c49ad94078cb9ef6f196",
+    "hdr-blue-clipped-core.png": "20b8157f8708f04736bfbfad0f9c83ff40923bfe1b10ea8abced961969745e44",
+    "hdr-bright-dot-field.png": "f90b188b4b088ddd7b034782206b6de71dabd382269c0a303caf998143449223",
+    "hdr-clipped-boundary.png": "3a227150673629518deda6f89459066963a9aaa0d1d4894a8aca3cd841e7cffb",
+    "hdr-clipped-core.png": "4de4799aaa96c4b1d8823972d133b90dd39f8e198fad32f0a65f36207191ea17",
+    "hdr-fine-resolution-bars.png": "fb6dbbe968009a787a4a891ae535b08ba8e6d732ad13a3010ea9035b082ef6b6",
+    "hdr-gray-ramp-middle.png": "0c5598f635ef7129209c69f458d9e33f0235981201995caaa061a1edf2ad200e",
+    "hdr-large-radial-star.png": "5c413a4896cd51ae1735951efcdbd03b68f8d6a9f3fbd42ff26e21f8c4edf247",
+    "hdr-low-contrast-dot-field.png": "198e0b0226b289585bcf9bed6426a24a1d3d78b2ccff7f2836679917e0c7e6b2",
+    "hdr-lower-radial-spokes.png": "7337c87346d9c00b902f8029c4788492f79bbb7e67fa478484a0d44980ca29b0",
+    "hdr-qr-corner-boundary.png": "2e432c3d693b3512f5714589c40cfe5501d976ff034fa6388732ef98109af217",
+    "hdr-qr-white-black-grid.png": "8fb453361a6a574d086e6517dd5a9f71b1e35a5a456ce52b0687514d7ea441dc",
+    "interleave-bright-dots.png": "23f94aeb1c9610584180bcfbbc5611c621336a5fd8cbd266d6788634c386e127",
+    "interleave-dark-dot-field.png": "ddfe9ed758a3997c6362db2f2bad6c14afba5926b5e8cdbc6aa3a2c082eddc80",
+    "interleave-fine-bars.png": "ccceb3cc9b3ed606c3ba74faa72b5f16a0546b8846d14e206c1f9d61b900292d",
+    "interleave-fine-grid.png": "760ec68ba745bddaabe7a843c57e705a7e274ddbdd709ec51052d84f83b97007",
+    "interleave-fine-radial-labels.png": "96a37cb160a202f681d6f0d9e65af7b753d3e3be904ede2129e5ab14dae97636",
+    "interleave-flat-gray.png": "558f203f5205294f382d2eb859313a98fb55a574d7f778d177994a505ac5cc8a",
+    "interleave-lower-radial.png": "8eb0361ba71b5591551518f777866cf1d58ee73e4c1e0715185113c25a1e2eef",
+    "interleave-qr-corner.png": "6ead5983a84c1d57a31e952909fa6078fd423d2a487da83da2d7c3770e800800",
+    "interleave-qr-grid.png": "e25484b86c3ee3c6d51148459eb860a4a3ca112ff964d1d731bb4caee3d19bec"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "status": "DERIVED, ideal continuous Gaussian and infinite dense sampling; not measured camera evidence",
+  "workers": 1,
+  "formula": "G_ij=exp(-0.5*(pi*sigma_sensor*(i-j))^2); separable 2D design condition=lambda_max(G)/lambda_min(G)",
+  "rows": [
+    {
+      "columns_per_axis": 2,
+      "output_scale": 1.0,
+      "sigma_sensor": 0.35,
+      "policy": "old_output_scaled",
+      "condition_2d": 3.408590673375737
+    },
+    {
+      "columns_per_axis": 2,
+      "output_scale": 1.0,
+      "sigma_sensor": 0.35,
+      "policy": "physical_sensor_invariant",
+      "condition_2d": 3.408590673375737
+    },
+    {
+      "columns_per_axis": 3,
+      "output_scale": 1.5,
+      "sigma_sensor": 0.2333333333333333,
+      "policy": "old_output_scaled",
+      "condition_2d": 29.690257589702313
+    },
+    {
+      "columns_per_axis": 3,
+      "output_scale": 1.5,
+      "sigma_sensor": 0.35,
+      "policy": "physical_sensor_invariant",
+      "condition_2d": 6.719591501031498
+    },
+    {
+      "columns_per_axis": 4,
+      "output_scale": 2.0,
+      "sigma_sensor": 0.175,
+      "policy": "old_output_scaled",
+      "condition_2d": 434.16150959406815
+    },
+    {
+      "columns_per_axis": 4,
+      "output_scale": 2.0,
+      "sigma_sensor": 0.35,
+      "policy": "physical_sensor_invariant",
+      "condition_2d": 10.179929415766004
+    }
+  ]
+}

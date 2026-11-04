@@ -26,6 +26,18 @@ target-*/
 # Generated desktop packages, captures and run artifacts. Reusable reproduction
 # code belongs in scripts/ or experiments/, not this disposable output tree.
 /outputs/
+# Generated output/cache trees can also live under individual experiments.
+outputs/
+cache/
+caches/
+.cache/
+*-cache/
+.strehl-session-cache/
+# Decoded sensor planes and intermediate floating-point workspaces.
+*.f32
+*.u16
+*.cfa
+*.bin
 *.tif
 *.tiff
 *.dng

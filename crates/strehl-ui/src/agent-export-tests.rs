@@ -85,6 +85,7 @@ fn app(origin: ImageOrigin) -> StrehlApp {
     let path = root.join("agent-export-master.tiff");
     std::fs::write(&path, b"fixture source photograph").unwrap();
     app.editor.loaded = Some(crate::edit_workspace::LoadedPhoto {
+        coverage: None,
         image: image.clone(),
         preview: image,
         recipe: Default::default(),

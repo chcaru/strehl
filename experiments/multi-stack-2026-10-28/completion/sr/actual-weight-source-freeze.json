@@ -1,0 +1,54 @@
+{
+  "schema": "strehl.sr-actual-weight-source-freeze.v1",
+  "state": "source frozen; repaired core16 and CLI gauge/highlight controls pending root",
+  "files": {
+    "kernel-reconstruction.rs": "83aa20187715579b7633c506ea913b2fbeb26368749a2de0918d785a981e6e72",
+    "kernel-reconstruction-tests.rs": "afb2b77c789728a2f0232c7d7a86e1b7366b6c68f152618e1977dc2e08e777a7",
+    "gauge-integration-tests.rs": "50bcbf91be7e9f86abffc7611fcd35e6f9b36d77039825c2c8819c3198c87b59",
+    "roi-pilot.rs": "afaa56fd6db2da4903c4373d61b1ff7cbfeccc6088338ff5ad2bca95a22bb1bc",
+    "kernel-phase-limits.py": "e7261c7f1783d1142f4917d29dad3de888bddb17ca91b50844623e48362008dd",
+    "kernel-phase-limits.json": "36cef2bbcd559e81577ef0470e0c6d56bd296d833e44ff69c6441f66973f5488",
+    "roi-inspect.py": "01cdbad45cc8d8509965f080fe4fa377ab2ec14d6ed39acf7ee044cbb8081f7b"
+  },
+  "kernel_policy": {
+    "phase_weights": "exact Gaussian times precision times admission",
+    "sigma_sensor": 0.35,
+    "sigma_invariant_to_output_step": true,
+    "condition_limit": 20,
+    "native_fallback_variance": "unknown unless explicitly supplied",
+    "image_storage": "original u16 CFA only; no aligned volume",
+    "original_noise": "calibrated injected model with frozen target-position signal prediction; edge approximation labelled"
+  },
+  "harness_policy": {
+    "raw_decodes_allowed": false,
+    "targets": [
+      148,
+      149,
+      150,
+      151,
+      152,
+      437,
+      438,
+      439,
+      440,
+      441
+    ],
+    "held_out_guide_acquisitions": [
+      147,
+      153,
+      436,
+      442
+    ],
+    "max_workers": 16,
+    "cache_budget_bytes": 1132462080,
+    "total_reservation_bytes": 1669332992,
+    "nonlinear_native": "unavailable for camera-DN candidate/prediction; exact original BT709 output retained"
+  },
+  "known_limits": [
+    "assumed diagnostic registration uncertainty; local measured bound required before full output",
+    "conditional variance with adaptive same-photon focus/motion",
+    "finer output grid is sampling, not proof of optical resolution",
+    "native fallback is dependent and has no propagated variance",
+    "complete photographic review outstanding"
+  ]
+}

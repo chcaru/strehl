@@ -683,6 +683,7 @@ fn drawing_on_zoomed_final_photo_uses_its_real_crop_and_does_not_pan() {
         });
         let mut editor = EditorState::default();
         editor.loaded = Some(LoadedPhoto {
+            coverage: None,
             image: image.clone(),
             preview: image,
             recipe: Default::default(),

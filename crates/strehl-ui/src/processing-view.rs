@@ -91,6 +91,13 @@ pub fn show_dock(
     };
     ui.label(RichText::new(title).size(23.0).color(INK))
         .on_hover_text(purpose);
+    if let Some(view) = progress.active_view() {
+        small(ui, view.label());
+        small(
+            ui,
+            "Phase and capture numbers below belong only to this view.",
+        );
+    }
     ui.add_space(9.0);
     timeline(ui, progress);
     ui.add_space(8.0);
@@ -768,7 +775,15 @@ fn key(ui: &mut Ui, colour: Color32, label: &str) {
 fn frame_ledger(ui: &mut Ui, progress: &PipelineProgress) -> Option<usize> {
     ui.horizontal(|ui| {
         ui.label(RichText::new("Frames").size(9.0).color(MUTED).strong());
+        let preview = progress.fringe_preview.filter(|f| !f.finished);
         let summary = match (progress.frames_processed, progress.frames_total) {
+            (None, _) if preview.is_some() => {
+                let f = preview.unwrap();
+                format!(
+                    "Colour-fringing preview · {} / {} frames",
+                    f.completed, f.total
+                )
+            }
             (Some(done), Some(total)) => format!(
                 "{done} / {total} processed  ·  {} admitted",
                 progress.frames_accepted.unwrap_or(0)

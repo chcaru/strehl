@@ -42,6 +42,12 @@ mod output_destination;
 mod photo_history;
 #[path = "app-presets.rs"]
 mod presets;
+#[path = "app-session.rs"]
+mod session;
+#[path = "app-session-import.rs"]
+mod session_import;
+#[path = "app-session-output.rs"]
+mod session_output;
 #[cfg(test)]
 #[path = "app-tests.rs"]
 mod tests;
@@ -57,6 +63,8 @@ mod v20_review_tests;
 #[cfg(test)]
 #[path = "app-v25-start-tests.rs"]
 mod v25_start_tests;
+#[path = "app-view-bundle-export.rs"]
+mod view_bundle_export;
 #[path = "app-workspace.rs"]
 mod workspace;
 #[cfg(test)]
@@ -84,6 +92,9 @@ enum View {
 enum Dialog {
     Source,
     Output,
+    CompletedSession,
+    ViewBundleExport,
+    StackEverything,
 }
 #[derive(Clone)]
 struct CachedImage {
@@ -108,6 +119,16 @@ struct ProcessSurface {
 }
 
 pub struct StrehlApp {
+    session_ui: crate::session_workspace::SessionUi,
+    ordinary_recipe: Option<history::Recipe>,
+    session_output_selection: Option<(u64, PathBuf, Task<PathBuf>)>,
+    view_bundle_export: Option<Task<PathBuf>>,
+    last_view_bundle_export: Option<PathBuf>,
+    session_import: Option<(
+        u64,
+        Option<crate::workspace_history::NodeId>,
+        Task<crate::workspace_history::Run>,
+    )>,
     stack: Option<StackScan>,
     scan: Option<Task<StackScan>>,
     epoch: u64,
@@ -188,6 +209,10 @@ pub struct StrehlApp {
     screenshot_ranges: Option<Vec<[usize; 2]>>,
     screenshot_ranges_applied_frame: Option<u64>,
     screenshot_requested: bool,
+    screenshot_diagnostic: Option<String>,
+    screenshot_diagnostic_opacity: Option<f32>,
+    screenshot_diagnostic_sample: Option<[f32; 2]>,
+    screenshot_error: Option<String>,
     reveal_at_ms: Option<f64>,
     reveal_started: Option<f64>,
     reveal_requested_elapsed: Option<f64>,
@@ -219,6 +244,12 @@ impl StrehlApp {
                 .or_else(crate::workspace_history::default_path),
         );
         let mut app = Self {
+            session_ui: crate::session_workspace::SessionUi::default(),
+            ordinary_recipe: None,
+            session_import: None,
+            session_output_selection: None,
+            view_bundle_export: None,
+            last_view_bundle_export: None,
             stack: None,
             scan: None,
             epoch: 0,
@@ -299,6 +330,10 @@ impl StrehlApp {
             screenshot_ranges: launch.screenshot_ranges,
             screenshot_ranges_applied_frame: None,
             screenshot_requested: false,
+            screenshot_diagnostic: launch.diagnostic_map,
+            screenshot_diagnostic_opacity: launch.diagnostic_opacity,
+            screenshot_diagnostic_sample: launch.diagnostic_sample,
+            screenshot_error: None,
             reveal_at_ms: launch.reveal_at_ms,
             reveal_started: None,
             reveal_requested_elapsed: None,
@@ -384,13 +419,22 @@ impl StrehlApp {
             {
                 app.reopen_run(run);
             } else {
-                app.error = Some(
-                    "This render is not in the project library. Open its stack from Projects."
-                        .into(),
-                );
+                if let Err(error) = app.start_completed_import(directory, None) {
+                    app.error = Some(error.to_string());
+                }
             }
         }
         if app.screenshot_ranges.is_some() {
+            app.process_view = true;
+        }
+        if launch.photo_zoom.is_some() || launch.photo_center.is_some() {
+            app.process_space.set_photo_view(
+                launch.photo_center.unwrap_or([0.5, 0.5]),
+                launch.photo_zoom.unwrap_or(1.0),
+            );
+            app.process_view = true;
+        }
+        if app.screenshot_diagnostic.is_some() {
             app.process_view = true;
         }
         for path in launch.agent_grants {
@@ -417,12 +461,21 @@ impl StrehlApp {
     }
 
     fn import(&mut self, path: PathBuf) {
+        if self.controls.settings.session.is_some() {
+            if let Some(recipe) = self.ordinary_recipe.take() {
+                recipe.apply(&mut self.controls);
+            } else {
+                self.controls = Controls::default();
+            }
+        }
+        self.controls.settings.session = None;
         self.reset_capture();
         self.scan = Some(jobs::scan_stack(path));
         self.status = "Reading bracket…".into();
     }
 
     fn reset_capture(&mut self) {
+        self.session_ui = crate::session_workspace::SessionUi::default();
         self.edits.change_stack();
         self.active_stack = None;
         self.epoch += 1;
@@ -487,13 +540,16 @@ impl StrehlApp {
         );
         self.editor.ensure_saved_on_close()?;
         if let Some(directory) = &owner.run {
-            let run = self
+            let mut run = self
                 .catalog
                 .runs
                 .iter()
-                .find(|run| &run.directory == directory && run.output == owner.output)
+                .find(|run| &run.directory == directory && run.owns_output(&owner.output))
                 .cloned()
                 .ok_or_else(|| anyhow::anyhow!("The saved stack run is no longer in Projects"))?;
+            // This transient view selects a declared layer; the catalog's run
+            // snapshot and its initial photograph remain unchanged.
+            run.output = owner.output.clone();
             self.reopen_run(run);
         } else {
             self.reset_capture();
@@ -507,6 +563,19 @@ impl StrehlApp {
         Ok(())
     }
     fn open_result(&mut self, path: PathBuf) {
+        // Reset a previously displayed, different gauge. Initial asynchronous
+        // reopen must preserve an explicit launch/control viewport request.
+        if self
+            .image_path
+            .as_ref()
+            .is_some_and(|previous| previous != &path)
+            && self.controls.settings.session.as_ref().is_some_and(|s| {
+                s.manifest.mode == crate::session_workspace::SessionMode::IndependentViews
+            })
+        {
+            self.process_space.fit_edit_view();
+            self.result_viewer.reset(true);
+        }
         // Saved edits belong to the photograph, independent of which sidebar
         // happens to be open when this result arrives.
         if crate::edit_workspace::recipe_path(&path).is_file() {
@@ -525,8 +594,13 @@ impl StrehlApp {
         self.browser.select(self.selected, &mut self.source_viewer);
     }
     fn inspect_frame(&mut self, index: usize) {
-        if self.process_view {
-            self.process_space.inspect_frame(index);
+        if self.process_view
+            && let Some(local) = self
+                .progress
+                .active_view()
+                .map_or(Some(index), |v| v.local_frame(index))
+        {
+            self.process_space.inspect_frame(local);
         }
         self.held_pair = None;
         if self.canvas_mode == Some(WorkbenchMode::Compare) {
@@ -539,6 +613,7 @@ impl StrehlApp {
             return;
         }
         if matches!(kind, Dialog::Source) {
+            self.session_ui.chooser = None;
             self.bracket_browser
                 .open(self.stack.as_ref().map(|stack| stack.directory.clone()));
             return;
@@ -550,12 +625,27 @@ impl StrehlApp {
             let path = match kind {
                 Dialog::Source => unreachable!("brackets use the visual browser"),
                 Dialog::Output => dialog.set_title("Save stacks in").pick_folder(),
+                Dialog::ViewBundleExport => dialog
+                    .set_title("Export view bundle to a new folder")
+                    .set_file_name("strehl-view-bundle")
+                    .save_file(),
+                Dialog::CompletedSession => {
+                    dialog.set_title("Open completed CLI session").pick_folder()
+                }
+                Dialog::StackEverything => dialog
+                    .set_title("Stack everything in a folder")
+                    .pick_folder(),
             };
             let _ = sender.send((kind, path));
         });
     }
     fn picker_active(&self) -> bool {
-        self.dialog.is_some() || self.editor.dialog.is_some() || self.bracket_browser.active()
+        self.session_import.is_some()
+            || self.session_output_selection.is_some()
+            || self.view_bundle_export.is_some()
+            || self.dialog.is_some()
+            || self.editor.dialog.is_some()
+            || self.bracket_browser.active()
     }
     fn start_render(&mut self) {
         if self.stack_start_blocker().is_some() {
@@ -591,6 +681,7 @@ impl StrehlApp {
             gate: self.controls.gate,
             workers: self.controls.workers,
             pinned: false,
+            imported: None,
         });
         self.replay = None;
         self.expected_run = None;
@@ -603,10 +694,17 @@ impl StrehlApp {
             worker_threads: Some(self.controls.workers),
             settings: self.controls.settings.clone(),
             retain_master: true,
-            recipe: (self.editor.loaded.is_some() && self.editor.path == self.result)
+            recipe: (self.controls.settings.session.is_none()
+                && self.editor.loaded.is_some()
+                && self.editor.path == self.result)
                 .then(|| self.editor.recipe.clone()),
         }));
         self.progress = PipelineProgress::default();
+        if self.controls.settings.session.as_ref().is_some_and(|s| {
+            s.manifest.mode == crate::session_workspace::SessionMode::IndependentViews
+        }) {
+            self.progress.expect_view_progress();
+        }
         self.process_space = ProcessSpace::default();
         self.editor.reset_document();
         self.process_space.set_layout(self.catalog.layout);
@@ -650,6 +748,17 @@ impl StrehlApp {
         }
     }
     fn poll(&mut self, ctx: &egui::Context) {
+        self.poll_completed_import();
+        self.poll_view_bundle_export();
+        self.poll_session_output_selection();
+        let evidence_output = self
+            .session_ui
+            .summary
+            .as_ref()
+            .filter(|s| s.completed)
+            .and(self.result.as_deref())
+            .filter(|_| self.image_path == self.result);
+        self.process_space.poll_diagnostics(ctx, evidence_output);
         self.camera_metadata.poll(ctx);
         if let Some(result) = self
             .replay
@@ -690,6 +799,17 @@ impl StrehlApp {
                 match kind {
                     Dialog::Source => self.import(path),
                     Dialog::Output => self.output = path,
+                    Dialog::ViewBundleExport => {
+                        if let Err(error) = self.start_view_bundle_export(path) {
+                            self.error = Some(error.to_string());
+                        }
+                    }
+                    Dialog::CompletedSession => {
+                        if let Err(error) = self.start_completed_import(path, None) {
+                            self.error = Some(error.to_string());
+                        }
+                    }
+                    Dialog::StackEverything => self.stack_everything(path),
                 }
             }
         }
@@ -705,6 +825,15 @@ impl StrehlApp {
                         self.status = "Saved stack / source bracket changed".into();
                         self.error = Some("Source bracket differs from this saved run. Its photograph and observations remain available.".into());
                     } else {
+                        if let Some(session) = &mut self.controls.settings.session {
+                            session.sources = crate::workspace_history::source_identities(&stack);
+                            match session.groups(&stack) {
+                                Ok(groups) => self.session_ui.groups = groups,
+                                Err(error) => {
+                                    self.error = Some(error.to_string());
+                                }
+                            }
+                        }
                         self.status = format!("{} source frames", stack.frames.len());
                         self.selected = stack.frames.len() / 2;
                         self.stack = Some(stack);
@@ -769,6 +898,9 @@ impl StrehlApp {
                 }
                 RenderEvent::Log(text) => {
                     self.progress.ingest(&text);
+                    if let Some(view) = self.progress.active_view() {
+                        self.status = format!("{} · {}", view.label(), self.progress.stage.title());
+                    }
                     if let Some(repair) = self.progress.source_repair
                         && !repair.finished
                     {
@@ -804,6 +936,7 @@ impl StrehlApp {
                                 log.display()
                             ));
                             self.result = Some(output.clone());
+                            self.refresh_session_outputs(&directory);
                             self.open_result(output);
                             self.process_view = true;
                         }
@@ -845,6 +978,9 @@ impl StrehlApp {
             ctx.request_repaint();
         }
         if self.job.is_some()
+            || self.session_import.is_some()
+            || self.session_output_selection.is_some()
+            || self.view_bundle_export.is_some()
             || self.scan.is_some()
             || self.replay.is_some()
             || self.browser.active()
@@ -858,7 +994,9 @@ impl StrehlApp {
     }
     fn poll_images(&mut self, ctx: &egui::Context) {
         self.browser.set_live_frame(if self.activity {
-            self.progress.processing_frame
+            self.progress
+                .processing_frame
+                .and_then(|i| self.progress.parent_frame(i))
         } else {
             None
         });
@@ -906,7 +1044,10 @@ impl StrehlApp {
             &mut self.source_viewer,
         );
         if self.activity
-            && let Some(index) = self.progress.processing_frame
+            && let Some(index) = self
+                .progress
+                .processing_frame
+                .and_then(|i| self.progress.parent_frame(i))
             && index < frames.len()
             && let Some(texture) = self.browser.native_thumbnail(index)
         {
@@ -1042,6 +1183,12 @@ impl StrehlApp {
     }
 
     fn start_draft(&mut self) {
+        if self.controls.settings.session.is_some() {
+            self.error = Some(
+                "Multi-stack previews use camera sources until a session render completes.".into(),
+            );
+            return;
+        }
         if self.draft_job.is_some()
             || self.picker_active()
             || self.job.is_some()
@@ -1140,19 +1287,32 @@ impl StrehlApp {
                                     } else if self.activity {
                                         let pair = self.live_pair();
                                         let previews = pair.map(|index| {
-                                            self.browser
-                                                .thumbnail(index)
-                                                .map(|texture| (index, texture))
+                                            self.browser.thumbnail(index).and_then(|texture| {
+                                                let local = self
+                                                    .progress
+                                                    .view
+                                                    .as_ref()
+                                                    .map_or(Some(index), |v| {
+                                                        v.local_frame(index)
+                                                    })?;
+                                                Some((local, texture))
+                                            })
                                         });
                                         let response = processing_view::show_dock(
                                             ui,
                                             &self.progress,
                                             previews,
                                         );
-                                        if let Some(index) = response.selected {
+                                        if let Some(index) = response
+                                            .selected
+                                            .and_then(|i| self.progress.parent_frame(i))
+                                        {
                                             self.inspect_frame(index);
                                         }
-                                        if let Some(pair) = response.compare_pair {
+                                        if let Some(pair) = response
+                                            .compare_pair
+                                            .and_then(|p| self.progress.parent_pair(p))
+                                        {
                                             self.hold_pair(pair);
                                         }
 
@@ -1351,8 +1511,14 @@ impl StrehlApp {
         let count = self.stack.as_ref().map_or(0, |s| s.frames.len());
         let mut pair = self
             .held_pair
-            .or(self.progress.alignment_current_pair)
-            .or(self.progress.alignment_latest_pair)
+            .or(self
+                .progress
+                .alignment_current_pair
+                .and_then(|p| self.progress.parent_pair(p)))
+            .or(self
+                .progress
+                .alignment_latest_pair
+                .and_then(|p| self.progress.parent_pair(p)))
             .filter(|pair| pair[0] < pair[1] && pair[1] < count)
             .unwrap_or_else(|| self.live_pair());
         if let Some(index) = self.process_inspection().filter(|&i| i < count) {
@@ -1367,6 +1533,7 @@ impl StrehlApp {
                 .progress
                 .alignment_current_pair
                 .or(self.progress.alignment_latest_pair)
+                .and_then(|p| self.progress.parent_pair(p))
             && pair[0] < count
             && pair[1] < count
         {
@@ -1436,6 +1603,7 @@ impl StrehlApp {
             && self
                 .progress
                 .processing_frame
+                .and_then(|i| self.progress.parent_frame(i))
                 .is_none_or(|index| index == self.selected)
     }
     fn sync_workbench_phase(&mut self) {
@@ -1459,7 +1627,10 @@ impl StrehlApp {
     }
     fn follow_current_frame(&mut self) {
         if self.follow_processing
-            && let Some(index) = self.progress.processing_frame
+            && let Some(index) = self
+                .progress
+                .processing_frame
+                .and_then(|i| self.progress.parent_frame(i))
             && Some((self.progress.stage, self.progress.alignment_phase, index))
                 != self.followed_frame
         {
@@ -1692,7 +1863,12 @@ impl StrehlApp {
                 "{} / {:03}",
                 if self.recorded {
                     "RECORDED INPUT"
-                } else if self.progress.processing_frame == Some(*index) {
+                } else if self
+                    .progress
+                    .processing_frame
+                    .and_then(|i| self.progress.parent_frame(i))
+                    == Some(*index)
+                {
                     "LIVE INPUT"
                 } else {
                     "LAST INPUT"
@@ -2077,6 +2253,11 @@ impl StrehlApp {
         if self.process_domain_epoch != self.progress.diagnostic_epoch {
             self.process_domain_epoch = self.progress.diagnostic_epoch;
             self.process_surfaces.clear();
+            if self.progress.active_view().is_some() {
+                self.held_pair = None;
+                self.followed_frame = None;
+                self.live_input = None;
+            }
         }
         let mut newest = BTreeSet::new();
         for sample in self
@@ -2166,10 +2347,31 @@ impl StrehlApp {
             .as_ref()
             .filter(|stack| index < stack.frames.len())
         {
+            let (directory, frames, offset) = if self.controls.settings.session.is_some() {
+                let directory = stack.frames[index]
+                    .path
+                    .parent()
+                    .unwrap_or(&stack.directory)
+                    .to_path_buf();
+                let start = stack.frames[..=index]
+                    .iter()
+                    .rposition(|frame| frame.path.parent() != Some(directory.as_path()))
+                    .map_or(0, |i| i + 1);
+                let end = index
+                    + stack.frames[index..]
+                        .iter()
+                        .take_while(|frame| frame.path.parent() == Some(directory.as_path()))
+                        .count();
+                (directory, stack.frames[start..end].to_vec(), start)
+            } else {
+                (stack.directory.clone(), stack.frames.clone(), 0)
+            };
+            self.session_ui.metadata_start = offset;
+            self.session_ui.metadata_directory = Some(directory.clone());
             self.camera_metadata.open_bracket(
                 self.epoch,
-                stack.directory.clone(),
-                stack.frames.clone(),
+                directory,
+                frames,
                 self.output.clone(),
                 ctx,
             );
@@ -2183,6 +2385,17 @@ impl StrehlApp {
         }
     }
     fn show_process(&mut self, ctx: &egui::Context) {
+        if let (Some(session), Some(scan)) = (&self.controls.settings.session, &self.stack) {
+            self.session_ui.groups = session.groups(scan).unwrap_or_default();
+        }
+        self.process_space
+            .set_capture_groups(if self.progress.active_view().is_some() {
+                &[]
+            } else {
+                &self.session_ui.groups
+            });
+        self.process_space
+            .set_session_summary(self.session_ui.summary.as_ref());
         let edit_enabled = self.sidebar == Some(workspace::Sidebar::Edit)
             && self.editor.loaded.is_some()
             && self.editor.path == self.result
@@ -2210,26 +2423,27 @@ impl StrehlApp {
         self.process_space.set_edit_workspace(edit_enabled);
         self.process_space
             .set_edit_navigation(edit_enabled && !ctx.input(|input| input.modifiers.alt));
-        let count = self
-            .stack
-            .as_ref()
-            .map(|stack| stack.frames.len())
-            .or_else(|| self.expected_run.as_ref().map(|run| run.frames))
-            .or(self.progress.frames_total)
-            .unwrap_or(0);
+        let parent_count = self.process_capture_count();
+        let view_scope = self.progress.active_view().cloned();
+        let count = view_scope.as_ref().map_or(parent_count, |v| v.source_count);
+        let local_index = |index| {
+            view_scope
+                .as_ref()
+                .map_or(Some(index), |v| v.local_frame(index))
+        };
         let photos: Vec<_> = self
             .browser
             .native_thumbnail_indices()
             .into_iter()
             .filter_map(|index| {
-                self.browser
-                    .native_thumbnail(index)
-                    .map(|texture| SourcePhoto {
+                self.browser.native_thumbnail(index).and_then(|texture| {
+                    Some(SourcePhoto {
                         epoch: self.epoch,
-                        index,
+                        index: local_index(index)?,
                         texture: texture.clone(),
                         aperture: [texture.size()[0] as u32, texture.size()[1] as u32],
                     })
+                })
             })
             .collect();
         let mut inspection_indices = self.browser.canonical_indices();
@@ -2239,7 +2453,11 @@ impl StrehlApp {
         inspection_indices.dedup();
         let inspection_photos: Vec<_> = inspection_indices
             .into_iter()
-            .filter_map(|index| self.source_photo(index))
+            .filter_map(|index| {
+                let mut photo = self.source_photo(index)?;
+                photo.index = local_index(index)?;
+                Some(photo)
+            })
             .collect();
         let surfaces: Vec<_> = self
             .process_surfaces
@@ -2273,7 +2491,7 @@ impl StrehlApp {
                 let input = process_space::Input {
                     progress: &self.progress,
                     frame_count: count,
-                    selected: self.selected,
+                    selected: local_index(self.selected).unwrap_or(0),
                     epoch: self.epoch,
                     photos: &photos,
                     inspection_photos: &inspection_photos,
@@ -2285,7 +2503,9 @@ impl StrehlApp {
                     } else {
                         None
                     },
-                    inspected_pair: self.held_pair,
+                    inspected_pair: self
+                        .held_pair
+                        .and_then(|p| Some([local_index(p[0])?, local_index(p[1])?])),
                     output_size: (self.result.is_some() && self.image_path == self.result)
                         .then_some(self.result_viewer.source_size),
                 };
@@ -2309,10 +2529,24 @@ impl StrehlApp {
                 response
             })
             .inner;
+        let response = Self::parent_process_response(response, view_scope.as_ref());
         if let Some(index) = response.camera_metadata {
             self.inspect_camera_metadata(index, ctx);
         }
-        self.apply_process_response(response, count);
+        self.apply_process_response(response, parent_count);
+    }
+    fn parent_process_response(
+        mut response: process_space::Response,
+        view: Option<&crate::pipeline::ViewProgress>,
+    ) -> process_space::Response {
+        if let Some(view) = view {
+            response.selected = response.selected.and_then(|i| view.parent_frame(i));
+            response.camera_metadata = response.camera_metadata.and_then(|i| view.parent_frame(i));
+            response.compare_pair = response
+                .compare_pair
+                .and_then(|p| Some([view.parent_frame(p[0])?, view.parent_frame(p[1])?]));
+        }
+        response
     }
     fn apply_process_response(&mut self, response: process_space::Response, count: usize) {
         if response.exit_space {
@@ -2356,11 +2590,40 @@ impl StrehlApp {
             self.canvas(ctx);
         }
     }
+    fn process_capture_count(&self) -> usize {
+        let scanned = self.stack.as_ref().map(|stack| stack.frames.len());
+        // Imported receipts describe provenance, not permission or availability
+        // to open original captures. Only an actual scan enables their browser.
+        if self
+            .expected_run
+            .as_ref()
+            .is_some_and(|run| run.imported.is_some())
+        {
+            scanned.unwrap_or(0)
+        } else {
+            scanned
+                .or_else(|| self.expected_run.as_ref().map(|run| run.frames))
+                .or(self.progress.frames_total)
+                .unwrap_or(0)
+        }
+    }
     fn process_contacts(&self) -> Vec<usize> {
-        self.process_space.contact_indices()
+        self.process_space
+            .contact_indices()
+            .into_iter()
+            .filter_map(|i| {
+                self.progress
+                    .active_view()
+                    .map_or(Some(i), |v| v.parent_frame(i))
+            })
+            .collect()
     }
     fn process_inspection(&self) -> Option<usize> {
-        self.process_space.inspection_frame()
+        self.process_space.inspection_frame().and_then(|i| {
+            self.progress
+                .active_view()
+                .map_or(Some(i), |v| v.parent_frame(i))
+        })
     }
     fn preview_target(&self) -> usize {
         let count = self.stack.as_ref().map_or(0, |stack| stack.frames.len());
@@ -2404,6 +2667,9 @@ impl StrehlApp {
             true
         };
         let ready = (self.reveal_at_ms.is_some() || self.updates > 10)
+            && self.session_import.is_none()
+            && self.session_output_selection.is_none()
+            && self.view_bundle_export.is_none()
             && self.scan.is_none()
             && self.replay.is_none()
             && self.result_work.is_none()
@@ -2411,6 +2677,7 @@ impl StrehlApp {
             && self.editor.loading.is_none()
             && self.editor.developing.is_none()
             && self.editor.viewport.settled()
+            && !self.process_space.diagnostics_loading()
             && self.agent.starting.is_none()
             && !self.metadata_requested
             && !self.camera_metadata.is_loading()
@@ -2436,6 +2703,25 @@ impl StrehlApp {
                         || self.browser.native_thumbnail_error(*i).is_some()
                 }));
         if ready && !self.screenshot_requested {
+            if let Some(map) = self.screenshot_diagnostic.as_deref() {
+                match self.process_space.diagnostic_capture_ready(
+                    map,
+                    self.screenshot_diagnostic_opacity,
+                    self.screenshot_diagnostic_sample,
+                ) {
+                    Ok(true) => {
+                        self.screenshot_diagnostic = None;
+                        self.screenshot_ranges_applied_frame = Some(ctx.cumulative_frame_nr());
+                    }
+                    Ok(false) => {}
+                    Err(error) => {
+                        self.screenshot_error = Some(format!("{error:#}"));
+                        self.error = self.screenshot_error.clone();
+                    }
+                }
+                ctx.request_repaint_after(Duration::from_millis(30));
+                return;
+            }
             if let Some(ranges) = self.screenshot_ranges.as_ref() {
                 // Replay and result loading must finish before the theater's
                 // initialized domain accepts this diagnostic-only selection.
@@ -2574,10 +2860,24 @@ impl StrehlApp {
         }
         self.status_bar(ctx);
         self.workspace(ctx);
-        let metadata_frame = self.preview_target();
+        if self.camera_metadata.is_open() && self.controls.settings.session.is_some() {
+            let index = self.preview_target();
+            if self
+                .stack
+                .as_ref()
+                .and_then(|stack| stack.frames.get(index))
+                .and_then(|frame| frame.path.parent())
+                != self.session_ui.metadata_directory.as_deref()
+            {
+                self.inspect_camera_metadata(index, ctx);
+            }
+        }
+        let metadata_frame = self
+            .preview_target()
+            .saturating_sub(self.session_ui.metadata_start);
         if let Some(index) = self.camera_metadata.show(ctx, metadata_frame) {
             let view = self.view;
-            self.inspect_frame(index);
+            self.inspect_frame(index + self.session_ui.metadata_start);
             self.view = view;
         }
         self.observe_edits(ctx);
@@ -2587,7 +2887,11 @@ impl StrehlApp {
             self.persist_catalog();
         }
         if let Some(directory) = self.bracket_browser.show(ctx) {
-            self.import(directory);
+            if let Some(choose) = self.session_ui.chooser.take() {
+                self.add_session_directory(directory, choose);
+            } else {
+                self.import(directory);
+            }
             ctx.request_repaint();
         }
         crate::window_chrome::finish(ctx, self.picker_active());

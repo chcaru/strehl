@@ -1,0 +1,8 @@
+{
+  "scope": "Independent source review of exact-support guard; root test receipt sr-original-footprint-core-02",
+  "files": {
+    "crates/strehl-core/src/reconstruction-registration.rs": "e97270f1880766b44b15105ded3bd8d5291c4eb119ea13febc1d155e441071e1",
+    "crates/strehl-core/src/reconstruction-registration-footprint.rs": "353208901019c0a70ba959b38fee942679e758061f1f5d2e92e98e7bbf12699b",
+    "crates/strehl-core/src/reconstruction-registration-footprint-tests.rs": "d0614886a03a67e6ddf44b8a29cee0ed0399fab747c23874ccdf2007768c5921"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "checked": [
+    "docs/multi-stack-handoff.md",
+    "docs/multi-stack-tryout.md",
+    "experiments/multi-stack-2026-10-28/integration-2026-10-31.md"
+  ],
+  "local_links_resolve": true,
+  "single_final_newline": true,
+  "verification_script_parses": true
+}

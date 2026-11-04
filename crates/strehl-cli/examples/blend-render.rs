@@ -39,11 +39,11 @@
 #[path = "../src/align_cmd.rs"]
 mod align_cmd;
 #[allow(dead_code)]
-#[path = "../src/ui-progress.rs"]
-mod ui_progress;
-#[allow(dead_code)]
 #[path = "../src/image_out.rs"]
 mod image_out;
+#[allow(dead_code)]
+#[path = "../src/ui-progress.rs"]
+mod ui_progress;
 
 /// TIFF tag 305, required by the `#[path]`-included `image_out.rs`.
 ///
@@ -55,7 +55,10 @@ mod image_out;
 ///
 /// Deliberately marked so the provenance of a stray render is never in doubt:
 /// an experimental TIFF must not claim to be a shipped one.
-const SOFTWARE: &str = concat!("strehl blend-render (examples/, not the shipped merge) ", env!("CARGO_PKG_VERSION"));
+const SOFTWARE: &str = concat!(
+    "strehl blend-render (examples/, not the shipped merge) ",
+    env!("CARGO_PKG_VERSION")
+);
 
 use std::path::{Path, PathBuf};
 use std::time::Instant;
@@ -68,9 +71,8 @@ use strehl_core::noise::{Levels, NoiseModel};
 use strehl_core::plane::{PlaneGeometry, QuadSource};
 use strehl_core::profile;
 use strehl_core::pyramid::{
-    Fallback,
-    BandMerge, BaseBand, FrameWorkspace, Hull, MergeConfig, SelectMode, Workspace, level_sizes,
-    luma_variance,
+    BandMerge, BaseBand, Fallback, FrameWorkspace, Hull, MergeConfig, SelectMode, Workspace,
+    level_sizes, luma_variance,
 };
 use strehl_core::warpmap::{FrameWarp, WarpMap};
 
@@ -116,10 +118,8 @@ fn parse_args() -> Result<Args> {
         exposure_stops: 0.0,
     };
     while let Some(flag) = it.next() {
-        let mut val = || -> Result<String> {
-            it.next()
-                .with_context(|| format!("{flag} needs a value"))
-        };
+        let mut val =
+            || -> Result<String> { it.next().with_context(|| format!("{flag} needs a value")) };
         match flag.as_str() {
             "--limit" => a.limit = Some(val()?.parse()?),
             "--chunks" => a.chunks = val()?.parse()?,
@@ -336,7 +336,9 @@ fn main() -> Result<()> {
     let noise = profile::noise_model_for(&camera, iso, levels);
     let sizes = level_sizes(geom.width, geom.height, args.cfg.bands);
 
-    eprintln!("strehl BUILD-BLEND -- LAPLACIAN MULTI-BAND MERGE (an experiment, not the ship path)");
+    eprintln!(
+        "strehl BUILD-BLEND -- LAPLACIAN MULTI-BAND MERGE (an experiment, not the ship path)"
+    );
     eprintln!("camera          : {camera}");
     // Cheap: seeks a few hundred bytes of metadata, no pixel decode.
     let ident = strehl_raw::identity(&paths[0]);
@@ -351,10 +353,8 @@ fn main() -> Result<()> {
     // call, so the label cannot drift from the pixels without the pixels moving.
     eprintln!(
         "lateral CA      : {}",
-        match strehl_core::optics::resolve_for_capture_env(
-            ident.model.as_deref(),
-            ident.lens_type3,
-        ) {
+        match strehl_core::optics::resolve_for_capture_env(ident.model.as_deref(), ident.lens_type3,)
+        {
             Ok(d) => d.to_string(),
             // Unreachable: `preflight_ca_profile` rejects an unusable setting
             // before any decode. Stated as `off` because that is what the render
@@ -555,7 +555,10 @@ fn main() -> Result<()> {
     }
     let merge = merged.context("no frames were folded")?;
     let fold_secs = t_fold.elapsed().as_secs_f64();
-    ensure!(folded_total > 0, "every frame was refused by the alignment solve");
+    ensure!(
+        folded_total > 0,
+        "every frame was refused by the alignment solve"
+    );
     eprintln!();
     eprintln!(
         "folded          : {folded_total} / {} frames in {fold_secs:.1} s ({:.2} s per frame, \
@@ -588,7 +591,11 @@ fn main() -> Result<()> {
     if !clamped.is_empty() {
         eprintln!(
             "hull clamp      : {}",
-            clamped.iter().map(|f| format!("{:.3}%", 100.0 * f)).collect::<Vec<_>>().join(" ")
+            clamped
+                .iter()
+                .map(|f| format!("{:.3}%", 100.0 * f))
+                .collect::<Vec<_>>()
+                .join(" ")
         );
         eprintln!(
             "                  per plane, the fraction of output pixels the reconstruction put \
@@ -662,9 +669,8 @@ fn write_frame(
         _ => eprintln!("colour          : no characterisation; CAMERA-NATIVE RGB"),
     }
     let eg = 2.0f32.powf(exposure_stops);
-    let dev = space.develop(
-        matrix.map(|r| r.with_ceiling(color::saturation_ceiling(levels, gains, eg))),
-    );
+    let dev =
+        space.develop(matrix.map(|r| r.with_ceiling(color::saturation_ceiling(levels, gains, eg))));
 
     let (mw, mh) = (geom.width * 2, geom.height * 2);
     let mut mosaic = vec![0.0f32; mw * mh];
@@ -686,4 +692,3 @@ fn write_frame(
     }
     image_out::write_demosaiced(path, mw, mh, &mosaic, &dev)
 }
-

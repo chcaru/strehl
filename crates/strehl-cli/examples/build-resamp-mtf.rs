@@ -158,9 +158,7 @@ fn ratio_pure_scale(r: Resampler, f_out: f64, k: f64) -> f64 {
 
 fn main() {
     println!("BUILD-RESAMP — isolated gather-kernel MTF, measured on align.rs's own samplers");
-    println!(
-        "plane {W} x {H}, fit window N = {N} from x = {MARGIN}, row {ROW}, {PHASES} phases\n"
-    );
+    println!("plane {W} x {H}, fit window N = {N} from x = {MARGIN}, row {ROW}, {PHASES} phases\n");
 
     println!("=== NULL: dx = 0 must read 1.000000 for every kernel at every f ===");
     print!("{:<14}", "kernel");
@@ -181,7 +179,11 @@ fn main() {
     println!("worst |ratio - 1| at dx=0 : {null_worst:.3e}");
     println!(
         "NULL {}\n",
-        if null_worst < 1e-6 { "PASS" } else { "FAIL — the harness is wrong, not align.rs" }
+        if null_worst < 1e-6 {
+            "PASS"
+        } else {
+            "FAIL — the harness is wrong, not align.rs"
+        }
     );
 
     println!("=== dx = 0.5 (worst phase) ===");

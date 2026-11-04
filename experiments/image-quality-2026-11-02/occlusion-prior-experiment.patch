@@ -1,0 +1,276 @@
+diff --git a/crates/strehl-cli/src/merge_cmd.rs b/crates/strehl-cli/src/merge_cmd.rs
+index 3a800ffc3..e4ec7b410 100644
+--- a/crates/strehl-cli/src/merge_cmd.rs
++++ b/crates/strehl-cli/src/merge_cmd.rs
+@@ -5815,6 +5815,7 @@ impl BandWorker {
+         if let Some((levels, beta, var)) = self.floor.as_ref().and_then(|p| p.null_frame()) {
+             self.merge.add_null_frame(&levels, &beta, var);
+         }
++        self.merge.frame_index = index;
+         let frame_beta = (!self.beta.is_empty()).then_some(self.beta.as_slice());
+         if let Some(b) = frame_beta {
+             if self.beta_sum.len() < b.len() {
+@@ -5900,6 +5901,7 @@ impl BandWorker {
+         if let Some((levels, beta, var)) = prep.floor.as_ref().and_then(|p| p.null_frame()) {
+             self.merge.add_null_frame(&levels, &beta, var);
+         }
++        self.merge.frame_index = index;
+         let frame_beta = (!prep.beta.is_empty()).then_some(prep.beta.as_slice());
+         if let Some(b) = frame_beta {
+             if self.beta_sum.len() < b.len() {
+@@ -6031,6 +6033,155 @@ fn prepare_frame_into(
+     Ok(true)
+ }
+ 
++/// EXPERIMENT: a cheap first pass for the occlusion prior. Each frame's green
++/// luma is taken per quad, box-reduced to half the analysis plane, pulled onto
++/// the reference grid by its own placement, and scored with a log local
++/// high-pass energy normalised by signal (shot noise). Per cell, the near
++/// surface is the smallest frame index whose score is within `STREHL_OCCLUSION_ALPHA`
++/// (log2 units, default 1 = half the energy) of that cell's best.
++fn occlusion_prior(
++    source: &impl PyramidFrameSource,
++    n: usize,
++    domain: PyramidDomain,
++    levels: Levels,
++    warps: Option<&WarpMap>,
++) -> Result<strehl_core::pyramid::DepthPrior> {
++    let map = warps.context("the occlusion prior needs an alignment map")?;
++    let full = domain.full;
++    let (hw, hh) = (full.width / 2, full.height / 2);
++    let env = |k: &str, d: f32| std::env::var(k).ok().and_then(|v| v.parse().ok()).unwrap_or(d);
++    let alpha = env("STREHL_OCCLUSION_ALPHA", 1.0);
++    let scores: Vec<Option<Vec<u8>>> = (0..n)
++        .into_par_iter()
++        .map(|index| -> Result<Option<Vec<u8>>> {
++            let t = match map.warp(index)? {
++                FrameWarp::Placed(t) => *t,
++                FrameWarp::Refused(_) => return Ok(None),
++            };
++            let frame = source.decode(index)?;
++            let (ax, ay, stride) = (frame.active.x, frame.active.y, frame.stride);
++            let black = levels.black;
++            let g = |px: usize, py: usize| {
++                let r = (ay + 2 * py) * stride + ax + 2 * px;
++                0.5 * (f32::from(frame.data[r + 1]) + f32::from(frame.data[r + stride])) - black
++            };
++            // Half-plane source, box-reduced from the quad plane.
++            let mut src = vec![0.0f32; hw * hh];
++            for y in 0..hh {
++                for x in 0..hw {
++                    src[y * hw + x] = 0.25
++                        * (g(2 * x, 2 * y) + g(2 * x + 1, 2 * y) + g(2 * x, 2 * y + 1) + g(2 * x + 1, 2 * y + 1));
++                }
++            }
++            let (cx, cy) = (full.width as f64 * 0.5, full.height as f64 * 0.5);
++            let mut lum = vec![0.0f32; hw * hh];
++            for y in 0..hh {
++                for x in 0..hw {
++                    let (qx, qy) = t.apply_at(2.0 * x as f64 + 0.5, 2.0 * y as f64 + 0.5, cx, cy);
++                    let (sx, sy) = ((qx - 0.5) / 2.0, (qy - 0.5) / 2.0);
++                    let (x0, y0) = (sx.floor(), sy.floor());
++                    if x0 < 0.0 || y0 < 0.0 || x0 as usize + 1 >= hw || y0 as usize + 1 >= hh {
++                        continue;
++                    }
++                    let (fx, fy) = ((sx - x0) as f32, (sy - y0) as f32);
++                    let i = y0 as usize * hw + x0 as usize;
++                    lum[y * hw + x] = (1.0 - fy) * ((1.0 - fx) * src[i] + fx * src[i + 1])
++                        + fy * ((1.0 - fx) * src[i + hw] + fx * src[i + hw + 1]);
++                }
++            }
++            let box3 = |a: &[f32]| {
++                let mut o = vec![0.0f32; hw * hh];
++                for y in 1..hh - 1 {
++                    for x in 1..hw - 1 {
++                        let mut acc = 0.0;
++                        for dy in 0..3 {
++                            for dx in 0..3 {
++                                acc += a[(y + dy - 1) * hw + x + dx - 1];
++                            }
++                        }
++                        o[y * hw + x] = acc / 9.0;
++                    }
++                }
++                o
++            };
++            let mean = box3(&lum);
++            let sq: Vec<f32> = lum.iter().zip(&mean).map(|(l, m)| (l - m) * (l - m)).collect();
++            let energy = box3(&sq);
++            Ok(Some(
++                energy
++                    .iter()
++                    .zip(&mean)
++                    .map(|(e, m)| ((e / (m.max(0.0) + 64.0) + 1.0).log2() * 16.0).clamp(0.0, 255.0) as u8)
++                    .collect(),
++            ))
++        })
++        .collect::<Result<_>>()?;
++    let thr = (alpha * 16.0) as i32;
++    let mut near = vec![u16::MAX; hw * hh];
++    near.par_iter_mut().enumerate().for_each(|(j, d)| {
++        let best = scores.iter().flatten().map(|s| s[j]).max().unwrap_or(0) as i32;
++        if best < std::env::var("STREHL_OCCLUSION_FLOOR").ok().and_then(|v| v.parse().ok()).unwrap_or(24) {
++            return; // no surface above noise here: no prior
++        }
++        if let Some(i) = scores
++            .iter()
++            .position(|s| s.as_ref().is_some_and(|s| i32::from(s[j]) >= best - thr))
++        {
++            *d = i as u16;
++        }
++    });
++    // Keep a near-surface label only inside a coherent region of consistent
++    // depth (a leg, an antenna): where front and back alternate (hair), the
++    // local spread is large and the label is dropped, so legitimately visible
++    // farther detail between near strands is not suppressed.
++    let radius = env("STREHL_OCCLUSION_RADIUS", 6.0) as isize;
++    let max_iqr = env("STREHL_OCCLUSION_IQR", 10.0);
++    if radius > 0 {
++        let src = near.clone();
++        near.par_iter_mut().enumerate().for_each(|(j, d)| {
++            if *d == u16::MAX {
++                return;
++            }
++            let (x, y) = ((j % hw) as isize, (j / hw) as isize);
++            let mut v: Vec<u16> = Vec::with_capacity(((2 * radius + 1) * (2 * radius + 1)) as usize);
++            let mut total = 0usize;
++            for yy in (y - radius).max(0)..(y + radius + 1).min(hh as isize) {
++                for xx in (x - radius).max(0)..(x + radius + 1).min(hw as isize) {
++                    total += 1;
++                    let w = src[yy as usize * hw + xx as usize];
++                    if w != u16::MAX {
++                        v.push(w);
++                    }
++                }
++            }
++            if v.len() * 10 < total * 6 {
++                *d = u16::MAX;
++                return;
++            }
++            v.sort_unstable();
++            let iqr = f32::from(v[v.len() * 3 / 4]) - f32::from(v[v.len() / 4]);
++            if iqr > max_iqr {
++                *d = u16::MAX;
++            }
++        });
++    }
++    if let Ok(path) = std::env::var("STREHL_OCCLUSION_DUMP") {
++        let bytes: Vec<u8> = near.iter().flat_map(|v| v.to_le_bytes()).collect();
++        std::fs::write(&path, bytes)?;
++        eprintln!("occlusion map   : {path} ({hw}x{hh} u16, rect origin {},{})", domain.rect.x, domain.rect.y);
++    }
++    Ok(strehl_core::pyramid::DepthPrior {
++        near,
++        width: hw,
++        height: hh,
++        shift: 1,
++        offset: (domain.rect.x, domain.rect.y),
++        margin: env("STREHL_OCCLUSION_MARGIN", 20.0),
++        softness: env("STREHL_OCCLUSION_SOFTNESS", 15.0),
++        levels: env("STREHL_OCCLUSION_LEVELS", 3.0) as usize,
++    })
++}
++
+ /// One look-ahead slot: its own preparation buffers, so several frames can be
+ /// decoded, gathered and probed at once while the fold stays in index order.
+ struct FramePrep {
+@@ -7704,6 +7855,17 @@ fn run_pyramid_prepared_with_sensor(
+     let mut folded_total = 0usize;
+     let mut beta_sum: Vec<f64> = Vec::new();
+     let mut beta_n = 0usize;
++    if std::env::var("STREHL_OCCLUSION").is_ok() {
++        let t0 = Instant::now();
++        let prior = occlusion_prior(source, paths.len(), domain, levels, warps)?;
++        eprintln!(
++            "occlusion prior : EXPERIMENT -- {}x{} near-surface map in {:.1} s, margin {} softness {} levels {}",
++            prior.width, prior.height, t0.elapsed().as_secs_f64(), prior.margin, prior.softness, prior.levels
++        );
++        strehl_core::pyramid::set_depth_prior(Some(prior));
++    } else {
++        strehl_core::pyramid::set_depth_prior(None);
++    }
+     progress.stage("merge");
+     pool.install(|| -> Result<()> {
+         #[cfg(feature = "temporal-energy")]
+diff --git a/crates/strehl-core/src/pyramid.rs b/crates/strehl-core/src/pyramid.rs
+index 370d89d21..d062377a3 100644
+--- a/crates/strehl-core/src/pyramid.rs
++++ b/crates/strehl-core/src/pyramid.rs
+@@ -1655,6 +1655,9 @@ pub struct BandMerge {
+     /// floor, independent noise), over a central window of each level. Their
+     /// statistics' quantiles are the gate's thresholds. Empty when off.
+     null: Vec<NullWindow>,
++    /// EXPERIMENT (occlusion prior): index of the frame being folded, set by
++    /// the caller before each `add_frame*`.
++    pub frame_index: usize,
+ }
+ 
+ /// One level's window of the ensemble gate's null accumulators.
+@@ -1900,6 +1903,7 @@ impl BandMerge {
+                 Vec::new()
+             },
+             sizes,
++            frame_index: 0,
+         }
+     }
+ 
+@@ -2551,6 +2555,22 @@ impl BandMerge {
+                             }
+                         }
+                     });
++                if let Some(prior) = depth_prior().filter(|p| k < p.levels) {
++                    let sz = self.sizes[k];
++                    let i = self.frame_index as f32;
++                    for (j, wv) in w.iter_mut().enumerate() {
++                        let (x, y) = ((j % sz.width) << k, (j / sz.width) << k);
++                        let mx = ((x + prior.offset.0) >> prior.shift).min(prior.width - 1);
++                        let my = ((y + prior.offset.1) >> prior.shift).min(prior.height - 1);
++                        let d = prior.near[my * prior.width + mx];
++                        if d != u16::MAX {
++                            let excess = i - f32::from(d) - prior.margin;
++                            if excess > 0.0 {
++                                *wv *= (-(excess / prior.softness).powi(2)).exp();
++                            }
++                        }
++                    }
++                }
+                 if !self.zmax.is_empty() {
+                     // Energy in units of this frame's own expected noise energy
+                     // (the floor without the gate multiplier).
+@@ -3700,6 +3720,36 @@ pub fn pooled_evidence_default() -> bool {
+     })
+ }
+ 
++/// EXPERIMENT: an occlusion prior. `near[y][x]` is the index of the nearest
++/// frame whose focus at that place is close to its best (u16::MAX: unknown), on
++/// a grid `2^shift` analysis-plane pixels per cell after adding `offset`.
++/// Frames more than `margin` beyond it lose weight at the finest `levels`
++/// bands with a Gaussian of width `softness` (frames): a nearer opaque
++/// surface cannot show a farther surface's fine detail.
++#[derive(Debug, Clone)]
++pub struct DepthPrior {
++    pub near: Vec<u16>,
++    pub width: usize,
++    pub height: usize,
++    pub shift: usize,
++    pub offset: (usize, usize),
++    pub margin: f32,
++    pub softness: f32,
++    pub levels: usize,
++}
++
++static DEPTH_PRIOR: std::sync::OnceLock<std::sync::Mutex<Option<std::sync::Arc<DepthPrior>>>> =
++    std::sync::OnceLock::new();
++
++/// Install (or clear) the process-wide experimental occlusion prior.
++pub fn set_depth_prior(prior: Option<DepthPrior>) {
++    *DEPTH_PRIOR.get_or_init(Default::default).lock().unwrap() = prior.map(std::sync::Arc::new);
++}
++
++fn depth_prior() -> Option<std::sync::Arc<DepthPrior>> {
++    DEPTH_PRIOR.get().and_then(|m| m.lock().unwrap().clone())
++}
++
+ /// Environment override for the ensemble gate's default (`0`/`off` disables).
+ pub const ENSEMBLE_ENV: &str = "STREHL_PYRAMID_ENSEMBLE";
+ 

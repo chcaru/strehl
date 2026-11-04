@@ -1,0 +1,55 @@
+{
+  "source_commit": "9f81063231b78b9244874ccfa4bb939b60517ef5",
+  "build_id": "desktop-129ddfd67a3f75a5",
+  "source_sha256": "129ddfd67a3f75a572f060b3998f967a6621c4570d67cf206c4707911635d83c",
+  "source_files_verified": 830,
+  "package_files_verified": 9,
+  "no_raw_tiff_or_cfa_data_in_source_zip": true,
+  "files": [
+    {
+      "path": "Strehl.exe",
+      "bytes": 40244736,
+      "sha256": "643f3c000204fad0deabc28bb6bcf3605baabb5a01030451426759436f866022"
+    },
+    {
+      "path": "strehl-cli.exe",
+      "bytes": 21130752,
+      "sha256": "0458141bfacb444b2397373b797dfdb01d3f75f720742522ea56f6d68e51441a"
+    },
+    {
+      "path": "strehl-source.zip",
+      "bytes": 4591981,
+      "sha256": "10e828274357c2006a9139ab8e67d24c0007b4df16ca52305a14051377e7442c"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2310,
+      "sha256": "06934a8e27257368cb434dece1b2bd5d0d16f3958eed86eb7b805c318bb95c7a"
+    },
+    {
+      "path": "REBUILD.md",
+      "bytes": 6150,
+      "sha256": "547ebfe61148c7b2d7ec3f1f829ddd2c22da144c8cbba85b04f6cfea940505c9"
+    },
+    {
+      "path": "RAW-DECODER-NOTICE.md",
+      "bytes": 1124,
+      "sha256": "11fc766589b5c3e58d76ce648a6949ce4debf29c2232507ee4f4df79fe5edc03"
+    },
+    {
+      "path": "LICENSE-MIT",
+      "bytes": 1092,
+      "sha256": "1254bdfae7d28b46245a3bae01385611dda4bba18d9e65c244d767fee23b846d"
+    },
+    {
+      "path": "LICENSE-APACHE",
+      "bytes": 11560,
+      "sha256": "47b2b7375318c574ef44d0def1e28d296e8bac5940d24d2694f5d99e7053b780"
+    },
+    {
+      "path": "LICENSE-LGPL-2.1",
+      "bytes": 26920,
+      "sha256": "b14c366c41cc9f62dc20ec1a0885f278cf9681076d98027012a910fca5e89639"
+    }
+  ]
+}

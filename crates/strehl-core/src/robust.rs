@@ -400,7 +400,10 @@ pub fn loo_residual_kernel(w: usize, p: usize) -> Vec<f64> {
         ksum += kj;
         *rj = -kj;
     }
-    assert!((ksum - 1.0).abs() < 1e-9, "LOO weights sum to {ksum}, not 1");
+    assert!(
+        (ksum - 1.0).abs() < 1e-9,
+        "LOO weights sum to {ksum}, not 1"
+    );
     r
 }
 
@@ -529,7 +532,10 @@ mod tests {
     fn z_is_a_departure_measured_in_sigmas() {
         let op = ResidualOp::default();
         let flat = [100.0f32; Z_WINDOW];
-        assert!(op.z(&flat, 0.0, 1.0).abs() < 1e-5, "a flat window must read 0");
+        assert!(
+            op.z(&flat, 0.0, 1.0).abs() < 1e-5,
+            "a flat window must read 0"
+        );
 
         // Unit variance: b = 1, a = 0. sum(r^2) = 1/36 + 4/9 + 1 + 4/9 + 1/36.
         let r2: f32 = loo_residual_kernel(Z_WINDOW, Z_ORDER)
@@ -547,7 +553,10 @@ mod tests {
 
         // Four times the variance is twice the sigma, so half the z.
         let z4 = op.z(&bumped, 0.0, 4.0);
-        assert!((z4 - 0.5 * z).abs() < 1e-3, "z {z} -> {z4} is not sigma-scaled");
+        assert!(
+            (z4 - 0.5 * z).abs() < 1e-3,
+            "z {z} -> {z4} is not sigma-scaled"
+        );
     }
 
     /// A degenerate denominator leaves the sample ungated rather than rejecting

@@ -18,6 +18,7 @@ mod recovery;
 mod regions;
 
 pub(crate) struct LoadedPhoto {
+    pub coverage: Option<Arc<crate::photo_coverage::Coverage>>,
     pub image: Arc<LinearImage>,
     pub preview: Arc<LinearImage>,
     pub recipe: DevelopmentRecipe,
@@ -116,7 +117,8 @@ impl EditorState {
         } else {
             self.recipe.clone()
         };
-        let job = DevelopmentJob::new(loaded.image.clone(), loaded.preview.clone(), recipe);
+        let job = DevelopmentJob::new(loaded.image.clone(), loaded.preview.clone(), recipe)
+            .with_coverage(loaded.coverage.clone());
         self.development = Some((self.revision, before, job.clone()));
         Some(job)
     }
@@ -347,6 +349,8 @@ impl EditorState {
                     "The scene-linear master dimensions do not match this photograph; its edits were not attached"
                 );
             }
+            let coverage =
+                crate::photo_coverage::Coverage::load(&path, [image.width, image.height])?;
             let preview = Arc::new(image.preview(1600));
             let fallback = image.baked_recipe.clone().unwrap_or_default();
             let sidecar = recipe_path(&path);
@@ -368,6 +372,7 @@ impl EditorState {
                 }
             };
             Ok(LoadedPhoto {
+                coverage,
                 image,
                 preview,
                 recipe,

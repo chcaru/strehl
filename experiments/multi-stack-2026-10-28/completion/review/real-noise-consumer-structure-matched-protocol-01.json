@@ -1,0 +1,491 @@
+{
+  "schema": "strehl.structure-observer-focus-matched-protocol.v1",
+  "status": "FROZEN NOMINATION ONLY; Q/V reading awaits root scheduling, R/W/M remains held",
+  "source_render": "outputs\\multi-stack\\insect-repeat-7",
+  "cache": "outputs/multi-stack/full-source-cache",
+  "historical_reader_policy": "existing audited reader with exact binding, source stamps and full payload digest; no decoder/relabel",
+  "matched_centers_ordinal": [
+    110,
+    101
+  ],
+  "bases_ordinal": [
+    106,
+    97
+  ],
+  "domain_quad": [
+    969,
+    1029,
+    128,
+    128
+  ],
+  "scored_tiles_quad_local": [
+    [
+      16,
+      16,
+      32,
+      32
+    ],
+    [
+      48,
+      16,
+      32,
+      32
+    ],
+    [
+      80,
+      16,
+      32,
+      32
+    ],
+    [
+      16,
+      48,
+      32,
+      32
+    ],
+    [
+      48,
+      48,
+      32,
+      32
+    ],
+    [
+      80,
+      48,
+      32,
+      32
+    ],
+    [
+      16,
+      80,
+      32,
+      32
+    ],
+    [
+      48,
+      80,
+      32,
+      32
+    ],
+    [
+      80,
+      80,
+      32,
+      32
+    ]
+  ],
+  "scored_sensor_rectangle": [
+    1970,
+    2090,
+    192,
+    192
+  ],
+  "sealed_focus_roi_index": 0,
+  "focus_seal_sha256": "78142d8f8f5edec7d4693872c87dce78dfece9bde6dcbd87142899ca552a1d81",
+  "sealed_focus_files_verified": true,
+  "opportunity_sha256": "aaeba1351e60243a628125aec2cb20d325d1098bb2d7f0a3ee9788617f276301",
+  "previous_roi04_report_sha256": "7cce046e358d8f2210f393cf16751ebb58308783b672bd487d13be74a87a3482",
+  "nomination_reason": "Existing pre-noise SR ROI0 target neighborhood was centered110/101 using full-track focus plus actual-weight phase opportunity; retain it independently of current noise/candidate outcomes. Nine scored32quad blocks exactly tile the original sealed192sensor ROI;16quad halo lies inside sealed expanded focus domain.",
+  "roles": [
+    {
+      "pass": 0,
+      "base_ordinal": 106,
+      "role": "Q",
+      "offset": 0,
+      "local_ordinal": 106,
+      "global_index": 106,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\106MSDCF\\DSC00107.ARW",
+        "bytes": 35233792,
+        "modified_unix_nanos": 1792988142950000000,
+        "sha256": "baea8fa075a93949dcbd33de747396689b8824a5b491c56f16487485a8020c51"
+      }
+    },
+    {
+      "pass": 0,
+      "base_ordinal": 106,
+      "role": "Q",
+      "offset": 4,
+      "local_ordinal": 110,
+      "global_index": 110,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\106MSDCF\\DSC00111.ARW",
+        "bytes": 35237888,
+        "modified_unix_nanos": 1792988151130000000,
+        "sha256": "97a42fcfbfb9dc47ea4040724942b4ff435578fa5a7f06fd5930499087e7b814"
+      }
+    },
+    {
+      "pass": 0,
+      "base_ordinal": 106,
+      "role": "Q",
+      "offset": 8,
+      "local_ordinal": 114,
+      "global_index": 114,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\106MSDCF\\DSC00115.ARW",
+        "bytes": 35229696,
+        "modified_unix_nanos": 1792988159320000000,
+        "sha256": "c510ba442a62a09cc7071ac9076b7e8239a31200239781457a8e67e4344af194"
+      }
+    },
+    {
+      "pass": 0,
+      "base_ordinal": 106,
+      "role": "V",
+      "offset": 1,
+      "local_ordinal": 107,
+      "global_index": 107,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\106MSDCF\\DSC00108.ARW",
+        "bytes": 35241984,
+        "modified_unix_nanos": 1792988144990000000,
+        "sha256": "5df68b589ae6484dbcaeacf6d7a7719513fae22d6fa58ebb15fa65d020474b58"
+      }
+    },
+    {
+      "pass": 0,
+      "base_ordinal": 106,
+      "role": "V",
+      "offset": 5,
+      "local_ordinal": 111,
+      "global_index": 111,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\106MSDCF\\DSC00112.ARW",
+        "bytes": 35237888,
+        "modified_unix_nanos": 1792988153180000000,
+        "sha256": "b94cef5ef305b46bc1efd217d1fb57a12b866b30870ea19c6fe139fa4e4508b8"
+      }
+    },
+    {
+      "pass": 0,
+      "base_ordinal": 106,
+      "role": "V",
+      "offset": 9,
+      "local_ordinal": 115,
+      "global_index": 115,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\106MSDCF\\DSC00116.ARW",
+        "bytes": 35229696,
+        "modified_unix_nanos": 1792988161380000000,
+        "sha256": "9afff0e2065177714882ed703c4f648edd28fac5ba5531ac4373fc10b03d3282"
+      }
+    },
+    {
+      "pass": 0,
+      "base_ordinal": 106,
+      "role": "R",
+      "offset": -2,
+      "local_ordinal": 104,
+      "global_index": 104,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\106MSDCF\\DSC00105.ARW",
+        "bytes": 35213312,
+        "modified_unix_nanos": 1792988138850000000,
+        "sha256": "d6ee41e1b69280d7540f331e96623f67e32d2b4805aaa9191e2136cd2d02e194"
+      }
+    },
+    {
+      "pass": 0,
+      "base_ordinal": 106,
+      "role": "R",
+      "offset": 2,
+      "local_ordinal": 108,
+      "global_index": 108,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\106MSDCF\\DSC00109.ARW",
+        "bytes": 35237888,
+        "modified_unix_nanos": 1792988147050000000,
+        "sha256": "a767a7bb5c01f0a55aa49656ba143b82d21971e1f15246daa9eb661f72e3a423"
+      }
+    },
+    {
+      "pass": 0,
+      "base_ordinal": 106,
+      "role": "R",
+      "offset": 6,
+      "local_ordinal": 112,
+      "global_index": 112,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\106MSDCF\\DSC00113.ARW",
+        "bytes": 35237888,
+        "modified_unix_nanos": 1792988155230000000,
+        "sha256": "c7fc88d7a64f11aa32ff4026dbaf7e79176596d60b1481a7c603a3c23cd34111"
+      }
+    },
+    {
+      "pass": 0,
+      "base_ordinal": 106,
+      "role": "R",
+      "offset": 10,
+      "local_ordinal": 116,
+      "global_index": 116,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\106MSDCF\\DSC00117.ARW",
+        "bytes": 35225600,
+        "modified_unix_nanos": 1792988163440000000,
+        "sha256": "99b8d6a9d199dd91a74f298c0214d5722d2b0fccf4ffea3eeece35f20033fee3"
+      }
+    },
+    {
+      "pass": 0,
+      "base_ordinal": 106,
+      "role": "W",
+      "offset": -1,
+      "local_ordinal": 105,
+      "global_index": 105,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\106MSDCF\\DSC00106.ARW",
+        "bytes": 35229696,
+        "modified_unix_nanos": 1792988140900000000,
+        "sha256": "bf8d7af612eebc5467f721e38c4f644be3a2f26d7c078f809c815da4f3d9ef63"
+      }
+    },
+    {
+      "pass": 0,
+      "base_ordinal": 106,
+      "role": "W",
+      "offset": 11,
+      "local_ordinal": 117,
+      "global_index": 117,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\106MSDCF\\DSC00118.ARW",
+        "bytes": 35209216,
+        "modified_unix_nanos": 1792988165490000000,
+        "sha256": "20469b703d153b5713e78cbc19dcd3459df2057e315bfb648790c0b0a3a64ae6"
+      }
+    },
+    {
+      "pass": 0,
+      "base_ordinal": 106,
+      "role": "M",
+      "offset": 3,
+      "local_ordinal": 109,
+      "global_index": 109,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\106MSDCF\\DSC00110.ARW",
+        "bytes": 35241984,
+        "modified_unix_nanos": 1792988149090000000,
+        "sha256": "2a1284fd382269f2ab8949996e1d904dc21a184f521d2b0557cbd732cfaf1180"
+      }
+    },
+    {
+      "pass": 0,
+      "base_ordinal": 106,
+      "role": "M",
+      "offset": 7,
+      "local_ordinal": 113,
+      "global_index": 113,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\106MSDCF\\DSC00114.ARW",
+        "bytes": 35241984,
+        "modified_unix_nanos": 1792988157270000000,
+        "sha256": "e070ddf178711903f1ad59d1be2700bdec5ae3da9ae5bbb7ed6db6a6e020f2aa"
+      }
+    },
+    {
+      "pass": 1,
+      "base_ordinal": 97,
+      "role": "Q",
+      "offset": 0,
+      "local_ordinal": 97,
+      "global_index": 396,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00098.ARW",
+        "bytes": 35487744,
+        "modified_unix_nanos": 1792989092350000000,
+        "sha256": "ea22200b9dd5527137e23c3fe94d45bac666f90672fd356f79f473f715f01454"
+      }
+    },
+    {
+      "pass": 1,
+      "base_ordinal": 97,
+      "role": "Q",
+      "offset": 4,
+      "local_ordinal": 101,
+      "global_index": 400,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00102.ARW",
+        "bytes": 35508224,
+        "modified_unix_nanos": 1792989100560000000,
+        "sha256": "367a6ae6cc92938e7dee4e458e39b78116b02062953832046308660d43c20d05"
+      }
+    },
+    {
+      "pass": 1,
+      "base_ordinal": 97,
+      "role": "Q",
+      "offset": 8,
+      "local_ordinal": 105,
+      "global_index": 404,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00106.ARW",
+        "bytes": 35495936,
+        "modified_unix_nanos": 1792989108770000000,
+        "sha256": "be8211b5d07fa2f471448da76d29c6a8ee837796b121dca5698df5749ed3f57f"
+      }
+    },
+    {
+      "pass": 1,
+      "base_ordinal": 97,
+      "role": "V",
+      "offset": 1,
+      "local_ordinal": 98,
+      "global_index": 397,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00099.ARW",
+        "bytes": 35495936,
+        "modified_unix_nanos": 1792989094390000000,
+        "sha256": "873d6a53aea509fc164158be49e518b312a05a49d41c768256ccaf6b6d6ff8c9"
+      }
+    },
+    {
+      "pass": 1,
+      "base_ordinal": 97,
+      "role": "V",
+      "offset": 5,
+      "local_ordinal": 102,
+      "global_index": 401,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00103.ARW",
+        "bytes": 35508224,
+        "modified_unix_nanos": 1792989102620000000,
+        "sha256": "6d595531ea9294bff3b66f5d8eba44c0fe905eaeb797e752e746928b39b464ff"
+      }
+    },
+    {
+      "pass": 1,
+      "base_ordinal": 97,
+      "role": "V",
+      "offset": 9,
+      "local_ordinal": 106,
+      "global_index": 405,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00107.ARW",
+        "bytes": 35504128,
+        "modified_unix_nanos": 1792989110840000000,
+        "sha256": "b790fad5c096a1b9513ebda00edaaa86c25891c41eccab28518b6ba5f0ef133c"
+      }
+    },
+    {
+      "pass": 1,
+      "base_ordinal": 97,
+      "role": "R",
+      "offset": -2,
+      "local_ordinal": 95,
+      "global_index": 394,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00096.ARW",
+        "bytes": 35487744,
+        "modified_unix_nanos": 1792989088260000000,
+        "sha256": "bde433b5cc7a80c496565fd9f070519edb3e3c916ff78691b8df738b4722add5"
+      }
+    },
+    {
+      "pass": 1,
+      "base_ordinal": 97,
+      "role": "R",
+      "offset": 2,
+      "local_ordinal": 99,
+      "global_index": 398,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00100.ARW",
+        "bytes": 35491840,
+        "modified_unix_nanos": 1792989096440000000,
+        "sha256": "e0b5f38714efd90873f66f742eee9ab5aa86b7b198d7583099e9d2ca6c300206"
+      }
+    },
+    {
+      "pass": 1,
+      "base_ordinal": 97,
+      "role": "R",
+      "offset": 6,
+      "local_ordinal": 103,
+      "global_index": 402,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00104.ARW",
+        "bytes": 35504128,
+        "modified_unix_nanos": 1792989104670000000,
+        "sha256": "0248ba18b0669fbb45bfb0dd2372cae7d38283bfb5b90219af69f6fb50820643"
+      }
+    },
+    {
+      "pass": 1,
+      "base_ordinal": 97,
+      "role": "R",
+      "offset": 10,
+      "local_ordinal": 107,
+      "global_index": 406,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00108.ARW",
+        "bytes": 35491840,
+        "modified_unix_nanos": 1792989112890000000,
+        "sha256": "1cc5739eec01511ec0ca59befabf25135e6f7e416b8d4d6df11b20e6697451c7"
+      }
+    },
+    {
+      "pass": 1,
+      "base_ordinal": 97,
+      "role": "W",
+      "offset": -1,
+      "local_ordinal": 96,
+      "global_index": 395,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00097.ARW",
+        "bytes": 35479552,
+        "modified_unix_nanos": 1792989090310000000,
+        "sha256": "3c65202fe0d9c0c7d1fee88e8ed827e15c835bda5406ac207d6c539a7cf0f686"
+      }
+    },
+    {
+      "pass": 1,
+      "base_ordinal": 97,
+      "role": "W",
+      "offset": 11,
+      "local_ordinal": 108,
+      "global_index": 407,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00109.ARW",
+        "bytes": 35487744,
+        "modified_unix_nanos": 1792989114930000000,
+        "sha256": "cf1e42858de6f36e90ded6625c3325f6ed3e64692cf38dffe4b2dc5ab57cb9bb"
+      }
+    },
+    {
+      "pass": 1,
+      "base_ordinal": 97,
+      "role": "M",
+      "offset": 3,
+      "local_ordinal": 100,
+      "global_index": 399,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00101.ARW",
+        "bytes": 35500032,
+        "modified_unix_nanos": 1792989098500000000,
+        "sha256": "03c71c31908693ac778208c1929c350701f7fb377d377a7c90a3fc2a7e99a7b8"
+      }
+    },
+    {
+      "pass": 1,
+      "base_ordinal": 97,
+      "role": "M",
+      "offset": 7,
+      "local_ordinal": 104,
+      "global_index": 403,
+      "source": {
+        "path": "\\\\?\\D:\\personal\\macro\\insects\\bug-3\\107MSDCF\\DSC00105.ARW",
+        "bytes": 35500032,
+        "modified_unix_nanos": 1792989106720000000,
+        "sha256": "1eb874ef24bc092225e582a805c75f899e3409e200a2d092d456684f04797d18"
+      }
+    }
+  ],
+  "cutoff": 1.35,
+  "crosspass_mapping": "Pass-specific ordinal centers only. Unit local slopes are not assumed equal physical-depth increments; preserve ordinals and report remaining Q-only between-pass appearance differences.",
+  "risk_contract": "If later authorized, score the complete Q/V mask separately against each pass R trajectory at its own state. Never silently average reference targets; no common-noise/SNR claim without separately commissioned compatibility.",
+  "selection_scope": "Earlier full-track focus/geometry used these acquisitions; current roles are disjoint, not globally unseen photons. Risk stays conditional on frozen prior geometry/selection assumptions.",
+  "unchanged_negative": "Existing same-ordinal nine-witness census remains intact; this is a separate independently nominated spatial comparison, not a replacement or retuned mask.",
+  "read_roles_executed": [],
+  "sources_sha256": "f3cb48fa5cfd592f3bb3facc4fc8efac247c90272afd9b03aa2188b2e1efb672",
+  "alignment_sha256": "7c06ed37d92f3a1dde0a03e5b6f2f5eaf71d2c5ab4ef494bac51441400e2ef82"
+}

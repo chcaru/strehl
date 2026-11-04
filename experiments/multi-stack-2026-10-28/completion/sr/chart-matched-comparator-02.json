@@ -1,0 +1,50 @@
+{
+  "constant": {
+    "promotion_and_library_refresh_exact_files": {
+      "native.tiff": true,
+      "candidate.tiff": true,
+      "coherent-rgb-mask.u8": true,
+      "reason.u8": true
+    },
+    "heldout_numerical_report_equal": true,
+    "heldout_provenance_hashes_changed_as_expected": [
+      "5f78685e287de7b61e1c324c675c379e7624ecf5cac636f855b816b83fdf8424",
+      "75e7a17f0150d5f9004fb92f01cc97693d719e193402a434820e8360445fe239"
+    ],
+    "coherent_pixels": 3120,
+    "matched_pixels": 3120,
+    "cache_hits": 18,
+    "raw_decodes": 0,
+    "image": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\completion\\sr-chart-constant-02\\inspection\\comparison-native-pixels.png",
+    "input_hashes": {
+      "native.tiff": "03b86b1031d4abf07c1614e89a2c6e4b574fa063297a428dd976c91b29a0fc2e",
+      "candidate.tiff": "faaf58ce48e314bc95cc6341b08f3fc4c9aca7cdbd89a08181902c234b4056bc",
+      "matched-cfa-mhc.tiff": "ed948ef098289169a1ba21ce6b089241eb47e4367e9f724a0852ef1fad2e4d96",
+      "matched-cfa-mhc-support.u8": "c9f8e15adf029e7792f10d7efba6e0007743e90f0fab78c1575e06956ccc3da4"
+    }
+  },
+  "affine": {
+    "promotion_and_library_refresh_exact_files": {
+      "native.tiff": true,
+      "candidate.tiff": true,
+      "coherent-rgb-mask.u8": true,
+      "reason.u8": true
+    },
+    "heldout_numerical_report_equal": true,
+    "heldout_provenance_hashes_changed_as_expected": [
+      "5f78685e287de7b61e1c324c675c379e7624ecf5cac636f855b816b83fdf8424",
+      "75e7a17f0150d5f9004fb92f01cc97693d719e193402a434820e8360445fe239"
+    ],
+    "coherent_pixels": 2407,
+    "matched_pixels": 2407,
+    "cache_hits": 18,
+    "raw_decodes": 0,
+    "image": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\completion\\sr-chart-affine-02\\inspection\\comparison-native-pixels.png",
+    "input_hashes": {
+      "native.tiff": "03b86b1031d4abf07c1614e89a2c6e4b574fa063297a428dd976c91b29a0fc2e",
+      "candidate.tiff": "dec14c46653b51e5f986b5ba9953162f8419608a5cd62501040bceac8ced557b",
+      "matched-cfa-mhc.tiff": "99421cd20b56bf718ab7a77ac677cfcdfd24f6d70236aa43d8c80f4926234c55",
+      "matched-cfa-mhc-support.u8": "2a7c771abf0fbc419563ded335fdea36b564092228fec541eae9693a79cc909e"
+    }
+  }
+}

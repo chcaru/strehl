@@ -1,0 +1,34 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--locked",
+    "-p",
+    "strehl-ui",
+    "-p",
+    "strehl-edit",
+    "--",
+    "--test-threads=2"
+  ],
+  "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+  "started_unix": 1793473131.6234825,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "logical_cpus": 32,
+  "physical_cpus": 16,
+  "physical_memory_bytes": 66094223360,
+  "available_memory_before": 50817277952,
+  "environment": {
+    "CARGO_BUILD_JOBS": "4"
+  },
+  "sampling_seconds": 1,
+  "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+  "state": "complete",
+  "pid": 16812,
+  "exit_code": 0,
+  "elapsed_seconds": 52.38620901107788,
+  "finished_unix": 1793473184.0096915,
+  "sampled_peak_private_bytes": 4576403456,
+  "sampled_peak_rss_bytes": 4914847744,
+  "sampled_cpu_seconds": 117.625,
+  "available_memory_after": 50837483520
+}

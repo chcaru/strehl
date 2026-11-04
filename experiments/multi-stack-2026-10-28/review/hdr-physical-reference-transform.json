@@ -1,0 +1,13 @@
+{
+  "schema": "strehl.independent-review-transform.v1",
+  "parameter_source": "Predeclared6s sensor-reference physical scale; no output histogram or image fitted",
+  "display_baseline": {
+    "black": 0.0,
+    "white": 4.0,
+    "contrast": 0.55,
+    "exposure_gain": 1.0
+  },
+  "display_icc_file": "display-srgb.icc",
+  "display_icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "policy": "Apply both predeclared views identically to fullHDR and both controls. No per-image fit."
+}

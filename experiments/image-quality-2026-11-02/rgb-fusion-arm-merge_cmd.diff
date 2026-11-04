@@ -1,0 +1,345 @@
+diff --git a/crates/strehl-cli/src/merge_cmd.rs b/crates/strehl-cli/src/merge_cmd.rs
+index 0c38f189e..dc4ebcbd0 100644
+--- a/crates/strehl-cli/src/merge_cmd.rs
++++ b/crates/strehl-cli/src/merge_cmd.rs
+@@ -4748,6 +4748,14 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
+ /// what makes that checkable.
+ const BAND_PLANES: usize = 4;
+ 
++/// Planes the band fold carries: the four native CFA sites, plus under
++/// [`align_cmd::rgb_fusion_enabled`] the eight reconstructed missing colours
++/// (two per site, `align_cmd::WarpScratch::extra` order). Selection is still
++/// made on the native greens only, so the native planes fold identically.
++fn band_planes() -> usize {
++    if align_cmd::rgb_fusion_enabled() { BAND_PLANES + 8 } else { BAND_PLANES }
++}
++
+ /// `(dx, dy)` of each plane inside the 2x2 quad, in [`BAND_PLANES`] order.
+ const BAND_PLANE_OFFSETS: [(usize, usize); BAND_PLANES] = [(0, 0), (1, 0), (0, 1), (1, 1)];
+ 
+@@ -4927,6 +4935,32 @@ fn extract_planes(
+     Ok(())
+ }
+ 
++/// Crop the gathered missing colours onto the compact analysis domain, with the
++/// same non-negative clamp [`extract_planes`] applies to native samples.
++fn copy_extra_planes(
++    extra: &[Vec<f32>],
++    domain: PyramidDomain,
++    planes: &mut [Vec<f32>],
++) -> Result<()> {
++    ensure!(
++        extra.len() == planes.len(),
++        "{} gathered colours for {} RGB fusion planes",
++        extra.len(),
++        planes.len()
++    );
++    let local = domain.analysis();
++    let gw = domain.full.width;
++    planes.par_iter_mut().zip(extra.par_iter()).for_each(|(out, src)| {
++        out.par_chunks_mut(local.width).enumerate().for_each(|(ly, dst)| {
++            let row = (domain.rect.y + ly) * gw + domain.rect.x;
++            for (d, s) in dst.iter_mut().zip(&src[row..row + local.width]) {
++                *d = s.max(0.0);
++            }
++        });
++    });
++    Ok(())
++}
++
+ /// A merged image ready to be developed, whichever backend produced it.
+ ///
+ /// **Both variants answer in black-subtracted, non-negative DN.** That is the
+@@ -4958,6 +4992,16 @@ enum Merged<'a> {
+ }
+ 
+ impl Merged<'_> {
++    /// RGB fusion's eight fused missing colours, if this merge carried them.
++    fn missing_colours(&self) -> Option<&[Vec<f32>]> {
++        match self {
++            Self::Bands { planes, .. } if planes.len() == BAND_PLANES + 8 => {
++                Some(&planes[BAND_PLANES..])
++            }
++            _ => None,
++        }
++    }
++
+     fn geometry(&self) -> PlaneGeometry {
+         match self {
+             Self::Estimated { est, .. } => est.geometry(),
+@@ -5024,6 +5068,9 @@ struct BandWorker {
+     /// the failure mode this project exists to catch.
+     beta_sum: Vec<f64>,
+     beta_n: usize,
++    /// The last prepared frame's measured noise-energy degrees of freedom.
++    nu: Vec<f32>,
++    nu_wide: Vec<f32>,
+     #[cfg(feature = "native-green-cue")]
+     green_cue: Option<strehl_core::pyramid::native_green_cue::Cue>,
+ }
+@@ -5726,18 +5773,20 @@ impl BandWorker {
+             #[cfg(feature = "temporal-energy")]
+             config: cfg,
+             domain,
+-            merge: BandMerge::new(geom.width, geom.height, BAND_PLANES, cfg),
+-            fws: FrameWorkspace::new(&sizes, BAND_PLANES),
++            merge: BandMerge::new(geom.width, geom.height, band_planes(), cfg),
++            fws: FrameWorkspace::new(&sizes, band_planes()),
+             // The warp is deliberately still evaluated on the original plane.
+             // Only its prepared outputs become compact.
+             warp: WarpScratch::new(domain.full),
+-            planes: (0..BAND_PLANES).map(|_| vec![0.0; px]).collect(),
++            planes: (0..band_planes()).map(|_| vec![0.0; px]).collect(),
+             luma: vec![0.0; px],
+             var: vec![0.0; px],
+             floor: gatefloor::enabled().then(|| gatefloor::Probe::new(domain, cfg.bands)),
+             beta: Vec::new(),
+             beta_sum: Vec::new(),
+             beta_n: 0,
++            nu: Vec::new(),
++            nu_wide: Vec::new(),
+             #[cfg(feature = "native-green-cue")]
+             green_cue: None,
+         }
+@@ -5785,6 +5834,8 @@ impl BandWorker {
+                 luma: &mut self.luma,
+                 var: &mut self.var,
+                 beta: &mut self.beta,
++                nu: &mut self.nu,
++                nu_wide: &mut self.nu_wide,
+                 #[cfg(feature = "native-green-cue")]
+                 green_cue: &mut self.green_cue,
+             },
+@@ -5812,6 +5863,9 @@ impl BandWorker {
+         if !self.prepare_observed(source, index, levels, noise, warps, defect, progress)? {
+             return Ok(false);
+         }
++        if !self.nu.is_empty() {
++            self.merge.note_frame_nu(&self.nu, &self.nu_wide);
++        }
+         let frame_beta = (!self.beta.is_empty()).then_some(self.beta.as_slice());
+         if let Some(b) = frame_beta {
+             if self.beta_sum.len() < b.len() {
+@@ -5894,6 +5948,9 @@ impl BandWorker {
+         index: usize,
+         progress: Option<&crate::ui_progress::Progress>,
+     ) {
++        if !prep.nu.is_empty() {
++            self.merge.note_frame_nu(&prep.nu, &prep.nu_wide);
++        }
+         let frame_beta = (!prep.beta.is_empty()).then_some(prep.beta.as_slice());
+         if let Some(b) = frame_beta {
+             if self.beta_sum.len() < b.len() {
+@@ -5941,6 +5998,8 @@ struct PrepBuffers<'a> {
+     luma: &'a mut [f32],
+     var: &'a mut [f32],
+     beta: &'a mut Vec<f32>,
++    nu: &'a mut Vec<f32>,
++    nu_wide: &'a mut Vec<f32>,
+     #[cfg(feature = "native-green-cue")]
+     green_cue: &'a mut Option<strehl_core::pyramid::native_green_cue::Cue>,
+ }
+@@ -5968,13 +6027,32 @@ fn prepare_frame_into(
+         luma,
+         var,
+         beta,
++        nu,
++        nu_wide,
+         #[cfg(feature = "native-green-cue")]
+         green_cue,
+     } = b;
+     beta.clear();
++    nu.clear();
++    nu_wide.clear();
+     if let Some(p) = floor.as_deref_mut() {
+         p.invalidate();
+     }
++    // Experiment-only: fold every other frame under the whole stack's own
++    // geometry, so two half-stack renders are pixel-aligned replicates.
++    if let Ok(parity) = std::env::var("STREHL_FRAME_PARITY") {
++        let keep = match parity.as_str() {
++            "even" => index % 2 == 0,
++            "odd" => index % 2 == 1,
++            other => match other.split_once('-').map(|(a, b)| (a.parse::<usize>(), b.parse::<usize>())) {
++                Some((Ok(a), Ok(b))) => (a..=b).contains(&index),
++                _ => anyhow::bail!("STREHL_FRAME_PARITY={other:?} is not even, odd or A-B"),
++            },
++        };
++        if !keep {
++            return Ok(false);
++        }
++    }
+     if !load_frame_impl_observed(
+         source,
+         index,
+@@ -6006,6 +6084,8 @@ fn prepare_frame_into(
+     // adjacent bands.
+     if let Some(p) = floor.as_deref() {
+         beta.extend(p.last().iter().copied().take_while(|b| b.is_finite()));
++        nu.extend_from_slice(p.last_nu());
++        nu_wide.extend_from_slice(p.last_nu_wide());
+     }
+     Ok(true)
+ }
+@@ -6019,6 +6099,8 @@ struct FramePrep {
+     var: Vec<f32>,
+     floor: Option<gatefloor::Probe>,
+     beta: Vec<f32>,
++    nu: Vec<f32>,
++    nu_wide: Vec<f32>,
+     accepted: bool,
+ }
+ 
+@@ -6027,11 +6109,13 @@ impl FramePrep {
+         let px = domain.analysis().pixels();
+         Self {
+             warp: WarpScratch::new(domain.full),
+-            planes: (0..BAND_PLANES).map(|_| vec![0.0; px]).collect(),
++            planes: (0..band_planes()).map(|_| vec![0.0; px]).collect(),
+             luma: vec![0.0; px],
+             var: vec![0.0; px],
+             floor: gatefloor::enabled().then(|| gatefloor::Probe::new(domain, cfg.bands)),
+             beta: Vec::new(),
++            nu: Vec::new(),
++            nu_wide: Vec::new(),
+             accepted: false,
+         }
+     }
+@@ -6059,6 +6143,8 @@ impl FramePrep {
+                 luma: &mut self.luma,
+                 var: &mut self.var,
+                 beta: &mut self.beta,
++                nu: &mut self.nu,
++                nu_wide: &mut self.nu_wide,
+                 #[cfg(feature = "native-green-cue")]
+                 green_cue: &mut no_cue,
+             },
+@@ -6419,13 +6505,24 @@ fn load_frame_impl_observed(
+                         #[cfg(not(feature = "research-lens-warp"))]
+                         let research_consumed = false;
+                         if !research_consumed {
+-                            align_cmd::warp_frame_in_place(
++                            let rgb = planes.len() > BAND_PLANES;
++                            ensure!(
++                                !rgb || align_cmd::fullres_gather_enabled(),
++                                "RGB fusion requires the full-resolution gather"
++                            );
++                            scratch.capture_extra = rgb;
++                            let gathered = align_cmd::warp_frame_in_place(
+                                 &mut frame,
+                                 *t,
+                                 domain.full,
+                                 map.resampler(),
+                                 scratch,
+-                            )?;
++                            );
++                            scratch.capture_extra = false;
++                            gathered?;
++                            if rgb {
++                                copy_extra_planes(&scratch.extra, domain, &mut planes[BAND_PLANES..])?;
++                            }
+                         }
+                     }
+                     #[cfg(feature = "native-pyramid-profile")]
+@@ -6471,8 +6568,14 @@ fn load_frame_impl_observed(
+                     return Ok(false);
+                 }
+             }
+-        } else if let Some(progress) = progress {
+-            progress.merge_step(index, "gather", None, "skipped");
++        } else {
++            ensure!(
++                planes.len() == BAND_PLANES,
++                "RGB fusion requires alignment: an unregistered frame has no gathered colours"
++            );
++            if let Some(progress) = progress {
++                progress.merge_step(index, "gather", None, "skipped");
++            }
+         }
+ 
+         #[cfg(all(test, feature = "native-sensor-transfer"))]
+@@ -6494,7 +6597,7 @@ fn load_frame_impl_observed(
+                 black,
+                 domain,
+                 &BAND_PLANE_OFFSETS,
+-                planes,
++                &mut planes[..BAND_PLANES],
+             )?;
+         }
+     }
+@@ -7792,7 +7895,7 @@ fn run_pyramid_prepared_with_sensor(
+                 None => {
+                     merged = Some(std::mem::replace(
+                         &mut worker.merge,
+-                        BandMerge::new(analysis_geom.width, analysis_geom.height, BAND_PLANES, cfg),
++                        BandMerge::new(analysis_geom.width, analysis_geom.height, band_planes(), cfg),
+                     ));
+                 }
+             }
+@@ -7926,9 +8029,10 @@ fn run_pyramid_prepared_with_sensor(
+     drop(ws);
+     drop(merge);
+     ensure!(
+-        planes.len() == BAND_PLANES,
+-        "the band merge returned {} planes, not {BAND_PLANES}",
+-        planes.len()
++        planes.len() == band_planes(),
++        "the band merge returned {} planes, not {}",
++        planes.len(),
++        band_planes()
+     );
+ 
+     #[cfg(feature = "native-boundary-radiance")]
+@@ -9731,6 +9835,31 @@ fn write_merged_observed_with_reconstruction(
+             progress.render_step("develop", "finished");
+             progress.render_step("write", "started");
+         }
++        // RGB fusion: every site already carries all three fused colours, so the
++        // writer takes them as they are instead of re-estimating two of them
++        // from the merged mosaic. The native colour is the mosaic value itself.
++        let fused_rgb = match merged.missing_colours() {
++            None => None,
++            Some(extra) => {
++                ensure!(restore.is_none() && reconstruction.is_none(),
++                    "RGB fusion does not support restoration or session reconstruction");
++                let mut rgb = vec![0.0f32; mw * mh * 3];
++                rgb.par_chunks_mut(mw * 3).enumerate().for_each(|(y, row)| {
++                    let (py, dy) = (y / 2, y % 2);
++                    for x in 0..mw {
++                        let (px, dx) = (x / 2, x % 2);
++                        let i = py * geom.width + px;
++                        let slot = dx + 2 * dy;
++                        let native = match (dx, dy) { (0, 0) => 0, (1, 1) => 2, _ => 1 };
++                        row[3 * x + native] = mosaic[y * mw + x];
++                        for (k, c) in align_cmd::missing_channels(dx, dy).into_iter().enumerate() {
++                            row[3 * x + c] = norm(extra[slot * 2 + k][i].max(0.0), gains[c]);
++                        }
++                    }
++                });
++                Some(rgb)
++            }
++        };
+         if let Some(reconstruction) = reconstruction {
+             use image_out::session_reconstruction_output::{NativeNormalization,prepare_native_camera_image,write_reconstructed_camera_image};
+             let mut image = prepare_native_camera_image(mw,mh,&mosaic,&dev,reconstruction.output_memory_budget)?;
+@@ -9748,6 +9877,7 @@ fn write_merged_observed_with_reconstruction(
+             linear_master,
+             baked_recipe,
+             coverage,
++            fused_rgb.as_deref(),
+         )?;
+         }
+         if let Some(progress) = progress {
+@@ -9755,9 +9885,10 @@ fn write_merged_observed_with_reconstruction(
+         }
+         eprintln!();
+         eprintln!(
+-            "wrote           : {} ({mw} x {mh}, 16-bit RGB, {}, Malvar-He-Cutler demosaic)",
++            "wrote           : {} ({mw} x {mh}, 16-bit RGB, {}, {})",
+             path.display(),
+-            dev.caveat()
++            dev.caveat(),
++            if fused_rgb.is_some() { "RGB-fused source reconstructions, no output demosaic" } else { "Malvar-He-Cutler demosaic" }
+         );
+         eprintln!("                  Full sensor resolution: every CFA site estimated, one focus");
+         eprintln!(

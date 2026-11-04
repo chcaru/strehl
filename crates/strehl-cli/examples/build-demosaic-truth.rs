@@ -164,14 +164,54 @@ impl Scene {
 /// amplitude going into false colour at a 2.5 px period on a neutral subject.
 fn luma_waves() -> Vec<Wave> {
     vec![
-        Wave { a: 900.0, fx: 0.045, fy: 0.020, ph: 0.31 },
-        Wave { a: 700.0, fx: 0.110, fy: -0.070, ph: 1.17 },
-        Wave { a: 520.0, fx: 0.190, fy: 0.150, ph: 2.44 },
-        Wave { a: 430.0, fx: -0.260, fy: 0.090, ph: 0.83 },
-        Wave { a: 360.0, fx: 0.330, fy: 0.240, ph: 3.02 },
-        Wave { a: 300.0, fx: 0.400, fy: -0.120, ph: 1.71 },
-        Wave { a: 260.0, fx: 0.070, fy: 0.450, ph: 2.05 },
-        Wave { a: 220.0, fx: -0.440, fy: 0.310, ph: 0.44 },
+        Wave {
+            a: 900.0,
+            fx: 0.045,
+            fy: 0.020,
+            ph: 0.31,
+        },
+        Wave {
+            a: 700.0,
+            fx: 0.110,
+            fy: -0.070,
+            ph: 1.17,
+        },
+        Wave {
+            a: 520.0,
+            fx: 0.190,
+            fy: 0.150,
+            ph: 2.44,
+        },
+        Wave {
+            a: 430.0,
+            fx: -0.260,
+            fy: 0.090,
+            ph: 0.83,
+        },
+        Wave {
+            a: 360.0,
+            fx: 0.330,
+            fy: 0.240,
+            ph: 3.02,
+        },
+        Wave {
+            a: 300.0,
+            fx: 0.400,
+            fy: -0.120,
+            ph: 1.71,
+        },
+        Wave {
+            a: 260.0,
+            fx: 0.070,
+            fy: 0.450,
+            ph: 2.05,
+        },
+        Wave {
+            a: 220.0,
+            fx: -0.440,
+            fy: 0.310,
+            ph: 0.44,
+        },
     ]
 }
 
@@ -183,17 +223,47 @@ fn luma_waves() -> Vec<Wave> {
 /// charging an arm for it would be charging it for the sensor.
 fn chroma_waves(scale: f64) -> Vec<Wave> {
     vec![
-        Wave { a: 420.0 * scale, fx: 0.030, fy: 0.045, ph: 0.62 },
-        Wave { a: 300.0 * scale, fx: 0.095, fy: -0.060, ph: 2.31 },
-        Wave { a: 210.0 * scale, fx: 0.160, fy: 0.130, ph: 1.05 },
-        Wave { a: 150.0 * scale, fx: -0.200, fy: 0.055, ph: 2.87 },
+        Wave {
+            a: 420.0 * scale,
+            fx: 0.030,
+            fy: 0.045,
+            ph: 0.62,
+        },
+        Wave {
+            a: 300.0 * scale,
+            fx: 0.095,
+            fy: -0.060,
+            ph: 2.31,
+        },
+        Wave {
+            a: 210.0 * scale,
+            fx: 0.160,
+            fy: 0.130,
+            ph: 1.05,
+        },
+        Wave {
+            a: 150.0 * scale,
+            fx: -0.200,
+            fy: 0.055,
+            ph: 2.87,
+        },
     ]
 }
 
 fn green_waves(scale: f64) -> Vec<Wave> {
     vec![
-        Wave { a: 330.0 * scale, fx: 0.050, fy: -0.035, ph: 1.94 },
-        Wave { a: 190.0 * scale, fx: 0.140, fy: 0.105, ph: 0.28 },
+        Wave {
+            a: 330.0 * scale,
+            fx: 0.050,
+            fy: -0.035,
+            ph: 1.94,
+        },
+        Wave {
+            a: 190.0 * scale,
+            fx: 0.140,
+            fy: 0.105,
+            ph: 0.28,
+        },
     ]
 }
 
@@ -259,7 +329,10 @@ struct Lcg(u64);
 
 impl Lcg {
     fn next_f64(&mut self) -> f64 {
-        self.0 = self.0.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+        self.0 = self
+            .0
+            .wrapping_mul(6364136223846793005)
+            .wrapping_add(1442695040888963407);
         ((self.0 >> 11) as f64) / ((1u64 << 53) as f64)
     }
     /// Box-Muller, one value per call. Wasteful and irrelevant at this size.
@@ -290,7 +363,11 @@ fn mosaic(scene: &Scene, wb: [f32; 4], noise_sd: f64, seed: u64) -> Frame {
         for x in 0..fw {
             let ci = rggb(x, y);
             let wbdn = scene.rgb(x as f64, y as f64)[ci]
-                + if noise_sd > 0.0 { noise_sd * rng.normal() } else { 0.0 };
+                + if noise_sd > 0.0 {
+                    noise_sd * rng.normal()
+                } else {
+                    0.0
+                };
             let raw = wbdn / gain[ci] as f64 + BLACK as f64;
             data[(oy + y) * stride + ox + x] = raw.round().clamp(0.0, u16::MAX as f64) as u16;
         }
@@ -299,8 +376,16 @@ fn mosaic(scene: &Scene, wb: [f32; 4], noise_sd: f64, seed: u64) -> Frame {
         data,
         stride,
         buffer_height,
-        active: Region { x: ox, y: oy, width: fw, height: fh },
-        levels: Levels { black: BLACK, white: 15360.0 },
+        active: Region {
+            x: ox,
+            y: oy,
+            width: fw,
+            height: fh,
+        },
+        levels: Levels {
+            black: BLACK,
+            white: 15360.0,
+        },
         iso: Some(100.0),
         wb_coeffs: wb,
         xyz_to_cam_rgbe: [[0.0; 3]; 4],
@@ -345,7 +430,11 @@ type Planes = [Vec<f32>; 3];
 
 /// The shipped demosaic, whichever `STREHL_DEMOSAIC` selects.
 fn demosaic_planes(mos: &[f32], fw: usize, fh: usize) -> Planes {
-    let m = Mosaic { data: mos, width: fw, height: fh };
+    let m = Mosaic {
+        data: mos,
+        width: fw,
+        height: fh,
+    };
     let mut rp = vec![0f32; fw * fh];
     let mut gp = vec![0f32; fw * fh];
     let mut bp = vec![0f32; fw * fh];
@@ -374,7 +463,11 @@ fn demosaic_planes(mos: &[f32], fw: usize, fh: usize) -> Planes {
 /// beat, and its failure mode is precisely false colour on luma detail. If the
 /// instrument cannot see this arm get worse, it cannot see anything.
 fn demosaic_bilinear(mos: &[f32], fw: usize, fh: usize) -> Planes {
-    let mut out = [vec![0f32; fw * fh], vec![0f32; fw * fh], vec![0f32; fw * fh]];
+    let mut out = [
+        vec![0f32; fw * fh],
+        vec![0f32; fw * fh],
+        vec![0f32; fw * fh],
+    ];
     for ch in 0..3 {
         let plane = &mut out[ch];
         for y in 0..fh {
@@ -466,7 +559,11 @@ fn planted_chroma(base: &Planes, fw: usize, fh: usize, d: f32) -> Planes {
 /// Malvar -- so whatever error remains is *not* the warp-time demosaic's, and
 /// whatever error disappears is exactly its.
 fn oracle_planes(scene: &Scene, fw: usize, fh: usize) -> Planes {
-    let mut out = [vec![0f32; fw * fh], vec![0f32; fw * fh], vec![0f32; fw * fh]];
+    let mut out = [
+        vec![0f32; fw * fh],
+        vec![0f32; fw * fh],
+        vec![0f32; fw * fh],
+    ];
     for y in 0..fh {
         for x in 0..fw {
             let t = scene.rgb(x as f64, y as f64);
@@ -503,8 +600,12 @@ fn gather_from_planes(
     let (stride, ax, ay) = (frame.stride, frame.active.x, frame.active.y);
     let gain = wb_gains(&frame.wb_coeffs);
     let ident = strehl_raw::identity(&frame.path);
-    let ca = strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?;
-    let fgeom = PlaneGeometry { width: fw, height: fh };
+    let ca =
+        strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?;
+    let fgeom = PlaneGeometry {
+        width: fw,
+        height: fh,
+    };
     let (cx, cy) = (gw as f64 * 0.5, gh as f64 * 0.5);
     let mut dst = vec![0f32; gw * gh];
     let mut cover = vec![false; gw * gh];
@@ -543,7 +644,9 @@ fn gather_from_planes(
                 for px in 0..gw {
                     frame.data[row + 2 * px] = if cover[lo + px] {
                         covered_total += 1;
-                        (dst[lo + px] * inv + black).round().clamp(0.0, u16::MAX as f32) as u16
+                        (dst[lo + px] * inv + black)
+                            .round()
+                            .clamp(0.0, u16::MAX as f32) as u16
                     } else {
                         black_dn
                     };
@@ -563,19 +666,29 @@ fn gather_from_planes(
 fn once_rgb(planes: &Planes, t: Similarity, geom: PlaneGeometry, resampler: Resampler) -> Planes {
     let (gw, gh) = (geom.width, geom.height);
     let (fw, fh) = (2 * gw, 2 * gh);
-    let fgeom = PlaneGeometry { width: fw, height: fh };
+    let fgeom = PlaneGeometry {
+        width: fw,
+        height: fh,
+    };
     let (cx, cy) = (gw as f64 * 0.5, gh as f64 * 0.5);
-    let mut out = [vec![0f32; fw * fh], vec![0f32; fw * fh], vec![0f32; fw * fh]];
+    let mut out = [
+        vec![0f32; fw * fh],
+        vec![0f32; fw * fh],
+        vec![0f32; fw * fh],
+    ];
     for ch in 0..3 {
         let src = PlaneRef::from_geometry(&planes[ch], fgeom).expect("plane geometry");
-        out[ch].par_chunks_mut(fw).enumerate().for_each(|(y, orow)| {
-            for (x, o) in orow.iter_mut().enumerate() {
-                let (sxp, syp) = t.apply_at(x as f64 * 0.5, y as f64 * 0.5, cx, cy);
-                *o = resampler
-                    .sample_checked(src, 2.0 * sxp, 2.0 * syp)
-                    .unwrap_or(f32::NAN);
-            }
-        });
+        out[ch]
+            .par_chunks_mut(fw)
+            .enumerate()
+            .for_each(|(y, orow)| {
+                for (x, o) in orow.iter_mut().enumerate() {
+                    let (sxp, syp) = t.apply_at(x as f64 * 0.5, y as f64 * 0.5, cx, cy);
+                    *o = resampler
+                        .sample_checked(src, 2.0 * sxp, 2.0 * syp)
+                        .unwrap_or(f32::NAN);
+                }
+            });
     }
     out
 }
@@ -672,7 +785,10 @@ fn measure(arm: &Planes, truth: &Planes, fw: usize, fh: usize) -> Stat {
         for x in m..fw - m {
             let i = y * fw + x;
             let a = rb_arm[i];
-            assert!(a.is_finite(), "arm has a hole at ({x}, {y}); MARGIN is too small");
+            assert!(
+                a.is_finite(),
+                "arm has a hole at ({x}, {y}); MARGIN is too small"
+            );
             let e = (a - rb_true[i]) as f64;
             se += e * e;
             sh += (hp_arm[i] as f64).powi(2);
@@ -709,7 +825,10 @@ fn run_scene(
     wb: [f32; 4],
     noise_sd: f64,
 ) -> Result<Vec<Run>> {
-    let geom = PlaneGeometry { width: GW, height: GH };
+    let geom = PlaneGeometry {
+        width: GW,
+        height: GH,
+    };
     let (fw, fh) = (2 * GW, 2 * GH);
     let base = mosaic(scene, wb, noise_sd, 0x5EED_1234_ABCD_0001);
     let truth_warped = truth_planes(scene, t, geom);
@@ -720,7 +839,10 @@ fn run_scene(
 
     // Floor: one demosaic, no warp at all. Everything below must pay at least
     // this, because every arm ends in the same final Malvar.
-    out.push(Run { label: "nowarp", stat: measure(&src_planes, &truth_still, fw, fh) });
+    out.push(Run {
+        label: "nowarp",
+        stat: measure(&src_planes, &truth_still, fw, fh),
+    });
 
     // The two shipping arms, called through the exported functions rather than
     // through `warp_frame_in_place`, so that an ambient STREHL_FULLRES_GATHER
@@ -731,7 +853,12 @@ fn run_scene(
     warp_frame_in_place_plane(&mut f, t, geom, resampler, &mut scratch)?;
     out.push(Run {
         label: "plane",
-        stat: measure(&demosaic_planes(&wb_mosaic(&f), fw, fh), &truth_warped, fw, fh),
+        stat: measure(
+            &demosaic_planes(&wb_mosaic(&f), fw, fh),
+            &truth_warped,
+            fw,
+            fh,
+        ),
     });
 
     let mut f = base.clone();
@@ -739,7 +866,12 @@ fn run_scene(
     let shipped_fullres = f.data.clone();
     out.push(Run {
         label: "fullres",
-        stat: measure(&demosaic_planes(&wb_mosaic(&f), fw, fh), &truth_warped, fw, fh),
+        stat: measure(
+            &demosaic_planes(&wb_mosaic(&f), fw, fh),
+            &truth_warped,
+            fw,
+            fh,
+        ),
     });
 
     // Harness fidelity: the re-gather, fed the shipping demosaic, must reproduce
@@ -747,7 +879,12 @@ fn run_scene(
     let mut f = base.clone();
     gather_from_planes(&mut f, t, geom, resampler, &src_planes)?;
     if f.data != shipped_fullres {
-        let diff = f.data.iter().zip(&shipped_fullres).filter(|(a, b)| a != b).count();
+        let diff = f
+            .data
+            .iter()
+            .zip(&shipped_fullres)
+            .filter(|(a, b)| a != b)
+            .count();
         bail!("harness re-gather differs from warp_frame_in_place_fullres at {diff} samples");
     }
 
@@ -757,33 +894,65 @@ fn run_scene(
     gather_from_planes(&mut f, t, geom, resampler, &oracle)?;
     out.push(Run {
         label: "oracle",
-        stat: measure(&demosaic_planes(&wb_mosaic(&f), fw, fh), &truth_warped, fw, fh),
+        stat: measure(
+            &demosaic_planes(&wb_mosaic(&f), fw, fh),
+            &truth_warped,
+            fw,
+            fh,
+        ),
     });
 
     // Planted defect, calibrated: the oracle with a known chroma injection. Two
     // amplitudes, so the metric is required to be monotone as well as awake.
     for (label, d) in [("oracle+100", 100.0f32), ("oracle+300", 300.0)] {
         let mut f = base.clone();
-        gather_from_planes(&mut f, t, geom, resampler, &planted_chroma(&oracle, fw, fh, d))?;
+        gather_from_planes(
+            &mut f,
+            t,
+            geom,
+            resampler,
+            &planted_chroma(&oracle, fw, fh, d),
+        )?;
         out.push(Run {
             label,
-            stat: measure(&demosaic_planes(&wb_mosaic(&f), fw, fh), &truth_warped, fw, fh),
+            stat: measure(
+                &demosaic_planes(&wb_mosaic(&f), fw, fh),
+                &truth_warped,
+                fw,
+                fh,
+            ),
         });
     }
 
     // Reported, not commissioning: a bilinear warp-time demosaic. It is here
     // because it failed as a planted defect, and why it failed is a result.
     let mut f = base.clone();
-    gather_from_planes(&mut f, t, geom, resampler, &demosaic_bilinear(&wb_mosaic(&base), fw, fh))?;
+    gather_from_planes(
+        &mut f,
+        t,
+        geom,
+        resampler,
+        &demosaic_bilinear(&wb_mosaic(&base), fw, fh),
+    )?;
     out.push(Run {
         label: "bilin",
-        stat: measure(&demosaic_planes(&wb_mosaic(&f), fw, fh), &truth_warped, fw, fh),
+        stat: measure(
+            &demosaic_planes(&wb_mosaic(&f), fw, fh),
+            &truth_warped,
+            fw,
+            fh,
+        ),
     });
 
     // Candidate fix: one demosaic, warped in RGB.
     out.push(Run {
         label: "once",
-        stat: measure(&once_rgb(&src_planes, t, geom, resampler), &truth_warped, fw, fh),
+        stat: measure(
+            &once_rgb(&src_planes, t, geom, resampler),
+            &truth_warped,
+            fw,
+            fh,
+        ),
     });
 
     Ok(out)
@@ -809,7 +978,11 @@ fn print_table(title: &str, runs: &[Run]) {
 }
 
 fn get<'a>(runs: &'a [Run], label: &str) -> &'a Stat {
-    &runs.iter().find(|r| r.label == label).expect("arm is present").stat
+    &runs
+        .iter()
+        .find(|r| r.label == label)
+        .expect("arm is present")
+        .stat
 }
 
 // ---------------------------------------------------------------------------
@@ -830,24 +1003,32 @@ fn commission_cfa() -> Result<()> {
             }
         }
     }
-    println!("  C0 CFA parity          : rggb() agrees with cfa_site_channel at all four sites   PASS");
+    println!(
+        "  C0 CFA parity          : rggb() agrees with cfa_site_channel at all four sites   PASS"
+    );
     Ok(())
 }
 
 fn commission_ca(frame: &Frame) -> Result<()> {
     let ident = strehl_raw::identity(&frame.path);
-    let ca = strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?;
+    let ca =
+        strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?;
     if ca.is_some() {
         bail!("a lateral-CA profile matched the synthetic frame; the arms are not isolated");
     }
-    println!("  C0 CA isolation        : profile_for_capture_env declines the synthetic frame     PASS");
+    println!(
+        "  C0 CA isolation        : profile_for_capture_env declines the synthetic frame     PASS"
+    );
     Ok(())
 }
 
 /// The identity null: with no warp, the full-resolution gather is documented as a
 /// bit-exact no-op, so it must land exactly on the `nowarp` floor.
 fn commission_identity(scene: &Scene, resampler: Resampler) -> Result<()> {
-    let geom = PlaneGeometry { width: GW, height: GH };
+    let geom = PlaneGeometry {
+        width: GW,
+        height: GH,
+    };
     let (fw, fh) = (2 * GW, 2 * GH);
     let base = mosaic(scene, WB, 0.0, 0x5EED_1234_ABCD_0001);
     let truth = truth_planes(scene, Similarity::IDENTITY, geom);
@@ -879,7 +1060,13 @@ fn commission_identity(scene: &Scene, resampler: Resampler) -> Result<()> {
 /// so keeping the real path would apply a correctly-measured aberration at the
 /// wrong radius. CA composes identically into both arms, so it is not the
 /// variable under test and declining it costs nothing.
-fn real_window(path: &std::path::Path, x0: usize, y0: usize, gw: usize, gh: usize) -> Result<Frame> {
+fn real_window(
+    path: &std::path::Path,
+    x0: usize,
+    y0: usize,
+    gw: usize,
+    gh: usize,
+) -> Result<Frame> {
     let raw = strehl_raw::decode(path)?;
     let (fw, fh) = (2 * gw, 2 * gh);
     let (x0, y0) = (x0 & !1, y0 & !1);
@@ -903,7 +1090,12 @@ fn real_window(path: &std::path::Path, x0: usize, y0: usize, gw: usize, gh: usiz
         data,
         stride,
         buffer_height,
-        active: Region { x: ox, y: oy, width: fw, height: fh },
+        active: Region {
+            x: ox,
+            y: oy,
+            width: fw,
+            height: fh,
+        },
         levels: raw.levels,
         iso: raw.iso,
         wb_coeffs: raw.wb_coeffs,
@@ -1031,15 +1223,25 @@ fn flat_tile_chroma(
 }
 
 fn run_real(path: &std::path::Path, x0: usize, y0: usize, gw: usize, gh: usize) -> Result<()> {
-    let geom = PlaneGeometry { width: gw, height: gh };
+    let geom = PlaneGeometry {
+        width: gw,
+        height: gh,
+    };
     let (fw, fh) = (2 * gw, 2 * gh);
     let resampler = Resampler::CatmullRom;
-    let t = Similarity::from_params(SimilarityParams { ax: 0.37, ay: 0.23, g: 0.0004, rot: 0.0006 });
+    let t = Similarity::from_params(SimilarityParams {
+        ax: 0.37,
+        ay: 0.23,
+        g: 0.0004,
+        rot: 0.0006,
+    });
     let base = real_window(path, x0, y0, gw, gh)?;
     println!(
         "  window {fw}x{fh} at ({x0}, {y0}) of {}   ISO {}   black {:.0}",
         path.file_name().unwrap().to_string_lossy(),
-        base.iso.map(|v| v.to_string()).unwrap_or_else(|| "?".into()),
+        base.iso
+            .map(|v| v.to_string())
+            .unwrap_or_else(|| "?".into()),
         base.levels.black
     );
 
@@ -1149,7 +1351,11 @@ fn run_real(path: &std::path::Path, x0: usize, y0: usize, gw: usize, gh: usize) 
         m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2], m[2][0], m[2][1], m[2][2]
     );
     let to_srgb = |p: &Planes| -> Planes {
-        let mut o = [vec![0f32; fw * fh], vec![0f32; fw * fh], vec![0f32; fw * fh]];
+        let mut o = [
+            vec![0f32; fw * fh],
+            vec![0f32; fw * fh],
+            vec![0f32; fw * fh],
+        ];
         for i in 0..fw * fh {
             let v = strehl_core::color::apply(&m, [p[0][i], p[1][i], p[2][i]]);
             o[0][i] = v[0];
@@ -1193,7 +1399,6 @@ fn run_real(path: &std::path::Path, x0: usize, y0: usize, gw: usize, gh: usize) 
     Ok(())
 }
 
-
 // ---------------------------------------------------------------------------
 // main
 // ---------------------------------------------------------------------------
@@ -1205,7 +1410,12 @@ fn run_real(path: &std::path::Path, x0: usize, y0: usize, gw: usize, gh: usize) 
 /// and an integer shift would make Catmull-Rom the identity and the whole
 /// question vanish.
 fn warp() -> Similarity {
-    Similarity::from_params(SimilarityParams { ax: 0.37, ay: 0.23, g: 0.0004, rot: 0.0006 })
+    Similarity::from_params(SimilarityParams {
+        ax: 0.37,
+        ay: 0.23,
+        g: 0.0004,
+        rot: 0.0006,
+    })
 }
 
 fn main() -> Result<()> {
@@ -1248,7 +1458,10 @@ fn main() -> Result<()> {
         &ach,
     );
     let col = run_scene(&scene_coloured(), t, resampler, WB, 0.0)?;
-    print_table("COLOURED -- real chroma detail inside the R/B Nyquist", &col);
+    print_table(
+        "COLOURED -- real chroma detail inside the R/B Nyquist",
+        &col,
+    );
     let viv = run_scene(&scene_vivid(), t, resampler, WB, 0.0)?;
     print_table(
         "VIVID -- healthy control (111.3): 3x the chroma, wears the defect's signature",
@@ -1258,9 +1471,17 @@ fn main() -> Result<()> {
     // ------------------------------------------------- commissioning verdicts
     println!("\n== commissioning, on the arms above ==");
     let mut fails: Vec<String> = Vec::new();
-    for (name, runs) in [("flat", &flat), ("achromatic", &ach), ("coloured", &col), ("vivid", &viv)]
-    {
-        let (o, d1, d3) = (get(runs, "oracle"), get(runs, "oracle+100"), get(runs, "oracle+300"));
+    for (name, runs) in [
+        ("flat", &flat),
+        ("achromatic", &ach),
+        ("coloured", &col),
+        ("vivid", &viv),
+    ] {
+        let (o, d1, d3) = (
+            get(runs, "oracle"),
+            get(runs, "oracle+100"),
+            get(runs, "oracle+300"),
+        );
         let ok = d1.chroma_err > o.chroma_err && d3.chroma_err > d1.chroma_err;
         if !ok {
             fails.push(format!("C2 planted chroma is not monotone on `{name}`"));
@@ -1273,12 +1494,18 @@ fn main() -> Result<()> {
             if ok { "PASS" } else { "FAIL" }
         );
     }
-    for (name, runs) in [("flat", &flat), ("achromatic", &ach), ("coloured", &col), ("vivid", &viv)]
-    {
+    for (name, runs) in [
+        ("flat", &flat),
+        ("achromatic", &ach),
+        ("coloured", &col),
+        ("vivid", &viv),
+    ] {
         let (o, f) = (get(runs, "oracle"), get(runs, "fullres"));
         let ok = o.chroma_err < f.chroma_err;
         if !ok {
-            fails.push(format!("C3 the oracle did not beat the shipping path on `{name}`"));
+            fails.push(format!(
+                "C3 the oracle did not beat the shipping path on `{name}`"
+            ));
         }
         println!(
             "  C3 planted improve {name:<11}: oracle {:8.2} < shipping fullres {:8.2}            {}",
@@ -1304,14 +1531,18 @@ fn main() -> Result<()> {
         );
     }
     println!("  C5 harness fidelity       : re-gather == warp_frame_in_place_fullres to the byte");
-    println!("                              (checked inside every run above; a mismatch aborts)  PASS");
+    println!(
+        "                              (checked inside every run above; a mismatch aborts)  PASS"
+    );
 
     // ---------------------------------------------------------------- part C
     println!("\n== part C: does this harness see the phenomenon on REAL sensor data? ==");
     println!("  V-GATHER measured chroma (R-B) high-pass rising 25.2% to 48.6% plane -> fullres,");
     println!("  on rendered masters, restricted to the flattest tiles. Same statistic here, on a");
     println!("  window of a real capture, one frame, no merge and no render:");
-    let dir = std::env::args().nth(1).unwrap_or_else(|| r"D:\personal\macro\wrapped-text-1".into());
+    let dir = std::env::args()
+        .nth(1)
+        .unwrap_or_else(|| r"D:\personal\macro\wrapped-text-1".into());
     let mut frames: Vec<PathBuf> = std::fs::read_dir(&dir)?
         .filter_map(|e| e.ok().map(|e| e.path()))
         .filter(|p| p.extension().is_some_and(|e| e.eq_ignore_ascii_case("ARW")))
@@ -1325,7 +1556,10 @@ fn main() -> Result<()> {
     // A second subject, because the owner's magenta observation was on brushed
     // steel and white trichomes rather than on paper, and a mechanism that only
     // shows on one subject is a subject, not a mechanism.
-    for other in [r"D:\personal\macro\tweezers-cpl", r"D:\personal\macro\lavendar-cpl"] {
+    for other in [
+        r"D:\personal\macro\tweezers-cpl",
+        r"D:\personal\macro\lavendar-cpl",
+    ] {
         let mut fs: Vec<PathBuf> = std::fs::read_dir(other)
             .into_iter()
             .flatten()
@@ -1340,8 +1574,12 @@ fn main() -> Result<()> {
     }
 
     println!("\n== the reading ==");
-    for (name, runs) in [("flat+noise", &flat), ("achromatic", &ach), ("coloured", &col), ("vivid", &viv)]
-    {
+    for (name, runs) in [
+        ("flat+noise", &flat),
+        ("achromatic", &ach),
+        ("coloured", &col),
+        ("vivid", &viv),
+    ] {
         let (n, pl, fr, or, on) = (
             get(runs, "nowarp"),
             get(runs, "plane"),
@@ -1365,11 +1603,23 @@ fn main() -> Result<()> {
     }
 
     println!("\n== V-GATHER's own ceiling argument, restated with a truth behind it ==");
-    println!("  `chroma.py`: NOGATHER (mosaic -> Malvar, no resampling) is the CEILING on restored");
-    println!("  noise -- resampling can only attenuate, so an arm ABOVE it manufactured the excess.");
-    for (name, runs) in [("flat+noise", &flat), ("achromatic", &ach), ("coloured", &col), ("vivid", &viv)]
-    {
-        let (n, pl, fr) = (get(runs, "nowarp"), get(runs, "plane"), get(runs, "fullres"));
+    println!(
+        "  `chroma.py`: NOGATHER (mosaic -> Malvar, no resampling) is the CEILING on restored"
+    );
+    println!(
+        "  noise -- resampling can only attenuate, so an arm ABOVE it manufactured the excess."
+    );
+    for (name, runs) in [
+        ("flat+noise", &flat),
+        ("achromatic", &ach),
+        ("coloured", &col),
+        ("vivid", &viv),
+    ] {
+        let (n, pl, fr) = (
+            get(runs, "nowarp"),
+            get(runs, "plane"),
+            get(runs, "fullres"),
+        );
         println!(
             "  {name:<11} chroma HP: nowarp {:8.2}  plane {:8.2} ({:.3}x)  fullres {:8.2} ({:.3}x)",
             n.chroma_hp,
@@ -1390,15 +1640,30 @@ fn main() -> Result<()> {
     );
 
     println!("\n== white balance control ==");
-    let unity = run_scene(&scene_achromatic(), t, resampler, [1.0, 1.0, 1.0, f32::NAN], 0.0)?;
-    print_table("ACHROMATIC, unity white balance -- isolates the WB round trip", &unity);
+    let unity = run_scene(
+        &scene_achromatic(),
+        t,
+        resampler,
+        [1.0, 1.0, 1.0, f32::NAN],
+        0.0,
+    )?;
+    print_table(
+        "ACHROMATIC, unity white balance -- isolates the WB round trip",
+        &unity,
+    );
 
     if !fails.is_empty() {
         for f in &fails {
             println!("\nCOMMISSIONING FAILURE: {f}");
         }
-        bail!("{} commissioning arm(s) failed; no verdict is reportable", fails.len());
+        bail!(
+            "{} commissioning arm(s) failed; no verdict is reportable",
+            fails.len()
+        );
     }
-    println!("\n  n = {} interior pixels per synthetic arm", get(&ach, "nowarp").n);
+    println!(
+        "\n  n = {} interior pixels per synthetic arm",
+        get(&ach, "nowarp").n
+    );
     Ok(())
 }

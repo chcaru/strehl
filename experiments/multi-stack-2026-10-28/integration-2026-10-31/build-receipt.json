@@ -1,0 +1,33 @@
+{
+  "command": [
+    "pwsh",
+    "-NoProfile",
+    "-File",
+    "scripts/package-desktop.ps1",
+    "-Destination",
+    "outputs/strehl-multi-stack-2026-10-31",
+    "-TargetDirectory",
+    "target"
+  ],
+  "cwd": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl",
+  "started_unix": 1793473238.4888594,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "logical_cpus": 32,
+  "physical_cpus": 16,
+  "physical_memory_bytes": 66094223360,
+  "available_memory_before": 51231047680,
+  "environment": {
+    "CARGO_BUILD_JOBS": "4"
+  },
+  "sampling_seconds": 1,
+  "cpu_accounting": "sampled cumulative owned-process CPU; may miss final interval",
+  "state": "complete",
+  "pid": 19444,
+  "exit_code": 0,
+  "elapsed_seconds": 187.23553323745728,
+  "finished_unix": 1793473425.7243927,
+  "sampled_peak_private_bytes": 3408195584,
+  "sampled_peak_rss_bytes": 3002277888,
+  "sampled_cpu_seconds": 441.65625,
+  "available_memory_after": 50739204096
+}

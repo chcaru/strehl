@@ -1,0 +1,10 @@
+{
+  "revision": "ef65505013585abcc86b1410e4bf902bf34ed479",
+  "materialized_line_endings": "CRLF for both files",
+  "cargo_lock_sha256": "d2a0612ac7af7eb0157a587043cc89915d92fee6776e351b6ad6504201a581a3",
+  "raw_lib_sha256": "34e779aaffdd215bdee3e9a0128289bae551cbb49dc75c1d3aa96b646f4c1455",
+  "decoder_key": "c6fa0bc876fd2934faedea72a6e545c8bc2e2d3a812650c4726716216f0ce5bd",
+  "current_raw_normalized_equal": true,
+  "only_current_lock_change": "sha2 added to strehl-core dependencies; all other parsed TOML equal",
+  "policy": "historical cache read only; no relabel, rewrite or decoder fallback"
+}

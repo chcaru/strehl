@@ -24,7 +24,7 @@
 
 use std::io::{Read, Write};
 
-use strehl_core::demosaic::{demosaic, demosaic_bilinear_row, Mosaic};
+use strehl_core::demosaic::{Mosaic, demosaic, demosaic_bilinear_row};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = std::env::args().collect();
@@ -51,7 +51,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         })
         .collect();
 
-    let m = Mosaic { data: &data, width: w, height: h };
+    let m = Mosaic {
+        data: &data,
+        width: w,
+        height: h,
+    };
     let mut out = vec![0.0f32; w * h * 3];
     match args[3].as_str() {
         "malvar" => demosaic(&m, &mut out),

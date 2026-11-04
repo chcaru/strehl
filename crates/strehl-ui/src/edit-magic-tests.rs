@@ -225,6 +225,7 @@ fn editor_fixture() -> EditorState {
     EditorState {
         tool: DrawingTool::MagicLasso,
         loaded: Some(LoadedPhoto {
+            coverage: None,
             image: image.clone(),
             preview: image,
             recipe: Default::default(),

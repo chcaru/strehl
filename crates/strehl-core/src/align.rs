@@ -510,6 +510,48 @@ pub fn downsample(p: PlaneRef<'_>, factor: usize) -> Option<PlaneBuf> {
     })
 }
 
+/// Lift a similarity measured between box-decimated planes to their full grids.
+///
+/// Each transform uses coordinates relative to its own plane centre. The
+/// sample at guide index `x` represents the source centroid
+/// `factor * x + (factor - 1) / 2`; [`downsample`] truncates incomplete blocks.
+/// Consequently scaling translation alone is not exact for scale/rotation,
+/// especially when the full dimensions are not divisible by `factor`.
+/// This only changes coordinates; it does not establish registration accuracy.
+pub fn lift_box_decimated_similarity(
+    transform: Similarity,
+    reference: PlaneGeometry,
+    moving: PlaneGeometry,
+    factor: usize,
+) -> Option<Similarity> {
+    if factor == 0
+        || reference.width < factor
+        || reference.height < factor
+        || moving.width < factor
+        || moving.height < factor
+        || !transform.a.is_finite()
+        || !transform.b.is_finite()
+        || transform.a.norm_sq() <= 0.0
+    {
+        return None;
+    }
+    if factor == 1 {
+        return Some(transform);
+    }
+    let s = factor as f64;
+    let offset = |geom: PlaneGeometry| {
+        Cx::new(
+            s * (geom.width / factor) as f64 * 0.5 + (s - 1.0) * 0.5 - geom.width as f64 * 0.5,
+            s * (geom.height / factor) as f64 * 0.5 + (s - 1.0) * 0.5 - geom.height as f64 * 0.5,
+        )
+    };
+    let lifted = Similarity {
+        a: transform.a,
+        b: transform.b.scale(s) + offset(moving) - transform.a * offset(reference),
+    };
+    lifted.b.is_finite().then_some(lifted)
+}
+
 /// Decimated copies of one plane, at the factors a configuration asks for.
 ///
 /// Built once per frame and reused across every pair that frame takes part in.
@@ -1420,6 +1462,8 @@ pub struct TileCensus {
 /// that matters.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum AlignFailure {
+    /// An externally supplied seed is non-finite or singular.
+    InvalidSeed,
     /// The plane is smaller than one tile plus twice the margin.
     GridTooSmall,
     /// Fewer than `min_tiles` tiles correlated at all.
@@ -1490,6 +1534,7 @@ pub struct FinePassTrace {
 /// The actual branch that ended the pair's coarse-to-fine calculation.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum PairTermination {
+    InvalidSeed,
     CoarseGridTooSmall { level: usize },
     CoarseStageFailed { level: usize, cause: AlignFailure },
     FineStageFailed { pass: usize, cause: AlignFailure },
@@ -1908,6 +1953,67 @@ pub fn align_pair(
     cfg: &AlignConfig,
 ) -> Result<StageFit, AlignFailure> {
     align_pair_impl(reference, moving, spots, cfg, None)
+}
+
+/// Refine one directly measured pair from an externally supplied coarse seed.
+///
+/// `seed` maps reference coordinates to moving coordinates in this full-plane
+/// gauge. Only the ordinary fine stage runs: no coarse pyramid or intermediate
+/// aligned frame is required. Iteration, convergence, retained earlier fits
+/// after a later failure, and tracing are identical to [`align_pair_observed`].
+/// A seed is only a search proposal; a failed first fine stage remains refused.
+pub fn refine_pair_observed(
+    reference: PlaneRef<'_>,
+    moving: PlaneRef<'_>,
+    spots: &[(usize, usize)],
+    cfg: &AlignConfig,
+    seed: Similarity,
+    observer: Option<&mut dyn FnMut(&PairTrace)>,
+) -> Result<StageFit, AlignFailure> {
+    if !seed.a.is_finite() || !seed.b.is_finite() || seed.a.norm_sq() <= 0.0 {
+        let result = Err(AlignFailure::InvalidSeed);
+        if let Some(observer) = observer {
+            observer(&PairTrace {
+                fine_passes: Vec::new(),
+                selected_fine_pass: None,
+                termination: PairTermination::InvalidSeed,
+                result: result.clone(),
+            });
+        }
+        return result;
+    }
+    let Some(observer) = observer else {
+        return fit_stage_iterated_impl(
+            reference,
+            moving,
+            cfg.fine_tile,
+            spots,
+            cfg.fine_radius,
+            Some(seed.to_params()),
+            cfg,
+            None,
+        );
+    };
+    let mut trace = PairCapture::default();
+    let result = fit_stage_iterated_impl(
+        reference,
+        moving,
+        cfg.fine_tile,
+        spots,
+        cfg.fine_radius,
+        Some(seed.to_params()),
+        cfg,
+        Some(&mut trace),
+    );
+    observer(&PairTrace {
+        fine_passes: trace.fine_passes,
+        selected_fine_pass: trace.selected_fine_pass,
+        termination: trace
+            .termination
+            .expect("completed refinement has a termination branch"),
+        result: result.clone(),
+    });
+    result
 }
 
 /// Observe the actual fine passes and terminal pair decision without adding
@@ -2593,12 +2699,119 @@ pub fn solve_global_in_component(
     solve_global_selected(edges, n, opts, &admitted, gauge)
 }
 
+/// An invalid track partition or an unsolvable measured component.
+#[derive(Clone, Debug, PartialEq, Eq, thiserror::Error)]
+pub enum TrackSolveError {
+    #[error("a track solve requires at least one frame")]
+    EmptySession,
+    #[error("reference {reference} is outside {frames} frames")]
+    ReferenceOutOfBounds { reference: usize, frames: usize },
+    #[error("track {track} is empty")]
+    EmptyTrack { track: usize },
+    #[error("track {track} names frame {frame}, outside {frames} frames")]
+    FrameOutOfBounds {
+        track: usize,
+        frame: usize,
+        frames: usize,
+    },
+    #[error("frame {frame} occurs more than once, in tracks {first_track} and {track}")]
+    RepeatedFrame {
+        frame: usize,
+        first_track: usize,
+        track: usize,
+    },
+    #[error("frame {frame} does not belong to any track")]
+    MissingFrame { frame: usize },
+    #[error("the measured reference component could not be solved")]
+    Unsolvable,
+}
+
+/// Solve direct edges jointly, with smoothness restricted to explicit tracks.
+///
+/// Tracks must partition `0..n` exactly once. Each track lists its original
+/// capture order, which may run opposite to global index order; callers must
+/// not remove unplaced frames from that list. A prior row uses only an
+/// original adjacent triple whose three frames are in the reference's measured
+/// component. Neither a track nor its smoothness can create measured coverage.
+///
+/// As in [`solve_global_in_component`], `reference` selects the component and
+/// the smallest admitted global index is the numerical gauge. Rebase the
+/// result explicitly to a chosen output frame. This API has no preferred-pass
+/// or fusion policy. A single track `0..n` preserves the ordinary solve's
+/// arithmetic, including the order of its prior rows.
+pub fn solve_global_in_tracks(
+    edges: &[AlignEdge],
+    n: usize,
+    opts: &GlobalOptions,
+    reference: usize,
+    tracks: &[Vec<usize>],
+) -> Result<Placement, TrackSolveError> {
+    if n == 0 {
+        return Err(TrackSolveError::EmptySession);
+    }
+    if reference >= n {
+        return Err(TrackSolveError::ReferenceOutOfBounds {
+            reference,
+            frames: n,
+        });
+    }
+    let mut owner = vec![None; n];
+    let mut triples = Vec::new();
+    for (track, frames) in tracks.iter().enumerate() {
+        if frames.is_empty() {
+            return Err(TrackSolveError::EmptyTrack { track });
+        }
+        for &frame in frames {
+            if frame >= n {
+                return Err(TrackSolveError::FrameOutOfBounds {
+                    track,
+                    frame,
+                    frames: n,
+                });
+            }
+            if let Some(first_track) = owner[frame] {
+                return Err(TrackSolveError::RepeatedFrame {
+                    frame,
+                    first_track,
+                    track,
+                });
+            }
+            owner[frame] = Some(track);
+        }
+        triples.extend(frames.windows(3).map(|w| [w[0], w[1], w[2]]));
+    }
+    if let Some(frame) = owner.iter().position(Option::is_none) {
+        return Err(TrackSolveError::MissingFrame { frame });
+    }
+    let admitted = reachable_from(edges, n, reference);
+    let gauge = admitted
+        .iter()
+        .position(|&keep| keep)
+        .ok_or(TrackSolveError::Unsolvable)?;
+    solve_global_selected_with_triples(edges, n, opts, &admitted, gauge, &triples)
+        .ok_or(TrackSolveError::Unsolvable)
+}
+
 fn solve_global_selected(
     edges: &[AlignEdge],
     n: usize,
     opts: &GlobalOptions,
     admitted: &[bool],
     gauge: usize,
+) -> Option<Placement> {
+    let triples: Vec<_> = (1..n.saturating_sub(1))
+        .map(|k| [k - 1, k, k + 1])
+        .collect();
+    solve_global_selected_with_triples(edges, n, opts, admitted, gauge, &triples)
+}
+
+fn solve_global_selected_with_triples(
+    edges: &[AlignEdge],
+    n: usize,
+    opts: &GlobalOptions,
+    admitted: &[bool],
+    gauge: usize,
+    triples: &[[usize; 3]],
 ) -> Option<Placement> {
     if n == 0 || gauge >= n || admitted.len() != n || !admitted[gauge] {
         return None;
@@ -2669,12 +2882,13 @@ fn solve_global_selected(
         }
 
         if opts.smooth > 0.0 && n >= 3 {
-            for (k, &pw) in pen_w.iter().enumerate().take(n - 1).skip(1) {
-                if !(admitted[k - 1] && admitted[k] && admitted[k + 1]) {
+            for &[previous, k, next] in triples {
+                if !(admitted[previous] && admitted[k] && admitted[next]) {
                     continue;
                 }
+                let pw = pen_w[k];
                 let sw = pw.sqrt();
-                let stencil = [(k - 1, 1.0), (k, -2.0), (k + 1, 1.0)];
+                let stencil = [(previous, 1.0), (k, -2.0), (next, 1.0)];
                 let mut cols = Vec::with_capacity(3);
                 let mut rhs = Cx::ZERO;
                 for (kk, c) in stencil {
@@ -2764,12 +2978,12 @@ fn solve_global_selected(
             && n >= 3
             && thr > 0.0
         {
-            for k in 1..n - 1 {
-                if !(admitted[k - 1] && admitted[k] && admitted[k + 1]) {
+            for &[previous, k, next] in triples {
+                if !(admitted[previous] && admitted[k] && admitted[next]) {
                     continue;
                 }
                 let (Some(p), Some(c), Some(q)) =
-                    (placement[k - 1], placement[k], placement[k + 1])
+                    (placement[previous], placement[k], placement[next])
                 else {
                     continue;
                 };
@@ -4701,3 +4915,7 @@ mod measured_component_tests;
 #[cfg(test)]
 #[path = "../../../experiments/raw-quality-2026-10-27/insect-placement-observer/core-controls.rs"]
 mod insect_placement_controls;
+
+#[cfg(test)]
+#[path = "multi-track-tests.rs"]
+mod multi_track_tests;

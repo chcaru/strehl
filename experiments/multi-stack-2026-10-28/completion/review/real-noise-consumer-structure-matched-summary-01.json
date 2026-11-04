@@ -1,0 +1,107 @@
+{
+  "schema": "strehl.matched-QV-summary.v1",
+  "input": "outputs/multi-stack/completion/rn-sm-01",
+  "qualified_all_cfa_blocks": 0,
+  "total_blocks": 9,
+  "components": [
+    {
+      "color": 0,
+      "accepted": 5,
+      "median_energy_by_pass": [
+        1.2297725386027998,
+        1.3102397438603293
+      ],
+      "signed_mean_difference_range_dn": [
+        -111.7230745011475,
+        -40.53503182095301
+      ],
+      "per_site_difference_rms_range_dn": [
+        52.54105926527656,
+        135.40913984305575
+      ]
+    },
+    {
+      "color": 1,
+      "accepted": 0,
+      "median_energy_by_pass": [
+        2.2551340225524927,
+        4.424620673533366
+      ],
+      "signed_mean_difference_range_dn": [
+        -329.2135328759905,
+        -136.2469446788018
+      ],
+      "per_site_difference_rms_range_dn": [
+        190.4900704022206,
+        591.4411955704612
+      ]
+    },
+    {
+      "color": 2,
+      "accepted": 1,
+      "median_energy_by_pass": [
+        1.5067505226795699,
+        2.1186969089460748
+      ],
+      "signed_mean_difference_range_dn": [
+        -116.83500241895672,
+        -51.1522354920744
+      ],
+      "per_site_difference_rms_range_dn": [
+        64.58265303073678,
+        209.70353786642866
+      ]
+    },
+    {
+      "color": 3,
+      "accepted": 0,
+      "median_energy_by_pass": [
+        2.0854576966278606,
+        4.422646481233618
+      ],
+      "signed_mean_difference_range_dn": [
+        -326.94534659478813,
+        -135.29668662250333
+      ],
+      "per_site_difference_rms_range_dn": [
+        187.24050889459534,
+        560.376872995206
+      ]
+    }
+  ],
+  "read_indices": [
+    106,
+    107,
+    110,
+    111,
+    114,
+    115,
+    396,
+    397,
+    400,
+    401,
+    404,
+    405
+  ],
+  "excluded_indices": [
+    104,
+    105,
+    108,
+    109,
+    112,
+    113,
+    116,
+    117,
+    394,
+    395,
+    398,
+    399,
+    402,
+    403,
+    406,
+    407
+  ],
+  "role_disjoint": true,
+  "raw_decodes": 0,
+  "scope": "Observed model/instrument limitation at one independently nominated sharp ROI. No inference that dataset is generally unusable or common latent impossible. No R/M signal read or repeated risk on empty all-CFA support."
+}

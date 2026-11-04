@@ -159,8 +159,9 @@ report includes clipped sample counts and measured content light levels.
 No fictitious mastering-display metadata is invented.
 
 This is HDR **development and output from the preserved RAW-derived master**.
-It does not recover sensor-clipped information and is not an exposure-bracket
-fusion algorithm.
+Development itself cannot recover sensor-clipped information. The separate
+[Exposure range session mode](multi-stack.md) can combine compatible shutter
+brackets before development, retaining unclipped observations when available.
 
 ## Progressive photograph display
 

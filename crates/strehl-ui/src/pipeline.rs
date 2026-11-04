@@ -7,6 +7,10 @@
 
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
+#[path = "pipeline-view.rs"]
+mod view;
+pub(crate) use view::ViewProgress;
+
 #[path = "pipeline-confidence.rs"]
 mod confidence;
 #[path = "pipeline-diagnostics.rs"]
@@ -25,6 +29,13 @@ const MAX_FRAME_OBSERVATIONS: usize = 65_536;
 const MAX_ALIGNMENT_OBSERVATIONS: usize = 512;
 const MAX_ALIGNMENT_EDGE_OBSERVATIONS: usize = 65_536;
 pub(crate) const LOG_GAP: &str = "\nLive output skipped ahead; the complete log is saved.\n";
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) struct FringePreviewProgress {
+    pub(crate) completed: usize,
+    pub(crate) total: usize,
+    pub(crate) finished: bool,
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) struct SourceRepairProgress {
@@ -174,6 +185,13 @@ pub enum CoveragePlan {
 
 #[derive(Debug, Default)]
 pub struct PipelineProgress {
+    pub(crate) view: Option<ViewProgress>,
+    pub(crate) view_observations_missing: bool,
+    /// Inside the engine's lateral-CA preview pass (`--refine-ca`): a partial
+    /// run whose banner (frames, folds, alignment) describes the preview, not
+    /// the render, so it is not read as the render's.
+    ca_preview: bool,
+    pub(crate) view_expected: bool,
     pub stage: Stage,
     pub observed_stages: BTreeSet<Stage>,
     pub diagnostic_surfaces: VecDeque<DiagnosticSurface>,
@@ -196,6 +214,9 @@ pub struct PipelineProgress {
     pub render_step_state: Option<WorkState>,
     pub confidence: Option<ConfidenceProgress>,
     pub(crate) source_repair: Option<SourceRepairProgress>,
+    /// The engine's lateral-CA preview (`--refine-ca`): frames taken, frames
+    /// planned, and whether it has finished.
+    pub(crate) fringe_preview: Option<FringePreviewProgress>,
     pub frames_total: Option<usize>,
     pub folded: Option<(usize, usize)>,
     pub frames_processed: Option<usize>,
@@ -276,6 +297,7 @@ impl PipelineProgress {
         // A queue/backlog gap must never splice the beginning and end of
         // unrelated lines into what looks like a real observation.
         let chunk = if let Some(chunk) = chunk.strip_prefix(LOG_GAP) {
+            self.view_gap();
             self.pending.clear();
             // File reads resume at an arbitrary byte, so the first resumed
             // line is incomplete too. Resume parsing after its terminator.
@@ -356,8 +378,28 @@ impl PipelineProgress {
 
     fn line(&mut self, line: &str) {
         let line = line.trim();
+        if let Some(context) = line.strip_prefix("STREHL_UI_VIEW ") {
+            self.view_context(context);
+            return;
+        }
+        if self.view_observations_missing {
+            return;
+        }
         if let Some(fields) = line.strip_prefix("STREHL_UI_PROGRESS ") {
             self.progress_event(fields);
+            return;
+        }
+        if let Some(rest) = line.strip_prefix("CA refinement") {
+            let value = rest.trim_start().trim_start_matches(':').trim();
+            self.ca_preview = value.starts_with("PREVIEW");
+            self.record(if self.ca_preview {
+                "Fringe refinement · measuring a quick preview of the stack".to_string()
+            } else {
+                format!("Fringe refinement · {value}")
+            });
+            return;
+        }
+        if self.ca_preview {
             return;
         }
         if line.starts_with("align: track prior ") {
@@ -402,7 +444,7 @@ impl PipelineProgress {
                 if !value.contains(" from ") {
                     return;
                 }
-                if count == 0 {
+                if count == 0 || self.view.as_ref().is_some_and(|v| count != v.source_count) {
                     return;
                 }
                 self.observed_stages.insert(Stage::Preparing);
@@ -569,6 +611,34 @@ impl PipelineProgress {
                 (key == name).then_some(value)
             })
         };
+        if field("event") == Some("fringe-preview") {
+            let number = |name| field(name).and_then(|value| value.parse::<usize>().ok());
+            let (Some(completed), Some(total)) = (number("completed"), number("total")) else {
+                return;
+            };
+            let state = field("state");
+            if completed > total
+                || total > MAX_FRAME_OBSERVATIONS
+                || !matches!(state, Some("started" | "folded" | "finished"))
+            {
+                return;
+            }
+            let finished = state == Some("finished");
+            // Never rewinds within one preview.
+            if let Some(previous) = self.fringe_preview
+                && !previous.finished
+                && !finished
+                && completed < previous.completed
+            {
+                return;
+            }
+            self.fringe_preview = Some(FringePreviewProgress {
+                completed,
+                total,
+                finished,
+            });
+            return;
+        }
         if field("event") == Some("source-repair") {
             let number = |name| field(name).and_then(|value| value.parse::<usize>().ok());
             let (
@@ -1187,6 +1257,67 @@ memory plan     : 4 canonical chunks, 1 reusable frame worker, 1 retained + 1 sc
 folded          : 259 / 259 frames in 344.6 s (1.33 s per frame, 4 execution threads)\n\
 tone            : black 0.01568, white 0.51089 (linear), contrast 0.55\n\
 wrote           : result.partial.tiff (7032 x 4688, 16-bit RGB)\n";
+
+    #[test]
+    fn the_fringe_preview_reports_its_own_progress_and_never_rewinds() {
+        let mut progress = PipelineProgress::default();
+        let event = |state: &str, completed: usize| {
+            format!(
+                "STREHL_UI_PROGRESS event=fringe-preview state={state} \
+                 completed={completed} total=38\n"
+            )
+        };
+        progress.ingest(&event("started", 0));
+        assert_eq!(
+            progress.fringe_preview,
+            Some(FringePreviewProgress {
+                completed: 0,
+                total: 38,
+                finished: false
+            })
+        );
+        progress.ingest(&event("folded", 12));
+        // A lower count (out-of-order lines) does not rewind it.
+        progress.ingest(&event("folded", 7));
+        assert_eq!(progress.fringe_preview.unwrap().completed, 12);
+        // An impossible count is ignored.
+        progress.ingest(&event("folded", 40));
+        assert_eq!(progress.fringe_preview.unwrap().completed, 12);
+        progress.ingest(&event("finished", 38));
+        assert!(progress.fringe_preview.unwrap().finished);
+        // The preview's events do not touch the render's frame counts.
+        assert_eq!(progress.frames_processed, None);
+    }
+
+    #[test]
+    fn a_lateral_ca_preview_pass_is_not_read_as_the_render() {
+        // `--refine-ca` merges a preview of every 8th frame first; its banner
+        // describes that preview, so only the render's own lines may count.
+        let preview = concat!(
+            "CA refinement   : PREVIEW pass over every 8th of 259 frames, measuring the ",
+            "lateral CA the profile leaves (default; --refine-ca=off skips it)\n",
+            "frames          : 259 from D:/capture  (first decode 0.13 s)\n",
+            "folded          : 33 / 259 frames in 14.0 s (0.42 s per frame, 4 execution threads)\n",
+            "CA refinement   : measured red t (+0.058, -0.064) px, scale +366.5 ppm ",
+            "(268 of 272 tiles, rms 0.122 px)\n",
+            "                  measured blue t (-0.060, +0.079) px, scale -203.6 ppm ",
+            "(268 of 272 tiles, rms 0.120 px)\n",
+            "                  APPLIED on top of the profile for the render below\n",
+        );
+        let mut progress = PipelineProgress::default();
+        progress.ingest(&(preview.to_string() + LOG));
+        assert_eq!(progress.folded, Some((259, 259)));
+        let notes: Vec<_> = progress.events.iter().map(|e| e.detail.as_str()).collect();
+        assert!(
+            notes
+                .iter()
+                .any(|n| n.starts_with("Fringe refinement · measured red")),
+            "{notes:?}"
+        );
+        let mut skipped = PipelineProgress::default();
+        skipped.ingest(preview);
+        assert_eq!(skipped.folded, None, "the preview's fold count leaked");
+    }
 
     #[test]
     fn retained_engine_lines_survive_arbitrary_chunks_and_carriage_returns() {

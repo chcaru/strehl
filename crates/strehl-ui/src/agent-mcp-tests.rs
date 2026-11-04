@@ -137,6 +137,7 @@ fn v2_layout_unknown_versions_and_invalid_adaptive_controls_never_dispatch() {
         ("shadow_protection", json!(-0.01)),
         ("highlight_compression", json!(1.01)),
         ("presence", json!(1.01)),
+        ("glint_compression", json!(1.01)),
         ("invented_control", json!(0.5)),
     ] {
         let mut recipe = valid.clone();

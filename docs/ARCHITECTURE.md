@@ -58,8 +58,8 @@ mean across frames (`pyramid.rs:2641`, `pyramid.rs:2223-2233`; tests
 `pure_noise_is_averaged_not_selected` `pyramid.rs:3368` and
 `the_averaged_fraction_reports_where_the_gate_refused` `pyramid.rs:3627`).
 
-But above that floor the default exponent ladder runs at 7.683 / 8.0 / 8.0 in the three
-finest bands, which the module itself calls "already close to winner-take-all — a frame
+But above that floor the default exponent ladder runs at 8.0 in every band but the two
+coarsest (7.683 / 8.0 / 8.0 in the three finest before the coarse exponent moved to 4), which the module itself calls "already close to winner-take-all — a frame
 with twice another's band energy gets 256 times the weight" (`pyramid.rs:1241-1242`).
 
 And the project's own instrumentation measures selection concentration **higher in flat
@@ -69,6 +69,17 @@ comment names this exactly: *"That is a merge selecting on noise"* (`pyramid.rs:
 The fix is built (`STREHL_PYRAMID_SIGNIFICANCE`) and ships **off**, because at derived
 strength it does not collapse the inversion — band 1's gap narrows 0.0657 → 0.0338 and
 bands 2–6 move under 0.2% (`pyramid.rs:1150-1190`).
+
+**Since 2026-11-02 the default runs the ensemble gate** (`MergeConfig::ensemble`,
+`STREHL_PYRAMID_ENSEMBLE=0` disables), which addresses that inversion at its source: the
+per-frame gate is a multiple-comparisons test that some noise frame passes at almost
+every flat coefficient. A coefficient now selects only where the stack as a whole shows
+signal (one frame dominating the rest, detail adding coherently across frames, or
+structure in every frame); elsewhere it is the plain mean of all frames. Thresholds are
+percentiles of a null measured from the floor probe's noise frames through each frame's
+own warp. Measured: flat-region noise power 0.03–0.05x of the old default on deep
+stacks, lower error against truth in 176 of 180 synthetic cells and on a held-out
+fixed-focus burst; see `experiments/image-quality-2026-11-02/results.md`.
 
 **So: the thesis is implemented and demonstrated on a backend that is not the default,
 and holds in a diluted form on the backend that is.** That is the central architectural
@@ -245,9 +256,14 @@ signature idea:
 p(k) = min(exponent × sharpen_per_octave^(bands-1-k), MAX_EXPONENT)
 ```
 
-Defaults `exponent = 2.0`, `sharpen_per_octave = 1.4`, `MAX_EXPONENT = 8.0`. The ladder,
-coarsest → finest: **2.000, 2.800, 3.920, 5.488, 7.683, 8.000, 8.000** (last two capped
-from 10.756 and 15.059).
+Defaults `exponent = 4.0` (`DEFAULT_EXPONENT`), `sharpen_per_octave = 1.4`,
+`MAX_EXPONENT = 8.0`. The ladder, coarsest → finest: **4.000, 5.600, 7.840, 8.000, 8.000,
+8.000, 8.000**. Until 2026-11-03 the default was `exponent = 2.0` (ladder 2.000, 2.800, 3.920,
+5.488, 7.683, 8.000, 8.000), chosen when coarse bands selected on their own focus-blind
+energy. With pooled evidence they select on their finer bands' focus evidence, and the
+sharper coarse selection measured better against truth and drew less glow
+(`experiments/image-quality-2026-11-02/results.md` §1d). Session fusion keeps 2.0 with its
+previous selection.
 
 The ramp is geometric rather than linear because band power itself falls geometrically
 with scale, so a fixed *ratio* per octave is the scale-free choice. The justification is
@@ -259,7 +275,24 @@ transition inside each band rather than a step in the image.
 on `p·ln(r)` is 80, so beyond about `p = 10` the sharpest coefficients all pin and get
 averaged. More selectivity is `SelectMode::HardMax`, not a bigger exponent.
 
-Other defaults: `BaseBand::Mean` (`pyramid.rs:1280`), `SelectMode::SoftPower`,
+**Since 2026-11-03 bands select on pooled focus evidence** (`MergeConfig::pooled_evidence`,
+`STREHL_PYRAMID_POOLED_EVIDENCE=0` disables): each band's weight is computed from a weighted
+mean of its own and every finer band's energy in noise units, the finer ones reduced onto its
+grid and each counted `pooled_evidence_ratio` (default 2, `STREHL_PYRAMID_POOLED_RATIO`) times
+its next coarser one, because a coarse band's own energy barely depends on focus and a defocused frame's spread
+light kept or raised it beside bright and dark detail. The base band is now **weighted** by
+the coarsest band's selection and inherits that band's ensemble blend. Together they removed
+most of the glow around edges on a tilted calibration slide (+35% -> +14.5% dark-ground
+excess over a locally in-focus composite) and lowered error against truth on every synthetic
+cell; see `experiments/image-quality-2026-11-02/results.md` §1b. On scene-linear masters the
+slide's remaining excess is gone. The ratio of 2 (§1e) roughly halved the glow still left within
+8-16 px of very bright edges on bug-4. Session fusion (Best result)
+can select with the same pooled evidence and weighted base, pinned coefficient for coefficient
+to the ordinary merge by a parity test, but sessions keep the previous selection (mean base, no
+pooling): session fusion has no ensemble gate yet, and without it the two select noise in flat
+dark ground.
+
+Other defaults: `BaseBand::WeightedFromCoarsest`, `SelectMode::SoftPower`,
 `Hull::InputRange` — output clamped to the frames' hull, because per-band convexity does
 not imply reconstruction convexity.
 
@@ -393,6 +426,21 @@ typo'd `STREHL_FIX_CA` is an error, not silence. The direction is a pull, `s = 1
 the inverted version shipped once and made the aberration 7.2% worse, where the corrected
 direction removes 94.3%. Out-of-sample leave-one-out transfer is 93.7%/93.3%, taking
 corner residual from 1.519 px to 0.071 px.
+
+**Per-capture refinement — DEFAULT ON (`--refine-ca=off` / `STREHL_REFINE_CA=off` to skip; desktop: "Refine fringing per stack").** The constants
+are right on average and wrong per capture: a channel's effective wavelength is weighted by
+the scene's spectrum (SYNTHESIS fact 1570), so red's native scale measured −258 to −611 ppm
+across seven captures, and red/blue carry a translation of up to 0.3 px the profile does not
+apply. By default `stack` first merges a preview of every Nth frame (at least ~32
+frames, at most every 8th), measures on its white-balanced **mosaic** — each colour
+interpolated from its own sites only, because a demosaic that borrows green's detail
+under-reads the displacement — the red and blue displacement against green as translation +
+scale (`ca_refine.rs`: per 256 px tile, windowed cross-correlation of gradient magnitude
+refined to 1/400 px, then a structure-weighted trimmed fit), installs it on top of the
+profile (`optics::set_ca_refinement`, consumed by `compose`), and renders in full. About +18%
+time; skipped automatically with no matching profile, `--fix-ca=off`, alignment off, or binned output, and the preview is silent on the desktop progress channel. Multi-pass sessions run their own preview through the session consumer (whose original-CFA gather leaves its own residual) and apply the result to every lighting group; aligned layers keep the profile alone. MEASURED: edge fringing on the neutral slide-2 7.34% → 2.97% (red), 5.37% → 2.11%
+(blue); bug-4's red residual +250 → +10 ppm. With `--refine-ca=off` the output is pixel-identical to the profile-only render.
+See `experiments/image-quality-2026-11-02/results.md` section 3c.
 
 ### Sensor defects — OPT-IN, off by default
 
@@ -765,6 +813,7 @@ backends, so any unintended change to the merge is caught as a hash movement.
 | `merge_cmd/gatefloor.rs` | **DEFAULT** (opt-out) | Per-frame measured band-noise floor |
 | `align.rs`, `warpmap.rs` | **DEFAULT** (sidecar-cached) | Solve once, gather at consumption |
 | `optics.rs` (lateral CA) | **DEFAULT** for matching gear | Composed into the alignment similarity |
+| `ca_refine.rs` (per-capture CA refinement) | **DEFAULT** where a profile applies (`--refine-ca=off` skips) | Preview pass + measured residual on top of the profile |
 | `demosaic.rs` (Malvar) | **DEFAULT** in full-resolution alignment and development | Per-source reconstruction during full-resolution gather, plus final demosaic when developing; binned output omits only the latter |
 | `color.rs`, `highlight.rs`, `clip.rs` | **DEFAULT** in the writer | Roll-off is identity below the knee |
 | `noise.rs`, `profile.rs` | **DEFAULT** | Injected once; PRNU term measured but off |
@@ -803,11 +852,136 @@ backends, so any unintended change to the merge is caught as a hash movement.
   scores only 11 of 26 are actually *clean* — 4 blind and 7 unmeasurable remain UNSCORED,
   which is not the same as clean. 13 subjects FAIL on a rim axis at ±12 px that the halo
   work never reached.
-- **The default backend still selects on noise in flat regions.** Measured, at every band.
-  The fix is built and off because at derived strength it does not collapse the inversion.
+- **The default backend selected on noise in flat regions** until the ensemble gate
+  (2026-11-02). Remaining: plateau regions, where every frame holds the same detail,
+  still select rather than average; multi-pass Best result sessions do not use the gate.
 - **`SELECTION_INFLATION` is 1.0** — the noise penalty for selecting is a known missing
   term.
 - **One profiled camera body, one optical path.** The gear-matching guard has never
   declined a real file, because all corpus stacks are the same rig.
 - **Rail capture is deferred** — no rail hardware to test against, and an untested geometry
   model would violate rule 8.
+
+## 12. Opt-in multi-stack sessions
+
+**EXPERIMENTAL, COMPILED ONLY WITH THE `multi-stack` FEATURE** (strehl-cli and strehl-ui,
+off by default since 2026-11-04). Without it the `session` subcommand, the session engine
+modules and the desktop's session actions are absent; the session specification types and
+folder discovery stay compiled so saved results still open.
+
+**SEPARATE SESSION PATH.** `strehl session` consumes a versioned manifest of
+ordered passes, each with one or more ordered continuation folders.
+[The session guide](multi-stack.md) describes the user contract. The existing
+`stack` command does not call this consumer. A one-pass, one-folder
+Combine/Repeat session delegates to the ordinary command and adds only source
+binding and completion receipts around it.
+
+### Source and geometry contract
+
+`session-input.rs` retains global, pass, segment and local indices. Canonical
+paths, file stamps and whole-original SHA256 identities bind each run;
+duplicate paths or duplicate file content are refused. Outputs and caches
+must remain outside every capture folder.
+
+`session-cache.rs` stores original active CFA codes as `u16`, preserving
+decoded geometry, levels and calibration. The in-memory cache has a byte
+budget and pinned handles. Checksummed disk entries bind the original identity
+and decoder implementation; corrupt or stale derived entries are rebuilt.
+This cache contains no aligned frame volume.
+
+`session-align.rs` builds bounded guides, proposes intra-pass and cross-pass
+pairs, refines accepted seeds directly against original native data, and solves
+the direct measured graph in one reference gauge. Core's
+`solve_global_in_tracks` applies the smoothness prior within explicit pass
+tracks only. It does not introduce rows across pass boundaries or chain poses.
+The ordinary solver retains its original single-track behavior.
+
+Reports preserve components, cycle rank, per-pass placement/refusal counts,
+direct edges and candidate correspondence. Fitted scale proximity and mutual
+nearest partners are retrieval hints; `validated_same_focus` remains false.
+A connected graph establishes connectivity, not placement accuracy or
+identical physical focus. Geometry caches bind source identities, ordered
+session layout, configuration, resampler and owned implementation sources.
+
+### Sampling and fusion
+
+`session-sampling.rs` gathers original same-color CFA samples at consumption.
+Coordinates explicitly relate each CFA site to the green-quad alignment gauge.
+Only the current source's signed `f32` planes are materialized. Coverage and
+original clipping support are separate masks. The clipping check includes
+nonzero negative-lobed interpolation taps; clipped data are not silently
+turned into valid zero-valued observations.
+
+Each pass receives the existing injected sensor-noise model. A deterministic
+original-CFA Rademacher probe measures the actual gather-plus-pyramid variance
+transfer for each placement, profile, canvas and resampler. Luma and color
+transfer are separate. This is an operator measurement with known input
+variance, not a new fitted sensor noise estimate. It is a spatial average
+under stationary independent noise and does not represent exact local
+covariance. Nonlinear clamped Catmull-Rom is refused.
+
+`session-transfer-cache.rs` caches only those small measured operator reports.
+Its binding includes exact placement bits, canvas, full geometry, optical
+profile, probe settings, platform and implementation sources. Payload float
+bits, checksum, dimensions, support counts and positivity are checked.
+Worker count is excluded because indexed parallelism preserves the
+measurement's reduction order; one-versus-sixteen-worker controls cover it.
+
+Core's `pyramid::session_fusion` is an additional coefficient consumer.
+Disjoint proposed groups contain at most one observation per pass. Compatible
+repeats use an equal-weight coefficient mean with variance
+`sum(v_i) / K^2`; this is valid propagation, not an inverse-variance optimal
+HDR estimator. Disagreement uses ordinary noise-gated admission, or the
+explicit primary's supported coefficient. Absent a primary, the automatically
+chosen geometry reference has no fusion preference. Combine mode admits
+sources independently unless a primary requires matching-overlap handling.
+
+Strict uncensored support is preferred across groups. A separate coverage
+fallback retains real saturated values only where all observations lack
+strict support; it never claims to recover clipped information. The hull uses
+uncensored observations where available. Actual unsupported output pixels
+withhold the completed photograph. CFA planes are demosaiced once by the
+existing writer into the photograph and scene-linear master.
+
+### Modes, resources and desktop boundary
+
+Fused sessions require compatible camera, lens, decoded sensor calibration,
+known ISO and aperture. Combine/Repeat also require equal shutter time.
+Different apertures or lighting appearances remain separate in Aligned layers,
+which shares geometry/canvas while preserving each pass's final calibration.
+Physical camera-body identity cannot be established from model metadata alone.
+
+HDR's `session-photometry.rs` validates one bounded multiplicative correction
+per pass after nominal shutter normalization. A fixed checkerboard split of
+spatial patches separates fitting and validation; several proposed focus
+partners must span the tracks. Original clipping/coverage masks and injected
+noise eligibility guard the measurement. Supported contradictory radiometry
+vetoes the pass rather than disappearing through accepted-pair selection.
+All pair evidence, tolerances, gains and refusals are retained. The consumer
+applies the accepted gain to signal and its square to propagated variance.
+Calibration phase and retained report memory are checked before merge buffers
+are allocated. These are sampled compatibility checks, not calibration of
+physical focus or a general camera response.
+
+The optional primary anchors framing and preference over disagreeing matched
+overlap. It does not suppress useful unmatched focus coverage. For layers it
+sets the shared reference and initially opened layer. Neither mode is a
+stitching implementation.
+
+A checked session memory reservation covers cache, sampling, probes,
+coefficient workspaces and output development. It is separate from ordinary
+stacking's existing planner. Deterministic row and pixel-chunk parallelism
+uses CPU workers without changing per-pixel source order. GPU support remains
+the desktop display path; experimental GPU fusion is not silently enabled.
+
+The desktop saves a session recipe separately from ordinary catalog stacks.
+Its isolated engine worker receives an immutable manifest, fresh output
+directory and shared cache outside captures. Publication checks completed
+source identities against the imported recipe and validates every photograph
+and linear master. Leaving session mode restores the entire ordinary recipe.
+Pass groups and layer ownership survive saved-run reopening.
+
+Depth-aware mosaics, super-resolution, calibrated depth, and Fourier-ring
+resolution claims are not implemented by this path. Their capture and
+identifiability requirements remain separate from usable session input,
+common-gauge layers and conservative fusion.

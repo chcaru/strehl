@@ -78,9 +78,23 @@ foreach ($relative in @(
     $relativeFiles.Add($relative)
 }
 $relativeFiles.Add('scripts/rebuild-desktop.ps1')
+# Preserve declared external Cargo examples and all owned sibling Rust modules
+# and embedded protocol text. Never include generated image/cache/capture data.
+foreach ($file in Get-ChildItem -LiteralPath (Join-Path $repository 'experiments/multi-stack-2026-10-28') -File -Recurse -Force) {
+    if ($file.Extension -in @('.rs', '.md')) {
+        if (($file.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+            throw "Refusing a linked research source: $($file.FullName)"
+        }
+        $relativeFiles.Add([IO.Path]::GetRelativePath($repository, $file.FullName))
+    }
+}
+$relativeFiles.Add('experiments/raw-quality-2026-10-27/native-spectral-fusion/pilot/native-cfa-develop.rs')
 $relativeFiles.Add('scripts/package-desktop.ps1')
 $relativeFiles.Add('scripts/strehl-control.py')
 $relativeFiles.Add('docs/desktop-control.md')
+$relativeFiles.Add('docs/multi-stack.md')
+$relativeFiles.Add('docs/multi-stack-tryout.md')
+$relativeFiles.Add('experiments/multi-stack-2026-10-28/brief.md')
 $relativeFiles.Add('docs/desktop-build.md')
 $relativeFiles.Add('docs/public-release.md')
 $relativeFiles.Add('SECURITY.md')
@@ -89,6 +103,7 @@ $relativeFiles.Add('docs/temporal-energy.md')
 $relativeFiles.Add('docs/sony-focus-metadata.md')
 $relativeFiles.Add('docs/research/metadata-continuation-2026-10-25.md')
 $relativeFiles.Add('docs/raw-decoder-notice.md')
+$relativeFiles = @($relativeFiles | ForEach-Object { $_.Replace('\', '/') } | Sort-Object -Unique)
 foreach ($relative in $relativeFiles) {
     $copy = Join-Path $source $relative
     New-Item -ItemType Directory -Path (Split-Path -Parent $copy) -Force | Out-Null
@@ -154,9 +169,16 @@ $rebuildGuide = $rebuildGuide.Replace('](temporal-energy.md)', '](source/docs/te
 $rebuildGuide = $rebuildGuide.Replace('](raw-decoder-notice.md)', '](source/docs/raw-decoder-notice.md)')
 [IO.File]::WriteAllText((Join-Path $package 'REBUILD.md'), $rebuildGuide)
 $packageReadme = @'
-# Strehl: native metadata and application control
+# Strehl desktop workspace
 
-Open **Strehl.exe** for the desktop workspace. Import a bracket, select a capture
+Open **Strehl.exe** for the desktop workspace. To combine several focus sweeps,
+choose **Create multi-stack session** from Projects. Repeat fusion, exposure
+range and aligned layers retain separate pass identity, with an optional primary
+stack and a configurable RAM budget. See the [session guide](source/docs/multi-stack.md).
+Start with the [multi-stack tryout](source/docs/multi-stack-tryout.md) for setup
+steps and the current experimental limits.
+
+Import a bracket, select a capture
 on the timeline, and open **Camera metadata**. The native panel contains the AF
 grid, exact cell bits and flags, focus progression and optical sample curves.
 Selecting a chart point selects its capture. Full details stay inside Strehl.

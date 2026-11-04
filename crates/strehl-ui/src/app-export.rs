@@ -170,6 +170,7 @@ impl StrehlApp {
     }
 
     pub(super) fn export_panel(&mut self, ui: &mut egui::Ui) {
+        self.view_bundle_export_action(ui);
         let Some(loaded) = self.editor.loaded.as_ref() else {
             egui::Frame::NONE.inner_margin(12).show(ui, |ui| {
                 ui.label(if self.editor.loading.is_some() {

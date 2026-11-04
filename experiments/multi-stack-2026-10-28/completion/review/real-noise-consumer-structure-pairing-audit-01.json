@@ -1,0 +1,762 @@
+{
+  "schema": "strehl.structure-noise-focus-pairing-audit.v1",
+  "command": "inline one-worker Python, reads saved reports and sealed focus artifacts only",
+  "render_report_sha256": "168c0e8751b87acccf48d1fb9de550d895f029a93ffe3c54ecb7b787203cf7c3",
+  "source_identities_sha256": "f3cb48fa5cfd592f3bb3facc4fc8efac247c90272afd9b03aa2188b2e1efb672",
+  "scale_proposed_pairs": [
+    {
+      "pass0_ordinal": 17,
+      "pass1_ordinal": 8,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 25,
+      "pass1_ordinal": 17,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 27,
+      "pass1_ordinal": 19,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 29,
+      "pass1_ordinal": 21,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 31,
+      "pass1_ordinal": 23,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 32,
+      "pass1_ordinal": 24,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 40,
+      "pass1_ordinal": 30,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 42,
+      "pass1_ordinal": 32,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 43,
+      "pass1_ordinal": 33,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 48,
+      "pass1_ordinal": 38,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 49,
+      "pass1_ordinal": 39,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 50,
+      "pass1_ordinal": 40,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 51,
+      "pass1_ordinal": 41,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 52,
+      "pass1_ordinal": 42,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 57,
+      "pass1_ordinal": 49,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 59,
+      "pass1_ordinal": 50,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 60,
+      "pass1_ordinal": 51,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 61,
+      "pass1_ordinal": 52,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 65,
+      "pass1_ordinal": 55,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 66,
+      "pass1_ordinal": 56,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 70,
+      "pass1_ordinal": 60,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 72,
+      "pass1_ordinal": 64,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 78,
+      "pass1_ordinal": 71,
+      "offset": -7
+    },
+    {
+      "pass0_ordinal": 82,
+      "pass1_ordinal": 74,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 86,
+      "pass1_ordinal": 78,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 87,
+      "pass1_ordinal": 80,
+      "offset": -7
+    },
+    {
+      "pass0_ordinal": 88,
+      "pass1_ordinal": 82,
+      "offset": -6
+    },
+    {
+      "pass0_ordinal": 89,
+      "pass1_ordinal": 83,
+      "offset": -6
+    },
+    {
+      "pass0_ordinal": 91,
+      "pass1_ordinal": 84,
+      "offset": -7
+    },
+    {
+      "pass0_ordinal": 95,
+      "pass1_ordinal": 87,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 97,
+      "pass1_ordinal": 86,
+      "offset": -11
+    },
+    {
+      "pass0_ordinal": 100,
+      "pass1_ordinal": 90,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 101,
+      "pass1_ordinal": 91,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 103,
+      "pass1_ordinal": 94,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 104,
+      "pass1_ordinal": 95,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 111,
+      "pass1_ordinal": 101,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 113,
+      "pass1_ordinal": 103,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 114,
+      "pass1_ordinal": 104,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 118,
+      "pass1_ordinal": 107,
+      "offset": -11
+    },
+    {
+      "pass0_ordinal": 119,
+      "pass1_ordinal": 108,
+      "offset": -11
+    },
+    {
+      "pass0_ordinal": 121,
+      "pass1_ordinal": 110,
+      "offset": -11
+    },
+    {
+      "pass0_ordinal": 122,
+      "pass1_ordinal": 111,
+      "offset": -11
+    },
+    {
+      "pass0_ordinal": 123,
+      "pass1_ordinal": 114,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 125,
+      "pass1_ordinal": 116,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 126,
+      "pass1_ordinal": 117,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 128,
+      "pass1_ordinal": 120,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 133,
+      "pass1_ordinal": 125,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 139,
+      "pass1_ordinal": 132,
+      "offset": -7
+    },
+    {
+      "pass0_ordinal": 142,
+      "pass1_ordinal": 134,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 144,
+      "pass1_ordinal": 136,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 149,
+      "pass1_ordinal": 139,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 151,
+      "pass1_ordinal": 141,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 153,
+      "pass1_ordinal": 143,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 156,
+      "pass1_ordinal": 147,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 157,
+      "pass1_ordinal": 148,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 158,
+      "pass1_ordinal": 149,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 160,
+      "pass1_ordinal": 151,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 161,
+      "pass1_ordinal": 152,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 162,
+      "pass1_ordinal": 153,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 163,
+      "pass1_ordinal": 154,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 166,
+      "pass1_ordinal": 158,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 167,
+      "pass1_ordinal": 159,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 169,
+      "pass1_ordinal": 160,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 170,
+      "pass1_ordinal": 163,
+      "offset": -7
+    },
+    {
+      "pass0_ordinal": 173,
+      "pass1_ordinal": 166,
+      "offset": -7
+    },
+    {
+      "pass0_ordinal": 174,
+      "pass1_ordinal": 167,
+      "offset": -7
+    },
+    {
+      "pass0_ordinal": 176,
+      "pass1_ordinal": 168,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 177,
+      "pass1_ordinal": 169,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 178,
+      "pass1_ordinal": 170,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 179,
+      "pass1_ordinal": 171,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 180,
+      "pass1_ordinal": 172,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 181,
+      "pass1_ordinal": 173,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 183,
+      "pass1_ordinal": 175,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 186,
+      "pass1_ordinal": 177,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 189,
+      "pass1_ordinal": 181,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 193,
+      "pass1_ordinal": 185,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 202,
+      "pass1_ordinal": 192,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 204,
+      "pass1_ordinal": 194,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 207,
+      "pass1_ordinal": 198,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 211,
+      "pass1_ordinal": 201,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 214,
+      "pass1_ordinal": 203,
+      "offset": -11
+    },
+    {
+      "pass0_ordinal": 215,
+      "pass1_ordinal": 204,
+      "offset": -11
+    },
+    {
+      "pass0_ordinal": 220,
+      "pass1_ordinal": 209,
+      "offset": -11
+    },
+    {
+      "pass0_ordinal": 224,
+      "pass1_ordinal": 212,
+      "offset": -12
+    },
+    {
+      "pass0_ordinal": 229,
+      "pass1_ordinal": 219,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 231,
+      "pass1_ordinal": 221,
+      "offset": -10
+    },
+    {
+      "pass0_ordinal": 233,
+      "pass1_ordinal": 224,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 234,
+      "pass1_ordinal": 225,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 236,
+      "pass1_ordinal": 227,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 239,
+      "pass1_ordinal": 230,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 240,
+      "pass1_ordinal": 231,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 241,
+      "pass1_ordinal": 232,
+      "offset": -9
+    },
+    {
+      "pass0_ordinal": 243,
+      "pass1_ordinal": 235,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 245,
+      "pass1_ordinal": 237,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 246,
+      "pass1_ordinal": 238,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 256,
+      "pass1_ordinal": 248,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 258,
+      "pass1_ordinal": 252,
+      "offset": -6
+    },
+    {
+      "pass0_ordinal": 259,
+      "pass1_ordinal": 254,
+      "offset": -5
+    },
+    {
+      "pass0_ordinal": 261,
+      "pass1_ordinal": 255,
+      "offset": -6
+    },
+    {
+      "pass0_ordinal": 264,
+      "pass1_ordinal": 256,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 267,
+      "pass1_ordinal": 259,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 268,
+      "pass1_ordinal": 261,
+      "offset": -7
+    },
+    {
+      "pass0_ordinal": 270,
+      "pass1_ordinal": 265,
+      "offset": -5
+    },
+    {
+      "pass0_ordinal": 271,
+      "pass1_ordinal": 263,
+      "offset": -8
+    },
+    {
+      "pass0_ordinal": 272,
+      "pass1_ordinal": 268,
+      "offset": -4
+    },
+    {
+      "pass0_ordinal": 273,
+      "pass1_ordinal": 270,
+      "offset": -3
+    },
+    {
+      "pass0_ordinal": 276,
+      "pass1_ordinal": 272,
+      "offset": -4
+    },
+    {
+      "pass0_ordinal": 277,
+      "pass1_ordinal": 274,
+      "offset": -3
+    },
+    {
+      "pass0_ordinal": 282,
+      "pass1_ordinal": 278,
+      "offset": -4
+    },
+    {
+      "pass0_ordinal": 286,
+      "pass1_ordinal": 280,
+      "offset": -6
+    },
+    {
+      "pass0_ordinal": 287,
+      "pass1_ordinal": 281,
+      "offset": -6
+    },
+    {
+      "pass0_ordinal": 288,
+      "pass1_ordinal": 283,
+      "offset": -5
+    },
+    {
+      "pass0_ordinal": 289,
+      "pass1_ordinal": 284,
+      "offset": -5
+    },
+    {
+      "pass0_ordinal": 293,
+      "pass1_ordinal": 286,
+      "offset": -7
+    },
+    {
+      "pass0_ordinal": 294,
+      "pass1_ordinal": 297,
+      "offset": 3
+    },
+    {
+      "pass0_ordinal": 295,
+      "pass1_ordinal": 296,
+      "offset": 1
+    },
+    {
+      "pass0_ordinal": 296,
+      "pass1_ordinal": 293,
+      "offset": -3
+    },
+    {
+      "pass0_ordinal": 298,
+      "pass1_ordinal": 298,
+      "offset": 0
+    }
+  ],
+  "pair_count": 118,
+  "offset_median": -8.0,
+  "offset_range": [
+    -12,
+    3
+  ],
+  "local_focus_seal_sha256": "78142d8f8f5edec7d4693872c87dce78dfece9bde6dcbd87142899ca552a1d81",
+  "all_sealed_focus_files_digest_verified": true,
+  "local_opportunity_sha256": "aaeba1351e60243a628125aec2cb20d325d1098bb2d7f0a3ee9788617f276301",
+  "local_nomination": [
+    {
+      "index": 0,
+      "roi_sensor": [
+        1970,
+        2090,
+        192,
+        192
+      ],
+      "top_focus_mode_pairs": [
+        [
+          112,
+          103,
+          180
+        ],
+        [
+          108,
+          100,
+          168
+        ],
+        [
+          109,
+          101,
+          164
+        ],
+        [
+          110,
+          101,
+          148
+        ],
+        [
+          111,
+          102,
+          128
+        ],
+        [
+          109,
+          100,
+          108
+        ],
+        [
+          113,
+          104,
+          104
+        ],
+        [
+          106,
+          98,
+          84
+        ],
+        [
+          113,
+          103,
+          72
+        ],
+        [
+          110,
+          102,
+          72
+        ],
+        [
+          101,
+          92,
+          64
+        ],
+        [
+          112,
+          104,
+          60
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "roi_sensor": [
+        2350,
+        1330,
+        192,
+        192
+      ],
+      "top_focus_mode_pairs": [
+        [
+          101,
+          92,
+          140
+        ],
+        [
+          114,
+          106,
+          128
+        ],
+        [
+          100,
+          91,
+          108
+        ],
+        [
+          102,
+          93,
+          96
+        ],
+        [
+          102,
+          92,
+          88
+        ],
+        [
+          99,
+          90,
+          80
+        ],
+        [
+          113,
+          106,
+          60
+        ],
+        [
+          103,
+          94,
+          60
+        ],
+        [
+          95,
+          87,
+          60
+        ],
+        [
+          100,
+          92,
+          56
+        ],
+        [
+          99,
+          91,
+          56
+        ],
+        [
+          105,
+          96,
+          48
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "roi_sensor": [
+        4620,
+        2600,
+        192,
+        192
+      ],
+      "top_focus_mode_pairs": []
+    }
+  ],
+  "scope": "DERIVED pairing evidence, not identical-focus proof. Scale proposals global and incomplete; local focus centers cannot be transferred to other spatial witnesses or assigned metric depth. No new source/cache/Q/V/R/W/M signal reads."
+}

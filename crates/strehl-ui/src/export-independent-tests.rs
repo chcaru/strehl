@@ -18,6 +18,7 @@ fn photograph(origin: ImageOrigin) -> StrehlApp {
     app.result = Some(path.clone());
     app.editor.path = Some(path.clone());
     app.editor.loaded = Some(crate::edit_workspace::LoadedPhoto {
+        coverage: None,
         image: image.clone(),
         preview: image,
         source: path,

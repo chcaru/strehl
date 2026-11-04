@@ -1,0 +1,17 @@
+test_application_source_keeps_declared_workspace_targets (__main__.ReleasePackagingTests.test_application_source_keeps_declared_workspace_targets) ... ok
+test_archive_paths_refuse_cross_platform_traversal_and_symlinks (__main__.ReleasePackagingTests.test_archive_paths_refuse_cross_platform_traversal_and_symlinks) ... ok
+test_dependency_patent_grants_are_shipped_with_licenses (__main__.ReleasePackagingTests.test_dependency_patent_grants_are_shipped_with_licenses) ... ok
+test_ldd_missing_library_fails_and_only_os_baseline_is_excluded (__main__.ReleasePackagingTests.test_ldd_missing_library_fails_and_only_os_baseline_is_excluded) ... ok
+test_linux_audit_checks_dlopen_transitive_dependencies (__main__.ReleasePackagingTests.test_linux_audit_checks_dlopen_transitive_dependencies) ... ok
+test_local_renderer_patch_keeps_upstream_notices_in_release_kit (__main__.ReleasePackagingTests.test_local_renderer_patch_keeps_upstream_notices_in_release_kit) ... ok
+test_notices_zip_roundtrip_and_existing_output_are_checked (__main__.ReleasePackagingTests.test_notices_zip_roundtrip_and_existing_output_are_checked) ... ok
+test_pe_audit_accepts_windows_combase_without_admitting_external_libraries (__main__.ReleasePackagingTests.test_pe_audit_accepts_windows_combase_without_admitting_external_libraries) ... ok
+test_pe_audit_includes_delay_imports_and_rejects_missing_runtime (__main__.ReleasePackagingTests.test_pe_audit_includes_delay_imports_and_rejects_missing_runtime) ... ok
+test_source_kit_refuses_an_omitted_local_patch (__main__.ReleasePackagingTests.test_source_kit_refuses_an_omitted_local_patch) ... ok
+test_source_staging_keeps_patch_sources_and_notices_in_distinct_directories (__main__.ReleasePackagingTests.test_source_staging_keeps_patch_sources_and_notices_in_distinct_directories) ... ok
+test_worker_smoke_rejects_wrong_source_or_unavailable_engine (__main__.ReleasePackagingTests.test_worker_smoke_rejects_wrong_source_or_unavailable_engine) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 4.743s
+
+OK

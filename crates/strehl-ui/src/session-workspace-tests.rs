@@ -1,0 +1,351 @@
+use super::*;
+use crate::jobs::{FrameFile, RenderSettings};
+
+fn fixture() -> (tempfile::TempDir, SessionDraft, StackScan) {
+    let root = tempfile::tempdir().unwrap();
+    let mut directories = Vec::new();
+    let mut frames = Vec::new();
+    for (segment, count) in [2, 1, 2].into_iter().enumerate() {
+        let directory = root.path().join(format!("segment-{segment}"));
+        std::fs::create_dir(&directory).unwrap();
+        let directory = std::fs::canonicalize(directory).unwrap();
+        for i in 0..count {
+            let path = directory.join(format!("capture-{i:02}.ARW"));
+            std::fs::write(&path, [segment as u8, i as u8, 42]).unwrap();
+            frames.push(FrameFile { path, bytes: 3 });
+        }
+        directories.push(directory);
+    }
+    let scan = StackScan {
+        directory: directories[0].clone(),
+        frames,
+        total_bytes: 15,
+    };
+    let draft = SessionDraft {
+        manifest: SessionSpec {
+            passes: vec![
+                PassSpec {
+                    name: "Continued pass".into(),
+                    directories: directories[..2].to_vec(),
+                },
+                PassSpec {
+                    name: "Repeat".into(),
+                    directories: directories[2..].to_vec(),
+                },
+            ],
+            primary_pass: Some(1),
+            ..Default::default()
+        },
+        memory_limit_gib: 24.0,
+        anchor_lighting_only: false,
+        precision_weights: false,
+        contribution_maps: false,
+        focus_evidence: false,
+        reproducibility: false,
+        original_cfa_reconstruction: false,
+        sources: crate::workspace_history::source_identities(&scan),
+    };
+    (root, draft, scan)
+}
+
+#[test]
+fn session_workspace_old_recipes_keep_ordinary_defaults_and_no_session_field() {
+    let settings: RenderSettings = serde_json::from_str("{}").unwrap();
+    assert_eq!(settings, RenderSettings::default());
+    assert!(settings.session.is_none());
+    assert!(
+        serde_json::to_value(&settings)
+            .unwrap()
+            .get("session")
+            .is_none()
+    );
+    assert!(settings.confidence_map && settings.correct_lateral_ca);
+}
+
+#[test]
+fn session_workspace_grouping_preserves_continuation_order_and_detects_wrong_scan() {
+    let (_root, draft, mut scan) = fixture();
+    draft.validate().unwrap();
+    let groups = draft.groups(&scan).unwrap();
+    assert_eq!(groups[0].range, 0..3);
+    assert_eq!(groups[0].segment_ends, vec![2, 3]);
+    assert_eq!(groups[1].range, 3..5);
+    assert!(groups[1].primary && !groups[0].primary);
+    scan.frames.swap(0, 4);
+    assert!(draft.groups(&scan).is_err());
+}
+
+#[test]
+fn session_workspace_primary_follows_reordering_and_removal_never_selects_another_pass() {
+    let (_root, mut draft, _) = fixture();
+    draft.move_pass(0, 1);
+    assert_eq!(draft.manifest.primary_pass, Some(0));
+    assert_eq!(draft.manifest.passes[0].name, "Repeat");
+    draft.remove_pass(0);
+    assert_eq!(draft.manifest.primary_pass, None);
+    assert_eq!(draft.manifest.passes[0].name, "Continued pass");
+}
+
+#[test]
+fn session_workspace_settings_snapshot_keeps_layout_budget_and_sources_immutable() {
+    let (_root, draft, _) = fixture();
+    let mut next = RenderSettings {
+        session: Some(draft),
+        ..RenderSettings::default()
+    };
+    let saved = next.clone();
+    let before = serde_json::to_vec(&saved).unwrap();
+    let session = next.session.as_mut().unwrap();
+    session.manifest.passes[0].directories.reverse();
+    session.manifest.primary_pass = None;
+    session.memory_limit_gib = 8.0;
+    session.sources.clear();
+    assert_eq!(serde_json::to_vec(&saved).unwrap(), before);
+    let restored: RenderSettings = serde_json::from_slice(&before).unwrap();
+    assert_eq!(restored, saved);
+    assert_ne!(restored, next);
+}
+
+#[test]
+fn session_workspace_background_scan_uses_production_manifest_order() {
+    let (_root, draft, scan) = fixture();
+    let task = crate::jobs::scan_session(draft.clone());
+    let actual = task
+        .receiver
+        .recv_timeout(std::time::Duration::from_secs(5))
+        .unwrap()
+        .unwrap();
+    assert_eq!(
+        actual.frames.iter().map(|f| &f.path).collect::<Vec<_>>(),
+        scan.frames.iter().map(|f| &f.path).collect::<Vec<_>>()
+    );
+    assert_eq!(actual.total_bytes, 15);
+    assert_eq!(draft.groups(&actual).unwrap()[0].segment_ends, vec![2, 3]);
+}
+
+#[test]
+fn session_workspace_invalid_budget_and_primary_are_refused() {
+    let (_root, mut draft, _) = fixture();
+    draft.memory_limit_gib = f64::NAN;
+    assert!(draft.validate().is_err());
+    draft.memory_limit_gib = 16.0;
+    draft.manifest.primary_pass = Some(2);
+    assert!(draft.validate().is_err());
+}
+
+#[test]
+fn session_workspace_new_options_default_off_for_old_saved_sessions() {
+    let (_root, draft, _) = fixture();
+    let mut old = serde_json::to_value(&draft).unwrap();
+    for key in [
+        "precision_weights",
+        "contribution_maps",
+        "focus_evidence",
+        "reproducibility",
+        "original_cfa_reconstruction",
+    ] {
+        old.as_object_mut().unwrap().remove(key);
+    }
+    let restored: SessionDraft = serde_json::from_value(old).unwrap();
+    assert_eq!(restored, draft);
+    assert!(
+        !restored.precision_weights
+            && !restored.contribution_maps
+            && !restored.focus_evidence
+            && !restored.reproducibility
+            && !restored.original_cfa_reconstruction
+    );
+}
+
+#[test]
+fn session_workspace_options_are_immutable_and_mode_transitions_clear_invalid_preferences() {
+    let (_root, mut draft, _) = fixture();
+    draft.manifest.mode = SessionMode::Repeat;
+    draft.precision_weights = true;
+    draft.contribution_maps = true;
+    draft.focus_evidence = true;
+    draft.reproducibility = true;
+    draft.original_cfa_reconstruction = true;
+    draft.validate().unwrap();
+    let saved = draft.clone();
+    let bytes = serde_json::to_vec(&saved).unwrap();
+    draft.manifest.mode = SessionMode::Mosaic;
+    assert!(draft.validate().is_err());
+    draft.normalize_mode_options();
+    draft.validate().unwrap();
+    assert_eq!(draft.manifest.primary_pass, None);
+    assert!(
+        !draft.precision_weights
+            && !draft.contribution_maps
+            && !draft.focus_evidence
+            && !draft.reproducibility
+            && !draft.original_cfa_reconstruction
+    );
+    assert_eq!(serde_json::to_vec(&saved).unwrap(), bytes);
+    let mut reduced = saved;
+    reduced.remove_pass(1);
+    assert!(!reduced.precision_weights && !reduced.reproducibility);
+    assert!(reduced.contribution_maps && reduced.focus_evidence);
+    assert_eq!(mode_label(SessionMode::Mosaic), "Wider mosaic");
+}
+
+#[test]
+fn session_workspace_mode_guards_are_explicit_for_first_two_pass_comparison() {
+    for mode in MODES {
+        assert!(!precision_available(mode, 1));
+        assert!(!reproducibility_available(mode, 1));
+        assert_eq!(
+            precision_available(mode, 2),
+            matches!(
+                mode,
+                SessionMode::Auto | SessionMode::Repeat | SessionMode::Hdr
+            )
+        );
+        assert_eq!(
+            reproducibility_available(mode, 3),
+            matches!(
+                mode,
+                SessionMode::Auto
+                    | SessionMode::Combine
+                    | SessionMode::Interleave
+                    | SessionMode::Repeat
+                    | SessionMode::Layers
+            )
+        );
+    }
+}
+
+#[test]
+fn session_reconstruction_default_guard_preserves_single_and_multi_pass_jobs() {
+    let (_root, mut draft, _) = fixture();
+    for mode in MODES {
+        draft.manifest.mode = mode;
+        draft.manifest.primary_pass = None;
+        draft.original_cfa_reconstruction = true;
+        let supported = matches!(
+            mode,
+            SessionMode::Auto
+                | SessionMode::Combine
+                | SessionMode::Interleave
+                | SessionMode::Repeat
+                | SessionMode::Hdr
+        );
+        assert_eq!(reconstruction_available(mode), supported);
+        assert_eq!(draft.validate().is_ok(), supported);
+        let saved = draft.clone();
+        draft.normalize_mode_options();
+        assert_eq!(draft.original_cfa_reconstruction, supported);
+        assert!(saved.original_cfa_reconstruction);
+    }
+}
+
+#[test]
+fn session_workspace_independent_views_clear_cross_view_flags_and_primary() {
+    let (_root, mut draft, scan) = fixture();
+    draft.manifest.mode = SessionMode::IndependentViews;
+    draft.precision_weights = true;
+    draft.contribution_maps = true;
+    draft.focus_evidence = true;
+    draft.reproducibility = true;
+    draft.original_cfa_reconstruction = true;
+    assert!(draft.validate().is_err());
+    draft.normalize_mode_options();
+    draft.validate().unwrap();
+    assert_eq!(draft.manifest.primary_pass, None);
+    assert!(
+        !draft.precision_weights
+            && !draft.contribution_maps
+            && !draft.focus_evidence
+            && !draft.reproducibility
+            && !draft.original_cfa_reconstruction
+    );
+    assert_eq!(draft.groups(&scan).unwrap()[1].range, 3..5);
+    assert_eq!(output_prefix(draft.manifest.mode), Some("view"));
+    assert_eq!(
+        serde_json::to_value(draft.manifest.mode).unwrap(),
+        "independent_views"
+    );
+    draft.manifest.passes.pop();
+    draft.sources.truncate(3);
+    draft.validate().unwrap();
+    assert_eq!(draft.manifest.passes.len(), 1);
+    assert_eq!(output_prefix(draft.manifest.mode), Some("view"));
+}
+
+#[test]
+fn best_result_contributions_name_each_pass_role_and_layer_outcome() {
+    let root = tempfile::tempdir().unwrap();
+    std::fs::write(
+        root.path().join("plan.json"),
+        r#"{"passes":[
+            {"pass":0,"role":"lighting_layer","reason":"lighting differs in shape"},
+            {"pass":1,"role":"anchor","reason":null},
+            {"pass":2,"role":"pose_layer","reason":"the subject moved"},
+            {"pass":3,"role":"excluded","reason":"ISO differs"}]}"#,
+    )
+    .unwrap();
+    std::fs::write(
+        root.path().join("render-report.json"),
+        r#"{"lighting_fusion":{"layers":[
+            {"group":1,"outcome":"superposed","residual_before":{"median_px":2.6},"residual_after":{"median_px":0.3},"coverage":0.32,"agreement":null,"sharp_fraction":0.99},
+            {"group":2,"outcome":"defocused","residual_before":null,"residual_after":null,"coverage":null,"agreement":null,"sharp_fraction":null}]},
+          "lighting_groups":[{"passes":["b"]},{"passes":["a"]},{"passes":["c"]}]}"#,
+    )
+    .unwrap();
+    let names: Vec<String> = ["a", "b", "c", "d"].map(String::from).to_vec();
+    let list = summary::contributions(root.path(), &names).expect("plan");
+    assert_eq!(list[0].label, "Lighting layer · averaged in");
+    assert!(list[0].used);
+    assert_eq!(
+        list[0].detail.as_deref(),
+        Some("aligned 2.6 → 0.3 px · sharp 99% · covers 32%")
+    );
+    assert!(list[1].label.starts_with("Primary"));
+    assert_eq!(list[2].label, "Pose layer · not used: out of focus");
+    assert!(!list[2].used);
+    assert_eq!(list[3].label, "Not used");
+    assert_eq!(list[3].reason.as_deref(), Some("ISO differs"));
+    // Other modes save no plan.
+    assert!(summary::contributions(&root.path().join("missing"), &names).is_none());
+    // A detached pass: placed and averaged in, or not found.
+    std::fs::write(
+        root.path().join("plan.json"),
+        r#"{"passes":[
+            {"pass":0,"role":"anchor","reason":null},
+            {"pass":1,"role":"detached_layer","reason":"no frame joined"},
+            {"pass":2,"role":"detached_layer","reason":"no frame joined"}]}"#,
+    )
+    .unwrap();
+    std::fs::write(
+        root.path().join("render-report.json"),
+        r#"{"lighting_fusion":{"layers":[
+            {"group":1,"outcome":"superposed","residual_before":{"median_px":1.2},"residual_after":{"median_px":0.3},"coverage":0.6,"agreement":0.5,"sharp_fraction":0.9}]},
+          "lighting_groups":[{"passes":["a"]},{"passes":["b"]}],
+          "detached_layers":[
+            {"pass":"b","placement":{"scale":1.02,"rotation_deg":-3.0,"ncc":0.7,"runner_up_ncc":0.4,"accepted":true}},
+            {"pass":"c","placement":{"scale":2.1,"rotation_deg":90.0,"ncc":0.3,"runner_up_ncc":0.29,"accepted":false}}]}"#,
+    )
+    .unwrap();
+    let list = summary::contributions(root.path(), &names[..3]).expect("plan");
+    assert_eq!(list[1].label, "Detached layer · averaged in");
+    assert!(
+        list[1]
+            .detail
+            .as_deref()
+            .unwrap()
+            .starts_with("placed x1.02 at -3°")
+    );
+    assert_eq!(
+        list[2].label,
+        "Detached layer · not used: not found on the primary"
+    );
+    // Built on another view: that pass is the reference, the anchor is not used.
+    std::fs::write(
+        root.path().join("render-report.json"),
+        r#"{"view_anchor_pass":2,"lighting_groups":[{"passes":["c"]}],"detached_layers":[]}"#,
+    )
+    .unwrap();
+    let list = summary::contributions(root.path(), &names[..3]).expect("plan");
+    assert_eq!(list[0].label, "Not used: shows another view of the subject");
+    assert!(list[2].label.starts_with("Primary reference"));
+}
