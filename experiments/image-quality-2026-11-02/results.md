@@ -529,6 +529,12 @@ tamed (they sit below the blade's level); specks in cells without a blade still 
 Prior sweep 0.02 / 0.05 / 0.1 on rutile: above-95% 0.155 / 0.143 / 0.117%, 0.4-0.6
 bin 1.000 / 0.999 / 0.998.
 
+*Tried first and replaced:* pulling each cell's lit level toward the **image's** lit mean
+instead of the cell's own mean. The existing test
+`glint_compression_lowers_small_bright_spots_but_not_large_bright_areas` showed why it is
+wrong: glints on a dark stone beside a large bright area were compared with that bright
+area's level and no longer tamed. The prior toward the cell's own mean keeps them tamed.
+
 Test `glint_compression_judges_a_lit_subject_on_dark_ground_by_its_own_level` (blades
 on a ground 3.7 stops below, glints on the blades). Mutation-checked: no ground split
 fails it (blade 0.066 -> 0.054); no prior fails the existing small-glint test (0 of
@@ -762,6 +768,13 @@ its correction and scoring the neutral targets, not by agreement with another es
 | **shipped build**, measured on an MHC demosaic of the preview | 4.054% / 2.284% | 3.799% / 4.220% |
 | **shipped build**, measured on the mosaic, each colour from its own sites | **2.965% / 2.108%** | **3.782% / 4.145%** |
 
+*Estimator dead ends, on planted shifts (`ca-refine-tests.rs` diagnostics, not shipped):* an
+iterative gradient (Lucas-Kanade) solve on gradient magnitude read fractional shifts 4-10%
+high whatever was tried -- a symmetric half-shift made it worse (0.25 -> 0.295 on stripes),
+Catmull-Rom sampling did not fix it, and smoothing before the gradient made it worse; the
+bias is interpolation locking (exact at whole pixels, +0.025 px at 0.5 px). Phase
+correlation replaced it.
+
 The final estimator ports the Python instrument (cross-correlation of Sobel gradient
 magnitude per 256 px tile; its Rust port matched it within 0.015 px and 7 ppm on four
 masters) with three changes, each measured on planted shifts (`ca-refine-tests.rs`): a
@@ -798,6 +811,22 @@ the desktop's log parser skips the preview's banner (test
 headless workspace: the setting reads `true` by default and `false` after a `set_settings`
 call. Not exercised: a screenshot of the checkbox -- the screenshot command cannot open the
 Adjust panel.
+
+**Desktop feedback (2026-11-04).** The preview is silent on the stage channel, so the engine
+now emits its own `fringe-preview` event (started / one per preview frame / finished) and the
+desktop shows it in the Combine node ("Measuring colour fringing on a quick preview",
+k / n preview frames) and the frame ledger (test
+`the_fringe_preview_reports_its_own_progress_and_never_rewinds`). VERIFIED on the razor: 37
+events for a 35-frame preview.
+
+**Interaction found by the owner (2026-11-04):** with the experimental *Temporal detail
+smoothing* on, every desktop stack refused to start ("experimental temporal energy requires
+SoftPower, HardFloor, Mean base and Mean fallback"): the temporal guide accepts only the mean
+base band, and the default base became weighted in section 1b. Temporal renders now use the
+mean base band and say so, and the CA preview never runs the temporal path (it skips frames,
+the guide pairs neighbours). Test `a_default_temporal_render_passes_the_temporal_preflight`
+(temporal-energy feature). Temporal renders therefore do not get the weighted base's halo
+improvement.
 
 **Regression sweep of the default on the minerals (MEASURED, release build at `b0150782`,
 `--refine-ca=off` vs default, same warp maps; output-space residual by `ca-residual.py`):**
@@ -854,6 +883,19 @@ pre-existing. So `coffee-bean-20-gate2-pyramid` (alignment off, where the refine
 itself) is the only runnable row, and it passes (`STREHL_FREEZE_IDS=coffee-bean-20-gate2-pyramid`).
 When the sidecar maps are regenerated, the pyramid-sidecar row will need a baseline that
 includes the default refinement.
+
+## 5. Multi-stack sessions moved behind a build feature (2026-11-04)
+
+Owner decision: sessions are not ready, and should not grow the executable. The
+`multi-stack` Cargo feature (off by default; `strehl-ui/multi-stack` forwards to
+`strehl-cli/multi-stack`) now gates the `session` subcommand, every session engine module
+except the specification types and folder discovery (kept for opening saved results), and
+the desktop's "Create multi-stack session", "Stack everything" and "Open completed CLI
+session" actions; agent `create_session` and session job launch refuse with "not included
+in this build" (test `session_control_refuses_sessions_in_a_build_without_multi_stack`).
+Tests that create sessions run only with the feature: desktop 1034 pass without it, 1040
+with it. The session work above (gate port, CA refinement) is kept and tested with the
+feature on.
 
 ## 4. Cost (MEASURED)
 
