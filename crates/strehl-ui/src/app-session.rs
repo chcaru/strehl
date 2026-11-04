@@ -148,7 +148,7 @@ impl StrehlApp {
             && self.replay.is_none()
             && !self.picker_active();
         let Some(mut session) = self.controls.settings.session.clone() else {
-            if self.stack.is_some() && ui.add_enabled(enabled, egui::Button::new("Create multi-stack session…")).on_hover_text("Use this stack as the first pass, then add repeats, exposure passes or aligned layers. The original stack remains in Projects.").clicked() {
+            if cfg!(feature = "multi-stack") && self.stack.is_some() && ui.add_enabled(enabled, egui::Button::new("Create multi-stack session…")).on_hover_text("Use this stack as the first pass, then add repeats, exposure passes or aligned layers. The original stack remains in Projects.").clicked() {
                 let source = self.stack.as_ref().unwrap().directory.clone();
                 self.reload_session(SessionDraft::from_directory(source), false);
             }

@@ -261,6 +261,10 @@ pub(super) fn run_session_render(
         };
         let output = outputs[displayed].clone();
         let log = directory.join("render.log");
+        anyhow::ensure!(
+            cfg!(feature = "multi-stack"),
+            "Multi-stack sessions are experimental and not included in this build"
+        );
         let mut command = session_command(request, &manifest, &engine_output)?;
         let shared_cache =
             resolved.ensure_output_outside_sources(&output_parent.join(".strehl-session-cache"))?;

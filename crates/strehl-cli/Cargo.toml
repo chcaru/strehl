@@ -35,6 +35,10 @@ serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
 sha2 = "=0.11.0"
 
 [features]
+# Multi-stack sessions (`strehl session`, desktop "Best result"): experimental,
+# off by default and not in default builds. The session specification types and
+# folder discovery stay compiled, for opening previously completed session results.
+multi-stack = []
 # Default-off direct original-CFA lattice sampling experiment.
 direct-cfa-gather = []
 # Default-off nonlinear Sony metadata research consumer.
@@ -92,3 +96,4 @@ path = "../../experiments/raw-quality-2026-10-27/native-spectral-fusion/pilot/na
 [[example]]
 name = "session-reconstruction-roi"
 path = "../../experiments/multi-stack-2026-10-28/completion/sr/roi-pilot.rs"
+required-features = ["multi-stack"]

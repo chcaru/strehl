@@ -8,34 +8,47 @@ mod image_out;
 #[path = "lens-research.rs"]
 mod lens_research;
 mod merge_cmd;
+#[cfg(feature = "multi-stack")]
 #[path = "session-align.rs"]
 pub mod session_align;
+#[cfg(feature = "multi-stack")]
 #[path = "session-cache.rs"]
 pub mod session_cache;
+#[cfg(feature = "multi-stack")]
 #[path = "session-cmd.rs"]
 mod session_cmd;
+#[cfg(feature = "multi-stack")]
 #[path = "session-focus.rs"]
 pub mod session_focus;
 #[path = "session-input.rs"]
 pub mod session_input;
 #[path = "session-discover.rs"]
 pub mod session_discover;
+#[cfg(feature = "multi-stack")]
 #[path = "session-frame-photometry.rs"]
 pub mod session_frame_photometry;
+#[cfg(feature = "multi-stack")]
 #[path = "session-geometry-check.rs"]
 pub mod session_geometry_check;
+#[cfg(feature = "multi-stack")]
 #[path = "session-lighting-fusion.rs"]
 pub mod session_lighting_fusion;
+#[cfg(feature = "multi-stack")]
 #[path = "session-mapped-sampling.rs"]
 pub mod session_mapped_sampling;
+#[cfg(feature = "multi-stack")]
 #[path = "session-mosaic-geometry.rs"]
 pub mod session_mosaic_geometry;
+#[cfg(feature = "multi-stack")]
 #[path = "session-photometry.rs"]
 pub mod session_photometry;
+#[cfg(feature = "multi-stack")]
 #[path = "session-reconstruction-sampling.rs"]
 pub mod session_reconstruction_sampling;
+#[cfg(feature = "multi-stack")]
 #[path = "session-reproducibility.rs"]
 mod session_reproducibility;
+#[cfg(feature = "multi-stack")]
 #[path = "session-sampling.rs"]
 pub mod session_sampling;
 #[path = "sony-focus-cmd.rs"]
@@ -133,6 +146,7 @@ enum FocusAction {
 #[derive(Subcommand)]
 enum Command {
     /// Work with explicitly grouped passes of one subject.
+    #[cfg(feature = "multi-stack")]
     Session {
         #[command(subcommand)]
         action: session_cmd::Action,
@@ -983,8 +997,11 @@ where
         )
         .init();
 
+    #[cfg(feature = "multi-stack")]
     let (command, single_pass_completion) =
         unsafe { session_cmd::route_single_pass(Cli::parse_from(args).command)? };
+    #[cfg(not(feature = "multi-stack"))]
+    let (command, single_pass_completion) = (Cli::parse_from(args).command, None::<NoSinglePass>);
     if std::env::var_os("STREHL_RESEARCH_LENS_MAP").is_some() {
         anyhow::ensure!(
             cfg!(feature = "research-lens-warp"),
@@ -996,6 +1013,7 @@ where
         );
     }
     let result = match command {
+        #[cfg(feature = "multi-stack")]
         Command::Session { action } => session_cmd::run(action),
         Command::Align(args) => align_cmd::run(&args),
         #[cfg(feature = "research-lens-warp")]
@@ -1415,6 +1433,20 @@ where
         completion.finish()?;
     }
     Ok(())
+}
+
+/// Without multi-stack sessions there is never a single-pass session to complete.
+#[cfg(not(feature = "multi-stack"))]
+enum NoSinglePass {}
+
+#[cfg(not(feature = "multi-stack"))]
+impl NoSinglePass {
+    fn prepare_alignment(&self) -> Result<()> {
+        match *self {}
+    }
+    fn finish(self) -> Result<()> {
+        match self {}
+    }
 }
 
 /// RAW files in `dir`, sorted by filename so that frame index is capture order.

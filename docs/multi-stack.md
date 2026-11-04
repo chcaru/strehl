@@ -2,8 +2,13 @@
 
 A session keeps several focus stacks of the same subject together. Each pass
 retains its own capture order, calibration and identity. Ordinary single-folder
-stacking continues to use the existing pipeline. These capabilities are opt-in
-in development builds; the alpha.6 download predates them.
+stacking continues to use the existing pipeline.
+
+**Experimental, and not in default builds.** Sessions are compiled only with the
+`multi-stack` Cargo feature (`cargo build --release -p strehl-ui --features
+multi-stack`, or `-p strehl-cli --features multi-stack` for the `strehl session`
+command). Without it the desktop shows no session actions, the agent refuses
+`create_session`, and the session engine is not linked into the executables.
 
 ## Choose the result
 

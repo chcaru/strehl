@@ -804,6 +804,10 @@ impl StrehlApp {
                 parent_id,
             } => {
                 anyhow::ensure!(
+                    cfg!(feature = "multi-stack"),
+                    "Multi-stack sessions are experimental and not included in this build"
+                );
+                anyhow::ensure!(
                     self.job.is_none()
                         && self.scan.is_none()
                         && self.replay.is_none()

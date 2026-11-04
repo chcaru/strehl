@@ -50,7 +50,9 @@ and [release checklist](../../docs/public-release.md).
 
 **Working with several passes of one subject**
 
-Import a source stack, then choose **Create multi-stack session** in Projects or
+Multi-stack sessions are experimental and only in builds with the `multi-stack`
+feature (`cargo build --release -p strehl-ui --features multi-stack`). In such a build,
+import a source stack, then choose **Create multi-stack session** in Projects or
 Adjust. The new session has its own saved recipe; the original stack remains in
 the library. Add an **independent pass** for a repeat, changed exposure or lighting
 treatment. Use **Add continuation folder** when another directory continues the

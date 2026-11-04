@@ -623,8 +623,8 @@ impl StrehlApp {
                     changed = response.changed;
                     action = response.action;
                     ui.horizontal(|ui| {
-                        if ui.add_enabled(!busy && self.replay.is_none(), egui::Button::new("Stack everything…")).on_hover_text("Pick a folder of related captures. Every folder of RAW files inside becomes a pass, and Best result plans what each contributes to one photograph.").clicked() { self.pick(Dialog::StackEverything); }
-                        if ui.add_enabled(!busy && self.replay.is_none(), egui::Button::new("Open completed CLI session…")).on_hover_text("Import saved photographs and diagnostics without opening original capture folders.").clicked() { self.pick(Dialog::CompletedSession); }
+                        if cfg!(feature = "multi-stack") && ui.add_enabled(!busy && self.replay.is_none(), egui::Button::new("Stack everything…")).on_hover_text("Pick a folder of related captures. Every folder of RAW files inside becomes a pass, and Best result plans what each contributes to one photograph.").clicked() { self.pick(Dialog::StackEverything); }
+                        if cfg!(feature = "multi-stack") && ui.add_enabled(!busy && self.replay.is_none(), egui::Button::new("Open completed CLI session…")).on_hover_text("Import saved photographs and diagnostics without opening original capture folders.").clicked() { self.pick(Dialog::CompletedSession); }
                     });
                     if let Some((_,_,task)) = &self.session_import {
                         ui.label("Verifying imported artifacts…");

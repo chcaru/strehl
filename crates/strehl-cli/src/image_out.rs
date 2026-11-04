@@ -99,10 +99,13 @@ use strehl_core::demosaic::{Mosaic, demosaic_row};
 use tiff::encoder::{Rational, TiffEncoder, colortype};
 use tiff::tags::{ResolutionUnit, Tag};
 
+#[cfg_attr(not(feature = "multi-stack"), allow(unused_imports, dead_code))]
 #[path = "session-alpha-output.rs"]
 mod session_alpha_output;
+#[cfg(feature = "multi-stack")]
 pub(crate) use session_alpha_output::apply_mosaic_coverage;
 
+#[cfg_attr(not(feature = "multi-stack"), allow(dead_code))]
 #[path = "session-reconstruction-output.rs"]
 pub(crate) mod session_reconstruction_output;
 

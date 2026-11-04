@@ -196,8 +196,9 @@ see the release guide before installing.
 
 1. Open **Projects → New stack**, or drop a folder of Sony `.ARW` captures.
 2. Choose the bracket in the visual browser. An ordinary stack uses one directory,
-   ordered by filename. For several sweeps, choose
-   [Create multi-stack session](docs/multi-stack.md).
+   ordered by filename. (Several sweeps of one subject can be combined by the
+   experimental [multi-stack sessions](docs/multi-stack.md), which need a build
+   with the `multi-stack` feature.)
 3. Open **Adjust** if you want to change the recipe, then select **Stack**.
 4. Follow the process; afterward, scrub the timeline to inspect sources against
    the result. Escape or **Photograph** restores the final image.

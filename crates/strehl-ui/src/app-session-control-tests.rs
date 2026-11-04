@@ -75,6 +75,7 @@ fn command(project: u64, ids: &[u64]) -> AgentCommand {
     }
 }
 
+#[cfg(feature = "multi-stack")]
 #[test]
 fn session_control_creates_an_explicit_session_without_mutating_original_stacks() {
     let (_root, mut app, project, ids) = fixture();
@@ -140,6 +141,7 @@ fn session_control_creates_an_explicit_session_without_mutating_original_stacks(
     );
 }
 
+#[cfg(feature = "multi-stack")]
 #[test]
 fn session_control_refuses_unknown_and_repeated_catalog_sources_before_mutation() {
     let (_root, mut app, project, ids) = fixture();
@@ -157,6 +159,7 @@ fn session_control_refuses_unknown_and_repeated_catalog_sources_before_mutation(
     assert_eq!(serde_json::to_vec(&app.catalog).unwrap(), before);
 }
 
+#[cfg(feature = "multi-stack")]
 #[test]
 fn session_control_layer_outputs_retain_their_own_catalog_owner() {
     let (root, mut app, project, ids) = fixture();
@@ -211,6 +214,7 @@ fn session_control_layer_outputs_retain_their_own_catalog_owner() {
     );
 }
 
+#[cfg(feature = "multi-stack")]
 #[test]
 fn session_control_restores_ordinary_defaults_and_user_choices_with_identical_command() {
     for ordinary in [
@@ -280,6 +284,7 @@ fn session_control_restores_ordinary_defaults_and_user_choices_with_identical_co
     }
 }
 
+#[cfg(feature = "multi-stack")]
 #[test]
 fn session_control_mosaic_primary_and_incompatible_options_refuse_before_mutation() {
     let (_root, mut app, project, ids) = fixture();
@@ -327,6 +332,7 @@ fn session_import_receipt_count_does_not_enable_unloaded_originals() {
     );
 }
 
+#[cfg(feature = "multi-stack")]
 #[test]
 fn session_control_reconstruction_rejects_unsupported_mode_before_catalog_mutation() {
     let (_root, mut app, project, ids) = fixture();
@@ -354,6 +360,7 @@ fn session_control_reconstruction_rejects_unsupported_mode_before_catalog_mutati
     }
 }
 
+#[cfg(feature = "multi-stack")]
 #[test]
 fn session_control_independent_view_primary_refuses_before_mutation() {
     let (_root, mut app, project, ids) = fixture();
@@ -539,4 +546,19 @@ fn session_control_inspection_maps_parent_identity_back_to_active_local_axis() {
     app.progress = PipelineProgress::default();
     app.inspect_frame(3);
     assert_eq!(app.process_space.inspection_frame(), Some(3));
+}
+
+#[cfg(not(feature = "multi-stack"))]
+#[test]
+fn session_control_refuses_sessions_in_a_build_without_multi_stack() {
+    // Multi-stack sessions are experimental and not compiled into default
+    // builds: creating one is refused before anything in the catalog changes.
+    let (_root, mut app, project, ids) = fixture();
+    let before = serde_json::to_vec(&app.catalog).unwrap();
+    let error = app.apply_agent_command(command(project, &ids)).unwrap_err();
+    assert!(
+        error.to_string().contains("not included in this build"),
+        "{error}"
+    );
+    assert_eq!(serde_json::to_vec(&app.catalog).unwrap(), before);
 }

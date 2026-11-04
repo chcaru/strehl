@@ -864,6 +864,11 @@ backends, so any unintended change to the merge is caught as a hash movement.
 
 ## 12. Opt-in multi-stack sessions
 
+**EXPERIMENTAL, COMPILED ONLY WITH THE `multi-stack` FEATURE** (strehl-cli and strehl-ui,
+off by default since 2026-11-04). Without it the `session` subcommand, the session engine
+modules and the desktop's session actions are absent; the session specification types and
+folder discovery stay compiled so saved results still open.
+
 **SEPARATE SESSION PATH.** `strehl session` consumes a versioned manifest of
 ordered passes, each with one or more ordered continuation folders.
 [The session guide](multi-stack.md) describes the user contract. The existing

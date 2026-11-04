@@ -38,6 +38,7 @@ pub(super) fn tone_from_supported_mosaic(m: &Mosaic, dev: &Develop, mask: &[bool
     Tone::from_luminance(&mut luminance)
 }
 
+#[cfg(feature = "multi-stack")]
 /// Coverage is conservative across both Malvar's radius-two sensor stencil and
 /// the optional directional radius-three stencil: every quad within radius two
 /// must exist. Canvas exterior is unknown. Sidecar samples are 0 or 255; alpha
@@ -233,6 +234,7 @@ mod tests {
         );
         assert!(contaminated.white > actual.white * 100.);
     }
+    #[cfg(feature = "multi-stack")]
     #[test]
     fn rgba_preserves_rgb_metadata_and_refuses_missing_demosaic_support() {
         let root = std::env::temp_dir().join(format!(
