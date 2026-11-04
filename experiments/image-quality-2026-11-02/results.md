@@ -645,6 +645,22 @@ line and blue on the other -- a residual *lateral* shift, which a focus offset c
 move. The lateral-CA record (facts 1414-1903; no scalar fix, scene-dependent effective
 wavelength, fact 1570) is the place for that defect. Not built.
 
+**Re-tested after the lateral refinement (3c), 2026-11-03 -- still rejected.** With the
+lateral offset removed, the flat slide's own result reversed: delays 2,2 took red fringe
+2.542% -> 2.010% and the measured 2.16,1.62 took blue 1.997% -> 1.942% (default refined render
+as the base; flat-slide preview stride 1). On the other two neutral targets, with their own
+measured offsets (slide-2 R -1.08 / B -0.40 frames, 61 tiles; razor -2.07 / -1.92, 24 tiles,
+wide IQR) and the delay suspended during the frame-skipping CA preview so the lateral
+refinement was identical, fringing rose sharply: slide-2 red 2.965% -> 10.341%, blue 2.108%
+-> 4.005%; razor red 3.782% -> 6.052%, blue 4.145% -> 6.270%. (A first run without the
+suspension was worse still: the preview's buffer held frames 8-16 apart.) ARGUED cause: red
+and blue taken from another frame inherit that frame's *placement* error relative to green's
+frame -- held-out placement error reads 2-4 plane px on these stacks -- while within one
+frame all channels share it exactly. On these targets red and blue keep 98.9-100% of their
+best energy at green's best frame, so there is little to gain and a registration cost to
+pay. A per-channel focus offset would need inter-frame registration well below the channel
+shift; not built.
+
 ## 3c. Per-capture lateral-CA refinement (SHIPPED, default on, 2026-11-03)
 
 While testing 3b, chroma-boosted crops of the flat slide showed red on one side of every
