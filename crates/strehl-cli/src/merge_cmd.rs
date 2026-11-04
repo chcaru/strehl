@@ -7615,6 +7615,29 @@ mod ca_refine {
     }
 }
 
+/// The merge configuration a temporal render uses: the temporal guide is
+/// defined for the mean base band only (`temporal_cpu::preflight`).
+#[cfg(feature = "temporal-energy")]
+fn temporal_compatible(cfg: MergeConfig) -> MergeConfig {
+    MergeConfig {
+        base: BaseBand::Mean,
+        ..cfg
+    }
+}
+
+#[cfg(all(test, feature = "temporal-energy"))]
+#[test]
+fn a_default_temporal_render_passes_the_temporal_preflight() {
+    // The desktop compiles temporal-energy; with "Temporal detail smoothing"
+    // on, every render refused to start once the default base band became
+    // weighted. The adjusted default must pass, and the unadjusted one is
+    // still refused, so this test cannot pass vacuously.
+    let default = MergeConfig::default();
+    assert!(temporal_cpu::preflight(default, 4, None, false).is_err());
+    temporal_cpu::preflight(temporal_compatible(default), 4, None, false)
+        .expect("the default merge, adjusted, must be temporal-compatible");
+}
+
 /// The environment twin of `--refine-ca`.
 pub const REFINE_CA_ENV: &str = ca_refine::ENV;
 
@@ -7652,13 +7675,27 @@ fn run_pyramid_prepared_with_sensor(
     if align_cmd::direct_cfa::enabled()? {
         align_cmd::direct_cfa::validate_domain(paths, alignment.as_ref().map(|(map, _, _)| map), domain.rect)?;
     }
-    let cfg = opts.pyramid;
+    #[cfg_attr(not(feature = "temporal-energy"), allow(unused_mut))]
+    let mut cfg = opts.pyramid;
     #[cfg(feature = "temporal-energy")]
     let temporal_mode = temporal_cpu::environment_mode()?;
+    // A lateral-CA preview skips frames, and the temporal guide pairs each
+    // frame with its neighbours; the preview only measures channel alignment.
     #[cfg(feature = "temporal-energy")]
-    let temporal_active = temporal_mode != strehl_core::pyramid::temporal_energy::Mode::Off;
+    let temporal_active = temporal_mode != strehl_core::pyramid::temporal_energy::Mode::Off
+        && !ca_refine::preview_active();
     #[cfg(not(feature = "temporal-energy"))]
     let temporal_active = false;
+    // The temporal guide is defined for the mean base band only; the default
+    // became the weighted base (image-quality-2026-11-02 section 1b), which
+    // made every temporal render refuse to start.
+    #[cfg(feature = "temporal-energy")]
+    if temporal_active && cfg.base != BaseBand::Mean {
+        eprintln!(
+            "base band       : MEAN for this render -- temporal detail smoothing is defined for the mean base band only"
+        );
+        cfg = temporal_compatible(cfg);
+    }
     #[cfg(feature = "temporal-energy")]
     if temporal_active {
         temporal_cpu::preflight(
