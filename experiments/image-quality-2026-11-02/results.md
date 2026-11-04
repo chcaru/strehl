@@ -779,6 +779,22 @@ headless workspace: the setting reads `true` by default and `false` after a `set
 call. Not exercised: a screenshot of the checkbox -- the screenshot command cannot open the
 Adjust panel.
 
+**Regression sweep of the default on the minerals (MEASURED, release build at `b0150782`,
+`--refine-ca=off` vs default, same warp maps; output-space residual by `ca-residual.py`):**
+
+| subject | preview measured red / blue scale | red residual off -> on | blue residual off -> on |
+| --- | --- | --- | --- |
+| garnet 104MSDCF | +207 / -41 ppm | +142 -> -16 ppm | t (0.00, +0.09) -> (0.00, -0.02) px |
+| rutile 105MSDCF | +114 / +20 ppm | +100 -> -4 ppm | t (-0.02, +0.13) -> (0.00, 0.00) px |
+| opal 103MSDCF | +166 / -68 ppm | +86 -> -27 ppm | +3 -> +41 ppm; t (+0.02, +0.07) -> (-0.01, -0.01) px |
+| peacock 102MSDCF | +385 / -80 ppm | +106 -> -53 ppm | -45 -> +6 ppm |
+
+Every subject ends with a smaller overall misalignment, but not every term: peacock's red
+over-shoots by about half (its mosaic reading, +385 ppm, is far above what the colour-mixed
+output shows; on a strongly coloured subject part of the measured shift is probably real
+colour structure that differs between channels), and opal's blue scale moves from +3 to
++41 ppm while its blue translation improves. Preview 14.8-16.9 s against 61-90 s renders.
+
 Checks: strehl-core 757 tests pass (`cargo test --locked -p strehl-core`); strehl-cli lib
 399 pass, the same 8 private-capture tests fail as before. **Byte-freeze:** the default
 pyramid row (`coffee-bean-20-gate2-pyramid`) reproduces bit-exactly with this build
