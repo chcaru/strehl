@@ -624,6 +624,10 @@ fn render(
             guide_receipts.push(receipt);
         }
         for &index in members {
+            // A lateral-CA preview (`merge_cmd::ca_refine`) fuses every Nth source.
+            if !super::ca_refine::preview_keeps(index) {
+                continue;
+            }
             cohort.require(index)?;
             let progress_index = if !sparse {
                 index
@@ -696,6 +700,9 @@ fn render(
                 "prepare_seconds":prepare_seconds,"accumulate_seconds":accumulate_seconds,
             }));
             progress.frame_finished(progress_index, true);
+        }
+        if group.source_count() == 0 && super::ca_refine::preview_active() {
+            continue;
         }
         let fold_started = Instant::now();
         if args.precision_weights {
@@ -1154,6 +1161,33 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                 outputs.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &frame_gains, &excluded, &reconstruction_focus, domain, Some(pass), &layer, None)?);
             }
         } else {
+            // Per-capture lateral-CA refinement, as for an ordinary stack
+            // (`merge_cmd::ca_refine`): every Nth source fused by this same
+            // consumer -- whose gather samples original same-colour CFA sites,
+            // so its residual is its own -- measured on the fused planes, then
+            // installed for every render below (each lighting group included).
+            let anchor = session.primary_pass_index().unwrap_or(alignment.report.reference_pass);
+            let refine = super::ca_refine::requested()?
+                && !args.binned
+                && calibrations[anchor].profile.is_some();
+            if refine {
+                let lighting = plan.as_ref().map(|p| p.lighting_groups()).unwrap_or_default();
+                // One lighting appearance: the group holding the anchor pass.
+                let preview_excluded: Vec<bool> = match lighting
+                    .iter()
+                    .find(|mask| mask.get(anchor).copied().unwrap_or(false))
+                {
+                    Some(mask) if lighting.len() >= 2 => mask.iter().zip(&excluded).map(|(&m, &e)| !m || e).collect(),
+                    _ => excluded.clone(),
+                };
+                super::ca_refine::begin_preview(session.len());
+                let mut slot = None;
+                let preview = render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &frame_gains, &preview_excluded, &reconstruction_focus, domain, args.only_pass, &destination, Some(&mut slot));
+                let _ = super::ca_refine::end_preview();
+                preview.context("lateral-CA refinement preview of the session")?;
+                let measured = slot.and_then(|g| measure_planes(&g.planes, domain.width, domain.height));
+                super::ca_refine::install(measured);
+            }
             let groups = plan.as_ref().map(|p| p.lighting_groups()).unwrap_or_default();
             let mut kinds = plan.as_ref().map(|p| p.group_kinds()).unwrap_or_default();
             let has_detached = plan.as_ref().is_some_and(|p| !p.detached_passes().is_empty());
@@ -1431,6 +1465,7 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
                 outputs.push(render(args, &session, &identities, &metadata, &alignment, &mut cache, &calibrations, &photometric_gains, &frame_gains, &excluded, &reconstruction_focus, domain, args.only_pass, &destination, None)?);
             }
         }
+        strehl_core::optics::set_ca_refinement(None);
         if args.reproducibility {
             let mut diagnostic_args=args.clone();
             diagnostic_args.no_repeat_grouping=true;diagnostic_args.precision_weights=false;
@@ -1473,6 +1508,29 @@ pub(crate) fn run(args: &StackArgs) -> Result<()> {
 
 /// Develop fused native planes (R, G1, B, G2) exactly as an ordinary render.
 #[allow(clippy::too_many_arguments)]
+/// Lateral-CA residual of fused session planes (`[R, G1, B, G2]`, as
+/// `SessionMerge::finish` returns them), interleaved into the RGGB mosaic the
+/// writer would build.
+fn measure_planes(
+    planes: &[Vec<f32>; 4],
+    width: usize,
+    height: usize,
+) -> Option<strehl_core::ca_refine::Residual> {
+    let [r, g1, b, g2] = planes;
+    let (mw, mh) = (width * 2, height * 2);
+    let mut mosaic = vec![0.0f32; mw * mh];
+    for y in 0..height {
+        for x in 0..width {
+            let i = y * width + x;
+            mosaic[(2 * y) * mw + 2 * x] = r[i];
+            mosaic[(2 * y) * mw + 2 * x + 1] = g1[i];
+            mosaic[(2 * y + 1) * mw + 2 * x] = g2[i];
+            mosaic[(2 * y + 1) * mw + 2 * x + 1] = b[i];
+        }
+    }
+    strehl_core::ca_refine::measure_mosaic(mw, mh, &mosaic)
+}
+
 fn write_fused(
     args: &StackArgs,
     session: &ResolvedSession,

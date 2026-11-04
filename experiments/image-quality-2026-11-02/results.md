@@ -282,6 +282,26 @@ apart. The ordinary merge's win does not carry over to session fusion, so this i
 not just the missing gate; porting the gate alone is not expected to change that
 and is not scheduled.
 
+**Gate ported and measured, 2026-11-04.** Session fusion now has the ensemble gate
+(`SessionMerge`: the same four statistics per coefficient, over the sources that observed
+it, so the dominance null uses each coefficient's own source count; parametric thresholds,
+since a session has no probe frames). Test `the_ensemble_gate_matches_the_ordinary_merge`
+pins it to the ordinary merge with pooled evidence, weighted base and gate on (six
+sources, max difference < 0.01; disabling the session blend breaks it by 10.1). On bug-4
+(1231 frames, five passes, automatic lighting-layer plan, same alignment cache), with
+`session-metrics.py` (dark ground = 33 px mean below 1% of the 99.5th percentile, 59% of the
+frame):
+
+| session selection | noise hp3 / hp33 (1e-4) | black (1e-4) | glow 8-16 / 16-32 px vs old |
+| --- | --- | --- | --- |
+| shipped (mean base, no pooling, exponent 2) | 0.842 / 1.560 | 1.573 | 1.000 / 1.000 |
+| + ensemble gate | 0.840 / 1.557 | 1.594 | 1.000 / 1.000 |
+| + gate, pooled, weighted base, exponent 4 | 0.863 / 1.622 | 1.747 | 1.163 / 1.064 |
+
+The gate is nearly neutral in sessions and the full ordinary selection is worse even with it,
+so sessions keep their selection (`session-cmd.rs` records this); the port stays, tested
+and off. **The per-capture lateral-CA refinement does carry over** (see 3c).
+
 ## 1d. A sharper coarse exponent now that coarse bands see focus (SHIPPED, 2026-11-03)
 
 **Hypothesis (ARGUED).** The coarsest-band exponent of 2 was chosen when coarse bands
@@ -794,6 +814,20 @@ over-shoots by about half (its mosaic reading, +385 ppm, is far above what the c
 output shows; on a strongly coloured subject part of the measured shift is probably real
 colour structure that differs between channels), and opal's blue scale moves from +3 to
 +41 ppm while its blue translation improves. Preview 14.8-16.9 s against 61-90 s renders.
+
+**Best result sessions (2026-11-04).** Multi-pass sessions gather original same-colour CFA
+sites (no per-source demosaic), so their residual is their own; they get their own preview:
+every Nth source fused by the session consumer itself (the lighting group holding the anchor
+pass, when there are several), measured on the fused planes, installed for every render of
+the session (each lighting group included). bug-4 session (1231 frames, preview over every
+8th): measured red (+0.10, -0.15) px / +296 ppm, blue (-0.10, +0.12) px / -220 ppm. Output
+residual (`ca-residual.py`) red +212 -> -10 ppm and (+0.09, -0.09) -> (+0.02, +0.01) px; blue
+-196 -> -32 ppm, fit rms 0.53 -> 0.24 px. Dark-ground noise / black / glow unchanged
+(0.842 -> 0.850, 1.573 -> 1.576, glow 0.994-1.010). A peripheral edge at r 0.65, origin
+(840,1260), loses its red fringes (`sess2/ca-edge.png`). Aligned-layer sessions and
+half-size output keep the profile alone. Glint taming is a development control and acts on
+session photographs as on any other (bug-4 session master, glint 0.85: above-95% 0.312% ->
+0.104%).
 
 *Tried and not adopted:* gating tiles on the normalised cross-correlation of the two
 gradient-magnitude tiles at the found peak (computed from the spectra), to keep tiles whose

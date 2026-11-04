@@ -192,10 +192,22 @@ impl MemoryEstimate {
         // pooled evidence and the weighted base (ev, ev_next, coarse and base
         // weights), allocated unconditionally.
         let group_bytes = byte_terms(&[(p, group_fields * 4), (n, 10 * 4 + 2), (width, 4)])?;
-        let merge_bytes = byte_terms(&[(p, 15 * 4 + 1), (n, 8 * 4 + 1)])?;
+        // The ensemble gate adds four f32 statistics and a u32 count per
+        // coefficient, plus an energy field and its smoothing scratch.
+        let ensemble = usize::from(cfg.ensemble);
+        let merge_bytes = byte_terms(&[
+            (p, 15 * 4 + 1 + ensemble * 5 * 4),
+            (n, 8 * 4 + 1 + ensemble * 2 * 4),
+            (width, ensemble * 4),
+        ])?;
         // Reconstruction workspace, one pyramid, four returned color planes,
-        // the level-mask pyramid and simultaneously live old/new support masks.
-        let finish_additional_bytes = byte_terms(&[(p, 4 + 1), (n, 6 * 4 + 2), (width, 4)])?;
+        // the level-mask pyramid and simultaneously live old/new support masks;
+        // with the gate, one blend per coefficient and three smoothing fields.
+        let finish_additional_bytes = byte_terms(&[
+            (p, 4 + 1 + ensemble * 4),
+            (n, 6 * 4 + 2 + ensemble * 3 * 4),
+            (width, 4 + ensemble * 4),
+        ])?;
         // BandGain::measure may be uncached. Match its actual-depth probe, not
         // cfg.bands (small images truncate their pyramid before that depth).
         let bands = sizes.len() - 1;
@@ -1471,6 +1483,25 @@ pub struct SessionMerge {
     groups: usize,
     diagnostics: Vec<LevelDiagnostics>,
     attribution: Option<Vec<Vec<DualAccumulator>>>,
+    /// The ordinary merge's ensemble gate (`MergeConfig::ensemble`), one entry
+    /// per level; empty at averaged levels and when the gate is off.
+    ensemble: Vec<EnsembleStats>,
+    ensemble_energy: Vec<f32>,
+    ensemble_scratch: Vec<f32>,
+}
+
+/// Per coefficient, over the sources that observed it with energy support:
+/// the strongest and the summed band energy in each source's own noise units,
+/// the summed green band coefficient, the summed raw energy, and the count.
+/// The same statistics as the ordinary merge's gate (`BandMerge`), except that
+/// coverage varies between passes, so the count is per coefficient.
+#[derive(Debug, Default)]
+struct EnsembleStats {
+    zmax: Vec<f32>,
+    zsum: Vec<f32>,
+    lsum: Vec<f32>,
+    esum: Vec<f32>,
+    count: Vec<u32>,
 }
 
 impl SessionMerge {
@@ -1511,6 +1542,28 @@ impl SessionMerge {
             folded_sources: 0,
             groups: 0,
             diagnostics: vec![LevelDiagnostics::default(); sizes.len()],
+            ensemble: sizes
+                .iter()
+                .enumerate()
+                .map(|(k, s)| {
+                    let bands = sizes.len() - 1;
+                    let gated = cfg.ensemble && k < bands && k + cfg.mean_coarse < bands;
+                    let n = if gated { s.pixels() } else { 0 };
+                    EnsembleStats {
+                        zmax: vec![0.0; n],
+                        zsum: vec![0.0; n],
+                        lsum: vec![0.0; n],
+                        esum: vec![0.0; n],
+                        count: vec![0; n],
+                    }
+                })
+                .collect(),
+            ensemble_energy: if cfg.ensemble { vec![0.0; n] } else { Vec::new() },
+            ensemble_scratch: if cfg.ensemble {
+                vec![0.0; n + sizes[0].width]
+            } else {
+                Vec::new()
+            },
             sizes,
         })
     }
@@ -1547,6 +1600,45 @@ impl SessionMerge {
             ));
         }
         group.add(source)?;
+        for (k, stats) in self.ensemble.iter_mut().enumerate() {
+            if stats.count.is_empty() {
+                continue;
+            }
+            let sz = self.sizes[k];
+            let n = sz.pixels();
+            let energy = &mut self.ensemble_energy[..n];
+            band_energy(source.green.level(k), sz, energy, &mut self.ensemble_scratch);
+            let green = source.green.level(k);
+            let variance = source.variance.level(k);
+            let (support, energy_support) = (&source.support[k], &source.energy_support[k]);
+            let energy = &*energy;
+            (
+                stats.zmax.par_chunks_mut(ACCUMULATION_CHUNK),
+                stats.zsum.par_chunks_mut(ACCUMULATION_CHUNK),
+                stats.lsum.par_chunks_mut(ACCUMULATION_CHUNK),
+                stats.esum.par_chunks_mut(ACCUMULATION_CHUNK),
+                stats.count.par_chunks_mut(ACCUMULATION_CHUNK),
+            )
+                .into_par_iter()
+                .enumerate()
+                .for_each(|(block, (zmax, zsum, lsum, esum, count))| {
+                    let begin = block * ACCUMULATION_CHUNK;
+                    for j in 0..count.len() {
+                        let i = begin + j;
+                        if !support[i] || !energy_support[i] {
+                            continue;
+                        }
+                        // `variance` is the band noise energy (gain included);
+                        // the same unit as the pooled evidence above.
+                        let z = energy[i] / variance[i].max(1.0);
+                        zmax[j] = zmax[j].max(z);
+                        zsum[j] += z;
+                        lsum[j] += green[i];
+                        esum[j] += energy[i];
+                        count[j] += 1;
+                    }
+                });
+        }
         self.primary_policy_set = true;
         self.fallback_primary = group.policy.primary;
         self.source_ids.insert(key.acquisition);
@@ -1891,6 +1983,22 @@ impl SessionMerge {
                 }
             }
         }
+        let mut blends: Vec<Option<Vec<f32>>> = (0..self.sizes.len())
+            .map(|k| self.ensemble_blend_level(k))
+            .collect();
+        // A weighted base takes the coarsest band's weights, so it also takes
+        // that band's ensemble judgement, as in the ordinary merge.
+        let nb = self.sizes.len() - 1;
+        if self.cfg.base == BaseBand::WeightedFromCoarsest
+            && nb >= 1
+            && let Some(coarsest) = blends[nb - 1].clone()
+        {
+            let from = self.sizes[nb - 1];
+            let mut base = vec![0.0f32; self.sizes[nb].pixels()];
+            let mut scratch = vec![0.0f32; from.pixels() + from.width];
+            super::reduce(&coarsest, from, &mut base, &mut scratch);
+            blends[nb] = Some(base);
+        }
         let mut valid = masks.last().expect("one level").clone();
         for k in (0..self.sizes.len() - 1).rev() {
             let mut expanded = vec![false; self.sizes[k].pixels()];
@@ -1904,7 +2012,15 @@ impl SessionMerge {
             for (k, level) in self.levels.iter().enumerate() {
                 for (i, value) in pyramid.level_mut(k).iter_mut().enumerate() {
                     *value = if level.denominator[i] > 0.0 {
-                        (level.numerator[c][i] / level.denominator[i]) * SOFT_NUMERATOR_SCALE
+                        let selected =
+                            (level.numerator[c][i] / level.denominator[i]) * SOFT_NUMERATOR_SCALE;
+                        match &blends[k] {
+                            Some(b) if b[i] < 1.0 && level.count[i] > 0.0 => {
+                                let mean = level.plain[c][i] / level.count[i];
+                                mean + b[i] * (selected - mean)
+                            }
+                            _ => selected,
+                        }
                     } else if level.count[i] > 0.0 {
                         level.plain[c][i] / level.count[i]
                     } else if self.coverage_fallback[k].count[i] > 0.0 {
@@ -1967,9 +2083,70 @@ impl SessionMerge {
         })
     }
 
+    /// The ordinary merge's ensemble blend (`BandMerge::ensemble_blend_level`)
+    /// for level `k`: `1` keeps selection, `0` takes the plain mean of the
+    /// sources that observed the coefficient. A coefficient falls back only
+    /// where every test reads noise. Thresholds are the parametric nulls (a
+    /// session has no noise-only probe frames); the dominance null uses each
+    /// coefficient's own source count, because coverage varies between passes.
+    fn ensemble_blend_level(&self, k: usize) -> Option<Vec<f32>> {
+        let stats = self.ensemble.get(k).filter(|s| !s.count.is_empty())?;
+        let sz = self.sizes[k];
+        let px = sz.pixels();
+        let side = (2 * super::COHERENCE_WIDE_RADIUS + 1) as f32;
+        let (clo, chi) = super::chi2_null(super::NU_SMOOTH).ramp();
+        let (wlo, whi) = super::chi2_null(side * side).ramp();
+        let mut dominance_ramps: BTreeMap<u32, (f32, f32)> = BTreeMap::new();
+        for &n in &stats.count {
+            if n >= 2 {
+                dominance_ramps
+                    .entry(n)
+                    .or_insert_with(|| super::dominance_null(n as usize, super::NU_SMOOTH).ramp());
+            }
+        }
+        let mut local: Vec<f32> = stats.lsum.iter().map(|v| v * v).collect();
+        let mut scratch = vec![0.0f32; px + sz.width];
+        super::smooth5(&mut local, sz, &mut scratch);
+        let mut wide_num: Vec<f32> = stats.lsum.iter().map(|v| v * v).collect();
+        let mut wide_den = stats.esum.clone();
+        super::box_smooth(&mut wide_num, sz, super::COHERENCE_WIDE_RADIUS);
+        super::box_smooth(&mut wide_den, sz, super::COHERENCE_WIDE_RADIUS);
+        Some(
+            (0..px)
+                .into_par_iter()
+                .map(|j| {
+                    let n = stats.count[j];
+                    let Some(&(dlo, dhi)) = dominance_ramps.get(&n) else {
+                        return 1.0; // one source (or none): nothing to average
+                    };
+                    let e = stats.esum[j];
+                    let dominance =
+                        super::dominance_blend(stats.zmax[j], stats.zsum[j], n, dlo, dhi);
+                    let coherent = if e > 0.0 {
+                        super::log_ramp(local[j] / e, clo, chi)
+                    } else {
+                        1.0
+                    };
+                    let wide = if wide_den[j] > 0.0 {
+                        super::log_ramp(wide_num[j] / wide_den[j], wlo, whi)
+                    } else {
+                        0.0
+                    };
+                    dominance.max(coherent).max(wide)
+                })
+                .collect(),
+        )
+    }
+
     pub fn buffer_bytes(&self) -> usize {
         let p: usize = self.sizes.iter().map(LevelSize::pixels).sum();
-        (15 * p + 8 * self.sizes[0].pixels()) * 4
+        let ensemble: usize = self
+            .ensemble
+            .iter()
+            .map(|e| e.count.len() * 5 * 4)
+            .sum::<usize>()
+            + (self.ensemble_energy.len() + self.ensemble_scratch.len()) * 4;
+        ensemble + (15 * p + 8 * self.sizes[0].pixels()) * 4
             + p
             + self.sizes[0].pixels()
             + self.attribution.as_ref().map_or(0, |levels| {
@@ -4159,6 +4336,117 @@ mod tests {
         // And it is not the old merge: the knobs must actually act here.
         let old = SessionMerge::new(w, h, cfg()).is_ok();
         assert!(old);
+    }
+
+    /// Six sources, each its own group (as across focus positions), merged by
+    /// the session consumer and by the ordinary merge with `config`.
+    fn session_and_ordinary(config: MergeConfig) -> (Vec<f32>, Vec<f32>) {
+        let (w, h) = (64, 48);
+        let frames: Vec<[Vec<f32>; 4]> = (0..6u64)
+            .map(|f| {
+                let mut img = flat(17 + f, w, h, 4.0);
+                for plane in &mut img {
+                    for y in 0..h {
+                        for x in 0..w {
+                            // A bright bar whose sharpness peaks at frame 2,
+                            // beside flat noise where only the gate can act.
+                            let d = (x as f32 - 30.0).abs() / (1.0 + (f as f32 - 2.0).abs() * 2.0);
+                            plane[y * w + x] += 800.0 * (-d * d).exp();
+                        }
+                    }
+                }
+                img
+            })
+            .collect();
+        let model = noise(4.0);
+        let valid = vec![true; w * h];
+        let mut source = PreparedSource::new(w, h, config).unwrap();
+        let mut merge = SessionMerge::new(w, h, config).unwrap();
+        for (id, frame) in frames.iter().enumerate() {
+            let mut group = GroupWorkspace::new(
+                w,
+                h,
+                config,
+                GroupPolicy {
+                    mode: GroupMode::Combine,
+                    ..GroupPolicy::default()
+                },
+            )
+            .unwrap();
+            source
+                .prepare(
+                    SourceKey {
+                        acquisition: id as u64,
+                        bracket: 0,
+                    },
+                    std::array::from_fn(|c| frame[c].as_slice()),
+                    &model,
+                    None,
+                    &valid,
+                    1.0,
+                )
+                .unwrap();
+            merge.add_source(&mut group, &source).unwrap();
+            merge.fold_group(&mut group).unwrap();
+        }
+        let actual = merge.finish().unwrap();
+        let sizes = level_sizes(w, h, config.bands);
+        let mut ordinary = super::super::BandMerge::new(w, h, 4, config);
+        let mut fws = super::super::FrameWorkspace::new(&sizes, 4);
+        let mut luma = vec![0.0; w * h];
+        let mut variance = luma.clone();
+        for frame in &frames {
+            for i in 0..w * h {
+                luma[i] = (frame[1][i] + frame[3][i]) * 0.5;
+            }
+            super::super::luma_variance(&luma, &model, &mut variance);
+            ordinary.add_frame(
+                &std::array::from_fn::<_, 4, _>(|c| frame[c].as_slice()),
+                &luma,
+                &variance,
+                &mut fws,
+            );
+            fws.next_frame();
+        }
+        let expected = ordinary.finish(&mut Workspace::new(&sizes));
+        (
+            actual.planes.iter().flatten().copied().collect(),
+            expected.iter().flatten().copied().collect(),
+        )
+    }
+
+    #[test]
+    fn the_ensemble_gate_matches_the_ordinary_merge() {
+        // The ordinary merge's whole current selection -- pooled evidence,
+        // weighted base, ensemble gate -- must be the session consumer's too
+        // when every source covers every coefficient (equal per-coefficient
+        // counts), coefficient for coefficient.
+        let gated = MergeConfig {
+            bands: 3,
+            pooled_evidence: true,
+            pooled_evidence_ratio: 2.0,
+            base: BaseBand::WeightedFromCoarsest,
+            ensemble: true,
+            ..cfg()
+        };
+        let (session, ordinary) = session_and_ordinary(gated);
+        let max_error = session
+            .iter()
+            .zip(&ordinary)
+            .map(|(a, b)| (a - b).abs())
+            .fold(0.0, f32::max);
+        assert!(max_error < 0.01, "session and ordinary gated merges differ by {max_error}");
+        // And the gate must act here: without it the session output differs.
+        let (ungated, _) = session_and_ordinary(MergeConfig {
+            ensemble: false,
+            ..gated
+        });
+        let moved = session
+            .iter()
+            .zip(&ungated)
+            .map(|(a, b)| (a - b).abs())
+            .fold(0.0, f32::max);
+        assert!(moved > 0.5, "the gate changed nothing ({moved})");
     }
 
     #[test]

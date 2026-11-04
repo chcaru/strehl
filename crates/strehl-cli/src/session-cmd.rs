@@ -166,11 +166,14 @@ impl StackArgs {
             sharpen_per_octave: self.pyramid_sharpen,
             // Session fusion's coefficient consumer can select with pooled
             // evidence and a weighted base exactly as the ordinary merge does
-            // (pinned by a parity test), but it has no ensemble gate, and
-            // without that gate the two select noise in flat dark ground: on
-            // bug-4 (1231 frames) dark-ground noise rose ~3% RMS and the black
-            // level ~10% with no glow reduction. Sessions keep the previous
-            // selection until the gate is ported (image-quality-2026-11-02 §1b).
+            // (pinned by a parity test), and since 2026-11-04 it has the
+            // ensemble gate too (`the_ensemble_gate_matches_the_ordinary_merge`).
+            // Measured on bug-4 (1231 frames, five passes, same alignment
+            // cache): the gate alone moves dark-ground noise -0.2% and the black
+            // level +1.3%; the whole current ordinary selection with the gate
+            // raises dark-ground noise 2.5%, the black level 11% and the glow
+            // 8-16 px from bright edges 16%. Sessions keep the previous
+            // selection (image-quality-2026-11-02 §1b).
             base: strehl_core::pyramid::BaseBand::Mean,
             pooled_evidence: false,
             ensemble: false,

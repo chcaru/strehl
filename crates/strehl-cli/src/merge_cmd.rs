@@ -7528,7 +7528,6 @@ mod ca_refine {
     pub(super) fn run_refined(opts: &MergeOptions) -> Result<()> {
         let paths = only_frame(crate::raw_paths(&opts.dir, opts.limit)?);
         let frames = paths.len();
-        let stride = stride_for(frames);
         // Align first, with progress, so a fresh stack's alignment is visible
         // in the desktop; both passes below then load it from the cache.
         {
@@ -7536,6 +7535,20 @@ mod ca_refine {
             progress.stage("alignment");
             alignment_for_observed(&opts.dir, &paths, opts.resampler, progress.observer())?;
         }
+        begin_preview(frames);
+        let preview = run_pyramid_once(opts);
+        let measured = end_preview();
+        preview.context("lateral-CA refinement preview pass")?;
+        install(measured);
+        let out = run_pyramid_once(opts);
+        strehl_core::optics::set_ca_refinement(None);
+        out
+    }
+
+    /// Start a preview over every Nth of `frames` (see [`stride_for`]):
+    /// clear any refinement, skip frames, silence desktop progress.
+    pub(super) fn begin_preview(frames: usize) {
+        let stride = stride_for(frames);
         strehl_core::optics::set_ca_refinement(None);
         *RESULT.lock().unwrap_or_else(|e| e.into_inner()) = None;
         eprintln!(
@@ -7544,15 +7557,22 @@ mod ca_refine {
         );
         STRIDE.store(stride, Ordering::Relaxed);
         crate::ui_progress::set_muted(true);
-        let preview = run_pyramid_once(opts);
+    }
+
+    /// End the preview and take what its writer measured.
+    pub(super) fn end_preview() -> Option<Residual> {
         crate::ui_progress::set_muted(false);
         STRIDE.store(0, Ordering::Relaxed);
-        preview.context("lateral-CA refinement preview pass")?;
-        let measured = RESULT
+        RESULT
             .lock()
             .unwrap_or_else(|e| e.into_inner())
             .take()
-            .flatten();
+            .flatten()
+    }
+
+    /// Report a measured residual and install it as the refinement when it is
+    /// inside the bounds; otherwise leave the profile alone.
+    pub(super) fn install(measured: Option<Residual>) {
         let refinement = match measured {
             None => {
                 eprintln!(
@@ -7592,9 +7612,6 @@ mod ca_refine {
             }
         };
         strehl_core::optics::set_ca_refinement(refinement);
-        let out = run_pyramid_once(opts);
-        strehl_core::optics::set_ca_refinement(None);
-        out
     }
 }
 

@@ -438,7 +438,7 @@ under-reads the displacement — the red and blue displacement against green as 
 scale (`ca_refine.rs`: per 256 px tile, windowed cross-correlation of gradient magnitude
 refined to 1/400 px, then a structure-weighted trimmed fit), installs it on top of the
 profile (`optics::set_ca_refinement`, consumed by `compose`), and renders in full. About +18%
-time; skipped automatically with no matching profile, `--fix-ca=off`, alignment off, or binned output, and the preview is silent on the desktop progress channel. MEASURED: edge fringing on the neutral slide-2 7.34% → 2.97% (red), 5.37% → 2.11%
+time; skipped automatically with no matching profile, `--fix-ca=off`, alignment off, or binned output, and the preview is silent on the desktop progress channel. Multi-pass sessions run their own preview through the session consumer (whose original-CFA gather leaves its own residual) and apply the result to every lighting group; aligned layers keep the profile alone. MEASURED: edge fringing on the neutral slide-2 7.34% → 2.97% (red), 5.37% → 2.11%
 (blue); bug-4's red residual +250 → +10 ppm. With `--refine-ca=off` the output is pixel-identical to the profile-only render.
 See `experiments/image-quality-2026-11-02/results.md` section 3c.
 
