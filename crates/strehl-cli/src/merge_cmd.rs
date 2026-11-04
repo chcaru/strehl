@@ -5996,6 +5996,9 @@ fn prepare_frame_into(
             return Ok(false);
         }
     }
+    if !ca_refine::preview_keeps(index) {
+        return Ok(false);
+    }
     if !load_frame_impl_observed(
         source,
         index,
@@ -7262,6 +7265,15 @@ struct PreparedPyramid<'a> {
 /// * **No gate ladder.** Its gate is a band-power threshold, not the
 ///   estimator's focus-noise gate, and the two are not the same number.
 fn run_pyramid(opts: &MergeOptions) -> Result<()> {
+    if ca_refine::requested()? {
+        return ca_refine::run_refined(opts);
+    }
+    run_pyramid_once(opts)
+}
+
+/// One pyramid render. [`run_pyramid`] calls it once, or twice -- a preview
+/// and the refined render -- under `STREHL_REFINE_CA=on`.
+fn run_pyramid_once(opts: &MergeOptions) -> Result<()> {
     // Ask once, up front, and throw the answer away. `warp_frame_in_place`
     // re-reads the profile per frame, so a typo'd STREHL_FIX_CA would otherwise
     // surface only after a full decode.
@@ -7421,6 +7433,133 @@ fn run_pyramid_prepared(
         "synthetic prepared sources cannot claim native sensor provenance"
     );
     run_pyramid_prepared_with_sensor(opts, prepared, source, None)
+}
+
+/// Per-capture lateral-CA refinement (`STREHL_REFINE_CA=on`, default off).
+///
+/// A preview merge of a subset of frames, rendered with the active profile,
+/// is measured for the red and blue displacement it still shows
+/// (`strehl_core::ca_refine`); the measured residual is installed on top of
+/// the profile (`strehl_core::optics::set_ca_refinement`) and the stack is
+/// rendered again in full. MEASURED in
+/// `experiments/image-quality-2026-11-02/results.md` section 3c.
+mod ca_refine {
+    use super::*;
+    use std::sync::Mutex;
+    use strehl_core::ca_refine::Residual;
+    use strehl_core::optics::{CaRefinement, ChannelRefinement};
+
+    pub(super) const ENV: &str = "STREHL_REFINE_CA";
+    /// A refinement beyond these bounds is refused, not applied: the
+    /// residuals measured across the corpus were at most ~250 ppm and 0.35 px.
+    const MAX_SCALE: f64 = 1000e-6;
+    const MAX_TRANSLATION: f64 = 1.5;
+
+    static STRIDE: AtomicUsize = AtomicUsize::new(0);
+    static RESULT: Mutex<Option<Option<Residual>>> = Mutex::new(None);
+
+    pub(super) fn requested() -> Result<bool> {
+        match std::env::var(ENV) {
+            Err(std::env::VarError::NotPresent) => Ok(false),
+            Err(e) => Err(e).context(ENV),
+            Ok(v) => match v.trim() {
+                "" | "0" | "off" => Ok(false),
+                "on" | "1" => Ok(true),
+                other => anyhow::bail!("{ENV}={other:?} is not on or off"),
+            },
+        }
+    }
+
+    pub(super) fn preview_active() -> bool {
+        STRIDE.load(Ordering::Relaxed) > 0
+    }
+
+    pub(super) fn preview_keeps(index: usize) -> bool {
+        let stride = STRIDE.load(Ordering::Relaxed);
+        stride <= 1 || index.is_multiple_of(stride)
+    }
+
+    pub(super) fn capture(width: usize, height: usize, mosaic: &[f32]) {
+        let r = strehl_core::ca_refine::measure_mosaic(width, height, mosaic);
+        *RESULT.lock().unwrap_or_else(|e| e.into_inner()) = Some(r);
+    }
+
+    /// Every `stride`-th frame for the preview: at least ~32 frames, at most
+    /// every 8th (every 8th measured within 2 ppm of the full stack on bug-4
+    /// and 42 ppm low on bee-3, at a sixth of the time).
+    fn stride_for(frames: usize) -> usize {
+        (frames / 32).clamp(1, 8)
+    }
+
+    fn line(name: &str, c: &strehl_core::ca_refine::ChannelFit) -> String {
+        format!(
+            "{name} t ({:+.3}, {:+.3}) px, scale {:+.1} ppm ({} of {} tiles, rms {:.3} px)",
+            c.translation.0,
+            c.translation.1,
+            c.scale * 1e6,
+            c.kept,
+            c.measured,
+            c.rms
+        )
+    }
+
+    pub(super) fn run_refined(opts: &MergeOptions) -> Result<()> {
+        let frames = crate::raw_paths(&opts.dir, opts.limit)?.len();
+        let stride = stride_for(frames);
+        strehl_core::optics::set_ca_refinement(None);
+        *RESULT.lock().unwrap_or_else(|e| e.into_inner()) = None;
+        eprintln!(
+            "CA refinement   : PREVIEW pass over every {stride}th of {frames} frames, measuring the \
+             lateral CA the profile leaves ({ENV}=on)"
+        );
+        STRIDE.store(stride, Ordering::Relaxed);
+        let preview = run_pyramid_once(opts);
+        STRIDE.store(0, Ordering::Relaxed);
+        preview.context("lateral-CA refinement preview pass")?;
+        let measured = RESULT.lock().unwrap_or_else(|e| e.into_inner()).take().flatten();
+        let refinement = match measured {
+            None => {
+                eprintln!(
+                    "CA refinement   : NOT APPLIED -- the preview gave no fit (too little \
+                     structure, or an output mode the preview cannot measure); rendering with \
+                     the profile alone"
+                );
+                None
+            }
+            Some(r) => {
+                let ok = |c: &strehl_core::ca_refine::ChannelFit| {
+                    c.scale.abs() <= MAX_SCALE
+                        && c.translation.0.abs() <= MAX_TRANSLATION
+                        && c.translation.1.abs() <= MAX_TRANSLATION
+                };
+                eprintln!("CA refinement   : measured {}", line("red", &r.red));
+                eprintln!("                  measured {}", line("blue", &r.blue));
+                if ok(&r.red) && ok(&r.blue) {
+                    let c = |f: &strehl_core::ca_refine::ChannelFit| ChannelRefinement {
+                        scale: f.scale,
+                        translation: f.translation,
+                    };
+                    eprintln!(
+                        "                  APPLIED on top of the profile for the render below"
+                    );
+                    Some(CaRefinement {
+                        red: c(&r.red),
+                        blue: c(&r.blue),
+                    })
+                } else {
+                    eprintln!(
+                        "                  NOT APPLIED -- beyond the bounds ({:.0} ppm, {MAX_TRANSLATION} px)",
+                        MAX_SCALE * 1e6
+                    );
+                    None
+                }
+            }
+        };
+        strehl_core::optics::set_ca_refinement(refinement);
+        let out = run_pyramid_once(opts);
+        strehl_core::optics::set_ca_refinement(None);
+        out
+    }
 }
 
 fn run_pyramid_prepared_with_sensor(
@@ -9795,6 +9934,14 @@ fn write_merged_observed_with_reconstruction(
                 bot[px * 2] = planes[2][i];
                 bot[px * 2 + 1] = planes[3][i];
             }
+        }
+        if ca_refine::preview_active() {
+            // A lateral-CA preview pass: measure what the correction leaves on
+            // the white-balanced mosaic -- before any demosaic borrows one
+            // channel's detail for another, or a colour matrix mixes them --
+            // and write nothing.
+            ca_refine::capture(mw, mh, &mosaic);
+            return Ok(());
         }
         if let Some(progress) = progress {
             progress.render_step("develop", "finished");

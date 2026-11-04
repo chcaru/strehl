@@ -645,7 +645,7 @@ line and blue on the other -- a residual *lateral* shift, which a focus offset c
 move. The lateral-CA record (facts 1414-1903; no scalar fix, scene-dependent effective
 wavelength, fact 1570) is the place for that defect. Not built.
 
-## 3c. Per-capture lateral-CA refinement (MEASURED, 2026-11-03; not yet built)
+## 3c. Per-capture lateral-CA refinement (BUILT, opt-in `STREHL_REFINE_CA=on`, 2026-11-03)
 
 While testing 3b, chroma-boosted crops of the flat slide showed red on one side of every
 line and blue on the other, near the centre -- a lateral offset the shipped correction
@@ -707,6 +707,61 @@ fell), but a resampling softening is not excluded.
 stack) matches the full stack on bug-4 (+248 vs +250 ppm) and is 42 ppm low on bee-3; a
 half stack matches both within 11 ppm. So a preview pass of a subset, then one render,
 is viable at roughly +20-30% time.
+
+**Built (`strehl_core::ca_refine`, `STREHL_REFINE_CA=on`, default off).** `stack` merges a
+preview of every Nth frame (N = frames/32 clamped to 1..8), measures the residual on the
+preview's white-balanced mosaic, installs it on top of the profile
+(`optics::set_ca_refinement`, read by `compose`), and renders in full; bounds 1000 ppm and
+1.5 px, beyond which it is refused and reported. Off, the output is pixel-identical (razor:
+same pixels, only the build-hash Software tag differs). Choices, each decided by rendering
+its correction and scoring the neutral targets, not by agreement with another estimator:
+
+| estimator variant | slide-2 fringe R / B | razor fringe R / B |
+| --- | --- | --- |
+| shipped constants | 7.343% / 5.371% | 4.069% / 4.456% |
+| Python instrument, output space (two full renders) | 3.154% / 2.137% | 3.746% / 4.182% |
+| Rust, gradient energy + iterative solve (128 px tiles) | 3.554% / 2.690% | 3.873% / 4.437% |
+| same, no blur | 4.643% / 2.309% | 3.815% / 4.221% |
+| Rust, intensity matching with per-tile gain | 10.028% / 4.019% | 3.816% / 4.251% |
+| **shipped build**, measured on an MHC demosaic of the preview | 4.054% / 2.284% | 3.799% / 4.220% |
+| **shipped build**, measured on the mosaic, each colour from its own sites | **2.965% / 2.108%** | **3.782% / 4.145%** |
+
+The final estimator ports the Python instrument (cross-correlation of Sobel gradient
+magnitude per 256 px tile; its Rust port matched it within 0.015 px and 7 ppm on four
+masters) with three changes, each measured on planted shifts (`ca-refine-tests.rs`): a
+Hann window after mean removal (unwindowed reads planted shifts ~10% short, windowed ~5%),
+a second upsampled-DFT stage at 1/400 px (one stage at 1/20 quantised a planted
+(0.12, 0.07) to (0.10, 0.10)), and per-tile weighting by green's structure tensor (with
+stripes on half the frame and a vertical shift planted, the unweighted fit read 0.127 px
+for 0.30). Measuring on the MHC demosaic under-read the residual -- MHC rebuilds red's
+detail partly from green's Laplacian -- and left about half of bug-4's red residual; the
+mosaic path removes it. Output residual after one refined render (`ca-residual.py`):
+
+| subject | preview measured R (t px, scale) | output residual R after | output residual B after |
+| --- | --- | --- | --- |
+| slide-2 | (+0.07, -0.20), -116 ppm | (-0.02, -0.04), +47 ppm | (+0.01, -0.07), 0 ppm |
+| razor | (+0.10, -0.12), +84 ppm | (0.00, -0.02), -4 ppm | (-0.04, -0.05), +20 ppm |
+| bee-3 | (+0.06, -0.18), +111 ppm | (+0.03, +0.02), +38 ppm | (+0.03, -0.02), +17 ppm |
+| bug-4 104MSDCF | (+0.06, -0.06), +367 ppm | (+0.01, +0.01), +10 ppm | (+0.01, -0.02), +8 ppm |
+
+Time: the preview took 15-18 s against an 84-93 s render (+18%), host otherwise idle
+except this lane. Tests: six in `ca-refine-tests.rs` (planted translation and scale,
+gain-only null, single orientation, edge tiles not voting along their edges, mosaic siting
+null and planted shift, featureless refusal); mutation-checked: a flipped displacement sign,
+removing the structure weighting, and an off-centre mosaic interpolation each fail a test.
+Not yet done: a default-on decision (it moves every render), and the desktop has no control
+for it.
+
+Checks: strehl-core 757 tests pass (`cargo test --locked -p strehl-core`); strehl-cli lib
+399 pass, the same 8 private-capture tests fail as before. **Byte-freeze:** the default
+pyramid row (`coffee-bean-20-gate2-pyramid`) reproduces bit-exactly with this build
+(`8ACA4A41...`, 49450027 bytes, rendered from the row's own command). The test itself
+stops on an earlier row, `coffee-bean-20-gate2-unaligned` (estimator backend, alignment
+off): it renders `741F4984...` / 49450027 bytes against a recorded `88712017...` /
+49450019 -- and so does the release binary built at `9fd5d744`, before any of this
+section's code. That row has been stale since before this lane (its baseline is from
+4c99cc40, 2026-08-26; the size change is 8 bytes, i.e. writer metadata, and several
+writer commits have landed since). Not re-baselined here: its move is not attributed.
 
 ## 4. Cost (MEASURED)
 

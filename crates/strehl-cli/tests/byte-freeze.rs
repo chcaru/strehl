@@ -615,6 +615,9 @@ const RENDER_ENV: &[&str] = &[
     // once by `MergeConfig::default()`.
     "STREHL_PYRAMID_POOLED_EVIDENCE",
     "STREHL_PYRAMID_POOLED_RATIO",
+    // Per-capture lateral-CA refinement (2026-11-03), OFF by default: a
+    // preview pass plus a refined render, so a different image.
+    "STREHL_REFINE_CA",
     "STREHL_FRAME_PARITY",
     // The rest of the pyramid's own environment, registered in the commit that
     // gives it something to hide -- the first pyramid row. Both are read by

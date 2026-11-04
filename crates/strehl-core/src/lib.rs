@@ -14,6 +14,8 @@ pub mod align;
 #[path = "align-global.rs"]
 pub mod align_global;
 pub mod boxfilter;
+#[path = "ca-refine.rs"]
+pub mod ca_refine;
 #[path = "cfa-lattice.rs"]
 pub mod cfa_lattice;
 pub mod clip;

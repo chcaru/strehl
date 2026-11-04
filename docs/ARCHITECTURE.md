@@ -427,6 +427,21 @@ the inverted version shipped once and made the aberration 7.2% worse, where the 
 direction removes 94.3%. Out-of-sample leave-one-out transfer is 93.7%/93.3%, taking
 corner residual from 1.519 px to 0.071 px.
 
+**Per-capture refinement — OPT-IN (`STREHL_REFINE_CA=on`), off by default.** The constants
+are right on average and wrong per capture: a channel's effective wavelength is weighted by
+the scene's spectrum (SYNTHESIS fact 1570), so red's native scale measured −258 to −611 ppm
+across seven captures, and red/blue carry a translation of up to 0.3 px the profile does not
+apply. With the switch on, `stack` first merges a preview of every Nth frame (at least ~32
+frames, at most every 8th), measures on its white-balanced **mosaic** — each colour
+interpolated from its own sites only, because a demosaic that borrows green's detail
+under-reads the displacement — the red and blue displacement against green as translation +
+scale (`ca_refine.rs`: per 256 px tile, windowed cross-correlation of gradient magnitude
+refined to 1/400 px, then a structure-weighted trimmed fit), installs it on top of the
+profile (`optics::set_ca_refinement`, consumed by `compose`), and renders in full. About +18%
+time. MEASURED: edge fringing on the neutral slide-2 7.34% → 2.97% (red), 5.37% → 2.11%
+(blue); bug-4's red residual +250 → +10 ppm. Off, the output is pixel-identical to before.
+See `experiments/image-quality-2026-11-02/results.md` section 3c.
+
 ### Sensor defects — OPT-IN, off by default
 
 Two defect classes with two different arithmetics: **hot** pixels are additive
@@ -798,6 +813,7 @@ backends, so any unintended change to the merge is caught as a hash movement.
 | `merge_cmd/gatefloor.rs` | **DEFAULT** (opt-out) | Per-frame measured band-noise floor |
 | `align.rs`, `warpmap.rs` | **DEFAULT** (sidecar-cached) | Solve once, gather at consumption |
 | `optics.rs` (lateral CA) | **DEFAULT** for matching gear | Composed into the alignment similarity |
+| `ca_refine.rs` (per-capture CA refinement) | **OPT-IN** (`STREHL_REFINE_CA=on`) | Preview pass + measured residual on top of the profile |
 | `demosaic.rs` (Malvar) | **DEFAULT** in full-resolution alignment and development | Per-source reconstruction during full-resolution gather, plus final demosaic when developing; binned output omits only the latter |
 | `color.rs`, `highlight.rs`, `clip.rs` | **DEFAULT** in the writer | Roll-off is identity below the knee |
 | `noise.rs`, `profile.rs` | **DEFAULT** | Injected once; PRNU term measured but off |
