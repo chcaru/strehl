@@ -1,0 +1,239 @@
+{
+  "classification": "DERIVED: analytical model, no new photographic quality measurement",
+  "workers": 1,
+  "environment": {
+    "python": "3.12.10",
+    "numpy": "2.4.4"
+  },
+  "source_sha256": "be48175909b1d838df206b520a4a941499a46ab31bd5c071f47d53acb5ebc5eb",
+  "assumptions": {
+    "n_range": [
+      13.5072,
+      17.1584
+    ],
+    "representative_n": 15.5,
+    "magnification_example": 2.7198,
+    "native_step_example_um": 40.0,
+    "pixel_aperture": "uniform full-pitch square, axial response",
+    "omissions": "aberrations, measured CFA spectra, sensor MTF/OLPF, real pupil, coherence, drift, occlusion and merge behavior"
+  },
+  "controls": {
+    "dc_and_cutoff": true,
+    "quadrature_zero_defocus_max_error": 1.7881393432617188e-07,
+    "output_grid_cannot_change_optical_mtf": true,
+    "in_focus_placebo": true
+  },
+  "sampling": {
+    "pitch_a7c2_um": 5.119999885559082,
+    "pitch_a7cr_um": 3.7563130855560303,
+    "nyquist_a7c2_lp_mm": 97.65625,
+    "nyquist_a7cr_lp_mm": 133.1092529296875,
+    "nyquist_16shift_lp_mm": 266.218505859375,
+    "a7cr_pixel_area_ratio": 0.5382495522499084
+  },
+  "optics": [
+    {
+      "working_f": 13.5072,
+      "cutoff_lp_mm": {
+        "blue_450nm": 164.52130879991577,
+        "green_550nm": 134.60834356356744,
+        "red_650nm": 113.89936763071093
+      },
+      "airy_diameter_um": 18.1266624,
+      "a7c2": {
+        "mtf50_lp_mm": 48.21628744665637,
+        "mtf10_lp_mm": 98.67877879751592,
+        "mtf_at_80_lp_mm": 0.2167569100856781,
+        "mtf_at_100_lp_mm": 0.09338276833295822
+      },
+      "a7cr": {
+        "mtf50_lp_mm": 50.790094590263735,
+        "mtf10_lp_mm": 103.29981176606691,
+        "mtf_at_80_lp_mm": 0.24928343296051025,
+        "mtf_at_100_lp_mm": 0.11777542531490326
+      }
+    },
+    {
+      "working_f": 15.5,
+      "cutoff_lp_mm": {
+        "blue_450nm": 143.36917562724014,
+        "green_550nm": 117.30205278592375,
+        "red_650nm": 99.25558312655086
+      },
+      "airy_diameter_um": 20.801000000000002,
+      "a7c2": {
+        "mtf50_lp_mm": 43.141944852036836,
+        "mtf10_lp_mm": 88.10104616413756,
+        "mtf_at_80_lp_mm": 0.1526946872472763,
+        "mtf_at_100_lp_mm": 0.041299354285001755
+      },
+      "a7cr": {
+        "mtf50_lp_mm": 44.9566298374517,
+        "mtf10_lp_mm": 91.12385968279031,
+        "mtf_at_80_lp_mm": 0.1756080538034439,
+        "mtf_at_100_lp_mm": 0.05208722501993179
+      }
+    },
+    {
+      "working_f": 17.1584,
+      "cutoff_lp_mm": {
+        "blue_450nm": 129.5122052302209,
+        "green_550nm": 105.96453155199892,
+        "red_650nm": 89.66229592861447
+      },
+      "airy_diameter_um": 23.0265728,
+      "a7c2": {
+        "mtf50_lp_mm": 39.60119457992853,
+        "mtf10_lp_mm": 80.68364748952017,
+        "mtf_at_80_lp_mm": 0.104533351957798,
+        "mtf_at_100_lp_mm": 0.009874806739389896
+      },
+      "a7cr": {
+        "mtf50_lp_mm": 40.99054605569157,
+        "mtf10_lp_mm": 82.88871633773188,
+        "mtf_at_80_lp_mm": 0.1202196255326271,
+        "mtf_at_100_lp_mm": 0.012454221025109291
+      }
+    }
+  ],
+  "focus_examples": [
+    {
+      "working_f": 13.5072,
+      "native_spacing_um": 32.0,
+      "midpoint_mtf_ratio_60_lp_mm": 1.094682216644287,
+      "midpoint_mtf_ratio_80_lp_mm": 1.0886530876159668,
+      "coarse_mtf50_lp_mm": 49.002712625612894,
+      "fine_mtf50_lp_mm": 53.766751468526905,
+      "already_in_focus_gain": 1.0
+    },
+    {
+      "working_f": 13.5072,
+      "native_spacing_um": 40.0,
+      "midpoint_mtf_ratio_60_lp_mm": 1.1535248756408691,
+      "midpoint_mtf_ratio_80_lp_mm": 1.1433812379837036,
+      "coarse_mtf50_lp_mm": 46.19578550753791,
+      "fine_mtf50_lp_mm": 53.42365841419939,
+      "already_in_focus_gain": 1.0
+    },
+    {
+      "working_f": 13.5072,
+      "native_spacing_um": 49.0,
+      "midpoint_mtf_ratio_60_lp_mm": 1.2430176734924316,
+      "midpoint_mtf_ratio_80_lp_mm": 1.2260931730270386,
+      "coarse_mtf50_lp_mm": 42.664900662113666,
+      "fine_mtf50_lp_mm": 52.947800189454036,
+      "already_in_focus_gain": 1.0
+    },
+    {
+      "working_f": 15.5,
+      "native_spacing_um": 32.0,
+      "midpoint_mtf_ratio_60_lp_mm": 1.0540668964385986,
+      "midpoint_mtf_ratio_80_lp_mm": 1.0397748947143555,
+      "coarse_mtf50_lp_mm": 44.64712069221225,
+      "fine_mtf50_lp_mm": 47.07943413856599,
+      "already_in_focus_gain": 1.0
+    },
+    {
+      "working_f": 15.5,
+      "native_spacing_um": 40.0,
+      "midpoint_mtf_ratio_60_lp_mm": 1.0862799882888794,
+      "midpoint_mtf_ratio_80_lp_mm": 1.0631144046783447,
+      "coarse_mtf50_lp_mm": 43.15012097334711,
+      "fine_mtf50_lp_mm": 46.90672138487196,
+      "already_in_focus_gain": 1.0
+    },
+    {
+      "working_f": 15.5,
+      "native_spacing_um": 49.0,
+      "midpoint_mtf_ratio_60_lp_mm": 1.1334068775177002,
+      "midpoint_mtf_ratio_80_lp_mm": 1.0967943668365479,
+      "coarse_mtf50_lp_mm": 41.150213175305424,
+      "fine_mtf50_lp_mm": 46.666828949501024,
+      "already_in_focus_gain": 1.0
+    },
+    {
+      "working_f": 17.1584,
+      "native_spacing_um": 32.0,
+      "midpoint_mtf_ratio_60_lp_mm": 1.0341672897338867,
+      "midpoint_mtf_ratio_80_lp_mm": 1.0188950300216675,
+      "coarse_mtf50_lp_mm": 41.15103449912662,
+      "fine_mtf50_lp_mm": 42.62183106802766,
+      "already_in_focus_gain": 1.0
+    },
+    {
+      "working_f": 17.1584,
+      "native_spacing_um": 40.0,
+      "midpoint_mtf_ratio_60_lp_mm": 1.0541011095046997,
+      "midpoint_mtf_ratio_80_lp_mm": 1.0297402143478394,
+      "coarse_mtf50_lp_mm": 40.23330746686078,
+      "fine_mtf50_lp_mm": 42.51786278276834,
+      "already_in_focus_gain": 1.0
+    },
+    {
+      "working_f": 17.1584,
+      "native_spacing_um": 49.0,
+      "midpoint_mtf_ratio_60_lp_mm": 1.0827206373214722,
+      "midpoint_mtf_ratio_80_lp_mm": 1.0450878143310547,
+      "coarse_mtf50_lp_mm": 38.98218245941165,
+      "fine_mtf50_lp_mm": 42.37339088072831,
+      "already_in_focus_gain": 1.0
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "A7C II current",
+      "planes": 300,
+      "raw_count": 300,
+      "output_mp": 32.741376,
+      "relative_integrated_exposure": 1.0,
+      "ideal_same_output_snr_factor": 1.0,
+      "exposure_only_minutes_at_0_2s": 1.0,
+      "exposure_only_minutes_at_1s": 5.0,
+      "relative_source_samples": 1.0
+    },
+    {
+      "name": "A7C II fine focus",
+      "planes": 900,
+      "raw_count": 900,
+      "output_mp": 32.741376,
+      "relative_integrated_exposure": 3.0,
+      "ideal_same_output_snr_factor": 1.7320508075688772,
+      "exposure_only_minutes_at_0_2s": 3.0,
+      "exposure_only_minutes_at_1s": 15.0,
+      "relative_source_samples": 3.0
+    },
+    {
+      "name": "A7CR fine focus",
+      "planes": 900,
+      "raw_count": 900,
+      "output_mp": 60.217344,
+      "relative_integrated_exposure": 3.0,
+      "ideal_same_output_snr_factor": 1.7320508075688772,
+      "exposure_only_minutes_at_0_2s": 3.0,
+      "exposure_only_minutes_at_1s": 15.0,
+      "relative_source_samples": 5.5175455057234
+    },
+    {
+      "name": "A7CR fine + 4 shift",
+      "planes": 900,
+      "raw_count": 3600,
+      "output_mp": 60.217344,
+      "relative_integrated_exposure": 12.0,
+      "ideal_same_output_snr_factor": 3.4641016151377544,
+      "exposure_only_minutes_at_0_2s": 12.0,
+      "exposure_only_minutes_at_1s": 60.0,
+      "relative_source_samples": 22.0701820228936
+    },
+    {
+      "name": "A7CR fine + 16 shift",
+      "planes": 900,
+      "raw_count": 14400,
+      "output_mp": 240.869376,
+      "relative_integrated_exposure": 48.0,
+      "ideal_same_output_snr_factor": 6.928203230275509,
+      "exposure_only_minutes_at_0_2s": 48.0,
+      "exposure_only_minutes_at_1s": 240.0,
+      "relative_source_samples": 88.2807280915744
+    }
+  ]
+}

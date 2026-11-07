@@ -1,0 +1,50 @@
+{
+  "producer_sha256": "202f1a35297756505770ea97eea334d35f2218a0ebf66facb2f5a5825d4ef134",
+  "files": [
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/evidence/band-results.json",
+      "bytes": 152564,
+      "sha256": "f9fc42f00dd606f13201c63a63d7340de83c9a77e93333c1cfe2a82846681333"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/evidence/capture-summary.json",
+      "bytes": 82381,
+      "sha256": "acf249d81a0296e8f8a56cc8ba82c25eee47fe11245ed57b358c36e1c83a5893"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/evidence/decode-summary.json",
+      "bytes": 19794,
+      "sha256": "ed87d04a30b4ec2e244e9f420f50ed74229ee6a9cda3cef340a892a3500e0cf4"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/evidence/pair-response.json",
+      "bytes": 65119,
+      "sha256": "7a613aa9a1db02efad630f22b5a75d6b972bf1cb95c9ded2dc7ddd23e59871ac"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/evidence/review.json",
+      "bytes": 16479,
+      "sha256": "292b739d72281cbd8ff4c88925aa09626e46b97f8011722774c674246d5617fc"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/evidence/verification.json",
+      "bytes": 2199,
+      "sha256": "6da8ffa5a4389943fd7d5e794ed4fb11be474292d3e505cfb95c15874a615db6"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/figures/fine-focus-response.svg",
+      "bytes": 74579,
+      "sha256": "5e6f1ff653859ce18f390133d9186b7aad938648e122d2ee9f4818a86c5bc25a"
+    },
+    {
+      "path": "experiments/sony-upgrade-2026-11-07/evidence/model.json",
+      "bytes": 7719,
+      "sha256": "b6354c1d2096b8a8daf17b7f15391023229020a40aeeb5332de33c999297512e"
+    },
+    {
+      "path": "experiments/sony-upgrade-2026-11-07/figures/optical-limits.svg",
+      "bytes": 92831,
+      "sha256": "c33fad69badc1b3cb798ee476c617dafe5da6fdf383d1a165b7a84398e434c71"
+    }
+  ]
+}

@@ -1,0 +1,680 @@
+{
+  "source_sha256": "61c2a904ce59d9d6fd34f9f242eb78c0047ecfc93dbd378efe01b470f6187d3c",
+  "workers": 1,
+  "runs": [
+    {
+      "run": 1,
+      "pure_scale_control": {
+        "focus_response": -0.0015566876390948892,
+        "uniform_blur_response": -0.023545341566205025,
+        "translation_green_px": [
+          -0.12907586991786957,
+          0.10526927560567856
+        ],
+        "affine_terms": [
+          -0.33449721336364746,
+          -0.02787802554666996,
+          0.004867887124419212,
+          -0.36788496375083923
+        ],
+        "brightness_terms": [
+          -0.004889491014182568,
+          0.004928507376462221
+        ],
+        "residual_rms_dn": 0.6446709632873535,
+        "condition_number": 4.050978183746338,
+        "pixels": 100200
+      },
+      "spatial_blur_controls": {
+        "positive": {
+          "focus_response": 0.24829016625881195,
+          "uniform_blur_response": 0.9272136688232422,
+          "translation_green_px": [
+            -0.00024083683092612773,
+            -0.0009800087427720428
+          ],
+          "affine_terms": [
+            0.00013761477021034807,
+            0.0008494649664498866,
+            0.00045256345765665174,
+            0.0009319264208897948
+          ],
+          "brightness_terms": [
+            -0.2540932297706604,
+            0.17887498438358307
+          ],
+          "residual_rms_dn": 0.5663377046585083,
+          "condition_number": 3.9780497550964355,
+          "pixels": 100200
+        },
+        "negative": {
+          "focus_response": -0.2523982524871826,
+          "uniform_blur_response": 0.9275195002555847,
+          "translation_green_px": [
+            -8.91390664037317e-06,
+            -0.0003568722167983651
+          ],
+          "affine_terms": [
+            0.0001802520127967,
+            0.0008099905680865049,
+            0.0007285257452167571,
+            0.0011735634179785848
+          ],
+          "brightness_terms": [
+            -0.2507350742816925,
+            0.17647647857666016
+          ],
+          "residual_rms_dn": 0.5839117765426636,
+          "condition_number": 3.9521961212158203,
+          "pixels": 100200
+        }
+      },
+      "fine_response_by_repeat": [
+        [
+          0.004681567661464214,
+          -0.07505321502685547,
+          0.0017110781045630574,
+          0.0009264802210964262,
+          -0.07406054437160492,
+          -0.08264893293380737
+        ],
+        [
+          0.0006702671525999904,
+          -0.07512861490249634,
+          0.0035439126659184694,
+          -1.15788034236175e-05,
+          -0.07464618235826492,
+          -0.07992853224277496
+        ],
+        [
+          0.0035739047452807426,
+          -0.07464800775051117,
+          0.004019227810204029,
+          0.0021796836517751217,
+          -0.0768633708357811,
+          -0.07981283217668533
+        ]
+      ],
+      "plateau_response": [
+        0.0017110781045630574,
+        0.0006702671525999904,
+        0.0035739047452807426
+      ],
+      "moving_response": [
+        -0.07505321502685547,
+        -0.07512861490249634,
+        -0.0768633708357811
+      ],
+      "local_response_increment": [
+        0.0767642930150032,
+        0.0757988840341568,
+        0.08043727278709412
+      ],
+      "native_response": [
+        0.25851961970329285,
+        0.2580545246601105,
+        0.2373053878545761,
+        0.26195651292800903,
+        0.2561885118484497,
+        0.2364674210548401
+      ],
+      "native_to_smallest_repeatable_response_ratio": 3.3494935035705566,
+      "ratio_limit": "Local response estimate, opposite movement directions; not calibrated physical distance or resolution gain.",
+      "shuffle": {
+        "seed": 4607,
+        "count": 200,
+        "observed_contrast": 0.07766681909561157,
+        "shuffled_mean": 0.0002647955808788538,
+        "shuffled_range": [
+          -0.07724446803331375,
+          0.07743953913450241
+        ],
+        "inference": "Descriptive order control only; pattern chosen after viewing data."
+      }
+    },
+    {
+      "run": 2,
+      "pure_scale_control": {
+        "focus_response": 0.0016808724030852318,
+        "uniform_blur_response": -0.015133954584598541,
+        "translation_green_px": [
+          -0.12741883099079132,
+          0.10688219964504242
+        ],
+        "affine_terms": [
+          -0.3393738269805908,
+          -0.00028112425934523344,
+          -6.398795085260645e-05,
+          -0.39296314120292664
+        ],
+        "brightness_terms": [
+          0.0041944850236177444,
+          -0.0008469439344480634
+        ],
+        "residual_rms_dn": 0.33446061611175537,
+        "condition_number": 3.3054652214050293,
+        "pixels": 100200
+      },
+      "spatial_blur_controls": {
+        "positive": {
+          "focus_response": 0.2517015039920807,
+          "uniform_blur_response": 0.9409698843955994,
+          "translation_green_px": [
+            -0.00023615184181835502,
+            -0.0006995914736762643
+          ],
+          "affine_terms": [
+            8.376707410207018e-05,
+            0.00037096411688253284,
+            1.225422602146864e-05,
+            0.000438154733274132
+          ],
+          "brightness_terms": [
+            -0.05893301963806152,
+            0.0491936095058918
+          ],
+          "residual_rms_dn": 0.2548484206199646,
+          "condition_number": 3.2680397033691406,
+          "pixels": 100200
+        },
+        "negative": {
+          "focus_response": -0.2502107620239258,
+          "uniform_blur_response": 0.9406910538673401,
+          "translation_green_px": [
+            -0.00011432032624725252,
+            -0.00017094568465836346
+          ],
+          "affine_terms": [
+            8.116621756926179e-05,
+            0.00029413722222670913,
+            2.6782690838444978e-05,
+            0.000360411882866174
+          ],
+          "brightness_terms": [
+            -0.05849543213844299,
+            0.0487762987613678
+          ],
+          "residual_rms_dn": 0.25540733337402344,
+          "condition_number": 3.275846481323242,
+          "pixels": 100200
+        }
+      },
+      "fine_response_by_repeat": [
+        [
+          -0.01489975955337286,
+          -0.12231685221195221,
+          -0.012539500370621681,
+          -0.013348372653126717,
+          -0.1266060471534729,
+          -0.12534765899181366
+        ],
+        [
+          -0.018176842480897903,
+          -0.11826833337545395,
+          -0.014526893384754658,
+          -0.011684886179864407,
+          -0.1256454437971115,
+          -0.1150144413113594
+        ],
+        [
+          -0.006499503739178181,
+          -0.11492524296045303,
+          -0.011278066784143448,
+          -0.01022132858633995,
+          -0.12339728325605392,
+          -0.1183645948767662
+        ]
+      ],
+      "plateau_response": [
+        -0.013348372653126717,
+        -0.014526893384754658,
+        -0.01022132858633995
+      ],
+      "moving_response": [
+        -0.12534765899181366,
+        -0.11826833337545395,
+        -0.1183645948767662
+      ],
+      "local_response_increment": [
+        0.11199928820133209,
+        0.10374143719673157,
+        0.10814327001571655
+      ],
+      "native_response": [
+        0.3699413239955902,
+        0.3268263339996338,
+        0.3326996862888336,
+        0.3700566589832306,
+        0.3316102623939514,
+        0.3361646831035614
+      ],
+      "native_to_smallest_repeatable_response_ratio": 3.092491865158081,
+      "ratio_limit": "Local response estimate, opposite movement directions; not calibrated physical distance or resolution gain.",
+      "shuffle": {
+        "seed": 4607,
+        "count": 200,
+        "observed_contrast": 0.10796133428812027,
+        "shuffled_mean": 0.00032779257744550703,
+        "shuffled_range": [
+          -0.10646263509988785,
+          0.10687670111656189
+        ],
+        "inference": "Descriptive order control only; pattern chosen after viewing data."
+      }
+    }
+  ],
+  "display": {
+    "demosaic": "LibRaw LINEAR",
+    "black": 512,
+    "white": 15360,
+    "bright": 4,
+    "gamma": [
+      2.222,
+      4.5
+    ],
+    "auto_bright": false,
+    "color": "sRGB",
+    "bits": 8,
+    "sharpen": "none",
+    "wb": "fixed to first frame within each run",
+    "records": [
+      {
+        "run": 1,
+        "ordinal": 1,
+        "crop": "run-1-image-01-native.png",
+        "overview": "run-1-image-01-fixed-overview.jpg",
+        "origin": [
+          3300,
+          2400
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 191,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 1,
+        "ordinal": 9,
+        "crop": "run-1-image-09-native.png",
+        "overview": "run-1-image-09-fixed-overview.jpg",
+        "origin": [
+          3300,
+          2400
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 199,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 1,
+        "ordinal": 11,
+        "crop": "run-1-image-11-native.png",
+        "overview": "run-1-image-11-fixed-overview.jpg",
+        "origin": [
+          3300,
+          2400
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 189,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 1,
+        "ordinal": 12,
+        "crop": "run-1-image-12-native.png",
+        "overview": "run-1-image-12-fixed-overview.jpg",
+        "origin": [
+          3300,
+          2400
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 193,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 1,
+        "ordinal": 13,
+        "crop": "run-1-image-13-native.png",
+        "overview": "run-1-image-13-fixed-overview.jpg",
+        "origin": [
+          3300,
+          2400
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 189,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 1,
+        "ordinal": 15,
+        "crop": "run-1-image-15-native.png",
+        "overview": "run-1-image-15-fixed-overview.jpg",
+        "origin": [
+          3300,
+          2400
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 189,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 1,
+        "ordinal": 23,
+        "crop": "run-1-image-23-native.png",
+        "overview": "run-1-image-23-fixed-overview.jpg",
+        "origin": [
+          3300,
+          2400
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 190,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 1,
+        "ordinal": 56,
+        "crop": "run-1-image-56-native.png",
+        "overview": "run-1-image-56-fixed-overview.jpg",
+        "origin": [
+          3300,
+          2400
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 194,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 1,
+        "ordinal": 64,
+        "crop": "run-1-image-64-native.png",
+        "overview": "run-1-image-64-fixed-overview.jpg",
+        "origin": [
+          3300,
+          2400
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 182,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 2,
+        "ordinal": 1,
+        "crop": "run-2-image-01-native.png",
+        "overview": "run-2-image-01-fixed-overview.jpg",
+        "origin": [
+          3330,
+          2230
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1775.0,
+          1024.0,
+          2498.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 145,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 2,
+        "ordinal": 9,
+        "crop": "run-2-image-09-native.png",
+        "overview": "run-2-image-09-fixed-overview.jpg",
+        "origin": [
+          3330,
+          2230
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1775.0,
+          1024.0,
+          2498.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 187,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 2,
+        "ordinal": 11,
+        "crop": "run-2-image-11-native.png",
+        "overview": "run-2-image-11-fixed-overview.jpg",
+        "origin": [
+          3330,
+          2230
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1775.0,
+          1024.0,
+          2498.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 148,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 2,
+        "ordinal": 12,
+        "crop": "run-2-image-12-native.png",
+        "overview": "run-2-image-12-fixed-overview.jpg",
+        "origin": [
+          3330,
+          2230
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1775.0,
+          1024.0,
+          2498.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 152,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 2,
+        "ordinal": 13,
+        "crop": "run-2-image-13-native.png",
+        "overview": "run-2-image-13-fixed-overview.jpg",
+        "origin": [
+          3330,
+          2230
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1775.0,
+          1024.0,
+          2498.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 149,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 2,
+        "ordinal": 15,
+        "crop": "run-2-image-15-native.png",
+        "overview": "run-2-image-15-fixed-overview.jpg",
+        "origin": [
+          3330,
+          2230
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1775.0,
+          1024.0,
+          2498.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 152,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 2,
+        "ordinal": 23,
+        "crop": "run-2-image-23-native.png",
+        "overview": "run-2-image-23-fixed-overview.jpg",
+        "origin": [
+          3330,
+          2230
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1775.0,
+          1024.0,
+          2498.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 150,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 2,
+        "ordinal": 56,
+        "crop": "run-2-image-56-native.png",
+        "overview": "run-2-image-56-fixed-overview.jpg",
+        "origin": [
+          3330,
+          2230
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1775.0,
+          1024.0,
+          2498.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 151,
+        "at_255_fraction": 0.0
+      },
+      {
+        "run": 2,
+        "ordinal": 64,
+        "crop": "run-2-image-64-native.png",
+        "overview": "run-2-image-64-fixed-overview.jpg",
+        "origin": [
+          3330,
+          2230
+        ],
+        "size": [
+          400,
+          400
+        ],
+        "white_balance": [
+          1775.0,
+          1024.0,
+          2498.0,
+          1024.0
+        ],
+        "rendered_rgb_max": 149,
+        "at_255_fraction": 0.0
+      }
+    ],
+    "publication_note": "Filenames identify private local derivatives; photographs are not published."
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "input_files": 158,
+  "input_bytes": 5343085974,
+  "input_names_sizes_mtimes_and_sha256_unchanged": true,
+  "analysis_source_sha256": {
+    "decode.py": "81dcc210ba89eca45ac98f7a9828e761005c81291f44c4d2e14fc06827ce8585",
+    "focus-band.py": "70b7b4eee83925f0e484ae3dde6db213065f5259ba6890641371f2ecfafd7797",
+    "inventory.py": "cec8eeee51390646d843872b861f1dcaaaf642134c0743afa9c689f767705181",
+    "pair-response.py": "32db53aaa0d0a57706c45db5294df353353d756dd8d22eea254f0a53837e588c",
+    "publish-evidence.py": "202f1a35297756505770ea97eea334d35f2218a0ebf66facb2f5a5825d4ef134",
+    "review.py": "61c2a904ce59d9d6fd34f9f242eb78c0047ecfc93dbd378efe01b470f6187d3c",
+    "verify.py": "a40c0bc87d0dbc4d1bd8c3855e6152f3720e691eda440442c1489674caee18a8",
+    "raw-check.rs": "772c47b730487d615a67bd82d72ca5de6a333156c43ef5d30df954c5b04a4c78"
+  },
+  "markdown_links_checked": [
+    "../sony-focus-control-2026-11-07/brief.md",
+    "evidence/capture-summary.json",
+    "evidence/decode-summary.json",
+    "evidence/pair-response.json",
+    "evidence/review.json",
+    "figures/fine-focus-response.svg",
+    "evidence/verification.json",
+    "evidence/publication.json"
+  ],
+  "runtime_versions": {
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "Pillow": "12.2.0",
+    "matplotlib": "3.10.8",
+    "rawpy": "0.27.0"
+  },
+  "native_endpoints": [
+    {
+      "session": "focus-test-20261107-141709-2df448f6",
+      "sequence": 56,
+      "before": 60627,
+      "after": 60557
+    },
+    {
+      "session": "focus-test-20261107-141709-2df448f6",
+      "sequence": 57,
+      "before": 60627,
+      "after": 60557
+    },
+    {
+      "session": "focus-test-20261107-142917-26f4c92d",
+      "sequence": 56,
+      "before": 61693,
+      "after": 61623
+    },
+    {
+      "session": "focus-test-20261107-142917-26f4c92d",
+      "sequence": 57,
+      "before": 61693,
+      "after": 61623
+    }
+  ],
+  "restoration_warning": {
+    "code": 131180,
+    "sdk_name": "CrWarning_FocusPosition_Result_OK"
+  },
+  "decoder_dependency_sha256": "a5787e7dc9ffc3ea311f6be5f180f02f6058fe19454915cdb0376dab92276aea",
+  "report_sha256": "a5f2abef0de6bf62fec9573e712e9327ff2a0a9135e1e648d6893a73a6622bca",
+  "workers": 1
+}
