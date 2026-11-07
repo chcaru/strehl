@@ -296,7 +296,6 @@ fn bsc_from_pairs(across: &[Pair], within: &mut [f32]) -> f64 {
     if mw > 0.0 { ma / mw } else { f64::NAN }
 }
 
-
 fn mean_of(v: &[f32], mask: &[bool]) -> f64 {
     let (mut s, mut n) = (0.0f64, 0.0f64);
     for (i, &m) in mask.iter().enumerate() {
@@ -318,7 +317,11 @@ fn sd_of(v: &[f32], mask: &[bool]) -> f64 {
             n += 1.0;
         }
     }
-    if n > 1.0 { (s / (n - 1.0)).sqrt() } else { f64::NAN }
+    if n > 1.0 {
+        (s / (n - 1.0)).sqrt()
+    } else {
+        f64::NAN
+    }
 }
 
 #[allow(clippy::too_many_lines)]
@@ -376,9 +379,15 @@ fn main() -> Result<()> {
     drop(first);
 
     println!("stack           : {}", dir.display());
-    println!("frames          : {n}   reference {reference}   plane {}x{}", geom.width, geom.height);
+    println!(
+        "frames          : {n}   reference {reference}   plane {}x{}",
+        geom.width, geom.height
+    );
     println!("plant amplitude : {plant_a:+.3} peak-to-peak, per-frame gain, pseudo-random in k");
-    println!("background      : smoothest {:.0}% of the reference frame", 100.0 * BACKGROUND_Q);
+    println!(
+        "background      : smoothest {:.0}% of the reference frame",
+        100.0 * BACKGROUND_Q
+    );
 
     // The plant is a per-frame multiplicative gain — the same *form* as the
     // defect, as the brief requires. Its *sequence* is deliberately pseudo-
@@ -421,7 +430,13 @@ fn main() -> Result<()> {
     {
         let p = &paths[reference];
         let frame = strehl_raw::decode(p).with_context(|| format!("decoding {}", p.display()))?;
-        green_luma_with_clip(&frame, levels.black, CONTAINER_MAX_DN, &mut luma, &mut clipped);
+        green_luma_with_clip(
+            &frame,
+            levels.black,
+            CONTAINER_MAX_DN,
+            &mut luma,
+            &mut clipped,
+        );
         drop(frame);
         let src = PlaneRef::new(&luma, geom.width, geom.height).context("luma plane geometry")?;
         strehl_core::warpmap::gather_frame(&map, reference, src, &mut warped, &mut cover)?;
@@ -458,7 +473,13 @@ fn main() -> Result<()> {
 
     for (k, p) in paths.iter().enumerate() {
         let frame = strehl_raw::decode(p).with_context(|| format!("decoding {}", p.display()))?;
-        green_luma_with_clip(&frame, levels.black, CONTAINER_MAX_DN, &mut luma, &mut clipped);
+        green_luma_with_clip(
+            &frame,
+            levels.black,
+            CONTAINER_MAX_DN,
+            &mut luma,
+            &mut clipped,
+        );
         drop(frame);
         let src = PlaneRef::new(&luma, geom.width, geom.height).context("luma plane geometry")?;
         strehl_core::warpmap::gather_frame(&map, k, src, &mut warped, &mut cover)?;
@@ -486,7 +507,10 @@ fn main() -> Result<()> {
         apply_to_plane(&mut warped, 1.0 / g);
 
         if k % 50 == 0 {
-            println!("  pass 1: frame {k}/{n}  {:.1} s", t0.elapsed().as_secs_f64());
+            println!(
+                "  pass 1: frame {k}/{n}  {:.1} s",
+                t0.elapsed().as_secs_f64()
+            );
         }
     }
     let pass1 = t0.elapsed().as_secs_f64();
@@ -502,7 +526,11 @@ fn main() -> Result<()> {
         map_plain.span(),
         map_plain.span().log2(),
         map_plain.refused_count(),
-        map_plain.gains().iter().copied().fold(f32::INFINITY, f32::min),
+        map_plain
+            .gains()
+            .iter()
+            .copied()
+            .fold(f32::INFINITY, f32::min),
         map_plain.gains().iter().copied().fold(0.0f32, f32::max)
     );
     println!(
@@ -529,25 +557,77 @@ fn main() -> Result<()> {
     // model and is asserted to re-elect **exactly zero** pixels. N1 is N0 with
     // the noise propagation deliberately omitted; it is the measurement of what
     // that omission costs, and it is the reason `scale_noise_model` exists.
-    let null_gain: f32 = std::env::var("M99_NULL_GAIN").ok().and_then(|v| v.parse().ok()).unwrap_or(1.1);
+    let null_gain: f32 = std::env::var("M99_NULL_GAIN")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(1.1);
     let mut arms: Vec<Arm> = Vec::new();
     let gp: Vec<f32> = map_plain.gains().to_vec();
     let gb: Vec<f32> = map_bg.gains().to_vec();
     let gq: Vec<f32> = map_plant.gains().to_vec();
-    arms.push(Arm { name: "A0 shipped", gain: Box::new(|_| 1.0), plant: false, scale_noise: true,
-        stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
-    arms.push(Arm { name: "A1 whole-frame gain", gain: Box::new(move |k| gp[k]), plant: false, scale_noise: true,
-        stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
-    arms.push(Arm { name: "A2 background gain", gain: Box::new(move |k| gb[k]), plant: false, scale_noise: true,
-        stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
-    arms.push(Arm { name: "P0 planted", gain: Box::new(|_| 1.0), plant: true, scale_noise: true,
-        stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
-    arms.push(Arm { name: "P1 planted + corr", gain: Box::new(move |k| gq[k]), plant: true, scale_noise: true,
-        stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
-    arms.push(Arm { name: "N0 constant gain", gain: Box::new(move |_| null_gain), plant: false, scale_noise: true,
-        stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
-    arms.push(Arm { name: "N1 constant, noise unscaled", gain: Box::new(move |_| null_gain), plant: false, scale_noise: false,
-        stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
+    arms.push(Arm {
+        name: "A0 shipped",
+        gain: Box::new(|_| 1.0),
+        plant: false,
+        scale_noise: true,
+        stats: FocusStats::new(geom),
+        out: vec![0.0; px],
+        best: vec![f32::NEG_INFINITY; px],
+    });
+    arms.push(Arm {
+        name: "A1 whole-frame gain",
+        gain: Box::new(move |k| gp[k]),
+        plant: false,
+        scale_noise: true,
+        stats: FocusStats::new(geom),
+        out: vec![0.0; px],
+        best: vec![f32::NEG_INFINITY; px],
+    });
+    arms.push(Arm {
+        name: "A2 background gain",
+        gain: Box::new(move |k| gb[k]),
+        plant: false,
+        scale_noise: true,
+        stats: FocusStats::new(geom),
+        out: vec![0.0; px],
+        best: vec![f32::NEG_INFINITY; px],
+    });
+    arms.push(Arm {
+        name: "P0 planted",
+        gain: Box::new(|_| 1.0),
+        plant: true,
+        scale_noise: true,
+        stats: FocusStats::new(geom),
+        out: vec![0.0; px],
+        best: vec![f32::NEG_INFINITY; px],
+    });
+    arms.push(Arm {
+        name: "P1 planted + corr",
+        gain: Box::new(move |k| gq[k]),
+        plant: true,
+        scale_noise: true,
+        stats: FocusStats::new(geom),
+        out: vec![0.0; px],
+        best: vec![f32::NEG_INFINITY; px],
+    });
+    arms.push(Arm {
+        name: "N0 constant gain",
+        gain: Box::new(move |_| null_gain),
+        plant: false,
+        scale_noise: true,
+        stats: FocusStats::new(geom),
+        out: vec![0.0; px],
+        best: vec![f32::NEG_INFINITY; px],
+    });
+    arms.push(Arm {
+        name: "N1 constant, noise unscaled",
+        gain: Box::new(move |_| null_gain),
+        plant: false,
+        scale_noise: false,
+        stats: FocusStats::new(geom),
+        out: vec![0.0; px],
+        best: vec![f32::NEG_INFINITY; px],
+    });
     // A3 and A4 isolate the orchestrator's election-bias mechanism. Scaling the
     // data *and* the noise model leaves focus = contrast/sigma exactly
     // invariant, which is why A1/A2 are election-neutral. These two arms scale
@@ -556,17 +636,37 @@ fn main() -> Result<()> {
     // shared noise model. A3 removes the deck's own drift that way; A4 injects
     // a known ramp that way, as the calibration.
     let gb3: Vec<f32> = map_bg.gains().to_vec();
-    arms.push(Arm { name: "A3 natural gain, noise unscaled", gain: Box::new(move |k| gb3[k]), plant: false, scale_noise: false,
-        stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
-    arms.push(Arm { name: "A4 planted ramp, noise unscaled", gain: Box::new(|_| 1.0), plant: true, scale_noise: false,
-        stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
+    arms.push(Arm {
+        name: "A3 natural gain, noise unscaled",
+        gain: Box::new(move |k| gb3[k]),
+        plant: false,
+        scale_noise: false,
+        stats: FocusStats::new(geom),
+        out: vec![0.0; px],
+        best: vec![f32::NEG_INFINITY; px],
+    });
+    arms.push(Arm {
+        name: "A4 planted ramp, noise unscaled",
+        gain: Box::new(|_| 1.0),
+        plant: true,
+        scale_noise: false,
+        stats: FocusStats::new(geom),
+        out: vec![0.0; px],
+        best: vec![f32::NEG_INFINITY; px],
+    });
 
     let t1 = std::time::Instant::now();
     let mut scaled = vec![0.0f32; px];
     let mut arm_seconds = vec![0.0f64; arms.len()];
     for (k, p) in paths.iter().enumerate() {
         let frame = strehl_raw::decode(p).with_context(|| format!("decoding {}", p.display()))?;
-        green_luma_with_clip(&frame, levels.black, CONTAINER_MAX_DN, &mut luma, &mut clipped);
+        green_luma_with_clip(
+            &frame,
+            levels.black,
+            CONTAINER_MAX_DN,
+            &mut luma,
+            &mut clipped,
+        );
         drop(frame);
         let src = PlaneRef::new(&luma, geom.width, geom.height).context("luma plane geometry")?;
         strehl_core::warpmap::gather_frame(&map, k, src, &mut warped, &mut cover)?;
@@ -600,7 +700,10 @@ fn main() -> Result<()> {
             arm_seconds[ai] += ta.elapsed().as_secs_f64();
         }
         if k % 50 == 0 {
-            println!("  pass 2: frame {k}/{n}  {:.1} s", t1.elapsed().as_secs_f64());
+            println!(
+                "  pass 2: frame {k}/{n}  {:.1} s",
+                t1.elapsed().as_secs_f64()
+            );
         }
     }
     let pass2 = t1.elapsed().as_secs_f64();
@@ -638,7 +741,11 @@ fn main() -> Result<()> {
         let moved = dk.len();
         dk.sort_unstable();
         let med = if moved == 0 { 0 } else { dk[moved / 2] };
-        let p95 = if moved == 0 { 0 } else { dk[(moved * 95) / 100] };
+        let p95 = if moved == 0 {
+            0
+        } else {
+            dk[(moved * 95) / 100]
+        };
         println!(
             "{:<30}{:>12}{:>11.2}%{:>12}{:>12}",
             arm.name,
@@ -662,19 +769,19 @@ fn main() -> Result<()> {
     println!(
         "\nNULL N0 (constant gain {null_gain}, noise model scaled)   : {} pixels re-elected  -> {}",
         null_moved[0],
-        if null_moved[0] == 0 { "PASS (exactly zero)" } else { "FAIL" }
+        if null_moved[0] == 0 {
+            "PASS (exactly zero)"
+        } else {
+            "FAIL"
+        }
     );
     println!(
         "NULL N1 (constant gain {null_gain}, noise model NOT scaled): {} pixels re-elected  ({:.3}% of covered)",
         null_moved[1],
         100.0 * null_moved[1] as f64 / covered as f64
     );
-    println!(
-        "  -> N1 is the cost of omitting `scale_noise_model`: a gain that carries"
-    );
-    println!(
-        "     no per-frame information still moves the election, because the read"
-    );
+    println!("  -> N1 is the cost of omitting `scale_noise_model`: a gain that carries");
+    println!("     no per-frame information still moves the election, because the read");
     println!("     floor (RN*g)^2 does not scale with the data.");
     if null_moved[0] != 0 {
         anyhow::bail!(
@@ -685,7 +792,10 @@ fn main() -> Result<()> {
 
     println!(
         "cost            : per-arm merge seconds {:?}  (A1 - A0 = {:+.2} s over {n} frames)",
-        arm_seconds.iter().map(|s| (s * 10.0).round() / 10.0).collect::<Vec<_>>(),
+        arm_seconds
+            .iter()
+            .map(|s| (s * 10.0).round() / 10.0)
+            .collect::<Vec<_>>(),
         arm_seconds[1] - arm_seconds[0]
     );
 
@@ -712,7 +822,13 @@ fn main() -> Result<()> {
     let t3 = std::time::Instant::now();
     for (k, p) in paths.iter().enumerate() {
         let frame = strehl_raw::decode(p).with_context(|| format!("decoding {}", p.display()))?;
-        green_luma_with_clip(&frame, levels.black, CONTAINER_MAX_DN, &mut luma, &mut clipped);
+        green_luma_with_clip(
+            &frame,
+            levels.black,
+            CONTAINER_MAX_DN,
+            &mut luma,
+            &mut clipped,
+        );
         drop(frame);
         let src = PlaneRef::new(&luma, geom.width, geom.height).context("luma plane geometry")?;
         strehl_core::warpmap::gather_frame(&map, k, src, &mut warped, &mut cover)?;
@@ -735,7 +851,10 @@ fn main() -> Result<()> {
             }
         }
         if k % 100 == 0 {
-            println!("  pass 3: frame {k}/{n}  {:.1} s", t3.elapsed().as_secs_f64());
+            println!(
+                "  pass 3: frame {k}/{n}  {:.1} s",
+                t3.elapsed().as_secs_f64()
+            );
         }
     }
     let disconnected: Vec<bool> = (0..px)
@@ -782,7 +901,8 @@ fn main() -> Result<()> {
     }
     for arm in arms.iter().skip(1) {
         let elect = arm.stats.best_index();
-        let (mut nd, mut rd, mut nc, mut rc, mut sd_, mut sc) = (0u64, 0u64, 0u64, 0u64, 0u64, 0u64);
+        let (mut nd, mut rd, mut nc, mut rc, mut sd_, mut sc) =
+            (0u64, 0u64, 0u64, 0u64, 0u64, 0u64);
         let (mut dkd, mut dkc) = (Vec::new(), Vec::new());
         for i in 0..px {
             if !decided[i] {
@@ -816,15 +936,27 @@ fn main() -> Result<()> {
         let overall = (rd + rc) as f64 / (nd + nc).max(1) as f64;
         dkd.sort_unstable();
         dkc.sort_unstable();
-        let md = if dkd.is_empty() { 0 } else { dkd[dkd.len() / 2] };
-        let mc = if dkc.is_empty() { 0 } else { dkc[dkc.len() / 2] };
+        let md = if dkd.is_empty() {
+            0
+        } else {
+            dkd[dkd.len() / 2]
+        };
+        let mc = if dkc.is_empty() {
+            0
+        } else {
+            dkc[dkc.len() / 2]
+        };
         println!(
             "{:<32}{:>9.3}%{:>9.3}%{:>9.2}x{:>11.2}x{:>7} / {:<4}",
             arm.name,
             100.0 * pd,
             100.0 * pc,
             if pc > 0.0 { pd / pc } else { f64::NAN },
-            if overall > 0.0 { ps / overall } else { f64::NAN },
+            if overall > 0.0 {
+                ps / overall
+            } else {
+                f64::NAN
+            },
             md,
             mc
         );
@@ -916,7 +1048,10 @@ fn main() -> Result<()> {
             "NO DEFECT DETECTABLE -- nothing for the correction to fix"
         }
     );
-    for (i, label) in [(1usize, "A1 whole-frame gain"), (2usize, "A2 background gain")] {
+    for (i, label) in [
+        (1usize, "A1 whole-frame gain"),
+        (2usize, "A2 background gain"),
+    ] {
         let s = if i == 1 { s_a1 } else { s_a2 };
         let b = if i == 1 { b_a1 } else { b_a2 };
         let sd_ok = summary[i].4 <= summary[0].4 * 1.02;

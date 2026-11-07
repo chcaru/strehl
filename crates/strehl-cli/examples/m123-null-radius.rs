@@ -51,8 +51,8 @@ use anyhow::{Context, Result, bail};
 use strehl_core::clip::CONTAINER_MAX_DN;
 use strehl_core::noise::NoiseModel;
 use strehl_core::outlier::{
-    DEFAULT_MIN_SHIFT_PX, Discriminator, Params, RESOLUTION_MARGIN, Scratch, TileGrid,
-    chi2_map, mask, mask_tiles, shift_tiles, thresholds,
+    DEFAULT_MIN_SHIFT_PX, Discriminator, Params, RESOLUTION_MARGIN, Scratch, TileGrid, chi2_map,
+    mask, mask_tiles, shift_tiles, thresholds,
 };
 use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma_with_clip};
 use strehl_core::profile;
@@ -65,14 +65,19 @@ const PAIRS: usize = 4;
 const RADII: [usize; 7] = [0, 1, 2, 3, 4, 6, 12];
 
 fn load(path: &Path) -> Result<(Vec<f32>, PlaneGeometry, NoiseModel)> {
-    let frame =
-        strehl_raw::decode(path).with_context(|| format!("decoding {}", path.display()))?;
+    let frame = strehl_raw::decode(path).with_context(|| format!("decoding {}", path.display()))?;
     let geom = frame.geometry();
     let levels = frame.levels;
     let noise = profile::noise_model_for(&frame.camera, frame.iso, levels);
     let mut luma = vec![0.0f32; geom.pixels()];
     let mut clipped = vec![false; geom.pixels()];
-    green_luma_with_clip(&frame, levels.black, CONTAINER_MAX_DN, &mut luma, &mut clipped);
+    green_luma_with_clip(
+        &frame,
+        levels.black,
+        CONTAINER_MAX_DN,
+        &mut luma,
+        &mut clipped,
+    );
     let (x0, y0) = ((geom.width - CROP) / 2, (geom.height - CROP) / 2);
     let mut out = vec![0.0f32; CROP * CROP];
     for row in 0..CROP {
@@ -109,12 +114,7 @@ fn stats(v: &[f32]) -> (f64, f64) {
     }
     let n = v.len() as f64;
     let m = v.iter().map(|x| f64::from(*x)).sum::<f64>() / n;
-    let sd = (v
-        .iter()
-        .map(|x| (f64::from(*x) - m).powi(2))
-        .sum::<f64>()
-        / (n - 1.0))
-        .sqrt();
+    let sd = (v.iter().map(|x| (f64::from(*x) - m).powi(2)).sum::<f64>() / (n - 1.0)).sqrt();
     (m, sd)
 }
 
@@ -191,7 +191,10 @@ fn main() -> Result<()> {
     }
 
     for (label, dir) in [
-        ("flat-null [PURE NOISE]", r"D:\personal\macro\flat-fields\flat-fields"),
+        (
+            "flat-null [PURE NOISE]",
+            r"D:\personal\macro\flat-fields\flat-fields",
+        ),
         ("109MSDCF [TRAP]", r"D:\personal\macro\109MSDCF"),
         ("foam [MOTION]", r"D:\personal\macro\foam"),
     ] {
@@ -218,7 +221,11 @@ fn main() -> Result<()> {
             } else {
                 Discriminator::LowFreq
             };
-            let m = if r == 0 { 1.0 } else { ((2 * r + 1) * (2 * r + 1)) as f64 };
+            let m = if r == 0 {
+                1.0
+            } else {
+                ((2 * r + 1) * (2 * r + 1)) as f64
+            };
             let params = Params {
                 tile: 32,
                 blur_radius: r,
@@ -384,7 +391,6 @@ fn main() -> Result<()> {
     }
     println!();
 
-
     //
     // A tile fires if motion touches ANY part of its 32x32 = 1024 pixels, so a
     // per-tile rate is an upper bound on a per-pixel rate. Fact 1189's 4.78% is
@@ -404,7 +410,11 @@ fn main() -> Result<()> {
     println!("{}", "-".repeat(70));
     for (label, dir, truth) in [
         ("109MSDCF", r"D:\personal\macro\109MSDCF", "STILL (trap)"),
-        ("coffee-bubbles", r"D:\personal\macro\coffee-bubbles", "MOVING"),
+        (
+            "coffee-bubbles",
+            r"D:\personal\macro\coffee-bubbles",
+            "MOVING",
+        ),
         ("foam", r"D:\personal\macro\foam", "MOVING 4.78%"),
     ] {
         let d = Path::new(dir);
@@ -447,4 +457,3 @@ fn main() -> Result<()> {
     println!("  proximity to fact 1189's 4.78% on foam is coincidence, not agreement.");
     Ok(())
 }
-

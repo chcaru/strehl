@@ -1,0 +1,6 @@
+{
+  "decoder_keys": {
+    "c6fa0bc876fd2934faedea72a6e545c8bc2e2d3a812650c4726716216f0ce5bd": 598
+  },
+  "scope": "Header census only; full source identity/payload verification remains in historical reader before use."
+}

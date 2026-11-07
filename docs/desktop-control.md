@@ -237,3 +237,17 @@ On normal completion the helper checks the PNG header, dimensions and final
 IEND chunk. Its screenshot command does not require `--session-file`.
 This is the SDR workspace rendering path; it does not validate native monitor HDR
 presentation. The normal interactive `--screenshot` option remains available.
+
+## Export an independent-view bundle
+
+An Independent views result keeps each photograph and focus map in its own coordinates. Open a completed result and choose **Export view bundle…** beside the view selector or in Export. Choose a fresh folder name. The app copies the bound photographs, linear masters, focus maps, original identity metadata and receipts. It preserves recorded original paths as provenance; it does not copy RAWs or developed edit versions. Selected-photograph export remains a separate action.
+
+The control command uses an explicitly shared destination parent and a fresh child name:
+
+```json
+{"operation":"export_view_bundle","grant_id":"folder-1","relative_parent":"exports","folder_name":"insect-views"}
+```
+
+Read `export_capabilities.view_bundle` in snapshots for availability, busy state and the last completed destination. A queued response is not completion. `cancel_view_bundle_export` requests cooperative cancellation. Cancelled or failed copies may leave an incomplete folder, but the root `completed.json` is published only after every copied binding verifies. Choose another fresh destination for a retry. Reopen the exported folder with `import_completed_session`; original capture access is not required. Focus ordinal/width/support maps are descriptive within each view, not metric depth or a relative camera pose.
+
+Use `select_session_output` with a zero-based `index` from the current session's output list to choose an aligned layer or independent view. The app rechecks the selected retained photograph/master/report hashes in the background, then saves the selected output in history. Poll `session.selection_busy` and `session.selected_output`; a queued response does not establish the switch. An invalid index, different saved directory or changed artifact refuses without changing the current photograph or saved recipe.

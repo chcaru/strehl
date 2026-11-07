@@ -1,0 +1,6 @@
+    Checking strehl-edit v0.1.0-alpha.6 (C:\Users\chris\.codex\worktrees\multi-stack\strehl\crates\strehl-edit)
+    Checking strehl-raw v0.1.0-alpha.6 (C:\Users\chris\.codex\worktrees\multi-stack\strehl\crates\strehl-raw)
+    Checking strehl-plugin v0.1.0-alpha.6 (C:\Users\chris\.codex\worktrees\multi-stack\strehl\crates\strehl-plugin)
+    Checking strehl-cli v0.1.0-alpha.6 (C:\Users\chris\.codex\worktrees\multi-stack\strehl\crates\strehl-cli)
+    Checking strehl-ui v0.1.0-alpha.6 (C:\Users\chris\.codex\worktrees\multi-stack\strehl\crates\strehl-ui)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 12.87s

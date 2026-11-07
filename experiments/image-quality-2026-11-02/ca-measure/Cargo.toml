@@ -1,0 +1,11 @@
+[package]
+name = "iq-ca-measure"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+strehl-core = { path = "../../../crates/strehl-core" }
+strehl-edit = { path = "../../../crates/strehl-edit" }
+
+[workspace]

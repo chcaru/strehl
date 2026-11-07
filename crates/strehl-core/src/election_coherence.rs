@@ -234,7 +234,10 @@ mod tests {
         let a = incoherence(&idx, geom(w, h));
         let b = incoherence(&idx, geom(w, h));
         assert_eq!(a, b);
-        assert!(a.iter().all(|&v| v < 1e-6), "a constant depth has no spread");
+        assert!(
+            a.iter().all(|&v| v < 1e-6),
+            "a constant depth has no spread"
+        );
     }
 
     #[test]

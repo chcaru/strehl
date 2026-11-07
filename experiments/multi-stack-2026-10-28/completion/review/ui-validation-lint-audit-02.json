@@ -1,0 +1,308 @@
+{
+  "baselines": [
+    "ef655050",
+    "c149e52834fc1c86c2af0fe022713c39fa25f33c"
+  ],
+  "reports": [
+    {
+      "name": "ui-strict-clippy-02",
+      "log_sha256": "f48d0ed6329c5ac4800f8b6e96d1695316b091cdfc2394c478f6ac1ead6cb5b6",
+      "raw_message_count": 11,
+      "unique_diagnostics": 7,
+      "counts": {
+        "new_or_changed_span": 6,
+        "unchanged_remote_main": 1
+      },
+      "build_finished": [
+        {
+          "reason": "build-finished",
+          "success": false
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": null,
+          "message": "hard linking files in the incremental compilation cache failed. copying files instead. consider moving the cache directory to a file system which supports hard linking in session dir `\\\\?\\C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\target\\debug\\incremental\\strehl_edit-38m7hqeck810y\\s-hnngxhepun-0ewf3hq-working`",
+          "level": "warning",
+          "occurrences": 1,
+          "spans": [],
+          "classification": "new_or_changed_span"
+        },
+        {
+          "code": "dead_code",
+          "message": "function `prepare` is never used",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-ui/src/photo-viewport.rs",
+              "line": 68,
+              "end": 68,
+              "column": 15,
+              "text": [
+                "pub(super) fn prepare("
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "9b82b00b7cfa4c704bfca108270cf66b56cb48afab55dd1fd735a93cebe8a368",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 68,
+                      "baseline_line": 67,
+                      "unchanged_block_lines": 12
+                    }
+                  ]
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": true,
+                  "current_sha256": "9b82b00b7cfa4c704bfca108270cf66b56cb48afab55dd1fd735a93cebe8a368",
+                  "unchanged_mappings": [
+                    {
+                      "current_line": 68,
+                      "baseline_line": 67,
+                      "unchanged_block_lines": 12
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "classification": "unchanged_remote_main"
+        },
+        {
+          "code": "clippy::collapsible_if",
+          "message": "this `if` statement can be collapsed",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-ui/src/app-session.rs",
+              "line": 316,
+              "end": 324,
+              "column": 9,
+              "text": [
+                "        if selected != self.result",
+                "            && let Some(path) = selected",
+                "        {",
+                "            if let Some(index) = self.session_ui.layers.iter().position(|p| p == &path)",
+                "                && let Err(error) = self.select_session_output(index)",
+                "            {",
+                "                self.error = Some(error.to_string());",
+                "            }",
+                "        }"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": true,
+                  "current_sha256": "57d579e579208b713f0cc95a3bd7da08597f690a5f7ec65efa8307989e3bffd5",
+                  "unchanged_mappings": []
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": false,
+                  "current_sha256": "57d579e579208b713f0cc95a3bd7da08597f690a5f7ec65efa8307989e3bffd5",
+                  "unchanged_mappings": []
+                }
+              }
+            }
+          ],
+          "classification": "new_or_changed_span"
+        },
+        {
+          "code": "clippy::too_many_arguments",
+          "message": "this function has too many arguments (8/7)",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-ui/src/session-diagnostics-data.rs",
+              "line": 99,
+              "end": 108,
+              "column": 1,
+              "text": [
+                "fn files(",
+                "    maps: &mut Vec<Map>,",
+                "    folder: &Path,",
+                "    report: &Value,",
+                "    label: &str,",
+                "    d: [u32; 2],",
+                "    extent: [f32; 2],",
+                "    scope: &str,",
+                "    repro: Option<Arc<Repro>>,",
+                ") -> Result<()> {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": false,
+                  "current_sha256": "bf7e50d6cd14433dffff63bc37fb6f869e09dc0c9e3b4afe53aa6d0eb752d1d7",
+                  "unchanged_mappings": []
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": false,
+                  "current_sha256": "bf7e50d6cd14433dffff63bc37fb6f869e09dc0c9e3b4afe53aa6d0eb752d1d7",
+                  "unchanged_mappings": []
+                }
+              }
+            }
+          ],
+          "classification": "new_or_changed_span"
+        },
+        {
+          "code": "clippy::manual_range_contains",
+          "message": "manual `RangeInclusive::contains` implementation",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-ui/src/session-diagnostics-data.rs",
+              "line": 547,
+              "end": 547,
+              "column": 51,
+              "text": [
+                "                Scale::Category | Scale::Flags => v >= 0.0 && v <= 16_777_216.0 && v.fract() == 0.0,"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": false,
+                  "current_sha256": "bf7e50d6cd14433dffff63bc37fb6f869e09dc0c9e3b4afe53aa6d0eb752d1d7",
+                  "unchanged_mappings": []
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": false,
+                  "current_sha256": "bf7e50d6cd14433dffff63bc37fb6f869e09dc0c9e3b4afe53aa6d0eb752d1d7",
+                  "unchanged_mappings": []
+                }
+              }
+            }
+          ],
+          "classification": "new_or_changed_span"
+        },
+        {
+          "code": "clippy::collapsible_if",
+          "message": "this `if` statement can be collapsed",
+          "level": "error",
+          "occurrences": 2,
+          "spans": [
+            {
+              "file": "crates/strehl-ui/src/session-diagnostics.rs",
+              "line": 361,
+              "end": 381,
+              "column": 13,
+              "text": [
+                "            if let Some(i) = self.probe {",
+                "                if let Some(&v) = loaded.values.get(i) {",
+                "                    let text = format!(\"{} \u00b7 {}\", map.name, map.value_label(v));",
+                "                    let box_rect = Rect::from_min_size(",
+                "                        clip.left_bottom() + egui::vec2(8.0, -26.0),",
+                "                        egui::vec2((clip.width() - 16.0).max(1.0), 22.0),",
+                "                    );",
+                "                    ui.painter().with_clip_rect(clip).rect_filled(",
+                "                        box_rect,",
+                "                        3.0,",
+                "                        Color32::from_black_alpha(190),",
+                "                    );",
+                "                    ui.painter().with_clip_rect(box_rect).text(",
+                "                        box_rect.left_center() + egui::vec2(5., 0.),",
+                "                        egui::Align2::LEFT_CENTER,",
+                "                        text,",
+                "                        egui::FontId::proportional(10.),",
+                "                        Color32::WHITE,",
+                "                    );",
+                "                }",
+                "            }"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": false,
+                  "current_sha256": "7ae52d59ba6070d990f721cded0fa57a95294cfe3554e3b2912886f31fd55ad1",
+                  "unchanged_mappings": []
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": false,
+                  "current_sha256": "7ae52d59ba6070d990f721cded0fa57a95294cfe3554e3b2912886f31fd55ad1",
+                  "unchanged_mappings": []
+                }
+              }
+            }
+          ],
+          "classification": "new_or_changed_span"
+        },
+        {
+          "code": "clippy::items_after_test_module",
+          "message": "items after a test module",
+          "level": "error",
+          "occurrences": 1,
+          "spans": [
+            {
+              "file": "crates/strehl-ui/src/session-diagnostics.rs",
+              "line": 547,
+              "end": 547,
+              "column": 1,
+              "text": [
+                "mod tests {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": false,
+                  "current_sha256": "7ae52d59ba6070d990f721cded0fa57a95294cfe3554e3b2912886f31fd55ad1",
+                  "unchanged_mappings": []
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": false,
+                  "current_sha256": "7ae52d59ba6070d990f721cded0fa57a95294cfe3554e3b2912886f31fd55ad1",
+                  "unchanged_mappings": []
+                }
+              }
+            },
+            {
+              "file": "crates/strehl-ui/src/session-diagnostics.rs",
+              "line": 748,
+              "end": 748,
+              "column": 1,
+              "text": [
+                "pub(crate) struct ImportArtifact {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": false,
+                  "current_sha256": "7ae52d59ba6070d990f721cded0fa57a95294cfe3554e3b2912886f31fd55ad1",
+                  "unchanged_mappings": []
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": false,
+                  "current_sha256": "7ae52d59ba6070d990f721cded0fa57a95294cfe3554e3b2912886f31fd55ad1",
+                  "unchanged_mappings": []
+                }
+              }
+            },
+            {
+              "file": "crates/strehl-ui/src/session-diagnostics.rs",
+              "line": 753,
+              "end": 756,
+              "column": 1,
+              "text": [
+                "pub(crate) fn import_artifacts(",
+                "    output: &Path,",
+                "    warnings: &mut Vec<String>,",
+                ") -> anyhow::Result<Vec<ImportArtifact>> {"
+              ],
+              "evidence": {
+                "ef655050": {
+                  "exists": false,
+                  "current_sha256": "7ae52d59ba6070d990f721cded0fa57a95294cfe3554e3b2912886f31fd55ad1",
+                  "unchanged_mappings": []
+                },
+                "c149e52834fc1c86c2af0fe022713c39fa25f33c": {
+                  "exists": false,
+                  "current_sha256": "7ae52d59ba6070d990f721cded0fa57a95294cfe3554e3b2912886f31fd55ad1",
+                  "unchanged_mappings": []
+                }
+              }
+            }
+          ],
+          "classification": "new_or_changed_span"
+        }
+      ]
+    }
+  ]
+}

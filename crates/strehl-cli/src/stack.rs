@@ -45,7 +45,8 @@ use strehl_core::stack::{Selection, speckle_fraction};
 use strehl_core::{CfaPlane, Error};
 use strehl_raw::Frame;
 
-use crate::image_out;/// Working-set ceiling used to size the worker pool. SYNTHESIS §3.2 ratchets
+use crate::image_out;
+/// Working-set ceiling used to size the worker pool. SYNTHESIS §3.2 ratchets
 /// peak RSS at 8 GB independent of frame count; this leaves headroom for the
 /// decoder's own scratch and the output buffers.
 ///
@@ -971,8 +972,9 @@ pub(crate) fn defect_preflight(
 
     let raw_map = match req {
         DefectRequest::Off => unreachable!("handled above"),
-        DefectRequest::Sidecar(p) => DefectMap::load(p)
-            .with_context(|| format!("loading the defect map {}", p.display()))?,
+        DefectRequest::Sidecar(p) => {
+            DefectMap::load(p).with_context(|| format!("loading the defect map {}", p.display()))?
+        }
         DefectRequest::Embedded => match DefectMap::embedded_for(&first.camera) {
             Some(m) => m,
             None => {
@@ -1014,12 +1016,8 @@ pub(crate) fn defect_preflight(
         first.active.width,
         first.active.height,
     );
-    let (q, qw, qh) = strehl_core::defect_map::quad_mean(
-        &first.data,
-        first.stride,
-        active,
-        first.levels.black,
-    );
+    let (q, qw, qh) =
+        strehl_core::defect_map::quad_mean(&first.data, first.stride, active, first.levels.black);
     validator.observe(&q, qw, qh);
     drop(first);
     for &i in &idx[1..] {
@@ -1661,9 +1659,7 @@ fn write_outputs(
             color::AUTO_EXPOSURE_PERCENTILE,
             color::AUTO_EXPOSURE_TARGET
         );
-        eprintln!(
-            "                  To deviate deliberately from that rendering, use --exposure."
-        );
+        eprintln!("                  To deviate deliberately from that rendering, use --exposure.");
     }
     if !applied.is_identity() {
         eprintln!("exposure        : {applied}, as asked");
@@ -1728,9 +1724,7 @@ fn write_outputs(
         eprintln!(
             "                  Full sensor resolution, matching `stack --srgb` so the two are"
         );
-        eprintln!(
-            "                  comparable. Interpolated -- do not measure resolution on it."
-        );
+        eprintln!("                  comparable. Interpolated -- do not measure resolution on it.");
     } else if let Some(m) = matrix {
         let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain * eg / range;
         let mut lin = vec![0.0f32; n * 3];

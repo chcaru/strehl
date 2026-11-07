@@ -122,6 +122,9 @@ impl AdaptiveSuggestion {
                         presence: (previous.parameters.presence * old_weight
                             + next.parameters.presence * new_weight)
                             / denominator,
+                        glint_compression: (previous.parameters.glint_compression * old_weight
+                            + next.parameters.glint_compression * new_weight)
+                            / denominator,
                     };
                     if previous.version == 2 && field.version == 1 {
                         field.version = 2;

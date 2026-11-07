@@ -204,7 +204,10 @@ fn controlled_environment() -> Result<BTreeMap<String, String>> {
 fn controlled_environment_for(m194d: bool) -> Result<BTreeMap<String, String>> {
     controlled_environment_configured(m194d, false)
 }
-fn controlled_environment_configured(m194d: bool, direct: bool) -> Result<BTreeMap<String, String>> {
+fn controlled_environment_configured(
+    m194d: bool,
+    direct: bool,
+) -> Result<BTreeMap<String, String>> {
     let diagnostic = std::env::var(format!("{PREFIX}DIAGNOSTIC")).ok();
     ensure!(
         diagnostic
@@ -243,7 +246,9 @@ fn controlled_environment_configured(m194d: bool, direct: bool) -> Result<BTreeM
             ensure!(
                 key.starts_with(PREFIX)
                     || (m194d && key == "STREHL_M194D_ADMISSION")
-                    || (direct && cfg!(feature = "native-direct-planes") && key == "STREHL_DIRECT_PLANES")
+                    || (direct
+                        && cfg!(feature = "native-direct-planes")
+                        && key == "STREHL_DIRECT_PLANES")
                     || key == "STREHL_BUILD_ID"
                     || (white_floor_diagnostic && key == gatefloor::GATE_FLOOR_ENV)
                     || required.iter().any(|(k, _)| key == *k),
@@ -498,9 +503,15 @@ fn options(out: PathBuf) -> MergeOptions {
         backend: MergeBackend::Pyramid,
         cover: align_cmd::CoverMode::Crop,
         cover_source: SettingSource::Flag,
+        // The benchmark's registered merge predates the ensemble gate, pooled
+        // evidence and the weighted base; pin it so its arms stay comparable.
         pyramid: MergeConfig {
             bands: 3,
             gate: 2.0,
+            ensemble: false,
+            pooled_evidence: false,
+            exponent: 2.0,
+            base: strehl_core::pyramid::BaseBand::Mean,
             ..MergeConfig::default()
         },
     }
@@ -590,8 +601,15 @@ struct FileSource<'a> {
 }
 impl PyramidFrameSource for FileSource<'_> {
     #[cfg(feature = "native-direct-planes")]
-    fn observe_direct_inputs(&self, index: usize, planes: &[Vec<f32>], luma: &[f32], beta: Option<&[f32]>) -> Result<()> {
-        self.direct_trace.inputs(self.indices[index], planes, luma, beta)
+    fn observe_direct_inputs(
+        &self,
+        index: usize,
+        planes: &[Vec<f32>],
+        luma: &[f32],
+        beta: Option<&[f32]>,
+    ) -> Result<()> {
+        self.direct_trace
+            .inputs(self.indices[index], planes, luma, beta)
     }
     #[cfg(feature = "native-direct-planes")]
     fn observe_direct_collapsed(&self, planes: &[Vec<f32>]) -> Result<()> {
@@ -683,7 +701,10 @@ fn m194b_boundary_radiance_no_treatment_consumer() -> Result<()> {
 
 #[cfg(feature = "native-direct-planes")]
 mod direct_planes_bridge {
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-direct-planes/bridge.rs"));
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-direct-planes/bridge.rs"
+    ));
 }
 #[cfg(feature = "native-direct-planes")]
 #[test]
@@ -691,19 +712,34 @@ mod direct_planes_bridge {
 fn m194b_direct_planes_consumer() -> Result<()> {
     run_known_scene_consumer_modes(None, false, true)
 }
-fn run_known_scene_consumer_configured(admission: Option<AdmissionMode>, boundary_no_treatment: bool) -> Result<()> {
+fn run_known_scene_consumer_configured(
+    admission: Option<AdmissionMode>,
+    boundary_no_treatment: bool,
+) -> Result<()> {
     run_known_scene_consumer_modes(admission, boundary_no_treatment, false)
 }
-fn run_known_scene_consumer_modes(admission: Option<AdmissionMode>, boundary_no_treatment: bool, direct_experiment: bool) -> Result<()> {
+fn run_known_scene_consumer_modes(
+    admission: Option<AdmissionMode>,
+    boundary_no_treatment: bool,
+    direct_experiment: bool,
+) -> Result<()> {
     #[cfg(not(feature = "native-direct-planes"))]
     ensure!(!direct_experiment, "direct-plane feature is disabled");
     #[cfg(feature = "native-direct-planes")]
     let direct = if direct_experiment {
-        ensure!(admission.is_none() && !boundary_no_treatment, "direct bridge cannot combine other candidates");
+        ensure!(
+            admission.is_none() && !boundary_no_treatment,
+            "direct bridge cannot combine other candidates"
+        );
         Some(direct_planes_bridge::Configuration::load()?)
-    } else { None };
+    } else {
+        None
+    };
     #[cfg(not(feature = "native-boundary-radiance"))]
-    ensure!(!boundary_no_treatment, "boundary radiance feature is disabled");
+    ensure!(
+        !boundary_no_treatment,
+        "boundary radiance feature is disabled"
+    );
     if let Some(mode) = admission {
         let expected = match mode {
             AdmissionMode::HardFloor => "hard-floor",
@@ -729,13 +765,17 @@ fn run_known_scene_consumer_modes(admission: Option<AdmissionMode>, boundary_no_
         prepare(&inputs, &environment)?
     };
     if boundary_no_treatment {
-        ensure!(inputs.manifest.scene == "color" && !inputs.manifest.noise_enabled,
-            "boundary no-treatment control requires the existing genuine colour fixture");
+        ensure!(
+            inputs.manifest.scene == "color" && !inputs.manifest.noise_enabled,
+            "boundary no-treatment control requires the existing genuine colour fixture"
+        );
         plan["schema"] = json!("native-boundary-radiance-colour-no-treatment-plan-v1");
         plan["boundary_radiance"] = json!("explicit no-treatment; M194g geometry unsupported");
     }
     #[cfg(feature = "native-direct-planes")]
-    if let Some(config) = &direct { config.bind(&inputs, &mut plan)?; }
+    if let Some(config) = &direct {
+        config.bind(&inputs, &mut plan)?;
+    }
     let plan_path = PathBuf::from(env("PLAN")?);
     let mode = env("MODE")?;
     if mode == "plan" {
@@ -782,11 +822,13 @@ fn run_known_scene_consumer_modes(admission: Option<AdmissionMode>, boundary_no_
         calls: indices.iter().map(|_| AtomicUsize::new(0)).collect(),
         indices: indices.clone(),
         #[cfg(feature = "native-direct-planes")]
-        direct_trace: direct_planes_bridge::Trace::new(direct.as_ref().is_some_and(|c|c.observer)),
+        direct_trace: direct_planes_bridge::Trace::new(direct.as_ref().is_some_and(|c| c.observer)),
     };
     #[cfg(feature = "native-boundary-radiance")]
-    let configured_source = native_boundary_radiance::ConfiguredSource::optional(&source,
-        boundary_no_treatment.then_some(native_boundary_radiance::Configuration::NoTreatment));
+    let configured_source = native_boundary_radiance::ConfiguredSource::optional(
+        &source,
+        boundary_no_treatment.then_some(native_boundary_radiance::Configuration::NoTreatment),
+    );
     #[cfg(feature = "native-boundary-radiance")]
     let consumer_source = &configured_source;
     #[cfg(not(feature = "native-boundary-radiance"))]
@@ -794,7 +836,7 @@ fn run_known_scene_consumer_modes(admission: Option<AdmissionMode>, boundary_no_
     let local = domain.analysis();
     #[cfg(feature = "native-direct-planes")]
     let direct_before = {
-        align_cmd::direct_plane_observer(direct.as_ref().is_some_and(|c|c.observer));
+        align_cmd::direct_plane_observer(direct.as_ref().is_some_and(|c| c.observer));
         align_cmd::direct_plane_hits()
     };
     run_pyramid_prepared(
@@ -869,7 +911,8 @@ fn run_known_scene_consumer_modes(admission: Option<AdmissionMode>, boundary_no_
     #[cfg(feature = "native-direct-planes")]
     if let Some(config) = &direct {
         result["direct_planes_mode"] = json!(config.label);
-        result["direct_planes_evidence"] = source.direct_trace.receipt(config, direct_before, domain)?;
+        result["direct_planes_evidence"] =
+            source.direct_trace.receipt(config, direct_before, domain)?;
     }
     write_json_new(&receipt, &result)?;
     Ok(())

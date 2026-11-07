@@ -1,0 +1,23 @@
+# Reconstruction checkpoint after core promotion
+
+VERIFIED: `cargo test --locked -p strehl-core --lib reconstruction:: -- --test-threads=4` rebuilt the core library and passed42 controls, including the64-node direct graph, actual-CFA affine variance guard with native variance explicitly unknown, and the coherent hull/fallback mixture control. The exact command, timestamps and exit0 are in `outputs/multi-stack/completion/core-reconstruction-controls-03`. Other root-coordinated lanes may have been active; this is not a performance measurement. A subsequent private Estimate diagnostic-field removal changes no arithmetic and still requires the next fresh build.
+
+The flat mixture control deliberately uses a test-only variance ratio100 to expose both hull admission branches under one-sided support. It uses128 independent antithetic seed pairs at each of three physical origins, evaluates the actual original-CFA core, and retains the flat native RGB triple whenever any color refuses. It requires both delivered arms, actual hull refusals, mean within0.03DN of256, and at most3 antithetic admission asymmetries. This checks a symmetric flat null; it does not establish unconditional variance or absence of edge-selection bias. The reported h-squared-v remains pre-admission conditional variance. The production default same-sample positive-kernel variance ratio remains1.25.
+
+## Low-signal instrument failure retained
+
+MEASURED synthetic commissioning at ROI02 camera-DN means [182.80623,564.7222,213.28857], with the injected calibrated gain0.22893773DN/e and read noise4.2e, failed the accurate-placement assertion. The unchanged0.15sensor maximum-held-tile rule admitted R0/G10/B1 of12 known-accurate measured-trajectory pairs. Maximum errors were [0.35342665,0.16391660,0.30602355]sensor. The wrong-placement foil passed. Exact failing command/exit101 remain in `sr-matched-signal-controls-01`; the flat model control passed first in `sr-matched-signal-flat-01`.
+
+The earlier high-signal geometric alias control passed but is not sufficient at this photon level. A maximum of noisy subpixel NCC estimates is an instrument statistic, not a calibrated bound on true consuming placement. Accordingly the real insect refusal cannot be interpreted as demonstrated physical placement error. The registered commissioning example intentionally still exposes its failed positive; it has not been ignored or relaxed.
+
+The saved-focus-only preselection also found no completely qualified8x8quad patch for any of the24 insect pairs, before geometry/search halo. The cross-pass intersection has495quad pixels but the largest connected component contains only23. These results bind the sealed focus evidence and do not inspect candidate pixels or select by geometric residual. They do not justify masking residual outliers or widening the threshold.
+
+## Production caller review
+
+ARGUED from source review: the initial caller preserves exact full-guide gauge, binds each pair to original acquisitions and input pulls, requests direct-anchor/triangle evidence, consumes returned per-color pulls, requires coherentRGB admission and at least3 independently admitted sources, and copies native cameraRGB unchanged on refusal. Window-fit checks use the same physical CFA-site conversion and full center as the registered pair builder. Skipped out-of-active pairs are explicit; other errors are not swallowed.
+
+Limitations: local geometry currently spans384sensor pixels without pairwise focus masks; local corrections are not yet returned. If a future certificate returns refined pulls, motion-guide gathering must consume them too (currently saved and returned pulls are identical). The low-signal failed commissioning remains material to evidence interpretation. An independent review and complete photographic output remain necessary.
+
+## Bounded guide sampling
+
+The initial caller's NativeSampler scanned all four full source planes for each small tile. New unregistered `session-reconstruction-sampling.rs` instead computes the source bounding rectangle of each affine CFA-site pull, expands by four original plane pixels, then stores one original unaligned f32/color rectangle plus its clip mask. It calls the existing core sampler and clipping footprint; no new interpolation recipe or aligned source volume is introduced. Integer crop offsets retain phases and the full geometry remains the warp center. Budget preflight precedes source access. The pending five controls compare all output/mask bits to NativeSampler, including every resampler, active-origin poison, clipping, tiny planes, boundaries, optics and distant fractional coordinates. Source inspection is not yet test evidence.

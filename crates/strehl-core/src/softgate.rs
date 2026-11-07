@@ -422,12 +422,17 @@ mod tests {
         let seam: Vec<f32> = (0..8).map(|k| 1.0 - (k as f32) * 0.06 * tol).collect();
         // Texture: one clear winner, the rest beyond two tolerances.
         let texture: Vec<f32> = (0..8)
-            .map(|k| if k == 0 { 1.0 } else { 1.0 - (2.0 + k as f32) * tol })
+            .map(|k| {
+                if k == 0 {
+                    1.0
+                } else {
+                    1.0 - (2.0 + k as f32) * tol
+                }
+            })
             .collect();
 
-        let count = |rs: &[f32], best: f32| {
-            rs.iter().filter(|r| hard.admits(**r, best)).count() as f32
-        };
+        let count =
+            |rs: &[f32], best: f32| rs.iter().filter(|r| hard.admits(**r, best)).count() as f32;
         let soft_n = |rs: &[f32], best: f32| {
             n_eff(&rs.iter().map(|r| soft.weight(*r, best)).collect::<Vec<_>>())
         };
@@ -561,7 +566,12 @@ mod tests {
 
         // No finite response: no posterior, rather than a uniform one.
         let none = g.posterior(&[f32::NAN, f32::NAN]);
-        approx(none.iter().sum::<f32>(), 0.0, 1e-7, "all-NaN posterior mass");
+        approx(
+            none.iter().sum::<f32>(),
+            0.0,
+            1e-7,
+            "all-NaN posterior mass",
+        );
     }
 
     #[test]

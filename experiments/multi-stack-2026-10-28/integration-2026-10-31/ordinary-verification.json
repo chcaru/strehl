@@ -1,0 +1,69 @@
+{
+  "schema": "strehl.tryout-ordinary-verification.v1",
+  "executable_sha256": "0458141bfacb444b2397373b797dfdb01d3f75f720742522ea56f6d68e51441a",
+  "command": [
+    "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\strehl-multi-stack-2026-10-31\\strehl-cli.exe",
+    "stack",
+    "D:/personal/macro/insects/bug-3/106MSDCF",
+    "--merge",
+    "pyramid",
+    "--srgb",
+    "--out",
+    "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\ordinary\\photograph.tiff",
+    "--linear-master",
+    "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\ordinary\\master.tiff",
+    "--sensor-master",
+    "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\ordinary\\sensor.tiff"
+  ],
+  "environment": {
+    "STREHL_WARPMAP": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\ordinary\\warpmap.txt",
+    "STREHL_CACHE_DIR": "outputs/multi-stack/completion/ordinary-regression-16/cache",
+    "RAYON_NUM_THREADS": "16",
+    "STREHL_BAND_WORKERS": "16",
+    "STREHL_PYRAMID_WORKERS": "16"
+  },
+  "comparisons": [
+    {
+      "left": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\ordinary\\photograph.tiff",
+      "right": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\completion\\ordinary-regression-16\\photograph.tiff",
+      "shape": [
+        4688,
+        7032,
+        3
+      ],
+      "dtype": "uint16",
+      "pixel_bits_equal": true,
+      "left_sha256": "6f9d196755b5cb52338c6879ab6db9bfa262d901b3497be5edd46a6c68ed7b31",
+      "right_sha256": "87cee6a948bb498303a428198b8065be81f8d194e72f17370679fcbbda00363c",
+      "pixel_sha256": "2e353fa03df12fdc53422ef060175c48f929fefbb00cf5363ea9aac09cf6be58"
+    },
+    {
+      "left": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\ordinary\\master.tiff",
+      "right": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\completion\\ordinary-regression-16\\master.tiff",
+      "shape": [
+        4688,
+        7032,
+        3
+      ],
+      "dtype": "float32",
+      "pixel_bits_equal": true,
+      "left_sha256": "b97188c458778aa058257207868b530e7fcd8a38528b6d3e340e7bf229b142a5",
+      "right_sha256": "b97188c458778aa058257207868b530e7fcd8a38528b6d3e340e7bf229b142a5",
+      "pixel_sha256": "8625ab8da5b2461edfc5f5bc8149a478dbc22f04144b1d371d7ec8509f5a4aff"
+    },
+    {
+      "left": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\ordinary\\sensor.tiff",
+      "right": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\completion\\ordinary-regression-16\\sensor.tiff",
+      "shape": [
+        4688,
+        7032
+      ],
+      "dtype": "float32",
+      "pixel_bits_equal": true,
+      "left_sha256": "a9712c7b03b90e87d1a2b3695f8d1287c3c8d62e8018e3921988219adefa86b9",
+      "right_sha256": "a9712c7b03b90e87d1a2b3695f8d1287c3c8d62e8018e3921988219adefa86b9",
+      "pixel_sha256": "1ca956ec53839b9708b0afbe740704a2f628d5805ebf92602c415233ca6b1c83"
+    }
+  ],
+  "scope": "Complete 299-source pixels match product16, whose complete pixels matched the original baseline."
+}

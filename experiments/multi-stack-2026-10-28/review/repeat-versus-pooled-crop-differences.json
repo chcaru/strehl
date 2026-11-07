@@ -1,0 +1,265 @@
+{
+  "qualification": "Same verified warpmap/canvas and display. Code deltas describe differences, not photographic quality or temporal noise. Only nine frozen native crops measured here.",
+  "rows": [
+    {
+      "name": "dark-flat-background",
+      "different_rgb8_channels": 133496,
+      "max_abs_rgb8_code_difference": 16,
+      "mean_abs_rgb8_code_difference": 0.3883373119212963
+    },
+    {
+      "name": "cyan-wing-scales",
+      "different_rgb8_channels": 7082,
+      "max_abs_rgb8_code_difference": 26,
+      "mean_abs_rgb8_code_difference": 0.025110315393518517
+    },
+    {
+      "name": "dark-wing-band",
+      "different_rgb8_channels": 22410,
+      "max_abs_rgb8_code_difference": 20,
+      "mean_abs_rgb8_code_difference": 0.06909405743634259
+    },
+    {
+      "name": "upper-leg-hairs",
+      "different_rgb8_channels": 11116,
+      "max_abs_rgb8_code_difference": 22,
+      "mean_abs_rgb8_code_difference": 0.04317446108217592
+    },
+    {
+      "name": "wing-leg-occlusion",
+      "different_rgb8_channels": 26466,
+      "max_abs_rgb8_code_difference": 17,
+      "mean_abs_rgb8_code_difference": 0.08894630714699074
+    },
+    {
+      "name": "bright-wing-glint",
+      "different_rgb8_channels": 6753,
+      "max_abs_rgb8_code_difference": 25,
+      "mean_abs_rgb8_code_difference": 0.021416558159722224
+    },
+    {
+      "name": "blue-cyan-chroma",
+      "different_rgb8_channels": 59248,
+      "max_abs_rgb8_code_difference": 25,
+      "mean_abs_rgb8_code_difference": 0.2135326244212963
+    },
+    {
+      "name": "face-edge",
+      "different_rgb8_channels": 14524,
+      "max_abs_rgb8_code_difference": 18,
+      "mean_abs_rgb8_code_difference": 0.047810872395833336
+    },
+    {
+      "name": "antenna-hairs",
+      "different_rgb8_channels": 14276,
+      "max_abs_rgb8_code_difference": 23,
+      "mean_abs_rgb8_code_difference": 0.05232069227430555
+    }
+  ],
+  "render_report_summary": {
+    "insect-repeat-4": {
+      "groups": 480,
+      "mode": "repeat",
+      "primary_pass": null,
+      "canvas": [
+        38,
+        26,
+        3440,
+        2292
+      ],
+      "diagnostics": [
+        {
+          "averaged": 889604344,
+          "independent_counts": {
+            "2": 889604344
+          },
+          "ordinary_fallback": 40130780,
+          "primary_fallback": 0,
+          "primary_saturated_fallback": 0,
+          "saturated_fallback": 0,
+          "single_source": 2853717213,
+          "uncovered": 1098063
+        },
+        {
+          "averaged": 203380973,
+          "independent_counts": {
+            "2": 203380973
+          },
+          "ordinary_fallback": 28689980,
+          "primary_fallback": 0,
+          "primary_saturated_fallback": 0,
+          "saturated_fallback": 0,
+          "single_source": 713089920,
+          "uncovered": 976727
+        },
+        {
+          "averaged": 39837278,
+          "independent_counts": {
+            "2": 39837278
+          },
+          "ordinary_fallback": 17953325,
+          "primary_fallback": 0,
+          "primary_saturated_fallback": 0,
+          "saturated_fallback": 0,
+          "single_source": 177967828,
+          "uncovered": 775969
+        },
+        {
+          "averaged": 7933122,
+          "independent_counts": {
+            "2": 7933122
+          },
+          "ordinary_fallback": 6415127,
+          "primary_fallback": 0,
+          "primary_saturated_fallback": 0,
+          "saturated_fallback": 0,
+          "single_source": 44364735,
+          "uncovered": 523816
+        },
+        {
+          "averaged": 1631294,
+          "independent_counts": {
+            "2": 1631294
+          },
+          "ordinary_fallback": 1893153,
+          "primary_fallback": 0,
+          "primary_saturated_fallback": 0,
+          "saturated_fallback": 0,
+          "single_source": 10999723,
+          "uncovered": 336630
+        },
+        {
+          "averaged": 250122,
+          "independent_counts": {
+            "2": 250122
+          },
+          "ordinary_fallback": 588571,
+          "primary_fallback": 0,
+          "primary_saturated_fallback": 0,
+          "saturated_fallback": 0,
+          "single_source": 2678708,
+          "uncovered": 215079
+        },
+        {
+          "averaged": 5270,
+          "independent_counts": {
+            "2": 5270
+          },
+          "ordinary_fallback": 177035,
+          "primary_fallback": 0,
+          "primary_saturated_fallback": 0,
+          "saturated_fallback": 0,
+          "single_source": 615232,
+          "uncovered": 135583
+        },
+        {
+          "averaged": 0,
+          "independent_counts": {},
+          "ordinary_fallback": 49377,
+          "primary_fallback": 0,
+          "primary_saturated_fallback": 0,
+          "saturated_fallback": 0,
+          "single_source": 161437,
+          "uncovered": 22466
+        }
+      ],
+      "frames": 598,
+      "proposed_groups": 480
+    },
+    "insect-pooled-4": {
+      "groups": 598,
+      "mode": "repeat",
+      "primary_pass": null,
+      "canvas": [
+        38,
+        26,
+        3440,
+        2292
+      ],
+      "diagnostics": [
+        {
+          "averaged": 0,
+          "independent_counts": {},
+          "ordinary_fallback": 0,
+          "primary_fallback": 0,
+          "primary_saturated_fallback": 0,
+          "saturated_fallback": 0,
+          "single_source": 4713187461,
+          "uncovered": 1731579
+        },
+        {
+          "averaged": 0,
+          "independent_counts": {},
+          "ordinary_fallback": 0,
+          "primary_fallback": 0,
+          "primary_saturated_fallback": 0,
+          "saturated_fallback": 0,
+          "single_source": 1177231826,
+          "uncovered": 1497934
+        },
+        {
+          "averaged": 0,
+          "independent_counts": {},
+          "ordinary_fallback": 0,
+          "primary_fallback": 0,
+          "primary_saturated_fallback": 0,
+          "saturated_fallback": 0,
+          "single_source": 293549034,
+          "uncovered": 1133406
+        },
+        {
+          "averaged": 0,
+          "independent_counts": {},
+          "ordinary_fallback": 0,
+          "primary_fallback": 0,
+          "primary_saturated_fallback": 0,
+          "saturated_fallback": 0,
+          "single_source": 73061233,
+          "uncovered": 737947
+        },
+        {
+          "averaged": 0,
+          "independent_counts": {},
+          "ordinary_fallback": 0,
+          "primary_fallback": 0,
+          "primary_saturated_fallback": 0,
+          "saturated_fallback": 0,
+          "single_source": 18048617,
+          "uncovered": 465463
+        },
+        {
+          "averaged": 0,
+          "independent_counts": {},
+          "ordinary_fallback": 0,
+          "primary_fallback": 0,
+          "primary_saturated_fallback": 0,
+          "saturated_fallback": 0,
+          "single_source": 4356094,
+          "uncovered": 293954
+        },
+        {
+          "averaged": 0,
+          "independent_counts": {},
+          "ordinary_fallback": 0,
+          "primary_fallback": 0,
+          "primary_saturated_fallback": 0,
+          "saturated_fallback": 0,
+          "single_source": 979842,
+          "uncovered": 182670
+        },
+        {
+          "averaged": 0,
+          "independent_counts": {},
+          "ordinary_fallback": 0,
+          "primary_fallback": 0,
+          "primary_saturated_fallback": 0,
+          "saturated_fallback": 0,
+          "single_source": 260191,
+          "uncovered": 30437
+        }
+      ],
+      "frames": 598,
+      "proposed_groups": 598
+    }
+  }
+}

@@ -167,7 +167,11 @@ fn tap(r: Resampler, t: f64) -> f64 {
             unreachable!("nonlinear kernels must be refused before tap evaluation")
         }
         Resampler::Lanczos2 | Resampler::Lanczos3 => {
-            let n = if matches!(r, Resampler::Lanczos2) { 2.0 } else { 3.0 };
+            let n = if matches!(r, Resampler::Lanczos2) {
+                2.0
+            } else {
+                3.0
+            };
             if a >= n {
                 0.0
             } else if a < 1e-12 {
@@ -710,7 +714,9 @@ pub fn selftest() -> Result<(), String> {
     ] {
         let m0 = gather_mtf(r, 0.0);
         if (m0 - 1.0).abs() > 1e-9 {
-            return Err(format!("{r:?}: M(0) = {m0}, must be 1 (a gather preserves DC)"));
+            return Err(format!(
+                "{r:?}: M(0) = {m0}, must be 1 (a gather preserves DC)"
+            ));
         }
         // At phase 0 an interpolating kernel is the Kronecker delta, so a
         // gather at integer offsets is the identity and cannot attenuate.
@@ -811,7 +817,11 @@ mod tests {
         let mut p: Vec<f32> = (0..w * h)
             .map(|i| {
                 let (x, y) = (i % w, i / w);
-                if (x + y) % 2 == 0 { mid + amp } else { mid - amp }
+                if (x + y) % 2 == 0 {
+                    mid + amp
+                } else {
+                    mid - amp
+                }
             })
             .collect();
         let cfg = RestoreConfig {
@@ -1154,7 +1164,10 @@ mod tests {
         };
         let mut out = img.clone();
         restore_plane(&mut out, 64, 64, &cfg);
-        assert_eq!(out, img, "gain_cap 1.0 must be the identity, not merely close");
+        assert_eq!(
+            out, img,
+            "gain_cap 1.0 must be the identity, not merely close"
+        );
     }
 
     #[test]

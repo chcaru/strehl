@@ -1,0 +1,23 @@
+{
+  "renderer_bound_import": true,
+  "diagnostic_warnings": [],
+  "persisted_reopen": true,
+  "owned_headless_exit": 0,
+  "completed_output_grant_only": true,
+  "actual_gpu_screenshot": {
+    "data": {
+      "png": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\ui\\reopened.png",
+      "log_file": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\integration-2026-10-31\\ui\\reopened.png.log",
+      "pid": 12608,
+      "exit_code": 0,
+      "state": "screenshot_saved",
+      "size": [
+        1440,
+        940
+      ],
+      "byte_length": 824098
+    }
+  },
+  "visual_review_required": true,
+  "scope": "Product import/reopen and rendering, not a new photographic-quality conclusion."
+}

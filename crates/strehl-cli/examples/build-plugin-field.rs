@@ -63,7 +63,13 @@ fn load(path: &Path) -> Result<(Vec<f32>, PlaneGeometry, NoiseModel, Option<f32>
     let noise = profile::noise_model_for(&frame.camera, frame.iso, levels);
     let mut luma = vec![0.0f32; geom.pixels()];
     let mut clipped = vec![false; geom.pixels()];
-    green_luma_with_clip(&frame, levels.black, CONTAINER_MAX_DN, &mut luma, &mut clipped);
+    green_luma_with_clip(
+        &frame,
+        levels.black,
+        CONTAINER_MAX_DN,
+        &mut luma,
+        &mut clipped,
+    );
     Ok((luma, geom, noise, frame.iso))
 }
 
@@ -120,7 +126,9 @@ fn main() -> Result<()> {
     );
 
     println!("== arm 1: bit-identity on REAL frames ==");
-    println!("  regulariser radius {REGULARISER_RADIUS}, compiled-in FOCUS_NOISE_SD {FOCUS_NOISE_SD:e}");
+    println!(
+        "  regulariser radius {REGULARISER_RADIUS}, compiled-in FOCUS_NOISE_SD {FOCUS_NOISE_SD:e}"
+    );
     let mut all_identical = true;
     for p in &paths {
         let (luma, geom, noise, iso) = load(p)?;
@@ -157,11 +165,7 @@ fn main() -> Result<()> {
     }
     println!(
         "  VERDICT: the field.rs bit-identity claim is {} on real frames\n",
-        if all_identical {
-            "UPHELD"
-        } else {
-            "REFUTED"
-        }
+        if all_identical { "UPHELD" } else { "REFUTED" }
     );
 
     println!("== arm 3: the host measures every reference operator ==");

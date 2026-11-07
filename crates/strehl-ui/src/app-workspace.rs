@@ -59,6 +59,8 @@ impl StrehlApp {
             Some("Stacking engine unavailable")
         } else if self.controls.settings.frame_limit == Some(0) {
             Some("Choose at least one source photo")
+        } else if let Some(reason) = self.session_start_blocker() {
+            Some(reason)
         } else {
             jobs::temporal_settings_blocker(
                 &self.controls.settings,
@@ -75,7 +77,7 @@ impl StrehlApp {
             .job
             .as_ref()
             .is_some_and(jobs::RenderJob::is_cancelling);
-        let opening = self.scan.is_some() || self.replay.is_some();
+        let opening = self.scan.is_some() || self.replay.is_some() || self.session_import.is_some();
         let name = self
             .active_stack
             .and_then(|id| self.catalog.node(id))
@@ -363,12 +365,14 @@ impl StrehlApp {
                     }
                 },
             };
-            let name = draft
-                .source
-                .file_name()
-                .unwrap_or_default()
-                .to_string_lossy()
-                .into_owned();
+            let name = self.session_ui.pending_name.take().unwrap_or_else(|| {
+                draft
+                    .source
+                    .file_name()
+                    .unwrap_or_default()
+                    .to_string_lossy()
+                    .into_owned()
+            });
             match self.catalog.create_stack(parent, &name, draft) {
                 Ok(id) => self.active_stack = Some(id),
                 Err(error) => self.error = Some(error.to_string()),
@@ -393,7 +397,14 @@ impl StrehlApp {
             return;
         }
         let id = self.catalog.stack_for_run(&run.directory);
-        self.import(run.source.clone());
+        if run.imported.is_some() {
+            self.prepare_session_controls();
+            self.reset_capture();
+        } else if let Some(session) = run.settings.session.clone() {
+            self.reload_session(session, false);
+        } else {
+            self.import(run.source.clone());
+        }
         self.active_stack = id;
         if let Some(id) = id {
             self.catalog.selected = Some(id);
@@ -402,6 +413,7 @@ impl StrehlApp {
         }
         self.expected_run = Some(run.clone());
         self.controls.settings = run.settings.clone();
+        self.refresh_session_outputs(&run.directory);
         self.controls.exposure = run.exposure;
         self.controls.gate = run.gate;
         self.controls.workers = run
@@ -414,9 +426,26 @@ impl StrehlApp {
         if self.job.is_some() || self.picker_active() {
             return;
         }
+        if let Some(run) = self
+            .catalog
+            .latest_run(id)
+            .filter(|r| r.imported.is_some())
+            .cloned()
+        {
+            self.reopen_run(run);
+            return;
+        }
         let Some(draft) = self.catalog.node(id).and_then(|n| n.stack.clone()) else {
             return;
         };
+        if let Some(session) = draft.settings.session.clone() {
+            self.reload_session(session, false);
+            self.active_stack = Some(id);
+            self.catalog.selected = Some(id);
+            self.project_explorer.select_stack(id);
+            self.apply_draft(&draft);
+            return;
+        }
         if let Some(run) = self.catalog.latest_run(id).cloned() {
             self.reopen_run(run);
         } else {
@@ -560,6 +589,22 @@ impl StrehlApp {
                     self.stack_launch_panel(ui, pane);
                 }
                 if pane == Sidebar::Projects {
+                    if self.controls.settings.session.is_some() {
+                        // Always show the bar: a long pass list otherwise
+                        // ends at the clip edge with no sign that it scrolls.
+                        egui::Frame::NONE.inner_margin(egui::Margin::symmetric(8, 0)).show(ui, |ui| {
+                            egui::ScrollArea::vertical()
+                                .id_salt("project-session-editor")
+                                .max_height((ui.available_height() * 0.55).clamp(180.0, 420.0))
+                                .auto_shrink([false, true])
+                                .scroll_bar_visibility(egui::scroll_area::ScrollBarVisibility::AlwaysVisible)
+                                .show(ui, |ui| self.session_panel(ui));
+                        });
+                        ui.add_space(6.0);
+                    } else {
+                        self.session_panel(ui);
+                    }
+                    self.session_result_picker(ui);
                     self.photo_history_panel(ui);
                     self.project_explorer.set_current_photo(
                         self.editor.path.as_deref(),
@@ -567,9 +612,24 @@ impl StrehlApp {
                         self.editor.loaded.as_ref().map(|photo| &photo.preview),
                     );
                     let busy = self.job.is_some() || self.picker_active() || self.scan.is_some();
-                    let response = self.project_explorer.show(ui, &mut self.catalog, busy);
+                    // Keep the primary source workflow beside the Projects heading.
+                    // Reserve a footer for completed-result import instead of
+                    // pushing New stack down with an unrelated action row.
+                    let import_height = if self.session_import.is_some() { 76.0 } else { 30.0 };
+                    let response = ui.allocate_ui(
+                        egui::vec2(ui.available_width(), (ui.available_height() - import_height).max(70.0)),
+                        |ui| self.project_explorer.show(ui, &mut self.catalog, busy),
+                    ).inner;
                     changed = response.changed;
                     action = response.action;
+                    ui.horizontal(|ui| {
+                        if cfg!(feature = "multi-stack") && ui.add_enabled(!busy && self.replay.is_none(), egui::Button::new("Stack everything…")).on_hover_text("Pick a folder of related captures. Every folder of RAW files inside becomes a pass, and Best result plans what each contributes to one photograph.").clicked() { self.pick(Dialog::StackEverything); }
+                        if cfg!(feature = "multi-stack") && ui.add_enabled(!busy && self.replay.is_none(), egui::Button::new("Open completed CLI session…")).on_hover_text("Import saved photographs and diagnostics without opening original capture folders.").clicked() { self.pick(Dialog::CompletedSession); }
+                    });
+                    if let Some((_,_,task)) = &self.session_import {
+                        ui.label("Verifying imported artifacts…");
+                        if ui.button("Cancel import").clicked() { task.cancel(); }
+                    }
                 } else if pane == Sidebar::Edit {
                     self.edit_panel(ui);
                 } else if pane == Sidebar::Export {
@@ -584,6 +644,7 @@ impl StrehlApp {
                         )
                         .show(ui, |ui| match pane {
                             Sidebar::Adjust => {
+                                self.session_panel(ui);
                                 let recipe_before = history::Recipe::capture(&self.controls);
                                 let before = (
                                     self.controls.settings.clone(),
@@ -658,6 +719,7 @@ impl StrehlApp {
         }
     }
     fn review_panel(&mut self, ui: &mut egui::Ui) {
+        self.session_result_picker(ui);
         if !self.activity {
             theme::caption(
                 ui,
@@ -666,7 +728,11 @@ impl StrehlApp {
             return;
         }
         if let Some(focus) = crate::controls::show_review(ui, &self.progress) {
-            self.process_space.review_focus(focus, self.selected);
+            let selected = self
+                .progress
+                .active_view()
+                .map_or(self.selected, |v| v.local_frame(self.selected).unwrap_or(0));
+            self.process_space.review_focus(focus, selected);
         }
         if let Some(output) = &self.result {
             ui.separator();

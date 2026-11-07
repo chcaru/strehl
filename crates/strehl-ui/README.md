@@ -48,6 +48,93 @@ and [release checklist](../../docs/public-release.md).
    Source previews are withheld if the recorded source identities no longer match.
    Identity checks use ordered paths, sizes and modification times, not file hashes.
 
+**Working with several passes of one subject**
+
+Multi-stack sessions are experimental and only in builds with the `multi-stack`
+feature (`cargo build --release -p strehl-ui --features multi-stack`). In such a build,
+import a source stack, then choose **Create multi-stack session** in Projects or
+Adjust. The new session has its own saved recipe; the original stack remains in
+the library. Add an **independent pass** for a repeat, changed exposure or lighting
+treatment. Use **Add continuation folder** when another directory continues the
+same focus sweep. Folder segments and passes have explicit order; folder names
+never imply matching focus.
+
+Choose **Combine detail**, **Interleaved focus**, **Repeated captures**, **Exposure
+range**, **Aligned layers**, **Wider mosaic**, or **Independent views**. Combined output requires matching
+aperture and ISO; exposure range can vary shutter time. Use layers for incompatible
+capture conditions. Proposed repeats must pass the engine's agreement checks;
+uncertain matches remain separate. Experimental Wider mosaic requires qualified
+native overlap and retains unsupported regions as transparent coverage. Its
+supplied-capture validation is still in progress. Independent views keeps each
+viewpoint in its own coordinates, with its own photograph, master and focus maps.
+
+An optional **Primary** pass anchors framing and appearance and retains its reliable
+content when matched sources disagree. Automatic framing gives no pass that
+preference. Mosaic and Independent views have no primary pass; switching to
+either clears that preference.
+The capture timeline shows pass ranges, continuation boundaries and the selected primary. Camera metadata inspects the selected folder segment.
+
+Adjust exposes the session **RAM budget** and **CPU thread limit** alongside its
+supported pyramid and exposure controls. Session rendering uses full resolution
+and retains a linear master. It does not apply temporal detail smoothing,
+source-range repairs or automatic exposure. Develop the resulting photographs
+after rendering; earlier photographs and edits remain intact.
+
+Optional **Weight repeats by predicted noise** is available for repeated captures
+and exposure range with at least two passes. **Save contribution maps** records
+source and pass influence by detail scale; **Save focus evidence** records focus
+ordinals, support and ambiguity. These diagnostics are not physical depth or
+final-image uncertainty. Mosaic computes its own focus and coverage evidence.
+**Compare the first two passes** is available for combine, interleaved, repeated
+and layer modes with at least two passes. It compares the first two declared
+passes, even when more are present; correlation is not a resolution cutoff.
+Older saved recipes keep every new option off.
+
+**Original-CFA reconstruction (experimental)** is available for combine,
+interleaved, repeated and exposure-range sessions. Supported pixels are estimated
+directly from original sensor samples; unsupported pixels retain the native
+stacked RGB. Support and fallback overlays explain which path was used. Native
+dimensions and phase support alone do not establish additional resolved detail.
+
+Every run saves a fresh manifest, source snapshot and log. The engine's photographs,
+masters, alignment envelope and reports live in its `session-output` subdirectory.
+Original CFA and matching alignment caches are shared between revisions under
+`.strehl-session-cache` in the chosen output destination, outside all source folders.
+Aligned layers each have a `layer-NN` folder; use **Aligned layer** in Projects or
+Review to inspect them individually. A running job uses an immutable snapshot even
+if the next recipe is edited later. Sources changed since import require Reload.
+Independent views has a view selector that remembers the displayed result.
+Changing viewpoints fits the new canvas; reopening that view preserves zoom.
+**Export view bundle…** copies all bound photographs, masters, focus maps and
+geometry manifests to a fresh folder for relocation or external use. Relative
+pose remains unknown; focus ordinals are not metric depth. RAW originals and
+personal development edits are not copied.
+
+The local control API can compose already imported catalog stacks without granting
+new filesystem access:
+
+```json
+{
+  "expected_revision": 12,
+  "command": {
+    "operation": "create_session",
+    "name": "Repeated subject",
+    "passes": [
+      {"name": "First pass", "stack_ids": [3, 4]},
+      {"name": "Repeat", "stack_ids": [5]}
+    ],
+    "mode": "repeat",
+    "primary_pass": null,
+    "memory_limit_gib": 16
+  }
+}
+```
+
+Use actual stack IDs and the latest workspace revision from a snapshot. Stack IDs
+within one pass are ordered folder segments. The queued response does not mean the
+scan or render has finished. Snapshot `session.capture_groups` and `stack_blocker`
+expose readiness; `start_stack` launches the saved recipe.
+
 **Experimental detail smoothing**
 
 Under **Adjust → Merge**, **Temporal detail smoothing** uses neighboring captures

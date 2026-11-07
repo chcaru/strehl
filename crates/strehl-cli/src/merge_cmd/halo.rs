@@ -640,7 +640,10 @@ mod tests {
             tau: 0.0,
             foreground_px: 0,
         };
-        assert!(!plan.allows(0, 100), "the foreground's own frame must be out");
+        assert!(
+            !plan.allows(0, 100),
+            "the foreground's own frame must be out"
+        );
         assert!(!plan.allows(0, 139), "39 frames away is inside the band");
         assert!(plan.allows(0, 140), "40 frames away is the first allowed");
         assert!(plan.allows(0, 60), "and symmetrically on the near side");

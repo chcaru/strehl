@@ -86,6 +86,7 @@ fn editor() -> EditorState {
     let preview = Arc::new(image.preview(32));
     EditorState {
         loaded: Some(LoadedPhoto {
+            coverage: None,
             image,
             preview,
             recipe: Default::default(),

@@ -41,6 +41,11 @@ pub struct AdaptiveParameters {
     /// Scene-relative tonal separation, fitted once into the existing curves.
     #[serde(skip_serializing_if = "is_zero")]
     pub presence: f32,
+    /// Compress small light that stands far above its own neighbourhood --
+    /// specular glints on gems, metal and wet surfaces -- without touching
+    /// large bright areas or anything near the local level.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub glint_compression: f32,
 }
 
 impl Default for AdaptiveParameters {
@@ -53,6 +58,7 @@ impl Default for AdaptiveParameters {
             shadow_protection: 0.0,
             highlight_compression: 0.0,
             presence: 0.0,
+            glint_compression: 0.0,
         }
     }
 }
@@ -69,6 +75,7 @@ impl AdaptiveParameters {
             shadow_protection: 1.0,
             highlight_compression: 0.25,
             presence: 0.8,
+            glint_compression: 0.0,
         }
     }
 
@@ -80,6 +87,7 @@ impl AdaptiveParameters {
             self.shadow_protection,
             self.highlight_compression,
             self.presence,
+            self.glint_compression,
         ] {
             ensure!(
                 v.is_finite() && (0.0..=1.0).contains(&v),

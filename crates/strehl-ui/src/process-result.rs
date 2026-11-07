@@ -139,6 +139,9 @@ impl ResultPhoto {
             .then(|| self.probe.current_region(ui, self.probe_image?, aperture))
             .flatten()
     }
+    pub(crate) fn overview_rect(&self) -> Option<Rect> {
+        self.probe_overview.map(|rect| rect.expand(4.0))
+    }
     pub(crate) fn clear_lenses(&mut self) {
         self.balance.set_enabled(false);
         self.probe_region = None;

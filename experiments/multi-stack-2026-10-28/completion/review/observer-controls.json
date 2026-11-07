@@ -1,0 +1,124 @@
+{
+  "schema": "strehl.independent-observer-commission.v1",
+  "scope": "Known-truth synthetic observer checks only; no product engine, RAW, real-camera or photo-quality claim",
+  "seed": 2026102817,
+  "trials": 64,
+  "dimensions": [
+    64,
+    64
+  ],
+  "independence": "A and B independently generated; duplicate control deliberately shares A",
+  "flat_first": {
+    "single_A": {
+      "temporal_variance": 399.45442410144943,
+      "expected_variance": 400,
+      "ratio_to_expected": 0.9986360602536236,
+      "mean_bias": 0.013639272255602464
+    },
+    "single_B": {
+      "temporal_variance": 100.48661060884803,
+      "expected_variance": 100,
+      "ratio_to_expected": 1.0048661060884803,
+      "mean_bias": 0.00860667995368658
+    },
+    "equal": {
+      "temporal_variance": 124.63672338410785,
+      "expected_variance": 125,
+      "ratio_to_expected": 0.9970937870728628,
+      "mean_bias": 0.011122976104644522
+    },
+    "inverse_variance": {
+      "temporal_variance": 80.06654516590217,
+      "expected_variance": 80,
+      "ratio_to_expected": 1.0008318145737771,
+      "mean_bias": 0.009613198414115232
+    },
+    "duplicate_A_mean": {
+      "temporal_variance": 399.45442410144943,
+      "expected_variance": 400,
+      "ratio_to_expected": 0.9986360602536236,
+      "mean_bias": 0.013639272255602464
+    }
+  },
+  "texture_and_adversarial_controls": {
+    "correct_weighted": {
+      "temporal_variance": 80.06654516590217,
+      "known_signal_gains": [
+        0.999588479768508,
+        1.0014106131474414
+      ],
+      "mean_image_truth_mse": 1.2656293988556986,
+      "passes_two_frequency_transfer_sentinel": true
+    },
+    "blur": {
+      "temporal_variance": 5.977879860005064,
+      "known_signal_gains": [
+        0.7282535761333224,
+        0.926633393907132
+      ],
+      "mean_image_truth_mse": 93.4659512352099,
+      "passes_two_frequency_transfer_sentinel": false
+    },
+    "sharpen": {
+      "temporal_variance": 375.09466351252684,
+      "known_signal_gains": [
+        1.219167995264691,
+        1.058581496163148
+      ],
+      "mean_image_truth_mse": 66.7786340599143,
+      "passes_two_frequency_transfer_sentinel": false
+    },
+    "constant": {
+      "temporal_variance": 0.0,
+      "known_signal_gains": [
+        0.0,
+        0.0
+      ],
+      "mean_image_truth_mse": 1450.0,
+      "passes_two_frequency_transfer_sentinel": false
+    },
+    "one_pixel_shift": {
+      "temporal_variance": 80.06654516590217,
+      "known_signal_gains": [
+        0.7069443178428304,
+        1.0014106131474414
+      ],
+      "mean_image_truth_mse": 732.8760342130497,
+      "passes_two_frequency_transfer_sentinel": false
+    }
+  },
+  "constituent_reference_foil": [
+    {
+      "weight_B": 0,
+      "true_temporal_var": 399.45442410144943,
+      "mse_against_constituent_A": 0.0
+    },
+    {
+      "weight_B": 0.25,
+      "true_temporal_var": 230.71212525001843,
+      "mse_against_constituent_A": 31.33704206022007
+    },
+    {
+      "weight_B": 0.5,
+      "true_temporal_var": 124.63672338410785,
+      "mse_against_constituent_A": 125.34816824088028
+    },
+    {
+      "weight_B": 1,
+      "true_temporal_var": 100.48661060884803,
+      "mse_against_constituent_A": 501.39267296352114
+    }
+  ],
+  "limits": [
+    "Temporal variation assumes fixed latent signal; drift/focus/registration must be separately bounded on real captures.",
+    "Known-frequency transfer sentinels are scoped observables, not a universal photographic detail measure.",
+    "A fixed frozen-weight prediction is not a certificate of adaptive gating variance."
+  ],
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "numpy": "2.4.4",
+  "source_sha256": "bd2f5a57770f8aed358e98ed65aac21b8276e3a1455a910869750efe76a14d8e"
+}

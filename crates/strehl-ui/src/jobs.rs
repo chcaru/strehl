@@ -13,6 +13,9 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use anyhow::{Context, Result, bail, ensure};
 
 use crate::pipeline::Utf8LogDecoder;
+#[path = "jobs-session.rs"]
+mod session;
+pub(crate) use session::scan_session;
 
 static NEXT_JOB: AtomicU64 = AtomicU64::new(0);
 const EVENT_CAPACITY: usize = 96;
@@ -40,6 +43,30 @@ impl MachineResources {
     pub(crate) fn maximum_workers(self) -> usize {
         self.logical_processors.clamp(1, 1024)
     }
+
+    /// Default session RAM budget: half of physical memory within 8..=48 GiB
+    /// (16 GiB when unknown). Best result merges lighting and pose groups
+    /// concurrently in 9 GiB shares, so a larger budget is also faster.
+    pub(crate) fn default_session_memory_gib(self) -> f64 {
+        self.physical_memory_bytes.map_or(16.0, |bytes| {
+            (bytes as f64 / (1u64 << 30) as f64 / 2.0)
+                .floor()
+                .clamp(8.0, 48.0)
+        })
+    }
+}
+
+#[cfg(test)]
+#[test]
+fn default_session_memory_is_half_of_physical_within_bounds() {
+    let machine = |gib: Option<u64>| MachineResources {
+        logical_processors: 8,
+        physical_memory_bytes: gib.map(|g| g << 30),
+    };
+    assert_eq!(machine(Some(64)).default_session_memory_gib(), 32.0);
+    assert_eq!(machine(Some(8)).default_session_memory_gib(), 8.0);
+    assert_eq!(machine(Some(256)).default_session_memory_gib(), 48.0);
+    assert_eq!(machine(None).default_session_memory_gib(), 16.0);
 }
 
 #[cfg(windows)]
@@ -97,6 +124,28 @@ pub(crate) fn spawn_task<T: Send + 'static>(
         if !worker_cancelled.load(Ordering::Relaxed) {
             let _ = sender.send(result);
         }
+    }) {
+        let _ = errors.send(Err(format!("Starting background work: {error}")));
+    }
+    Task {
+        receiver,
+        cancelled,
+    }
+}
+
+/// A publication worker reports its terminal result even if cancellation races
+/// with a completed commit. The work itself must check the cancellation token.
+pub(crate) fn spawn_reporting_task<T: Send + 'static>(
+    name: &str,
+    work: impl FnOnce(Arc<AtomicBool>) -> Result<T> + Send + 'static,
+) -> Task<T> {
+    let (sender, receiver) = mpsc::sync_channel(1);
+    let cancelled = Arc::new(AtomicBool::new(false));
+    let worker_cancelled = Arc::clone(&cancelled);
+    let errors = sender.clone();
+    if let Err(error) = thread::Builder::new().name(name.into()).spawn(move || {
+        let result = work(worker_cancelled).map_err(|error| format!("{error:#}"));
+        let _ = sender.send(result);
     }) {
         let _ = errors.send(Err(format!("Starting background work: {error}")));
     }
@@ -266,6 +315,9 @@ impl Resampler {
 #[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct RenderSettings {
+    /// Explicit multi-pass recipe; absent for every existing ordinary stack.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub(crate) session: Option<crate::session_workspace::SessionDraft>,
     pub pyramid_bands: Option<usize>,
     pub pyramid_exponent: Option<f32>,
     pub pyramid_sharpen: Option<f32>,
@@ -274,6 +326,10 @@ pub struct RenderSettings {
     pub resampler: Resampler,
     pub binned: bool,
     pub correct_lateral_ca: bool,
+    /// Measure what the CA profile leaves on a preview of every Nth frame and
+    /// render with the refined correction (`--refine-ca`). Only acts while
+    /// `correct_lateral_ca` is on.
+    pub refine_lateral_ca: bool,
     pub crop_to_coverage: bool,
     /// The first N captures in filename order. None keeps the whole bracket.
     pub frame_limit: Option<usize>,
@@ -285,6 +341,7 @@ pub struct RenderSettings {
 impl Default for RenderSettings {
     fn default() -> Self {
         Self {
+            session: None,
             pyramid_bands: None,
             pyramid_exponent: None,
             pyramid_sharpen: None,
@@ -292,6 +349,7 @@ impl Default for RenderSettings {
             resampler: Resampler::default(),
             binned: false,
             correct_lateral_ca: true,
+            refine_lateral_ca: true,
             crop_to_coverage: false,
             frame_limit: None,
             auto_exposure: false,
@@ -453,6 +511,9 @@ fn run_render(
     cancelled: &Arc<AtomicBool>,
     sender: &SyncSender<RenderEvent>,
 ) -> RenderOutcome {
+    if request.settings.session.is_some() {
+        return session::run_session_render(request, cancelled, sender);
+    }
     let mut job_directory = None;
     let result = (|| -> Result<RenderOutcome> {
         validate_settings(request)?;
@@ -634,7 +695,11 @@ fn validate_settings(request: &RenderRequest) -> Result<()> {
     Ok(())
 }
 
-fn render_command(request: &RenderRequest, source: &Path, partial: &Path) -> Result<Command> {
+pub(crate) fn render_command(
+    request: &RenderRequest,
+    source: &Path,
+    partial: &Path,
+) -> Result<Command> {
     if let Some(reason) = temporal_settings_blocker(
         &request.settings,
         request.pyramid_gate,
@@ -704,6 +769,11 @@ fn render_command(request: &RenderRequest, source: &Path, partial: &Path) -> Res
     }
     if !request.settings.correct_lateral_ca {
         command.arg("--fix-ca=off");
+    }
+    // Only the departure from the engine default is passed, like `--fix-ca`;
+    // an inherited STREHL_REFINE_CA is removed with every other STREHL_ override.
+    if !(request.settings.correct_lateral_ca && request.settings.refine_lateral_ca) {
+        command.arg("--refine-ca=off");
     }
     if request.settings.crop_to_coverage {
         command.arg("--cover=crop");
@@ -848,7 +918,7 @@ fn path_is_within(path: &Path, root: &Path) -> bool {
     }
 }
 
-fn validate_output_parent(source: &Path, output_parent: &Path) -> Result<()> {
+pub(crate) fn validate_output_parent(source: &Path, output_parent: &Path) -> Result<()> {
     ensure!(
         !path_is_within(output_parent, source),
         "Choose an output folder outside the input stack"
@@ -1121,7 +1191,7 @@ fn publish_output(partial: &Path, output: &Path, cancelled: &AtomicBool) -> Resu
         .context("Publishing the completed TIFF without replacing existing files")
 }
 
-fn publish_no_replace(partial: &Path, output: &Path) -> Result<()> {
+pub(crate) fn publish_no_replace(partial: &Path, output: &Path) -> Result<()> {
     ensure!(
         partial.parent() == output.parent(),
         "The completed image must stay in its reserved render folder"
@@ -1558,6 +1628,7 @@ pub(crate) mod tests {
             "--resampler=lanczos3",
             "--binned",
             "--fix-ca=off",
+            "--refine-ca=off",
             "--cover=crop",
         ] {
             assert!(

@@ -49,8 +49,8 @@ use anyhow::{Context, Result, bail};
 use strehl_core::clip::CONTAINER_MAX_DN;
 use strehl_core::noise::NoiseModel;
 use strehl_core::outlier::{
-    DEFAULT_MIN_SHIFT_PX, Discriminator, Params, RESOLUTION_MARGIN, Scratch, TileGrid,
-    chi2_map, mask, mask_tiles, shift_tiles, thresholds,
+    DEFAULT_MIN_SHIFT_PX, Discriminator, Params, RESOLUTION_MARGIN, Scratch, TileGrid, chi2_map,
+    mask, mask_tiles, shift_tiles, thresholds,
 };
 use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma_with_clip};
 use strehl_core::profile;
@@ -93,14 +93,19 @@ struct Pair {
 /// prior project's 2-5x defect, and this file's whole claim is that the
 /// statistic is normalised by the shipped model.
 fn load(path: &Path) -> Result<(Vec<f32>, PlaneGeometry, NoiseModel)> {
-    let frame =
-        strehl_raw::decode(path).with_context(|| format!("decoding {}", path.display()))?;
+    let frame = strehl_raw::decode(path).with_context(|| format!("decoding {}", path.display()))?;
     let geom = frame.geometry();
     let levels = frame.levels;
     let noise = profile::noise_model_for(&frame.camera, frame.iso, levels);
     let mut luma = vec![0.0f32; geom.pixels()];
     let mut clipped = vec![false; geom.pixels()];
-    green_luma_with_clip(&frame, levels.black, CONTAINER_MAX_DN, &mut luma, &mut clipped);
+    green_luma_with_clip(
+        &frame,
+        levels.black,
+        CONTAINER_MAX_DN,
+        &mut luma,
+        &mut clipped,
+    );
 
     if CROP > geom.width || CROP > geom.height {
         bail!(
@@ -331,14 +336,16 @@ fn main() -> Result<()> {
         1.0 + f64::from(params.threshold_k) * null_sd,
         1.0 + params.threshold_k
     );
-    println!(
-        "min_shift_px = {DEFAULT_MIN_SHIFT_PX}  resolution_margin = {RESOLUTION_MARGIN}"
-    );
+    println!("min_shift_px = {DEFAULT_MIN_SHIFT_PX}  resolution_margin = {RESOLUTION_MARGIN}");
     println!("PLANT = must fire   TRAP/NULL = must stay quiet\n");
 
     // ---- real-capture cases -------------------------------------------------
     let cases: [(&str, &str, &str); 5] = [
-        ("flat-null", r"D:\personal\macro\flat-fields\flat-fields", "NULL"),
+        (
+            "flat-null",
+            r"D:\personal\macro\flat-fields\flat-fields",
+            "NULL",
+        ),
         ("dark-null", r"D:\macro-dark-frames\118MSDCF", "NULL"),
         ("defocus", r"D:\personal\macro\109MSDCF", "TRAP"),
         ("motion", r"D:\personal\macro\coffee-bubbles", "PLANT"),
@@ -362,7 +369,12 @@ fn main() -> Result<()> {
             continue;
         }
         let n = PAIRS.min(paths.len() - 1);
-        let mut accs = [Acc::default(), Acc::default(), Acc::default(), Acc::default()];
+        let mut accs = [
+            Acc::default(),
+            Acc::default(),
+            Acc::default(),
+            Acc::default(),
+        ];
         let mut lv = (0.0f64, 0.0f64);
         for i in 0..n {
             let p = pair_from(&paths[i], &paths[i + 1])?;
@@ -386,7 +398,10 @@ fn main() -> Result<()> {
             "-- {name} [{role}]  {n} adjacent pairs, mean level {:.1} / {:.1} DN",
             lv.0, lv.1
         );
-        for (j, arm) in ["Raw", "LowFreq", "Shift", "ShiftFree"].into_iter().enumerate() {
+        for (j, arm) in ["Raw", "LowFreq", "Shift", "ShiftFree"]
+            .into_iter()
+            .enumerate()
+        {
             accs[j].report(name, arm);
         }
         println!();

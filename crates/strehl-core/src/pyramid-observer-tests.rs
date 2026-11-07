@@ -367,6 +367,7 @@ fn virtual_absorb_preserves_floor_pedestal_admission_and_empty_chunk_semantics()
         admission: AdmissionMode::FloorPedestalV1,
         fallback: Fallback::Mean,
         hull: Hull::Unclamped,
+        base: crate::pyramid::BaseBand::Mean,
         ..MergeConfig::default()
     };
     let (width, height) = (43, 31);

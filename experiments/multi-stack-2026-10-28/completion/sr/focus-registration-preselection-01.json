@@ -1,0 +1,1272 @@
+{
+  "schema": "strehl.sr-focus-registration-preselection.v1",
+  "command": [
+    "experiments/multi-stack-2026-10-28/completion/sr/focus-registration-preselection.py",
+    "--census",
+    "outputs/multi-stack/completion/sr-census-01",
+    "--seal",
+    "experiments/multi-stack-2026-10-28/completion/sr/focus-census-01-seal.json",
+    "--out",
+    "experiments/multi-stack-2026-10-28/completion/sr/focus-registration-preselection-01.json"
+  ],
+  "source_sha256": "59b7528ef8baf1fbec9fd419ea2f4a9ce6b84ff73e90ea75d12179e9615072c3",
+  "seal_sha256": "78142d8f8f5edec7d4693872c87dce78dfece9bde6dcbd87142899ca552a1d81",
+  "census_report_sha256": "f2376b7e9ec97daa5a55c01cd91a132d27ae86f9a34e5653d83c704ab5be2d7b",
+  "focus_domain_quad": [
+    960,
+    1020,
+    148,
+    148
+  ],
+  "selection_basis": "Only sealed full-track focus flags and one-width membership, before local residuals or candidate pixels. Complete-square counts include no extra NCC search or filter halo; those stricter requirements can only reduce support.",
+  "pairs": [
+    {
+      "acquisitions": [
+        107,
+        108
+      ],
+      "common_focus_quad_pixels": 1215,
+      "components": [
+        {
+          "pixels_quad": 90,
+          "bbox_anchor_sensor": [
+            2014,
+            2202,
+            30,
+            42
+          ]
+        },
+        {
+          "pixels_quad": 50,
+          "bbox_anchor_sensor": [
+            2002,
+            2122,
+            18,
+            24
+          ]
+        },
+        {
+          "pixels_quad": 40,
+          "bbox_anchor_sensor": [
+            2024,
+            2084,
+            16,
+            18
+          ]
+        },
+        {
+          "pixels_quad": 38,
+          "bbox_anchor_sensor": [
+            2036,
+            2234,
+            16,
+            20
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 2,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        107,
+        110
+      ],
+      "common_focus_quad_pixels": 1089,
+      "components": [
+        {
+          "pixels_quad": 89,
+          "bbox_anchor_sensor": [
+            2014,
+            2202,
+            30,
+            42
+          ]
+        },
+        {
+          "pixels_quad": 50,
+          "bbox_anchor_sensor": [
+            2002,
+            2122,
+            18,
+            24
+          ]
+        },
+        {
+          "pixels_quad": 37,
+          "bbox_anchor_sensor": [
+            2024,
+            2244,
+            14,
+            28
+          ]
+        },
+        {
+          "pixels_quad": 31,
+          "bbox_anchor_sensor": [
+            2006,
+            2168,
+            12,
+            24
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 2,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        108,
+        109
+      ],
+      "common_focus_quad_pixels": 1286,
+      "components": [
+        {
+          "pixels_quad": 90,
+          "bbox_anchor_sensor": [
+            2014,
+            2202,
+            30,
+            42
+          ]
+        },
+        {
+          "pixels_quad": 56,
+          "bbox_anchor_sensor": [
+            1996,
+            2266,
+            24,
+            26
+          ]
+        },
+        {
+          "pixels_quad": 50,
+          "bbox_anchor_sensor": [
+            2002,
+            2122,
+            18,
+            24
+          ]
+        },
+        {
+          "pixels_quad": 38,
+          "bbox_anchor_sensor": [
+            1990,
+            2222,
+            14,
+            26
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 2,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        108,
+        110
+      ],
+      "common_focus_quad_pixels": 1201,
+      "components": [
+        {
+          "pixels_quad": 89,
+          "bbox_anchor_sensor": [
+            2014,
+            2202,
+            30,
+            42
+          ]
+        },
+        {
+          "pixels_quad": 56,
+          "bbox_anchor_sensor": [
+            1996,
+            2266,
+            24,
+            26
+          ]
+        },
+        {
+          "pixels_quad": 50,
+          "bbox_anchor_sensor": [
+            2002,
+            2122,
+            18,
+            24
+          ]
+        },
+        {
+          "pixels_quad": 38,
+          "bbox_anchor_sensor": [
+            1990,
+            2222,
+            14,
+            26
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 2,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        109,
+        110
+      ],
+      "common_focus_quad_pixels": 1291,
+      "components": [
+        {
+          "pixels_quad": 89,
+          "bbox_anchor_sensor": [
+            2014,
+            2202,
+            30,
+            42
+          ]
+        },
+        {
+          "pixels_quad": 85,
+          "bbox_anchor_sensor": [
+            1992,
+            2266,
+            30,
+            26
+          ]
+        },
+        {
+          "pixels_quad": 59,
+          "bbox_anchor_sensor": [
+            1980,
+            2254,
+            20,
+            26
+          ]
+        },
+        {
+          "pixels_quad": 50,
+          "bbox_anchor_sensor": [
+            2002,
+            2122,
+            18,
+            24
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 2,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        110,
+        111
+      ],
+      "common_focus_quad_pixels": 1271,
+      "components": [
+        {
+          "pixels_quad": 99,
+          "bbox_anchor_sensor": [
+            1986,
+            2266,
+            36,
+            26
+          ]
+        },
+        {
+          "pixels_quad": 84,
+          "bbox_anchor_sensor": [
+            1976,
+            2248,
+            24,
+            32
+          ]
+        },
+        {
+          "pixels_quad": 73,
+          "bbox_anchor_sensor": [
+            2014,
+            2202,
+            22,
+            42
+          ]
+        },
+        {
+          "pixels_quad": 49,
+          "bbox_anchor_sensor": [
+            2002,
+            2122,
+            18,
+            24
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 2,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        110,
+        112
+      ],
+      "common_focus_quad_pixels": 1132,
+      "components": [
+        {
+          "pixels_quad": 99,
+          "bbox_anchor_sensor": [
+            1986,
+            2266,
+            36,
+            26
+          ]
+        },
+        {
+          "pixels_quad": 84,
+          "bbox_anchor_sensor": [
+            1976,
+            2248,
+            24,
+            32
+          ]
+        },
+        {
+          "pixels_quad": 40,
+          "bbox_anchor_sensor": [
+            1988,
+            2200,
+            16,
+            22
+          ]
+        },
+        {
+          "pixels_quad": 39,
+          "bbox_anchor_sensor": [
+            1990,
+            2222,
+            14,
+            26
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 0,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        110,
+        113
+      ],
+      "common_focus_quad_pixels": 1006,
+      "components": [
+        {
+          "pixels_quad": 99,
+          "bbox_anchor_sensor": [
+            1986,
+            2266,
+            36,
+            26
+          ]
+        },
+        {
+          "pixels_quad": 84,
+          "bbox_anchor_sensor": [
+            1976,
+            2248,
+            24,
+            32
+          ]
+        },
+        {
+          "pixels_quad": 39,
+          "bbox_anchor_sensor": [
+            1990,
+            2222,
+            14,
+            26
+          ]
+        },
+        {
+          "pixels_quad": 37,
+          "bbox_anchor_sensor": [
+            1988,
+            2200,
+            16,
+            18
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 0,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        110,
+        397
+      ],
+      "common_focus_quad_pixels": 343,
+      "components": [
+        {
+          "pixels_quad": 23,
+          "bbox_anchor_sensor": [
+            2022,
+            2224,
+            22,
+            10
+          ]
+        },
+        {
+          "pixels_quad": 22,
+          "bbox_anchor_sensor": [
+            2008,
+            2126,
+            10,
+            20
+          ]
+        },
+        {
+          "pixels_quad": 11,
+          "bbox_anchor_sensor": [
+            2008,
+            2242,
+            8,
+            8
+          ]
+        },
+        {
+          "pixels_quad": 10,
+          "bbox_anchor_sensor": [
+            2028,
+            2218,
+            12,
+            6
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 0,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        110,
+        398
+      ],
+      "common_focus_quad_pixels": 412,
+      "components": [
+        {
+          "pixels_quad": 23,
+          "bbox_anchor_sensor": [
+            2022,
+            2224,
+            22,
+            10
+          ]
+        },
+        {
+          "pixels_quad": 22,
+          "bbox_anchor_sensor": [
+            2008,
+            2126,
+            10,
+            20
+          ]
+        },
+        {
+          "pixels_quad": 15,
+          "bbox_anchor_sensor": [
+            1992,
+            2166,
+            12,
+            12
+          ]
+        },
+        {
+          "pixels_quad": 11,
+          "bbox_anchor_sensor": [
+            2008,
+            2242,
+            8,
+            8
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 0,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        110,
+        399
+      ],
+      "common_focus_quad_pixels": 469,
+      "components": [
+        {
+          "pixels_quad": 23,
+          "bbox_anchor_sensor": [
+            2022,
+            2224,
+            22,
+            10
+          ]
+        },
+        {
+          "pixels_quad": 22,
+          "bbox_anchor_sensor": [
+            2008,
+            2126,
+            10,
+            20
+          ]
+        },
+        {
+          "pixels_quad": 19,
+          "bbox_anchor_sensor": [
+            1978,
+            2184,
+            8,
+            14
+          ]
+        },
+        {
+          "pixels_quad": 16,
+          "bbox_anchor_sensor": [
+            1988,
+            2254,
+            12,
+            16
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 0,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        110,
+        400
+      ],
+      "common_focus_quad_pixels": 495,
+      "components": [
+        {
+          "pixels_quad": 23,
+          "bbox_anchor_sensor": [
+            2022,
+            2224,
+            22,
+            10
+          ]
+        },
+        {
+          "pixels_quad": 22,
+          "bbox_anchor_sensor": [
+            2008,
+            2126,
+            10,
+            20
+          ]
+        },
+        {
+          "pixels_quad": 20,
+          "bbox_anchor_sensor": [
+            1986,
+            2264,
+            8,
+            14
+          ]
+        },
+        {
+          "pixels_quad": 20,
+          "bbox_anchor_sensor": [
+            1986,
+            2254,
+            14,
+            16
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 0,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        110,
+        401
+      ],
+      "common_focus_quad_pixels": 489,
+      "components": [
+        {
+          "pixels_quad": 22,
+          "bbox_anchor_sensor": [
+            2008,
+            2126,
+            10,
+            20
+          ]
+        },
+        {
+          "pixels_quad": 20,
+          "bbox_anchor_sensor": [
+            1986,
+            2264,
+            8,
+            14
+          ]
+        },
+        {
+          "pixels_quad": 20,
+          "bbox_anchor_sensor": [
+            1986,
+            2254,
+            14,
+            16
+          ]
+        },
+        {
+          "pixels_quad": 19,
+          "bbox_anchor_sensor": [
+            1978,
+            2184,
+            8,
+            14
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 0,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        110,
+        402
+      ],
+      "common_focus_quad_pixels": 459,
+      "components": [
+        {
+          "pixels_quad": 20,
+          "bbox_anchor_sensor": [
+            1986,
+            2264,
+            8,
+            14
+          ]
+        },
+        {
+          "pixels_quad": 20,
+          "bbox_anchor_sensor": [
+            1986,
+            2254,
+            14,
+            16
+          ]
+        },
+        {
+          "pixels_quad": 19,
+          "bbox_anchor_sensor": [
+            1978,
+            2184,
+            8,
+            14
+          ]
+        },
+        {
+          "pixels_quad": 17,
+          "bbox_anchor_sensor": [
+            1986,
+            2278,
+            12,
+            14
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 0,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        110,
+        403
+      ],
+      "common_focus_quad_pixels": 424,
+      "components": [
+        {
+          "pixels_quad": 20,
+          "bbox_anchor_sensor": [
+            1986,
+            2264,
+            8,
+            14
+          ]
+        },
+        {
+          "pixels_quad": 20,
+          "bbox_anchor_sensor": [
+            1986,
+            2254,
+            14,
+            16
+          ]
+        },
+        {
+          "pixels_quad": 19,
+          "bbox_anchor_sensor": [
+            1978,
+            2184,
+            8,
+            14
+          ]
+        },
+        {
+          "pixels_quad": 17,
+          "bbox_anchor_sensor": [
+            1986,
+            2278,
+            12,
+            14
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 0,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        111,
+        112
+      ],
+      "common_focus_quad_pixels": 1188,
+      "components": [
+        {
+          "pixels_quad": 120,
+          "bbox_anchor_sensor": [
+            1966,
+            2248,
+            34,
+            38
+          ]
+        },
+        {
+          "pixels_quad": 101,
+          "bbox_anchor_sensor": [
+            1984,
+            2266,
+            38,
+            26
+          ]
+        },
+        {
+          "pixels_quad": 40,
+          "bbox_anchor_sensor": [
+            1988,
+            2200,
+            16,
+            22
+          ]
+        },
+        {
+          "pixels_quad": 39,
+          "bbox_anchor_sensor": [
+            1990,
+            2222,
+            14,
+            26
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 0,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        112,
+        113
+      ],
+      "common_focus_quad_pixels": 1081,
+      "components": [
+        {
+          "pixels_quad": 138,
+          "bbox_anchor_sensor": [
+            1966,
+            2248,
+            34,
+            44
+          ]
+        },
+        {
+          "pixels_quad": 101,
+          "bbox_anchor_sensor": [
+            1984,
+            2266,
+            38,
+            26
+          ]
+        },
+        {
+          "pixels_quad": 39,
+          "bbox_anchor_sensor": [
+            1990,
+            2222,
+            14,
+            26
+          ]
+        },
+        {
+          "pixels_quad": 37,
+          "bbox_anchor_sensor": [
+            1988,
+            2200,
+            16,
+            18
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 0,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        113,
+        397
+      ],
+      "common_focus_quad_pixels": 244,
+      "components": [
+        {
+          "pixels_quad": 11,
+          "bbox_anchor_sensor": [
+            2008,
+            2242,
+            8,
+            8
+          ]
+        },
+        {
+          "pixels_quad": 9,
+          "bbox_anchor_sensor": [
+            1996,
+            2168,
+            8,
+            10
+          ]
+        },
+        {
+          "pixels_quad": 7,
+          "bbox_anchor_sensor": [
+            2014,
+            2202,
+            6,
+            10
+          ]
+        },
+        {
+          "pixels_quad": 7,
+          "bbox_anchor_sensor": [
+            1992,
+            2254,
+            8,
+            8
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 0,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        397,
+        398
+      ],
+      "common_focus_quad_pixels": 1245,
+      "components": [
+        {
+          "pixels_quad": 100,
+          "bbox_anchor_sensor": [
+            1984,
+            2166,
+            42,
+            24
+          ]
+        },
+        {
+          "pixels_quad": 98,
+          "bbox_anchor_sensor": [
+            1996,
+            2116,
+            24,
+            40
+          ]
+        },
+        {
+          "pixels_quad": 90,
+          "bbox_anchor_sensor": [
+            1992,
+            2226,
+            32,
+            32
+          ]
+        },
+        {
+          "pixels_quad": 83,
+          "bbox_anchor_sensor": [
+            2022,
+            2208,
+            28,
+            36
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 1,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        398,
+        399
+      ],
+      "common_focus_quad_pixels": 1335,
+      "components": [
+        {
+          "pixels_quad": 150,
+          "bbox_anchor_sensor": [
+            1980,
+            2160,
+            46,
+            30
+          ]
+        },
+        {
+          "pixels_quad": 146,
+          "bbox_anchor_sensor": [
+            1992,
+            2226,
+            32,
+            62
+          ]
+        },
+        {
+          "pixels_quad": 116,
+          "bbox_anchor_sensor": [
+            1996,
+            2116,
+            24,
+            44
+          ]
+        },
+        {
+          "pixels_quad": 83,
+          "bbox_anchor_sensor": [
+            2022,
+            2208,
+            28,
+            36
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 1,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        399,
+        400
+      ],
+      "common_focus_quad_pixels": 1376,
+      "components": [
+        {
+          "pixels_quad": 178,
+          "bbox_anchor_sensor": [
+            1984,
+            2226,
+            40,
+            62
+          ]
+        },
+        {
+          "pixels_quad": 155,
+          "bbox_anchor_sensor": [
+            1980,
+            2160,
+            46,
+            30
+          ]
+        },
+        {
+          "pixels_quad": 116,
+          "bbox_anchor_sensor": [
+            1996,
+            2116,
+            24,
+            44
+          ]
+        },
+        {
+          "pixels_quad": 84,
+          "bbox_anchor_sensor": [
+            1964,
+            2170,
+            28,
+            30
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 7,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        400,
+        401
+      ],
+      "common_focus_quad_pixels": 1336,
+      "components": [
+        {
+          "pixels_quad": 207,
+          "bbox_anchor_sensor": [
+            1984,
+            2226,
+            40,
+            66
+          ]
+        },
+        {
+          "pixels_quad": 155,
+          "bbox_anchor_sensor": [
+            1980,
+            2160,
+            46,
+            30
+          ]
+        },
+        {
+          "pixels_quad": 136,
+          "bbox_anchor_sensor": [
+            1964,
+            2142,
+            28,
+            58
+          ]
+        },
+        {
+          "pixels_quad": 116,
+          "bbox_anchor_sensor": [
+            1996,
+            2116,
+            24,
+            44
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 9,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        401,
+        402
+      ],
+      "common_focus_quad_pixels": 1239,
+      "components": [
+        {
+          "pixels_quad": 210,
+          "bbox_anchor_sensor": [
+            1982,
+            2226,
+            42,
+            66
+          ]
+        },
+        {
+          "pixels_quad": 155,
+          "bbox_anchor_sensor": [
+            1980,
+            2160,
+            46,
+            30
+          ]
+        },
+        {
+          "pixels_quad": 136,
+          "bbox_anchor_sensor": [
+            1964,
+            2142,
+            28,
+            58
+          ]
+        },
+        {
+          "pixels_quad": 87,
+          "bbox_anchor_sensor": [
+            1996,
+            2124,
+            24,
+            36
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 9,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    },
+    {
+      "acquisitions": [
+        402,
+        403
+      ],
+      "common_focus_quad_pixels": 1123,
+      "components": [
+        {
+          "pixels_quad": 201,
+          "bbox_anchor_sensor": [
+            1982,
+            2226,
+            40,
+            66
+          ]
+        },
+        {
+          "pixels_quad": 145,
+          "bbox_anchor_sensor": [
+            1980,
+            2160,
+            46,
+            30
+          ]
+        },
+        {
+          "pixels_quad": 136,
+          "bbox_anchor_sensor": [
+            1964,
+            2142,
+            28,
+            58
+          ]
+        },
+        {
+          "pixels_quad": 76,
+          "bbox_anchor_sensor": [
+            1996,
+            2124,
+            24,
+            32
+          ]
+        }
+      ],
+      "complete_qualified_square_counts_by_side_quad": {
+        "4": 8,
+        "8": 0,
+        "12": 0,
+        "18": 0,
+        "24": 0
+      }
+    }
+  ]
+}

@@ -56,6 +56,7 @@ fn fixture() -> StrehlApp {
     app.image_path = Some(path.clone());
     app.editor.path = Some(path.clone());
     app.editor.loaded = Some(crate::edit_workspace::LoadedPhoto {
+        coverage: None,
         image: image.clone(),
         preview: image,
         recipe: Default::default(),

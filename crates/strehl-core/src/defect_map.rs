@@ -204,11 +204,7 @@ pub enum DefectMapError {
     },
 
     #[error("defect map has a duplicate {kind} record at ({x}, {y})")]
-    DuplicateSite {
-        kind: &'static str,
-        x: u32,
-        y: u32,
-    },
+    DuplicateSite { kind: &'static str, x: u32, y: u32 },
 
     #[error(
         "defect map {kind} record at ({x}, {y}) is outside the {w}x{h} area the map \
@@ -472,7 +468,9 @@ impl CorrectionReport {
     /// Every hot site landed in exactly one bucket, and likewise every dust
     /// quad. Returns `(hot_ok, dust_ok)`.
     pub fn check_partition(&self) -> (bool, bool) {
-        let hot = self.hot_corrected + self.hot_below_floor + self.hot_clipped
+        let hot = self.hot_corrected
+            + self.hot_below_floor
+            + self.hot_clipped
             + self.hot_outside
             + self.hot_no_change;
         let dust =
@@ -689,14 +687,12 @@ impl DefectMap {
                         found: head.to_string(),
                     });
                 }
-                let v: u32 = it
-                    .next()
-                    .unwrap_or_default()
-                    .parse()
-                    .map_err(|_| DefectMapError::BadValue {
+                let v: u32 = it.next().unwrap_or_default().parse().map_err(|_| {
+                    DefectMapError::BadValue {
                         key: "version".into(),
                         value: t.to_string(),
-                    })?;
+                    }
+                })?;
                 if v != VERSION {
                     return Err(DefectMapError::BadVersion { found: v });
                 }
@@ -1711,7 +1707,12 @@ pub fn dust_residual(
     let r = ref_radius.max(1);
     for &(px, py) in quads {
         let (px, py) = (px as usize, py as usize);
-        if 2 * px + 1 >= aw || 2 * py + 1 >= ah || px < r || py < r || px + r >= aw / 2 || py + r >= ah / 2
+        if 2 * px + 1 >= aw
+            || 2 * py + 1 >= ah
+            || px < r
+            || py < r
+            || px + r >= aw / 2
+            || py + r >= ah / 2
         {
             unscored += 1;
             continue;
@@ -2351,7 +2352,10 @@ fn local_null_p(
         let d = p.annulus_in as f64 + rng.next_f64() * (p.annulus_out - p.annulus_in) as f64;
         let oy = cy as f64 + d * a.sin();
         let ox = cx as f64 + d * a.cos();
-        if oy < r as f64 || ox < r as f64 || oy >= (h as i64 - r) as f64 || ox >= (w as i64 - r) as f64
+        if oy < r as f64
+            || ox < r as f64
+            || oy >= (h as i64 - r) as f64
+            || ox >= (w as i64 - r) as f64
         {
             continue;
         }
@@ -2813,11 +2817,7 @@ mod tests {
         let mut m = DefectMap::empty(W, H, "x");
         m.dust = quads
             .iter()
-            .map(|&(px, py)| DustQuad {
-                px,
-                py,
-                gain: 1.02,
-            })
+            .map(|&(px, py)| DustQuad { px, py, gain: 1.02 })
             .collect();
         m.hot.push(HotSite {
             x: 100,
@@ -3414,10 +3414,15 @@ mod tests {
             ..DustParams::default()
         };
         let (dust, census) = detect_dust(&refs, w, h, p);
-        assert!(!dust.is_empty(), "the planted mote was not found: {census:?}");
+        assert!(
+            !dust.is_empty(),
+            "the planted mote was not found: {census:?}"
+        );
         assert_eq!(census.components, 1, "{census:?}");
-        let found: BTreeSet<(usize, usize)> =
-            dust.iter().map(|d| (d.px as usize, d.py as usize)).collect();
+        let found: BTreeSet<(usize, usize)> = dust
+            .iter()
+            .map(|d| (d.px as usize, d.py as usize))
+            .collect();
         let planted: BTreeSet<(usize, usize)> = quads.iter().copied().collect();
         let inter = found.intersection(&planted).count();
         assert!(
@@ -4218,7 +4223,11 @@ mod tests {
         let m = DefectMap::from_text(EMBEDDED_DUST_MAP).expect("embedded map must parse");
         assert_eq!(m.camera, "ILCE-7CM2");
         assert_eq!(m.coords, CoordSpace::Active);
-        assert_eq!(m.hot.len(), 0, "the hot arm is a measured null on this body");
+        assert_eq!(
+            m.hot.len(),
+            0,
+            "the hot arm is a measured null on this body"
+        );
         assert_eq!(m.dust.len(), 1135);
         assert_eq!((m.sensor_w, m.sensor_h), (7032, 4688));
         let motes = m.motes(8);
@@ -4333,7 +4342,11 @@ mod tests {
             ma, mb,
             "active and full coordinate spaces must correct different samples"
         );
-        assert_eq!(ma[0], (OFF + 2) * S + OFF + 2, "active: offset by the origin");
+        assert_eq!(
+            ma[0],
+            (OFF + 2) * S + OFF + 2,
+            "active: offset by the origin"
+        );
         assert_eq!(mb[0], 2 * S + 2, "full: not offset");
     }
 
@@ -4367,4 +4380,3 @@ mod tests {
         }
     }
 }
-

@@ -11,11 +11,11 @@
 #[path = "../src/align_cmd.rs"]
 mod align_cmd;
 #[allow(dead_code)]
-#[path = "../src/ui-progress.rs"]
-mod ui_progress;
-#[allow(dead_code)]
 #[path = "../src/image_out.rs"]
 mod image_out;
+#[allow(dead_code)]
+#[path = "../src/ui-progress.rs"]
+mod ui_progress;
 
 /// Required by the `#[path]`-included image writer. Measurement TIFFs use the
 /// writer's stable measurement stamp rather than this experimental build stamp.

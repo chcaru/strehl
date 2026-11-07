@@ -42,10 +42,32 @@ struct Counts {
     accepted: usize,
 }
 
+/// Silences every [`Progress`] created while set. The lateral-CA preview
+/// pass (`merge_cmd::ca_refine`) is a second, partial run of the stage
+/// sequence; the desktop's stage display only moves forward, so a preview that
+/// reported "rendering" would freeze it there for the whole real fold.
+static MUTED: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+pub(crate) fn set_muted(muted: bool) {
+    MUTED.store(muted, std::sync::atomic::Ordering::Relaxed);
+}
+
+/// The lateral-CA preview's own progress (`merge_cmd::ca_refine`): separate
+/// from the stage sequence the mute silences, so the desktop can say what is
+/// happening without that preview moving its stage display.
+pub(crate) fn fringe_preview(state: &str, completed: usize, total: usize) {
+    if enabled_value(std::env::var(ENV).ok().as_deref()) {
+        eprintln!(
+            "STREHL_UI_PROGRESS event=fringe-preview state={state} completed={completed} total={total}"
+        );
+    }
+}
+
 impl Progress {
     pub(crate) fn new(total: usize) -> Self {
         static ENABLED: OnceLock<bool> = OnceLock::new();
-        let enabled = *ENABLED.get_or_init(|| enabled_value(std::env::var(ENV).ok().as_deref()));
+        let enabled = *ENABLED.get_or_init(|| enabled_value(std::env::var(ENV).ok().as_deref()))
+            && !MUTED.load(std::sync::atomic::Ordering::Relaxed);
         Self {
             enabled,
             total,

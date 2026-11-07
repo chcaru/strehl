@@ -61,6 +61,14 @@ pub(crate) enum PreviewTarget {
 /// Unknown keys are rejected before the request reaches the UI.
 pub(crate) type SettingsPatch = BTreeMap<String, Value>;
 
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct CatalogSessionPass {
+    pub name: String,
+    /// Existing catalog stacks, in continuation order; no arbitrary filesystem paths.
+    pub stack_ids: Vec<u64>,
+}
+
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub(crate) enum AdaptiveDevelopIntent {
@@ -97,6 +105,15 @@ pub(crate) enum AgentCommand {
     SelectRun {
         stack_id: u64,
         run_index: usize,
+    },
+    ImportCompletedSession {
+        grant_id: String,
+        relative_path: String,
+        #[serde(default)]
+        parent_id: Option<u64>,
+    },
+    SelectSessionOutput {
+        index: usize,
     },
     SelectSource {
         frame: usize,
@@ -137,6 +154,12 @@ pub(crate) enum AgentCommand {
     },
     StartStack {},
     CancelStack {},
+    ExportViewBundle {
+        grant_id: String,
+        relative_parent: String,
+        folder_name: String,
+    },
+    CancelViewBundleExport {},
     /// The destination is the app's selected export folder; never an arbitrary path.
     SaveEditVersion {
         name: String,
@@ -174,6 +197,38 @@ pub(crate) enum AgentCommand {
         name: String,
         #[serde(default)]
         parent_id: Option<u64>,
+    },
+    /// Compose already imported catalog stacks into ordered pass segments.
+    CreateSession {
+        name: String,
+        passes: Vec<CatalogSessionPass>,
+        mode: strehl_cli::session_input::SessionMode,
+        #[serde(default)]
+        primary_pass: Option<usize>,
+        memory_limit_gib: f64,
+        #[serde(default)]
+        precision_weights: bool,
+        #[serde(default)]
+        contribution_maps: bool,
+        #[serde(default)]
+        focus_evidence: bool,
+        #[serde(default)]
+        reproducibility: bool,
+        #[serde(default)]
+        original_cfa_reconstruction: bool,
+        #[serde(default)]
+        anchor_lighting_only: bool,
+        #[serde(default)]
+        parent_id: Option<u64>,
+    },
+    /// Inspect a saved map from snapshot.saved_diagnostics.available; no caller path.
+    InspectSessionDiagnostic {
+        #[serde(default)]
+        map: Option<String>,
+        #[serde(default)]
+        opacity: Option<f32>,
+        #[serde(default)]
+        sample_uv: Option<[f32; 2]>,
     },
     ImportPreset {
         grant_id: String,
@@ -244,6 +299,9 @@ impl AgentCommand {
                 }
                 Ok(())
             }
+            Self::SelectSessionOutput { index } => {
+                ensure(*index < 64, "Session output index must be0..63")
+            }
             Self::SetSettings { patch } => validate_settings(patch),
             Self::SetDevelop { recipe } => {
                 recipe.validate().map_err(|e| e.to_string())?;
@@ -282,6 +340,22 @@ impl AgentCommand {
                     && (1.0..=8.0).contains(zoom),
                 "View center must be normalized and zoom must be 1..8",
             ),
+            Self::InspectSessionDiagnostic {
+                map,
+                opacity,
+                sample_uv,
+            } => {
+                if let Some(map) = map {
+                    text_bound(map, 256, false)?;
+                }
+                ensure(
+                    opacity.is_none_or(|v| v.is_finite() && (0.0..=1.0).contains(&v))
+                        && sample_uv.is_none_or(|p| {
+                            p.iter().all(|v| v.is_finite() && (0.0..=1.0).contains(v))
+                        }),
+                    "Diagnostic opacity and sample coordinates must be normalized",
+                )
+            }
             Self::SaveEditVersion { name } => ensure(
                 !name.trim().is_empty()
                     && name.trim().chars().count() <= 120
@@ -296,6 +370,15 @@ impl AgentCommand {
                         .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b)),
                 "Use the exact saved version ID from photo_history.versions",
             ),
+            Self::ExportViewBundle {
+                grant_id,
+                relative_parent,
+                folder_name,
+            } => {
+                identifier(grant_id)?;
+                safe_relative_path(relative_parent)?;
+                safe_file_name(folder_name)
+            }
             Self::Export {
                 file_name,
                 format,
@@ -310,6 +393,14 @@ impl AgentCommand {
             }
             Self::CreateProject { name, .. } | Self::RenameNode { name, .. } => {
                 text_bound(name, 160, false)
+            }
+            Self::ImportCompletedSession {
+                grant_id,
+                relative_path,
+                ..
+            } => {
+                identifier(grant_id)?;
+                text_bound(relative_path, 4096, true)
             }
             Self::ImportStack {
                 grant_id,
@@ -327,6 +418,65 @@ impl AgentCommand {
             } => {
                 identifier(grant_id)?;
                 safe_relative_path(relative_path)
+            }
+            Self::CreateSession {
+                name,
+                passes,
+                primary_pass,
+                memory_limit_gib,
+                mode,
+                precision_weights,
+                contribution_maps,
+                focus_evidence,
+                reproducibility,
+                original_cfa_reconstruction,
+                ..
+            } => {
+                text_bound(name, 160, false)?;
+                ensure(
+                    crate::session_workspace::primary_available(*mode) || primary_pass.is_none(),
+                    "Mosaics and independent views do not use a primary pass",
+                )?;
+                ensure(
+                    !*precision_weights
+                        || crate::session_workspace::precision_available(*mode, passes.len()),
+                    "Precision weighting needs at least two repeated or exposure passes",
+                )?;
+                ensure(
+                    !(*contribution_maps || *focus_evidence)
+                        || !crate::session_workspace::managed_evidence(*mode),
+                    "Mosaics and independent views manage their own focus evidence",
+                )?;
+                ensure(
+                    !*reproducibility
+                        || crate::session_workspace::reproducibility_available(*mode, passes.len()),
+                    "Automatic comparison needs two combine, interleaved, repeat or layer passes",
+                )?;
+                ensure(
+                    !*original_cfa_reconstruction
+                        || crate::session_workspace::reconstruction_available(*mode),
+                    "Original-CFA reconstruction is unavailable for layers and mosaics",
+                )?;
+                ensure(
+                    !passes.is_empty() && passes.len() <= 64,
+                    "Use 1..64 explicit passes",
+                )?;
+                ensure(
+                    primary_pass.is_none_or(|index| index < passes.len()),
+                    "Primary pass is outside the session",
+                )?;
+                ensure(
+                    memory_limit_gib.is_finite() && (1.0..=4096.0).contains(memory_limit_gib),
+                    "RAM budget must be 1..4096 GiB",
+                )?;
+                for pass in passes {
+                    text_bound(&pass.name, 160, false)?;
+                    ensure(
+                        !pass.stack_ids.is_empty() && pass.stack_ids.len() <= 256,
+                        "Each pass needs 1..256 existing source stacks",
+                    )?;
+                }
+                Ok(())
             }
             Self::Suggest {
                 title,
@@ -422,7 +572,7 @@ pub(crate) fn safe_relative_path(path: &str) -> Result<(), String> {
         "Use a relative path within a human-shared folder, without parent traversal or a drive prefix",
     )
 }
-fn safe_file_name(name: &str) -> Result<(), String> {
+pub(crate) fn safe_file_name(name: &str) -> Result<(), String> {
     safe_relative_path(name)?;
     ensure(
         name.len() <= 200
@@ -463,8 +613,8 @@ pub(crate) fn validate_settings(patch: &SettingsPatch) -> Result<(), String> {
             "pyramid_sharpen" => Some((1.0, 2.0, false, true)),
             "frame_limit" => Some((1.0, 100_000.0, true, true)),
             "workers" => Some((1.0, 1024.0, true, false)),
-            "binned" | "correct_lateral_ca" | "crop_to_coverage" | "auto_exposure"
-            | "confidence_map" => {
+            "binned" | "correct_lateral_ca" | "refine_lateral_ca" | "crop_to_coverage"
+            | "auto_exposure" | "confidence_map" => {
                 ensure(value.is_boolean(), &format!("{name} must be boolean"))?;
                 None
             }

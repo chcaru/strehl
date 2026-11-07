@@ -55,6 +55,10 @@ impl Controls {
     }
 
     pub fn show(&mut self, ui: &mut egui::Ui, enabled: bool) {
+        if self.settings.session.is_some() {
+            self.show_session_controls(ui, enabled);
+            return;
+        }
         ui.add_enabled_ui(enabled, |ui| {
             ui.horizontal(|ui| {
                 ui.label(RichText::new("RENDER SETTINGS").monospace().size(9.0).color(MUTED));
@@ -80,7 +84,7 @@ impl Controls {
                             } else if ui.small_button("Default").on_hover_text("Override the engine's pyramid scale count.").clicked() { self.settings.pyramid_bands=Some(7); }
                         });
                     });
-                    optional_float(ui,"Coarse power",&mut self.settings.pyramid_exponent,2.0,0.5..=8.0,
+                    optional_float(ui,"Coarse power",&mut self.settings.pyramid_exponent,strehl_core::pyramid::DEFAULT_EXPONENT,0.5..=8.0,
                         "Exponent applied to band weights. Increasing it concentrates selection; it does not promise better detail.");
                     optional_float(ui,"Fine-scale ramp",&mut self.settings.pyramid_sharpen,1.4,1.0..=2.0,
                         "Increase selection exponents toward finer bands. This is not post-process sharpening.");
@@ -95,6 +99,8 @@ impl Controls {
                         "Exposure in stops for the next TIFF. Click Default to override. Camera JPEG previews retain camera processing.");
                 });
                 ui.checkbox(&mut self.settings.correct_lateral_ca,"Correct colour fringing").on_hover_text("Use the engine's supported optical profile; unknown profiles follow its normal guard.");
+                ui.add_enabled(self.settings.correct_lateral_ca, egui::Checkbox::new(&mut self.settings.refine_lateral_ca,"Refine fringing per stack"))
+                    .on_hover_text("Measure the red and blue fringing the profile leaves on a quick preview of every 8th frame, then render with the correction fitted to this stack. About 18% more time; skipped for half-size TIFFs.");
                 note(ui,"As-shot WB / sRGB tone");
             });
             section(ui,"03","Geometry", |ui| {
@@ -131,6 +137,61 @@ impl Controls {
                 note(ui,"All available CPU threads by default.");
                 note(ui,"CPU stacking · GPU display");
                 ui.label(RichText::new("Engine manages memory and task routing.").size(9.5).color(MUTED)).on_hover_text("The normal stacking engine runs on CPU. The graphics card draws this workspace. Thread limits do not change the image settings or canonical merge reduction order; actual active threads depend on the current stage and bracket.");
+            });
+        });
+    }
+
+    fn show_session_controls(&mut self, ui: &mut egui::Ui, enabled: bool) {
+        ui.add_enabled_ui(enabled, |ui| {
+            section(ui, "01", "Session merge", |ui| {
+                optional_float(ui, "Noise gate", &mut self.gate, 2.0, 0.0..=8.0, "Higher values average more coefficients below the calibrated noise gate.");
+                optional_usize(ui, "Detail scales", &mut self.settings.pyramid_bands, 7, 1..=12, "Pyramid scale count for this session.");
+                optional_float(ui, "Coarse power", &mut self.settings.pyramid_exponent, 2.0, 0.5..=8.0, "Band-weight exponent.");
+                optional_float(ui, "Fine-scale ramp", &mut self.settings.pyramid_sharpen, 1.4, 1.0..=2.0, "Selection exponent increase toward finer bands.");
+                optional_float(ui, "Exposure", &mut self.exposure, 0.0, -12.0..=12.0, "Manual output exposure in stops; camera previews keep camera processing.");
+                let session = self.settings.session.as_mut().expect("session controls");
+                let mode = session.manifest.mode;
+                let passes = session.manifest.passes.len();
+                if mode == crate::session_workspace::SessionMode::Auto {
+                    let mut layers = !session.anchor_lighting_only;
+                    ui.checkbox(&mut layers, "Combine other lighting and moved poses")
+                        .on_hover_text("Passes lit differently from the primary are aligned to it and averaged as if every lamp were on at once, lowering noise. Passes where the subject moved are used only where they still match. Out-of-focus areas of any pass are not used.");
+                    session.anchor_lighting_only = !layers;
+                    if layers && (session.contribution_maps || session.focus_evidence || session.reproducibility || session.original_cfa_reconstruction) {
+                        note(ui, "Evidence outputs below do not yet combine with other lighting or poses; those passes will be set aside.");
+                    }
+                }
+                ui.add_enabled(crate::session_workspace::precision_available(mode, passes),
+                    egui::Checkbox::new(&mut session.precision_weights, "Weight repeats by predicted noise"))
+                    .on_hover_text("Available for repeated captures and exposure range. Compatible observations use a separate source to predict their relative noise; unsupported predictions keep equal averaging.");
+                if crate::session_workspace::managed_evidence(mode) {
+                    note(ui, if mode == crate::session_workspace::SessionMode::IndependentViews { "Each view includes its own focus evidence and coordinates." } else { "Mosaic includes focus evidence and transparent coverage." });
+                } else {
+                    ui.checkbox(&mut session.contribution_maps, "Save contribution maps")
+                        .on_hover_text("Retain the source and pass contributions used at each detail scale. These maps describe coefficients, not final-image uncertainty.");
+                    ui.checkbox(&mut session.focus_evidence, "Save focus evidence")
+                        .on_hover_text("Retain measured focus position, support and ambiguity for each pass. Focus position is a capture ordinal, not physical depth.");
+                }
+                ui.add_enabled(crate::session_workspace::reproducibility_available(mode, passes),
+                    egui::Checkbox::new(&mut session.reproducibility, "Compare the first two passes"))
+                    .on_hover_text("Compare independent output detail from the first two declared passes. Save correlations, differences and qualification; this is not a measured resolution cutoff. Available for combine, interleaved, repeated and layer passes.");
+                ui.add_enabled(crate::session_workspace::reconstruction_available(mode),
+                    egui::Checkbox::new(&mut session.original_cfa_reconstruction, "Original-CFA reconstruction (experimental)"))
+                    .on_hover_text("Uses original sensor samples where registration and local support qualify. Unsupported pixels retain the native result. Keeps the same output dimensions; no resolution improvement is promised. Saves coherent RGB support and fallback reasons.");
+                note(ui, "Full resolution · 16-bit photograph + linear master");
+                note(ui, "Each pass is calibrated independently. Source repairs and temporal smoothing are unavailable in a session.");
+                note(ui, "New session renders start from these merge settings. Develop each saved photograph afterwards; previous edits stay with their saved result.");
+            });
+            section(ui, "02", "Session resources", |ui| {
+                note(ui, &self.machine_summary());
+                let maximum = self.machine.physical_memory_bytes.map_or(4096.0, |bytes| (bytes as f64 / (1u64 << 30) as f64).max(1.0));
+                ui.horizontal(|ui| {
+                    ui.label("RAM budget").on_hover_text("Working-memory reservation for the session engine, including cached CFA, guides, direct native pairs and reconstruction. It refuses a budget too small for the required workspace.");
+                    let session = self.settings.session.as_mut().expect("session controls");
+                    ui.add(egui::DragValue::new(&mut session.memory_limit_gib).range(1.0..=maximum).speed(0.25).suffix(" GiB"));
+                });
+                ui.horizontal(|ui| { ui.label("CPU thread limit"); ui.add(egui::DragValue::new(&mut self.workers).range(1..=self.machine.maximum_workers()).speed(0.1)); });
+                note(ui, "The engine bounds active workers to the RAM reservation. GPU draws this workspace.");
             });
         });
     }
@@ -244,6 +305,7 @@ mod tests {
             assert!(!controls.settings.binned);
             assert_eq!(controls.settings.resampler, Resampler::CatmullRom);
             assert!(controls.settings.correct_lateral_ca);
+            assert!(controls.settings.refine_lateral_ca);
             assert!(controls.exposure.is_none() && controls.gate.is_none());
         }
     }

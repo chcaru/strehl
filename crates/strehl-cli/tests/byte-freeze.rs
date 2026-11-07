@@ -603,6 +603,22 @@ const RENDER_ENV: &[&str] = &[
     // the reason the `sha256` column insists on it: this corpus already carries
     // a freeze recorded as `D99F5D82...76CA`, which no machine can check.
     "STREHL_PYRAMID_SIGNIFICANCE",
+    // The ensemble gate (2026-11-02) is read by `MergeConfig::default()` through
+    // a `OnceLock` and is ON by default: an ambient `STREHL_PYRAMID_ENSEMBLE=0`
+    // would render the previous pyramid while every pyramid row here names the
+    // current one. `_Q` moves its thresholds. `STREHL_FRAME_PARITY` folds only a
+    // subset of frames (an experiment instrument) and would render a different
+    // stack under the same command.
+    "STREHL_PYRAMID_ENSEMBLE",
+    "STREHL_PYRAMID_ENSEMBLE_Q",
+    // Pooled-evidence selection (2026-11-03), ON by default, likewise read
+    // once by `MergeConfig::default()`.
+    "STREHL_PYRAMID_POOLED_EVIDENCE",
+    "STREHL_PYRAMID_POOLED_RATIO",
+    // Per-capture lateral-CA refinement (2026-11-03), OFF by default: a
+    // preview pass plus a refined render, so a different image.
+    "STREHL_REFINE_CA",
+    "STREHL_FRAME_PARITY",
     // The rest of the pyramid's own environment, registered in the commit that
     // gives it something to hide -- the first pyramid row. Both are read by
     // `MergeConfig::default()` through a `OnceLock`, so an ambient value is
@@ -931,8 +947,11 @@ fn selected_freezes(rows: &[Freeze]) -> Vec<&Freeze> {
     let Ok(raw) = std::env::var(FREEZE_IDS_ENV) else {
         return rows.iter().collect();
     };
-    let requested: BTreeSet<&str> =
-        raw.split(',').map(str::trim).filter(|id| !id.is_empty()).collect();
+    let requested: BTreeSet<&str> = raw
+        .split(',')
+        .map(str::trim)
+        .filter(|id| !id.is_empty())
+        .collect();
     assert!(
         !requested.is_empty(),
         "{FREEZE_IDS_ENV} was set but selected no byte-freeze rows"
@@ -943,7 +962,9 @@ fn selected_freezes(rows: &[Freeze]) -> Vec<&Freeze> {
             "{FREEZE_IDS_ENV} requested unknown row {id:?}"
         );
     }
-    rows.iter().filter(|row| requested.contains(row.id.as_str())).collect()
+    rows.iter()
+        .filter(|row| requested.contains(row.id.as_str()))
+        .collect()
 }
 
 // ---------------------------------------------------------------------------

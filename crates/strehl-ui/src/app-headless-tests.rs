@@ -415,3 +415,28 @@ fn headless_autosave_undo_shutdown_and_reload_do_not_require_immutable_versions(
     assert_eq!(fs::read(&photograph).unwrap(), original);
     assert_eq!(reopened.catalog.path.as_ref(), Some(&catalog));
 }
+
+#[test]
+fn diagnostic_capture_launch_requires_a_saved_run_and_normalized_view() {
+    let root = tempfile::tempdir().unwrap();
+    let mut valid = LaunchOptions {
+        offscreen: true,
+        screenshot: Some(root.path().join("view.png")),
+        open_run: Some(root.path().join("run")),
+        diagnostic_map: Some("First two passes · correlation".into()),
+        diagnostic_opacity: Some(0.5),
+        diagnostic_sample: Some([0.5, 0.5]),
+        photo_zoom: Some(8.0),
+        ..Default::default()
+    };
+    validate_automation_launch(&mut valid).unwrap();
+    valid.photo_zoom = Some(f32::NAN);
+    assert!(validate_automation_launch(&mut valid).is_err());
+    valid.photo_zoom = Some(1.0);
+    valid.open_run = None;
+    assert!(validate_automation_launch(&mut valid).is_err());
+    valid.open_run = Some(root.path().join("run"));
+    valid.diagnostic_sample = Some([1.1, 0.5]);
+    assert!(validate_automation_launch(&mut valid).is_err());
+    assert!(!root.path().join("view.png").exists());
+}

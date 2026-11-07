@@ -8,6 +8,49 @@ mod image_out;
 #[path = "lens-research.rs"]
 mod lens_research;
 mod merge_cmd;
+#[cfg(feature = "multi-stack")]
+#[path = "session-align.rs"]
+pub mod session_align;
+#[cfg(feature = "multi-stack")]
+#[path = "session-cache.rs"]
+pub mod session_cache;
+#[cfg(feature = "multi-stack")]
+#[path = "session-cmd.rs"]
+mod session_cmd;
+#[cfg(feature = "multi-stack")]
+#[path = "session-focus.rs"]
+pub mod session_focus;
+#[path = "session-input.rs"]
+pub mod session_input;
+#[path = "session-discover.rs"]
+pub mod session_discover;
+#[cfg(feature = "multi-stack")]
+#[path = "session-frame-photometry.rs"]
+pub mod session_frame_photometry;
+#[cfg(feature = "multi-stack")]
+#[path = "session-geometry-check.rs"]
+pub mod session_geometry_check;
+#[cfg(feature = "multi-stack")]
+#[path = "session-lighting-fusion.rs"]
+pub mod session_lighting_fusion;
+#[cfg(feature = "multi-stack")]
+#[path = "session-mapped-sampling.rs"]
+pub mod session_mapped_sampling;
+#[cfg(feature = "multi-stack")]
+#[path = "session-mosaic-geometry.rs"]
+pub mod session_mosaic_geometry;
+#[cfg(feature = "multi-stack")]
+#[path = "session-photometry.rs"]
+pub mod session_photometry;
+#[cfg(feature = "multi-stack")]
+#[path = "session-reconstruction-sampling.rs"]
+pub mod session_reconstruction_sampling;
+#[cfg(feature = "multi-stack")]
+#[path = "session-reproducibility.rs"]
+mod session_reproducibility;
+#[cfg(feature = "multi-stack")]
+#[path = "session-sampling.rs"]
+pub mod session_sampling;
 #[path = "sony-focus-cmd.rs"]
 mod sony_focus_cmd;
 #[path = "sony-focus-report.rs"]
@@ -98,8 +141,16 @@ enum FocusAction {
     },
 }
 
+// Parsed once per process; variant size is irrelevant.
+#[allow(clippy::large_enum_variant)]
 #[derive(Subcommand)]
 enum Command {
+    /// Work with explicitly grouped passes of one subject.
+    #[cfg(feature = "multi-stack")]
+    Session {
+        #[command(subcommand)]
+        action: session_cmd::Action,
+    },
     /// Prepare an isolated, uncalibrated nonlinear optical research map.
     #[cfg(feature = "research-lens-warp")]
     LensResearch(lens_research::Args),
@@ -327,14 +378,19 @@ enum Command {
         #[arg(long, value_name = "MODE")]
         pyramid_select: Option<String>,
         /// How the `pyramid` merge combines the coarsest residual, the band
-        /// that carries overall tone: `mean` (the default) or `weighted`.
+        /// that carries overall tone: `weighted` (the default) or `mean`.
         ///
-        /// MEASURED on flower-bud-alone-cpl: weighting the base band cost
-        /// -475.0 DN of global level and 835.0 DN of position-dependent
-        /// structure, against +11.0 DN and 45.0 DN for the mean, with no
-        /// difference in aura removal between them. `weighted` is kept
-        /// reachable because a default chosen by measurement needs the arm it
-        /// beat to remain runnable.
+        /// `weighted` takes the base from the frames the coarsest band selects
+        /// (on pooled focus evidence), and averages where that band is noise.
+        /// The mean of every frame's base includes every defocused frame's
+        /// spread light, which shows as a glow around bright and dark detail
+        /// and lifted dark ground on deep stacks: on a tilted calibration slide
+        /// the weighted base with pooled evidence cut the dark-ground excess
+        /// over a locally in-focus composite from 35% to 14%, and it lowered
+        /// error against truth on synthetic stacks and a held-out burst
+        /// (experiments/image-quality-2026-11-02/results.md). An earlier
+        /// measurement preferred `mean`, scoring against the mean itself; it is
+        /// kept reachable here.
         #[arg(long, value_name = "MODE")]
         pyramid_base: Option<String>,
         /// Render for viewing: camera colour matrix (to sRGB/BT.709 primaries,
@@ -419,6 +475,20 @@ enum Command {
         /// over the gear match, in BOTH directions.
         #[arg(long, value_name = "PROFILE")]
         fix_ca: Option<String>,
+        /// Refine the lateral-CA correction for this capture: `on` (the
+        /// default) or `off`.
+        ///
+        /// The profile's per-channel constants are right on average and wrong
+        /// per capture (a channel's effective wavelength depends on the
+        /// scene's spectrum). With `on`, a preview of every Nth frame is
+        /// merged first, the red and blue displacement it still shows against
+        /// green is measured, and the render uses the profile plus that
+        /// residual -- about +18% time. Skipped automatically where it cannot
+        /// help: no matching profile, `--fix-ca=off`, alignment off, binned
+        /// output. Takes precedence over the STREHL_REFINE_CA environment
+        /// variable.
+        #[arg(long, value_name = "on|off")]
+        refine_ca: Option<String>,
         /// Exposure for the viewing render, in STOPS. Requires --srgb.
         ///
         /// A gain of 2^STOPS applied in LINEAR light, before the sRGB transfer
@@ -927,7 +997,11 @@ where
         )
         .init();
 
-    let command = Cli::parse_from(args).command;
+    #[cfg(feature = "multi-stack")]
+    let (command, single_pass_completion) =
+        unsafe { session_cmd::route_single_pass(Cli::parse_from(args).command)? };
+    #[cfg(not(feature = "multi-stack"))]
+    let (command, single_pass_completion) = (Cli::parse_from(args).command, None::<NoSinglePass>);
     if std::env::var_os("STREHL_RESEARCH_LENS_MAP").is_some() {
         anyhow::ensure!(
             cfg!(feature = "research-lens-warp"),
@@ -938,7 +1012,9 @@ where
             "STREHL_RESEARCH_LENS_MAP applies only to stack; unset it for other commands"
         );
     }
-    match command {
+    let result = match command {
+        #[cfg(feature = "multi-stack")]
+        Command::Session { action } => session_cmd::run(action),
         Command::Align(args) => align_cmd::run(&args),
         #[cfg(feature = "research-lens-warp")]
         Command::LensResearch(args) => lens_research::run(&args),
@@ -999,6 +1075,7 @@ where
             demosaic,
             binned,
             fix_ca,
+            refine_ca,
             exposure,
             auto_exposure,
             gates,
@@ -1030,6 +1107,14 @@ where
             // below, so the write strictly happens-before any reader exists.
             if let Some(key) = fix_ca.as_deref() {
                 unsafe { std::env::set_var(strehl_core::optics::CA_ENV, key) };
+            }
+            // Same mechanism and the same SAFETY argument as `--fix-ca` above.
+            if let Some(v) = refine_ca.as_deref() {
+                anyhow::ensure!(
+                    matches!(v, "on" | "off"),
+                    "--refine-ca takes on or off, not {v:?}"
+                );
+                unsafe { std::env::set_var(merge_cmd::REFINE_CA_ENV, v) };
             }
 
             // Resolved here, alongside `resampler` and `photometric`, so that
@@ -1270,6 +1355,9 @@ where
             // one backend to honour the mode while the other ignores it.
             let (cover_mode, cover_source) = merge_cmd::resolve_cover_mode(cover.as_deref())?;
 
+            if let Some(completion) = single_pass_completion.as_ref() {
+                completion.prepare_alignment()?;
+            }
             merge_cmd::run(&MergeOptions {
                 dir,
                 out,
@@ -1339,6 +1427,25 @@ where
                 pyramid,
             })
         }
+    };
+    result?;
+    if let Some(completion) = single_pass_completion {
+        completion.finish()?;
+    }
+    Ok(())
+}
+
+/// Without multi-stack sessions there is never a single-pass session to complete.
+#[cfg(not(feature = "multi-stack"))]
+enum NoSinglePass {}
+
+#[cfg(not(feature = "multi-stack"))]
+impl NoSinglePass {
+    fn prepare_alignment(&self) -> Result<()> {
+        match *self {}
+    }
+    fn finish(self) -> Result<()> {
+        match self {}
     }
 }
 

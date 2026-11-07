@@ -1,0 +1,270 @@
+{
+  "schema": "strehl.pitch32-focus-witnesses.v1",
+  "argv": [
+    "experiments/multi-stack-2026-10-28/completion/review/select-pitch32-witnesses.py"
+  ],
+  "workers": 1,
+  "no_photograph_pixels_read": true,
+  "protocol": "Both usable; primary modes in original acquisition ordinals agree within max shape width. Each half independently requires distance to good sample <0.5 own width and distance to bad sample >2 own width. Eight-connected components ranked by area; witness center is maximum192quad density within each component, deterministic tie-first. Up to3 nonoverlapping384sensor witnesses per direction.",
+  "shape_not_confidence": "Local width is a shape descriptor, not calibrated uncertainty. Selection predicts an adverse gap; does not prove detail or unbiased geometry.",
+  "controls": {
+    "even_positive": true,
+    "offset_positive": true,
+    "inconsistent_modes_refused": true,
+    "broad_width_refused": true,
+    "unusable_refused": true
+  },
+  "sampling": {
+    "even32": [
+      0,
+      32,
+      64,
+      96,
+      128,
+      160
+    ],
+    "offset16": [
+      16,
+      48,
+      80,
+      112,
+      144,
+      176
+    ]
+  },
+  "widths": [
+    {
+      "count": 1260022,
+      "original_frame_shape_width_quantiles": [
+        3.207073616981506,
+        5.628604412078857,
+        9.18362379074097
+      ]
+    },
+    {
+      "count": 1276279,
+      "original_frame_shape_width_quantiles": [
+        3.2052873611450194,
+        5.6654839515686035,
+        9.341951751708983
+      ]
+    }
+  ],
+  "both_usable": 949105,
+  "consistent_usable": 948989,
+  "census": {
+    "even32-good": {
+      "qualifying_pixels": 87292,
+      "components": 7269,
+      "largest_component_pixels": 16438,
+      "witnesses": 3
+    },
+    "offset16-good": {
+      "qualifying_pixels": 74711,
+      "components": 6625,
+      "largest_component_pixels": 8289,
+      "witnesses": 3
+    }
+  },
+  "gauge_policy": "Coordinates are in existing dense-half output gauge6800x4534. Before candidate viewing, map these physical regions into NEW first-half control gauge and freeze rounded native384 origins there; no cross-gauge pixel differences.",
+  "map_bindings": [
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\completion\\interleave-02\\focus\\pass-01\\mode-1-ordinal.tiff",
+      "sha256": "8547c46b507edf5f78512e700dcf93ec5060a69640b71441650b6cbbbb02b085"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\completion\\interleave-02\\focus\\pass-01\\width-frames.tiff",
+      "sha256": "686b36409fd007fdab4483885190cb7d9d69c814d8c6bb04bd483a2ae0a23d92"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\completion\\interleave-02\\focus\\pass-01\\usable.tiff",
+      "sha256": "4c00bdbd88955fd859a8e6776cfd1447834d8f4e32c6d8e9838ec13b15bf2fde"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\completion\\interleave-02\\focus\\pass-02\\mode-1-ordinal.tiff",
+      "sha256": "12ad9c03efb7a91b4829beaa41bb0c75ea619e1d8555089e68275e1ca808a4ac"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\completion\\interleave-02\\focus\\pass-02\\width-frames.tiff",
+      "sha256": "73ad15925238204d6b35f894d2c8352d37097a80c16f4e5dc728a9e1903d08bc"
+    },
+    {
+      "path": "C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\completion\\interleave-02\\focus\\pass-02\\usable.tiff",
+      "sha256": "4e141c3901d4fb9f949fbf95de73c7816ad1d7710f04cf97148454c316cfadc0"
+    }
+  ],
+  "geometry_receipt_sha256": [
+    "384f9cd693ee86d7ef61e288409a1a5afb68e7ca1f5e271cff83c19121a39a97",
+    "2f8b1024267fb29d29d46674a0e35e5a7e5a0a9f66bc1138d96bfe3edc81de51"
+  ],
+  "witnesses": [
+    {
+      "direction": "even32-good",
+      "component": 2763,
+      "component_pixels": 16438,
+      "center_sensor_in_dense_control": [
+        2112,
+        1428
+      ],
+      "origin_sensor_in_dense_control": [
+        1920,
+        1236
+      ],
+      "native_size": 384,
+      "qualifying_quad_pixels_in_witness": 6990,
+      "qualifying_fraction": 0.18961588541666666,
+      "center_modes_original_ordinals": [
+        64.0,
+        63.0
+      ],
+      "center_widths_original_frames": [
+        3.6362457275390625,
+        5.315248489379883
+      ],
+      "geometry_origin_quad": [
+        58,
+        39
+      ]
+    },
+    {
+      "direction": "even32-good",
+      "component": 4223,
+      "component_pixels": 2583,
+      "center_sensor_in_dense_control": [
+        6068,
+        1700
+      ],
+      "origin_sensor_in_dense_control": [
+        5876,
+        1508
+      ],
+      "native_size": 384,
+      "qualifying_quad_pixels_in_witness": 2029,
+      "qualifying_fraction": 0.05504014756944445,
+      "center_modes_original_ordinals": [
+        64.0,
+        63.0
+      ],
+      "center_widths_original_frames": [
+        4.616185188293457,
+        5.542468070983887
+      ],
+      "geometry_origin_quad": [
+        58,
+        39
+      ]
+    },
+    {
+      "direction": "even32-good",
+      "component": 2667,
+      "component_pixels": 2123,
+      "center_sensor_in_dense_control": [
+        1600,
+        1408
+      ],
+      "origin_sensor_in_dense_control": [
+        1408,
+        1216
+      ],
+      "native_size": 384,
+      "qualifying_quad_pixels_in_witness": 5668,
+      "qualifying_fraction": 0.1537543402777778,
+      "center_modes_original_ordinals": [
+        64.0,
+        65.0
+      ],
+      "center_widths_original_frames": [
+        6.677610874176025,
+        5.177328586578369
+      ],
+      "geometry_origin_quad": [
+        58,
+        39
+      ]
+    },
+    {
+      "direction": "offset16-good",
+      "component": 5337,
+      "component_pixels": 8289,
+      "center_sensor_in_dense_control": [
+        1418,
+        4198
+      ],
+      "origin_sensor_in_dense_control": [
+        1226,
+        4006
+      ],
+      "native_size": 384,
+      "qualifying_quad_pixels_in_witness": 8336,
+      "qualifying_fraction": 0.2261284722222222,
+      "center_modes_original_ordinals": [
+        142.0,
+        143.0
+      ],
+      "center_widths_original_frames": [
+        4.3482346534729,
+        4.338554859161377
+      ],
+      "geometry_origin_quad": [
+        58,
+        39
+      ]
+    },
+    {
+      "direction": "offset16-good",
+      "component": 616,
+      "component_pixels": 4296,
+      "center_sensor_in_dense_control": [
+        2332,
+        852
+      ],
+      "origin_sensor_in_dense_control": [
+        2140,
+        660
+      ],
+      "native_size": 384,
+      "qualifying_quad_pixels_in_witness": 7178,
+      "qualifying_fraction": 0.19471571180555555,
+      "center_modes_original_ordinals": [
+        48.0,
+        47.0
+      ],
+      "center_widths_original_frames": [
+        2.7946550846099854,
+        3.0444977283477783
+      ],
+      "geometry_origin_quad": [
+        58,
+        39
+      ]
+    },
+    {
+      "direction": "offset16-good",
+      "component": 2761,
+      "component_pixels": 2082,
+      "center_sensor_in_dense_control": [
+        3792,
+        2110
+      ],
+      "origin_sensor_in_dense_control": [
+        3600,
+        1918
+      ],
+      "native_size": 384,
+      "qualifying_quad_pixels_in_witness": 4966,
+      "qualifying_fraction": 0.1347113715277778,
+      "center_modes_original_ordinals": [
+        80.0,
+        79.0
+      ],
+      "center_widths_original_frames": [
+        4.818930149078369,
+        5.166423797607422
+      ],
+      "geometry_origin_quad": [
+        58,
+        39
+      ]
+    }
+  ]
+}

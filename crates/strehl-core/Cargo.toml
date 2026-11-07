@@ -12,6 +12,7 @@ description = "Core types for strehl: noise model, CFA planes, geometry."
 thiserror.workspace = true
 anyhow.workspace = true
 rayon.workspace = true
+sha2 = "=0.11.0"
 
 [features]
 # Isolated first-two-band temporal E/full-F experiment; no default path.
@@ -39,3 +40,47 @@ serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
 [[example]]
 name = "noise-floor-oracle"
 path = "../../experiments/rea-a7c2-2026-10-24-c/noise-floor-oracle.rs"
+
+[[example]]
+name = "session-reconstruction-controls"
+path = "../../experiments/multi-stack-2026-10-28/completion/sr/controls.rs"
+test = true
+
+[[example]]
+name = "session-reconstruction-registration-controls"
+path = "../../experiments/multi-stack-2026-10-28/completion/sr/local-registration-controls.rs"
+test = true
+
+[[example]]
+name = "session-reconstruction-registration-graph-controls"
+path = "../../experiments/multi-stack-2026-10-28/completion/sr/local-registration-graph-controls.rs"
+test = true
+
+[[example]]
+name = "session-reconstruction-measured-trajectory-controls"
+path = "../../experiments/multi-stack-2026-10-28/completion/sr/measured-trajectory-controls.rs"
+test = true
+
+[[example]]
+name = "session-noise-transfer-controls"
+path = "../../experiments/multi-stack-2026-10-28/completion/review/noise-transfer-controls.rs"
+
+[[example]]
+name = "session-reconstruction-geometry-lowpass-controls"
+path = "../../experiments/multi-stack-2026-10-28/completion/sr/geometry-lowpass-controls.rs"
+test = true
+
+[[example]]
+name = "session-reconstruction-affine-controls"
+path = "../../experiments/multi-stack-2026-10-28/completion/sr/affine-regression-controls.rs"
+test = true
+
+[[example]]
+name = "session-reconstruction-geometry-signal-commission-controls"
+path = "../../experiments/multi-stack-2026-10-28/completion/sr/geometry-signal-commission-controls.rs"
+test = true
+
+[[example]]
+name = "session-reconstruction-global-controls"
+path = "../../experiments/multi-stack-2026-10-28/completion/sr/guarded-global-chart-controls.rs"
+test = true

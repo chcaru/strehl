@@ -24,7 +24,7 @@
 use std::fs;
 use std::io::Write;
 
-use strehl_core::demosaic::{demosaic, demosaic_bilinear_row, Mosaic};
+use strehl_core::demosaic::{Mosaic, demosaic, demosaic_bilinear_row};
 
 fn main() -> anyhow::Result<()> {
     let args: Vec<String> = std::env::args().collect();

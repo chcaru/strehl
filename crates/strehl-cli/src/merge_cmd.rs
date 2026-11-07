@@ -77,6 +77,9 @@ pub(crate) mod halo;
 mod region_repair;
 #[path = "merge_cmd/sensor-master.rs"]
 pub(crate) mod sensor_master;
+#[cfg(feature = "multi-stack")]
+#[path = "session-consumer.rs"]
+pub(crate) mod session_consumer;
 #[cfg(feature = "temporal-energy")]
 #[path = "merge_cmd/temporal-cpu.rs"]
 mod temporal_cpu;
@@ -5774,44 +5777,26 @@ impl BandWorker {
         defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
         progress: Option<&crate::ui_progress::Progress>,
     ) -> Result<bool> {
-        self.beta.clear();
-        if let Some(p) = self.floor.as_mut() {
-            p.invalidate();
-        }
-        if !load_frame_impl_observed(
+        prepare_frame_into(
+            PrepBuffers {
+                domain: self.domain,
+                warp: &mut self.warp,
+                floor: self.floor.as_mut(),
+                planes: &mut self.planes,
+                luma: &mut self.luma,
+                var: &mut self.var,
+                beta: &mut self.beta,
+                #[cfg(feature = "native-green-cue")]
+                green_cue: &mut self.green_cue,
+            },
             source,
             index,
-            self.domain,
             levels,
+            noise,
             warps,
             defect,
-            &mut self.warp,
-            self.floor.as_mut(),
-            &mut self.planes,
-            &mut self.luma,
-            #[cfg(feature = "native-green-cue")]
-            Some((noise, &mut self.green_cue)),
             progress,
-        )? {
-            return Ok(false);
-        }
-        #[cfg(feature = "native-pyramid-profile")]
-        let variance_phase = native_pyramid_profile::start(native_pyramid_profile::VARIANCE);
-        luma_variance(&self.luma, noise, &mut self.var);
-        #[cfg(feature = "native-pyramid-profile")]
-        drop(variance_phase);
-
-        // The measured floor, truncated at the first band the probe could not
-        // speak for rather than skipping past it. `add_frame_with_gain` falls
-        // back to the white value beyond the slice's end, so truncating is how
-        // a partial measurement is expressed; substituting white *inside* the
-        // slice and continuing would silently mix two noise models across
-        // adjacent bands.
-        if let Some(p) = self.floor.as_ref() {
-            self.beta
-                .extend(p.last().iter().copied().take_while(|b| b.is_finite()));
-        }
-        Ok(true)
+        )
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -5827,6 +5812,9 @@ impl BandWorker {
     ) -> Result<bool> {
         if !self.prepare_observed(source, index, levels, noise, warps, defect, progress)? {
             return Ok(false);
+        }
+        if let Some((levels, beta, var)) = self.floor.as_ref().and_then(|p| p.null_frame()) {
+            self.merge.add_null_frame(&levels, &beta, var);
         }
         let frame_beta = (!self.beta.is_empty()).then_some(self.beta.as_slice());
         if let Some(b) = frame_beta {
@@ -5899,6 +5887,215 @@ impl BandWorker {
         #[cfg(all(test, feature = "native-sensor-transfer"))]
         native_sensor_transfer::after(&self.var);
         Ok(true)
+    }
+
+    /// Fold a frame prepared by [`FramePrep::prepare`] into this worker's
+    /// accumulator. Exactly the arithmetic of [`Self::fold_observed`] after its
+    /// preparation step; only the buffers the inputs are read from differ.
+    fn add_prepared(
+        &mut self,
+        prep: &FramePrep,
+        index: usize,
+        progress: Option<&crate::ui_progress::Progress>,
+    ) {
+        if let Some((levels, beta, var)) = prep.floor.as_ref().and_then(|p| p.null_frame()) {
+            self.merge.add_null_frame(&levels, &beta, var);
+        }
+        let frame_beta = (!prep.beta.is_empty()).then_some(prep.beta.as_slice());
+        if let Some(b) = frame_beta {
+            if self.beta_sum.len() < b.len() {
+                self.beta_sum.resize(b.len(), 0.0);
+            }
+            for (acc, v) in self.beta_sum.iter_mut().zip(b) {
+                *acc += f64::from(*v);
+            }
+            self.beta_n += 1;
+        }
+        let refs: Vec<&[f32]> = prep.planes.iter().map(|v| v.as_slice()).collect();
+        #[cfg(feature = "native-pyramid-profile")]
+        let add_phase = native_pyramid_profile::start(native_pyramid_profile::ADD);
+        self.fws.next_frame();
+        let tap = progress.map(|progress| {
+            crate::ui_progress::FrameTap::new(progress, index, self.merge.sizes().len())
+        });
+        if let Some(tap) = tap.as_ref() {
+            self.merge.add_frame_with_gain_observed(
+                &refs,
+                &prep.luma,
+                &prep.var,
+                frame_beta,
+                &mut self.fws,
+                tap,
+            );
+        } else {
+            self.merge
+                .add_frame_with_gain(&refs, &prep.luma, &prep.var, frame_beta, &mut self.fws);
+        }
+        #[cfg(feature = "native-pyramid-profile")]
+        drop(add_phase);
+    }
+}
+
+/// The buffers one frame's preparation writes: decode, gather, floor probe,
+/// luma, variance and the measured band floor. Borrowed from a [`BandWorker`]
+/// on the serial path, or from a [`FramePrep`] slot when frames are prepared
+/// ahead in parallel.
+struct PrepBuffers<'a> {
+    domain: PyramidDomain,
+    warp: &'a mut WarpScratch,
+    floor: Option<&'a mut gatefloor::Probe>,
+    planes: &'a mut [Vec<f32>],
+    luma: &'a mut [f32],
+    var: &'a mut [f32],
+    beta: &'a mut Vec<f32>,
+    #[cfg(feature = "native-green-cue")]
+    green_cue: &'a mut Option<strehl_core::pyramid::native_green_cue::Cue>,
+}
+
+/// Prepare one frame for the band fold. A pure function of the frame and the
+/// stack's fixed inputs: nothing here reads or writes the accumulator, which is
+/// why preparing frames concurrently and folding them in index order produces
+/// the same arithmetic as the serial loop.
+#[allow(clippy::too_many_arguments)]
+fn prepare_frame_into(
+    b: PrepBuffers<'_>,
+    source: &impl PyramidFrameSource,
+    index: usize,
+    levels: Levels,
+    noise: &NoiseModel,
+    warps: Option<&WarpMap>,
+    defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
+    progress: Option<&crate::ui_progress::Progress>,
+) -> Result<bool> {
+    let PrepBuffers {
+        domain,
+        warp,
+        mut floor,
+        planes,
+        luma,
+        var,
+        beta,
+        #[cfg(feature = "native-green-cue")]
+        green_cue,
+    } = b;
+    beta.clear();
+    if let Some(p) = floor.as_deref_mut() {
+        p.invalidate();
+    }
+    // Experiment-only: fold every other frame under the whole stack's own
+    // geometry, so two half-stack renders are pixel-aligned replicates.
+    if let Ok(parity) = std::env::var("STREHL_FRAME_PARITY") {
+        let keep = match parity.as_str() {
+            "even" => index % 2 == 0,
+            "odd" => index % 2 == 1,
+            other => match other.split_once('-').map(|(a, b)| (a.parse::<usize>(), b.parse::<usize>())) {
+                Some((Ok(a), Ok(b))) => (a..=b).contains(&index),
+                _ => anyhow::bail!("STREHL_FRAME_PARITY={other:?} is not even, odd or A-B"),
+            },
+        };
+        if !keep {
+            return Ok(false);
+        }
+    }
+    if !ca_refine::preview_keeps(index) {
+        return Ok(false);
+    }
+    if !load_frame_impl_observed(
+        source,
+        index,
+        domain,
+        levels,
+        warps,
+        defect,
+        warp,
+        floor.as_deref_mut(),
+        planes,
+        luma,
+        #[cfg(feature = "native-green-cue")]
+        Some((noise, green_cue)),
+        progress,
+    )? {
+        return Ok(false);
+    }
+    #[cfg(feature = "native-pyramid-profile")]
+    let variance_phase = native_pyramid_profile::start(native_pyramid_profile::VARIANCE);
+    luma_variance(luma, noise, var);
+    #[cfg(feature = "native-pyramid-profile")]
+    drop(variance_phase);
+
+    // The measured floor, truncated at the first band the probe could not
+    // speak for rather than skipping past it. `add_frame_with_gain` falls
+    // back to the white value beyond the slice's end, so truncating is how
+    // a partial measurement is expressed; substituting white *inside* the
+    // slice and continuing would silently mix two noise models across
+    // adjacent bands.
+    if let Some(p) = floor.as_deref() {
+        beta.extend(p.last().iter().copied().take_while(|b| b.is_finite()));
+    }
+    Ok(true)
+}
+
+/// One look-ahead slot: its own preparation buffers, so several frames can be
+/// decoded, gathered and probed at once while the fold stays in index order.
+struct FramePrep {
+    warp: WarpScratch,
+    planes: Vec<Vec<f32>>,
+    luma: Vec<f32>,
+    var: Vec<f32>,
+    floor: Option<gatefloor::Probe>,
+    beta: Vec<f32>,
+    accepted: bool,
+}
+
+impl FramePrep {
+    fn new(domain: PyramidDomain, cfg: MergeConfig) -> Self {
+        let px = domain.analysis().pixels();
+        Self {
+            warp: WarpScratch::new(domain.full),
+            planes: (0..BAND_PLANES).map(|_| vec![0.0; px]).collect(),
+            luma: vec![0.0; px],
+            var: vec![0.0; px],
+            floor: gatefloor::enabled().then(|| gatefloor::Probe::new(domain, cfg.bands)),
+            beta: Vec::new(),
+            accepted: false,
+        }
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn prepare(
+        &mut self,
+        domain: PyramidDomain,
+        source: &impl PyramidFrameSource,
+        index: usize,
+        levels: Levels,
+        noise: &NoiseModel,
+        warps: Option<&WarpMap>,
+        defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
+        progress: Option<&crate::ui_progress::Progress>,
+    ) -> Result<()> {
+        #[cfg(feature = "native-green-cue")]
+        let mut no_cue = None;
+        self.accepted = prepare_frame_into(
+            PrepBuffers {
+                domain,
+                warp: &mut self.warp,
+                floor: self.floor.as_mut(),
+                planes: &mut self.planes,
+                luma: &mut self.luma,
+                var: &mut self.var,
+                beta: &mut self.beta,
+                #[cfg(feature = "native-green-cue")]
+                green_cue: &mut no_cue,
+            },
+            source,
+            index,
+            levels,
+            noise,
+            warps,
+            defect,
+            progress,
+        )?;
+        Ok(())
     }
 }
 
@@ -6922,7 +7119,56 @@ fn band_workers(per_worker_bytes: usize, frames: usize) -> Result<usize> {
         ensure!(n >= 1, "{BAND_WORKERS_ENV} must be at least 1");
         return Ok(n.min(frames.max(1)));
     }
-    Ok(canonical_band_chunks(per_worker_bytes, frames))
+    // Execution threads only: the arithmetic is grouped by
+    // `canonical_band_chunks`, so using every core changes no output byte
+    // (bug-4 102MSDCF, 299 frames: identical pixels at 4, 16 and 32 threads).
+    // It used to default to the chunk count, which left most cores idle.
+    let cores = std::thread::available_parallelism().map_or(1, |n| n.get());
+    Ok(cores
+        .max(canonical_band_chunks(per_worker_bytes, frames))
+        .min(frames.max(1)))
+}
+
+/// Execution-only override for how many frames are prepared at once.
+const LOOKAHEAD_ENV: &str = "STREHL_PYRAMID_LOOKAHEAD";
+
+/// Frames prepared concurrently ahead of the fold (decode, gather, floor
+/// probe, luma, variance). Preparation reads no accumulator state and frames
+/// are still folded one at a time in index order, so this changes speed and
+/// memory only, never arithmetic. `1` is the serial path.
+///
+/// Bounded by a fixed 4 GiB allowance for the slots, and capped at 8:
+/// beyond that the serial fold dominates. Feature-gated research consumers
+/// that observe per-frame inputs keep the serial path.
+fn prepare_lookahead(workers: usize, domain: PyramidDomain) -> Result<usize> {
+    if cfg!(any(
+        feature = "native-green-cue",
+        feature = "native-direct-planes",
+        feature = "native-sensor-transfer",
+        feature = "temporal-energy"
+    )) {
+        return Ok(1);
+    }
+    if let Ok(v) = std::env::var(LOOKAHEAD_ENV)
+        && !v.trim().is_empty()
+    {
+        let n: usize = v
+            .trim()
+            .parse()
+            .with_context(|| format!("reading {LOOKAHEAD_ENV}={v:?}"))?;
+        ensure!(n >= 1, "{LOOKAHEAD_ENV} must be at least 1");
+        return Ok(n);
+    }
+    // Calibrated, not itemised: on bug-4 102MSDCF (3516x2344 planes) each
+    // extra slot raised measured peak private memory by about 1.0 GB
+    // (2.8 GB serial; 5.3 / 7.3 / 9.3 GB at 3 / 5 / 7 slots), i.e. about
+    // 128 bytes per full-plane site including decode and gather temporaries.
+    // Slots share a 4 GiB allowance, so the default is 4 there (84 s against
+    // 225 s serial, identical pixels).
+    const LOOKAHEAD_BYTES: usize = 4 << 30;
+    let slot = domain.full.pixels().max(domain.analysis().pixels()) * 128;
+    let by_memory = (LOOKAHEAD_BYTES / slot.max(1)).max(1);
+    Ok(workers.min(by_memory).clamp(1, 8))
 }
 
 /// The `lateral CA` prologue line, reporting the **resolved decision** rather
@@ -7020,6 +7266,15 @@ struct PreparedPyramid<'a> {
 /// * **No gate ladder.** Its gate is a band-power threshold, not the
 ///   estimator's focus-noise gate, and the two are not the same number.
 fn run_pyramid(opts: &MergeOptions) -> Result<()> {
+    if ca_refine::requested()? && ca_refine::applicable(opts)? {
+        return ca_refine::run_refined(opts);
+    }
+    run_pyramid_once(opts)
+}
+
+/// One pyramid render. [`run_pyramid`] calls it once, or twice -- a preview
+/// and the refined render -- under `STREHL_REFINE_CA=on`.
+fn run_pyramid_once(opts: &MergeOptions) -> Result<()> {
     // Ask once, up front, and throw the answer away. `warp_frame_in_place`
     // re-reads the profile per frame, so a typo'd STREHL_FIX_CA would otherwise
     // surface only after a full decode.
@@ -7181,6 +7436,225 @@ fn run_pyramid_prepared(
     run_pyramid_prepared_with_sensor(opts, prepared, source, None)
 }
 
+/// Per-capture lateral-CA refinement (`--refine-ca` / `STREHL_REFINE_CA`,
+/// default ON).
+///
+/// A preview merge of a subset of frames, rendered with the active profile,
+/// is measured for the red and blue displacement it still shows
+/// (`strehl_core::ca_refine`); the measured residual is installed on top of
+/// the profile (`strehl_core::optics::set_ca_refinement`) and the stack is
+/// rendered again in full. MEASURED in
+/// `experiments/image-quality-2026-11-02/results.md` section 3c.
+mod ca_refine {
+    use super::*;
+    use std::sync::Mutex;
+    use strehl_core::ca_refine::Residual;
+    use strehl_core::optics::{CaRefinement, ChannelRefinement};
+
+    pub(super) const ENV: &str = "STREHL_REFINE_CA";
+    /// A refinement beyond these bounds is refused, not applied: the
+    /// residuals measured across the corpus were at most ~250 ppm and 0.35 px.
+    const MAX_SCALE: f64 = 1000e-6;
+    const MAX_TRANSLATION: f64 = 1.5;
+
+    static STRIDE: AtomicUsize = AtomicUsize::new(0);
+    /// Frames the preview has taken so far, and how many it will take.
+    static TAKEN: AtomicUsize = AtomicUsize::new(0);
+    static TAKING: AtomicUsize = AtomicUsize::new(0);
+    static RESULT: Mutex<Option<Option<Residual>>> = Mutex::new(None);
+
+    pub(super) fn requested() -> Result<bool> {
+        match std::env::var(ENV) {
+            Err(std::env::VarError::NotPresent) => Ok(true),
+            Err(e) => Err(e).context(ENV),
+            Ok(v) => match v.trim() {
+                "" | "0" | "off" => Ok(false),
+                "on" | "1" => Ok(true),
+                other => anyhow::bail!("{ENV}={other:?} is not on or off"),
+            },
+        }
+    }
+
+    /// Whether a refinement can do anything for this render. The preview
+    /// measures the full-resolution mosaic, so binned output is out; the CA
+    /// correction runs inside warp application, so alignment must be on; and
+    /// the refinement adds to an active profile, so the capture's gear must
+    /// match one (and `--fix-ca` / `STREHL_FIX_CA` must not have turned it
+    /// off). Otherwise the render proceeds exactly as without the switch.
+    pub(super) fn applicable(opts: &MergeOptions) -> Result<bool> {
+        if !opts.demosaic || !align_cmd::align_enabled() {
+            return Ok(false);
+        }
+        let paths = only_frame(crate::raw_paths(&opts.dir, opts.limit)?);
+        let Some(first) = paths.first() else {
+            return Ok(false);
+        };
+        let ident = strehl_raw::identity(first);
+        Ok(
+            strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?
+                .is_some(),
+        )
+    }
+
+    pub(super) fn preview_active() -> bool {
+        STRIDE.load(Ordering::Relaxed) > 0
+    }
+
+    pub(super) fn preview_keeps(index: usize) -> bool {
+        let stride = STRIDE.load(Ordering::Relaxed);
+        let keep = stride <= 1 || index.is_multiple_of(stride);
+        if keep && stride > 0 {
+            let taken = TAKEN.fetch_add(1, Ordering::Relaxed) + 1;
+            crate::ui_progress::fringe_preview("folded", taken, TAKING.load(Ordering::Relaxed));
+        }
+        keep
+    }
+
+    pub(super) fn capture(width: usize, height: usize, mosaic: &[f32]) {
+        let r = strehl_core::ca_refine::measure_mosaic(width, height, mosaic);
+        *RESULT.lock().unwrap_or_else(|e| e.into_inner()) = Some(r);
+    }
+
+    /// Every `stride`-th frame for the preview: at least ~32 frames, at most
+    /// every 8th (every 8th measured within 2 ppm of the full stack on bug-4
+    /// and 42 ppm low on bee-3, at a sixth of the time).
+    fn stride_for(frames: usize) -> usize {
+        (frames / 32).clamp(1, 8)
+    }
+
+    fn line(name: &str, c: &strehl_core::ca_refine::ChannelFit) -> String {
+        format!(
+            "{name} t ({:+.3}, {:+.3}) px, scale {:+.1} ppm ({} of {} tiles, rms {:.3} px)",
+            c.translation.0,
+            c.translation.1,
+            c.scale * 1e6,
+            c.kept,
+            c.measured,
+            c.rms
+        )
+    }
+
+    pub(super) fn run_refined(opts: &MergeOptions) -> Result<()> {
+        let paths = only_frame(crate::raw_paths(&opts.dir, opts.limit)?);
+        let frames = paths.len();
+        // Align first, with progress, so a fresh stack's alignment is visible
+        // in the desktop; both passes below then load it from the cache.
+        {
+            let progress = crate::ui_progress::Progress::new(frames);
+            progress.stage("alignment");
+            alignment_for_observed(&opts.dir, &paths, opts.resampler, progress.observer())?;
+        }
+        begin_preview(frames);
+        let preview = run_pyramid_once(opts);
+        let measured = end_preview();
+        preview.context("lateral-CA refinement preview pass")?;
+        install(measured);
+        let out = run_pyramid_once(opts);
+        strehl_core::optics::set_ca_refinement(None);
+        out
+    }
+
+    /// Start a preview over every Nth of `frames` (see [`stride_for`]):
+    /// clear any refinement, skip frames, silence desktop progress.
+    pub(super) fn begin_preview(frames: usize) {
+        let stride = stride_for(frames);
+        strehl_core::optics::set_ca_refinement(None);
+        *RESULT.lock().unwrap_or_else(|e| e.into_inner()) = None;
+        eprintln!(
+            "CA refinement   : PREVIEW pass over every {stride}th of {frames} frames, measuring the \
+             lateral CA the profile leaves (default; --refine-ca=off skips it)"
+        );
+        TAKEN.store(0, Ordering::Relaxed);
+        TAKING.store(frames.div_ceil(stride), Ordering::Relaxed);
+        crate::ui_progress::fringe_preview("started", 0, frames.div_ceil(stride));
+        STRIDE.store(stride, Ordering::Relaxed);
+        crate::ui_progress::set_muted(true);
+    }
+
+    /// End the preview and take what its writer measured.
+    pub(super) fn end_preview() -> Option<Residual> {
+        crate::ui_progress::set_muted(false);
+        STRIDE.store(0, Ordering::Relaxed);
+        let total = TAKING.load(Ordering::Relaxed);
+        crate::ui_progress::fringe_preview("finished", total, total);
+        RESULT
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .take()
+            .flatten()
+    }
+
+    /// Report a measured residual and install it as the refinement when it is
+    /// inside the bounds; otherwise leave the profile alone.
+    pub(super) fn install(measured: Option<Residual>) {
+        let refinement = match measured {
+            None => {
+                eprintln!(
+                    "CA refinement   : NOT APPLIED -- the preview gave no fit (too little \
+                     structure, or an output mode the preview cannot measure); rendering with \
+                     the profile alone"
+                );
+                None
+            }
+            Some(r) => {
+                let ok = |c: &strehl_core::ca_refine::ChannelFit| {
+                    c.scale.abs() <= MAX_SCALE
+                        && c.translation.0.abs() <= MAX_TRANSLATION
+                        && c.translation.1.abs() <= MAX_TRANSLATION
+                };
+                eprintln!("CA refinement   : measured {}", line("red", &r.red));
+                eprintln!("                  measured {}", line("blue", &r.blue));
+                if ok(&r.red) && ok(&r.blue) {
+                    let c = |f: &strehl_core::ca_refine::ChannelFit| ChannelRefinement {
+                        scale: f.scale,
+                        translation: f.translation,
+                    };
+                    eprintln!(
+                        "                  APPLIED on top of the profile for the render below"
+                    );
+                    Some(CaRefinement {
+                        red: c(&r.red),
+                        blue: c(&r.blue),
+                    })
+                } else {
+                    eprintln!(
+                        "                  NOT APPLIED -- beyond the bounds ({:.0} ppm, {MAX_TRANSLATION} px)",
+                        MAX_SCALE * 1e6
+                    );
+                    None
+                }
+            }
+        };
+        strehl_core::optics::set_ca_refinement(refinement);
+    }
+}
+
+/// The merge configuration a temporal render uses: the temporal guide is
+/// defined for the mean base band only (`temporal_cpu::preflight`).
+#[cfg(feature = "temporal-energy")]
+fn temporal_compatible(cfg: MergeConfig) -> MergeConfig {
+    MergeConfig {
+        base: BaseBand::Mean,
+        ..cfg
+    }
+}
+
+#[cfg(all(test, feature = "temporal-energy"))]
+#[test]
+fn a_default_temporal_render_passes_the_temporal_preflight() {
+    // The desktop compiles temporal-energy; with "Temporal detail smoothing"
+    // on, every render refused to start once the default base band became
+    // weighted. The adjusted default must pass, and the unadjusted one is
+    // still refused, so this test cannot pass vacuously.
+    let default = MergeConfig::default();
+    assert!(temporal_cpu::preflight(default, 4, None, false).is_err());
+    temporal_cpu::preflight(temporal_compatible(default), 4, None, false)
+        .expect("the default merge, adjusted, must be temporal-compatible");
+}
+
+/// The environment twin of `--refine-ca`.
+pub const REFINE_CA_ENV: &str = ca_refine::ENV;
+
 fn run_pyramid_prepared_with_sensor(
     opts: &MergeOptions,
     prepared: PreparedPyramid<'_>,
@@ -7215,13 +7689,27 @@ fn run_pyramid_prepared_with_sensor(
     if align_cmd::direct_cfa::enabled()? {
         align_cmd::direct_cfa::validate_domain(paths, alignment.as_ref().map(|(map, _, _)| map), domain.rect)?;
     }
-    let cfg = opts.pyramid;
+    #[cfg_attr(not(feature = "temporal-energy"), allow(unused_mut))]
+    let mut cfg = opts.pyramid;
     #[cfg(feature = "temporal-energy")]
     let temporal_mode = temporal_cpu::environment_mode()?;
+    // A lateral-CA preview skips frames, and the temporal guide pairs each
+    // frame with its neighbours; the preview only measures channel alignment.
     #[cfg(feature = "temporal-energy")]
-    let temporal_active = temporal_mode != strehl_core::pyramid::temporal_energy::Mode::Off;
+    let temporal_active = temporal_mode != strehl_core::pyramid::temporal_energy::Mode::Off
+        && !ca_refine::preview_active();
     #[cfg(not(feature = "temporal-energy"))]
     let temporal_active = false;
+    // The temporal guide is defined for the mean base band only; the default
+    // became the weighted base (image-quality-2026-11-02 section 1b), which
+    // made every temporal render refuse to start.
+    #[cfg(feature = "temporal-energy")]
+    if temporal_active && cfg.base != BaseBand::Mean {
+        eprintln!(
+            "base band       : MEAN for this render -- temporal detail smoothing is defined for the mean base band only"
+        );
+        cfg = temporal_compatible(cfg);
+    }
     #[cfg(feature = "temporal-energy")]
     if temporal_active {
         temporal_cpu::preflight(
@@ -7299,6 +7787,35 @@ fn run_pyramid_prepared_with_sensor(
          single-frame noise.",
         cfg.gate
     );
+    eprintln!(
+        "ensemble gate   : {}",
+        if cfg.ensemble && cfg.select == SelectMode::SoftPower {
+            "ON -- a coefficient selects only where the stack as a whole shows signal \
+             (one\n                  frame dominating the rest, or detail adding coherently \
+             across\n                  frames); elsewhere it is the plain mean of every frame.\n\
+             \x20                 STREHL_PYRAMID_ENSEMBLE=0 turns it off."
+        } else {
+            "off"
+        }
+    );
+    eprintln!(
+        "pooled evidence : {}",
+        if cfg.pooled_evidence {
+            "ON -- each band selects on its own and every finer band's energy, so coarse \
+             bands\n                  follow the frames that are in focus there instead of \
+             a defocused frame's\n                  spread light. STREHL_PYRAMID_POOLED_EVIDENCE=0 \
+             turns it off."
+        } else {
+            "off"
+        }
+    );
+    if cfg.pooled_evidence {
+        eprintln!(
+            "pooled ratio    : {:.2} -- each finer level counts this many times its next \
+             coarser one (STREHL_PYRAMID_POOLED_RATIO).",
+            cfg.pooled_evidence_ratio
+        );
+    }
     eprintln!("exponent        : {:.2}", cfg.exponent);
     eprintln!(
         "per-band exp    : {}   (coarsest -> finest)",
@@ -7399,6 +7916,7 @@ fn run_pyramid_prepared_with_sensor(
     let canonical_chunks = canonical_band_chunks(planning_bytes, paths.len());
     let workers = band_workers(planning_bytes, paths.len())?;
     let per_chunk = paths.len().div_ceil(canonical_chunks);
+    let lookahead = prepare_lookahead(workers, domain)?.min(per_chunk.max(1));
     #[cfg(feature = "temporal-energy")]
     if temporal_active {
         // Explicit extra-buffer preflight; never change canonical arithmetic chunks.
@@ -7419,7 +7937,8 @@ fn run_pyramid_prepared_with_sensor(
          1 retained + 1 scratch accumulator, {workers} execution threads\n                  \
          CONSTANT in the frame count and reduction order. Chunks run serially; spatial work \
          uses\n                  the execution pool. {BAND_WORKERS_ENV}=N changes threads, never \
-         arithmetic.",
+         arithmetic.\n                  {lookahead} frame(s) prepared ahead in parallel and folded in \
+         index order ({LOOKAHEAD_ENV}=1 is serial).",
     );
 
     let warps = alignment.as_ref().map(|(m, _, _)| m);
@@ -7461,25 +7980,99 @@ fn run_pyramid_prepared_with_sensor(
             beta_n = result.beta_n;
             return Ok(());
         }
+        let mut slots: Vec<FramePrep> = (0..lookahead.min(per_chunk))
+            .filter(|_| lookahead > 1)
+            .map(|_| FramePrep::new(domain, cfg))
+            .collect();
         let mut chunks = paths.chunks(per_chunk).enumerate().peekable();
         while let Some((chunk_index, chunk)) = chunks.next() {
             let mut folded = 0usize;
-            for (offset, _path) in chunk.iter().enumerate() {
-                let index = chunk_index * per_chunk + offset;
-                progress.frame_started(index);
-                let accepted = worker.fold_observed(
-                    source,
-                    index,
-                    levels,
-                    &noise,
-                    warps,
-                    defect,
-                    progress.observer(),
-                )?;
-                progress.frame_finished(index, accepted);
-                if accepted {
-                    folded += 1;
-                    progress.live_accumulator(merged.as_ref(), &worker.merge, index);
+            let first = chunk_index * per_chunk;
+            if slots.is_empty() {
+                for offset in 0..chunk.len() {
+                    let index = first + offset;
+                    progress.frame_started(index);
+                    let accepted = worker.fold_observed(
+                        source,
+                        index,
+                        levels,
+                        &noise,
+                        warps,
+                        defect,
+                        progress.observer(),
+                    )?;
+                    progress.frame_finished(index, accepted);
+                    if accepted {
+                        folded += 1;
+                        progress.live_accumulator(merged.as_ref(), &worker.merge, index);
+                    }
+                }
+            } else {
+                let indices: Vec<usize> = (first..first + chunk.len()).collect();
+                // Two half-size slot sets: while one set's frames are folded in
+                // index order, the next batch is prepared into the other set.
+                // A single slot cannot be split, so it degenerates to
+                // prepare-then-fold.
+                let half = (slots.len() / 2).max(1);
+                let batches: Vec<&[usize]> = indices.chunks(half).collect();
+                let prepare_batch = |set: &mut [FramePrep], batch: &[usize]| -> Result<()> {
+                    for &index in batch {
+                        progress.frame_started(index);
+                    }
+                    set[..batch.len()]
+                        .par_iter_mut()
+                        .zip(batch.par_iter())
+                        .try_for_each(|(slot, &index)| {
+                            slot.prepare(
+                                domain,
+                                source,
+                                index,
+                                levels,
+                                &noise,
+                                warps,
+                                defect,
+                                progress.observer(),
+                            )
+                        })
+                };
+                let (set_a, set_b) = slots.split_at_mut(half);
+                let pipelined = !set_b.is_empty();
+                for (b, batch) in batches.iter().enumerate() {
+                    let (current, next): (&mut [FramePrep], &mut [FramePrep]) =
+                        if !pipelined || b % 2 == 0 {
+                            (&mut *set_a, &mut *set_b)
+                        } else {
+                            (&mut *set_b, &mut *set_a)
+                        };
+                    if b == 0 || !pipelined {
+                        prepare_batch(current, batch)?;
+                    }
+                    let following = batches.get(b + 1).filter(|_| pipelined);
+                    let current: &[FramePrep] = current;
+                    // Fold strictly in index order: the same additions, in
+                    // the same order, as the serial loop above.
+                    let mut fold_batch = || {
+                        let mut accepted = 0usize;
+                        for (slot, &index) in current.iter().zip(batch.iter()) {
+                            if slot.accepted {
+                                worker.add_prepared(slot, index, progress.observer());
+                            }
+                            progress.frame_finished(index, slot.accepted);
+                            if slot.accepted {
+                                accepted += 1;
+                                progress.live_accumulator(merged.as_ref(), &worker.merge, index);
+                            }
+                        }
+                        accepted
+                    };
+                    let (accepted, prepared) = match following {
+                        Some(next_batch) => {
+                            rayon::join(fold_batch, || prepare_batch(next, next_batch))
+                        }
+                        None => (fold_batch(), Ok(())),
+                    };
+                    folded += accepted;
+                    prepared?;
                 }
             }
             folded_total += folded;
@@ -7625,7 +8218,26 @@ fn run_pyramid_prepared_with_sensor(
     let t_out = Instant::now();
     let mut ws = Workspace::new(&sizes);
     progress.render_step("reconstruct", "started");
-    let mut planes = merge.finish(&mut ws);
+    let (mut planes, ensemble_report) = merge.finish_with_report(&mut ws);
+    if let Some(levels) = ensemble_report {
+        for l in levels {
+            let t = l.thresholds;
+            eprintln!(
+                "ensemble band {} : {:.1}% of coefficients averaged, mean selection {:.3}; null {} \
+                 -- dominance {:.2}..{:.2}, coherence {:.2}..{:.2}, wide {:.3}..{:.3}",
+                l.level,
+                100.0 * l.averaged,
+                l.mean_blend,
+                if t.measured { "measured" } else { "parametric" },
+                t.dominance.0,
+                t.dominance.1,
+                t.coherence.0,
+                t.coherence.1,
+                t.wide.0,
+                t.wide.1
+            );
+        }
+    }
     drop(ws);
     drop(merge);
     ensure!(
@@ -9034,6 +9646,44 @@ fn write_merged_observed(
     linear_master: Option<&Path>,
     baked_recipe: Option<&strehl_edit::DevelopmentRecipe>,
 ) -> Result<()> {
+    write_merged_observed_with_coverage(merged,levels,wb,xyz_to_cam,space,demosaic,
+        exposure,restore,path,progress,linear_master,baked_recipe,None)
+}
+
+/// Optional union-canvas writer. The ordinary wrapper supplies no mask.
+#[allow(clippy::too_many_arguments)]
+fn write_merged_observed_with_coverage(
+    merged: Merged<'_>, levels: Levels, wb: Option<[f32;3]>,
+    xyz_to_cam: Option<&([[f32;3];3],String)>, space: image_out::OutputSpace,
+    demosaic: bool, exposure: Exposure, restore: Option<strehl_core::restore::RestorePlan<'_>>,
+    path: &Path, progress: Option<&crate::ui_progress::Progress>, linear_master: Option<&Path>,
+    baked_recipe: Option<&strehl_edit::DevelopmentRecipe>, coverage: Option<&[bool]>,
+) -> Result<()> {
+    write_merged_observed_with_reconstruction(merged,levels,wb,xyz_to_cam,space,demosaic,
+        exposure,restore,path,progress,linear_master,baked_recipe,coverage,None)
+}
+
+#[cfg(test)]
+#[path = "session-reconstruction-writer-tests.rs"]
+mod session_reconstruction_writer_tests;
+
+/// The optional callback runs after the existing native WB/MHC calculation and
+/// before color/highlight/tone development. Ordinary callers supply None.
+#[allow(clippy::too_many_arguments)]
+fn write_merged_observed_with_reconstruction(
+    merged: Merged<'_>, levels: Levels, wb: Option<[f32;3]>,
+    xyz_to_cam: Option<&([[f32;3];3],String)>, space: image_out::OutputSpace,
+    demosaic: bool, exposure: Exposure, restore: Option<strehl_core::restore::RestorePlan<'_>>,
+    path: &Path, progress: Option<&crate::ui_progress::Progress>, linear_master: Option<&Path>,
+    baked_recipe: Option<&strehl_edit::DevelopmentRecipe>, coverage: Option<&[bool]>,
+    reconstruction: Option<image_out::session_reconstruction_output::NativeReconstruction<'_>>,
+) -> Result<()> {
+    ensure!(reconstruction.is_none() || (demosaic && restore.is_none() && coverage.is_none()),
+        "original-CFA reconstruction requires native-size, single-view output without restoration");
+    if let Some(mask)=coverage {
+        ensure!(demosaic && restore.is_none() && mask.len()==merged.geometry().pixels()
+            && mask.iter().any(|&v|v),"union output needs supported full-resolution samples and no restoration");
+    }
     if let Some(progress) = progress {
         progress.render_step("develop", "started");
     }
@@ -9150,6 +9800,7 @@ fn write_merged_observed(
     let choose = || {
         let norm = |v: f32, gain: f32| v * gain / range;
         let mut luma: Vec<f32> = (0..n)
+            .filter(|&i|coverage.is_none_or(|mask|mask[i]))
             .map(|i| {
                 color::display_luminance(
                     [
@@ -9391,11 +10042,27 @@ fn write_merged_observed(
                 bot[px * 2 + 1] = planes[3][i];
             }
         }
+        if ca_refine::preview_active() {
+            // A lateral-CA preview pass: measure what the correction leaves on
+            // the white-balanced mosaic -- before any demosaic borrows one
+            // channel's detail for another, or a colour matrix mixes them --
+            // and write nothing.
+            ca_refine::capture(mw, mh, &mosaic);
+            return Ok(());
+        }
         if let Some(progress) = progress {
             progress.render_step("develop", "finished");
             progress.render_step("write", "started");
         }
-        image_out::write_demosaiced_with_master(
+        if let Some(reconstruction) = reconstruction {
+            use image_out::session_reconstruction_output::{NativeNormalization,prepare_native_camera_image,write_reconstructed_camera_image};
+            let mut image = prepare_native_camera_image(mw,mh,&mosaic,&dev,reconstruction.output_memory_budget)?;
+            (reconstruction.transform)(&mut image,NativeNormalization {
+                white_balance:gains,exposure_gain:eg,range,
+            })?;
+            write_reconstructed_camera_image(path,image,linear_master,baked_recipe)?;
+        } else {
+        image_out::write_demosaiced_with_master_coverage(
             path,
             mw,
             mh,
@@ -9403,7 +10070,9 @@ fn write_merged_observed(
             &dev,
             linear_master,
             baked_recipe,
+            coverage,
         )?;
+        }
         if let Some(progress) = progress {
             progress.render_step("write", "finished");
         }
@@ -11149,10 +11818,12 @@ mod tests {
             3,
             "the canonical reduction count did not follow the memory budget"
         );
+        let cores = std::thread::available_parallelism().map_or(1, |n| n.get());
         assert_eq!(
             band_workers(third, 64).unwrap(),
-            3,
-            "the unset execution count did not follow the canonical count"
+            cores.clamp(3, 64),
+            "the unset execution count must use the machine's cores, never fewer than the \
+             canonical count, bounded by the frames"
         );
         assert_eq!(
             band_workers(third, 2).unwrap(),
@@ -11160,9 +11831,17 @@ mod tests {
             "the frame count did not bound the worker count"
         );
         assert_eq!(
-            band_workers(usize::MAX, 8).unwrap(),
+            canonical_band_chunks(usize::MAX, 8),
             1,
-            "a worker too large to fit must still leave one"
+            "a worker too large to fit must still leave one chunk"
+        );
+        // Threads do not hold accumulators (chunks run serially), so they are
+        // not bounded by the per-worker size; look-ahead memory is bounded
+        // separately in `prepare_lookahead`.
+        assert_eq!(
+            band_workers(usize::MAX, 8).unwrap(),
+            cores.min(8),
+            "execution threads follow the cores, bounded by the frames"
         );
         assert_eq!(
             band_workers(1, 0).unwrap(),
@@ -11201,7 +11880,7 @@ mod tests {
         unsafe { std::env::remove_var(BAND_WORKERS_ENV) };
         assert_eq!(
             band_workers(third, 64).unwrap(),
-            3,
+            cores.clamp(3, 64),
             "band_workers did not return to its unset value"
         );
 

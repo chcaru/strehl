@@ -1,0 +1,53 @@
+{
+  "exact_pass_order": [
+    {
+      "name": "107MSDCF",
+      "stack_ids": [
+        2
+      ]
+    },
+    {
+      "name": "106MSDCF",
+      "stack_ids": [
+        4
+      ]
+    },
+    {
+      "name": "105MSDCF",
+      "stack_ids": [
+        6
+      ]
+    },
+    {
+      "name": "104MSDCF",
+      "stack_ids": [
+        8
+      ]
+    },
+    {
+      "name": "103MSDCF",
+      "stack_ids": [
+        10
+      ]
+    },
+    {
+      "name": "102MSDCF",
+      "stack_ids": [
+        12
+      ]
+    },
+    {
+      "name": "100MSDCF",
+      "stack_ids": [
+        14
+      ]
+    }
+  ],
+  "mode": "combine",
+  "primary": 0,
+  "sources": 1650,
+  "displayed_error": "combined passes have different shutter times; choose Exposure range or Aligned layers. Session engine exited with exit code: 1; full output: \\\\?\\C:\\Users\\chris\\.codex\\worktrees\\multi-stack\\strehl\\outputs\\multi-stack\\shutter-error-fix\\ui\\outputs\\strehl-1793475203066-13940-0\\render.log",
+  "actual_packaged_worker": true,
+  "no_completed_photograph": true,
+  "scope": "Expected real incompatibility is explained; automatic heterogeneous fusion remains unimplemented."
+}

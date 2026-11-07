@@ -274,6 +274,7 @@ fn baseline_alternating_job_benchmark() {
     let mut editor = crate::edit_workspace::EditorState::default();
     editor.recipe = large;
     editor.loaded = Some(crate::edit_workspace::LoadedPhoto {
+        coverage: None,
         image: image.clone(),
         preview: job.image(true).clone(),
         recipe: Default::default(),

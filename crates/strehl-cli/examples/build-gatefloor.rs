@@ -142,8 +142,16 @@ fn probe_frame(sigma_p: f64, seed: u64, blur: bool) -> Frame {
         data,
         stride,
         buffer_height,
-        active: Region { x: ox, y: oy, width: fw, height: fh },
-        levels: Levels { black: BLACK, white: 15360.0 },
+        active: Region {
+            x: ox,
+            y: oy,
+            width: fw,
+            height: fh,
+        },
+        levels: Levels {
+            black: BLACK,
+            white: 15360.0,
+        },
         iso: Some(100.0),
         // Unity, so the gather's white-balance round trip is exactly the
         // identity and cannot colour the measurement.
@@ -166,8 +174,7 @@ fn green_luma(frame: &Frame) -> Vec<f32> {
         for py in 0..GH {
             let row = (ay + 2 * py + dy) * stride + ax + dx;
             for px in 0..GW {
-                planes[p][py * GW + px] =
-                    (f32::from(frame.data[row + 2 * px]) - black).max(0.0);
+                planes[p][py * GW + px] = (f32::from(frame.data[row + 2 * px]) - black).max(0.0);
             }
         }
     }
@@ -299,9 +306,15 @@ fn arm_pooled(
 
 fn main() -> Result<()> {
     let bands = DEFAULT_BANDS;
-    let geom = PlaneGeometry { width: GW, height: GH };
+    let geom = PlaneGeometry {
+        width: GW,
+        height: GH,
+    };
     let resampler = Resampler::CatmullRom;
-    let reals: usize = std::env::var("REALS").ok().and_then(|v| v.parse().ok()).unwrap_or(8);
+    let reals: usize = std::env::var("REALS")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(8);
     let mut scratch = WarpScratch::new(geom);
 
     // Green luma is (G1 + G2)/2 of two independent photosites, so its level-0
@@ -320,7 +333,14 @@ fn main() -> Result<()> {
 
     let white = BandGain::measure(bands);
     let (p_none, v_none) = arm_pooled(
-        sigma_p, false, None, bands, geom, resampler, &mut scratch, reals,
+        sigma_p,
+        false,
+        None,
+        bands,
+        geom,
+        resampler,
+        &mut scratch,
+        reals,
     )?;
 
     println!("\n== commissioning ==");
@@ -330,7 +350,11 @@ fn main() -> Result<()> {
         "  C0 green-luma level-0 variance: measured {v_none:.2} DN^2, expected sigma_p^2/2 = \
          {expect:.2}   ratio {:.4}   {}",
         v_none / expect,
-        if (v_none / expect - 1.0).abs() < 0.02 { "PASS" } else { "FAIL" }
+        if (v_none / expect - 1.0).abs() < 0.02 {
+            "PASS"
+        } else {
+            "FAIL"
+        }
     );
 
     // C1: with no warp the probe must reproduce the shipping white-noise beta.
@@ -382,10 +406,19 @@ fn main() -> Result<()> {
     // the difference is that this quantity is a *normalised* one by
     // construction and its numerator is checked to move in C4.
     let (p2, v2) = arm_pooled(
-        2.0 * sigma_p, false, None, bands, geom, resampler, &mut scratch, reals,
+        2.0 * sigma_p,
+        false,
+        None,
+        bands,
+        geom,
+        resampler,
+        &mut scratch,
+        reals,
     )?;
     let b2: Vec<f64> = p2.iter().map(|p| p / v2).collect();
-    let gap2 = (0..nlap).map(|k| (b2[k] / beta_none[k] - 1.0).abs()).fold(0.0, f64::max);
+    let gap2 = (0..nlap)
+        .map(|k| (b2[k] / beta_none[k] - 1.0).abs())
+        .fold(0.0, f64::max);
     println!(
         "  C2 amplitude x2: beta unchanged (it is a ratio)      worst gap {:.3}%   {}",
         100.0 * gap2,
@@ -401,7 +434,14 @@ fn main() -> Result<()> {
 
     // C3 planted DEFECT: pre-correlate the noise. beta[0] must fall.
     let (p_blur, v_blur) = arm_pooled(
-        sigma_p, true, None, bands, geom, resampler, &mut scratch, reals,
+        sigma_p,
+        true,
+        None,
+        bands,
+        geom,
+        resampler,
+        &mut scratch,
+        reals,
     )?;
     let b_blur: Vec<f64> = p_blur.iter().map(|p| p / v_blur).collect();
     println!(
@@ -409,15 +449,31 @@ fn main() -> Result<()> {
          beta[0] {:.4} -> {:.4}   {}",
         beta_none[0],
         b_blur[0],
-        if b_blur[0] < 0.7 * beta_none[0] { "PASS - falls" } else { "FAIL" }
+        if b_blur[0] < 0.7 * beta_none[0] {
+            "PASS - falls"
+        } else {
+            "FAIL"
+        }
     );
 
     // C4 planted IMPROVEMENT: a warp so small it is the identity must leave the
     // floor where it was. This is the improvement half of 110.6 for an
     // estimator: an arm that should NOT move, and does not.
-    let tiny = Similarity::from_params(SimilarityParams { ax: 0.0, ay: 0.0, g: 0.0, rot: 0.0 });
+    let tiny = Similarity::from_params(SimilarityParams {
+        ax: 0.0,
+        ay: 0.0,
+        g: 0.0,
+        rot: 0.0,
+    });
     let (p_id, v_id) = arm_pooled(
-        sigma_p, false, Some((tiny, true)), bands, geom, resampler, &mut scratch, reals,
+        sigma_p,
+        false,
+        Some((tiny, true)),
+        bands,
+        geom,
+        resampler,
+        &mut scratch,
+        reals,
     )?;
     let b_id: Vec<f64> = p_id.iter().map(|p| p / v_id).collect();
     println!(
@@ -426,7 +482,11 @@ fn main() -> Result<()> {
         b_id[0],
         beta_none[0],
         100.0 * (b_id[0] / beta_none[0] - 1.0),
-        if (b_id[0] / beta_none[0] - 1.0).abs() < 0.02 { "PASS - flat" } else { "FAIL" }
+        if (b_id[0] / beta_none[0] - 1.0).abs() < 0.02 {
+            "PASS - flat"
+        } else {
+            "FAIL"
+        }
     );
 
     // ---- the measurement -------------------------------------------------
@@ -450,10 +510,24 @@ fn main() -> Result<()> {
     for (ax, ay, g, rot) in warps {
         let t = Similarity::from_params(SimilarityParams { ax, ay, g, rot });
         let (pp, vp) = arm_pooled(
-            sigma_p, false, Some((t, false)), bands, geom, resampler, &mut scratch, reals,
+            sigma_p,
+            false,
+            Some((t, false)),
+            bands,
+            geom,
+            resampler,
+            &mut scratch,
+            reals,
         )?;
         let (pf, vf) = arm_pooled(
-            sigma_p, false, Some((t, true)), bands, geom, resampler, &mut scratch, reals,
+            sigma_p,
+            false,
+            Some((t, true)),
+            bands,
+            geom,
+            resampler,
+            &mut scratch,
+            reals,
         )?;
         // Normalised by the UNWARPED variance, because that is what the gate's
         // `var` models: the raw sensor noise, which the warp does not change.
@@ -484,19 +558,45 @@ fn main() -> Result<()> {
     );
     println!(
         "  A SINGLE CONSTANT CANNOT SERVE BOTH: the two arms' spans {} overlap.",
-        if hi_p < lo_f || hi_f < lo_p { "do NOT" } else { "DO" }
+        if hi_p < lo_f || hi_f < lo_p {
+            "do NOT"
+        } else {
+            "DO"
+        }
     );
 
     // Deeper bands: does the warp matter there, or only at band 0?
     println!("\n== does the correction matter beyond band 0? ==");
-    let t = Similarity::from_params(SimilarityParams { ax: 0.37, ay: 0.23, g: 0.0004, rot: 0.0006 });
+    let t = Similarity::from_params(SimilarityParams {
+        ax: 0.37,
+        ay: 0.23,
+        g: 0.0004,
+        rot: 0.0006,
+    });
     let (pp, _) = arm_pooled(
-        sigma_p, false, Some((t, false)), bands, geom, resampler, &mut scratch, reals,
+        sigma_p,
+        false,
+        Some((t, false)),
+        bands,
+        geom,
+        resampler,
+        &mut scratch,
+        reals,
     )?;
     let (pf, _) = arm_pooled(
-        sigma_p, false, Some((t, true)), bands, geom, resampler, &mut scratch, reals,
+        sigma_p,
+        false,
+        Some((t, true)),
+        bands,
+        geom,
+        resampler,
+        &mut scratch,
+        reals,
     )?;
-    println!("  {:>5} {:>10} {:>10} {:>10} {:>10} {:>8}", "band", "white", "plane/w", "full/w", "full/plane", "C1");
+    println!(
+        "  {:>5} {:>10} {:>10} {:>10} {:>10} {:>8}",
+        "band", "white", "plane/w", "full/w", "full/plane", "C1"
+    );
     for k in 0..nlap {
         let w = f64::from(white.beta(k));
         let (bp, bf) = (pp[k] / v_none, pf[k] / v_none);
@@ -533,10 +633,24 @@ fn main() -> Result<()> {
             rot: 0.0,
         });
         let (pp, _) = arm_pooled(
-            sigma_p, false, Some((t, false)), bands, geom, resampler, &mut scratch, reals,
+            sigma_p,
+            false,
+            Some((t, false)),
+            bands,
+            geom,
+            resampler,
+            &mut scratch,
+            reals,
         )?;
         let (pf, _) = arm_pooled(
-            sigma_p, false, Some((t, true)), bands, geom, resampler, &mut scratch, reals,
+            sigma_p,
+            false,
+            Some((t, true)),
+            bands,
+            geom,
+            resampler,
+            &mut scratch,
+            reals,
         )?;
         let (bp, bf) = (pp[0] / v_none, pf[0] / v_none);
         println!(

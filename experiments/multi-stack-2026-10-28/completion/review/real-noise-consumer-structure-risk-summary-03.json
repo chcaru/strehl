@@ -1,0 +1,5284 @@
+{
+  "schema": "strehl.structure-risk-analysis.v1",
+  "input_root": "outputs\\multi-stack\\completion\\rn-sr-all-03",
+  "analysis_sha256": "777f4880f217fd8d7e2438c64d5ac7758024e74f2e491d5a4249646a7a79c2a0",
+  "threshold_note": "Fixed .95..1.05 known signal projection, written before nonflat results were opened; no amplitude/autofit correction. This is a diagnostic retention criterion, not a camera quality guarantee.",
+  "unit_note": "Mean and full replicate range across base+synthetic acquisition seed. Two states and colors share estimator inputs; no pixel CI or independent-row count.",
+  "summary": [
+    {
+      "mode": "cubic",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 698.7567677303474,
+          "known_risk_delta": 169.9033982088335,
+          "known_mse": 703.3903806184104,
+          "reference_mse": 1069.9567645076984,
+          "projection": 0.7215881058517828
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 689.5079928756879,
+          "known_risk_delta": 170.39931110373624,
+          "known_mse": 707.964621761819,
+          "reference_mse": 1074.4630448897321,
+          "projection": 0.7213961178639544
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 666.2111573026291,
+          "known_risk_delta": 144.97027628282478,
+          "known_mse": 705.6427219415972,
+          "reference_mse": 1088.039545534638,
+          "projection": 0.7227988231972693
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 647.632336985329,
+          "known_risk_delta": 142.70437891356622,
+          "known_mse": 704.911889326657,
+          "reference_mse": 1081.0544339157148,
+          "projection": 0.7229515422813847
+        }
+      ],
+      "reference_risk_delta": 675.5270637234984,
+      "known_risk_delta": 156.99434112724018,
+      "known_mse": 705.4774034121209,
+      "reference_mse": 1078.3784472119457,
+      "projection": 0.7221836472985979,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "cubic",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "constant",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 8762.95269949705,
+          "known_risk_delta": 6777.61503395344,
+          "known_mse": 7311.102016363004,
+          "reference_mse": 1069.9567645076984,
+          "projection": 0.0
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 8738.614248798833,
+          "known_risk_delta": 6773.536705704934,
+          "known_mse": 7311.102016363004,
+          "reference_mse": 1074.4630448897321,
+          "projection": 0.0
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 8713.198794017682,
+          "known_risk_delta": 6750.429570704245,
+          "known_mse": 7311.102016363004,
+          "reference_mse": 1088.039545534638,
+          "projection": 0.0
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 8676.117933327145,
+          "known_risk_delta": 6748.894505949927,
+          "known_mse": 7311.102016363004,
+          "reference_mse": 1081.0544339157148,
+          "projection": 0.0
+        }
+      ],
+      "reference_risk_delta": 8722.720918910178,
+      "known_risk_delta": 6762.618954078136,
+      "known_mse": 7311.102016363004,
+      "reference_mse": 1078.3784472119457,
+      "projection": 0.0,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "cubic",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "equal",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 533.486982409577,
+          "reference_mse": 1069.9567645076984,
+          "projection": 0.9893526111510919
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 537.5653106580827,
+          "reference_mse": 1074.4630448897321,
+          "projection": 0.9888011323708318
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 560.6724456587724,
+          "reference_mse": 1088.039545534638,
+          "projection": 0.9905178332892542
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 562.2075104130907,
+          "reference_mse": 1081.0544339157148,
+          "projection": 0.9908379444649
+        }
+      ],
+      "reference_risk_delta": 0.0,
+      "known_risk_delta": 0.0,
+      "known_mse": 548.4830622848807,
+      "reference_mse": 1078.3784472119457,
+      "projection": 0.9898773803190195,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "cubic",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "mild-blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -19.859895220292604,
+          "known_risk_delta": -99.19040635780074,
+          "known_mse": 434.2965760517761,
+          "reference_mse": 1069.9567645076984,
+          "projection": 0.9491873050118093
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -21.068577363601133,
+          "known_risk_delta": -98.93597666742386,
+          "known_mse": 438.6293339906589,
+          "reference_mse": 1074.4630448897321,
+          "projection": 0.948689865456142
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -27.611797717918407,
+          "known_risk_delta": -105.79507481105651,
+          "known_mse": 454.87737084771584,
+          "reference_mse": 1088.039545534638,
+          "projection": 0.9503597835433789
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -30.468039305088546,
+          "known_risk_delta": -106.21038700855394,
+          "known_mse": 455.99712340453675,
+          "reference_mse": 1081.0544339157148,
+          "projection": 0.9506551504236584
+        }
+      ],
+      "reference_risk_delta": -24.752077401725174,
+      "known_risk_delta": -102.53296121120876,
+      "known_mse": 445.95010107367193,
+      "reference_mse": 1078.3784472119457,
+      "projection": 0.9497230261087471,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "cubic",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "pass0",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 602.9326496762355,
+          "known_risk_delta": 602.501686113851,
+          "known_mse": 1135.9886685234278,
+          "reference_mse": 1069.9567645076984,
+          "projection": 0.9889042327096563
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 598.1743681339261,
+          "known_risk_delta": 603.1542712375459,
+          "known_mse": 1140.7195818956286,
+          "reference_mse": 1074.4630448897321,
+          "projection": 0.9879706438306566
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 562.1355724402375,
+          "known_risk_delta": 560.2164740426184,
+          "known_mse": 1120.8889197013907,
+          "reference_mse": 1088.039545534638,
+          "projection": 0.9915729574053975
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 560.6583260031758,
+          "known_risk_delta": 558.8244134245787,
+          "known_mse": 1121.0319238376694,
+          "reference_mse": 1081.0544339157148,
+          "projection": 0.9892776862931498
+        }
+      ],
+      "reference_risk_delta": 580.9752290633937,
+      "known_risk_delta": 581.1742112046485,
+      "known_mse": 1129.6572734895292,
+      "reference_mse": 1078.3784472119457,
+      "projection": 0.9894313800597151,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "cubic",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "pass1",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 469.9195977061942,
+          "known_risk_delta": 470.35061309420576,
+          "known_mse": 1003.8375955037825,
+          "reference_mse": 1069.9567645076984,
+          "projection": 0.9898010195034621
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 480.82258486084913,
+          "known_risk_delta": 475.8426671024468,
+          "known_mse": 1013.4079777605295,
+          "reference_mse": 1074.4630448897321,
+          "projection": 0.9896316583898846
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 559.237463586765,
+          "known_risk_delta": 561.1566012670612,
+          "known_mse": 1121.8290469258336,
+          "reference_mse": 1088.039545534638,
+          "projection": 0.9894626971384289
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 558.0102223810029,
+          "known_risk_delta": 559.844120736094,
+          "known_mse": 1122.0516311491847,
+          "reference_mse": 1081.0544339157148,
+          "projection": 0.9923981888735534
+        }
+      ],
+      "reference_risk_delta": 516.9974671337028,
+      "known_risk_delta": 516.798500549952,
+      "known_mse": 1065.2815628348326,
+      "reference_mse": 1078.3784472119457,
+      "projection": 0.9903233909763323,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "cubic",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "precision",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.010727761374356406,
+          "known_risk_delta": -0.013743809702545049,
+          "known_mse": 533.4732385998743,
+          "reference_mse": 1069.9567645076984,
+          "projection": 0.9893518352352637
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.007483106528929461,
+          "known_risk_delta": -0.00884076155721737,
+          "known_mse": 537.5564698965255,
+          "reference_mse": 1074.4630448897321,
+          "projection": 0.9888004937644485
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.018659373277690367,
+          "known_risk_delta": -0.015380589787986941,
+          "known_mse": 560.6570650689844,
+          "reference_mse": 1088.039545534638,
+          "projection": 0.9905175654042887
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.01193233142268784,
+          "known_risk_delta": -0.01572148960879834,
+          "known_mse": 562.191788923482,
+          "reference_mse": 1081.0544339157148,
+          "projection": 0.9908381092362727
+        }
+      ],
+      "reference_risk_delta": -0.012200643150916018,
+      "known_risk_delta": -0.013421662664136925,
+      "known_mse": 548.4696406222165,
+      "reference_mse": 1078.3784472119457,
+      "projection": 0.9898770009100684,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "cubic",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "shift",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2988.083182597385,
+          "known_risk_delta": 2613.112041601448,
+          "known_mse": 3146.599024011025,
+          "reference_mse": 1069.9567645076984,
+          "projection": 0.8103452561818989
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2965.8035394567714,
+          "known_risk_delta": 2603.455146089657,
+          "known_mse": 3141.0204567477394,
+          "reference_mse": 1074.4630448897321,
+          "projection": 0.8108040074383747
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2980.4751190194456,
+          "known_risk_delta": 2613.31298192326,
+          "known_mse": 3173.985427582032,
+          "reference_mse": 1088.039545534638,
+          "projection": 0.8122372217863981
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 3006.0156224974403,
+          "known_risk_delta": 2612.762107207023,
+          "known_mse": 3174.9696176201137,
+          "reference_mse": 1081.0544339157148,
+          "projection": 0.8122832466088323
+        }
+      ],
+      "reference_risk_delta": 2985.094365892761,
+      "known_risk_delta": 2610.6605692053467,
+      "known_mse": 3159.1436314902276,
+      "reference_mse": 1078.3784472119457,
+      "projection": 0.811417433003876,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "cubic",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 282.4525223143778,
+          "known_risk_delta": -249.07017576579463,
+          "known_mse": 741.9636798284027,
+          "reference_mse": 1319.205550724972,
+          "projection": 0.7213938283084828
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 267.72589253395046,
+          "known_risk_delta": -250.53166235750328,
+          "known_mse": 746.8244267958837,
+          "reference_mse": 1325.090183697758,
+          "projection": 0.7211778213459459
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 251.16733904664474,
+          "known_risk_delta": -268.1199685800136,
+          "known_mse": 744.5847431058363,
+          "reference_mse": 1331.9961339288257,
+          "projection": 0.7225430143405399
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 230.9112934991746,
+          "known_risk_delta": -271.9514255914978,
+          "known_mse": 743.3096113094063,
+          "reference_mse": 1325.6574607469006,
+          "projection": 0.723235598401094
+        }
+      ],
+      "reference_risk_delta": 258.0642618485369,
+      "known_risk_delta": -259.91830807370235,
+      "known_mse": 744.1706152598822,
+      "reference_mse": 1325.4873322746141,
+      "projection": 0.7220875655990157,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "cubic",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "constant",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 8318.243547022814,
+          "known_risk_delta": 6320.06816076882,
+          "known_mse": 7311.102016363004,
+          "reference_mse": 1319.205550724972,
+          "projection": 0.0
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 8283.6344465485,
+          "known_risk_delta": 6313.74592720963,
+          "known_mse": 7311.102016363004,
+          "reference_mse": 1325.090183697758,
+          "projection": 0.0
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 8256.720784522324,
+          "known_risk_delta": 6298.397304677168,
+          "known_mse": 7311.102016363004,
+          "reference_mse": 1331.9961339288257,
+          "projection": 0.0
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 8220.337585043128,
+          "known_risk_delta": 6295.840979462113,
+          "known_mse": 7311.102016363004,
+          "reference_mse": 1325.6574607469006,
+          "projection": 0.0
+        }
+      ],
+      "reference_risk_delta": 8269.734090784192,
+      "known_risk_delta": 6307.013093029433,
+      "known_mse": 7311.102016363004,
+      "reference_mse": 1325.4873322746141,
+      "projection": 0.0,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "cubic",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "equal",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 991.0338555941975,
+          "reference_mse": 1319.205550724972,
+          "projection": 0.9882514436425913
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 997.3560891533868,
+          "reference_mse": 1325.090183697758,
+          "projection": 0.98738662379959
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 1012.7047116858498,
+          "reference_mse": 1331.9961339288257,
+          "projection": 0.9908478904904937
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 1015.2610369009041,
+          "reference_mse": 1325.6574607469006,
+          "projection": 0.9903027910411052
+        }
+      ],
+      "reference_risk_delta": 0.0,
+      "known_risk_delta": 0.0,
+      "known_mse": 1004.0889233335845,
+      "reference_mse": 1325.4873322746141,
+      "projection": 0.9891971872434451,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "cubic",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "mild-blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -305.88528562693784,
+          "known_risk_delta": -386.24220417139975,
+          "known_mse": 604.7916514227976,
+          "reference_mse": 1319.205550724972,
+          "projection": 0.948810748267388
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -307.2171528286101,
+          "known_risk_delta": -386.3836332414248,
+          "known_mse": 610.9724559119621,
+          "reference_mse": 1325.090183697758,
+          "projection": 0.9483054115482477
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -288.01214552953303,
+          "known_risk_delta": -363.84105663463595,
+          "known_mse": 648.8636550512139,
+          "reference_mse": 1331.9961339288257,
+          "projection": 0.950075513816621
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -290.0061036101568,
+          "known_risk_delta": -364.61633653352516,
+          "known_mse": 650.6447003673788,
+          "reference_mse": 1325.6574607469006,
+          "projection": 0.9510393273943999
+        }
+      ],
+      "reference_risk_delta": -297.78017189880944,
+      "known_risk_delta": -375.2708076452464,
+      "known_mse": 628.8181156883381,
+      "reference_mse": 1325.4873322746141,
+      "projection": 0.9495577502566641,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "cubic",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "pass0",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1976.6511984964034,
+          "known_risk_delta": 1978.3146515027838,
+          "known_mse": 2969.3485070969814,
+          "reference_mse": 1319.205550724972,
+          "projection": 0.986701890166858
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1981.0763770748938,
+          "known_risk_delta": 1984.842460020516,
+          "known_mse": 2982.198549173903,
+          "reference_mse": 1325.090183697758,
+          "projection": 0.9851415806559475
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1922.367103306362,
+          "known_risk_delta": 1916.7655254839415,
+          "known_mse": 2929.4702371697913,
+          "reference_mse": 1331.9961339288257,
+          "projection": 0.9922330709047495
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1915.554621416023,
+          "known_risk_delta": 1913.5070618598402,
+          "known_mse": 2928.7680987607437,
+          "reference_mse": 1325.6574607469006,
+          "projection": 0.988207386798226
+        }
+      ],
+      "reference_risk_delta": 1948.9123250734206,
+      "known_risk_delta": 1948.3574247167703,
+      "known_mse": 2952.4463480503546,
+      "reference_mse": 1325.4873322746141,
+      "projection": 0.9880709821314453,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "cubic",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "pass1",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 14.46711159961736,
+          "known_risk_delta": 12.803739909585298,
+          "known_mse": 1003.8375955037825,
+          "reference_mse": 1319.205550724972,
+          "projection": 0.9898010195034621
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 19.817872881497706,
+          "known_risk_delta": 16.0518886071426,
+          "known_mse": 1013.4079777605295,
+          "reference_mse": 1325.090183697758,
+          "projection": 0.9896316583898846
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 103.52276836526562,
+          "known_risk_delta": 109.12433523998374,
+          "known_mse": 1121.8290469258336,
+          "reference_mse": 1331.9961339288257,
+          "projection": 0.9894626971384289
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 104.74305615618677,
+          "known_risk_delta": 106.7905942482808,
+          "known_mse": 1122.0516311491847,
+          "reference_mse": 1325.6574607469006,
+          "projection": 0.9923981888735534
+        }
+      ],
+      "reference_risk_delta": 60.637702250641865,
+      "known_risk_delta": 61.19263950124811,
+      "known_mse": 1065.2815628348326,
+      "reference_mse": 1325.4873322746141,
+      "projection": 0.9903233909763323,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "cubic",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "precision",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -239.5411643369827,
+          "known_risk_delta": -240.28067972865983,
+          "known_mse": 750.7531758655374,
+          "reference_mse": 1319.205550724972,
+          "projection": 0.9889431122867374
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -238.37800608246692,
+          "known_risk_delta": -240.05791188849122,
+          "known_mse": 757.2981772648958,
+          "reference_mse": 1325.090183697758,
+          "projection": 0.9883867200848688
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -204.05343956015733,
+          "known_risk_delta": -201.62504827153498,
+          "known_mse": 811.0796634143148,
+          "reference_mse": 1331.9961339288257,
+          "projection": 0.9902282758337376
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -202.94125164946686,
+          "known_risk_delta": -201.97757833590978,
+          "known_mse": 813.2834585649941,
+          "reference_mse": 1325.6574607469006,
+          "projection": 0.9912399551110409
+        }
+      ],
+      "reference_risk_delta": -221.22846540726846,
+      "known_risk_delta": -220.98530455614895,
+      "known_mse": 783.1036187774355,
+      "reference_mse": 1325.4873322746141,
+      "projection": 0.9896995158290962,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "cubic",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "shift",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2761.080046220246,
+          "known_risk_delta": 2381.6720251930783,
+          "known_mse": 3372.705880787274,
+          "reference_mse": 1319.205550724972,
+          "projection": 0.8093710512009092
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2733.08173162114,
+          "known_risk_delta": 2367.1656340572304,
+          "known_mse": 3364.521723210616,
+          "reference_mse": 1325.090183697758,
+          "projection": 0.8101553623778458
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2772.832954702037,
+          "known_risk_delta": 2411.3480037401923,
+          "known_mse": 3424.0527154260403,
+          "reference_mse": 1331.9961339288257,
+          "projection": 0.8119870379389894
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2809.807984378709,
+          "known_risk_delta": 2413.339258940492,
+          "known_mse": 3428.600295841394,
+          "reference_mse": 1325.6574607469006,
+          "projection": 0.8125066137228936
+        }
+      ],
+      "reference_risk_delta": 2769.200679230533,
+      "known_risk_delta": 2393.3812304827484,
+      "known_mse": 3397.4701538163313,
+      "reference_mse": 1325.4873322746141,
+      "projection": 0.8110050163101595,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "flat",
+      "hdr": false,
+      "divisor": 1.0,
+      "arm": "blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -73.40180953997778,
+          "known_risk_delta": -73.44624552711522,
+          "known_mse": 13.657466808669495,
+          "reference_mse": 47.320266338832276,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -74.06723409089844,
+          "known_risk_delta": -73.81453383365199,
+          "known_mse": 13.887642102904769,
+          "reference_mse": 47.920373263153024,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -77.125168305273,
+          "known_risk_delta": -77.29357646520515,
+          "known_mse": 14.21420452956368,
+          "reference_mse": 49.781550337544104,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -78.20061675478772,
+          "known_risk_delta": -77.47290353386558,
+          "known_mse": 14.223945625341205,
+          "reference_mse": 49.330408582806236,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -75.69870717273423,
+      "known_risk_delta": -75.50681483995949,
+      "known_mse": 13.995814766619787,
+      "reference_mse": 48.588149630583914
+    },
+    {
+      "mode": "flat",
+      "hdr": false,
+      "divisor": 1.0,
+      "arm": "constant",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -86.90813646838716,
+          "known_risk_delta": -87.10371233578472,
+          "known_mse": 0.0,
+          "reference_mse": 47.320266338832276,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -87.65729820254536,
+          "known_risk_delta": -87.70217593655677,
+          "known_mse": 0.0,
+          "reference_mse": 47.920373263153024,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -91.44298043573589,
+          "known_risk_delta": -91.50778099476884,
+          "known_mse": 0.0,
+          "reference_mse": 49.781550337544104,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -92.61962281295483,
+          "known_risk_delta": -91.69684915920678,
+          "known_mse": 0.0,
+          "reference_mse": 49.330408582806236,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -89.65700947990581,
+      "known_risk_delta": -89.50262960657928,
+      "known_mse": 0.0,
+      "reference_mse": 48.588149630583914
+    },
+    {
+      "mode": "flat",
+      "hdr": false,
+      "divisor": 1.0,
+      "arm": "equal",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 87.10371233578472,
+          "reference_mse": 47.320266338832276,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 87.70217593655677,
+          "reference_mse": 47.920373263153024,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 91.50778099476884,
+          "reference_mse": 49.781550337544104,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 91.69684915920678,
+          "reference_mse": 49.330408582806236,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": 0.0,
+      "known_risk_delta": 0.0,
+      "known_mse": 89.50262960657928,
+      "reference_mse": 48.588149630583914
+    },
+    {
+      "mode": "flat",
+      "hdr": false,
+      "divisor": 1.0,
+      "arm": "mild-blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -19.50333294549758,
+          "known_risk_delta": -19.510009948687284,
+          "known_mse": 67.59370238709744,
+          "reference_mse": 47.320266338832276,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -19.624915961221227,
+          "known_risk_delta": -19.587079144786912,
+          "known_mse": 68.11509679176986,
+          "reference_mse": 47.920373263153024,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -20.557451791370315,
+          "known_risk_delta": -20.58264479387536,
+          "known_mse": 70.92513620089348,
+          "reference_mse": 49.781550337544104,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -20.717930227972424,
+          "known_risk_delta": -20.60897855814134,
+          "known_mse": 71.08787060106543,
+          "reference_mse": 49.330408582806236,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -20.100907731515385,
+      "known_risk_delta": -20.072178111372725,
+      "known_mse": 69.43045149520655,
+      "reference_mse": 48.588149630583914
+    },
+    {
+      "mode": "flat",
+      "hdr": false,
+      "divisor": 1.0,
+      "arm": "pass0",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 97.9602308227382,
+          "known_risk_delta": 98.42807600232462,
+          "known_mse": 185.53178833810932,
+          "reference_mse": 47.320266338832276,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 98.13748515860344,
+          "known_risk_delta": 98.51585497209372,
+          "known_mse": 186.2180309086505,
+          "reference_mse": 47.920373263153024,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 91.87163247179888,
+          "known_risk_delta": 91.59720815230948,
+          "known_mse": 183.1049891470783,
+          "reference_mse": 49.781550337544104,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 91.3100080494292,
+          "known_risk_delta": 91.19247140329632,
+          "known_mse": 182.8893205625031,
+          "reference_mse": 49.330408582806236,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": 94.81983912564243,
+      "known_risk_delta": 94.93340263250603,
+      "known_mse": 184.4360322390853,
+      "reference_mse": 48.588149630583914
+    },
+    {
+      "mode": "flat",
+      "hdr": false,
+      "divisor": 1.0,
+      "arm": "pass1",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 77.33861027705967,
+          "known_risk_delta": 76.87076635445231,
+          "known_mse": 163.97447869023705,
+          "reference_mse": 47.320266338832276,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 77.94492892660855,
+          "known_risk_delta": 77.56654751850348,
+          "known_mse": 165.26872345506024,
+          "reference_mse": 47.920373263153024,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 91.51280690843345,
+          "known_risk_delta": 91.78722644199075,
+          "known_mse": 183.2950074367596,
+          "reference_mse": 49.781550337544104,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 91.60002834594849,
+          "known_risk_delta": 91.71758108863953,
+          "known_mse": 183.41443024784633,
+          "reference_mse": 49.330408582806236,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": 84.59909361451254,
+      "known_risk_delta": 84.48553035089652,
+      "known_mse": 173.9881599574758,
+      "reference_mse": 48.588149630583914
+    },
+    {
+      "mode": "flat",
+      "hdr": false,
+      "divisor": 1.0,
+      "arm": "precision",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.0022446105467679445,
+          "known_risk_delta": -0.0022643713006497515,
+          "known_mse": 87.10144796448407,
+          "reference_mse": 47.320266338832276,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.0013463543677466481,
+          "known_risk_delta": -0.0014320714971189671,
+          "known_mse": 87.70074386505965,
+          "reference_mse": 47.920373263153024,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.0025860442704773354,
+          "known_risk_delta": -0.0025005639840350747,
+          "known_mse": 91.50528043078481,
+          "reference_mse": 49.781550337544104,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.0023011426734835063,
+          "known_risk_delta": -0.002549758116300735,
+          "known_mse": 91.69429940109048,
+          "reference_mse": 49.330408582806236,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -0.0021195379646188586,
+      "known_risk_delta": -0.0021866912245261322,
+      "known_mse": 89.50044291535475,
+      "reference_mse": 48.588149630583914
+    },
+    {
+      "mode": "flat",
+      "hdr": false,
+      "divisor": 1.0,
+      "arm": "shift",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.075583561174426,
+          "known_risk_delta": -0.005630570576613536,
+          "known_mse": 87.09808176520811,
+          "reference_mse": 47.320266338832276,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.3754677340855576,
+          "known_risk_delta": 0.09176828109856514,
+          "known_mse": 87.79394421765534,
+          "reference_mse": 47.920373263153024,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.46527485452012723,
+          "known_risk_delta": 0.2464006627045213,
+          "known_mse": 91.75418165747335,
+          "reference_mse": 49.781550337544104,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -1.1417687921936401,
+          "known_risk_delta": 0.18011473344146603,
+          "known_mse": 91.87696389264823,
+          "reference_mse": 49.330408582806236,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -0.2818863082333741,
+      "known_risk_delta": 0.12816327666698474,
+      "known_mse": 89.63079288324626,
+      "reference_mse": 48.588149630583914
+    },
+    {
+      "mode": "flat",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -448.3347202564257,
+          "known_risk_delta": -448.75170111981123,
+          "known_mse": 83.36581186064986,
+          "reference_mse": 289.1037067153017,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -452.364899761092,
+          "known_risk_delta": -450.9746285604767,
+          "known_mse": 84.92853978897236,
+          "reference_mse": 292.9851967613631,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -471.25688132783296,
+          "known_risk_delta": -472.2405067735221,
+          "known_mse": 86.9836610549064,
+          "reference_mse": 304.12344271450354,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -477.6458067187319,
+          "known_risk_delta": -473.2043684954355,
+          "known_mse": 86.95555492341919,
+          "reference_mse": 301.50874689078813,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -462.40057701602063,
+      "known_risk_delta": -461.2928012373114,
+      "known_mse": 85.55839190698696,
+      "reference_mse": 296.9302732704891
+    },
+    {
+      "mode": "flat",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "constant",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -530.905386115905,
+          "known_risk_delta": -532.117512980461,
+          "known_mse": 0.0,
+          "reference_mse": 289.1037067153017,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -535.4270359398569,
+          "known_risk_delta": -535.9031683494491,
+          "known_mse": 0.0,
+          "reference_mse": 292.9851967613631,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -558.952358547775,
+          "known_risk_delta": -559.2241678284286,
+          "known_mse": 0.0,
+          "reference_mse": 304.12344271450354,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -565.7424668413983,
+          "known_risk_delta": -560.1599234188548,
+          "known_mse": 0.0,
+          "reference_mse": 301.50874689078813,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -547.7568118612338,
+      "known_risk_delta": -546.8511931442983,
+      "known_mse": 0.0,
+      "reference_mse": 296.9302732704891
+    },
+    {
+      "mode": "flat",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "equal",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 532.117512980461,
+          "reference_mse": 289.1037067153017,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 535.9031683494491,
+          "reference_mse": 292.9851967613631,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 559.2241678284286,
+          "reference_mse": 304.12344271450354,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 560.1599234188548,
+          "reference_mse": 301.50874689078813,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": 0.0,
+      "known_risk_delta": 0.0,
+      "known_mse": 546.8511931442983,
+      "reference_mse": 296.9302732704891
+    },
+    {
+      "mode": "flat",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "mild-blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -119.14899165227446,
+          "known_risk_delta": -119.21167408010257,
+          "known_mse": 412.9058389003585,
+          "reference_mse": 289.1037067153017,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -119.87789639934333,
+          "known_risk_delta": -119.6696942149079,
+          "known_mse": 416.2334741345411,
+          "reference_mse": 292.9851967613631,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -125.59620472655843,
+          "known_risk_delta": -125.74318265746459,
+          "known_mse": 433.48098517096395,
+          "reference_mse": 304.12344271450354,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -126.55479587269798,
+          "known_risk_delta": -125.88951430302869,
+          "known_mse": 434.270409115826,
+          "reference_mse": 301.50874689078813,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -122.79447216271855,
+      "known_risk_delta": -122.62851631387593,
+      "known_mse": 424.2226768304224,
+      "reference_mse": 296.9302732704891
+    },
+    {
+      "mode": "flat",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "pass0",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 598.7072314727188,
+          "known_risk_delta": 601.377859422462,
+          "known_mse": 1133.495372402923,
+          "reference_mse": 289.1037067153017,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 599.4057007290653,
+          "known_risk_delta": 601.5309979961057,
+          "known_mse": 1137.4341663455548,
+          "reference_mse": 292.9851967613631,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 561.7399069582893,
+          "known_risk_delta": 560.0183890007598,
+          "known_mse": 1119.2425568291883,
+          "reference_mse": 304.12344271450354,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 558.9312525375584,
+          "known_risk_delta": 557.5644255331002,
+          "known_mse": 1117.7243489519549,
+          "reference_mse": 301.50874689078813,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": 579.696022924408,
+      "known_risk_delta": 580.122917988107,
+      "known_mse": 1126.9741111324051,
+      "reference_mse": 296.9302732704891
+    },
+    {
+      "mode": "flat",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "pass1",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 472.3671801961108,
+          "known_risk_delta": 469.69657055436824,
+          "known_mse": 1001.8140835348293,
+          "reference_mse": 289.1037067153017,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 475.914981613831,
+          "known_risk_delta": 473.78970579414334,
+          "known_mse": 1009.6928741435923,
+          "reference_mse": 292.9851967613631,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 558.5150930879926,
+          "known_risk_delta": 560.236622606921,
+          "known_mse": 1119.4607904353495,
+          "reference_mse": 304.12344271450354,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 558.8891810191557,
+          "known_risk_delta": 560.255982436484,
+          "known_mse": 1120.4159058553387,
+          "reference_mse": 301.50874689078813,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": 516.4216089792725,
+      "known_risk_delta": 515.9947203479792,
+      "known_mse": 1062.8459134922775,
+      "reference_mse": 296.9302732704891
+    },
+    {
+      "mode": "flat",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "precision",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.013664947659789404,
+          "known_risk_delta": -0.01383602111592255,
+          "known_mse": 532.1036769593452,
+          "reference_mse": 289.1037067153017,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.008300588323739552,
+          "known_risk_delta": -0.008705441115833108,
+          "known_mse": 535.8944629083331,
+          "reference_mse": 292.9851967613631,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.016421813208176497,
+          "known_risk_delta": -0.015740234677246515,
+          "known_mse": 559.2084275937513,
+          "reference_mse": 304.12344271450354,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.014771110138907615,
+          "known_risk_delta": -0.01590133253517302,
+          "known_mse": 560.1440220863195,
+          "reference_mse": 301.50874689078813,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -0.013289614832653267,
+      "known_risk_delta": -0.013545757361043798,
+      "known_mse": 546.8376473869373,
+      "reference_mse": 296.9302732704891
+    },
+    {
+      "mode": "flat",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "shift",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.37742092293673424,
+          "known_risk_delta": -0.08901659103523546,
+          "known_mse": 532.0284963894259,
+          "reference_mse": 289.1037067153017,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -2.2094116501719125,
+          "known_risk_delta": 0.5760788568172251,
+          "known_mse": 536.4792472062662,
+          "reference_mse": 292.9851967613631,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 3.1553519205085143,
+          "known_risk_delta": 1.5108603983887103,
+          "known_mse": 560.7350282268172,
+          "reference_mse": 304.12344271450354,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -7.084510135427788,
+          "known_risk_delta": 1.1080889839364925,
+          "known_mse": 561.2680124027912,
+          "reference_mse": 301.50874689078813,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -1.6289976970069802,
+      "known_risk_delta": 0.7765029120267981,
+      "known_mse": 547.6276960563251,
+      "reference_mse": 296.9302732704891
+    },
+    {
+      "mode": "flat",
+      "hdr": true,
+      "divisor": 1.0,
+      "arm": "blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -138.50850291871535,
+          "known_risk_delta": -139.13795896791373,
+          "known_mse": 19.569134775728646,
+          "reference_mse": 86.33173235268906,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -140.4068819653045,
+          "known_risk_delta": -139.94826009683453,
+          "known_mse": 19.73428598058308,
+          "reference_mse": 86.98682425627946,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -141.91202580155874,
+          "known_risk_delta": -142.0126608179851,
+          "known_mse": 20.33648908358272,
+          "reference_mse": 87.94930453553246,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -142.93904675018712,
+          "known_risk_delta": -141.98445284598185,
+          "known_mse": 20.538855231652633,
+          "reference_mse": 87.62184102647633,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -140.94161435894142,
+      "known_risk_delta": -140.77083318217882,
+      "known_mse": 20.04469126788677,
+      "reference_mse": 87.22242554274433
+    },
+    {
+      "mode": "flat",
+      "hdr": true,
+      "divisor": 1.0,
+      "arm": "constant",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -157.89207678166773,
+          "known_risk_delta": -158.70709374364236,
+          "known_mse": 0.0,
+          "reference_mse": 86.33173235268906,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -159.83230620562102,
+          "known_risk_delta": -159.6825460774176,
+          "known_mse": 0.0,
+          "reference_mse": 86.98682425627946,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -162.3949426309846,
+          "known_risk_delta": -162.3491499015678,
+          "known_mse": 0.0,
+          "reference_mse": 87.94930453553246,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -163.80628236477403,
+          "known_risk_delta": -162.52330807763448,
+          "known_mse": 0.0,
+          "reference_mse": 87.62184102647633,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -160.98140199576184,
+      "known_risk_delta": -160.81552445006557,
+      "known_mse": 0.0,
+      "reference_mse": 87.22242554274433
+    },
+    {
+      "mode": "flat",
+      "hdr": true,
+      "divisor": 1.0,
+      "arm": "equal",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 158.70709374364236,
+          "reference_mse": 86.33173235268906,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 159.6825460774176,
+          "reference_mse": 86.98682425627946,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 162.3491499015678,
+          "reference_mse": 87.94930453553246,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 162.52330807763448,
+          "reference_mse": 87.62184102647633,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": 0.0,
+      "known_risk_delta": 0.0,
+      "known_mse": 160.81552445006557,
+      "reference_mse": 87.22242554274433
+    },
+    {
+      "mode": "flat",
+      "hdr": true,
+      "divisor": 1.0,
+      "arm": "mild-blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -63.50864601233641,
+          "known_risk_delta": -63.98517677390353,
+          "known_mse": 94.72191696973884,
+          "reference_mse": 86.33173235268906,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -64.04167254696625,
+          "known_risk_delta": -64.19355929395978,
+          "known_mse": 95.48898678345783,
+          "reference_mse": 86.98682425627946,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -60.68245630193188,
+          "known_risk_delta": -60.457499734258214,
+          "known_mse": 101.8916501673096,
+          "reference_mse": 87.94930453553246,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -60.52978415581189,
+          "known_risk_delta": -60.34558548005589,
+          "known_mse": 102.1777225975786,
+          "reference_mse": 87.62184102647633,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -62.19063975426161,
+      "known_risk_delta": -62.24545532054435,
+      "known_mse": 98.57006912952122,
+      "reference_mse": 87.22242554274433
+    },
+    {
+      "mode": "flat",
+      "hdr": true,
+      "divisor": 1.0,
+      "arm": "pass0",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 312.884088498613,
+          "known_risk_delta": 313.9178512272629,
+          "known_mse": 472.62494497090523,
+          "reference_mse": 86.33173235268906,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 314.2633603983494,
+          "known_risk_delta": 314.8615832850268,
+          "known_mse": 474.54412936244444,
+          "reference_mse": 86.98682425627946,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 304.9399347113924,
+          "known_risk_delta": 304.2707694025473,
+          "known_mse": 466.61991930411506,
+          "reference_mse": 87.94930453553246,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 303.5700877008682,
+          "known_risk_delta": 303.47597969592266,
+          "known_mse": 465.9992877735571,
+          "reference_mse": 87.62184102647633,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": 308.91436782730574,
+      "known_risk_delta": 309.13154590268994,
+      "known_mse": 469.9470703527555,
+      "reference_mse": 87.22242554274433
+    },
+    {
+      "mode": "flat",
+      "hdr": true,
+      "divisor": 1.0,
+      "arm": "pass1",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 6.301194051626428,
+          "known_risk_delta": 5.267384946594676,
+          "known_mse": 163.97447869023705,
+          "reference_mse": 86.33173235268906,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 6.184419170103259,
+          "known_risk_delta": 5.586177377642646,
+          "known_mse": 165.26872345506024,
+          "reference_mse": 86.98682425627946,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 20.276692480081085,
+          "known_risk_delta": 20.945857535191763,
+          "known_mse": 183.2950074367596,
+          "reference_mse": 87.94930453553246,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 20.796991619372825,
+          "known_risk_delta": 20.89112217021183,
+          "known_mse": 183.41443024784633,
+          "reference_mse": 87.62184102647633,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": 13.3898243302959,
+      "known_risk_delta": 13.172635507410229,
+      "known_mse": 173.9881599574758,
+      "reference_mse": 87.22242554274433
+    },
+    {
+      "mode": "flat",
+      "hdr": true,
+      "divisor": 1.0,
+      "arm": "precision",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -36.499071924492455,
+          "known_risk_delta": -36.94861709475663,
+          "known_mse": 121.75847664888573,
+          "reference_mse": 86.33173235268906,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -36.70850682370534,
+          "known_risk_delta": -36.96813059207246,
+          "known_mse": 122.71441548534514,
+          "reference_mse": 86.98682425627946,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -31.138539694632023,
+          "known_risk_delta": -30.856119165906016,
+          "known_mse": 131.49303073566182,
+          "reference_mse": 87.94930453553246,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -30.8233114423755,
+          "known_risk_delta": -30.775069363257597,
+          "known_mse": 131.7482387143769,
+          "reference_mse": 87.62184102647633,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -33.79235747130133,
+      "known_risk_delta": -33.88698405399818,
+      "known_mse": 126.9285403960674,
+      "reference_mse": 87.22242554274433
+    },
+    {
+      "mode": "flat",
+      "hdr": true,
+      "divisor": 1.0,
+      "arm": "shift",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -36.37014347796261,
+          "known_risk_delta": -36.87373837686917,
+          "known_mse": 121.8333553667732,
+          "reference_mse": 86.33173235268906,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -37.62436629482201,
+          "known_risk_delta": -36.71088566462701,
+          "known_mse": 122.9716604127906,
+          "reference_mse": 86.98682425627946,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -30.37582095338621,
+          "known_risk_delta": -30.430199142909867,
+          "known_mse": 131.91895075865796,
+          "reference_mse": 87.94930453553246,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -32.59983447885538,
+          "known_risk_delta": -30.49433116087332,
+          "known_mse": 132.02897691676117,
+          "reference_mse": 87.62184102647633,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -34.24254130125655,
+      "known_risk_delta": -33.62728858631984,
+      "known_mse": 127.18823586374573,
+      "reference_mse": 87.22242554274433
+    },
+    {
+      "mode": "flat",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -864.8067535097528,
+          "known_risk_delta": -868.4474306806995,
+          "known_mse": 120.44066646105199,
+          "reference_mse": 538.1865387533829,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -876.7537428947928,
+          "known_risk_delta": -874.1038035281935,
+          "known_mse": 121.36401266777426,
+          "reference_mse": 542.0556355892635,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -885.3114112648353,
+          "known_risk_delta": -885.4696842323034,
+          "known_mse": 125.31335052598014,
+          "reference_mse": 548.1373649326628,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -892.3001762924931,
+          "known_risk_delta": -885.9520935001422,
+          "known_mse": 126.42624776752544,
+          "reference_mse": 546.2563726443946,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -879.7930209904684,
+      "known_risk_delta": -878.4932529853346,
+      "known_mse": 123.38606935558296,
+      "reference_mse": 543.6589779799259
+    },
+    {
+      "mode": "flat",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "constant",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -984.1748835660221,
+          "known_risk_delta": -988.8880971417516,
+          "known_mse": 0.0,
+          "reference_mse": 538.1865387533829,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -996.1372245299935,
+          "known_risk_delta": -995.4678161959678,
+          "known_mse": 0.0,
+          "reference_mse": 542.0556355892635,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -1011.4717740936331,
+          "known_risk_delta": -1010.7830347582835,
+          "known_mse": 0.0,
+          "reference_mse": 548.1373649326628,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -1020.6819618343741,
+          "known_risk_delta": -1012.3783412676676,
+          "known_mse": 0.0,
+          "reference_mse": 546.2563726443946,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -1003.1164610060057,
+      "known_risk_delta": -1001.8793223409176,
+      "known_mse": 0.0,
+      "reference_mse": 543.6589779799259
+    },
+    {
+      "mode": "flat",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "equal",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 988.8880971417516,
+          "reference_mse": 538.1865387533829,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 995.4678161959678,
+          "reference_mse": 542.0556355892635,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 1010.7830347582835,
+          "reference_mse": 548.1373649326628,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 1012.3783412676676,
+          "reference_mse": 546.2563726443946,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": 0.0,
+      "known_risk_delta": 0.0,
+      "known_mse": 1001.8793223409176,
+      "reference_mse": 543.6589779799259
+    },
+    {
+      "mode": "flat",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "mild-blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -403.1586552017577,
+          "known_risk_delta": -406.1916809727148,
+          "known_mse": 582.6964161690368,
+          "reference_mse": 538.1865387533829,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -406.96083924318776,
+          "known_risk_delta": -407.9770421750493,
+          "known_mse": 587.4907740209185,
+          "reference_mse": 542.0556355892635,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -385.40703528442464,
+          "known_risk_delta": -383.875931527312,
+          "known_mse": 626.9071032309716,
+          "reference_mse": 548.1373649326628,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -384.99632739745033,
+          "known_risk_delta": -383.44546365965084,
+          "known_mse": 628.9328776080167,
+          "reference_mse": 546.2563726443946,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -395.1307142817051,
+      "known_risk_delta": -395.37252958368174,
+      "known_mse": 606.5067927572359,
+      "reference_mse": 543.6589779799259
+    },
+    {
+      "mode": "flat",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "pass0",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1968.9851487369242,
+          "known_risk_delta": 1975.5536599426762,
+          "known_mse": 2964.441757084428,
+          "reference_mse": 538.1865387533829,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1979.474296765994,
+          "known_risk_delta": 1983.1777078155412,
+          "known_mse": 2978.6455240115088,
+          "reference_mse": 542.0556355892635,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1921.5447341869294,
+          "known_risk_delta": 1917.297220913587,
+          "known_mse": 2928.0802556718704,
+          "reference_mse": 548.1373649326628,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1913.7587115435324,
+          "known_risk_delta": 1912.2830113635473,
+          "known_mse": 2924.661352631215,
+          "reference_mse": 546.2563726443946,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": 1945.940722808345,
+      "known_risk_delta": 1947.0779000088378,
+      "known_mse": 2948.9572223497553,
+      "reference_mse": 543.6589779799259
+    },
+    {
+      "mode": "flat",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "pass1",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 19.494571132069016,
+          "known_risk_delta": 12.925986393077741,
+          "known_mse": 1001.8140835348293,
+          "reference_mse": 538.1865387533829,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 17.928462097206445,
+          "known_risk_delta": 14.225057947624615,
+          "known_mse": 1009.6928741435923,
+          "reference_mse": 542.0556355892635,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 104.43027008691995,
+          "known_risk_delta": 108.67775567706586,
+          "known_mse": 1119.4607904353495,
+          "reference_mse": 548.1373649326628,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 106.56189902873484,
+          "known_risk_delta": 108.03756458767121,
+          "known_mse": 1120.4159058553387,
+          "reference_mse": 546.2563726443946,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": 62.103800586232566,
+      "known_risk_delta": 60.96659115135986,
+      "known_mse": 1062.8459134922775,
+      "reference_mse": 543.6589779799259
+    },
+    {
+      "mode": "flat",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "precision",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -236.97008362477897,
+          "known_risk_delta": -239.89587940841253,
+          "known_mse": 748.992217733339,
+          "reference_mse": 538.1865387533829,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -238.7790857916902,
+          "known_risk_delta": -240.44226329400954,
+          "known_mse": 755.0255529019582,
+          "reference_mse": 542.0556355892635,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -203.66531750426273,
+          "known_risk_delta": -201.83607017817224,
+          "known_mse": 808.9469645801114,
+          "reference_mse": 548.1373649326628,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -202.12310811017252,
+          "known_risk_delta": -201.41883182974016,
+          "known_mse": 810.9595094379274,
+          "reference_mse": 546.2563726443946,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -220.3843987577261,
+      "known_risk_delta": -220.8982611775836,
+      "known_mse": 780.9810611633341,
+      "reference_mse": 543.6589779799259
+    },
+    {
+      "mode": "flat",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "shift",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -236.132293596292,
+          "known_risk_delta": -239.46074673881574,
+          "known_mse": 749.4273504029358,
+          "reference_mse": 538.1865387533829,
+          "projection": null
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -245.12114881462588,
+          "known_risk_delta": -238.8484408706281,
+          "known_mse": 756.6193753253397,
+          "reference_mse": 542.0556355892635,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -199.138014629769,
+          "known_risk_delta": -199.15198100438485,
+          "known_mse": 811.6310537538988,
+          "reference_mse": 548.1373649326628,
+          "projection": null
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -213.77919978060729,
+          "known_risk_delta": -199.6981009087762,
+          "known_mse": 812.6802403588913,
+          "reference_mse": 546.2563726443946,
+          "projection": null
+        }
+      ],
+      "reference_risk_delta": -223.54266420532355,
+      "known_risk_delta": -219.28981738065124,
+      "known_mse": 782.5895049602664,
+      "reference_mse": 543.6589779799259
+    },
+    {
+      "mode": "focus",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -276.2015643024519,
+          "known_risk_delta": -273.6994140327954,
+          "known_mse": 258.9320669882248,
+          "reference_mse": 297.5315607971463,
+          "projection": 0.7202676106694527
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -281.99187411172977,
+          "known_risk_delta": -274.89376877491145,
+          "known_mse": 261.62027011053436,
+          "reference_mse": 301.1431880181218,
+          "projection": 0.719878702104476
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -303.1080124555562,
+          "known_risk_delta": -299.00804489551655,
+          "known_mse": 260.8374083691285,
+          "reference_mse": 312.0545340314887,
+          "projection": 0.7225656540123249
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -315.35965720552565,
+          "known_risk_delta": -300.57426371031437,
+          "known_mse": 260.52229165786434,
+          "reference_mse": 310.45691080491247,
+          "projection": 0.7229182970511027
+        }
+      ],
+      "reference_risk_delta": -294.1652770188159,
+      "known_risk_delta": -287.0438728533844,
+      "known_mse": 260.478009281438,
+      "reference_mse": 305.29654841291733,
+      "projection": 0.7214075659593391,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "focus",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "constant",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1516.6194948233388,
+          "known_risk_delta": 1518.7582872141688,
+          "known_mse": 2051.389768235189,
+          "reference_mse": 297.5315607971463,
+          "projection": 0.0
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1505.7916346160785,
+          "known_risk_delta": 1514.875729349743,
+          "known_mse": 2051.389768235189,
+          "reference_mse": 301.1431880181218,
+          "projection": 0.0
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1484.2782365684109,
+          "known_risk_delta": 1491.5443149705438,
+          "known_mse": 2051.389768235189,
+          "reference_mse": 312.0545340314887,
+          "projection": 0.0
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1458.8585380545926,
+          "known_risk_delta": 1490.2932128670102,
+          "known_mse": 2051.389768235189,
+          "reference_mse": 310.45691080491247,
+          "projection": 0.0
+        }
+      ],
+      "reference_risk_delta": 1491.3869760156051,
+      "known_risk_delta": 1503.8678861003664,
+      "known_mse": 2051.389768235189,
+      "reference_mse": 305.29654841291733,
+      "projection": 0.0,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "focus",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "equal",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 532.6314810210201,
+          "reference_mse": 297.5315607971463,
+          "projection": 0.9876368092099881
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 536.5140388854458,
+          "reference_mse": 301.1431880181218,
+          "projection": 0.9866107661493094
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 559.8454532646451,
+          "reference_mse": 312.0545340314887,
+          "projection": 0.9900835619453496
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 561.0965553681787,
+          "reference_mse": 310.45691080491247,
+          "projection": 0.9907172390831384
+        }
+      ],
+      "reference_risk_delta": 0.0,
+      "known_risk_delta": 0.0,
+      "known_mse": 547.5218821348224,
+      "reference_mse": 305.29654841291733,
+      "projection": 0.9887620940969464,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "focus",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "mild-blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -113.66437980693748,
+          "known_risk_delta": -113.28914104770573,
+          "known_mse": 419.34233997331444,
+          "reference_mse": 297.5315607971463,
+          "projection": 0.947529958044577
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -114.5342929165955,
+          "known_risk_delta": -113.46989409825902,
+          "known_mse": 423.0441447871868,
+          "reference_mse": 301.1431880181218,
+          "projection": 0.9465997413180767
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -120.76468739368708,
+          "known_risk_delta": -120.1495712890814,
+          "known_mse": 439.6958819755637,
+          "reference_mse": 312.0545340314887,
+          "projection": 0.9499555770487311
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -122.63323441805753,
+          "known_risk_delta": -120.41656462147269,
+          "known_mse": 440.679990746706,
+          "reference_mse": 310.45691080491247,
+          "projection": 0.9505476615458307
+        }
+      ],
+      "reference_risk_delta": -117.8991486338194,
+      "known_risk_delta": -116.8312927641297,
+      "known_mse": 430.6905893706927,
+      "reference_mse": 305.29654841291733,
+      "projection": 0.9486582344893039,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "focus",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "pass0",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 598.1856832365725,
+          "known_risk_delta": 601.4085481418456,
+          "known_mse": 1134.0400291628657,
+          "reference_mse": 297.5315607971463,
+          "projection": 0.9857381723256561
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 600.9881925035188,
+          "known_risk_delta": 602.7589594650292,
+          "known_mse": 1139.272998350475,
+          "reference_mse": 301.1431880181218,
+          "projection": 0.9841283524155955
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 561.8938197286529,
+          "known_risk_delta": 560.457463722824,
+          "known_mse": 1120.302916987469,
+          "reference_mse": 312.0545340314887,
+          "projection": 0.9925375543369029
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 558.5295177165467,
+          "known_risk_delta": 557.6042127224493,
+          "known_mse": 1118.7007680906281,
+          "reference_mse": 310.45691080491247,
+          "projection": 0.9884509719764648
+        }
+      ],
+      "reference_risk_delta": 579.8993032963227,
+      "known_risk_delta": 580.557296013037,
+      "known_mse": 1128.0791781478595,
+      "reference_mse": 305.29654841291733,
+      "projection": 0.9877137627636549,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "focus",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "pass1",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 472.89794683194174,
+          "known_risk_delta": 469.67508081983084,
+          "known_mse": 1002.3065618408509,
+          "reference_mse": 297.5315607971463,
+          "projection": 0.9895354580367203
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 476.59844553232807,
+          "known_risk_delta": 474.82766964457267,
+          "known_mse": 1011.3417085300184,
+          "reference_mse": 301.1431880181218,
+          "projection": 0.9890932397444687
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 558.6503720070035,
+          "known_risk_delta": 560.0867538135726,
+          "known_mse": 1119.9322070782177,
+          "reference_mse": 312.0545340314887,
+          "projection": 0.9876296132626996
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 558.8785371245168,
+          "known_risk_delta": 559.8038857665009,
+          "known_mse": 1120.9004411346796,
+          "reference_mse": 310.45691080491247,
+          "projection": 0.9929835194990567
+        }
+      ],
+      "reference_risk_delta": 516.7563253739476,
+      "known_risk_delta": 516.0983475111193,
+      "known_mse": 1063.6202296459417,
+      "reference_mse": 305.29654841291733,
+      "projection": 0.9898104576357363,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "focus",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "precision",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.013555308814223585,
+          "known_risk_delta": -0.013676534608344405,
+          "known_mse": 532.6178044864118,
+          "reference_mse": 297.5315607971463,
+          "projection": 0.9876350627714666
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.008357953249085566,
+          "known_risk_delta": -0.00873448294724868,
+          "known_mse": 536.5053044024985,
+          "reference_mse": 301.1431880181218,
+          "projection": 0.9866093183462653
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.015674753280109144,
+          "known_risk_delta": -0.015532077877247098,
+          "known_mse": 559.8299211867678,
+          "reference_mse": 312.0545340314887,
+          "projection": 0.9900831909264789
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.014005693721022302,
+          "known_risk_delta": -0.015360862146432433,
+          "known_mse": 561.0811945060323,
+          "reference_mse": 310.45691080491247,
+          "projection": 0.9907175322312405
+        }
+      ],
+      "reference_risk_delta": -0.012898427266110148,
+      "known_risk_delta": -0.013325989394818154,
+      "known_mse": 547.5085561454276,
+      "reference_mse": 305.29654841291733,
+      "projection": 0.9887612760688629,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "focus",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "shift",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 737.8019228374983,
+          "known_risk_delta": 731.8016427555877,
+          "known_mse": 1264.433123776608,
+          "reference_mse": 297.5315607971463,
+          "projection": 0.8088097174943231
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 728.6922044982083,
+          "known_risk_delta": 727.5443369188508,
+          "known_mse": 1264.0583758042967,
+          "reference_mse": 301.1431880181218,
+          "projection": 0.8096151151958462
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 730.3966902462586,
+          "known_risk_delta": 733.9674121154874,
+          "known_mse": 1293.8128653801325,
+          "reference_mse": 312.0545340314887,
+          "projection": 0.8118578780161978
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 741.3335018850271,
+          "known_risk_delta": 733.1821655932092,
+          "known_mse": 1294.278720961388,
+          "reference_mse": 310.45691080491247,
+          "projection": 0.8122223761101787
+        }
+      ],
+      "reference_risk_delta": 734.5560798667481,
+      "known_risk_delta": 731.6238893457838,
+      "known_mse": 1279.1457714806063,
+      "reference_mse": 305.29654841291733,
+      "projection": 0.8106262717041364,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "focus",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -691.8140099326843,
+          "known_risk_delta": -693.745129754771,
+          "known_mse": 296.072205319365,
+          "reference_mse": 547.0857967230708,
+          "projection": 0.7203163525286285
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -704.4792720133922,
+          "known_risk_delta": -697.3689978442424,
+          "known_mse": 298.78035508239736,
+          "reference_mse": 551.0477633789726,
+          "projection": 0.7197394130115478
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -717.5361828301037,
+          "known_risk_delta": -712.0223532089658,
+          "known_mse": 299.47677092369526,
+          "reference_mse": 555.4680666486597,
+          "projection": 0.7220101970780101
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -730.116882067506,
+          "known_risk_delta": -713.2119151667955,
+          "known_mse": 299.6152609742205,
+          "reference_mse": 554.6359226746988,
+          "projection": 0.7232866947274637
+        }
+      ],
+      "reference_risk_delta": -710.9865867109215,
+      "known_risk_delta": -704.0870989936936,
+      "known_mse": 298.4861480749195,
+      "reference_mse": 552.0593873563505,
+      "projection": 0.7213381643364125,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "focus",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "constant",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1069.0402285012312,
+          "known_risk_delta": 1061.572433161053,
+          "known_mse": 2051.389768235189,
+          "reference_mse": 547.0857967230708,
+          "projection": 0.0
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1051.042278976891,
+          "known_risk_delta": 1055.2404153085492,
+          "known_mse": 2051.389768235189,
+          "reference_mse": 551.0477633789726,
+          "projection": 0.0
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1029.047576530781,
+          "known_risk_delta": 1039.8906441025279,
+          "known_mse": 2051.389768235189,
+          "reference_mse": 555.4680666486597,
+          "projection": 0.0
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1004.1076041689284,
+          "known_risk_delta": 1038.562592094173,
+          "known_mse": 2051.389768235189,
+          "reference_mse": 554.6359226746988,
+          "projection": 0.0
+        }
+      ],
+      "reference_risk_delta": 1038.309422044458,
+      "known_risk_delta": 1048.8165211665757,
+      "known_mse": 2051.389768235189,
+      "reference_mse": 552.0593873563505,
+      "projection": 0.0,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "focus",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "equal",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 989.817335074136,
+          "reference_mse": 547.0857967230708,
+          "projection": 0.9858325925026816
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 996.1493529266396,
+          "reference_mse": 551.0477633789726,
+          "projection": 0.9840010448542347
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 1011.4991241326611,
+          "reference_mse": 555.4680666486597,
+          "projection": 0.9908147443956317
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 1012.827176141016,
+          "reference_mse": 554.6359226746988,
+          "projection": 0.989764410614174
+        }
+      ],
+      "reference_risk_delta": 0.0,
+      "known_risk_delta": 0.0,
+      "known_mse": 1002.5732470686132,
+      "reference_mse": 552.0593873563505,
+      "projection": 0.9876031980916805,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "focus",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "mild-blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -397.9029161564771,
+          "known_risk_delta": -400.50706187189184,
+          "known_mse": 589.3102732022443,
+          "reference_mse": 547.0857967230708,
+          "projection": 0.9474091550502478
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -401.13194254065326,
+          "known_risk_delta": -401.3868851738592,
+          "known_mse": 594.7624677527806,
+          "reference_mse": 551.0477633789726,
+          "projection": 0.9462898516887182
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -380.41855821065997,
+          "known_risk_delta": -378.24839580533603,
+          "known_mse": 633.250728327325,
+          "reference_mse": 555.4680666486597,
+          "projection": 0.9492834917669105
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -380.6137496733906,
+          "known_risk_delta": -377.8302130983395,
+          "known_mse": 634.9969630426765,
+          "reference_mse": 554.6359226746988,
+          "projection": 0.9510162885106411
+        }
+      ],
+      "reference_risk_delta": -390.01679164529526,
+      "known_risk_delta": -389.49313898735664,
+      "known_mse": 613.0801080812566,
+      "reference_mse": 552.0593873563505,
+      "projection": 0.9484996967541294,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "focus",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "pass0",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1970.2940742857058,
+          "known_risk_delta": 1976.4271970777909,
+          "known_mse": 2966.244532151927,
+          "reference_mse": 547.0857967230708,
+          "projection": 0.9821297410422327
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1980.113520602773,
+          "known_risk_delta": 1983.5762796994693,
+          "known_mse": 2979.7256326261095,
+          "reference_mse": 551.0477633789726,
+          "projection": 0.9789088964024647
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1919.863679586602,
+          "known_risk_delta": 1916.165876064093,
+          "known_mse": 2927.665000196754,
+          "reference_mse": 555.4680666486597,
+          "projection": 0.9939998804122069
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1911.9430507953891,
+          "known_risk_delta": 1911.396365657241,
+          "known_mse": 2924.2235417982574,
+          "reference_mse": 554.6359226746988,
+          "projection": 0.9865452830609802
+        }
+      ],
+      "reference_risk_delta": 1945.5535813176175,
+      "known_risk_delta": 1946.8914296246485,
+      "known_mse": 2949.464676693262,
+      "reference_mse": 552.0593873563505,
+      "projection": 0.9853959502294711,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "focus",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "pass1",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 18.62237829111761,
+          "known_risk_delta": 12.48922676671489,
+          "known_mse": 1002.3065618408509,
+          "reference_mse": 547.0857967230708,
+          "projection": 0.9895354580367203
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 18.655071998666145,
+          "known_risk_delta": 15.192355603378726,
+          "known_mse": 1011.3417085300184,
+          "reference_mse": 551.0477633789726,
+          "projection": 0.9890932397444687
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 104.73524316926513,
+          "known_risk_delta": 108.43308294555663,
+          "known_mse": 1119.9322070782177,
+          "reference_mse": 555.4680666486597,
+          "projection": 0.9876296132626996
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 107.52656725284416,
+          "known_risk_delta": 108.07326499366354,
+          "known_mse": 1120.9004411346796,
+          "reference_mse": 554.6359226746988,
+          "projection": 0.9929835194990567
+        }
+      ],
+      "reference_risk_delta": 62.38481517797326,
+      "known_risk_delta": 61.04698257732845,
+      "known_mse": 1063.6202296459417,
+      "reference_mse": 552.0593873563505,
+      "projection": 0.9898104576357363,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "focus",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "precision",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -237.41900660314727,
+          "known_risk_delta": -240.14192967679367,
+          "known_mse": 749.6754053973424,
+          "reference_mse": 547.0857967230708,
+          "projection": 0.9874843375638704
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -238.62592623055858,
+          "known_risk_delta": -240.18061227634124,
+          "known_mse": 755.9687406502985,
+          "reference_mse": 551.0477633789726,
+          "projection": 0.9862693203564115
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -203.3524837148915,
+          "known_risk_delta": -201.77237121145137,
+          "known_mse": 809.7267529212097,
+          "reference_mse": 555.4680666486597,
+          "projection": 0.9893905310476442
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -201.58936064542428,
+          "known_risk_delta": -201.2978562516463,
+          "known_mse": 811.5293198893697,
+          "reference_mse": 554.6359226746988,
+          "projection": 0.9912038437905858
+        }
+      ],
+      "reference_risk_delta": -220.24669429850542,
+      "known_risk_delta": -220.84819235405814,
+      "known_mse": 781.7250547145551,
+      "reference_mse": 552.0593873563505,
+      "projection": 0.988587008189628,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "focus",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "shift",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 506.2737633973401,
+          "known_risk_delta": 495.76758418591976,
+          "known_mse": 1485.5849192600558,
+          "reference_mse": 547.0857967230708,
+          "projection": 0.8077892104610433
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 490.60015396250856,
+          "known_risk_delta": 488.9718515257945,
+          "known_mse": 1485.121204452434,
+          "reference_mse": 551.0477633789726,
+          "projection": 0.8091243407232933
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 524.459983243929,
+          "known_risk_delta": 532.5878012434844,
+          "known_mse": 1544.0869253761455,
+          "reference_mse": 555.4680666486597,
+          "projection": 0.8112285520509036
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 542.757555155677,
+          "known_risk_delta": 534.0583444093269,
+          "known_mse": 1546.885520550343,
+          "reference_mse": 554.6359226746988,
+          "projection": 0.812292757016305
+        }
+      ],
+      "reference_risk_delta": 516.0228639398637,
+      "known_risk_delta": 512.8463953411314,
+      "known_mse": 1515.4196424097445,
+      "reference_mse": 552.0593873563505,
+      "projection": 0.8101087150628863,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": false,
+      "divisor": 1.0,
+      "arm": "blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 394.1236069895145,
+          "known_risk_delta": 425.4969079056769,
+          "known_mse": 513.9515298605277,
+          "reference_mse": 48.254367642430424,
+          "projection": 0.7267880165321216
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 392.3037253534055,
+          "known_risk_delta": 425.89262037671847,
+          "known_mse": 515.0563691052583,
+          "reference_mse": 48.94262187118087,
+          "projection": 0.7269340961597762
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 385.7008209506148,
+          "known_risk_delta": 421.07921711800475,
+          "known_mse": 514.4155531818337,
+          "reference_mse": 51.201512238178715,
+          "projection": 0.7272699680397848
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 380.2676898302822,
+          "known_risk_delta": 420.63038622256926,
+          "known_mse": 514.2376711317941,
+          "reference_mse": 51.177509856276934,
+          "projection": 0.7273728250919465
+        }
+      ],
+      "reference_risk_delta": 388.09896078095426,
+      "known_risk_delta": 423.2747829057423,
+      "known_mse": 514.4152808198535,
+      "reference_mse": 49.89400290201674,
+      "projection": 0.7270912264559073,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": false,
+      "divisor": 1.0,
+      "arm": "constant",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 5841.914096605953,
+          "known_risk_delta": 5934.512000571383,
+          "known_mse": 6022.966622526234,
+          "reference_mse": 48.254367642430424,
+          "projection": 0.0
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 5836.639176742848,
+          "known_risk_delta": 5933.802873797694,
+          "known_mse": 6022.966622526234,
+          "reference_mse": 48.94262187118087,
+          "projection": 0.0
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 5827.1612596986215,
+          "known_risk_delta": 5929.630286462405,
+          "known_mse": 6022.966622526234,
+          "reference_mse": 51.201512238178715,
+          "projection": 0.0
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 5814.26071967828,
+          "known_risk_delta": 5929.359337617009,
+          "known_mse": 6022.966622526234,
+          "reference_mse": 51.177509856276934,
+          "projection": 0.0
+        }
+      ],
+      "reference_risk_delta": 5829.993813181425,
+      "known_risk_delta": 5931.826124612123,
+      "known_mse": 6022.966622526234,
+      "reference_mse": 49.89400290201674,
+      "projection": 0.0,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": false,
+      "divisor": 1.0,
+      "arm": "equal",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 88.45462195485077,
+          "reference_mse": 48.254367642430424,
+          "projection": 0.9904811823746206
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 89.16374872853986,
+          "reference_mse": 48.94262187118087,
+          "projection": 0.9904791761527013
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 93.33633606382904,
+          "reference_mse": 51.201512238178715,
+          "projection": 0.990821671367506
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 93.6072849092248,
+          "reference_mse": 51.177509856276934,
+          "projection": 0.9909851772768934
+        }
+      ],
+      "reference_risk_delta": 0.0,
+      "known_risk_delta": 0.0,
+      "known_mse": 91.14049791411111,
+      "reference_mse": 49.89400290201674,
+      "projection": 0.9906918017929303,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": false,
+      "divisor": 1.0,
+      "arm": "mild-blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -8.43180083104077,
+          "known_risk_delta": -3.7258554798105856,
+          "known_mse": 84.72876647504017,
+          "reference_mse": 48.254367642430424,
+          "projection": 0.9509270445481722
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -8.63155589157092,
+          "known_risk_delta": -3.5932847050343195,
+          "known_mse": 85.57046402350554,
+          "reference_mse": 48.94262187118087,
+          "projection": 0.9509474018584427
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -10.070365776904914,
+          "known_risk_delta": -4.763342717189516,
+          "known_mse": 88.57299334663952,
+          "reference_mse": 51.201512238178715,
+          "projection": 0.9512889374423212
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -10.906734628356288,
+          "known_risk_delta": -4.85247156674369,
+          "known_mse": 88.7548133424811,
+          "reference_mse": 51.177509856276934,
+          "projection": 0.9514434467716961
+        }
+      ],
+      "reference_risk_delta": -9.510114281968223,
+      "known_risk_delta": -4.233738617194528,
+      "known_mse": 86.90675929691659,
+      "reference_mse": 49.89400290201674,
+      "projection": 0.9511517076551581,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": false,
+      "divisor": 1.0,
+      "arm": "pass0",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 99.31153883822506,
+          "known_risk_delta": 99.59951764071336,
+          "known_mse": 188.05413959556412,
+          "reference_mse": 48.254367642430424,
+          "projection": 0.9908647754113373
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 99.48591840067836,
+          "known_risk_delta": 99.66582127427597,
+          "known_mse": 188.8295700028158,
+          "reference_mse": 48.94262187118087,
+          "projection": 0.9908181223050225
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 92.81742556833372,
+          "known_risk_delta": 92.57461968684532,
+          "known_mse": 185.91095575067436,
+          "reference_mse": 51.201512238178715,
+          "projection": 0.9910573168848449
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 92.30997885978367,
+          "known_risk_delta": 92.37804657675163,
+          "known_mse": 185.98533148597642,
+          "reference_mse": 51.177509856276934,
+          "projection": 0.990038118721309
+        }
+      ],
+      "reference_risk_delta": 95.9812154167552,
+      "known_risk_delta": 96.05450129464657,
+      "known_mse": 187.19499920875768,
+      "reference_mse": 49.89400290201674,
+      "projection": 0.9906945833306284,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": false,
+      "divisor": 1.0,
+      "arm": "pass1",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 78.36317733383223,
+          "known_risk_delta": 78.07518910105894,
+          "known_mse": 166.5298110559097,
+          "reference_mse": 48.254367642430424,
+          "projection": 0.9900976014876934
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 79.25422020019515,
+          "known_risk_delta": 79.0743290698181,
+          "known_mse": 168.23807779835795,
+          "reference_mse": 48.94262187118087,
+          "projection": 0.9901402247959
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 92.22656275083344,
+          "known_risk_delta": 92.4693873009189,
+          "known_mse": 185.80572336474793,
+          "reference_mse": 51.201512238178715,
+          "projection": 0.9905860031845649
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 92.38121724172318,
+          "known_risk_delta": 92.31316648221602,
+          "known_mse": 185.92045139144082,
+          "reference_mse": 51.177509856276934,
+          "projection": 0.991932242811133
+        }
+      ],
+      "reference_risk_delta": 85.556294381646,
+      "known_risk_delta": 85.483017988503,
+      "known_mse": 176.6235159026141,
+      "reference_mse": 49.89400290201674,
+      "projection": 0.9906890180698229,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": false,
+      "divisor": 1.0,
+      "arm": "precision",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.0022165529830494458,
+          "known_risk_delta": -0.0022760233872152944,
+          "known_mse": 88.45234593146354,
+          "reference_mse": 48.254367642430424,
+          "projection": 0.9904809182688427
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.0014067692930742244,
+          "known_risk_delta": -0.0014820273966809812,
+          "known_mse": 89.16226670114318,
+          "reference_mse": 48.94262187118087,
+          "projection": 0.9904790891430828
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.0028460091376069207,
+          "known_risk_delta": -0.002531923453918555,
+          "known_mse": 93.33380414037512,
+          "reference_mse": 51.201512238178715,
+          "projection": 0.9908216256301867
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.0024114510827833633,
+          "known_risk_delta": -0.002580111263442733,
+          "known_mse": 93.60470479796135,
+          "reference_mse": 51.177509856276934,
+          "projection": 0.9909852500193969
+        }
+      ],
+      "reference_risk_delta": -0.0022201956241284884,
+      "known_risk_delta": -0.0022175213753143908,
+      "known_mse": 91.1382803927358,
+      "reference_mse": 49.89400290201674,
+      "projection": 0.9906917207653773,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": false,
+      "divisor": 1.0,
+      "arm": "shift",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2112.1585790816407,
+          "known_risk_delta": 2119.0293649519904,
+          "known_mse": 2207.4839869068414,
+          "reference_mse": 48.254367642430424,
+          "projection": 0.8142918995416338
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2106.4996653994267,
+          "known_risk_delta": 2115.5295323884875,
+          "known_mse": 2204.6932811170277,
+          "reference_mse": 48.94262187118087,
+          "projection": 0.814744313603536
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2108.184715280348,
+          "known_risk_delta": 2115.5050396090996,
+          "known_mse": 2208.8413756729287,
+          "reference_mse": 51.201512238178715,
+          "projection": 0.8151997868495017
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2120.0525514979067,
+          "known_risk_delta": 2115.3145593226623,
+          "known_mse": 2208.921844231887,
+          "reference_mse": 51.177509856276934,
+          "projection": 0.8152615182688723
+        }
+      ],
+      "reference_risk_delta": 2111.7238778148303,
+      "known_risk_delta": 2116.34462406806,
+      "known_mse": 2207.485121982171,
+      "reference_mse": 49.89400290201674,
+      "projection": 0.8148743795658859,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 23.245590287023536,
+          "known_risk_delta": 51.08901774056085,
+          "known_mse": 586.7519917744625,
+          "reference_mse": 291.13912990227453,
+          "projection": 0.7257048935788563
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 16.3126140808185,
+          "known_risk_delta": 50.72804526376321,
+          "known_mse": 590.6231688407258,
+          "reference_mse": 294.8572969476114,
+          "projection": 0.7260624557877852
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -7.820978763583046,
+          "known_risk_delta": 25.171802245066676,
+          "known_mse": 588.4600264216258,
+          "reference_mse": 306.3272982113274,
+          "projection": 0.7269399220323954
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -24.443176407307167,
+          "known_risk_delta": 23.735962329101817,
+          "known_mse": 588.1694677598475,
+          "reference_mse": 304.87281013783746,
+          "projection": 0.7271722702743294
+        }
+      ],
+      "reference_risk_delta": 1.8235122992379553,
+      "known_risk_delta": 37.68120689462314,
+      "known_mse": 588.5011636991654,
+      "reference_mse": 299.29913379976267,
+      "projection": 0.7264698854183416,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "constant",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 5407.276006075123,
+          "known_risk_delta": 5487.303648492333,
+          "known_mse": 6022.966622526234,
+          "reference_mse": 291.13912990227453,
+          "projection": 0.0
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 5391.6415214031895,
+          "known_risk_delta": 5483.071498949272,
+          "known_mse": 6022.966622526234,
+          "reference_mse": 294.8572969476114,
+          "projection": 0.0
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 5363.289428856664,
+          "known_risk_delta": 5459.678398349675,
+          "known_mse": 6022.966622526234,
+          "reference_mse": 306.3272982113274,
+          "projection": 0.0
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 5328.269540367539,
+          "known_risk_delta": 5458.533117095489,
+          "known_mse": 6022.966622526234,
+          "reference_mse": 304.87281013783746,
+          "projection": 0.0
+        }
+      ],
+      "reference_risk_delta": 5372.619124175629,
+      "known_risk_delta": 5472.146665721692,
+      "known_mse": 6022.966622526234,
+      "reference_mse": 299.29913379976267,
+      "projection": 0.0,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "equal",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 535.6629740339016,
+          "reference_mse": 291.13912990227453,
+          "projection": 0.9891012478062504
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 539.8951235769626,
+          "reference_mse": 294.8572969476114,
+          "projection": 0.9890878565372765
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 563.2882241765591,
+          "reference_mse": 306.3272982113274,
+          "projection": 0.9903399515302937
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 564.4335054307458,
+          "reference_mse": 304.87281013783746,
+          "projection": 0.9906898588705688
+        }
+      ],
+      "reference_risk_delta": 0.0,
+      "known_risk_delta": 0.0,
+      "known_mse": 550.8199568045422,
+      "reference_mse": 299.29913379976267,
+      "projection": 0.9898047286860974,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "mild-blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -107.54057122053331,
+          "known_risk_delta": -103.36418012460268,
+          "known_mse": 432.29879390929887,
+          "reference_mse": 291.13912990227453,
+          "projection": 0.9495909068792101
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -108.4762700115036,
+          "known_risk_delta": -103.31431250177815,
+          "known_mse": 436.5808110751845,
+          "reference_mse": 294.8572969476114,
+          "projection": 0.9496335775217903
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -115.19382164660212,
+          "known_risk_delta": -110.24408819834606,
+          "known_mse": 453.0441359782131,
+          "reference_mse": 306.3272982113274,
+          "projection": 0.950829958678331
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -117.6813437153386,
+          "known_risk_delta": -110.4559008392397,
+          "known_mse": 453.97760459150606,
+          "reference_mse": 304.87281013783746,
+          "projection": 0.9511624570556627
+        }
+      ],
+      "reference_risk_delta": -112.2230016484944,
+      "known_risk_delta": -106.84462041599164,
+      "known_mse": 443.97533638855066,
+      "reference_mse": 299.29913379976267,
+      "projection": 0.9503042250337486,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "pass0",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 602.7002693667714,
+          "known_risk_delta": 605.169986543664,
+          "known_mse": 1140.8329605775657,
+          "reference_mse": 291.13912990227453,
+          "projection": 0.9882982756997616
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 603.9176169444522,
+          "known_risk_delta": 605.7486481867996,
+          "known_mse": 1145.6437717637625,
+          "reference_mse": 294.8572969476114,
+          "projection": 0.9882946755806699
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 564.4264002757087,
+          "known_risk_delta": 562.8668877376234,
+          "known_mse": 1126.1551119141825,
+          "reference_mse": 306.3272982113274,
+          "projection": 0.9916699362026274
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 561.5772807132403,
+          "known_risk_delta": 561.2917854631593,
+          "known_mse": 1125.7252908939051,
+          "reference_mse": 304.87281013783746,
+          "projection": 0.9891988928049168
+        }
+      ],
+      "reference_risk_delta": 583.1553918250431,
+      "known_risk_delta": 583.7693269828115,
+      "known_mse": 1134.589283787354,
+      "reference_mse": 299.29913379976267,
+      "projection": 0.989365445071994,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "pass1",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 474.88398195647756,
+          "known_risk_delta": 472.4142471636417,
+          "known_mse": 1008.0772211975432,
+          "reference_mse": 291.13912990227453,
+          "projection": 0.9899042454199238
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 479.9390615926625,
+          "known_risk_delta": 478.10801813213504,
+          "known_mse": 1018.0031417090977,
+          "reference_mse": 294.8572969476114,
+          "projection": 0.9898810183253448
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 562.6164479056738,
+          "known_risk_delta": 564.17589377543,
+          "known_mse": 1127.4641179519892,
+          "reference_mse": 306.3272982113274,
+          "projection": 0.9890099791261591
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 561.5807480602559,
+          "known_risk_delta": 561.8661601630455,
+          "known_mse": 1126.2996655937911,
+          "reference_mse": 304.87281013783746,
+          "projection": 0.9921808125102449
+        }
+      ],
+      "reference_risk_delta": 519.7550598787675,
+      "known_risk_delta": 519.1410798085631,
+      "known_mse": 1069.9610366131053,
+      "reference_mse": 299.29913379976267,
+      "projection": 0.9902440138454182,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "precision",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.013660795821225393,
+          "known_risk_delta": -0.013809366626143552,
+          "known_mse": 535.6491646672754,
+          "reference_mse": 291.13912990227453,
+          "projection": 0.9891001308454305
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.008319169096214156,
+          "known_risk_delta": -0.00875154983537464,
+          "known_mse": 539.8863720271272,
+          "reference_mse": 294.8572969476114,
+          "projection": 0.98908723189644
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.016888217488384625,
+          "known_risk_delta": -0.015923329518550924,
+          "known_mse": 563.2723008470407,
+          "reference_mse": 306.3272982113274,
+          "projection": 0.9903398971527531
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -0.014387965604328201,
+          "known_risk_delta": -0.01607514877084921,
+          "known_mse": 564.4174302819749,
+          "reference_mse": 304.87281013783746,
+          "projection": 0.9906900631646344
+        }
+      ],
+      "reference_risk_delta": -0.013314037002538094,
+      "known_risk_delta": -0.013639848687729581,
+      "known_mse": 550.8063169558545,
+      "reference_mse": 299.29913379976267,
+      "projection": 0.9898043307648144,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": false,
+      "divisor": 6.0,
+      "arm": "shift",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2115.0793671582305,
+          "known_risk_delta": 2115.6726698448115,
+          "known_mse": 2651.3356438787127,
+          "reference_mse": 291.13912990227453,
+          "projection": 0.813004208043682
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2100.375822219055,
+          "known_risk_delta": 2108.02161139206,
+          "known_mse": 2647.9167349690233,
+          "reference_mse": 294.8572969476114,
+          "projection": 0.814068127842262
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2103.340526535406,
+          "known_risk_delta": 2116.298787409187,
+          "known_mse": 2679.587011585746,
+          "reference_mse": 306.3272982113274,
+          "projection": 0.8148668006066018
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2126.0136967089907,
+          "known_risk_delta": 2115.4272996097516,
+          "known_mse": 2679.8608050404973,
+          "reference_mse": 304.87281013783746,
+          "projection": 0.8149966840248348
+        }
+      ],
+      "reference_risk_delta": 2111.2023531554205,
+      "known_risk_delta": 2113.8550920639527,
+      "known_mse": 2664.6750488684947,
+      "reference_mse": 299.29913379976267,
+      "projection": 0.8142339551293452,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": true,
+      "divisor": 1.0,
+      "arm": "blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 330.952379255086,
+          "known_risk_delta": 360.91140572446267,
+          "known_mse": 521.3733789834083,
+          "reference_mse": 87.47204031038528,
+          "projection": 0.7265058529029179
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 327.89337004194516,
+          "known_risk_delta": 360.9500095537908,
+          "known_mse": 522.5124914494058,
+          "reference_mse": 88.15872588581867,
+          "projection": 0.7266568077925889
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 320.25686702631845,
+          "known_risk_delta": 355.8067752712788,
+          "known_mse": 520.3212146044781,
+          "reference_mse": 89.51254230004598,
+          "projection": 0.7271687371426894
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 314.26323222960264,
+          "known_risk_delta": 354.87509141219857,
+          "known_mse": 519.6827904947163,
+          "reference_mse": 89.69146060867206,
+          "projection": 0.7275461898265927
+        }
+      ],
+      "reference_risk_delta": 323.34146213823806,
+      "known_risk_delta": 358.1358204904327,
+      "known_mse": 520.9724688830022,
+      "reference_mse": 88.7086922762305,
+      "projection": 0.7269693969161972,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": true,
+      "divisor": 1.0,
+      "arm": "constant",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 5774.957625131155,
+          "known_risk_delta": 5862.504649267288,
+          "known_mse": 6022.966622526234,
+          "reference_mse": 87.47204031038528,
+          "projection": 0.0
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 5767.86100843541,
+          "known_risk_delta": 5861.404140630619,
+          "known_mse": 6022.966622526234,
+          "reference_mse": 88.15872588581867,
+          "projection": 0.0
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 5755.029657617949,
+          "known_risk_delta": 5858.452183193035,
+          "known_mse": 6022.966622526234,
+          "reference_mse": 89.51254230004598,
+          "projection": 0.0
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 5743.30029504916,
+          "known_risk_delta": 5858.158923443716,
+          "known_mse": 6022.966622526234,
+          "reference_mse": 89.69146060867206,
+          "projection": 0.0
+        }
+      ],
+      "reference_risk_delta": 5760.2871465584185,
+      "known_risk_delta": 5860.129974133664,
+      "known_mse": 6022.966622526234,
+      "reference_mse": 88.7086922762305,
+      "projection": 0.0,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": true,
+      "divisor": 1.0,
+      "arm": "equal",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 160.46197325894568,
+          "reference_mse": 87.47204031038528,
+          "projection": 0.989977606902926
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 161.56248189561515,
+          "reference_mse": 88.15872588581867,
+          "projection": 0.9899647261239051
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 164.51443933319928,
+          "reference_mse": 89.51254230004598,
+          "projection": 0.9909567846344886
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 164.80769908251776,
+          "reference_mse": 89.69146060867206,
+          "projection": 0.990792127997595
+        }
+      ],
+      "reference_risk_delta": 0.0,
+      "known_risk_delta": 0.0,
+      "known_mse": 162.83664839256946,
+      "reference_mse": 88.7086922762305,
+      "projection": 0.9904228114147287,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": true,
+      "divisor": 1.0,
+      "arm": "mild-blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -52.12663481902796,
+          "known_risk_delta": -47.97788680341799,
+          "known_mse": 112.48408645552769,
+          "reference_mse": 87.47204031038528,
+          "projection": 0.9504911348710032
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -52.67331100393282,
+          "known_risk_delta": -47.893810908425216,
+          "known_mse": 113.66867098718993,
+          "reference_mse": 88.15872588581867,
+          "projection": 0.9505271932812533
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -50.45470281840077,
+          "known_risk_delta": -44.918242145454364,
+          "known_mse": 119.59619718774492,
+          "reference_mse": 89.51254230004598,
+          "projection": 0.9512421579320617
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -51.08346618995453,
+          "known_risk_delta": -45.04511371950568,
+          "known_mse": 119.76258536301208,
+          "reference_mse": 89.69146060867206,
+          "projection": 0.9517262578946107
+        }
+      ],
+      "reference_risk_delta": -51.58452870782902,
+      "known_risk_delta": -46.458763394200815,
+      "known_mse": 116.37788499836866,
+      "reference_mse": 88.7086922762305,
+      "projection": 0.9509966859947323,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": true,
+      "divisor": 1.0,
+      "arm": "pass0",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 315.3679548749409,
+          "known_risk_delta": 316.3026439333296,
+          "known_mse": 476.7646171922752,
+          "reference_mse": 87.47204031038528,
+          "projection": 0.9898576004359797
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 316.7410946380748,
+          "known_risk_delta": 317.22734607530737,
+          "known_mse": 478.7898279709225,
+          "reference_mse": 88.15872588581867,
+          "projection": 0.989789256785178
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 306.81203819562114,
+          "known_risk_delta": 306.23828610462454,
+          "known_mse": 470.75272543782376,
+          "reference_mse": 89.51254230004598,
+          "projection": 0.9913275406686617
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 305.5159995418353,
+          "known_risk_delta": 305.6772101777815,
+          "known_mse": 470.4849092602993,
+          "reference_mse": 89.69146060867206,
+          "projection": 0.9896520269568607
+        }
+      ],
+      "reference_risk_delta": 311.10927181261803,
+      "known_risk_delta": 311.36137157276073,
+      "known_mse": 474.19801996533016,
+      "reference_mse": 88.7086922762305,
+      "projection": 0.99015660621167,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": true,
+      "divisor": 1.0,
+      "arm": "pass1",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 7.002521608447448,
+          "known_risk_delta": 6.067837796964038,
+          "known_mse": 166.5298110559097,
+          "reference_mse": 87.47204031038528,
+          "projection": 0.9900976014876934
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 7.161880709182798,
+          "known_risk_delta": 6.675595902742821,
+          "known_mse": 168.23807779835795,
+          "reference_mse": 88.15872588581867,
+          "projection": 0.9901402247959
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 20.71750128014143,
+          "known_risk_delta": 21.29128403154866,
+          "known_mse": 185.80572336474793,
+          "reference_mse": 89.51254230004598,
+          "projection": 0.9905860031845649
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 21.273979155381465,
+          "known_risk_delta": 21.112752308923064,
+          "known_mse": 185.92045139144082,
+          "reference_mse": 89.69146060867206,
+          "projection": 0.991932242811133
+        }
+      ],
+      "reference_risk_delta": 14.038970688288286,
+      "known_risk_delta": 13.786867510044646,
+      "known_mse": 176.6235159026141,
+      "reference_mse": 88.7086922762305,
+      "projection": 0.9906890180698229,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": true,
+      "divisor": 1.0,
+      "arm": "precision",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -36.58402213822561,
+          "known_risk_delta": -36.99002508344155,
+          "known_mse": 123.47194817550411,
+          "reference_mse": 87.47204031038528,
+          "projection": 0.99001787885615
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -36.70699990452572,
+          "known_risk_delta": -36.917580282720536,
+          "known_mse": 124.6449016128946,
+          "reference_mse": 88.15872588581867,
+          "projection": 0.9900336617228308
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -31.229846318288864,
+          "known_risk_delta": -30.989874102971044,
+          "known_mse": 133.52456523022823,
+          "reference_mse": 89.51254230004598,
+          "projection": 0.9907844535696564
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -30.913765003078474,
+          "known_risk_delta": -30.976617987032416,
+          "known_mse": 133.83108109548533,
+          "reference_mse": 89.69146060867206,
+          "projection": 0.991287375255592
+        }
+      ],
+      "reference_risk_delta": -33.85865834102967,
+      "known_risk_delta": -33.968524364041386,
+      "known_mse": 128.86812402852806,
+      "reference_mse": 88.7086922762305,
+      "projection": 0.9905308423510573,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": true,
+      "divisor": 1.0,
+      "arm": "shift",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2080.482523836303,
+          "known_risk_delta": 2086.3025473789467,
+          "known_mse": 2246.7645206378925,
+          "reference_mse": 87.47204031038528,
+          "projection": 0.8134918501041117
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2073.9952420360723,
+          "known_risk_delta": 2081.3255748110046,
+          "known_mse": 2242.88805670662,
+          "reference_mse": 88.15872588581867,
+          "projection": 0.8140895459053838
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2075.454652533285,
+          "known_risk_delta": 2084.6091316934694,
+          "known_mse": 2249.1235710266683,
+          "reference_mse": 89.51254230004598,
+          "projection": 0.8151507608639383
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 2093.2081775440106,
+          "known_risk_delta": 2085.2298639640812,
+          "known_mse": 2250.0375630465987,
+          "reference_mse": 89.69146060867206,
+          "projection": 0.8154860254680136
+        }
+      ],
+      "reference_risk_delta": 2080.7851489874174,
+      "known_risk_delta": 2084.3667794618755,
+      "known_mse": 2247.2034278544447,
+      "reference_mse": 88.7086922762305,
+      "projection": 0.8145545455853619,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -391.29877075984274,
+          "known_risk_delta": -369.94885825476376,
+          "known_mse": 625.5264125763883,
+          "reference_mse": 541.3254502252324,
+          "projection": 0.7254760288711523
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -407.20177664139123,
+          "known_risk_delta": -371.7440625102339,
+          "known_mse": 629.2169714727435,
+          "reference_mse": 545.0365986268088,
+          "projection": 0.7257815086416204
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -422.3635467275685,
+          "known_risk_delta": -389.1431153963949,
+          "known_mse": 627.3922501017338,
+          "reference_mse": 550.7431483415585,
+          "projection": 0.7265538852693741
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -441.69295178496884,
+          "known_risk_delta": -391.85953149161213,
+          "known_mse": 626.7711464279073,
+          "reference_mse": 550.8131458575062,
+          "projection": 0.7274495439882366
+        }
+      ],
+      "reference_risk_delta": -415.63926147844285,
+      "known_risk_delta": -380.67389191325117,
+      "known_mse": 627.2266951446932,
+      "reference_mse": 546.9795857627764,
+      "projection": 0.7263152416925959,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "constant",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 4963.192360356712,
+          "known_risk_delta": 5027.491351695083,
+          "known_mse": 6022.966622526234,
+          "reference_mse": 541.3254502252324,
+          "projection": 0.0
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 4935.041624649715,
+          "known_risk_delta": 5022.0055885432575,
+          "known_mse": 6022.966622526234,
+          "reference_mse": 545.0365986268088,
+          "projection": 0.0
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 4909.30501571484,
+          "known_risk_delta": 5006.431257028106,
+          "known_mse": 6022.966622526234,
+          "reference_mse": 550.7431483415585,
+          "projection": 0.0
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 4873.051637765815,
+          "known_risk_delta": 5004.335944606715,
+          "known_mse": 6022.966622526234,
+          "reference_mse": 550.8131458575062,
+          "projection": 0.0
+        }
+      ],
+      "reference_risk_delta": 4920.147659621771,
+      "known_risk_delta": 5015.0660354682905,
+      "known_mse": 6022.966622526234,
+      "reference_mse": 546.9795857627764,
+      "projection": 0.0,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "equal",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 995.4752708311521,
+          "reference_mse": 541.3254502252324,
+          "projection": 0.9876603096254546
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 1000.9610339829774,
+          "reference_mse": 545.0365986268088,
+          "projection": 0.9875611677654551
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 1016.5353654981287,
+          "reference_mse": 550.7431483415585,
+          "projection": 0.9907323419803605
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 0.0,
+          "known_risk_delta": 0.0,
+          "known_mse": 1018.6306779195194,
+          "reference_mse": 550.8131458575062,
+          "projection": 0.9902348370153801
+        }
+      ],
+      "reference_risk_delta": 0.0,
+      "known_risk_delta": 0.0,
+      "known_mse": 1007.9005870579444,
+      "reference_mse": 546.9795857627764,
+      "projection": 0.9890471640966626,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "mild-blur",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -392.5518296227879,
+          "known_risk_delta": -391.9713044236153,
+          "known_mse": 603.5039664075367,
+          "reference_mse": 541.3254502252324,
+          "projection": 0.94915697767141
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -395.9495023140225,
+          "known_risk_delta": -391.5492837312464,
+          "known_mse": 609.411750251731,
+          "reference_mse": 545.0365986268088,
+          "projection": 0.9491594989793131
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -375.4109114023156,
+          "known_risk_delta": -368.77746991568273,
+          "known_mse": 647.757895582446,
+          "reference_mse": 550.7431483415585,
+          "projection": 0.9504289679987471
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -377.08682466583673,
+          "known_risk_delta": -369.645213592765,
+          "known_mse": 648.9854643267544,
+          "reference_mse": 550.8131458575062,
+          "projection": 0.9515482283052508
+        }
+      ],
+      "reference_risk_delta": -385.2497670012407,
+      "known_risk_delta": -380.4858179158274,
+      "known_mse": 627.414769142117,
+      "reference_mse": 546.9795857627764,
+      "projection": 0.9500734182386803,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "pass0",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1982.1414970735705,
+          "known_risk_delta": 1989.0716946675202,
+          "known_mse": 2984.5469654986723,
+          "reference_mse": 541.3254502252324,
+          "projection": 0.9854163721418993
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1989.1769411744156,
+          "known_risk_delta": 1991.5759527982877,
+          "known_mse": 2992.536986781265,
+          "reference_mse": 545.0365986268088,
+          "projection": 0.9852413143365468
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1928.2825946222822,
+          "known_risk_delta": 1923.7841431697952,
+          "known_mse": 2940.319508667924,
+          "reference_mse": 550.7431483415585,
+          "projection": 0.9924547296068883
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1921.1693220684142,
+          "known_risk_delta": 1921.3670278942664,
+          "known_mse": 2939.997705813786,
+          "reference_mse": 550.8131458575062,
+          "projection": 0.9882888495155456
+        }
+      ],
+      "reference_risk_delta": 1955.1925887346706,
+      "known_risk_delta": 1956.4497046324673,
+      "known_mse": 2964.3502916904117,
+      "reference_mse": 546.9795857627764,
+      "projection": 0.98785031640022,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "pass1",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 19.53213278129543,
+          "known_risk_delta": 12.601950366391167,
+          "known_mse": 1008.0772211975432,
+          "reference_mse": 541.3254502252324,
+          "projection": 0.9899042454199238
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 19.441118047509818,
+          "known_risk_delta": 17.04210772612027,
+          "known_mse": 1018.0031417090977,
+          "reference_mse": 545.0365986268088,
+          "projection": 0.9898810183253448
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 106.43027075245158,
+          "known_risk_delta": 110.9287524538605,
+          "known_mse": 1127.4641179519892,
+          "reference_mse": 550.7431483415585,
+          "projection": 0.9890099791261591
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 107.86673047753614,
+          "known_risk_delta": 107.66898767427185,
+          "known_mse": 1126.2996655937911,
+          "reference_mse": 550.8131458575062,
+          "projection": 0.9921808125102449
+        }
+      ],
+      "reference_risk_delta": 63.31756301469824,
+      "known_risk_delta": 62.06044955516094,
+      "known_mse": 1069.9610366131053,
+      "reference_mse": 546.9795857627764,
+      "projection": 0.9902440138454182,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "precision",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -238.56201398391238,
+          "known_risk_delta": -241.64666981758734,
+          "known_mse": 753.8286010135647,
+          "reference_mse": 541.3254502252324,
+          "projection": 0.9886300120654467
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -239.47833623393186,
+          "known_risk_delta": -240.55885304331676,
+          "known_mse": 760.4021809396605,
+          "reference_mse": 545.0365986268088,
+          "projection": 0.9885790734978269
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -203.84763787103196,
+          "known_risk_delta": -201.90601166498038,
+          "known_mse": 814.6293538331483,
+          "reference_mse": 550.7431483415585,
+          "projection": 0.9899362639438236
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": -202.63310031331523,
+          "known_risk_delta": -202.672406321303,
+          "known_mse": 815.9582715982165,
+          "reference_mse": 550.8131458575062,
+          "projection": 0.9910949840672519
+        }
+      ],
+      "reference_risk_delta": -221.13027210054787,
+      "known_risk_delta": -221.69598521179688,
+      "known_mse": 786.2046018461475,
+      "reference_mse": 546.9795857627764,
+      "projection": 0.9895600833935873,
+      "known_signal_retention_095_105": true,
+      "reference_claims_gain_despite_known_damage": false
+    },
+    {
+      "mode": "quadratic",
+      "hdr": true,
+      "divisor": 6.0,
+      "arm": "shift",
+      "units": [
+        {
+          "base": 36,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1884.4549728685718,
+          "known_risk_delta": 1880.9228809579545,
+          "known_mse": 2876.3981517891066,
+          "reference_mse": 541.3254502252324,
+          "projection": 0.8120048739045688
+        },
+        {
+          "base": 36,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1865.253923062695,
+          "known_risk_delta": 1870.8145834330696,
+          "known_mse": 2871.775617416047,
+          "reference_mse": 545.0365986268088,
+          "projection": 0.813345478479361
+        },
+        {
+          "base": 236,
+          "seed": 80,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1896.4247515955285,
+          "known_risk_delta": 1914.5975524299517,
+          "known_mse": 2931.1329179280806,
+          "reference_mse": 550.7431483415585,
+          "projection": 0.8144854330159218
+        },
+        {
+          "base": 236,
+          "seed": 81,
+          "pixels_across_correlated_states_components": 73728,
+          "reference_risk_delta": 1932.7335616326372,
+          "known_risk_delta": 1916.1906560518962,
+          "known_mse": 2934.8213339714157,
+          "reference_mse": 550.8131458575062,
+          "projection": 0.8151462661452772
+        }
+      ],
+      "reference_risk_delta": 1894.7168022898582,
+      "known_risk_delta": 1895.631418218218,
+      "known_mse": 2903.5320052761626,
+      "reference_mse": 546.9795857627764,
+      "projection": 0.8137455128862822,
+      "known_signal_retention_095_105": false,
+      "reference_claims_gain_despite_known_damage": false
+    }
+  ],
+  "empty_qualified_rows": 2048,
+  "all_rows": 5120,
+  "input_hashes": {
+    "cubic.json": "ab5f1cb7e17f2083f4a8062777b93205bdceb8631ea5777a44db08bbe0b6731d",
+    "flat.json": "d6fc6f8ecc04bddcb8fbb01003d71d5b5e09e7dede36287a8aff392d6d6b3250",
+    "focus.json": "4251ec56e2826cb3a08229517a277cf1e12f330964d13fce2f65ec723b03cc62",
+    "mask-cubic-236-80-false-1.json": "ac4fa41ca8fbc2782da100dc115d9907347e4341dfe7e62fce8d8acf8fb2c043",
+    "mask-cubic-236-80-false-6.json": "9addb294a683dfc4641a09694ce5b25542a8b02ad0878db96699d5805048ec21",
+    "mask-cubic-236-80-true-1.json": "89bc14d8d1269c938e3cc8cfd89c04693f3a6875306bd4d180c377cb6bbbeaf3",
+    "mask-cubic-236-80-true-6.json": "5064a58fa45417e997b09bb44d4a33abfca558a36356b6774a206a2eeb2a72fb",
+    "mask-cubic-236-81-false-1.json": "132bbec7f89b9432db570b2cb5333b5994ca8cb65bf2d62a92ec455fdb3a2108",
+    "mask-cubic-236-81-false-6.json": "3bb46e9967c950fc2d5092b39f7c83ae05307b2ad4bf7bb6e7871ad7ed49132a",
+    "mask-cubic-236-81-true-1.json": "61b99d2402996b93a239fb4387e5fd90fbe6b3db0c8ae7973a0cb6dd60e7cfde",
+    "mask-cubic-236-81-true-6.json": "5fe5083adfc38638f4eb2615e453d38990eb12f4cb7e566d2705270082ff150c",
+    "mask-cubic-36-80-false-1.json": "a7919e2c3bba047b4fe07c50160bbee7855a9ffcc6c662672e13e5c17828398f",
+    "mask-cubic-36-80-false-6.json": "beaf3cd757aea2e5296fcc533e5cd4d652f006c99bf2e36d643c6f7f27c00ecb",
+    "mask-cubic-36-80-true-1.json": "86e3aae6701ccbd6fa81bd300daf7563dde0f904d9295b66279e4bee503843ee",
+    "mask-cubic-36-80-true-6.json": "d4bb91b54fe3e6ae52d2d0afbdd8a9ae6d9be5caaeda05ecba6bd8c383fb2978",
+    "mask-cubic-36-81-false-1.json": "2038048b503f3403163ff7dc66cf1213f5b93af10455bf79bdf882f55210b30e",
+    "mask-cubic-36-81-false-6.json": "084d855ee3c0d638e442ca056a3078af18b8ea7ef7dff292fe3c0604e46ece53",
+    "mask-cubic-36-81-true-1.json": "225721216c96756235a7543677b86c4fcc3562766514f1599f3d828abd9c0575",
+    "mask-cubic-36-81-true-6.json": "75e013f3e2924e95aba2828d4635d53a059fedabeb5946696460b576d422f92a",
+    "mask-flat-236-80-false-1.json": "4cb41114ddeb77168b64caee79abad69b3e1a6f6f5d9a9e471be5243fc044530",
+    "mask-flat-236-80-false-6.json": "2dbb41def2dcc3bdded2e709ac71f23dedc301e9cec8ba755455f086951e28ec",
+    "mask-flat-236-80-true-1.json": "a388b62e2053ec33db53aec596a90dd5db6e087883b9ea2694e50d482aa4ba84",
+    "mask-flat-236-80-true-6.json": "c7f08acf4b77c85cdefd437bde5cf2d2fd7752d1b289e02c869601d2a53b81fc",
+    "mask-flat-236-81-false-1.json": "e36a83693138c47464a8cd5530b6a4f6692e8873e56e55fca049e6e6e5efc968",
+    "mask-flat-236-81-false-6.json": "2570dc0c855ee6ddacd7bc2903193e5e095a428a3583ef07a40f5b44fd104329",
+    "mask-flat-236-81-true-1.json": "589aceee4b47f5fac6ee725a14d4024dd7e5ff35c7b9ccdb378eeac6e22b6a43",
+    "mask-flat-236-81-true-6.json": "a16a3e190364afeedc87082ea9836b419669df4a0b9fed763cc8dfcb72758952",
+    "mask-flat-36-80-false-1.json": "a319419bfddfe36ba56da52c5103d761d43c9647b0b414f78772f3109c3691a5",
+    "mask-flat-36-80-false-6.json": "daafd62fe4076bbdd206b4572ea2f417a1e45d2f4528813b2a57db464a14054a",
+    "mask-flat-36-80-true-1.json": "7edfd51e635ec6de1398e0cb880167e0fa9090117e5832b018b07b0ee5dc0d34",
+    "mask-flat-36-80-true-6.json": "30cd4dbd7d87df6881da4d815889bd6843fd3fe1fe197e2f1ae868c98ec60bb2",
+    "mask-flat-36-81-false-1.json": "ac3b478451666b7f3e10bd0788fcd0b1d1057c0dbcdccff7b88f876408193350",
+    "mask-flat-36-81-false-6.json": "a1f3af5c2afd002483e657aef4cc0c56f39a24977a6ec82dbb31bab3387b2f4a",
+    "mask-flat-36-81-true-1.json": "95e60134c9ab397a25d3abbdcc92a84dd889cc0b20e5055f1f23d6303aff9573",
+    "mask-flat-36-81-true-6.json": "7868c263374047faaac8044b8493d8be4ab942ccfa5f0988420aca39dd3b79f1",
+    "mask-focus-236-80-false-1.json": "1f3500108647c445c2cece6e90fd7c0f1f4a8de33cc18112e6ffa263696afaed",
+    "mask-focus-236-80-false-6.json": "18314f0abe0ab1d30a5a98b09adcdc39dba5b86f75ac1036cf97d5da514e39e4",
+    "mask-focus-236-80-true-1.json": "b81347e3de635d433ef5e4fb42cb3343b75a3360fc64774572a473c84d11b494",
+    "mask-focus-236-80-true-6.json": "83aa8b0527971bdc0e394dd4b07bb12ee0eef6660de9ecca41e19d15bab268e3",
+    "mask-focus-236-81-false-1.json": "779bfb4e145c00826d4aef7b6e5ec3d5eeb02c6de2ba48deea9bec8860b87c63",
+    "mask-focus-236-81-false-6.json": "29c67bff882f805b5a3ecd93be3643b31f86afdd067ca06b9fff6e12cbb6b63d",
+    "mask-focus-236-81-true-1.json": "3d1d0227a8c99a019dce35543b8572650cb3ffaeb1a740ada50af9bef5a3a74f",
+    "mask-focus-236-81-true-6.json": "0b3fe037c67a1598590e4d7c15b548c9c8abbd508e9d7f3e4972b3434652b7b0",
+    "mask-focus-36-80-false-1.json": "8ee2b713a47da9fe4aa929504fe8518668eeefd4af1e8be03f0e0c650f05104c",
+    "mask-focus-36-80-false-6.json": "7595075d3d5cc7a06d99ffb758f594398402fd3cbe6657256e39686338972ba4",
+    "mask-focus-36-80-true-1.json": "901817c80e969d867e370fff753d668561b841ced6e424e4b63b5320ca084da3",
+    "mask-focus-36-80-true-6.json": "5f707b98e7922a4ace49a1e957b2c8bf757ca63f315a580325d55fe08b4e3df7",
+    "mask-focus-36-81-false-1.json": "71733adccef0866f6bf84767583f7c9f6448e7d5d03f02fb18d457283c176cd4",
+    "mask-focus-36-81-false-6.json": "03d0c9b669f2fc5878bd4a1a8aa7e8425958f97c376d5fb2d88bd158f31ee872",
+    "mask-focus-36-81-true-1.json": "f0ac1a3f4e341f5989b98aff7433c1ab69684d909f85b739527d146abf7552a2",
+    "mask-focus-36-81-true-6.json": "6af4917fb82a82c41421f1fb2f9859af0f9fe5358a076dd00b9f3c82dec5d803",
+    "mask-quadratic-236-80-false-1.json": "9f2b895ad1f7adff83872c700f01271ee9ebeda82355d1bf3d614c16e26d7aac",
+    "mask-quadratic-236-80-false-6.json": "7c8ad741ac146c2caba1076f05ae6c9583e6d11b43f06cf2da0c2a37086c142b",
+    "mask-quadratic-236-80-true-1.json": "9667da3fbfe39fb1b683d2d7ab95c070b7873ce35d33e8eafc5a6483e2d0c72d",
+    "mask-quadratic-236-80-true-6.json": "17a2f393a6ff02fcfec74c7a040ced74c4150bb2ffb32294eedc5c59346745f1",
+    "mask-quadratic-236-81-false-1.json": "517b3b62f2229abf6a61ede6742e031a6bf962b6232e20661ca6df8891de5fa6",
+    "mask-quadratic-236-81-false-6.json": "c362e8d8e32835bc4bd97c3dc670887e767e371e133bd1f12968f71dc2342b5f",
+    "mask-quadratic-236-81-true-1.json": "ae2a77cc4ffa80b7018f17c71604667346a97d45d9c8d7e1cae9c9e3e627bb8e",
+    "mask-quadratic-236-81-true-6.json": "450abb16c021ba018a76d08d073d19e6427bc9f4516c16aca3eb47d5bccd775a",
+    "mask-quadratic-36-80-false-1.json": "d9c3d01bccbbf60a32a6b8d850122654518bcef4097ed68b18fd6bfe5e9a9fd1",
+    "mask-quadratic-36-80-false-6.json": "e8e24c49bbea33c3512b709079b06ccb17a77ced5704b21c3512764e21b3c917",
+    "mask-quadratic-36-80-true-1.json": "51efed7312a4972d2729ceca74f72c04722468b333637092af48f5deaa51834f",
+    "mask-quadratic-36-80-true-6.json": "686fb59064e2053352081e4ffd4c02a497e2889c5ebb1f0216f1e9e952ce06cd",
+    "mask-quadratic-36-81-false-1.json": "62e69016a6dc133a508e4721e7ce550fcf9b485d8bffc88989a9636123e3f9ce",
+    "mask-quadratic-36-81-false-6.json": "328997ef8c06ff04fd167881c78a6db9055372c4daeaca5ac6fadfb505ad9698",
+    "mask-quadratic-36-81-true-1.json": "e3df3fa80a80fb54fb287f92f997c311b6f21b9f0d7b17ad5dd0213906e73736",
+    "mask-quadratic-36-81-true-6.json": "af1a24b1e33069da268e7d085e68e5fa57e3692ccb9c9526a556de87cc9d250f",
+    "mask-shift-236-80-false-1.json": "dc695086ca6f74efbf7cf6a9e9ac5d7f5915404b01fbe0351383d6d7a8b2e82a",
+    "mask-shift-236-80-false-6.json": "f37d62790f6d6e6dad9db7de148f22875c5aa52d018623d745cdf424782870ae",
+    "mask-shift-236-80-true-1.json": "7878ff17fdbc1667f4a76d9d87ab80e38cdbc89bef15b53ec945387bc80094a6",
+    "mask-shift-236-80-true-6.json": "03a48d087f0e28e6cf73c305f1fb23852383ddaf4b9c183de767dd6034fc1691",
+    "mask-shift-236-81-false-1.json": "7dd8193f87c86514b574a673926a49766bc914d09e69e6e1c46d0ff319219ce1",
+    "mask-shift-236-81-false-6.json": "6ccb2bcf55b55535431a611ea211061975929c334aec46708b454fdd4cf74a52",
+    "mask-shift-236-81-true-1.json": "a367467376833a602b629750ed03471fc5f4bce5b8d84b1f645e33771880892c",
+    "mask-shift-236-81-true-6.json": "f288f2fe2a193d2dc219e7e5190bc3d59542168d3f2b59c5357333e84084189f",
+    "mask-shift-36-80-false-1.json": "3c534cf75a7be65c07de10e6d325d2ef93f945f8ada4cba0ea04938ee387d0d6",
+    "mask-shift-36-80-false-6.json": "6d32c0e932958a0120236e3ac0bc008857cd930388e5651e4b21ccdf03447a23",
+    "mask-shift-36-80-true-1.json": "77ca83eb5de08396bd815629eb5b10650beabae5b8806619096794bf34964024",
+    "mask-shift-36-80-true-6.json": "043d7b72af10caf44c0cafead4ad899bbcdb995eb95795eaac988121a4b44479",
+    "mask-shift-36-81-false-1.json": "c631b3c71085a7c674efa3024aa0e0b9eb546eb1c3f31bd040ccb09bb584c788",
+    "mask-shift-36-81-false-6.json": "13749cda6e2fadbcdf59227494b641db4045e42713f412bcc3b8c78e037ea6be",
+    "mask-shift-36-81-true-1.json": "d35c5109f19ec295772ff65128ef8c31d817d03b27c617e052829d3e5f490d33",
+    "mask-shift-36-81-true-6.json": "1c8ad090966c00cf4560b29ae16107bf2d1d3cf293d83d46d68cb98b7f96b7f5",
+    "protocol-frozen.json": "35a8e78c6fc8c7a84a9cc3a25c3e79b578afe481fbc6238c0e2d3b73876975b0",
+    "quadratic.json": "a64c71b1dec0e70f0ddb060df44e6668f8f0e42944b647e301fdcc5a64f73332",
+    "report.json": "34cc4dd3d839c306956ca597cfe845024e8589859d3a8036e34954523adb9c15",
+    "shift.json": "7edc583e2d4b74f643c75058b99ef206ef06a18d89750db841d162c2369db7c9"
+  }
+}

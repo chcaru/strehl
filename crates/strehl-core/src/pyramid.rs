@@ -65,6 +65,9 @@
 //! in which any one coefficient sees frames. Frame chunking remains a caller
 //! decision because it owns the much larger decode and warp working sets.
 
+#[path = "session-fusion.rs"]
+pub mod session_fusion;
+
 use std::sync::{Mutex, OnceLock};
 
 use crate::noise::NoiseModel;
@@ -1210,7 +1213,17 @@ pub struct MergeConfig {
     /// a 300-frame stack, twenty defocused frames each carrying 5% of the
     /// in-focus frame's band power contribute 45% of the weight at exponent 1
     /// and 3% at exponent 2. Defocus is a low-pass, so that contamination is
-    /// *blur*, and 45% of it is visible. Hence the default of 2.
+    /// *blur*, and 45% of it is visible.
+    ///
+    /// The default is **4** since pooled evidence (`pooled_evidence`): a
+    /// coarse band now selects on its finer bands' focus evidence, not on its
+    /// own energy, so a sharper coarse selection follows focus rather than
+    /// defocus spread. Measured against 2 (image-quality-2026-11-02 §1d):
+    /// synthetic truth error 0.930x (geometric mean of 120 cells, coarse
+    /// strong texture 0.73x, worst cell +3.7% coarse smooth), burst truth
+    /// within 0.3%, scene-linear replicates within 2% on six subjects (5% on
+    /// low-SNR wrapped-text tiles), less glow on the slide and bee. With
+    /// `pooled_evidence` off, 2 remains the measured choice.
     ///
     /// See [`exponent_at`](MergeConfig::exponent_at): this is the floor of a
     /// ramp, not a single global value.
@@ -1326,6 +1339,32 @@ pub struct MergeConfig {
     /// `1.0` exaggerate the effect and exist so the change can be *commissioned*
     /// — see [`significance_scale_default`].
     pub significance_scale: f32,
+
+    /// Judge each coefficient against the whole stack before letting any frame
+    /// select it: the ensemble gate. See [`ensemble_gate_default`]. Applies to
+    /// [`SelectMode::SoftPower`] only.
+    pub ensemble: bool,
+
+    /// Select every band on pooled focus evidence -- its own energy and every
+    /// finer band's, each in its own noise units, the finer ones reduced onto
+    /// this grid -- rather than on its own energy alone. See
+    /// [`pooled_evidence_default`].
+    pub pooled_evidence: bool,
+    /// How much more each finer level counts than its next coarser one in
+    /// pooled evidence: level `j` enters band `k`'s evidence with weight
+    /// `ratio^(k - j)`, normalised. `1.0` is the plain mean over levels.
+    ///
+    /// Next to a very bright edge, frames a little out of focus spread light
+    /// several pixels into the dark beside it; their own mid-band energy there
+    /// is large, so with every level counted equally they still win part of
+    /// the coarse bands and draw a glow. Finer levels carry the focus cue, so
+    /// counting them more removes it. Measured (image-quality-2026-11-02 §1e):
+    /// `2.0` lowered synthetic truth error to 0.922x (1 of 120 cells worse,
+    /// +3.7%), cut coarse flat error on a fixed-focus burst by 14%, and halved
+    /// the glow 8-16 px beside a bright edge on bug-4; `4.0` (close to
+    /// finer-only evidence) made coarse texture up to 1.48x worse. Ignored when
+    /// `pooled_evidence` is off. See [`pooled_evidence_ratio_default`].
+    pub pooled_evidence_ratio: f32,
 }
 
 /// Judge each coefficient against its own measurement noise before selecting.
@@ -1434,6 +1473,10 @@ impl MergeConfig {
     }
 }
 
+/// Default [`MergeConfig::exponent`]: the coarsest band's selection exponent.
+/// See the field's documentation for why it is 4 with pooled evidence.
+pub const DEFAULT_EXPONENT: f32 = 4.0;
+
 /// Ceiling on the per-band selection exponent.
 ///
 /// Set by what `f32` can actually represent, not by taste. The weight spans
@@ -1455,7 +1498,7 @@ impl Default for MergeConfig {
         Self {
             bands: DEFAULT_BANDS,
             gate: 2.0,
-            exponent: 2.0,
+            exponent: DEFAULT_EXPONENT,
             // 1.4x per octave. Over a 7-band pyramid this runs 2.000, 2.800,
             // 3.920, 5.488, 7.683, 8.000, 8.000 from coarsest to finest -- the
             // last two capped from 10.756 and 15.059 by `MAX_EXPONENT`. So the
@@ -1479,11 +1522,17 @@ impl Default for MergeConfig {
             sharpen_per_octave: 1.4,
             select: SelectMode::SoftPower,
             admission: AdmissionMode::HardFloor,
-            // Measured, not argued -- see `BaseBand`. Weighting the base band
-            // cost -475 DN of global level and 835 DN of position-dependent
-            // structure on flower-bud-alone-cpl, against +11 DN and 45 DN for
-            // the mean, with no difference in aura removal between them.
-            base: BaseBand::Mean,
+            // Weighted since 2026-11-02, together with pooled evidence. The
+            // earlier measurement (weighting cost -475 DN of global level on
+            // flower-bud-alone-cpl against the mean) took the mean as the
+            // reference; but the mean of every frame's base band includes every
+            // defocused frame's spread light, which is the glow around bright
+            // and dark features on deep stacks. Against truth (synthetic stacks,
+            // a held-out burst) and against a locally in-focus composite of a
+            // tilted calibration slide, pooled evidence with a weighted base is
+            // better: experiments/image-quality-2026-11-02/results.md.
+            // `--pyramid-base mean` keeps the earlier arm reachable.
+            base: BaseBand::WeightedFromCoarsest,
             // See `DEFAULT_MEAN_COARSE`. 0 until the ladder that chooses it has
             // been run, so this field cannot move a byte until it is measured.
             mean_coarse: mean_coarse_default(),
@@ -1504,6 +1553,9 @@ impl Default for MergeConfig {
             fallback_power: 4.0,
             hull_from_level: 1,
             significance_scale: significance_scale_default(),
+            ensemble: ensemble_gate_default(),
+            pooled_evidence: pooled_evidence_default(),
+            pooled_evidence_ratio: pooled_evidence_ratio_default(),
         }
     }
 }
@@ -1617,7 +1669,78 @@ pub struct BandMerge {
     /// commissioning bound on 965 647 coefficients of a 19-frame subject, which
     /// is why the bound is checked rather than assumed.
     dsq: Vec<Vec<f64>>,
+    /// Ensemble gate (see [`ensemble_gate_default`]): per selected level, the
+    /// largest and the summed band energy over frames, each in units of that
+    /// frame's own modelled noise energy. Empty when the gate is off. Both
+    /// absorb exactly (max) or by summation (sum).
+    zmax: Vec<Vec<f32>>,
+    zsum: Vec<Vec<f32>>,
+    /// Ensemble gate coherence: per selected level, the sum over frames of the
+    /// luma coefficient and of its raw smoothed energy. Signal shared by several
+    /// frames adds coherently in the first; independent noise does not.
+    lsum: Vec<Vec<f32>>,
+    esum: Vec<Vec<f32>>,
+    /// The ensemble gate's measured null: the same accumulators as `zmax` ..
+    /// `esum`, fed by noise-only probe frames (each frame's own warp and
+    /// floor, independent noise), over a central window of each level. Their
+    /// statistics' quantiles are the gate's thresholds. Empty when off.
+    null: Vec<NullWindow>,
 }
+
+/// One level's window of the ensemble gate's null accumulators.
+#[derive(Debug, Clone, Default)]
+struct NullWindow {
+    x0: usize,
+    y0: usize,
+    w: usize,
+    h: usize,
+    frames: u32,
+    zmax: Vec<f32>,
+    zsum: Vec<f32>,
+    lsum: Vec<f32>,
+    esum: Vec<f32>,
+}
+
+/// Largest side of a null window, in samples of its level.
+const NULL_WINDOW_MAX: usize = 512;
+/// Smallest side worth measuring a null on.
+const NULL_WINDOW_MIN: usize = 16;
+/// Null percentiles at which a statistic's selection ramp starts and ends.
+/// The start sits deep in the tail on purpose: a selected coefficient keeps
+/// one frame's noise, tens of times the power of an averaged one, so even a
+/// small false-alarm rate dominates what is left of the noise. Three tests are
+/// combined, so the joint rate is up to three times this.
+///
+/// MEASURED trade (experiments/image-quality-2026-11-02/results.md): a later
+/// start (99.9/99.99) lowered error against truth further on synthetic and
+/// burst stacks, but on real paper texture it thinned weak fibres more than
+/// 99/99.9 does, and whether that is detail or removed selection inflation is
+/// unresolved. The shipped ramp is the conservative one.
+const NULL_Q_LO: f64 = 0.99;
+const NULL_Q_HI: f64 = 0.999;
+
+/// The ramp percentiles, overridable for commissioning only by
+/// `STREHL_PYRAMID_ENSEMBLE_Q=lo,hi` (both in (0, 1), lo < hi).
+fn null_quantiles() -> (f64, f64) {
+    static CACHED: std::sync::OnceLock<(f64, f64)> = std::sync::OnceLock::new();
+    *CACHED.get_or_init(|| match std::env::var("STREHL_PYRAMID_ENSEMBLE_Q") {
+        Err(_) => (NULL_Q_LO, NULL_Q_HI),
+        Ok(raw) => {
+            let v: Vec<f64> = raw
+                .split(',')
+                .filter_map(|t| t.trim().parse().ok())
+                .collect();
+            match v[..] {
+                [lo, hi] if 0.0 < lo && lo < hi && hi < 1.0 => (lo, hi),
+                _ => panic!("STREHL_PYRAMID_ENSEMBLE_Q={raw:?} is not lo,hi with 0 < lo < hi < 1"),
+            }
+        }
+    })
+}
+/// Null samples expected above a percentile before it is read rather than
+/// extrapolated: the ramp start needs `NULL_ABOVE_LO`, the end `NULL_ABOVE_HI`.
+const NULL_ABOVE_LO: f64 = 20.0;
+const NULL_ABOVE_HI: f64 = 10.0;
 
 // The weight cap protects sum(w), not sum(w * L): exp(80) times a bright
 // legal RAW coefficient can overflow f32. A fixed binary scale preserves the
@@ -1758,12 +1881,247 @@ impl BandMerge {
                 None => Vec::new(),
                 Some(_) => sizes.iter().map(|s| vec![0.0f64; s.pixels()]).collect(),
             },
+            zmax: if cfg.ensemble {
+                per_level()
+            } else {
+                Vec::new()
+            },
+            zsum: if cfg.ensemble {
+                per_level()
+            } else {
+                Vec::new()
+            },
+            lsum: if cfg.ensemble {
+                per_level()
+            } else {
+                Vec::new()
+            },
+            esum: if cfg.ensemble {
+                per_level()
+            } else {
+                Vec::new()
+            },
+            null: if cfg.ensemble {
+                sizes[..nl - 1]
+                    .iter()
+                    .map(|sz| {
+                        let side = |n: usize| {
+                            let margin = (n / 8).max(8);
+                            n.saturating_sub(2 * margin).min(NULL_WINDOW_MAX)
+                        };
+                        let (w, h) = (side(sz.width), side(sz.height));
+                        if w < NULL_WINDOW_MIN || h < NULL_WINDOW_MIN {
+                            return NullWindow::default();
+                        }
+                        NullWindow {
+                            x0: (sz.width - w) / 2,
+                            y0: (sz.height - h) / 2,
+                            w,
+                            h,
+                            frames: 0,
+                            zmax: vec![0.0; w * h],
+                            zsum: vec![0.0; w * h],
+                            lsum: vec![0.0; w * h],
+                            esum: vec![0.0; w * h],
+                        }
+                    })
+                    .collect()
+            } else {
+                Vec::new()
+            },
             sizes,
         }
     }
 
     pub fn sizes(&self) -> &[LevelSize] {
         &self.sizes
+    }
+
+    /// Fold one noise-only probe frame into the ensemble gate's null.
+    ///
+    /// `levels` are the probe's Laplacian bands (finest first) for this frame's
+    /// own warp, `beta` its measured band floor and `variance` the luma
+    /// variance the floor is relative to. Bands beyond any of the three, or
+    /// without a window, are skipped and keep the parametric thresholds. A
+    /// no-op when the gate is off.
+    pub fn add_null_frame(&mut self, levels: &[&[f32]], beta: &[f32], variance: f32) {
+        let n = levels.len().min(beta.len()).min(self.null.len());
+        for k in 0..n {
+            let win = &mut self.null[k];
+            let sz = self.sizes[k];
+            if win.w == 0 || beta[k].is_nan() || beta[k] <= 0.0 || levels[k].len() != sz.pixels() {
+                continue;
+            }
+            // The window plus the smoothing kernel's 2-sample reach, so the
+            // window's own energies are exactly the full level's.
+            let (ex0, ey0) = (win.x0 - 2, win.y0 - 2);
+            let esz = LevelSize {
+                width: win.w + 4,
+                height: win.h + 4,
+            };
+            let mut e: Vec<f32> = (0..esz.height)
+                .flat_map(|y| {
+                    let row = (ey0 + y) * sz.width + ex0;
+                    levels[k][row..row + esz.width].iter().copied()
+                })
+                .collect();
+            let lv = e.clone();
+            let mut scratch = vec![0.0f32; esz.pixels() + esz.width];
+            band_energy(&lv, esz, &mut e, &mut scratch);
+            let unit = (beta[k] * variance).max(f32::MIN_POSITIVE);
+            for y in 0..win.h {
+                for x in 0..win.w {
+                    let i = y * win.w + x;
+                    let j = (y + 2) * esz.width + x + 2;
+                    let z = e[j] / unit;
+                    win.zmax[i] = win.zmax[i].max(z);
+                    win.zsum[i] += z;
+                    win.lsum[i] += lv[j];
+                    win.esum[i] += e[j];
+                }
+            }
+            win.frames += 1;
+        }
+    }
+
+    /// Thresholds for level `k`'s three ensemble statistics: each its null's
+    /// `NULL_Q_LO` and `NULL_Q_HI` percentiles, measured from the probe frames when every
+    /// folded frame contributed one, else from the white-noise parametric
+    /// model. The flag says which.
+    fn ensemble_thresholds(&self, k: usize) -> EnsembleThresholds {
+        let frames = self.frames;
+        let side = (2 * COHERENCE_WIDE_RADIUS + 1) as f32;
+        let p_dominance = dominance_null(frames.max(2) as usize, NU_SMOOTH);
+        let p_coherence = chi2_null(NU_SMOOTH);
+        // A box of side^2 samples pools about side^2 degrees of freedom where
+        // the 5-tap kernel pools NU_SMOOTH from its ~13 samples.
+        let p_wide = chi2_null(side * side);
+        let parametric = EnsembleThresholds {
+            measured: false,
+            dominance: p_dominance.ramp(),
+            coherence: p_coherence.ramp(),
+            wide: p_wide.ramp(),
+        };
+        if let Some(win) = self
+            .null
+            .get(k)
+            .filter(|w| w.w > 0 && w.frames == frames && frames > 1)
+        {
+            let rest = |zmax: f32, zsum: f32| (zsum - zmax).max(0.0) / (frames - 1) as f32;
+            let dominance: Vec<f32> = win
+                .zmax
+                .iter()
+                .zip(&win.zsum)
+                .filter_map(|(m, s)| {
+                    let r = rest(*m, *s);
+                    (r > 0.0).then(|| m / r)
+                })
+                .collect();
+            let wsz = LevelSize {
+                width: win.w,
+                height: win.h,
+            };
+            let mut local: Vec<f32> = win.lsum.iter().map(|v| v * v).collect();
+            let mut scratch = vec![0.0f32; wsz.pixels() + wsz.width];
+            smooth5(&mut local, wsz, &mut scratch);
+            let mut wide_num: Vec<f32> = win.lsum.iter().map(|v| v * v).collect();
+            let mut wide_den = win.esum.clone();
+            box_smooth(&mut wide_num, wsz, COHERENCE_WIDE_RADIUS);
+            box_smooth(&mut wide_den, wsz, COHERENCE_WIDE_RADIUS);
+            let interior = |m: usize| {
+                (m..win.h - m).flat_map(move |y| (m..win.w - m).map(move |x| y * win.w + x))
+            };
+            let coherence: Vec<f32> = interior(2)
+                .filter(|&i| win.esum[i] > 0.0)
+                .map(|i| local[i] / win.esum[i])
+                .collect();
+            let wide: Vec<f32> = interior(COHERENCE_WIDE_RADIUS)
+                .filter(|&i| wide_den[i] > 0.0)
+                .map(|i| wide_num[i] / wide_den[i])
+                .collect();
+            if let (Some(dominance), Some(coherence), Some(wide)) = (
+                quantile_pair(dominance, &p_dominance),
+                quantile_pair(coherence, &p_coherence),
+                quantile_pair(wide, &p_wide),
+            ) {
+                return EnsembleThresholds {
+                    measured: true,
+                    dominance,
+                    coherence,
+                    wide,
+                };
+            }
+        }
+        parametric
+    }
+
+    /// The ensemble gate's selection blend for every coefficient of level `k`:
+    /// `1` keeps the ordinary soft-power selection, `0` takes the plain mean of
+    /// all frames, values between interpolate. `None` where the gate does not
+    /// judge this level (gate off, a single frame, or an averaged level).
+    ///
+    /// A coefficient falls back toward the mean only when **every** test below
+    /// reads it as noise; any one of them finding signal keeps selection.
+    ///
+    /// * **Dominance** -- the strongest frame's band energy over the mean energy
+    ///   of the *other* frames, both in that frame's own noise units, against
+    ///   the same statistic for `N` frames of pure noise (from its
+    ///   `NULL_Q_LO` to its `NULL_Q_HI` percentile). Catches detail sharp in one or a few frames.
+    /// * **Coherence** -- `smooth5((sum_i L_i)^2) / sum_i smooth5(L_i^2)`. Signal
+    ///   shared by `m` frames adds coherently and reads ~`m`; independent noise
+    ///   reads ~1, distributed as `chi^2_nu / nu`. Catches weak detail seen by
+    ///   many frames, which no single frame's energy can. Needs no noise model.
+    ///   Also pooled over a `2r+1` box, which finds weak detail spread over an
+    ///   area that one 5x5 window cannot.
+    /// * **Typical level** -- the other frames' mean energy above 2-4x the
+    ///   modelled noise means real structure everywhere (coarse bands, plateau
+    ///   detail), which must not be averaged across focus.
+    ///
+    /// `nu` is the measured degrees of freedom of the smoothed noise energy for
+    /// this stack's actual warps where the probe reported it (resampling and
+    /// demosaicing correlate the noise, so it reads well below the white value),
+    /// else the white value.
+    fn ensemble_blend_level(&self, k: usize) -> Option<Vec<f32>> {
+        let nb = self.sizes.len() - 1;
+        if self.zmax.is_empty()
+            || self.frames < 2
+            || self.cfg.select != SelectMode::SoftPower
+            || k >= nb
+            || k + self.cfg.mean_coarse >= nb
+        {
+            return None;
+        }
+        let sz = self.sizes[k];
+        let px = sz.pixels();
+        let t = self.ensemble_thresholds(k);
+        let ((dlo, dhi), (clo, chi), (wlo, whi)) = (t.dominance, t.coherence, t.wide);
+        let mut local: Vec<f32> = self.lsum[k][..px].iter().map(|v| v * v).collect();
+        let mut scratch = vec![0.0f32; px + sz.width];
+        smooth5(&mut local, sz, &mut scratch);
+        let mut wide_num: Vec<f32> = self.lsum[k][..px].iter().map(|v| v * v).collect();
+        let mut wide_den: Vec<f32> = self.esum[k][..px].to_vec();
+        box_smooth(&mut wide_num, sz, COHERENCE_WIDE_RADIUS);
+        box_smooth(&mut wide_den, sz, COHERENCE_WIDE_RADIUS);
+        let frames = self.frames;
+        let b = (0..px)
+            .into_par_iter()
+            .map(|j| {
+                let e = self.esum[k][j];
+                let dominance = dominance_blend(self.zmax[k][j], self.zsum[k][j], frames, dlo, dhi);
+                let coherent = if e > 0.0 {
+                    log_ramp(local[j] / e, clo, chi)
+                } else {
+                    1.0
+                };
+                let wide = if wide_den[j] > 0.0 {
+                    log_ramp(wide_num[j] / wide_den[j], wlo, whi)
+                } else {
+                    0.0
+                };
+                dominance.max(coherent).max(wide)
+            })
+            .collect();
+        Some(b)
     }
 
     pub fn frames(&self) -> u32 {
@@ -1791,6 +2149,7 @@ impl BandMerge {
         per_level
             * (2 * planes
                 + 1
+                + 4 * usize::from(cfg.ensemble)
                 + usize::from(cfg.select == SelectMode::HardMax)
                 + usize::from(cfg.fallback != Fallback::Mean) * cfg.fallback_slots() * (planes + 1))
             + usize::from(cfg.hull.bounds()) * 2 * planes * sizes[0].pixels()
@@ -1805,6 +2164,7 @@ impl BandMerge {
         per_level
             * (2 * self.planes
                 + 1
+                + 4 * usize::from(!self.zmax.is_empty())
                 + usize::from(!self.best.is_empty())
                 + usize::from(!self.fkey.is_empty())
                     * self.cfg.fallback_slots()
@@ -1832,6 +2192,10 @@ impl BandMerge {
             .chain(&mut self.fval)
             .chain(&mut self.sig_lv)
             .chain(&mut self.dmax)
+            .chain(&mut self.zmax)
+            .chain(&mut self.zsum)
+            .chain(&mut self.lsum)
+            .chain(&mut self.esum)
         {
             values.fill(0.0);
         }
@@ -1846,6 +2210,12 @@ impl BandMerge {
         }
         for values in &mut self.dsq {
             values.fill(0.0);
+        }
+        for win in &mut self.null {
+            win.frames = 0;
+            for v in [&mut win.zmax, &mut win.zsum, &mut win.lsum, &mut win.esum] {
+                v.fill(0.0);
+            }
         }
         self.frames = 0;
         #[cfg(feature = "temporal-energy")]
@@ -2151,8 +2521,46 @@ impl BandMerge {
                 let vv = ws.var.level(k);
                 #[cfg(feature = "spatial-noise-floor")]
                 let vv = ws.spatial_noise_floor.level(k).unwrap_or(vv);
+                let pooled = self.cfg.pooled_evidence;
+                if pooled {
+                    // Pooled focus evidence: this band's energy in its own
+                    // noise units, plus the finer bands' evidence reduced onto
+                    // this grid. Coarse band energy barely depends on focus (a
+                    // defocused frame's blur spreads light, which can raise it),
+                    // while the finer bands it summarises do.
+                    let unit = |v: f32| (beta * v.max(0.0)).max(1.0);
+                    let ratio = self.cfg.pooled_evidence_ratio;
+                    if k == 0 {
+                        for ((ev, e), v) in ws.ev[..px].iter_mut().zip(sq.iter()).zip(vv) {
+                            *ev = *e / unit(*v);
+                        }
+                    } else {
+                        let prev = self.sizes[k - 1];
+                        reduce(
+                            &ws.ev[..prev.pixels()],
+                            prev,
+                            &mut ws.ev_next[..px],
+                            &mut ws.smooth_scratch,
+                        );
+                        for ((ev, n), (e, v)) in ws.ev[..px]
+                            .iter_mut()
+                            .zip(&ws.ev_next[..px])
+                            .zip(sq.iter().zip(vv))
+                        {
+                            *ev = ratio * *n + *e / unit(*v);
+                        }
+                    }
+                    // The mean over the pooled levels, back in this band's
+                    // energy units: its noise expectation is unchanged, so the
+                    // floor and the weight need no other change.
+                    let levels = pooled_levels(ratio, k);
+                    for ((out, ev), v) in ws.eff[..px].iter_mut().zip(&ws.ev[..px]).zip(vv) {
+                        *out = unit(*v) * *ev / levels;
+                    }
+                }
+                let sel: &[f32] = if pooled { &ws.eff[..px] } else { sq };
                 w.par_iter_mut()
-                    .zip(sq.par_iter())
+                    .zip(sel.par_iter())
                     .zip(vv)
                     .enumerate()
                     .for_each(|(_i, ((w, e), v))| {
@@ -2174,6 +2582,29 @@ impl BandMerge {
                             }
                         }
                     });
+                if !self.zmax.is_empty() {
+                    // Energy in units of this frame's own expected noise energy
+                    // (the floor without the gate multiplier).
+                    self.zmax[k][..px]
+                        .par_iter_mut()
+                        .zip(self.zsum[k][..px].par_iter_mut())
+                        .zip(sq.par_iter())
+                        .zip(vv)
+                        .for_each(|(((zm, zs), e), v)| {
+                            let z = *e / (beta * v.max(0.0)).max(1.0);
+                            *zm = zm.max(z);
+                            *zs += z;
+                        });
+                    self.lsum[k][..px]
+                        .par_iter_mut()
+                        .zip(self.esum[k][..px].par_iter_mut())
+                        .zip(lv.par_iter())
+                        .zip(sq.par_iter())
+                        .for_each(|(((ls, es), l), e)| {
+                            *ls += l;
+                            *es += e;
+                        });
+                }
             }
             #[cfg(feature = "native-green-cue")]
             if k == 0 && !averaged {
@@ -2279,7 +2710,10 @@ impl BandMerge {
         let kb = nb;
         let szb = self.sizes[kb];
         match self.cfg.base {
+            // With no Laplacian band there is no selection to weight by: the
+            // base is the mean (and `nb - 1` below would underflow).
             BaseBand::Mean => ws.coarse[..szb.pixels()].fill(0.0),
+            BaseBand::WeightedFromCoarsest if nb == 0 => ws.coarse[..szb.pixels()].fill(0.0),
             BaseBand::WeightedFromCoarsest => {
                 let prev = self.sizes[nb - 1];
                 reduce(
@@ -2569,6 +3003,11 @@ impl BandMerge {
             self.cfg.admission, other.cfg.admission,
             "cannot absorb a different admission mode"
         );
+        assert_eq!(
+            self.zmax.is_empty(),
+            other.zmax.is_empty(),
+            "cannot absorb a merge with a different ensemble gate"
+        );
         if self.cfg.fallback != Fallback::Mean {
             assert_eq!(
                 other.cfg.fallback, self.cfg.fallback,
@@ -2743,6 +3182,37 @@ impl BandMerge {
             }
         }
         self.assert_pedestal_accumulators_finite();
+        for (dst, src) in self.zmax.iter_mut().zip(&other.zmax) {
+            for (a, b) in dst.iter_mut().zip(src) {
+                *a = a.max(*b);
+            }
+        }
+        for (dst, src) in self
+            .zsum
+            .iter_mut()
+            .chain(self.lsum.iter_mut())
+            .chain(self.esum.iter_mut())
+            .zip(other.zsum.iter().chain(&other.lsum).chain(&other.esum))
+        {
+            for (a, b) in dst.iter_mut().zip(src) {
+                *a += b;
+            }
+        }
+        for (dst, src) in self.null.iter_mut().zip(&other.null) {
+            dst.frames += src.frames;
+            for (a, b) in dst.zmax.iter_mut().zip(&src.zmax) {
+                *a = a.max(*b);
+            }
+            for (a, b) in dst
+                .zsum
+                .iter_mut()
+                .chain(dst.lsum.iter_mut())
+                .chain(dst.esum.iter_mut())
+                .zip(src.zsum.iter().chain(&src.lsum).chain(&src.esum))
+            {
+                *a += b;
+            }
+        }
         self.frames += other.frames;
     }
 
@@ -2846,13 +3316,56 @@ impl BandMerge {
     /// Returns `planes` images at level-0 size, in the order they were supplied
     /// to [`add_frame`](Self::add_frame).
     pub fn finish(&self, ws: &mut Workspace) -> Vec<Vec<f32>> {
+        self.finish_with_report(ws).0
+    }
+
+    /// [`finish`](Self::finish), also returning what the ensemble gate did at
+    /// each level it judged (`None` when the gate is off).
+    pub fn finish_with_report(
+        &self,
+        ws: &mut Workspace,
+    ) -> (Vec<Vec<f32>>, Option<Vec<EnsembleLevel>>) {
         assert!(self.frames > 0, "cannot finish a merge with no frames");
         self.assert_pedestal_accumulators_finite();
         self.dump_weights();
+        // Per level, how far each coefficient may select (1) versus fall back to
+        // the plain mean of every frame (0). Computed once, shared by planes.
+        let mut blends: Vec<Option<Vec<f32>>> = (0..self.sizes.len())
+            .map(|k| self.ensemble_blend_level(k))
+            .collect();
+        // A weighted base band takes its weights from the coarsest band's
+        // selection, so it must also take that band's ensemble judgement:
+        // where the coarsest band is noise, the base is the plain mean too.
+        let nb = self.sizes.len() - 1;
+        if self.cfg.base == BaseBand::WeightedFromCoarsest
+            && nb >= 1
+            && let Some(coarsest) = blends[nb - 1].clone()
+        {
+            let from = self.sizes[nb - 1];
+            let mut base = vec![0.0f32; self.sizes[nb].pixels()];
+            let mut scratch = vec![0.0f32; from.pixels() + from.width];
+            reduce(&coarsest, from, &mut base, &mut scratch);
+            blends[nb] = Some(base);
+        }
+        let report = (!self.zmax.is_empty()).then(|| {
+            blends
+                .iter()
+                .enumerate()
+                .take(nb)
+                .filter_map(|(k, b)| {
+                    b.as_ref().map(|b| EnsembleLevel {
+                        level: k,
+                        thresholds: self.ensemble_thresholds(k),
+                        averaged: b.iter().filter(|v| **v <= 0.0).count() as f64 / b.len() as f64,
+                        mean_blend: b.iter().map(|v| f64::from(*v)).sum::<f64>() / b.len() as f64,
+                    })
+                })
+                .collect()
+        });
         #[cfg(feature = "native-correction-variance")]
         let mut census = garnet_spatial_trace::start(self);
         let inv_n = 1.0 / self.frames as f32;
-        (0..self.planes)
+        let planes = (0..self.planes)
             .map(|c| {
                 let mut pyr = Pyramid::zeros(&self.sizes);
                 for k in 0..self.sizes.len() {
@@ -2893,7 +3406,14 @@ impl BandMerge {
                         SelectMode::SoftPower => {
                             for j in 0..out.len() {
                                 out[j] = if den[j] > 0.0 {
-                                    resolve_soft_numerator(num[j], den[j])
+                                    let sel = resolve_soft_numerator(num[j], den[j]);
+                                    match &blends[k] {
+                                        Some(b) if b[j] < 1.0 => {
+                                            let mean = usum[j] * inv_n;
+                                            mean + b[j] * (sel - mean)
+                                        }
+                                        _ => sel,
+                                    }
                                 } else {
                                     subgate(j)
                                 };
@@ -2957,7 +3477,8 @@ impl BandMerge {
                 garnet_spatial_trace::post_hull(census.as_mut(), self, c, &img);
                 img
             })
-            .collect()
+            .collect();
+        (planes, report)
     }
 
     /// [`Pyramid::collapse`], with the partial reconstruction clamped to the
@@ -3072,6 +3593,12 @@ pub struct FrameWorkspace {
     weight: Vec<f32>,
     coarse: Vec<f32>,
     smooth_scratch: Vec<f32>,
+    /// Pooled-evidence selection (see [`pooled_evidence_default`]): the running pooled
+    /// evidence at the previous level, a reduce target, and the effective
+    /// energy the weight is computed from. Empty when the mode is off.
+    ev: Vec<f32>,
+    ev_next: Vec<f32>,
+    eff: Vec<f32>,
     /// Diagnostic storage is empty when disabled. Excluded from the legacy
     /// planning formula so the experiment cannot change arithmetic chunks.
     #[cfg(feature = "native-correction-variance")]
@@ -3100,6 +3627,9 @@ impl FrameWorkspace {
             weight: vec![0.0; n0],
             coarse: vec![0.0; n0],
             smooth_scratch: vec![0.0; n0 + sizes[0].width],
+            ev: vec![0.0; n0],
+            ev_next: vec![0.0; n0],
+            eff: vec![0.0; n0],
             #[cfg(feature = "native-correction-variance")]
             fine_support: fine_support_candidate::Scratch::default(),
             #[cfg(feature = "spatial-noise-floor")]
@@ -3175,6 +3705,294 @@ impl PlaneCache {
 
 // These are the actual ordinary guide producers, also used by the isolated
 // temporal-energy measurement API. Operation order stays identical.
+/// Environment override for pooled-evidence selection (`0`/`off` disables).
+pub const POOLED_EVIDENCE_ENV: &str = "STREHL_PYRAMID_POOLED_EVIDENCE";
+
+/// Environment override for [`pooled_evidence_ratio_default`].
+pub const POOLED_EVIDENCE_RATIO_ENV: &str = "STREHL_PYRAMID_POOLED_RATIO";
+
+/// Default [`MergeConfig::pooled_evidence_ratio`]: `2.0`, honouring
+/// [`POOLED_EVIDENCE_RATIO_ENV`] (a finite value of at least 1).
+#[must_use]
+pub fn pooled_evidence_ratio_default() -> f32 {
+    static CACHED: std::sync::OnceLock<f32> = std::sync::OnceLock::new();
+    *CACHED.get_or_init(|| match std::env::var(POOLED_EVIDENCE_RATIO_ENV) {
+        Err(_) => 2.0,
+        Ok(raw) => match raw.trim().parse::<f32>() {
+            Ok(v) if v.is_finite() && v >= 1.0 => v,
+            _ => panic!("{POOLED_EVIDENCE_RATIO_ENV}={raw:?} is not a finite number >= 1"),
+        },
+    })
+}
+
+/// The total weight of pooled levels `0..=k` when each finer level counts
+/// `ratio` times its next coarser one: `sum_{j<=k} ratio^(k-j)`.
+pub(crate) fn pooled_levels(ratio: f32, k: usize) -> f32 {
+    if ratio == 1.0 {
+        (k + 1) as f32
+    } else {
+        (ratio.powi(k as i32 + 1) - 1.0) / (ratio - 1.0)
+    }
+}
+
+/// Whether bands select on pooled focus evidence. ON unless
+/// [`POOLED_EVIDENCE_ENV`] says otherwise.
+///
+/// A coarse band's own energy barely depends on focus: a defocused frame's
+/// blur spreads light, which keeps or even raises coarse-band energy beside a
+/// bright or dark feature. Selecting coarse bands on it blends in defocused
+/// frames and draws a glow (halo) around edges and fine structure, and lifts
+/// dark ground near bright detail. The finer bands at the same place do tell
+/// focus apart, so each band selects on the mean of its own and every finer
+/// band's energy in noise units, the finer ones reduced onto its grid. The
+/// shipping floor, gate and exponent ladder are unchanged.
+pub fn pooled_evidence_default() -> bool {
+    static CACHED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+    *CACHED.get_or_init(|| match std::env::var(POOLED_EVIDENCE_ENV) {
+        Err(_) => true,
+        Ok(raw) => match raw.trim() {
+            "" | "1" | "on" | "true" => true,
+            "0" | "off" | "false" => false,
+            other => panic!("{POOLED_EVIDENCE_ENV}={other:?} is not 0/1/off/on/false/true"),
+        },
+    })
+}
+
+/// Environment override for the ensemble gate's default (`0`/`off` disables).
+pub const ENSEMBLE_ENV: &str = "STREHL_PYRAMID_ENSEMBLE";
+
+/// What the ensemble gate did at one level, for the run log.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct EnsembleLevel {
+    pub level: usize,
+    pub thresholds: EnsembleThresholds,
+    /// Fraction of coefficients sent entirely to the plain mean.
+    pub averaged: f64,
+    /// Mean selection blend (1 = ordinary selection everywhere).
+    pub mean_blend: f64,
+}
+
+/// Whether the merge judges each coefficient's frames as an ensemble before
+/// letting any one of them select it. ON unless [`ENSEMBLE_ENV`] says
+/// otherwise.
+///
+/// The per-frame gate asks "is this frame above its own noise floor?". Across
+/// `N` frames of pure noise some frame answers yes almost everywhere (a gate at
+/// 2x expected power is exceeded with probability ~1.5% per frame, so ~99% of
+/// coefficients at N = 299), and that frame is then selected: the merge keeps
+/// single-frame noise, amplified by the selection, exactly where averaging
+/// should have removed it. The ensemble gate asks the family-wise question
+/// instead and averages where the stack as a whole shows no signal. See
+/// [`BandMerge::ensemble_blend_level`] for the tests and
+/// `experiments/image-quality-2026-11-02/results.md` for the measurements.
+pub fn ensemble_gate_default() -> bool {
+    static CACHED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+    *CACHED.get_or_init(|| match std::env::var(ENSEMBLE_ENV) {
+        Err(_) => true,
+        Ok(raw) => match raw.trim() {
+            "" | "1" | "on" | "true" => true,
+            "0" | "off" | "false" => false,
+            other => panic!("{ENSEMBLE_ENV}={other:?} is not 0/1/off/on/false/true"),
+        },
+    })
+}
+
+/// The ramp ends (null `NULL_Q_LO` and `NULL_Q_HI` percentiles) of one level's statistics.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct EnsembleThresholds {
+    /// Measured from this stack's probe frames, rather than parametric.
+    pub measured: bool,
+    pub dominance: (f32, f32),
+    pub coherence: (f32, f32),
+    pub wide: (f32, f32),
+}
+
+/// The ramp ends of a measured null, kept increasing.
+///
+/// Each end is read directly where the null has enough samples above it
+/// (`NULL_ABOVE_LO` / `NULL_ABOVE_HI`). Where it does not, the highest
+/// percentile on [`NULL_LADDER`] that it can support is read instead and
+/// carried up by the parametric model's ratio between the two percentiles, so
+/// the measured scale is always used and only the far tail's shape is modelled.
+/// `None` when not even the lowest rung is supported.
+fn quantile_pair(mut values: Vec<f32>, parametric: &Parametric) -> Option<(f32, f32)> {
+    values.retain(|v| v.is_finite());
+    let n = values.len();
+    let (qlo, qhi) = null_quantiles();
+    let mut read = |q: f64| {
+        let i = ((n as f64 * q) as usize).min(n.saturating_sub(1));
+        *values.select_nth_unstable_by(i, |a, b| a.total_cmp(b)).1
+    };
+    let supported = |q: f64, above: f64| (n as f64) * (1.0 - q) >= above;
+    let mut end = |q: f64, above: f64| -> Option<f32> {
+        if supported(q, above) {
+            return Some(read(q));
+        }
+        let rung = NULL_LADDER
+            .iter()
+            .copied()
+            .find(|r| *r < q && supported(*r, NULL_ABOVE_LO))?;
+        Some(read(rung) * parametric.quantile(q) / parametric.quantile(rung))
+    };
+    let lo = end(qlo, NULL_ABOVE_LO)?;
+    let hi = end(qhi, NULL_ABOVE_HI)?;
+    Some((lo, hi.max(lo * 1.0001)))
+}
+
+/// Percentiles a sparse null may be read at before extrapolation, highest first.
+const NULL_LADDER: [f64; 4] = [0.999, 0.99, 0.95, 0.90];
+
+/// Sorted Monte Carlo samples of a parametric null, cached by its parameters.
+type NullCache<K> =
+    std::sync::OnceLock<std::sync::Mutex<std::collections::HashMap<K, std::sync::Arc<Vec<f32>>>>>;
+
+/// A parametric null as sorted Monte Carlo samples, queried at any percentile.
+struct Parametric(std::sync::Arc<Vec<f32>>);
+
+impl Parametric {
+    fn quantile(&self, q: f64) -> f32 {
+        let n = self.0.len();
+        self.0[((n as f64 * q) as usize).min(n - 1)]
+    }
+
+    fn ramp(&self) -> (f32, f32) {
+        let (lo, hi) = null_quantiles();
+        (self.quantile(lo), self.quantile(hi))
+    }
+}
+
+/// `(ln x - ln lo) / (ln hi - ln lo)`, clamped to `[0, 1]`; 0 for `x <= lo`.
+#[inline]
+fn log_ramp(x: f32, lo: f32, hi: f32) -> f32 {
+    if x.is_nan() || x <= lo {
+        0.0
+    } else {
+        ((x.ln() - lo.ln()) / (hi.ln() - lo.ln())).clamp(0.0, 1.0)
+    }
+}
+
+/// Leave-one-out dominance `zmax / mean(others)` and its blend into selection./// Leave-one-out dominance `zmax / mean(others)` and its blend into selection.
+#[inline]
+fn dominance_blend(zmax: f32, zsum: f32, frames: u32, lo: f32, hi: f32) -> f32 {
+    let rest = (zsum - zmax).max(0.0) / (frames - 1) as f32;
+    if rest.is_nan() || rest <= 0.0 {
+        return 1.0;
+    }
+    // Only coefficients whose typical frame is itself at noise level are
+    // candidates for averaging: where the other frames carry real structure
+    // (coarse bands, or detail sharp in many frames) the existing selection
+    // stands. Ramp from 2x to 4x the modelled noise energy.
+    let typical = ((rest / 2.0).ln() / std::f32::consts::LN_2).clamp(0.0, 1.0);
+    log_ramp(zmax / rest, lo, hi).max(typical)
+}
+
+/// The leave-one-out dominance statistic for `n` frames of pure noise whose
+/// smoothed band energies are independent `chi^2_nu / nu`: deterministic Monte
+/// Carlo (fixed seed), cached per `(n, nu)`.
+fn dominance_null(n: usize, nu: f32) -> Parametric {
+    use std::sync::Arc;
+    static CACHE: NullCache<(usize, u32)> = std::sync::OnceLock::new();
+    let cache = CACHE.get_or_init(Default::default);
+    if let Some(v) = cache.lock().unwrap().get(&(n, nu.to_bits())) {
+        return Parametric(v.clone());
+    }
+    let mut gamma = gamma_sampler(nu, 0x9E37_79B9_7F4A_7C15 ^ n as u64);
+    let trials = 100_000usize;
+    let mut stats: Vec<f32> = (0..trials)
+        .map(|_| {
+            let (mut mx, mut sum) = (0.0f64, 0.0f64);
+            for _ in 0..n {
+                let z = gamma();
+                mx = mx.max(z);
+                sum += z;
+            }
+            (mx / ((sum - mx) / (n - 1) as f64)) as f32
+        })
+        .collect();
+    stats.sort_by(|a, b| a.total_cmp(b));
+    let v = Arc::new(stats);
+    cache.lock().unwrap().insert((n, nu.to_bits()), v.clone());
+    Parametric(v)
+}
+
+/// `chi^2_nu / nu`: deterministic Monte Carlo (fixed seed), cached per `nu`.
+fn chi2_null(nu: f32) -> Parametric {
+    use std::sync::Arc;
+    static CACHE: NullCache<u32> = std::sync::OnceLock::new();
+    let cache = CACHE.get_or_init(Default::default);
+    if let Some(v) = cache.lock().unwrap().get(&nu.to_bits()) {
+        return Parametric(v.clone());
+    }
+    let mut gamma = gamma_sampler(nu, 0xD1B5_4A32_D192_ED03);
+    let mut v: Vec<f32> = (0..400_000).map(|_| gamma() as f32).collect();
+    v.sort_by(|a, b| a.total_cmp(b));
+    let v = Arc::new(v);
+    cache.lock().unwrap().insert(nu.to_bits(), v.clone());
+    Parametric(v)
+}
+
+/// Deterministic `chi^2_nu / nu` deviates: xorshift uniforms, Box-Muller
+/// normals and Marsaglia-Tsang gamma (shape `nu / 2 >= 1`).
+fn gamma_sampler(nu: f32, seed: u64) -> impl FnMut() -> f64 {
+    let mut state = seed | 1;
+    let mut uniform = move || {
+        state ^= state << 13;
+        state ^= state >> 7;
+        state ^= state << 17;
+        ((state >> 11) as f64 + 0.5) / (1u64 << 53) as f64
+    };
+    let shape = f64::from(nu.max(2.0)) / 2.0;
+    let d = shape - 1.0 / 3.0;
+    let c = 1.0 / (9.0 * d).sqrt();
+    move || loop {
+        let (u1, u2) = (uniform(), uniform());
+        let x = (-2.0 * u1.ln()).sqrt() * (std::f64::consts::TAU * u2).cos();
+        let v = (1.0 + c * x).powi(3);
+        if v <= 0.0 {
+            continue;
+        }
+        if uniform().ln() < 0.5 * x * x + d - d * v + d * v.ln() {
+            return d * v / shape;
+        }
+    }
+}
+
+/// Half-width of the wide coherence window, in samples of the level.
+const COHERENCE_WIDE_RADIUS: usize = 7;
+
+/// In-place separable box mean of half-width `r`; windows are truncated at the
+/// borders (the mean is over the samples that exist).
+pub fn box_smooth(data: &mut [f32], size: LevelSize, r: usize) {
+    let (w, h) = (size.width, size.height);
+    assert_eq!(data.len(), w * h, "box_smooth: wrong buffer size");
+    fn line(src: impl Iterator<Item = f32>, n: usize, r: usize, out: &mut [f32]) {
+        let mut prefix = Vec::with_capacity(n + 1);
+        prefix.push(0.0f64);
+        let mut acc = 0.0f64;
+        for v in src {
+            acc += f64::from(v);
+            prefix.push(acc);
+        }
+        for (i, o) in out.iter_mut().enumerate().take(n) {
+            let (a, b) = (i.saturating_sub(r), (i + r + 1).min(n));
+            *o = ((prefix[b] - prefix[a]) / (b - a) as f64) as f32;
+        }
+    }
+    let mut rows = vec![0.0f32; w * h];
+    rows.par_chunks_mut(w)
+        .zip(data.par_chunks(w))
+        .for_each(|(out, src)| line(src.iter().copied(), w, r, out));
+    let mut cols = vec![0.0f32; w * h];
+    cols.par_chunks_mut(h).enumerate().for_each(|(x, out)| {
+        line((0..h).map(|y| rows[y * w + x]), h, r, out);
+    });
+    data.par_chunks_mut(w).enumerate().for_each(|(y, out)| {
+        for (x, o) in out.iter_mut().enumerate() {
+            *o = cols[x * h + y];
+        }
+    });
+}
+
 #[inline]
 fn band_floor(gate: f32, beta: f32, variance: f32) -> f32 {
     gate * beta * variance.max(0.0)
@@ -4823,7 +5641,7 @@ mod tests {
         let frames: Vec<Vec<f32>> = (0..nf).map(|f| disagreeing_bands(w, h, nf, f)).collect();
         let cfg = MergeConfig {
             hull,
-            ..MergeConfig::default()
+            ..legacy_merge()
         };
         let sizes = level_sizes(w, h, cfg.bands);
         let mut merge = BandMerge::new(w, h, 1, cfg);
@@ -4902,7 +5720,7 @@ mod tests {
         let frames: Vec<Vec<f32>> = (0..nf).map(|f| disagreeing_bands(w, h, nf, f)).collect();
         let cfg = MergeConfig {
             hull,
-            ..MergeConfig::default()
+            ..legacy_merge()
         };
         let sizes = level_sizes(w, h, cfg.bands);
         let mut merge = BandMerge::new(w, h, 1, cfg);
@@ -4961,7 +5779,7 @@ mod tests {
         // not stuck open or shut).
         let base = MergeConfig {
             hull: Hull::PerLevel,
-            ..MergeConfig::default()
+            ..legacy_merge()
         };
         let all = render_cfg(MergeConfig {
             hull_from_level: 1,
@@ -4973,7 +5791,7 @@ mod tests {
         });
         let flat = render_cfg(MergeConfig {
             hull: Hull::InputRange,
-            ..MergeConfig::default()
+            ..legacy_merge()
         });
 
         assert_eq!(
@@ -4998,7 +5816,7 @@ mod tests {
         // modes disagree must be one the symmetric bound pushed DOWN.
         let base = MergeConfig {
             hull: Hull::PerLevel,
-            ..MergeConfig::default()
+            ..legacy_merge()
         };
         let sym = render_cfg(MergeConfig {
             hull_low_only: false,
@@ -5077,7 +5895,7 @@ mod tests {
         let frame = disagreeing_bands(w, h, 4, 1);
         let cfg = MergeConfig {
             hull: Hull::PerLevel,
-            ..MergeConfig::default()
+            ..legacy_merge()
         };
         let sizes = level_sizes(w, h, cfg.bands);
         let mut merge = BandMerge::new(w, h, 1, cfg);
@@ -5156,8 +5974,8 @@ mod tests {
         // The diagnostic must move with the phenomenon, not merely exist.
         let (w, h, nf) = (192usize, 144usize, 8usize);
         let frames: Vec<Vec<f32>> = (0..nf).map(|f| disagreeing_bands(w, h, nf, f)).collect();
-        let sizes = level_sizes(w, h, MergeConfig::default().bands);
-        let mut m = BandMerge::new(w, h, 1, MergeConfig::default());
+        let sizes = level_sizes(w, h, legacy_merge().bands);
+        let mut m = BandMerge::new(w, h, 1, legacy_merge());
         let mut fws = FrameWorkspace::new(&sizes, 1);
         let var = vec![4.0f32; w * h];
         for f in &frames {
@@ -5210,7 +6028,25 @@ mod tests {
 
     #[test]
     fn the_base_band_default_is_the_measured_one() {
-        assert_eq!(MergeConfig::default().base, BaseBand::Mean);
+        // Weighted since 2026-11-02, measured against truth together with
+        // pooled evidence: see `pooled_evidence_and_a_weighted_base_remove_the_
+        // glow_around_bright_detail` and experiments/image-quality-2026-11-02.
+        assert_eq!(MergeConfig::default().base, BaseBand::WeightedFromCoarsest);
+        assert!(MergeConfig::default().pooled_evidence);
+        assert_eq!(MergeConfig::default().pooled_evidence_ratio, 2.0);
+        assert_eq!(MergeConfig::default().exponent, DEFAULT_EXPONENT);
+    }
+
+    /// The merge the hull plants were built to break: own-band selection and a
+    /// plain-mean base. Its excursions are what the hull modes exist to bound,
+    /// so the hull tests keep exercising them on it.
+    fn legacy_merge() -> MergeConfig {
+        MergeConfig {
+            pooled_evidence: false,
+            exponent: 2.0,
+            base: BaseBand::Mean,
+            ..MergeConfig::default()
+        }
     }
 
     /// The arm the default was measured against has to stay reachable and has
@@ -5376,5 +6212,418 @@ mod tests {
             merge.add_frame(&[f], f, &var, &mut fws);
         }
         merge.finish(&mut Workspace::new(&sizes))[0].clone()
+    }
+
+    // ---- the ensemble gate --------------------------------------------------
+
+    /// Deterministic approximately-normal deviates (sum of 4 uniforms) from
+    /// splitmix64. Not an LCG: a power-of-two stride through an LCG (one test
+    /// frame is 2^20 draws) correlates successive frames' high bits, which
+    /// made "independent" noise frames average to 3.6x the ideal.
+    fn ens_normal(state: &mut u64) -> f32 {
+        let mut acc = 0.0f32;
+        for _ in 0..4 {
+            *state = state.wrapping_add(0x9E37_79B9_7F4A_7C15);
+            let mut z = *state;
+            z = (z ^ (z >> 30)).wrapping_mul(0xBF58_476D_1CE4_E5B9);
+            z = (z ^ (z >> 27)).wrapping_mul(0x94D0_49BB_1331_11EB);
+            z ^= z >> 31;
+            acc += ((z >> 40) as f32) / ((1u64 << 23) as f32) - 1.0;
+        }
+        acc * 0.866_025_4
+    }
+
+    /// Noise as a resampled frame carries it: white deviates of variance
+    /// `sigma^2` passed through a separable `[1, 2, 1] / 4`, which correlates
+    /// neighbours the way interpolation does and gives the smoothed band
+    /// energy the heavier tail measured on real warped frames.
+    fn ens_noise(w: usize, h: usize, sigma: f32, state: &mut u64) -> Vec<f32> {
+        let white: Vec<f32> = (0..w * h).map(|_| sigma * ens_normal(state)).collect();
+        let at = |x: isize, y: isize| {
+            white[(y.clamp(0, h as isize - 1) as usize) * w + x.clamp(0, w as isize - 1) as usize]
+        };
+        let mut out = vec![0.0f32; w * h];
+        for y in 0..h as isize {
+            for x in 0..w as isize {
+                let mut acc = 0.0;
+                for (dy, a) in [(-1isize, 1.0f32), (0, 2.0), (1, 1.0)] {
+                    for (dx, b) in [(-1isize, 1.0f32), (0, 2.0), (1, 1.0)] {
+                        acc += a * b * at(x + dx, y + dy);
+                    }
+                }
+                out[y as usize * w + x as usize] = acc / 16.0;
+            }
+        }
+        out
+    }
+
+    /// Fold `frames` as the CLI folds warped frames: each with its own probe,
+    /// an independent realisation of the same noise through the same pyramid,
+    /// which supplies that frame's measured floor and its null for the
+    /// ensemble gate.
+    fn ens_fold(frames: &[Vec<f32>], sigma: f32, w: usize, h: usize, ensemble: bool) -> Vec<f32> {
+        // Three bands keep every selected level of a test-sized image large
+        // enough for a measured null window, as every level is on a real frame.
+        let cfg = MergeConfig {
+            bands: 3,
+            ensemble,
+            significance_scale: 0.0,
+            ..Default::default()
+        };
+        let sizes = level_sizes(w, h, cfg.bands);
+        let var = vec![sigma * sigma; w * h];
+        let mut merge = BandMerge::new(w, h, 1, cfg);
+        let mut fws = FrameWorkspace::new(&sizes, 1);
+        let mut ws = Workspace::new(&sizes);
+        let mut st = 0xABCDu64;
+        for f in frames {
+            let noise = ens_noise(w, h, sigma, &mut st);
+            let mut pyr = Pyramid::zeros(&sizes);
+            pyr.build(&noise, &mut ws);
+            let beta: Vec<f32> = (0..sizes.len() - 1)
+                .map(|k| {
+                    let lv = pyr.level(k);
+                    lv.iter().map(|v| v * v).sum::<f32>() / lv.len() as f32 / (sigma * sigma)
+                })
+                .collect();
+            let levels: Vec<&[f32]> = (0..sizes.len() - 1).map(|k| pyr.level(k)).collect();
+            merge.add_null_frame(&levels, &beta, sigma * sigma);
+            fws.next_frame();
+            merge.add_frame_with_gain(&[f.as_slice()], f, &var, Some(&beta), &mut fws);
+        }
+        merge.finish(&mut ws)[0].clone()
+    }
+
+    /// Interior standard deviation, and the least-squares slope of `img` on
+    /// `truth` (both mean-removed) over the same interior.
+    fn ens_stats(img: &[f32], truth: &[f32], w: usize, h: usize) -> (f32, f32) {
+        let idx: Vec<usize> = (10..h - 10)
+            .flat_map(|y| (10..w - 10).map(move |x| y * w + x))
+            .collect();
+        let n = idx.len() as f32;
+        let mi = idx.iter().map(|&i| img[i]).sum::<f32>() / n;
+        let mt = idx.iter().map(|&i| truth[i]).sum::<f32>() / n;
+        let sd = (idx.iter().map(|&i| (img[i] - mi).powi(2)).sum::<f32>() / n).sqrt();
+        let cov = idx
+            .iter()
+            .map(|&i| (img[i] - mi) * (truth[i] - mt))
+            .sum::<f32>();
+        let vt = idx.iter().map(|&i| (truth[i] - mt).powi(2)).sum::<f32>();
+        (sd, if vt > 0.0 { cov / vt } else { 0.0 })
+    }
+
+    #[test]
+    fn the_ensemble_gate_averages_noise_the_per_frame_gate_lets_one_frame_select() {
+        // Across many frames of pure (resampling-correlated) noise some frame
+        // clears the per-frame gate at most coefficients and is selected, so
+        // the merge keeps single-frame noise. Judged as an ensemble nothing
+        // stands out, and the coefficient becomes the plain mean.
+        let (w, h, n, sigma) = (512usize, 512usize, 64usize, 10.0f32);
+        let mut st = 99u64;
+        let frames: Vec<Vec<f32>> = (0..n)
+            .map(|_| {
+                ens_noise(w, h, sigma, &mut st)
+                    .iter()
+                    .map(|v| 500.0 + v)
+                    .collect()
+            })
+            .collect();
+        let flat = vec![500.0f32; w * h];
+        let (single, _) = ens_stats(&frames[0], &flat, w, h);
+        let (off, _) = ens_stats(&ens_fold(&frames, sigma, w, h, false), &flat, w, h);
+        let (on, _) = ens_stats(&ens_fold(&frames, sigma, w, h, true), &flat, w, h);
+        let ideal = single / (n as f32).sqrt();
+        assert!(
+            off > 4.0 * ideal,
+            "control: the per-frame gate no longer selects noise: off {off}, ideal {ideal}"
+        );
+        assert!(
+            on < 2.0 * ideal && on < 0.5 * off,
+            "ensemble gate did not average pure noise: on {on}, off {off}, ideal {ideal}"
+        );
+    }
+
+    #[test]
+    fn the_ensemble_gate_keeps_detail_that_one_frame_holds_sharply() {
+        // A texture in exactly one frame of many, over noise. It adds nothing
+        // coherent across frames (m = 1), so only dominance can keep it.
+        let (w, h, n, sigma) = (96usize, 96usize, 61usize, 4.0f32);
+        let mut st = 7u64;
+        let texture: Vec<f32> = (0..w * h).map(|_| 12.0 * ens_normal(&mut st)).collect();
+        let frames: Vec<Vec<f32>> = (0..n)
+            .map(|i| {
+                let a = if i == 30 { 1.0 } else { 0.0 };
+                let noise = ens_noise(w, h, sigma, &mut st);
+                (0..w * h)
+                    .map(|j| 500.0 + a * texture[j] + noise[j])
+                    .collect()
+            })
+            .collect();
+        let (_, off) = ens_stats(&ens_fold(&frames, sigma, w, h, false), &texture, w, h);
+        let (_, on) = ens_stats(&ens_fold(&frames, sigma, w, h, true), &texture, w, h);
+        assert!(
+            off > 0.5,
+            "control: the merge did not find the sharp frame: slope {off}"
+        );
+        assert!(
+            on > 0.97 * off,
+            "ensemble gate lost single-frame detail: slope on {on}, off {off}"
+        );
+    }
+
+    #[test]
+    fn the_ensemble_gate_keeps_weak_detail_shared_by_a_subset_of_frames() {
+        // Weak texture in 12 of 60 frames; the others see none of it. No frame
+        // dominates, so the energy tests read noise, and a plain mean would
+        // attenuate the texture to 12/60. It adds coherently across the frames
+        // that hold it, and the coherence test must keep it.
+        let (w, h, n, sigma) = (96usize, 96usize, 60usize, 10.0f32);
+        let mut st = 3u64;
+        let texture: Vec<f32> = (0..w * h).map(|_| 6.0 * ens_normal(&mut st)).collect();
+        let frames: Vec<Vec<f32>> = (0..n)
+            .map(|i| {
+                let a = if (24..36).contains(&i) { 1.0 } else { 0.0 };
+                let noise = ens_noise(w, h, sigma, &mut st);
+                (0..w * h)
+                    .map(|j| 500.0 + a * texture[j] + noise[j])
+                    .collect()
+            })
+            .collect();
+        let (_, off) = ens_stats(&ens_fold(&frames, sigma, w, h, false), &texture, w, h);
+        let (_, on) = ens_stats(&ens_fold(&frames, sigma, w, h, true), &texture, w, h);
+        assert!(
+            on > 0.9 * off,
+            "ensemble gate averaged away weak shared detail: slope on {on}, off {off}"
+        );
+    }
+
+    #[test]
+    fn the_ensemble_gate_absorbs_chunks_like_one_fold() {
+        let (w, h, n, sigma) = (64usize, 48usize, 40usize, 6.0f32);
+        let var = vec![sigma * sigma; w * h];
+        let mut st = 11u64;
+        let texture: Vec<f32> = (0..w * h).map(|_| 10.0 * ens_normal(&mut st)).collect();
+        let frames: Vec<Vec<f32>> = (0..n)
+            .map(|i| {
+                let a = (-((i as f32 - 20.0).powi(2)) / 8.0).exp();
+                (0..w * h)
+                    .map(|j| 400.0 + a * texture[j] + sigma * ens_normal(&mut st))
+                    .collect()
+            })
+            .collect();
+        let cfg = MergeConfig {
+            bands: 4,
+            ensemble: true,
+            ..Default::default()
+        };
+        let sizes = level_sizes(w, h, cfg.bands);
+        let fold = |range: std::ops::Range<usize>| {
+            let mut merge = BandMerge::new(w, h, 1, cfg);
+            let mut fws = FrameWorkspace::new(&sizes, 1);
+            for f in &frames[range] {
+                fws.next_frame();
+                merge.add_frame(&[f.as_slice()], f, &var, &mut fws);
+            }
+            merge
+        };
+        let whole = fold(0..n).finish(&mut Workspace::new(&sizes))[0].clone();
+        let mut a = fold(0..17);
+        a.absorb(&fold(17..n));
+        let parts = a.finish(&mut Workspace::new(&sizes))[0].clone();
+        let worst = whole
+            .iter()
+            .zip(&parts)
+            .map(|(x, y)| (x - y).abs())
+            .fold(0.0f32, f32::max);
+        assert!(
+            worst < 1e-2,
+            "absorbed ensemble merge differs by {worst} DN"
+        );
+    }
+
+    #[test]
+    fn the_ensemble_thresholds_are_deterministic_and_ordered() {
+        let a = dominance_null(150, 9.5).ramp();
+        assert_eq!(a, dominance_null(150, 9.5).ramp());
+        assert!(1.0 < a.0 && a.0 < a.1, "{a:?}");
+        // More frames: the strongest of them stands further above the rest.
+        assert!(dominance_null(300, 9.5).ramp().0 > dominance_null(20, 9.5).ramp().0);
+        // Heavier-tailed noise (fewer degrees of freedom): higher thresholds.
+        assert!(dominance_null(150, 6.0).ramp().0 > a.0);
+        let c = chi2_null(9.5).ramp();
+        assert_eq!(c, chi2_null(9.5).ramp());
+        assert!(1.0 < c.0 && c.0 < c.1, "{c:?}");
+        // A sparse measured null is carried up the parametric tail from the
+        // highest percentile it supports, preserving its measured scale.
+        let p = chi2_null(9.5);
+        let sparse: Vec<f32> = (0..3_000)
+            .map(|i| 2.0 * p.quantile((i as f64 + 0.5) / 3_000.0))
+            .collect();
+        let (lo, _) = quantile_pair(sparse, &p).unwrap();
+        assert!(
+            (lo / (2.0 * p.ramp().0) - 1.0).abs() < 0.1,
+            "{lo} vs {}",
+            2.0 * p.ramp().0
+        );
+    }
+
+    #[test]
+    fn the_box_mean_matches_a_direct_sum() {
+        let sz = LevelSize {
+            width: 9,
+            height: 7,
+        };
+        let src: Vec<f32> = (0..63).map(|i| ((i * 37) % 11) as f32).collect();
+        let mut fast = src.clone();
+        box_smooth(&mut fast, sz, 2);
+        for y in 0..7usize {
+            for x in 0..9usize {
+                let (mut s, mut c) = (0.0f32, 0.0f32);
+                for yy in y.saturating_sub(2)..(y + 3).min(7) {
+                    for xx in x.saturating_sub(2)..(x + 3).min(9) {
+                        s += src[yy * 9 + xx];
+                        c += 1.0;
+                    }
+                }
+                // Separable truncated means equal the 2-D truncated mean.
+                assert!((fast[y * 9 + x] - s / c).abs() < 1e-4, "({x},{y})");
+            }
+        }
+    }
+
+    /// Separable Gaussian blur with clamped borders (test-only).
+    fn halo_blur(img: &[f32], w: usize, h: usize, sigma: f32) -> Vec<f32> {
+        let r = (3.0 * sigma).ceil() as isize;
+        let k: Vec<f32> = (-r..=r)
+            .map(|i| (-(i * i) as f32 / (2.0 * sigma * sigma)).exp())
+            .collect();
+        let sum: f32 = k.iter().sum();
+        let pass = |src: &[f32], horizontal: bool| -> Vec<f32> {
+            let mut out = vec![0.0f32; w * h];
+            for y in 0..h as isize {
+                for x in 0..w as isize {
+                    let mut acc = 0.0;
+                    for (t, kv) in (-r..=r).zip(&k) {
+                        let (xx, yy) = if horizontal {
+                            ((x + t).clamp(0, w as isize - 1), y)
+                        } else {
+                            (x, (y + t).clamp(0, h as isize - 1))
+                        };
+                        acc += kv * src[yy as usize * w + xx as usize];
+                    }
+                    out[y as usize * w + x as usize] = acc / sum;
+                }
+            }
+            out
+        };
+        pass(&pass(img, true), false)
+    }
+
+    #[test]
+    fn pooled_evidence_and_a_weighted_base_remove_the_glow_around_bright_detail() {
+        // Bright bars on dark ground, the left half in focus at frame 10 and
+        // the right half at frame 30. In every other frame each half's bars are
+        // blurred, spreading light into the dark ground beside them. A merge
+        // that selects coarse bands on their own (focus-blind) energy and
+        // averages the base over every frame paints that light back in as a
+        // glow; the dark ground of the truth is level.
+        let (w, h, n, sigma) = (192usize, 128usize, 41usize, 2.0f32);
+        let truth: Vec<f32> = (0..w * h)
+            .map(|j| {
+                if (j % w) % 32 < 5 && (j / w) % 64 > 8 {
+                    1000.0
+                } else {
+                    20.0
+                }
+            })
+            .collect();
+        let mut st = 5u64;
+        let frames: Vec<Vec<f32>> = (0..n)
+            .map(|i| {
+                let left = halo_blur(&truth, w, h, 0.6 + 1.2 * (i as f32 - 10.0).abs());
+                let right = halo_blur(&truth, w, h, 0.6 + 1.2 * (i as f32 - 30.0).abs());
+                (0..w * h)
+                    .map(|j| if j % w < w / 2 { left[j] } else { right[j] } + sigma * ens_normal(&mut st))
+                    .collect()
+            })
+            .collect();
+        let var = vec![sigma * sigma; w * h];
+        let fold_ratio = |pooled: bool, base: BaseBand, exponent: f32, ratio: f32| {
+            let cfg = MergeConfig {
+                bands: 6,
+                pooled_evidence: pooled,
+                pooled_evidence_ratio: ratio,
+                base,
+                exponent,
+                ensemble: true,
+                ..Default::default()
+            };
+            let sizes = level_sizes(w, h, cfg.bands);
+            let mut merge = BandMerge::new(w, h, 1, cfg);
+            let mut fws = FrameWorkspace::new(&sizes, 1);
+            for f in &frames {
+                fws.next_frame();
+                merge.add_frame(&[f.as_slice()], f, &var, &mut fws);
+            }
+            merge.finish(&mut Workspace::new(&sizes))[0].clone()
+        };
+        let fold = |pooled: bool, base: BaseBand, exponent: f32| fold_ratio(pooled, base, exponent, 1.0);
+        // Dark ground 3..14 px from a bar, away from the depth seam and borders.
+        let ground = |j: usize| {
+            let (x, y) = (j % w, j / w);
+            let d = (x % 32).saturating_sub(4);
+            truth[j] < 100.0
+                && (3..14).contains(&d)
+                && (16..h - 8).contains(&y)
+                && (16..w - 16).contains(&x)
+                && !(w / 2 - 12..w / 2 + 12).contains(&x)
+        };
+        let glow = |img: &[f32]| {
+            let v: Vec<f32> = (0..w * h)
+                .filter(|&j| ground(j))
+                .map(|j| img[j] - truth[j])
+                .collect();
+            v.iter().sum::<f32>() / v.len() as f32
+        };
+        let bars = |img: &[f32]| {
+            let v: Vec<f32> = (0..w * h)
+                .filter(|&j| truth[j] > 100.0 && (j / w) % 64 > 12 && (j % w) % 32 == 2)
+                .map(|j| img[j])
+                .collect();
+            v.iter().sum::<f32>() / v.len() as f32
+        };
+        let before = fold(false, BaseBand::Mean, 2.0);
+        let after = fold(true, BaseBand::WeightedFromCoarsest, 2.0);
+        let (g0, g1) = (glow(&before), glow(&after));
+        assert!(
+            g0 > 5.0,
+            "control: the focus-blind merge drew no glow ({g0})"
+        );
+        assert!(
+            g1 < 0.5 * g0,
+            "glow beside bright detail: before {g0}, after {g1}"
+        );
+        // Coarse bands chosen from defocused frames also dim narrow bright
+        // detail; the bars' level error against truth must fall substantially.
+        let (e0, e1) = (1000.0 - bars(&before), 1000.0 - bars(&after));
+        assert!(e1 < 0.6 * e0, "bar level error: before {e0}, after {e1}");
+        // With pooled evidence a coarse band selects on focus, so the sharper
+        // default coarse exponent follows focus further: the bars recover more
+        // of their level and the ground gains no glow.
+        let sharper = fold(true, BaseBand::WeightedFromCoarsest, DEFAULT_EXPONENT);
+        let (g2, e2) = (glow(&sharper), 1000.0 - bars(&sharper));
+        // Measured: glow 2.0 -> 0.94 DN, bar error 33 -> 8.6 DN.
+        assert!(g2 <= g1, "glow at the default exponent: {g1} at 2, {g2} at {DEFAULT_EXPONENT}");
+        assert!(e2 < 0.5 * e1, "bar level error: {e1} at 2, {e2} at {DEFAULT_EXPONENT}");
+    }
+
+    #[test]
+    fn pooled_levels_is_the_total_weight_of_the_pooled_levels() {
+        for ratio in [1.0f32, 1.5, 2.0, 4.0] {
+            for k in 0..8 {
+                let direct: f32 = (0..=k).map(|j| ratio.powi((k - j) as i32)).sum();
+                assert!((pooled_levels(ratio, k) - direct).abs() <= 1e-4 * direct, "ratio {ratio} k {k}");
+            }
+        }
     }
 }

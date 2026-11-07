@@ -21,7 +21,7 @@
 use std::io::{Read, Write};
 
 use strehl_core::align::Resampler;
-use strehl_core::restore::{restore_plane, RestoreConfig};
+use strehl_core::restore::{RestoreConfig, restore_plane};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = std::env::args().collect();

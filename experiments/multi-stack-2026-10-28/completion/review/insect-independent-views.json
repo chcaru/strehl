@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "mode": "independent_views",
+  "passes": [
+    {
+      "name": "Underside view 3.2s",
+      "directories": [
+        "D:\\personal\\macro\\insects\\bug-1\\100MSDCF"
+      ]
+    },
+    {
+      "name": "Top green view 3.2s",
+      "directories": [
+        "D:\\personal\\macro\\insects\\bug-1\\103MSDCF"
+      ]
+    }
+  ],
+  "primary_pass": null
+}

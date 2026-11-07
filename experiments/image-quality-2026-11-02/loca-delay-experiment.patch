@@ -1,0 +1,69 @@
+diff --git a/crates/strehl-core/src/pyramid.rs b/crates/strehl-core/src/pyramid.rs
+index 498b4cd8b..de370f5e0 100644
+--- a/crates/strehl-core/src/pyramid.rs
++++ b/crates/strehl-core/src/pyramid.rs
+@@ -2447,6 +2447,29 @@ impl BandMerge {
+         let n0 = self.sizes[0].pixels();
+         assert_eq!(luma.len(), n0);
+         assert_eq!(variance.len(), n0);
++        // EXPERIMENT (LoCA delay): fold R and B from earlier frames, where they
++        // are sharp at the depth this frame's (green-led) weights select.
++        let loca_store;
++        let loca_refs: Vec<&[f32]>;
++        let planes: &[&[f32]] = match loca_delay().filter(|_| planes.len() == 4) {
++            None => planes,
++            Some(d) => {
++                let keep = d[0].max(d[1]).ceil() as usize + 1;
++                ws.loca_ring.push_front([planes[0].to_vec(), planes[3].to_vec()]);
++                ws.loca_ring.truncate(keep);
++                let at = |c: usize, delay: f32| -> Vec<f32> {
++                    let last = ws.loca_ring.len() - 1;
++                    let lo = (delay.floor() as usize).min(last);
++                    let hi = (delay.ceil() as usize).min(last);
++                    let t = if hi == lo { 0.0 } else { delay - delay.floor() };
++                    let (a, b) = (&ws.loca_ring[lo][c], &ws.loca_ring[hi][c]);
++                    a.iter().zip(b).map(|(x, y)| x + t * (y - x)).collect()
++                };
++                loca_store = [at(0, d[0]), at(1, d[1])];
++                loca_refs = vec![&loca_store[0], planes[1], planes[2], &loca_store[1]];
++                &loca_refs
++            }
++        };
+ 
+         #[cfg(feature = "native-correction-variance")]
+         fine_support_candidate::validate_config(fine_mode, self.cfg);
+@@ -3599,6 +3622,8 @@ pub struct FrameWorkspace {
+     ev: Vec<f32>,
+     ev_next: Vec<f32>,
+     eff: Vec<f32>,
++    /// EXPERIMENT (LoCA delay): the last frames' R and B planes, newest first.
++    loca_ring: std::collections::VecDeque<[Vec<f32>; 2]>,
+     /// Diagnostic storage is empty when disabled. Excluded from the legacy
+     /// planning formula so the experiment cannot change arithmetic chunks.
+     #[cfg(feature = "native-correction-variance")]
+@@ -3630,6 +3655,7 @@ impl FrameWorkspace {
+             ev: vec![0.0; n0],
+             ev_next: vec![0.0; n0],
+             eff: vec![0.0; n0],
++            loca_ring: std::collections::VecDeque::new(),
+             #[cfg(feature = "native-correction-variance")]
+             fine_support: fine_support_candidate::Scratch::default(),
+             #[cfg(feature = "spatial-noise-floor")]
+@@ -3758,6 +3784,17 @@ pub fn pooled_evidence_default() -> bool {
+     })
+ }
+ 
++/// EXPERIMENT ONLY: `STREHL_LOCA_DELAY=dR,dB` (frames, fractional allowed).
++fn loca_delay() -> Option<[f32; 2]> {
++    static V: std::sync::OnceLock<Option<[f32; 2]>> = std::sync::OnceLock::new();
++    *V.get_or_init(|| {
++        let raw = std::env::var("STREHL_LOCA_DELAY").ok()?;
++        let v: Vec<f32> = raw.split(',').map(|t| t.trim().parse().expect("STREHL_LOCA_DELAY")).collect();
++        assert!(v.len() == 2 && v.iter().all(|d| *d >= 0.0), "STREHL_LOCA_DELAY=dR,dB");
++        Some([v[0], v[1]])
++    })
++}
++
+ /// Environment override for the ensemble gate's default (`0`/`off` disables).
+ pub const ENSEMBLE_ENV: &str = "STREHL_PYRAMID_ENSEMBLE";
+ 

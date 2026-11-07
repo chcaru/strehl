@@ -167,8 +167,7 @@ const PLANT_RADIUS: i64 = CORE_RADIUS;
 /// Where `G1` and `G2` plant. Fixed coordinates, chosen away from both map
 /// sites and from every edge -- and **verified clean before use**, so that a
 /// commissioning arm cannot be run on top of a real defect.
-const PLANT_SITES: [(&str, usize, usize); 2] =
-    [("G1 site", 1760, 1172), ("G2 site", 2600, 800)];
+const PLANT_SITES: [(&str, usize, usize); 2] = [("G1 site", 1760, 1172), ("G2 site", 2600, 800)];
 
 /// A plant site must read flatter than this in the base field, or the program
 /// halts. A commissioning arm planted on a real mote proves nothing.
@@ -282,13 +281,7 @@ fn plant(field: &mut [f32], w: usize, h: usize, px: usize, py: usize, depth: f32
 /// mote. It absorbs whatever the two blocks differ by for reasons that are not
 /// dust -- a rotated polariser changing the falloff, for instance -- so a leak
 /// inflates the null and makes the verdict conservative rather than wrong.
-fn delta_null(
-    r1: &[f32],
-    r2: &[f32],
-    w: usize,
-    h: usize,
-    avoid: &[(usize, usize)],
-) -> Vec<f32> {
+fn delta_null(r1: &[f32], r2: &[f32], w: usize, h: usize, avoid: &[(usize, usize)]) -> Vec<f32> {
     let mut out = Vec::new();
     let mut y = SEARCH_BORDER;
     while y < h.saturating_sub(SEARCH_BORDER) {
@@ -299,10 +292,9 @@ fn delta_null(
                 dx * dx + dy * dy < (4 * CORE_RADIUS) * (4 * CORE_RADIUS)
             });
             if !near {
-                if let (Some(d1), Some(d2)) = (
-                    core_depth(r1, w, h, x, y),
-                    core_depth(r2, w, h, x, y),
-                ) {
+                if let (Some(d1), Some(d2)) =
+                    (core_depth(r1, w, h, x, y), core_depth(r2, w, h, x, y))
+                {
                     out.push(d2 - d1);
                 }
             }
@@ -614,7 +606,10 @@ fn main() {
         println!("  C1 FAILS -> blocks reported as 1 and 2; NO filter label claimed.");
         ("block 2", "block 1")
     } else if mean_stops < 0.0 {
-        println!("  C1 PASSES -> block 2 is DARKER by {:.2} stops = the CPL block.", -mean_stops);
+        println!(
+            "  C1 PASSES -> block 2 is DARKER by {:.2} stops = the CPL block.",
+            -mean_stops
+        );
         ("block 2 (CPL)", "block 1 (bare)")
     } else {
         println!("  C1 PASSES -> block 1 is DARKER by {mean_stops:.2} stops = the CPL block.");
@@ -778,9 +773,7 @@ fn main() {
         let moved_positive = d_after > d_before;
         let ok = moved_positive && out == Outcome::BlockSpecific;
         arms_pass &= ok;
-        println!(
-            "  G3 improved   mote 2 divided out of block 2",
-        );
+        println!("  G3 improved   mote 2 divided out of block 2",);
         println!(
             "                block 2 depth {:+.3}% -> {:+.3}%   DELTA {:+.3} -> {:+.3} pp  p {:.4}  {:?}  {}",
             100.0 * d2_before.unwrap_or(f32::NAN),
@@ -883,7 +876,10 @@ fn main() {
         );
         // How much of this mote could be on the filter and still hide here?
         // A wholly filter-borne mote would put its entire depth into DELTA.
-        let depth = d1.unwrap_or(f32::NAN).abs().max(d2.unwrap_or(f32::NAN).abs());
+        let depth = d1
+            .unwrap_or(f32::NAN)
+            .abs()
+            .max(d2.unwrap_or(f32::NAN).abs());
         if depth > 0.0 {
             println!(
                 "            depth {:.3}%; a wholly filter-borne mote would give DELTA {:.3} pp.",
@@ -951,7 +947,10 @@ fn main() {
     );
     if kept.is_empty() {
         println!("   NO filter-specific defect found at this sensitivity.");
-        println!("   Sensitivity is not asserted: G1 planted -{:.0}% and it was", 100.0 * PLANT_DEPTH);
+        println!(
+            "   Sensitivity is not asserted: G1 planted -{:.0}% and it was",
+            100.0 * PLANT_DEPTH
+        );
         println!("   detected, so the search resolves a disc of that depth and radius.");
     } else {
         for (d, x, y) in kept.iter().take(20) {

@@ -1,0 +1,268 @@
+{
+  "schema": "strehl.completion-independent-checkpoint-audit.v1",
+  "base": "ef65505013585abcc86b1410e4bf902bf34ed479",
+  "scope": "Saved JSON and committed source only; no RAW, render, image processing or engine test",
+  "source_sha256": {
+    "crates/strehl-core/src/session-fusion.rs": "9c81c65b6651eb5e78f491172f66165dcdeda83615dbc0c6bd5d5c6104fcabad",
+    "crates/strehl-cli/src/session-align.rs": "fe368dbb41c3ebf3ecd66380e22b58d3c92ce50a4e64540e444dcac4b444d03e",
+    "crates/strehl-cli/src/session-consumer.rs": "f00643e7caabd645fbb9b4439baf64bbedf95a17ab1a50ddd4fc4e69a8ff8156",
+    "crates/strehl-cli/src/session-input.rs": "3fa9cf6108ee38d4cf8e582d6f76c4533557ddcf208641085d048fccf51f15c9",
+    "crates/strehl-ui/src/process-session.rs": "61f9b41e67b1186c7b9c85d3e765c0b6192ee347a0caeab5f1a656180262fbe4"
+  },
+  "proposal_sha256": {
+    "Proposal.md": "2e416ab34bf1d9db53e08d5c507e8c2e78ba14820ffb68a531503aa2aaaf9ee0",
+    "Derivations.md": "7884ced5fbb3bc2d287de403070996774371d34dee079c2cab42d590f40289c5"
+  },
+  "arms": [
+    {
+      "name": "insect-repeat-4",
+      "render_report_sha256": "614ce136e9445b5d5853b1dd28ff0266ec714bb6ebb47999cdfe835c32e6944a",
+      "alignment_sha256": "7c06ed37d92f3a1dde0a03e5b6f2f5eaf71d2c5ab4ef494bac51441400e2ef82",
+      "source_count": 598,
+      "groups": 480,
+      "pair_candidates": 385,
+      "mutual_pairs": 213,
+      "eligible_pairs": 118,
+      "paired_sources": 236,
+      "possible_pairs_upper_bound": 299,
+      "mutual_gap_small_step_units": {
+        "min": 0.004216348499874901,
+        "median": 0.21610171428458175,
+        "max": 1.2956721656665777
+      },
+      "eligible_indices": {
+        "i_min": 17,
+        "i_max": 298,
+        "j_min": 307,
+        "j_max": 597
+      },
+      "band_acceptance": [
+        {
+          "level": 0,
+          "averaged": 889604344,
+          "two_source_candidate_sites": 929735124,
+          "fraction_averaged_conditional_on_two_supported": 0.9568363300857718,
+          "single_source_sites": 2853717213,
+          "uncovered_group_sites": 1098063
+        },
+        {
+          "level": 1,
+          "averaged": 203380973,
+          "two_source_candidate_sites": 232070953,
+          "fraction_averaged_conditional_on_two_supported": 0.8763741018463436,
+          "single_source_sites": 713089920,
+          "uncovered_group_sites": 976727
+        },
+        {
+          "level": 2,
+          "averaged": 39837278,
+          "two_source_candidate_sites": 57790603,
+          "fraction_averaged_conditional_on_two_supported": 0.6893383341232829,
+          "single_source_sites": 177967828,
+          "uncovered_group_sites": 775969
+        },
+        {
+          "level": 3,
+          "averaged": 7933122,
+          "two_source_candidate_sites": 14348249,
+          "fraction_averaged_conditional_on_two_supported": 0.552898266541095,
+          "single_source_sites": 44364735,
+          "uncovered_group_sites": 523816
+        },
+        {
+          "level": 4,
+          "averaged": 1631294,
+          "two_source_candidate_sites": 3524447,
+          "fraction_averaged_conditional_on_two_supported": 0.46285105152666506,
+          "single_source_sites": 10999723,
+          "uncovered_group_sites": 336630
+        },
+        {
+          "level": 5,
+          "averaged": 250122,
+          "two_source_candidate_sites": 838693,
+          "fraction_averaged_conditional_on_two_supported": 0.29822831477072065,
+          "single_source_sites": 2678708,
+          "uncovered_group_sites": 215079
+        },
+        {
+          "level": 6,
+          "averaged": 5270,
+          "two_source_candidate_sites": 182305,
+          "fraction_averaged_conditional_on_two_supported": 0.028907599901264364,
+          "single_source_sites": 615232,
+          "uncovered_group_sites": 135583
+        },
+        {
+          "level": 7,
+          "averaged": 0,
+          "two_source_candidate_sites": 49377,
+          "fraction_averaged_conditional_on_two_supported": 0.0,
+          "single_source_sites": 161437,
+          "uncovered_group_sites": 22466
+        }
+      ],
+      "caution": "Counts sum group coefficients, not unique output pixels or normalized final contribution. Low-frequency disagreement is not classified by cause."
+    },
+    {
+      "name": "slide-hdr-pair-6",
+      "render_report_sha256": "aeb2d9d86386cc0c9ab3a3656121f57f9ebce28f00dcd7a23c623cef3c008573",
+      "alignment_sha256": "786b809e4de07e20af4853704e4c0b5ffa744820f81c69d7ee70575ee00ca8f7",
+      "source_count": 126,
+      "groups": 77,
+      "pair_candidates": 65,
+      "mutual_pairs": 61,
+      "eligible_pairs": 49,
+      "paired_sources": 98,
+      "possible_pairs_upper_bound": 61,
+      "mutual_gap_small_step_units": {
+        "min": 0.16330711853518853,
+        "median": 0.21470610289208614,
+        "max": 0.30667665070285466
+      },
+      "eligible_indices": {
+        "i_min": 12,
+        "i_max": 60,
+        "j_min": 74,
+        "j_max": 122
+      },
+      "band_acceptance": [
+        {
+          "level": 0,
+          "averaged": 345380036,
+          "two_source_candidate_sites": 356039519,
+          "fraction_averaged_conditional_on_two_supported": 0.9700609555087057,
+          "single_source_sites": 250949968,
+          "uncovered_group_sites": 9152193
+        },
+        {
+          "level": 1,
+          "averaged": 72809436,
+          "two_source_candidate_sites": 85830949,
+          "fraction_averaged_conditional_on_two_supported": 0.8482888380973161,
+          "single_source_sites": 65153988,
+          "uncovered_group_sites": 3050483
+        },
+        {
+          "level": 2,
+          "averaged": 10353295,
+          "two_source_candidate_sites": 20145926,
+          "fraction_averaged_conditional_on_two_supported": 0.5139150714640767,
+          "single_source_sites": 17299726,
+          "uncovered_group_sites": 1096544
+        },
+        {
+          "level": 3,
+          "averaged": 1114670,
+          "two_source_candidate_sites": 4591668,
+          "fraction_averaged_conditional_on_two_supported": 0.24275927614975648,
+          "single_source_sites": 4672965,
+          "uncovered_group_sites": 370916
+        },
+        {
+          "level": 4,
+          "averaged": 140218,
+          "two_source_candidate_sites": 973081,
+          "fraction_averaged_conditional_on_two_supported": 0.14409694568078094,
+          "single_source_sites": 1318585,
+          "uncovered_group_sites": 131139
+        },
+        {
+          "level": 5,
+          "averaged": 25816,
+          "two_source_candidate_sites": 177806,
+          "fraction_averaged_conditional_on_two_supported": 0.14519195077781402,
+          "single_source_sites": 383621,
+          "uncovered_group_sites": 51262
+        },
+        {
+          "level": 6,
+          "averaged": 4434,
+          "two_source_candidate_sites": 25091,
+          "fraction_averaged_conditional_on_two_supported": 0.17671675102626438,
+          "single_source_sites": 111888,
+          "uncovered_group_sites": 19716
+        },
+        {
+          "level": 7,
+          "averaged": 0,
+          "two_source_candidate_sites": 9399,
+          "fraction_averaged_conditional_on_two_supported": 0.0,
+          "single_source_sites": 27379,
+          "uncovered_group_sites": 4186
+        }
+      ],
+      "caution": "Counts sum group coefficients, not unique output pixels or normalized final contribution. Low-frequency disagreement is not classified by cause."
+    }
+  ],
+  "derivations": {
+    "fixed_weight_pair_noise": {
+      "same_noise": {
+        "variance_short_over_long": 1.0,
+        "equal_pair_var_over_long": 0.5,
+        "inverse_variance_pair_var_over_long": 0.5,
+        "equal_pair_sigma_over_long": 0.7071067811865476,
+        "inverse_variance_pair_sigma_over_long": 0.7071067811865476,
+        "optimal_long_weight": 0.5,
+        "equal_over_optimal_variance": 1.0,
+        "exact_average_sigma": 0.7071067811865475
+      },
+      "hdr_shot_limited_equal_beta": {
+        "variance_short_over_long": 2.533541440963745,
+        "equal_pair_var_over_long": 0.8833853602409363,
+        "inverse_variance_pair_var_over_long": 0.71699780044825,
+        "equal_pair_sigma_over_long": 0.9398858229811408,
+        "inverse_variance_pair_sigma_over_long": 0.8467572263926951,
+        "optimal_long_weight": 0.71699780044825,
+        "equal_over_optimal_variance": 1.232061464747402
+      },
+      "hdr_read_limited_equal_beta": {
+        "variance_short_over_long": 6.41883223308065,
+        "equal_pair_var_over_long": 1.8547080582701625,
+        "inverse_variance_pair_var_over_long": 0.8652078967979637,
+        "equal_pair_sigma_over_long": 1.3618766677897682,
+        "inverse_variance_pair_sigma_over_long": 0.930165521183173,
+        "optimal_long_weight": 0.8652078967979637,
+        "equal_over_optimal_variance": 2.143655952672446
+      },
+      "unequal_warp_transfer_ratio4": {
+        "variance_short_over_long": 4.0,
+        "equal_pair_var_over_long": 1.25,
+        "inverse_variance_pair_var_over_long": 0.8,
+        "equal_pair_sigma_over_long": 1.118033988749895,
+        "inverse_variance_pair_sigma_over_long": 0.8944271909999159,
+        "optimal_long_weight": 0.8,
+        "equal_over_optimal_variance": 1.5625
+      }
+    },
+    "shared_noise_foil": {
+      "var1": 1.0,
+      "var2": 1.0,
+      "covariance": 1.0,
+      "actual_pair_variance": 1.0,
+      "independence_formula_incorrect": 0.5
+    },
+    "constituent_reference_foil": [
+      {
+        "alpha_weight_B": 0.0,
+        "candidate_minus_A_variance_for_equal_unit_noise": 0.0,
+        "candidate_true_variance": 1.0
+      },
+      {
+        "alpha_weight_B": 0.25,
+        "candidate_minus_A_variance_for_equal_unit_noise": 0.125,
+        "candidate_true_variance": 0.625
+      },
+      {
+        "alpha_weight_B": 0.5,
+        "candidate_minus_A_variance_for_equal_unit_noise": 0.5,
+        "candidate_true_variance": 0.5
+      },
+      {
+        "alpha_weight_B": 1.0,
+        "candidate_minus_A_variance_for_equal_unit_noise": 2.0,
+        "candidate_true_variance": 1.0
+      }
+    ]
+  }
+}

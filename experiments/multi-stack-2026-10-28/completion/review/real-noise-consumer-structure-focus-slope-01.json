@@ -1,0 +1,37 @@
+{
+  "schema": "strehl.sealed-focus-mapping-diagnostic.v1",
+  "source_report_sha256": "f2376b7e9ec97daa5a55c01cd91a132d27ae86f9a34e5653d83c704ab5be2d7b",
+  "roi_sensor": [
+    1970,
+    2090,
+    192,
+    192
+  ],
+  "qualified_quad_pixels": 537,
+  "frozen_centers": [
+    110,
+    101
+  ],
+  "ordinal_ranges": [
+    [
+      97.21595764160156,
+      115.6595687866211
+    ],
+    [
+      88.1810302734375,
+      107.10989379882812
+    ]
+  ],
+  "descriptive_ls_slope_intercept": [
+    0.9199849398999849,
+    0.2102447426644772
+  ],
+  "descriptive_residual_rms_ordinals": 0.6944535447465053,
+  "median_offset_ordinals": -8.525985717773438,
+  "median_focus_width_ratio": 0.8997017741203308,
+  "width_ratio_p10_p90": [
+    0.5633826971054077,
+    1.4877349615097057
+  ],
+  "scope": "DERIVED from previously sealed spatially qualified focus peaks, not independently calibrated focus-step geometry. No new source reads, no threshold/center/window change, and no equal physical-depth step claim. Fit not used to map future risk targets."
+}

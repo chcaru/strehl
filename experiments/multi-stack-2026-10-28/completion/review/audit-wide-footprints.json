@@ -1,0 +1,665 @@
+{
+  "schema": "strehl.review.registration-initial-footprints.v1",
+  "scope": "Independent geometric enumeration only: initial measured seed, no RAW/NCC/refinement execution. The numerical sets include all bilinear reads (including zero-coefficient taps) and finite Gaussian support; mask sets additionally include supported() rectangle. Later runtime train iterations and final held transform are unobserved.",
+  "command": "python -X utf8 experiments/multi-stack-2026-10-28/completion/review/audit-wide-footprints.py",
+  "counterexample": {
+    "1.0": {
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18605,
+        "held_union_sites": 14884,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 19845,
+        "held_union_sites": 15876,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    "0.85": {
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 14152,
+        "held_union_sites": 11448,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 1288,
+        "first_overlap_xy": [
+          69,
+          15
+        ],
+        "train_union_sites": 15553,
+        "held_union_sites": 12304,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    "0.75": {
+      "numeric": {
+        "overlap_plane_sites": 568,
+        "first_overlap_xy": [
+          72,
+          25
+        ],
+        "train_union_sites": 11709,
+        "held_union_sites": 9308,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 1704,
+        "first_overlap_xy": [
+          71,
+          24
+        ],
+        "train_union_sites": 12565,
+        "held_union_sites": 10164,
+        "out_of_bounds_tiles": 0
+      }
+    }
+  },
+  "initial_seeds": [
+    {
+      "trajectory": "measured-trajectory-01.rs",
+      "pair_indices": [
+        3,
+        4
+      ],
+      "color": "R",
+      "relative_scale": 0.9999160239619732,
+      "relative_rotation_radians": 8.113038543039635e-06,
+      "crop_transform": [
+        0.9999160239290653,
+        8.112357242117437e-06,
+        0.034898284284052575,
+        0.005970490510472715
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18483,
+        "held_union_sites": 14823,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 754,
+        "first_overlap_xy": [
+          65,
+          2
+        ],
+        "train_union_sites": 20348,
+        "held_union_sites": 16316,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "measured-trajectory-01.rs",
+      "pair_indices": [
+        3,
+        4
+      ],
+      "color": "G",
+      "relative_scale": 0.9999160239619732,
+      "relative_rotation_radians": 8.113038543039635e-06,
+      "crop_transform": [
+        0.9999160239290653,
+        8.112357242117437e-06,
+        0.03488337453425039,
+        0.006035500652984416
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18483,
+        "held_union_sites": 14823,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 754,
+        "first_overlap_xy": [
+          65,
+          2
+        ],
+        "train_union_sites": 20348,
+        "held_union_sites": 16316,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "measured-trajectory-01.rs",
+      "pair_indices": [
+        3,
+        4
+      ],
+      "color": "B",
+      "relative_scale": 0.9999160239619732,
+      "relative_rotation_radians": 8.113038543039635e-06,
+      "crop_transform": [
+        0.9999160239290653,
+        8.112357242117437e-06,
+        0.034860352427205976,
+        0.006016534724561207
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18483,
+        "held_union_sites": 14823,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 754,
+        "first_overlap_xy": [
+          65,
+          2
+        ],
+        "train_union_sites": 20348,
+        "held_union_sites": 16316,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "measured-trajectory-01.rs",
+      "pair_indices": [
+        9,
+        10
+      ],
+      "color": "R",
+      "relative_scale": 0.9998316346462791,
+      "relative_rotation_radians": -6.903093990029393e-07,
+      "crop_transform": [
+        0.9998316346460409,
+        -6.901931748167445e-07,
+        0.11467976391118184,
+        -0.9478622571926766
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18605,
+        "held_union_sites": 14884,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 756,
+        "first_overlap_xy": [
+          65,
+          1
+        ],
+        "train_union_sites": 20476,
+        "held_union_sites": 16380,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "measured-trajectory-01.rs",
+      "pair_indices": [
+        9,
+        10
+      ],
+      "color": "G",
+      "relative_scale": 0.9998316346462791,
+      "relative_rotation_radians": -6.903093990029393e-07,
+      "crop_transform": [
+        0.9998316346460409,
+        -6.901931748167445e-07,
+        -0.8851937895250552,
+        0.05209616911371484
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18605,
+        "held_union_sites": 14884,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 756,
+        "first_overlap_xy": [
+          64,
+          2
+        ],
+        "train_union_sites": 20476,
+        "held_union_sites": 16380,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "measured-trajectory-01.rs",
+      "pair_indices": [
+        9,
+        10
+      ],
+      "color": "B",
+      "relative_scale": 0.9998316346462791,
+      "relative_rotation_radians": -6.903093990029393e-07,
+      "crop_transform": [
+        0.9998316346460409,
+        -6.901931748167445e-07,
+        0.11476429168474866,
+        0.05205390522693154
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18605,
+        "held_union_sites": 14884,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 756,
+        "first_overlap_xy": [
+          65,
+          2
+        ],
+        "train_union_sites": 20476,
+        "held_union_sites": 16380,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "measured-trajectory-01.rs",
+      "pair_indices": [
+        3,
+        10
+      ],
+      "color": "R",
+      "relative_scale": 0.9999239168088707,
+      "relative_rotation_radians": -0.00021349468398611365,
+      "crop_transform": [
+        0.9999238940206147,
+        -0.000213478439007543,
+        -0.5937339921372422,
+        -0.17011564428802306
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18605,
+        "held_union_sites": 14884,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 756,
+        "first_overlap_xy": [
+          64,
+          1
+        ],
+        "train_union_sites": 20476,
+        "held_union_sites": 16380,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "measured-trajectory-01.rs",
+      "pair_indices": [
+        3,
+        10
+      ],
+      "color": "G",
+      "relative_scale": 0.9999239168088707,
+      "relative_rotation_radians": -0.00021349468398611365,
+      "crop_transform": [
+        0.9999238940206147,
+        -0.000213478439007543,
+        -0.5939131274613442,
+        -0.1701119344132359
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18605,
+        "held_union_sites": 14884,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 756,
+        "first_overlap_xy": [
+          64,
+          1
+        ],
+        "train_union_sites": 20476,
+        "held_union_sites": 16380,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "measured-trajectory-01.rs",
+      "pair_indices": [
+        3,
+        10
+      ],
+      "color": "B",
+      "relative_scale": 0.9999239168088707,
+      "relative_rotation_radians": -0.00021349468398611365,
+      "crop_transform": [
+        0.9999238940206147,
+        -0.000213478439007543,
+        0.4061212156535614,
+        -0.17018433051783388
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18605,
+        "held_union_sites": 14884,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 756,
+        "first_overlap_xy": [
+          65,
+          1
+        ],
+        "train_union_sites": 20476,
+        "held_union_sites": 16380,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "chart-measured-trajectory-01.rs",
+      "pair_indices": [
+        3,
+        4
+      ],
+      "color": "R",
+      "relative_scale": 0.9997004837874723,
+      "relative_rotation_radians": 2.7611882649632976e-05,
+      "crop_transform": [
+        0.9997004834063785,
+        2.7603612439613427e-05,
+        0.09099555654864595,
+        -0.008769401343381195
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18605,
+        "held_union_sites": 14823,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 879,
+        "first_overlap_xy": [
+          65,
+          2
+        ],
+        "train_union_sites": 20474,
+        "held_union_sites": 16315,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "chart-measured-trajectory-01.rs",
+      "pair_indices": [
+        3,
+        4
+      ],
+      "color": "G",
+      "relative_scale": 0.9997004837874723,
+      "relative_rotation_radians": 2.7611882649632976e-05,
+      "crop_transform": [
+        0.9997004834063785,
+        2.7603612439613427e-05,
+        0.09091377649713066,
+        -0.008837379588676642
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18605,
+        "held_union_sites": 14834,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 879,
+        "first_overlap_xy": [
+          65,
+          2
+        ],
+        "train_union_sites": 20474,
+        "held_union_sites": 16315,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "chart-measured-trajectory-01.rs",
+      "pair_indices": [
+        3,
+        4
+      ],
+      "color": "B",
+      "relative_scale": 0.9997004837874723,
+      "relative_rotation_radians": 2.7611882649632976e-05,
+      "crop_transform": [
+        0.9997004834063785,
+        2.7603612439613427e-05,
+        0.09115911665167642,
+        -0.008633444852790273
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18605,
+        "held_union_sites": 14823,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 879,
+        "first_overlap_xy": [
+          65,
+          2
+        ],
+        "train_union_sites": 20474,
+        "held_union_sites": 16315,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "chart-measured-trajectory-01.rs",
+      "pair_indices": [
+        9,
+        10
+      ],
+      "color": "R",
+      "relative_scale": 0.9996939794929877,
+      "relative_rotation_radians": 2.2428618849838967e-05,
+      "crop_transform": [
+        0.9996939792415432,
+        2.2421755230647105e-05,
+        -0.11447236105174663,
+        -0.14470418788332173
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18605,
+        "held_union_sites": 14884,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 756,
+        "first_overlap_xy": [
+          64,
+          1
+        ],
+        "train_union_sites": 20476,
+        "held_union_sites": 16380,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "chart-measured-trajectory-01.rs",
+      "pair_indices": [
+        9,
+        10
+      ],
+      "color": "G",
+      "relative_scale": 0.9996939794929877,
+      "relative_rotation_radians": 2.2428618849838967e-05,
+      "crop_transform": [
+        0.9996939792415432,
+        2.2421755230647105e-05,
+        0.8854455283198316,
+        0.8552249123658717
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18605,
+        "held_union_sites": 14884,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 756,
+        "first_overlap_xy": [
+          65,
+          2
+        ],
+        "train_union_sites": 20476,
+        "held_union_sites": 16380,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "chart-measured-trajectory-01.rs",
+      "pair_indices": [
+        9,
+        10
+      ],
+      "color": "B",
+      "relative_scale": 0.9996939794929877,
+      "relative_rotation_radians": 2.2428618849838967e-05,
+      "crop_transform": [
+        0.9996939792415432,
+        2.2421755230647105e-05,
+        -0.11430813979490295,
+        -0.14456238838170854
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18605,
+        "held_union_sites": 14884,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 756,
+        "first_overlap_xy": [
+          64,
+          1
+        ],
+        "train_union_sites": 20476,
+        "held_union_sites": 16380,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "chart-measured-trajectory-01.rs",
+      "pair_indices": [
+        3,
+        10
+      ],
+      "color": "R",
+      "relative_scale": 0.9996306342682191,
+      "relative_rotation_radians": 5.542691743375076e-06,
+      "crop_transform": [
+        0.999630634252864,
+        5.5406444629548785e-06,
+        -0.12223508864320964,
+        -0.13943806285503613
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18605,
+        "held_union_sites": 14884,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 756,
+        "first_overlap_xy": [
+          64,
+          1
+        ],
+        "train_union_sites": 20476,
+        "held_union_sites": 16380,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "chart-measured-trajectory-01.rs",
+      "pair_indices": [
+        3,
+        10
+      ],
+      "color": "G",
+      "relative_scale": 0.9996306342682191,
+      "relative_rotation_radians": 5.542691743375076e-06,
+      "crop_transform": [
+        0.999630634252864,
+        5.5406444629548785e-06,
+        0.8776711847588906,
+        0.8604709808692956
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18605,
+        "held_union_sites": 14884,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 756,
+        "first_overlap_xy": [
+          65,
+          2
+        ],
+        "train_union_sites": 20476,
+        "held_union_sites": 16380,
+        "out_of_bounds_tiles": 0
+      }
+    },
+    {
+      "trajectory": "chart-measured-trajectory-01.rs",
+      "pair_indices": [
+        3,
+        10
+      ],
+      "color": "B",
+      "relative_scale": 0.9996306342682191,
+      "relative_rotation_radians": 5.542691743375076e-06,
+      "crop_transform": [
+        0.999630634252864,
+        5.5406444629548785e-06,
+        -0.12204763544741004,
+        -0.13925615030369964
+      ],
+      "numeric": {
+        "overlap_plane_sites": 0,
+        "first_overlap_xy": null,
+        "train_union_sites": 18605,
+        "held_union_sites": 14884,
+        "out_of_bounds_tiles": 0
+      },
+      "mask_dependencies": {
+        "overlap_plane_sites": 756,
+        "first_overlap_xy": [
+          64,
+          1
+        ],
+        "train_union_sites": 20476,
+        "held_union_sites": 16380,
+        "out_of_bounds_tiles": 0
+      }
+    }
+  ],
+  "sources": {
+    "measured-trajectory-01.rs": "972b9c383dcd617b2a863ca24d69bde861485a81361964ee168947b5aa85430f",
+    "chart-measured-trajectory-01.rs": "d3b7371e6f420a512bac24f4425c0634690d83a0b183a5bd17e790d329cfdc61",
+    "audit-wide-footprints.py": "e54a9ab05bccb28373073857c5a200245caa26adf4cc3225a1d431ea79de3c47"
+  }
+}

@@ -40,3 +40,8 @@ objc = "=0.2.7"
 
 [dev-dependencies]
 tempfile = "3"
+
+[features]
+# Multi-stack sessions ("Best result", "Stack everything", repeats and layers):
+# experimental and off by default, so the session engine is not in default builds.
+multi-stack = ["strehl-cli/multi-stack"]

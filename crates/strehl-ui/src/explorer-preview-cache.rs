@@ -19,7 +19,7 @@ const MAX_HEADER: usize = 4096;
 const MAX_PIXELS: usize = SIDE as usize * SIDE as usize * 4;
 const DISK_BUDGET: u64 = 128 * 1024 * 1024;
 const DISK_ENTRIES: usize = 512;
-const FORMAT: u32 = 2;
+const FORMAT: u32 = 3;
 
 #[derive(Serialize, Deserialize)]
 struct Header {
@@ -90,8 +90,15 @@ pub(crate) fn load_file(
         .extension()
         .is_some_and(|e| e.eq_ignore_ascii_case("tif") || e.eq_ignore_ascii_case("tiff"))
     {
-        let (image, source_size) = strehl_edit::load_tiff_thumbnail(path, SIDE, cancelled)?;
-        render(path, &image, &DevelopmentRecipe::default(), source_size)?
+        let size = image::ImageReader::open(path)?
+            .with_guessed_format()?
+            .into_dimensions()?;
+        if crate::photo_coverage::Coverage::load(path, [size.0, size.1])?.is_some() {
+            super::load_preview_image(path.into(), SIDE, cancelled)?
+        } else {
+            let (image, source_size) = strehl_edit::load_tiff_thumbnail(path, SIDE, cancelled)?;
+            render(path, &image, &DevelopmentRecipe::default(), source_size)?
+        }
     } else {
         super::load_preview_image(path.into(), SIDE, cancelled)?
     };
@@ -116,7 +123,11 @@ pub(crate) fn render(
     recipe: &DevelopmentRecipe,
     source_size: [u32; 2],
 ) -> Result<PreviewImage> {
-    let (width, height, rgb) = image.render_region_sdr8(recipe, [0.0, 0.0], [1.0, 1.0], SIDE)?;
+    let (width, height, mut rgb) =
+        image.render_region_sdr8(recipe, [0.0, 0.0], [1.0, 1.0], SIDE)?;
+    if let Some(coverage) = crate::photo_coverage::Coverage::load(path, source_size)? {
+        coverage.apply_rgb([width, height], &mut rgb);
+    }
     Ok(PreviewImage {
         path: path.into(),
         source_size,

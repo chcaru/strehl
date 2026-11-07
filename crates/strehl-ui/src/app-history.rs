@@ -35,7 +35,7 @@ impl Recipe {
             workers: controls.workers,
         }
     }
-    fn apply(&self, controls: &mut Controls) {
+    pub(super) fn apply(&self, controls: &mut Controls) {
         controls.settings = self.settings.clone();
         controls.exposure = self.exposure;
         controls.gate = self.gate;
