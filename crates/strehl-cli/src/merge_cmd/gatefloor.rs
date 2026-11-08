@@ -189,6 +189,50 @@ pub(super) struct Probe {
     pyr: Pyramid,
     sizes: Vec<LevelSize>,
     beta: Vec<f32>,
+    /// The previous probe frame, kept so its sample allocation is reused.
+    recycled: Option<Frame>,
+}
+
+/// `template.clone()`, reusing `recycled`'s sample allocation.
+///
+/// Every field is named, with no `..` rest pattern, so a field added to
+/// `Frame` fails to compile here rather than silently missing from the probe:
+/// the property the module docs ask of copying the template. The samples are
+/// copied too, so the probe's buffer is the template's byte for byte before
+/// the noise fill, exactly as a clone. What it saves is a fresh 66 MB
+/// allocation per frame and the page faults that came with it.
+fn clone_frame_reusing(template: &Frame, recycled: Option<Frame>) -> Frame {
+    let mut data = recycled.map(|f| f.data).unwrap_or_default();
+    data.resize(template.data.len(), 0);
+    data.par_chunks_mut(1 << 16)
+        .zip(template.data.par_chunks(1 << 16))
+        .for_each(|(d, s)| d.copy_from_slice(s));
+    let Frame {
+        data: _,
+        stride,
+        buffer_height,
+        active,
+        levels,
+        iso,
+        wb_coeffs,
+        xyz_to_cam_rgbe,
+        color_matrices,
+        camera,
+        path,
+    } = template;
+    Frame {
+        data,
+        stride: *stride,
+        buffer_height: *buffer_height,
+        active: *active,
+        levels: *levels,
+        iso: *iso,
+        wb_coeffs: *wb_coeffs,
+        xyz_to_cam_rgbe: *xyz_to_cam_rgbe,
+        color_matrices: color_matrices.clone(),
+        camera: camera.clone(),
+        path: path.clone(),
+    }
 }
 
 impl Probe {
@@ -204,6 +248,7 @@ impl Probe {
             pyr: Pyramid::zeros(&sizes),
             beta: Vec::new(),
             sizes,
+            recycled: None,
         }
     }
 
@@ -397,7 +442,7 @@ impl Probe {
             direct_mode != align_cmd::DirectPlaneMode::Off && align_cmd::fullres_gather_enabled();
         #[cfg(not(feature = "native-direct-planes"))]
         let direct_consumed = false;
-        let mut probe = template.clone();
+        let mut probe = clone_frame_reusing(template, self.recycled.take());
         let black = f64::from(template.levels.black);
         fill_probe_noise(
             &mut probe,
@@ -511,9 +556,12 @@ impl Probe {
             )
             .context("extracting the compact gate-floor luma domain")?;
         }
-        for i in 0..self.luma.len() {
-            self.luma[i] = 0.5 * (self.planes[0][i] + self.planes[1][i]);
-        }
+        self.recycled = Some(probe);
+        let (g1, g2) = (&self.planes[0], &self.planes[1]);
+        self.luma
+            .par_iter_mut()
+            .zip(g1.par_iter().zip(g2.par_iter()))
+            .for_each(|(l, (a, b))| *l = 0.5 * (*a + *b));
 
         // Zero-mean the field before the pyramid.
         //
@@ -528,9 +576,7 @@ impl Probe {
         // pedestal is not one of them.
         let mean =
             (self.luma.iter().map(|v| f64::from(*v)).sum::<f64>() / self.luma.len() as f64) as f32;
-        for v in self.luma.iter_mut() {
-            *v -= mean;
-        }
+        self.luma.par_iter_mut().for_each(|v| *v -= mean);
 
         // The denominator. Green luma is the mean of two independent greens, so
         // its pre-warp variance is `sigma^2 / 2` exactly. Taken analytically and

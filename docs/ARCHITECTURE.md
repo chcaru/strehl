@@ -743,32 +743,55 @@ in pairs — "a single-seed measurement would have baked a 30% error into the ga
 ### Streaming
 
 **There is no memory-mapped I/O anywhere in this tree.** RAW files are read into an owned
-`Vec<u16>`. What exists instead is a **memory-budget planner**.
+`Vec<u16>`. What exists instead is a **memory-budget planner**, and every stage that
+touches all frames holds a bounded window of them, never the stack.
 
-The invariant is a fold: each worker decodes → folds → **drops** one frame before reading
-the next, so peak memory is O(workers), not O(frames). Measured, memory is flat at
-5.6–5.8 GB from 20 to 299 frames — a 3.2% spread over a 14.9× change in N.
+- **Alignment streams.** The edge ladder pairs frames at most `max(spans)` (128) apart, so
+  `measure_ladder_streaming` keeps a window of `max_span + 2 × batch` decoded green planes
+  and evicts a frame once every pair reading it is measured; the next batch decodes while
+  the current one is measured. Pairs are tagged with their ordinal and returned in ladder
+  order, so the solve sees the same rows: sidecars are byte-identical to the former
+  whole-stack decode. Before 2026-11-08 every plane was resident at once — 33 MB per
+  33 MP frame, about 48 GB for a 1,444-frame bracket before a single pair was measured.
+  The window is budgeted at `LADDER_WINDOW_BYTES` (6 GiB) with a minimum batch of 4.
+- **The solve is banded.** Unknowns are in frame order and rows span at most one edge, so
+  the normal matrix is stored and factored by its envelope (`align.rs`, `Envelope`):
+  `O(n b²)` instead of a dense `O(n³)` Cholesky, bit-identical by construction and by test.
+- **The fold** decodes → prepares → folds → **drops** each frame, so peak memory is
+  O(look-ahead slots), not O(frames). RAW decoding (single-threaded per file) runs ahead
+  on four decoder threads into a bounded window (`merge_cmd/decode-ahead.rs`) in the
+  order the fold will ask, honouring the CA preview's stride.
+- **The full-resolution gather is banded** (`warp_fullres_banded`). Each band of 16
+  destination rows computes only the mosaic rows, Malvar rows and Catmull-Rom taps its
+  samples touch, in per-thread buffers, instead of materialising the balanced mosaic and
+  three demosaiced channels (528 MB per frame at 33 MP) and reading them back per site.
+  `STREHL_GATHER_BANDS=off` restores the whole-plane route for A/B checks; both produce
+  the same pixels.
 
-Work is split by **contiguous chunks of the frame list**, `chunk_len = frames.div_ceil(workers)`,
-with a coverage-exactly-once test. These are frame ranges, **not spatial tiles** — there is
-no image tiling on this path.
+Work is split by **contiguous chunks of the frame list** (canonical chunks, below), with a
+coverage-exactly-once test. These are frame ranges, **not spatial tiles**.
 
-`MEMORY_BUDGET_BYTES = 6 GiB`, read at 15 sites and deliberately not overridable. The
-pyramid banner's "4 workers × 1328 MB" comes from a per-worker cost model over
-accumulators, frame workspace, band planes and frame bytes.
+`MEMORY_BUDGET_BYTES = 6 GiB`, read at 15 sites and deliberately not overridable. It sets
+the canonical chunk count from a per-worker cost model over accumulators, frame workspace,
+band planes and frame bytes; that model is part of the output contract (below), not a
+measurement of the process peak.
 
 ### Parallelism
 
-One rayon task per frame-chunk. Data-parallel with **no locks on the hot path**: each
-worker owns a private accumulator and results are combined afterwards by an exact
-`absorb`. The only shared mutable state on the baseline path is two atomic counters and an
-atomically-absorbed defect tally.
+**Canonical chunks fix the arithmetic; threads do not.** The number of chunks — and so the
+floating-point reduction order — is derived from the memory model and the geometry only.
+Chunks fold serially, each into a reused accumulator absorbed in order. Execution threads
+default to every core (`STREHL_PYRAMID_WORKERS` overrides) and only parallelise work
+inside a frame, so output is identical at any thread count. Frames are prepared up to
+`STREHL_PYRAMID_LOOKAHEAD` ahead (4 at 33 MP) and folded in index order. Until 2026-11-08
+the look-ahead was disabled whenever the `temporal-energy` feature was *compiled*, which is
+every desktop build; it now follows the runtime temporal decision.
 
-**Worker count on the pyramid backend is memory-derived only — `available_parallelism()`
-is deliberately excluded**, because the worker count sets the float reduction order and
-would otherwise make output host-dependent. Measured, 2 vs 7 workers differ on 0.2573% of
-pixels at a maximum of 1 DN. This is a real determinism/throughput trade: the memory-derived
-4-worker cap costs **1.29×** against 8 workers on a 16-core part.
+**The fold is memory-bandwidth bound, not core bound.** MEASURED on bug-7 (100 frames,
+desktop engine, 2026-11-08): 0.26 / 0.22 / 0.23 s per frame at 8 / 16 / 32 threads, and
+`pyramid-add` floors at ~90 ms per frame at any thread count from 8 up — consistent with the
+~5 GB of pyramid and accumulator traffic each frame moves. Further speed comes from moving
+fewer bytes (pass fusion, batching frames per accumulator pass, or a GPU), not from threads.
 
 > The estimator and argmax paths *do* min with `available_parallelism()`. That
 > inconsistency between backends is unresolved.
@@ -798,6 +821,19 @@ backends, so any unintended change to the merge is caught as a hash movement.
 - **22.58× `enfuse`**; against a `focus-stack` fork, 0.366 s/frame vs 13.93 s/frame with
   7.64 GiB peak RSS vs 47.37 GiB.
 - Whole 26-subject corpus: **4,825 frames in 16.2 min = 0.2015 s/frame**.
+
+- **bug-7, 1,444 frames, 33 MP, 46.6 GB of ARW** — MEASURED 2026-11-08 on a Ryzen 9 9950X3D
+  (16 cores / 32 threads, 64 GB, NVMe), desktop engine (`temporal-energy` compiled, off),
+  `stack --merge pyramid --srgb --linear-master`, `STREHL_UI_PROGRESS=1`, CA refinement on:
+  - before (`86cdc47ec`), alignment **already cached**: 645.2 s (CA preview 68.2 s + main
+    576.5 s at 0.40 s/frame), 3.26 GB peak private. Its whole-stack alignment could not be
+    run at this depth on this host: it holds every plane (~48 GB); at 300 frames it peaked
+    at 13.28 GB against 6.75 GB streaming, with byte-identical sidecars.
+  - after, **including a fresh alignment**: 464.7 s, 7.22 GB peak private (four look-ahead
+    slots and the decode-ahead window, which the desktop engine never had). Alignment alone:
+    12,645 pair fits in 89.8 s at 7.18 GB.
+  - Photograph and float linear master **pixel-identical** to before (compared decoded,
+    since the TIFF `Software` tag carries the build id).
 
 > The README's **51.6 s** headline was measured on the **estimator** path and explicitly
 > does not transfer to the default. The 36–42× comparator headline is **retracted to

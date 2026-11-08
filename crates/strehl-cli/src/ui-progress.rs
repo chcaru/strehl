@@ -158,6 +158,9 @@ impl Progress {
         }
     }
 
+    /// Emitted by the whole-stack alignment reference only; the ordinary solve
+    /// streams and builds each pyramid with its plane.
+    #[cfg(any(test, feature = "research-lens-warp"))]
     pub(crate) fn alignment_pyramid_finished(&self, index: usize) {
         if self.enabled {
             let mut counts = self

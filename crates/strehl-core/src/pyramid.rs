@@ -329,6 +329,16 @@ pub fn reduce(src: &[f32], src_size: LevelSize, dst: &mut [f32], scratch: &mut [
     });
 }
 
+/// `dst.copy_from_slice(src)` in parallel chunks. A serial 33 MB copy opened
+/// every level-0 pyramid build and showed up as a floor on the fold's speed.
+fn par_copy(dst: &mut [f32], src: &[f32]) {
+    assert_eq!(dst.len(), src.len(), "par_copy: lengths differ");
+    const CHUNK: usize = 1 << 16;
+    dst.par_chunks_mut(CHUNK)
+        .zip(src.par_chunks(CHUNK))
+        .for_each(|(d, s)| d.copy_from_slice(s));
+}
+
 /// Index of tap `t` (of 5, centred) at centre `c`, clamped into `0..n`.
 #[inline]
 fn clamp_tap(c: usize, t: usize, n: usize) -> usize {
@@ -483,7 +493,7 @@ impl Pyramid {
         );
         let n = self.levels();
         // Gaussian levels first, into the pyramid's own storage.
-        self.data[0].copy_from_slice(src);
+        par_copy(&mut self.data[0], src);
         for k in 1..n {
             let (lo, hi) = self.data.split_at_mut(k);
             reduce(&lo[k - 1], self.sizes[k - 1], &mut hi[0], &mut ws.scratch);
@@ -565,7 +575,7 @@ impl Pyramid {
             self.sizes[0].pixels(),
             "pyramid: source is not level-0 sized"
         );
-        self.data[0].copy_from_slice(src);
+        par_copy(&mut self.data[0], src);
         for k in 1..self.levels() {
             let (lo, hi) = self.data.split_at_mut(k);
             reduce(&lo[k - 1], self.sizes[k - 1], &mut hi[0], &mut ws.scratch);
@@ -2423,8 +2433,18 @@ impl BandMerge {
     }
 
     fn build_guide_fields(&self, luma: &[f32], variance: &[f32], ws: &mut FrameWorkspace) {
-        ws.luma.build(luma, &mut ws.ws);
-        ws.var.build_gaussian(variance, &mut ws.ws);
+        // Independent pyramids with their own workspaces: built concurrently.
+        let FrameWorkspace {
+            ws: ws_luma,
+            ws_var,
+            luma: luma_pyr,
+            var: var_pyr,
+            ..
+        } = ws;
+        rayon::join(
+            || luma_pyr.build(luma, ws_luma),
+            || var_pyr.build_gaussian(variance, ws_var),
+        );
         #[cfg(feature = "spatial-noise-floor")]
         ws.spatial_noise_floor.prepare(variance, &self.sizes);
     }
@@ -2530,10 +2550,14 @@ impl BandMerge {
                     // while the finer bands it summarises do.
                     let unit = |v: f32| (beta * v.max(0.0)).max(1.0);
                     let ratio = self.cfg.pooled_evidence_ratio;
+                    // Element-wise, so parallel: these were serial passes over
+                    // every coefficient and set a floor on the fold's speed.
                     if k == 0 {
-                        for ((ev, e), v) in ws.ev[..px].iter_mut().zip(sq.iter()).zip(vv) {
-                            *ev = *e / unit(*v);
-                        }
+                        ws.ev[..px]
+                            .par_iter_mut()
+                            .zip(sq.par_iter())
+                            .zip(vv.par_iter())
+                            .for_each(|((ev, e), v)| *ev = *e / unit(*v));
                     } else {
                         let prev = self.sizes[k - 1];
                         reduce(
@@ -2542,21 +2566,21 @@ impl BandMerge {
                             &mut ws.ev_next[..px],
                             &mut ws.smooth_scratch,
                         );
-                        for ((ev, n), (e, v)) in ws.ev[..px]
-                            .iter_mut()
-                            .zip(&ws.ev_next[..px])
-                            .zip(sq.iter().zip(vv))
-                        {
-                            *ev = ratio * *n + *e / unit(*v);
-                        }
+                        ws.ev[..px]
+                            .par_iter_mut()
+                            .zip(ws.ev_next[..px].par_iter())
+                            .zip(sq.par_iter().zip(vv.par_iter()))
+                            .for_each(|((ev, n), (e, v))| *ev = ratio * *n + *e / unit(*v));
                     }
                     // The mean over the pooled levels, back in this band's
                     // energy units: its noise expectation is unchanged, so the
                     // floor and the weight need no other change.
                     let levels = pooled_levels(ratio, k);
-                    for ((out, ev), v) in ws.eff[..px].iter_mut().zip(&ws.ev[..px]).zip(vv) {
-                        *out = unit(*v) * *ev / levels;
-                    }
+                    ws.eff[..px]
+                        .par_iter_mut()
+                        .zip(ws.ev[..px].par_iter())
+                        .zip(vv.par_iter())
+                        .for_each(|((out, ev), v)| *out = unit(*v) * *ev / levels);
                 }
                 let sel: &[f32] = if pooled { &ws.eff[..px] } else { sq };
                 w.par_iter_mut()
@@ -3582,6 +3606,8 @@ impl BandMerge {
 #[derive(Debug, Clone)]
 pub struct FrameWorkspace {
     ws: Workspace,
+    /// The variance pyramid's own workspace, so it builds beside the luma's.
+    ws_var: Workspace,
     luma: Pyramid,
     var: Pyramid,
     /// Gaussian pyramid of one plane, reused plane-by-plane to fold the
@@ -3619,6 +3645,7 @@ impl FrameWorkspace {
         let n0 = sizes[0].pixels();
         Self {
             ws: Workspace::new(sizes),
+            ws_var: Workspace::new(sizes),
             luma: Pyramid::zeros(sizes),
             var: Pyramid::zeros(sizes),
             ghull: Pyramid::zeros(sizes),
@@ -3679,7 +3706,11 @@ impl FrameWorkspace {
 #[derive(Debug, Clone)]
 struct PlaneCache {
     pyramids: Vec<Pyramid>,
-    ws: Workspace,
+    /// One workspace per plane, so the planes' pyramids build concurrently.
+    /// Each build is the same deterministic operator sequence whichever thread
+    /// runs it; building them one after another through a single workspace
+    /// left most of the machine idle between the short parallel passes.
+    ws: Vec<Workspace>,
     valid: bool,
 }
 
@@ -3687,7 +3718,7 @@ impl PlaneCache {
     fn new(sizes: &[LevelSize], planes: usize) -> Self {
         Self {
             pyramids: (0..planes).map(|_| Pyramid::zeros(sizes)).collect(),
-            ws: Workspace::new(sizes),
+            ws: (0..planes).map(|_| Workspace::new(sizes)).collect(),
             valid: false,
         }
     }
@@ -3696,9 +3727,11 @@ impl PlaneCache {
         if self.valid {
             return;
         }
-        for (p, src) in self.pyramids.iter_mut().zip(planes) {
-            p.build(src, &mut self.ws);
-        }
+        self.pyramids
+            .par_iter_mut()
+            .zip(self.ws.par_iter_mut())
+            .zip(planes.par_iter())
+            .for_each(|((p, ws), src)| p.build(src, ws));
         self.valid = true;
     }
 }

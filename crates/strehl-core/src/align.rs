@@ -2150,16 +2150,34 @@ impl LeastSquares {
         self.rows.push(LsRow { cols, rhs });
     }
 
-    /// `A^H A` (lower triangle, row-major dense) and `A^H b`.
-    fn normal_equations(&self) -> (Vec<Cx>, Vec<Cx>) {
+    /// `A^H A` (lower triangle, in envelope storage) and `A^H b`.
+    ///
+    /// Every entry is accumulated in exactly the order the former dense
+    /// `n x n` build used (row by row, then `p`, then `q`); only entries above
+    /// the diagonal, which the factorisation never read, and entries outside
+    /// the envelope, which no row touches and so stay exactly zero, are no
+    /// longer stored.
+    fn normal_equations(&self) -> (Envelope, Vec<Cx>) {
         let n = self.ncol;
-        let mut h = vec![Cx::ZERO; n * n];
+        let mut first: Vec<usize> = (0..n).collect();
+        for row in &self.rows {
+            let Some(lo) = row.cols.iter().map(|&(c, _)| c).min() else {
+                continue;
+            };
+            for &(p, _) in &row.cols {
+                first[p] = first[p].min(lo);
+            }
+        }
+        let mut h = Envelope::zeros(first);
         let mut g = vec![Cx::ZERO; n];
         for row in &self.rows {
             for &(p, cp) in &row.cols {
                 let cpc = cp.conj();
                 for &(q, cq) in &row.cols {
-                    h[p * n + q] = h[p * n + q] + cpc * cq;
+                    if q <= p {
+                        let at = h.index(p, q);
+                        h.data[at] = h.data[at] + cpc * cq;
+                    }
                 }
                 g[p] = g[p] + cpc * row.rhs;
             }
@@ -2190,14 +2208,14 @@ impl LeastSquares {
             return None;
         }
         let (h, g) = self.normal_equations();
-        let l = cholesky(&h, self.ncol)?;
-        let mut x = cholesky_solve(&l, self.ncol, &g);
+        let l = cholesky(&h)?;
+        let mut x = cholesky_solve(&l, &g);
         // Two steps of iterative refinement. Normal equations square the
         // condition number; this puts most of the lost digits back for a cost
         // of two triangular solves.
         for _ in 0..2 {
             let r = self.gradient_at(&x);
-            let d = cholesky_solve(&l, self.ncol, &r);
+            let d = cholesky_solve(&l, &r);
             let mut moved = false;
             for (xi, di) in x.iter_mut().zip(d.iter()) {
                 if di.norm_sq() > 0.0 {
@@ -2217,56 +2235,203 @@ impl LeastSquares {
     }
 }
 
+/// A lower-triangular matrix stored by its **envelope** (profile): row `p`
+/// holds columns `first[p]..=p` contiguously, and every entry left of
+/// `first[p]` is exactly zero.
+///
+/// # Why
+///
+/// The alignment systems are banded. Unknowns are in frame order and every
+/// row couples frames at most one edge span apart (128 on the default ladder),
+/// so the normal matrix of a 1,444-frame bracket is 1443 x 1443 with a band of
+/// about 128. Dense storage cost `n^2` memory and the dense factorisation
+/// `n^3 / 3` complex multiply-adds -- the latter about a billion, paid twice
+/// per IRLS pass and again for the held-out solve. A Cholesky factor keeps the
+/// envelope of the matrix it factors, so this costs `n b^2` and `n b`.
+///
+/// # Bit-identity with the dense factorisation it replaced
+///
+/// Every sum below visits the same non-zero terms in the same ascending order
+/// as the dense loops did. The terms it skips are products with an entry
+/// outside the envelope, which the dense loops computed as exactly zero, and
+/// adding a signed zero to a running sum never changes a non-zero value. The
+/// dense version is kept under `#[cfg(test)]` and compared bit for bit.
+#[derive(Clone, Debug)]
+struct Envelope {
+    first: Vec<usize>,
+    start: Vec<usize>,
+    data: Vec<Cx>,
+}
+
+impl Envelope {
+    fn zeros(first: Vec<usize>) -> Self {
+        let mut start = Vec::with_capacity(first.len());
+        let mut len = 0usize;
+        for (p, &f) in first.iter().enumerate() {
+            debug_assert!(f <= p);
+            start.push(len);
+            len += p - f + 1;
+        }
+        Self {
+            first,
+            start,
+            data: vec![Cx::ZERO; len],
+        }
+    }
+
+    fn n(&self) -> usize {
+        self.first.len()
+    }
+
+    /// Storage index of `(p, k)`; requires `first[p] <= k <= p`.
+    #[inline]
+    fn index(&self, p: usize, k: usize) -> usize {
+        debug_assert!(k >= self.first[p] && k <= p);
+        self.start[p] + (k - self.first[p])
+    }
+
+    /// Row `p`'s stored columns `first[p]..=p`.
+    #[inline]
+    fn row(&self, p: usize) -> &[Cx] {
+        let s = self.start[p];
+        &self.data[s..s + (p - self.first[p] + 1)]
+    }
+}
+
 /// Hermitian Cholesky `H = L L^H`, reading only the lower triangle of `h`.
 ///
 /// `None` if `H` is not positive definite, which for these systems means the
 /// unknowns are not all constrained. That is information, not an error.
-fn cholesky(h: &[Cx], n: usize) -> Option<Vec<Cx>> {
-    let mut l = vec![Cx::ZERO; n * n];
+fn cholesky(h: &Envelope) -> Option<Envelope> {
+    let n = h.n();
+    let mut l = Envelope::zeros(h.first.clone());
     // A relative floor on the pivot, so that a numerically-zero pivot is
     // refused rather than producing a huge spurious answer.
-    let scale: f64 = (0..n).map(|p| h[p * n + p].re.abs()).fold(0.0, f64::max);
+    let scale: f64 = (0..n)
+        .map(|p| h.data[h.index(p, p)].re.abs())
+        .fold(0.0, f64::max);
     let floor = scale * 1e-14;
     for p in 0..n {
-        let mut s = h[p * n + p].re;
-        for k in 0..p {
-            s -= l[p * n + k].norm_sq();
+        let fp = l.first[p];
+        let mut s = h.data[h.index(p, p)].re;
+        for v in &l.row(p)[..p - fp] {
+            s -= v.norm_sq();
         }
         if !s.is_finite() || s <= floor {
             return None;
         }
         let d = s.sqrt();
-        l[p * n + p] = Cx::real(d);
+        let at = l.index(p, p);
+        l.data[at] = Cx::real(d);
         for q in p + 1..n {
-            let mut t = h[q * n + p];
-            for k in 0..p {
-                t = t - l[q * n + k] * l[p * n + k].conj();
+            let fq = l.first[q];
+            if fq > p {
+                continue;
             }
-            l[q * n + p] = t.scale(1.0 / d);
+            let mut t = h.data[h.index(q, p)];
+            let k0 = fq.max(fp);
+            let rq = &l.row(q)[k0 - fq..p - fq];
+            let rp = &l.row(p)[k0 - fp..p - fp];
+            for (a, b) in rq.iter().zip(rp) {
+                t = t - *a * b.conj();
+            }
+            let at = l.index(q, p);
+            l.data[at] = t.scale(1.0 / d);
         }
     }
     Some(l)
 }
 
 /// Solve `L L^H x = g` by forward then backward substitution.
-fn cholesky_solve(l: &[Cx], n: usize, g: &[Cx]) -> Vec<Cx> {
+fn cholesky_solve(l: &Envelope, g: &[Cx]) -> Vec<Cx> {
+    let n = l.n();
     let mut y = vec![Cx::ZERO; n];
     for p in 0..n {
+        let fp = l.first[p];
         let mut s = g[p];
-        for k in 0..p {
-            s = s - l[p * n + k] * y[k];
+        for (v, yk) in l.row(p)[..p - fp].iter().zip(&y[fp..p]) {
+            s = s - *v * *yk;
         }
-        y[p] = s.scale(1.0 / l[p * n + p].re);
+        y[p] = s.scale(1.0 / l.data[l.index(p, p)].re);
     }
     let mut x = vec![Cx::ZERO; n];
     for p in (0..n).rev() {
         let mut s = y[p];
-        for k in p + 1..n {
-            s = s - l[k * n + p].conj() * x[k];
+        for (k, xk) in (p + 1..n).zip(&x[p + 1..]) {
+            if l.first[k] <= p {
+                s = s - l.data[l.index(k, p)].conj() * *xk;
+            }
         }
-        x[p] = s.scale(1.0 / l[p * n + p].re);
+        x[p] = s.scale(1.0 / l.data[l.index(p, p)].re);
     }
     x
+}
+
+/// The dense factorisation and solve the envelope versions replaced, kept
+/// verbatim so the bit-identity claim is tested rather than argued.
+#[cfg(test)]
+mod dense_reference {
+    use super::Cx;
+
+    pub(super) fn normal_equations(rows: &[super::LsRow], n: usize) -> (Vec<Cx>, Vec<Cx>) {
+        let mut h = vec![Cx::ZERO; n * n];
+        let mut g = vec![Cx::ZERO; n];
+        for row in rows {
+            for &(p, cp) in &row.cols {
+                let cpc = cp.conj();
+                for &(q, cq) in &row.cols {
+                    h[p * n + q] = h[p * n + q] + cpc * cq;
+                }
+                g[p] = g[p] + cpc * row.rhs;
+            }
+        }
+        (h, g)
+    }
+
+    pub(super) fn cholesky(h: &[Cx], n: usize) -> Option<Vec<Cx>> {
+        let mut l = vec![Cx::ZERO; n * n];
+        let scale: f64 = (0..n).map(|p| h[p * n + p].re.abs()).fold(0.0, f64::max);
+        let floor = scale * 1e-14;
+        for p in 0..n {
+            let mut s = h[p * n + p].re;
+            for k in 0..p {
+                s -= l[p * n + k].norm_sq();
+            }
+            if !s.is_finite() || s <= floor {
+                return None;
+            }
+            let d = s.sqrt();
+            l[p * n + p] = Cx::real(d);
+            for q in p + 1..n {
+                let mut t = h[q * n + p];
+                for k in 0..p {
+                    t = t - l[q * n + k] * l[p * n + k].conj();
+                }
+                l[q * n + p] = t.scale(1.0 / d);
+            }
+        }
+        Some(l)
+    }
+
+    pub(super) fn cholesky_solve(l: &[Cx], n: usize, g: &[Cx]) -> Vec<Cx> {
+        let mut y = vec![Cx::ZERO; n];
+        for p in 0..n {
+            let mut s = g[p];
+            for k in 0..p {
+                s = s - l[p * n + k] * y[k];
+            }
+            y[p] = s.scale(1.0 / l[p * n + p].re);
+        }
+        let mut x = vec![Cx::ZERO; n];
+        for p in (0..n).rev() {
+            let mut s = y[p];
+            for k in p + 1..n {
+                s = s - l[k * n + p].conj() * x[k];
+            }
+            x[p] = s.scale(1.0 / l[p * n + p].re);
+        }
+        x
+    }
 }
 
 // ===========================================================================
@@ -3515,6 +3680,210 @@ pub fn sample_catmull_rom(p: PlaneRef<'_>, x: f64, y: f64) -> f32 {
     acc
 }
 
+/// One destination row of a checked Catmull-Rom pull, bit-identical to calling
+/// [`Resampler::sample_checked`] with [`Resampler::CatmullRom`] at
+/// `scale * t.apply_at(px + ox, py + oy, cx, cy)` for every `px`.
+///
+/// `out[px]` receives the sample and `cover[px]` whether it existed; an
+/// uncovered sample is written as `NaN`, as the callers did.
+///
+/// # Why a row kernel
+///
+/// The per-sample route -- a closure, the transform, `sample_checked`'s
+/// support test, the resampler `match`, two clamps, two `floor` calls and
+/// sixteen bounds-checked loads -- measured about 18 ns a sample on one core,
+/// and the full-resolution gather plus its noise probe pull 49 M samples a
+/// frame: over half of all the work in a 33 MP fold. Here the coordinates and
+/// weights are produced in separate passes the compiler can vectorise, and the
+/// taps are read through four-element row slices.
+///
+/// # Why it is bit-identical
+///
+/// Every sample evaluates the same expressions in the same order: the same f64
+/// transform, the same support comparisons, the same `(x - x0) as f32` phase,
+/// the same weight polynomials, and the same row-then-column accumulation
+/// starting from `0.0`. Two steps are dropped because they cannot change a
+/// value inside the checked support, `1.5 <= x <= w - 2.5`: the clamp to
+/// `[1, w - 2]` is the identity there, and `floor` agrees with truncation for
+/// a positive finite `x`. The `min(w - 3)` and the small-plane fallback are
+/// kept. Tested against [`Resampler::sample_checked`] bit for bit.
+#[allow(clippy::too_many_arguments)]
+pub fn gather_row_catmull_rom_checked(
+    src: PlaneRef<'_>,
+    t: Similarity,
+    scale: f64,
+    offset: (f64, f64),
+    py: usize,
+    centre: (f64, f64),
+    out: &mut [f32],
+    cover: &mut [bool],
+) {
+    let rows = PlaneRows {
+        data: src.data,
+        width: src.width,
+        height: src.height,
+        first: 0,
+    };
+    gather_rows_catmull_rom_checked(rows, t, scale, offset, py, centre, out, cover);
+}
+
+/// Rows `first..first + data.len() / width` of a `width x height` plane.
+///
+/// Support tests and cell clamps use the **full** plane's size, so a pull
+/// through a window samples exactly what it would sample through the whole
+/// plane, provided the window holds the rows [`catmull_rom_row_support`]
+/// reports. A tap outside the window panics rather than reading a wrong row.
+#[derive(Clone, Copy, Debug)]
+pub struct PlaneRows<'a> {
+    pub data: &'a [f32],
+    pub width: usize,
+    pub height: usize,
+    pub first: usize,
+}
+
+/// The checked Catmull-Rom source coordinate for destination `(px, py)`, or
+/// `None` outside the support; the same expressions as `apply_at` followed by
+/// [`Resampler::sample_checked`].
+#[inline(always)]
+fn catmull_rom_coord(
+    t: Similarity,
+    scale: f64,
+    x: f64,
+    yy: f64,
+    (cx, cy): (f64, f64),
+    (hi_x, hi_y): (f64, f64),
+) -> Option<(f64, f64)> {
+    let (sx, sy) = t.apply_at(x, yy, cx, cy);
+    let (x, y) = (scale * sx, scale * sy);
+    (x.is_finite() && y.is_finite() && x >= 1.5 && y >= 1.5 && x <= hi_x && y <= hi_y)
+        .then_some((x, y))
+}
+
+/// The plane rows, inclusive, that [`gather_rows_catmull_rom_checked`] reads
+/// for destination row `py` of `n` pixels; `None` when no sample is covered.
+/// Computed from the identical coordinates, so it is exact, not a bound.
+#[allow(clippy::too_many_arguments)]
+pub fn catmull_rom_row_support(
+    width: usize,
+    height: usize,
+    t: Similarity,
+    scale: f64,
+    (ox, oy): (f64, f64),
+    py: usize,
+    centre: (f64, f64),
+    n: usize,
+) -> Option<(usize, usize)> {
+    if width < 4 || height < 4 {
+        return Some((0, height.saturating_sub(1)));
+    }
+    let hi = (width as f64 - 2.5, height as f64 - 2.5);
+    let yy = py as f64 + oy;
+    let mut span: Option<(usize, usize)> = None;
+    for px in 0..n {
+        if let Some((_, y)) = catmull_rom_coord(t, scale, px as f64 + ox, yy, centre, hi) {
+            let y0 = (y as usize).min(height - 3);
+            span = Some(match span {
+                None => (y0 - 1, y0 + 2),
+                Some((a, b)) => (a.min(y0 - 1), b.max(y0 + 2)),
+            });
+        }
+    }
+    span
+}
+
+/// [`gather_row_catmull_rom_checked`] reading its taps from a window of rows.
+#[allow(clippy::too_many_arguments)]
+pub fn gather_rows_catmull_rom_checked(
+    src: PlaneRows<'_>,
+    t: Similarity,
+    scale: f64,
+    (ox, oy): (f64, f64),
+    py: usize,
+    (cx, cy): (f64, f64),
+    out: &mut [f32],
+    cover: &mut [bool],
+) {
+    assert_eq!(out.len(), cover.len(), "row buffers disagree");
+    let n = out.len();
+    let (w, h) = (src.width, src.height);
+    if w < 4 || h < 4 {
+        assert!(
+            src.first == 0 && src.data.len() == w * h,
+            "a plane this small must be passed whole"
+        );
+        let whole = PlaneRef {
+            data: src.data,
+            width: w,
+            height: h,
+        };
+        for (px, (o, c)) in out.iter_mut().zip(cover.iter_mut()).enumerate() {
+            let (sx, sy) = t.apply_at(px as f64 + ox, py as f64 + oy, cx, cy);
+            match Resampler::CatmullRom.sample_checked(whole, scale * sx, scale * sy) {
+                Some(v) => {
+                    *o = v;
+                    *c = true;
+                }
+                None => {
+                    *o = f32::NAN;
+                    *c = false;
+                }
+            }
+        }
+        return;
+    }
+    const CHUNK: usize = 256;
+    let hi = (w as f64 - 2.5, h as f64 - 2.5);
+    let mut ok = [false; CHUNK];
+    let mut x0s = [0usize; CHUNK];
+    let mut y0s = [0usize; CHUNK];
+    let mut fx = [0f32; CHUNK];
+    let mut fy = [0f32; CHUNK];
+    let yy = py as f64 + oy;
+    let mut start = 0;
+    while start < n {
+        let len = CHUNK.min(n - start);
+        // 1. Coordinates, support test, cell and phase. Inside the support
+        //    `x >= 1.5`, so truncation is `floor`; outside it the values are
+        //    unused.
+        for i in 0..len {
+            let p = catmull_rom_coord(t, scale, (start + i) as f64 + ox, yy, (cx, cy), hi);
+            ok[i] = p.is_some();
+            let (x, y) = p.unwrap_or((1.5, 1.5));
+            let x0 = (x as usize).min(w - 3);
+            let y0 = (y as usize).min(h - 3);
+            x0s[i] = x0;
+            y0s[i] = y0;
+            fx[i] = (x - x0 as f64) as f32;
+            fy[i] = (y - y0 as f64) as f32;
+        }
+        // 2. Sixteen taps, row-major, exactly as `sample_catmull_rom`.
+        for i in 0..len {
+            let (o, c) = (&mut out[start + i], &mut cover[start + i]);
+            if !ok[i] {
+                *o = f32::NAN;
+                *c = false;
+                continue;
+            }
+            let wx = catmull_rom_weights(fx[i]);
+            let wy = catmull_rom_weights(fy[i]);
+            let base = (y0s[i] - 1 - src.first) * w + x0s[i] - 1;
+            let mut acc = 0f32;
+            for (dy, wyv) in wy.iter().enumerate() {
+                let taps = &src.data[base + dy * w..base + dy * w + 4];
+                let mut r = 0f32;
+                r += taps[0] * wx[0];
+                r += taps[1] * wx[1];
+                r += taps[2] * wx[2];
+                r += taps[3] * wx[3];
+                acc += r * *wyv;
+            }
+            *o = acc;
+            *c = true;
+        }
+        start += len;
+    }
+}
+
 /// Catmull-Rom followed by an exact clamp to the range of its 16 input taps.
 ///
 /// The weighted sum is evaluated in the same order as [`sample_catmull_rom`].
@@ -3803,6 +4172,185 @@ pub fn gather_into(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A banded system shaped like the alignment ladder: edges at spans
+    /// 1, 2, 4, ... up to `max_span`, plus three-frame smoothness rows, with
+    /// some frames' edges missing so the envelope is ragged.
+    fn ladder_system(n: usize, max_span: usize, seed: u64) -> LeastSquares {
+        let mut s = seed;
+        let mut next = move || {
+            s ^= s << 13;
+            s ^= s >> 7;
+            s ^= s << 17;
+            (s >> 11) as f64 / (1u64 << 53) as f64 - 0.5
+        };
+        let mut sys = LeastSquares::new(n);
+        let mut span = 1;
+        while span <= max_span {
+            for i in 0..n.saturating_sub(span) {
+                if (i * 7 + span * 3) % 11 == 0 {
+                    continue; // a refused edge
+                }
+                let a = Cx::new(1.0 + 0.01 * next(), 0.01 * next());
+                let w = 1.0 + next();
+                sys.push(
+                    vec![(i, a.scale(w)), (i + span, (-Cx::ONE).scale(w))],
+                    Cx::new(next(), next()).scale(w),
+                );
+            }
+            span *= 2;
+        }
+        for k in 1..n - 1 {
+            let w = 0.5 + next().abs();
+            sys.push(
+                vec![
+                    (k - 1, Cx::real(w)),
+                    (k, Cx::real(-2.0 * w)),
+                    (k + 1, Cx::real(w)),
+                ],
+                Cx::ZERO,
+            );
+        }
+        // One row touching only the first unknown, like a gauge substitution.
+        sys.push(vec![(0, Cx::ONE)], Cx::new(0.25, -0.5));
+        sys
+    }
+
+    #[test]
+    fn envelope_cholesky_is_bit_identical_to_the_dense_factorisation() {
+        for (n, max_span, seed) in [(40, 8, 1u64), (300, 128, 7), (517, 128, 99)] {
+            let sys = ladder_system(n, max_span, seed);
+            let (h_env, g_env) = sys.normal_equations();
+            let (h_dense, g_dense) = dense_reference::normal_equations(&sys.rows, n);
+            // The envelope really is narrower than the dense triangle here.
+            assert!(h_env.data.len() < n * (n + 1) / 2 || n <= max_span);
+            for p in 0..n {
+                assert_eq!(g_env[p].re.to_bits(), g_dense[p].re.to_bits());
+                assert_eq!(g_env[p].im.to_bits(), g_dense[p].im.to_bits());
+                for q in 0..=p {
+                    let dense = h_dense[p * n + q];
+                    if q < h_env.first[p] {
+                        assert!(dense.re == 0.0 && dense.im == 0.0, "outside envelope");
+                    } else {
+                        let env = h_env.data[h_env.index(p, q)];
+                        assert_eq!(
+                            (env.re.to_bits(), env.im.to_bits()),
+                            (dense.re.to_bits(), dense.im.to_bits())
+                        );
+                    }
+                }
+            }
+            let l_env = cholesky(&h_env).expect("positive definite");
+            let l_dense = dense_reference::cholesky(&h_dense, n).expect("positive definite");
+            let x_env = cholesky_solve(&l_env, &g_env);
+            let x_dense = dense_reference::cholesky_solve(&l_dense, n, &g_dense);
+            for (a, b) in x_env.iter().zip(&x_dense) {
+                assert_eq!(
+                    (a.re.to_bits(), a.im.to_bits()),
+                    (b.re.to_bits(), b.im.to_bits())
+                );
+            }
+            // And through the public path, refinement included.
+            let solved = sys.solve().expect("solves");
+            assert_eq!(solved.len(), n);
+        }
+    }
+
+    #[test]
+    fn the_catmull_rom_row_kernel_is_bit_identical_to_sample_checked() {
+        let mut s = 0x1234_5678_9abc_def1u64;
+        let mut next = move || {
+            s ^= s << 13;
+            s ^= s >> 7;
+            s ^= s << 17;
+            (s >> 11) as f64 / (1u64 << 53) as f64
+        };
+        for (w, h) in [(97usize, 61usize), (300, 9), (4, 4), (3, 7), (517, 33)] {
+            let data: Vec<f32> = (0..w * h)
+                .map(|_| (next() * 30000.0 - 2000.0) as f32)
+                .collect();
+            let src = PlaneRef {
+                data: &data,
+                width: w,
+                height: h,
+            };
+            // Destination grid is half the source, as in the full-res gather.
+            let (gw, gh) = ((w / 2).max(1), (h / 2).max(1));
+            let (cx, cy) = (gw as f64 * 0.5, gh as f64 * 0.5);
+            for trial in 0..6 {
+                let t = Similarity::from_params(SimilarityParams {
+                    ax: (next() - 0.5) * 6.0,
+                    ay: (next() - 0.5) * 6.0,
+                    g: (next() - 0.5) * 0.04 * f64::from(trial),
+                    rot: (next() - 0.5) * 0.01,
+                });
+                for (ox, oy) in [(0.0, 0.0), (0.5, 0.0), (0.0, 0.5), (0.5, 0.5)] {
+                    for py in 0..gh {
+                        let mut out = vec![0f32; gw];
+                        let mut cover = vec![false; gw];
+                        gather_row_catmull_rom_checked(
+                            src,
+                            t,
+                            2.0,
+                            (ox, oy),
+                            py,
+                            (cx, cy),
+                            &mut out,
+                            &mut cover,
+                        );
+                        for px in 0..gw {
+                            let (sx, sy) = t.apply_at(px as f64 + ox, py as f64 + oy, cx, cy);
+                            let want =
+                                Resampler::CatmullRom.sample_checked(src, 2.0 * sx, 2.0 * sy);
+                            assert_eq!(cover[px], want.is_some(), "{w}x{h} ({px},{py})");
+                            if let Some(v) = want {
+                                assert_eq!(out[px].to_bits(), v.to_bits(), "{w}x{h} ({px},{py})");
+                            }
+                        }
+                        // Through exactly the rows the support function names.
+                        if w >= 4 && h >= 4 {
+                            let support =
+                                catmull_rom_row_support(w, h, t, 2.0, (ox, oy), py, (cx, cy), gw);
+                            let (a, b) = support.unwrap_or((0, 0));
+                            assert_eq!(support.is_some(), cover.iter().any(|&c| c));
+                            let rows = PlaneRows {
+                                data: &data[a * w..(b + 1) * w],
+                                width: w,
+                                height: h,
+                                first: a,
+                            };
+                            let mut wout = vec![0f32; gw];
+                            let mut wcover = vec![false; gw];
+                            gather_rows_catmull_rom_checked(
+                                rows,
+                                t,
+                                2.0,
+                                (ox, oy),
+                                py,
+                                (cx, cy),
+                                &mut wout,
+                                &mut wcover,
+                            );
+                            assert_eq!(wcover, cover);
+                            for px in 0..gw {
+                                if cover[px] {
+                                    assert_eq!(wout[px].to_bits(), out[px].to_bits());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn envelope_cholesky_still_refuses_an_unconstrained_unknown() {
+        let mut sys = LeastSquares::new(3);
+        sys.push(vec![(0, Cx::ONE), (1, -Cx::ONE)], Cx::ONE);
+        // Unknown 2 appears in no row: the pivot is zero and must be refused.
+        assert!(sys.solve().is_none());
+    }
 
     #[test]
     fn quadratic_refinement_keeps_separable_bits_on_a_tied_peak() {

@@ -70,6 +70,8 @@ use strehl_raw::Frame;
 use crate::align_cmd::{self, WarpScratch};
 use crate::image_out;
 
+#[path = "merge_cmd/decode-ahead.rs"]
+mod decode_ahead;
 pub(crate) mod dump;
 pub(crate) mod gatefloor;
 pub(crate) mod halo;
@@ -5952,6 +5954,34 @@ struct PrepBuffers<'a> {
     green_cue: &'a mut Option<strehl_core::pyramid::native_green_cue::Cue>,
 }
 
+/// `STREHL_FRAME_PARITY` (experiment-only): whether frame `index` is folded.
+fn frame_parity_keeps(index: usize) -> Result<bool> {
+    let Ok(parity) = std::env::var("STREHL_FRAME_PARITY") else {
+        return Ok(true);
+    };
+    Ok(match parity.as_str() {
+        "even" => index.is_multiple_of(2),
+        "odd" => !index.is_multiple_of(2),
+        other => match other
+            .split_once('-')
+            .map(|(a, b)| (a.parse::<usize>(), b.parse::<usize>()))
+        {
+            Some((Ok(a), Ok(b))) => (a..=b).contains(&index),
+            _ => anyhow::bail!("STREHL_FRAME_PARITY={other:?} is not even, odd or A-B"),
+        },
+    })
+}
+
+/// The frames the ordinary fold will decode, in the order it asks for them:
+/// every index, less those the parity experiment or a CA preview skips before
+/// decoding. Used only to schedule decoding ahead; a frame missing from it is
+/// still decoded on demand.
+fn fold_decode_plan(frames: usize) -> Vec<usize> {
+    (0..frames)
+        .filter(|&i| frame_parity_keeps(i).unwrap_or(true) && ca_refine::preview_would_keep(i))
+        .collect()
+}
+
 /// Prepare one frame for the band fold. A pure function of the frame and the
 /// stack's fixed inputs: nothing here reads or writes the accumulator, which is
 /// why preparing frames concurrently and folding them in index order produces
@@ -5984,18 +6014,8 @@ fn prepare_frame_into(
     }
     // Experiment-only: fold every other frame under the whole stack's own
     // geometry, so two half-stack renders are pixel-aligned replicates.
-    if let Ok(parity) = std::env::var("STREHL_FRAME_PARITY") {
-        let keep = match parity.as_str() {
-            "even" => index % 2 == 0,
-            "odd" => index % 2 == 1,
-            other => match other.split_once('-').map(|(a, b)| (a.parse::<usize>(), b.parse::<usize>())) {
-                Some((Ok(a), Ok(b))) => (a..=b).contains(&index),
-                _ => anyhow::bail!("STREHL_FRAME_PARITY={other:?} is not even, odd or A-B"),
-            },
-        };
-        if !keep {
-            return Ok(false);
-        }
+    if !frame_parity_keeps(index)? {
+        return Ok(false);
     }
     if !ca_refine::preview_keeps(index) {
         return Ok(false);
@@ -7140,13 +7160,26 @@ const LOOKAHEAD_ENV: &str = "STREHL_PYRAMID_LOOKAHEAD";
 /// Bounded by a fixed 4 GiB allowance for the slots, and capped at 8:
 /// beyond that the serial fold dominates. Feature-gated research consumers
 /// that observe per-frame inputs keep the serial path.
-fn prepare_lookahead(workers: usize, domain: PyramidDomain) -> Result<usize> {
-    if cfg!(any(
-        feature = "native-green-cue",
-        feature = "native-direct-planes",
-        feature = "native-sensor-transfer",
-        feature = "temporal-energy"
-    )) {
+///
+/// `temporal_active` is the **runtime** decision, not the compiled feature.
+/// The desktop engine compiles `temporal-energy` so its toggle can reach each
+/// render, and this used to test `cfg!(feature = "temporal-energy")`, which put
+/// every desktop render on the serial path even with temporal smoothing off --
+/// 0.36 s against 0.28 s per frame on bug-7, 300 frames. An active temporal
+/// render takes `temporal_cpu::fold` before any slot is built, so it never
+/// reaches the look-ahead either way.
+fn prepare_lookahead(
+    workers: usize,
+    domain: PyramidDomain,
+    temporal_active: bool,
+) -> Result<usize> {
+    if temporal_active
+        || cfg!(any(
+            feature = "native-green-cue",
+            feature = "native-direct-planes",
+            feature = "native-sensor-transfer"
+        ))
+    {
         return Ok(1);
     }
     if let Ok(v) = std::env::var(LOOKAHEAD_ENV)
@@ -7498,6 +7531,13 @@ mod ca_refine {
 
     pub(super) fn preview_active() -> bool {
         STRIDE.load(Ordering::Relaxed) > 0
+    }
+
+    /// [`preview_keeps`] without its progress side effect, for planning which
+    /// frames the fold will decode.
+    pub(super) fn preview_would_keep(index: usize) -> bool {
+        let stride = STRIDE.load(Ordering::Relaxed);
+        stride <= 1 || index.is_multiple_of(stride)
     }
 
     pub(super) fn preview_keeps(index: usize) -> bool {
@@ -7916,7 +7956,7 @@ fn run_pyramid_prepared_with_sensor(
     let canonical_chunks = canonical_band_chunks(planning_bytes, paths.len());
     let workers = band_workers(planning_bytes, paths.len())?;
     let per_chunk = paths.len().div_ceil(canonical_chunks);
-    let lookahead = prepare_lookahead(workers, domain)?.min(per_chunk.max(1));
+    let lookahead = prepare_lookahead(workers, domain, temporal_active)?.min(per_chunk.max(1));
     #[cfg(feature = "temporal-energy")]
     if temporal_active {
         // Explicit extra-buffer preflight; never change canonical arithmetic chunks.
@@ -7958,154 +7998,182 @@ fn run_pyramid_prepared_with_sensor(
     let mut beta_sum: Vec<f64> = Vec::new();
     let mut beta_n = 0usize;
     progress.stage("merge");
-    pool.install(|| -> Result<()> {
-        #[cfg(feature = "temporal-energy")]
-        if temporal_active {
-            let result = temporal_cpu::fold(
-                source,
-                &mut worker,
-                levels,
-                &noise,
-                warps,
-                defect,
-                progress.observer(),
-                paths.len(),
-                per_chunk,
-                temporal_mode,
-                None,
-            )?;
-            merged = Some(result.merge);
-            folded_total = result.folded_total;
-            beta_sum = result.beta_sum;
-            beta_n = result.beta_n;
-            return Ok(());
+    // Decode ahead of the fold on dedicated threads (see `decode_ahead`). The
+    // temporal consumer reads frames in its own pattern and keeps on-demand
+    // decoding.
+    let fold_plan = if temporal_active {
+        Vec::new()
+    } else {
+        fold_decode_plan(paths.len())
+    };
+    let original_source = source;
+    let ahead = decode_ahead::DecodeAhead::new(original_source, fold_plan, (2 * lookahead).max(8));
+    let source = &ahead;
+    std::thread::scope(|scope| -> Result<()> {
+        for _ in 0..decode_ahead::DECODERS {
+            scope.spawn(|| ahead.run_decoder());
         }
-        let mut slots: Vec<FramePrep> = (0..lookahead.min(per_chunk))
-            .filter(|_| lookahead > 1)
-            .map(|_| FramePrep::new(domain, cfg))
-            .collect();
-        let mut chunks = paths.chunks(per_chunk).enumerate().peekable();
-        while let Some((chunk_index, chunk)) = chunks.next() {
-            let mut folded = 0usize;
-            let first = chunk_index * per_chunk;
-            if slots.is_empty() {
-                for offset in 0..chunk.len() {
-                    let index = first + offset;
-                    progress.frame_started(index);
-                    let accepted = worker.fold_observed(
-                        source,
-                        index,
-                        levels,
-                        &noise,
-                        warps,
-                        defect,
-                        progress.observer(),
-                    )?;
-                    progress.frame_finished(index, accepted);
-                    if accepted {
-                        folded += 1;
-                        progress.live_accumulator(merged.as_ref(), &worker.merge, index);
-                    }
-                }
-            } else {
-                let indices: Vec<usize> = (first..first + chunk.len()).collect();
-                // Two half-size slot sets: while one set's frames are folded in
-                // index order, the next batch is prepared into the other set.
-                // A single slot cannot be split, so it degenerates to
-                // prepare-then-fold.
-                let half = (slots.len() / 2).max(1);
-                let batches: Vec<&[usize]> = indices.chunks(half).collect();
-                let prepare_batch = |set: &mut [FramePrep], batch: &[usize]| -> Result<()> {
-                    for &index in batch {
+        let fold_result = pool.install(|| -> Result<()> {
+            #[cfg(feature = "temporal-energy")]
+            if temporal_active {
+                let result = temporal_cpu::fold(
+                    source,
+                    &mut worker,
+                    levels,
+                    &noise,
+                    warps,
+                    defect,
+                    progress.observer(),
+                    paths.len(),
+                    per_chunk,
+                    temporal_mode,
+                    None,
+                )?;
+                merged = Some(result.merge);
+                folded_total = result.folded_total;
+                beta_sum = result.beta_sum;
+                beta_n = result.beta_n;
+                return Ok(());
+            }
+            let mut slots: Vec<FramePrep> = (0..lookahead.min(per_chunk))
+                .filter(|_| lookahead > 1)
+                .map(|_| FramePrep::new(domain, cfg))
+                .collect();
+            let mut chunks = paths.chunks(per_chunk).enumerate().peekable();
+            while let Some((chunk_index, chunk)) = chunks.next() {
+                let mut folded = 0usize;
+                let first = chunk_index * per_chunk;
+                if slots.is_empty() {
+                    for offset in 0..chunk.len() {
+                        let index = first + offset;
                         progress.frame_started(index);
+                        let accepted = worker.fold_observed(
+                            source,
+                            index,
+                            levels,
+                            &noise,
+                            warps,
+                            defect,
+                            progress.observer(),
+                        )?;
+                        progress.frame_finished(index, accepted);
+                        if accepted {
+                            folded += 1;
+                            progress.live_accumulator(merged.as_ref(), &worker.merge, index);
+                        }
                     }
-                    set[..batch.len()]
-                        .par_iter_mut()
-                        .zip(batch.par_iter())
-                        .try_for_each(|(slot, &index)| {
-                            slot.prepare(
-                                domain,
-                                source,
-                                index,
-                                levels,
-                                &noise,
-                                warps,
-                                defect,
-                                progress.observer(),
-                            )
-                        })
-                };
-                let (set_a, set_b) = slots.split_at_mut(half);
-                let pipelined = !set_b.is_empty();
-                for (b, batch) in batches.iter().enumerate() {
-                    let (current, next): (&mut [FramePrep], &mut [FramePrep]) =
-                        if !pipelined || b % 2 == 0 {
-                            (&mut *set_a, &mut *set_b)
-                        } else {
-                            (&mut *set_b, &mut *set_a)
+                } else {
+                    let indices: Vec<usize> = (first..first + chunk.len()).collect();
+                    // Two half-size slot sets: while one set's frames are folded in
+                    // index order, the next batch is prepared into the other set.
+                    // A single slot cannot be split, so it degenerates to
+                    // prepare-then-fold.
+                    let half = (slots.len() / 2).max(1);
+                    let batches: Vec<&[usize]> = indices.chunks(half).collect();
+                    let prepare_batch = |set: &mut [FramePrep], batch: &[usize]| -> Result<()> {
+                        for &index in batch {
+                            progress.frame_started(index);
+                        }
+                        set[..batch.len()]
+                            .par_iter_mut()
+                            .zip(batch.par_iter())
+                            .try_for_each(|(slot, &index)| {
+                                slot.prepare(
+                                    domain,
+                                    source,
+                                    index,
+                                    levels,
+                                    &noise,
+                                    warps,
+                                    defect,
+                                    progress.observer(),
+                                )
+                            })
+                    };
+                    let (set_a, set_b) = slots.split_at_mut(half);
+                    let pipelined = !set_b.is_empty();
+                    for (b, batch) in batches.iter().enumerate() {
+                        let (current, next): (&mut [FramePrep], &mut [FramePrep]) =
+                            if !pipelined || b % 2 == 0 {
+                                (&mut *set_a, &mut *set_b)
+                            } else {
+                                (&mut *set_b, &mut *set_a)
+                            };
+                        if b == 0 || !pipelined {
+                            prepare_batch(current, batch)?;
+                        }
+                        let following = batches.get(b + 1).filter(|_| pipelined);
+                        let current: &[FramePrep] = current;
+                        // Fold strictly in index order: the same additions, in
+                        // the same order, as the serial loop above.
+                        let mut fold_batch = || {
+                            let mut accepted = 0usize;
+                            for (slot, &index) in current.iter().zip(batch.iter()) {
+                                if slot.accepted {
+                                    worker.add_prepared(slot, index, progress.observer());
+                                }
+                                progress.frame_finished(index, slot.accepted);
+                                if slot.accepted {
+                                    accepted += 1;
+                                    progress.live_accumulator(
+                                        merged.as_ref(),
+                                        &worker.merge,
+                                        index,
+                                    );
+                                }
+                            }
+                            accepted
                         };
-                    if b == 0 || !pipelined {
-                        prepare_batch(current, batch)?;
+                        let (accepted, prepared) = match following {
+                            Some(next_batch) => {
+                                rayon::join(fold_batch, || prepare_batch(next, next_batch))
+                            }
+                            None => (fold_batch(), Ok(())),
+                        };
+                        folded += accepted;
+                        prepared?;
                     }
-                    let following = batches.get(b + 1).filter(|_| pipelined);
-                    let current: &[FramePrep] = current;
-                    // Fold strictly in index order: the same additions, in
-                    // the same order, as the serial loop above.
-                    let mut fold_batch = || {
-                        let mut accepted = 0usize;
-                        for (slot, &index) in current.iter().zip(batch.iter()) {
-                            if slot.accepted {
-                                worker.add_prepared(slot, index, progress.observer());
-                            }
-                            progress.frame_finished(index, slot.accepted);
-                            if slot.accepted {
-                                accepted += 1;
-                                progress.live_accumulator(merged.as_ref(), &worker.merge, index);
-                            }
-                        }
-                        accepted
-                    };
-                    let (accepted, prepared) = match following {
-                        Some(next_batch) => {
-                            rayon::join(fold_batch, || prepare_batch(next, next_batch))
-                        }
-                        None => (fold_batch(), Ok(())),
-                    };
-                    folded += accepted;
-                    prepared?;
+                }
+                folded_total += folded;
+                if beta_sum.len() < worker.beta_sum.len() {
+                    beta_sum.resize(worker.beta_sum.len(), 0.0);
+                }
+                for (acc, value) in beta_sum.iter_mut().zip(&worker.beta_sum) {
+                    *acc += value;
+                }
+                beta_n += worker.beta_n;
+                match merged.as_mut() {
+                    Some(acc) => acc.absorb(&worker.merge),
+                    None => {
+                        merged = Some(std::mem::replace(
+                            &mut worker.merge,
+                            BandMerge::new(
+                                analysis_geom.width,
+                                analysis_geom.height,
+                                BAND_PLANES,
+                                cfg,
+                            ),
+                        ));
+                    }
+                }
+                if let Some(acc) = merged.as_ref() {
+                    progress.accumulator(
+                        acc,
+                        (chunk_index * per_chunk + chunk.len()).saturating_sub(1),
+                        chunk_index,
+                        paths.len().div_ceil(per_chunk),
+                    );
+                }
+                if chunks.peek().is_some() {
+                    worker.reset_chunk();
                 }
             }
-            folded_total += folded;
-            if beta_sum.len() < worker.beta_sum.len() {
-                beta_sum.resize(worker.beta_sum.len(), 0.0);
-            }
-            for (acc, value) in beta_sum.iter_mut().zip(&worker.beta_sum) {
-                *acc += value;
-            }
-            beta_n += worker.beta_n;
-            match merged.as_mut() {
-                Some(acc) => acc.absorb(&worker.merge),
-                None => {
-                    merged = Some(std::mem::replace(
-                        &mut worker.merge,
-                        BandMerge::new(analysis_geom.width, analysis_geom.height, BAND_PLANES, cfg),
-                    ));
-                }
-            }
-            if let Some(acc) = merged.as_ref() {
-                progress.accumulator(
-                    acc,
-                    (chunk_index * per_chunk + chunk.len()).saturating_sub(1),
-                    chunk_index,
-                    paths.len().div_ceil(per_chunk),
-                );
-            }
-            if chunks.peek().is_some() {
-                worker.reset_chunk();
-            }
-        }
-        Ok(())
+            Ok(())
+        });
+        ahead.stop();
+        fold_result
     })?;
+    let source = original_source;
     drop(worker);
     let merge = merged.context("no frames were folded")?;
     ensure!(
@@ -12194,6 +12262,7 @@ mod green_phase_guide {
 mod native_pixel_fusion {
     include!(concat!(
         env!("CARGO_MANIFEST_DIR"),
+    use super::*;
         "/../../experiments/raw-quality-2026-10-27/native-pixel-fusion/implementation.rs"
     ));
 }
@@ -12262,7 +12331,6 @@ mod dual_tree_cfa {
     feature = "native-gpu-gather"
 ))]
 mod dual_tree_cfa_gpu {
-    use super::*;
     use super::dual_tree_cfa::*;
     include!(concat!(
         env!("CARGO_MANIFEST_DIR"),

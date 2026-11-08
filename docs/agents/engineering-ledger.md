@@ -16,7 +16,7 @@ in their sources, not necessarily the current default.
 | Controls, metrics, experiments | 8–13, 16–18, 20–24, 26, 30, 34–36, 39 |
 | Corpus citations and folds | 25, 28–29, 31, 31b, 37–38, 44 |
 | Prior work and allocation | 40–41, 43 |
-| Builds, processes, reproducibility | 14, 19, 27, 33, 42, 45–49 |
+| Builds, processes, reproducibility | 14, 19, 27, 33, 42, 45–50 |
 
 ## How to read older operational advice
 
@@ -1004,3 +1004,26 @@ is the identity source referred to below.
     was in their dispatch brief -- which is why it is here now instead, where it
     binds every lane by default rather than only the ones I remembered to tell.
     (`docs/STATUS.md` 2.9.81.)
+### Rule 50
+
+50. **Performance work on the default path must leave output pixels unchanged,
+    and must be shown to.** Compare decoded pixels, photograph and linear master
+    both, never file hashes alone: the TIFF `Software` tag carries the build id,
+    so a `-dirty` build differs from a clean one by six bytes over identical
+    pixels (MEASURED 2026-11-08, bug-7). Every rewritten kernel needs a
+    bit-identity test against the code it replaces — the envelope Cholesky
+    against the retained dense one, the Malvar interior and window paths against
+    the reflecting stencil, the Catmull-Rom row kernel against `sample_checked`,
+    the streaming alignment ladder against the whole-stack ladder — and the
+    change needs an end-to-end pixel comparison on a real stack.
+
+    Per-frame state must be bounded by a window, never by the frame count. The
+    alignment decode held every green plane at once and reached ~48 GB on a
+    1,444-frame bracket on a 64 GB host; streaming it held 7.2 GB with a
+    byte-identical sidecar. **Measure thread scaling before adding parallelism**:
+    the pyramid fold ran 0.26 / 0.22 / 0.23 s per frame at 8 / 16 / 32 threads
+    because it is memory-bandwidth bound, so its remaining lever is bytes moved,
+    not threads. Profile single-threaded (`RAYON_NUM_THREADS=1`,
+    `STREHL_PYRAMID_WORKERS=1`, `STREHL_PYRAMID_LOOKAHEAD=1`, feature
+    `native-pyramid-profile`) to see work; idle rayon workers spin, so
+    multi-threaded CPU time overstates it several-fold.

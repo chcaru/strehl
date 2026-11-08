@@ -397,7 +397,11 @@ fn decode_stack_observed(
     })
 }
 
-/// Measure the pairwise edge ladder.
+/// Measure the pairwise edge ladder over a whole decoded stack.
+///
+/// The ordinary solve now streams ([`measure_ladder_streaming`]); this
+/// whole-stack form remains the reference its tests compare against.
+#[cfg(test)]
 fn measure_edges(
     st: &Stack,
     pairs: &[(usize, usize)],
@@ -407,6 +411,7 @@ fn measure_edges(
     measure_edges_observed(st, pairs, cfg, threads, None)
 }
 
+#[cfg(any(test, feature = "research-lens-warp"))]
 fn measure_edges_observed(
     st: &Stack,
     pairs: &[(usize, usize)],
@@ -419,6 +424,7 @@ fn measure_edges_observed(
 
 /// Pair-local producing observations. Serialization belongs to the caller,
 /// after measurement; unavailable inputs are distinct from an NCC refusal.
+#[cfg(any(test, feature = "research-lens-warp"))]
 #[derive(Debug)]
 #[allow(dead_code)] // Read by the test-only diagnostic adapter, never a product switch.
 struct PairMeasurementTrace {
@@ -429,6 +435,7 @@ struct PairMeasurementTrace {
     core: Option<strehl_core::align::PairTrace>,
 }
 
+#[cfg(any(test, feature = "research-lens-warp"))]
 fn measure_edges_traced(
     st: &Stack,
     pairs: &[(usize, usize)],
@@ -554,6 +561,251 @@ fn measure_edges_traced(
     Ok(edges)
 }
 
+/// Every `(i, i + s)` for `s` in `spans`, sorted and deduplicated: the order the
+/// edges are measured in and handed to the solve.
+fn ladder_pairs(n: usize, spans: &[usize]) -> Vec<(usize, usize)> {
+    let mut pairs: Vec<(usize, usize)> = Vec::new();
+    for &s in spans {
+        for i in 0..n.saturating_sub(s) {
+            pairs.push((i, i + s));
+        }
+    }
+    pairs.sort_unstable();
+    pairs.dedup();
+    pairs
+}
+
+/// Memory the streaming ladder may keep resident for its window of decoded
+/// alignment planes, before it falls back to its minimum batch.
+const LADDER_WINDOW_BYTES: usize = 6 << 30;
+
+/// One decoded alignment frame held in the streaming window.
+struct LadderFrame {
+    plane: Vec<f32>,
+    pyramid: Option<AlignPyramid>,
+}
+
+/// Measure the pairwise edge ladder while streaming frames through a bounded
+/// window, returning the plane geometry and exactly the edges
+/// [`measure_edges_observed`] returns for the same `pairs`, in the same order.
+///
+/// # Why
+///
+/// [`decode_stack_observed`] holds every frame's green plane at once: 33 MB per
+/// frame at 33 MP, so a 1,444-frame bracket needed about 48 GB before a single
+/// pair was measured, and a 61 MP body roughly 88 GB. But the ladder only
+/// pairs frames at most `max_span` apart (128 by default), so once frame `j`
+/// has been measured against `j - max_span .. j`, frame `j - max_span` is never
+/// read again. This keeps a window of `max_span + 2 * batch` frames: memory is
+/// O(span), not O(frames).
+///
+/// # Why the edges are identical
+///
+/// Each pair is measured by the same `align_pair` call on the same two planes
+/// and pyramids, built by the same `green_luma` and `AlignPyramid::build`, and
+/// pairs share no state. Results are tagged with their ordinal in `pairs` and
+/// returned in that order, so the solve sees the same rows in the same order.
+/// Decoding the next batch overlaps measuring the current one.
+fn measure_ladder_streaming(
+    paths: &[PathBuf],
+    pairs: &[(usize, usize)],
+    cfg: &AlignConfig,
+    threads: usize,
+    progress: Option<&crate::ui_progress::Progress>,
+) -> Result<(PlaneGeometry, Vec<AlignEdge>)> {
+    measure_ladder_streaming_with(
+        paths.len(),
+        pairs,
+        cfg,
+        threads,
+        progress,
+        LADDER_WINDOW_BYTES,
+        |index| {
+            let path = &paths[index];
+            let raw =
+                strehl_raw::decode(path).with_context(|| format!("decoding {}", path.display()))?;
+            let geom = PlaneGeometry {
+                width: raw.active.width / 2,
+                height: raw.active.height / 2,
+            };
+            let mut plane = vec![0f32; geom.pixels()];
+            green_luma(&raw, raw.levels.black as f32, &mut plane);
+            Ok((geom, plane))
+        },
+    )
+}
+
+/// [`measure_ladder_streaming`] over any plane source: `load(index)` returns
+/// frame `index`'s green-luma plane, and `window_bytes` budgets the window.
+#[allow(clippy::too_many_arguments)]
+fn measure_ladder_streaming_with(
+    n: usize,
+    pairs: &[(usize, usize)],
+    cfg: &AlignConfig,
+    threads: usize,
+    progress: Option<&crate::ui_progress::Progress>,
+    window_bytes: usize,
+    load: impl Fn(usize) -> Result<(PlaneGeometry, Vec<f32>)> + Sync,
+) -> Result<(PlaneGeometry, Vec<AlignEdge>)> {
+    anyhow::ensure!(n > 0, "no frames to align");
+    anyhow::ensure!(
+        pairs.iter().all(|&(i, j)| i < j && j < n),
+        "alignment pairs must be ordered and inside the bracket"
+    );
+    let pool = rayon::ThreadPoolBuilder::new()
+        .num_threads(threads)
+        .build()
+        .context("alignment pool")?;
+    let max_span = pairs.iter().map(|&(i, j)| j - i).max().unwrap_or(0);
+    // Pairs grouped by their later frame, keeping each pair's ordinal.
+    let mut by_j: Vec<Vec<(usize, usize)>> = vec![Vec::new(); n];
+    for (ordinal, &(i, j)) in pairs.iter().enumerate() {
+        by_j[j].push((ordinal, i));
+    }
+
+    let decode_one = |index: usize| -> Result<(PlaneGeometry, LadderFrame)> {
+        if let Some(progress) = progress {
+            progress.alignment_plane_started(index);
+        }
+        let (geom, plane) = load(index)?;
+        let pyramid =
+            PlaneRef::from_geometry(&plane, geom).and_then(|v| AlignPyramid::build(v, cfg));
+        if let Some(progress) = progress {
+            progress.alignment_plane_finished(index);
+        }
+        Ok((geom, LadderFrame { plane, pyramid }))
+    };
+
+    if let Some(progress) = progress {
+        progress.alignment_phase("planes", n);
+    }
+    // The first frame fixes the geometry, and with it the batch size.
+    let (geom, first) = pool.install(|| decode_one(0))?;
+    let frame_bytes = 4 * geom.pixels() + 4 * geom.pixels() / 32;
+    let resident = window_bytes / frame_bytes.max(1);
+    let batch = (resident.saturating_sub(max_span + 1) / 2).clamp(4, 64);
+    let spots = {
+        let p0 = PlaneRef::from_geometry(&first.plane, geom).context("plane view")?;
+        tile_grid(
+            p0,
+            cfg.fine_tile,
+            cfg.fine_grid.0,
+            cfg.fine_grid.1,
+            cfg.margin,
+        )
+        .context("the fine tile grid does not fit in this plane")?
+    };
+
+    let mut window: Vec<Option<LadderFrame>> = (0..n).map(|_| None).collect();
+    window[0] = Some(first);
+    let mut results: Vec<(usize, Option<AlignEdge>)> = Vec::with_capacity(pairs.len());
+    let mut pairs_announced = false;
+
+    let decode_batch = |range: std::ops::Range<usize>| -> Result<Vec<(usize, LadderFrame)>> {
+        range
+            .into_par_iter()
+            .map(|index| {
+                let (g, frame) = decode_one(index)?;
+                anyhow::ensure!(g == geom, "frames do not share a plane geometry");
+                Ok((index, frame))
+            })
+            .collect()
+    };
+    let measure_batch = |window: &[Option<LadderFrame>],
+                         range: std::ops::Range<usize>|
+     -> Vec<(usize, Option<AlignEdge>)> {
+        let work: Vec<(usize, usize, usize)> = range
+            .flat_map(|j| by_j[j].iter().map(move |&(ordinal, i)| (ordinal, i, j)))
+            .collect();
+        work.into_par_iter()
+            .map(|(ordinal, i, j)| {
+                if let Some(progress) = progress {
+                    progress.alignment_pair_started(i, j, pairs.len());
+                }
+                let edge = (|| {
+                    let fi = window[i].as_ref()?;
+                    let fj = window[j].as_ref()?;
+                    let a = AlignFrame {
+                        plane: PlaneRef::from_geometry(&fi.plane, geom)?,
+                        pyramid: fi.pyramid.as_ref()?,
+                    };
+                    let b = AlignFrame {
+                        plane: PlaneRef::from_geometry(&fj.plane, geom)?,
+                        pyramid: fj.pyramid.as_ref()?,
+                    };
+                    let fit = align_pair(a, b, &spots, cfg).ok()?;
+                    Some(AlignEdge {
+                        i,
+                        j,
+                        t: fit.similarity(),
+                        rms: fit.rms as f64,
+                        used: fit.used,
+                        lever: fit.lever_rms as f64,
+                    })
+                })();
+                if let Some(progress) = progress {
+                    progress.alignment_pair_finished(i, j, edge.is_some(), pairs.len());
+                }
+                (ordinal, edge)
+            })
+            .collect()
+    };
+
+    pool.install(|| -> Result<()> {
+        // Frames [0, decoded) are in the window or already evicted; the
+        // batch [measured, decoded) is ready to measure.
+        let mut decoded = 1usize;
+        let mut measured = 0usize;
+        while measured < n {
+            if decoded == measured || decoded < n.min(measured + batch) {
+                // Fill the current batch (only at the start, or after a
+                // batch that could not be prefetched).
+                let upto = n.min(measured + batch);
+                for (index, frame) in decode_batch(decoded..upto)? {
+                    window[index] = Some(frame);
+                }
+                decoded = upto;
+            }
+            let current = measured..decoded;
+            let next = decoded..n.min(decoded + batch);
+            if !pairs_announced && !by_j[current.clone()].iter().all(Vec::is_empty) {
+                if let Some(progress) = progress {
+                    progress.alignment_phase("pairs", pairs.len());
+                }
+                pairs_announced = true;
+            }
+            let (measured_edges, prefetched) = rayon::join(
+                || measure_batch(&window, current.clone()),
+                || decode_batch(next.clone()),
+            );
+            results.extend(measured_edges);
+            for (index, frame) in prefetched? {
+                window[index] = Some(frame);
+            }
+            measured = current.end;
+            decoded = next.end.max(decoded);
+            // Every later pair has j >= measured, so it reads i >= measured - max_span.
+            for slot in &mut window[..measured.saturating_sub(max_span)] {
+                *slot = None;
+            }
+        }
+        Ok(())
+    })?;
+    if let Some(progress) = progress
+        && !pairs_announced
+    {
+        progress.alignment_phase("pairs", pairs.len());
+    }
+    results.sort_unstable_by_key(|&(ordinal, _)| ordinal);
+    anyhow::ensure!(
+        results.len() == pairs.len(),
+        "measured {} of {} alignment pairs",
+        results.len(),
+        pairs.len()
+    );
+    Ok((geom, results.into_iter().filter_map(|(_, e)| e).collect()))
+}
+
 /// Resolve the lateral-CA profile once, **before any frame is decoded**.
 ///
 /// [`strehl_core::optics::active_profile`] is deliberately re-read per call so a
@@ -629,15 +881,6 @@ pub fn run(args: &AlignArgs) -> Result<()> {
         }
     );
 
-    let t0 = std::time::Instant::now();
-    let st = decode_stack(&paths, args.threads)?;
-    println!(
-        "  decoded {n} frames in {:.1} s, plane {}x{}",
-        t0.elapsed().as_secs_f64(),
-        st.geom.width,
-        st.geom.height
-    );
-
     let cfg = AlignConfig {
         peak_refinement,
         ..AlignConfig::deep()
@@ -645,28 +888,24 @@ pub fn run(args: &AlignArgs) -> Result<()> {
     if peak_refinement == PeakRefinement::Quadratic {
         println!("  peak refinement: quadratic (experimental; separable fallback)");
     }
-    let mut pairs: Vec<(usize, usize)> = Vec::new();
-    for &s in &args.spans {
-        for i in 0..n.saturating_sub(s) {
-            pairs.push((i, i + s));
-        }
-    }
-    pairs.sort_unstable();
-    pairs.dedup();
+    let pairs = ladder_pairs(n, &args.spans);
 
     let t1 = std::time::Instant::now();
-    let edges = measure_edges(&st, &pairs, &cfg, args.threads)?;
+    let (geom, edges) = measure_ladder_streaming(&paths, &pairs, &cfg, args.threads, None)?;
     println!(
-        "  measured {}/{} edges in {:.1} s ({:.1}% refused)",
+        "  decoded {n} frames and measured {}/{} edges in {:.1} s ({:.1}% refused), plane {}x{}",
         edges.len(),
         pairs.len(),
         t1.elapsed().as_secs_f64(),
-        100.0 * (pairs.len() - edges.len()) as f64 / pairs.len() as f64
+        100.0 * (pairs.len() - edges.len()) as f64 / pairs.len() as f64,
+        geom.width,
+        geom.height
     );
+    let st_geom = geom;
 
     let component_edges = measured_reference_edges(&edges, n, reference);
-    let floor = cycle_floor(&component_edges, st.geom);
-    let mut opts = GlobalOptions::new(st.geom);
+    let floor = cycle_floor(&component_edges, st_geom);
+    let mut opts = GlobalOptions::new(st_geom);
     opts.weighting = Weighting::Unit;
     apply_smooth_env(&mut opts);
     let placements = solve_global_in_component(&edges, n, &opts, reference)
@@ -674,9 +913,9 @@ pub fn run(args: &AlignArgs) -> Result<()> {
 
     // Held-out error, not fit error. Every other number here would flatter the
     // solve; this one is the only one a consumer can act on.
-    let heldout = heldout_error(&component_edges, n, &opts, st.geom, Some(reference));
+    let heldout = heldout_error(&component_edges, n, &opts, st_geom, Some(reference));
 
-    let drift = total_drift(&placements, st.geom);
+    let drift = total_drift(&placements, st_geom);
     let warps = ordinary_component_warps(&placements, reference)?;
 
     let map = WarpMap::new(
@@ -694,7 +933,7 @@ pub fn run(args: &AlignArgs) -> Result<()> {
                 ),
             },
         },
-        st.geom,
+        st_geom,
         resampler,
         warps,
     );
@@ -1781,44 +2020,26 @@ fn solve_map_observed(
         println!("stack {name}: {n} frames, digest {:016x}", identity.digest);
     }
 
-    let t0 = std::time::Instant::now();
-    if let Some(progress) = progress {
-        progress.alignment_phase("planes", n);
-    }
-    let st = decode_stack_observed(paths, threads, progress)?;
-    if verbose {
-        println!(
-            "  decoded {n} frames in {:.1} s, plane {}x{}",
-            t0.elapsed().as_secs_f64(),
-            st.geom.width,
-            st.geom.height
-        );
-    }
-
     let cfg = AlignConfig::deep();
-    let mut pairs: Vec<(usize, usize)> = Vec::new();
-    for &s in spans {
-        for i in 0..n.saturating_sub(s) {
-            pairs.push((i, i + s));
-        }
-    }
-    pairs.sort_unstable();
-    pairs.dedup();
+    let pairs = ladder_pairs(n, spans);
 
     let t1 = std::time::Instant::now();
-    let edges = measure_edges_observed(&st, &pairs, &cfg, threads, progress)?;
+    let (geom, edges) = measure_ladder_streaming(paths, &pairs, &cfg, threads, progress)?;
     if verbose {
         println!(
-            "  measured {}/{} edges in {:.1} s ({:.1}% refused)",
+            "  decoded {n} frames and measured {}/{} edges in {:.1} s ({:.1}% refused), \
+             plane {}x{}",
             edges.len(),
             pairs.len(),
             t1.elapsed().as_secs_f64(),
-            100.0 * (pairs.len() - edges.len()) as f64 / pairs.len() as f64
+            100.0 * (pairs.len() - edges.len()) as f64 / pairs.len() as f64,
+            geom.width,
+            geom.height
         );
     }
 
     finish_measured_map(
-        identity, st.geom, n, reference, spans, resampler, &edges, progress,
+        identity, geom, n, reference, spans, resampler, &edges, progress,
     )
 }
 
@@ -2192,27 +2413,41 @@ pub fn cover_rect(geom: PlaneGeometry, k: f64) -> CropRect {
 /// # What this does and does not save
 ///
 /// It saves the four `gw x gh` quad-plane allocations that
-/// [`warp_frame_in_place_plane`] would otherwise make per frame. It does
-/// **not** make a merge allocation-free per frame, and an earlier version of
-/// this doc said it did ("so a merge does not allocate four planes per
-/// frame"), which stopped being true when the full-res gather became the
-/// default.
+/// [`warp_frame_in_place_plane`] would otherwise make per frame, and it holds
+/// every buffer the full-resolution gather needs, so a warp allocates nothing
+/// after its first frame.
 ///
 /// [`warp_frame_in_place_fullres`] -- the shipping path, since
-/// [`fullres_gather_enabled`] defaults on -- allocates four *full-resolution*
-/// planes per call that this scratch does not cover: `mos`, `rp`, `gp` and
-/// `bp`. Each is `fw * fh` `f32`, and `fw * fh == 4 * gw * gh`, so the
-/// per-warp transient is `4 planes * 4 bytes * 4 * gw * gh` = **64 bytes per
-/// quad pixel**, which is 16x the 4 bytes per quad pixel a single scratch
-/// plane costs. Measured at 503.0 MiB per warp on the reference stack, times
-/// the worker count -- +2.0 GiB at four workers. Neither the align planner nor
-/// the merge planner prices it, so the printed budget understates the peak;
-/// the measured fold peak on the deepest real stack is 12.5-13.4 GiB against a
-/// printed 5.2 GB plan (1.51x), with no OOM risk against 61.6 GB of RAM.
+/// [`fullres_gather_enabled`] defaults on -- used to allocate four
+/// *full-resolution* planes per call: the balanced mosaic and three channels,
+/// 64 bytes per quad pixel, 503.0 MiB per warp on the reference stack. The
+/// default banded route (`warp_fullres_banded`) never materialises them; it
+/// keeps one quad-resolution destination and coverage plane per CFA site here
+/// (20 bytes per quad pixel per site) plus small per-thread band buffers. The
+/// whole-plane route, still used by non-default resamplers, the directional
+/// demosaic and research consumers, reuses `mos`/`rp`/`gp`/`bp` below instead
+/// of allocating them per frame.
 pub struct WarpScratch {
     src: Vec<f32>,
     dst: Vec<f32>,
     cover: Vec<bool>,
+    /// Full-resolution buffers for [`warp_frame_in_place_fullres`]: the
+    /// balanced mosaic and the three demosaiced channels. Empty until the
+    /// full-resolution gather first runs, then retained.
+    ///
+    /// They used to be allocated per warp -- four `2gw x 2gh` `f32` planes,
+    /// 528 MB a frame at 7032x4688, plus two more for the noise probe -- so
+    /// every frame paid first-touch page faults and kernel zeroing on most of
+    /// a gigabyte before doing any arithmetic. Every element is overwritten on
+    /// each use, so reuse cannot carry one frame's samples into the next.
+    mos: Vec<f32>,
+    rp: Vec<f32>,
+    gp: Vec<f32>,
+    bp: Vec<f32>,
+    /// Quad-resolution destination and coverage per CFA site for the banded
+    /// gather, which finishes every site before any sink writes the frame.
+    site_dst: Vec<Vec<f32>>,
+    site_cover: Vec<Vec<bool>>,
 }
 
 impl WarpScratch {
@@ -2222,8 +2457,24 @@ impl WarpScratch {
             src: vec![0.0; px],
             dst: vec![0.0; px],
             cover: vec![false; px],
+            mos: Vec::new(),
+            rp: Vec::new(),
+            gp: Vec::new(),
+            bp: Vec::new(),
+            site_dst: Vec::new(),
+            site_cover: Vec::new(),
         }
     }
+}
+
+/// Size a reusable full-resolution buffer without touching retained contents.
+fn sized(buf: &mut Vec<f32>, n: usize) -> &mut [f32] {
+    if buf.len() != n {
+        buf.clear();
+        buf.shrink_to_fit();
+        buf.resize(n, 0.0);
+    }
+    buf
 }
 
 /// Resample a decoded frame onto the reference grid, in place.
@@ -2433,10 +2684,11 @@ pub fn warp_frame_in_place_plane(
 ///
 /// # Cost
 ///
-/// Four `2gw x 2gh` `f32` buffers are live at the peak -- the mosaic plus three
-/// channel planes, about 528 MB at 7032x4688 -- and the mosaic is dropped before
-/// the gather. A caller that warps frames concurrently multiplies that by the
-/// worker count.
+/// On the default route (Catmull-Rom, Malvar) nothing full-resolution is
+/// materialised: see `warp_fullres_banded`, which computes the same values a
+/// band of rows at a time. The whole-plane route, used otherwise, keeps four
+/// `2gw x 2gh` `f32` buffers -- the mosaic plus three channel planes, about
+/// 528 MB at 7032x4688 -- in the caller's [`WarpScratch`], reused per frame.
 pub fn warp_frame_in_place_fullres(
     frame: &mut strehl_raw::Frame,
     t: Similarity,
@@ -2755,6 +3007,30 @@ where
         );
     }
     let writeback = warp_writeback_mode()?;
+
+    // The banded route (see `warp_fullres_banded`) covers the default
+    // resampler and demosaic. Research consumers, the directional demosaic arm
+    // and the other kernels keep the whole-plane route below.
+    #[cfg(feature = "research-lens-warp")]
+    let banded = lens_pull.is_none();
+    #[cfg(not(feature = "research-lens-warp"))]
+    let banded = true;
+    #[cfg(all(test, feature = "native-gpu-gather"))]
+    let banded = banded && ca_override.is_none();
+    let banded = banded
+        && !cfg!(all(test, feature = "native-sensor-transfer"))
+        && resampler == Resampler::CatmullRom
+        && !strehl_core::demosaic::uses_directional()
+        && gw >= 4
+        && gh >= 4
+        && banded_gather_enabled()?;
+    if banded {
+        let ident = strehl_raw::identity(&frame.path);
+        let ca =
+            strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?;
+        return warp_fullres_banded::<GREEN_ONLY, F>(frame, t, geom, scratch, sink, ca, writeback);
+    }
+
     let (fw, fh) = (2 * gw, 2 * gh);
     let black = frame.levels.black;
     let (stride, ax, ay) = (frame.stride, frame.active.x, frame.active.y);
@@ -2762,8 +3038,8 @@ where
 
     // 1. Black-subtracted, white-balanced mosaic over the active region. Local
     //    coordinates, so CFA parity is the same one `cfa_site_channel` uses.
-    let mut mos = vec![0f32; fw * fh];
     {
+        let mos = sized(&mut scratch.mos, fw * fh);
         let data = &frame.data;
         mos.par_chunks_mut(fw).enumerate().for_each(|(y, orow)| {
             let row = (ay + y) * stride + ax;
@@ -2774,46 +3050,38 @@ where
     }
 
     // 2. Only the synthetic probe may omit its unconsumed R/B output planes.
-    let mut rp = if GREEN_ONLY {
-        Vec::new()
-    } else {
-        vec![0f32; fw * fh]
-    };
-    let mut gp = vec![0f32; fw * fh];
-    let mut bp = if GREEN_ONLY {
-        Vec::new()
-    } else {
-        vec![0f32; fw * fh]
-    };
+    //    Every row of every produced plane is written in full below.
+    sized(&mut scratch.gp, fw * fh);
+    if !GREEN_ONLY {
+        sized(&mut scratch.rp, fw * fh);
+        sized(&mut scratch.bp, fw * fh);
+    }
     {
         let m = strehl_core::demosaic::Mosaic {
-            data: &mos,
+            data: &scratch.mos,
             width: fw,
             height: fh,
         };
         if GREEN_ONLY {
-            gp.par_chunks_mut(fw).enumerate().for_each(|(y, gg)| {
-                strehl_core::demosaic::demosaic_green_row(&m, y, gg);
-            });
-        } else {
-            rp.par_chunks_mut(fw)
-                .zip(gp.par_chunks_mut(fw))
-                .zip(bp.par_chunks_mut(fw))
+            scratch
+                .gp
+                .par_chunks_mut(fw)
                 .enumerate()
-                .for_each_init(
-                    || vec![0f32; fw * 3],
-                    |buf, (y, ((rr, gg), bb))| {
-                        strehl_core::demosaic::demosaic_row(&m, y, buf);
-                        for x in 0..fw {
-                            rr[x] = buf[3 * x];
-                            gg[x] = buf[3 * x + 1];
-                            bb[x] = buf[3 * x + 2];
-                        }
-                    },
-                );
+                .for_each(|(y, gg)| {
+                    strehl_core::demosaic::demosaic_green_row(&m, y, gg);
+                });
+        } else {
+            scratch
+                .rp
+                .par_chunks_mut(fw)
+                .zip(scratch.gp.par_chunks_mut(fw))
+                .zip(scratch.bp.par_chunks_mut(fw))
+                .enumerate()
+                .for_each(|(y, ((rr, gg), bb))| {
+                    strehl_core::demosaic::demosaic_row_planar(&m, y, rr, gg, bb);
+                });
         }
     }
-    drop(mos);
 
     // Same gear-guarded CA resolution as the shipped path; `None` => `compose`
     // returns `t` untouched.
@@ -2851,9 +3119,9 @@ where
                 continue;
             }
             let plane: &[f32] = match ci {
-                0 => &rp,
-                2 => &bp,
-                _ => &gp,
+                0 => &scratch.rp,
+                2 => &scratch.bp,
+                _ => &scratch.gp,
             };
             let src = PlaneRef::from_geometry(plane, fgeom)
                 .context("full-resolution warp source does not match the frame geometry")?;
@@ -2871,7 +3139,31 @@ where
             );
             // The site's own offset inside the quad, in plane units.
             let (ox, oy) = (dx as f64 * 0.5, dy as f64 * 0.5);
-            {
+            #[cfg(feature = "research-lens-warp")]
+            let row_kernel = resampler == Resampler::CatmullRom && lens_pull.is_none();
+            #[cfg(not(feature = "research-lens-warp"))]
+            let row_kernel = resampler == Resampler::CatmullRom;
+            if row_kernel {
+                // The default resampler's whole-row kernel: the same samples,
+                // bit for bit, as the per-pixel closure below.
+                scratch
+                    .dst
+                    .par_chunks_mut(gw)
+                    .zip(scratch.cover.par_chunks_mut(gw))
+                    .enumerate()
+                    .for_each(|(py, (drow, crow))| {
+                        strehl_core::align::gather_row_catmull_rom_checked(
+                            src,
+                            t_site,
+                            2.0,
+                            (ox, oy),
+                            py,
+                            (cx, cy),
+                            drow,
+                            crow,
+                        );
+                    });
+            } else {
                 let dst = &mut scratch.dst;
                 let cover = &mut scratch.cover;
                 dst.par_chunks_mut(gw)
@@ -2935,6 +3227,308 @@ where
     }
     let sites = if GREEN_ONLY { 2 } else { 4 };
     Ok(covered_total as f64 / (sites * geom.pixels()) as f64)
+}
+
+/// `STREHL_GATHER_BANDS=off` restores the whole-plane full-resolution gather,
+/// for A/B checks of the banded route. Default on; both produce the same bytes.
+pub const GATHER_BANDS_ENV: &str = "STREHL_GATHER_BANDS";
+
+fn banded_gather_enabled() -> Result<bool> {
+    static CHOICE: std::sync::OnceLock<std::result::Result<bool, String>> =
+        std::sync::OnceLock::new();
+    match CHOICE.get_or_init(|| match std::env::var(GATHER_BANDS_ENV) {
+        Err(std::env::VarError::NotPresent) => Ok(true),
+        Ok(v) if matches!(v.trim(), "" | "on" | "1") => Ok(true),
+        Ok(v) if matches!(v.trim(), "off" | "0") => Ok(false),
+        other => Err(format!(
+            "{GATHER_BANDS_ENV}: expected on or off, got {other:?}"
+        )),
+    }) {
+        Ok(v) => Ok(*v),
+        Err(message) => bail!("{message}"),
+    }
+}
+
+/// Destination rows per band of the banded gather.
+const GATHER_BAND_ROWS: usize = 16;
+
+/// One worker thread's band buffers, kept for the life of the thread so a
+/// band never faults in fresh pages.
+#[derive(Default)]
+struct GatherBandBufs {
+    mos: Vec<f32>,
+    r: Vec<f32>,
+    g: Vec<f32>,
+    b: Vec<f32>,
+}
+
+thread_local! {
+    static GATHER_BAND_BUFS: std::cell::RefCell<GatherBandBufs> =
+        std::cell::RefCell::new(GatherBandBufs::default());
+}
+
+/// Grow `buf` to at least `n` and return its first `n` elements. Contents are
+/// stale; every caller overwrites the prefix it reads.
+fn grown(buf: &mut Vec<f32>, n: usize) -> &mut [f32] {
+    if buf.len() < n {
+        buf.resize(n, 0.0);
+    }
+    &mut buf[..n]
+}
+
+/// Full-resolution rows, inclusive, that the checked Catmull-Rom pull of
+/// destination rows `py0..py1` can read, or `None` if none can be covered.
+///
+/// The source coordinate is affine in the destination pixel, so over the band
+/// it lies between its values at the four corners. A covered sample at source
+/// row `y` reads rows `floor(y) - 1 ..= floor(y) + 2`; widening by one more row
+/// each way absorbs any last-bit rounding between the corners and the interior,
+/// so this is a strict superset of what the kernel reads. A non-finite corner
+/// falls back to every row.
+#[allow(clippy::too_many_arguments)]
+fn band_source_rows(
+    t: Similarity,
+    (ox, oy): (f64, f64),
+    py0: usize,
+    py1: usize,
+    gw: usize,
+    (cx, cy): (f64, f64),
+    fh: usize,
+) -> Option<(usize, usize)> {
+    let mut lo = f64::INFINITY;
+    let mut hi = f64::NEG_INFINITY;
+    for py in [py0, py1 - 1] {
+        for px in [0, gw - 1] {
+            let (_, sy) = t.apply_at(px as f64 + ox, py as f64 + oy, cx, cy);
+            let y = 2.0 * sy;
+            if !y.is_finite() {
+                return Some((0, fh - 1));
+            }
+            lo = lo.min(y);
+            hi = hi.max(y);
+        }
+    }
+    let first = (lo.floor() - 2.0).max(0.0);
+    let last = (hi.floor() + 3.0).min((fh - 1) as f64);
+    (first <= last).then_some((first as usize, last as usize))
+}
+
+/// [`warp_frame_fullres_coordinates_impl`]'s default route, in bands.
+///
+/// # What changes
+///
+/// The whole-plane route materialises the balanced mosaic and three
+/// demosaiced channels at full resolution -- four `2gw x 2gh` `f32` planes,
+/// 528 MB at 7032x4688 -- writes them to memory, then reads them back once per
+/// CFA site. Measured, the fold was memory-bandwidth bound: on bug-7 it ran as
+/// fast at 8 threads as at 32. Here each band of [`GATHER_BAND_ROWS`]
+/// destination rows builds just the mosaic rows, Malvar rows and taps its
+/// samples touch, in buffers small enough to stay in cache, and writes only
+/// the gathered quad-resolution sites.
+///
+/// # Why the bytes cannot change
+///
+/// Every value is computed by the same expression as the whole-plane route:
+/// the mosaic sample, the Malvar stencil (`demosaic::MosaicRows` reflects
+/// about the full image, tested bit for bit), and the Catmull-Rom pull
+/// (`gather_rows_catmull_rom_checked`, tested bit for bit against
+/// `sample_checked`, support tests against the full plane). The band's row
+/// window is a superset of the rows its taps read, and a tap outside it would
+/// panic, not read a wrong row. Sinks run per site in the original order, after
+/// every band has finished reading the frame they write.
+#[allow(clippy::too_many_arguments)]
+fn warp_fullres_banded<const GREEN_ONLY: bool, F>(
+    frame: &mut strehl_raw::Frame,
+    t: Similarity,
+    geom: PlaneGeometry,
+    scratch: &mut WarpScratch,
+    mut sink: F,
+    ca: Option<&strehl_core::optics::OpticalProfile>,
+    writeback: WarpWriteback,
+) -> Result<f64>
+where
+    F: FnMut(
+        &mut strehl_raw::Frame,
+        (usize, usize),
+        &[f32],
+        &[bool],
+        f32,
+        f32,
+        WarpWriteback,
+    ) -> Result<usize>,
+{
+    struct Site {
+        dx: usize,
+        dy: usize,
+        ci: usize,
+        t: Similarity,
+        offset: (f64, f64),
+    }
+    let (gw, gh) = (geom.width, geom.height);
+    let (fw, fh) = (2 * gw, 2 * gh);
+    let black = frame.levels.black;
+    let (stride, ax, ay) = (frame.stride, frame.active.x, frame.active.y);
+    let gain = wb_gains(&frame.wb_coeffs);
+    let centre = (gw as f64 * 0.5, gh as f64 * 0.5);
+    // The whole-plane route's site order: dy outer, dx inner.
+    let sites: Vec<Site> = [(0, 0), (1, 0), (0, 1), (1, 1)]
+        .into_iter()
+        .filter(|&(dx, dy)| !GREEN_ONLY || rggb_channel_index(dx, dy) == 1)
+        .map(|(dx, dy)| Site {
+            dx,
+            dy,
+            ci: rggb_channel_index(dx, dy),
+            t: strehl_core::optics::OpticalProfile::compose(
+                ca,
+                strehl_core::optics::cfa_site_channel(dx, dy),
+                t,
+            ),
+            offset: (dx as f64 * 0.5, dy as f64 * 0.5),
+        })
+        .collect();
+
+    let px = geom.pixels();
+    scratch.site_dst.resize_with(sites.len(), Vec::new);
+    scratch.site_cover.resize_with(sites.len(), Vec::new);
+    for (d, c) in scratch
+        .site_dst
+        .iter_mut()
+        .zip(scratch.site_cover.iter_mut())
+    {
+        if d.len() != px {
+            *d = vec![0.0; px];
+            *c = vec![false; px];
+        }
+    }
+    let band_px = GATHER_BAND_ROWS * gw;
+    let bands = gh.div_ceil(GATHER_BAND_ROWS);
+    let mut views: Vec<Vec<(&mut [f32], &mut [bool])>> = (0..bands)
+        .map(|_| Vec::with_capacity(sites.len()))
+        .collect();
+    for (d, c) in scratch
+        .site_dst
+        .iter_mut()
+        .zip(scratch.site_cover.iter_mut())
+        .take(sites.len())
+    {
+        for (view, pair) in views
+            .iter_mut()
+            .zip(d[..px].chunks_mut(band_px).zip(c[..px].chunks_mut(band_px)))
+        {
+            view.push(pair);
+        }
+    }
+
+    let data = &frame.data;
+    views
+        .into_par_iter()
+        .enumerate()
+        .for_each(|(band, mut planes)| {
+            let py0 = band * GATHER_BAND_ROWS;
+            let py1 = (py0 + GATHER_BAND_ROWS).min(gh);
+            let mut span: Option<(usize, usize)> = None;
+            for s in &sites {
+                if let Some((a, b)) = band_source_rows(s.t, s.offset, py0, py1, gw, centre, fh) {
+                    span = Some(span.map_or((a, b), |(lo, hi)| (lo.min(a), hi.max(b))));
+                }
+            }
+            GATHER_BAND_BUFS.with(|cell| {
+                let mut guard = cell.borrow_mut();
+                let bufs = &mut *guard;
+                let (ylo, rows) = match span {
+                    Some((ylo, yhi)) => {
+                        let (ma, mb) = strehl_core::demosaic::MosaicRows::span(fh, ylo, yhi);
+                        let mos = grown(&mut bufs.mos, (mb - ma + 1) * fw);
+                        for (k, orow) in mos.chunks_mut(fw).enumerate() {
+                            let y = ma + k;
+                            let row = (ay + y) * stride + ax;
+                            for (x, o) in orow.iter_mut().enumerate() {
+                                *o =
+                                    (data[row + x] as f32 - black) * gain[rggb_channel_index(x, y)];
+                            }
+                        }
+                        let win = strehl_core::demosaic::MosaicRows {
+                            data: mos,
+                            width: fw,
+                            height: fh,
+                            first: ma,
+                        };
+                        let n = (yhi - ylo + 1) * fw;
+                        let g = grown(&mut bufs.g, n);
+                        if GREEN_ONLY {
+                            for (k, grow) in g.chunks_mut(fw).enumerate() {
+                                strehl_core::demosaic::demosaic_malvar_green_rows(
+                                    &win,
+                                    ylo + k,
+                                    grow,
+                                );
+                            }
+                        } else {
+                            let r = grown(&mut bufs.r, n);
+                            let b = grown(&mut bufs.b, n);
+                            for (k, ((rr, gg), bb)) in r
+                                .chunks_mut(fw)
+                                .zip(g.chunks_mut(fw))
+                                .zip(b.chunks_mut(fw))
+                                .enumerate()
+                            {
+                                strehl_core::demosaic::demosaic_malvar_rows_planar(
+                                    &win,
+                                    ylo + k,
+                                    rr,
+                                    gg,
+                                    bb,
+                                );
+                            }
+                        }
+                        (ylo, n)
+                    }
+                    None => (0, 0),
+                };
+                for (s, (dst, cover)) in sites.iter().zip(planes.iter_mut()) {
+                    let channel: &[f32] = match s.ci {
+                        0 => &bufs.r[..rows],
+                        2 => &bufs.b[..rows],
+                        _ => &bufs.g[..rows],
+                    };
+                    let src = strehl_core::align::PlaneRows {
+                        data: channel,
+                        width: fw,
+                        height: fh,
+                        first: ylo,
+                    };
+                    for (k, (drow, crow)) in
+                        dst.chunks_mut(gw).zip(cover.chunks_mut(gw)).enumerate()
+                    {
+                        strehl_core::align::gather_rows_catmull_rom_checked(
+                            src,
+                            s.t,
+                            2.0,
+                            s.offset,
+                            py0 + k,
+                            centre,
+                            drow,
+                            crow,
+                        );
+                    }
+                }
+            });
+        });
+
+    let mut covered_total = 0usize;
+    for (si, s) in sites.iter().enumerate() {
+        let inv = 1.0 / gain[s.ci];
+        covered_total += sink(
+            frame,
+            (s.dx, s.dy),
+            &scratch.site_dst[si][..px],
+            &scratch.site_cover[si][..px],
+            inv,
+            black,
+            writeback,
+        )?;
+    }
+    Ok(covered_total as f64 / (sites.len() * px) as f64)
 }
 
 #[cfg(all(test, feature = "native-gpu-gather"))]
@@ -3440,6 +4034,84 @@ pub fn cover_scale(map: &WarpMap, margin: f64) -> Option<f64> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn the_streaming_ladder_measures_exactly_the_whole_stack_edges() {
+        // A deep synthetic bracket: a texture drifting by a sub-pixel step per
+        // frame, two featureless frames whose pairs must be refused, and a
+        // window budget so small that frames are evicted and batches turn
+        // over many times.
+        let geom = PlaneGeometry {
+            width: 192,
+            height: 128,
+        };
+        let n = 40;
+        let plane = |k: usize| -> Vec<f32> {
+            if k == 13 || k == 27 {
+                return vec![100.0; geom.pixels()];
+            }
+            let (dx, dy) = (0.37 * k as f32, -0.21 * k as f32);
+            (0..geom.pixels())
+                .map(|i| {
+                    let x = (i % geom.width) as f32 + dx;
+                    let y = (i / geom.width) as f32 + dy;
+                    120.0 + 25.0 * (x / 4.7 + y / 7.1).sin() + 19.0 * (x / 11.3 - y / 3.9).cos()
+                })
+                .collect()
+        };
+        let st = Stack {
+            geom,
+            planes: (0..n).map(plane).collect(),
+        };
+        let cfg = AlignConfig {
+            coarse_factors: vec![2],
+            coarse_tile: 12,
+            coarse_grid: (4, 3),
+            coarse_radius: 3,
+            fine_tile: 24,
+            fine_grid: (5, 4),
+            fine_radius: 3,
+            margin: 12,
+            min_tiles: 6,
+            min_contrast: 2.0,
+            min_peak: 0.8,
+            ..AlignConfig::shallow()
+        };
+        let pairs = ladder_pairs(n, &[1, 2, 4, 8, 16]);
+        let bits = |edges: &[AlignEdge]| {
+            edges
+                .iter()
+                .map(|e| {
+                    (
+                        e.i,
+                        e.j,
+                        [e.t.a.re, e.t.a.im, e.t.b.re, e.t.b.im].map(f64::to_bits),
+                        e.rms.to_bits(),
+                        e.used,
+                        e.lever.to_bits(),
+                    )
+                })
+                .collect::<Vec<_>>()
+        };
+        let whole = measure_edges(&st, &pairs, &cfg, 3).unwrap();
+        assert!(
+            whole.len() > pairs.len() / 2 && whole.len() < pairs.len(),
+            "the fixture must both fit pairs and refuse some ({} of {})",
+            whole.len(),
+            pairs.len()
+        );
+        // Six frames of budget: the batch clamps to its minimum of 4, so the
+        // window holds the 16-frame span plus two batches and evicts the rest.
+        for budget in [6 * 4 * geom.pixels(), usize::MAX / 2] {
+            let (g, streamed) =
+                measure_ladder_streaming_with(n, &pairs, &cfg, 3, None, budget, |k| {
+                    Ok((geom, plane(k)))
+                })
+                .unwrap();
+            assert_eq!(g, geom);
+            assert_eq!(bits(&whole), bits(&streamed), "budget {budget}");
+        }
+    }
 
     #[test]
     fn alignment_observer_counts_real_pair_attempts_including_flat_and_noise_refusals() {

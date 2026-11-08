@@ -886,22 +886,31 @@ impl PipelineProgress {
                 }
                 self.record(phase.title().into());
             }
+            // The engine streams alignment: planes keep decoding while the
+            // first pairs are measured, so plane events also count once the
+            // pairs phase has begun.
             Some("align-plane-start") => {
                 let Some(index) = number("index") else { return };
-                if self.alignment_phase != Some(AlignmentPhase::Planes)
-                    || total != frames
+                if !matches!(
+                    self.alignment_phase,
+                    Some(AlignmentPhase::Planes | AlignmentPhase::Pairs)
+                ) || total != frames
                     || index >= frames
                 {
                     return;
                 }
-                self.processing_frame = Some(index);
+                if self.alignment_phase == Some(AlignmentPhase::Planes) {
+                    self.processing_frame = Some(index);
+                }
             }
             Some("align-plane") => {
                 let (Some(index), Some(completed)) = (number("index"), number("completed")) else {
                     return;
                 };
-                if self.alignment_phase != Some(AlignmentPhase::Planes)
-                    || total != frames
+                if !matches!(
+                    self.alignment_phase,
+                    Some(AlignmentPhase::Planes | AlignmentPhase::Pairs)
+                ) || total != frames
                     || !count(index, completed)
                     || self
                         .alignment_planes
@@ -911,7 +920,9 @@ impl PipelineProgress {
                 }
                 self.alignment_planes = Some((completed, total));
                 self.alignment_plane_observations.insert(index);
-                self.processing_frame = Some(index);
+                if self.alignment_phase == Some(AlignmentPhase::Planes) {
+                    self.processing_frame = Some(index);
+                }
             }
             Some("align-pyramid") => {
                 let (Some(index), Some(completed)) = (number("index"), number("completed")) else {

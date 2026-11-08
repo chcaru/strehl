@@ -217,8 +217,120 @@ const F_X: [Tap; 9] = [
     (0, 2, -1.5),
 ];
 
+/// Read access to a mosaic: the whole array, or a window of its rows.
+///
+/// Row indices are always **full-image** rows, and reflection is always about
+/// the full image's edges, so a stencil evaluated through a window reads
+/// exactly the samples it would read through the whole mosaic.
+trait MosaicAccess {
+    fn width(&self) -> usize;
+    /// Height of the full mosaic, not of a window.
+    fn height(&self) -> usize;
+    /// Full-image row `y`.
+    fn row(&self, y: usize) -> &[f32];
+    #[inline]
+    fn at(&self, x: isize, y: isize) -> f32 {
+        let x = reflect(x, self.width());
+        let y = reflect(y, self.height());
+        self.row(y)[x]
+    }
+    #[inline]
+    fn plane_at(&self, x: usize, y: usize) -> CfaPlane {
+        CfaPlane::rggb_at(x, y)
+    }
+}
+
+impl MosaicAccess for Mosaic<'_> {
+    fn width(&self) -> usize {
+        self.width
+    }
+    fn height(&self) -> usize {
+        self.height
+    }
+    #[inline]
+    fn row(&self, y: usize) -> &[f32] {
+        &self.data[y * self.width..(y + 1) * self.width]
+    }
+}
+
+/// Rows `first..first + data.len() / width` of a `width x height` mosaic.
+///
+/// Lets a consumer demosaic a band of rows from just the mosaic rows that band
+/// reads, instead of materialising the whole balanced mosaic first. Reading a
+/// row outside the window panics; [`MosaicRows::span`] gives the window a band
+/// of output rows needs.
+pub struct MosaicRows<'a> {
+    pub data: &'a [f32],
+    pub width: usize,
+    pub height: usize,
+    pub first: usize,
+}
+
+impl MosaicRows<'_> {
+    /// Mosaic rows that Malvar output rows `lo..=hi` read, reflection included.
+    pub fn span(height: usize, lo: usize, hi: usize) -> (usize, usize) {
+        // Reflection maps row -1 to 1, -2 to 2, height to height - 2 and
+        // height + 1 to height - 3, all inside this window when height >= 3.
+        (lo.saturating_sub(2), (hi + 2).min(height - 1))
+    }
+}
+
+impl MosaicAccess for MosaicRows<'_> {
+    fn width(&self) -> usize {
+        self.width
+    }
+    fn height(&self) -> usize {
+        self.height
+    }
+    #[inline]
+    fn row(&self, y: usize) -> &[f32] {
+        let k = y - self.first;
+        &self.data[k * self.width..(k + 1) * self.width]
+    }
+}
+
+/// Whether `STREHL_DEMOSAIC` selects the directional arm. Window consumers
+/// implement Malvar only and must fall back to a whole mosaic when this is set.
+pub fn uses_directional() -> bool {
+    use_directional()
+}
+
+/// Malvar row `y` of a mosaic window into planar `r`, `g`, `b`; bit-identical
+/// to [`demosaic_row_planar`] on the whole mosaic with Malvar selected.
+pub fn demosaic_malvar_rows_planar(
+    m: &MosaicRows,
+    y: usize,
+    r: &mut [f32],
+    g: &mut [f32],
+    b: &mut [f32],
+) {
+    assert!(r.len() == m.width && g.len() == m.width && b.len() == m.width);
+    assert!(y < m.height, "row {y} is outside the mosaic");
+    malvar_row_with(m, y, |x, px| {
+        r[x] = px[0];
+        g[x] = px[1];
+        b[x] = px[2];
+    });
+}
+
+/// Malvar green of row `y` of a mosaic window; bit-identical to
+/// [`demosaic_green_row`] on the whole mosaic with Malvar selected.
+pub fn demosaic_malvar_green_rows(m: &MosaicRows, y: usize, out: &mut [f32]) {
+    assert_eq!(out.len(), m.width, "output row is the wrong width");
+    assert!(y < m.height, "row {y} is outside the mosaic");
+    if malvar_green_row_interior(m, y, out) {
+        return;
+    }
+    for (x, o) in out.iter_mut().enumerate() {
+        *o = match CfaPlane::rggb_at(x, y) {
+            CfaPlane::G1 | CfaPlane::G2 => m.row(y)[x],
+            _ => conv(m, x, y, &F_G),
+        };
+    }
+}
+
 #[inline]
-fn conv(m: &Mosaic, x: usize, y: usize, taps: &[Tap]) -> f32 {
+fn conv<M: MosaicAccess + ?Sized>(m: &M, x: usize, y: usize, taps: &[Tap]) -> f32 {
     let (x, y) = (x as isize, y as isize);
     let mut acc = 0.0f32;
     for (dx, dy, w) in taps {
@@ -351,6 +463,9 @@ pub fn demosaic_green_row(m: &Mosaic, y: usize, out: &mut [f32]) {
     assert_eq!(out.len(), m.width, "output row is the wrong width");
     assert!(y < m.height, "row {y} is outside the mosaic");
     let directional = use_directional();
+    if !directional && malvar_green_row_interior(m, y, out) {
+        return;
+    }
     for (x, o) in out.iter_mut().enumerate() {
         *o = match m.plane_at(x, y) {
             CfaPlane::G1 | CfaPlane::G2 => m.data[y * m.width + x],
@@ -413,36 +528,149 @@ pub fn demosaic_directional_row(m: &Mosaic, y: usize, out: &mut [f32]) {
 pub fn demosaic_malvar_row(m: &Mosaic, y: usize, out: &mut [f32]) {
     assert_eq!(out.len(), m.width * 3, "output row is the wrong width");
     assert!(y < m.height, "row {y} is outside the mosaic");
-    for x in 0..m.width {
-        let px = &mut out[3 * x..3 * x + 3];
-        let known = m.data[y * m.width + x];
-        match m.plane_at(x, y) {
-            CfaPlane::R => {
-                px[0] = known;
-                px[1] = conv(m, x, y, &F_G);
-                px[2] = conv(m, x, y, &F_X);
-            }
-            CfaPlane::B => {
-                px[0] = conv(m, x, y, &F_X);
-                px[1] = conv(m, x, y, &F_G);
-                px[2] = known;
-            }
-            // G1: even row, odd column. The row is an R row, so red neighbours
-            // are horizontal and blue neighbours are vertical.
-            CfaPlane::G1 => {
-                px[0] = conv(m, x, y, &F_H);
-                px[1] = known;
-                px[2] = conv(m, x, y, &F_V);
-            }
-            // G2: odd row, even column. The row is a B row, so it is the other
-            // way round.
-            CfaPlane::G2 => {
-                px[0] = conv(m, x, y, &F_V);
-                px[1] = known;
-                px[2] = conv(m, x, y, &F_H);
-            }
+    malvar_row_with(m, y, |x, px| out[3 * x..3 * x + 3].copy_from_slice(&px));
+}
+
+/// [`demosaic_row`] written straight into three planar rows, each `width`
+/// long. Values are identical to [`demosaic_row`]'s interleaved output; this
+/// only drops the interleave-then-scatter a planar consumer used to pay.
+pub fn demosaic_row_planar(m: &Mosaic, y: usize, r: &mut [f32], g: &mut [f32], b: &mut [f32]) {
+    assert!(
+        r.len() == m.width && g.len() == m.width && b.len() == m.width,
+        "output rows are the wrong width"
+    );
+    assert!(y < m.height, "row {y} is outside the mosaic");
+    if use_directional() {
+        let mut buf = vec![0f32; 3 * m.width];
+        demosaic_directional_row(m, y, &mut buf);
+        for x in 0..m.width {
+            r[x] = buf[3 * x];
+            g[x] = buf[3 * x + 1];
+            b[x] = buf[3 * x + 2];
+        }
+        return;
+    }
+    malvar_row_with(m, y, |x, px| {
+        r[x] = px[0];
+        g[x] = px[1];
+        b[x] = px[2];
+    });
+}
+
+/// One Malvar pixel through the reflecting border path.
+#[inline]
+fn malvar_px_border<M: MosaicAccess>(m: &M, x: usize, y: usize) -> [f32; 3] {
+    let known = m.row(y)[x];
+    match m.plane_at(x, y) {
+        CfaPlane::R => [known, conv(m, x, y, &F_G), conv(m, x, y, &F_X)],
+        CfaPlane::B => [conv(m, x, y, &F_X), conv(m, x, y, &F_G), known],
+        // G1: even row, odd column. The row is an R row, so red neighbours
+        // are horizontal and blue neighbours are vertical.
+        CfaPlane::G1 => [conv(m, x, y, &F_H), known, conv(m, x, y, &F_V)],
+        // G2: odd row, even column. The row is a B row, so it is the other
+        // way round.
+        CfaPlane::G2 => [conv(m, x, y, &F_V), known, conv(m, x, y, &F_H)],
+    }
+}
+
+/// [`conv`] for a pixel whose whole 5x5 support is inside the mosaic.
+///
+/// `rows[k]` is mosaic row `y + k - 2`. Reflection is the identity inside the
+/// array, so this reads the same samples [`conv`] reads, accumulates them in
+/// the same tap order with the same `acc += w * v`, and scales by the same
+/// `0.125`: the result is bit-identical. What it drops is two `reflect` loops
+/// and a multiply per tap, which were most of the demosaic's cost.
+#[inline(always)]
+fn conv_interior<const N: usize>(rows: &[&[f32]; 5], x: usize, taps: &[Tap; N]) -> f32 {
+    let mut acc = 0.0f32;
+    for (dx, dy, w) in taps {
+        acc += w * rows[(2 + dy) as usize][(x as isize + dx) as usize];
+    }
+    acc * 0.125
+}
+
+/// Every Malvar pixel of row `y`, in order, handed to `put(x, [r, g, b])`.
+#[inline]
+fn malvar_row_with<M: MosaicAccess>(m: &M, y: usize, mut put: impl FnMut(usize, [f32; 3])) {
+    let w = m.width();
+    if y < 2 || y + 2 >= m.height() || w < 5 {
+        for x in 0..w {
+            put(x, malvar_px_border(m, x, y));
+        }
+        return;
+    }
+    let rows: [&[f32]; 5] = std::array::from_fn(|k| m.row(y + k - 2));
+    let row = rows[2];
+    for x in 0..2 {
+        put(x, malvar_px_border(m, x, y));
+    }
+    if y.is_multiple_of(2) {
+        // R G1 R G1 ...
+        for (x, &known) in row.iter().enumerate().take(w - 2).skip(2) {
+            put(
+                x,
+                if x % 2 == 0 {
+                    [
+                        known,
+                        conv_interior(&rows, x, &F_G),
+                        conv_interior(&rows, x, &F_X),
+                    ]
+                } else {
+                    [
+                        conv_interior(&rows, x, &F_H),
+                        known,
+                        conv_interior(&rows, x, &F_V),
+                    ]
+                },
+            );
+        }
+    } else {
+        // G2 B G2 B ...
+        for (x, &known) in row.iter().enumerate().take(w - 2).skip(2) {
+            put(
+                x,
+                if x % 2 == 0 {
+                    [
+                        conv_interior(&rows, x, &F_V),
+                        known,
+                        conv_interior(&rows, x, &F_H),
+                    ]
+                } else {
+                    [
+                        conv_interior(&rows, x, &F_X),
+                        conv_interior(&rows, x, &F_G),
+                        known,
+                    ]
+                },
+            );
         }
     }
+    for x in w - 2..w {
+        put(x, malvar_px_border(m, x, y));
+    }
+}
+
+/// Malvar green only for an interior row; `None` for a border row.
+#[inline]
+fn malvar_green_row_interior<M: MosaicAccess>(m: &M, y: usize, out: &mut [f32]) -> bool {
+    let w = m.width();
+    if y < 2 || y + 2 >= m.height() || w < 5 {
+        return false;
+    }
+    let rows: [&[f32]; 5] = std::array::from_fn(|k| m.row(y + k - 2));
+    let row = rows[2];
+    // Green sites are odd columns on an even row and even columns on an odd row.
+    let green_parity = 1 - y % 2;
+    for (x, o) in out.iter_mut().enumerate() {
+        *o = if x % 2 == green_parity {
+            row[x]
+        } else if x < 2 || x + 2 >= w {
+            conv(m, x, y, &F_G)
+        } else {
+            conv_interior(&rows, x, &F_G)
+        };
+    }
+    true
 }
 
 /// Demosaic the whole mosaic, serially. `out` must hold `width * height * 3`.
@@ -507,6 +735,89 @@ pub fn demosaic_bilinear_row(m: &Mosaic, y: usize, out: &mut [f32]) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn noisy_mosaic(w: usize, h: usize, seed: u64) -> Vec<f32> {
+        let mut s = seed | 1;
+        (0..w * h)
+            .map(|_| {
+                s ^= s << 13;
+                s ^= s >> 7;
+                s ^= s << 17;
+                // Wide dynamic range, negatives included, as a black-subtracted
+                // and white-balanced mosaic can carry.
+                ((s >> 40) as f32 / (1u64 << 24) as f32 - 0.1) * 16000.0
+            })
+            .collect()
+    }
+
+    #[test]
+    fn the_interior_fast_paths_are_bit_identical_to_the_reflecting_reference() {
+        for (w, h, seed) in [
+            (37, 23, 3u64),
+            (64, 48, 5),
+            (5, 5, 7),
+            (4, 9, 11),
+            (3, 3, 13),
+            (1, 6, 17),
+        ] {
+            let data = noisy_mosaic(w, h, seed);
+            let m = Mosaic {
+                data: &data,
+                width: w,
+                height: h,
+            };
+            for y in 0..h {
+                let mut inter = vec![0f32; 3 * w];
+                demosaic_malvar_row(&m, y, &mut inter);
+                let (mut r, mut g, mut b) = (vec![0f32; w], vec![0f32; w], vec![0f32; w]);
+                demosaic_row_planar(&m, y, &mut r, &mut g, &mut b);
+                let mut green = vec![0f32; w];
+                demosaic_green_row(&m, y, &mut green);
+                for x in 0..w {
+                    let want = malvar_px_border(&m, x, y);
+                    for c in 0..3 {
+                        assert_eq!(
+                            inter[3 * x + c].to_bits(),
+                            want[c].to_bits(),
+                            "({x},{y}) c{c}"
+                        );
+                    }
+                    assert_eq!(r[x].to_bits(), want[0].to_bits());
+                    assert_eq!(g[x].to_bits(), want[1].to_bits());
+                    assert_eq!(b[x].to_bits(), want[2].to_bits());
+                    assert_eq!(green[x].to_bits(), want[1].to_bits(), "green ({x},{y})");
+                }
+            }
+            // Windows: every band of output rows, from only its span of rows.
+            if h < 3 {
+                continue;
+            }
+            for lo in 0..h {
+                for hi in lo..h.min(lo + 4) {
+                    let (a, b) = MosaicRows::span(h, lo, hi);
+                    let win = MosaicRows {
+                        data: &data[a * w..(b + 1) * w],
+                        width: w,
+                        height: h,
+                        first: a,
+                    };
+                    for y in lo..=hi {
+                        let (mut r, mut g, mut b2) = (vec![0f32; w], vec![0f32; w], vec![0f32; w]);
+                        demosaic_malvar_rows_planar(&win, y, &mut r, &mut g, &mut b2);
+                        let mut green = vec![0f32; w];
+                        demosaic_malvar_green_rows(&win, y, &mut green);
+                        for x in 0..w {
+                            let want = malvar_px_border(&m, x, y);
+                            assert_eq!(r[x].to_bits(), want[0].to_bits(), "win ({x},{y})");
+                            assert_eq!(g[x].to_bits(), want[1].to_bits(), "win ({x},{y})");
+                            assert_eq!(b2[x].to_bits(), want[2].to_bits(), "win ({x},{y})");
+                            assert_eq!(green[x].to_bits(), want[1].to_bits(), "win g ({x},{y})");
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     fn run(m: &Mosaic) -> Vec<f32> {
         let mut out = vec![0.0; m.width * m.height * 3];
