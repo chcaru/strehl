@@ -28,6 +28,7 @@ def main():
     parser.add_argument('--zip',type=Path,required=True)
     parser.add_argument('--out',type=Path,required=True)
     parser.add_argument('--preview-fix',action='store_true',help='Require offset-JPEG, countdown and failed-preview UI regressions')
+    parser.add_argument('--web-remote',action='store_true',help='Require embedded browser assets, firewall helper and native pairing controls')
     args=parser.parse_args()
     out=args.out.resolve();out.mkdir(parents=True,exist_ok=False)
     with ZipFile(args.zip) as z:
@@ -45,6 +46,8 @@ def main():
         path=package/entry['path'];assert path.stat().st_size==entry['bytes'],entry['path'];assert digest(path)==entry['sha256'],entry['path'];listed.add(entry['path'])
     actual={p.relative_to(package).as_posix() for p in package.rglob('*') if p.is_file()}
     assert actual==listed|{'package-manifest.json'}
+    if args.web_remote:
+        assert {'allow-web-remote.ps1','source/crates/strehl-capture/web/index.html','source/crates/strehl-capture/web/app.js','source/crates/strehl-capture/web/style.css'} <= listed
     assert not any(Path(name).suffix.lower() in ('.arw','.arq','.dng','.jpg','.jpeg','.png','.tif','.tiff') for name in listed)
     build=json.loads((package/'build-receipt.json').read_text(encoding='utf-8'))
     assert digest(package/'Strehl-Capture.exe')==build['app_sha256']
@@ -61,6 +64,7 @@ def main():
     exercise=out/'rendered ui and journals'
     report=json.loads(run([str(package/'Strehl-Capture.exe'),'--demo','--exercise',str(exercise)],package))
     assert report['last_phase']=='Disconnected' and len(report['checks'])>=(8 if args.preview_fix else 6)
+    if args.web_remote:assert len(report['checks'])>=9 and 'Web remote' in report['checks'][-1]
     # Exercise smaller layout with an active preview, not just a disconnected page.
     preview=out/'laptop live preview.png'
     run([str(package/'Strehl-Capture.exe'),'--demo','--offscreen-screenshot',str(preview),'--size','1280x720'],package,30)

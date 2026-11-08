@@ -40,6 +40,8 @@ pub struct Snapshot {
     pub suggestion: Option<Suggestion>,
     pub connected: bool,
     pub timing: Option<RunTiming>,
+    pub command_pending: bool,
+    pub sequence_id: u64,
 }
 impl Default for Snapshot {
     fn default() -> Self {
@@ -61,6 +63,8 @@ impl Default for Snapshot {
             suggestion: None,
             connected: false,
             timing: None,
+            command_pending: false,
+            sequence_id: 0,
         }
     }
 }
@@ -133,15 +137,42 @@ impl Worker {
         self.state.lock().unwrap().clone()
     }
     pub fn send(&self, revision: u64, action: Action) -> Result<()> {
+        let mut state = self.state.lock().unwrap();
+        ensure!(
+            state.revision == revision,
+            "Camera state changed; refresh before trying again"
+        );
+        ensure!(
+            !state.command_pending,
+            "A camera command is already pending"
+        );
+        if matches!(&action, Action::Capture { .. } | Action::Scan { .. }) {
+            ensure!(
+                state.connected && state.phase.can_edit(),
+                "Connect a ready camera first"
+            );
+            self.control.store(RUN, Ordering::SeqCst);
+        }
+        let next = state.revision + 1;
         self.tx
-            .try_send(Envelope { revision, action })
-            .context("Camera command queue unavailable; read the current state before retrying")
+            .try_send(Envelope {
+                revision: next,
+                action,
+            })
+            .context("Camera command queue unavailable; read the current state before retrying")?;
+        state.revision = next;
+        state.command_pending = true;
+        Ok(())
     }
     pub fn request_pause(&self) {
-        self.control.store(PAUSE, Ordering::SeqCst);
+        let _ = self
+            .control
+            .compare_exchange(RUN, PAUSE, Ordering::SeqCst, Ordering::SeqCst);
     }
     pub fn request_resume(&self) {
-        self.control.store(RUN, Ordering::SeqCst);
+        let _ = self
+            .control
+            .compare_exchange(PAUSE, RUN, Ordering::SeqCst, Ordering::SeqCst);
     }
     pub fn request_stop(&self) {
         self.control.store(STOP, Ordering::SeqCst);
@@ -216,6 +247,7 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
             Ok(envelope) => {
                 if envelope.revision != s.lock().unwrap().revision {
                     update(&s, |v| {
+                        v.command_pending = false;
                         v.message =
                             "That command used an older state. Check the preview and try again."
                                 .into()
@@ -393,6 +425,7 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                         v.message = format!("{error:#}");
                     });
                 }
+                update(&s, |v| v.command_pending = false);
             }
             Err(mpsc::RecvTimeoutError::Disconnected) => break,
             Err(mpsc::RecvTimeoutError::Timeout) => {
@@ -466,6 +499,7 @@ fn capture(
     let mut log = Journal::create(&root, &plan, c.identity(), status)?;
     update(s, |v| {
         v.phase = Phase::Capturing;
+        v.sequence_id += 1;
         v.completed = 0;
         v.total = positions.len();
         v.journal = Some(log.directory.clone());
@@ -634,6 +668,7 @@ fn scan(
     validate_exposure(&status)?;
     update(s, |v| {
         v.phase = Phase::Scanning;
+        v.sequence_id += 1;
         v.samples.clear();
         v.suggestion = None;
         v.completed = 0;
@@ -766,7 +801,7 @@ mod tests {
         let temp = tempfile::tempdir().unwrap();
         let w = Worker::new(PathBuf::new(), true);
         w.send(0, Action::Connect).unwrap();
-        let ready = until(&w, |s| s.phase == Phase::Ready);
+        let ready = until(&w, |s| s.phase == Phase::Ready && !s.command_pending);
         w.send(
             0,
             Action::Move {
@@ -774,8 +809,7 @@ mod tests {
                 settle_ms: 500,
             },
         )
-        .unwrap();
-        let ready = until(&w, |s| s.revision > ready.revision);
+        .unwrap_err();
         assert_eq!(ready.position, Some(60627));
         w.send(
             ready.revision,
@@ -797,7 +831,7 @@ mod tests {
         w.request_resume();
         until(&w, |s| s.completed > paused.completed);
         w.request_stop();
-        let stopped = until(&w, |s| s.phase == Phase::Stopped);
+        let stopped = until(&w, |s| s.phase == Phase::Stopped && !s.command_pending);
         assert!(stopped.completed < stopped.total);
         let journal =
             std::fs::read_to_string(stopped.journal.unwrap().join("events.jsonl")).unwrap();
@@ -819,7 +853,7 @@ mod tests {
             }))
         }));
         w.send(0, Action::Connect).unwrap();
-        let ready = until(&w, |s| s.phase == Phase::Ready);
+        let ready = until(&w, |s| s.phase == Phase::Ready && !s.command_pending);
         w.send(
             ready.revision,
             Action::Capture {
@@ -832,7 +866,7 @@ mod tests {
             },
         )
         .unwrap();
-        let fault = until(&w, |s| s.phase == Phase::Fault);
+        let fault = until(&w, |s| s.phase == Phase::Fault && !s.command_pending);
         assert_eq!(fault.completed, 0);
         let journal = std::fs::read_to_string(fault.journal.unwrap().join("events.jsonl")).unwrap();
         assert_eq!(journal.matches("\"event\":\"capture_intent\"").count(), 1);
@@ -845,7 +879,7 @@ mod tests {
             },
         )
         .unwrap();
-        let rejected = until(&w, |s| s.revision > fault.revision);
+        let rejected = until(&w, |s| s.revision > fault.revision && !s.command_pending);
         assert_eq!(rejected.phase, Phase::Fault);
         assert_eq!(rejected.position, Some(60600));
     }

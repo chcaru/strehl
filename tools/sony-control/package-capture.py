@@ -129,6 +129,7 @@ def main():
         shutil.copy2(ROOT/name,out/name)
     guide=(ROOT/'crates/strehl-capture/README.md').read_text(encoding='utf-8').replace('../../experiments/','source/experiments/')
     (out/'START-HERE.md').write_text(guide,encoding='utf-8',newline='\n')
+    shutil.copy2(ROOT/'tools/sony-control/allow-web-remote.ps1',out/'allow-web-remote.ps1')
     (out/'try-demo.cmd').write_bytes(b'@echo off\r\nstart "" "%~dp0Strehl-Capture.exe" --demo\r\n')
     (source/'REBUILD.md').write_text('''# Rebuild the capture workspace
 

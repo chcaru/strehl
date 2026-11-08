@@ -7,7 +7,7 @@ use std::{
     io::{BufRead, BufReader, Write},
     path::{Path, PathBuf},
     process::{Child, ChildStdin, Command, Stdio},
-    sync::mpsc,
+    sync::{Arc, mpsc},
     thread,
     time::Duration,
 };
@@ -15,6 +15,7 @@ use std::{
 pub struct Preview {
     pub frame: u64,
     pub rgb: RgbImage,
+    pub jpeg: Option<Arc<Vec<u8>>>,
 }
 
 pub trait Camera: Send {
@@ -212,7 +213,7 @@ fn decode_preview(response: &Value) -> Result<Preview> {
     let jpeg = base64::engine::general_purpose::STANDARD
         .decode(response["jpeg"].as_str().context("Missing preview")?)?;
     let mut decoder =
-        image::ImageReader::with_format(std::io::Cursor::new(jpeg), image::ImageFormat::Jpeg);
+        image::ImageReader::with_format(std::io::Cursor::new(&jpeg), image::ImageFormat::Jpeg);
     let mut limits = image::Limits::default();
     limits.max_image_width = Some(8192);
     limits.max_image_height = Some(8192);
@@ -224,6 +225,7 @@ fn decode_preview(response: &Value) -> Result<Preview> {
             .as_u64()
             .context("Missing preview frame number")?,
         rgb,
+        jpeg: Some(Arc::new(jpeg)),
     })
 }
 impl Drop for Native {
@@ -312,6 +314,7 @@ impl Camera for Demo {
         Ok(Preview {
             frame: self.frame,
             rgb: demo_image(self.position, 960, 640),
+            jpeg: None,
         })
     }
     fn magnify(&mut self, _: u32, _: u16, _: u16) -> Result<()> {

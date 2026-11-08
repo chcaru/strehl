@@ -2,24 +2,31 @@ use crate::theme::*;
 use eframe::egui::{self, Color32, Rect, RichText, Vec2};
 use std::{
     collections::BTreeMap,
+    net::SocketAddr,
     path::PathBuf,
+    sync::{Arc, Mutex},
     time::{Duration, Instant},
 };
 use strehl_capture::{
     backend::property,
-    model::{Phase, Plan, Roi},
+    model::{Phase, Roi},
+    remote::WebServer,
+    session::{Controls, Session},
     timing,
     worker::{Action, PAUSE, STOP, Snapshot, Worker},
 };
 
 pub struct App {
-    pub worker: Worker,
-    pub plan: Plan,
-    pub start_set: bool,
-    pub end_set: bool,
-    pub root: PathBuf,
+    pub worker: Arc<Worker>,
+    pub controls: Arc<Mutex<Controls>>,
+    session: Arc<Session>,
+    web: Option<WebServer>,
+    pub web_bind: SocketAddr,
+    web_visible: bool,
+    web_address: usize,
+    qr: Option<egui::TextureHandle>,
+    qr_url: String,
     pub demo: bool,
-    pub roi: Roi,
     pub widgets: BTreeMap<String, Rect>,
     pub local_message: Option<String>,
     texture: Option<egui::TextureHandle>,
@@ -30,19 +37,24 @@ pub struct App {
     choose_roi: bool,
     roi_drag: Option<egui::Pos2>,
     closing: bool,
-    was_connected: bool,
     close_revision: Option<u64>,
 }
 impl App {
     pub fn new(worker: Worker, root: PathBuf, demo: bool) -> Self {
+        let worker = Arc::new(worker);
+        let controls = Arc::new(Mutex::new(Controls::new(root)));
+        let session = Arc::new(Session::new(worker.clone(), controls.clone(), demo));
         Self {
             worker,
-            plan: Plan::default(),
-            start_set: false,
-            end_set: false,
-            root,
+            controls,
+            session,
+            web: None,
+            web_bind: "0.0.0.0:8787".parse().unwrap(),
+            web_visible: false,
+            web_address: 0,
+            qr: None,
+            qr_url: String::new(),
             demo,
-            roi: Roi::subject(),
             widgets: BTreeMap::new(),
             local_message: None,
             texture: None,
@@ -53,7 +65,6 @@ impl App {
             choose_roi: false,
             roi_drag: None,
             closing: false,
-            was_connected: false,
             close_revision: None,
         }
     }
@@ -62,6 +73,72 @@ impl App {
         if let Err(e) = self.worker.send(s.revision, action) {
             self.local_message = Some(e.to_string());
         }
+    }
+    pub fn control_snapshot(&self) -> Controls {
+        self.controls.lock().unwrap().clone()
+    }
+    pub fn web_enabled(&self) -> bool {
+        self.web.is_some()
+    }
+    fn web_panel(&mut self, ctx: &egui::Context) {
+        if !self.web_visible {
+            return;
+        }
+        let mut visible = self.web_visible;
+        egui::Window::new("Web remote")
+            .open(&mut visible).resizable(false).default_width(460.0)
+            .show(ctx, |ui| {
+                ui.label("Control this capture session from a phone or another computer.");
+                ui.small("The camera stays connected to this laptop. Keep Strehl Capture open.");
+                ui.add_space(8.0);
+                if self.web.is_none() {
+                    if self.button(ui,"web-enable","Enable web remote",true) {
+                        match WebServer::start(self.session.clone(),self.web_bind) {
+                            Ok(server) => {self.web=Some(server);self.web_address=0;self.local_message=None;},
+                            Err(e) => self.local_message=Some(format!("{e:#}")),
+                        }
+                    }
+                } else {
+                    if self.button(ui,"web-disable","Disable and revoke links",true) {
+                        self.web=None;self.qr=None;self.qr_url.clear();return;
+                    }
+                    let addresses=self.web.as_ref().unwrap().addresses.clone();
+                    self.web_address=self.web_address.min(addresses.len()-1);
+                    egui::ComboBox::from_id_salt("web-address")
+                        .selected_text(&addresses[self.web_address].label)
+                        .show_ui(ui,|ui|{for (index,address) in addresses.iter().enumerate() {
+                            ui.selectable_value(&mut self.web_address,index,&address.label);
+                        }});
+                    let address=&addresses[self.web_address];
+                    let base=address.url.split('#').next().unwrap();
+                    ui.label(RichText::new(base).monospace().color(ACCENT));
+                    if self.qr_url!=address.url && let Ok(code)=qrcode::QrCode::new(address.url.as_bytes()) {
+                            let width=code.width();let size=width+8;
+                            let mut pixels=vec![Color32::WHITE;size*size];
+                            for y in 0..width { for x in 0..width {
+                                if code[(x,y)]==qrcode::Color::Dark {pixels[(y+4)*size+x+4]=Color32::BLACK;}
+                            }}
+                            let image=egui::ColorImage::new([size,size],pixels);
+                            self.qr=Some(ctx.load_texture("pairing-qr",image,egui::TextureOptions::NEAREST));
+                            self.qr_url=address.url.clone();
+                    }
+                    if let Some(qr)=&self.qr {ui.add(egui::Image::new(qr).fit_to_exact_size(Vec2::splat(220.0)));}
+                    ui.horizontal(|ui| {
+                        if ui.button("Copy pairing link").clicked(){ctx.copy_text(address.url.clone());}
+                        if ui.button("Open on this laptop").clicked(){ctx.open_url(egui::OpenUrl::new_tab(self.web.as_ref().unwrap().local_url()));}
+                    });
+                    ui.small("Scan the QR or open the copied link. It grants control until web remote is disabled or the app closes.");
+                    ui.add_space(8.0);
+                    ui.label(RichText::new("Access while away").color(ACCENT));
+                    ui.label("Install Tailscale on this laptop and your phone / other computer, and sign in to the same account. Enable it on both devices, then select ‘Away · Tailscale’ above.");
+                    if !addresses.iter().any(|a|a.label.contains("Tailscale")) {
+                        ui.small("Tailscale is not connected here. After connecting it, disable and re-enable web remote to find its address.");
+                    }
+                    ui.hyperlink_to("Tailscale setup guide","https://tailscale.com/docs/how-to/quickstart");
+                    ui.small("Nearby: use the same Wi-Fi/LAN. If blocked, see START-HERE.md for the narrow Windows firewall rule. Away: no router port forwarding is needed.");
+                }
+            });
+        self.web_visible = visible;
     }
     fn button(&mut self, ui: &mut egui::Ui, key: &str, label: &str, enabled: bool) -> bool {
         let response = ui.add_enabled(enabled, egui::Button::new(label));
@@ -74,22 +151,25 @@ impl App {
     }
     pub fn draw(&mut self, ctx: &egui::Context) {
         self.widgets.clear();
+        let shared = self.controls.clone();
+        let mut settings = shared.lock().unwrap();
         let s = self.worker.snapshot();
-        if s.connected != self.was_connected {
-            self.start_set = false;
-            self.end_set = false;
-            self.roi = Roi::subject();
-            self.was_connected = s.connected;
-        }
-        if ctx.input(|i| i.viewport().close_requested()) && (s.connected || s.phase.active()) {
+        settings.sync_connection(&s);
+        let before = settings.clone();
+        if ctx.input(|i| i.viewport().close_requested())
+            && (s.connected || s.phase.active() || s.command_pending)
+        {
             ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
             self.closing = true;
             self.worker.request_stop();
         }
         if self.closing {
-            if !s.connected && !s.phase.active() {
+            if !s.connected && !s.phase.active() && !s.command_pending {
                 ctx.send_viewport_cmd(egui::ViewportCommand::Close);
-            } else if !s.phase.active() && self.close_revision != Some(s.revision) {
+            } else if !s.phase.active()
+                && !s.command_pending
+                && self.close_revision != Some(s.revision)
+            {
                 self.close_revision = Some(s.revision);
                 self.send(&s, Action::Disconnect);
             }
@@ -118,7 +198,7 @@ impl App {
                             } else {
                                 "Connect camera"
                             },
-                            !s.phase.active(),
+                            !s.phase.active() && !s.command_pending,
                         ) {
                             self.send(
                                 &s,
@@ -128,6 +208,9 @@ impl App {
                                     Action::Connect
                                 },
                             );
+                        }
+                        if self.button(ui, "web-remote", "Web remote", true) {
+                            self.web_visible = true;
                         }
                         ui.label(
                             RichText::new(if s.connected {
@@ -203,7 +286,7 @@ impl App {
                 egui::ScrollArea::vertical()
                     .id_salt("capture-controls")
                     .auto_shrink([false, false])
-                    .show(ui, |ui| self.controls(ui, &s));
+                    .show(ui, |ui| self.controls(ui, &s, &mut settings));
             });
         egui::CentralPanel::default()
             .frame(
@@ -211,11 +294,16 @@ impl App {
                     .fill(BG)
                     .inner_margin(egui::Margin::same(16)),
             )
-            .show(ctx, |ui| self.viewer(ui, &s));
+            .show(ctx, |ui| self.viewer(ui, &s, &mut settings));
+        if *settings != before {
+            settings.revision += 1;
+        }
+        drop(settings);
+        self.web_panel(ctx);
         ctx.request_repaint_after(Duration::from_millis(80));
     }
-    fn controls(&mut self, ui: &mut egui::Ui, s: &Snapshot) {
-        let editable = s.phase.can_edit();
+    fn controls(&mut self, ui: &mut egui::Ui, s: &Snapshot, settings: &mut Controls) {
+        let editable = s.phase.can_edit() && !s.command_pending;
         Self::section(ui, "FOCUS POSITION");
         ui.horizontal(|ui| {
             ui.label(
@@ -245,7 +333,7 @@ impl App {
                         s,
                         Action::Move {
                             target: target.unwrap(),
-                            settle_ms: self.plan.settle_ms,
+                            settle_ms: settings.plan.settle_ms,
                         },
                     );
                 }
@@ -264,11 +352,11 @@ impl App {
                                 .color(ACCENT)
                                 .size(11.0),
                         );
-                        let set = if start { self.start_set } else { self.end_set };
+                        let set = if start { settings.start_set } else { settings.end_set };
                         let value = if start {
-                            self.plan.start
+                            settings.plan.start
                         } else {
-                            self.plan.end
+                            settings.plan.end
                         };
                         ui.label(
                             RichText::new(if set {
@@ -287,18 +375,18 @@ impl App {
                             editable && s.connected && s.position.is_some(),
                         ) {
                             if start {
-                                self.plan.start = s.position.unwrap();
-                                self.start_set = true;
+                                settings.plan.start = s.position.unwrap();
+                                settings.start_set = true;
                             } else {
-                                self.plan.end = s.position.unwrap();
-                                self.end_set = true;
+                                settings.plan.end = s.position.unwrap();
+                                settings.end_set = true;
                             }
                         }
-                        let set = if start { self.start_set } else { self.end_set };
+                        let set = if start { settings.start_set } else { settings.end_set };
                         let target = if start {
-                            self.plan.start
+                            settings.plan.start
                         } else {
-                            self.plan.end
+                            settings.plan.end
                         };
                         if self.button(
                             ui,
@@ -306,9 +394,9 @@ impl App {
                             "Go to mark",
                             editable && set,
                         ) {
-                            let from=i32::from(target)-self.plan.direction()*i32::from(self.plan.approach);
+                            let from=i32::from(target)-settings.plan.direction()*i32::from(settings.plan.approach);
                             if let Ok(approach_from)=u16::try_from(from) {
-                                self.send(s,Action::Inspect{target,approach_from,settle_ms:self.plan.settle_ms});
+                                self.send(s,Action::Inspect{target,approach_from,settle_ms:settings.plan.settle_ms});
                             }else{self.local_message=Some("Shorten Approach to inspect this mark without crossing the lens limit".into());}
                         }
                     });
@@ -318,29 +406,32 @@ impl App {
             ui.label(RichText::new("Preview unavailable. Use the camera display to inspect focus; Mark current still records the reported position.").size(11.0).color(AMBER));
         }
         Self::section(ui, "CAPTURE PLAN");
-        ui.add_enabled_ui(!s.phase.active() && s.phase != Phase::Fault, |ui| {
-            egui::Grid::new("plan-settings")
-                .num_columns(2)
-                .spacing([15.0, 8.0])
-                .show(ui, |ui| {
-                    ui.label("Focus step");
-                    ui.add(
-                        egui::DragValue::new(&mut self.plan.step)
-                            .range(1..=65535)
-                            .speed(1.0)
-                            .suffix(" units"),
-                    );
-                    ui.end_row();
-                    ui.label("Settle after move");
-                    ui.add(
-                        egui::DragValue::new(&mut self.plan.settle_ms)
-                            .range(100..=30000)
-                            .speed(25.0)
-                            .suffix(" ms"),
-                    );
-                    ui.end_row();
-                });
-        });
+        ui.add_enabled_ui(
+            !s.phase.active() && !s.command_pending && s.phase != Phase::Fault,
+            |ui| {
+                egui::Grid::new("plan-settings")
+                    .num_columns(2)
+                    .spacing([15.0, 8.0])
+                    .show(ui, |ui| {
+                        ui.label("Focus step");
+                        ui.add(
+                            egui::DragValue::new(&mut settings.plan.step)
+                                .range(1..=65535)
+                                .speed(1.0)
+                                .suffix(" units"),
+                        );
+                        ui.end_row();
+                        ui.label("Settle after move");
+                        ui.add(
+                            egui::DragValue::new(&mut settings.plan.settle_ms)
+                                .range(100..=30000)
+                                .speed(25.0)
+                                .suffix(" ms"),
+                        );
+                        ui.end_row();
+                    });
+            },
+        );
         ui.label(
             RichText::new(
                 "1 is the smallest command. Adjacent positions can repeat the same physical focus.",
@@ -348,8 +439,8 @@ impl App {
             .size(11.0)
             .color(MUTED),
         );
-        let positions = if self.start_set && self.end_set {
-            self.plan.positions()
+        let positions = if settings.start_set && settings.end_set {
+            settings.plan.positions()
         } else {
             Err(anyhow::anyhow!("Mark both focus boundaries"))
         };
@@ -359,7 +450,7 @@ impl App {
                     RichText::new(format!(
                         "{} RAWs · {} sweep",
                         p.len(),
-                        if self.plan.end >= self.plan.start {
+                        if settings.plan.end >= settings.plan.start {
                             "increasing"
                         } else {
                             "decreasing"
@@ -369,10 +460,10 @@ impl App {
                 );
                 if !s.phase.active()
                     && let Some(cycle) = property(&s.status, "ShutterSpeed")
-                        .and_then(|shutter| timing::initial_cycle(shutter, self.plan.settle_ms))
+                        .and_then(|shutter| timing::initial_cycle(shutter, settings.plan.settle_ms))
                 {
-                    let estimate =
-                        cycle.mul_f64(p.len() as f64) + timing::initial_setup(self.plan.settle_ms);
+                    let estimate = cycle.mul_f64(p.len() as f64)
+                        + timing::initial_setup(settings.plan.settle_ms);
                     ui.label(RichText::new(format!("Initial estimate ~{}", timing::format_duration(estimate))).size(11.0).color(MUTED))
                         .on_hover_text("Rough shutter + settle + camera/SD allowance. The countdown learns actual cadence during capture.");
                 }
@@ -387,8 +478,8 @@ impl App {
                 self.send(
                     s,
                     Action::Capture {
-                        plan: self.plan.clone(),
-                        root: self.root.clone(),
+                        plan: settings.plan.clone(),
+                        root: settings.root.clone(),
                     },
                 );
             }
@@ -443,16 +534,16 @@ impl App {
                 "Sweep preview",
                 editable
                     && fresh_preview
-                    && self.start_set
-                    && self.end_set
-                    && self.plan.start.abs_diff(self.plan.end) >= 8,
+                    && settings.start_set
+                    && settings.end_set
+                    && settings.plan.start.abs_diff(settings.plan.end) >= 8,
             ) {
                 self.worker.request_resume();
                 self.send(
                     s,
                     Action::Scan {
-                        plan: self.plan.clone(),
-                        roi: self.roi,
+                        plan: settings.plan.clone(),
+                        roi: settings.roi,
                     },
                 );
             }
@@ -472,22 +563,22 @@ impl App {
                 "Apply suggested bounds",
                 editable && !suggestion.clipped,
             ) {
-                self.plan.start = suggestion.start;
-                self.plan.end = suggestion.end;
-                self.start_set = true;
-                self.end_set = true;
+                settings.plan.start = suggestion.start;
+                settings.plan.end = suggestion.end;
+                settings.start_set = true;
+                settings.end_set = true;
             }
         }
         ui.add_space(5.0);
         egui::CollapsingHeader::new("Approach, timeout & storage").show(ui,|ui|{
-            ui.add_enabled_ui(!s.phase.active(),|ui|{
-                ui.horizontal(|ui|{ui.label("Approach");ui.add(egui::DragValue::new(&mut self.plan.approach).range(1..=4096).suffix(" units"));});
+            ui.add_enabled_ui(!s.phase.active() && !s.command_pending,|ui|{
+                ui.horizontal(|ui|{ui.label("Approach");ui.add(egui::DragValue::new(&mut settings.plan.approach).range(1..=4096).suffix(" units"));});
                 ui.small("Before capture, move beyond A, then approach A in the sweep direction to reduce hysteresis.");
-                ui.horizontal(|ui|{ui.label("Shutter timeout");ui.add(egui::DragValue::new(&mut self.plan.capture_timeout_s).range(5..=3600).suffix(" s"));});
+                ui.horizontal(|ui|{ui.label("Shutter timeout");ui.add(egui::DragValue::new(&mut settings.plan.capture_timeout_s).range(5..=3600).suffix(" s"));});
                 if ui.button("Choose journal folder…").clicked()
-                    && let Some(path)=rfd::FileDialog::new().set_title("Local capture journals (no photographs)").pick_folder(){self.root=path;}
+                    && let Some(path)=rfd::FileDialog::new().set_title("Local capture journals (no photographs)").pick_folder(){settings.root=path;}
             });
-            ui.label(RichText::new(self.root.display().to_string()).size(10.0).color(MUTED));
+            ui.label(RichText::new(settings.root.display().to_string()).size(10.0).color(MUTED));
             if self.button(ui,"export","Copy metadata to SD…",!s.phase.active()&&s.journal.as_ref().is_some_and(|p|p.join("result.json").exists()))
                 && let Some(folder)=rfd::FileDialog::new().set_title("Choose the mounted SD card or RAW folder").pick_folder(){self.send(s,Action::Export{folder});
             }
@@ -556,7 +647,7 @@ impl App {
         }
         self.texture_generation = s.preview_generation;
     }
-    fn viewer(&mut self, ui: &mut egui::Ui, s: &Snapshot) {
+    fn viewer(&mut self, ui: &mut egui::Ui, s: &Snapshot, settings: &mut Controls) {
         ui.horizontal(|ui| {
             ui.label(RichText::new("LIVE VIEW").size(10.0).color(MUTED));
             if self.button(ui, "fit", "Fit", true) {
@@ -671,7 +762,7 @@ impl App {
                             height: selection.height() / rect.height(),
                         };
                         if roi.valid() {
-                            self.roi = roi;
+                            settings.roi = roi;
                         }
                         self.roi_drag = None;
                         self.choose_roi = false;
@@ -690,10 +781,14 @@ impl App {
             }
             if self.zoom == 1.0 {
                 let region = Rect::from_min_size(
-                    rect.min + egui::vec2(self.roi.x * rect.width(), self.roi.y * rect.height()),
+                    rect.min
+                        + egui::vec2(
+                            settings.roi.x * rect.width(),
+                            settings.roi.y * rect.height(),
+                        ),
                     egui::vec2(
-                        self.roi.width * rect.width(),
-                        self.roi.height * rect.height(),
+                        settings.roi.width * rect.width(),
+                        settings.roi.height * rect.height(),
                     ),
                 );
                 ui.painter().rect_stroke(

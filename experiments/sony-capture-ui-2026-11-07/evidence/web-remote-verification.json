@@ -1,0 +1,107 @@
+{
+  "schema": "strehl-capture-package-verification-v2",
+  "zip_name": "strehl-capture-win-x64-2026-11-07-r5.zip",
+  "zip_sha256": "0c299f5ad0110e001beea0dde58bb967a5d29cb3d702cf99c0b0ce30473d5c6d",
+  "zip_bytes": 19487144,
+  "manifest_files_verified": 504,
+  "source_snapshot_verified": true,
+  "relocated_path_contains_spaces": true,
+  "native_gate_assertions": 19,
+  "native_preview_assertions": 9,
+  "sdk_image_pointer_offset_without_camera": 0,
+  "sdk_version": 33685504,
+  "enumerated_camera_count": 0,
+  "camera_activity": "enumeration only; no camera connection, focus or exposure",
+  "app_sha256": "d25a59160b213b76a76c5f73e4f9910f6113590f0d551948059be8578d5d7288",
+  "bridge_sha256": "1b1bfe295b44af122a484aac37224ac389a6381370273e87fd59d1d8e3db264b",
+  "ui": {
+    "camera": "simulator; no physical connection",
+    "checks": [
+      "Connect button starts simulator and renders a fresh live preview",
+      "Select subject and pointer drag set a bounded ROI in preview coordinates",
+      "Mark A, jog +128, mark B bind the focus commands shown by the camera",
+      "Capture countdown is rendered and its active time freezes while paused",
+      "Start, Pause, Resume and Stop exercised through actual egui button input",
+      "A new three-plane run includes both bounds and finishes with three journalled acknowledgements",
+      "Preview-only survey uses fresh frames and suggests bounds without capture",
+      "Both manual focus marks and jogging work while the preview reports invalid JPEG",
+      "Web remote enables and revokes its pairing links through real egui controls"
+    ],
+    "last_phase": "Disconnected",
+    "renderer": "AdapterInfo { name: \"NVIDIA GeForce RTX 5090\", vendor: 4318, device: 11141, device_type: DiscreteGpu, driver: \"NVIDIA\", driver_info: \"621.01\", backend: Vulkan }",
+    "schema": "strehl-capture-ui-verification-v1",
+    "sizes": [
+      [
+        1366,
+        900
+      ],
+      [
+        1280,
+        720
+      ]
+    ]
+  },
+  "laptop_live_preview_sha256": "d77641e379851fdf3cc1918a6f5c8d9de0250baf69590051cb82372755005235",
+  "web": {
+    "schema": "strehl-web-remote-verification-v1",
+    "camera": "explicit simulator; no physical camera access",
+    "executable_sha256": "d25a59160b213b76a76c5f73e4f9910f6113590f0d551948059be8578d5d7288",
+    "browser": "Microsoft Edge / Playwright, headless",
+    "sizes": [
+      [
+        1366,
+        1000
+      ],
+      [
+        390,
+        844
+      ]
+    ],
+    "checks": [
+      "Unauthenticated, cross-origin and file-path requests are rejected; no phantom preview",
+      "Real browser decodes live JPEG; desktop marks and focus moves appear on a phone client",
+      "Conflicting edits from two controllers are refused without overwriting the current plan",
+      "Pointer selection sets the subject ROI in shared preview coordinates",
+      "Browser closure leaves capture running; reconnect, pause, frozen countdown, resume and stop work across clients",
+      "A second three-plane stack completes with both endpoints and a finished timer",
+      "Disconnect clears shared focus marks and the browser preview"
+    ],
+    "browser_errors": [],
+    "expected_conflicts": 1,
+    "journal_runs": 2,
+    "away_vpn": "Not exercised; Tailscale must be installed and connected on owner devices",
+    "screenshots": [
+      "desktop-bounds.png",
+      "desktop-paused.png",
+      "phone-bounds.png",
+      "phone-paused.png"
+    ]
+  },
+  "pairing_qr": {
+    "decoded_from_rendered_window": true,
+    "key_published": false,
+    "screenshot_sha256": "4e79419f02ed750e5a7bb5df0dc7bcafc1bcc3ea05f5d424349fb8d96432e2cd"
+  },
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.10",
+    "build_workers": 2,
+    "http_runtime_workers": 2
+  },
+  "source_inputs_match_working_tree": 91,
+  "checks": {
+    "rust_tests": 18,
+    "clippy": "passed, -D warnings",
+    "format": "passed",
+    "javascript_syntax": "node --check passed",
+    "firewall_helper": "PowerShell parser passed; no firewall rules applied",
+    "away_access": "unverified on owner devices"
+  },
+  "logs": {
+    "web-tests.log": "ed9edbd05ae50b7d5f8c6a566d9c6bb103a32cec2970772fbdc91b9de5802372",
+    "web-clippy.log": "aa433aa0fc0b67ea34422e441b7687357dd6ca11a875f63db84a0ffc9f7867f4",
+    "web-package-r5.log": "79be99b59fd4fc626e54f4592bc4e0402d53e1cab62166225fe44739e3268dde",
+    "web-package-r5-verification.log": "68d6d687ae4a01c9f5cab19e24b4a7fa664ba4a78ee38e43aa7a1b4147960220",
+    "web-browser-package-r5.log": "8fe7bd2f56823ecb6b33151b80cd479843b5543ee5cbb59e1cf4ad408ed4832a"
+  }
+}

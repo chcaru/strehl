@@ -22,6 +22,14 @@ struct Args {
     /// Exercise actual egui controls with a simulator and save screenshots/receipt.
     #[arg(long)]
     exercise: Option<PathBuf>,
+    /// HTTP interface when web remote is enabled in the desktop app.
+    #[arg(long, default_value = "0.0.0.0:8787")]
+    web_bind: std::net::SocketAddr,
+    /// Bounded headless browser test; requires --demo and publishes a local test key.
+    #[arg(long)]
+    web_test_session: Option<PathBuf>,
+    #[arg(long, default_value_t = 240)]
+    web_test_seconds: u64,
 }
 fn main() {
     if let Err(e) = run() {
@@ -49,7 +57,36 @@ fn run() -> anyhow::Result<()> {
         );
     }
     let worker = strehl_capture::worker::Worker::new(bridge, args.demo);
-    let app = app::App::new(worker, root, args.demo);
+    if let Some(path) = args.web_test_session {
+        use std::sync::{Arc, Mutex};
+        use strehl_capture::{
+            remote::WebServer,
+            session::{Controls, Session},
+        };
+        anyhow::ensure!(args.demo, "Headless browser tests require --demo");
+        anyhow::ensure!(!path.exists(), "Choose a fresh test session file");
+        anyhow::ensure!(
+            (1..=600).contains(&args.web_test_seconds),
+            "Test lifetime must be 1–600 seconds"
+        );
+        let session = Arc::new(Session::new(
+            Arc::new(worker),
+            Arc::new(Mutex::new(Controls::new(root))),
+            true,
+        ));
+        let server = WebServer::start(session, "127.0.0.1:0".parse()?)?;
+        std::fs::write(
+            &path,
+            serde_json::to_vec(
+                &serde_json::json!({"pid":std::process::id(),"url":server.local_url(),"key":server.key,"port":server.port,"demo":true}),
+            )?,
+        )?;
+        std::thread::sleep(std::time::Duration::from_secs(args.web_test_seconds));
+        std::fs::remove_file(path)?;
+        return Ok(());
+    }
+    let mut app = app::App::new(worker, root, args.demo);
+    app.web_bind = args.web_bind;
     if let Some(dir) = args.exercise {
         return offscreen::exercise(app, &dir);
     }

@@ -206,7 +206,7 @@ impl Viewer {
             .with_context(|| format!("UI widget {name} is absent"))?;
         ensure!(
             rect.center().y > 58.0 && rect.center().y < (self.size[1] - 64) as f32
-                || name == "connection",
+                || matches!(name, "connection" | "web-remote"),
             "Widget {name} is outside the visible viewport: {rect:?}"
         );
         let pos = rect.center();
@@ -288,9 +288,12 @@ impl Viewer {
             false,
         )?;
         ensure!(
-            app.roi.x > 0.15 && app.roi.y > 0.15 && app.roi.width < 0.65 && app.roi.height < 0.65,
+            app.control_snapshot().roi.x > 0.15
+                && app.control_snapshot().roi.y > 0.15
+                && app.control_snapshot().roi.width < 0.65
+                && app.control_snapshot().roi.height < 0.65,
             "Subject rectangle did not follow pointer input: {:?}",
-            app.roi
+            app.control_snapshot().roi
         );
         Ok(())
     }
@@ -327,7 +330,7 @@ pub fn screenshot(mut app: App, path: &Path, size: [u32; 2]) -> Result<()> {
 }
 pub fn exercise(mut app: App, directory: &Path) -> Result<()> {
     std::fs::create_dir(directory).context("Choose a fresh UI exercise directory")?;
-    app.root = directory.join("journals");
+    app.controls.lock().unwrap().root = directory.join("journals");
     let mut viewer = Viewer::new([1366, 900])?;
     let mut checks = Vec::new();
     viewer.save(&mut app, &directory.join("01-disconnected.png"))?;
@@ -337,19 +340,21 @@ pub fn exercise(mut app: App, directory: &Path) -> Result<()> {
     viewer.subject_rectangle(&mut app)?;
     checks.push("Select subject and pointer drag set a bounded ROI in preview coordinates");
     viewer.click(&mut app, "mark-start")?;
-    let start = app.plan.start;
+    let start = app.control_snapshot().plan.start;
     viewer.click(&mut app, "jog-128")?;
     viewer.until(
         &mut app,
         |a| {
             a.worker.snapshot().position == Some(start + 128)
-                && a.worker.snapshot().phase == Phase::Ready
+                && (a.worker.snapshot().phase == Phase::Ready
+                    && !a.worker.snapshot().command_pending)
         },
         10,
     )?;
     viewer.click(&mut app, "mark-end")?;
     ensure!(
-        app.plan.start == start && app.plan.end == start + 128,
+        app.control_snapshot().plan.start == start
+            && app.control_snapshot().plan.end == start + 128,
         "Focus marks did not preserve preview positions"
     );
     checks.push("Mark A, jog +128, mark B bind the focus commands shown by the camera");
@@ -394,7 +399,7 @@ pub fn exercise(mut app: App, directory: &Path) -> Result<()> {
     viewer.click(&mut app, "stop")?;
     viewer.until(
         &mut app,
-        |a| a.worker.snapshot().phase == Phase::Stopped,
+        |a| a.worker.snapshot().phase == Phase::Stopped && !a.worker.snapshot().command_pending,
         10,
     )?;
     ensure!(
@@ -406,7 +411,8 @@ pub fn exercise(mut app: App, directory: &Path) -> Result<()> {
     viewer.until(
         &mut app,
         |a| {
-            a.worker.snapshot().phase == Phase::Ready && a.worker.snapshot().position == Some(start)
+            (a.worker.snapshot().phase == Phase::Ready && !a.worker.snapshot().command_pending)
+                && a.worker.snapshot().position == Some(start)
         },
         10,
     )?;
@@ -415,7 +421,7 @@ pub fn exercise(mut app: App, directory: &Path) -> Result<()> {
         viewer.until(
             &mut app,
             |a| {
-                a.worker.snapshot().phase == Phase::Ready
+                (a.worker.snapshot().phase == Phase::Ready && !a.worker.snapshot().command_pending)
                     && a.worker.snapshot().position == Some(expected)
             },
             10,
@@ -425,7 +431,7 @@ pub fn exercise(mut app: App, directory: &Path) -> Result<()> {
     viewer.click(&mut app, "start")?;
     viewer.until(
         &mut app,
-        |a| a.worker.snapshot().phase == Phase::Complete,
+        |a| a.worker.snapshot().phase == Phase::Complete && !a.worker.snapshot().command_pending,
         10,
     )?;
     ensure!(
@@ -445,17 +451,25 @@ pub fn exercise(mut app: App, directory: &Path) -> Result<()> {
         "Completed timer did not finish"
     );
     // A separate synthetic survey fixture spans the known simulated depth range.
-    app.plan.start = 60500;
-    app.plan.end = 60800;
-    app.plan.settle_ms = 100;
-    app.roi = strehl_capture::model::Roi::subject();
+    {
+        let mut c = app.controls.lock().unwrap();
+        c.plan.start = 60500;
+        c.plan.end = 60800;
+        c.plan.settle_ms = 100;
+        c.roi = strehl_capture::model::Roi::subject();
+        c.revision += 1;
+    }
     viewer.click(&mut app, "scan")?;
     viewer.until(
         &mut app,
         |a| a.worker.snapshot().phase == Phase::Scanning,
         10,
     )?;
-    viewer.until(&mut app, |a| a.worker.snapshot().phase == Phase::Ready, 50)?;
+    viewer.until(
+        &mut app,
+        |a| a.worker.snapshot().phase == Phase::Ready && !a.worker.snapshot().command_pending,
+        50,
+    )?;
     ensure!(
         app.worker.snapshot().suggestion.is_some(),
         "Synthetic focus survey did not produce bounds"
@@ -464,7 +478,7 @@ pub fn exercise(mut app: App, directory: &Path) -> Result<()> {
     viewer.save(&mut app, &directory.join("05-survey.png"))?;
     viewer.click(&mut app, "apply-bounds")?;
     ensure!(
-        app.plan.start > 60500 && app.plan.end < 60800,
+        app.control_snapshot().plan.start > 60500 && app.control_snapshot().plan.end < 60800,
         "Apply bounds did not trim the synthetic sweep"
     );
     viewer.click(&mut app, "connection")?;
@@ -474,7 +488,7 @@ pub fn exercise(mut app: App, directory: &Path) -> Result<()> {
         10,
     )?;
     ensure!(
-        !app.start_set && !app.end_set,
+        !app.control_snapshot().start_set && !app.control_snapshot().end_set,
         "Focus marks survived disconnection"
     );
     let mut laptop = Viewer::new([1280, 720])?;
@@ -495,22 +509,23 @@ pub fn exercise(mut app: App, directory: &Path) -> Result<()> {
     )?;
     viewer.click(&mut no_preview, "mark-start")?;
     ensure!(
-        no_preview.start_set,
+        no_preview.control_snapshot().start_set,
         "Preview error disabled manual start mark"
     );
-    let start = no_preview.plan.start;
+    let start = no_preview.control_snapshot().plan.start;
     viewer.click(&mut no_preview, "jog-128")?;
     viewer.until(
         &mut no_preview,
         |a| {
             let s = a.worker.snapshot();
-            s.phase == Phase::Ready && s.position == Some(start + 128)
+            s.phase == Phase::Ready && !s.command_pending && s.position == Some(start + 128)
         },
         10,
     )?;
     viewer.click(&mut no_preview, "mark-end")?;
     ensure!(
-        no_preview.end_set && no_preview.plan.end == start + 128,
+        no_preview.control_snapshot().end_set
+            && no_preview.control_snapshot().plan.end == start + 128,
         "Preview error disabled manual end mark"
     );
     ensure!(
@@ -535,6 +550,17 @@ pub fn exercise(mut app: App, directory: &Path) -> Result<()> {
         |a| a.worker.snapshot().phase == Phase::Disconnected,
         10,
     )?;
+    app.web_bind = "127.0.0.1:0".parse()?;
+    viewer.click(&mut app, "web-remote")?;
+    viewer.click(&mut app, "web-enable")?;
+    ensure!(app.web_enabled(), "Web remote did not start");
+    // Let the newly opened egui window finish fading and settle its larger layout.
+    std::thread::sleep(Duration::from_millis(350));
+    viewer.frame(&mut app, vec![], false)?;
+    viewer.save(&mut app, &directory.join("08-web-remote.png"))?;
+    viewer.click(&mut app, "web-disable")?;
+    ensure!(!app.web_enabled(), "Web remote did not stop");
+    checks.push("Web remote enables and revokes its pairing links through real egui controls");
     let report = serde_json::json!({"schema":"strehl-capture-ui-verification-v1","camera":"simulator; no physical connection","renderer":format!("{:?}",viewer.render.adapter.get_info()),"checks":checks,"sizes":[[1366,900],[1280,720]],"last_phase":format!("{:?}",app.worker.snapshot().phase)});
     std::fs::write(
         directory.join("ui-receipt.json"),

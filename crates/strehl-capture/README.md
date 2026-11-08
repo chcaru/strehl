@@ -67,6 +67,58 @@ underlying SDK capture/focus path has the owner's two physical tests; this new
 live-view UI and magnifier have only software/simulator verification so far.
 `try-demo.cmd` opens a clearly marked simulator without loading the Sony SDK.
 
+## Control from a phone or another computer
+
+1. On the camera laptop, open **Web remote → Enable web remote**. Choose
+   **Nearby · local network**, then scan its QR code with your phone, or use
+   **Copy pairing link** and open that link in another browser. Both devices must
+   be on the same reachable LAN/Wi-Fi. Guest Wi-Fi may isolate devices.
+2. The page includes live view, zoom, camera magnifier when available, focus
+   jogging, A/B marks, subject selection, preview survey, step/settle settings,
+   Start/Pause/Resume/Stop, and the countdown. Focus step still defaults to **1**.
+   Desktop and browser use the same camera session and shared marks/settings.
+3. If the browser closes, the phone sleeps, or Wi-Fi drops, the sequence keeps
+   running on the laptop. Reopen the pairing link to see its progress. Commands
+   whose replies are lost are not automatically retried; check the current
+   status before acting again. A stale plan or duplicate Start is refused.
+4. Keep the laptop awake, powered, connected to the camera and running Strehl
+   Capture. Disabling web remote revokes its links without stopping the stack;
+   closing Strehl Capture stops the sequence cooperatively. A new remote session
+   creates a new pairing key. Treat the pairing link as access to camera control.
+
+**Access while away:** install [Tailscale](https://tailscale.com/docs/how-to/quickstart)
+on the camera laptop and your phone/other computer, and sign in to the same
+Tailscale account. Connect both devices to Tailscale. In Strehl Capture, enable
+web remote and select **Away · Tailscale**; scan/copy that pairing link. If you
+installed or connected Tailscale after enabling the remote, disable and re-enable
+web remote so it discovers the new address. This is a private website served by
+the laptop; there is no cloud site to deploy or router port to forward. The
+Tailscale connection carries the HTTP traffic through the encrypted private VPN.
+Local-network HTTP uses the pairing key but does not itself encrypt traffic.
+
+If Windows Firewall blocks the connection, allow **Strehl Capture** on your
+private network when Windows prompts. The package also includes
+`allow-web-remote.ps1`: open **PowerShell as administrator** in the extracted ZIP
+folder, then run `powershell -NoProfile -ExecutionPolicy Bypass -File .\allow-web-remote.ps1`.
+This optional helper allows only this executable on TCP port **8787**, from the
+local subnet and Tailscale's IPv4 range. It does not turn off the firewall.
+Rerun from the new folder if you move the package. Custom firewall/managed
+network policies may still require local configuration. The helper prints the
+rule name if you later want to remove that rule in Windows Firewall.
+
+Try the away link with your phone's Wi-Fi off and Tailscale connected before
+leaving the laptop unattended. Software/simulator checks exercise HTTP control
+and browser reconnection; an actual away connection and physical-camera remote
+capture still need this check on your devices.
+
+The server starts only when enabled, listens on port 8787, and accepts local,
+LAN or private-VPN clients with a per-session pairing key. It exposes embedded
+page assets, session state, transient preview JPEGs and bounded camera commands.
+It has no filesystem browser, RAW download, metadata export or shell endpoint.
+Metadata export to an SD reader remains a desktop action. If another application
+uses that port, start with `Strehl-Capture.exe --web-bind 0.0.0.0:8788` and adjust
+your firewall rule to match. All page assets are bundled; no CDN is required.
+
 ## Optional preview survey
 
 Mark rough A/B limits extending beyond the visible subject depth. At **Fit**,
@@ -132,11 +184,16 @@ cargo clippy --locked -p strehl-capture --all-targets --no-deps -j 2 -- -D warni
 cargo fmt -p strehl-capture -- --check
 python scripts/strehl-capture-control.py --exe target/debug/strehl-capture.exe exercise --out outputs/sony-capture-ui/fresh-ui-check
 python scripts/strehl-capture-control.py --exe target/debug/strehl-capture.exe screenshot --png outputs/sony-capture-ui/fresh-preview.png --size 1280x720
+python experiments/sony-capture-ui-2026-11-07/verify-web-remote.py --exe target/debug/strehl-capture.exe --out outputs/sony-capture-ui/fresh-web-check
 ```
 
 The control helper always uses the simulator. It sends egui input to the actual
 rendered UI and uses a wgpu texture readback, with no desktop automation or
 camera connection. Camera commands have a single worker owner; the UI stays
 responsive while the bridge waits. Preview buffers and reply lengths are bounded.
+The browser check requires Python Playwright and Microsoft Edge. It launches a
+bounded, loopback-only `--demo --web-test-session` server, exercises desktop and
+phone-sized browsers, and removes its temporary pairing key when done. It does
+not connect physical hardware or change firewall/VPN settings.
 This package is for the owner's supplied Sony SDK and is not an official public
 Strehl release. Keep its source and third-party notices with the binaries.

@@ -1,0 +1,406 @@
+{
+  "created_utc": "2026-11-08T02:22:34.434450+00:00",
+  "rustc": "rustc 1.98.0 (88d9e12ae 2026-08-18)\nbinary: rustc\ncommit-hash: 88d9e12ae178fab0fb5cc050a94da85685d449ea\ncommit-date: 2026-08-18\nhost: x86_64-pc-windows-msvc\nrelease: 1.98.0\nLLVM version: 22.1.8\n",
+  "command": [
+    "cargo",
+    "build",
+    "--locked",
+    "--offline",
+    "--release",
+    "-p",
+    "strehl-capture",
+    "-j",
+    "2",
+    "--target-dir",
+    "<external-build-cache>"
+  ],
+  "build_working_directory": "source",
+  "app_sha256": "d25a59160b213b76a76c5f73e4f9910f6113590f0d551948059be8578d5d7288",
+  "native": {
+    "builtUtc": "2026-11-08T01:01:02.5497856Z",
+    "sdk": {
+      "archive": "CrSDK_v2.02.00_20260610a_Win64.zip",
+      "sha256": "4d4cc0bee7fdd60e1e947bfa7a524cbfb5550465ceccc8647eb7b7cdc383ef77",
+      "sdk_version": "2.02.00",
+      "source": "SimpleCli.zip headers and runtime; SDK remains external"
+    },
+    "generator": "Visual Studio 17 2022; x64; Release; /W4 /WX; 2 build workers",
+    "executableSha256": "1B1BFE295B44AF122A484AAC37224AC389A6381370273E87FD59D1D8E3DB264B",
+    "sourceSha256": "A950A061F9A7C141F0FB9361BA305216AE91F00FC584618C022C5411D2B8A3A5",
+    "sourceFilesSha256": {
+      "strehl-sony-control.cpp": "A950A061F9A7C141F0FB9361BA305216AE91F00FC584618C022C5411D2B8A3A5",
+      "card-capture.h": "F4719E4889C568E6BE64BF405FA02A54B473AEE0C0F4B6415A4D4E5019A9E4EB",
+      "CMakeLists.txt": "65CBC7BC1A43B220F9332CB82EC86E5E890F430DADAAA8DF5E0192C8F900461A"
+    }
+  },
+  "copied_inputs": [
+    {
+      "path": "crates/strehl-capture/Cargo.toml",
+      "sha256": "bd6f50d224d8b2035df35a0ebef59dccae50746a0ab2d2b5ae4fe888d3fe4812"
+    },
+    {
+      "path": "crates/strehl-capture/README.md",
+      "sha256": "fefe39cda700e6c87fa8de8f6fedcefa69385d40eaf00316c29ce81f405f7e16"
+    },
+    {
+      "path": "crates/strehl-capture/src/app.rs",
+      "sha256": "6f62b0985a311d36d9e2014c95bb7e62537e9ffd0e75eefde8127907eb7d196d"
+    },
+    {
+      "path": "crates/strehl-capture/src/backend.rs",
+      "sha256": "05480b3302c727da752532773ae75318e208c31f48be905fa8b2a59f371bdfe7"
+    },
+    {
+      "path": "crates/strehl-capture/src/bounds.rs",
+      "sha256": "2b5ae5968fcb2e47492d4ac025db1e2a016ba37ef19b83427430bca15146617b"
+    },
+    {
+      "path": "crates/strehl-capture/src/journal.rs",
+      "sha256": "2ef09af8e52a1a540bed5a52c86b66b74d9bc1bfe17e540f7840b47ec351c0ac"
+    },
+    {
+      "path": "crates/strehl-capture/src/lib.rs",
+      "sha256": "50139d79227c2fdbed9f74e19a89913128a0b9dc183651896c6ad97c7b60ceb1"
+    },
+    {
+      "path": "crates/strehl-capture/src/main.rs",
+      "sha256": "4e9627809ce60f261ff49831dbdf140170bee91c9e6ed703e5a06ecb3e989cf8"
+    },
+    {
+      "path": "crates/strehl-capture/src/model.rs",
+      "sha256": "e05b428274402eae3486cd7ce680af0a7e463a70b2e85b59b74d99076f218a8e"
+    },
+    {
+      "path": "crates/strehl-capture/src/offscreen.rs",
+      "sha256": "346ca6983f57e822bb07276997f9851de5bc64aa62ddcc74412135894d232fdf"
+    },
+    {
+      "path": "crates/strehl-capture/src/remote.rs",
+      "sha256": "b7188f0783be933492faeea4a5e14dabbfe00b0942f0f45a7c868a3da298bc73"
+    },
+    {
+      "path": "crates/strehl-capture/src/session.rs",
+      "sha256": "a489901de28fb14da900dbe4cd225614fbd58c9ee944ec8f306c221b963d26b3"
+    },
+    {
+      "path": "crates/strehl-capture/src/theme.rs",
+      "sha256": "98fdd02a2231773c3db8d5747355b0dafc9a3a95f1a934c1af05f262549c2308"
+    },
+    {
+      "path": "crates/strehl-capture/src/timing.rs",
+      "sha256": "a68b080f874f7122470832a71346865947960be785a4b950ae24f60b8c6f4bc2"
+    },
+    {
+      "path": "crates/strehl-capture/src/worker.rs",
+      "sha256": "ee1fec8a42f10c28dcd29b79762d13f68108cf506d2b3dacfed3e2d9a0b22385"
+    },
+    {
+      "path": "crates/strehl-capture/web/app.js",
+      "sha256": "cc6ab6cf2db5a004a94d07084e98b0e0200f4534eb12cfc41577ca3e1bfd5a8a"
+    },
+    {
+      "path": "crates/strehl-capture/web/index.html",
+      "sha256": "0a2ba30c46a38446ceeb9c9239cdfc85949666c6ea422956f9faf1a07f6bf4f4"
+    },
+    {
+      "path": "crates/strehl-capture/web/style.css",
+      "sha256": "58cc7755bd6ce88ff6dcb70dd4ee7d63fdd27485c0800fdcb18bbdc40e2bf70f"
+    },
+    {
+      "path": "third-party/egui-wgpu/.cargo_vcs_info.json",
+      "sha256": "3068420187cbd3e103ddda250ca0ef83997c65e68fbdc60cabdd4ad17f5f0571"
+    },
+    {
+      "path": "third-party/egui-wgpu/Cargo.toml",
+      "sha256": "4d2e5a55a403f3b3cf9c717cec3535583f1061ec0e879badf1ef91df6aa10e6d"
+    },
+    {
+      "path": "third-party/egui-wgpu/LICENSE-APACHE",
+      "sha256": "1ac50a5abd5cff5331d59928d83369b66b0099a88f0111dc2175526b3c666dec"
+    },
+    {
+      "path": "third-party/egui-wgpu/LICENSE-MIT",
+      "sha256": "3fceb7b317f3c70451942b0e123723a2e250c7eaf970ce4b490a57a94c5588ff"
+    },
+    {
+      "path": "third-party/egui-wgpu/README.md",
+      "sha256": "fb5165f613471a07c0ca9811b87de0c434a006fe71aa70c216e158b40d3384da"
+    },
+    {
+      "path": "third-party/egui-wgpu/src/capture.rs",
+      "sha256": "4cac2ebafdd583f89c481a030bf880903b18941485d1c0ad02d447c12db3fd6c"
+    },
+    {
+      "path": "third-party/egui-wgpu/src/egui.wgsl",
+      "sha256": "c9e249f47ee977927c127ccf96207ce80ccbfacaeaf0d47c53ffa424d8ecd6e1"
+    },
+    {
+      "path": "third-party/egui-wgpu/src/lib.rs",
+      "sha256": "c1c5e457029124155c33e77de7fb5649c5f049780a6b659e225c966f19cd6bd7"
+    },
+    {
+      "path": "third-party/egui-wgpu/src/renderer.rs",
+      "sha256": "c3beb24aba95acfab846fa22112146d0ce4c81038a1e8a3689f58e50ebe6b504"
+    },
+    {
+      "path": "third-party/egui-wgpu/src/setup.rs",
+      "sha256": "1c4a8cb3a93f3ad3860d4b094e6d084b75b6182e6e5196327d99ef56067cbfe8"
+    },
+    {
+      "path": "third-party/egui-wgpu/src/texture_copy.wgsl",
+      "sha256": "d27fdb1276298551fb27425f4bec8f60dd5440d9b0196d82f5f982843067f722"
+    },
+    {
+      "path": "third-party/egui-wgpu/src/winit.rs",
+      "sha256": "7d3f7b8f815ef3593a5ac49deb36f05eb31f9d21b11687b6224b385834c40fb4"
+    },
+    {
+      "path": "third-party/egui-wgpu/STREHL-PATCH.md",
+      "sha256": "52d8aba69fc085e677f5133e0bfa41e1180093376cfcc119dc746f420fe1d4ae"
+    },
+    {
+      "path": "third-party/egui-wgpu/strehl.patch",
+      "sha256": "b88a05c7283ff60a6d3ef4f5f7973bf9981d275bc05d0afcdea3f15b02d617ab"
+    },
+    {
+      "path": "tools/sony-control/allow-web-remote.ps1",
+      "sha256": "f82d79209b5c9e6dc44945f99c6cff1429d570c8324553da65ef3b080b309d54"
+    },
+    {
+      "path": "tools/sony-control/build.ps1",
+      "sha256": "a4e0ee84af3803d1312c316e4d8a7e74db5f0d99cd2b01fc42654477cfc26f8e"
+    },
+    {
+      "path": "tools/sony-control/card-capture.h",
+      "sha256": "f4719e4889c568e6be64bf405fa02a54b473aee0c0f4b6415a4d4e5019a9e4eb"
+    },
+    {
+      "path": "tools/sony-control/CMakeLists.txt",
+      "sha256": "65cbc7bc1a43b220f9332cb82ec86e5e890f430dadaaa8df5e0192c8f900461a"
+    },
+    {
+      "path": "tools/sony-control/package-capture.py",
+      "sha256": "9333d897d6944a6e9567ede82954db188266913deb1f0d81a8c8d0cd3e87165a"
+    },
+    {
+      "path": "tools/sony-control/package-portable.py",
+      "sha256": "7446b5cb619c866437d4dd1fe5d15016b9be00a3b90464d137495913920ebead"
+    },
+    {
+      "path": "tools/sony-control/portable-launch.py",
+      "sha256": "8d6a8af47c4644be001485eb5390497b3ba58a80ca260125c0571a34593d4c58"
+    },
+    {
+      "path": "tools/sony-control/prepare-sdk.py",
+      "sha256": "39fc7dbb45ac62854ff472e762c1ead205103beaf2155887ab1ef1fb0667aa50"
+    },
+    {
+      "path": "tools/sony-control/README.md",
+      "sha256": "84c2c8530eb653ea6d4cff2aef6fb9beb247d88af324d299c171c6563c691746"
+    },
+    {
+      "path": "tools/sony-control/sony-control.py",
+      "sha256": "517f2d9803ccd7ba13abe807475361e1d901a8cdc076b79d90ad8d3a0842dc1a"
+    },
+    {
+      "path": "tools/sony-control/strehl-sony-control.cpp",
+      "sha256": "a950a061f9a7c141f0fb9361ba305216ae91f00fc584618c022c5411d2b8a3a5"
+    },
+    {
+      "path": "tools/sony-control/test-sony-control.py",
+      "sha256": "a81936b9c148a65e0f1b367e4b84832d1c0fa6833e06ff70db890cfc21f43f34"
+    },
+    {
+      "path": "experiments/sony-capture-ui-2026-11-07/a7cr-sequencing.md",
+      "sha256": "111e6cf68cb225e38ee68a244c7a3f7642fee5985fe90c96d416f108a7a04d9b"
+    },
+    {
+      "path": "experiments/sony-capture-ui-2026-11-07/brief.md",
+      "sha256": "ae47409893f5c8831c512b855d50c8444518eecd9929e3db56704f306a063968"
+    },
+    {
+      "path": "experiments/sony-capture-ui-2026-11-07/evidence/build.json",
+      "sha256": "e025c8bb49d8cffa68d7eaf2d01c89a74838aef63b2eea9eb0390dfd7fdb8faa"
+    },
+    {
+      "path": "experiments/sony-capture-ui-2026-11-07/evidence/corpus-lint.txt",
+      "sha256": "dd3c3708e7d1cd33c3d2fb52806aaa82b171c319341236af3e9706a8ee2de79d"
+    },
+    {
+      "path": "experiments/sony-capture-ui-2026-11-07/evidence/preview-fix-build.json",
+      "sha256": "31fcd3bec393c58064a2019f6f352cf2b4bf41e4daf61ef41e5f6ce147dc63cc"
+    },
+    {
+      "path": "experiments/sony-capture-ui-2026-11-07/evidence/preview-fix-verification.json",
+      "sha256": "d7d6105cbd30df5b7df0a579b0809bf4ac0dcfda6bead4a99ce865365fc8c2f0"
+    },
+    {
+      "path": "experiments/sony-capture-ui-2026-11-07/evidence/verification.json",
+      "sha256": "134356cee2a7f674a757512bbc4c982939b0a5ea02c48fa209c134ab5dd58ed6"
+    },
+    {
+      "path": "experiments/sony-capture-ui-2026-11-07/preview-fix-results.md",
+      "sha256": "050656677c837c1de4d4c9cab3370448b2063099f36918462f267cec74595eba"
+    },
+    {
+      "path": "experiments/sony-capture-ui-2026-11-07/preview-fix.md",
+      "sha256": "6c392ff20cdbb4bcb8f741131ce74c8a955a175f14ad94284d4fec4a2df1ea7e"
+    },
+    {
+      "path": "experiments/sony-capture-ui-2026-11-07/results.md",
+      "sha256": "20e61f30dcac08aa4052ebdc45de774e6ca700bbd819c91b8f2d61d5681d85ed"
+    },
+    {
+      "path": "experiments/sony-capture-ui-2026-11-07/verify-package.py",
+      "sha256": "57dc7758e6edc84bc02c7055d87935e9bb77ed3e6e8e58d2c3b6e5fcb90776a1"
+    },
+    {
+      "path": "experiments/sony-capture-ui-2026-11-07/verify-web-remote.py",
+      "sha256": "bfd08603ea04215807127a9e2b1e1ba2994c87fe2149efa2d551fa7ec1a1d243"
+    },
+    {
+      "path": "experiments/sony-capture-ui-2026-11-07/web-remote-brief.md",
+      "sha256": "86cd4a5caeca99e94ca96df81216ba5a43bbc19a6818b16f02daca147d0f9f7e"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07/brief.md",
+      "sha256": "c5f055155c2a735afe295a3da5e22406768da4a72b91c2ea7d06656ce35dc190"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07/inspect-toolkit.py",
+      "sha256": "dfa22162accc362e984f78ff8fa6f0f055475f199b5b0d241aaeb227a10041f9"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07/portable-package.md",
+      "sha256": "8f36f0318e0d0be70b957c826de767a45a52a45ae53a05129e59c70e8d2db567"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07/results.md",
+      "sha256": "a5f6b4a46527c9a57b5012bbcb006142c433dfd86b82c6b5f424f5ebc3f18a92"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07/sdk-audit.md",
+      "sha256": "d8186c14b79da8e269d495061537a9c3daf0fd15e6b63546972c23f5ea803ae6"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07/verify-portable.py",
+      "sha256": "769994a585e72c8117310380e663eb0cb505cf8fe97518913e69a1c7325d6000"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/brief.md",
+      "sha256": "919f415be95d6f3b21538442d896d9134e5cf3772332a1a039f84704571c3036"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/decode.py",
+      "sha256": "81dcc210ba89eca45ac98f7a9828e761005c81291f44c4d2e14fc06827ce8585"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/evidence/band-results.json",
+      "sha256": "f9fc42f00dd606f13201c63a63d7340de83c9a77e93333c1cfe2a82846681333"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/evidence/capture-summary.json",
+      "sha256": "acf249d81a0296e8f8a56cc8ba82c25eee47fe11245ed57b358c36e1c83a5893"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/evidence/decode-summary.json",
+      "sha256": "ed87d04a30b4ec2e244e9f420f50ed74229ee6a9cda3cef340a892a3500e0cf4"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/evidence/pair-response.json",
+      "sha256": "7a613aa9a1db02efad630f22b5a75d6b972bf1cb95c9ded2dc7ddd23e59871ac"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/evidence/publication.json",
+      "sha256": "415029696286f63e059248d00f7cbe7c741675f25e9f912d42e3364d5227a4e6"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/evidence/review.json",
+      "sha256": "292b739d72281cbd8ff4c88925aa09626e46b97f8011722774c674246d5617fc"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/evidence/verification.json",
+      "sha256": "6da8ffa5a4389943fd7d5e794ed4fb11be474292d3e505cfb95c15874a615db6"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/figures/fine-focus-response.svg",
+      "sha256": "5e6f1ff653859ce18f390133d9186b7aad938648e122d2ee9f4818a86c5bc25a"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/focus-band.py",
+      "sha256": "70b7b4eee83925f0e484ae3dde6db213065f5259ba6890641371f2ecfafd7797"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/inventory.py",
+      "sha256": "cec8eeee51390646d843872b861f1dcaaaf642134c0743afa9c689f767705181"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/pair-response.py",
+      "sha256": "32db53aaa0d0a57706c45db5294df353353d756dd8d22eea254f0a53837e588c"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/publish-evidence.py",
+      "sha256": "202f1a35297756505770ea97eea334d35f2218a0ebf66facb2f5a5825d4ef134"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/raw-check.rs",
+      "sha256": "772c47b730487d615a67bd82d72ca5de6a333156c43ef5d30df954c5b04a4c78"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/results.md",
+      "sha256": "a5f2abef0de6bf62fec9573e712e9327ff2a0a9135e1e648d6893a73a6622bca"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/review.py",
+      "sha256": "61c2a904ce59d9d6fd34f9f242eb78c0047ecfc93dbd378efe01b470f6187d3c"
+    },
+    {
+      "path": "experiments/sony-focus-control-2026-11-07-capture-review/verify.py",
+      "sha256": "a40c0bc87d0dbc4d1bd8c3855e6152f3720e691eda440442c1489674caee18a8"
+    },
+    {
+      "path": "experiments/sony-upgrade-2026-11-07/brief.md",
+      "sha256": "f54b88e52f1b070e81acae7060ad643d3faf0bec2d087aaf0cb94e79bb58ebe1"
+    },
+    {
+      "path": "experiments/sony-upgrade-2026-11-07/evidence/model.json",
+      "sha256": "b6354c1d2096b8a8daf17b7f15391023229020a40aeeb5332de33c999297512e"
+    },
+    {
+      "path": "experiments/sony-upgrade-2026-11-07/figures/optical-limits.svg",
+      "sha256": "c33fad69badc1b3cb798ee476c617dafe5da6fdf383d1a165b7a84398e434c71"
+    },
+    {
+      "path": "experiments/sony-upgrade-2026-11-07/model.py",
+      "sha256": "be48175909b1d838df206b520a4a941499a46ab31bd5c071f47d53acb5ebc5eb"
+    },
+    {
+      "path": "experiments/sony-upgrade-2026-11-07/results.md",
+      "sha256": "1b4172916b2f65582cd3b8de75f205dc0758118a66f3e4d7226703f7204e871e"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256": "da92ef0d5d828e690d743a46da88487cc4427febb14e81231559a5767a0b614f"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256": "89d9c3c3266967c0be43405f082a94cda8eab9b2cfdf28538eda48fa5e08c398"
+    },
+    {
+      "path": "LICENSE-MIT",
+      "sha256": "1254bdfae7d28b46245a3bae01385611dda4bba18d9e65c244d767fee23b846d"
+    },
+    {
+      "path": "LICENSE-APACHE",
+      "sha256": "47b2b7375318c574ef44d0def1e28d296e8bac5940d24d2694f5d99e7053b780"
+    },
+    {
+      "path": "scripts/strehl-capture-control.py",
+      "sha256": "ecf5828428b13dcfda968bac695ec3d5bd7e867a980f073b76f698363a0d7cdf"
+    }
+  ],
+  "generated_workspace_sha256": "5225c81c61de18d87e354ed7aeaae043bc1ea9ebdad229cccda65f95c59e8f69",
+  "resolved_lock_sha256": "7383303e5926616297d4b359ad56eb1c00862874d68b478ff2d350e6e3efa039",
+  "raw_downloads": false,
+  "preview_storage": "memory-only"
+}
