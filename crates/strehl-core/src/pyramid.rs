@@ -384,19 +384,8 @@ pub fn expand(
         src_size,
         "expand: destination does not reduce to the source size"
     );
-    let (sw, sh) = (src_size.width, src_size.height);
-    let dw = dst_size.width;
-    assert!(scratch.len() >= dw * sh, "expand: scratch is too small");
-
-    scratch[..dw * sh]
-        .par_chunks_mut(dw)
-        .enumerate()
-        .for_each(|(y, out)| {
-            let row = &src[y * sw..y * sw + sw];
-            for (x, o) in out.iter_mut().enumerate() {
-                *o = expand_tap(row, sw, x);
-            }
-        });
+    let (sh, dw) = (src_size.height, dst_size.width);
+    expand_rows(src, src_size, dw, scratch);
     dst.par_chunks_mut(dw).enumerate().for_each(|(y, out)| {
         if y % 2 == 0 {
             let c = y / 2;
@@ -412,6 +401,98 @@ pub fn expand(
             let b = &scratch[clamp_idx(c as isize + 1, sh) * dw..][..dw];
             for (i, o) in out.iter_mut().enumerate() {
                 *o = 0.5 * (a[i] + b[i]);
+            }
+        }
+    });
+}
+
+/// `expand`'s horizontal pass: every source row upsampled to `dw` columns.
+fn expand_rows(src: &[f32], src_size: LevelSize, dw: usize, scratch: &mut [f32]) {
+    let (sw, sh) = (src_size.width, src_size.height);
+    assert!(scratch.len() >= dw * sh, "expand: scratch is too small");
+    scratch[..dw * sh]
+        .par_chunks_mut(dw)
+        .enumerate()
+        .for_each(|(y, out)| {
+            let row = &src[y * sw..y * sw + sw];
+            for (x, o) in out.iter_mut().enumerate() {
+                *o = expand_tap(row, sw, x);
+            }
+        });
+}
+
+/// `dst = base - expand(src)`, or `dst -= expand(src)` when `base` is `None`,
+/// without materialising the expanded level.
+///
+/// The expanded value is the same expression [`expand`] stores, and a store
+/// and reload of an `f32` is exact, so subtracting it here gives the same bits
+/// as expanding into a buffer and subtracting that. What it saves is writing
+/// and re-reading one full level -- the largest single traffic item in a
+/// Laplacian build.
+fn expand_subtract(
+    src: &[f32],
+    src_size: LevelSize,
+    base: Option<&[f32]>,
+    dst: &mut [f32],
+    dst_size: LevelSize,
+    scratch: &mut [f32],
+) {
+    assert_eq!(
+        src.len(),
+        src_size.pixels(),
+        "expand: source is not level-sized"
+    );
+    assert_eq!(
+        dst.len(),
+        dst_size.pixels(),
+        "expand: destination is not level-sized"
+    );
+    assert_eq!(
+        dst_size.reduced(),
+        src_size,
+        "expand: destination does not reduce to the source size"
+    );
+    if let Some(base) = base {
+        assert_eq!(base.len(), dst.len(), "expand: base is not level-sized");
+    }
+    let (sh, dw) = (src_size.height, dst_size.width);
+    expand_rows(src, src_size, dw, scratch);
+    let scratch = &scratch[..dw * sh];
+    dst.par_chunks_mut(dw).enumerate().for_each(|(y, out)| {
+        let row = |r: usize| &scratch[r * dw..][..dw];
+        let base_row = base.map(|b| &b[y * dw..][..dw]);
+        let c = y / 2;
+        if y % 2 == 0 {
+            let (a, b, d) = (
+                row(clamp_idx(c as isize - 1, sh)),
+                row(c),
+                row(clamp_idx(c as isize + 1, sh)),
+            );
+            match base_row {
+                Some(s) => {
+                    for (i, o) in out.iter_mut().enumerate() {
+                        *o = s[i] - (0.125 * a[i] + 0.75 * b[i] + 0.125 * d[i]);
+                    }
+                }
+                None => {
+                    for (i, o) in out.iter_mut().enumerate() {
+                        *o -= 0.125 * a[i] + 0.75 * b[i] + 0.125 * d[i];
+                    }
+                }
+            }
+        } else {
+            let (a, b) = (row(c), row(clamp_idx(c as isize + 1, sh)));
+            match base_row {
+                Some(s) => {
+                    for (i, o) in out.iter_mut().enumerate() {
+                        *o = s[i] - 0.5 * (a[i] + b[i]);
+                    }
+                }
+                None => {
+                    for (i, o) in out.iter_mut().enumerate() {
+                        *o -= 0.5 * (a[i] + b[i]);
+                    }
+                }
             }
         }
     });
@@ -492,16 +573,46 @@ impl Pyramid {
             "pyramid: source is not level-0 sized"
         );
         let n = self.levels();
-        // Gaussian levels first, into the pyramid's own storage.
-        par_copy(&mut self.data[0], src);
-        for k in 1..n {
+        if n == 1 {
+            par_copy(&mut self.data[0], src);
+            return;
+        }
+        // Gaussian levels first, into the pyramid's own storage. Level 1 is
+        // reduced straight from the source: level 0 is never a plain copy, it
+        // is formed below as the source minus the expanded level 1.
+        reduce(src, self.sizes[0], &mut self.data[1], &mut ws.scratch);
+        for k in 2..n {
             let (lo, hi) = self.data.split_at_mut(k);
             reduce(&lo[k - 1], self.sizes[k - 1], &mut hi[0], &mut ws.scratch);
         }
         // Then the differences, **fine to coarse**, so that when level `k` is
         // differenced its source `k+1` is still a Gaussian. Running this the
         // other way round expands an already-differenced level and silently
-        // produces a pyramid that does not reconstruct.
+        // produces a pyramid that does not reconstruct. Each difference is
+        // fused with its expansion (see `expand_subtract`).
+        for k in 0..n - 1 {
+            let (lo, hi) = self.data.split_at_mut(k + 1);
+            let base = (k == 0).then_some(src);
+            expand_subtract(
+                &hi[0],
+                self.sizes[k + 1],
+                base,
+                &mut lo[k],
+                self.sizes[k],
+                &mut ws.scratch,
+            );
+        }
+    }
+
+    /// The pre-fusion build, kept verbatim as the bit-identity reference.
+    #[cfg(test)]
+    fn build_reference(&mut self, src: &[f32], ws: &mut Workspace) {
+        let n = self.levels();
+        self.data[0].copy_from_slice(src);
+        for k in 1..n {
+            let (lo, hi) = self.data.split_at_mut(k);
+            reduce(&lo[k - 1], self.sizes[k - 1], &mut hi[0], &mut ws.scratch);
+        }
         for k in 0..n - 1 {
             let px = self.sizes[k].pixels();
             expand(
@@ -512,7 +623,7 @@ impl Pyramid {
                 &mut ws.scratch,
             );
             self.data[k]
-                .par_iter_mut()
+                .iter_mut()
                 .zip(&ws.expanded[..px])
                 .for_each(|(d, e)| *d -= e);
         }
@@ -2542,23 +2653,23 @@ impl BandMerge {
                 #[cfg(feature = "spatial-noise-floor")]
                 let vv = ws.spatial_noise_floor.level(k).unwrap_or(vv);
                 let pooled = self.cfg.pooled_evidence;
-                if pooled {
-                    // Pooled focus evidence: this band's energy in its own
-                    // noise units, plus the finer bands' evidence reduced onto
-                    // this grid. Coarse band energy barely depends on focus (a
-                    // defocused frame's blur spreads light, which can raise it),
-                    // while the finer bands it summarises do.
-                    let unit = |v: f32| (beta * v.max(0.0)).max(1.0);
-                    let ratio = self.cfg.pooled_evidence_ratio;
-                    // Element-wise, so parallel: these were serial passes over
-                    // every coefficient and set a floor on the fold's speed.
-                    if k == 0 {
-                        ws.ev[..px]
-                            .par_iter_mut()
-                            .zip(sq.par_iter())
-                            .zip(vv.par_iter())
-                            .for_each(|((ev, e), v)| *ev = *e / unit(*v));
-                    } else {
+                #[cfg(feature = "temporal-energy")]
+                let temporal_band = temporal.and_then(|ready| ready.band(k)).is_some();
+                #[cfg(not(feature = "temporal-energy"))]
+                let temporal_band = false;
+                #[cfg(test)]
+                let temporal_band = temporal_band || FORCE_GENERAL_ROUTE.with(|f| f.get());
+                if pooled && !temporal_band {
+                    // The default route: every per-coefficient step of the
+                    // general route below, in one sweep. See
+                    // `fused_pooled_level`.
+                    let ensemble = (!self.zmax.is_empty()).then(|| EnsembleSums {
+                        zmax: &mut self.zmax[k][..px],
+                        zsum: &mut self.zsum[k][..px],
+                        lsum: &mut self.lsum[k][..px],
+                        esum: &mut self.esum[k][..px],
+                    });
+                    if k > 0 {
                         let prev = self.sizes[k - 1];
                         reduce(
                             &ws.ev[..prev.pixels()],
@@ -2566,68 +2677,114 @@ impl BandMerge {
                             &mut ws.ev_next[..px],
                             &mut ws.smooth_scratch,
                         );
-                        ws.ev[..px]
-                            .par_iter_mut()
-                            .zip(ws.ev_next[..px].par_iter())
-                            .zip(sq.par_iter().zip(vv.par_iter()))
-                            .for_each(|((ev, n), (e, v))| *ev = ratio * *n + *e / unit(*v));
                     }
-                    // The mean over the pooled levels, back in this band's
-                    // energy units: its noise expectation is unchanged, so the
-                    // floor and the weight need no other change.
-                    let levels = pooled_levels(ratio, k);
-                    ws.eff[..px]
-                        .par_iter_mut()
-                        .zip(ws.ev[..px].par_iter())
-                        .zip(vv.par_iter())
-                        .for_each(|((out, ev), v)| *out = unit(*v) * *ev / levels);
-                }
-                let sel: &[f32] = if pooled { &ws.eff[..px] } else { sq };
-                w.par_iter_mut()
-                    .zip(sel.par_iter())
-                    .zip(vv)
-                    .enumerate()
-                    .for_each(|(_i, ((w, e), v))| {
-                        // The floor at this band's scale: the level-0 variance
-                        // carried down to this grid, times the measured band gain.
-                        let floor = band_floor(gate, beta, *v);
-                        #[cfg(feature = "temporal-energy")]
-                        let floor = temporal
-                            .and_then(|ready| ready.band(k))
-                            .map_or(floor, |band| band.floor[_i]);
-                        match self.cfg.admission {
-                            AdmissionMode::HardFloor => {
-                                let excess = (*e - floor).max(0.0);
-                                *w = select_weight(excess, floor, p, r_floor);
-                            }
-                            AdmissionMode::FloorPedestalV1 => {
-                                assert!(v.is_finite(), "FloorPedestalV1: invalid variance");
-                                *w = pedestal_weight(*e, floor, p);
-                            }
+                    fused_pooled_level(
+                        FusedLevel {
+                            first: k == 0,
+                            beta,
+                            gate,
+                            p,
+                            r_floor,
+                            ratio: self.cfg.pooled_evidence_ratio,
+                            levels: pooled_levels(self.cfg.pooled_evidence_ratio, k),
+                            admission: self.cfg.admission,
+                        },
+                        sq,
+                        vv,
+                        lv,
+                        &ws.ev_next[..px],
+                        &mut ws.ev[..px],
+                        w,
+                        ensemble,
+                    );
+                } else {
+                    if pooled {
+                        // Pooled focus evidence: this band's energy in its own
+                        // noise units, plus the finer bands' evidence reduced onto
+                        // this grid. Coarse band energy barely depends on focus (a
+                        // defocused frame's blur spreads light, which can raise it),
+                        // while the finer bands it summarises do.
+                        let unit = |v: f32| (beta * v.max(0.0)).max(1.0);
+                        let ratio = self.cfg.pooled_evidence_ratio;
+                        // Element-wise, so parallel: these were serial passes over
+                        // every coefficient and set a floor on the fold's speed.
+                        if k == 0 {
+                            ws.ev[..px]
+                                .par_iter_mut()
+                                .zip(sq.par_iter())
+                                .zip(vv.par_iter())
+                                .for_each(|((ev, e), v)| *ev = *e / unit(*v));
+                        } else {
+                            let prev = self.sizes[k - 1];
+                            reduce(
+                                &ws.ev[..prev.pixels()],
+                                prev,
+                                &mut ws.ev_next[..px],
+                                &mut ws.smooth_scratch,
+                            );
+                            ws.ev[..px]
+                                .par_iter_mut()
+                                .zip(ws.ev_next[..px].par_iter())
+                                .zip(sq.par_iter().zip(vv.par_iter()))
+                                .for_each(|((ev, n), (e, v))| *ev = ratio * *n + *e / unit(*v));
                         }
-                    });
-                if !self.zmax.is_empty() {
-                    // Energy in units of this frame's own expected noise energy
-                    // (the floor without the gate multiplier).
-                    self.zmax[k][..px]
-                        .par_iter_mut()
-                        .zip(self.zsum[k][..px].par_iter_mut())
-                        .zip(sq.par_iter())
+                        // The mean over the pooled levels, back in this band's
+                        // energy units: its noise expectation is unchanged, so the
+                        // floor and the weight need no other change.
+                        let levels = pooled_levels(ratio, k);
+                        ws.eff[..px]
+                            .par_iter_mut()
+                            .zip(ws.ev[..px].par_iter())
+                            .zip(vv.par_iter())
+                            .for_each(|((out, ev), v)| *out = unit(*v) * *ev / levels);
+                    }
+                    let sel: &[f32] = if pooled { &ws.eff[..px] } else { sq };
+                    w.par_iter_mut()
+                        .zip(sel.par_iter())
                         .zip(vv)
-                        .for_each(|(((zm, zs), e), v)| {
-                            let z = *e / (beta * v.max(0.0)).max(1.0);
-                            *zm = zm.max(z);
-                            *zs += z;
+                        .enumerate()
+                        .for_each(|(_i, ((w, e), v))| {
+                            // The floor at this band's scale: the level-0 variance
+                            // carried down to this grid, times the measured band gain.
+                            let floor = band_floor(gate, beta, *v);
+                            #[cfg(feature = "temporal-energy")]
+                            let floor = temporal
+                                .and_then(|ready| ready.band(k))
+                                .map_or(floor, |band| band.floor[_i]);
+                            match self.cfg.admission {
+                                AdmissionMode::HardFloor => {
+                                    let excess = (*e - floor).max(0.0);
+                                    *w = select_weight(excess, floor, p, r_floor);
+                                }
+                                AdmissionMode::FloorPedestalV1 => {
+                                    assert!(v.is_finite(), "FloorPedestalV1: invalid variance");
+                                    *w = pedestal_weight(*e, floor, p);
+                                }
+                            }
                         });
-                    self.lsum[k][..px]
-                        .par_iter_mut()
-                        .zip(self.esum[k][..px].par_iter_mut())
-                        .zip(lv.par_iter())
-                        .zip(sq.par_iter())
-                        .for_each(|(((ls, es), l), e)| {
-                            *ls += l;
-                            *es += e;
-                        });
+                    if !self.zmax.is_empty() {
+                        // Energy in units of this frame's own expected noise energy
+                        // (the floor without the gate multiplier).
+                        self.zmax[k][..px]
+                            .par_iter_mut()
+                            .zip(self.zsum[k][..px].par_iter_mut())
+                            .zip(sq.par_iter())
+                            .zip(vv)
+                            .for_each(|(((zm, zs), e), v)| {
+                                let z = *e / (beta * v.max(0.0)).max(1.0);
+                                *zm = zm.max(z);
+                                *zs += z;
+                            });
+                        self.lsum[k][..px]
+                            .par_iter_mut()
+                            .zip(self.esum[k][..px].par_iter_mut())
+                            .zip(lv.par_iter())
+                            .zip(sq.par_iter())
+                            .for_each(|(((ls, es), l), e)| {
+                                *ls += l;
+                                *es += e;
+                            });
+                    }
                 }
             }
             #[cfg(feature = "native-green-cue")]
@@ -3993,6 +4150,129 @@ fn gamma_sampler(nu: f32, seed: u64) -> impl FnMut() -> f64 {
 /// Half-width of the wide coherence window, in samples of the level.
 const COHERENCE_WIDE_RADIUS: usize = 7;
 
+#[cfg(test)]
+thread_local! {
+    /// Test-only: send the default configuration through the general
+    /// per-level route, so the fused sweep can be compared against it.
+    static FORCE_GENERAL_ROUTE: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
+}
+
+/// Scalars for [`fused_pooled_level`].
+#[derive(Clone, Copy)]
+struct FusedLevel {
+    first: bool,
+    beta: f32,
+    gate: f32,
+    p: f32,
+    r_floor: f32,
+    ratio: f32,
+    levels: f32,
+    admission: AdmissionMode,
+}
+
+/// One level's ensemble accumulators.
+struct EnsembleSums<'a> {
+    zmax: &'a mut [f32],
+    zsum: &'a mut [f32],
+    lsum: &'a mut [f32],
+    esum: &'a mut [f32],
+}
+
+/// The default fold's per-coefficient work for one level, in one sweep:
+/// pooled evidence (`ev`), the effective energy, the selection weight (`w`)
+/// and the ensemble gate's four running sums.
+///
+/// # Why
+///
+/// The general route makes five separate passes over the level -- evidence,
+/// effective energy, weight, dominance sums, coherence sums -- each re-reading
+/// the energy, the variance or the previous pass's output. The fold is
+/// memory-bandwidth bound (ARCHITECTURE section 9), so those re-reads, and the
+/// effective-energy buffer written only to be read back, were the cost.
+///
+/// # Why the bits cannot change
+///
+/// Every value is the same expression as the general route, evaluated in the
+/// same order: `e / unit(v)` or `ratio * n + e / unit(v)` for the evidence,
+/// `unit(v) * ev / levels` from the stored evidence for the effective energy,
+/// `band_floor` and `select_weight`/`pedestal_weight` for the weight, and the
+/// same `z`, `max` and `+=` updates. Each coefficient is independent, so the
+/// sweep order does not matter. Pinned by
+/// `the_fused_level_sweep_is_bit_identical_to_the_general_route`.
+#[allow(clippy::too_many_arguments)]
+fn fused_pooled_level(
+    s: FusedLevel,
+    sq: &[f32],
+    vv: &[f32],
+    lv: &[f32],
+    ev_next: &[f32],
+    ev: &mut [f32],
+    w: &mut [f32],
+    ensemble: Option<EnsembleSums<'_>>,
+) {
+    const CHUNK: usize = 1 << 13;
+    let px = ev.len();
+    assert!(sq.len() >= px && vv.len() >= px && lv.len() >= px && w.len() == px);
+    assert!(s.first || ev_next.len() >= px);
+    let unit = |v: f32| (s.beta * v.max(0.0)).max(1.0);
+    let one = |i: usize, ev: &mut f32, w: &mut f32| {
+        let (v, e) = (vv[i], sq[i]);
+        *ev = if s.first {
+            e / unit(v)
+        } else {
+            s.ratio * ev_next[i] + e / unit(v)
+        };
+        let eff = unit(v) * *ev / s.levels;
+        let floor = band_floor(s.gate, s.beta, v);
+        *w = match s.admission {
+            AdmissionMode::HardFloor => {
+                let excess = (eff - floor).max(0.0);
+                select_weight(excess, floor, s.p, s.r_floor)
+            }
+            AdmissionMode::FloorPedestalV1 => {
+                assert!(v.is_finite(), "FloorPedestalV1: invalid variance");
+                pedestal_weight(eff, floor, s.p)
+            }
+        };
+    };
+    match ensemble {
+        None => ev
+            .par_chunks_mut(CHUNK)
+            .zip(w.par_chunks_mut(CHUNK))
+            .enumerate()
+            .for_each(|(c, (evc, wc))| {
+                for (j, (ev, w)) in evc.iter_mut().zip(wc.iter_mut()).enumerate() {
+                    one(c * CHUNK + j, ev, w);
+                }
+            }),
+        Some(EnsembleSums {
+            zmax,
+            zsum,
+            lsum,
+            esum,
+        }) => ev
+            .par_chunks_mut(CHUNK)
+            .zip(w.par_chunks_mut(CHUNK))
+            .zip(zmax[..px].par_chunks_mut(CHUNK))
+            .zip(zsum[..px].par_chunks_mut(CHUNK))
+            .zip(lsum[..px].par_chunks_mut(CHUNK))
+            .zip(esum[..px].par_chunks_mut(CHUNK))
+            .enumerate()
+            .for_each(|(c, (((((evc, wc), zmc), zsc), lsc), esc))| {
+                for j in 0..evc.len() {
+                    let i = c * CHUNK + j;
+                    one(i, &mut evc[j], &mut wc[j]);
+                    let e = sq[i];
+                    let z = e / (s.beta * vv[i].max(0.0)).max(1.0);
+                    zmc[j] = zmc[j].max(z);
+                    zsc[j] += z;
+                    lsc[j] += lv[i];
+                    esc[j] += e;
+                }
+            }),
+    }
+}
+
 /// In-place separable box mean of half-width `r`; windows are truncated at the
 /// borders (the mean is over the samples that exist).
 pub fn box_smooth(data: &mut [f32], size: LevelSize, r: usize) {
@@ -4364,6 +4644,43 @@ mod tests {
                 "expand is not exact on a ramp at {x}: {} vs {want}",
                 out[x]
             );
+        }
+    }
+
+    #[test]
+    fn the_fused_build_is_bit_identical_to_the_reference_build() {
+        let mut s = 0x2545_f491_4f6c_dd1du64;
+        let mut next = move || {
+            s ^= s << 13;
+            s ^= s >> 7;
+            s ^= s << 17;
+            ((s >> 40) as f32 / (1u64 << 24) as f32 - 0.3) * 9000.0
+        };
+        for (w, h, bands) in [
+            (64usize, 64usize, 4usize),
+            (37, 23, 3),
+            (129, 71, 7),
+            (5, 3, 1),
+            (9, 9, 0),
+        ] {
+            let sizes = level_sizes(w, h, bands);
+            let src: Vec<f32> = (0..w * h).map(|_| next()).collect();
+            let mut ws = Workspace::new(&sizes);
+            let mut fused = Pyramid::zeros(&sizes);
+            // Stale contents must not leak into the result.
+            for k in 0..fused.levels() {
+                fused.level_mut(k).fill(f32::NAN);
+            }
+            fused.build(&src, &mut ws);
+            let mut reference = Pyramid::zeros(&sizes);
+            reference.build_reference(&src, &mut Workspace::new(&sizes));
+            for k in 0..sizes.len() {
+                let (a, b) = (fused.level(k), reference.level(k));
+                assert!(
+                    a.iter().zip(b).all(|(x, y)| x.to_bits() == y.to_bits()),
+                    "{w}x{h} bands {bands}: level {k} differs"
+                );
+            }
         }
     }
 
@@ -6325,6 +6642,78 @@ mod tests {
             merge.add_frame_with_gain(&[f.as_slice()], f, &var, Some(&beta), &mut fws);
         }
         merge.finish(&mut ws)[0].clone()
+    }
+
+    #[test]
+    fn the_fused_level_sweep_is_bit_identical_to_the_general_route() {
+        let (w, h, sigma) = (96usize, 72usize, 3.0f32);
+        let mut st = 0x5EED_u64;
+        let frames: Vec<Vec<f32>> = (0..5)
+            .map(|f| {
+                let noise = ens_noise(w, h, sigma, &mut st);
+                (0..w * h)
+                    .map(|i| {
+                        let (x, y) = ((i % w) as f32, (i / w) as f32);
+                        let sharp = 40.0 * ((x * 0.9 + f as f32).sin() * (y * 0.7).cos());
+                        200.0
+                            + if (x as usize / 24) % 5 == f {
+                                sharp
+                            } else {
+                                0.0
+                            }
+                            + noise[i]
+                    })
+                    .collect()
+            })
+            .collect();
+        let var: Vec<f32> = (0..w * h)
+            .map(|i| sigma * sigma * (0.5 + (i % 7) as f32 * 0.3))
+            .collect();
+        let run = |cfg: MergeConfig, general: bool| -> Vec<u32> {
+            FORCE_GENERAL_ROUTE.with(|f| f.set(general));
+            let sizes = level_sizes(w, h, cfg.bands);
+            let mut merge = BandMerge::new(w, h, 1, cfg);
+            let mut fws = FrameWorkspace::new(&sizes, 1);
+            let mut ws = Workspace::new(&sizes);
+            let beta = vec![0.37f32, 0.11, 0.05];
+            for f in &frames {
+                fws.next_frame();
+                merge.add_frame_with_gain(&[f.as_slice()], f, &var, Some(&beta), &mut fws);
+            }
+            FORCE_GENERAL_ROUTE.with(|f| f.set(false));
+            merge.finish(&mut ws)[0]
+                .iter()
+                .map(|v| v.to_bits())
+                .collect()
+        };
+        for ensemble in [true, false] {
+            for significance_scale in [0.0, 1.0] {
+                for admission in [AdmissionMode::HardFloor, AdmissionMode::FloorPedestalV1] {
+                    let pedestal = admission == AdmissionMode::FloorPedestalV1;
+                    if pedestal && significance_scale != 0.0 {
+                        continue; // The pedestal arm refuses a significance floor.
+                    }
+                    let cfg = MergeConfig {
+                        bands: 3,
+                        ensemble,
+                        significance_scale,
+                        admission,
+                        pooled_evidence: true,
+                        base: if pedestal {
+                            BaseBand::Mean
+                        } else {
+                            MergeConfig::default().base
+                        },
+                        ..Default::default()
+                    };
+                    assert_eq!(
+                        run(cfg, false),
+                        run(cfg, true),
+                        "ensemble {ensemble} significance {significance_scale} {admission:?}"
+                    );
+                }
+            }
+        }
     }
 
     /// Interior standard deviation, and the least-squares slope of `img` on

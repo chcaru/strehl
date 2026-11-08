@@ -4650,3 +4650,32 @@ mod insect_placement_observer;
 #[cfg(test)]
 #[path = "../../../experiments/raw-quality-2026-10-27/insect-blur-phase/full/graph.rs"]
 mod insect_blur_phase_graph;
+/// Exactness of GPU division and square root on this machine's device, for
+/// the GPU-resident fold proposal. Prints counts; asserts nothing.
+#[cfg(all(test, feature = "native-gpu-gather"))]
+#[test]
+#[ignore = "needs a Vulkan GPU; run explicitly with --ignored --nocapture"]
+fn gpu_arith_probe() {
+    for seed in [1u64, 2, 3, 4] {
+        let r = strehl_native_gpu_gather::arith_probe::run(1 << 24, seed).unwrap();
+        eprintln!("{r:?}");
+    }
+}
+/// Whether the platform's f32 `ln`/`exp` are correctly rounded over the
+/// ranges the selection weight uses. Prints counts; asserts nothing.
+#[cfg(all(test, feature = "native-gpu-gather"))]
+#[test]
+#[ignore = "exhaustive CPU census; run explicitly with --ignored --nocapture"]
+fn libm_rounding_census() {
+    use strehl_native_gpu_gather::arith_probe::libm_census;
+    let ln = libm_census(false, f32::MIN_POSITIVE, f32::MAX);
+    eprintln!(
+        "ln  over all positive normal f32: tested {} mismatches {} first {:?}",
+        ln.0, ln.1, ln.2
+    );
+    let ex = libm_census(true, -80.0, 80.0);
+    eprintln!(
+        "exp over [-80, 80]: tested {} mismatches {} first {:?}",
+        ex.0, ex.1, ex.2
+    );
+}

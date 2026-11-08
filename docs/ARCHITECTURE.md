@@ -791,7 +791,11 @@ every desktop build; it now follows the runtime temporal decision.
 desktop engine, 2026-11-08): 0.26 / 0.22 / 0.23 s per frame at 8 / 16 / 32 threads, and
 `pyramid-add` floors at ~90 ms per frame at any thread count from 8 up — consistent with the
 ~5 GB of pyramid and accumulator traffic each frame moves. Further speed comes from moving
-fewer bytes (pass fusion, batching frames per accumulator pass, or a GPU), not from threads.
+fewer bytes, not from threads. Fusing each Laplacian difference with its expansion (no
+level-0 copy, no expanded buffer) and the per-level evidence/weight/ensemble passes into one
+sweep took `pyramid-add` to ~77 ms and the pipeline to 0.20 s per frame, pixel-identical. The
+GPU route, and why its divisions must go through f64 and its `ln`/`exp` stay matched to the
+CPU, is in [the GPU fold proposal](proposals/2026-11-gpu-resident-fold-and-planner.md).
 
 > The estimator and argmax paths *do* min with `available_parallelism()`. That
 > inconsistency between backends is unresolved.

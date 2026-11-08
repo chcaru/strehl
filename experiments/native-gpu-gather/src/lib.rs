@@ -12,6 +12,9 @@ mod strict_spirv;
 pub use strict_spirv::CompilationReport;
 #[path = "../../ca-before-mhc/gpu.rs"]
 pub mod ca_before_mhc;
+/// Exactness probe for division and square root on the active device.
+#[path = "arith-probe.rs"]
+pub mod arith_probe;
 #[path = "device-coordinates.rs"]
 mod device_coordinates;
 pub use device_coordinates::{CoordinateReport, MIN_DEVICE_COEFFICIENT, coefficients_safe as device_coordinate_eligible};

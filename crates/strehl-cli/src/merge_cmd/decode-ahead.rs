@@ -101,10 +101,9 @@ impl<'s, S: PyramidFrameSource> DecodeAhead<'s, S> {
             };
             // A panic here must still publish a result: the fold is waiting for
             // this index and would otherwise wait forever instead of failing.
-            let frame = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                self.inner.decode(index)
-            }))
-            .unwrap_or_else(|_| Err(anyhow::anyhow!("decoding frame {index} panicked")));
+            let frame =
+                std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| self.inner.decode(index)))
+                    .unwrap_or_else(|_| Err(anyhow::anyhow!("decoding frame {index} panicked")));
             let mut st = self.lock();
             st.ready.insert(index, frame);
             drop(st);
