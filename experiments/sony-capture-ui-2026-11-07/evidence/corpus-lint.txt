@@ -1,0 +1,37 @@
+corpus_lint: 409 markdown file(s), 524 rust file(s); 1786 facts, 756 disciplines, 140 questions, 11 risks, 49 rules
+corpus_lint: checks run: A1 A2 A4 C1 C2 C3 D1 N1 N2 N4 N5 S1 S2 S3 S4 S5 S6 S7
+
+docs/research/M-PHASE0-SPLIT.md:178: [S1] table row has 10 unescaped pipes, header (line 176) has 4: 6 cell(s) past the header's column count are DISCARDED by the renderer. Escape absolute-value bars as \|.
+      | independent white-noise null | mean `|FRC|` **0.047182**; three band means **−0.027520, −0.013547, −0.014068**; max per-ring `|t|` **3.167384** | `<0.05`, every band `<0.08`, every ring `|t|<4`: PASS |
+docs/research/M-PHASE0-SPLIT2.md:97: [S1] table row has 5 unescaped pipes, header (line 95) has 3: 2 cell(s) past the header's column count are DISCARDED by the renderer. Escape absolute-value bars as \|.
+      | independent-noise mean `|FRC|` | 0.029622 |
+docs/research/M-PHASE0-SPLIT2.md:98: [S1] table row has 5 unescaped pipes, header (line 95) has 3: 2 cell(s) past the header's column count are DISCARDED by the renderer. Escape absolute-value bars as \|.
+      | independent-noise maximum ring `|t|` | 1.725586 |
+docs/research/M135-detail-instrument.md:14: [S1] table row has 6 unescaped pipes, header (line 12) has 4: 2 cell(s) past the header's column count are DISCARDED by the renderer. Escape absolute-value bars as \|.
+      | absolute split cross-power `P_sig` | **Reject as M1** | It responds to blur, but a common output gain `K_k` also multiplies it by `|K_k|^2`; USM can buy the same increase. |
+docs/research/M169-comparator-requirement-audit.md:144: [S1] table row has 6 unescaped pipes, header (line 140) has 4: 2 cell(s) past the header's column count are DISCARDED by the renderer. Escape absolute-value bars as \|.
+      | Actual §1.3 witness | Eight identical 33-step ramps must produce per-channel slope `[0.995,1.005]`, `|intercept|<=0.001`, max residual `<=0.002`, RMS residual `<=0.0005`, strict monotonicity, and no interior clipping. A documentation c...
+docs/research/M182-kernel-trade.md:250: [S1] table row has 6 unescaped pipes, header (line 247) has 4: 2 cell(s) past the header's column count are DISCARDED by the renderer. Escape absolute-value bars as \|.
+      | model vs shipping sampler | max `|delta MTF| = 2.294e-08` (bar `< 2.0e-06`) | PASS |
+docs/research/M182-kernel-trade.md:251: [S1] table row has 6 unescaped pipes, header (line 247) has 4: 2 cell(s) past the header's column count are DISCARDED by the renderer. Escape absolute-value bars as \|.
+      | restoration noise application | measured `1.313270x`, tap-energy prediction `1.313721x`, `|delta|=0.000451` (bar `< 0.005`) | PASS |
+docs/research/M185-flat-retraction.md:104: [S3] file does not end in a newline
+      Common TIFFs, RGB plant headroom, the exact selector/null response, and paired-transfer checker commissioning do not exist. The retraction is therefore a safe instruction to **defer shooting**, not proof that this exact burst has complet...
+docs/research/M186-m10-definition-audit.md:76: [S3] file does not end in a newline
+      Divergences: `PARTIALLY DEFINED` follows the implementer-equivalence defects; `(b)(c)` preserves this scorecard's legend (`(e)` means measurable now, unlike M160's taxonomy); all old numbers are retained explicitly; `DEFINITION BLOCKED`,...
+docs/research/M-PHASE0-SPLIT.md:178: [S6] code span `|FRC|` on a table row contains an unescaped `|`: the renderer splits the row on it BEFORE parsing the span, so this opens a cell. Write \| inside tables.
+      | independent white-noise null | mean `|FRC|` **0.047182**; three band means **−0.027520, −0.013547, −0.014068**; max per-ring `|t|` **3.167384** | `<0.05`, every band `<0.08`, every ring `|t|<4`: PASS |
+docs/research/M-PHASE0-SPLIT2.md:97: [S6] code span `|FRC|` on a table row contains an unescaped `|`: the renderer splits the row on it BEFORE parsing the span, so this opens a cell. Write \| inside tables.
+      | independent-noise mean `|FRC|` | 0.029622 |
+docs/research/M-PHASE0-SPLIT2.md:98: [S6] code span `|t|` on a table row contains an unescaped `|`: the renderer splits the row on it BEFORE parsing the span, so this opens a cell. Write \| inside tables.
+      | independent-noise maximum ring `|t|` | 1.725586 |
+docs/research/M135-detail-instrument.md:14: [S6] code span `|K_k|^2` on a table row contains an unescaped `|`: the renderer splits the row on it BEFORE parsing the span, so this opens a cell. Write \| inside tables.
+      | absolute split cross-power `P_sig` | **Reject as M1** | It responds to blur, but a common output gain `K_k` also multiplies it by `|K_k|^2`; USM can buy the same increase. |
+docs/research/M169-comparator-requirement-audit.md:144: [S6] code span `|intercept|<=0.001` on a table row contains an unescaped `|`: the renderer splits the row on it BEFORE parsing the span, so this opens a cell. Write \| inside tables.
+      | Actual §1.3 witness | Eight identical 33-step ramps must produce per-channel slope `[0.995,1.005]`, `|intercept|<=0.001`, max residual `<=0.002`, RMS residual `<=0.0005`, strict monotonicity, and no interior clipping. A documentation c...
+docs/research/M182-kernel-trade.md:250: [S6] code span `|delta MTF| = 2.294e-08` on a table row contains an unescaped `|`: the renderer splits the row on it BEFORE parsing the span, so this opens a cell. Write \| inside tables.
+      | model vs shipping sampler | max `|delta MTF| = 2.294e-08` (bar `< 2.0e-06`) | PASS |
+docs/research/M182-kernel-trade.md:251: [S6] code span `|delta|=0.000451` on a table row contains an unescaped `|`: the renderer splits the row on it BEFORE parsing the span, so this opens a cell. Write \| inside tables.
+      | restoration noise application | measured `1.313270x`, tap-energy prediction `1.313721x`, `|delta|=0.000451` (bar `< 0.005`) | PASS |
+
+corpus_lint: FAIL — 16 violation(s): S1=7, S3=2, S6=7

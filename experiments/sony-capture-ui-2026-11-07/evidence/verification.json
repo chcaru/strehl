@@ -1,0 +1,40 @@
+{
+  "schema": "strehl-capture-package-verification-v1",
+  "zip_name": "strehl-capture-win-x64-2026-11-07-r2.zip",
+  "zip_sha256": "667ca8835309cca419ea2ab41321d419dfb75ccc788201719334deb85df8541c",
+  "zip_bytes": 18754061,
+  "manifest_files_verified": 441,
+  "source_snapshot_verified": true,
+  "relocated_path_contains_spaces": true,
+  "native_gate_assertions": 19,
+  "sdk_version": 33685504,
+  "enumerated_camera_count": 0,
+  "camera_activity": "enumeration only; no camera connection, focus or exposure",
+  "app_sha256": "28e6a54bf7d03a82b5a72a182467ebde8fa42461c49f3e3cb444dcdf0190d933",
+  "bridge_sha256": "888ca58899661903987455bb7d9a0b2b42ac1d3b68d1c8ba12be920c47e940c9",
+  "ui": {
+    "camera": "simulator; no physical connection",
+    "checks": [
+      "Connect button starts simulator and renders a fresh live preview",
+      "Select subject and pointer drag set a bounded ROI in preview coordinates",
+      "Mark A, jog +128, mark B bind the focus commands shown by the camera",
+      "Start, Pause, Resume and Stop exercised through actual egui button input",
+      "A new three-plane run includes both bounds and finishes with three journalled acknowledgements",
+      "Preview-only survey uses fresh frames and suggests bounds without capture"
+    ],
+    "last_phase": "Disconnected",
+    "renderer": "AdapterInfo { name: \"NVIDIA GeForce RTX 5090\", vendor: 4318, device: 11141, device_type: DiscreteGpu, driver: \"NVIDIA\", driver_info: \"621.01\", backend: Vulkan }",
+    "schema": "strehl-capture-ui-verification-v1",
+    "sizes": [
+      [
+        1366,
+        900
+      ],
+      [
+        1280,
+        720
+      ]
+    ]
+  },
+  "laptop_live_preview_sha256": "68c852ae2001bbffc4427adf9c15ce760b55b07b23355d60cb0e8f963f83a3f8"
+}

@@ -67,6 +67,21 @@ static std::vector<std::string> split(const std::string& line) {
     while (std::getline(stream, field, '\t')) result.push_back(field);
     return result;
 }
+// Live-view JPEGs travel only through the private pipe, never a file/download API.
+static std::string base64(const unsigned char* data, size_t size) {
+    static const char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    std::string out;
+    out.reserve((size + 2) / 3 * 4);
+    for (size_t i = 0; i < size; i += 3) {
+        const uint32_t word = (uint32_t(data[i]) << 16) |
+            (i + 1 < size ? uint32_t(data[i + 1]) << 8 : 0) |
+            (i + 2 < size ? uint32_t(data[i + 2]) : 0);
+        out += alphabet[(word >> 18) & 63]; out += alphabet[(word >> 12) & 63];
+        out += i + 1 < size ? alphabet[(word >> 6) & 63] : '=';
+        out += i + 2 < size ? alphabet[word & 63] : '=';
+    }
+    return out;
+}
 
 static const std::map<std::string, CrInt32u> properties = {
 #define PROP(name) {#name, sdk::CrDeviceProperty_##name}
@@ -79,13 +94,14 @@ static const std::map<std::string, CrInt32u> properties = {
     PROP(MediaSLOT1_Status), PROP(MediaSLOT1_RemainingNumber),
     PROP(FNumber), PROP(ShutterSpeed), PROP(IsoSensitivity),
     PROP(ExposureProgramMode), PROP(BatteryRemain), PROP(PreAF),
-    PROP(LensModelName), PROP(LensVersionNumber)
+    PROP(LensModelName), PROP(LensVersionNumber), PROP(USBPowerSupply),
+    PROP(LiveViewStatus), PROP(LiveView_Image_Quality), PROP(Focus_Magnifier_Setting)
 #undef PROP
 };
 static const std::set<std::string> writable = {
     "FocusMode", "DriveMode", "FileType", "StillImageStoreDestination",
     "FocusBracketShotNumber", "FocusBracketFocusRange",
-    "FocusBracketOrder"
+    "FocusBracketOrder", "LiveView_Image_Quality"
 };
 
 struct Events : sdk::IDeviceCallback {
@@ -130,6 +146,11 @@ static void validate_value(const sdk::CrDeviceProperty& p, uint64_t value) {
     const auto allowed = values(p);
     const auto type = static_cast<unsigned>(p.GetValueType());
     if (!p.IsSetEnableCurrentValue()) throw std::runtime_error("Property is not writable in the current camera state");
+    if (p.GetCode() == sdk::CrDeviceProperty_Focus_Magnifier_Setting) {
+        if (std::none_of(allowed.begin(), allowed.end(), [value](uint64_t item) { return (item >> 32) == (value >> 32); }))
+            throw std::runtime_error("Camera does not advertise this focus magnification");
+        return;
+    }
     if ((type & sdk::CrDataType_RangeBit) && allowed.size() == 3) {
         if (value < allowed[0] || value > allowed[1] ||
             (allowed[2] && (value - allowed[0]) % allowed[2]))
@@ -179,7 +200,11 @@ class Camera {
         auto end = Clock::now() + 5s;
         do {
             std::this_thread::sleep_for(100ms);
-            if (current(code) == value) return;
+            const auto readback = current(code);
+            if (readback == value) return;
+            if (code == sdk::CrDeviceProperty_Focus_Magnifier_Setting &&
+                (readback >> 32) == (value >> 32) &&
+                ((value >> 32) == 0 || (value & 0xffffffffULL) == 0xffffffffULL)) return;
         } while (Clock::now() < end);
         throw std::runtime_error("Property write did not read back within 5 seconds");
     }
@@ -208,6 +233,60 @@ public:
     void disable_live_view() {
         check(sdk::SetDeviceSetting(handle, sdk::Setting_Key_EnableLiveView,
                                    sdk::CrDeviceSetting_Disable), "Disable SDK live view");
+    }
+    void live_view(bool enabled) {
+        alive();
+        check(sdk::SetDeviceSetting(handle, sdk::Setting_Key_EnableLiveView,
+            enabled ? sdk::CrDeviceSetting_Enable : sdk::CrDeviceSetting_Disable), "Set live view");
+    }
+    std::string preview() {
+        alive();
+        sdk::CrImageInfo info;
+        check(sdk::GetLiveViewImageInfo(handle, &info), "GetLiveViewImageInfo");
+        const auto size = info.GetBufferSize();
+        if (!size || size > 16 * 1024 * 1024) throw std::runtime_error("Live view unavailable or exceeds 16 MiB");
+        std::vector<unsigned char> buffer(size);
+        sdk::CrImageDataBlock block;
+        block.SetData(buffer.data()); block.SetSize(size);
+        check(sdk::GetLiveViewImage(handle, &block), "GetLiveViewImage");
+        const auto bytes = block.GetImageSize();
+        if (bytes < 4 || bytes > size || block.GetImageData() != buffer.data() ||
+            buffer[0] != 0xff || buffer[1] != 0xd8)
+            throw std::runtime_error("Invalid live-view JPEG");
+        return "\"frame\":" + std::to_string(block.GetFrameNo()) +
+            ",\"width\":" + std::to_string(info.GetWidth()) +
+            ",\"height\":" + std::to_string(info.GetHeight()) +
+            ",\"jpeg\":" + quote(base64(buffer.data(), bytes));
+    }
+    void magnify(uint64_t ratio_tenths, uint64_t x, uint64_t y) {
+        if (uncertain) throw std::runtime_error("Previous camera operation uncertain");
+        if (ratio_tenths > 1000 || x > 639 || y > 479) throw std::runtime_error("Invalid magnifier position or ratio");
+        const auto code = sdk::CrDeviceProperty_Focus_Magnifier_Setting;
+        auto p = get(code);
+        if (!p.IsGetEnableCurrentValue()) throw std::runtime_error("Cannot snapshot focus magnifier");
+        if (std::none_of(saved.begin(), saved.end(), [code](const Saved& s) { return s.code == code; }))
+            saved.push_back({code, p.GetValueType(), p.GetCurrentValue(), "Focus_Magnifier_Setting"});
+        // Sony requires a ratio-only update before placing the newly sized box.
+        set_checked(code, (ratio_tenths << 32) | 0xffffffffULL);
+        if (!ratio_tenths) return;
+        std::this_thread::sleep_for(200ms);
+        CrInt32u live_code = sdk::CrLiveViewProperty_Focus_Magnifier_Position;
+        sdk::CrLiveViewProperty* raw = nullptr;
+        CrInt32 count = 0;
+        check(sdk::GetSelectLiveViewProperties(handle, 1, &live_code, &raw, &count), "Get magnifier frame bounds");
+        // CrMagPosInfo consists of six UINT32 fields in this documented order.
+        CrInt32u frame[6]{};
+        const bool valid = raw && count == 1 && raw[0].IsGetEnableCurrentValue() &&
+            raw[0].GetFrameInfoType() == sdk::CrFrameInfoType_Magnifier_Position &&
+            raw[0].GetValue() && raw[0].GetValueSize() >= sizeof(frame);
+        if (valid) std::memcpy(frame, raw[0].GetValue(), sizeof(frame));
+        if (raw) sdk::ReleaseLiveViewProperties(handle, raw);
+        if (!valid || !frame[1] || !frame[3] || frame[1] > 65535 || frame[3] > 65535 ||
+            frame[4] > frame[1] || frame[5] > frame[3])
+            throw std::runtime_error("Camera magnification enabled, but its frame bounds are unavailable; use the camera to position it");
+        const uint64_t px = std::clamp(x * frame[1] / 639, uint64_t(frame[4] / 2), uint64_t(frame[1] - (frame[4] + 1) / 2));
+        const uint64_t py = std::clamp(y * frame[3] / 479, uint64_t(frame[5] / 2), uint64_t(frame[3] - (frame[5] + 1) / 2));
+        set_checked(code, (ratio_tenths << 32) | (px << 16) | py);
     }
     std::string property(const std::string& name) {
         auto p = get(properties.at(name));
@@ -403,6 +482,11 @@ int main(int argc, char** argv) {
     int result = 0;
     try {
         if (argc == 2 && std::string(argv[1]) == "self-test") {
+            if (base64(reinterpret_cast<const unsigned char*>(""), 0) != "" ||
+                base64(reinterpret_cast<const unsigned char*>("f"), 1) != "Zg==" ||
+                base64(reinterpret_cast<const unsigned char*>("fo"), 2) != "Zm8=" ||
+                base64(reinterpret_cast<const unsigned char*>("foo"), 3) != "Zm9v")
+                throw std::runtime_error("Live-view base64 self-test failed");
             emit("\"test\":\"sd-card-completion-gate\",\"assertions\":" + std::to_string(card_capture_self_test()));
             return 0; // No SDK initialization, enumeration or camera connection.
         }
@@ -428,7 +512,7 @@ int main(int argc, char** argv) {
             if (matches.size() != 1) throw std::runtime_error("Connect exactly one ILCE-7CM2 via USB Remote Shoot; found " + std::to_string(matches.size()));
             Camera camera(matches.front());
             camera.disable_live_view();
-            emit(list + ",\"ready\":true,\"capture_destination\":\"memory-card\",\"capture_protocol\":2");
+            emit(list + ",\"ready\":true,\"capture_destination\":\"memory-card\",\"capture_protocol\":2,\"live_view_protocol\":1");
             std::string line;
             while (std::getline(std::cin, line)) {
                 try {
@@ -436,6 +520,9 @@ int main(int argc, char** argv) {
                     if (args.empty()) throw std::runtime_error("Empty command");
                     std::string response;
                     if (args[0] == "status" && args.size() == 1) response = camera.status();
+                    else if (args[0] == "liveview" && args.size() == 2 && number(args[1]) <= 1) { camera.live_view(number(args[1]) == 1); response = "\"live_view\":" + std::string(number(args[1]) ? "true" : "false"); }
+                    else if (args[0] == "preview" && args.size() == 1) response = camera.preview();
+                    else if (args[0] == "magnify" && args.size() == 4) { camera.magnify(number(args[1]), number(args[2]), number(args[3])); response = "\"magnifier\":true"; }
                     else if (args[0] == "set" && args.size() == 3) { camera.set(args[1], number(args[2])); response = "\"property\":" + camera.property(args[1]); }
                     else if (args[0] == "focus" && args.size() == 3) response = camera.focus(number(args[1]), number(args[2]));
                     else if (args[0] == "capture" && args.size() == 3) response = camera.capture(number(args[1]), number(args[2]));

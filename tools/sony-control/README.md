@@ -6,8 +6,10 @@ with native focus bracket width 1. It includes a reusable sequential stack mode.
 The native executable has been built locally under `outputs/sony-control/bin/`.
 
 **Photos save only to the SD card.** The computer keeps settings and command logs.
-There are no image downloads, preview downloads, or review-image copies. This
-version replaces the earlier PC+card package; replace the entire extracted folder.
+The Python diagnostic does not request images or previews. The separate
+[Rust capture workspace](../../crates/strehl-capture/README.md) uses the bridge's
+new opt-in live-view commands for transient previews, without saving images.
+Replace the entire extracted folder when updating a portable package.
 
 **Physical distance per command is uncalibrated.** The
 [first two physical tests](../../experiments/sony-focus-control-2026-11-07-capture-review/results.md)
@@ -15,7 +17,7 @@ found repeated optical plateaus, approach dependence and approximately threefold
 finer local response than native width 1. Command units are not motor steps or
 micrometres. A successful command/read-back is not proof that focus moved.
 The a7C II has no pixel-shift multi-shooting. This version uses USB; it does not
-yet implement Wi-Fi control, live view, ESP32 firmware, or a7CR pixel-shift capture.
+yet implement Wi-Fi control, ESP32 firmware, or a7CR pixel-shift capture.
 See [the SDK/Command audit](../../experiments/sony-focus-control-2026-11-07/sdk-audit.md)
 for the now-confirmed PTP 3 pixel-shift controls.
 

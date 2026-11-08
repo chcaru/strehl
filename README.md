@@ -278,13 +278,23 @@ strehl focus inspect "path/to/bracket" --out "focus.json" --html "focus.html"
 The offline viewer shows the sparse AF records and bracket progression. See
 [Sony focus metadata](docs/sony-focus-metadata.md) for supported layouts and limits.
 
+### Capture from an A7C II
+
+The separate experimental [Strehl Capture](crates/strehl-capture/README.md)
+workspace provides live focus inspection, start/end marks, smallest-command
+stepping, preview-only bounds suggestions, and pause/stop controls on Windows.
+RAWs stay on the camera SD card; a local capture journal can be copied to the
+mounted card afterward. This is a separate private laptop preview, not part of
+the alpha.6 download. Its new live-view path has simulator verification; A7CR
+pixel-shift sequencing remains a [researched implementation path](experiments/sony-capture-ui-2026-11-07/a7cr-sequencing.md).
+
 ## Development and research
 
 Use the [research guide](docs/research/README.md) for topic indexes and searchable
 reports, experiment results, reviews, and plans.
 
 The Rust workspace contains `strehl-core`, `strehl-raw`, `strehl-plugin`, `strehl-edit`,
-`strehl-cli`, and `strehl-ui`. A complete source checkout also includes the
+`strehl-cli`, `strehl-ui`, and `strehl-capture`. A complete source checkout also includes the
 optional path dependency `experiments/native-gpu-gather`. Private photographic
 corpora are not needed to launch the application or run the normal CLI.
 Some research tests and scripts do require their original local data.
