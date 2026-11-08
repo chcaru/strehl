@@ -31,6 +31,7 @@ pub struct Address {
 struct WebState {
     session: Arc<Session>,
     key: String,
+    remote_session: String,
     preview: Mutex<Option<(u64, Arc<Vec<u8>>)>>,
 }
 pub struct WebServer {
@@ -49,9 +50,11 @@ impl WebServer {
             .context("Open web remote port; another application may already be using it")?;
         listener.set_nonblocking(true)?;
         let port = listener.local_addr()?.port();
-        let mut random = [0u8; 24];
+        // Independent public identity distinguishes server replacement from an
+        // interrupted request. Neither the key nor its identity has an age TTL.
+        let mut random = [0u8; 40];
         getrandom::fill(&mut random).map_err(|e| anyhow::anyhow!("Create pairing key: {e}"))?;
-        let key = random
+        let key = random[..24]
             .iter()
             .map(|b| format!("{b:02x}"))
             .collect::<String>();
@@ -59,6 +62,7 @@ impl WebServer {
         let state = Arc::new(WebState {
             session,
             key: key.clone(),
+            remote_session: random[24..].iter().map(|b| format!("{b:02x}")).collect(),
             preview: Mutex::new(None),
         });
         let router = Router::new()
@@ -251,6 +255,13 @@ async fn guard(State(state): State<Arc<WebState>>, request: Request<Body>, next:
         next.run(request).await
     };
     let headers = response.headers_mut();
+    headers.insert(
+        "x-strehl-remote-session",
+        state
+            .remote_session
+            .parse()
+            .expect("hex session identifier"),
+    );
     for (name, value) in [
         ("cache-control", "no-store"),
         ("referrer-policy", "no-referrer"),
@@ -438,11 +449,20 @@ mod tests {
         assert!(reply.contains("cache-control: no-store"));
         assert!(!reply.contains(&server.key));
         assert!(!reply.contains("bridge_sha256"));
+        let identity = format!("x-strehl-remote-session: {}", server.state.remote_session);
+        assert_eq!(server.state.remote_session.len(), 32);
+        assert_eq!(server.key.len(), 48);
+        assert!(reply.contains(&identity));
+        // Rejections and further requests must not rotate an active session.
+        assert!(request(&server, "", "/api/state").contains(&identity));
+        assert!(request(&server, &auth, "/api/state").contains(&identity));
         assert!(request(&server, &auth, "/../../Cargo.toml").starts_with("HTTP/1.1 404"));
         let old_key = server.key.clone();
+        let old_identity = server.state.remote_session.clone();
         drop(server);
         let replacement = WebServer::start(session, "127.0.0.1:0".parse().unwrap()).unwrap();
         assert_ne!(replacement.key, old_key);
+        assert_ne!(replacement.state.remote_session, old_identity);
         assert!(request(&replacement, &auth, "/api/state").starts_with("HTTP/1.1 401"));
         let new_auth = format!("Authorization: Bearer {}\r\n", replacement.key);
         assert!(request(&replacement, &new_auth, "/api/state").starts_with("HTTP/1.1 200"));

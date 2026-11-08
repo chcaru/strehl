@@ -67,6 +67,27 @@ underlying SDK capture/focus path has the owner's two physical tests; this new
 live-view UI and magnifier have only software/simulator verification so far.
 `try-demo.cmd` opens a clearly marked simulator without loading the Sony SDK.
 
+### Recover after a camera error
+
+If focus information, a focus move or a capture fails, **Camera needs attention**
+shows the error and the number of confirmed captures in both the desktop and
+browser. Check the lens/USB connection and camera display, then use **Reconnect
+camera**. There is no need to close the app. If the previous connection is still
+finishing an operation, wait for the camera/card to become idle and retry that
+button. The app waits for the old connection to release before opening another.
+
+Reconnecting does not take a photo. It keeps the previous RAWs, journal and
+confirmed count. A/B marks are retained when the camera reports the same identity;
+review both with **Go to mark**, especially if you touched the lens or camera.
+**Start stack** then begins a new run from A with a new journal; it does not resume
+or overwrite the failed run. Ordinary Disconnect clears the focus marks.
+
+If a shutter was sent but its completion could not be confirmed, the last RAW
+may already be on the card. Wait for camera/card activity to finish, inspect that
+exposure, and tick the acknowledgement beside Reconnect. This check is required
+only for an uncertain exposure; focus-information failures alone do not need it.
+The app never retries a shutter automatically.
+
 ## Control from a phone or another computer
 
 1. On the camera laptop, open **Web remote → Enable web remote**. Choose
@@ -78,13 +99,36 @@ live-view UI and magnifier have only software/simulator verification so far.
    Start/Pause/Resume/Stop, and the countdown. Focus step still defaults to **1**.
    Desktop and browser use the same camera session and shared marks/settings.
 3. If the browser closes, the phone sleeps, or Wi-Fi drops, the sequence keeps
-   running on the laptop. Reopen the pairing link to see its progress. Commands
+   running on the laptop. Pairing is remembered by this browser; reopen the same
+   page to reconnect and see its progress. Commands
    whose replies are lost are not automatically retried; check the current
    status before acting again. A stale plan or duplicate Start is refused.
 4. Keep the laptop awake, powered, connected to the camera and running Strehl
    Capture. Disabling web remote revokes its links without stopping the stack;
    closing Strehl Capture stops the sequence cooperatively. A new remote session
    creates a new pairing key. Treat the pairing link as access to camera control.
+
+**Long stacks:** pairing has no inactivity or elapsed-time limit. A temporary
+network failure or authorization rejection keeps the saved key and retries
+read-only status requests automatically, including after the phone wakes.
+Progress while offline is labelled **last confirmed**, and camera controls stay
+disabled until the connection is verified. Camera commands are never retried
+automatically. A late reply from an earlier pairing attempt cannot sign out a
+newer pairing.
+
+If repeated rejections require attention, the page offers **Retry saved pairing**
+and a field for the current pairing link while retaining the last confirmed
+progress. Copying that link from the laptop's Web remote panel does not stop a
+stack. Do not disable/re-enable Web remote to copy it: doing so revokes the key.
+An identified server restart/revocation is reported separately from connection
+loss. **Forget this browser** removes its stored pairing and updates its other
+open tabs; it does not stop capture. LAN and HTTPS addresses each remember their
+own pairing. If persistent browser storage is unavailable, the page falls back
+to tab storage or memory, so reopening may require the link again.
+
+For an update during a capture, let that stack finish before closing/replacing
+the laptop application. The website's assets are embedded in the executable;
+installing an update requires a later app restart and a new pairing link.
 
 **Access while away:** install [Tailscale](https://tailscale.com/docs/how-to/quickstart)
 on the camera laptop and your phone/other computer, and sign in to the same

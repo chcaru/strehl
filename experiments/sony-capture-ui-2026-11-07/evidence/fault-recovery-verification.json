@@ -1,0 +1,192 @@
+{
+  "schema": "strehl-capture-fault-recovery-verification-v1",
+  "created_utc": "2026-11-08T10:26:57.457270+00:00",
+  "rust_tests": {
+    "passed": 22,
+    "failed": 0,
+    "clippy_warnings_denied": "passed",
+    "fmt_check": "passed",
+    "fresh_compiling_and_checking_observed": true
+  },
+  "package": {
+    "schema": "strehl-capture-package-verification-v2",
+    "zip_name": "strehl-capture-win-x64-2026-11-08-r10.zip",
+    "zip_sha256": "363e4a9dee06766d974d3bb3fe74002b25b4f21f034c523d8f25ce0d9356d12f",
+    "zip_bytes": 19560642,
+    "manifest_files_verified": 520,
+    "source_snapshot_verified": true,
+    "relocated_path_contains_spaces": true,
+    "native_gate_assertions": 19,
+    "native_preview_assertions": 9,
+    "sdk_image_pointer_offset_without_camera": 0,
+    "sdk_version": 33685504,
+    "enumerated_camera_count": 0,
+    "camera_activity": "enumeration only; no camera connection, focus or exposure",
+    "app_sha256": "a66b0f4aaf593250bc315f031e7022b3798e7c53e67013b7b57ba8ca9ba9c4c4",
+    "bridge_sha256": "1b1bfe295b44af122a484aac37224ac389a6381370273e87fd59d1d8e3db264b",
+    "ui": {
+      "camera": "simulator; no physical connection",
+      "checks": [
+        "Connect button starts simulator and renders a fresh live preview",
+        "Select subject and pointer drag set a bounded ROI in preview coordinates",
+        "Mark A, jog +128, mark B bind the focus commands shown by the camera",
+        "Capture countdown is rendered and its active time freezes while paused",
+        "Start, Pause, Resume and Stop exercised through actual egui button input",
+        "A new three-plane run includes both bounds and finishes with three journalled acknowledgements",
+        "Preview-only survey uses fresh frames and suggests bounds without capture",
+        "Both manual focus marks and jogging work while the preview reports invalid JPEG",
+        "Web remote enables and revokes its pairing links through real egui controls",
+        "Focus-information and uncertain-exposure faults recover through native controls, retain same-camera marks, and finish a separate new stack"
+      ],
+      "last_phase": "Disconnected",
+      "renderer": "AdapterInfo { name: \"NVIDIA GeForce RTX 5090\", vendor: 4318, device: 11141, device_type: DiscreteGpu, driver: \"NVIDIA\", driver_info: \"621.01\", backend: Vulkan }",
+      "schema": "strehl-capture-ui-verification-v1",
+      "sizes": [
+        [
+          1366,
+          900
+        ],
+        [
+          1280,
+          720
+        ]
+      ]
+    },
+    "laptop_live_preview_sha256": "d77641e379851fdf3cc1918a6f5c8d9de0250baf69590051cb82372755005235"
+  },
+  "source_and_cli_guards": {
+    "schema": "strehl-recovery-package-source-check-v1",
+    "copied_inputs_match_working_source": 107,
+    "app_sha256": "a66b0f4aaf593250bc315f031e7022b3798e7c53e67013b7b57ba8ca9ba9c4c4",
+    "hidden_failure_cli_negative_controls": [
+      {
+        "arguments": [
+          "--web-test-failure",
+          "focus"
+        ],
+        "exit_code": 2,
+        "reason": "Required explicit simulator and headless test-session flags absent"
+      },
+      {
+        "arguments": [
+          "--demo",
+          "--web-test-failure",
+          "focus"
+        ],
+        "exit_code": 2,
+        "reason": "Required explicit simulator and headless test-session flags absent"
+      }
+    ]
+  },
+  "browser_faults": {
+    "schema": "strehl-web-fault-verification-v1",
+    "camera": "simulator only",
+    "app_sha256": "a66b0f4aaf593250bc315f031e7022b3798e7c53e67013b7b57ba8ca9ba9c4c4",
+    "checks": [
+      "focus: clear recovery guidance, retained marks/count/journal, no automatic exposure, new two-plane stack completes without app restart",
+      "capture: clear recovery guidance, retained marks/count/journal, no automatic exposure, new two-plane stack completes without app restart"
+    ],
+    "unacknowledged_uncertain_recovery_refused": true,
+    "browser_errors": []
+  },
+  "normal_browser": {
+    "schema": "strehl-web-remote-verification-v1",
+    "camera": "explicit simulator; no physical camera access",
+    "executable_sha256": "a66b0f4aaf593250bc315f031e7022b3798e7c53e67013b7b57ba8ca9ba9c4c4",
+    "browser": "Microsoft Edge / Playwright, headless",
+    "sizes": [
+      [
+        1366,
+        1000
+      ],
+      [
+        390,
+        844
+      ]
+    ],
+    "checks": [
+      "Unauthenticated, cross-origin and file-path requests are rejected; no phantom preview",
+      "Real browser decodes live JPEG; desktop marks and focus moves appear on a phone client",
+      "Conflicting edits from two controllers are refused without overwriting the current plan",
+      "Pointer selection sets the subject ROI in shared preview coordinates",
+      "Browser closure leaves capture running; reconnect, pause, frozen countdown, resume and stop work across clients",
+      "A second three-plane stack completes with both endpoints and a finished timer",
+      "Disconnect clears shared focus marks and the browser preview"
+    ],
+    "browser_errors": [],
+    "expected_conflicts": 1,
+    "journal_runs": 2,
+    "away_vpn": "Not exercised; Tailscale must be installed and connected on owner devices",
+    "screenshots": [
+      "desktop-bounds.png",
+      "desktop-paused.png",
+      "phone-bounds.png",
+      "phone-paused.png"
+    ]
+  },
+  "logs": [
+    {
+      "path": "outputs/sony-capture-ui/fault-recovery-tests-final.log",
+      "sha256": "460b55352c7ac0799b62c7c52b9dc16b03ab880c8c815f3f9f174aeff98becf5"
+    },
+    {
+      "path": "outputs/sony-capture-ui/fault-recovery-clippy.log",
+      "sha256": "d63432e551a21a2fbb8611773511cf8587fdba8e7978d992dc3a40a636a171cf"
+    },
+    {
+      "path": "outputs/sony-capture-ui/recovery-package-r10.log",
+      "sha256": "9680fb1611c0b96aace12dc2dff8b5c6740011fdee07cd08f3612349d4029f11"
+    },
+    {
+      "path": "outputs/sony-capture-ui/recovery-package-check-r10.log",
+      "sha256": "98b97fd8a95fc35a622b0271c6bac7e1deada1c04abf03e79214cb63dcb6dafc"
+    },
+    {
+      "path": "outputs/sony-capture-ui/fault-recovery-browser-r10.log",
+      "sha256": "293923c7548e430676ab9797792988116d06efaa197973865fef02772cfbb61e"
+    },
+    {
+      "path": "outputs/sony-capture-ui/recovery-normal-browser-r10-isolated.log",
+      "sha256": "d5d12281a3a65bce9936af622b0e4558f0503c8c2196ff37bcd5f90b8093e960"
+    },
+    {
+      "path": "outputs/sony-capture-ui/session-recovery-browser-r10.log",
+      "sha256": "1e2f03e3560ea9a310ce2f43ce8d64d73f21b05bd7ebe5d278dc8b4fc1116dca"
+    },
+    {
+      "path": "outputs/sony-capture-ui/recovery-package-check-r8.log",
+      "sha256": "0b681f8e77371ac42fb9e09559c07f26467f4ea68e7a98a688f976d6ecdd37e0"
+    },
+    {
+      "path": "outputs/sony-capture-ui/session-recovery-browser-r6.log",
+      "sha256": "bbbe30e85c4f49b0248f8b6a8ee3be0ba361078b65a2b6e4b3e9d21f535ebce6"
+    },
+    {
+      "path": "outputs/sony-capture-ui/recovery-normal-browser-r10.log",
+      "sha256": "0a98765f45f1a6b68726456159d4ff06bc8f5208425a3fe0005f26d0891c256e"
+    }
+  ],
+  "retained_failures": [
+    {
+      "build": "r6",
+      "issue": "Replacement URL fragment in same tab was not applied",
+      "resolution": "Added hashchange handling; same negative and positive browser controls pass"
+    },
+    {
+      "build": "r8",
+      "issue": "Native recovery acknowledgement scrolled outside viewport",
+      "resolution": "Keep native recovery panel outside scrolling controls; same exercise passes"
+    },
+    {
+      "build": "r10",
+      "issue": "First concurrent normal-browser run had one net::ERR_NO_BUFFER_SPACE resource error",
+      "resolution": "Unchanged test/executable passed in isolation; resource-error cause unverified"
+    }
+  ],
+  "limits": [
+    "Author software/simulator verification; no physical camera recovery",
+    "No real hours-long soak",
+    "Original owner 401 and physical focus failure causes remain unverified",
+    "Reported camera identity is not a camera/lens serial identity"
+  ]
+}

@@ -561,6 +561,96 @@ pub fn exercise(mut app: App, directory: &Path) -> Result<()> {
     viewer.click(&mut app, "web-disable")?;
     ensure!(!app.web_enabled(), "Web remote did not stop");
     checks.push("Web remote enables and revokes its pairing links through real egui controls");
+    for uncertain in [false, true] {
+        let first = std::sync::atomic::AtomicBool::new(true);
+        let worker = strehl_capture::worker::Worker::with_factory(Box::new(move || {
+            let fail = first.swap(false, std::sync::atomic::Ordering::SeqCst);
+            Ok(Box::new(strehl_capture::backend::Demo {
+                fail_focus_after: (fail && !uncertain).then_some(3),
+                fail_capture: fail && uncertain,
+                ..Default::default()
+            }))
+        }));
+        let label = if uncertain {
+            "uncertain-exposure"
+        } else {
+            "focus-information"
+        };
+        let mut fault_app = App::new(worker, directory.join(format!("{label}-journals")), true);
+        viewer.click(&mut fault_app, "connection")?;
+        viewer.until(
+            &mut fault_app,
+            |a| a.worker.snapshot().phase == Phase::Ready && !a.worker.snapshot().command_pending,
+            10,
+        )?;
+        viewer.click(&mut fault_app, "mark-start")?;
+        viewer.click(&mut fault_app, "jog-1")?;
+        viewer.until(
+            &mut fault_app,
+            |a| a.worker.snapshot().phase == Phase::Ready && !a.worker.snapshot().command_pending,
+            10,
+        )?;
+        viewer.click(&mut fault_app, "mark-end")?;
+        let marked = fault_app.control_snapshot().plan;
+        viewer.click(&mut fault_app, "start")?;
+        viewer.until(
+            &mut fault_app,
+            |a| a.worker.snapshot().phase == Phase::Fault && !a.worker.snapshot().command_pending,
+            10,
+        )?;
+        let fault = fault_app.worker.snapshot();
+        ensure!(
+            fault.exposure_uncertain == uncertain,
+            "Wrong recovery guidance for fixture"
+        );
+        viewer.save(&mut fault_app, &directory.join(format!("09-{label}.png")))?;
+        if uncertain {
+            viewer.click(&mut fault_app, "recover-camera")?;
+            ensure!(
+                fault_app.worker.snapshot().phase == Phase::Fault,
+                "Unacknowledged uncertain exposure recovered"
+            );
+            viewer.click(&mut fault_app, "recovery-ack")?;
+        }
+        viewer.click(&mut fault_app, "recover-camera")?;
+        viewer.until(
+            &mut fault_app,
+            |a| a.worker.snapshot().phase == Phase::Ready && !a.worker.snapshot().command_pending,
+            10,
+        )?;
+        let restored = fault_app.control_snapshot();
+        ensure!(
+            restored.start_set && restored.end_set && restored.plan == marked,
+            "Recovery lost same-camera bounds/settings"
+        );
+        ensure!(
+            fault_app.worker.snapshot().sequence_id == fault.sequence_id,
+            "Recovery started a sequence"
+        );
+        viewer.click(&mut fault_app, "start")?;
+        viewer.until(
+            &mut fault_app,
+            |a| {
+                a.worker.snapshot().phase == Phase::Complete && !a.worker.snapshot().command_pending
+            },
+            10,
+        )?;
+        ensure!(
+            fault_app.worker.snapshot().completed == 2,
+            "Restart after fault did not complete"
+        );
+        viewer.save(
+            &mut fault_app,
+            &directory.join(format!("10-{label}-restarted.png")),
+        )?;
+        viewer.click(&mut fault_app, "connection")?;
+        viewer.until(
+            &mut fault_app,
+            |a| a.worker.snapshot().phase == Phase::Disconnected,
+            10,
+        )?;
+    }
+    checks.push("Focus-information and uncertain-exposure faults recover through native controls, retain same-camera marks, and finish a separate new stack");
     let report = serde_json::json!({"schema":"strehl-capture-ui-verification-v1","camera":"simulator; no physical connection","renderer":format!("{:?}",viewer.render.adapter.get_info()),"checks":checks,"sizes":[[1366,900],[1280,720]],"last_phase":format!("{:?}",app.worker.snapshot().phase)});
     std::fs::write(
         directory.join("ui-receipt.json"),

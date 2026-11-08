@@ -64,7 +64,7 @@ def main():
     exercise=out/'rendered ui and journals'
     report=json.loads(run([str(package/'Strehl-Capture.exe'),'--demo','--exercise',str(exercise)],package))
     assert report['last_phase']=='Disconnected' and len(report['checks'])>=(8 if args.preview_fix else 6)
-    if args.web_remote:assert len(report['checks'])>=9 and 'Web remote' in report['checks'][-1]
+    if args.web_remote:assert len(report['checks'])>=9 and any('Web remote' in check for check in report['checks'])
     # Exercise smaller layout with an active preview, not just a disconnected page.
     preview=out/'laptop live preview.png'
     run([str(package/'Strehl-Capture.exe'),'--demo','--offscreen-screenshot',str(preview),'--size','1280x720'],package,30)

@@ -113,6 +113,7 @@ pub enum Phase {
     Complete,
     Stopped,
     Fault,
+    Recovering,
     Disconnecting,
 }
 impl Phase {
@@ -125,6 +126,7 @@ impl Phase {
                 | Self::Capturing
                 | Self::Paused
                 | Self::Disconnecting
+                | Self::Recovering
         )
     }
     pub fn can_edit(&self) -> bool {

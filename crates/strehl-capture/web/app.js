@@ -1,20 +1,36 @@
 'use strict';
 const $ = id => document.getElementById(id);
-let key=sessionStorage.getItem('strehl-pairing')||'',state=null,online=false,sending=false,dirty=false,editRevision=null,selecting=false,drag=null,previewGeneration=-1,previewBusy=false,previewUrl=null;
+const PAIRING_STORE='strehl-pairing-v2';
+function validKey(value){return typeof value==='string'&&/^[a-f0-9]{48}$/.test(value);}
+function stored(area,name){try{return window[area].getItem(name);}catch{return null;}}
+function writeStored(area,name,value){try{if(value===null)window[area].removeItem(name);else window[area].setItem(name,value);}catch{/* Pairing still works in memory when browser storage is unavailable. */}}
+function decodePairing(value){try{const saved=JSON.parse(value);if(validKey(saved?.key))return{key:saved.key,remoteSession:saved.remoteSession||''};}catch{}return null;}
+const savedPairing=decodePairing(stored('localStorage',PAIRING_STORE))||decodePairing(stored('sessionStorage',PAIRING_STORE))||{key:stored('sessionStorage','strehl-pairing')||'',remoteSession:''};
+let key=validKey(savedPairing.key)?savedPairing.key:'',remoteSession=savedPairing.remoteSession,state=null,online=false,sending=false,dirty=false,editRevision=null,selecting=false,drag=null,previewGeneration=-1,previewBusy=false,previewUrl=null;
+let pairingVersion=0,authFailures=0,failures=0,revoked=false,polling=false,pollTimer=null;
+let recoveryMessage='';
 const fragment=new URLSearchParams(location.hash.slice(1));
-if(fragment.has('key')){key=fragment.get('key');sessionStorage.setItem('strehl-pairing',key);history.replaceState(null,'',location.pathname);}
+if(fragment.has('key')){if(validKey(fragment.get('key'))){key=fragment.get('key');remoteSession='';}history.replaceState(null,'',location.pathname);}
 function notice(text){$('notice').textContent=text;}
-function paired(){return /^[a-f0-9]{48}$/.test(key);}
-function showPairing(){const active=paired();$('pairing').hidden=active;$('workspace').hidden=!active;$('capture-footer').hidden=!active;}
+function paired(){return validKey(key);}
+function persistPairing(){const value=paired()?JSON.stringify({key,remoteSession}):null;for(const area of ['localStorage','sessionStorage'])writeStored(area,PAIRING_STORE,value);writeStored('sessionStorage','strehl-pairing',null);}
+function showPairing(){const active=paired(),repair=active&&(revoked||authFailures>=3);$('pairing').hidden=active&&!repair;$('workspace').hidden=!active||!state;$('capture-footer').hidden=!active||!state;$('pairing-title').textContent=repair?'Reconnect this browser':'Pair this browser';$('retry-pairing').hidden=!active;$('forget-pairing').hidden=!active;if(!online)$('camera-connect').disabled=true;if(!active||!state)$('camera-recovery').hidden=true;}
+function clearPreview(){if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;previewGeneration=-1;$('preview').removeAttribute('src');$('preview').hidden=true;}
+function schedulePoll(delay=0){clearTimeout(pollTimer);pollTimer=setTimeout(poll,delay);}
+function activatePairing(value){const changed=key!==value.key;pairingVersion++;key=validKey(value.key)?value.key:'';remoteSession=value.remoteSession||'';online=false;authFailures=0;failures=0;revoked=false;if(changed){state=null;dirty=false;editRevision=null;clearPreview();}persistPairing();notice(paired()?'Connecting with saved pairing…':'');showPairing();render();schedulePoll();}
+function authorization(){return{key,version:pairingVersion};}
+function current(auth){return paired()&&auth.version===pairingVersion&&auth.key===key;}
+function sessionIdentity(response){const value=response.headers.get('x-strehl-remote-session');return /^[a-f0-9]{32}$/.test(value||'')?value:'';}
 function id(){return Array.from(crypto.getRandomValues(new Uint8Array(16)),b=>b.toString(16).padStart(2,'0')).join('');}
-async function api(path,options={}){return fetch(path,{cache:'no-store',credentials:'omit',...options,headers:{'Authorization':`Bearer ${key}`,...options.headers},signal:AbortSignal.timeout(10000)});}
+async function api(path,options={},auth=authorization()){return fetch(path,{cache:'no-store',credentials:'omit',...options,headers:{'Authorization':`Bearer ${auth.key}`,...options.headers},signal:AbortSignal.timeout(10000)});}
 function duration(seconds){const s=Math.ceil(Math.max(0,seconds||0));return s>=3600?`${Math.floor(s/3600)}h ${String(Math.floor(s/60)%60).padStart(2,'0')}m ${String(s%60).padStart(2,'0')}s`:`${Math.floor(s/60)}m ${String(s%60).padStart(2,'0')}s`;}
 async function command(command,planRevision=null){
  if(!state||!online||sending)return false;
  sending=true;render();let ok=false;
+ const auth=authorization();
  const request={id:id(),camera_revision:state.camera_revision,plan_revision:planRevision??state.plan_revision,sequence_id:state.sequence_id,command};
- try{const response=await api('/api/command',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(request)});const result=await response.json();if(!response.ok)throw Error(result.error||'Command was refused');receive(result.state);notice('');ok=true;}
- catch(error){notice(error.name==='TimeoutError'||error instanceof TypeError?'Response lost. Check the live status before issuing another command; nothing was retried.':error.message);}
+ try{const response=await api('/api/command',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(request)},auth);const result=await response.json();if(!current(auth))return false;if(!response.ok)throw Error(result.error||'Command was refused');receive(result.state);notice('');ok=true;}
+ catch(error){if(current(auth))notice(error.name==='TimeoutError'||error instanceof TypeError?'Response lost. Check the live status before issuing another command; nothing was retried.':error.message);}
  finally{sending=false;render();}return ok;
 }
 function receive(next){if(!state||(next.camera_revision>=state.camera_revision&&next.plan_revision>=state.plan_revision))state=next;}
@@ -22,6 +38,8 @@ function resetSettings(){dirty=false;editRevision=null;render();}
 function render(){
  if(!state)return;
  const s=state,edit=online&&s.editable&&!sending,active=['capturing','scanning','paused'].includes(s.phase),fresh=edit&&s.preview.fresh;
+ $('camera-recovery').hidden=!s.failure||!paired();
+ if(s.failure){const tag=`${s.sequence_id}:${s.failure.message}:${s.failure.exposure_uncertain}`;if(tag!==recoveryMessage){recoveryMessage=tag;$('recovery-ack').checked=false;}$('camera-error').textContent=s.failure.message;$('recovery-count').textContent=`${s.completed} / ${s.total} captures confirmed.${s.failure.exposure_uncertain?' The last exposure may be on the card; inspect it before reconnecting.':''}`;$('recovery-ack-label').hidden=!s.failure.exposure_uncertain;$('recover-camera').disabled=!online||sending||!s.failure.can_reconnect||(s.failure.exposure_uncertain&&!$('recovery-ack').checked);}else{recoveryMessage='';$('recovery-ack').checked=false;}
  $('demo-label').hidden=!s.demo;$('connection-label').textContent=online?(s.connected?'● Camera connected':'● Remote connected'):'○ Remote offline';
  $('camera-connect').textContent=s.connected?'Disconnect':'Connect camera';$('camera-connect').disabled=!online||sending||s.busy||['connecting','disconnecting'].includes(s.phase);
  $('position').textContent=s.position??'—';$('start-position').textContent=s.start_set?s.plan.start:'Not marked';$('end-position').textContent=s.end_set?s.plan.end:'Not marked';
@@ -32,7 +50,8 @@ function render(){
  $('settings-actions').hidden=!dirty;$('settings-actions').querySelector('button').disabled=!edit;
  $('plan-count').textContent=s.plan_error|| (s.planned?`${s.planned.toLocaleString()} RAWs · ${s.plan.end>=s.plan.start?'increasing':'decreasing'} sweep`:'Mark both focus bounds');
  $('initial-estimate').textContent=!active&&s.initial_seconds!==null?`Initial estimate ~${duration(s.initial_seconds)}`:'';
- $('start').disabled=!edit||!s.planned||dirty;$('start').hidden=active;
+ $('start').disabled=!edit||!s.planned||dirty;$('start').hidden=active||!!s.failure;
+ $('review-failure').hidden=!s.failure;for(const name of ['pause','stop'])$(name).hidden=!!s.failure;
  $('pause').disabled=!online||sending||!active||s.pending_control===2;$('pause').textContent=s.phase==='paused'?'Resume':'Pause';$('stop').disabled=!online||sending||!active;
  $('survey').disabled=!fresh||!s.start_set||!s.end_set||Math.abs(s.plan.end-s.plan.start)<8||dirty;$('select-roi').disabled=!fresh;
  $('battery').textContent=`Battery ${s.battery===null?'—':s.battery+'%'}`;$('card').textContent=`Card ~${s.card_remaining===null?'—':s.card_remaining.toLocaleString()} left`;
@@ -43,9 +62,9 @@ function render(){
  if(!drag)drawRoi(s.roi);
  const ratios=s.magnifier_ratios.join(',');if($('magnifier').dataset.ratios!==ratios){$('magnifier').replaceChildren(...s.magnifier_ratios.map(r=>{const o=document.createElement('option');o.value=r;o.textContent=r===0?'Off':`${r/10}×`;return o;}));$('magnifier').dataset.ratios=ratios;}
  $('magnifier-control').hidden=!s.magnifier_ratios.length;$('magnifier').disabled=!edit;if(s.magnifier_current!==null)$('magnifier').value=s.magnifier_current;
- $('run-message').textContent=!online?'Remote offline · capture continues on the laptop':active&&s.pending_control===2?'Stopping after the active operation…':active&&s.pending_control===1&&s.phase!=='paused'?'Pausing after the active operation…':s.message;
+ $('run-message').textContent=!online?'Reconnecting · showing last confirmed status':active&&s.pending_control===2?'Stopping after the active operation…':active&&s.pending_control===1&&s.phase!=='paused'?'Pausing after the active operation…':s.message;
  $('progress').max=s.total||1;$('progress').value=s.completed;$('run-count').textContent=s.total?`${s.completed} / ${s.total}`:'';
- $('timer').textContent=s.timer?s.timer.label:'RAWs stay on SD · pause/stop finish the active operation';
+ $('timer').textContent=s.timer?`${online?'':'Last confirmed · '}${s.timer.label}`:'RAWs stay on SD · pause/stop finish the active operation';
  $('survey-result').hidden=!s.samples.length;
  if(s.samples.length)curves(s.samples);
  $('suggestion').textContent=s.suggestion?`Suggested ${s.suggestion.start} → ${s.suggestion.end}`:'Surveying focus…';
@@ -54,11 +73,37 @@ function render(){
 }
 function drawRoi(roi){if(!roi||!previewUrl||!state?.connected)return;const box=$('roi');box.hidden=false;box.style.left=`${roi.x*100}%`;box.style.top=`${roi.y*100}%`;box.style.width=`${roi.width*100}%`;box.style.height=`${roi.height*100}%`;}
 function curves(samples){const canvas=$('curves'),w=canvas.clientWidth||600,h=90;canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');ctx.clearRect(0,0,w,h);const max=Math.max(0.00001,...samples.flatMap(s=>s.scores));ctx.strokeStyle='#e6b45070';ctx.lineWidth=1;for(let tile=0;tile<samples[0].scores.length;tile++){ctx.beginPath();samples.forEach((s,i)=>{const x=i/Math.max(1,samples.length-1)*w,y=h-4-(s.scores[tile]/max)*(h-8);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();}}
-async function preview(){if(previewBusy||!state?.preview.available||state.preview.generation===previewGeneration)return;previewBusy=true;try{const response=await api('/api/preview');if(!response.ok||response.status===204)return;const blob=await response.blob();if(!paired()||!state?.connected||!state.preview.available)return;const next=URL.createObjectURL(blob);const previous=previewUrl;previewUrl=next;previewGeneration=Number(response.headers.get('x-preview-generation'));$('preview').src=next;$('preview').hidden=false;$('preview-empty').hidden=true;if(previous)URL.revokeObjectURL(previous);drawRoi(state.roi);}catch{}finally{previewBusy=false;}}
-async function poll(){if(paired()){try{const response=await api('/api/state');if(response.status===401){key='';sessionStorage.removeItem('strehl-pairing');notice('Pairing expired. Open a new link from the camera laptop.');showPairing();}else if(response.ok){receive(await response.json());const reconnect=!online;online=true;if(reconnect)notice('');render();preview();}else throw Error('Remote unavailable');}catch{online=false;render();}}setTimeout(poll,350);}
-$('pair-form').addEventListener('submit',e=>{e.preventDefault();let value=$('pair-key').value.trim();try{if(value.includes('://'))value=new URLSearchParams(new URL(value).hash.slice(1)).get('key')||'';}catch{}key=value;if(paired()){sessionStorage.setItem('strehl-pairing',key);$('pair-key').value='';notice('');showPairing();}else notice('Use the complete pairing link or key from Strehl Capture.');});
-$('unpair').addEventListener('click',()=>{key='';sessionStorage.removeItem('strehl-pairing');online=false;state=null;if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;$('preview').removeAttribute('src');$('preview').hidden=true;showPairing();});
+async function preview(){if(previewBusy||!online||!state?.preview.available||state.preview.generation===previewGeneration)return;previewBusy=true;const auth=authorization();try{const response=await api('/api/preview',{},auth);if(!response.ok||response.status===204)return;const blob=await response.blob();if(!current(auth)||!online||!state?.connected||!state.preview.available)return;const next=URL.createObjectURL(blob);const previous=previewUrl;previewUrl=next;previewGeneration=Number(response.headers.get('x-preview-generation'));$('preview').src=next;$('preview').hidden=false;$('preview-empty').hidden=true;if(previous)URL.revokeObjectURL(previous);drawRoi(state.roi);}catch{}finally{previewBusy=false;}}
+async function poll(){
+ if(polling)return;polling=true;clearTimeout(pollTimer);const auth=authorization();
+ try{if(paired()){
+  const response=await api('/api/state',{},auth);if(!current(auth))return;
+  if(response.status===401){
+   online=false;authFailures++;failures++;const identity=sessionIdentity(response);revoked=revoked||!!(identity&&remoteSession&&identity!==remoteSession);
+   notice(revoked?'Web remote restarted or its links were revoked. Paste the current pairing link; no camera command was sent.':authFailures>=3?'The laptop is rejecting this saved pairing. Retrying automatically; you can retry now or paste its current link.':'Connection interrupted. Retrying saved pairing; the stack is controlled on the laptop.');
+   showPairing();render();
+  }else if(response.ok){
+   const next=await response.json();if(!current(auth))return;
+   const identity=sessionIdentity(response);if(identity&&identity!==remoteSession){if(remoteSession)state=null;remoteSession=identity;persistPairing();}
+   receive(next);const reconnect=!online;online=true;authFailures=0;failures=0;revoked=false;if(reconnect)notice('');showPairing();render();preview();
+  }else throw Error('Remote unavailable');
+ }}catch{if(current(auth)){online=false;failures++;notice('Connection lost. Reconnecting automatically; the saved pairing is retained.');render();}}
+ finally{polling=false;schedulePoll(!paired()?1000:!current(auth)?0:failures?Math.min(10000,500*2**Math.min(failures,5)):document.hidden?3000:350);}
+}
+$('pair-form').addEventListener('submit',e=>{e.preventDefault();let value=$('pair-key').value.trim();try{if(value.includes('://'))value=new URLSearchParams(new URL(value).hash.slice(1)).get('key')||'';}catch{}if(validKey(value)){$('pair-key').value='';activatePairing({key:value,remoteSession:value===key?remoteSession:''});}else notice('Use the complete pairing link or key from Strehl Capture.');});
+function forgetPairing(){activatePairing({key:'',remoteSession:''});}
+$('unpair').addEventListener('click',forgetPairing);
+$('forget-pairing').addEventListener('click',forgetPairing);
+$('retry-pairing').addEventListener('click',()=>schedulePoll());
+window.addEventListener('storage',event=>{if(event.key===PAIRING_STORE)activatePairing(decodePairing(event.newValue)||{key:'',remoteSession:''});});
+window.addEventListener('hashchange',()=>{const offered=new URLSearchParams(location.hash.slice(1));if(!offered.has('key'))return;const value=offered.get('key');history.replaceState(null,'',location.pathname);if(validKey(value))activatePairing({key:value,remoteSession:value===key?remoteSession:''});else notice('Use the complete pairing link or key from Strehl Capture.');});
+window.addEventListener('online',()=>schedulePoll());
+window.addEventListener('pageshow',()=>schedulePoll());
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedulePoll();});
 $('camera-connect').addEventListener('click',()=>command({op:state.connected?'disconnect':'connect'}));
+$('recovery-ack').addEventListener('change',render);
+$('review-failure').addEventListener('click',()=>$('camera-recovery').scrollIntoView({block:'start'}));
+$('recover-camera').addEventListener('click',()=>command({op:'recover',acknowledge_uncertain:$('recovery-ack').checked}));
 document.querySelectorAll('[data-jog]').forEach(b=>b.addEventListener('click',()=>command({op:'jog',delta:Number(b.dataset.jog)})));
 document.querySelectorAll('[data-mark]').forEach(b=>b.addEventListener('click',()=>command({op:'mark',start:b.dataset.mark==='true'})));
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>command({op:'go',start:b.dataset.go==='true'})));
@@ -76,4 +121,4 @@ $('preview').addEventListener('pointermove',event=>{if(drag)drawRoi(rectangle(dr
 $('preview').addEventListener('pointerup',async event=>{if(!drag)return;const roi=rectangle(drag,point(event));drag=null;selecting=false;$('preview-help').textContent='Enlarge to inspect focus; scroll or swipe to pan.';$('select-roi').classList.remove('selected');$('preview-box').classList.remove('selecting');if(roi.width>=.05&&roi.height>=.05)await command({op:'roi',roi});else notice('Select a larger subject rectangle.');render();});
 $('preview').addEventListener('pointercancel',()=>{drag=null;render();});
 $('magnifier').addEventListener('change',()=>command({op:'magnify',ratio:Number($('magnifier').value),x:Math.round((state.roi.x+state.roi.width/2)*639),y:Math.round((state.roi.y+state.roi.height/2)*479)}));
-showPairing();poll();
+if(paired()){persistPairing();notice('Connecting with saved pairing…');}showPairing();poll();

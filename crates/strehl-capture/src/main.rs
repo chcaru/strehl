@@ -30,6 +30,8 @@ struct Args {
     web_test_session: Option<PathBuf>,
     #[arg(long, default_value_t = 240)]
     web_test_seconds: u64,
+    #[arg(long, hide = true, requires_all = ["demo", "web_test_session"], value_parser = ["focus", "capture"])]
+    web_test_failure: Option<String>,
 }
 fn main() {
     if let Err(e) = run() {
@@ -56,7 +58,19 @@ fn run() -> anyhow::Result<()> {
             "Offscreen checks require explicit --demo and never open a camera"
         );
     }
-    let worker = strehl_capture::worker::Worker::new(bridge, args.demo);
+    let worker = if let Some(kind) = args.web_test_failure.clone() {
+        let first = std::sync::atomic::AtomicBool::new(true);
+        strehl_capture::worker::Worker::with_factory(Box::new(move || {
+            let fail = first.swap(false, std::sync::atomic::Ordering::SeqCst);
+            Ok(Box::new(strehl_capture::backend::Demo {
+                fail_focus_after: (fail && kind == "focus").then_some(3),
+                fail_capture: fail && kind == "capture",
+                ..Default::default()
+            }))
+        }))
+    } else {
+        strehl_capture::worker::Worker::new(bridge, args.demo)
+    };
     if let Some(path) = args.web_test_session {
         use std::sync::{Arc, Mutex};
         use strehl_capture::{

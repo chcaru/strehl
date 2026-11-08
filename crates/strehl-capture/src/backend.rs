@@ -9,7 +9,7 @@ use std::{
     process::{Child, ChildStdin, Command, Stdio},
     sync::{Arc, mpsc},
     thread,
-    time::Duration,
+    time::{Duration, Instant},
 };
 
 pub struct Preview {
@@ -40,6 +40,7 @@ pub struct Native {
     hello: Value,
     poisoned: bool,
     executable: PathBuf,
+    release_reply: Option<Value>,
 }
 
 impl Native {
@@ -77,20 +78,17 @@ impl Native {
                 }
             }
         });
-        let mut this = Self {
+        // The Worker owns this process before the first SDK reply is read.
+        // A failed handshake must retain that owner until release completes.
+        Ok(Self {
             child: Some(child),
             input,
             replies,
             hello: Value::Null,
             poisoned: false,
             executable: executable.to_owned(),
-        };
-        this.hello = this.receive(35)?;
-        ensure!(
-            this.hello["capture_protocol"] == 2 && this.hello["live_view_protocol"] == 1,
-            "This bridge predates the live-view capture app. Extract the entire new ZIP."
-        );
-        Ok(this)
+            release_reply: None,
+        })
     }
     fn receive(&mut self, timeout_s: u64) -> Result<Value> {
         let reply = match self.replies.recv_timeout(Duration::from_secs(timeout_s)) {
@@ -158,6 +156,13 @@ impl Camera for Native {
         self.call("status", 20)
     }
     fn configure(&mut self) -> Result<()> {
+        if self.hello.is_null() {
+            self.hello = self.receive(35)?;
+        }
+        ensure!(
+            self.hello["capture_protocol"] == 2 && self.hello["live_view_protocol"] == 1,
+            "This bridge predates the live-view capture app. Extract the entire new ZIP."
+        );
         // Set destination first, before any preview or release; never select HostPC.
         self.set("StillImageStoreDestination", 2)?;
         self.set("DriveMode", 1)?;
@@ -205,7 +210,30 @@ impl Camera for Native {
         Ok(())
     }
     fn disconnect(&mut self) -> Result<Value> {
-        self.call("quit", 50)
+        if self.input.is_some() {
+            // Closing stdin also releases a poisoned protocol after its current
+            // operation finishes. Never kill a bridge during an uncertain shot.
+            let result = self.call("quit", 50);
+            self.input.take();
+            self.release_reply = Some(match result {
+                Ok(reply) => reply,
+                Err(error) => json!({"restored":false,"reason":format!("{error:#}")}),
+            });
+        }
+        if let Some(child) = self.child.as_mut() {
+            let end = Instant::now() + Duration::from_secs(5);
+            while child.try_wait()?.is_none() {
+                ensure!(
+                    Instant::now() < end,
+                    "Camera bridge is still finishing its previous operation. Wait for the camera/card to become idle, then retry reconnect. No replacement connection was opened."
+                );
+                thread::sleep(Duration::from_millis(50));
+            }
+            self.child.take();
+        }
+        Ok(self.release_reply.clone().unwrap_or_else(
+            || json!({"restored":false,"reason":"Connection was already released"}),
+        ))
     }
 }
 
@@ -249,6 +277,8 @@ pub struct Demo {
     pub delay_ms: u64,
     pub fail_capture: bool,
     pub fail_preview: bool,
+    pub fail_focus_after: Option<u32>,
+    pub focus_calls: u32,
 }
 impl Default for Demo {
     fn default() -> Self {
@@ -259,6 +289,8 @@ impl Default for Demo {
             delay_ms: 120,
             fail_capture: false,
             fail_preview: false,
+            fail_focus_after: None,
+            focus_calls: 0,
         }
     }
 }
@@ -291,6 +323,11 @@ impl Camera for Demo {
         Ok(())
     }
     fn focus(&mut self, target: u16, _settle_ms: u32) -> Result<Value> {
+        ensure!(
+            !self.fail_focus_after.is_some_and(|n| self.focus_calls >= n),
+            "Simulated failure to get focus information"
+        );
+        self.focus_calls += 1;
         thread::sleep(Duration::from_millis(self.delay_ms.min(60)));
         let before = self.position;
         self.position = target;
@@ -350,6 +387,44 @@ pub fn demo_image(focus: u16, width: u32, height: u32) -> RgbImage {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(windows)]
+    #[test]
+    fn disconnect_waits_for_owned_bridge_exit_and_can_be_retried() {
+        use std::os::windows::process::CommandExt;
+        let child = Command::new("powershell.exe")
+            .args([
+                "-NoProfile",
+                "-NonInteractive",
+                "-Command",
+                "Start-Sleep -Seconds 6",
+            ])
+            .stdin(Stdio::null())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .creation_flags(0x0800_0000)
+            .spawn()
+            .unwrap();
+        let (_, replies) = mpsc::sync_channel(1);
+        let mut camera = Native {
+            child: Some(child),
+            input: None,
+            replies,
+            hello: Value::Null,
+            poisoned: true,
+            executable: PathBuf::new(),
+            release_reply: Some(json!({"restored":false,"reason":"fixture: uncertain operation"})),
+        };
+        assert!(
+            camera
+                .disconnect()
+                .unwrap_err()
+                .to_string()
+                .contains("still finishing")
+        );
+        assert!(camera.child.as_mut().unwrap().try_wait().unwrap().is_none());
+        assert_eq!(camera.disconnect().unwrap()["restored"], false);
+        assert!(camera.child.is_none());
+    }
     #[test]
     fn real_jpeg_round_trip_uses_camera_decode_path() {
         let image = image::RgbImage::from_pixel(64, 48, image::Rgb([40, 100, 180]));

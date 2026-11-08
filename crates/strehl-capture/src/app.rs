@@ -38,6 +38,8 @@ pub struct App {
     roi_drag: Option<egui::Pos2>,
     closing: bool,
     close_revision: Option<u64>,
+    recovery_ack: bool,
+    recovery_message: String,
 }
 impl App {
     pub fn new(worker: Worker, root: PathBuf, demo: bool) -> Self {
@@ -66,6 +68,8 @@ impl App {
             roi_drag: None,
             closing: false,
             close_revision: None,
+            recovery_ack: false,
+            recovery_message: String::new(),
         }
     }
     fn send(&mut self, s: &Snapshot, action: Action) {
@@ -283,6 +287,7 @@ impl App {
                     .inner_margin(egui::Margin::symmetric(18, 10)),
             )
             .show(ctx, |ui| {
+                self.recovery_controls(ui, &s);
                 egui::ScrollArea::vertical()
                     .id_salt("capture-controls")
                     .auto_shrink([false, false])
@@ -301,6 +306,48 @@ impl App {
         drop(settings);
         self.web_panel(ctx);
         ctx.request_repaint_after(Duration::from_millis(80));
+    }
+    fn recovery_controls(&mut self, ui: &mut egui::Ui, s: &Snapshot) {
+        if let Some(error) = &s.failure {
+            if self.recovery_message != *error {
+                self.recovery_message = error.clone();
+                self.recovery_ack = false;
+            }
+            Self::section(ui, "CAMERA NEEDS ATTENTION");
+            ui.label(RichText::new(error).color(AMBER));
+            ui.small(format!(
+                "{} / {} captures confirmed. Existing RAWs and the journal are kept.",
+                s.completed, s.total
+            ));
+            if s.exposure_uncertain {
+                ui.small("The last exposure may be on the card. Wait for camera/card activity to finish and inspect the SD card before reconnecting.");
+                let response = ui.checkbox(
+                    &mut self.recovery_ack,
+                    "Camera is idle; I checked the uncertain exposure",
+                );
+                self.widgets.insert("recovery-ack".into(), response.rect);
+            }
+            if self.button(
+                ui,
+                "recover-camera",
+                "Reconnect camera",
+                matches!(s.phase, Phase::Fault | Phase::Disconnected)
+                    && !s.command_pending
+                    && (!s.exposure_uncertain || self.recovery_ack),
+            ) {
+                self.send(
+                    s,
+                    Action::Recover {
+                        acknowledge_uncertain: self.recovery_ack,
+                    },
+                );
+            }
+            ui.small("Reconnect does not take a photo. Review both focus marks afterward; Start makes a new stack from A.");
+            ui.separator();
+        } else {
+            self.recovery_ack = false;
+            self.recovery_message.clear();
+        }
     }
     fn controls(&mut self, ui: &mut egui::Ui, s: &Snapshot, settings: &mut Controls) {
         let editable = s.phase.can_edit() && !s.command_pending;

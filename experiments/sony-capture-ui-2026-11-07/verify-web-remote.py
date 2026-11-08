@@ -102,7 +102,7 @@ def main():
             pc.locator('#camera-connect').click()
             ready()
             expect(pc.locator('#preview')).to_be_visible(timeout=10000)
-            pc.wait_for_function('document.getElementById("preview").naturalWidth > 0')
+            expect(pc.locator('#preview')).to_have_js_property('naturalWidth', 960, timeout=10000)
             pc.locator('[data-mark="true"]').click()
             start = wait(lambda s: s['start_set'])['plan']['start']
             pc.locator('[data-jog="128"]').click()

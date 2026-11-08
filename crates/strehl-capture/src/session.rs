@@ -24,6 +24,7 @@ pub struct Controls {
     pub roi: Roi,
     pub root: PathBuf,
     connected_seen: bool,
+    connection_generation_seen: u64,
 }
 impl Controls {
     pub fn new(root: PathBuf) -> Self {
@@ -35,11 +36,15 @@ impl Controls {
             roi: Roi::subject(),
             root,
             connected_seen: false,
+            connection_generation_seen: 0,
         }
     }
     pub fn sync_connection(&mut self, snapshot: &Snapshot) {
-        if self.connected_seen != snapshot.connected {
+        if self.connected_seen != snapshot.connected
+            || self.connection_generation_seen != snapshot.connection_generation
+        {
             self.connected_seen = snapshot.connected;
+            self.connection_generation_seen = snapshot.connection_generation;
             self.start_set = false;
             self.end_set = false;
             self.roi = Roi::subject();
@@ -100,6 +105,7 @@ impl Session {
         json!({"camera_revision":s.revision,"plan_revision":c.revision,"sequence_id":s.sequence_id,"phase":s.phase,"connected":s.connected,"busy":s.command_pending,"editable":editable,"message":s.message,"demo":self.demo,
             "position":s.position,"plan":c.plan,"start_set":c.start_set,"end_set":c.end_set,"roi":c.roi,"planned":planned,"plan_error":plan_error,"initial_seconds":initial.map(|t|t.as_secs_f64()),
             "completed":s.completed,"total":s.total,"timer":timer,"pending_control":self.worker.pending(),
+            "failure":s.failure.as_ref().map(|message|json!({"message":message,"exposure_uncertain":s.exposure_uncertain,"can_reconnect":matches!(s.phase,Phase::Fault|Phase::Disconnected)&&!s.command_pending})),
             "battery":property(&s.status,"BatteryRemain").filter(|v|*v<=100),"card_remaining":property(&s.status,"MediaSLOT1_RemainingNumber"),
             "preview":{"available":s.preview.is_some(),"fresh":fresh,"generation":s.preview_generation,"age_seconds":s.preview_at.map(|t|t.elapsed().as_secs_f64()),"error":s.preview_error,"width":s.preview.as_ref().map(|p|p.rgb.width()),"height":s.preview.as_ref().map(|p|p.rgb.height())},
             "magnifier_ratios":ratios,"magnifier_current":property(&s.status,"Focus_Magnifier_Setting").map(|n|n>>32),"suggestion":s.suggestion,"samples":s.samples})
@@ -168,6 +174,13 @@ impl Session {
             Command::Disconnect {} => {
                 ensure!(s.connected, "Camera is not connected");
                 action = Some(Action::Disconnect);
+            }
+            Command::Recover {
+                acknowledge_uncertain,
+            } => {
+                action = Some(Action::Recover {
+                    acknowledge_uncertain,
+                });
             }
             command => {
                 ensure!(
@@ -304,6 +317,9 @@ pub struct CommandRequest {
 pub enum Command {
     Connect {},
     Disconnect {},
+    Recover {
+        acknowledge_uncertain: bool,
+    },
     Jog {
         delta: i32,
     },

@@ -1,0 +1,23 @@
+{
+  "schema": "strehl-web-session-verification-v1",
+  "camera": "explicit simulator only",
+  "app_sha256": "a66b0f4aaf593250bc315f031e7022b3798e7c53e67013b7b57ba8ca9ba9c4c4",
+  "baseline_sha256": "d25a59160b213b76a76c5f73e4f9910f6113590f0d551948059be8578d5d7288",
+  "checks": [
+    "Old client reproduced: one planted 401 deletes a still-valid key and reports expiration",
+    "One 401 mid-capture retains pairing and last progress, disables commands, then reconnects",
+    "Network loss and a 24-hour browser-clock jump recover without replaying the lost Start reply",
+    "Full browser process restart reconnects from stored pairing without a URL fragment",
+    "A delayed 401 from a forgotten pairing cannot erase a newer pairing attempt",
+    "Changed server identity produces actionable re-pair UI with last progress retained",
+    "Opening a replacement link in the current tab applies its key; wrong keys remain refused and correct re-pair restores control",
+    "Explicit Forget removes persistent pairing and signs out other open tabs without stopping capture",
+    "Blocked browser storage falls back to memory and still reconnects after a rejected request",
+    "Same simulated sequence advanced throughout recovery; exactly one Start was issued"
+  ],
+  "browser_errors": [],
+  "clock_jump_hours": 24,
+  "real_hours_long_soak": false,
+  "start_requests": 1,
+  "simulated_captures_completed": 64
+}

@@ -42,6 +42,9 @@ pub struct Snapshot {
     pub timing: Option<RunTiming>,
     pub command_pending: bool,
     pub sequence_id: u64,
+    pub connection_generation: u64,
+    pub failure: Option<String>,
+    pub exposure_uncertain: bool,
 }
 impl Default for Snapshot {
     fn default() -> Self {
@@ -65,12 +68,18 @@ impl Default for Snapshot {
             timing: None,
             command_pending: false,
             sequence_id: 0,
+            connection_generation: 0,
+            failure: None,
+            exposure_uncertain: false,
         }
     }
 }
 pub enum Action {
     Connect,
     Disconnect,
+    Recover {
+        acknowledge_uncertain: bool,
+    },
     Move {
         target: u16,
         settle_ms: u32,
@@ -146,6 +155,26 @@ impl Worker {
             !state.command_pending,
             "A camera command is already pending"
         );
+        if let Action::Recover {
+            acknowledge_uncertain,
+        } = &action
+        {
+            ensure!(
+                matches!(state.phase, Phase::Fault | Phase::Disconnected)
+                    && state.failure.is_some(),
+                "Recovery is available after a camera failure"
+            );
+            ensure!(
+                !state.exposure_uncertain || *acknowledge_uncertain,
+                "Check the camera is idle and inspect the SD card before acknowledging the uncertain exposure"
+            );
+        }
+        if matches!(&action, Action::Connect) {
+            ensure!(
+                !state.exposure_uncertain,
+                "Use Reconnect camera and acknowledge the uncertain exposure first"
+            );
+        }
         if matches!(&action, Action::Capture { .. } | Action::Scan { .. }) {
             ensure!(
                 state.connected && state.phase.can_edit(),
@@ -201,6 +230,7 @@ fn update(s: &Shared, f: impl FnOnce(&mut Snapshot)) {
     state.revision += 1;
 }
 fn phase(s: &Shared, p: Phase, message: impl Into<String>) {
+    let message = message.into();
     update(s, |v| {
         if let Some(timing) = &mut v.timing {
             match p {
@@ -210,8 +240,11 @@ fn phase(s: &Shared, p: Phase, message: impl Into<String>) {
                 _ => {}
             }
         }
+        if p == Phase::Fault {
+            v.failure = Some(message.clone());
+        }
         v.phase = p;
-        v.message = message.into();
+        v.message = message;
     });
 }
 fn preview(camera: &mut dyn Camera, s: &Shared) -> Result<u64> {
@@ -233,10 +266,13 @@ fn preview(camera: &mut dyn Camera, s: &Shared) -> Result<u64> {
 }
 fn refresh(camera: &mut dyn Camera, s: &Shared) -> Result<Value> {
     let status = camera.status()?;
-    let mut st = s.lock().unwrap();
-    st.position =
+    let position =
         property(&status, "FocusPositionCurrentValue").and_then(|v| u16::try_from(v).ok());
+    let mut st = s.lock().unwrap();
+    st.position = position;
     st.status = status.clone();
+    drop(st);
+    position.context("Camera did not return focus information; check the lens connection and MF mode, then reconnect")?;
     Ok(status)
 }
 fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<AtomicU8>) {
@@ -263,23 +299,22 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                                 Phase::Connecting,
                                 "Connecting · preparing MF, RAW and SD-only saving…",
                             );
-                            let mut opened = factory()?;
-                            let configured = opened.configure();
-                            if let Err(e) = configured {
-                                let _ = opened.disconnect();
-                                return Err(e);
-                            }
+                            camera = Some(factory()?);
+                            let opened = camera.as_mut().unwrap();
+                            opened.configure()?;
                             refresh(opened.as_mut(), &s)?;
                             let identity = opened.identity();
                             update(&s, |v| {
                                 v.connected = true;
+                                v.connection_generation += 1;
+                                v.failure = None;
+                                v.exposure_uncertain = false;
                                 v.identity = identity;
                                 v.phase = Phase::Ready;
                                 v.message = "Connected · RAW captures stay on the SD card".into();
                                 v.suggestion = None;
                                 v.timing = None;
                             });
-                            camera = Some(opened);
                         }
                         Action::Disconnect => {
                             phase(
@@ -287,8 +322,12 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                                 Phase::Disconnecting,
                                 "Disconnecting · restoring camera settings…",
                             );
-                            if let Some(mut opened) = camera.take() {
+                            if let Some(opened) = camera.as_mut() {
                                 let result = opened.disconnect()?;
+                                // Release is complete even if settings could not
+                                // safely be restored. A pending release retains
+                                // the owner so another bridge cannot race it.
+                                camera = None;
                                 ensure!(
                                     result["restored"] == true,
                                     "Camera settings were not fully restored: {result}"
@@ -307,7 +346,51 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                                 v.samples.clear();
                                 v.suggestion = None;
                                 v.message = "Disconnected".into();
+                                if !v.exposure_uncertain {
+                                    v.failure = None;
+                                }
                             });
+                        }
+                        Action::Recover {
+                            acknowledge_uncertain,
+                        } => {
+                            let before = s.lock().unwrap().clone();
+                            ensure!(
+                                !before.exposure_uncertain || acknowledge_uncertain,
+                                "Inspect the uncertain exposure before reconnecting"
+                            );
+                            phase(
+                                &s,
+                                Phase::Recovering,
+                                "Reconnecting camera · releasing the previous connection…",
+                            );
+                            if let Some(opened) = camera.as_mut() {
+                                opened.disconnect()?;
+                                camera = None;
+                            }
+                            camera = Some(factory()?);
+                            let opened = camera.as_mut().unwrap();
+                            opened.configure()?;
+                            refresh(opened.as_mut(), &s)?;
+                            let identity = opened.identity();
+                            update(&s, |v| {
+                                if identity != before.identity {
+                                    v.connection_generation += 1;
+                                }
+                                v.identity = identity;
+                                v.connected = true;
+                                v.phase = Phase::Ready;
+                                v.failure = None;
+                                v.exposure_uncertain = false;
+                                v.preview = None;
+                                v.preview_at = None;
+                                v.preview_error = None;
+                                v.message = format!(
+                                    "Camera reconnected · previous run: {} / {} confirmed. Review A/B marks; Start begins a new stack. RAWs and journal kept.",
+                                    v.completed, v.total
+                                );
+                            });
+                            control.store(RUN, Ordering::SeqCst);
                         }
                         Action::Move { target, settle_ms } => {
                             ensure!(
@@ -415,8 +498,10 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                             v.preview = None;
                             v.preview_at = None;
                             v.position = None;
+                            v.failure = Some(format!("{error:#}"));
                         } else if v.phase.active() {
                             v.phase = Phase::Fault;
+                            v.failure = Some(format!("{error:#}"));
                             if let Some(timing) = &mut v.timing {
                                 timing.finish(Instant::now());
                             }
@@ -499,6 +584,8 @@ fn capture(
     let mut log = Journal::create(&root, &plan, c.identity(), status)?;
     update(s, |v| {
         v.phase = Phase::Capturing;
+        v.failure = None;
+        v.exposure_uncertain = false;
         v.sequence_id += 1;
         v.completed = 0;
         v.total = positions.len();
@@ -557,19 +644,21 @@ fn capture(
                 "capture_intent",
                 json!({"ordinal":ordinal,"target":target,"pixel_shift_shots":1,"camera_status":before}),
             )?;
+            s.lock().unwrap().exposure_uncertain = true;
             let response = c.capture(plan.capture_timeout_s)?;
             validate_capture(&response)?;
-            log.record(
-                "capture_complete",
-                json!({"ordinal":ordinal,"target":target,"response":response}),
-            )?;
             completed += 1;
             update(s, |v| {
+                v.exposure_uncertain = false;
                 v.completed = completed;
                 if let Some(timing) = &mut v.timing {
                     timing.complete_cycle(Instant::now());
                 }
             });
+            log.record(
+                "capture_complete",
+                json!({"ordinal":ordinal,"target":target,"response":response}),
+            )?;
             // Preview failure does not repeat or invalidate a completed exposure.
             if let Err(e) = preview(c, s) {
                 s.lock().unwrap().preview_error = Some(e.to_string());
@@ -796,6 +885,147 @@ mod tests {
             thread::sleep(Duration::from_millis(5));
         }
     }
+    struct DelayedRelease {
+        demo: Demo,
+        refuse_release: bool,
+        missing_focus: bool,
+    }
+    impl Camera for DelayedRelease {
+        fn identity(&self) -> Value {
+            self.demo.identity()
+        }
+        fn status(&mut self) -> Result<Value> {
+            let mut value = self.demo.status()?;
+            if self.missing_focus {
+                value["properties"]["FocusPositionCurrentValue"]["value"] = Value::Null;
+            }
+            Ok(value)
+        }
+        fn configure(&mut self) -> Result<()> {
+            self.demo.configure()
+        }
+        fn focus(&mut self, target: u16, settle_ms: u32) -> Result<Value> {
+            self.demo.focus(target, settle_ms)
+        }
+        fn capture(&mut self, timeout_s: u32) -> Result<Value> {
+            self.demo.capture(timeout_s)
+        }
+        fn preview(&mut self) -> Result<Preview> {
+            self.demo.preview()
+        }
+        fn magnify(&mut self, ratio: u32, x: u16, y: u16) -> Result<()> {
+            self.demo.magnify(ratio, x, y)
+        }
+        fn disconnect(&mut self) -> Result<Value> {
+            if self.refuse_release {
+                self.refuse_release = false;
+                bail!("fixture: connection is still releasing");
+            }
+            self.demo.disconnect()
+        }
+    }
+    #[test]
+    fn failed_release_cannot_open_a_second_camera_and_missing_focus_is_not_reused() {
+        let shared = Arc::new(Mutex::new(Snapshot {
+            position: Some(12345),
+            ..Snapshot::default()
+        }));
+        let mut missing = DelayedRelease {
+            demo: Demo::default(),
+            refuse_release: false,
+            missing_focus: true,
+        };
+        assert!(refresh(&mut missing, &shared).is_err());
+        assert!(shared.lock().unwrap().position.is_none());
+        let calls = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+        let count = calls.clone();
+        let worker = Worker::with_factory(Box::new(move || {
+            let first = count.fetch_add(1, Ordering::SeqCst) == 0;
+            Ok(Box::new(DelayedRelease {
+                demo: Demo {
+                    fail_focus_after: first.then_some(0),
+                    ..Default::default()
+                },
+                refuse_release: first,
+                missing_focus: false,
+            }))
+        }));
+        worker.send(0, Action::Connect).unwrap();
+        let ready = until(&worker, |s| s.phase == Phase::Ready && !s.command_pending);
+        worker
+            .send(
+                ready.revision,
+                Action::Move {
+                    target: 60620,
+                    settle_ms: 100,
+                },
+            )
+            .unwrap();
+        let fault = until(&worker, |s| s.phase == Phase::Fault && !s.command_pending);
+        worker
+            .send(
+                fault.revision,
+                Action::Recover {
+                    acknowledge_uncertain: false,
+                },
+            )
+            .unwrap();
+        let refusal = until(&worker, |s| s.phase == Phase::Fault && !s.command_pending);
+        assert!(refusal.failure.unwrap().contains("still releasing"));
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
+        worker
+            .send(
+                refusal.revision,
+                Action::Recover {
+                    acknowledge_uncertain: false,
+                },
+            )
+            .unwrap();
+        until(&worker, |s| s.phase == Phase::Ready && !s.command_pending);
+        assert_eq!(calls.load(Ordering::SeqCst), 2);
+    }
+    #[test]
+    fn failed_initialization_and_recovery_retain_the_connection_until_released() {
+        let calls = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+        let count = calls.clone();
+        let worker = Worker::with_factory(Box::new(move || {
+            let failed = count.fetch_add(1, Ordering::SeqCst) < 2;
+            Ok(Box::new(DelayedRelease {
+                demo: Demo::default(),
+                refuse_release: failed,
+                missing_focus: failed,
+            }))
+        }));
+        worker.send(0, Action::Connect).unwrap();
+        for expected_openings in 1..=2 {
+            let fault = until(&worker, |s| s.phase == Phase::Fault && !s.command_pending);
+            assert!(fault.failure.unwrap().contains("focus information"));
+            assert!(fault.connected && fault.position.is_none());
+            assert_eq!(calls.load(Ordering::SeqCst), expected_openings);
+            worker
+                .send(
+                    fault.revision,
+                    Action::Recover {
+                        acknowledge_uncertain: false,
+                    },
+                )
+                .unwrap();
+            let releasing = until(&worker, |s| s.phase == Phase::Fault && !s.command_pending);
+            assert!(releasing.failure.unwrap().contains("still releasing"));
+            assert_eq!(calls.load(Ordering::SeqCst), expected_openings);
+            worker
+                .send(
+                    releasing.revision,
+                    Action::Recover {
+                        acknowledge_uncertain: false,
+                    },
+                )
+                .unwrap();
+        }
+        let ready = until(&worker, |s| s.phase == Phase::Ready && !s.command_pending);
+        assert!(ready.failure.is_none());
+        assert_eq!(calls.load(Ordering::SeqCst), 3);
+    }
     #[test]
     fn state_machine_pause_resume_stop_and_stale_command() {
         let temp = tempfile::tempdir().unwrap();
@@ -882,5 +1112,116 @@ mod tests {
         let rejected = until(&w, |s| s.revision > fault.revision && !s.command_pending);
         assert_eq!(rejected.phase, Phase::Fault);
         assert_eq!(rejected.position, Some(60600));
+        assert!(rejected.exposure_uncertain);
+        assert!(
+            w.send(
+                rejected.revision,
+                Action::Recover {
+                    acknowledge_uncertain: false
+                }
+            )
+            .is_err()
+        );
+    }
+    #[test]
+    fn recovery_keeps_partial_journal_and_starts_only_on_explicit_new_capture() {
+        for uncertain in [false, true] {
+            let temp = tempfile::tempdir().unwrap();
+            let openings = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+            let count = openings.clone();
+            let w = Worker::with_factory(Box::new(move || {
+                let first = count.fetch_add(1, Ordering::SeqCst) == 0;
+                Ok(Box::new(Demo {
+                    delay_ms: 0,
+                    fail_capture: first && uncertain,
+                    fail_focus_after: (first && !uncertain).then_some(3),
+                    ..Default::default()
+                }))
+            }));
+            assert!(
+                w.send(
+                    0,
+                    Action::Recover {
+                        acknowledge_uncertain: true
+                    }
+                )
+                .is_err()
+            );
+            w.send(0, Action::Connect).unwrap();
+            let ready = until(&w, |s| s.phase == Phase::Ready && !s.command_pending);
+            let plan = Plan {
+                start: 60600,
+                end: 60603,
+                ..Plan::default()
+            };
+            w.send(
+                ready.revision,
+                Action::Capture {
+                    plan: plan.clone(),
+                    root: temp.path().into(),
+                },
+            )
+            .unwrap();
+            let fault = until(&w, |s| s.phase == Phase::Fault && !s.command_pending);
+            assert_eq!(fault.exposure_uncertain, uncertain);
+            assert_eq!(fault.completed, if uncertain { 0 } else { 2 });
+            let old_journal = fault.journal.clone().unwrap();
+            let old_bytes = std::fs::read(old_journal.join("events.jsonl")).unwrap();
+            assert!(
+                w.send(
+                    fault.revision,
+                    Action::Capture {
+                        plan: plan.clone(),
+                        root: temp.path().into()
+                    }
+                )
+                .is_err()
+            );
+            if uncertain {
+                assert!(
+                    w.send(
+                        fault.revision,
+                        Action::Recover {
+                            acknowledge_uncertain: false
+                        }
+                    )
+                    .is_err()
+                );
+            }
+            w.send(
+                fault.revision,
+                Action::Recover {
+                    acknowledge_uncertain: uncertain,
+                },
+            )
+            .unwrap();
+            let recovered = until(&w, |s| s.phase == Phase::Ready && !s.command_pending);
+            assert_eq!(openings.load(Ordering::SeqCst), 2);
+            assert_eq!(recovered.completed, fault.completed);
+            assert_eq!(recovered.sequence_id, fault.sequence_id);
+            assert_eq!(recovered.journal.as_ref(), Some(&old_journal));
+            assert_eq!(recovered.connection_generation, fault.connection_generation);
+            assert!(recovered.failure.is_none() && !recovered.exposure_uncertain);
+            assert_eq!(
+                std::fs::read(old_journal.join("events.jsonl")).unwrap(),
+                old_bytes
+            );
+            w.send(
+                recovered.revision,
+                Action::Capture {
+                    plan,
+                    root: temp.path().into(),
+                },
+            )
+            .unwrap();
+            let complete = until(&w, |s| s.phase == Phase::Complete && !s.command_pending);
+            assert_eq!(complete.completed, 4);
+            assert!(complete.sequence_id > fault.sequence_id);
+            assert_ne!(complete.journal, fault.journal);
+            assert_eq!(
+                std::fs::read(old_journal.join("events.jsonl")).unwrap(),
+                old_bytes
+            );
+        }
     }
 }
