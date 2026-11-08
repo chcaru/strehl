@@ -83,6 +83,49 @@ static std::string base64(const unsigned char* data, size_t size) {
     return out;
 }
 
+// The SDK returns the JPEG body separately from the receive allocation. It can
+// follow a transport header; neither pointer equality nor offset zero is required.
+static std::string preview_jpeg(const unsigned char* buffer, size_t capacity,
+                                const unsigned char* image, size_t bytes) {
+    const auto begin = reinterpret_cast<uintptr_t>(buffer);
+    const auto address = reinterpret_cast<uintptr_t>(image);
+    const bool in_buffer = buffer && image && address >= begin && address - begin <= capacity;
+    const auto offset = in_buffer ? static_cast<size_t>(address - begin) : capacity;
+    if (!in_buffer || bytes < 4 || bytes > capacity - offset)
+        throw std::runtime_error("Invalid live-view payload range (buffer " + std::to_string(capacity) +
+            ", offset " + (in_buffer ? std::to_string(offset) : "outside") +
+            ", image bytes " + std::to_string(bytes) + ")");
+    if (image[0] != 0xff || image[1] != 0xd8)
+        throw std::runtime_error("Live-view payload is not JPEG (offset " + std::to_string(offset) +
+            ", image bytes " + std::to_string(bytes) + ")");
+    return base64(image, bytes);
+}
+
+static unsigned preview_self_test() {
+    // A deliberate non-JPEG header reproduces the original incorrect-base test.
+    std::vector<unsigned char> storage(2048, 0);
+    const unsigned char jpeg[] = {0xff, 0xd8, 0xff, 0xd9};
+    std::copy(std::begin(jpeg), std::end(jpeg), storage.begin() + 128);
+    if (preview_jpeg(storage.data(), storage.size(), storage.data() + 128, 4) != "/9j/2Q==")
+        throw std::runtime_error("Offset JPEG regression failed");
+    if (preview_jpeg(jpeg, sizeof(jpeg), jpeg, sizeof(jpeg)) != "/9j/2Q==")
+        throw std::runtime_error("Zero-offset JPEG regression failed");
+    unsigned rejected = 0;
+    const auto refuse = [&](const unsigned char* image, size_t bytes) {
+        try { preview_jpeg(storage.data(), storage.size(), image, bytes); }
+        catch (const std::runtime_error&) { ++rejected; return; }
+        throw std::runtime_error("Invalid preview range was accepted");
+    };
+    refuse(nullptr, 4);
+    refuse(storage.data() + 128, 0);
+    refuse(storage.data() + 128, 3);
+    refuse(storage.data() + 128, storage.size());
+    refuse(storage.data() + storage.size(), 4);
+    refuse(storage.data(), 4);
+    if (rejected != 6) throw std::runtime_error("Preview rejection controls failed");
+    return rejected + 2;
+}
+
 static const std::map<std::string, CrInt32u> properties = {
 #define PROP(name) {#name, sdk::CrDeviceProperty_##name}
     PROP(FocusMode), PROP(FocusModeSetting), PROP(FocusPositionSetting),
@@ -250,13 +293,11 @@ public:
         block.SetData(buffer.data()); block.SetSize(size);
         check(sdk::GetLiveViewImage(handle, &block), "GetLiveViewImage");
         const auto bytes = block.GetImageSize();
-        if (bytes < 4 || bytes > size || block.GetImageData() != buffer.data() ||
-            buffer[0] != 0xff || buffer[1] != 0xd8)
-            throw std::runtime_error("Invalid live-view JPEG");
+        const auto jpeg = preview_jpeg(buffer.data(), buffer.size(), block.GetImageData(), bytes);
         return "\"frame\":" + std::to_string(block.GetFrameNo()) +
             ",\"width\":" + std::to_string(info.GetWidth()) +
             ",\"height\":" + std::to_string(info.GetHeight()) +
-            ",\"jpeg\":" + quote(base64(buffer.data(), bytes));
+            ",\"jpeg\":" + quote(jpeg);
     }
     void magnify(uint64_t ratio_tenths, uint64_t x, uint64_t y) {
         if (uncertain) throw std::runtime_error("Previous camera operation uncertain");
@@ -487,7 +528,23 @@ int main(int argc, char** argv) {
                 base64(reinterpret_cast<const unsigned char*>("fo"), 2) != "Zm8=" ||
                 base64(reinterpret_cast<const unsigned char*>("foo"), 3) != "Zm9v")
                 throw std::runtime_error("Live-view base64 self-test failed");
-            emit("\"test\":\"sd-card-completion-gate\",\"assertions\":" + std::to_string(card_capture_self_test()));
+            // Exercise the installed SDK's data-pointer accessor without Init,
+            // enumeration or a camera. Never assume a fixed transport-header size.
+            std::vector<unsigned char> receive(2048, 0);
+            sdk::CrImageDataBlock image;
+            image.SetSize(static_cast<CrInt32u>(receive.size())); image.SetData(receive.data());
+            const auto address = reinterpret_cast<uintptr_t>(image.GetImageData());
+            const auto begin = reinterpret_cast<uintptr_t>(receive.data());
+            if (address < begin || address - begin > receive.size() - 4)
+                throw std::runtime_error("SDK preview pointer outside receive buffer");
+            const auto offset = static_cast<size_t>(address - begin);
+            receive[offset] = 0xff; receive[offset + 1] = 0xd8;
+            receive[offset + 2] = 0xff; receive[offset + 3] = 0xd9;
+            if (preview_jpeg(receive.data(), receive.size(), image.GetImageData(), 4) != "/9j/2Q==")
+                throw std::runtime_error("SDK image-pointer regression failed");
+            emit("\"test\":\"sd-card-completion-gate\",\"assertions\":" + std::to_string(card_capture_self_test()) +
+                 ",\"preview_assertions\":" + std::to_string(preview_self_test() + 1) +
+                 ",\"sdk_image_pointer_offset\":" + std::to_string(offset));
             return 0; // No SDK initialization, enumeration or camera connection.
         }
         if (argc != 2 || (std::string(argv[1]) != "list" && std::string(argv[1]) != "serve"))

@@ -1,9 +1,14 @@
 use crate::theme::*;
 use eframe::egui::{self, Color32, Rect, RichText, Vec2};
-use std::{collections::BTreeMap, path::PathBuf, time::Duration};
+use std::{
+    collections::BTreeMap,
+    path::PathBuf,
+    time::{Duration, Instant},
+};
 use strehl_capture::{
     backend::property,
     model::{Phase, Plan, Roi},
+    timing,
     worker::{Action, PAUSE, STOP, Snapshot, Worker},
 };
 
@@ -140,7 +145,7 @@ impl App {
                 });
             });
         egui::TopBottomPanel::bottom("status")
-            .exact_height(64.0)
+            .exact_height(86.0)
             .frame(
                 egui::Frame::new()
                     .fill(PANEL)
@@ -173,6 +178,18 @@ impl App {
                         );
                     }
                 });
+                if let Some(timing) = &s.timing {
+                    let response = ui.label(
+                        RichText::new(timing.label(Instant::now(), s.phase == Phase::Paused))
+                            .monospace()
+                            .color(ACCENT),
+                    );
+                    self.widgets.insert("countdown".into(), response.rect);
+                } else {
+                    ui.small(
+                        "Time estimates update from completed captures; paused time is excluded.",
+                    );
+                }
             });
         egui::SidePanel::left("controls")
             .exact_width(320.0)
@@ -267,7 +284,7 @@ impl App {
                             ui,
                             if start { "mark-start" } else { "mark-end" },
                             "Mark current",
-                            editable && s.position.is_some() && s.preview_at.is_some_and(|t|t.elapsed()<Duration::from_secs(2)),
+                            editable && s.connected && s.position.is_some(),
                         ) {
                             if start {
                                 self.plan.start = s.position.unwrap();
@@ -296,6 +313,9 @@ impl App {
                         }
                     });
                 });
+        }
+        if editable && (s.preview_error.is_some() || s.preview_at.is_none()) {
+            ui.label(RichText::new("Preview unavailable. Use the camera display to inspect focus; Mark current still records the reported position.").size(11.0).color(AMBER));
         }
         Self::section(ui, "CAPTURE PLAN");
         ui.add_enabled_ui(!s.phase.active() && s.phase != Phase::Fault, |ui| {
@@ -347,6 +367,15 @@ impl App {
                     ))
                     .color(ACCENT),
                 );
+                if !s.phase.active()
+                    && let Some(cycle) = property(&s.status, "ShutterSpeed")
+                        .and_then(|shutter| timing::initial_cycle(shutter, self.plan.settle_ms))
+                {
+                    let estimate =
+                        cycle.mul_f64(p.len() as f64) + timing::initial_setup(self.plan.settle_ms);
+                    ui.label(RichText::new(format!("Initial estimate ~{}", timing::format_duration(estimate))).size(11.0).color(MUTED))
+                        .on_hover_text("Rough shutter + settle + camera/SD allowance. The countdown learns actual cadence during capture.");
+                }
             }
             Err(e) => {
                 ui.label(RichText::new(e.to_string()).size(11.0).color(MUTED));
@@ -391,6 +420,9 @@ impl App {
         ui.small("Pause / Stop finish the active operation.");
         Self::section(ui, "FIND BOUNDS · PREVIEW SURVEY");
         ui.label(RichText::new("Mark rough limits first. Select the subject in the preview, then sweep without taking RAWs.").size(11.0).color(MUTED));
+        let fresh_preview = s.preview_error.is_none()
+            && s.preview_at
+                .is_some_and(|time| time.elapsed() < Duration::from_secs(2));
         ui.horizontal(|ui| {
             if self.button(
                 ui,
@@ -400,7 +432,7 @@ impl App {
                 } else {
                     "Select subject"
                 },
-                editable,
+                editable && fresh_preview,
             ) {
                 self.choose_roi = !self.choose_roi;
                 self.zoom = 1.0;
@@ -410,6 +442,7 @@ impl App {
                 "scan",
                 "Sweep preview",
                 editable
+                    && fresh_preview
                     && self.start_set
                     && self.end_set
                     && self.plan.start.abs_diff(self.plan.end) >= 8,
@@ -683,14 +716,22 @@ impl App {
             ui.painter().text(
                 canvas.center() - egui::vec2(0.0, 18.0),
                 egui::Align2::CENTER_CENTER,
-                "Bring the subject into focus",
+                if s.connected {
+                    "Waiting for live preview"
+                } else {
+                    "Bring the subject into focus"
+                },
                 egui::FontId::proportional(23.0),
                 INK,
             );
             ui.painter().text(
                 canvas.center() + egui::vec2(0.0, 18.0),
                 egui::Align2::CENTER_CENTER,
-                "Connect the camera to begin a live preview.",
+                if s.connected {
+                    "You can still jog focus and mark both bounds using the camera display."
+                } else {
+                    "Connect the camera to begin a live preview."
+                },
                 egui::FontId::proportional(13.0),
                 MUTED,
             );

@@ -197,22 +197,7 @@ impl Camera for Native {
     }
     fn preview(&mut self) -> Result<Preview> {
         let response = self.call("preview", 15)?;
-        let jpeg = base64::engine::general_purpose::STANDARD
-            .decode(response["jpeg"].as_str().context("Missing preview")?)?;
-        let mut decoder =
-            image::ImageReader::with_format(std::io::Cursor::new(jpeg), image::ImageFormat::Jpeg);
-        let mut limits = image::Limits::default();
-        limits.max_image_width = Some(8192);
-        limits.max_image_height = Some(8192);
-        limits.max_alloc = Some(128 * 1024 * 1024);
-        decoder.limits(limits);
-        let rgb = decoder.decode().context("Decode live-view JPEG")?.to_rgb8();
-        Ok(Preview {
-            frame: response["frame"]
-                .as_u64()
-                .context("Missing preview frame number")?,
-            rgb,
-        })
+        decode_preview(&response)
     }
     fn magnify(&mut self, ratio_tenths: u32, x: u16, y: u16) -> Result<()> {
         self.call(&format!("magnify\t{ratio_tenths}\t{x}\t{y}"), 15)?;
@@ -221,6 +206,25 @@ impl Camera for Native {
     fn disconnect(&mut self) -> Result<Value> {
         self.call("quit", 50)
     }
+}
+
+fn decode_preview(response: &Value) -> Result<Preview> {
+    let jpeg = base64::engine::general_purpose::STANDARD
+        .decode(response["jpeg"].as_str().context("Missing preview")?)?;
+    let mut decoder =
+        image::ImageReader::with_format(std::io::Cursor::new(jpeg), image::ImageFormat::Jpeg);
+    let mut limits = image::Limits::default();
+    limits.max_image_width = Some(8192);
+    limits.max_image_height = Some(8192);
+    limits.max_alloc = Some(128 * 1024 * 1024);
+    decoder.limits(limits);
+    let rgb = decoder.decode().context("Decode live-view JPEG")?.to_rgb8();
+    Ok(Preview {
+        frame: response["frame"]
+            .as_u64()
+            .context("Missing preview frame number")?,
+        rgb,
+    })
 }
 impl Drop for Native {
     fn drop(&mut self) {
@@ -242,6 +246,7 @@ pub struct Demo {
     pub remaining: u64,
     pub delay_ms: u64,
     pub fail_capture: bool,
+    pub fail_preview: bool,
 }
 impl Default for Demo {
     fn default() -> Self {
@@ -251,6 +256,7 @@ impl Default for Demo {
             remaining: 9000,
             delay_ms: 120,
             fail_capture: false,
+            fail_preview: false,
         }
     }
 }
@@ -301,6 +307,7 @@ impl Camera for Demo {
         )
     }
     fn preview(&mut self) -> Result<Preview> {
+        ensure!(!self.fail_preview, "Simulated invalid live-view JPEG");
         self.frame += 1;
         Ok(Preview {
             frame: self.frame,
@@ -340,6 +347,30 @@ pub fn demo_image(focus: u16, width: u32, height: u32) -> RgbImage {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn real_jpeg_round_trip_uses_camera_decode_path() {
+        let image = image::RgbImage::from_pixel(64, 48, image::Rgb([40, 100, 180]));
+        let mut jpeg = Vec::new();
+        image::codecs::jpeg::JpegEncoder::new(&mut jpeg)
+            .encode_image(&image::DynamicImage::ImageRgb8(image))
+            .unwrap();
+        let response =
+            json!({"frame":42,"jpeg":base64::engine::general_purpose::STANDARD.encode(&jpeg)});
+        let preview = decode_preview(&response).unwrap();
+        assert_eq!((preview.frame, preview.rgb.dimensions()), (42, (64, 48)));
+        for (actual, expected) in preview
+            .rgb
+            .get_pixel(32, 24)
+            .0
+            .into_iter()
+            .zip([40i16, 100, 180])
+        {
+            assert!((i16::from(actual) - expected).abs() <= 3);
+        }
+        let bad = json!({"frame":43,"jpeg":base64::engine::general_purpose::STANDARD.encode(b"not JPEG")});
+        assert!(decode_preview(&bad).is_err());
+        assert!(decode_preview(&json!({"frame":44,"jpeg":"%%%"})).is_err());
+    }
     #[test]
     fn protocol_rejects_truncated_or_non_json_replies() {
         assert!(read_reply(&mut std::io::Cursor::new(b"{\"ok\":true}")).is_err());

@@ -33,7 +33,9 @@ see the [separate feasibility answer](../../experiments/sony-capture-ui-2026-11-
 5. Jog with **−128 / −16 / −1 / +1 / +16 / +128**. Inspect the near boundary and
    **Mark current** in A. Find the other boundary and mark B. The numbers are
    normalized focus commands, not millimetres or hardware encoder positions;
-   determine near/far visually for your lens.
+   determine near/far visually for your lens. Manual marks remain available when
+   the preview fails: inspect focus on the camera display, then mark the reported
+   position. Jogging and capture do not depend on decoding a preview.
 6. Enlarge the preview with its zoom control, then drag to pan. **Preview edges**
    overlays strong edges as an aid; noise and out-of-focus boundaries can also
    appear. This is not calibrated focus peaking. If the camera advertises a focus
@@ -54,6 +56,11 @@ see the [separate feasibility answer](../../experiments/sony-capture-ui-2026-11-
    prevents future exposures. It leaves completed RAWs on the card. The capture
    timeout defaults to 120 seconds per exposure; increase it for long exposures
    plus camera processing. No shutter is automatically retried after an error.
+10. The plan shows a rough **Initial estimate** from shutter speed, settling and
+    camera/SD overhead. During capture, the footer shows **elapsed time and an
+    estimated countdown**, updated from completed capture cycles. Pausing freezes
+    active time and the countdown; stop/error freezes the elapsed total. The
+    estimate is approximate, especially before the first few completed RAWs.
 
 Start with a short stack to confirm the new live preview on the laptop. The
 underlying SDK capture/focus path has the owner's two physical tests; this new

@@ -27,6 +27,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--zip',type=Path,required=True)
     parser.add_argument('--out',type=Path,required=True)
+    parser.add_argument('--preview-fix',action='store_true',help='Require offset-JPEG, countdown and failed-preview UI regressions')
     args=parser.parse_args()
     out=args.out.resolve();out.mkdir(parents=True,exist_ok=False)
     with ZipFile(args.zip) as z:
@@ -54,15 +55,16 @@ def main():
     assert digest(package/'source/Cargo.toml')==build['generated_workspace_sha256']
     gate=json.loads(run([str(package/'camera/strehl-sony-control.exe'),'self-test'],package/'camera'))
     assert gate['assertions']==19
+    if args.preview_fix:assert gate['preview_assertions']==9
     cameras=json.loads(run([str(package/'camera/strehl-sony-control.exe'),'list'],package/'camera',30))
     assert cameras['ok'] is True and cameras['sdk_version']==0x02020000
     exercise=out/'rendered ui and journals'
     report=json.loads(run([str(package/'Strehl-Capture.exe'),'--demo','--exercise',str(exercise)],package))
-    assert report['last_phase']=='Disconnected' and len(report['checks'])>=6
+    assert report['last_phase']=='Disconnected' and len(report['checks'])>=(8 if args.preview_fix else 6)
     # Exercise smaller layout with an active preview, not just a disconnected page.
     preview=out/'laptop live preview.png'
     run([str(package/'Strehl-Capture.exe'),'--demo','--offscreen-screenshot',str(preview),'--size','1280x720'],package,30)
-    summary={'schema':'strehl-capture-package-verification-v1','zip_name':args.zip.name,'zip_sha256':digest(args.zip),'zip_bytes':args.zip.stat().st_size,'manifest_files_verified':len(listed),'source_snapshot_verified':True,'relocated_path_contains_spaces':' ' in str(out),'native_gate_assertions':gate['assertions'],'sdk_version':cameras['sdk_version'],'enumerated_camera_count':len(cameras['cameras']),'camera_activity':'enumeration only; no camera connection, focus or exposure','app_sha256':build['app_sha256'],'bridge_sha256':build['native']['executableSha256'].lower(),'ui':report,'laptop_live_preview_sha256':digest(preview)}
+    summary={'schema':'strehl-capture-package-verification-v2','zip_name':args.zip.name,'zip_sha256':digest(args.zip),'zip_bytes':args.zip.stat().st_size,'manifest_files_verified':len(listed),'source_snapshot_verified':True,'relocated_path_contains_spaces':' ' in str(out),'native_gate_assertions':gate['assertions'],'native_preview_assertions':gate.get('preview_assertions'),'sdk_image_pointer_offset_without_camera':gate.get('sdk_image_pointer_offset'),'sdk_version':cameras['sdk_version'],'enumerated_camera_count':len(cameras['cameras']),'camera_activity':'enumeration only; no camera connection, focus or exposure','app_sha256':build['app_sha256'],'bridge_sha256':build['native']['executableSha256'].lower(),'ui':report,'laptop_live_preview_sha256':digest(preview)}
     (out/'verification.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(summary,indent=2))
 

@@ -3,6 +3,7 @@ use crate::{
     bounds::{self, Sample, Suggestion},
     journal::{self, Journal},
     model::{Phase, Plan, Roi},
+    timing::{self, RunTiming},
 };
 use anyhow::{Context, Result, bail, ensure};
 use serde_json::{Value, json};
@@ -38,6 +39,7 @@ pub struct Snapshot {
     pub samples: Vec<Sample>,
     pub suggestion: Option<Suggestion>,
     pub connected: bool,
+    pub timing: Option<RunTiming>,
 }
 impl Default for Snapshot {
     fn default() -> Self {
@@ -58,6 +60,7 @@ impl Default for Snapshot {
             samples: vec![],
             suggestion: None,
             connected: false,
+            timing: None,
         }
     }
 }
@@ -168,6 +171,14 @@ fn update(s: &Shared, f: impl FnOnce(&mut Snapshot)) {
 }
 fn phase(s: &Shared, p: Phase, message: impl Into<String>) {
     update(s, |v| {
+        if let Some(timing) = &mut v.timing {
+            match p {
+                Phase::Paused => timing.pause(Instant::now()),
+                Phase::Capturing => timing.resume(Instant::now()),
+                Phase::Complete | Phase::Stopped | Phase::Fault => timing.finish(Instant::now()),
+                _ => {}
+            }
+        }
         v.phase = p;
         v.message = message.into();
     });
@@ -234,6 +245,7 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                                 v.phase = Phase::Ready;
                                 v.message = "Connected · RAW captures stay on the SD card".into();
                                 v.suggestion = None;
+                                v.timing = None;
                             });
                             camera = Some(opened);
                         }
@@ -259,6 +271,7 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                                 v.status = Value::Null;
                                 v.total = 0;
                                 v.completed = 0;
+                                v.timing = None;
                                 v.samples.clear();
                                 v.suggestion = None;
                                 v.message = "Disconnected".into();
@@ -372,6 +385,9 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                             v.position = None;
                         } else if v.phase.active() {
                             v.phase = Phase::Fault;
+                            if let Some(timing) = &mut v.timing {
+                                timing.finish(Instant::now());
+                            }
                         }
                         v.connected = camera.is_some();
                         v.message = format!("{error:#}");
@@ -386,7 +402,7 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                     }
                     if let Err(e) = preview(c.as_mut(), &s) {
                         s.lock().unwrap().preview_error =
-                            Some(format!("Live preview unavailable: {e}"));
+                            Some(format!("Live preview unavailable: {e:#}"));
                     }
                     if last_status.elapsed() > Duration::from_secs(2) {
                         if let Err(e) = refresh(c.as_mut(), &s) {
@@ -444,6 +460,9 @@ fn capture(
         "The card does not report enough remaining captures for this plan"
     );
     let initial_exposure = status.clone();
+    let cycle = property(&status, "ShutterSpeed")
+        .and_then(|shutter| timing::initial_cycle(shutter, plan.settle_ms))
+        .context("Cannot estimate timed shutter speed")?;
     let mut log = Journal::create(&root, &plan, c.identity(), status)?;
     update(s, |v| {
         v.phase = Phase::Capturing;
@@ -451,6 +470,12 @@ fn capture(
         v.total = positions.len();
         v.journal = Some(log.directory.clone());
         v.message = "Approaching the start from the capture direction…".into();
+        v.timing = Some(RunTiming::new(
+            positions.len(),
+            cycle,
+            timing::initial_setup(plan.settle_ms),
+            Instant::now(),
+        ));
     });
     let mut completed = 0;
     let result = (|| -> Result<bool> {
@@ -461,6 +486,9 @@ fn capture(
         log.record("approach_intent", json!({"target":prestart}))?;
         let response = c.focus(prestart, plan.settle_ms)?;
         log.record("approach_complete", response)?;
+        if let Some(timing) = &mut s.lock().unwrap().timing {
+            timing.approached(Instant::now());
+        }
         for (ordinal, target) in positions.into_iter().enumerate() {
             if !checkpoint(c, s, control, Phase::Capturing)? {
                 return Ok(false);
@@ -502,7 +530,12 @@ fn capture(
                 json!({"ordinal":ordinal,"target":target,"response":response}),
             )?;
             completed += 1;
-            update(s, |v| v.completed = completed);
+            update(s, |v| {
+                v.completed = completed;
+                if let Some(timing) = &mut v.timing {
+                    timing.complete_cycle(Instant::now());
+                }
+            });
             // Preview failure does not repeat or invalidate a completed exposure.
             if let Err(e) = preview(c, s) {
                 s.lock().unwrap().preview_error = Some(e.to_string());
@@ -606,6 +639,7 @@ fn scan(
         v.completed = 0;
         v.total = positions.len();
         v.message = "Preview survey · no RAW exposures".into();
+        v.timing = None;
     });
     if !checkpoint(c, s, control, Phase::Scanning)? {
         phase(s, Phase::Stopped, "Survey stopped · no captures taken");

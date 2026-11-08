@@ -362,12 +362,33 @@ pub fn exercise(mut app: App, directory: &Path) -> Result<()> {
     viewer.click(&mut app, "pause")?;
     viewer.until(&mut app, |a| a.worker.snapshot().phase == Phase::Paused, 10)?;
     let completed = app.worker.snapshot().completed;
+    let paused_timing = app
+        .worker
+        .snapshot()
+        .timing
+        .context("Missing capture countdown")?;
+    let paused_elapsed = paused_timing.elapsed(Instant::now());
     std::thread::sleep(Duration::from_millis(350));
     ensure!(
         app.worker.snapshot().completed == completed,
         "Capture advanced while paused"
     );
+    ensure!(
+        app.worker
+            .snapshot()
+            .timing
+            .as_ref()
+            .unwrap()
+            .elapsed(Instant::now())
+            == paused_elapsed,
+        "Countdown accrued paused time"
+    );
     viewer.save(&mut app, &directory.join("04-paused.png"))?;
+    ensure!(
+        app.widgets.contains_key("countdown"),
+        "Actual UI omitted the countdown"
+    );
+    checks.push("Capture countdown is rendered and its active time freezes while paused");
     viewer.click(&mut app, "pause")?;
     viewer.until(&mut app, |a| a.worker.snapshot().completed > completed, 10)?;
     viewer.click(&mut app, "stop")?;
@@ -412,6 +433,17 @@ pub fn exercise(mut app: App, directory: &Path) -> Result<()> {
         "Inclusive 3-plane sequence did not finish"
     );
     checks.push("A new three-plane run includes both bounds and finishes with three journalled acknowledgements");
+    let finished = app
+        .worker
+        .snapshot()
+        .timing
+        .context("Missing final elapsed time")?;
+    ensure!(
+        finished.finished
+            && finished.completed == 3
+            && finished.remaining(Instant::now()).is_zero(),
+        "Completed timer did not finish"
+    );
     // A separate synthetic survey fixture spans the known simulated depth range.
     app.plan.start = 60500;
     app.plan.end = 60800;
@@ -447,6 +479,62 @@ pub fn exercise(mut app: App, directory: &Path) -> Result<()> {
     );
     let mut laptop = Viewer::new([1280, 720])?;
     laptop.save(&mut app, &directory.join("06-laptop-layout.png"))?;
+    // Exercise the owner's broken-preview state through real button input.
+    let worker = strehl_capture::worker::Worker::with_factory(Box::new(|| {
+        Ok(Box::new(strehl_capture::backend::Demo {
+            fail_preview: true,
+            ..Default::default()
+        }))
+    }));
+    let mut no_preview = App::new(worker, directory.join("no-preview-journals"), true);
+    viewer.click(&mut no_preview, "connection")?;
+    viewer.until(
+        &mut no_preview,
+        |a| a.worker.snapshot().preview_error.is_some(),
+        10,
+    )?;
+    viewer.click(&mut no_preview, "mark-start")?;
+    ensure!(
+        no_preview.start_set,
+        "Preview error disabled manual start mark"
+    );
+    let start = no_preview.plan.start;
+    viewer.click(&mut no_preview, "jog-128")?;
+    viewer.until(
+        &mut no_preview,
+        |a| {
+            let s = a.worker.snapshot();
+            s.phase == Phase::Ready && s.position == Some(start + 128)
+        },
+        10,
+    )?;
+    viewer.click(&mut no_preview, "mark-end")?;
+    ensure!(
+        no_preview.end_set && no_preview.plan.end == start + 128,
+        "Preview error disabled manual end mark"
+    );
+    ensure!(
+        no_preview.worker.snapshot().preview.is_none(),
+        "Failure fixture unexpectedly produced preview"
+    );
+    viewer.click(&mut no_preview, "scan")?;
+    std::thread::sleep(Duration::from_millis(250));
+    ensure!(
+        no_preview.worker.snapshot().phase == Phase::Ready
+            && no_preview.worker.snapshot().position == Some(start + 128),
+        "Survey moved focus without a usable preview"
+    );
+    viewer.save(
+        &mut no_preview,
+        &directory.join("07-manual-marks-without-preview.png"),
+    )?;
+    checks.push("Both manual focus marks and jogging work while the preview reports invalid JPEG");
+    viewer.click(&mut no_preview, "connection")?;
+    viewer.until(
+        &mut no_preview,
+        |a| a.worker.snapshot().phase == Phase::Disconnected,
+        10,
+    )?;
     let report = serde_json::json!({"schema":"strehl-capture-ui-verification-v1","camera":"simulator; no physical connection","renderer":format!("{:?}",viewer.render.adapter.get_info()),"checks":checks,"sizes":[[1366,900],[1280,720]],"last_phase":format!("{:?}",app.worker.snapshot().phase)});
     std::fs::write(
         directory.join("ui-receipt.json"),
