@@ -1,0 +1,44 @@
+{
+  "schema": "strehl-away-relay-deployment-v1",
+  "checked_utc": "2026-11-08T05:08:49.317730+00:00",
+  "environment": "Windows-11-10.0.26200-SP0",
+  "base_commit": "73f973b6b4b97496eafff2995d615841482c404e",
+  "owner_explicit_cloudflare_approval": true,
+  "deployment": "personal PC relay to camera laptop private LAN server",
+  "live_relay_running_after_test_cleanup": true,
+  "test_relays_retired": true,
+  "read_only_http_codes": {
+    "page": 200,
+    "unpaired_api": 401,
+    "wrong_key_same_origin": 401,
+    "foreign_origin": 403
+  },
+  "same_pid_and_url_reused_by_final_start": true,
+  "owner_confirmed_android_lan_fix": true,
+  "owner_cellular_test": "Preview loads on cellular",
+  "agent_issued_physical_camera_commands": false,
+  "pairing_key_collected": false,
+  "live_helper_matches_r2_package": true,
+  "connector": {
+    "version": "2026.10.7",
+    "source": "https://github.com/cloudflare/cloudflared/releases/download/2026.10.7/cloudflared-windows-amd64.exe",
+    "sha256": "2493dbc168923bb3e59e5e7716f71deced92992eea9acd6e9d74f84ac7751343",
+    "bytes": 55390512
+  },
+  "zip": {
+    "name": "strehl-away-relay-2026-11-07-r2.zip",
+    "bytes": 12604,
+    "sha256": "466089d5710f31ce48658611fc0bc0024f619ded2e74ff160fc6ae79804f9c43"
+  },
+  "source_sha256": {
+    "tools/sony-control/away-relay.py": "7711850b4eb5b70b9a106ef633f4fc0df0ebcd18eff3b850688bd39403b947af",
+    "tools/sony-control/package-away-relay.py": "f22352fe7357d2643ad4da3566b3fda47944f2dfad2bf5362d306d0e23a2ecfa",
+    "experiments/sony-capture-ui-2026-11-07/verify-away-relay.py": "30709e54b6eddf55b7d60ad39e3792df9621727c1d6fbd118cc9cc615cf4be82",
+    "experiments/sony-capture-ui-2026-11-07/verify-away-relay-helper.py": "45e891461cea120691aeb211a558980aa68ddaf816163b9a8ca59c04bc3767ef"
+  },
+  "unverified": [
+    "physical focus/capture over cellular",
+    "long unattended uptime",
+    "automatic restart after reboot"
+  ]
+}

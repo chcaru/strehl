@@ -119,6 +119,42 @@ Metadata export to an SD reader remains a desktop action. If another application
 uses that port, start with `Strehl-Capture.exe --web-bind 0.0.0.0:8788` and adjust
 your firewall rule to match. All page assets are bundled; no CDN is required.
 
+### Android Chrome cannot reach the local address
+
+If the page loads on another computer but Android Chrome shows
+`ERR_TOO_MANY_RETRIES`, check **Android Settings → Apps → Chrome → Permissions →
+Nearby devices → Allow**, then reopen the HTTP link. Android's local-network
+permission belongs to the Nearby devices group on recent versions. The owner
+confirmed that this resolved access from `10.0.0.13` to the camera laptop at
+`10.0.0.7`. This symptom did not require changing the camera server or firewall.
+See [Android's local-network documentation](https://developer.android.com/privacy-and-security/local-network-permission).
+
+### Corporate laptop cannot install Tailscale
+
+A separate personal PC on the LAN can relay just the existing camera website
+through a [Cloudflare Quick Tunnel](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/).
+That is a fallback requiring both PCs to stay awake. It needs explicit approval
+to carry live preview/control traffic through Cloudflare; it is not a method for
+overriding corporate installation or network policy. A laptop-only arrangement
+depends on an outbound remote-access method permitted on that laptop.
+
+The prepared personal-PC helper is `tools/sony-control/away-relay.py`. It uses
+a pinned, SHA-256-verified official connector, verifies the camera pairing gate
+before starting, retains ownership information for stopping its process, and
+never reads the camera's pairing key or sends camera commands. The accompanying
+`package-away-relay.py` creates start/stop/status launchers for the personal PC.
+Python is needed for this helper; the capture application itself still does not
+require Python. The helper downloads its connector directly from the official
+release instead of redistributing it in the helper ZIP.
+
+Open the relay's HTTPS link, then paste the camera app's full **Copy pairing
+link** into the pairing field. Keep the pairing key out of the connector's
+target URL and logs. RAWs remain on SD; transient preview/control traffic passes
+through Cloudflare, while the relay-to-camera hop uses LAN HTTP. The generic
+pairing page is public; every camera API request requires Strehl's key.
+Quick Tunnels are temporary development relays without an uptime guarantee;
+the hostname changes on restart. Loss of the relay does not stop an active stack.
+
 ## Optional preview survey
 
 Mark rough A/B limits extending beyond the visible subject depth. At **Fit**,

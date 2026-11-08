@@ -1,0 +1,21 @@
+{
+  "schema": "strehl-away-relay-verification-v1",
+  "camera": "explicit simulator; no physical camera commands",
+  "app_sha256": "d25a59160b213b76a76c5f73e4f9910f6113590f0d551948059be8578d5d7288",
+  "connector_version": "2026.10.7",
+  "connector_sha256": "2493dbc168923bb3e59e5e7716f71deced92992eea9acd6e9d74f84ac7751343",
+  "transport": "real Cloudflare HTTPS Quick Tunnel",
+  "checks": [
+    "page served over HTTPS",
+    "pairing required",
+    "same-origin reaches pairing gate",
+    "foreign origin refused",
+    "browser authenticated over HTTPS",
+    "live JPEG decoded over HTTPS",
+    "marked both focus bounds and jogged focus",
+    "two-plane demo capture completed over HTTPS"
+  ],
+  "browser_errors": [],
+  "screenshot": "https-phone.png",
+  "test_tunnel_stopped": true
+}

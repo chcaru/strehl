@@ -1,0 +1,14 @@
+{
+  "schema": "strehl-away-relay-helper-verification-v1",
+  "checks": [
+    "eight invalid target forms rejected; plain LAN target accepted",
+    "wrong connector, unpaired API and wrong page refused before connector spawn",
+    "transient DNS error after page load retried; every authentication gate still checked",
+    "failed remote pairing and origin gates terminate the owned test process",
+    "mismatched process identity refused; exact owned process stopped",
+    "all package hashes match; helper source matches; vendor executable is not bundled"
+  ],
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "package_files": 8,
+  "zip_sha256": "466089d5710f31ce48658611fc0bc0024f619ded2e74ff160fc6ae79804f9c43"
+}
