@@ -486,6 +486,10 @@ const RENDER_ENV: &[&str] = &[
     "STREHL_DEFECT_MAP",
     "STREHL_DEFECT_ARM",
     "STREHL_DEFECT_HOT_FLOOR",
+    // The selection weight's ln/exp. `platform` restores the C runtime's
+    // logf/expf, which the 2026-11-08 re-baseline moved away from: a shell with
+    // it exported would render the pre-change bytes and look like a regression.
+    "STREHL_WEIGHT_MATH",
     // The edge-aware selection variables. Every one of these re-routes the
     // election, so a row rendered with one of them set is not the row it says
     // it is. STREHL_ONLY_FRAME is the extreme case: it renders a single frame

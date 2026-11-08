@@ -2249,6 +2249,98 @@ impl BandMerge {
         self.frames
     }
 
+    /// Why an external executor (the GPU fold) cannot reproduce
+    /// [`Self::add_frame_with_gain`] for this merge, or `None` if it can.
+    ///
+    /// The external fold implements exactly the default route: soft-power
+    /// selection, hard-floor admission, pooled evidence, no significance floor,
+    /// mean fallback, an input-range hull or none, either base band, portable
+    /// weight math, and no diagnostics or research hooks.
+    pub fn external_fold_refusal(&self) -> Option<&'static str> {
+        let c = self.cfg;
+        if cfg!(any(
+            feature = "m194h-pedestal-causality",
+            feature = "native-sensor-transfer",
+            feature = "spatial-noise-floor",
+            feature = "native-correction-variance",
+            feature = "native-green-cue"
+        )) {
+            return Some("a research feature is compiled into the fold");
+        }
+        if c.select != SelectMode::SoftPower {
+            return Some("selection is not soft-power");
+        }
+        if c.admission != AdmissionMode::HardFloor {
+            return Some("admission is not the hard floor");
+        }
+        if !c.pooled_evidence {
+            return Some("pooled evidence is off");
+        }
+        if significance_floor(c.gate) * c.significance_scale != 0.0 {
+            return Some("the significance floor is on");
+        }
+        if c.fallback != Fallback::Mean {
+            return Some("the fallback is not the mean");
+        }
+        if c.hull.bounds_each_level() {
+            return Some("the per-level hull is on");
+        }
+        if !self.dmax.is_empty() {
+            return Some("weight diagnostics are on");
+        }
+        if platform_weight_math() {
+            return Some("STREHL_WEIGHT_MATH=platform");
+        }
+        None
+    }
+
+    /// The scalars [`Self::add_frame_with_gain`] uses at each Laplacian level
+    /// for a frame with this measured floor, from the same functions.
+    pub fn level_scalars(&self, frame_beta: Option<&[f32]>) -> Vec<LevelScalars> {
+        let nb = self.sizes.len() - 1;
+        (0..nb)
+            .map(|k| LevelScalars {
+                averaged: k + self.cfg.mean_coarse >= nb,
+                beta: Self::beta_for(&self.gain, frame_beta, k),
+                gate: self.cfg.gate,
+                p: self.cfg.exponent_at(k, nb),
+                ratio: self.cfg.pooled_evidence_ratio,
+                levels: pooled_levels(self.cfg.pooled_evidence_ratio, k),
+            })
+            .collect()
+    }
+
+    pub fn config(&self) -> MergeConfig {
+        self.cfg
+    }
+
+    pub fn planes(&self) -> usize {
+        self.planes
+    }
+
+    /// The accumulators an external executor fills, in this merge's own
+    /// layout: `num`/`usum` indexed `[level * planes + plane]`, `den` and the
+    /// ensemble sums per level (empty when the gate is off), `lo`/`hi` per
+    /// plane at level 0 (empty without a hull).
+    pub fn totals_mut(&mut self) -> FoldTotalsMut<'_> {
+        FoldTotalsMut {
+            num: &mut self.num,
+            usum: &mut self.usum,
+            den: &mut self.den,
+            zmax: &mut self.zmax,
+            zsum: &mut self.zsum,
+            lsum: &mut self.lsum,
+            esum: &mut self.esum,
+            lo: &mut self.lo,
+            hi: &mut self.hi,
+        }
+    }
+
+    /// Count a frame an external executor folded into [`Self::totals_mut`].
+    pub fn note_external_frame(&mut self) {
+        self.frames += 1;
+    }
+
     pub fn band_gain(&self) -> &BandGain {
         &self.gain
     }
@@ -4157,6 +4249,32 @@ thread_local! {
     static FORCE_GENERAL_ROUTE: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
 }
 
+/// One Laplacian level's fold scalars for one frame; see
+/// [`BandMerge::level_scalars`].
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct LevelScalars {
+    /// The level is averaged (`mean_coarse`): its weight is zero.
+    pub averaged: bool,
+    pub beta: f32,
+    pub gate: f32,
+    pub p: f32,
+    pub ratio: f32,
+    pub levels: f32,
+}
+
+/// See [`BandMerge::totals_mut`].
+pub struct FoldTotalsMut<'a> {
+    pub num: &'a mut [Vec<f32>],
+    pub usum: &'a mut [Vec<f32>],
+    pub den: &'a mut [Vec<f32>],
+    pub zmax: &'a mut [Vec<f32>],
+    pub zsum: &'a mut [Vec<f32>],
+    pub lsum: &'a mut [Vec<f32>],
+    pub esum: &'a mut [Vec<f32>],
+    pub lo: &'a mut [Vec<f32>],
+    pub hi: &'a mut [Vec<f32>],
+}
+
 /// Scalars for [`fused_pooled_level`].
 #[derive(Clone, Copy)]
 struct FusedLevel {
@@ -4520,7 +4638,43 @@ fn select_weight(excess: f32, floor: f32, p: f32, r_floor: f32) -> f32 {
         // `exp(+-80)` spans `[2e-35, 6e34]`; its sum stays inside f32 on a
         // 1000-frame stack. The weighted coefficient sum additionally needs
         // SOFT_NUMERATOR_SCALE: finite weights alone do not make it safe.
-        (p * r.ln()).clamp(-80.0, 80.0).exp()
+        weight_exp((p * weight_ln(r)).clamp(-80.0, 80.0))
+    }
+}
+
+/// `STREHL_WEIGHT_MATH=platform` evaluates the selection weight's `ln` and
+/// `exp` with the C runtime, as every render before 2026-11-08 did. The
+/// default is [`crate::portable_math`], which a GPU reproduces bit for bit.
+/// The switch exists to attribute that one-time output change, not as a mode.
+pub const WEIGHT_MATH_ENV: &str = "STREHL_WEIGHT_MATH";
+
+fn platform_weight_math() -> bool {
+    static CHOICE: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+    *CHOICE.get_or_init(|| match std::env::var(WEIGHT_MATH_ENV) {
+        Err(_) => false,
+        Ok(v) => match v.trim() {
+            "" | "portable" => false,
+            "platform" => true,
+            other => panic!("{WEIGHT_MATH_ENV}={other:?} is not portable or platform"),
+        },
+    })
+}
+
+#[inline]
+fn weight_ln(r: f32) -> f32 {
+    if platform_weight_math() {
+        r.ln()
+    } else {
+        crate::portable_math::ln(r)
+    }
+}
+
+#[inline]
+fn weight_exp(x: f32) -> f32 {
+    if platform_weight_math() {
+        x.exp()
+    } else {
+        crate::portable_math::exp(x)
     }
 }
 
@@ -4542,7 +4696,7 @@ fn pedestal_weight(energy: f32, floor: f32, p: f32) -> f32 {
     let excess = (energy - floor).max(0.0);
     let a = excess / floor.max(1.0);
     let r = a.hypot(1.0) / SNR_REF;
-    (p * r.ln()).clamp(-80.0, 80.0).exp()
+    weight_exp((p * weight_ln(r)).clamp(-80.0, 80.0))
 }
 
 #[cfg(test)]
@@ -4948,7 +5102,7 @@ mod tests {
                         } else if p == 2.0 {
                             r * r
                         } else {
-                            (p * r.ln()).clamp(-80.0, 80.0).exp()
+                            weight_exp((p * weight_ln(r)).clamp(-80.0, 80.0))
                         }
                     };
                     let got = select_weight(excess, floor, p, 0.0);

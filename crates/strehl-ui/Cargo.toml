@@ -16,7 +16,7 @@ path = "src/main.rs"
 anyhow.workspace = true
 strehl-core.workspace = true
 strehl-edit.workspace = true
-strehl-cli = { path = "../strehl-cli", features = ["temporal-energy"] }
+strehl-cli = { path = "../strehl-cli", features = ["temporal-energy", "gpu"] }
 getrandom = "=0.3.4"
 serde = { version = "=1.0.229", features = ["derive"] }
 serde_json = "=1.0.151"

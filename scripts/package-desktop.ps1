@@ -127,7 +127,7 @@ $manifest = [ordered]@{
     source_sha256 = $manifestHash
     command = 'cargo build --locked --release -p strehl-cli --bin strehl -p strehl-ui --bin strehl-ui'
     # Compiled through the desktop dependency; the saved recipe defaults Off.
-    experimental_features = @('temporal-energy')
+    experimental_features = @('temporal-energy', 'gpu')
     experimental_defaults = [ordered]@{ temporal_energy = 'off' }
     files = $entries
 }

@@ -5029,6 +5029,50 @@ struct BandWorker {
     beta_n: usize,
     #[cfg(feature = "native-green-cue")]
     green_cue: Option<strehl_core::pyramid::native_green_cue::Cue>,
+    /// The GPU fold, when attached (`STREHL_GPU_FOLD=on`). It holds this
+    /// chunk's accumulators on the device until [`BandWorker::finish_chunk`].
+    #[cfg(feature = "gpu")]
+    gpu: Option<strehl_gpu::GpuFold>,
+}
+
+/// `STREHL_GPU_FOLD`: `on` folds on the GPU (feature `gpu`) and refuses to run
+/// if it cannot; `auto` folds on the GPU when an eligible device and
+/// configuration exist and otherwise on the CPU, saying which and why; `off`
+/// or unset folds on the CPU. Every choice produces identical pixels.
+pub const GPU_FOLD_ENV: &str = "STREHL_GPU_FOLD";
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum GpuFoldRequest {
+    Off,
+    Auto,
+    On,
+}
+
+fn gpu_fold_requested() -> Result<GpuFoldRequest> {
+    match std::env::var(GPU_FOLD_ENV) {
+        Err(std::env::VarError::NotPresent) => Ok(GpuFoldRequest::Off),
+        Err(e) => Err(e).context(GPU_FOLD_ENV),
+        Ok(v) => match v.trim() {
+            "" | "off" | "0" => Ok(GpuFoldRequest::Off),
+            "auto" => Ok(GpuFoldRequest::Auto),
+            "on" | "1" => Ok(GpuFoldRequest::On),
+            other => anyhow::bail!("{GPU_FOLD_ENV}={other:?} is not on, auto or off"),
+        },
+    }
+}
+
+/// Report the stages an external fold passes through, so the desktop's
+/// per-frame progress keeps moving. Band surfaces are not produced: the GPU
+/// does not hand full-resolution fields back.
+#[cfg(feature = "gpu")]
+fn gpu_fold_phases(tap: &crate::ui_progress::FrameTap<'_>, levels: usize) {
+    use strehl_core::pyramid::{FoldPhase, MergeObserver};
+    tap.phase(FoldPhase::PyramidStarted);
+    tap.phase(FoldPhase::PyramidReady);
+    for k in 0..levels {
+        tap.phase(FoldPhase::FoldStarted(k));
+        tap.phase(FoldPhase::FoldFinished(k));
+    }
 }
 
 /// One decoded-CFA source shared by the fold and every confidence reread.
@@ -5743,6 +5787,58 @@ impl BandWorker {
             beta_n: 0,
             #[cfg(feature = "native-green-cue")]
             green_cue: None,
+            #[cfg(feature = "gpu")]
+            gpu: None,
+        }
+    }
+
+    /// Attach the GPU fold if `STREHL_GPU_FOLD` asks for it; returns the
+    /// banner line describing the decision.
+    fn attach_gpu(&mut self, temporal_active: bool) -> Result<String> {
+        let request = gpu_fold_requested()?;
+        if request == GpuFoldRequest::Off {
+            return Ok("off (CPU fold; STREHL_GPU_FOLD=on or auto folds on the GPU)".into());
+        }
+        let outcome = if temporal_active {
+            Err("the temporal-energy fold has no GPU implementation".to_string())
+        } else {
+            self.try_gpu()
+        };
+        match (outcome, request) {
+            (Ok(line), _) => Ok(line),
+            (Err(why), GpuFoldRequest::Auto) => Ok(format!("off (auto: {why}); CPU fold")),
+            (Err(why), _) => anyhow::bail!("{GPU_FOLD_ENV}=on: {why}"),
+        }
+    }
+
+    #[cfg(feature = "gpu")]
+    fn try_gpu(&mut self) -> std::result::Result<String, String> {
+        let gpu = strehl_gpu::GpuFold::new(&self.merge)?;
+        let line = format!(
+            "ON, {} ({} MB device memory); bit-identical to the CPU fold",
+            gpu.adapter,
+            gpu.device_bytes() >> 20
+        );
+        self.gpu = Some(gpu);
+        Ok(line)
+    }
+
+    #[cfg(not(feature = "gpu"))]
+    fn try_gpu(&mut self) -> std::result::Result<String, String> {
+        Err("this engine was built without the `gpu` feature".into())
+    }
+    fn gpu_active(&self) -> bool {
+        #[cfg(feature = "gpu")]
+        return self.gpu.is_some();
+        #[cfg(not(feature = "gpu"))]
+        false
+    }
+
+    /// Bring a GPU chunk's accumulators into `self.merge`. A no-op on the CPU.
+    fn finish_chunk(&mut self) {
+        #[cfg(feature = "gpu")]
+        if let Some(gpu) = self.gpu.as_mut() {
+            gpu.finish_chunk(&mut self.merge);
         }
     }
 
@@ -5840,6 +5936,14 @@ impl BandWorker {
         let tap = progress.map(|progress| {
             crate::ui_progress::FrameTap::new(progress, index, self.merge.sizes().len())
         });
+        #[cfg(feature = "gpu")]
+        if let Some(gpu) = self.gpu.as_mut() {
+            gpu.add_frame(&mut self.merge, &refs, &self.var, frame_beta);
+            if let Some(tap) = tap.as_ref() {
+                gpu_fold_phases(tap, self.merge.sizes().len());
+            }
+            return Ok(true);
+        }
         #[cfg(feature = "native-green-cue")]
         if let Some(cue) = self.green_cue.as_ref() {
             self.merge.add_frame_with_green_cue(
@@ -5920,6 +6024,14 @@ impl BandWorker {
         let tap = progress.map(|progress| {
             crate::ui_progress::FrameTap::new(progress, index, self.merge.sizes().len())
         });
+        #[cfg(feature = "gpu")]
+        if let Some(gpu) = self.gpu.as_mut() {
+            gpu.add_frame(&mut self.merge, &refs, &prep.var, frame_beta);
+            if let Some(tap) = tap.as_ref() {
+                gpu_fold_phases(tap, self.merge.sizes().len());
+            }
+            return;
+        }
         if let Some(tap) = tap.as_ref() {
             self.merge.add_frame_with_gain_observed(
                 &refs,
@@ -7993,6 +8105,10 @@ fn run_pyramid_prepared_with_sensor(
         .build()
         .context("building Pyramid execution pool")?;
     let mut worker = BandWorker::new(domain, cfg);
+    eprintln!("gpu fold        : {}", worker.attach_gpu(temporal_active)?);
+    // A GPU chunk's accumulators live on the device until the chunk ends, so
+    // the desktop's live mid-chunk accumulator view has nothing to read.
+    let live_view = !worker.gpu_active();
     let mut merged: Option<BandMerge> = None;
     let mut folded_total = 0usize;
     let mut beta_sum: Vec<f64> = Vec::new();
@@ -8059,7 +8175,9 @@ fn run_pyramid_prepared_with_sensor(
                         progress.frame_finished(index, accepted);
                         if accepted {
                             folded += 1;
-                            progress.live_accumulator(merged.as_ref(), &worker.merge, index);
+                            if live_view {
+                                progress.live_accumulator(merged.as_ref(), &worker.merge, index);
+                            }
                         }
                     }
                 } else {
@@ -8115,11 +8233,13 @@ fn run_pyramid_prepared_with_sensor(
                                 progress.frame_finished(index, slot.accepted);
                                 if slot.accepted {
                                     accepted += 1;
-                                    progress.live_accumulator(
-                                        merged.as_ref(),
-                                        &worker.merge,
-                                        index,
-                                    );
+                                    if live_view {
+                                        progress.live_accumulator(
+                                            merged.as_ref(),
+                                            &worker.merge,
+                                            index,
+                                        );
+                                    }
                                 }
                             }
                             accepted
@@ -8135,6 +8255,7 @@ fn run_pyramid_prepared_with_sensor(
                     }
                 }
                 folded_total += folded;
+                worker.finish_chunk();
                 if beta_sum.len() < worker.beta_sum.len() {
                     beta_sum.resize(worker.beta_sum.len(), 0.0);
                 }

@@ -4106,6 +4106,7 @@ dependencies = [
  "sha2",
  "strehl-core",
  "strehl-edit",
+ "strehl-gpu",
  "strehl-native-gpu-gather",
  "strehl-plugin",
  "strehl-raw",
@@ -4142,6 +4143,19 @@ dependencies = [
  "tempfile",
  "tiff",
  "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "strehl-gpu"
+version = "0.1.0-alpha.6"
+dependencies = [
+ "bytemuck",
+ "naga 30.0.1",
+ "pollster",
+ "rayon",
+ "spirv 0.4.0+sdk-1.4.341.0",
+ "strehl-core",
+ "wgpu 30.0.1",
 ]
 
 [[package]]

@@ -22,6 +22,8 @@ pub mod clip;
 pub mod color;
 pub mod defect_map;
 pub mod demosaic;
+#[path = "portable-math.rs"]
+pub mod portable_math;
 pub mod edgeaware;
 pub mod election_coherence;
 pub mod flat_ratio;

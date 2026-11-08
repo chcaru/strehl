@@ -1,0 +1,19 @@
+[package]
+name = "strehl-gpu"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "Bit-exact GPU execution of strehl's default pyramid fold (Vulkan)."
+
+[dependencies]
+strehl-core.workspace = true
+# Same versions the native-gpu-gather experiment already resolves.
+wgpu = "30"
+naga = { version = "=30.0.1", features = ["wgsl-in", "spv-out"] }
+spirv = "=0.4.0"
+bytemuck = { version = "1", features = ["derive"] }
+pollster = "0.4"
+rayon.workspace = true

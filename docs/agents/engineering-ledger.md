@@ -1027,3 +1027,11 @@ is the identity source referred to below.
     `STREHL_PYRAMID_WORKERS=1`, `STREHL_PYRAMID_LOOKAHEAD=1`, feature
     `native-pyramid-profile`) to see work; idle rayon workers spin, so
     multi-threaded CPU time overstates it several-fold.
+    **GPU amendment (2026-11-08).** A synthetic equivalence test passed on the
+    first run and the real stack still differed by up to 6213 DN: the device
+    flushed f32 subnormals, which only appear where every frame's weight sits at
+    the `exp(-80)` clamp -- noisy flat ground the fixture did not contain. A
+    fixture must reach the numerical regimes the real input reaches, and each
+    exactness condition (NoContraction, f64 division, portable `ln`/`exp`,
+    `DenormPreserve`) must be shown necessary by a mutation that makes the test
+    fail, not only sufficient by a test that passes.

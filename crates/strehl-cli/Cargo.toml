@@ -21,6 +21,8 @@ strehl-core.workspace = true
 strehl-plugin.workspace = true
 strehl-raw.workspace = true
 strehl-edit.workspace = true
+# Bit-exact GPU fold (Vulkan); runtime switch STREHL_GPU_FOLD=on.
+strehl-gpu = { path = "../strehl-gpu", optional = true }
 # Experimental test bridge only; no production GPU dispatch.
 strehl-native-gpu-gather = { path = "../../experiments/native-gpu-gather", optional = true }
 clap.workspace = true
@@ -35,6 +37,8 @@ serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
 sha2 = "=0.11.0"
 
 [features]
+# The bit-exact GPU fold. Off at runtime unless STREHL_GPU_FOLD=on.
+gpu = ["dep:strehl-gpu"]
 # Multi-stack sessions (`strehl session`, desktop "Best result"): experimental,
 # off by default and not in default builds. The session specification types and
 # folder discovery stay compiled, for opening previously completed session results.

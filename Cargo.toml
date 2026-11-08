@@ -10,6 +10,7 @@ members = [
     "crates/strehl-cli",
     "crates/strehl-ui",
     "crates/strehl-capture",
+    "crates/strehl-gpu",
 ]
 
 [workspace.package]

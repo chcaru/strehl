@@ -795,6 +795,9 @@ fn configure_render_environment(
     // Keep OS variables, but bind every processing override to the saved recipe.
     remove_experimental_overrides(command, environment);
     command.env("STREHL_UI_PROGRESS", "1");
+    // Fold on the GPU when this machine has an eligible one; the engine says
+    // which it used, and the pixels are identical either way.
+    command.env("STREHL_GPU_FOLD", "auto");
     command.env(
         "STREHL_TEMPORAL_ENERGY",
         if request.settings.temporal_energy {

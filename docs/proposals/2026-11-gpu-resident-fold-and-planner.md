@@ -1,7 +1,7 @@
 # GPU-resident fold and a CPU/GPU/RAM planner
 
-**Status:** Proposal. Exactness preconditions MEASURED; nothing below is built or
-default yet.
+**Status:** Stages 1-2 BUILT (GPU fold, CPU-side weights replaced by portable `ln`/`exp`
+after the owner approved a one-time change); planner and GPU preparation still proposals.
 **Date:** 2026-11-08.
 **Scope:** the default `stack --merge pyramid` path, desktop and CLI.
 
@@ -139,3 +139,27 @@ today, and a placebo/CPU-only switch reproduces the identical pixels.
   decode, gather and probe. A disk cache of each frame's prepared planes would
   remove that, but it is an aligned-frame volume, which `AGENTS.md` forbids. Not
   proposed without an explicit decision to amend that invariant.
+
+## Outcome, 2026-11-08
+
+The owner accepted a one-time, near-imperceptible output change, so route 2's tables were
+not needed: the CPU and GPU now share `strehl_core::portable_math` for the weight's
+`ln`/`exp` (bug-7, 300 frames: 2,526 of 98.9 M samples moved by exactly 1 DN; byte-freeze
+rows re-baselined with the attribution recorded). `crates/strehl-gpu` implements the fold
+(stage 2); `STREHL_GPU_FOLD=on|auto|off`.
+
+A fourth exactness condition was found end to end, not in the synthetic test: the device
+flushed f32 subnormals, and the soft-power numerator is subnormal wherever every frame's
+weight sits at the `exp(-80)` clamp. `DenormPreserve` on every entry point fixed it; the
+synthetic test now includes a noisy flat region that fails without it.
+
+MEASURED, desktop path (sRGB + linear master + UI progress + CA preview), RTX 5090:
+
+| bug-7 | CPU fold | GPU fold | pixels |
+| --- | ---: | ---: | --- |
+| 300 frames | 69.4 s | 45.3 s | identical (photograph and float master) |
+| 1,444 frames, alignment cached | 329.9 s (645.2 s at `86cdc47ec`) | 209.2 s | identical (photograph and float master) |
+
+With the fold on the GPU the per-frame cost is now the CPU's frame preparation (gather,
+probe, extraction): ~0.12 s per frame. Stage 3 (GPU preparation, planner and overlap) is the
+next lever; the gather kernels already exist and are exact.
