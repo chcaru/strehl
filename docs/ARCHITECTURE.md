@@ -826,9 +826,12 @@ surfaces are not produced (the device does not hand full fields back); stage pro
 default preparation (sidecar or no alignment, Catmull-Rom, Malvar, no defect correction, an
 integral black level; `STREHL_GPU_PREP=off` declines), the decoded u16 CFA is uploaded once
 and everything else runs on the device: Malvar, the checked Catmull-Rom gather with f64 site
-pulls, extraction, the luma variance, and the whole gate-floor probe. Only the probe's four
-interior f64 sums and its ensemble-null windows (at most 516² per band) come back. The probe
-is reproduced without uploading a probe frame:
+pulls, extraction, the luma variance, the whole gate-floor probe and the ensemble null's
+accumulation. Only the probe's four interior f64 sums (32 bytes) come back per frame; the
+CPU turns them into the floor and hands each band's null unit back (`BandMerge::
+note_external_null_frame` counts the frame exactly as `add_null_frame` would), and the
+null's maxima and sums stay in device memory until the chunk ends, like the accumulators.
+The probe is reproduced without uploading a probe frame:
 
 - its noise is `portable_math::probe_gaussian_pair` (SplitMix64 emulated in u32 pairs on the
   device). The CPU fill uses the same functions; over 2^30 quantised samples they gave the
@@ -844,9 +847,32 @@ is reproduced without uploading a probe frame:
   could). The f32 floor rounds the difference away except within ~1e-13 of a boundary; bug-7
   (100 frames and all 1,444) and the byte-freeze rows were unchanged.
 
+**Data movement.** A frame is copied once, in parallel 4 MB pieces, into one of two
+persistently mapped upload buffers (re-mapped after the device copy, not reallocated), then
+copied on the device into one of two raw slots; a third slot holds the probe. Frames are
+pipelined one deep: frame *n + 1* is decoded, staged and its probe submitted before frame *n*
+waits for its own probe's sums (`PendingProbe`, a wait on that submission alone) and is
+folded, so the CPU's floor and bookkeeping overlap the device. The decoded frame goes back to
+its decoder thread to be freed as soon as it is staged. At a chunk's end the accumulators come
+back through one reusable 64 MB readback buffer, piece by piece, instead of one staging copy
+of the whole merge (over 1 GB on bug-7). None of this changes an operation's inputs or order.
+
+The engine executables (CLI and desktop) use mimalloc as the global allocator
+(`strehl_cli::EngineAllocator`). Every frame allocates and frees ~100 MB of decoder buffers;
+the Windows system allocator hands blocks that large straight to `VirtualAlloc`, so each
+starts as fresh pages faulted in and zeroed, and those faults contend across decoder threads:
+a single-threaded, independent decode took 74, 116 and 166 ms with 4, 8 and 16 decoders
+(MEASURED, bug-7, GPU preparation). mimalloc reuses the memory: on all 1,444 frames one
+decode went from 125 to 88 ms at 8 decoders and CPU time from 775 to 589 s (MEASURED). A
+size-keyed cache of freed large blocks was tried first and gave nothing measurable.
+`STREHL_DECODE_THREADS` overrides the decoder count.
+
 MEASURED, bug-7 1,444 frames, desktop path (sRGB + linear master + progress + CA preview),
 same machine: CPU 329.9 s; GPU fold with CPU preparation 209.2 s; GPU preparation 42.2 s
-(0.02 s per frame folded), photograph and float master identical to the CPU's. At that rate
+(0.02 s per frame folded); with the data movement and allocator above 32.5-32.8 s against
+43.5-44.4 s for the build before them, alternated (fold 22.6 s, CPU time 555 s against 848 s,
+peak private memory 7.3 GB against 6.7 GB). Photograph and float master are identical to the
+CPU's in every one of these runs. At that rate
 decoding (~75 ms per frame on one core) is a limit, so with GPU preparation the decode-ahead
 pool uses a quarter of the logical cores (8 here) instead of 4. `STREHL_GPU_PROFILE=1` times
 every dispatch with GPU timestamps (diagnostic; it serialises submits).

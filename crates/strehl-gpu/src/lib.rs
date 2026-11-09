@@ -70,6 +70,7 @@ enum Kernel {
     Noise,
     RowSq,
     Pack,
+    NullAccum,
 }
 
 impl Kernel {
@@ -106,7 +107,22 @@ struct Layout {
     esum: Vec<u32>,
     lo: Vec<u32>,
     hi: Vec<u32>,
+    /// The ensemble null's windows, per level, when the device prepares
+    /// frames and the merge has them.
+    null: Vec<Option<NullRegion>>,
     acc_len: u64,
+}
+
+/// One level's ensemble-null window on the device: its rectangle within the
+/// level, the probe's coefficients and energies packed per frame slot (work),
+/// and the window's accumulators (acc).
+#[derive(Clone, Copy)]
+struct NullRegion {
+    rect: [usize; 4],
+    lv: [u32; 2],
+    energy: [u32; 2],
+    /// zmax, zsum, lsum, esum.
+    acc: [u32; 4],
 }
 
 impl Layout {
@@ -116,6 +132,7 @@ impl Layout {
         ensemble: bool,
         hull: bool,
         full: Option<(usize, usize)>,
+        null_rects: &[Option<[usize; 4]>],
     ) -> Self {
         let nl = sizes.len();
         let n0 = sizes[0].pixels() as u64;
@@ -141,6 +158,21 @@ impl Layout {
             Some((gw, gh)) => (take(3 * 4 * gw * gh), pyramid(&mut take)),
             None => (0, Vec::new()),
         };
+        let null_rects: Vec<Option<[usize; 4]>> = if full.is_some() {
+            null_rects.to_vec()
+        } else {
+            Vec::new()
+        };
+        let null_work: Vec<Option<([u32; 2], [u32; 2])>> = null_rects
+            .iter()
+            .map(|r| {
+                r.map(|[_, _, w, h]| {
+                    let lv = [take(w * h), take(w * h)];
+                    let energy = [take(w * h), take(w * h)];
+                    (lv, energy)
+                })
+            })
+            .collect();
         let work_len = work;
         let mut acc = 0u64;
         let mut put = |n: usize| {
@@ -174,6 +206,20 @@ impl Layout {
         } else {
             (Vec::new(), Vec::new())
         };
+        let null = null_rects
+            .iter()
+            .zip(null_work)
+            .map(|(r, w)| {
+                let (rect, (lv, energy)) = (r.as_ref()?, w?);
+                let n = rect[2] * rect[3];
+                Some(NullRegion {
+                    rect: *rect,
+                    lv,
+                    energy,
+                    acc: [put(n), put(n), put(n), put(n)],
+                })
+            })
+            .collect();
         Self {
             sizes: sizes.to_vec(),
             planes,
@@ -198,6 +244,7 @@ impl Layout {
             esum,
             lo,
             hi,
+            null,
             acc_len: acc,
         }
     }
@@ -329,10 +376,12 @@ pub struct GpuFold {
     /// Raw u16 frames, main then probe, two samples per word.
     raw: wgpu::Buffer,
     raw_samples: u64,
-    /// The frame whose samples are resident in slot 0 because [`Self::probe`]
-    /// uploaded them for the [`Self::add_raw_frame`] that must follow: the
-    /// buffer address and length, checked there.
-    staged: Option<(usize, usize)>,
+    /// The frame slot the next [`GpuFold::stage`] fills (0 or 1).
+    next_slot: usize,
+    /// One persistently mapped upload buffer per frame slot.
+    upload: Vec<UploadSlot>,
+    /// Bumped whenever the raw buffer is reallocated, evicting staged frames.
+    raw_generation: u64,
     xf: wgpu::Buffer,
     red: wgpu::Buffer,
     /// Full quad geometry `(gw, gh)` and the analysis rectangle, when the
@@ -405,7 +454,14 @@ fn red_len(sizes: &[LevelSize]) -> u64 {
     (parts + 2 + rows + sizes.len() + 16) as u64
 }
 
-/// f64s in `xf`: two slots of four site pulls (8 each), then the probe
+/// Raw buffer slots: two frame slots, then the probe's.
+const RAW_SLOTS: usize = 3;
+const PROBE_SLOT: usize = 2;
+
+/// `xf` index of the probe noise's level, sigma and f32-screen margin.
+const XF_NOISE: u64 = 64;
+
+/// f64s in `xf`: two frame slots of four site pulls (8 each), then the probe
 /// noise's level, sigma and f32-screen margin.
 const XF_LEN: u64 = 67;
 
@@ -475,13 +531,41 @@ pub struct ProbeNoise {
     pub sigma: f64,
 }
 
+/// A host-visible upload buffer, mapped for writing whenever it is idle.
+struct UploadSlot {
+    buffer: wgpu::Buffer,
+    /// The copy out of it last submitted, after which it is re-mapped.
+    copy: Option<wgpu::SubmissionIndex>,
+    mapped: std::sync::Arc<std::sync::atomic::AtomicBool>,
+}
+
+/// A frame uploaded by [`GpuFold::stage`]: where it lives and what the
+/// device needs to prepare it. Valid until the second `stage` after it.
+#[derive(Clone, Debug)]
+pub struct Staged {
+    slot: usize,
+    generation: u64,
+    len: usize,
+    stride: usize,
+    active: [usize; 2],
+    black: f32,
+    gain: [f32; 3],
+    warped: bool,
+}
+
+/// A probe submitted by [`GpuFold::probe_submit`], read by
+/// [`GpuFold::probe_collect`].
+pub struct PendingProbe {
+    readback: wgpu::Buffer,
+    index: wgpu::SubmissionIndex,
+    sums: usize,
+}
+
 /// What [`GpuFold::probe`] reads back.
 #[derive(Debug, Default)]
 pub struct ProbeOutput {
     /// One f64 sum of squares per requested interior, in request order.
     pub sums: Vec<f64>,
-    /// The requested windows, indexed by level, row-major.
-    pub windows: Vec<Option<Vec<f32>>>,
 }
 
 /// The injected noise model's two green planes: gain (DN/e) and read floor
@@ -579,7 +663,14 @@ impl GpuFold {
 
         let ensemble = cfg.ensemble;
         let hull = cfg.hull.bounds();
-        let layout = Layout::new(merge.sizes(), planes, ensemble, hull, full);
+        // The null's windows without the smoothing reach: the device smooths
+        // whole levels, so it needs only the windows themselves.
+        let null_rects: Vec<Option<[usize; 4]>> = merge
+            .null_window_rects()
+            .into_iter()
+            .map(|r| r.map(|[x, y, w, h]| [x + 2, y + 2, w - 4, h - 4]))
+            .collect();
+        let layout = Layout::new(merge.sizes(), planes, ensemble, hull, full, &null_rects);
         let (work_bytes, acc_bytes) = (layout.work_len * 4, layout.acc_len * 4);
         for (name, bytes) in [("workspace", work_bytes), ("accumulators", acc_bytes)] {
             if bytes > limits.max_storage_buffer_binding_size || bytes > limits.max_buffer_size {
@@ -765,7 +856,9 @@ impl GpuFold {
             consts,
             raw,
             raw_samples: 0,
-            staged: None,
+            next_slot: 0,
+            upload: Vec::new(),
+            raw_generation: 0,
             xf,
             red,
             full,
@@ -813,7 +906,17 @@ impl GpuFold {
         (self.layout.work_len + self.layout.acc_len) * 4
     }
 
-    fn submit(&mut self, rec: Recorder) {
+    fn submit(&mut self, rec: Recorder) -> wgpu::SubmissionIndex {
+        self.submit_with(rec, |_, _| {})
+    }
+
+    /// Submit `rec`'s dispatches, then whatever `after` records (copies) in
+    /// the same command buffer.
+    fn submit_with(
+        &mut self,
+        rec: Recorder,
+        after: impl FnOnce(&mut wgpu::CommandEncoder, &Self),
+    ) -> wgpu::SubmissionIndex {
         assert!(rec.calls.len() <= MAX_CALLS, "too many dispatches");
         let slot = self.frame % self.params.len();
         let mut bytes = vec![0u8; self.param_stride as usize * rec.calls.len()];
@@ -891,7 +994,8 @@ impl GpuFold {
                 pass.dispatch_workgroups(x, y, 1);
             }
         }
-        self.queue.submit([encoder.finish()]);
+        after(&mut encoder, self);
+        let index = self.queue.submit([encoder.finish()]);
         if let Some(prof) = &mut self.profile
             && !rec.calls.is_empty()
         {
@@ -919,6 +1023,7 @@ impl GpuFold {
                 .expect("GPU fold wait");
         }
         self.frame += 1;
+        index
     }
 
     fn reset_accumulators(&mut self) {
@@ -1086,7 +1191,9 @@ impl GpuFold {
         rec.accum(l, l.coarse, nb);
     }
 
-    /// Size the raw buffer for frames of `samples` u16 each (main + probe).
+    /// Size the raw buffer for frames of `samples` u16 each: two frame slots,
+    /// alternating so one frame can be staged and probed while the other is
+    /// still to be folded, and the probe's slot.
     fn ensure_raw(&mut self, samples: usize) {
         let samples = samples as u64 + (samples as u64 & 1);
         if self.raw_samples == samples {
@@ -1094,14 +1201,27 @@ impl GpuFold {
         }
         self.raw = self.device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("fold-raw"),
-            size: samples * 2 * 2,
+            size: samples * 2 * RAW_SLOTS as u64,
             usage: wgpu::BufferUsages::STORAGE
                 | wgpu::BufferUsages::COPY_DST
                 | wgpu::BufferUsages::COPY_SRC,
             mapped_at_creation: false,
         });
         self.raw_samples = samples;
-        self.staged = None;
+        // Frames staged in the old buffer are gone.
+        self.raw_generation += 1;
+        self.upload = (0..2)
+            .map(|_| UploadSlot {
+                buffer: self.device.create_buffer(&wgpu::BufferDescriptor {
+                    label: Some("fold-upload"),
+                    size: samples * 2,
+                    usage: wgpu::BufferUsages::MAP_WRITE | wgpu::BufferUsages::COPY_SRC,
+                    mapped_at_creation: true,
+                }),
+                copy: None,
+                mapped: std::sync::Arc::new(std::sync::atomic::AtomicBool::new(true)),
+            })
+            .collect();
         self.bind = make_binds(
             &self.device,
             &self.bgl,
@@ -1117,39 +1237,92 @@ impl GpuFold {
         );
     }
 
-    /// Upload a frame's samples into slot 0 and its pulls into `xf` slots 0
-    /// and 1 (the probe gathers through the same pulls).
-    fn upload_raw(&mut self, frame: &RawFrame<'_>) {
-        self.ensure_raw(frame.data.len());
-        // Whole words straight from the decoder's buffer, in parallel chunks:
-        // wgpu stages each write in fresh host memory before taking its queue
-        // lock, so the copies (and their page faults) run concurrently. An odd
-        // trailing sample is written as its own padded word.
-        let even = frame.data.len() & !1;
-        const UPLOAD_CHUNK: usize = 1 << 21;
-        let queue = &self.queue;
-        let raw = &self.raw;
-        frame.data[..even]
-            .par_chunks(UPLOAD_CHUNK)
-            .enumerate()
-            .for_each(|(i, chunk)| {
-                queue.write_buffer(
-                    raw,
-                    (i * UPLOAD_CHUNK * 2) as u64,
-                    bytemuck::cast_slice(chunk),
-                );
-            });
-        if even < frame.data.len() {
-            let tail = [frame.data[even], 0u16];
-            self.queue
-                .write_buffer(&self.raw, even as u64 * 2, bytemuck::cast_slice(&tail));
+    /// The first sample of `slot`'s frame in the raw buffer.
+    fn raw_base(&self, slot: usize) -> u32 {
+        (slot as u64 * self.raw_samples) as u32
+    }
+
+    /// Upload `frame` into the next frame slot and its pulls into that slot's
+    /// `xf` sites. wgpu copies the samples before this returns, so the caller
+    /// may free the frame at once. The slot stays valid until the second
+    /// `stage` after this one.
+    pub fn stage(&mut self, frame: &RawFrame<'_>) -> Result<Staged, String> {
+        let (gw, gh) = self.full.ok_or("GPU preparation layout")?;
+        let (width, rows) = (2 * gw, 2 * gh);
+        let padded = frame.data.len() as u64 + (frame.data.len() as u64 & 1);
+        if frame.stride < frame.active[0] + width
+            || frame.data.len() < (frame.active[1] + rows) * frame.stride
+            || (width * rows) as u64 + 2 > u64::from(u32::MAX)
+            || RAW_SLOTS as u64 * padded > u64::from(u32::MAX)
+        {
+            return Err("GPU preparation: frame geometry out of range".into());
         }
-        let (gw, gh) = self.full.expect("preparation layout");
+        self.ensure_raw(frame.data.len());
+        let slot = self.next_slot;
+        self.next_slot ^= 1;
+        let base = u64::from(self.raw_base(slot)) * 2;
+        // Through this slot's persistently mapped upload buffer: wait for its
+        // last copy out (two frames ago) and the re-map, fill it in parallel
+        // chunks, then copy it to the device. No staging memory is allocated
+        // per frame. An odd trailing sample is padded to a whole word.
+        let up = &mut self.upload[slot];
+        if let Some(index) = up.copy.take() {
+            self.device
+                .poll(wgpu::PollType::Wait {
+                    submission_index: Some(index),
+                    timeout: None,
+                })
+                .map_err(|e| format!("GPU upload wait: {e:?}"))?;
+        }
+        if !up.mapped.load(std::sync::atomic::Ordering::Acquire) {
+            return Err("GPU upload buffer was not re-mapped".into());
+        }
+        let bytes: &[u8] = bytemuck::cast_slice(frame.data);
+        // Mapped ranges start 8-byte aligned and span whole words, so chunks
+        // are fixed-size over the (word-padded) buffer and the last one carries
+        // the zero padding.
+        const UPLOAD_CHUNK: usize = 1 << 22;
+        let size = (self.raw_samples * 2) as usize;
+        let buffer = &up.buffer;
+        (0..size.div_ceil(UPLOAD_CHUNK))
+            .into_par_iter()
+            .for_each(|i| {
+                let (at, end) = (i * UPLOAD_CHUNK, ((i + 1) * UPLOAD_CHUNK).min(size));
+                let data = &bytes[at.min(bytes.len())..end.min(bytes.len())];
+                let mut view = buffer
+                    .slice(at as u64..end as u64)
+                    .get_mapped_range_mut()
+                    .expect("mapped upload buffer");
+                view.slice(..data.len()).copy_from_slice(data);
+                if data.len() < end - at {
+                    view.slice(data.len()..)
+                        .copy_from_slice(&vec![0u8; end - at - data.len()]);
+                }
+            });
+        let size = size as u64;
+        up.mapped.store(false, std::sync::atomic::Ordering::Release);
+        up.buffer.unmap();
+        let mut encoder = self
+            .device
+            .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                label: Some("fold-upload"),
+            });
+        encoder.copy_buffer_to_buffer(&self.upload[slot].buffer, 0, &self.raw, base, size);
+        let index = self.queue.submit([encoder.finish()]);
+        let up = &mut self.upload[slot];
+        let mapped = up.mapped.clone();
+        up.buffer
+            .slice(..)
+            .map_async(wgpu::MapMode::Write, move |r| {
+                r.expect("re-map upload buffer");
+                mapped.store(true, std::sync::atomic::Ordering::Release);
+            });
+        up.copy = Some(index);
         let (cx, cy) = (gw as f64 * 0.5, gh as f64 * 0.5);
         if let Some(pulls) = frame.pulls {
-            let mut xf = [0f64; 64];
+            let mut xf = [0f64; 32];
             for (i, (&(dx, dy), t)) in SITES.iter().zip(pulls.iter()).enumerate() {
-                let site = [
+                xf[8 * i..8 * i + 8].copy_from_slice(&[
                     t.a[0],
                     t.a[1],
                     t.b[0],
@@ -1158,29 +1331,40 @@ impl GpuFold {
                     dy as f64 * 0.5,
                     cx,
                     cy,
-                ];
-                xf[8 * i..8 * i + 8].copy_from_slice(&site);
-                xf[32 + 8 * i..40 + 8 * i].copy_from_slice(&site);
+                ]);
             }
             self.queue
-                .write_buffer(&self.xf, 0, bytemuck::cast_slice(&xf));
+                .write_buffer(&self.xf, (slot * 32 * 8) as u64, bytemuck::cast_slice(&xf));
         }
+        Ok(Staged {
+            slot,
+            generation: self.raw_generation,
+            len: frame.data.len(),
+            stride: frame.stride,
+            active: frame.active,
+            black: frame.black,
+            gain: frame.gain,
+            warped: frame.pulls.is_some(),
+        })
     }
 
-    /// The first sample of `slot`'s frame in the raw buffer.
-    fn raw_base(&self, slot: usize) -> u32 {
-        (slot as u64 * self.raw_samples) as u32
+    fn check_staged(&self, staged: &Staged) -> Result<(), String> {
+        if staged.generation != self.raw_generation {
+            return Err("GPU preparation: staged frame was evicted by a geometry change".into());
+        }
+        Ok(())
     }
 
-    /// Record the gather (or unwarped extraction) of `sites` into the given
+    /// Record the gather (or unwarped extraction) of `sites` of the frame at
+    /// raw sample `base`, through slot `pulls`' site pulls, into the given
     /// level-0 planes.
     #[allow(clippy::too_many_arguments)]
     fn record_gather(
         &self,
         rec: &mut Recorder,
-        frame: &RawFrame<'_>,
+        frame: &Staged,
         base: u32,
-        slot: usize,
+        pulls: usize,
         sites: &[usize],
         dst: &[u32],
         green_only: bool,
@@ -1193,7 +1377,7 @@ impl GpuFold {
         let black_dn = black.round().clamp(0.0, f32::from(u16::MAX)) as u16;
         let raw_base = base + (frame.active[1] * frame.stride + frame.active[0]) as u32;
         let l = &self.layout;
-        if frame.pulls.is_none() {
+        if !frame.warped {
             for (&s, &d) in sites.iter().zip(dst) {
                 let (dx, dy) = SITES[s];
                 rec.push(
@@ -1234,7 +1418,7 @@ impl GpuFold {
                 Params {
                     a: [plane, fw as u32, fh as u32, d],
                     b: rect,
-                    c: [u32::from(black_dn), (4 * slot + s) as u32, 0, 0],
+                    c: [u32::from(black_dn), (4 * pulls + s) as u32, 0, 0],
                     f: [black, inv, 0.0, 0.0],
                     ..Default::default()
                 },
@@ -1243,67 +1427,52 @@ impl GpuFold {
         }
     }
 
-    /// The gate-floor probe on the device: build the probe frame from `frame`
-    /// and `noise` as `gatefloor` does (a copy of the frame with its active
-    /// complete quads replaced by seeded noise), gather its greens, form and
-    /// zero-mean its luma and build its Laplacian pyramid. Returns, from that
-    /// pyramid, the f64 sum of squares over each `[level, x, y, w, h]` of
-    /// `sums` (each row in column order, then the rows in order:
+    /// The gate-floor probe on the device: build the probe frame from the
+    /// staged frame and `noise` as `gatefloor` does (a copy of the frame with
+    /// its active complete quads replaced by seeded noise), gather its greens,
+    /// form and zero-mean its luma and build its Laplacian pyramid. Reads back,
+    /// from that pyramid, the f64 sum of squares over each `[level, x, y, w, h]`
+    /// of `sums` (each row in column order, then the rows in order:
     /// `gatefloor::square_sum`), and each requested `[x, y, w, h]` window of
     /// `windows` (indexed by level), row-major. Only these cross PCIe.
     ///
-    /// Uploads `frame`, which stays resident for the [`Self::add_raw_frame`]
-    /// of the same frame that must follow. Requires an integral black level:
-    /// the luma's f64 sum is then exact in any order, which is what lets the
-    /// device reproduce the CPU's mean.
-    pub fn probe(
+    /// Returns without waiting: [`Self::probe_collect`] waits for this probe
+    /// alone, so the caller can fold the previous frame meanwhile. Requires an
+    /// integral black level: the luma's f64 sum is then exact in any order,
+    /// which is what lets the device reproduce the CPU's mean.
+    pub fn probe_submit(
         &mut self,
-        frame: &RawFrame<'_>,
+        frame: &Staged,
         noise: ProbeNoise,
         sums: &[[usize; 5]],
-        windows: &[Option<[usize; 4]>],
-    ) -> Result<ProbeOutput, String> {
-        self.staged = None;
+    ) -> Result<PendingProbe, String> {
+        self.check_staged(frame)?;
         let sizes = &self.layout.sizes;
         let fits = |k: usize, [x, y, w, h]: [usize; 4]| {
             k < sizes.len() && x + w <= sizes[k].width && y + h <= sizes[k].height
         };
-        if !sums.iter().all(|&[k, x, y, w, h]| fits(k, [x, y, w, h]))
-            || !windows
-                .iter()
-                .enumerate()
-                .all(|(k, r)| r.is_none_or(|r| fits(k, r)))
-        {
+        if !sums.iter().all(|&[k, x, y, w, h]| fits(k, [x, y, w, h])) {
             return Err("GPU probe: a requested rectangle is outside its level".into());
         }
         if frame.black.fract() != 0.0 {
             return Err("GPU probe needs an integral black level".into());
         }
-        if frame.pulls.is_none() {
+        if !frame.warped {
             return Err("the probe is only measured for a warped frame".into());
         }
         let (gw, gh) = self.full.expect("preparation layout");
         let (width, rows) = (2 * gw, 2 * gh);
-        let words = frame.data.len().div_ceil(2);
-        if frame.stride < frame.active[0] + width
-            || frame.data.len() < (frame.active[1] + rows) * frame.stride
-            || (width * rows) as u64 + 2 > u64::from(u32::MAX)
-            || 2 * (words as u64 * 2) > u64::from(u32::MAX)
-        {
-            return Err("GPU probe: frame geometry out of range".into());
-        }
-        self.upload_raw(frame);
-        self.staged = Some((frame.data.as_ptr() as usize, frame.data.len()));
+        let words = frame.len.div_ceil(2);
         self.queue.write_buffer(
             &self.xf,
-            64 * 8,
+            XF_NOISE * 8,
             bytemuck::cast_slice(&[
                 noise.level,
                 noise.sigma,
                 strehl_core::portable_math::probe_f32_margin(noise.sigma),
             ]),
         );
-        let base = self.raw_base(1);
+        let base = self.raw_base(PROBE_SLOT);
         let mut rec = Recorder { calls: Vec::new() };
         rec.push(
             Kernel::Noise,
@@ -1313,7 +1482,7 @@ impl GpuFold {
                     frame.active[0] as u32,
                     frame.active[1] as u32,
                     rows as u32,
-                    0,
+                    self.raw_base(frame.slot) / 2,
                 ],
                 c: [noise.seed as u32, (noise.seed >> 32) as u32, 0, 0],
                 ..Default::default()
@@ -1322,13 +1491,13 @@ impl GpuFold {
         );
         let l = &self.layout;
         let n0 = l.sizes[0].pixels();
-        // Greens into the planes' level-0 slots, which the main frame's gather
-        // overwrites only after this download.
+        // Greens into the planes' level-0 slots: the fold that follows in the
+        // queue regathers them, and the readback below precedes it.
         self.record_gather(
             &mut rec,
             frame,
             base,
-            1,
+            frame.slot,
             &[1, 2],
             &[l.plane_lv[1][0], l.plane_lv[2][0]],
             true,
@@ -1391,47 +1560,101 @@ impl GpuFold {
             );
             row += h as u32;
         }
-        // Windows packed into the scratch region, free once the pyramid is built.
-        let mut packed = 0usize;
-        for (k, r) in windows.iter().enumerate() {
-            if let Some([x, y, w, h]) = *r {
+        // The ensemble null's windows, kept on the device for this frame's
+        // fold: each band's coefficients, and its energy (the fold's own
+        // smoothing over the whole level, so the window's interior is the
+        // level's), packed into this frame slot's region.
+        for (k, region) in l.null.iter().enumerate() {
+            let Some(region) = region else { continue };
+            let s = l.sizes[k];
+            let [x, y, w, h] = region.rect;
+            rec.push(
+                Kernel::SmoothH,
+                Params {
+                    a: [l.probe_lv[k], s.width as u32, s.height as u32, l.scratch],
+                    ..Default::default()
+                },
+                s.pixels(),
+            );
+            rec.push(
+                Kernel::SmoothV,
+                Params {
+                    a: [l.scratch, s.width as u32, s.height as u32, l.sq],
+                    ..Default::default()
+                },
+                s.pixels(),
+            );
+            for (src, dst) in [
+                (l.probe_lv[k], region.lv[frame.slot]),
+                (l.sq, region.energy[frame.slot]),
+            ] {
                 rec.push(
                     Kernel::Pack,
                     Params {
-                        a: [l.probe_lv[k], l.sizes[k].width as u32, x as u32, w as u32],
-                        b: [y as u32, h as u32, l.scratch + packed as u32, 0],
+                        a: [src, s.width as u32, x as u32, w as u32],
+                        b: [y as u32, h as u32, dst, 0],
                         ..Default::default()
                     },
                     w * h,
                 );
-                packed += w * h;
             }
         }
-        let scratch = l.scratch;
-        self.submit(rec);
-        self.download(
-            scratch,
-            packed,
-            u64::from(total),
-            sums.len(),
-            |floats, totals| {
-                let mut at = 0;
-                let windows = windows
-                    .iter()
-                    .map(|r| {
-                        r.map(|[_, _, w, h]| {
-                            let v = floats[at..at + w * h].to_vec();
-                            at += w * h;
-                            v
-                        })
-                    })
-                    .collect();
-                ProbeOutput {
-                    sums: totals.to_vec(),
-                    windows,
-                }
-            },
-        )
+        let bytes = sums.len() as u64 * 8;
+        let readback = self.device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("fold-probe-readback"),
+            size: bytes.max(8),
+            usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        });
+        let index = self.submit_with(rec, |encoder, fold| {
+            if bytes > 0 {
+                encoder.copy_buffer_to_buffer(&fold.red, u64::from(total) * 8, &readback, 0, bytes);
+            }
+        });
+        readback
+            .slice(..)
+            .map_async(wgpu::MapMode::Read, |r| r.expect("map probe readback"));
+        Ok(PendingProbe {
+            readback,
+            index,
+            sums: sums.len(),
+        })
+    }
+
+    /// Wait for one submitted probe (not for later work) and read it.
+    pub fn probe_collect(&self, pending: PendingProbe) -> Result<ProbeOutput, String> {
+        self.device
+            .poll(wgpu::PollType::Wait {
+                submission_index: Some(pending.index),
+                timeout: None,
+            })
+            .map_err(|e| format!("GPU probe wait: {e:?}"))?;
+        let out = {
+            let view = pending
+                .readback
+                .slice(..)
+                .get_mapped_range()
+                .map_err(|e| format!("mapped probe: {e:?}"))?;
+            let totals: &[f64] = bytemuck::cast_slice(&view[..pending.sums * 8]);
+            ProbeOutput {
+                sums: totals.to_vec(),
+            }
+        };
+        pending.readback.unmap();
+        Ok(out)
+    }
+
+    /// [`Self::stage`], [`Self::probe_submit`] and [`Self::probe_collect`] in
+    /// one blocking call.
+    pub fn probe(
+        &mut self,
+        frame: &RawFrame<'_>,
+        noise: ProbeNoise,
+        sums: &[[usize; 5]],
+    ) -> Result<ProbeOutput, String> {
+        let staged = self.stage(frame)?;
+        let pending = self.probe_submit(&staged, noise, sums)?;
+        self.probe_collect(pending)
     }
 
     /// The probe frame [`Self::probe`] builds on the device, read back: for
@@ -1442,8 +1665,7 @@ impl GpuFold {
         frame: &RawFrame<'_>,
         noise: ProbeNoise,
     ) -> Result<Vec<u16>, String> {
-        self.probe(frame, noise, &[], &[])?;
-        self.staged = None;
+        self.probe(frame, noise, &[])?;
         let bytes = frame.data.len().div_ceil(2) as u64 * 4;
         let readback = self.device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("fold-raw-readback"),
@@ -1456,7 +1678,8 @@ impl GpuFold {
             .create_command_encoder(&wgpu::CommandEncoderDescriptor {
                 label: Some("raw-readback"),
             });
-        encoder.copy_buffer_to_buffer(&self.raw, self.raw_samples * 2, &readback, 0, bytes);
+        let from = u64::from(self.raw_base(PROBE_SLOT)) * 2;
+        encoder.copy_buffer_to_buffer(&self.raw, from, &readback, 0, bytes);
         self.queue.submit([encoder.finish()]);
         readback
             .slice(..)
@@ -1475,152 +1698,158 @@ impl GpuFold {
         Ok(out)
     }
 
-    /// Gather `frame` on the device into the fold's planes, compute its luma
-    /// variance from `noise`, and fold it: equivalent to the CPU's
-    /// `load_frame` + `luma_variance` + `add_frame_with_gain`.
+    /// Gather a staged frame on the device into the fold's planes, compute its
+    /// luma variance from `noise`, and fold it: equivalent to the CPU's
+    /// `load_frame` + `luma_variance` + `add_frame_with_gain`. With
+    /// `null_units` (from `BandMerge::note_external_null_frame`), the frame's
+    /// probe, packed by [`Self::probe_submit`], is also added to the ensemble
+    /// null: `BandMerge::add_null_windows`.
+    pub fn add_staged(
+        &mut self,
+        merge: &mut BandMerge,
+        frame: &Staged,
+        noise: GreenNoise,
+        frame_beta: Option<&[f32]>,
+        null_units: Option<&[Option<f32>]>,
+    ) -> Result<(), String> {
+        self.check_staged(frame)?;
+        if self.pending_reset {
+            self.reset_accumulators();
+        }
+        let scalars: Vec<LevelScalars> = merge.level_scalars(frame_beta);
+        let base = self.raw_base(frame.slot);
+        let l = &self.layout;
+        let dst: Vec<u32> = (0..4).map(|c| l.plane_lv[c][0]).collect();
+        let mut rec = Recorder { calls: Vec::new() };
+        self.record_gather(
+            &mut rec,
+            frame,
+            base,
+            frame.slot,
+            &[0, 1, 2, 3],
+            &dst,
+            false,
+        );
+        self.record_fold(&mut rec, &scalars, Some(noise));
+        for (region, unit) in l.null.iter().zip(null_units.unwrap_or(&[])) {
+            let (Some(region), Some(unit)) = (region, unit) else {
+                continue;
+            };
+            let n = region.rect[2] * region.rect[3];
+            rec.push(
+                Kernel::NullAccum,
+                Params {
+                    a: [
+                        region.lv[frame.slot],
+                        region.energy[frame.slot],
+                        n as u32,
+                        0,
+                    ],
+                    b: region.acc,
+                    f: [*unit, 0.0, 0.0, 0.0],
+                    ..Default::default()
+                },
+                n,
+            );
+        }
+        self.submit(rec);
+        merge.note_external_frame();
+        Ok(())
+    }
+
+    /// [`Self::stage`] then [`Self::add_staged`].
     pub fn add_raw_frame(
         &mut self,
         merge: &mut BandMerge,
         frame: &RawFrame<'_>,
         noise: GreenNoise,
         frame_beta: Option<&[f32]>,
-    ) {
-        if self.pending_reset {
-            self.reset_accumulators();
-        }
-        let scalars: Vec<LevelScalars> = merge.level_scalars(frame_beta);
-        // The probe already put this frame in slot 0; otherwise upload it.
-        match self.staged.take() {
-            Some(staged) => assert_eq!(
-                staged,
-                (frame.data.as_ptr() as usize, frame.data.len()),
-                "add_raw_frame after a probe of a different frame"
-            ),
-            None => self.upload_raw(frame),
-        }
-        let base = self.raw_base(0);
-        let l = &self.layout;
-        let dst: Vec<u32> = (0..4).map(|c| l.plane_lv[c][0]).collect();
-        let mut rec = Recorder { calls: Vec::new() };
-        self.record_gather(&mut rec, frame, base, 0, &[0, 1, 2, 3], &dst, false);
-        self.record_fold(&mut rec, &scalars, Some(noise));
-        self.submit(rec);
-        merge.note_external_frame();
+    ) -> Result<(), String> {
+        let staged = self.stage(frame)?;
+        self.add_staged(merge, &staged, noise, frame_beta, None)
     }
-
-    /// Hand `count` f32 of the work arena from `at` and `sums` f64 of `red`
-    /// from `red_at` to `read`, waiting for the device.
-    fn download<T>(
-        &self,
-        at: u32,
-        count: usize,
-        red_at: u64,
-        sums: usize,
-        read: impl FnOnce(&[f32], &[f64]) -> T,
-    ) -> Result<T, String> {
-        let float_bytes = (count as u64 * 4).div_ceil(8) * 8;
-        let bytes = float_bytes + sums as u64 * 8;
-        let readback = self.device.create_buffer(&wgpu::BufferDescriptor {
-            label: Some("fold-probe-readback"),
-            size: bytes.max(8),
-            usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
-            mapped_at_creation: false,
-        });
-        let mut encoder = self
-            .device
-            .create_command_encoder(&wgpu::CommandEncoderDescriptor {
-                label: Some("probe-readback"),
-            });
-        if count > 0 {
-            encoder.copy_buffer_to_buffer(
-                &self.work,
-                u64::from(at) * 4,
-                &readback,
-                0,
-                count as u64 * 4,
-            );
-        }
-        if sums > 0 {
-            encoder.copy_buffer_to_buffer(
-                &self.red,
-                red_at * 8,
-                &readback,
-                float_bytes,
-                sums as u64 * 8,
-            );
-        }
-        self.queue.submit([encoder.finish()]);
-        readback
-            .slice(..)
-            .map_async(wgpu::MapMode::Read, |r| r.expect("map probe readback"));
-        self.device
-            .poll(wgpu::PollType::wait_indefinitely())
-            .map_err(|e| format!("GPU probe wait: {e:?}"))?;
-        let out = {
-            let view = readback
-                .slice(..)
-                .get_mapped_range()
-                .map_err(|e| format!("mapped probe: {e:?}"))?;
-            let floats: &[f32] = bytemuck::cast_slice(&view[..float_bytes as usize]);
-            let totals: &[f64] = bytemuck::cast_slice(&view[float_bytes as usize..bytes as usize]);
-            read(&floats[..count], totals)
-        };
-        readback.unmap();
-        Ok(out)
-    }
-
     /// Write the chunk's accumulators into `merge` (whose own accumulators
     /// must be freshly reset) and reset the device's for the next chunk.
+    ///
+    /// Read back through one reusable 64 MB host buffer, piece by piece: the
+    /// accumulators are over a gigabyte at 33 MP, and a host-visible copy of
+    /// all of them at once was that much more peak memory beside the CPU
+    /// merge being written.
     pub fn finish_chunk(&mut self, merge: &mut BandMerge) {
-        let bytes = self.layout.acc_len * 4;
+        let l = &self.layout;
+        let mut regions: Vec<(usize, &mut [f32])> = Vec::new();
+        let (t, null) = merge.all_totals_mut();
+        fn add<'a>(regions: &mut Vec<(usize, &'a mut [f32])>, dst: &'a mut [Vec<f32>], at: &[u32]) {
+            for (d, &o) in dst.iter_mut().zip(at) {
+                regions.push((o as usize, &mut d[..]));
+            }
+        }
+        add(&mut regions, t.num, &l.num);
+        add(&mut regions, t.usum, &l.usum);
+        add(&mut regions, t.den, &l.den);
+        if self.ensemble {
+            add(&mut regions, t.zmax, &l.zmax);
+            add(&mut regions, t.zsum, &l.zsum);
+            add(&mut regions, t.lsum, &l.lsum);
+            add(&mut regions, t.esum, &l.esum);
+        }
+        if self.hull {
+            add(&mut regions, t.lo, &l.lo);
+            add(&mut regions, t.hi, &l.hi);
+        }
+        // The ensemble null's windows, accumulated by `null_accum`. Only
+        // levels the device holds a window for: the CPU has the same ones.
+        for (totals, region) in null.into_iter().zip(&l.null) {
+            if let (Some(totals), Some(region)) = (totals, region) {
+                for (dst, &o) in totals.into_iter().zip(&region.acc) {
+                    regions.push((o as usize, dst));
+                }
+            }
+        }
+        regions.sort_by_key(|r| r.0);
+        const PIECE: usize = 16 << 20; // floats: 64 MB
+        let total = l.acc_len as usize;
+        let piece = PIECE.min(total.max(1));
         let readback = self.device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("fold-readback"),
-            size: bytes,
+            size: piece as u64 * 4,
             usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
             mapped_at_creation: false,
         });
-        let mut encoder = self
-            .device
-            .create_command_encoder(&wgpu::CommandEncoderDescriptor {
-                label: Some("fold-readback"),
-            });
-        encoder.copy_buffer_to_buffer(&self.acc, 0, &readback, 0, bytes);
-        self.queue.submit([encoder.finish()]);
-        readback
-            .slice(..)
-            .map_async(wgpu::MapMode::Read, |r| r.expect("map fold readback"));
-        self.device
-            .poll(wgpu::PollType::wait_indefinitely())
-            .expect("GPU fold wait");
-        {
-            let view = readback
-                .slice(..)
-                .get_mapped_range()
-                .expect("mapped readback");
-            let all: &[f32] = bytemuck::cast_slice(&view[..]);
-            let l = &self.layout;
-            let t = merge.totals_mut();
-            let copy = |dst: &mut [Vec<f32>], at: &[u32]| {
-                dst.par_iter_mut().zip(at.par_iter()).for_each(|(d, &o)| {
-                    let (o, n) = (o as usize, d.len());
-                    d.copy_from_slice(&all[o..o + n]);
+        let mut start = 0usize;
+        while start < total {
+            let n = piece.min(total - start);
+            let mut encoder = self
+                .device
+                .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                    label: Some("fold-readback"),
                 });
-            };
-            copy(t.num, &l.num);
-            copy(t.usum, &l.usum);
-            copy(t.den, &l.den);
-            if self.ensemble {
-                copy(t.zmax, &l.zmax);
-                copy(t.zsum, &l.zsum);
-                copy(t.lsum, &l.lsum);
-                copy(t.esum, &l.esum);
+            encoder.copy_buffer_to_buffer(&self.acc, start as u64 * 4, &readback, 0, n as u64 * 4);
+            let index = self.queue.submit([encoder.finish()]);
+            let slice = readback.slice(..n as u64 * 4);
+            slice.map_async(wgpu::MapMode::Read, |r| r.expect("map fold readback"));
+            self.device
+                .poll(wgpu::PollType::Wait {
+                    submission_index: Some(index),
+                    timeout: None,
+                })
+                .expect("GPU fold wait");
+            {
+                let view = slice.get_mapped_range().expect("mapped readback");
+                let all: &[f32] = bytemuck::cast_slice(&view[..]);
+                let end = start + n;
+                regions
+                    .par_iter_mut()
+                    .filter(|(o, d)| *o < end && o + d.len() > start)
+                    .for_each(|(o, d)| {
+                        let from = start.max(*o);
+                        let to = end.min(*o + d.len());
+                        d[from - *o..to - *o].copy_from_slice(&all[from - start..to - start]);
+                    });
             }
-            if self.hull {
-                copy(t.lo, &l.lo);
-                copy(t.hi, &l.hi);
-            }
+            readback.unmap();
+            start += n;
         }
-        readback.unmap();
         self.pending_reset = true;
     }
 }

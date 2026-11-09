@@ -35,6 +35,8 @@ tiff.workspace = true
 serde = { version = "=1.0.229", features = ["derive"] }
 serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
 sha2 = "=0.11.0"
+# The engine's global allocator (lib.rs `EngineAllocator`). MIT.
+mimalloc = { version = "0.1", default-features = false }
 
 [features]
 # The bit-exact GPU fold. Off at runtime unless STREHL_GPU_FOLD=on.

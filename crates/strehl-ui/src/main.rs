@@ -1,6 +1,10 @@
 //! Native, event-driven desktop shell. The existing CLI owns all RAW processing.
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+// The engine's allocator (this executable re-runs itself as the engine).
+#[global_allocator]
+static GLOBAL: strehl_cli::EngineAllocator = strehl_cli::ENGINE_ALLOCATOR;
+
 #[path = "agent-interface.rs"]
 mod agent_interface;
 mod app;

@@ -5004,6 +5004,27 @@ impl Merged<'_> {
     }
 }
 
+/// A frame started on the GPU (`BandWorker::gpu_start`), awaiting its finish.
+#[cfg(feature = "gpu")]
+enum GpuStarted {
+    /// Not folded: a parity or preview skip, or a refused warp.
+    Skipped(usize),
+    Ready {
+        index: usize,
+        staged: strehl_gpu::Staged,
+        /// The submitted probe and its interiors.
+        probe: Option<(strehl_gpu::PendingProbe, Vec<[usize; 5]>)>,
+    },
+}
+
+#[cfg(feature = "gpu")]
+impl GpuStarted {
+    fn index(&self) -> usize {
+        match self {
+            Self::Skipped(index) | Self::Ready { index, .. } => *index,
+        }
+    }
+}
 /// Per-frame buffers for the band merge, allocated once and reused across
 /// canonical chunks.
 struct BandWorker {
@@ -5139,6 +5160,7 @@ trait PyramidFrameSource: Sync {
     /// Hand back a frame the fold has finished with. Freeing a 66 MB buffer
     /// costs milliseconds, so a source with threads of its own frees it there
     /// rather than on the fold's critical path.
+    #[cfg(feature = "gpu")]
     fn retire(&self, frame: Frame) {
         drop(frame);
     }
@@ -5901,11 +5923,8 @@ impl BandWorker {
         Err("this engine was built without the `gpu` feature".into())
     }
 
-    /// Decode, prepare and fold one frame with the GPU doing the preparation.
-    /// The same steps, checks and order as `fold_observed` over
-    /// `prepare_frame_into`: parity and preview skips, decode and level
-    /// checks, refusal, the probe (noise, gather and pyramid on the device,
-    /// floor summed here), the null frame, then the fold.
+    /// Decode, prepare and fold one frame with the GPU doing the preparation:
+    /// [`Self::gpu_start`] then [`Self::gpu_finish`].
     #[cfg(feature = "gpu")]
     #[allow(clippy::too_many_arguments)]
     fn fold_gpu_prepared(
@@ -5917,12 +5936,27 @@ impl BandWorker {
         warps: Option<&WarpMap>,
         progress: Option<&crate::ui_progress::Progress>,
     ) -> Result<bool> {
-        self.beta.clear();
-        if let Some(p) = self.floor.as_mut() {
-            p.invalidate();
-        }
+        let started = self.gpu_start(source, index, levels, warps, progress)?;
+        self.gpu_finish(started, noise, progress)
+    }
+
+    /// The first half of a GPU-prepared frame, the same steps and checks as
+    /// `prepare_frame_into`: parity and preview skips, decode and level
+    /// checks, refusal; then the frame is uploaded (and freed here) and its
+    /// probe submitted without waiting. Touches no fold state, so frame
+    /// `n + 1` may be started before frame `n` is finished: the device then
+    /// probes the next frame while the CPU finishes this one.
+    #[cfg(feature = "gpu")]
+    fn gpu_start(
+        &mut self,
+        source: &impl PyramidFrameSource,
+        index: usize,
+        levels: Levels,
+        warps: Option<&WarpMap>,
+        progress: Option<&crate::ui_progress::Progress>,
+    ) -> Result<GpuStarted> {
         if !frame_parity_keeps(index)? || !ca_refine::preview_keeps(index) {
-            return Ok(false);
+            return Ok(GpuStarted::Skipped(index));
         }
         if let Some(progress) = progress {
             progress.merge_step(index, "decode", None, "started");
@@ -5950,7 +5984,8 @@ impl BandWorker {
                     if let Some(progress) = progress {
                         progress.merge_step(index, "gather", None, "skipped");
                     }
-                    return Ok(false);
+                    source.retire(frame);
+                    return Ok(GpuStarted::Skipped(index));
                 }
             },
             None => None,
@@ -5977,45 +6012,78 @@ impl BandWorker {
             }
             None => None,
         };
-        let gain = align_cmd::wb_gains(&frame.wb_coeffs);
-        fn raw_frame(
-            f: &strehl_raw::Frame,
-            black: f32,
-            gain: [f32; 3],
-            pulls: Option<[strehl_gpu::SitePull; 4]>,
-        ) -> strehl_gpu::RawFrame<'_> {
-            strehl_gpu::RawFrame {
-                data: &f.data,
-                stride: f.stride,
-                active: [f.active.x, f.active.y],
-                black,
-                gain,
-                pulls,
-            }
-        }
         let black = levels.black;
         let gpu = self
             .gpu
             .as_mut()
             .expect("GPU preparation without a GPU fold");
-        if let (Some(probe), Some(_)) = (self.floor.as_mut(), t) {
-            if let Some(progress) = progress {
-                progress.merge_step(index, "gather", None, "started");
-            }
-            let windows = self.merge.null_window_rects();
-            probe.measure_external(f64::from(black), index, &windows, |fill, sums, windows| {
+        if let Some(progress) = progress {
+            progress.merge_step(index, "gather", None, "started");
+        }
+        let staged = gpu
+            .stage(&strehl_gpu::RawFrame {
+                data: &frame.data,
+                stride: frame.stride,
+                active: [frame.active.x, frame.active.y],
+                black,
+                gain: align_cmd::wb_gains(&frame.wb_coeffs),
+                pulls,
+            })
+            .map_err(|e| anyhow::anyhow!(e))?;
+        // The device holds its own copy now.
+        source.retire(frame);
+        let probe = match (self.floor.as_ref(), t) {
+            (Some(probe), Some(_)) => {
+                let (fill, rects) = probe.external_request(f64::from(black), index)?;
                 let noise = strehl_gpu::ProbeNoise {
                     seed: fill.seed,
                     level: fill.level,
                     sigma: fill.sigma,
                 };
-                let out = gpu
-                    .probe(&raw_frame(&frame, black, gain, pulls), noise, sums, windows)
+                let pending = gpu
+                    .probe_submit(&staged, noise, &rects)
                     .map_err(|e| anyhow::anyhow!(e))?;
-                Ok((out.sums, out.windows))
-            })?;
+                Some((pending, rects))
+            }
+            _ => None,
+        };
+        Ok(GpuStarted::Ready {
+            index,
+            staged,
+            probe,
+        })
+    }
+
+    /// The second half: collect the probe, set the floor, fold, add the
+    /// ensemble null. Frames must be finished in the order they were started.
+    #[cfg(feature = "gpu")]
+    fn gpu_finish(
+        &mut self,
+        started: GpuStarted,
+        noise: &NoiseModel,
+        progress: Option<&crate::ui_progress::Progress>,
+    ) -> Result<bool> {
+        self.beta.clear();
+        if let Some(p) = self.floor.as_mut() {
+            p.invalidate();
+        }
+        let GpuStarted::Ready {
+            index,
+            staged,
+            probe,
+        } = started
+        else {
+            return Ok(false);
+        };
+        let gpu = self
+            .gpu
+            .as_mut()
+            .expect("GPU preparation without a GPU fold");
+        if let (Some(floor), Some((pending, rects))) = (self.floor.as_mut(), probe) {
+            let out = gpu.probe_collect(pending).map_err(|e| anyhow::anyhow!(e))?;
+            floor.external_accept(&rects, &out.sums)?;
             self.beta
-                .extend(probe.last().iter().copied().take_while(|b| b.is_finite()));
+                .extend(floor.last().iter().copied().take_while(|b| b.is_finite()));
         }
         let frame_beta = (!self.beta.is_empty()).then_some(self.beta.as_slice());
         if let Some(b) = frame_beta {
@@ -6035,18 +6103,17 @@ impl BandWorker {
                 g2.read_noise_e * g2.gain_dn_per_e,
             ],
         };
-        gpu.add_raw_frame(
-            &mut self.merge,
-            &raw_frame(&frame, black, gain, pulls),
-            green,
-            frame_beta,
-        );
-        // The ensemble null after the fold is queued, so this CPU work overlaps
-        // the device's: the null windows and the fold share no state, so the
-        // order is free (the CPU path adds the null first).
-        if let Some((windows, beta, var)) = self.floor.as_ref().and_then(|p| p.null_windows()) {
-            self.merge.add_null_windows(&windows, &beta, var);
-        }
+        // The ensemble null is accumulated on the device from the probe's
+        // packed bands; here it is only counted, exactly where
+        // `add_null_windows` would count it. Null windows and the fold share no
+        // state, so their order is free (the CPU path adds the null first).
+        let units = self
+            .floor
+            .as_ref()
+            .and_then(|p| p.null_floor())
+            .map(|(beta, var)| self.merge.note_external_null_frame(&beta, var));
+        gpu.add_staged(&mut self.merge, &staged, green, frame_beta, units.as_deref())
+            .map_err(|e| anyhow::anyhow!(e))?;
         if let Some(progress) = progress {
             progress.merge_step(index, "gather", None, "finished");
             gpu_fold_phases(
@@ -6054,8 +6121,45 @@ impl BandWorker {
                 self.merge.sizes().len(),
             );
         }
-        source.retire(frame);
         Ok(true)
+    }
+
+    /// Fold one canonical chunk's frames with GPU preparation, one frame
+    /// ahead: frame `n + 1` is decoded, uploaded and probed before frame `n`
+    /// is finished. Finishing stays in index order, so every fold, floor sum
+    /// and null addition happens in the order the serial path uses.
+    #[cfg(feature = "gpu")]
+    #[allow(clippy::too_many_arguments)]
+    fn fold_chunk_gpu(
+        &mut self,
+        source: &impl PyramidFrameSource,
+        indices: std::ops::Range<usize>,
+        levels: Levels,
+        noise: &NoiseModel,
+        warps: Option<&WarpMap>,
+        progress: &crate::ui_progress::Progress,
+    ) -> Result<usize> {
+        let observer = progress.observer();
+        let mut folded = 0;
+        let mut pending: Option<GpuStarted> = None;
+        let mut finish = |worker: &mut Self, started: GpuStarted| -> Result<()> {
+            let index = started.index();
+            let accepted = worker.gpu_finish(started, noise, observer)?;
+            progress.frame_finished(index, accepted);
+            folded += usize::from(accepted);
+            Ok(())
+        };
+        for index in indices {
+            progress.frame_started(index);
+            let next = self.gpu_start(source, index, levels, warps, observer)?;
+            if let Some(started) = pending.replace(next) {
+                finish(self, started)?;
+            }
+        }
+        if let Some(started) = pending {
+            finish(self, started)?;
+        }
+        Ok(folded)
     }
     fn gpu_active(&self) -> bool {
         #[cfg(feature = "gpu")]
@@ -8411,7 +8515,23 @@ fn run_pyramid_prepared_with_sensor(
             while let Some((chunk_index, chunk)) = chunks.next() {
                 let mut folded = 0usize;
                 let first = chunk_index * per_chunk;
-                if slots.is_empty() {
+                #[cfg(feature = "gpu")]
+                let gpu_pipelined = worker.gpu_prep;
+                #[cfg(not(feature = "gpu"))]
+                let gpu_pipelined = false;
+                if gpu_pipelined {
+                    #[cfg(feature = "gpu")]
+                    {
+                        folded = worker.fold_chunk_gpu(
+                            source,
+                            first..first + chunk.len(),
+                            levels,
+                            &noise,
+                            warps,
+                            &progress,
+                        )?;
+                    }
+                } else if slots.is_empty() {
                     for offset in 0..chunk.len() {
                         let index = first + offset;
                         progress.frame_started(index);

@@ -1,8 +1,8 @@
 # GPU-resident fold and a CPU/GPU/RAM planner
 
 **Status:** Stages 1-2 BUILT (GPU fold, CPU-side weights replaced by portable `ln`/`exp`
-after the owner approved a one-time change); stage 3's GPU preparation BUILT; the planner
-is only its first rule (decoder threads); asynchronous overlap still a proposal.
+after the owner approved a one-time change); stage 3's GPU preparation and one-deep
+probe/fold overlap BUILT; the planner is only its first rule (decoder threads).
 **Date:** 2026-11-08.
 **Scope:** the default `stack --merge pyramid` path, desktop and CLI.
 
@@ -199,7 +199,39 @@ Decoded pixels were compared with the CPU path (`target/perf/cmp.py`, identical)
 except frame freeing, which the next comparison covers.
 Full stack, desktop path: 42.2 s against 90.1 s at the start of stage 3.
 
-Remaining, in order of expected value: overlap the probe of frame *n + 1* with the CPU work of
-frame *n* (needs a third raw slot); a persistent mapped upload ring instead of wgpu's
-per-write staging; the chunk-end readback (~0.2 s each, four per render); CPU RAM, which still
-holds the CPU frame workspace and probe pyramid the GPU path no longer uses.
+### Stage 3, data movement (2026-11-08)
+
+The four items that were listed as remaining here, all built, none changing an operation's
+inputs or order (`docs/ARCHITECTURE.md` § The GPU fold, *Data movement*):
+
+- **Overlap.** A third raw slot; frame *n + 1* is decoded, staged and probed before frame *n*
+  waits for its own probe (`probe_submit`/`probe_collect`, a wait on that submission only).
+  It showed no clear gain until the CPU's ensemble-null work left the critical path.
+- **The ensemble null on the device.** The CPU null took a median 4 ms per frame, often over
+  20 ms; the device accumulates it next to the probe and the CPU only counts frames and
+  hands back each band's unit. The per-frame download is the 32-byte sums.
+- **A persistent mapped upload ring** (two buffers, re-mapped after each device copy).
+- **Chunked chunk-end readback** through one 64 MB buffer: peak private memory ~8.1 to
+  ~7.1 GB at 200 frames.
+- **mimalloc** as the engine's allocator, not on the plan: decoding, not the device, was the
+  limit, and large-block page faults contended across 8 decoders (one decode 125 to 88 ms).
+  A hand-written cache of freed large blocks was tried first and gave nothing measurable.
+
+MEASURED, full stack, desktop path, CLI `stack --merge pyramid --srgb --linear-master`,
+`STREHL_UI_PROGRESS=1 STREHL_GPU_FOLD=on`, alignment cached, `--features temporal-energy,gpu`
+release builds of `865777ad8` and of this change alternated (ABBA), otherwise idle machine:
+
+| Build | Wall | Fold | CPU time | Peak private |
+| --- | ---: | ---: | ---: | ---: |
+| `865777ad8` | 43.5 / 44.4 s | 31.5 / 32.9 s | 843 / 854 s | 6.72 / 6.76 GB |
+| this change | 32.8 / 32.5 s | 22.7 / 22.6 s | 555 / 555 s | 7.29 / 7.24 GB |
+
+Photograph and float master identical to the CPU path's (`target/perf/cmp.py`) for both
+builds; byte-freeze rows unchanged. Peak memory is 0.5 GB higher: mimalloc keeps freed pages
+for reuse (+0.7 GB measured when it alone was added), which the chunked readback partly pays
+back.
+
+Remaining: CPU RAM, which still holds the CPU frame workspace and probe pyramid the GPU path
+no longer uses, and two CPU `BandMerge`s; the desktop's live views on the GPU path. The fold
+now takes 15.6 ms per frame against ~11 ms of decode throughput (8 threads at ~88 ms), so
+the planner's next rule is the decoder count against the device's per-frame time (DERIVED).

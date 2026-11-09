@@ -188,4 +188,5 @@ pub const ENTRY_POINTS: &[&str] = &[
     "noise",
     "rowsq",
     "pack",
+    "null_accum",
 ];

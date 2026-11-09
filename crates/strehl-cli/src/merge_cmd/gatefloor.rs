@@ -191,9 +191,6 @@ pub(super) struct Probe {
     beta: Vec<f32>,
     /// The previous probe frame, kept so its sample allocation is reused.
     recycled: Option<Frame>,
-    /// The ensemble null's windows of the last device measurement
-    /// ([`Probe::measure_external`]); the CPU path reads `pyr` instead.
-    windows: Vec<Option<Vec<f32>>>,
 }
 
 /// `template.clone()`, reusing `recycled`'s sample allocation.
@@ -252,7 +249,6 @@ impl Probe {
             beta: Vec::new(),
             sizes,
             recycled: None,
-            windows: Vec::new(),
         }
     }
 
@@ -591,25 +587,18 @@ impl Probe {
         Ok(())
     }
 
-    /// Measure this frame's floor on a device. `device` receives the noise
-    /// fill [`Self::measure`] would write into a copy of the frame (seed,
-    /// level and sigma for its active complete quads) and must build the probe
-    /// from the frame itself, as the CPU does, then return two things from the
-    /// probe's Laplacian bands: the [`square_sum`] over each requested
-    /// `[level, x, y, w, h]` interior, in order, and each requested window of
-    /// `windows` (row-major; `None` where none was requested). The windows are
-    /// kept for [`Self::null_windows`].
-    pub(super) fn measure_external(
-        &mut self,
+    /// What a device must measure for frame `index`'s floor: the noise fill
+    /// [`Self::measure`] would write into a copy of the frame (seed, level and
+    /// sigma for its active complete quads; the device builds the probe from
+    /// the frame itself, as the CPU does), and the `[level, x, y, w, h]`
+    /// interiors whose [`square_sum`] it must return. Changes no state, so a
+    /// later frame's request may be issued before an earlier one is accepted.
+    #[cfg(feature = "gpu")]
+    pub(super) fn external_request(
+        &self,
         black: f64,
         index: usize,
-        windows: &[Option<[usize; 4]>],
-        device: impl FnOnce(
-            ProbeFill,
-            &[[usize; 5]],
-            &[Option<[usize; 4]>],
-        ) -> Result<(Vec<f64>, Vec<Option<Vec<f32>>>)>,
-    ) -> Result<&[f32]> {
+    ) -> Result<(ProbeFill, Vec<[usize; 5]>)> {
         anyhow::ensure!(!debug(), "the probe's debug null runs on the CPU only");
         // The fill mode cannot change the noise (rows are seeded so the
         // parallel fill equals the serial one), but a malformed setting is
@@ -624,30 +613,29 @@ impl Probe {
             level: black + PROBE_LEVEL,
             sigma: PROBE_SIGMA,
         };
-        let rects: Vec<[usize; 5]> = (0..self.certified())
+        let rects = (0..self.certified())
             .filter_map(|k| interior(self.sizes[k]).map(|[x, y, w, h]| [k, x, y, w, h]))
             .collect();
-        let (sums, got) = device(fill, &rects, windows)?;
+        Ok((fill, rects))
+    }
+
+    /// Take a device's answer to [`Self::external_request`]: one sum per
+    /// requested interior, in order. Sets and returns the floor; the device
+    /// keeps the probe's bands for the ensemble null ([`Self::null_floor`]).
+    #[cfg(feature = "gpu")]
+    pub(super) fn external_accept(&mut self, rects: &[[usize; 5]], sums: &[f64]) -> Result<&[f32]> {
         anyhow::ensure!(
-            sums.len() == rects.len()
-                && got.len() == windows.len()
-                && got.iter().zip(windows).all(|(g, w)| match (g, w) {
-                    (Some(g), Some(r)) => g.len() == r[2] * r[3],
-                    (None, None) => true,
-                    _ => false,
-                }),
+            sums.len() == rects.len(),
             "the device probe returned the wrong shape"
         );
-        self.windows = got;
         let mut per_band = vec![None; self.certified()];
-        for (r, s) in rects.iter().zip(&sums) {
+        for (r, s) in rects.iter().zip(sums) {
             per_band[r[0]] = Some(*s);
         }
         self.beta_from_sums(&per_band);
         self.apply_scale();
         Ok(&self.beta)
     }
-
     /// Bands the probe certifies.
     ///
     /// Correct only the bands this probe can certify, and only where the
@@ -779,15 +767,11 @@ impl Probe {
         ))
     }
 
-    /// [`Self::null_frame`] after a device measurement: each band's null
-    /// window only (`BandMerge::add_null_windows`).
-    pub(super) fn null_windows(&self) -> Option<NullInputs<Option<&[f32]>>> {
-        let beta = self.null_beta()?;
-        Some((
-            self.windows.iter().map(|w| w.as_deref()).collect(),
-            beta,
-            (PROBE_SIGMA * PROBE_SIGMA * 0.5) as f32,
-        ))
+    /// [`Self::null_frame`] after a device measurement, without the bands
+    /// (the device holds them): every band's floor and the luma variance.
+    #[cfg(feature = "gpu")]
+    pub(super) fn null_floor(&self) -> Option<(Vec<f32>, f32)> {
+        Some((self.null_beta()?, (PROBE_SIGMA * PROBE_SIGMA * 0.5) as f32))
     }
 
     /// Every Laplacian band's floor for the null: measured where certified,
@@ -868,6 +852,7 @@ pub(super) type NullInputs<L> = (Vec<L>, Vec<f32>, f32);
 /// The probe's noise, as [`fill_probe_noise`] writes it: SplitMix64 from
 /// `seed`, one Box-Muller pair per two sites in active-relative row order,
 /// `level + sigma * g` quantised to u16, over the frame's complete quads.
+#[cfg(feature = "gpu")]
 #[derive(Clone, Copy, Debug)]
 pub(super) struct ProbeFill {
     pub seed: u64,

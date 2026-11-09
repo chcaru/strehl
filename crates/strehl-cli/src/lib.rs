@@ -4,6 +4,17 @@ mod align_cmd;
 mod develop_cmd;
 mod focus_plugin;
 mod image_out;
+
+/// The engine's global allocator, declared by each executable that runs the
+/// engine (`strehl` and the desktop, which re-runs itself as the engine).
+/// Every frame allocates and frees ~100 MB of decoder buffers and many
+/// medium ones; mimalloc reuses that memory where the system allocator faults
+/// fresh pages in, which contended across decoder threads. MEASURED on bug-7,
+/// 1,444 frames with GPU preparation: one decode 125 -> 88 ms at 8 decoder
+/// threads, the render 45.4 -> 38.7 s, CPU time 775 -> 589 s, peak private
+/// memory 7.4 -> 8.1 GB. It changes addresses, never arithmetic.
+pub type EngineAllocator = mimalloc::MiMalloc;
+pub const ENGINE_ALLOCATOR: EngineAllocator = mimalloc::MiMalloc;
 #[cfg(feature = "research-lens-warp")]
 #[path = "lens-research.rs"]
 mod lens_research;

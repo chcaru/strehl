@@ -728,14 +728,15 @@ fn probe_pair(seed: vec2<u32>, row: u32, col: u32, width: u32) -> vec2<u32> {
     return vec2(quantize64(level + sigma * g.x), quantize64(level + sigma * g.y));
 }
 
-// One word of slot 1 from slot 0, noise where the fill reaches.
-// a = (words, slot-1 word base, stride, width), b = (ax, ay, rows), c = (seed lo, seed hi);
+// One word of the probe slot from a frame slot, noise where the fill reaches.
+// a = (words, probe word base, stride, width), b = (ax, ay, rows, frame word base),
+// c = (seed lo, seed hi);
 // xf[64], xf[65] = level, sigma.
 @compute @workgroup_size(256)
 fn noise(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
     let w = gid(id, nwg);
     if (w >= p.a.x) { return; }
-    var word = raw[w];
+    var word = raw[p.b.w + w];
     let seed = vec2(p.c.x, p.c.y);
     // A pair covers two adjacent sites of a row; compute each pair once per
     // word (one pair when the word is pair-aligned, else parts of two).
@@ -781,4 +782,19 @@ fn pack(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) n
     if (i >= p.a.w * p.b.y) { return; }
     let r = i / p.a.w; let c = i % p.a.w;
     work[p.b.z + i] = work[p.a.x + (p.b.x + r) * p.a.y + p.a.z + c];
+}
+
+// One frame's ensemble-null window (BandMerge::add_null_windows):
+// a = (packed lv, packed energy, n), b = (zmax, zsum, lsum, esum) in acc, f.x = unit.
+@compute @workgroup_size(256)
+fn null_accum(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let i = gid(id, nwg);
+    if (i >= p.a.z) { return; }
+    let lv = work[p.a.x + i];
+    let e = work[p.a.y + i];
+    let z = div(e, p.f.x);
+    acc[p.b.x + i] = max(acc[p.b.x + i], z);
+    acc[p.b.y + i] = acc[p.b.y + i] + z;
+    acc[p.b.z + i] = acc[p.b.z + i] + lv;
+    acc[p.b.w + i] = acc[p.b.w + i] + e;
 }

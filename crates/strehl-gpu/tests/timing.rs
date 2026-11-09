@@ -44,7 +44,6 @@ fn device_stage_timing() {
         [k, mx, my, s.width - 2 * mx, s.height - 2 * my]
     };
     let sums: Vec<[usize; 5]> = (0..4).map(interior).collect();
-    let windows = merge.null_window_rects();
     let green = GreenNoise {
         gain: [0.4, 0.4],
         read_dn: [2.0, 2.0],
@@ -52,15 +51,16 @@ fn device_stage_timing() {
     let beta = [1.0f32, 0.05, 0.01, 0.002];
     for round in 0..12 {
         let t0 = Instant::now();
-        gpu.probe(&frame, noise, &sums, &windows).expect("probe");
+        gpu.probe(&frame, noise, &sums).expect("probe");
         let t1 = Instant::now();
-        gpu.add_raw_frame(&mut merge, &frame, green, Some(&beta));
+        gpu.add_raw_frame(&mut merge, &frame, green, Some(&beta))
+            .expect("fold");
         // A second probe call waits for the fold; time only its wait by
         // timing an empty-request probe and subtracting a solo probe.
         let t2 = Instant::now();
-        gpu.probe(&frame, noise, &[], &[]).expect("probe sync");
+        gpu.probe(&frame, noise, &[]).expect("probe sync");
         let t3 = Instant::now();
-        gpu.probe(&frame, noise, &[], &[]).expect("probe solo");
+        gpu.probe(&frame, noise, &[]).expect("probe solo");
         let t4 = Instant::now();
         let ms = |a: Instant, b: Instant| (b - a).as_secs_f64() * 1e3;
         if round >= 2 {

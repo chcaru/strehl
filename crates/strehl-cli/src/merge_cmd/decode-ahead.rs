@@ -35,6 +35,10 @@ use super::PyramidFrameSource;
 /// the fold consumes them, without competing much with the data-parallel pool.
 pub(super) const DECODERS: usize = 4;
 
+/// Override the decoder thread count (1..=64). Scheduling only: decoding is a
+/// pure function of the file.
+pub const DECODERS_ENV: &str = "STREHL_DECODE_THREADS";
+
 /// Decoder threads for a render. When the GPU prepares frames the CPU's
 /// data-parallel work mostly leaves, and decoding (~75 ms per 33 MP frame on
 /// one core, MEASURED on bug-7) becomes the fold's limit at four threads:
@@ -42,6 +46,13 @@ pub(super) const DECODERS: usize = 4;
 /// 12. Decoding is a pure function of the file, so the count cannot change
 /// output (see the module docs).
 pub(super) fn decoders(gpu_prep: bool) -> usize {
+    if let Some(n) = std::env::var(DECODERS_ENV)
+        .ok()
+        .and_then(|v| v.trim().parse::<usize>().ok())
+        .filter(|n| (1..=64).contains(n))
+    {
+        return n;
+    }
     if !gpu_prep {
         return DECODERS;
     }
@@ -156,6 +167,7 @@ impl<S: PyramidFrameSource> PyramidFrameSource for DecodeAhead<'_, S> {
     fn len(&self) -> usize {
         self.inner.len()
     }
+    #[cfg(feature = "gpu")]
     fn retire(&self, frame: Frame) {
         let mut st = self.lock();
         if st.stop || st.claimed >= self.plan.len() {

@@ -2099,6 +2099,44 @@ impl BandMerge {
             .collect()
     }
 
+    /// Count a null frame whose windows are accumulated elsewhere (the GPU),
+    /// exactly where [`Self::add_null_windows`] would have accumulated it:
+    /// returns each level's energy unit `(beta * variance).max(MIN_POSITIVE)`,
+    /// or `None` where that level is skipped. The accumulators themselves come
+    /// back through [`Self::null_totals_mut`].
+    pub fn note_external_null_frame(&mut self, beta: &[f32], variance: f32) -> Vec<Option<f32>> {
+        let n = beta.len().min(self.null.len());
+        self.null
+            .iter_mut()
+            .enumerate()
+            .map(|(k, win)| {
+                if k >= n || win.w == 0 || beta[k].is_nan() || beta[k] <= 0.0 {
+                    return None;
+                }
+                win.frames += 1;
+                Some((beta[k] * variance).max(f32::MIN_POSITIVE))
+            })
+            .collect()
+    }
+
+    /// The ensemble null's accumulators per level, `[zmax, zsum, lsum, esum]`
+    /// over its window (`None` without one), for an external fold to write.
+    pub fn null_totals_mut(&mut self) -> Vec<Option<[&mut [f32]; 4]>> {
+        self.null
+            .iter_mut()
+            .map(|win| {
+                (win.w > 0).then(|| {
+                    [
+                        &mut win.zmax[..],
+                        &mut win.zsum[..],
+                        &mut win.lsum[..],
+                        &mut win.esum[..],
+                    ]
+                })
+            })
+            .collect()
+    }
+
     /// [`Self::add_null_frame`] given only each level's widened window
     /// ([`Self::null_window_rects`]), row-major.
     pub fn add_null_windows(&mut self, windows: &[Option<&[f32]>], beta: &[f32], variance: f32) {
@@ -2356,6 +2394,39 @@ impl BandMerge {
     /// layout: `num`/`usum` indexed `[level * planes + plane]`, `den` and the
     /// ensemble sums per level (empty when the gate is off), `lo`/`hi` per
     /// plane at level 0 (empty without a hull).
+    /// [`Self::totals_mut`] and [`Self::null_totals_mut`] at once, for a caller
+    /// writing both.
+    pub fn all_totals_mut(&mut self) -> (FoldTotalsMut<'_>, Vec<Option<[&mut [f32]; 4]>>) {
+        let null = self
+            .null
+            .iter_mut()
+            .map(|win| {
+                (win.w > 0).then(|| {
+                    [
+                        &mut win.zmax[..],
+                        &mut win.zsum[..],
+                        &mut win.lsum[..],
+                        &mut win.esum[..],
+                    ]
+                })
+            })
+            .collect();
+        (
+            FoldTotalsMut {
+                num: &mut self.num,
+                usum: &mut self.usum,
+                den: &mut self.den,
+                zmax: &mut self.zmax,
+                zsum: &mut self.zsum,
+                lsum: &mut self.lsum,
+                esum: &mut self.esum,
+                lo: &mut self.lo,
+                hi: &mut self.hi,
+            },
+            null,
+        )
+    }
+
     pub fn totals_mut(&mut self) -> FoldTotalsMut<'_> {
         FoldTotalsMut {
             num: &mut self.num,
