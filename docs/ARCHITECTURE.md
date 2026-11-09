@@ -856,7 +856,14 @@ folded, so the CPU's floor and bookkeeping overlap the device. As soon as a fram
 73 MB sample buffer goes back to the decoders, and the next decode writes into it
 (`strehl_raw::decode_into`) instead of into new memory whose pages would fault in. At a chunk's end the accumulators come
 back through one reusable 64 MB readback buffer, piece by piece, instead of one staging copy
-of the whole merge (over 1 GB on bug-7). None of this changes an operation's inputs or order.
+of the whole merge (over 1 GB on bug-7). The first chunk's are copied into a new merge; every
+later chunk's are absorbed into it as they arrive (`GpuFold::absorb_chunk`), with the
+elementwise sums, minima and maxima `BandMerge::absorb` uses, in the same operand order
+(`BandMerge::EXTERNAL_ABSORB`, tested against `absorb` with signed zeros and infinities).
+So the worker's own merge only counts frames, and holds the ensemble null's windows when the
+CPU prepares frames (`absorb_external_remainder` moves both): attaching the GPU fold releases its totals
+(`release_external_totals`), the CPU fold's workspace and, under GPU preparation, the CPU's
+preparation buffers. None of this changes an operation's inputs or order.
 
 The engine executables (CLI and desktop) use mimalloc as the global allocator
 (`strehl_cli::EngineAllocator`). Every frame allocates and frees ~100 MB of decoder buffers;
@@ -889,7 +896,9 @@ same machine: CPU 329.9 s; GPU fold with CPU preparation 209.2 s; GPU preparatio
 peak private memory 7.3 GB against 6.7 GB); with the decoder above and buffer reuse 26.5-26.7 s
 against 33.1-33.5 s, alternated (fold 17.2-17.4 s against 23.5-23.9 s, CPU time 300-309 s
 against 578 s, peak private memory 9.2-9.4 GB against 7.3-7.4 GB: sixteen frames decode at
-once). The fold now waits on the device, ~12 ms per frame. Photograph and float master are
+once); with the host buffers released and chunks absorbed from the device 25.9-26.0 s against
+27.0 s, alternated, peak private memory 7.1 GB against 8.9 GB and peak working set 3.85 GB
+against 5.8 GB. The fold now waits on the device, ~12 ms per frame. Photograph and float master are
 identical to the CPU's in every one of these runs. `STREHL_GPU_PROFILE=1` times every dispatch
 with GPU timestamps (diagnostic; it serialises submits; the device timing test,
 `crates/strehl-gpu/tests/timing.rs`, prints the per-kernel report).

@@ -27,7 +27,7 @@ use rayon::prelude::*;
 use strehl_core::portable_math::{
     COS_SERIES, EXP_SERIES, LN_SERIES, LN_UNIFORM_FLOOR, LN64_SERIES, PIO2_HI, PIO2_LO, SIN_SERIES,
 };
-use strehl_core::pyramid::{BandMerge, BaseBand, LevelScalars, LevelSize};
+use strehl_core::pyramid::{BandMerge, BaseBand, Combine, FoldCombine, LevelScalars, LevelSize};
 use wgpu::util::DeviceExt;
 
 pub mod strict;
@@ -1776,36 +1776,69 @@ impl GpuFold {
     /// all of them at once was that much more peak memory beside the CPU
     /// merge being written.
     pub fn finish_chunk(&mut self, merge: &mut BandMerge) {
+        self.read_chunk(merge, None);
+    }
+
+    /// Absorb the chunk's accumulators into `merge`, which holds earlier
+    /// chunks, exactly as `merge.absorb(&chunk)` would with the chunk read
+    /// back ([`BandMerge::EXTERNAL_ABSORB`]), and reset the device's. No
+    /// second host merge is needed for the chunk; the caller moves its frame
+    /// counts, and the null windows the device does not hold
+    /// ([`Self::null_levels`]), with [`BandMerge::absorb_external_remainder`].
+    pub fn absorb_chunk(&mut self, merge: &mut BandMerge) {
+        self.read_chunk(merge, Some(BandMerge::EXTERNAL_ABSORB));
+    }
+
+    /// Per level, whether the device accumulates the ensemble null's window.
+    /// Only with preparation on the device; otherwise the host's
+    /// `add_null_frame` does, into the counting merge.
+    pub fn null_levels(&self) -> Vec<bool> {
+        self.layout.null.iter().map(Option::is_some).collect()
+    }
+
+    /// Read the accumulators back into `merge`: copied, or combined by `ops`.
+    fn read_chunk(&mut self, merge: &mut BandMerge, ops: Option<FoldCombine>) {
         let l = &self.layout;
-        let mut regions: Vec<(usize, &mut [f32])> = Vec::new();
+        type Region<'a> = (usize, &'a mut [f32], Option<Combine>);
+        let mut regions: Vec<Region<'_>> = Vec::new();
         let (t, null) = merge.all_totals_mut();
-        fn add<'a>(regions: &mut Vec<(usize, &'a mut [f32])>, dst: &'a mut [Vec<f32>], at: &[u32]) {
+        let op = |pick: fn(&FoldCombine) -> Combine| ops.as_ref().map(pick);
+        fn add<'a>(
+            regions: &mut Vec<Region<'a>>,
+            dst: &'a mut [Vec<f32>],
+            at: &[u32],
+            op: Option<Combine>,
+        ) {
             for (d, &o) in dst.iter_mut().zip(at) {
-                regions.push((o as usize, &mut d[..]));
+                regions.push((o as usize, &mut d[..], op));
             }
         }
-        add(&mut regions, t.num, &l.num);
-        add(&mut regions, t.usum, &l.usum);
-        add(&mut regions, t.den, &l.den);
+        add(&mut regions, t.num, &l.num, op(|c| c.num));
+        add(&mut regions, t.usum, &l.usum, op(|c| c.usum));
+        add(&mut regions, t.den, &l.den, op(|c| c.den));
         if self.ensemble {
-            add(&mut regions, t.zmax, &l.zmax);
-            add(&mut regions, t.zsum, &l.zsum);
-            add(&mut regions, t.lsum, &l.lsum);
-            add(&mut regions, t.esum, &l.esum);
+            add(&mut regions, t.zmax, &l.zmax, op(|c| c.zmax));
+            add(&mut regions, t.zsum, &l.zsum, op(|c| c.zsum));
+            add(&mut regions, t.lsum, &l.lsum, op(|c| c.lsum));
+            add(&mut regions, t.esum, &l.esum, op(|c| c.esum));
         }
         if self.hull {
-            add(&mut regions, t.lo, &l.lo);
-            add(&mut regions, t.hi, &l.hi);
+            add(&mut regions, t.lo, &l.lo, op(|c| c.lo));
+            add(&mut regions, t.hi, &l.hi, op(|c| c.hi));
         }
         // The ensemble null's windows, accumulated by `null_accum`. Only
         // levels the device holds a window for: the CPU has the same ones.
         for (totals, region) in null.into_iter().zip(&l.null) {
             if let (Some(totals), Some(region)) = (totals, region) {
-                for (dst, &o) in totals.into_iter().zip(&region.acc) {
-                    regions.push((o as usize, dst));
+                for (i, (dst, &o)) in totals.into_iter().zip(&region.acc).enumerate() {
+                    regions.push((o as usize, dst, ops.map(|c| c.null[i])));
                 }
             }
         }
+        assert!(
+            regions.iter().all(|r| !r.1.is_empty()),
+            "reading a chunk back into released totals"
+        );
         regions.sort_by_key(|r| r.0);
         const PIECE: usize = 16 << 20; // floats: 64 MB
         let total = l.acc_len as usize;
@@ -1840,11 +1873,16 @@ impl GpuFold {
                 let end = start + n;
                 regions
                     .par_iter_mut()
-                    .filter(|(o, d)| *o < end && o + d.len() > start)
-                    .for_each(|(o, d)| {
+                    .filter(|(o, d, _)| *o < end && *o + d.len() > start)
+                    .for_each(|(o, d, op)| {
                         let from = start.max(*o);
                         let to = end.min(*o + d.len());
-                        d[from - *o..to - *o].copy_from_slice(&all[from - start..to - start]);
+                        let (dst, src) =
+                            (&mut d[from - *o..to - *o], &all[from - start..to - start]);
+                        match op {
+                            None => dst.copy_from_slice(src),
+                            Some(op) => op.apply(dst, src),
+                        }
                     });
             }
             readback.unmap();

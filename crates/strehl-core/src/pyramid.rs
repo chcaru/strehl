@@ -1806,6 +1806,9 @@ pub struct BandMerge {
     /// floor, independent noise), over a central window of each level. Their
     /// statistics' quantiles are the gate's thresholds. Empty when off.
     null: Vec<NullWindow>,
+    /// [`Self::release_external_totals`] freed the totals: an external
+    /// executor's counter only.
+    released: bool,
 }
 
 /// One level's window of the ensemble gate's null accumulators.
@@ -2050,6 +2053,7 @@ impl BandMerge {
             } else {
                 Vec::new()
             },
+            released: false,
             sizes,
         }
     }
@@ -2444,6 +2448,117 @@ impl BandMerge {
     /// Count a frame an external executor folded into [`Self::totals_mut`].
     pub fn note_external_frame(&mut self) {
         self.frames += 1;
+    }
+
+    /// How [`Self::absorb`] combines each accumulator [`Self::all_totals_mut`]
+    /// exposes, for a merge an external executor folds
+    /// ([`Self::external_fold_refusal`] is `None`): `absorbed = op(self, other)`
+    /// element by element, `self` first. An executor holding a chunk's totals
+    /// can apply these straight into the merge it would have absorbed into,
+    /// with [`Self::absorb_external_remainder`], instead of first copying them
+    /// into a second merge. Kept beside `absorb`, and checked against it.
+    pub const EXTERNAL_ABSORB: FoldCombine = FoldCombine {
+        num: Combine::Add,
+        usum: Combine::Add,
+        den: Combine::Add,
+        zmax: Combine::Max,
+        zsum: Combine::Add,
+        lsum: Combine::Add,
+        esum: Combine::Add,
+        lo: Combine::Min,
+        hi: Combine::Max,
+        null: [Combine::Max, Combine::Add, Combine::Add, Combine::Add],
+    };
+
+    /// The rest of [`Self::absorb`] once an external executor has written the
+    /// totals it holds into this merge: `other`'s frame counts, and its
+    /// ensemble-null windows at the levels the executor does **not** hold
+    /// (`device_null[k]` false or absent), which were accumulated on the host
+    /// (`add_null_frame`). With `first`, this merge is new and the executor
+    /// copied its totals, so those windows are copied too, as moving `other`
+    /// would have; otherwise they are combined as `absorb` combines them.
+    /// `other` may have released its totals (its null windows are kept).
+    pub fn absorb_external_remainder(
+        &mut self,
+        other: &BandMerge,
+        device_null: &[bool],
+        first: bool,
+    ) {
+        assert!(
+            self.external_fold_refusal().is_none() && other.external_fold_refusal().is_none(),
+            "external absorption needs a merge an external executor can fold"
+        );
+        assert!(
+            !first || (self.frames == 0 && self.null.iter().all(|n| n.frames == 0)),
+            "a first chunk is copied into a new merge"
+        );
+        assert!(!self.released, "cannot absorb into released totals");
+        assert_eq!(
+            (
+                &self.sizes,
+                self.planes,
+                self.cfg.admission,
+                self.null.len()
+            ),
+            (
+                &other.sizes,
+                other.planes,
+                other.cfg.admission,
+                other.null.len()
+            ),
+            "cannot absorb a differently shaped merge"
+        );
+        let ops = Self::EXTERNAL_ABSORB.null;
+        for (k, (dst, src)) in self.null.iter_mut().zip(&other.null).enumerate() {
+            dst.frames += src.frames;
+            if device_null.get(k).copied().unwrap_or(false) {
+                continue;
+            }
+            let pairs = [
+                (&mut dst.zmax, &src.zmax),
+                (&mut dst.zsum, &src.zsum),
+                (&mut dst.lsum, &src.lsum),
+                (&mut dst.esum, &src.esum),
+            ];
+            for ((d, s), op) in pairs.into_iter().zip(ops) {
+                if first {
+                    d.copy_from_slice(s);
+                } else {
+                    op.apply(d, s);
+                }
+            }
+        }
+        self.frames += other.frames;
+    }
+
+    /// Free the totals an external executor holds on its device
+    /// ([`Self::all_totals_mut`] except the small null windows), keeping the
+    /// configuration, geometry and counters that its per-frame calls read
+    /// ([`Self::level_scalars`], [`Self::note_external_frame`],
+    /// [`Self::note_external_null_frame`]). A released merge cannot fold on the
+    /// CPU, be absorbed or be collapsed; its counts move with
+    /// [`Self::absorb_external_remainder`].
+    pub fn release_external_totals(&mut self) {
+        assert!(
+            self.external_fold_refusal().is_none(),
+            "only a merge an external executor folds can release its totals"
+        );
+        for totals in [
+            &mut self.num,
+            &mut self.usum,
+            &mut self.den,
+            &mut self.zmax,
+            &mut self.zsum,
+            &mut self.lsum,
+            &mut self.esum,
+            &mut self.lo,
+            &mut self.hi,
+        ] {
+            for values in totals.iter_mut() {
+                *values = Vec::new();
+            }
+        }
+        self.released = true;
     }
 
     pub fn band_gain(&self) -> &BandGain {
@@ -3369,6 +3484,10 @@ impl BandMerge {
     pub fn absorb(&mut self, other: &BandMerge) {
         #[cfg(feature = "m194h-pedestal-causality")]
         m194h::absorb(self, other);
+        assert!(
+            !self.released && !other.released,
+            "cannot absorb released totals (see `absorb_external_remainder`)"
+        );
         assert_eq!(
             self.sizes, other.sizes,
             "cannot absorb a differently shaped merge"
@@ -4380,6 +4499,46 @@ pub struct FoldTotalsMut<'a> {
     pub hi: &'a mut [Vec<f32>],
 }
 
+/// One element of [`BandMerge::absorb`]: `a = op(a, b)`, `a` the absorbing merge.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Combine {
+    /// `a += b`
+    Add,
+    /// `a = a.min(b)`
+    Min,
+    /// `a = a.max(b)`
+    Max,
+}
+
+impl Combine {
+    /// Combine `other` into `dst`, element by element, exactly as
+    /// [`BandMerge::absorb`] does.
+    pub fn apply(self, dst: &mut [f32], other: &[f32]) {
+        assert_eq!(dst.len(), other.len(), "combining unequal accumulators");
+        match self {
+            Combine::Add => dst.iter_mut().zip(other).for_each(|(a, b)| *a += b),
+            Combine::Min => dst.iter_mut().zip(other).for_each(|(a, b)| *a = a.min(*b)),
+            Combine::Max => dst.iter_mut().zip(other).for_each(|(a, b)| *a = a.max(*b)),
+        }
+    }
+}
+
+/// The [`Combine`] of each [`FoldTotalsMut`] field, and of a null window's
+/// `[zmax, zsum, lsum, esum]`. See [`BandMerge::EXTERNAL_ABSORB`].
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct FoldCombine {
+    pub num: Combine,
+    pub usum: Combine,
+    pub den: Combine,
+    pub zmax: Combine,
+    pub zsum: Combine,
+    pub lsum: Combine,
+    pub esum: Combine,
+    pub lo: Combine,
+    pub hi: Combine,
+    pub null: [Combine; 4],
+}
+
 /// Scalars for [`fused_pooled_level`].
 #[derive(Clone, Copy)]
 struct FusedLevel {
@@ -4844,6 +5003,146 @@ mod tests {
         (0..w * h)
             .map(|i| (i % 97) as f32 * 0.37 + (i / 97) as f32 * 0.11)
             .collect()
+    }
+
+    /// `EXTERNAL_ABSORB` with `absorb_external_remainder` must be `absorb` (or,
+    /// for a first chunk, the chunk itself), bit for bit, on every total and null
+    /// window whether the device or the host held the windows, with signed zeros
+    /// and infinities among the values; and a released merge must refuse `absorb`.
+    #[test]
+    fn external_absorption_is_absorb() {
+        let (w, h) = (300, 200);
+        let cfg = MergeConfig::default();
+        let mut seed = 0x2545_F491_4F6C_DD1Du64;
+        let mut value = move || {
+            seed ^= seed << 13;
+            seed ^= seed >> 7;
+            seed ^= seed << 17;
+            match seed % 11 {
+                0 => 0.0,
+                1 => -0.0,
+                2 => f32::INFINITY,
+                3 => f32::NEG_INFINITY,
+                _ => ((seed >> 40) as f32 / (1u64 << 24) as f32 - 0.5) * 1.0e4,
+            }
+        };
+        let mut filled = |frames: u32| {
+            let mut m = BandMerge::new(w, h, 4, cfg);
+            assert!(m.external_fold_refusal().is_none());
+            let (t, null) = m.all_totals_mut();
+            for v in [
+                t.num, t.usum, t.den, t.zmax, t.zsum, t.lsum, t.esum, t.lo, t.hi,
+            ] {
+                v.iter_mut().flatten().for_each(|x| *x = value());
+            }
+            null.into_iter()
+                .flatten()
+                .flatten()
+                .flat_map(|v| v.iter_mut())
+                .for_each(|x| *x = value());
+            m.frames = frames;
+            for (k, win) in m.null.iter_mut().enumerate() {
+                win.frames = frames + k as u32;
+            }
+            m
+        };
+        let (a, b) = (filled(7), filled(5));
+        assert!(!a.zmax.is_empty() && !a.lo.is_empty() && a.null.iter().any(|n| n.w > 0));
+
+        // What a device fold leaves after reading `from` back into `into`
+        // (copied for a first chunk, combined otherwise), with the null
+        // windows on the device or accumulated on the host.
+        let external = |into: &BandMerge, from: &BandMerge, device_null: bool, first: bool| {
+            let mut got = into.clone();
+            let mut other = from.clone();
+            let ops = BandMerge::EXTERNAL_ABSORB;
+            let put = |op: Combine, d: &mut [f32], s: &[f32]| {
+                if first {
+                    d.copy_from_slice(s)
+                } else {
+                    op.apply(d, s)
+                }
+            };
+            {
+                let (t, null) = got.all_totals_mut();
+                let (o, onull) = other.all_totals_mut();
+                for (dst, src, op) in [
+                    (t.num, o.num, ops.num),
+                    (t.usum, o.usum, ops.usum),
+                    (t.den, o.den, ops.den),
+                    (t.zmax, o.zmax, ops.zmax),
+                    (t.zsum, o.zsum, ops.zsum),
+                    (t.lsum, o.lsum, ops.lsum),
+                    (t.esum, o.esum, ops.esum),
+                    (t.lo, o.lo, ops.lo),
+                    (t.hi, o.hi, ops.hi),
+                ] {
+                    assert_eq!(dst.len(), src.len());
+                    for (d, s) in dst.iter_mut().zip(src.iter()) {
+                        put(op, d, s);
+                    }
+                }
+                for (d, s) in null.into_iter().zip(onull).filter(|_| device_null) {
+                    if let (Some(d), Some(s)) = (d, s) {
+                        for ((d, s), op) in d.into_iter().zip(s).zip(ops.null) {
+                            put(op, d, s);
+                        }
+                    }
+                }
+            }
+            // The rest comes from a merge whose totals are already released.
+            other.release_external_totals();
+            // As the device reports it: every window, or none at all.
+            let held = if device_null {
+                vec![true; other.null.len()]
+            } else {
+                Vec::new()
+            };
+            got.absorb_external_remainder(&other, &held, first);
+            (got, other)
+        };
+        let bits = |m: &BandMerge| -> Vec<Vec<u32>> {
+            [
+                &m.num, &m.usum, &m.den, &m.zmax, &m.zsum, &m.lsum, &m.esum, &m.lo, &m.hi,
+            ]
+            .into_iter()
+            .flatten()
+            .chain(
+                m.null
+                    .iter()
+                    .flat_map(|n| [&n.zmax, &n.zsum, &n.lsum, &n.esum]),
+            )
+            .map(|v| v.iter().map(|x| x.to_bits()).collect())
+            .collect()
+        };
+        let counts = |m: &BandMerge| {
+            (
+                m.frames,
+                m.null.iter().map(|n| n.frames).collect::<Vec<_>>(),
+            )
+        };
+        let mut absorbed = a.clone();
+        absorbed.absorb(&b);
+        let fresh = BandMerge::new(w, h, 4, cfg);
+        let mut other = b.clone();
+        for device_null in [true, false] {
+            // A later chunk: `absorb`. A first chunk: the chunk itself, moved.
+            for (into, first, expected) in [(&a, false, &absorbed), (&fresh, true, &b)] {
+                let (got, released) = external(into, &b, device_null, first);
+                assert!(
+                    bits(expected) == bits(&got),
+                    "external absorption differs (device null {device_null}, first {first})"
+                );
+                assert_eq!(counts(expected), counts(&got));
+                other = released;
+            }
+        }
+
+        // A released merge holds no totals and refuses to be absorbed.
+        assert!(other.num.iter().chain(&other.lo).all(Vec::is_empty));
+        let refused =
+            std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| a.clone().absorb(&other)));
+        assert!(refused.is_err());
     }
 
     #[test]

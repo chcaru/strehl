@@ -2427,6 +2427,9 @@ pub fn cover_rect(geom: PlaneGeometry, k: f64) -> CropRect {
 /// whole-plane route, still used by non-default resamplers, the directional
 /// demosaic and research consumers, reuses `mos`/`rp`/`gp`/`bp` below instead
 /// of allocating them per frame.
+///
+/// `Default` is empty: a placeholder for a worker that never warps on the CPU.
+#[derive(Default)]
 pub struct WarpScratch {
     src: Vec<f32>,
     dst: Vec<f32>,

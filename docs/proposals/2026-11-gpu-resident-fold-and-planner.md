@@ -255,8 +255,41 @@ MEASURED, same command and alternation as above, against `b3bf9da00`: 26.5 / 26.
 identical to the CPU path's. CPU fold path at 200 frames: unchanged within noise (alignment
 11.1 to 10.6 s, fold 41.3 to 40.6 s).
 
-Remaining: the fold now waits on the device (~12 ms per frame: upload, probe and fold
-kernels), which is where fusion of the probe's passes would pay; CPU RAM, which still holds
-the CPU frame workspace and probe pyramid the GPU path no longer uses, and two CPU
-`BandMerge`s, now worth more since sixteen frames decode at once; the desktop's live views on
-the GPU path.
+### Stage 3, host memory (2026-11-08)
+
+A private-memory timeline of the full run (sampled every 250 ms) put the peak inside the main
+fold, 8.0-9.0 GB throughout, not at collapse and output (6.2 GB); peak working set was only
+5.9 GB, so ~3 GB was committed and never touched. The GPU path still allocated what it no
+longer used, and from the second chunk held two host merges of ~0.84 GB each:
+
+- the worker's `BandMerge` totals: a GPU chunk's totals are on the device, and the host copy
+  was only a readback target before `absorb`. Now the first chunk is read into the retained
+  merge and later chunks are absorbed into it as they are read (`GpuFold::absorb_chunk`),
+  with `absorb`'s own elementwise operations (`BandMerge::EXTERNAL_ABSORB`); the worker's
+  merge releases its totals and only counts frames, plus the ensemble null's windows when the
+  host accumulates them (`absorb_external_remainder`). A core test checks the table against
+  `absorb` bit for bit with signed zeros and infinities among the values, for windows held by
+  the device or the host and for first and later chunks, and fails when one entry is swapped
+  or host windows are skipped; a device test absorbs three chunks against the CPU's chunked
+  `absorb`, collapsed output included.
+- Caught by running the other route: the first version moved only the null windows' frame
+  counts. With preparation on the CPU (`STREHL_GPU_PREP=off`) the windows are accumulated on
+  the host, not the device, so they were dropped and 5.1% of photograph samples changed (up
+  to 1,578 DN). The byte-freeze rows run the CPU fold and could not see it; the core test
+  passed because it described host windows as `[false; n]` where the device reports an empty
+  list. Both are fixed, and the planted omission now fails the test.
+- the CPU fold's `FrameWorkspace` (~0.9 GB), and under GPU preparation the CPU's warp scratch,
+  planes, luma and variance (~0.3 GB).
+
+MEASURED, same command as above, against `307700079`, alternated (ABAB): 25.9 / 26.0 s
+against 27.0 / 27.0 s; peak private 7.11 / 7.11 GB against 8.90 / 8.86 GB; peak working set
+3.85 / 3.84 GB against 5.86 / 5.79 GB. With CPU preparation (one run each): 208.7 s
+against 208.9 s, peak private 8.28 GB against 9.91 GB, working set 5.94 GB against 7.47 GB.
+Photograph and float master identical to the CPU path's on both routes (final build); byte-freeze
+rows unchanged. The fold's private memory is now ~6.5 GB over a ~2.2 GB
+base between passes: the retained merge, the decode window (up to 18 frames of 73 MB) and the
+device's host-side buffers.
+
+Remaining: the fold waits on the device (~12 ms per frame: upload, probe and fold kernels),
+which is where fusion of the probe's passes would pay; a decode window sized from measured
+decode and fold rates rather than the thread count; the desktop's live views on the GPU path.

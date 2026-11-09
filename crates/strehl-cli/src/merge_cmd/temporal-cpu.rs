@@ -250,7 +250,7 @@ pub(super) fn fold(
                 &worker.luma,
                 &worker.var,
                 beta,
-                &mut worker.fws,
+                super::cpu_workspace(&mut worker.fws),
             );
             ring.push(guide)
         } else {
@@ -296,7 +296,7 @@ pub(super) fn fold(
             &worker.luma,
             &worker.var,
             frame_beta,
-            &mut worker.fws,
+            super::cpu_workspace(&mut worker.fws),
             &ready,
             Some(&relay),
         );

@@ -5031,8 +5031,12 @@ struct BandWorker {
     #[cfg(feature = "temporal-energy")]
     config: MergeConfig,
     domain: PyramidDomain,
+    /// This chunk's accumulator. Under a GPU fold the device holds the totals
+    /// and this only counts frames: its totals are released.
     merge: BandMerge,
-    fws: FrameWorkspace,
+    /// The CPU fold's workspace; `None` once a GPU fold is attached. Under
+    /// GPU preparation `warp`, `planes`, `luma` and `var` are emptied too.
+    fws: Option<FrameWorkspace>,
     warp: WarpScratch,
     planes: Vec<Vec<f32>>,
     luma: Vec<f32>,
@@ -5857,6 +5861,12 @@ pub(crate) mod fine_support_candidate_tests {
     ));
 }
 
+/// The CPU fold's workspace, which only a worker without a GPU fold has.
+fn cpu_workspace(fws: &mut Option<FrameWorkspace>) -> &mut FrameWorkspace {
+    fws.as_mut()
+        .expect("the CPU fold's workspace was released for the GPU fold")
+}
+
 impl BandWorker {
     fn new(domain: PyramidDomain, cfg: MergeConfig) -> Self {
         let geom = domain.analysis();
@@ -5867,7 +5877,7 @@ impl BandWorker {
             config: cfg,
             domain,
             merge: BandMerge::new(geom.width, geom.height, BAND_PLANES, cfg),
-            fws: FrameWorkspace::new(&sizes, BAND_PLANES),
+            fws: Some(FrameWorkspace::new(&sizes, BAND_PLANES)),
             // The warp is deliberately still evaluated on the original plane.
             // Only its prepared outputs become compact.
             warp: WarpScratch::new(domain.full),
@@ -5933,6 +5943,19 @@ impl BandWorker {
         );
         self.gpu_prep = prep_refusal.is_none();
         self.gpu = Some(gpu);
+        // Memory the device now stands in for, never touched again: the
+        // chunk's host totals (the device's are absorbed straight into the
+        // retained merge, `finish_chunk`) and the CPU fold's workspace; with
+        // preparation on the device, the CPU's preparation buffers too. About
+        // 0.8 + 0.9 + 0.3 GB at 33 MP.
+        self.merge.release_external_totals();
+        self.fws = None;
+        if self.gpu_prep {
+            self.warp = WarpScratch::default();
+            self.planes = Vec::new();
+            self.luma = Vec::new();
+            self.var = Vec::new();
+        }
         Ok(line)
     }
 
@@ -6130,8 +6153,14 @@ impl BandWorker {
             .as_ref()
             .and_then(|p| p.null_floor())
             .map(|(beta, var)| self.merge.note_external_null_frame(&beta, var));
-        gpu.add_staged(&mut self.merge, &staged, green, frame_beta, units.as_deref())
-            .map_err(|e| anyhow::anyhow!(e))?;
+        gpu.add_staged(
+            &mut self.merge,
+            &staged,
+            green,
+            frame_beta,
+            units.as_deref(),
+        )
+        .map_err(|e| anyhow::anyhow!(e))?;
         if let Some(progress) = progress {
             progress.merge_step(index, "gather", None, "finished");
             gpu_fold_phases(
@@ -6186,11 +6215,41 @@ impl BandWorker {
         false
     }
 
-    /// Bring a GPU chunk's accumulators into `self.merge`. A no-op on the CPU.
-    fn finish_chunk(&mut self) {
+    /// End a canonical chunk: absorb its totals into `merged`, the earlier
+    /// chunks' retained merge, or make them `merged` if this is the first.
+    /// Under a GPU fold they come straight from the device: the first chunk is
+    /// read into a new merge, later ones are absorbed as they are read
+    /// (`absorb_chunk`, the same arithmetic as `absorb`), so the chunk never
+    /// needs host totals of its own.
+    fn finish_chunk(&mut self, merged: &mut Option<BandMerge>) {
+        let g = self.domain.analysis();
         #[cfg(feature = "gpu")]
         if let Some(gpu) = self.gpu.as_mut() {
-            gpu.finish_chunk(&mut self.merge);
+            // Without device preparation the null windows are accumulated
+            // here, in `self.merge`, and travel with the counts.
+            let device_null = gpu.null_levels();
+            let first = merged.is_none();
+            let total = match merged.as_mut() {
+                Some(total) => {
+                    gpu.absorb_chunk(total);
+                    total
+                }
+                None => {
+                    let mut total =
+                        BandMerge::new(g.width, g.height, BAND_PLANES, self.merge.config());
+                    gpu.finish_chunk(&mut total);
+                    merged.insert(total)
+                }
+            };
+            total.absorb_external_remainder(&self.merge, &device_null, first);
+            return;
+        }
+        match merged.as_mut() {
+            Some(total) => total.absorb(&self.merge),
+            None => {
+                let fresh = BandMerge::new(g.width, g.height, BAND_PLANES, self.merge.config());
+                *merged = Some(std::mem::replace(&mut self.merge, fresh));
+            }
         }
     }
 
@@ -6288,7 +6347,9 @@ impl BandWorker {
         native_sensor_transfer::inputs(&self.planes, &self.luma, &self.var, frame_beta);
         #[cfg(feature = "native-pyramid-profile")]
         let add_phase = native_pyramid_profile::start(native_pyramid_profile::ADD);
-        self.fws.next_frame();
+        if let Some(fws) = self.fws.as_mut() {
+            fws.next_frame();
+        }
         let tap = progress.map(|progress| {
             crate::ui_progress::FrameTap::new(progress, index, self.merge.sizes().len())
         });
@@ -6307,7 +6368,7 @@ impl BandWorker {
                 &self.luma,
                 &self.var,
                 frame_beta,
-                &mut self.fws,
+                cpu_workspace(&mut self.fws),
                 cue,
             );
         } else {
@@ -6317,7 +6378,7 @@ impl BandWorker {
                     &self.luma,
                     &self.var,
                     frame_beta,
-                    &mut self.fws,
+                    cpu_workspace(&mut self.fws),
                     tap,
                 );
             } else {
@@ -6326,7 +6387,7 @@ impl BandWorker {
                     &self.luma,
                     &self.var,
                     frame_beta,
-                    &mut self.fws,
+                    cpu_workspace(&mut self.fws),
                 );
             }
         }
@@ -6337,12 +6398,17 @@ impl BandWorker {
                 &self.luma,
                 &self.var,
                 frame_beta,
-                &mut self.fws,
+                cpu_workspace(&mut self.fws),
                 tap,
             );
         } else {
-            self.merge
-                .add_frame_with_gain(&refs, &self.luma, &self.var, frame_beta, &mut self.fws);
+            self.merge.add_frame_with_gain(
+                &refs,
+                &self.luma,
+                &self.var,
+                frame_beta,
+                cpu_workspace(&mut self.fws),
+            );
         }
         #[cfg(feature = "native-pyramid-profile")]
         drop(add_phase);
@@ -6376,7 +6442,9 @@ impl BandWorker {
         let refs: Vec<&[f32]> = prep.planes.iter().map(|v| v.as_slice()).collect();
         #[cfg(feature = "native-pyramid-profile")]
         let add_phase = native_pyramid_profile::start(native_pyramid_profile::ADD);
-        self.fws.next_frame();
+        if let Some(fws) = self.fws.as_mut() {
+            fws.next_frame();
+        }
         let tap = progress.map(|progress| {
             crate::ui_progress::FrameTap::new(progress, index, self.merge.sizes().len())
         });
@@ -6394,12 +6462,17 @@ impl BandWorker {
                 &prep.luma,
                 &prep.var,
                 frame_beta,
-                &mut self.fws,
+                cpu_workspace(&mut self.fws),
                 tap,
             );
         } else {
-            self.merge
-                .add_frame_with_gain(&refs, &prep.luma, &prep.var, frame_beta, &mut self.fws);
+            self.merge.add_frame_with_gain(
+                &refs,
+                &prep.luma,
+                &prep.var,
+                frame_beta,
+                cpu_workspace(&mut self.fws),
+            );
         }
         #[cfg(feature = "native-pyramid-profile")]
         drop(add_phase);
@@ -8645,7 +8718,6 @@ fn run_pyramid_prepared_with_sensor(
                     }
                 }
                 folded_total += folded;
-                worker.finish_chunk();
                 if beta_sum.len() < worker.beta_sum.len() {
                     beta_sum.resize(worker.beta_sum.len(), 0.0);
                 }
@@ -8653,20 +8725,7 @@ fn run_pyramid_prepared_with_sensor(
                     *acc += value;
                 }
                 beta_n += worker.beta_n;
-                match merged.as_mut() {
-                    Some(acc) => acc.absorb(&worker.merge),
-                    None => {
-                        merged = Some(std::mem::replace(
-                            &mut worker.merge,
-                            BandMerge::new(
-                                analysis_geom.width,
-                                analysis_geom.height,
-                                BAND_PLANES,
-                                cfg,
-                            ),
-                        ));
-                    }
-                }
+                worker.finish_chunk(&mut merged);
                 if let Some(acc) = merged.as_ref() {
                     progress.accumulator(
                         acc,

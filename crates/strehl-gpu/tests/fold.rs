@@ -125,3 +125,81 @@ fn the_gpu_fold_is_bit_identical_to_the_cpu_fold() {
         }
     }
 }
+
+/// Three chunks absorbed on the host straight from the device
+/// (`absorb_chunk`), counted by a merge whose totals were released, against
+/// the CPU's chunk-by-chunk `absorb`: every total, the frame count and the
+/// collapsed output identical.
+#[test]
+#[ignore = "needs a Vulkan GPU with f64"]
+fn absorbing_device_chunks_is_the_cpu_absorb() {
+    let (w, h, frames) = (640usize, 427usize, 4usize);
+    let cfg = MergeConfig {
+        bands: 7,
+        ..Default::default()
+    };
+    let sizes = level_sizes(w, h, cfg.bands);
+    let mut rng = Rng(0x0DDB_1A5E_5BAD_5EED);
+    let data: Vec<Vec<Vec<f32>>> = (0..3 * frames).map(|f| frame(w, h, f, &mut rng)).collect();
+    let beta: Vec<f32> = vec![0.41, 0.093, 0.021, 0.006];
+
+    let mut chunk = BandMerge::new(w, h, 4, cfg);
+    let mut fws = FrameWorkspace::new(&sizes, 4);
+    let mut cpu: Option<BandMerge> = None;
+    let mut counter = BandMerge::new(w, h, 4, cfg);
+    let mut gpu = GpuFold::new(&counter).expect("GPU fold");
+    counter.release_external_totals();
+    let mut device: Option<BandMerge> = None;
+    for c in 0..3 {
+        if c > 0 {
+            chunk.reset_for_reuse();
+            counter.reset_for_reuse();
+        }
+        for planes in &data[c * frames..(c + 1) * frames] {
+            let luma: Vec<f32> = planes[1]
+                .iter()
+                .zip(&planes[2])
+                .map(|(a, b)| 0.5 * (a + b))
+                .collect();
+            let var: Vec<f32> = luma.iter().map(|l| 0.3 * l.max(0.0) + 7.0).collect();
+            let refs: Vec<&[f32]> = planes.iter().map(Vec::as_slice).collect();
+            fws.next_frame();
+            chunk.add_frame_with_gain(&refs, &luma, &var, Some(&beta), &mut fws);
+            gpu.add_frame(&mut counter, &refs, &var, Some(&beta));
+        }
+        match cpu.as_mut() {
+            None => cpu = Some(chunk.clone()),
+            Some(total) => total.absorb(&chunk),
+        }
+        match device.as_mut() {
+            None => {
+                let mut total = BandMerge::new(w, h, 4, cfg);
+                gpu.finish_chunk(&mut total);
+                total.absorb_external_remainder(&counter, &gpu.null_levels(), true);
+                device = Some(total);
+            }
+            Some(total) => {
+                gpu.absorb_chunk(total);
+                total.absorb_external_remainder(&counter, &gpu.null_levels(), false);
+            }
+        }
+    }
+    let (mut cpu, mut device) = (cpu.unwrap(), device.unwrap());
+    assert_eq!(cpu.frames(), device.frames());
+    let names = [
+        "num", "usum", "den", "zmax", "zsum", "lsum", "esum", "lo", "hi",
+    ];
+    for ((x, y), name) in snapshot(&mut cpu)
+        .iter()
+        .zip(&snapshot(&mut device))
+        .zip(names)
+    {
+        assert!(x == y, "{name} differs after absorbing three chunks");
+    }
+    let mut ws = Workspace::new(&sizes);
+    assert_eq!(
+        bits(&cpu.finish(&mut ws)),
+        bits(&device.finish(&mut ws)),
+        "collapsed output differs"
+    );
+}
