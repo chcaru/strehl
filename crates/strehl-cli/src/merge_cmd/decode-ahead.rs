@@ -38,6 +38,11 @@ use super::PyramidFrameSource;
 /// the fold consumes them, without competing much with the data-parallel pool.
 pub(super) const DECODERS: usize = 4;
 
+/// Prefetch threads, and how many planned frames past the last claimed decode
+/// they read into the file cache (~35 MB each at 33 MP, so ~1.1 GB of cache).
+pub(super) const PREFETCHERS: usize = 2;
+pub(super) const PREFETCH_AHEAD: usize = 32;
+
 /// Override the decoder thread count (1..=64). Scheduling only: decoding is a
 /// pure function of the file.
 pub const DECODERS_ENV: &str = "STREHL_DECODE_THREADS";
@@ -90,6 +95,8 @@ struct State {
     /// which the next decodes write into instead of new memory
     /// (`PyramidFrameSource::decode_reusing`).
     spare: Vec<Vec<u16>>,
+    /// Next plan position a prefetcher may read ahead.
+    prefetched: usize,
     stop: bool,
 }
 
@@ -154,6 +161,44 @@ impl<'s, S: PyramidFrameSource> DecodeAhead<'s, S> {
             st.ready.insert(index, frame);
             drop(st);
             self.changed.notify_all();
+        }
+    }
+
+    /// One prefetch thread's loop: read the files of planned frames into the
+    /// operating system's file cache, up to `ahead` plan positions past the
+    /// last decode claimed, so decoders do not wait on storage. Only the file
+    /// cache holds what it reads; frame memory is unchanged.
+    ///
+    /// MEASURED on bug-7 (47 GB, more than the file cache keeps between
+    /// passes, so much of each pass comes from disk): once decoding stopped
+    /// reading every whole file for metadata (`strehl_raw`), the fold became
+    /// bound by decoders waiting on page faults for file data: without
+    /// prefetching, 8 / 12 / 16 / 24 decoders folded in 27 / 21 / 17.6 /
+    /// 15.0 s; with two prefetchers 32 frames ahead, 16 decoders fold in
+    /// 14.4-14.6 s and more do not help.
+    pub(super) fn run_prefetcher(&self, ahead: usize) {
+        loop {
+            let index = {
+                let mut st = self.lock();
+                loop {
+                    if st.stop || st.prefetched >= self.plan.len() {
+                        return;
+                    }
+                    if st.prefetched < st.claimed {
+                        // Already being decoded: nothing to gain.
+                        st.prefetched = st.claimed;
+                        continue;
+                    }
+                    if st.prefetched < st.claimed + ahead {
+                        break;
+                    }
+                    st = self.changed.wait(st).unwrap_or_else(|e| e.into_inner());
+                }
+                let index = self.plan[st.prefetched];
+                st.prefetched += 1;
+                index
+            };
+            self.inner.prefetch(index);
         }
     }
 
@@ -269,6 +314,62 @@ mod tests {
             self.decoded.fetch_add(1, SeqCst);
             Err(anyhow::anyhow!("frame {index}"))
         }
+    }
+
+    /// A source that records the frames prefetched from it.
+    struct Prefetching {
+        n: usize,
+        prefetched: std::sync::Mutex<Vec<usize>>,
+    }
+
+    impl PyramidFrameSource for Prefetching {
+        fn len(&self) -> usize {
+            self.n
+        }
+        fn decode(&self, index: usize) -> Result<Frame> {
+            Err(anyhow::anyhow!("frame {index}"))
+        }
+        fn prefetch(&self, index: usize) {
+            self.prefetched.lock().unwrap().push(index);
+        }
+    }
+
+    #[test]
+    fn prefetchers_read_planned_frames_at_most_once_and_stop_with_the_plan() {
+        let src = Prefetching {
+            n: 60,
+            prefetched: std::sync::Mutex::new(Vec::new()),
+        };
+        let plan: Vec<usize> = (0..60).rev().filter(|i| i % 4 != 2).collect();
+        let ahead = DecodeAhead::new(&src, plan.clone(), 4);
+        // The scope returning is the check that every thread stopped by itself.
+        std::thread::scope(|scope| {
+            for _ in 0..3 {
+                scope.spawn(|| ahead.run_prefetcher(6));
+            }
+            for _ in 0..DECODERS {
+                scope.spawn(|| ahead.run_decoder());
+            }
+            for (taken, &index) in plan.iter().enumerate() {
+                assert_eq!(
+                    ahead.decode(index).unwrap_err().to_string(),
+                    format!("frame {index}")
+                );
+                // Never more than `ahead` plan positions past the claimed decodes.
+                let st = ahead.lock();
+                assert!(st.prefetched <= st.claimed.max(taken + 1) + 6);
+            }
+        });
+        let got = src.prefetched.into_inner().unwrap();
+        let mut unique = got.clone();
+        unique.sort_unstable();
+        unique.dedup();
+        assert_eq!(unique.len(), got.len(), "a frame was prefetched twice");
+        assert!(
+            got.iter().all(|i| plan.contains(i)),
+            "an unplanned frame was prefetched"
+        );
+        assert!(!got.is_empty(), "nothing was prefetched");
     }
 
     #[test]

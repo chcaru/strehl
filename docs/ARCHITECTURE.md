@@ -889,6 +889,17 @@ included; 3,692 of them lossless-compressed). Each file now decodes on one threa
 preparation the decode-ahead pool uses half the logical cores (16 here); 8 left the fold waiting
 for decodes. `STREHL_RAW_DECODER=rawler` decodes every pixel with the linked decoder.
 
+The linked decoder's metadata-only pass takes time in proportion to the bytes it is given
+(MEASURED on bug-7: 0.6 ms for the first 2 MB, 8 ms for the whole 34 MB file, ~50 ms with 16
+decodes at once), and no field of the image comes from the tile data, so it is given the file
+up to the first tile (the whole file if that does not parse); `tests/lossless-jpeg.rs` still
+finds every field identical to the linked decoder's own decode on all 4,052 files. That made
+each decode cheaper and exposed storage: bug-7 is 47 GB, more than the file cache keeps between
+passes, and the fold became bound by decoders waiting on page faults for file data (8 / 12 / 16
+/ 24 decoders folded in 27 / 21 / 17.6 / 15.0 s). Two prefetch threads now read the files of
+the next 32 planned frames into the file cache ahead of the decoders (`decode_ahead`), and each
+decode faults its mapped file in once, in order, before decoding.
+
 MEASURED, bug-7 1,444 frames, desktop path (sRGB + linear master + progress + CA preview),
 same machine: CPU 329.9 s; GPU fold with CPU preparation 209.2 s; GPU preparation 42.2 s
 (0.02 s per frame folded); with the data movement and allocator above 32.5-32.8 s against

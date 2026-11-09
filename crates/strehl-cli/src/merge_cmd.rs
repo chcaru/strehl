@@ -5166,6 +5166,9 @@ trait PyramidFrameSource: Sync {
     fn decode_reusing(&self, index: usize, _buffer: Vec<u16>) -> Result<Frame> {
         self.decode(index)
     }
+    /// Bring frame `index`'s file into the operating system's file cache ahead
+    /// of its decode (`decode_ahead`'s prefetchers). Scheduling only.
+    fn prefetch(&self, _index: usize) {}
     /// Hand back a frame the fold has finished with. Freeing a 66 MB buffer
     /// costs milliseconds, so a source with threads of its own frees it there
     /// rather than on the fold's critical path.
@@ -5246,6 +5249,19 @@ impl PyramidFrameSource for RawPyramidSource<'_> {
 
     fn decode_reusing(&self, index: usize, buffer: Vec<u16>) -> Result<Frame> {
         self.decode_with(index, Some(buffer))
+    }
+
+    /// Read the file through once, in large sequential reads into a reused
+    /// buffer, so the decode finds it in the file cache.
+    fn prefetch(&self, index: usize) {
+        use std::io::Read;
+        thread_local! {
+            static BUF: std::cell::RefCell<Vec<u8>> = std::cell::RefCell::new(vec![0; 4 << 20]);
+        }
+        let Some(Ok(mut file)) = self.paths.get(index).map(std::fs::File::open) else {
+            return;
+        };
+        BUF.with_borrow_mut(|buf| while matches!(file.read(buf), Ok(n) if n > 0) {});
     }
 
     #[cfg(all(test, feature = "native-direct-planes"))]
@@ -8586,6 +8602,9 @@ fn run_pyramid_prepared_with_sensor(
     std::thread::scope(|scope| -> Result<()> {
         for _ in 0..decoders {
             scope.spawn(|| ahead.run_decoder());
+        }
+        for _ in 0..decode_ahead::PREFETCHERS {
+            scope.spawn(|| ahead.run_prefetcher(decode_ahead::PREFETCH_AHEAD));
         }
         let fold_result = pool.install(|| -> Result<()> {
             #[cfg(feature = "temporal-energy")]

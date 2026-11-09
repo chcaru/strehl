@@ -413,11 +413,36 @@ fn native_pixels(
 ) -> Option<rawler::RawImage> {
     let file = source.buf();
     let tiles = lossless_jpeg::find_tiles(file)?;
-    let decoder = rawler::get_decoder(source).ok()?;
-    let mut img = decoder.raw_image(source, params, true).ok()?;
+    // The linked decoder's metadata-only pass takes time in proportion to the
+    // bytes it is given (MEASURED on bug-7: 0.6 ms for the first 2 MB, 8 ms
+    // for the whole 34 MB file, ~50 ms with 16 decodes at once), and none of
+    // the image's fields come from the tile data. So it is given the file up
+    // to the first tile, or the whole file if that does not parse.
+    // `tests/lossless-jpeg.rs` compares every field with the linked decoder's
+    // own full decode.
+    let head = tiles.ranges.iter().map(|r| r.0).min()?;
+    let prefix = RawSource::new_from_slice(&file[..head.min(file.len())]);
+    let mut img =
+        match rawler::get_decoder(&prefix).and_then(|d| d.raw_image(&prefix, params, true)) {
+            Ok(img) => img,
+            Err(_) => rawler::get_decoder(source)
+                .ok()?
+                .raw_image(source, params, true)
+                .ok()?,
+        };
     if img.width != tiles.width || img.height != tiles.height || img.cpp != 1 {
         return None;
     }
+    // Fault the mapped file in once, in order, before decoding: even with the
+    // file in the cache, each page of a mapping is a fault on first touch, and
+    // taking them in one sequential pass is cheaper than the decoder taking
+    // them scattered as it walks the tiles. MEASURED on bug-7 with prefetching
+    // (`decode_ahead`): fold 14.4-14.6 s with this, 14.8-15.3 s without.
+    let mut touched = 0u8;
+    for page in file.iter().step_by(4096) {
+        touched ^= *page;
+    }
+    std::hint::black_box(touched);
     let n = tiles.width * tiles.height;
     let mut data = match buffer {
         // Every sample is overwritten: the tiles cover the image.

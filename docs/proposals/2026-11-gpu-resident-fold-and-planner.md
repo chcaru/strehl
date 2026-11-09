@@ -330,8 +330,28 @@ Not the limit on their own (each MEASURED by a throwaway build): skipping the up
 decoders + 10 (no gain), 20-28 decoders (slower). Decoding alone: 16 threads ~128 frames/s
 warm, the same at 24 and 32.
 
-Remaining: decoding throughput under load (~125 ms per frame with 16 at once against ~60 ms
-alone: file reads, the linked decoder's metadata pass, memory traffic); the fold thread's
-serial work (the upload fill, and a pipeline only one frame deep); then exact f32 division
-(~0.5 ms per frame), the gather's f64 coordinates (~0.7 ms), the upload (~2.4 ms); the
-desktop's live views on the GPU path.
+### Stage 3, decoding under load and storage (2026-11-09)
+
+Timing each decode step with 16 decodes at once: opening the mapped file 0.2 ms, the linked
+decoder's metadata-only pass 52 ms (14.7 ms alone), the whole decode 177 ms. Probed as a black
+box (its source is not consulted), the metadata pass returns no pixels but its time grows with
+the bytes it is given: 0.6 ms for a 2 MB prefix, 8 ms for the 34 MB file, with every field the
+same. Given the file up to the first tile, warm decoding rose from ~130 to ~167 frames/s with
+16 threads, and every field still matches on all 4,052 verification files.
+
+End to end that first made the fold slower (17.2-18.1 s against 15.3-15.4 s) while using 37 s
+less CPU: the fold had become bound by decoders waiting on storage. Bug-7 (47 GB) does not stay
+in the file cache between passes, and the old whole-file metadata scan had been faulting each
+file in. Decoder counts showed it (8 / 12 / 16 / 24 decoders: 27 / 21 / 17.6 / 15.0 s). Two
+prefetch threads reading the next 32 planned files into the file cache (`decode_ahead`), plus
+one in-order touch of each mapped file before decoding, fixed it without more decoders.
+
+MEASURED, same command as above, against `48c745f10`, alternated: fold 14.4-14.6 s against
+15.2-15.7 s, whole run 19.3-19.7 s against 20.3-20.9 s, CPU time ~305 s against ~315 s, peak
+private 6.9-7.1 GB against 7.1-7.2 GB; 20 and 24 decoders no faster than 16. Photograph and
+float master identical to the CPU path's.
+
+Remaining: the fold thread's serial work (the upload fill, 3.1 ms per frame and ~115 s of CPU
+per run, and a pipeline only one frame deep); exact f32 division (~0.5 ms per frame of device
+time), the gather's f64 coordinates (~0.7 ms), the upload (~2.4 ms); the desktop's live views
+on the GPU path.
