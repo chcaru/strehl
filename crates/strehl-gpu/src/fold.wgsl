@@ -391,51 +391,135 @@ const FX = array<vec3<f32>, 9>(
     vec3(0., 0., 6.), vec3(-1., -1., 2.), vec3(1., -1., 2.), vec3(-1., 1., 2.), vec3(1., 1., 2.),
     vec3(-2., 0., -1.5), vec3(2., 0., -1.5), vec3(0., -2., -1.5), vec3(0., 2., -1.5));
 
-// demosaic::conv: acc += w * at(x + dx, y + dy), then * 0.125.
-fn conv(m: Mosaic, x: i32, y: i32, kind: u32) -> f32 {
+// The tables above written out: demosaic::conv's taps, in table order, as
+// straight-line code. Indexing a constant table at run time inside a switch
+// kept the loop from unrolling and the tables out of registers; the operations
+// and their order are the table's, so the result is the same.
+
+// The mosaic sample at (x, y) when the whole 5x5 neighbourhood is inside the
+// frame (`mosaic` without reflection): the same expression.
+fn mosaic_in(m: Mosaic, x: i32, y: i32) -> f32 {
+    let sx = u32(x);
+    let sy = u32(y);
+    let gain = p.f[1u + channel(sx, sy)];
+    return (f32(sensel(m.base, sy * m.stride + sx)) - p.f.x) * gain;
+}
+
+fn tap(m: Mosaic, x: i32, y: i32, inside: bool) -> f32 {
+    if (inside) { return mosaic_in(m, x, y); }
+    return mosaic(m, x, y);
+}
+
+// FG
+fn conv_g(m: Mosaic, x: i32, y: i32, inside: bool) -> f32 {
     var acc = 0.0;
-    let count = select(9u, 11u, kind == 1u || kind == 2u);
-    for (var i = 0u; i < count; i = i + 1u) {
-        var t: vec3<f32>;
-        switch kind {
-            case 0u: { t = FG[i]; }
-            case 1u: { t = FH[i]; }
-            case 2u: { t = FV[i]; }
-            default: { t = FX[i]; }
-        }
-        acc = acc + t.z * mosaic(m, x + i32(t.x), y + i32(t.y));
-    }
+    acc = acc + 4. * tap(m, x, y, inside);
+    acc = acc + 2. * tap(m, x - 1, y, inside);
+    acc = acc + 2. * tap(m, x + 1, y, inside);
+    acc = acc + 2. * tap(m, x, y - 1, inside);
+    acc = acc + 2. * tap(m, x, y + 1, inside);
+    acc = acc + -1. * tap(m, x - 2, y, inside);
+    acc = acc + -1. * tap(m, x + 2, y, inside);
+    acc = acc + -1. * tap(m, x, y - 2, inside);
+    acc = acc + -1. * tap(m, x, y + 2, inside);
     return acc * 0.125;
 }
 
-// Malvar over the active region into planar channels at `a.x`.
-// a = (rgb, fw, fh, green_only), b = (raw_base, stride), f = (black, gR, gG, gB).
-@compute @workgroup_size(256)
-fn mhc(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
-    let i = gid(id, nwg);
-    let fw = p.a.y; let fh = p.a.z;
-    if (i >= fw * fh) { return; }
-    let x = i % fw; let y = i / fw;
-    let m = Mosaic(p.b.x, p.b.y, i32(fw), i32(fh));
-    let xi = i32(x); let yi = i32(y);
-    let known = mosaic(m, xi, yi);
-    let n = fw * fh;
-    if (p.a.w != 0u) {
-        if (channel(x, y) == 1u) { work[p.a.x + i] = known; } else { work[p.a.x + i] = conv(m, xi, yi, 0u); }
-        return;
-    }
-    var v: vec3<f32>;
-    switch ((y & 1u) * 2u + (x & 1u)) {
-        case 0u: { v = vec3(known, conv(m, xi, yi, 0u), conv(m, xi, yi, 3u)); }
-        case 3u: { v = vec3(conv(m, xi, yi, 3u), conv(m, xi, yi, 0u), known); }
-        case 1u: { v = vec3(conv(m, xi, yi, 1u), known, conv(m, xi, yi, 2u)); }
-        default: { v = vec3(conv(m, xi, yi, 2u), known, conv(m, xi, yi, 1u)); }
-    }
-    work[p.a.x + i] = v.x;
-    work[p.a.x + n + i] = v.y;
-    work[p.a.x + 2u * n + i] = v.z;
+// FH
+fn conv_h(m: Mosaic, x: i32, y: i32, inside: bool) -> f32 {
+    var acc = 0.0;
+    acc = acc + 5. * tap(m, x, y, inside);
+    acc = acc + 4. * tap(m, x - 1, y, inside);
+    acc = acc + 4. * tap(m, x + 1, y, inside);
+    acc = acc + -1. * tap(m, x - 2, y, inside);
+    acc = acc + -1. * tap(m, x + 2, y, inside);
+    acc = acc + -1. * tap(m, x - 1, y - 1, inside);
+    acc = acc + -1. * tap(m, x + 1, y - 1, inside);
+    acc = acc + -1. * tap(m, x - 1, y + 1, inside);
+    acc = acc + -1. * tap(m, x + 1, y + 1, inside);
+    acc = acc + 0.5 * tap(m, x, y - 2, inside);
+    acc = acc + 0.5 * tap(m, x, y + 2, inside);
+    return acc * 0.125;
 }
 
+// FV
+fn conv_v(m: Mosaic, x: i32, y: i32, inside: bool) -> f32 {
+    var acc = 0.0;
+    acc = acc + 5. * tap(m, x, y, inside);
+    acc = acc + 4. * tap(m, x, y - 1, inside);
+    acc = acc + 4. * tap(m, x, y + 1, inside);
+    acc = acc + -1. * tap(m, x, y - 2, inside);
+    acc = acc + -1. * tap(m, x, y + 2, inside);
+    acc = acc + -1. * tap(m, x - 1, y - 1, inside);
+    acc = acc + -1. * tap(m, x + 1, y - 1, inside);
+    acc = acc + -1. * tap(m, x - 1, y + 1, inside);
+    acc = acc + -1. * tap(m, x + 1, y + 1, inside);
+    acc = acc + 0.5 * tap(m, x - 2, y, inside);
+    acc = acc + 0.5 * tap(m, x + 2, y, inside);
+    return acc * 0.125;
+}
+
+// FX
+fn conv_x(m: Mosaic, x: i32, y: i32, inside: bool) -> f32 {
+    var acc = 0.0;
+    acc = acc + 6. * tap(m, x, y, inside);
+    acc = acc + 2. * tap(m, x - 1, y - 1, inside);
+    acc = acc + 2. * tap(m, x + 1, y - 1, inside);
+    acc = acc + 2. * tap(m, x - 1, y + 1, inside);
+    acc = acc + 2. * tap(m, x + 1, y + 1, inside);
+    acc = acc + -1.5 * tap(m, x - 2, y, inside);
+    acc = acc + -1.5 * tap(m, x + 2, y, inside);
+    acc = acc + -1.5 * tap(m, x, y - 2, inside);
+    acc = acc + -1.5 * tap(m, x, y + 2, inside);
+    return acc * 0.125;
+}
+
+// Malvar over the active region into planar channels at `a.x`, one 2x2 CFA
+// quad per invocation (R G / G B), so a warp runs one path rather than every
+// parity's; each sample's value is the same expression as before.
+// a = (rgb, fw, fh, green_only), b = (raw_base, stride), f = (black, gR, gG, gB).
+// Dispatched over (fw / 2) * (fh / 2) quads; fw and fh are even.
+@compute @workgroup_size(256)
+fn mhc(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let q = gid(id, nwg);
+    let fw = p.a.y; let fh = p.a.z;
+    let qw = fw / 2u;
+    if (q >= qw * (fh / 2u)) { return; }
+    let x = 2u * (q % qw); let y = 2u * (q / qw);
+    let m = Mosaic(p.b.x, p.b.y, i32(fw), i32(fh));
+    let xi = i32(x); let yi = i32(y);
+    // Every tap of all four samples inside the frame: no reflection needed.
+    let inside = x >= 2u && y >= 2u && x + 3u < fw && y + 3u < fh;
+    let n = fw * fh;
+    let o = p.a.x + y * fw + x;
+    let r = tap(m, xi, yi, inside);
+    let g1 = tap(m, xi + 1, yi, inside);
+    let g2 = tap(m, xi, yi + 1, inside);
+    let b = tap(m, xi + 1, yi + 1, inside);
+    if (p.a.w != 0u) {
+        work[o] = conv_g(m, xi, yi, inside);
+        work[o + 1u] = g1;
+        work[o + fw] = g2;
+        work[o + fw + 1u] = conv_g(m, xi + 1, yi + 1, inside);
+        return;
+    }
+    // (x, y): red known.
+    work[o] = r;
+    work[o + n] = conv_g(m, xi, yi, inside);
+    work[o + 2u * n] = conv_x(m, xi, yi, inside);
+    // (x + 1, y): green on a red row.
+    work[o + 1u] = conv_h(m, xi + 1, yi, inside);
+    work[o + n + 1u] = g1;
+    work[o + 2u * n + 1u] = conv_v(m, xi + 1, yi, inside);
+    // (x, y + 1): green on a blue row.
+    work[o + fw] = conv_v(m, xi, yi + 1, inside);
+    work[o + n + fw] = g2;
+    work[o + 2u * n + fw] = conv_h(m, xi, yi + 1, inside);
+    // (x + 1, y + 1): blue known.
+    work[o + fw + 1u] = conv_x(m, xi + 1, yi + 1, inside);
+    work[o + n + fw + 1u] = conv_g(m, xi + 1, yi + 1, inside);
+    work[o + 2u * n + fw + 1u] = b;
+}
 fn cr_weights(f: f32) -> vec4<f32> {
     let f2 = f * f;
     let f3 = f2 * f;

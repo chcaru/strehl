@@ -1402,7 +1402,8 @@ impl GpuFold {
                 f: [black, frame.gain[0], frame.gain[1], frame.gain[2]],
                 ..Default::default()
             },
-            fw * fh,
+            // One invocation per 2x2 quad.
+            gw * gh,
         );
         for (&s, &d) in sites.iter().zip(dst) {
             let (dx, dy) = SITES[s];

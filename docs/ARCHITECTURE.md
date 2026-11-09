@@ -898,10 +898,34 @@ against 33.1-33.5 s, alternated (fold 17.2-17.4 s against 23.5-23.9 s, CPU time 
 against 578 s, peak private memory 9.2-9.4 GB against 7.3-7.4 GB: sixteen frames decode at
 once); with the host buffers released and chunks absorbed from the device 25.9-26.0 s against
 27.0 s, alternated, peak private memory 7.1 GB against 8.9 GB and peak working set 3.85 GB
-against 5.8 GB. The fold now waits on the device, ~12 ms per frame. Photograph and float master are
+against 5.8 GB; with Malvar evaluated per 2x2 quad and the ensemble null computed beside the
+fold (below) 20.5-20.6 s against 25.9-26.3 s, alternated (fold 15.4-15.5 s against 17.0-17.3 s,
+collapse and write 0.6 s against 3.8-3.9 s). The fold waits on the device, ~10 ms per frame.
+Photograph and float master are
 identical to the CPU's in every one of these runs. `STREHL_GPU_PROFILE=1` times every dispatch
 with GPU timestamps (diagnostic; it serialises submits; the device timing test,
-`crates/strehl-gpu/tests/timing.rs`, prints the per-kernel report).
+`crates/strehl-gpu/tests/timing.rs`, prints the per-kernel report; its `production_frame_timing`
+runs frames in the CLI's order and `upload_timing` the upload alone).
+
+**Device kernels.** Malvar (`mhc`) runs one invocation per 2x2 CFA quad, each tap written out in
+its table's order with no reflection away from the borders; the table loop indexed constant
+arrays at run time and every warp ran two parities' paths. 2.08 to 0.51 ms per frame, same
+expressions, so the same bits. MEASURED per frame (`production_frame_timing`, bug-7 geometry):
+~7.7 ms of kernels, led by the gather (2.2 ms, of which ~0.7 ms is its f64 coordinate
+arithmetic) and the level weights (1.55 ms, of which ~1 ms is the f64 `ln`/`exp` of the
+portable weight math and ~0.5 ms the f64 divisions); and ~2.4 ms for the 66 MB upload, whose
+device copy wgpu orders between compute passes and whose CPU fill (2.2 ms, ~30 GB/s into mapped
+memory) also slowed the device. Tried and not kept: fusing the pyramid's separable passes and
+batching planes per dispatch (fewer dispatches did not matter; the fused expand was slower),
+and multiplying by 2^-6 / 2^-16 instead of dividing through f64 (`accum` is memory-bound).
+
+**Ensemble null.** Finishing a merge reads the parametric dominance null for its frame count:
+100,000 deterministic Monte Carlo trials of `frames` gamma draws on one thread, ~3 s at 1,444
+frames, which was most of the collapse. It depends only on the count, so the fold starts it on
+a spare thread with the planned, placed frame count (`pyramid::prepare_ensemble_null`), and
+the collapse reads the same cached value; the cache holds one cell per key, so a collapse that
+arrives first waits for it rather than computing it twice. A different final count computes
+its own, as before.
 
 ### Determinism and provenance
 

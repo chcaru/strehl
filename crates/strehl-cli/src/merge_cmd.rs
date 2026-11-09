@@ -8529,6 +8529,17 @@ fn run_pyramid_prepared_with_sensor(
     #[cfg(feature = "native-boundary-radiance")]
     let source = &observed_source;
     let t_fold = Instant::now();
+    // The ensemble gate's dominance null depends only on the number of frames
+    // folded and costs ~2.7 s at 1,444 frames on one thread, so it is computed
+    // on a spare thread from now, beside the fold, instead of inside the
+    // collapse, which reads the same cached value. The count is the planned
+    // frames the alignment placed; if the fold ends with another count, the
+    // collapse computes that one as before.
+    let expected_frames = fold_decode_plan(paths.len())
+        .into_iter()
+        .filter(|&i| warps.is_none_or(|m| matches!(m.warp(i), Ok(FrameWarp::Placed(_)))))
+        .count();
+    std::thread::spawn(move || strehl_core::pyramid::prepare_ensemble_null(&cfg, expected_frames));
     let pool = ThreadPoolBuilder::new()
         .num_threads(workers)
         .build()

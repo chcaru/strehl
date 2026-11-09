@@ -290,6 +290,32 @@ rows unchanged. The fold's private memory is now ~6.5 GB over a ~2.2 GB
 base between passes: the retained merge, the decode window (up to 18 frames of 73 MB) and the
 device's host-side buffers.
 
-Remaining: the fold waits on the device (~12 ms per frame: upload, probe and fold kernels),
-which is where fusion of the probe's passes would pay; a decode window sized from measured
-decode and fold rates rather than the thread count; the desktop's live views on the GPU path.
+### Stage 3, device kernels and the collapse (2026-11-09)
+
+A production-order device test (`production_frame_timing`: stage and probe frame n + 1, collect
+n's probe and fold it, with the null) measured 11.7 ms per frame, the CLI's rate, so the fold
+was device-bound. Per frame: ~7.7 ms of kernels and ~2.4 ms for the upload (without the device
+copy 9.27 ms, without the CPU fill 9.39 ms; wgpu serialises the copy with the compute passes
+and the 2.2 ms fill of mapped memory also slowed the device). Timing-only f32 variants priced
+the f64 arithmetic: the level kernel's `ln`/`exp` ~1 ms and divisions ~0.5 ms, the gather's
+coordinates ~0.7 ms per frame.
+
+- **Malvar per quad**: 2.08 to 0.51 ms per frame (taps written out in table order, a
+  reflection-free interior, one 2x2 quad per invocation); 11.7 to 10.1 ms per frame.
+- **The ensemble null beside the fold**: timing the collapse showed `finish_with_report` at
+  3.39 s against 0.73 s for the 181-frame preview, the frame-count-dependent Monte Carlo
+  dominance null. Started on a spare thread when the fold starts
+  (`pyramid::prepare_ensemble_null`), it is ready before the collapse.
+- Not kept: fused, plane-batched pyramid passes (fewer dispatches gained nothing and the fused
+  expand was slower: net zero) and power-of-two divisions as multiplies (`accum` is
+  memory-bound).
+
+MEASURED, same command as above, against `5acedd52c`, alternated (ABAB) on an idle machine:
+20.5 / 20.6 s against 25.9 / 26.3 s; fold 15.5 / 15.4 s against 17.0 / 17.3 s; collapse and
+write 0.6 / 0.6 s against 3.8 / 3.9 s; peak private 7.1 GB both. Photograph and float master
+identical to the CPU path's; byte-freeze rows unchanged.
+
+Remaining: the level weights' f64 `ln`/`exp` (~1 ms per frame), which could be screened in f32
+and proven by exhaustive census over every input, as the probe noise is; exact f32 division
+(~0.5 ms); the gather's f64 coordinates (~0.7 ms); the upload (~2.4 ms); a decode window sized
+from measured rates; the desktop's live views on the GPU path.

@@ -4348,9 +4348,40 @@ fn quantile_pair(mut values: Vec<f32>, parametric: &Parametric) -> Option<(f32, 
 /// Percentiles a sparse null may be read at before extrapolation, highest first.
 const NULL_LADDER: [f64; 4] = [0.999, 0.99, 0.95, 0.90];
 
-/// Sorted Monte Carlo samples of a parametric null, cached by its parameters.
-type NullCache<K> =
-    std::sync::OnceLock<std::sync::Mutex<std::collections::HashMap<K, std::sync::Arc<Vec<f32>>>>>;
+/// Sorted Monte Carlo samples of a parametric null, cached by its parameters:
+/// one cell per key, so a caller arriving while another computes it waits for
+/// that result instead of computing it again.
+type NullCell = std::sync::Arc<std::sync::OnceLock<std::sync::Arc<Vec<f32>>>>;
+type NullCache<K> = std::sync::OnceLock<std::sync::Mutex<std::collections::HashMap<K, NullCell>>>;
+
+/// The cached null for `key`, computed by `make` once per process.
+fn cached_null<K: std::hash::Hash + Eq>(
+    cache: &'static NullCache<K>,
+    key: K,
+    make: impl FnOnce() -> Vec<f32>,
+) -> Parametric {
+    let cell = cache
+        .get_or_init(Default::default)
+        .lock()
+        .unwrap_or_else(|e| e.into_inner())
+        .entry(key)
+        .or_default()
+        .clone();
+    Parametric(cell.get_or_init(|| std::sync::Arc::new(make())).clone())
+}
+
+/// Compute the ensemble gate's parametric dominance null for a merge with
+/// `cfg` that will hold `frames` frames, so finishing it finds the null ready.
+/// It costs about 100,000 x `frames` gamma draws on one thread (~2.7 s at
+/// 1,444 frames) and depends on nothing but the frame count, so a caller can
+/// run this on a spare thread while the frames are folded. The cached value is
+/// exactly the one [`BandMerge::finish`] would compute; a wrong count only
+/// wastes the work.
+pub fn prepare_ensemble_null(cfg: &MergeConfig, frames: usize) {
+    if cfg.ensemble && frames > 1 {
+        let _ = dominance_null(frames, NU_SMOOTH);
+    }
+}
 
 /// A parametric null as sorted Monte Carlo samples, queried at any percentile.
 struct Parametric(std::sync::Arc<Vec<f32>>);
@@ -4396,45 +4427,35 @@ fn dominance_blend(zmax: f32, zsum: f32, frames: u32, lo: f32, hi: f32) -> f32 {
 /// smoothed band energies are independent `chi^2_nu / nu`: deterministic Monte
 /// Carlo (fixed seed), cached per `(n, nu)`.
 fn dominance_null(n: usize, nu: f32) -> Parametric {
-    use std::sync::Arc;
     static CACHE: NullCache<(usize, u32)> = std::sync::OnceLock::new();
-    let cache = CACHE.get_or_init(Default::default);
-    if let Some(v) = cache.lock().unwrap().get(&(n, nu.to_bits())) {
-        return Parametric(v.clone());
-    }
-    let mut gamma = gamma_sampler(nu, 0x9E37_79B9_7F4A_7C15 ^ n as u64);
-    let trials = 100_000usize;
-    let mut stats: Vec<f32> = (0..trials)
-        .map(|_| {
-            let (mut mx, mut sum) = (0.0f64, 0.0f64);
-            for _ in 0..n {
-                let z = gamma();
-                mx = mx.max(z);
-                sum += z;
-            }
-            (mx / ((sum - mx) / (n - 1) as f64)) as f32
-        })
-        .collect();
-    stats.sort_by(|a, b| a.total_cmp(b));
-    let v = Arc::new(stats);
-    cache.lock().unwrap().insert((n, nu.to_bits()), v.clone());
-    Parametric(v)
+    cached_null(&CACHE, (n, nu.to_bits()), || {
+        let mut gamma = gamma_sampler(nu, 0x9E37_79B9_7F4A_7C15 ^ n as u64);
+        let trials = 100_000usize;
+        let mut stats: Vec<f32> = (0..trials)
+            .map(|_| {
+                let (mut mx, mut sum) = (0.0f64, 0.0f64);
+                for _ in 0..n {
+                    let z = gamma();
+                    mx = mx.max(z);
+                    sum += z;
+                }
+                (mx / ((sum - mx) / (n - 1) as f64)) as f32
+            })
+            .collect();
+        stats.sort_by(|a, b| a.total_cmp(b));
+        stats
+    })
 }
 
 /// `chi^2_nu / nu`: deterministic Monte Carlo (fixed seed), cached per `nu`.
 fn chi2_null(nu: f32) -> Parametric {
-    use std::sync::Arc;
     static CACHE: NullCache<u32> = std::sync::OnceLock::new();
-    let cache = CACHE.get_or_init(Default::default);
-    if let Some(v) = cache.lock().unwrap().get(&nu.to_bits()) {
-        return Parametric(v.clone());
-    }
-    let mut gamma = gamma_sampler(nu, 0xD1B5_4A32_D192_ED03);
-    let mut v: Vec<f32> = (0..400_000).map(|_| gamma() as f32).collect();
-    v.sort_by(|a, b| a.total_cmp(b));
-    let v = Arc::new(v);
-    cache.lock().unwrap().insert(nu.to_bits(), v.clone());
-    Parametric(v)
+    cached_null(&CACHE, nu.to_bits(), || {
+        let mut gamma = gamma_sampler(nu, 0xD1B5_4A32_D192_ED03);
+        let mut v: Vec<f32> = (0..400_000).map(|_| gamma() as f32).collect();
+        v.sort_by(|a, b| a.total_cmp(b));
+        v
+    })
 }
 
 /// Deterministic `chi^2_nu / nu` deviates: xorshift uniforms, Box-Muller
