@@ -35,6 +35,20 @@ use super::PyramidFrameSource;
 /// the fold consumes them, without competing much with the data-parallel pool.
 pub(super) const DECODERS: usize = 4;
 
+/// Decoder threads for a render. When the GPU prepares frames the CPU's
+/// data-parallel work mostly leaves, and decoding (~75 ms per 33 MP frame on
+/// one core, MEASURED on bug-7) becomes the fold's limit at four threads:
+/// then use a quarter of the logical cores, at least [`DECODERS`] and at most
+/// 12. Decoding is a pure function of the file, so the count cannot change
+/// output (see the module docs).
+pub(super) fn decoders(gpu_prep: bool) -> usize {
+    if !gpu_prep {
+        return DECODERS;
+    }
+    let cores = std::thread::available_parallelism().map_or(DECODERS, |n| n.get());
+    (cores / 4).clamp(DECODERS, 12)
+}
+
 /// Wraps a frame source, serving planned indices from decode-ahead threads.
 pub(super) struct DecodeAhead<'s, S: PyramidFrameSource> {
     inner: &'s S,
@@ -53,6 +67,8 @@ struct State {
     /// Planned frames handed to the fold so far.
     taken: usize,
     ready: BTreeMap<usize, Result<Frame>>,
+    /// Frames the fold has finished with, freed by the decoders.
+    retired: Vec<Frame>,
     stop: bool,
 }
 
@@ -87,6 +103,13 @@ impl<'s, S: PyramidFrameSource> DecodeAhead<'s, S> {
             let index = {
                 let mut st = self.lock();
                 loop {
+                    if !st.retired.is_empty() {
+                        let retired = std::mem::take(&mut st.retired);
+                        drop(st);
+                        drop(retired);
+                        st = self.lock();
+                        continue;
+                    }
                     if st.stop || st.claimed >= self.plan.len() {
                         return;
                     }
@@ -132,6 +155,18 @@ impl<S: PyramidFrameSource> PyramidFrameSource for DecodeAhead<'_, S> {
     }
     fn len(&self) -> usize {
         self.inner.len()
+    }
+    fn retire(&self, frame: Frame) {
+        let mut st = self.lock();
+        if st.stop || st.claimed >= self.plan.len() {
+            // No decoder is left to free it.
+            drop(st);
+            drop(frame);
+            return;
+        }
+        st.retired.push(frame);
+        drop(st);
+        self.changed.notify_all();
     }
     fn decode(&self, index: usize) -> Result<Frame> {
         if self.position.get(index).copied().flatten().is_none() {

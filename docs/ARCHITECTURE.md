@@ -822,6 +822,35 @@ Another device or driver must pass `cargo test -p strehl-gpu -- --ignored` befor
 trusted. With the GPU fold the desktop's live mid-chunk accumulator preview and per-band
 surfaces are not produced (the device does not hand full fields back); stage progress is.
 
+**Frame preparation on the GPU.** When the fold is on the GPU and the render uses the
+default preparation (sidecar or no alignment, Catmull-Rom, Malvar, no defect correction, an
+integral black level; `STREHL_GPU_PREP=off` declines), the decoded u16 CFA is uploaded once
+and everything else runs on the device: Malvar, the checked Catmull-Rom gather with f64 site
+pulls, extraction, the luma variance, and the whole gate-floor probe. Only the probe's four
+interior f64 sums and its ensemble-null windows (at most 516² per band) come back. The probe
+is reproduced without uploading a probe frame:
+
+- its noise is `portable_math::probe_gaussian_pair` (SplitMix64 emulated in u32 pairs on the
+  device). The CPU fill uses the same functions; over 2^30 quantised samples they gave the
+  same u16 as the C runtime's `ln`/`sin`/`cos` (MEASURED,
+  `portable_math::tests::probe_noise_census`), and bug-7 renders were unchanged.
+- f64 runs at 1/64 rate on this GPU, so each pair is first computed by an f32 screen made of
+  IEEE add/multiply only (bit-reproducible). Its error against the f64 pair is bounded by
+  exhaustive census over all 2^24 values of each draw (`probe_f32_census`), and only
+  samples within twice that bound of a rounding boundary are recomputed in f64. The device
+  test runs a 33 MP fill against the CPU; with the margin set to zero it fails (59 samples).
+- the pooled interior sums are now each row summed in order, then the rows in order: a fixed
+  association any IEEE device reproduces (it was one sequential sum, which only the CPU
+  could). The f32 floor rounds the difference away except within ~1e-13 of a boundary; bug-7
+  (100 frames and all 1,444) and the byte-freeze rows were unchanged.
+
+MEASURED, bug-7 1,444 frames, desktop path (sRGB + linear master + progress + CA preview),
+same machine: CPU 329.9 s; GPU fold with CPU preparation 209.2 s; GPU preparation 42.2 s
+(0.02 s per frame folded), photograph and float master identical to the CPU's. At that rate
+decoding (~75 ms per frame on one core) is a limit, so with GPU preparation the decode-ahead
+pool uses a quarter of the logical cores (8 here) instead of 4. `STREHL_GPU_PROFILE=1` times
+every dispatch with GPU timestamps (diagnostic; it serialises submits).
+
 ### Determinism and provenance
 
 Output carries `Software` tag 305 with version and git build id, an `ImageDescription`

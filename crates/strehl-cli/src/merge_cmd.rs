@@ -5033,7 +5033,54 @@ struct BandWorker {
     /// chunk's accumulators on the device until [`BandWorker::finish_chunk`].
     #[cfg(feature = "gpu")]
     gpu: Option<strehl_gpu::GpuFold>,
+    /// The GPU also prepares each frame (gather, probe, extraction).
+    gpu_prep: bool,
 }
+
+/// Why the GPU cannot also prepare frames for this render, or `None`.
+///
+/// Preparation on the device reproduces the default full-resolution route
+/// only: Catmull-Rom, Malvar, no defect correction, an integral black level
+/// (the probe's exact mean), the probe's ordinary measurement, and no research
+/// consumer compiled in. `STREHL_GPU_PREP=off` keeps preparation on the CPU.
+fn gpu_prep_refusal(warps: Option<&WarpMap>, defect: bool, levels: Levels) -> Option<&'static str> {
+    if std::env::var(GPU_PREP_ENV).is_ok_and(|v| v.trim() == "off") {
+        return Some("STREHL_GPU_PREP=off");
+    }
+    if cfg!(any(
+        feature = "native-direct-planes",
+        feature = "research-lens-warp",
+        feature = "direct-cfa-gather",
+        feature = "native-green-cue",
+        feature = "native-boundary-radiance",
+        feature = "native-signed-black",
+        feature = "native-sensor-transfer"
+    )) {
+        return Some("a research consumer is compiled in");
+    }
+    if warps.is_some_and(|m| m.resampler() != Resampler::CatmullRom) {
+        return Some("the resampler is not Catmull-Rom");
+    }
+    if warps.is_some() && !align_cmd::fullres_gather_enabled() {
+        return Some("the plane gather is selected");
+    }
+    if strehl_core::demosaic::uses_directional() {
+        return Some("the directional demosaic is selected");
+    }
+    if defect {
+        return Some("defect correction is on");
+    }
+    if levels.black.fract() != 0.0 {
+        return Some("the black level is not integral");
+    }
+    if std::env::var(gatefloor::GATE_FLOOR_ENV).is_ok_and(|v| v.eq_ignore_ascii_case("debug")) {
+        return Some("the gate floor's debug null is on");
+    }
+    None
+}
+
+/// `STREHL_GPU_PREP=off` keeps frame preparation on the CPU while the GPU folds.
+pub const GPU_PREP_ENV: &str = "STREHL_GPU_PREP";
 
 /// `STREHL_GPU_FOLD`: `on` folds on the GPU (feature `gpu`) and refuses to run
 /// if it cannot; `auto` folds on the GPU when an eligible device and
@@ -5089,6 +5136,12 @@ trait PyramidFrameSource: Sync {
     }
     fn len(&self) -> usize;
     fn decode(&self, index: usize) -> Result<Frame>;
+    /// Hand back a frame the fold has finished with. Freeing a 66 MB buffer
+    /// costs milliseconds, so a source with threads of its own frees it there
+    /// rather than on the fold's critical path.
+    fn retire(&self, frame: Frame) {
+        drop(frame);
+    }
     #[cfg(feature = "native-green-cue")]
     fn green_cue_enabled(&self) -> bool {
         false
@@ -5789,12 +5842,13 @@ impl BandWorker {
             green_cue: None,
             #[cfg(feature = "gpu")]
             gpu: None,
+            gpu_prep: false,
         }
     }
 
     /// Attach the GPU fold if `STREHL_GPU_FOLD` asks for it; returns the
     /// banner line describing the decision.
-    fn attach_gpu(&mut self, temporal_active: bool) -> Result<String> {
+    fn attach_gpu(&mut self, temporal_active: bool, prep: Option<&'static str>) -> Result<String> {
         let request = gpu_fold_requested()?;
         if request == GpuFoldRequest::Off {
             return Ok("off (CPU fold; STREHL_GPU_FOLD=on or auto folds on the GPU)".into());
@@ -5802,7 +5856,7 @@ impl BandWorker {
         let outcome = if temporal_active {
             Err("the temporal-energy fold has no GPU implementation".to_string())
         } else {
-            self.try_gpu()
+            self.try_gpu(prep)
         };
         match (outcome, request) {
             (Ok(line), _) => Ok(line),
@@ -5811,21 +5865,197 @@ impl BandWorker {
         }
     }
 
+    /// `prep_refusal` is why the GPU cannot also prepare frames, or `None`.
     #[cfg(feature = "gpu")]
-    fn try_gpu(&mut self) -> std::result::Result<String, String> {
-        let gpu = strehl_gpu::GpuFold::new(&self.merge)?;
+    fn try_gpu(
+        &mut self,
+        prep_refusal: Option<&'static str>,
+    ) -> std::result::Result<String, String> {
+        let full = self.domain.full;
+        let r = self.domain.rect;
+        let gpu = match prep_refusal {
+            None => strehl_gpu::GpuFold::with_preparation(
+                &self.merge,
+                (full.width, full.height),
+                [r.x, r.y, r.width, r.height],
+            )?,
+            Some(_) => strehl_gpu::GpuFold::new(&self.merge)?,
+        };
         let line = format!(
-            "ON, {} ({} MB device memory); bit-identical to the CPU fold",
+            "ON, {} ({} MB device memory); bit-identical to the CPU fold\n                  \
+             preparation: {}",
             gpu.adapter,
-            gpu.device_bytes() >> 20
+            gpu.device_bytes() >> 20,
+            match prep_refusal {
+                None => "GPU (gather, probe, extraction, variance)".to_string(),
+                Some(why) => format!("CPU ({why})"),
+            }
         );
+        self.gpu_prep = prep_refusal.is_none();
         self.gpu = Some(gpu);
         Ok(line)
     }
 
     #[cfg(not(feature = "gpu"))]
-    fn try_gpu(&mut self) -> std::result::Result<String, String> {
+    fn try_gpu(&mut self, _prep: Option<&'static str>) -> std::result::Result<String, String> {
         Err("this engine was built without the `gpu` feature".into())
+    }
+
+    /// Decode, prepare and fold one frame with the GPU doing the preparation.
+    /// The same steps, checks and order as `fold_observed` over
+    /// `prepare_frame_into`: parity and preview skips, decode and level
+    /// checks, refusal, the probe (noise, gather and pyramid on the device,
+    /// floor summed here), the null frame, then the fold.
+    #[cfg(feature = "gpu")]
+    #[allow(clippy::too_many_arguments)]
+    fn fold_gpu_prepared(
+        &mut self,
+        source: &impl PyramidFrameSource,
+        index: usize,
+        levels: Levels,
+        noise: &NoiseModel,
+        warps: Option<&WarpMap>,
+        progress: Option<&crate::ui_progress::Progress>,
+    ) -> Result<bool> {
+        self.beta.clear();
+        if let Some(p) = self.floor.as_mut() {
+            p.invalidate();
+        }
+        if !frame_parity_keeps(index)? || !ca_refine::preview_keeps(index) {
+            return Ok(false);
+        }
+        if let Some(progress) = progress {
+            progress.merge_step(index, "decode", None, "started");
+        }
+        let frame = source
+            .decode(index)
+            .with_context(|| format!("frame {index}"))?;
+        validate_pyramid_frame(&frame, self.domain.full, index)?;
+        ensure!(
+            frame.levels == levels,
+            "frame {index} has levels black {} white {}, but the stack was calibrated at \
+             black {} white {}",
+            frame.levels.black,
+            frame.levels.white,
+            levels.black,
+            levels.white
+        );
+        if let Some(progress) = progress {
+            progress.merge_step(index, "decode", None, "finished");
+        }
+        let t = match warps {
+            Some(map) => match map.warp(index)? {
+                FrameWarp::Placed(t) => Some(*t),
+                FrameWarp::Refused(_) => {
+                    if let Some(progress) = progress {
+                        progress.merge_step(index, "gather", None, "skipped");
+                    }
+                    return Ok(false);
+                }
+            },
+            None => None,
+        };
+        let pulls = match t {
+            Some(t) => {
+                let ident = strehl_raw::identity(&frame.path);
+                let ca = strehl_core::optics::profile_for_capture_env(
+                    ident.model.as_deref(),
+                    ident.lens_type3,
+                )?;
+                let pull = |dx: usize, dy: usize| {
+                    let s = strehl_core::optics::OpticalProfile::compose(
+                        ca,
+                        strehl_core::optics::cfa_site_channel(dx, dy),
+                        t,
+                    );
+                    strehl_gpu::SitePull {
+                        a: [s.a.re, s.a.im],
+                        b: [s.b.re, s.b.im],
+                    }
+                };
+                Some([pull(0, 0), pull(1, 0), pull(0, 1), pull(1, 1)])
+            }
+            None => None,
+        };
+        let gain = align_cmd::wb_gains(&frame.wb_coeffs);
+        fn raw_frame(
+            f: &strehl_raw::Frame,
+            black: f32,
+            gain: [f32; 3],
+            pulls: Option<[strehl_gpu::SitePull; 4]>,
+        ) -> strehl_gpu::RawFrame<'_> {
+            strehl_gpu::RawFrame {
+                data: &f.data,
+                stride: f.stride,
+                active: [f.active.x, f.active.y],
+                black,
+                gain,
+                pulls,
+            }
+        }
+        let black = levels.black;
+        let gpu = self
+            .gpu
+            .as_mut()
+            .expect("GPU preparation without a GPU fold");
+        if let (Some(probe), Some(_)) = (self.floor.as_mut(), t) {
+            if let Some(progress) = progress {
+                progress.merge_step(index, "gather", None, "started");
+            }
+            let windows = self.merge.null_window_rects();
+            probe.measure_external(f64::from(black), index, &windows, |fill, sums, windows| {
+                let noise = strehl_gpu::ProbeNoise {
+                    seed: fill.seed,
+                    level: fill.level,
+                    sigma: fill.sigma,
+                };
+                let out = gpu
+                    .probe(&raw_frame(&frame, black, gain, pulls), noise, sums, windows)
+                    .map_err(|e| anyhow::anyhow!(e))?;
+                Ok((out.sums, out.windows))
+            })?;
+            self.beta
+                .extend(probe.last().iter().copied().take_while(|b| b.is_finite()));
+        }
+        let frame_beta = (!self.beta.is_empty()).then_some(self.beta.as_slice());
+        if let Some(b) = frame_beta {
+            if self.beta_sum.len() < b.len() {
+                self.beta_sum.resize(b.len(), 0.0);
+            }
+            for (acc, v) in self.beta_sum.iter_mut().zip(b) {
+                *acc += f64::from(*v);
+            }
+            self.beta_n += 1;
+        }
+        let (g1, g2) = (noise.plane(CfaPlane::G1), noise.plane(CfaPlane::G2));
+        let green = strehl_gpu::GreenNoise {
+            gain: [g1.gain_dn_per_e, g2.gain_dn_per_e],
+            read_dn: [
+                g1.read_noise_e * g1.gain_dn_per_e,
+                g2.read_noise_e * g2.gain_dn_per_e,
+            ],
+        };
+        gpu.add_raw_frame(
+            &mut self.merge,
+            &raw_frame(&frame, black, gain, pulls),
+            green,
+            frame_beta,
+        );
+        // The ensemble null after the fold is queued, so this CPU work overlaps
+        // the device's: the null windows and the fold share no state, so the
+        // order is free (the CPU path adds the null first).
+        if let Some((windows, beta, var)) = self.floor.as_ref().and_then(|p| p.null_windows()) {
+            self.merge.add_null_windows(&windows, &beta, var);
+        }
+        if let Some(progress) = progress {
+            progress.merge_step(index, "gather", None, "finished");
+            gpu_fold_phases(
+                &crate::ui_progress::FrameTap::new(progress, index, self.merge.sizes().len()),
+                self.merge.sizes().len(),
+            );
+        }
+        source.retire(frame);
+        Ok(true)
     }
     fn gpu_active(&self) -> bool {
         #[cfg(feature = "gpu")]
@@ -5908,6 +6138,10 @@ impl BandWorker {
         defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
         progress: Option<&crate::ui_progress::Progress>,
     ) -> Result<bool> {
+        #[cfg(feature = "gpu")]
+        if self.gpu_prep {
+            return self.fold_gpu_prepared(source, index, levels, noise, warps, progress);
+        }
         if !self.prepare_observed(source, index, levels, noise, warps, defect, progress)? {
             return Ok(false);
         }
@@ -8105,7 +8339,15 @@ fn run_pyramid_prepared_with_sensor(
         .build()
         .context("building Pyramid execution pool")?;
     let mut worker = BandWorker::new(domain, cfg);
-    eprintln!("gpu fold        : {}", worker.attach_gpu(temporal_active)?);
+    eprintln!(
+        "gpu fold        : {}",
+        worker.attach_gpu(
+            temporal_active,
+            gpu_prep_refusal(warps, defect_plan.is_some(), levels)
+        )?
+    );
+    // Preparing on the device folds frame by frame; decoding still runs ahead.
+    let lookahead = if worker.gpu_prep { 1 } else { lookahead };
     // A GPU chunk's accumulators live on the device until the chunk ends, so
     // the desktop's live mid-chunk accumulator view has nothing to read.
     let live_view = !worker.gpu_active();
@@ -8123,10 +8365,20 @@ fn run_pyramid_prepared_with_sensor(
         fold_decode_plan(paths.len())
     };
     let original_source = source;
-    let ahead = decode_ahead::DecodeAhead::new(original_source, fold_plan, (2 * lookahead).max(8));
+    let decoders = decode_ahead::decoders(worker.gpu_prep);
+    let ahead = decode_ahead::DecodeAhead::new(
+        original_source,
+        fold_plan,
+        (2 * lookahead).max(8).max(decoders + 2),
+    );
+    if worker.gpu_prep {
+        eprintln!(
+            "decode ahead    : {decoders} decoder threads (frame preparation is on the GPU, so the CPU decodes)"
+        );
+    }
     let source = &ahead;
     std::thread::scope(|scope| -> Result<()> {
-        for _ in 0..decode_ahead::DECODERS {
+        for _ in 0..decoders {
             scope.spawn(|| ahead.run_decoder());
         }
         let fold_result = pool.install(|| -> Result<()> {

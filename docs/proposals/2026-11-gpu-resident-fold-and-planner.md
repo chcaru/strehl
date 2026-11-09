@@ -1,7 +1,8 @@
 # GPU-resident fold and a CPU/GPU/RAM planner
 
 **Status:** Stages 1-2 BUILT (GPU fold, CPU-side weights replaced by portable `ln`/`exp`
-after the owner approved a one-time change); planner and GPU preparation still proposals.
+after the owner approved a one-time change); stage 3's GPU preparation BUILT; the planner
+is only its first rule (decoder threads); asynchronous overlap still a proposal.
 **Date:** 2026-11-08.
 **Scope:** the default `stack --merge pyramid` path, desktop and CLI.
 
@@ -163,3 +164,42 @@ MEASURED, desktop path (sRGB + linear master + UI progress + CA preview), RTX 50
 With the fold on the GPU the per-frame cost is now the CPU's frame preparation (gather,
 probe, extraction): ~0.12 s per frame. Stage 3 (GPU preparation, planner and overlap) is the
 next lever; the gather kernels already exist and are exact.
+
+### Stage 3, GPU preparation (2026-11-08)
+
+Built as described in `docs/ARCHITECTURE.md` § The GPU fold. What changed from the plan
+above, and why:
+
+- **The probe noise moved to the device, not stayed on the CPU.** A portable f64 `ln` and
+  `sin`/`cos` reproduce the C runtime's quantised noise exactly on 2^30 samples, so the CPU
+  switched to them and the 66 MB probe frame is no longer built, filled or uploaded.
+- **The pooled sums moved too**, by fixing their association (rows, then rows of row sums)
+  instead of keeping one sequential sum. This was not on the plan: it was the price of the
+  44 MB probe download plus a 5 ms serial sum per frame.
+- **f64 throughput, not exactness, was the device limit.** The noise kernel was 5.3 ms per
+  frame in f64; an f32 screen with an exhaustively bounded error and an f64 fallback near
+  rounding boundaries made it 1.0 ms without changing a sample.
+
+MEASURED progression on bug-7, CLI `stack --merge pyramid --srgb --refine-ca=off`, fold
+wall from the `folded` line (four canonical chunks either way, each end ~0.2 s):
+
+| Step | 100 frames | 200 frames |
+| --- | ---: | ---: |
+| CPU preparation (GPU fold) | 20.6 s | |
+| device gather/probe, CPU-filled probe uploaded | 5.9 s | |
+| device probe noise, probe levels read straight into the CPU pyramid, null after submit | 4.8 s | |
+| frames freed on decoder threads | | 7.1 s |
+| ensemble null's levels in parallel | | 6.3-6.4 s |
+| device interior sums and null windows (no pyramid download) | | 5.5-5.6 s |
+| f32 screen for the noise | | 5.3 s |
+| parallel upload staging | | 5.4-5.5 s (no gain: decoding was the limit) |
+| 8 decoder threads | | 5.0-5.1 s |
+
+Decoded pixels were compared with the CPU path (`target/perf/cmp.py`, identical) after every row
+except frame freeing, which the next comparison covers.
+Full stack, desktop path: 42.2 s against 90.1 s at the start of stage 3.
+
+Remaining, in order of expected value: overlap the probe of frame *n + 1* with the CPU work of
+frame *n* (needs a third raw slot); a persistent mapped upload ring instead of wgpu's
+per-write staging; the chunk-end readback (~0.2 s each, four per render); CPU RAM, which still
+holds the CPU frame workspace and probe pyramid the GPU path no longer uses.

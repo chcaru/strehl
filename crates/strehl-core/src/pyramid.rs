@@ -2066,45 +2066,79 @@ impl BandMerge {
     /// without a window, are skipped and keep the parametric thresholds. A
     /// no-op when the gate is off.
     pub fn add_null_frame(&mut self, levels: &[&[f32]], beta: &[f32], variance: f32) {
-        let n = levels.len().min(beta.len()).min(self.null.len());
-        for k in 0..n {
-            let win = &mut self.null[k];
-            let sz = self.sizes[k];
-            if win.w == 0 || beta[k].is_nan() || beta[k] <= 0.0 || levels[k].len() != sz.pixels() {
-                continue;
-            }
-            // The window plus the smoothing kernel's 2-sample reach, so the
-            // window's own energies are exactly the full level's.
-            let (ex0, ey0) = (win.x0 - 2, win.y0 - 2);
-            let esz = LevelSize {
-                width: win.w + 4,
-                height: win.h + 4,
-            };
-            let mut e: Vec<f32> = (0..esz.height)
-                .flat_map(|y| {
-                    let row = (ey0 + y) * sz.width + ex0;
-                    levels[k][row..row + esz.width].iter().copied()
+        let windows: Vec<Option<Vec<f32>>> = self
+            .null_window_rects()
+            .into_iter()
+            .zip(levels)
+            .zip(&self.sizes)
+            .map(|((rect, level), sz)| {
+                let [x, y, w, h] = rect?;
+                (level.len() == sz.pixels()).then(|| {
+                    (y..y + h)
+                        .flat_map(|r| {
+                            level[r * sz.width + x..r * sz.width + x + w]
+                                .iter()
+                                .copied()
+                        })
+                        .collect()
                 })
-                .collect();
-            let lv = e.clone();
-            let mut scratch = vec![0.0f32; esz.pixels() + esz.width];
-            band_energy(&lv, esz, &mut e, &mut scratch);
-            let unit = (beta[k] * variance).max(f32::MIN_POSITIVE);
-            for y in 0..win.h {
-                for x in 0..win.w {
-                    let i = y * win.w + x;
-                    let j = (y + 2) * esz.width + x + 2;
-                    let z = e[j] / unit;
-                    win.zmax[i] = win.zmax[i].max(z);
-                    win.zsum[i] += z;
-                    win.lsum[i] += lv[j];
-                    win.esum[i] += e[j];
-                }
-            }
-            win.frames += 1;
-        }
+            })
+            .collect();
+        let refs: Vec<Option<&[f32]>> = windows.iter().map(|w| w.as_deref()).collect();
+        self.add_null_windows(&refs, beta, variance);
     }
 
+    /// Each level's null window widened by the smoothing kernel's 2-sample
+    /// reach, as `[x, y, w, h]` in that level's samples: the only part of a
+    /// probe band [`Self::add_null_frame`] reads. `None` where a level has no
+    /// window (or the gate is off).
+    pub fn null_window_rects(&self) -> Vec<Option<[usize; 4]>> {
+        self.null
+            .iter()
+            .map(|win| (win.w > 0).then(|| [win.x0 - 2, win.y0 - 2, win.w + 4, win.h + 4]))
+            .collect()
+    }
+
+    /// [`Self::add_null_frame`] given only each level's widened window
+    /// ([`Self::null_window_rects`]), row-major.
+    pub fn add_null_windows(&mut self, windows: &[Option<&[f32]>], beta: &[f32], variance: f32) {
+        let n = windows.len().min(beta.len()).min(self.null.len());
+        // Levels are independent windows, so they run in parallel; each
+        // level's arithmetic is unchanged.
+        self.null[..n]
+            .par_iter_mut()
+            .enumerate()
+            .for_each(|(k, win)| {
+                // The window plus the smoothing kernel's 2-sample reach, so the
+                // window's own energies are exactly the full level's.
+                let esz = LevelSize {
+                    width: win.w + 4,
+                    height: win.h + 4,
+                };
+                let Some(lv) = windows[k].filter(|lv| lv.len() == esz.pixels()) else {
+                    return;
+                };
+                if win.w == 0 || beta[k].is_nan() || beta[k] <= 0.0 {
+                    return;
+                }
+                let mut e = lv.to_vec();
+                let mut scratch = vec![0.0f32; esz.pixels() + esz.width];
+                band_energy(lv, esz, &mut e, &mut scratch);
+                let unit = (beta[k] * variance).max(f32::MIN_POSITIVE);
+                for y in 0..win.h {
+                    for x in 0..win.w {
+                        let i = y * win.w + x;
+                        let j = (y + 2) * esz.width + x + 2;
+                        let z = e[j] / unit;
+                        win.zmax[i] = win.zmax[i].max(z);
+                        win.zsum[i] += z;
+                        win.lsum[i] += lv[j];
+                        win.esum[i] += e[j];
+                    }
+                }
+                win.frames += 1;
+            });
+    }
     /// Thresholds for level `k`'s three ensemble statistics: each its null's
     /// `NULL_Q_LO` and `NULL_Q_HI` percentiles, measured from the probe frames when every
     /// folded frame contributed one, else from the white-noise parametric

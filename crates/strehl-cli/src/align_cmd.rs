@@ -1761,7 +1761,7 @@ fn rggb_channel_index(x: usize, y: usize) -> usize {
 /// usable balance; unity for all three is then the only consistent answer,
 /// because *mismatched* gains are precisely what a colour-difference demosaic
 /// cannot tolerate, and a half-applied balance is worse than none.
-fn wb_gains(wb: &[f32; 4]) -> [f32; 3] {
+pub(crate) fn wb_gains(wb: &[f32; 4]) -> [f32; 3] {
     let (r, g, b) = (wb[0], wb[1], wb[2]);
     if r.is_finite() && g.is_finite() && b.is_finite() && r > 0.0 && g > 0.0 && b > 0.0 {
         [r / g, 1.0, b / g]

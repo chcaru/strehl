@@ -1035,3 +1035,13 @@ is the identity source referred to below.
     exactness condition (NoContraction, f64 division, portable `ln`/`exp`,
     `DenormPreserve`) must be shown necessary by a mutation that makes the test
     fail, not only sufficient by a test that passes.
+    **Screening amendment (2026-11-08).** Cheaper arithmetic may stand in for
+    the exact path only where its error is bounded by an exhaustive census of
+    the inputs it can see, and every value within (twice) that bound of a
+    decision boundary falls back to the exact path. The probe noise's f32
+    screen is censused over all 2^24 values of each draw and falls back to f64
+    near a rounding boundary; its device test fails (59 of 33 M samples) with the
+    margin set to zero, which is the mutation that shows the fallback carries
+    weight. Changing an association order is an output change even when it is
+    expected to round away: say so, attribute it, and show the outputs unchanged
+    (the probe's row-blocked sums: bug-7 100 and 1,444 frames, byte-freezes).

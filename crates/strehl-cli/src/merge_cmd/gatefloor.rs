@@ -191,6 +191,9 @@ pub(super) struct Probe {
     beta: Vec<f32>,
     /// The previous probe frame, kept so its sample allocation is reused.
     recycled: Option<Frame>,
+    /// The ensemble null's windows of the last device measurement
+    /// ([`Probe::measure_external`]); the CPU path reads `pyr` instead.
+    windows: Vec<Option<Vec<f32>>>,
 }
 
 /// `template.clone()`, reusing `recycled`'s sample allocation.
@@ -249,6 +252,7 @@ impl Probe {
             beta: Vec::new(),
             sizes,
             recycled: None,
+            windows: Vec::new(),
         }
     }
 
@@ -582,48 +586,126 @@ impl Probe {
         // its pre-warp variance is `sigma^2 / 2` exactly. Taken analytically and
         // not measured, because a measured denominator would carry the same
         // black-border contamination the numerator is cropped to avoid.
-        let sigma0_sq = PROBE_SIGMA * PROBE_SIGMA * 0.5;
-
         self.pyr.build(&self.luma, &mut self.ws);
-        self.beta.clear();
-        // Correct only the bands this probe can certify, and only where the
-        // effect is bigger than the probe's own error.
-        //
-        // Two measurements set this bound, both from the identity null on real
-        // frames -- a warp that is an exact no-op, so every band must come back
-        // at the white value:
-        //
-        //   band          0       1       2       3   |     4       5       6
-        //   null      1.0000  0.999   0.995   1.003   | 1.031   1.021   12.6
-        //   warped    1.149   0.944   1.002   1.028   | 1.022   1.037    ~1.0
-        //
-        // Bands 0..3 are certified to within 0.5% and carry a real effect at
-        // band 0 (+14.9%) and band 1 (-5.6%). At bands 4 and 5 the null's own
-        // error (+3.1%, +2.1%) is the same size as the difference the warp
-        // makes there, so a correction would be reporting the instrument. Band
-        // 6 is the truncation seam described above.
-        //
-        // Expressed as a count rather than a hard index so a sensor whose
-        // pyramid is shallower keeps a valid slice; `add_frame_with_gain` falls
-        // back to white beyond the end.
+        self.beta_from_pyramid(index, t);
+        Ok(())
+    }
+
+    /// Measure this frame's floor on a device. `device` receives the noise
+    /// fill [`Self::measure`] would write into a copy of the frame (seed,
+    /// level and sigma for its active complete quads) and must build the probe
+    /// from the frame itself, as the CPU does, then return two things from the
+    /// probe's Laplacian bands: the [`square_sum`] over each requested
+    /// `[level, x, y, w, h]` interior, in order, and each requested window of
+    /// `windows` (row-major; `None` where none was requested). The windows are
+    /// kept for [`Self::null_windows`].
+    pub(super) fn measure_external(
+        &mut self,
+        black: f64,
+        index: usize,
+        windows: &[Option<[usize; 4]>],
+        device: impl FnOnce(
+            ProbeFill,
+            &[[usize; 5]],
+            &[Option<[usize; 4]>],
+        ) -> Result<(Vec<f64>, Vec<Option<Vec<f32>>>)>,
+    ) -> Result<&[f32]> {
+        anyhow::ensure!(!debug(), "the probe's debug null runs on the CPU only");
+        // The fill mode cannot change the noise (rows are seeded so the
+        // parallel fill equals the serial one), but a malformed setting is
+        // refused here as the CPU refuses it.
+        match std::env::var(PROBE_FILL_ENV) {
+            Ok(raw) => parse_fill_mode(Some(&raw))?,
+            Err(std::env::VarError::NotPresent) => parse_fill_mode(None)?,
+            Err(error) => return Err(error).context(PROBE_FILL_ENV),
+        };
+        let fill = ProbeFill {
+            seed: noise_seed(index),
+            level: black + PROBE_LEVEL,
+            sigma: PROBE_SIGMA,
+        };
+        let rects: Vec<[usize; 5]> = (0..self.certified())
+            .filter_map(|k| interior(self.sizes[k]).map(|[x, y, w, h]| [k, x, y, w, h]))
+            .collect();
+        let (sums, got) = device(fill, &rects, windows)?;
+        anyhow::ensure!(
+            sums.len() == rects.len()
+                && got.len() == windows.len()
+                && got.iter().zip(windows).all(|(g, w)| match (g, w) {
+                    (Some(g), Some(r)) => g.len() == r[2] * r[3],
+                    (None, None) => true,
+                    _ => false,
+                }),
+            "the device probe returned the wrong shape"
+        );
+        self.windows = got;
+        let mut per_band = vec![None; self.certified()];
+        for (r, s) in rects.iter().zip(&sums) {
+            per_band[r[0]] = Some(*s);
+        }
+        self.beta_from_sums(&per_band);
+        self.apply_scale();
+        Ok(&self.beta)
+    }
+
+    /// Bands the probe certifies.
+    ///
+    /// Correct only the bands this probe can certify, and only where the
+    /// effect is bigger than the probe's own error.
+    ///
+    /// Two measurements set this bound, both from the identity null on real
+    /// frames -- a warp that is an exact no-op, so every band must come back
+    /// at the white value:
+    ///
+    /// ```text
+    ///   band          0       1       2       3   |     4       5       6
+    ///   null      1.0000  0.999   0.995   1.003   | 1.031   1.021   12.6
+    ///   warped    1.149   0.944   1.002   1.028   | 1.022   1.037    ~1.0
+    /// ```
+    ///
+    /// Bands 0..3 are certified to within 0.5% and carry a real effect at
+    /// band 0 (+14.9%) and band 1 (-5.6%). At bands 4 and 5 the null's own
+    /// error (+3.1%, +2.1%) is the same size as the difference the warp
+    /// makes there, so a correction would be reporting the instrument. Band
+    /// 6 is the truncation seam described above.
+    ///
+    /// Expressed as a count rather than a hard index so a sensor whose
+    /// pyramid is shallower keeps a valid slice; `add_frame_with_gain` falls
+    /// back to white beyond the end.
+    fn certified(&self) -> usize {
         const CERTIFIED_BANDS: usize = 4;
-        let measurable = CERTIFIED_BANDS.min(self.sizes.len().saturating_sub(2));
-        for k in 0..measurable {
-            let sz = self.sizes[k];
-            match pooled_mean_square(self.pyr.level(k), sz) {
-                Some(e) => self.beta.push((e / sigma0_sq) as f32),
+        CERTIFIED_BANDS.min(self.sizes.len().saturating_sub(2))
+    }
+
+    /// The floor from the built probe pyramid: the tail of `run_gather_impl`.
+    fn beta_from_pyramid(&mut self, index: usize, t: Similarity) {
+        let sums: Vec<Option<f64>> = (0..self.certified())
+            .map(|k| {
+                let sz = self.sizes[k];
+                interior(sz).map(|r| square_sum(self.pyr.level(k), sz.width, r))
+            })
+            .collect();
+        self.beta_from_sums(&sums);
+        if debug() {
+            self.report(index, t);
+        }
+    }
+
+    /// The floor from each certified band's interior [`square_sum`], `None`
+    /// where the band has no interior.
+    fn beta_from_sums(&mut self, sums: &[Option<f64>]) {
+        let sigma0_sq = PROBE_SIGMA * PROBE_SIGMA * 0.5;
+        self.beta.clear();
+        for (k, sum) in sums.iter().enumerate() {
+            match interior(self.sizes[k]).zip(*sum) {
+                Some(([_, _, w, h], s)) => self.beta.push((s / (w * h) as f64 / sigma0_sq) as f32),
                 // Too few interior samples at this level to say anything. Left
                 // as NaN so the caller's `is_finite` filter drops it back to the
                 // white value instead of gating on a number nobody measured.
                 None => self.beta.push(f32::NAN),
             }
         }
-        if debug() {
-            self.report(index, t);
-        }
-        Ok(())
     }
-
     /// Apply [`GATE_FLOOR_SCALE_ENV`], extending to every Laplacian band first.
     ///
     /// Called from `measure` rather than `run`, and after the debug block, so
@@ -688,42 +770,78 @@ impl Probe {
     /// gate's dominance and coherence statistics are ratios, so a band whose
     /// floor is the white value (exactly as the merge itself gates it) still
     /// gives a correctly shaped null.
-    pub(super) fn null_frame(&self) -> Option<(Vec<&[f32]>, Vec<f32>, f32)> {
+    pub(super) fn null_frame(&self) -> Option<NullInputs<&[f32]>> {
+        let beta = self.null_beta()?;
+        Some((
+            (0..beta.len()).map(|k| self.pyr.level(k)).collect(),
+            beta,
+            (PROBE_SIGMA * PROBE_SIGMA * 0.5) as f32,
+        ))
+    }
+
+    /// [`Self::null_frame`] after a device measurement: each band's null
+    /// window only (`BandMerge::add_null_windows`).
+    pub(super) fn null_windows(&self) -> Option<NullInputs<Option<&[f32]>>> {
+        let beta = self.null_beta()?;
+        Some((
+            self.windows.iter().map(|w| w.as_deref()).collect(),
+            beta,
+            (PROBE_SIGMA * PROBE_SIGMA * 0.5) as f32,
+        ))
+    }
+
+    /// Every Laplacian band's floor for the null: measured where certified,
+    /// white beyond; `None` before a measurement.
+    fn null_beta(&self) -> Option<Vec<f32>> {
         let n = self.beta.iter().take_while(|b| b.is_finite()).count();
         (n > 0).then(|| {
             let bands = self.sizes.len() - 1;
             let white = strehl_core::pyramid::BandGain::measure(bands);
-            let beta = (0..bands)
+            (0..bands)
                 .map(|k| if k < n { self.beta[k] } else { white.beta(k) })
-                .collect();
-            (
-                (0..bands).map(|k| self.pyr.level(k)).collect(),
-                beta,
-                (PROBE_SIGMA * PROBE_SIGMA * 0.5) as f32,
-            )
+                .collect()
         })
     }
 }
 
-/// Mean square of a band's interior, or `None` if the crop leaves too little.
-fn pooled_mean_square(level: &[f32], sz: LevelSize) -> Option<f64> {
+/// A band's interior `[x, y, w, h]`, the part the floor pools, or `None` if
+/// the crop leaves too little.
+pub(super) fn interior(sz: LevelSize) -> Option<[usize; 4]> {
     let mx = (sz.width / MARGIN_FRACTION).max(3);
     let my = (sz.height / MARGIN_FRACTION).max(3);
     if sz.width <= 2 * mx || sz.height <= 2 * my {
         return None;
     }
     let (iw, ih) = (sz.width - 2 * mx, sz.height - 2 * my);
-    if iw * ih < MIN_SAMPLES {
-        return None;
-    }
-    let mut acc = 0.0f64;
-    for y in my..sz.height - my {
-        let row = &level[y * sz.width + mx..y * sz.width + sz.width - mx];
-        for v in row {
-            acc += f64::from(*v) * f64::from(*v);
-        }
-    }
-    Some(acc / (iw * ih) as f64)
+    (iw * ih >= MIN_SAMPLES).then_some([mx, my, iw, ih])
+}
+
+/// Mean square of a band's interior, or `None` if the crop leaves too little.
+#[cfg(test)]
+fn pooled_mean_square(level: &[f32], sz: LevelSize) -> Option<f64> {
+    let rect = interior(sz)?;
+    Some(square_sum(level, sz.width, rect) / (rect[2] * rect[3]) as f64)
+}
+
+/// Sum of squares over `rect` of a level `width` samples wide, in f64: each
+/// row summed in order, then the row sums in row order.
+///
+/// The association is fixed, so any IEEE-754 device reproduces the sum bit
+/// for bit, rows in parallel; the GPU probe computes it this way too. (Until
+/// 2026-11-08 this was one sequential sum over the whole interior, which only
+/// the CPU could reproduce. The f32 floor it feeds rounds away the difference
+/// except within ~1e-13 of a rounding boundary.)
+pub(super) fn square_sum(level: &[f32], width: usize, rect: [usize; 4]) -> f64 {
+    let [x, y, w, h] = rect;
+    let rows: Vec<f64> = (y..y + h)
+        .into_par_iter()
+        .map(|r| {
+            level[r * width + x..r * width + x + w]
+                .iter()
+                .fold(0.0f64, |acc, v| acc + f64::from(*v) * f64::from(*v))
+        })
+        .collect();
+    rows.iter().fold(0.0f64, |acc, r| acc + r)
 }
 
 /// Select the deterministic execution schedule, never a different noise law.
@@ -741,6 +859,20 @@ fn parse_fill_mode(raw: Option<&str>) -> Result<FillMode> {
         Some("serial") => Ok(FillMode::Serial),
         _ => anyhow::bail!("{PROBE_FILL_ENV} must be unset, serial, or parallel"),
     }
+}
+
+/// A noise-only frame for the ensemble null: per-band data, per-band floors and
+/// the luma variance they are relative to.
+pub(super) type NullInputs<L> = (Vec<L>, Vec<f32>, f32);
+
+/// The probe's noise, as [`fill_probe_noise`] writes it: SplitMix64 from
+/// `seed`, one Box-Muller pair per two sites in active-relative row order,
+/// `level + sigma * g` quantised to u16, over the frame's complete quads.
+#[derive(Clone, Copy, Debug)]
+pub(super) struct ProbeFill {
+    pub seed: u64,
+    pub level: f64,
+    pub sigma: f64,
 }
 
 /// Fill only the complete quads that both gather implementations consume.
@@ -832,19 +964,22 @@ fn fill_noise_from_state<'a>(
         let mut z = s;
         z = (z ^ (z >> 30)).wrapping_mul(0xBF58_476D_1CE4_E5B9);
         z = (z ^ (z >> 27)).wrapping_mul(0x94D0_49BB_1331_11EB);
-        f64::from(((z ^ (z >> 31)) >> 40) as u32) / f64::from(1u32 << 24)
+        ((z ^ (z >> 31)) >> 40) as u32
     };
     let mut spare: Option<f64> = None;
     for d in data {
-        // Box-Muller, both draws used.
+        // Box-Muller, both draws used. The transcendentals are the portable
+        // ones the device also evaluates, not the C runtime's: over 2^30
+        // quantised samples the two gave identical u16 (MEASURED,
+        // `portable_math::tests::probe_noise_census`), and with them the probe
+        // can be generated on the GPU and match on any platform.
         let g = match spare.take() {
             Some(g) => g,
             None => {
-                let (u1, u2) = (next().max(1e-12), next());
-                let r = (-2.0 * u1.ln()).sqrt();
-                let th = std::f64::consts::TAU * u2;
-                spare = Some(r * th.sin());
-                r * th.cos()
+                let k1 = next();
+                let (c, s) = strehl_core::portable_math::probe_gaussian_pair(k1, next());
+                spare = Some(s);
+                c
             }
         };
         *d = (level + sigma * g).round().clamp(0.0, f64::from(u16::MAX)) as u16;
