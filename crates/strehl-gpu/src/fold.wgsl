@@ -99,6 +99,11 @@ fn pow2(k: i32) -> f64 {
 fn pln(x: f32) -> f32 {
     if (x == 0.0) { return inf_neg(); }
     if (x == inf_pos()) { return inf_pos(); }
+    return f32(pln64(x));
+}
+
+// portable_math::ln's f64 value before its rounding to f32, for a finite x > 0.
+fn pln64(x: f32) -> f64 {
     var bits = bitcast<u32>(x);
     var e = i32((bits >> 23u) & 0xffu);
     if (e == 0) {
@@ -118,13 +123,18 @@ fn pln(x: f32) -> f32 {
         q = q * s2 + consts[C_LN + k - 1u];
     }
     let lnm = f64(2.0) * s * q;
-    return f32(f64(e) * consts[C_LN2] + lnm);
+    return f64(e) * consts[C_LN2] + lnm;
 }
 
 // crate::portable_math::exp for a finite x.
 fn pexp(x: f32) -> f32 {
     if (x > 89.0) { return inf_pos(); }
     if (x < -104.0) { return 0.0; }
+    return f32(pexp64(x));
+}
+
+// portable_math::exp's f64 value before its rounding to f32, for x in [-104, 89].
+fn pexp64(x: f32) -> f64 {
     let xd = f64(x);
     let k = floor(xd * consts[C_INV_LN2] + f64(0.5));
     let r = xd - k * consts[C_LN2];
@@ -134,7 +144,141 @@ fn pexp(x: f32) -> f32 {
     }
     let ki = i32(k);
     let k1 = ki / 2;
-    return f32(q * pow2(k1) * pow2(ki - k1));
+    return q * pow2(k1) * pow2(ki - k1);
+}
+
+// ---------------------------------------------------------------------------
+// f32 screens for the weight's ln and exp. f64 is slow on most GPUs (1/64 of
+// f32 on this one), and these two f64 evaluations were about two thirds of
+// the level kernel. Each screen computes the result as an unevaluated f32 sum
+// hi + lo (double-float, error-free transformations only: no fma, so the
+// module stays free of fused arithmetic) with error far below f32 rounding,
+// and returns hi when hi + lo is farther than a bound from every f32 rounding
+// boundary: then the f64 value rounds to hi too. Otherwise the caller uses the
+// f64 function. Exactness is not argued from the bound alone: `screen_census`
+// runs every input either can receive on this device against the f64 function
+// (tests/screen-census.rs) and must find no accepted value that differs.
+// ---------------------------------------------------------------------------
+
+// Tables in `work` at offset 0 (`weight_screen_tables`): ln's 128 entries of
+// (r, -ln r hi, lo), then exp's 64 entries of (2^(j/64) hi, lo).
+const TAB_LN: u32 = 0u;
+const TAB_EXP: u32 = 384u;
+// Each screen's error bound on hi + lo: a relative part for the table, the
+// reduction and the summation, and a part proportional to the polynomial tail,
+// which is evaluated in plain f32 (2^-24 relative). The census checks that the
+// measured error is at most half the bound at every input.
+const BOUND_REL: f32 = 0x1p-36f;
+const BOUND_TAIL: f32 = 0x1p-21f;
+
+struct Screen { v: f32, ok: bool }
+
+fn two_sum(a: f32, b: f32) -> vec2<f32> {
+    let s = a + b;
+    let bb = s - a;
+    return vec2(s, (a - (s - bb)) + (b - bb));
+}
+
+// |a| >= |b|, or a == 0.
+fn fast_two_sum(a: f32, b: f32) -> vec2<f32> {
+    let s = a + b;
+    return vec2(s, b - (s - a));
+}
+
+// Dekker's exact product, a * b = p + e, for |a|, |b| far from overflow.
+fn split(a: f32) -> vec2<f32> {
+    let c = 4097.0 * a;
+    let h = c - (c - a);
+    return vec2(h, a - h);
+}
+
+fn two_prod(a: f32, b: f32) -> vec2<f32> {
+    let p = a * b;
+    let sa = split(a);
+    let sb = split(b);
+    let e = ((sa.x * sb.x - p) + sa.x * sb.y + sa.y * sb.x) + sa.y * sb.y;
+    return vec2(p, e);
+}
+
+// Whether every value within `bound` of hi + lo (hi = fl(hi + lo)) rounds to
+// hi in f32.
+fn rounds_to_hi(hi: f32, lo: f32, bound: f32) -> bool {
+    let bits = bitcast<u32>(hi);
+    let e = (bits >> 23u) & 0xffu;
+    if (e <= 25u || e == 255u) { return false; }
+    // Half an ulp of hi, or a quarter toward zero from a power of two.
+    var half = bitcast<f32>((e - 24u) << 23u);
+    if ((bits & 0x007fffffu) == 0u && lo != 0.0 && (bitcast<u32>(lo) >> 31u) != (bits >> 31u)) {
+        half = half * 0.5;
+    }
+    return abs(lo) + bound < half;
+}
+
+// ln(x) as hi + lo, and the error bound, for a normal x > 0.
+fn ln_df(x: f32) -> vec3<f32> {
+    let bits = bitcast<u32>(x);
+    let j = (bits >> 16u) & 0x7fu;
+    let m = bitcast<f32>((bits & 0x007fffffu) | 0x3f800000u);
+    // x = 2^e m, m in [1, 2); the upper half of the table is stored as
+    // ln(m) - ln 2 with e + 1, so a value near 1 from below does not cancel.
+    let e = f32(i32((bits >> 23u) & 0xffu) - 127 + select(0, 1, j >= 64u));
+    let r = work[TAB_LN + 3u * j];
+    // t = m r - 1, exactly: th + tl.
+    let pr = two_prod(m, r);
+    let th = pr.x - 1.0;
+    let tl = pr.y;
+    // ln(1 + t) - th = th^2 (-1/2 + th/3 - ...) + tl / (1 + th).
+    let t2 = th * th;
+    let tail = t2 * (-0.5 + th * (0.33333334 + th * (-0.25 + th * (0.2 + th * (-0.16666667 + th * 0.14285715)))))
+        + tl * ((1.0 - th) + t2);
+    // e ln2 + (-ln r) + th, then the small terms.
+    let a = two_sum(e * bitcast<f32>(0x3f317200u), work[TAB_LN + 3u * j + 1u]);
+    let b = two_sum(a.x, th);
+    let low = (((a.y + b.y) + e * bitcast<f32>(0x35bfbe8eu)) + work[TAB_LN + 3u * j + 2u]) + tail;
+    let y = fast_two_sum(b.x, low);
+    return vec3(y, abs(y.x) * BOUND_REL + abs(tail) * BOUND_TAIL);
+}
+
+fn ln_screen(x: f32) -> Screen {
+    let be = (bitcast<u32>(x) >> 23u) & 0xffu;
+    if (be == 0u || be == 255u) { return Screen(0.0, false); }
+    let y = ln_df(x);
+    return Screen(y.x, rounds_to_hi(y.x, y.y, y.z));
+}
+
+// exp(x) / 2^k as hi + lo near [1, 2) with its error bound, and k, for x in
+// [-80, 80].
+struct ExpDf { y: vec3<f32>, k: i32 }
+
+fn exp_df(x: f32) -> ExpDf {
+    // n = round(x 64 / ln2); r = x - n ln2/64, ln2/64 = C1 + C2 + C3 with
+    // C1 and C2 of 11 bits, so n C1 and n C2 are exact (|n| < 2^13).
+    let nf = floor(x * bitcast<f32>(0x42b8aa3bu) + 0.5);
+    let r1 = x - nf * bitcast<f32>(0x3c318000u);
+    let s = two_sum(r1, -(nf * bitcast<f32>(0xb65e8000u)));
+    let rr = fast_two_sum(s.x, s.y - nf * bitcast<f32>(0xae02e308u));
+    let rh = rr.x;
+    // e^r - 1 - rh = rh^2 (1/2 + rh/6 + ...) + rl (1 + rh).
+    let r2 = rh * rh;
+    let tail = r2 * (0.5 + rh * (0.16666667 + rh * (0.041666668 + rh * 0.008333334)))
+        + rr.y * (1.0 + rh);
+    let n = i32(nf);
+    let j = u32(n & 63);
+    let th = work[TAB_EXP + 2u * j];
+    let tl = work[TAB_EXP + 2u * j + 1u];
+    // T (1 + p), p = rh + tail: th + th rh + (th tail + tl (1 + rh)).
+    let a = two_prod(th, rh);
+    let b = two_sum(th, a.x);
+    let low = ((b.y + a.y) + th * tail) + tl * (1.0 + rh);
+    let y = fast_two_sum(b.x, low);
+    return ExpDf(vec3(y, abs(y.x) * BOUND_REL + abs(th * tail) * BOUND_TAIL), n >> 6u);
+}
+
+fn exp_screen(x: f32) -> Screen {
+    let d = exp_df(x);
+    if (!rounds_to_hi(d.y.x, d.y.y, d.y.z)) { return Screen(0.0, false); }
+    // Exact: the result is a normal f32 for x in [-80, 80].
+    return Screen(d.y.x * bitcast<f32>(u32(d.k + 127) << 23u), true);
 }
 
 // Rust f32::clamp(-80, 80) for a non-NaN value.
@@ -144,15 +288,21 @@ fn clamp80(x: f32) -> f32 {
     return x;
 }
 
-// select_weight with r_floor == 0.
+// select_weight with r_floor == 0. ln and exp through their screens, falling
+// back to the f64 functions where a screen cannot decide.
 fn select_weight(excess: f32, floor_: f32, pw: f32) -> f32 {
     if (excess <= 0.0) { return 0.0; }
     let r = div(div(excess, max(floor_, 1.0)), 64.0);
     if (pw == 1.0) { return r; }
     if (pw == 2.0) { return r * r; }
-    return pexp(clamp80(pw * pln(r)));
+    let ls = ln_screen(r);
+    var l: f32;
+    if (ls.ok) { l = ls.v; } else { l = pln(r); }
+    let z = clamp80(pw * l);
+    let es = exp_screen(z);
+    if (es.ok) { return es.v; }
+    return pexp(z);
 }
-
 fn gid(id: vec3<u32>, nwg: vec3<u32>) -> u32 {
     return id.x + id.y * nwg.x * 256u;
 }
@@ -881,4 +1031,59 @@ fn null_accum(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgro
     acc[p.b.y + i] = acc[p.b.y + i] + z;
     acc[p.b.z + i] = acc[p.b.z + i] + lv;
     acc[p.b.w + i] = acc[p.b.w + i] + e;
+}
+
+// ---------------------------------------------------------------------------
+// The screens' census (test only, `GpuFold::screen_census`): every input in
+// [a.x, b.x] (f32 bits) against the f64 function on this device.
+// a = (first bits, inputs per invocation, 0 ln / 1 exp, invocations),
+// b.x = last bits (inclusive). Per invocation, at raw[4 i ..]: accepted values
+// that differ from the f64 function's, fallbacks, the smallest input that
+// differs (or all ones), and the largest error of hi + lo against the f64 value
+// before rounding as a fraction of the bound the screen used (f32 bits).
+// ---------------------------------------------------------------------------
+@compute @workgroup_size(256)
+fn screen_census(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let t = gid(id, nwg);
+    if (t >= p.a.w) { return; }
+    var bad = 0u;
+    var fell = 0u;
+    var first = 0xffffffffu;
+    var worst = 0.0;
+    for (var i = 0u; i < p.a.y; i = i + 1u) {
+        let bits = p.a.x + t * p.a.y + i;
+        if (bits < p.a.x || bits > p.b.x) { break; }
+        let x = bitcast<f32>(bits);
+        var want: f32;
+        var s: Screen;
+        var approx: vec3<f32>;
+        var exact: f64;
+        if (p.a.z == 0u) {
+            want = pln(x);
+            s = ln_screen(x);
+            approx = ln_df(x);
+            exact = pln64(x);
+        } else {
+            want = pexp(x);
+            s = exp_screen(x);
+            let d = exp_df(x);
+            approx = d.y;
+            exact = pexp64(x) * f64(bitcast<f32>(u32(127 - d.k) << 23u));
+        }
+        if (s.ok) {
+            if (bitcast<u32>(s.v) != bitcast<u32>(want)) {
+                bad = bad + 1u;
+                first = min(first, bits);
+            }
+        } else {
+            fell = fell + 1u;
+        }
+        if (approx.z > 0.0) {
+            worst = max(worst, f32(abs((f64(approx.x) + f64(approx.y)) - exact) / f64(approx.z)));
+        }
+    }
+    raw[4u * t] = bad;
+    raw[4u * t + 1u] = fell;
+    raw[4u * t + 2u] = first;
+    raw[4u * t + 3u] = bitcast<u32>(worst);
 }

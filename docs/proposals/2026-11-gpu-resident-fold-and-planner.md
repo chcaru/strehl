@@ -315,7 +315,23 @@ MEASURED, same command as above, against `5acedd52c`, alternated (ABAB) on an id
 write 0.6 / 0.6 s against 3.8 / 3.9 s; peak private 7.1 GB both. Photograph and float master
 identical to the CPU path's; byte-freeze rows unchanged.
 
-Remaining: the level weights' f64 `ln`/`exp` (~1 ms per frame), which could be screened in f32
-and proven by exhaustive census over every input, as the probe noise is; exact f32 division
-(~0.5 ms); the gather's f64 coordinates (~0.7 ms); the upload (~2.4 ms); a decode window sized
-from measured rates; the desktop's live views on the GPU path.
+### Stage 3, the weight's ln and exp in f32 (2026-11-09)
+
+Screened in f32 with an exhaustive device census as the proof (`docs/ARCHITECTURE.md` § The GPU
+fold, *Device kernels*): 0 mismatches over every input either function receives; level kernel
+1.55 to 0.59 ms per frame; production-order device time 10.2 to 9.1 ms per frame. The first
+version used a fixed relative bound and the census found 13 `ln` inputs just above 1 where it
+accepted a wrong value: there the plain-f32 tail dominates the error, so the bound now carries a
+term proportional to the tail. Bug-7 end to end: unchanged within noise (fold 15.3-16.2 s either
+way), because the CLI fold is no longer device-bound. Instrumented per frame (mean): waiting for
+a decode 2.7 ms (median 0, p90 7.6), staging the upload 3.1 ms, waiting for the probe 3.5 ms.
+Not the limit on their own (each MEASURED by a throwaway build): skipping the upload's CPU fill
+(fold 14.7-15.5 s; it costs ~115 s of CPU per run, mostly pool threads), a decode window of
+decoders + 10 (no gain), 20-28 decoders (slower). Decoding alone: 16 threads ~128 frames/s
+warm, the same at 24 and 32.
+
+Remaining: decoding throughput under load (~125 ms per frame with 16 at once against ~60 ms
+alone: file reads, the linked decoder's metadata pass, memory traffic); the fold thread's
+serial work (the upload fill, and a pipeline only one frame deep); then exact f32 division
+(~0.5 ms per frame), the gather's f64 coordinates (~0.7 ms), the upload (~2.4 ms); the
+desktop's live views on the GPU path.

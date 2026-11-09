@@ -915,7 +915,23 @@ expressions, so the same bits. MEASURED per frame (`production_frame_timing`, bu
 arithmetic) and the level weights (1.55 ms, of which ~1 ms is the f64 `ln`/`exp` of the
 portable weight math and ~0.5 ms the f64 divisions); and ~2.4 ms for the 66 MB upload, whose
 device copy wgpu orders between compute passes and whose CPU fill (2.2 ms, ~30 GB/s into mapped
-memory) also slowed the device. Tried and not kept: fusing the pyramid's separable passes and
+memory) also slowed the device.
+
+The weight's `ln` and `exp` are screened in f32 (`ln_screen`, `exp_screen` in `fold.wgsl`):
+each computes its result as an unevaluated f32 sum hi + lo with error-free transformations
+(Dekker products, no fma, so the module stays free of fused arithmetic) and small tables, and
+returns hi when hi + lo lies farther than an error bound from every f32 rounding boundary, the
+f64 function otherwise. That is not trusted to analysis: `tests/screen-census.rs` runs every
+input either can receive (all 2,130,706,432 positive normal f32 for `ln`, all 2,235,564,034 f32
+in [-80, 80] for `exp`) through the screen and the f64 function on the device, and requires no
+accepted value to differ and the measured error to stay under half the bound. MEASURED: 0
+mismatches; worst error 0.44 (`ln`) and 0.22 (`exp`) of the bound; 0.035% and ~0.01% fall
+back to f64; a bound shrunk to 2^-50 gives 613 mismatches. Level kernel 1.55 to 0.59 ms per
+frame, production order 10.2 to 9.1 ms per frame. End to end on bug-7 this did not show: the
+CLI fold, at ~10.6 ms per frame, is now limited as much by decoding (16 decoders give ~128
+frames/s warm, no more with more threads) and the fold thread's serial work as by the device.
+
+Tried and not kept: fusing the pyramid's separable passes and
 batching planes per dispatch (fewer dispatches did not matter; the fused expand was slower),
 and multiplying by 2^-6 / 2^-16 instead of dividing through f64 (`accum` is memory-bound).
 

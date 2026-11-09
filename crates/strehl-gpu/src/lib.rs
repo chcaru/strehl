@@ -71,6 +71,7 @@ enum Kernel {
     RowSq,
     Pack,
     NullAccum,
+    ScreenCensus,
 }
 
 impl Kernel {
@@ -81,6 +82,9 @@ impl Kernel {
 
 /// Offsets, in f32 elements, of every region in the two arenas.
 struct Layout {
+    /// The ln/exp screens' tables (`weight_screen_tables`), at offset 0,
+    /// where `fold.wgsl` reads them (`TAB_LN`, `TAB_EXP`).
+    tables: u32,
     sizes: Vec<LevelSize>,
     planes: usize,
     plane_lv: Vec<Vec<u32>>,
@@ -145,6 +149,7 @@ impl Layout {
         let pyramid = |take: &mut dyn FnMut(usize) -> u32| -> Vec<u32> {
             sizes.iter().map(|s| take(s.pixels())).collect()
         };
+        let tables = take(SCREEN_TABLES_LEN);
         let plane_lv = (0..planes).map(|_| pyramid(&mut take)).collect();
         let var_lv = pyramid(&mut take);
         let luma_lv = pyramid(&mut take);
@@ -221,6 +226,7 @@ impl Layout {
             })
             .collect();
         Self {
+            tables,
             sizes: sizes.to_vec(),
             planes,
             plane_lv,
@@ -438,6 +444,83 @@ impl Profile {
             totals: vec![(0, 0.0); strict::ENTRY_POINTS.len()],
         }
     }
+}
+
+/// f32s of the ln/exp screens' tables at the start of `work`.
+const SCREEN_TABLES_LEN: usize = 3 * 128 + 2 * 64;
+
+/// `ln(x)` for `x` in `[0.5, 2]` from the `atanh` series in f64, the same
+/// operations in the same order on every IEEE platform (a table constant must
+/// not depend on a C runtime's `log`).
+fn ln_series(x: f64) -> f64 {
+    let s = (x - 1.0) / (x + 1.0);
+    let s2 = s * s;
+    let (mut term, mut sum) = (s, 0.0);
+    for k in 0..40 {
+        sum += term / f64::from(2 * k + 1);
+        term *= s2;
+    }
+    2.0 * sum
+}
+
+/// `e^x` for `x` in `[0, 1)` from its Taylor series in f64.
+fn exp_series(x: f64) -> f64 {
+    let (mut term, mut sum) = (1.0, 1.0);
+    for k in 1..30 {
+        term *= x / f64::from(k);
+        sum += term;
+    }
+    sum
+}
+
+/// The tables `fold.wgsl`'s ln and exp screens read. ln: for each of 128
+/// mantissa intervals `j` (`m` in `[1 + j/128, 1 + (j+1)/128)`), an f32 `r`
+/// near `1 / c_j` and `-ln r` as an f32 pair, less `ln 2` for `j >= 64`
+/// (where the screen adds one to the exponent). `j = 0` and `j = 127` use
+/// `c = 1` and `c = 2`, so a value near 1 reduces exactly and does not cancel.
+/// exp: `2^(j/64)` as an f32 pair for `j` in `0..64`. Only their accuracy
+/// matters to the screens; the census proves the result.
+fn weight_screen_tables() -> Vec<f32> {
+    let pair = |v: f64| {
+        let hi = v as f32;
+        [hi, (v - f64::from(hi)) as f32]
+    };
+    let mut t = Vec::with_capacity(SCREEN_TABLES_LEN);
+    for j in 0..128u32 {
+        let (r, l) = match j {
+            0 => (1.0f32, [0.0, 0.0]),
+            127 => (0.5, [0.0, 0.0]),
+            _ => {
+                let c = 1.0 + (f64::from(j) + 0.5) / 128.0;
+                let r = (1.0 / c) as f32;
+                let fold = if j >= 64 { std::f64::consts::LN_2 } else { 0.0 };
+                (r, pair(-ln_series(f64::from(r)) - fold))
+            }
+        };
+        t.extend_from_slice(&[r, l[0], l[1]]);
+    }
+    for j in 0..64u32 {
+        t.extend_from_slice(&pair(exp_series(
+            f64::from(j) * std::f64::consts::LN_2 / 64.0,
+        )));
+    }
+    debug_assert_eq!(t.len(), SCREEN_TABLES_LEN);
+    t
+}
+
+/// One range of [`GpuFold::screen_census`].
+#[derive(Debug, Clone, Copy, Default)]
+pub struct ScreenCensus {
+    pub inputs: u64,
+    /// Accepted screen values that differ from the f64 function's: must be 0.
+    pub mismatches: u64,
+    /// Inputs the screen left to the f64 function.
+    pub fallbacks: u64,
+    /// The smallest input (f32 bits) whose accepted value differed.
+    pub first_mismatch: Option<u32>,
+    /// The largest error of the screen's hi + lo against the f64 value before
+    /// rounding, as a fraction of the bound the screen used: at most 0.5.
+    pub worst_ratio: f32,
 }
 
 /// Maximum dispatches one frame records; sizes the parameter buffers.
@@ -691,6 +774,11 @@ impl GpuFold {
             })
         };
         let work = storage("fold-work", work_bytes);
+        assert_eq!(
+            layout.tables, 0,
+            "fold.wgsl reads the screen tables at offset 0"
+        );
+        queue.write_buffer(&work, 0, bytemuck::cast_slice(&weight_screen_tables()));
         let acc = storage("fold-acc", acc_bytes);
         let mut consts: Vec<f64> = Vec::with_capacity(30);
         consts.extend_from_slice(&LN_SERIES);
@@ -1656,6 +1744,69 @@ impl GpuFold {
         let staged = self.stage(frame)?;
         let pending = self.probe_submit(&staged, noise, sums)?;
         self.probe_collect(pending)
+    }
+
+    /// Run the weight's ln (`exp == false`) or exp screen over every f32 whose
+    /// bits lie in `first..=last` against the f64 function on this device
+    /// (`screen_census` in `fold.wgsl`). For tests: the screens are exact only
+    /// if this finds no mismatch over every input they can receive.
+    #[doc(hidden)]
+    pub fn screen_census(&mut self, exp: bool, first: u32, last: u32) -> ScreenCensus {
+        const PER: u32 = 256;
+        const INVOCATIONS: u32 = 1 << 18;
+        let words = 4 * u64::from(INVOCATIONS);
+        if self.raw_samples * 2 * (RAW_SLOTS as u64) < words * 4 {
+            self.ensure_raw((words * 2) as usize);
+        }
+        let readback = self.device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("screen-census"),
+            size: words * 4,
+            usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        });
+        let mut out = ScreenCensus::default();
+        let mut start = u64::from(first);
+        while start <= u64::from(last) {
+            let count = (u64::from(last) - start + 1).min(u64::from(PER * INVOCATIONS));
+            let invocations = count.div_ceil(u64::from(PER)) as u32;
+            let mut rec = Recorder { calls: Vec::new() };
+            rec.push(
+                Kernel::ScreenCensus,
+                Params {
+                    a: [start as u32, PER, u32::from(exp), invocations],
+                    b: [(start + count - 1) as u32, 0, 0, 0],
+                    ..Default::default()
+                },
+                invocations as usize,
+            );
+            let n = u64::from(invocations) * 16;
+            let index = self.submit_with(rec, |encoder, fold| {
+                encoder.copy_buffer_to_buffer(&fold.raw, 0, &readback, 0, n);
+            });
+            let slice = readback.slice(..n);
+            slice.map_async(wgpu::MapMode::Read, |r| r.expect("map census"));
+            self.device
+                .poll(wgpu::PollType::Wait {
+                    submission_index: Some(index),
+                    timeout: None,
+                })
+                .expect("census wait");
+            {
+                let view = slice.get_mapped_range().expect("mapped census");
+                for w in bytemuck::cast_slice::<u8, [u32; 4]>(&view[..]) {
+                    out.mismatches += u64::from(w[0]);
+                    out.fallbacks += u64::from(w[1]);
+                    if w[2] != u32::MAX {
+                        out.first_mismatch = Some(out.first_mismatch.map_or(w[2], |f| f.min(w[2])));
+                    }
+                    out.worst_ratio = out.worst_ratio.max(f32::from_bits(w[3]));
+                }
+            }
+            readback.unmap();
+            out.inputs += count;
+            start += count;
+        }
+        out
     }
 
     /// The probe frame [`Self::probe`] builds on the device, read back: for
