@@ -852,8 +852,9 @@ persistently mapped upload buffers (re-mapped after the device copy, not realloc
 copied on the device into one of two raw slots; a third slot holds the probe. Frames are
 pipelined one deep: frame *n + 1* is decoded, staged and its probe submitted before frame *n*
 waits for its own probe's sums (`PendingProbe`, a wait on that submission alone) and is
-folded, so the CPU's floor and bookkeeping overlap the device. The decoded frame goes back to
-its decoder thread to be freed as soon as it is staged. At a chunk's end the accumulators come
+folded, so the CPU's floor and bookkeeping overlap the device. As soon as a frame is staged its
+73 MB sample buffer goes back to the decoders, and the next decode writes into it
+(`strehl_raw::decode_into`) instead of into new memory whose pages would fault in. At a chunk's end the accumulators come
 back through one reusable 64 MB readback buffer, piece by piece, instead of one staging copy
 of the whole merge (over 1 GB on bug-7). None of this changes an operation's inputs or order.
 
@@ -867,15 +868,31 @@ decode went from 125 to 88 ms at 8 decoders and CPU time from 775 to 589 s (MEAS
 size-keyed cache of freed large blocks was tried first and gave nothing measurable.
 `STREHL_DECODE_THREADS` overrides the decoder count.
 
+**Decoding.** With the device preparing frames, decoding became the limit: the linked decoder
+spent ~165 ms of CPU per 33 MP frame (one thread) and stopped at ~78 frames/s on this machine
+whatever the thread count, because it parallelises inside each file on the shared pool. Sony's
+lossless-compressed raw is tiled lossless JPEG, so `strehl_raw` decodes those pixels itself
+(`lossless-jpeg.rs`, from ITU-T T.81; the linked decoder still supplies every other field and
+decodes every other file): an 8192-entry table gives the whole difference and its length for
+nearly every sample, the bit buffer refills without branches, and two tiles decode in one loop
+so a core runs two dependency chains. ~50 ms per frame on one thread, plus ~10 ms of the
+linked decoder's metadata. Its output equals the linked decoder's on every sample of every file
+checked (`tests/lossless-jpeg.rs`: 4,052 files across 12 captures, ISO sweeps and dark frames
+included; 3,692 of them lossless-compressed). Each file now decodes on one thread, so with GPU
+preparation the decode-ahead pool uses half the logical cores (16 here); 8 left the fold waiting
+for decodes. `STREHL_RAW_DECODER=rawler` decodes every pixel with the linked decoder.
+
 MEASURED, bug-7 1,444 frames, desktop path (sRGB + linear master + progress + CA preview),
 same machine: CPU 329.9 s; GPU fold with CPU preparation 209.2 s; GPU preparation 42.2 s
 (0.02 s per frame folded); with the data movement and allocator above 32.5-32.8 s against
 43.5-44.4 s for the build before them, alternated (fold 22.6 s, CPU time 555 s against 848 s,
-peak private memory 7.3 GB against 6.7 GB). Photograph and float master are identical to the
-CPU's in every one of these runs. At that rate
-decoding (~75 ms per frame on one core) is a limit, so with GPU preparation the decode-ahead
-pool uses a quarter of the logical cores (8 here) instead of 4. `STREHL_GPU_PROFILE=1` times
-every dispatch with GPU timestamps (diagnostic; it serialises submits).
+peak private memory 7.3 GB against 6.7 GB); with the decoder above and buffer reuse 26.5-26.7 s
+against 33.1-33.5 s, alternated (fold 17.2-17.4 s against 23.5-23.9 s, CPU time 300-309 s
+against 578 s, peak private memory 9.2-9.4 GB against 7.3-7.4 GB: sixteen frames decode at
+once). The fold now waits on the device, ~12 ms per frame. Photograph and float master are
+identical to the CPU's in every one of these runs. `STREHL_GPU_PROFILE=1` times every dispatch
+with GPU timestamps (diagnostic; it serialises submits; the device timing test,
+`crates/strehl-gpu/tests/timing.rs`, prints the per-kernel report).
 
 ### Determinism and provenance
 

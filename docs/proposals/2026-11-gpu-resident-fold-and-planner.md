@@ -231,7 +231,32 @@ builds; byte-freeze rows unchanged. Peak memory is 0.5 GB higher: mimalloc keeps
 for reuse (+0.7 GB measured when it alone was added), which the chunked readback partly pays
 back.
 
-Remaining: CPU RAM, which still holds the CPU frame workspace and probe pyramid the GPU path
-no longer uses, and two CPU `BandMerge`s; the desktop's live views on the GPU path. The fold
-now takes 15.6 ms per frame against ~11 ms of decode throughput (8 threads at ~88 ms), so
-the planner's next rule is the decoder count against the device's per-frame time (DERIVED).
+### Stage 3, decoding (2026-11-08)
+
+Instrumenting the fold loop showed it waiting on decodes ~5.6 ms per frame, and more decoder
+threads did not help: the linked decoder parallelises inside each file on the shared pool,
+~165 ms of CPU per frame, and decoding alone stopped at ~78 frames/s on 32 logical cores
+(MEASURED). Sony's lossless raw is tiled lossless JPEG, so `strehl_raw` now decodes those
+pixels itself from ITU-T T.81 (`docs/ARCHITECTURE.md` § The GPU fold, *Decoding*), checked
+sample-for-sample against the linked decoder on 4,052 files. The steps, one thread, per frame
+of tile decoding: a first table-per-sample version 90 ms; registers instead of memory for the
+reader state (a macro per interleave width) ~80 ms; a 13-bit table giving the finished
+difference 52-56 ms; refilling without a branch, two tiles per loop 49 ms. Then the pipeline:
+
+- one file per thread means the thread count is the parallelism: 8 decoders left the fold
+  waiting, 16 did not (`decode_ahead::decoders`, half the logical cores);
+- with 16 decoders, freed 73 MB buffers were decommitted and faulted in again; handing each
+  staged frame's buffer to the next decode (`strehl_raw::decode_into`) gave the speed of
+  disabling mimalloc's purge with 1 GB less peak memory.
+
+MEASURED, same command and alternation as above, against `b3bf9da00`: 26.5 / 26.7 s against
+33.1 / 33.5 s; fold 17.2 / 17.4 s against 23.5 / 23.9 s; CPU time 300 / 309 s against 579 /
+578 s; peak private 9.40 / 9.22 GB against 7.38 / 7.32 GB. Photograph and float master
+identical to the CPU path's. CPU fold path at 200 frames: unchanged within noise (alignment
+11.1 to 10.6 s, fold 41.3 to 40.6 s).
+
+Remaining: the fold now waits on the device (~12 ms per frame: upload, probe and fold
+kernels), which is where fusion of the probe's passes would pay; CPU RAM, which still holds
+the CPU frame workspace and probe pyramid the GPU path no longer uses, and two CPU
+`BandMerge`s, now worth more since sixteen frames decode at once; the desktop's live views on
+the GPU path.

@@ -17,6 +17,12 @@ decoder. See `REBUILD.md` inside the release source/relink kit or `docs/desktop-
 inside the source kit. Keep the kit and this notice with distributed binaries.
 The application sources remain available under MIT OR Apache-2.0.
 
+The pixel data of Sony lossless-compressed raw files is decoded by Strehl's own
+code (`crates/strehl-raw/src/lossless-jpeg.rs`, MIT OR Apache-2.0); the decoder
+library still supplies every other field of those files and decodes all other
+files. Set `STREHL_RAW_DECODER=rawler` to have the decoder library, modified or
+not, decode every pixel as well.
+
 Published dependency: <https://crates.io/crates/rawler/0.7.2>
 
 License text: <https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt>

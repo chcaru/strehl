@@ -5157,6 +5157,11 @@ trait PyramidFrameSource: Sync {
     }
     fn len(&self) -> usize;
     fn decode(&self, index: usize) -> Result<Frame>;
+    /// [`Self::decode`] into the sample buffer of a frame the fold has
+    /// finished with (`strehl_raw::decode_into`); the same frame either way.
+    fn decode_reusing(&self, index: usize, _buffer: Vec<u16>) -> Result<Frame> {
+        self.decode(index)
+    }
     /// Hand back a frame the fold has finished with. Freeing a 66 MB buffer
     /// costs milliseconds, so a source with threads of its own frees it there
     /// rather than on the fold's critical path.
@@ -5198,6 +5203,26 @@ struct RawPyramidSource<'a> {
     lens: Option<&'a crate::lens_research::RuntimeMap>,
 }
 
+impl RawPyramidSource<'_> {
+    fn decode_with(&self, index: usize, buffer: Option<Vec<u16>>) -> Result<Frame> {
+        let path = self
+            .paths
+            .get(index)
+            .context("Pyramid source index out of bounds")?;
+        let frame = match buffer {
+            Some(b) => strehl_raw::decode_into(path, b)?,
+            None => strehl_raw::decode(path)?,
+        };
+        #[cfg(feature = "research-lens-warp")]
+        if let Some(lens) = self.lens {
+            lens.validate_frame(index, &frame)?;
+        }
+        #[cfg(all(test, feature = "native-direct-planes"))]
+        matched_source_tests::observe_raw(index, &frame)?;
+        Ok(frame)
+    }
+}
+
 impl PyramidFrameSource for RawPyramidSource<'_> {
     #[cfg(feature = "research-lens-warp")]
     fn lens_pull(&self, index: usize) -> Result<Option<&crate::lens_research::FramePull>> {
@@ -5212,18 +5237,11 @@ impl PyramidFrameSource for RawPyramidSource<'_> {
     }
 
     fn decode(&self, index: usize) -> Result<Frame> {
-        let path = self
-            .paths
-            .get(index)
-            .context("Pyramid source index out of bounds")?;
-        let frame = strehl_raw::decode(path)?;
-        #[cfg(feature = "research-lens-warp")]
-        if let Some(lens) = self.lens {
-            lens.validate_frame(index, &frame)?;
-        }
-        #[cfg(all(test, feature = "native-direct-planes"))]
-        matched_source_tests::observe_raw(index, &frame)?;
-        Ok(frame)
+        self.decode_with(index, None)
+    }
+
+    fn decode_reusing(&self, index: usize, buffer: Vec<u16>) -> Result<Frame> {
+        self.decode_with(index, Some(buffer))
     }
 
     #[cfg(all(test, feature = "native-direct-planes"))]

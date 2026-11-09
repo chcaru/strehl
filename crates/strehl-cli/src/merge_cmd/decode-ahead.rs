@@ -19,9 +19,12 @@
 //!
 //! # Memory
 //!
-//! At most `window` decoded frames wait for the fold, plus one in flight per
-//! decoder thread: about 0.8 GB at 33 MP with the defaults below, against the
-//! roughly 1 GB per prepared slot the look-ahead already budgets.
+//! At most `window` frames are claimed and not yet taken by the fold, those
+//! being decoded included: with GPU preparation on 32 logical cores, 16
+//! decoders and a window of 18, about 1.3 GB at 33 MP. Sample buffers of
+//! frames the fold has finished with wait for the next decodes (at most
+//! `window` of them; each frame the fold takes lets one more decode claim
+//! one).
 
 use std::collections::BTreeMap;
 use std::sync::{Condvar, Mutex};
@@ -40,11 +43,14 @@ pub(super) const DECODERS: usize = 4;
 pub const DECODERS_ENV: &str = "STREHL_DECODE_THREADS";
 
 /// Decoder threads for a render. When the GPU prepares frames the CPU's
-/// data-parallel work mostly leaves, and decoding (~75 ms per 33 MP frame on
-/// one core, MEASURED on bug-7) becomes the fold's limit at four threads:
-/// then use a quarter of the logical cores, at least [`DECODERS`] and at most
-/// 12. Decoding is a pure function of the file, so the count cannot change
-/// output (see the module docs).
+/// data-parallel work mostly leaves, and decoding becomes the fold's limit:
+/// then use half the logical cores, at least [`DECODERS`] and at most 16.
+/// Sony's lossless files decode on one thread each (`strehl_raw`'s own
+/// decoder, ~60 ms per 33 MP frame alone, ~85 ms with eight at once), so the
+/// thread count is the decoding parallelism. MEASURED on bug-7 (RTX 5090,
+/// 32 logical cores): 8 threads left the fold waiting ~11 ms per frame for
+/// decodes, 16 left it waiting on the GPU. Decoding is a pure function of the
+/// file, so the count cannot change output (see the module docs).
 pub(super) fn decoders(gpu_prep: bool) -> usize {
     if let Some(n) = std::env::var(DECODERS_ENV)
         .ok()
@@ -57,7 +63,7 @@ pub(super) fn decoders(gpu_prep: bool) -> usize {
         return DECODERS;
     }
     let cores = std::thread::available_parallelism().map_or(DECODERS, |n| n.get());
-    (cores / 4).clamp(DECODERS, 12)
+    (cores / 2).clamp(DECODERS, 16)
 }
 
 /// Wraps a frame source, serving planned indices from decode-ahead threads.
@@ -80,6 +86,10 @@ struct State {
     ready: BTreeMap<usize, Result<Frame>>,
     /// Frames the fold has finished with, freed by the decoders.
     retired: Vec<Frame>,
+    /// Sample buffers of frames the fold has finished with, at most `window`,
+    /// which the next decodes write into instead of new memory
+    /// (`PyramidFrameSource::decode_reusing`).
+    spare: Vec<Vec<u16>>,
     stop: bool,
 }
 
@@ -111,7 +121,7 @@ impl<'s, S: PyramidFrameSource> DecodeAhead<'s, S> {
     /// allows, decode it outside the lock, publish it.
     pub(super) fn run_decoder(&self) {
         loop {
-            let index = {
+            let (index, spare) = {
                 let mut st = self.lock();
                 loop {
                     if !st.retired.is_empty() {
@@ -131,13 +141,15 @@ impl<'s, S: PyramidFrameSource> DecodeAhead<'s, S> {
                 }
                 let index = self.plan[st.claimed];
                 st.claimed += 1;
-                index
+                (index, st.spare.pop())
             };
             // A panic here must still publish a result: the fold is waiting for
             // this index and would otherwise wait forever instead of failing.
-            let frame =
-                std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| self.inner.decode(index)))
-                    .unwrap_or_else(|_| Err(anyhow::anyhow!("decoding frame {index} panicked")));
+            let frame = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| match spare {
+                Some(buffer) => self.inner.decode_reusing(index, buffer),
+                None => self.inner.decode(index),
+            }))
+            .unwrap_or_else(|_| Err(anyhow::anyhow!("decoding frame {index} panicked")));
             let mut st = self.lock();
             st.ready.insert(index, frame);
             drop(st);
@@ -171,9 +183,17 @@ impl<S: PyramidFrameSource> PyramidFrameSource for DecodeAhead<'_, S> {
     fn retire(&self, frame: Frame) {
         let mut st = self.lock();
         if st.stop || st.claimed >= self.plan.len() {
-            // No decoder is left to free it.
+            // No decoder is left to reuse or free it.
             drop(st);
             drop(frame);
+            return;
+        }
+        if st.spare.len() < self.window {
+            // The next decode writes into this buffer: no new 73 MB
+            // allocation, so none of its pages fault in again.
+            let Frame { data, .. } = frame;
+            st.spare.push(data);
+            drop(st);
             return;
         }
         st.retired.push(frame);

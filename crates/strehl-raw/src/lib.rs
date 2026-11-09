@@ -17,7 +17,19 @@
 //!    measured 1245 MB/s cold against 503 MB/s sequential — 2.5x, because
 //!    `rawler` already saturates cores within a single file and the remaining
 //!    win is overlapping each file's serial head and its I/O stall. A 60-frame
-//!    stack decodes in 1.78 s cold, 0.91 s warm.
+//!    stack decodes in 1.78 s cold, 0.91 s warm. Sony's lossless-compressed
+//!    files are now decoded by [`lossless_jpeg`] on the calling thread alone,
+//!    so parallelism across files is the only parallelism there.
+//!
+//! # Lossless-compressed raw
+//!
+//! Tiled lossless JPEG raw data is decoded by this crate's own
+//! [`lossless_jpeg`] (written from ITU-T T.81), with every other field still
+//! from `rawler`, which is asked not to decode pixels. It produces exactly the
+//! linked decoder's samples (`tests/lossless-jpeg.rs` over the corpus) at
+//! about a third of the CPU: MEASURED on bug-7, one thread, ~50 ms of decoding
+//! plus ~10 ms of `rawler` metadata per 33 MP frame, against ~165 ms for the
+//! linked decoder's full decode. [`DECODER_ENV`] turns it off.
 
 use std::path::{Path, PathBuf};
 
@@ -34,6 +46,8 @@ pub mod common_tiff;
 /// profile is optional, and a capture that carries no identity must decode
 /// exactly as it did before this module existed.
 pub mod identity;
+#[path = "lossless-jpeg.rs"]
+mod lossless_jpeg;
 #[path = "sony-focus.rs"]
 pub mod sony_focus;
 #[path = "sony-optical.rs"]
@@ -255,7 +269,32 @@ impl QuadSource for Frame {
 /// The file is read once into a [`RawSource`] and then queried twice: for the
 /// pixel data and for the EXIF block that carries ISO. Reading ISO rather than
 /// assuming base ISO matters because the noise model's gain is linear in it.
+///
+/// Tiled lossless JPEG raw data (Sony's lossless compression) is decoded by
+/// [`lossless_jpeg`], everything else by the linked decoder; see
+/// [`DECODER_ENV`].
 pub fn decode(path: &Path) -> Result<Frame, RawError> {
+    decode_with(path, native_decoder_enabled(), None)
+}
+
+/// [`decode`], writing the samples into `buffer`'s allocation when this
+/// crate decodes them (see [`lossless_jpeg`]): a caller that decodes frame
+/// after frame of one geometry hands back the previous frame's
+/// [`Frame::data`] and the new frame needs no fresh memory, which for 73 MB
+/// buffers means no page faults. Every sample is overwritten. Otherwise the
+/// buffer is dropped.
+pub fn decode_into(path: &Path, buffer: Vec<u16>) -> Result<Frame, RawError> {
+    decode_with(path, native_decoder_enabled(), Some(buffer))
+}
+
+/// [`decode`] with every pixel decoded by the linked decoder, for checking
+/// that both decoders agree.
+#[doc(hidden)]
+pub fn decode_linked(path: &Path) -> Result<Frame, RawError> {
+    decode_with(path, false, None)
+}
+
+fn decode_with(path: &Path, native: bool, buffer: Option<Vec<u16>>) -> Result<Frame, RawError> {
     let fail = |e: String| RawError::Decode {
         path: path.to_path_buf(),
         source: anyhow::anyhow!(e),
@@ -264,7 +303,15 @@ pub fn decode(path: &Path) -> Result<Frame, RawError> {
     let source = RawSource::new(path).map_err(|e| fail(format!("{e}")))?;
     let params = RawDecodeParams::default();
 
-    let img = rawler::decode(&source, &params).map_err(|e| fail(format!("{e:?}")))?;
+    let native = if native {
+        native_pixels(&source, &params, buffer)
+    } else {
+        None
+    };
+    let img = match native {
+        Some(img) => img,
+        None => rawler::decode(&source, &params).map_err(|e| fail(format!("{e:?}")))?,
+    };
 
     // ISO is best-effort: a frame that decodes but has no ISO tag must still
     // stack, with the noise model visibly downgraded rather than guessed.
@@ -339,6 +386,47 @@ pub fn decode(path: &Path) -> Result<Frame, RawError> {
         camera: img.clean_model.clone(),
         path: path.to_path_buf(),
     })
+}
+
+/// `STREHL_RAW_DECODER=rawler` decodes every pixel with the linked decoder
+/// instead of [`lossless_jpeg`] where that applies. Both produce the same
+/// samples; the switch exists to show it.
+pub const DECODER_ENV: &str = "STREHL_RAW_DECODER";
+
+fn native_decoder_enabled() -> bool {
+    static ENABLED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+    *ENABLED.get_or_init(|| {
+        std::env::var(DECODER_ENV).map_or(true, |v| !v.trim().eq_ignore_ascii_case("rawler"))
+    })
+}
+
+/// The linked decoder's image with its pixels decoded by [`lossless_jpeg`]:
+/// everything but the pixel data comes from the linked decoder, which is
+/// asked not to decode pixels. `None` when the file's raw data is not tiled
+/// lossless JPEG of a shape this crate decodes, or when the native decode
+/// fails; the caller then decodes the file with the linked decoder, which
+/// reports its own errors.
+fn native_pixels(
+    source: &RawSource,
+    params: &RawDecodeParams,
+    buffer: Option<Vec<u16>>,
+) -> Option<rawler::RawImage> {
+    let file = source.buf();
+    let tiles = lossless_jpeg::find_tiles(file)?;
+    let decoder = rawler::get_decoder(source).ok()?;
+    let mut img = decoder.raw_image(source, params, true).ok()?;
+    if img.width != tiles.width || img.height != tiles.height || img.cpp != 1 {
+        return None;
+    }
+    let n = tiles.width * tiles.height;
+    let mut data = match buffer {
+        // Every sample is overwritten: the tiles cover the image.
+        Some(b) if b.len() == n => b,
+        _ => vec![0u16; n],
+    };
+    lossless_jpeg::decode(file, &tiles, &mut data).ok()?;
+    img.data = rawler::RawImageData::Integer(data);
+    Some(img)
 }
 
 /// Decode many RAW files concurrently.
