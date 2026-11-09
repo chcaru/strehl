@@ -764,28 +764,44 @@ fn variance(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroup
     work[p.a.y + i] = sigma * sigma;
 }
 
-// Partial f64 sums of `n` values in chunks of `a.w`: a = (src, n, red_base, chunk).
-// Exact for the probe luma (half-integers far below 2^52), so order is free.
+var<workgroup> tree64: array<f64, 256>;
+
+// Sum each thread's `s` across the workgroup into tree64[0]. Every invocation
+// must call it (it holds barriers).
+fn tree_sum(t: u32, s: f64) {
+    tree64[t] = s;
+    workgroupBarrier();
+    for (var w = 128u; w > 0u; w = w >> 1u) {
+        if (t < w) { tree64[t] = tree64[t] + tree64[t + w]; }
+        workgroupBarrier();
+    }
+}
+
+// Partial f64 sums of `n` values in chunks of `a.w`, one chunk per workgroup:
+// a = (src, n, red_base, chunk). Exact for the probe luma (half-integers far
+// below 2^52), so order is free: each thread sums a strided share of the chunk
+// (coalesced loads), then the workgroup sums the shares as a tree.
 @compute @workgroup_size(256)
-fn sum64(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
-    let i = gid(id, nwg);
-    let start = i * p.a.w;
-    if (start >= p.a.y) { return; }
+fn sum64(@builtin(workgroup_id) wid: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>,
+         @builtin(local_invocation_index) t: u32) {
+    let c = wid.x + wid.y * nwg.x;
+    let start = c * p.a.w;
     let end = min(start + p.a.w, p.a.y);
     var s = f64(0.0);
-    for (var j = start; j < end; j = j + 1u) { s = s + f64(work[p.a.x + j]); }
-    red[p.a.z + i] = s;
+    for (var j = start + t; j < end; j = j + 256u) { s = s + f64(work[p.a.x + j]); }
+    tree_sum(t, s);
+    if (t == 0u && start < p.a.y) { red[p.a.z + c] = tree64[0]; }
 }
 
-// Sum `a.y` partials at red[a.x] into red[a.z].
+// Sum the `a.y` exact partials at red[a.x] into red[a.z] (sum64's; their
+// order is free): one workgroup's strided shares, then a tree.
 @compute @workgroup_size(256)
-fn sum64_finish(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
-    if (gid(id, nwg) != 0u) { return; }
+fn sum64_finish(@builtin(local_invocation_index) t: u32) {
     var s = f64(0.0);
-    for (var j = 0u; j < p.a.y; j = j + 1u) { s = s + red[p.a.x + j]; }
-    red[p.a.z] = s;
+    for (var j = t; j < p.a.y; j = j + 256u) { s = s + red[p.a.x + j]; }
+    tree_sum(t, s);
+    if (t == 0u) { red[p.a.z] = tree64[0]; }
 }
-
 // The probe's zero-mean: v -= (sum / n) as f32. a = (luma, n, red_index).
 @compute @workgroup_size(256)
 fn demean(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
@@ -992,22 +1008,84 @@ fn noise(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) 
     raw[p.a.y + w] = word;
 }
 
-// One row's f64 sum of squares over a rectangle of a level, in column order:
-// gatefloor::square_sum's inner sums. a = (level, level width, x, w),
-// b = (y, h, red_dst).
-@compute @workgroup_size(256)
-fn rowsq(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
-    let r = gid(id, nwg);
-    if (r >= p.b.y) { return; }
-    let base = p.a.x + (p.b.x + r) * p.a.y + p.a.z;
-    var s = f64(0.0);
-    for (var j = 0u; j < p.a.w; j = j + 1u) {
-        let v = f64(work[base + j]);
-        s = s + v * v;
-    }
-    red[p.b.z + r] = s;
+// gatefloor::square_sum over up to four windows in one dispatch, so that
+// their ordered f64 chains (which no reassociation may shorten) run side by
+// side. Window j: a, b, c, d = (level, level width, x | y << 16, w | h << 16);
+// e = (first row-sum index, windows, total index). Window j's row sums follow
+// window j - 1's.
+fn sq_window(j: u32) -> vec4<u32> {
+    if (j == 0u) { return p.a; }
+    if (j == 1u) { return p.b; }
+    if (j == 2u) { return p.c; }
+    return p.d;
 }
 
+// One row's f64 sum of squares, in column order: square_sum's inner sums.
+// Loads are issued eight at a time, so the ordered chain waits on memory once
+// per eight values.
+@compute @workgroup_size(256)
+fn rowsq(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    var r = gid(id, nwg);
+    var row = p.e.x;
+    var j = 0u;
+    loop {
+        if (j >= p.e.y) { return; }
+        let h = sq_window(j).w >> 16u;
+        if (r < h) { break; }
+        r = r - h; row = row + h; j = j + 1u;
+    }
+    let win = sq_window(j);
+    let n = win.w & 0xffffu;
+    let base = win.x + ((win.z >> 16u) + r) * win.y + (win.z & 0xffffu);
+    var s = f64(0.0);
+    var c = 0u;
+    loop {
+        if (c + 8u > n) { break; }
+        let v0 = f64(work[base + c]); let v1 = f64(work[base + c + 1u]);
+        let v2 = f64(work[base + c + 2u]); let v3 = f64(work[base + c + 3u]);
+        let v4 = f64(work[base + c + 4u]); let v5 = f64(work[base + c + 5u]);
+        let v6 = f64(work[base + c + 6u]); let v7 = f64(work[base + c + 7u]);
+        s = s + v0 * v0; s = s + v1 * v1; s = s + v2 * v2; s = s + v3 * v3;
+        s = s + v4 * v4; s = s + v5 * v5; s = s + v6 * v6; s = s + v7 * v7;
+        c = c + 8u;
+    }
+    loop {
+        if (c >= n) { break; }
+        let v = f64(work[base + c]);
+        s = s + v * v;
+        c = c + 1u;
+    }
+    red[row + r] = s;
+}
+
+// Each window's row sums, in row order, into red[e.z + j]: square_sum's outer
+// sum. One invocation per window, loads eight at a time.
+@compute @workgroup_size(256)
+fn rowsq_finish(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let j = gid(id, nwg);
+    if (j >= p.e.y) { return; }
+    var b = p.e.x;
+    for (var k = 0u; k < j; k = k + 1u) { b = b + (sq_window(k).w >> 16u); }
+    let n = sq_window(j).w >> 16u;
+    var s = f64(0.0);
+    var c = 0u;
+    loop {
+        if (c + 8u > n) { break; }
+        let v0 = red[b + c]; let v1 = red[b + c + 1u];
+        let v2 = red[b + c + 2u]; let v3 = red[b + c + 3u];
+        let v4 = red[b + c + 4u]; let v5 = red[b + c + 5u];
+        let v6 = red[b + c + 6u]; let v7 = red[b + c + 7u];
+        s = s + v0; s = s + v1; s = s + v2; s = s + v3;
+        s = s + v4; s = s + v5; s = s + v6; s = s + v7;
+        c = c + 8u;
+    }
+    loop {
+        if (c >= n) { break; }
+        s = s + red[b + c];
+        c = c + 1u;
+    }
+    red[p.e.z + j] = s;
+}
 // Copy a rectangle of a level to a packed row-major block.
 // a = (level, level width, x, w), b = (y, h, dst).
 @compute @workgroup_size(256)

@@ -71,6 +71,113 @@ pub(super) fn decoders(gpu_prep: bool) -> usize {
     (cores / 2).clamp(DECODERS, 16)
 }
 
+/// `STREHL_DECODE_PIN=off` leaves decoder threads where the scheduler puts
+/// them (see [`pin_decoder`]). Scheduling only: it cannot change output.
+pub const DECODE_PIN_ENV: &str = "STREHL_DECODE_PIN";
+
+/// Give decoder `i` of `n` a physical core of its own, spread evenly over the
+/// cores (Windows; elsewhere nothing). Decoding is one thread per frame and
+/// compute-bound, so two decoders on one core's two hardware threads each run
+/// at about half speed. MEASURED on a 16-core, 32-thread Ryzen 9 9950X3D
+/// under Windows 11: 16 concurrent decodes ran on both hardware threads of 9
+/// cores while 7 cores idled (per-CPU load), 128-130 ms per 33 MP frame; one
+/// decoder per core, 90 ms, and the batch's wall time 2.6 s to 1.95 s.
+pub(super) fn pin_decoder(i: usize, n: usize) {
+    if std::env::var(DECODE_PIN_ENV).is_ok_and(|v| v.trim().eq_ignore_ascii_case("off")) {
+        return;
+    }
+    #[cfg(windows)]
+    {
+        use windows_sys::Win32::System::Threading::{GetCurrentThread, SetThreadGroupAffinity};
+        let cores = physical_cores();
+        if cores.len() < 2 || n == 0 {
+            return;
+        }
+        let core = if n <= cores.len() {
+            i * cores.len() / n
+        } else {
+            i % cores.len()
+        };
+        // SAFETY: a valid affinity of an existing core for the calling thread;
+        // the previous affinity is not wanted. A failure leaves it unpinned.
+        unsafe {
+            SetThreadGroupAffinity(GetCurrentThread(), &cores[core], std::ptr::null_mut());
+        }
+    }
+    #[cfg(not(windows))]
+    let _ = i;
+}
+
+/// Each physical core's processor group and logical-processor mask, in
+/// (group, mask) order; empty if the system cannot report them.
+#[cfg(windows)]
+fn physical_cores() -> &'static [windows_sys::Win32::System::SystemInformation::GROUP_AFFINITY] {
+    use windows_sys::Win32::System::SystemInformation::{
+        GROUP_AFFINITY, GetLogicalProcessorInformationEx, PROCESSOR_RELATIONSHIP,
+        RelationProcessorCore, SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX,
+    };
+    static CORES: std::sync::OnceLock<Vec<GROUP_AFFINITY>> = std::sync::OnceLock::new();
+    CORES.get_or_init(|| {
+        let mut len = 0u32;
+        // SAFETY: a null buffer asks for the required length.
+        unsafe {
+            GetLogicalProcessorInformationEx(RelationProcessorCore, std::ptr::null_mut(), &mut len)
+        };
+        // u64 storage keeps the records 8-byte aligned.
+        let mut buf = vec![0u64; (len as usize).div_ceil(8)];
+        // SAFETY: `buf` holds `len` bytes.
+        if unsafe {
+            GetLogicalProcessorInformationEx(
+                RelationProcessorCore,
+                buf.as_mut_ptr().cast(),
+                &mut len,
+            )
+        } == 0
+        {
+            return Vec::new();
+        }
+        let bytes: &[u8] = &bytemuck_bytes(&buf)[..len as usize];
+        // Each record: relationship, size, then (for a core) its processor
+        // relationship, whose first group mask is the core's (a core lies in
+        // one group). Read by offset: records are `size` bytes, shorter than
+        // the union-sized struct.
+        let mask_at = std::mem::offset_of!(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX, Anonymous)
+            + std::mem::offset_of!(PROCESSOR_RELATIONSHIP, GroupMask);
+        let mut cores = Vec::new();
+        let mut at = 0usize;
+        while at + 8 <= bytes.len() {
+            let word = |o: usize| u32::from_ne_bytes(bytes[at + o..at + o + 4].try_into().unwrap());
+            let (relationship, size) = (word(0) as i32, word(4) as usize);
+            if size == 0 || at + size > bytes.len() {
+                break;
+            }
+            let end = mask_at + std::mem::size_of::<GROUP_AFFINITY>();
+            if relationship == RelationProcessorCore && size >= end {
+                // SAFETY: `end <= size` bytes of this record are in `bytes`.
+                let mask = unsafe {
+                    bytes
+                        .as_ptr()
+                        .add(at + mask_at)
+                        .cast::<GROUP_AFFINITY>()
+                        .read_unaligned()
+                };
+                if mask.Mask != 0 {
+                    cores.push(mask);
+                }
+            }
+            at += size;
+        }
+        cores.sort_by_key(|g| (g.Group, g.Mask));
+        cores
+    })
+}
+
+#[cfg(windows)]
+fn bytemuck_bytes(words: &[u64]) -> &[u8] {
+    // SAFETY: any u64 is valid as eight bytes; the length is in bytes.
+    unsafe { std::slice::from_raw_parts(words.as_ptr().cast::<u8>(), words.len() * 8) }
+}
+
 /// Wraps a frame source, serving planned indices from decode-ahead threads.
 pub(super) struct DecodeAhead<'s, S: PyramidFrameSource> {
     inner: &'s S,
@@ -297,6 +404,31 @@ mod tests {
     use super::*;
     use std::sync::atomic::{AtomicUsize, Ordering::SeqCst};
 
+    /// Each reported core is a non-empty set of logical processors, no two
+    /// cores share one, and together they cover every logical processor this
+    /// process can use; pinning a thread to one leaves it runnable.
+    #[cfg(windows)]
+    #[test]
+    fn physical_cores_partition_the_logical_processors() {
+        let cores = physical_cores();
+        assert!(!cores.is_empty());
+        for (i, a) in cores.iter().enumerate() {
+            assert_ne!(a.Mask, 0);
+            for b in &cores[i + 1..] {
+                assert!(a.Group != b.Group || a.Mask & b.Mask == 0, "cores overlap");
+            }
+        }
+        let logical: u32 = cores.iter().map(|c| c.Mask.count_ones()).sum();
+        let available = std::thread::available_parallelism().map_or(1, |n| n.get());
+        assert!(logical as usize >= available, "{logical} < {available}");
+        std::thread::spawn(|| {
+            pin_decoder(cores.len() - 1, cores.len());
+            std::hint::black_box((0..1000u64).sum::<u64>())
+        })
+        .join()
+        .expect("a pinned thread runs");
+    }
+
     /// A source whose "frames" are errors naming their index, so results can
     /// be checked without RAW files, and which counts the decodes it served.
     struct Counting {
@@ -346,6 +478,12 @@ mod tests {
         std::thread::scope(|scope| {
             for _ in 0..3 {
                 scope.spawn(|| ahead.run_prefetcher(6));
+            }
+            // Decoders start once the prefetchers have read their first
+            // window: this source decodes instantly, so otherwise the decoders
+            // could claim every frame before a prefetcher ran.
+            while ahead.lock().prefetched < 6 {
+                std::thread::yield_now();
             }
             for _ in 0..DECODERS {
                 scope.spawn(|| ahead.run_decoder());

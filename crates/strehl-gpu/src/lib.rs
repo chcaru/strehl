@@ -69,6 +69,7 @@ enum Kernel {
     Demean,
     Noise,
     RowSq,
+    RowSqFinish,
     Pack,
     NullAccum,
     ScreenCensus,
@@ -319,6 +320,86 @@ impl Recorder {
         );
     }
 
+    /// The f64 sum of the `n` values at `src` into `red[0]`, through partials
+    /// at `red[1..]`; returns the first `red` index after them. The values
+    /// must make every partial sum exact (the probe luma: half-integers, far
+    /// below 2^52 in total), because the order of addition is free here.
+    fn exact_sum(&mut self, src: u32, n: usize) -> u32 {
+        let parts = n.div_ceil(SUM_CHUNK);
+        self.push(
+            Kernel::Sum64,
+            Params {
+                a: [src, n as u32, 1, SUM_CHUNK as u32],
+                ..Default::default()
+            },
+            // One workgroup per chunk.
+            parts * WG as usize,
+        );
+        // The partials are exact, so one workgroup sums them as a tree.
+        self.push(
+            Kernel::Sum64Finish,
+            Params {
+                a: [1, parts as u32, 0, 1],
+                ..Default::default()
+            },
+            WG as usize,
+        );
+        (parts + 2) as u32
+    }
+
+    /// Each `(level, level width, [x, y, w, h])` window's
+    /// `gatefloor::square_sum` (each row summed in column order, then the row
+    /// sums in row order) into `red[total + i]`, row sums from `red[row]`;
+    /// returns `total`. Up to four windows share a dispatch, so their ordered
+    /// chains run side by side. Coordinates must be below 2^16
+    /// ([`SQ_WINDOW_MAX`]).
+    fn square_sums(&mut self, windows: &[(u32, u32, [usize; 4])], mut row: u32) -> u32 {
+        let total = row + windows.iter().map(|w| w.2[3] as u32).sum::<u32>();
+        for (g, group) in windows.chunks(4).enumerate() {
+            let mut packed = [[0u32; 4]; 4];
+            for (slot, &(level, width, [x, y, w, h])) in packed.iter_mut().zip(group) {
+                assert!(
+                    [x, y, w, h].iter().all(|&v| v <= SQ_WINDOW_MAX),
+                    "square-sum window beyond 16 bits"
+                );
+                *slot = [
+                    level,
+                    width,
+                    x as u32 | (y as u32) << 16,
+                    w as u32 | (h as u32) << 16,
+                ];
+            }
+            let rows: usize = group.iter().map(|w| w.2[3]).sum();
+            let [a, b, c, d] = packed;
+            let e = [row, group.len() as u32, total + 4 * g as u32, 0];
+            self.push(
+                Kernel::RowSq,
+                Params {
+                    a,
+                    b,
+                    c,
+                    d,
+                    e,
+                    ..Default::default()
+                },
+                rows,
+            );
+            self.push(
+                Kernel::RowSqFinish,
+                Params {
+                    a,
+                    b,
+                    c,
+                    d,
+                    e,
+                    ..Default::default()
+                },
+                group.len(),
+            );
+            row += rows as u32;
+        }
+        total
+    }
     /// `Pyramid::build` (Laplacian) in place over `lv`, whose level 0 holds
     /// the source.
     fn laplacian(&mut self, scratch: u32, sizes: &[LevelSize], lv: &[u32]) {
@@ -416,6 +497,12 @@ struct Profile {
     period_ns: f64,
     /// Per kernel: dispatches and total nanoseconds.
     totals: Vec<(u64, f64)>,
+    /// Each submission's first-begin to last-end nanoseconds, summed: the
+    /// kernels plus the device's gaps between them.
+    span_ns: f64,
+    /// Per kernel: nanoseconds the device spent between the previous
+    /// kernel's end and this one's start.
+    gaps: Vec<f64>,
 }
 
 impl Profile {
@@ -442,6 +529,8 @@ impl Profile {
             }),
             period_ns: f64::from(queue.get_timestamp_period()),
             totals: vec![(0, 0.0); strict::ENTRY_POINTS.len()],
+            span_ns: 0.0,
+            gaps: vec![0.0; strict::ENTRY_POINTS.len()],
         }
     }
 }
@@ -525,6 +614,9 @@ pub struct ScreenCensus {
 
 /// Maximum dispatches one frame records; sizes the parameter buffers.
 const MAX_CALLS: usize = 1024;
+
+/// Largest coordinate or extent of a square-sum window (packed in 16 bits).
+const SQ_WINDOW_MAX: usize = 0xffff;
 
 /// Values per partial sum in the probe's exact mean.
 const SUM_CHUNK: usize = 4096;
@@ -976,14 +1068,19 @@ impl GpuFold {
             .filter(|(_, t)| t.0 > 0)
             .collect();
         rows.sort_by(|a, b| b.1.1.total_cmp(&a.1.1));
-        let mut out = format!("device time {:.1} ms\n", total * 1e-6);
+        let mut out = format!(
+            "device time {:.1} ms in kernels, {:.1} ms from each submission's first kernel to its last\n",
+            total * 1e-6,
+            prof.span_ns * 1e-6
+        );
         for (k, (n, ns)) in rows {
             out.push_str(&format!(
-                "  {:<14} {:>6} dispatches {:>9.2} ms {:>5.1}%\n",
+                "  {:<14} {:>6} dispatches {:>9.2} ms {:>5.1}%, gaps before {:>7.2} ms\n",
                 strict::ENTRY_POINTS[k],
                 n,
                 ns * 1e-6,
-                100.0 * ns / total
+                100.0 * ns / total,
+                prof.gaps[k] * 1e-6
             ));
         }
         Some(out)
@@ -1096,11 +1193,16 @@ impl GpuFold {
             {
                 let view = slice.get_mapped_range().expect("mapped profile");
                 let stamps: &[u64] = bytemuck::cast_slice(&view[..]);
+                prof.span_ns += stamps[q - 1].wrapping_sub(stamps[0]) as f64 * prof.period_ns;
                 for (i, (k, _, _)) in rec.calls.iter().enumerate() {
                     let ns = stamps[2 * i + 1].wrapping_sub(stamps[2 * i]) as f64 * prof.period_ns;
                     let t = &mut prof.totals[k.index()];
                     t.0 += 1;
                     t.1 += ns;
+                    if i > 0 {
+                        prof.gaps[k.index()] +=
+                            stamps[2 * i].wrapping_sub(stamps[2 * i - 1]) as f64 * prof.period_ns;
+                    }
                 }
             }
             prof.readback.unmap();
@@ -1538,7 +1640,10 @@ impl GpuFold {
         self.check_staged(frame)?;
         let sizes = &self.layout.sizes;
         let fits = |k: usize, [x, y, w, h]: [usize; 4]| {
-            k < sizes.len() && x + w <= sizes[k].width && y + h <= sizes[k].height
+            k < sizes.len()
+                && x + w <= sizes[k].width
+                && y + h <= sizes[k].height
+                && [x, y, w, h].iter().all(|&v| v <= SQ_WINDOW_MAX)
         };
         if !sums.iter().all(|&[k, x, y, w, h]| fits(k, [x, y, w, h])) {
             return Err("GPU probe: a requested rectangle is outside its level".into());
@@ -1599,23 +1704,7 @@ impl GpuFold {
             },
             n0,
         );
-        let parts = n0.div_ceil(SUM_CHUNK);
-        rec.push(
-            Kernel::Sum64,
-            Params {
-                a: [l.probe_lv[0], n0 as u32, 1, SUM_CHUNK as u32],
-                ..Default::default()
-            },
-            parts,
-        );
-        rec.push(
-            Kernel::Sum64Finish,
-            Params {
-                a: [1, parts as u32, 0, 0],
-                ..Default::default()
-            },
-            1,
-        );
+        let row = rec.exact_sum(l.probe_lv[0], n0);
         rec.push(
             Kernel::Demean,
             Params {
@@ -1625,30 +1714,11 @@ impl GpuFold {
             n0,
         );
         rec.laplacian(l.scratch, &l.sizes, &l.probe_lv);
-        // Interior sums: row sums, then each interior's rows in order.
-        let mut row = (parts + 2) as u32;
-        let total = row + sums.iter().map(|s| s[4] as u32).sum::<u32>();
-        for (i, &[k, x, y, w, h]) in sums.iter().enumerate() {
-            let width = l.sizes[k].width as u32;
-            rec.push(
-                Kernel::RowSq,
-                Params {
-                    a: [l.probe_lv[k], width, x as u32, w as u32],
-                    b: [y as u32, h as u32, row, 0],
-                    ..Default::default()
-                },
-                h,
-            );
-            rec.push(
-                Kernel::Sum64Finish,
-                Params {
-                    a: [row, h as u32, total + i as u32, 0],
-                    ..Default::default()
-                },
-                1,
-            );
-            row += h as u32;
-        }
+        let windows: Vec<(u32, u32, [usize; 4])> = sums
+            .iter()
+            .map(|&[k, x, y, w, h]| (l.probe_lv[k], l.sizes[k].width as u32, [x, y, w, h]))
+            .collect();
+        let total = rec.square_sums(&windows, row);
         // The ensemble null's windows, kept on the device for this frame's
         // fold: each band's coefficients, and its energy (the fold's own
         // smoothing over the whole level, so the window's interior is the
@@ -1848,6 +1918,66 @@ impl GpuFold {
         };
         out.truncate(frame.data.len());
         Ok(out)
+    }
+
+    /// The probe's two f64 reductions over supplied values, read back: the
+    /// exact sum the zero-mean takes (values must keep it exact, as the probe
+    /// luma does), and each `[x, y, w, h]` window's `gatefloor::square_sum`
+    /// with `values` as a level `width` samples wide. For testing the device's
+    /// order of addition against the CPU's.
+    #[doc(hidden)]
+    pub fn probe_sums(
+        &mut self,
+        values: &[f32],
+        width: usize,
+        windows: &[[usize; 4]],
+    ) -> Result<(f64, Vec<f64>), String> {
+        let at = self.layout.probe_lv[0];
+        let n = values.len();
+        if n > self.layout.sizes[0].pixels() || width == 0 || !n.is_multiple_of(width) {
+            return Err("probe sums: values do not fit the probe level".into());
+        }
+        let rows = n / width;
+        if !windows.iter().all(|&[x, y, w, h]| {
+            x + w <= width && y + h <= rows && [x, y, w, h].iter().all(|&v| v <= SQ_WINDOW_MAX)
+        }) {
+            return Err("probe sums: a window is outside the values".into());
+        }
+        let mut rec = Recorder { calls: Vec::new() };
+        let row = rec.exact_sum(at, n);
+        let level: Vec<(u32, u32, [usize; 4])> =
+            windows.iter().map(|&r| (at, width as u32, r)).collect();
+        let total = rec.square_sums(&level, row);
+        let len = u64::from(total) + windows.len() as u64;
+        if len > red_len(&self.layout.sizes) {
+            return Err("probe sums: too many window rows".into());
+        }
+        self.queue
+            .write_buffer(&self.work, u64::from(at) * 4, bytemuck::cast_slice(values));
+        let readback = self.device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("probe-sums-readback"),
+            size: len * 8,
+            usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        });
+        let index = self.submit_with(rec, |encoder, fold| {
+            encoder.copy_buffer_to_buffer(&fold.red, 0, &readback, 0, len * 8);
+        });
+        readback
+            .slice(..)
+            .map_async(wgpu::MapMode::Read, |r| r.expect("map probe sums"));
+        self.device
+            .poll(wgpu::PollType::Wait {
+                submission_index: Some(index),
+                timeout: None,
+            })
+            .map_err(|e| format!("GPU wait: {e:?}"))?;
+        let view = readback
+            .slice(..)
+            .get_mapped_range()
+            .map_err(|e| format!("{e:?}"))?;
+        let red: &[f64] = bytemuck::cast_slice(&view[..]);
+        Ok((red[0], red[total as usize..].to_vec()))
     }
 
     /// Gather a staged frame on the device into the fold's planes, compute its

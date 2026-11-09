@@ -78,7 +78,7 @@ native-green-cue = ["strehl-core/native-green-cue"]
 native-gpu-gather = ["dep:strehl-native-gpu-gather"]
 
 [target.'cfg(windows)'.dependencies]
-windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_Storage_FileSystem"] }
+windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_Storage_FileSystem", "Win32_System_SystemInformation", "Win32_System_Threading"] }
 [[example]]
 name = "rea-native-roi"
 path = "../../experiments/rea-a7c2-2026-10-24-i/native-roi/raw-roi-export.rs"

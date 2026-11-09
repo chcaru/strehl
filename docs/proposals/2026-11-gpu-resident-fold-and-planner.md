@@ -351,7 +351,36 @@ MEASURED, same command as above, against `48c745f10`, alternated: fold 14.4-14.6
 private 6.9-7.1 GB against 7.1-7.2 GB; 20 and 24 decoders no faster than 16. Photograph and
 float master identical to the CPU path's.
 
-Remaining: the fold thread's serial work (the upload fill, 3.1 ms per frame and ~115 s of CPU
-per run, and a pipeline only one frame deep); exact f32 division (~0.5 ms per frame of device
-time), the gather's f64 coordinates (~0.7 ms), the upload (~2.4 ms); the desktop's live views
-on the GPU path.
+### Stage 3, the probe's reductions and decoder placement (2026-11-09)
+
+Device time per frame is now accounted for, not only kernel time: the profile reports each
+submission's span and the gap before each kernel. Production order measured 9.0 ms per frame
+against ~6.6 ms of kernels; ~1.3 ms of the difference sat before the probe's f64 sums, whose
+loops waited on memory per value. Reworked (`docs/ARCHITECTURE.md` § The GPU fold, *Device
+kernels*; exact, `tests/probe-sums.rs`): production order 7.7 ms per frame. Extra dispatches
+cost ~1.2 µs each (MEASURED by duplicating 158 small ones per frame), so dispatch count is not
+the remaining gap. The upload was re-measured: the mapped buffer is in device memory, the device
+copy is 0.13 ms, and the CPU fill is off the device's critical path.
+
+Decoding under the fold: per-CPU load showed 16 decoders packed onto both hardware threads of 9
+cores; pinning one per physical core took a 16-thread decode from 128 to 90 ms per frame.
+
+MEASURED, bug-7 as above (`STREHL_GPU_FOLD=on`), alternated: pinned against unpinned (same
+build), fold 14.5-14.7 s against 14.5-15.2 s, CPU ~312 s against ~337 s; photograph and float
+master identical to the CPU path's. The fold, ~10 ms per frame, is now bound by the device
+(7.7 ms) plus stalls: an instrumented run finds ~2 s of decode waits in eight bursts, one per
+canonical chunk, where all decoders slow 2.5x for ~200 ms while the host reads back and
+combines the chunk's totals (over 1 GB) on every core, and ~1 s of the fold thread blocked in
+that combine. Not kept: one read per file into a reused buffer instead of a mapping (slower
+fold, 1 GB more memory).
+
+MEASURED, both changes against `27bb7fe7a`, alternated (ABABAB): fold 14.9 / 15.2 / 14.3 s
+against 15.4 / 15.0 / 15.6 s, CPU time 306-315 s against 326-330 s, peak private 7.0-7.1 GB
+both; photograph and float master identical to the CPU path's; byte-freeze rows unchanged.
+
+Remaining: keep the running total on the device (combine each chunk there with
+`EXTERNAL_ABSORB`'s operations, read back once at the end; the desktop's chunk-end live view
+needs a device-side sample of the accumulators first); carry decode buffers from the preview
+pass into the full pass (its first 14 decodes allocate fresh, 360-640 ms each); a pipeline only
+one frame deep; exact f32 division (~0.5 ms per frame of device time) and the gather's f64
+coordinates (~0.7 ms).

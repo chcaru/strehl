@@ -129,17 +129,29 @@ fn production_frame_timing() {
     let (warm, frames) = (6usize, 60usize);
     let mut pending = None;
     let mut start = Instant::now();
+    // Host time per call: stage, probe submit, probe collect (the wait),
+    // fold submit.
+    let mut host = [0f64; 4];
     for n in 0..warm + frames {
         if n == warm {
             start = Instant::now();
+            host = [0.0; 4];
         }
+        let t0 = Instant::now();
         let staged = gpu.stage(&frame).expect("stage");
+        let t1 = Instant::now();
         let probe = gpu.probe_submit(&staged, noise, &sums).expect("probe");
+        let t2 = Instant::now();
+        host[0] += (t1 - t0).as_secs_f64();
+        host[1] += (t2 - t1).as_secs_f64();
         if let Some((staged, probe)) = pending.replace((staged, probe)) {
             gpu.probe_collect(probe).expect("collect");
+            let t3 = Instant::now();
             let units = merge.note_external_null_frame(&beta, 1.0);
             gpu.add_staged(&mut merge, &staged, green, Some(&beta), Some(&units))
                 .expect("fold");
+            host[2] += (t3 - t2).as_secs_f64();
+            host[3] += t3.elapsed().as_secs_f64();
         }
     }
     // Drain: the last frame's probe waits for every fold queued before it.
@@ -147,6 +159,10 @@ fn production_frame_timing() {
     gpu.probe_collect(probe).expect("collect");
     let per = start.elapsed().as_secs_f64() * 1e3 / frames as f64;
     eprintln!("production order: {per:.2} ms per frame over {frames} frames");
+    let [a, b, c, d] = host.map(|t| t * 1e3 / frames as f64);
+    eprintln!(
+        "  host per frame: stage {a:.2} ms, probe submit {b:.2}, probe wait {c:.2}, fold submit {d:.2}"
+    );
     if let Some(report) = gpu.profile_report() {
         eprintln!("{report}");
     }

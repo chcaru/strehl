@@ -187,6 +187,7 @@ pub const ENTRY_POINTS: &[&str] = &[
     "demean",
     "noise",
     "rowsq",
+    "rowsq_finish",
     "pack",
     "null_accum",
     "screen_census",

@@ -8600,8 +8600,16 @@ fn run_pyramid_prepared_with_sensor(
     }
     let source = &ahead;
     std::thread::scope(|scope| -> Result<()> {
-        for _ in 0..decoders {
-            scope.spawn(|| ahead.run_decoder());
+        let pin = worker.gpu_prep;
+        for i in 0..decoders {
+            let ahead = &ahead;
+            scope.spawn(move || {
+                // Measured where decoding bounds the fold: GPU preparation.
+                if pin {
+                    decode_ahead::pin_decoder(i, decoders);
+                }
+                ahead.run_decoder()
+            });
         }
         for _ in 0..decode_ahead::PREFETCHERS {
             scope.spawn(|| ahead.run_prefetcher(decode_ahead::PREFETCH_AHEAD));

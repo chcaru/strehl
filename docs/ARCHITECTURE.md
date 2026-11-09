@@ -900,6 +900,16 @@ passes, and the fold became bound by decoders waiting on page faults for file da
 the next 32 planned frames into the file cache ahead of the decoders (`decode_ahead`), and each
 decode faults its mapped file in once, in order, before decoding.
 
+Under GPU preparation each decoder thread is pinned to a physical core of its own
+(`decode_ahead::pin_decoder`; `STREHL_DECODE_PIN=off` declines). Per-CPU load showed Windows
+running 16 concurrent decodes on both hardware threads of 9 of the 16 cores while 7 idled;
+pinned, a decode took 90 against 128 ms in a 16-thread decode test. End to end less (fold
+14.5-14.7 s against 14.5-15.2 s, alternated) with CPU time ~312 against ~337 s: the fold is now
+bound by the device and by the stalls at each chunk's end, where the host combines the chunk's
+totals on every core and the decoders slow 2.5x for ~200 ms. Reading each file with one call
+into a reused buffer instead of mapping it was tried: 7% faster decodes alone, but a slower fold
+(14.7-15.4 against 14.2-15.1 s) and 1 GB more peak memory, so not kept.
+
 MEASURED, bug-7 1,444 frames, desktop path (sRGB + linear master + progress + CA preview),
 same machine: CPU 329.9 s; GPU fold with CPU preparation 209.2 s; GPU preparation 42.2 s
 (0.02 s per frame folded); with the data movement and allocator above 32.5-32.8 s against
@@ -941,6 +951,27 @@ back to f64; a bound shrunk to 2^-50 gives 613 mismatches. Level kernel 1.55 to 
 frame, production order 10.2 to 9.1 ms per frame. End to end on bug-7 this did not show: the
 CLI fold, at ~10.6 ms per frame, is now limited as much by decoding (16 decoders give ~128
 frames/s warm, no more with more threads) and the fold thread's serial work as by the device.
+
+The probe's f64 reductions were the device's largest idle time. `STREHL_GPU_PROFILE` reports
+each submission's span beside its kernel time and each kernel's preceding gap; ~1.3 ms per frame
+of gaps sat before the probe's final sums. The zero-mean's sum ran 2,000 threads each adding
+4,096 values, and each interior's row sums one thread per row adding ~2,600, all waiting on
+memory for every value. The zero-mean's values are half-integers totalling far below 2^52, so
+any order gives the same sum: it is now coalesced strided shares and a workgroup tree. The
+interior sums keep the CPU's order (`gatefloor::square_sum`), so their chains cannot be
+reassociated; their loads are issued eight at a time, and all bands' rows, then all bands' row
+totals, run in one dispatch each instead of one band after another. `tests/probe-sums.rs`
+compares both with the CPU's order of addition bit for bit on values spanning 40 binades
+(where a reversed order gives a different sum) and fails with two terms swapped or one value
+dropped. Production order 9.0 to 7.7 ms per frame. Not kept: rows staged through shared memory
+for one ordered thread (8.3 ms) and 16-wide load batches (no change).
+
+The upload is not a device cost on this machine (revising the ~2.4 ms above, measured in an
+earlier state): the mapped upload buffer lies in device memory (resizable BAR), its device copy
+takes 0.13 ms for 66 MB, and skipping the CPU fill does not shorten production order (MEASURED,
+a throwaway build); a kernel reading the mapped buffer directly was no faster than copy and
+read (micro-benchmark). The fill costs the fold thread ~3 ms per frame, which it overlaps with
+the device's work on earlier frames.
 
 Tried and not kept: fusing the pyramid's separable passes and
 batching planes per dispatch (fewer dispatches did not matter; the fused expand was slower),
