@@ -1,0 +1,99 @@
+{
+  "source_and_builds": [
+    {
+      "file": "advanced.py",
+      "bytes": 5210,
+      "sha256": "f945a8db0d3208ca77af89c03034c2e2f07219863657b88e5fb0655538caa4b8"
+    },
+    {
+      "file": "bench.py",
+      "bytes": 7945,
+      "sha256": "72ad4722d3d8892c6585dd64668d45d1b57a01e67a7a56daad3ba5724f405e0f"
+    },
+    {
+      "file": "brief.md",
+      "bytes": 3242,
+      "sha256": "7ecb387aca32f7b87701cc517b0f0df0601e98c946c4500355833dc29069b986"
+    },
+    {
+      "file": "current-camera-bench.py",
+      "bytes": 1281,
+      "sha256": "f764d7b5bc03f5ac5f27e6faf57330f5c778578a197eb2a8775386912ba1a81d"
+    },
+    {
+      "file": "entropy.py",
+      "bytes": 2832,
+      "sha256": "8de529c350d3a7698b3f51b7d93b7834c8fbcc4c07fdb59d7287d8399613eb30"
+    },
+    {
+      "file": "extra-controls.py",
+      "bytes": 4731,
+      "sha256": "e987e8b547f38a6dcce67d0e3e9d7bfcaa25640a05a7e2647a00c640e33cdce7"
+    },
+    {
+      "file": "fetch-samples.py",
+      "bytes": 2916,
+      "sha256": "3c2a10cd4a83d3b9212b4ff0eb580e34b6018639b6064597a36abb0a90e15dea"
+    },
+    {
+      "file": "network-bench.py",
+      "bytes": 1811,
+      "sha256": "661a8027e1a92fcaa4e62651e0926c0088b169901d99d198fa24a3800260edef"
+    },
+    {
+      "file": "pi-bench.py",
+      "bytes": 4501,
+      "sha256": "64bcf1e7b1f0ad041d85b4f1cb056f0f1bd248ad41f6f757521ab07b4b21c74d"
+    },
+    {
+      "file": "predict.rs",
+      "bytes": 4555,
+      "sha256": "a1d9e941d726a4eb5b9046c48c209318bba1bceb4c7782237ed4bd20c72c0eaf"
+    },
+    {
+      "file": "resource-bench.py",
+      "bytes": 2152,
+      "sha256": "950950ad56f6b32025ee7dc858137e0d8732b5c066d4a53bfffef4c95b04e6e5"
+    },
+    {
+      "file": "run-pi.py",
+      "bytes": 1261,
+      "sha256": "9ef564865eb902f8a9c194bc5be5769ff51aa3704c68adac1f62678716a2adff"
+    },
+    {
+      "file": "video-bench.py",
+      "bytes": 3314,
+      "sha256": "058c85102c66945dd937a94068717191fc3f8a3a947b15659e81d20df071514f"
+    },
+    {
+      "file": "wire.py",
+      "bytes": 8493,
+      "sha256": "2e59f0e9a6ab9c2efbb8ecd4d788b71489b2535a2f0797ec30e18cd03eaedc12"
+    },
+    {
+      "file": "predict-v3.dll",
+      "bytes": 121344,
+      "sha256": "da6b18bda20d75e1d5a7c93fd970ad506c6a9e2ba2fe7a2f7fa5e1c878dde16a"
+    },
+    {
+      "file": "libpredict.so",
+      "bytes": 4566472,
+      "sha256": "e6e83ed65efb2f407117416382a8c8330792ae073109d1980235755d0ba4763e"
+    }
+  ],
+  "pc_environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "processor": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+    "python": "3.12.10",
+    "cpu_count": 32,
+    "dependencies": {
+      "numpy": "2.4.4",
+      "scipy": "1.17.1",
+      "imagecodecs": "2026.3.6",
+      "tifffile": "2026.5.2",
+      "rawpy": "0.27.0",
+      "requests": "2.34.2",
+      "beautifulsoup4": "4.15.0"
+    }
+  }
+}

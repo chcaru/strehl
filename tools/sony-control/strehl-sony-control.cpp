@@ -1,6 +1,14 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 // Original SDK client. Sony's headers and runtime are external dependencies.
+#ifdef _WIN32
 #include <windows.h>
+#else
+#include <sys/vfs.h>
+#include <unistd.h>
+#endif
+#include <filesystem>
+#include <cstdlib>
+#include <cctype>
 #include <algorithm>
 #include <atomic>
 #include <chrono>
@@ -23,6 +31,7 @@ namespace sdk = SCRSDK;
 using Clock = std::chrono::steady_clock;
 using namespace std::chrono_literals;
 
+#ifdef _WIN32
 static std::string utf8(const wchar_t* value) {
     if (!value) return {};
     const int n = WideCharToMultiByte(CP_UTF8, 0, value, -1, nullptr, 0, nullptr, nullptr);
@@ -32,6 +41,9 @@ static std::string utf8(const wchar_t* value) {
     result.pop_back();
     return result;
 }
+#else
+static std::string utf8(const char* value) { return value ? value : ""; }
+#endif
 static std::string quote(const std::string& value) {
     const char hex[] = "0123456789abcdef";
     std::string result = "\"";
@@ -130,7 +142,7 @@ static const std::map<std::string, CrInt32u> properties = {
 #define PROP(name) {#name, sdk::CrDeviceProperty_##name}
     PROP(FocusMode), PROP(FocusModeSetting), PROP(FocusPositionSetting),
     PROP(FocusPositionCurrentValue), PROP(DriveMode), PROP(FileType),
-    PROP(StillImageStoreDestination),
+    PROP(StillImageStoreDestination), PROP(RemoteSaveImageSize),
     PROP(RAW_FileCompressionType), PROP(FocusBracketShotNumber),
     PROP(FocusBracketFocusRange), PROP(FocusBracketOrder),
     PROP(FocusBracketShootingStatus), PROP(MediaSLOT1_WritingState),
@@ -144,7 +156,7 @@ static const std::map<std::string, CrInt32u> properties = {
 static const std::set<std::string> writable = {
     "FocusMode", "DriveMode", "FileType", "StillImageStoreDestination",
     "FocusBracketShotNumber", "FocusBracketFocusRange",
-    "FocusBracketOrder", "LiveView_Image_Quality"
+    "FocusBracketOrder", "LiveView_Image_Quality", "RAW_FileCompressionType", "RemoteSaveImageSize"
 };
 
 struct Events : sdk::IDeviceCallback {
@@ -154,11 +166,17 @@ struct Events : sdk::IDeviceCallback {
     std::mutex mutex;
     std::atomic<uint64_t> captured_events{0};
     std::atomic<uint64_t> unexpected_downloads{0};
+    bool host_mode = false;
+    std::vector<std::string> downloads;
     std::vector<CrInt32u> warnings;
     void OnConnected(sdk::DeviceConnectionVersioin) override { connected = true; }
     void OnDisconnected(CrInt32u e) override { connected = false; if (e) error = e; }
     void OnError(CrInt32u e) override { error = e; }
-    void OnCompleteDownload(CrChar*, CrInt32u) override { ++unexpected_downloads; }
+    void OnCompleteDownload(CrChar* filename, CrInt32u) override {
+        if (!host_mode) { ++unexpected_downloads; return; }
+        std::lock_guard<std::mutex> lock(mutex);
+        downloads.push_back(utf8(filename));
+    }
     void OnWarning(CrInt32u code) override {
         if (code == sdk::CrNotify_Captured_Event) ++captured_events;
         if (code == sdk::CrWarning_FocusPosition_Result_OK ||
@@ -212,6 +230,7 @@ class Camera {
     bool focus_saved = false;
     uint64_t initial_focus = 0;
     bool uncertain = false;
+    std::filesystem::path raw_directory;
     void alive() {
         check(events.error.load(), "Camera callback");
         if (!events.connected) throw std::runtime_error("Camera disconnected");
@@ -263,6 +282,23 @@ public:
             check(events.error.load(), "Connect callback");
             throw std::runtime_error("Connection timeout; check USB Remote Shoot and Sony USB driver");
         }
+    }
+    void host_memory(const std::string& path) {
+#ifdef _WIN32
+        (void)path;
+        throw std::runtime_error("RAM-only host capture requires the Linux Pi service");
+#else
+        raw_directory = std::filesystem::canonical(path);
+        struct statfs info{};
+        if (statfs(raw_directory.c_str(), &info) != 0 || info.f_type != 0x01021994)
+            throw std::runtime_error("Host RAW directory must be on tmpfs; refusing disk-backed RAW storage");
+        if (!std::filesystem::is_empty(raw_directory))
+            throw std::runtime_error("Unsent RAW data is still in RAM; recover it before reconnecting");
+        auto native = raw_directory.native();
+        std::string prefix = "STREHL";
+        check(sdk::SetSaveInfo(handle, native.data(), prefix.data(), 1), "SetSaveInfo RAM destination");
+        events.host_mode = true;
+#endif
     }
     ~Camera() {
         if (handle) {
@@ -338,7 +374,7 @@ public:
             << ",\"value\":";
         if (!p.IsGetEnableCurrentValue()) out << "null";
         else if (p.GetValueType() == sdk::CrDataType_STR)
-            out << quote(utf8(reinterpret_cast<const wchar_t*>(p.GetCurrentStr())));
+            out << quote(utf8(reinterpret_cast<const CrChar*>(p.GetCurrentStr())));
         else out << p.GetCurrentValue();
         out << ",\"allowed\":[";
         auto allowed = values(p);
@@ -361,8 +397,9 @@ public:
     void set(const std::string& name, uint64_t value) {
         if (uncertain) throw std::runtime_error("Previous operation uncertain; close and inspect the camera");
         if (!writable.count(name)) throw std::runtime_error("Property is not in this helper's write allowlist");
-        if (name == "StillImageStoreDestination" && value != sdk::CrStillImageStoreDestination_MemoryCard)
-            throw std::runtime_error("This helper permits SD-card-only saving");
+        if (name == "StillImageStoreDestination" && value != (events.host_mode ?
+            sdk::CrStillImageStoreDestination_HostPC : sdk::CrStillImageStoreDestination_MemoryCard))
+            throw std::runtime_error("Storage destination does not match the selected capture backend");
         const auto code = properties.at(name);
         auto p = get(code);
         if (!p.IsGetEnableCurrentValue()) throw std::runtime_error("Cannot snapshot original setting");
@@ -474,6 +511,55 @@ public:
             std::this_thread::sleep_for(100ms);
         }
     }
+    std::string capture_host(uint64_t timeout_s) {
+        if (!events.host_mode || uncertain || timeout_s < 5 || timeout_s > 3600)
+            throw std::runtime_error("Host capture is unavailable or an earlier exposure is uncertain");
+        // The Rust owner bounds completed files awaiting upload. The SDK still
+        // downloads exactly one exposure at a time and advances its filename.
+        if (current(sdk::CrDeviceProperty_StillImageStoreDestination) != sdk::CrStillImageStoreDestination_HostPC ||
+            current(sdk::CrDeviceProperty_DriveMode) != sdk::CrDrive_Single ||
+            current(sdk::CrDeviceProperty_FocusMode) != sdk::CrFocus_MF ||
+            current(sdk::CrDeviceProperty_FileType) != sdk::CrFileType_Raw ||
+            current(sdk::CrDeviceProperty_RAW_FileCompressionType) != sdk::CrRAWFile_LossLessL)
+            throw std::runtime_error("Capture requires host-only, single drive, MF and Lossless Compressed RAW L");
+        if (std::filesystem::space(raw_directory).available < 256ULL * 1024 * 1024)
+            throw std::runtime_error("RAM buffer has less than 256 MiB free; no exposure taken");
+        { std::lock_guard<std::mutex> lock(events.mutex); events.downloads.clear(); }
+        const auto baseline = events.captured_events.load();
+        uncertain = true;
+        const auto started = Clock::now();
+        const auto down = sdk::SendCommand(handle, sdk::CrCommandId_Release, sdk::CrCommandParam_Down);
+        std::this_thread::sleep_for(50ms);
+        const auto up = sdk::SendCommand(handle, sdk::CrCommandId_Release, sdk::CrCommandParam_Up);
+        check(down, "Release down"); check(up, "Release up");
+        for (;;) {
+            alive();
+            std::vector<std::string> files;
+            { std::lock_guard<std::mutex> lock(events.mutex); files = events.downloads; }
+            const auto captured = events.captured_events.load() - baseline;
+            if (files.size() > 1 || captured > 1)
+                throw std::runtime_error("Unexpected extra capture/download; RAM files retained");
+            if (files.size() == 1) {
+                auto file = std::filesystem::path(files.front());
+                if (file.is_relative()) file = raw_directory / file;
+                file = std::filesystem::canonical(file);
+                auto extension = file.extension().string();
+                std::transform(extension.begin(), extension.end(), extension.begin(), [](unsigned char c) { return static_cast<char>(std::toupper(c)); });
+                if (file.parent_path() != raw_directory || extension != ".ARW" ||
+                    !std::filesystem::is_regular_file(file) || std::filesystem::file_size(file) < 1024)
+                    throw std::runtime_error("Invalid completed RAW download; files retained");
+                if (current(sdk::CrDeviceProperty_StillImageStoreDestination) != sdk::CrStillImageStoreDestination_HostPC)
+                    throw std::runtime_error("Storage destination changed during host capture");
+                uncertain = false;
+                return "\"destination\":\"host-ram\",\"completion\":\"sdk-download-complete\",\"path\":" +
+                    quote(file.string()) + ",\"bytes\":" + std::to_string(std::filesystem::file_size(file)) +
+                    ",\"captured_events\":" + std::to_string(captured) + ",\"raw_compression\":\"lossless-l\"";
+            }
+            if (Clock::now() - started > std::chrono::seconds(timeout_s))
+                throw std::runtime_error("RAW download timed out; shutter will not be retried; inspect retained RAM files");
+            std::this_thread::sleep_for(50ms);
+        }
+    }
     std::string restore() {
         std::vector<std::string> failures;
         // A timed-out exposure may still be running. Do not move the lens then.
@@ -547,7 +633,8 @@ int main(int argc, char** argv) {
                  ",\"sdk_image_pointer_offset\":" + std::to_string(offset));
             return 0; // No SDK initialization, enumeration or camera connection.
         }
-        if (argc != 2 || (std::string(argv[1]) != "list" && std::string(argv[1]) != "serve"))
+        const bool host = argc == 3 && std::string(argv[1]) == "serve-host";
+        if (!host && (argc != 2 || (std::string(argv[1]) != "list" && std::string(argv[1]) != "serve")))
             throw std::runtime_error("Usage: strehl-sony-control.exe list|serve|self-test (USB a7C II only)");
         initialized = sdk::Init(0);
         if (!initialized) throw std::runtime_error("Sony SDK initialization failed");
@@ -569,7 +656,8 @@ int main(int argc, char** argv) {
             if (matches.size() != 1) throw std::runtime_error("Connect exactly one ILCE-7CM2 via USB Remote Shoot; found " + std::to_string(matches.size()));
             Camera camera(matches.front());
             camera.disable_live_view();
-            emit(list + ",\"ready\":true,\"capture_destination\":\"memory-card\",\"capture_protocol\":2,\"live_view_protocol\":1");
+            if (host) camera.host_memory(argv[2]);
+            emit(list + ",\"ready\":true,\"capture_destination\":" + quote(host ? "host-ram" : "memory-card") + ",\"capture_protocol\":2,\"live_view_protocol\":1,\"host_pipeline_protocol\":1");
             std::string line;
             while (std::getline(std::cin, line)) {
                 try {
@@ -583,6 +671,7 @@ int main(int argc, char** argv) {
                     else if (args[0] == "set" && args.size() == 3) { camera.set(args[1], number(args[2])); response = "\"property\":" + camera.property(args[1]); }
                     else if (args[0] == "focus" && args.size() == 3) response = camera.focus(number(args[1]), number(args[2]));
                     else if (args[0] == "capture" && args.size() == 3) response = camera.capture(number(args[1]), number(args[2]));
+                    else if (args[0] == "capture-host" && args.size() == 2) response = camera.capture_host(number(args[1]));
                     else if ((args[0] == "restore" || args[0] == "quit") && args.size() == 1) response = camera.restore();
                     else throw std::runtime_error("Unknown command or wrong argument count");
                     emit(response + ',' + camera.warning_list());

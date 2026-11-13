@@ -288,6 +288,12 @@ mounted card afterward. This is a separate private laptop preview, not part of
 the alpha.6 download. Its new live-view path has simulator verification; A7CR
 pixel-shift sequencing remains a [researched implementation path](experiments/sony-capture-ui-2026-11-07/a7cr-sequencing.md).
 
+The optional [headless Pi service](docs/pi-capture.md) reuses these controls and
+forwards full-resolution Lossless Compressed RAW L through Pi RAM to a local PC
+receiver, with checksum verification and durable acknowledgement before each
+RAM copy is released. Capture and delivery overlap through a bounded queue. This explicit
+host-storage mode bypasses both camera-card and Pi-disk RAW storage.
+
 ## Development and research
 
 Use the [research guide](docs/research/README.md) for topic indexes and searchable

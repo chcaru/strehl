@@ -33,6 +33,7 @@ struct WebState {
     key: String,
     remote_session: String,
     preview: Mutex<Option<(u64, Arc<Vec<u8>>)>>,
+    lan: Option<crate::lan::Lan>,
 }
 pub struct WebServer {
     pub addresses: Vec<Address>,
@@ -46,6 +47,15 @@ pub struct WebServer {
 }
 impl WebServer {
     pub fn start(session: Arc<Session>, bind: SocketAddr) -> Result<Self> {
+        Self::start_configured(session, bind, None, None)
+    }
+    /// A persistent pairing key and a single LAN are used by the Pi appliance.
+    pub fn start_configured(
+        session: Arc<Session>,
+        bind: SocketAddr,
+        persistent_key: Option<String>,
+        lan: Option<crate::lan::Lan>,
+    ) -> Result<Self> {
         let listener = TcpListener::bind(bind)
             .context("Open web remote port; another application may already be using it")?;
         listener.set_nonblocking(true)?;
@@ -54,16 +64,30 @@ impl WebServer {
         // interrupted request. Neither the key nor its identity has an age TTL.
         let mut random = [0u8; 40];
         getrandom::fill(&mut random).map_err(|e| anyhow::anyhow!("Create pairing key: {e}"))?;
-        let key = random[..24]
-            .iter()
-            .map(|b| format!("{b:02x}"))
-            .collect::<String>();
-        let addresses = addresses(port, &key, bind.ip().is_loopback());
+        let key = persistent_key.unwrap_or_else(|| {
+            random[..24]
+                .iter()
+                .map(|b| format!("{b:02x}"))
+                .collect::<String>()
+        });
+        anyhow::ensure!(
+            key.len() == 48 && key.bytes().all(|b| b.is_ascii_hexdigit()),
+            "Invalid pairing key"
+        );
+        let addresses = if lan.is_some() {
+            vec![Address {
+                label: "Local network".into(),
+                url: format!("http://strehl.local:{port}/#key={key}"),
+            }]
+        } else {
+            addresses(port, &key, bind.ip().is_loopback())
+        };
         let state = Arc::new(WebState {
             session,
             key: key.clone(),
             remote_session: random[24..].iter().map(|b| format!("{b:02x}")).collect(),
             preview: Mutex::new(None),
+            lan,
         });
         let router = Router::new()
             .route(
@@ -214,11 +238,13 @@ async fn guard(State(state): State<Arc<WebState>>, request: Request<Body>, next:
         .extensions()
         .get::<ConnectInfo<SocketAddr>>()
         .map(|c| c.0.ip());
-    let mut response = if !peer.is_some_and(private_peer) {
-        problem(
-            StatusCode::FORBIDDEN,
-            "Use the local network or your private VPN",
-        )
+    let mut response = if !peer.is_some_and(|ip| {
+        state
+            .lan
+            .as_ref()
+            .map_or_else(|| private_peer(ip), |lan| lan.permits(ip))
+    }) {
+        problem(StatusCode::FORBIDDEN, "Use the configured local network")
     } else if request.uri().path().starts_with("/api/") {
         let bearer = request
             .headers()

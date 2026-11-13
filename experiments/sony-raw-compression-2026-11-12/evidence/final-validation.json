@@ -1,0 +1,13 @@
+{
+  "production_source_unchanged": true,
+  "ledger_previous_rows_preserved": 317,
+  "ledger_appended_one_four_column_row": true,
+  "new_markdown_links_and_final_newlines": true,
+  "all_input_hashes_reconciled_by_summarize": true,
+  "prototype_controls": "40 predictors + 40 bit splits + 11 full wire roundtrips + 68 malformed refusals; additional synthetic noise, FFV1 and AEC controls",
+  "full_corpus_lint": {
+    "exit": 1,
+    "findings_in_untouched_documents": 17,
+    "new_ledger_findings": 0
+  }
+}

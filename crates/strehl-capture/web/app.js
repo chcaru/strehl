@@ -39,7 +39,7 @@ function render(){
  if(!state)return;
  const s=state,edit=online&&s.editable&&!sending,active=['capturing','scanning','paused'].includes(s.phase),fresh=edit&&s.preview.fresh;
  $('camera-recovery').hidden=!s.failure||!paired();
- if(s.failure){const tag=`${s.sequence_id}:${s.failure.message}:${s.failure.exposure_uncertain}`;if(tag!==recoveryMessage){recoveryMessage=tag;$('recovery-ack').checked=false;}$('camera-error').textContent=s.failure.message;$('recovery-count').textContent=`${s.completed} / ${s.total} captures confirmed.${s.failure.exposure_uncertain?' The last exposure may be on the card; inspect it before reconnecting.':''}`;$('recovery-ack-label').hidden=!s.failure.exposure_uncertain;$('recover-camera').disabled=!online||sending||!s.failure.can_reconnect||(s.failure.exposure_uncertain&&!$('recovery-ack').checked);}else{recoveryMessage='';$('recovery-ack').checked=false;}
+ if(s.failure){const tag=`${s.sequence_id}:${s.failure.message}:${s.failure.exposure_uncertain}`;if(tag!==recoveryMessage){recoveryMessage=tag;$('recovery-ack').checked=false;}$('camera-error').textContent=s.failure.message;$('recovery-count').textContent=(s.saved==null?`${s.completed} / ${s.total} captures confirmed.`:`${s.completed} / ${s.total} captured; ${s.saved} saved on PC.`)+(s.failure.exposure_uncertain?' The last exposure is uncertain; inspect the camera and saved files before reconnecting.':'');$('recovery-ack-label').hidden=!s.failure.exposure_uncertain;$('recover-camera').disabled=!online||sending||!s.failure.can_reconnect||(s.failure.exposure_uncertain&&!$('recovery-ack').checked);}else{recoveryMessage='';$('recovery-ack').checked=false;}
  $('demo-label').hidden=!s.demo;$('connection-label').textContent=online?(s.connected?'● Camera connected':'● Remote connected'):'○ Remote offline';
  $('camera-connect').textContent=s.connected?'Disconnect':'Connect camera';$('camera-connect').disabled=!online||sending||s.busy||['connecting','disconnecting'].includes(s.phase);
  $('position').textContent=s.position??'—';$('start-position').textContent=s.start_set?s.plan.start:'Not marked';$('end-position').textContent=s.end_set?s.plan.end:'Not marked';
@@ -54,7 +54,9 @@ function render(){
  $('review-failure').hidden=!s.failure;for(const name of ['pause','stop'])$(name).hidden=!!s.failure;
  $('pause').disabled=!online||sending||!active||s.pending_control===2;$('pause').textContent=s.phase==='paused'?'Resume':'Pause';$('stop').disabled=!online||sending||!active;
  $('survey').disabled=!fresh||!s.start_set||!s.end_set||Math.abs(s.plan.end-s.plan.start)<8||dirty;$('select-roi').disabled=!fresh;
- $('battery').textContent=`Battery ${s.battery===null?'—':s.battery+'%'}`;$('card').textContent=`Card ~${s.card_remaining===null?'—':s.card_remaining.toLocaleString()} left`;
+ const host=s.storage?.mode==='host-pc',waiting=host&&['waiting_for_pc','buffer_full','transfer_failed'].includes(s.storage.state);
+ $('storage-info').textContent=host?`A7C II · Lossless Compressed RAW L → PC. RAWs use Pi RAM only; metadata is saved beside them.${s.storage.receipt?.encoding==='strehl-raw-v1'?` Lossless transfer: ${Number(s.storage.receipt.transfer_saved_percent||0).toFixed(0)}% fewer bytes; original ARWs saved.`:''}`:'A7C II · RAW → SD card. Journal stays on the camera computer.';
+ $('battery').textContent=`Battery ${s.battery===null?'—':s.battery+'%'}`;$('card').textContent=host?(waiting?'Waiting for PC':s.storage.upload_MB_per_second?`${s.storage.upload_MB_per_second.toFixed(1)} RAW MB/s · ${s.storage.pending_frames||0} pending`:'PC storage'):`Card ~${s.card_remaining===null?'—':s.card_remaining.toLocaleString()} left`;
  $('preview-info').textContent=s.preview.error||(s.preview.available?`${s.preview.width} × ${s.preview.height} · ${s.preview.fresh?'live':s.preview.age_seconds===null?'waiting for a fresh frame':`last frame ${Math.floor(s.preview.age_seconds)}s ago`}`:'Waiting for preview');
  $('preview-empty').hidden=!!previewUrl&&s.connected;
  if(!s.connected){if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;$('preview').removeAttribute('src');$('preview').hidden=true;$('roi').hidden=true;previewGeneration=-1;$('preview-empty').querySelector('h2').textContent='Bring the subject into focus';$('preview-empty').querySelector('p').textContent='Connect the camera to begin.';}
@@ -63,8 +65,8 @@ function render(){
  const ratios=s.magnifier_ratios.join(',');if($('magnifier').dataset.ratios!==ratios){$('magnifier').replaceChildren(...s.magnifier_ratios.map(r=>{const o=document.createElement('option');o.value=r;o.textContent=r===0?'Off':`${r/10}×`;return o;}));$('magnifier').dataset.ratios=ratios;}
  $('magnifier-control').hidden=!s.magnifier_ratios.length;$('magnifier').disabled=!edit;if(s.magnifier_current!==null)$('magnifier').value=s.magnifier_current;
  $('run-message').textContent=!online?'Reconnecting · showing last confirmed status':active&&s.pending_control===2?'Stopping after the active operation…':active&&s.pending_control===1&&s.phase!=='paused'?'Pausing after the active operation…':s.message;
- $('progress').max=s.total||1;$('progress').value=s.completed;$('run-count').textContent=s.total?`${s.completed} / ${s.total}`:'';
- $('timer').textContent=s.timer?`${online?'':'Last confirmed · '}${s.timer.label}`:'RAWs stay on SD · pause/stop finish the active operation';
+ $('progress').max=s.total||1;$('progress').value=s.saved??s.completed;$('run-count').textContent=s.total?(s.saved==null?`${s.completed} / ${s.total}`:`${s.completed} / ${s.total} captured · ${s.saved} saved`):'';
+ $('timer').textContent=waiting?s.storage.message:s.timer?`${online?'':'Last confirmed · '}${s.timer.label}${s.saved!=null&&s.storage.pending_frames?` · ${s.storage.pending_frames} RAWs uploading`:''}`:host?'RAWs save to PC · pause/stop finish queued transfers':'RAWs stay on SD · pause/stop finish the active operation';
  $('survey-result').hidden=!s.samples.length;
  if(s.samples.length)curves(s.samples);
  $('suggestion').textContent=s.suggestion?`Suggested ${s.suggestion.start} → ${s.suggestion.end}`:'Surveying focus…';
@@ -80,7 +82,7 @@ async function poll(){
   const response=await api('/api/state',{},auth);if(!current(auth))return;
   if(response.status===401){
    online=false;authFailures++;failures++;const identity=sessionIdentity(response);revoked=revoked||!!(identity&&remoteSession&&identity!==remoteSession);
-   notice(revoked?'Web remote restarted or its links were revoked. Paste the current pairing link; no camera command was sent.':authFailures>=3?'The laptop is rejecting this saved pairing. Retrying automatically; you can retry now or paste its current link.':'Connection interrupted. Retrying saved pairing; the stack is controlled on the laptop.');
+   notice(revoked?'Web remote restarted or its links were revoked. Paste the current pairing link; no camera command was sent.':authFailures>=3?'The controller is rejecting this saved pairing. Retrying automatically; you can retry now or paste its current link.':'Connection interrupted. Retrying saved pairing; the stack is controlled on the controller.');
    showPairing();render();
   }else if(response.ok){
    const next=await response.json();if(!current(auth))return;
@@ -94,6 +96,11 @@ $('pair-form').addEventListener('submit',e=>{e.preventDefault();let value=$('pai
 function forgetPairing(){activatePairing({key:'',remoteSession:''});}
 $('unpair').addEventListener('click',forgetPairing);
 $('forget-pairing').addEventListener('click',forgetPairing);
+$('copy-pairing').addEventListener('click',async()=>{
+ const link=new URL('/',location.href);link.hash='key='+key;const input=$('share-link');input.value=link.href;
+ try{if(!navigator.clipboard)throw Error('Clipboard unavailable');await navigator.clipboard.writeText(link.href);notice('Pairing link copied. Open it on your phone or other computer.');}
+ catch{input.hidden=false;input.select();if(document.execCommand('copy')){input.hidden=true;notice('Pairing link copied. Open it on your phone or other computer.');}else notice('Copy the selected pairing link and open it on your other device.');}
+});
 $('retry-pairing').addEventListener('click',()=>schedulePoll());
 window.addEventListener('storage',event=>{if(event.key===PAIRING_STORE)activatePairing(decodePairing(event.newValue)||{key:'',remoteSession:''});});
 window.addEventListener('hashchange',()=>{const offered=new URLSearchParams(location.hash.slice(1));if(!offered.has('key'))return;const value=offered.get('key');history.replaceState(null,'',location.pathname);if(validKey(value))activatePairing({key:value,remoteSession:value===key?remoteSession:''});else notice('Use the complete pairing link or key from Strehl Capture.');});

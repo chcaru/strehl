@@ -19,6 +19,7 @@ pub struct Journal {
     pub directory: PathBuf,
     stream: File,
     sequence: u64,
+    host: bool,
 }
 fn new_file(path: &Path) -> Result<File> {
     OpenOptions::new()
@@ -37,6 +38,7 @@ fn write_new(path: &Path, value: &Value) -> Result<()> {
 impl Journal {
     pub fn create(root: &Path, plan: &Plan, identity: Value, status: Value) -> Result<Self> {
         plan.validate()?;
+        let host = status["capture_destination"] == "host-pc";
         std::fs::create_dir_all(root).context("Create capture-journal folder")?;
         let directory = root.join(format!("stack-{}-{}", now_ms(), std::process::id()));
         std::fs::create_dir(&directory)
@@ -47,9 +49,10 @@ impl Journal {
             "schema":"strehl-capture-v1", "build":env!("CARGO_PKG_VERSION"),
             "executable_sha256":Sha256::digest(std::fs::read(std::env::current_exe()?)?).iter().map(|b|format!("{b:02x}")).collect::<String>(), "started_unix_ms":now_ms(),
                 "camera":identity,"initial_status":status,"plan":plan,"focus_positions":plan.positions()?,
-                "focus_units":"normalized-uint16-not-metric", "raw_destination":"camera-sd-card", "raws_downloaded":false,
-                "pixel_shift_shots":1,"file_binding":"unbound-camera-event-ordinals", "preview_saved":false,
-                "matching_note":"Associate ordered RAWs from this run using camera timestamps and count; no filename or checksum binding is claimed. Do not insert manual exposures during a run."
+                "focus_units":"normalized-uint16-not-metric", "raw_destination":if host {"host-pc"} else {"camera-sd-card"}, "raws_downloaded":host,
+                "raw_format":if host {"sony-lossless-compressed-raw-l"} else {"camera-setting"},
+                "pixel_shift_shots":1,"file_binding":if host {"ordinal-filename-bytes-sha256"} else {"unbound-camera-event-ordinals"}, "preview_saved":false,
+                "matching_note":if host {"Each capture_buffered or capture_complete event binds its focus plane to one ordinal filename, byte length and SHA-256. Buffered files are not yet durable; transfer-receipts.jsonl confirms PC delivery. No manual exposures during a run."} else {"Associate ordered RAWs from this run using camera timestamps and count; no filename or checksum binding is claimed. Do not insert manual exposures during a run."}
             }),
         )?;
         let stream = new_file(&directory.join("events.jsonl"))?;
@@ -57,6 +60,7 @@ impl Journal {
             directory,
             stream,
             sequence: 0,
+            host,
         };
         journal.record("created", json!({}))?;
         Ok(journal)
@@ -80,7 +84,7 @@ impl Journal {
         )?;
         write_new(
             &self.directory.join("result.json"),
-            &json!({"schema":"strehl-capture-result-v1","outcome":outcome,"completed_camera_events":completed,"finished_unix_ms":now_ms(),"message":message,"raw_file_verification":"not-performed"}),
+            &json!({"schema":"strehl-capture-result-v1","outcome":outcome,"completed_camera_events":completed,"finished_unix_ms":now_ms(),"message":message,"raw_file_verification":if self.host && matches!(outcome,"complete"|"stopped") {"pc-durable-sha256"} else if self.host {"partial-see-transfer-receipts"} else {"not-performed"}}),
         )
     }
 }

@@ -1,0 +1,823 @@
+{
+  "date_local": "2026-11-12",
+  "timezone": "America/Los_Angeles",
+  "status": "deployed and author-verified",
+  "git_base": "122ed990e95e8d4a671ee68ce6bf45a7ac6bdd89",
+  "checkout_dirty": true,
+  "codec_workers": 4,
+  "build_workers_per_platform": 2,
+  "windows_install": {
+    "encodings": [
+      "identity",
+      "strehl-raw-v1"
+    ],
+    "sign_in_launcher_preserved": true,
+    "after_sha256": "8ACFEB7305332E7CA75A56F9A759913731406E970C547086991C6F5B3BCD92DC",
+    "protocol": 1,
+    "before_sha256": "DBB449045A995F7246957008F64A07A84FB4C71B92270089534E174781305201",
+    "destination": "\\\\?\\D:\\StrehlCaptures",
+    "backup": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\sony-transport-2026-11-12\\receiver-before.exe"
+  },
+  "pi_install": {
+    "before_sha256": "219d707946c9e0a55db217d1f0e596e6a8a55ffa0300fed7fe1a5fb160d37076",
+    "after_sha256": "1fcbbf09fcb6cd7470c18553f5301168d4288087972a1b40bd77bb117ce550d9",
+    "configuration_preserved": true,
+    "backup": "/root/strehl-transport-20261112/headless-before",
+    "service": "active"
+  },
+  "http_controls": {
+    "run": "stack-transport-controls-1794549390148",
+    "fixture_is_photographic_raw": false,
+    "negative_controls": [
+      {
+        "control": "truncated",
+        "status": 503,
+        "no_final_or_partial": true
+      },
+      {
+        "control": "trailing",
+        "status": 503,
+        "no_final_or_partial": true
+      },
+      {
+        "control": "bad-checksum",
+        "status": 503,
+        "no_final_or_partial": true
+      },
+      {
+        "control": "unknown-encoding",
+        "status": 415,
+        "no_final_or_partial": true
+      },
+      {
+        "control": "oversized-original",
+        "status": 503,
+        "no_final_or_partial": true
+      },
+      {
+        "control": "bad-cfa-dimensions",
+        "status": 503,
+        "no_final_or_partial": true
+      },
+      {
+        "control": "bad-version",
+        "status": 503,
+        "no_final_or_partial": true
+      },
+      {
+        "control": "expansion-bomb",
+        "status": 503,
+        "no_final_or_partial": true
+      },
+      {
+        "control": "tcp-interruption",
+        "no_final_or_partial": true
+      }
+    ],
+    "exact_positive": true,
+    "duplicate_consumed": true,
+    "truncated_duplicate_refused": true,
+    "different_overwrite_refused": true,
+    "receipt": {
+      "bytes": 32768,
+      "chunks": 1,
+      "durable": true,
+      "encoding": "strehl-raw-v1",
+      "ok": true,
+      "path": "\\\\?\\D:\\StrehlCaptures\\stack-transport-controls-1794549390148\\frame-000001.ARW",
+      "saved_unix_ms": 1794549390610,
+      "sha256": "e11360251d1173650cdcd20f111d8f1ca2e412f572e8b36a4dc067121c1799b8",
+      "wire_bytes": 305
+    }
+  },
+  "camera": {
+    "physical_captures": 3,
+    "folder": "\\\\?\\D:\\StrehlCaptures\\stack-1794549760762-7547",
+    "exact_receipts_and_decodes": [
+      {
+        "file": "\\\\?\\D:\\StrehlCaptures\\stack-1794549760762-7547\\frame-000001.ARW",
+        "bytes": 33177600,
+        "sha256": "4436696223d53049c406f13913bdaf4241d92272cbc4b4e63933982be4de3a3d",
+        "visible_shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "receipt": {
+          "bytes": 33177600,
+          "chunks": 8,
+          "durable": true,
+          "encoding": "strehl-raw-v1",
+          "ok": true,
+          "path": "\\\\?\\D:\\StrehlCaptures\\stack-1794549760762-7547\\frame-000001.ARW",
+          "saved_unix_ms": 1794549765398,
+          "sha256": "4436696223d53049c406f13913bdaf4241d92272cbc4b4e63933982be4de3a3d",
+          "wire_bytes": 18552726
+        }
+      },
+      {
+        "file": "\\\\?\\D:\\StrehlCaptures\\stack-1794549760762-7547\\frame-000002.ARW",
+        "bytes": 33185792,
+        "sha256": "590aea6a089a5782db177005413e62396ae1fcdb7aab20d59a1ba52ef06896ba",
+        "visible_shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "receipt": {
+          "bytes": 33185792,
+          "chunks": 8,
+          "durable": true,
+          "encoding": "strehl-raw-v1",
+          "ok": true,
+          "path": "\\\\?\\D:\\StrehlCaptures\\stack-1794549760762-7547\\frame-000002.ARW",
+          "saved_unix_ms": 1794549768969,
+          "sha256": "590aea6a089a5782db177005413e62396ae1fcdb7aab20d59a1ba52ef06896ba",
+          "wire_bytes": 18496321
+        }
+      },
+      {
+        "file": "\\\\?\\D:\\StrehlCaptures\\stack-1794549760762-7547\\frame-000003.ARW",
+        "bytes": 33173504,
+        "sha256": "fc8768e1e71183fbded29e724cd5ae22b7708c594ac33b789a00709fd458cbf1",
+        "visible_shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "receipt": {
+          "bytes": 33173504,
+          "chunks": 8,
+          "durable": true,
+          "encoding": "strehl-raw-v1",
+          "ok": true,
+          "path": "\\\\?\\D:\\StrehlCaptures\\stack-1794549760762-7547\\frame-000003.ARW",
+          "saved_unix_ms": 1794549772504,
+          "sha256": "fc8768e1e71183fbded29e724cd5ae22b7708c594ac33b789a00709fd458cbf1",
+          "wire_bytes": 18518847
+        }
+      }
+    ],
+    "tx_deltas": null,
+    "focus_returned_to": 36802,
+    "phase": "ready",
+    "pending_frames": 0,
+    "preview_size": [
+      1024,
+      680
+    ],
+    "camera_settings_unchanged": true,
+    "compression_enabled_in_production": true
+  },
+  "camera_completed_storage": {
+    "bytes": 33173504,
+    "captured_frames": 3,
+    "folder": "\\\\?\\D:\\StrehlCaptures",
+    "free_bytes": 293043699712,
+    "message": "RAW verified and saved on PC",
+    "mode": "host-pc",
+    "pending_bytes": 0,
+    "pending_frames": 0,
+    "pipelined": true,
+    "queue_capacity": 4,
+    "queue_peak": 1,
+    "receipt": {
+      "bytes": 33173504,
+      "chunks": 8,
+      "durable": true,
+      "encoding": "strehl-raw-v1",
+      "ok": true,
+      "path": "\\\\?\\D:\\StrehlCaptures\\stack-1794549760762-7547\\frame-000003.ARW",
+      "saved_unix_ms": 1794549772504,
+      "sha256": "fc8768e1e71183fbded29e724cd5ae22b7708c594ac33b789a00709fd458cbf1",
+      "transfer_saved_percent": 44.17578860526763,
+      "upload_MB_per_second": 87.72811183939643,
+      "upload_seconds": 0.378139952,
+      "wire_MB_per_second": 48.97352660583191,
+      "wire_bytes": 18518847
+    },
+    "saved_frames": 3,
+    "state": "saved",
+    "upload_MB_per_second": 87.72811183939643
+  },
+  "ui": {
+    "checks": [
+      {
+        "view": "phone-edup",
+        "preview_size": [
+          1024,
+          680
+        ],
+        "focus_marks_enabled": true,
+        "unmarked_start_disabled": true,
+        "compression_status_visible": true
+      },
+      {
+        "view": "desktop-existing-address",
+        "preview_size": [
+          1024,
+          680
+        ],
+        "focus_marks_enabled": true,
+        "unmarked_start_disabled": true,
+        "compression_status_visible": true
+      },
+      {
+        "view": "receiver-desktop",
+        "configured_destination": "\\\\?\\D:\\StrehlCaptures"
+      }
+    ],
+    "browser_errors": [],
+    "actual_android_device_tested": false,
+    "production_ui": true
+  },
+  "final_state": {
+    "removed_verified_temporary_raws": [
+      "DSC01472.ARW",
+      "frame-000001.ARW"
+    ],
+    "remaining_test_raws": 0,
+    "production_raws_pending": 0,
+    "swap": "Filename\t\t\t\tType\t\tSize\t\tUsed\t\tPriority\n",
+    "service": "active",
+    "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 0 \n    cache",
+    "throttling": "throttled=0x0",
+    "memory": "total        used        free      shared  buff/cache   available\nMem:      4245831680   458473472  3398303744    22282240   476233728  3787358208\nSwap:              0           0           0",
+    "headless_sha256": "1fcbbf09fcb6cd7470c18553f5301168d4288087972a1b40bd77bb117ce550d9",
+    "receiver_sha256": "8acfeb7305332e7ca75a56f9a759913731406e970c547086991c6f5b3bcd92dc"
+  },
+  "replays": [
+    {
+      "setup": {
+        "tmpfs": true,
+        "swap_disabled": true,
+        "camera_queue_empty": true
+      },
+      "probe_sha256": "3fa646cc1232b59b490e24824db58daa380ce0a61eb8de27631cf7a65a0af461",
+      "inputs": [
+        {
+          "label": "61mp",
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\sony-raw-compression-2026-11-12\\inputs\\pixel-shift-4\\DSC01472.ARW",
+          "sha256": "453154311a136a0bb08efc4e3f0124e6d7fdc0116a5c413893a5c6b101f25c72",
+          "bytes": 122968064
+        }
+      ],
+      "rows": [
+        {
+          "command": [
+            "/home/strehl/strehl-transport-20261112/transfer-probe",
+            "--config",
+            "/home/strehl/strehl-transport-20261112/transfer.json",
+            "--file",
+            "/run/strehl-transport-20261112/DSC01472.ARW",
+            "--run",
+            "stack-transport-bench-1794549485354-61mp-0",
+            "--identity"
+          ],
+          "result": {
+            "receipt": {
+              "bytes": 122968064,
+              "chunks": 0,
+              "durable": true,
+              "encoding": "identity",
+              "ok": true,
+              "path": "\\\\?\\D:\\StrehlCaptures\\stack-transport-bench-1794549485354-61mp-0\\frame-000001.ARW",
+              "saved_unix_ms": 1794549489997,
+              "sha256": "453154311a136a0bb08efc4e3f0124e6d7fdc0116a5c413893a5c6b101f25c72",
+              "transfer_saved_percent": 0.0,
+              "upload_MB_per_second": 66.57587430387917,
+              "upload_seconds": 1.847036412,
+              "wire_MB_per_second": 66.57587430387917,
+              "wire_bytes": 122968064
+            },
+            "source_retained": true,
+            "total_seconds": 1.9921174640000001
+          },
+          "before": {
+            "load": "0.16 0.18 0.18 1/179 7405\n",
+            "temperature_mC": 51250,
+            "tx": {
+              "wlan0": 3919513830,
+              "wlan1": 4743111008
+            },
+            "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 1001 \n    cache \n"
+          },
+          "after": {
+            "load": "0.16 0.18 0.18 1/180 7413\n",
+            "temperature_mC": 51250,
+            "tx": {
+              "wlan0": 3919513830,
+              "wlan1": 4871685674
+            },
+            "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 1001 \n    cache \n"
+          },
+          "max_rss_KiB": 122976,
+          "user_cpu_s": 0.105449,
+          "system_cpu_s": 0.093822,
+          "label": "61mp",
+          "repeat": 0,
+          "identity": true,
+          "pc_cpu_percent_before": 11.4,
+          "source_sha256": "453154311a136a0bb08efc4e3f0124e6d7fdc0116a5c413893a5c6b101f25c72",
+          "pc_reread_exact": true,
+          "tx_deltas": {
+            "wlan0": 0,
+            "wlan1": 128574666
+          }
+        },
+        {
+          "command": [
+            "/home/strehl/strehl-transport-20261112/transfer-probe",
+            "--config",
+            "/home/strehl/strehl-transport-20261112/transfer.json",
+            "--file",
+            "/run/strehl-transport-20261112/DSC01472.ARW",
+            "--run",
+            "stack-transport-bench-1794549485354-61mp-1"
+          ],
+          "result": {
+            "receipt": {
+              "bytes": 122968064,
+              "chunks": 51,
+              "durable": true,
+              "encoding": "strehl-raw-v1",
+              "ok": true,
+              "path": "\\\\?\\D:\\StrehlCaptures\\stack-transport-bench-1794549485354-61mp-1\\frame-000001.ARW",
+              "saved_unix_ms": 1794549491532,
+              "sha256": "453154311a136a0bb08efc4e3f0124e6d7fdc0116a5c413893a5c6b101f25c72",
+              "transfer_saved_percent": 55.65919131653565,
+              "upload_MB_per_second": 119.99304815863661,
+              "upload_seconds": 1.024793235,
+              "wire_MB_per_second": 53.2058879174783,
+              "wire_bytes": 54525034
+            },
+            "source_retained": true,
+            "total_seconds": 1.181441808
+          },
+          "before": {
+            "load": "0.16 0.18 0.18 1/180 7425\n",
+            "temperature_mC": 52900,
+            "tx": {
+              "wlan0": 3919513830,
+              "wlan1": 4871691001
+            },
+            "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 1001 \n    cache \n"
+          },
+          "after": {
+            "load": "0.16 0.18 0.18 1/180 7432\n",
+            "temperature_mC": 51800,
+            "tx": {
+              "wlan0": 3919513830,
+              "wlan1": 4928758800
+            },
+            "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 1001 \n    cache \n"
+          },
+          "max_rss_KiB": 149584,
+          "user_cpu_s": 0.777609,
+          "system_cpu_s": 0.18878699999999998,
+          "label": "61mp",
+          "repeat": 1,
+          "identity": false,
+          "pc_cpu_percent_before": 6.4,
+          "source_sha256": "453154311a136a0bb08efc4e3f0124e6d7fdc0116a5c413893a5c6b101f25c72",
+          "pc_reread_exact": true,
+          "tx_deltas": {
+            "wlan0": 0,
+            "wlan1": 57067799
+          }
+        },
+        {
+          "command": [
+            "/home/strehl/strehl-transport-20261112/transfer-probe",
+            "--config",
+            "/home/strehl/strehl-transport-20261112/transfer.json",
+            "--file",
+            "/run/strehl-transport-20261112/DSC01472.ARW",
+            "--run",
+            "stack-transport-bench-1794549485354-61mp-2"
+          ],
+          "result": {
+            "receipt": {
+              "bytes": 122968064,
+              "chunks": 51,
+              "durable": true,
+              "encoding": "strehl-raw-v1",
+              "ok": true,
+              "path": "\\\\?\\D:\\StrehlCaptures\\stack-transport-bench-1794549485354-61mp-2\\frame-000001.ARW",
+              "saved_unix_ms": 1794549493393,
+              "sha256": "453154311a136a0bb08efc4e3f0124e6d7fdc0116a5c413893a5c6b101f25c72",
+              "transfer_saved_percent": 55.65919131653565,
+              "upload_MB_per_second": 89.88291739357858,
+              "upload_seconds": 1.368091597,
+              "wire_MB_per_second": 39.85481244060298,
+              "wire_bytes": 54525034
+            },
+            "source_retained": true,
+            "total_seconds": 1.511963935
+          },
+          "before": {
+            "load": "0.16 0.18 0.18 1/180 7444\n",
+            "temperature_mC": 52350,
+            "tx": {
+              "wlan0": 3919513830,
+              "wlan1": 4928764135
+            },
+            "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 1001 \n    cache \n"
+          },
+          "after": {
+            "load": "0.47 0.24 0.20 1/180 7451\n",
+            "temperature_mC": 51800,
+            "tx": {
+              "wlan0": 3919513830,
+              "wlan1": 4985833056
+            },
+            "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 1001 \n    cache \n"
+          },
+          "max_rss_KiB": 150320,
+          "user_cpu_s": 0.8223459999999999,
+          "system_cpu_s": 0.160771,
+          "label": "61mp",
+          "repeat": 2,
+          "identity": false,
+          "pc_cpu_percent_before": 9.9,
+          "source_sha256": "453154311a136a0bb08efc4e3f0124e6d7fdc0116a5c413893a5c6b101f25c72",
+          "pc_reread_exact": true,
+          "tx_deltas": {
+            "wlan0": 0,
+            "wlan1": 57068921
+          }
+        },
+        {
+          "command": [
+            "/home/strehl/strehl-transport-20261112/transfer-probe",
+            "--config",
+            "/home/strehl/strehl-transport-20261112/transfer.json",
+            "--file",
+            "/run/strehl-transport-20261112/DSC01472.ARW",
+            "--run",
+            "stack-transport-bench-1794549485354-61mp-3",
+            "--identity"
+          ],
+          "result": {
+            "receipt": {
+              "bytes": 122968064,
+              "chunks": 0,
+              "durable": true,
+              "encoding": "identity",
+              "ok": true,
+              "path": "\\\\?\\D:\\StrehlCaptures\\stack-transport-bench-1794549485354-61mp-3\\frame-000001.ARW",
+              "saved_unix_ms": 1794549496031,
+              "sha256": "453154311a136a0bb08efc4e3f0124e6d7fdc0116a5c413893a5c6b101f25c72",
+              "transfer_saved_percent": 0.0,
+              "upload_MB_per_second": 58.35655023646554,
+              "upload_seconds": 2.107185286,
+              "wire_MB_per_second": 58.35655023646554,
+              "wire_bytes": 122968064
+            },
+            "source_retained": true,
+            "total_seconds": 2.252197115
+          },
+          "before": {
+            "load": "0.47 0.24 0.20 1/180 7463\n",
+            "temperature_mC": 52350,
+            "tx": {
+              "wlan0": 3919513830,
+              "wlan1": 4985838445
+            },
+            "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 1001 \n    cache \n"
+          },
+          "after": {
+            "load": "0.47 0.24 0.20 2/180 7470\n",
+            "temperature_mC": 51800,
+            "tx": {
+              "wlan0": 3919513830,
+              "wlan1": 5114412781
+            },
+            "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 1001 \n    cache \n"
+          },
+          "max_rss_KiB": 122976,
+          "user_cpu_s": 0.085711,
+          "system_cpu_s": 0.117293,
+          "label": "61mp",
+          "repeat": 3,
+          "identity": true,
+          "pc_cpu_percent_before": 16.0,
+          "source_sha256": "453154311a136a0bb08efc4e3f0124e6d7fdc0116a5c413893a5c6b101f25c72",
+          "pc_reread_exact": true,
+          "tx_deltas": {
+            "wlan0": 0,
+            "wlan1": 128574336
+          }
+        }
+      ]
+    },
+    {
+      "setup": {
+        "tmpfs": true,
+        "swap_disabled": true,
+        "camera_queue_empty": true
+      },
+      "probe_sha256": "3fa646cc1232b59b490e24824db58daa380ce0a61eb8de27631cf7a65a0af461",
+      "inputs": [
+        {
+          "label": "a7c2",
+          "path": "D:\\StrehlCaptures\\stack-1794546666339-2273\\frame-000001.ARW",
+          "sha256": "c0cf81c32b519f400e38e46a959cb10e038f65e5fc0ab4889c052d0dc453d643",
+          "bytes": 33169408
+        }
+      ],
+      "rows": [
+        {
+          "command": [
+            "/home/strehl/strehl-transport-20261112/transfer-probe",
+            "--config",
+            "/home/strehl/strehl-transport-20261112/transfer.json",
+            "--file",
+            "/run/strehl-transport-20261112/frame-000001.ARW",
+            "--run",
+            "stack-transport-bench-1794549652144-a7c2-0",
+            "--identity"
+          ],
+          "result": {
+            "receipt": {
+              "bytes": 33169408,
+              "chunks": 0,
+              "durable": true,
+              "encoding": "identity",
+              "ok": true,
+              "path": "\\\\?\\D:\\StrehlCaptures\\stack-transport-bench-1794549652144-a7c2-0\\frame-000001.ARW",
+              "saved_unix_ms": 1794549654246,
+              "sha256": "c0cf81c32b519f400e38e46a959cb10e038f65e5fc0ab4889c052d0dc453d643",
+              "transfer_saved_percent": 0.0,
+              "upload_MB_per_second": 35.216661642496064,
+              "upload_seconds": 0.941866902,
+              "wire_MB_per_second": 35.216661642496064,
+              "wire_bytes": 33169408
+            },
+            "source_retained": true,
+            "total_seconds": 0.986188766
+          },
+          "before": {
+            "load": "0.19 0.19 0.18 1/187 7677\n",
+            "temperature_mC": 51250,
+            "tx": {
+              "wlan0": 3919513962,
+              "wlan1": 5115375113
+            },
+            "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 1001 \n    cache \n"
+          },
+          "after": {
+            "load": "0.19 0.19 0.18 1/187 7684\n",
+            "temperature_mC": 51250,
+            "tx": {
+              "wlan0": 3919513962,
+              "wlan1": 5150057802
+            },
+            "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 1001 \n    cache \n"
+          },
+          "max_rss_KiB": 35408,
+          "user_cpu_s": 0.029318999999999998,
+          "system_cpu_s": 0.026657999999999998,
+          "label": "a7c2",
+          "repeat": 0,
+          "identity": true,
+          "pc_cpu_percent_before": 10.0,
+          "source_sha256": "c0cf81c32b519f400e38e46a959cb10e038f65e5fc0ab4889c052d0dc453d643",
+          "pc_reread_exact": true,
+          "tx_deltas": {
+            "wlan0": 0,
+            "wlan1": 34682689
+          }
+        },
+        {
+          "command": [
+            "/home/strehl/strehl-transport-20261112/transfer-probe",
+            "--config",
+            "/home/strehl/strehl-transport-20261112/transfer.json",
+            "--file",
+            "/run/strehl-transport-20261112/frame-000001.ARW",
+            "--run",
+            "stack-transport-bench-1794549652144-a7c2-1"
+          ],
+          "result": {
+            "receipt": {
+              "bytes": 33169408,
+              "chunks": 8,
+              "durable": true,
+              "encoding": "strehl-raw-v1",
+              "ok": true,
+              "path": "\\\\?\\D:\\StrehlCaptures\\stack-transport-bench-1794549652144-a7c2-1\\frame-000001.ARW",
+              "saved_unix_ms": 1794549655190,
+              "sha256": "c0cf81c32b519f400e38e46a959cb10e038f65e5fc0ab4889c052d0dc453d643",
+              "transfer_saved_percent": 44.27862565409669,
+              "upload_MB_per_second": 56.600769135761304,
+              "upload_seconds": 0.58602398,
+              "wire_MB_per_second": 31.53872645279806,
+              "wire_bytes": 18482450
+            },
+            "source_retained": true,
+            "total_seconds": 0.643837461
+          },
+          "before": {
+            "load": "0.19 0.19 0.18 1/187 7696\n",
+            "temperature_mC": 50700,
+            "tx": {
+              "wlan0": 3919513962,
+              "wlan1": 5150063145
+            },
+            "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 1001 \n    cache \n"
+          },
+          "after": {
+            "load": "0.19 0.19 0.18 1/187 7703\n",
+            "temperature_mC": 52350,
+            "tx": {
+              "wlan0": 3919513962,
+              "wlan1": 5169408350
+            },
+            "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 1001 \n    cache \n"
+          },
+          "max_rss_KiB": 56240,
+          "user_cpu_s": 0.187253,
+          "system_cpu_s": 0.053848,
+          "label": "a7c2",
+          "repeat": 1,
+          "identity": false,
+          "pc_cpu_percent_before": 12.6,
+          "source_sha256": "c0cf81c32b519f400e38e46a959cb10e038f65e5fc0ab4889c052d0dc453d643",
+          "pc_reread_exact": true,
+          "tx_deltas": {
+            "wlan0": 0,
+            "wlan1": 19345205
+          }
+        },
+        {
+          "command": [
+            "/home/strehl/strehl-transport-20261112/transfer-probe",
+            "--config",
+            "/home/strehl/strehl-transport-20261112/transfer.json",
+            "--file",
+            "/run/strehl-transport-20261112/frame-000001.ARW",
+            "--run",
+            "stack-transport-bench-1794549652144-a7c2-2"
+          ],
+          "result": {
+            "receipt": {
+              "bytes": 33169408,
+              "chunks": 8,
+              "durable": true,
+              "encoding": "strehl-raw-v1",
+              "ok": true,
+              "path": "\\\\?\\D:\\StrehlCaptures\\stack-transport-bench-1794549652144-a7c2-2\\frame-000001.ARW",
+              "saved_unix_ms": 1794549655925,
+              "sha256": "c0cf81c32b519f400e38e46a959cb10e038f65e5fc0ab4889c052d0dc453d643",
+              "transfer_saved_percent": 44.27862565409669,
+              "upload_MB_per_second": 86.51311254945982,
+              "upload_seconds": 0.383403244,
+              "wire_MB_per_second": 48.20629530197716,
+              "wire_bytes": 18482450
+            },
+            "source_retained": true,
+            "total_seconds": 0.428508362
+          },
+          "before": {
+            "load": "0.19 0.19 0.18 1/187 7715\n",
+            "temperature_mC": 49600,
+            "tx": {
+              "wlan0": 3919513962,
+              "wlan1": 5169413677
+            },
+            "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 1001 \n    cache \n"
+          },
+          "after": {
+            "load": "0.19 0.19 0.18 1/187 7722\n",
+            "temperature_mC": 52900,
+            "tx": {
+              "wlan0": 3919513962,
+              "wlan1": 5188758816
+            },
+            "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 1001 \n    cache \n"
+          },
+          "max_rss_KiB": 54064,
+          "user_cpu_s": 0.20232999999999998,
+          "system_cpu_s": 0.043075999999999996,
+          "label": "a7c2",
+          "repeat": 2,
+          "identity": false,
+          "pc_cpu_percent_before": 9.5,
+          "source_sha256": "c0cf81c32b519f400e38e46a959cb10e038f65e5fc0ab4889c052d0dc453d643",
+          "pc_reread_exact": true,
+          "tx_deltas": {
+            "wlan0": 0,
+            "wlan1": 19345139
+          }
+        },
+        {
+          "command": [
+            "/home/strehl/strehl-transport-20261112/transfer-probe",
+            "--config",
+            "/home/strehl/strehl-transport-20261112/transfer.json",
+            "--file",
+            "/run/strehl-transport-20261112/frame-000001.ARW",
+            "--run",
+            "stack-transport-bench-1794549652144-a7c2-3",
+            "--identity"
+          ],
+          "result": {
+            "receipt": {
+              "bytes": 33169408,
+              "chunks": 0,
+              "durable": true,
+              "encoding": "identity",
+              "ok": true,
+              "path": "\\\\?\\D:\\StrehlCaptures\\stack-transport-bench-1794549652144-a7c2-3\\frame-000001.ARW",
+              "saved_unix_ms": 1794549656877,
+              "sha256": "c0cf81c32b519f400e38e46a959cb10e038f65e5fc0ab4889c052d0dc453d643",
+              "transfer_saved_percent": 0.0,
+              "upload_MB_per_second": 55.49831410112043,
+              "upload_seconds": 0.597665146,
+              "wire_MB_per_second": 55.49831410112043,
+              "wire_bytes": 33169408
+            },
+            "source_retained": true,
+            "total_seconds": 0.64641511
+          },
+          "before": {
+            "load": "0.19 0.19 0.18 1/187 7734\n",
+            "temperature_mC": 51800,
+            "tx": {
+              "wlan0": 3919513962,
+              "wlan1": 5188764167
+            },
+            "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 1001 \n    cache \n"
+          },
+          "after": {
+            "load": "0.19 0.19 0.18 1/187 7741\n",
+            "temperature_mC": 51250,
+            "tx": {
+              "wlan0": 3919513962,
+              "wlan1": 5223446592
+            },
+            "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 1001 \n    cache \n"
+          },
+          "max_rss_KiB": 35408,
+          "user_cpu_s": 0.029151,
+          "system_cpu_s": 0.030469,
+          "label": "a7c2",
+          "repeat": 3,
+          "identity": true,
+          "pc_cpu_percent_before": 9.3,
+          "source_sha256": "c0cf81c32b519f400e38e46a959cb10e038f65e5fc0ab4889c052d0dc453d643",
+          "pc_reread_exact": true,
+          "tx_deltas": {
+            "wlan0": 0,
+            "wlan1": 34682425
+          }
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "No hours-long soak",
+    "No A7CR hardware or pixel-shift sequencing",
+    "Dark A7C II inputs; compression ratio is scene dependent",
+    "Physical capture interface counters were not retained after a harness assertion; not claimed",
+    "No reboot or fresh Windows sign-in test",
+    "No optical quality claim or independent research review"
+  ],
+  "production_source_sha256": {
+    "Cargo.lock": "143168e15befab0dc1083d8ba064ea125e95ca98da96f791c3dae3c980f405af",
+    "crates/strehl-capture/Cargo.toml": "6d5ca568aea8616af3221375b521351fe8b4fb12a228ab1b09d42008be79cbc3",
+    "crates/strehl-capture/src/lib.rs": "a4a881e5dc3057ea899ed17a5c7b81f6f2e91eefca3a7e5a3047bafddf75c81f",
+    "crates/strehl-capture/src/transport.rs": "7100bb4db7370b364bb017c88ee02ec42479e990fa69728ab5a388eb779fb43e",
+    "crates/strehl-capture/src/transfer.rs": "74a10255b3cec1eab36065396e383131d2d82a617efc57b21d644aa260458687",
+    "crates/strehl-capture/src/receiver.rs": "4b1d6c9e0fe7d62a66108148d1e5475d86ae6b14862134048528bf32e105af6b",
+    "crates/strehl-capture/examples/transfer-probe.rs": "61b492ae7f94aa3dad8690ebeec1903916391a1bb0a7d48926bede8ceb9c8877",
+    "crates/strehl-capture/web/app.js": "dec303fe1ab5be49d602405d9a36fac5a79914ceb5f4963a5c5cc9270e5e554b",
+    "crates/strehl-capture/web/receiver.js": "fad65d75f85613b7dab475aa0487284b38377b585d3a2221214ffa7a6bf424e9"
+  },
+  "qualification_source_sha256": {
+    "experiments/sony-transport-2026-11-12/build-arm.sh": "38506a2f5b3106f75fb19a0284e14b030762e03799f5abb42e0c73558db21eb6",
+    "experiments/sony-transport-2026-11-12/cleanup.py": "e6d7aed475a4a893e18b21cff63af02e0ea8db4e2a14f7d83f0ffe02d2035187",
+    "experiments/sony-transport-2026-11-12/deploy-pi.py": "1069aa2534da01a9dac40aed303d6a382486c1ef25ae3571101ba0d4242c7dc0",
+    "experiments/sony-transport-2026-11-12/install-receiver.ps1": "84b8ec0241769a577cc64a42f6c5e30f23e9fe35f392fa57ea85ac83997aa4e7",
+    "experiments/sony-transport-2026-11-12/qualify-camera.py": "01ea9656be21d57f0e68657790b990fcf32620d4b5b2626464b7a76689beeff7",
+    "experiments/sony-transport-2026-11-12/qualify-http.py": "70de16532d6dd98d5a50825140975d57f5e4db9a5e13b2b31262ad31e5c57c22",
+    "experiments/sony-transport-2026-11-12/replay-pi.py": "be981aa718e3183bd38aaf8fc7ec1552878d7729b7f4ea52cfda0b84dbc03406",
+    "experiments/sony-transport-2026-11-12/verify-ui.py": "da8a493e083d5e39a4bccc4a19de7a4f2f12d19095051e95b4019f12b51fe08f"
+  },
+  "log_sha256": {
+    "build-arm.log": "f676c0f2348ba816b7725b90b34bd5a358022328cb7026c5dad40ed4cc877241",
+    "build-windows.log": "0c79d2dd2be3f8d7162fbc5e5c11258357034e1bed67a38118a980831fd5d974",
+    "clippy.log": "1f7c97151828b7f7c36e741dee04525b6b8825bb30903d4c9f968169fb2199b2",
+    "tests-desktop.log": "2abd5a5c82e756f9d9e71b08c55c68a7664f39364d0708eb42f6c29cb880a03c",
+    "tests-first.log": "fee02c912883c391c06520ea6d1f6849a1fd1fa28fc69dc92588ce180f88af70",
+    "tests-headless.log": "86eea8813e454ebc010f0df2d2aa23c43be8d216b8bfbfe053f48e1639aa2d30"
+  },
+  "validation": {
+    "headless_tests": 31,
+    "desktop_tests": 31,
+    "clippy_exit": 0,
+    "format_exit": 0,
+    "browser_scripts_syntax_exit": 0
+  }
+}

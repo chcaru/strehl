@@ -1,0 +1,139 @@
+{
+  "groups_bytes_including_keyframes": {
+    "4": {
+      "original": 491868160,
+      "jpeg-ls-independent": 211557922,
+      "spatial-zstd": 218021349,
+      "raw-reference-zstd": 221280119,
+      "aligned-reference-zstd": 214479561,
+      "filtered-reference-zstd": 213382238,
+      "running-reference-zstd": 218611900,
+      "spatial-aec": 213492566,
+      "filtered-temporal-aec": 210991195
+    },
+    "16": {
+      "original": 1967534080,
+      "jpeg-ls-independent": 850881781,
+      "spatial-zstd": 877499130,
+      "raw-reference-zstd": 890326763,
+      "aligned-reference-zstd": 857512978,
+      "filtered-reference-zstd": 852264444,
+      "running-reference-zstd": 858747901,
+      "spatial-aec": 858982745,
+      "filtered-temporal-aec": 842561679
+    }
+  },
+  "lan_short_replay": {
+    "identity": {
+      "wire_bytes": 122968587,
+      "durable_s_min": 4.852402499993332,
+      "durable_s_max": 4.985004000016488,
+      "durable_s_mean": 4.91870325000491,
+      "standard_error_s_two_repeats": 0.0663007500115782
+    },
+    "zstd": {
+      "wire_bytes": 97401155,
+      "durable_s_min": 3.996910099987872,
+      "durable_s_max": 4.034019099955913,
+      "durable_s_mean": 4.015464599971892,
+      "standard_error_s_two_repeats": 0.018554499984020367
+    },
+    "cfa": {
+      "wire_bytes": 54525214,
+      "durable_s_min": 2.383056899998337,
+      "durable_s_max": 2.648820500005968,
+      "durable_s_mean": 2.5159387000021525,
+      "standard_error_s_two_repeats": 0.13288180000381544
+    }
+  },
+  "pi_four_worker_encode": {
+    "-1": {
+      "encoded_bytes": 97401480,
+      "encode_s_min": 0.24222718500095652,
+      "encode_s_median": 0.2743812889984838,
+      "encode_s_max": 0.27605522199883126
+    },
+    "2": {
+      "encoded_bytes": 56050312,
+      "encode_s_min": 0.3743440580001334,
+      "encode_s_median": 0.3815683819993865,
+      "encode_s_max": 0.39576436199968157
+    },
+    "3": {
+      "encoded_bytes": 54959197,
+      "encode_s_min": 0.3724242199987202,
+      "encode_s_median": 0.38481675000002724,
+      "encode_s_max": 0.3882725969997409
+    },
+    "8": {
+      "encoded_bytes": 54492942,
+      "encode_s_min": 0.4030651859993668,
+      "encode_s_median": 0.4054165039997315,
+      "encode_s_max": 0.4086010009996244
+    },
+    "9": {
+      "encoded_bytes": 54547285,
+      "encode_s_min": 0.42116180899938627,
+      "encode_s_median": 0.43543534399941564,
+      "encode_s_max": 0.436641096999665
+    },
+    "4": {
+      "encoded_bytes": 55669441,
+      "encode_s_min": 0.3983096629999636,
+      "encode_s_median": 0.40360729500025627,
+      "encode_s_max": 0.41276103199925274
+    },
+    "6": {
+      "encoded_bytes": 56586247,
+      "encode_s_min": 0.5012771170004271,
+      "encode_s_median": 0.5177628980000009,
+      "encode_s_max": 0.5274482610002451
+    }
+  },
+  "pi_peak_temperature_C": 57.85,
+  "resource_replay": [
+    {
+      "case": "61mp-cfa",
+      "seconds_to_durable": 2.6339522000052966,
+      "sender_stats": {
+        "sender_seconds": 2.101036774001841,
+        "max_rss_KiB": 182080,
+        "user_cpu_s": 1.395586,
+        "system_cpu_s": 0.15462399999999998,
+        "load": [
+          0.11767578125,
+          0.1376953125,
+          0.1748046875
+        ],
+        "workers": 4
+      },
+      "bytes": 122968064,
+      "wire_bytes": 54525214,
+      "sha256": "453154311a136a0bb08efc4e3f0124e6d7fdc0116a5c413893a5c6b101f25c72",
+      "chunks": 51,
+      "exact": true
+    },
+    {
+      "case": "33mp-camera-lossless",
+      "seconds_to_durable": 1.4271522000199184,
+      "sender_stats": {
+        "sender_seconds": 1.1453003879978496,
+        "max_rss_KiB": 117856,
+        "user_cpu_s": 0.252285,
+        "system_cpu_s": 0.042047,
+        "load": [
+          0.10791015625,
+          0.13525390625,
+          0.173828125
+        ],
+        "workers": 4
+      },
+      "bytes": 35676160,
+      "wire_bytes": 29269669,
+      "sha256": "ac219277a79e315cd8db2951f39db6ce97a9b18db3f49092ddc25dd9ac143c33",
+      "chunks": 9,
+      "exact": true
+    }
+  ],
+  "independent_review": false
+}

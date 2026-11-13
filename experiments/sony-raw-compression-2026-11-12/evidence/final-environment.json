@@ -1,0 +1,64 @@
+{
+  "service_active": "active",
+  "experiment_files": [
+    {
+      "name": "current-camera.ARW",
+      "bytes": 35676160
+    },
+    {
+      "name": "wire.py",
+      "bytes": 8493
+    },
+    {
+      "name": "pi-bench.py",
+      "bytes": 4501
+    },
+    {
+      "name": "DSC01473.ARW",
+      "bytes": 122963968
+    },
+    {
+      "name": "DSC01472.ARW",
+      "bytes": 122968064
+    },
+    {
+      "name": "libpredict.so",
+      "bytes": 4566472
+    }
+  ],
+  "mount": "tmpfs rw,nosuid,nodev,noexec,relatime,size=829264k,mode=755",
+  "swap": "Filename\t\t\t\tType\t\tSize\t\tUsed\t\tPriority\n",
+  "temperature_mC": 47950,
+  "throttling": "throttled=0x0",
+  "binaries": [
+    {
+      "name": "strehl-capture-headless",
+      "sha256": "219d707946c9e0a55db217d1f0e596e6a8a55ffa0300fed7fe1a5fb160d37076"
+    },
+    {
+      "name": "strehl-sony-control",
+      "sha256": "73abfba37853ac0c0315e1ce21dac4300c3ab1db7a374fad45d93f31ad5b3551"
+    },
+    {
+      "name": "strehl-sony-control",
+      "sha256": "3b4b1ac4d8351a4ad3c29398697c0661424d8a8402c010a6b51cc0afd11feb56"
+    },
+    {
+      "name": "strehl-sony-control",
+      "sha256": "73abfba37853ac0c0315e1ce21dac4300c3ab1db7a374fad45d93f31ad5b3551"
+    }
+  ],
+  "camera_state": {
+    "busy": false,
+    "completed": 0,
+    "connected": true,
+    "failure": null,
+    "phase": "ready",
+    "plan": {},
+    "preview": {
+      "error": null
+    },
+    "roi": {},
+    "storage": {}
+  }
+}

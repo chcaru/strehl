@@ -27,6 +27,15 @@ pub trait Camera: Send {
     fn preview(&mut self) -> Result<Preview>;
     fn magnify(&mut self, ratio_tenths: u32, x: u16, y: u16) -> Result<()>;
     fn disconnect(&mut self) -> Result<Value>;
+    fn sync_journal(&mut self, _directory: &Path) -> Result<()> {
+        Ok(())
+    }
+    fn prepare_capture(&mut self) -> Result<bool> {
+        Ok(true)
+    }
+    fn finish_transfers(&mut self) -> Result<()> {
+        Ok(())
+    }
 }
 
 pub fn property(status: &Value, name: &str) -> Option<u64> {
@@ -41,10 +50,17 @@ pub struct Native {
     poisoned: bool,
     executable: PathBuf,
     release_reply: Option<Value>,
+    host_mode: bool,
 }
 
 impl Native {
     pub fn connect(executable: &Path) -> Result<Self> {
+        Self::connect_mode(executable, None)
+    }
+    pub fn connect_host(executable: &Path, ram_directory: &Path) -> Result<Self> {
+        Self::connect_mode(executable, Some(ram_directory))
+    }
+    fn connect_mode(executable: &Path, ram_directory: Option<&Path>) -> Result<Self> {
         ensure!(
             executable.is_file(),
             "Sony bridge is missing: {}. Extract the complete portable ZIP.",
@@ -54,8 +70,12 @@ impl Native {
             .canonicalize()
             .context("Resolve Sony bridge path")?;
         let mut cmd = Command::new(&executable);
-        cmd.arg("serve")
-            .current_dir(executable.parent().context("Bridge has no parent folder")?)
+        if let Some(directory) = ram_directory {
+            cmd.arg("serve-host").arg(directory);
+        } else {
+            cmd.arg("serve");
+        }
+        cmd.current_dir(executable.parent().context("Bridge has no parent folder")?)
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
             .stderr(Stdio::null());
@@ -88,6 +108,7 @@ impl Native {
             poisoned: false,
             executable: executable.to_owned(),
             release_reply: None,
+            host_mode: ram_directory.is_some(),
         })
     }
     fn receive(&mut self, timeout_s: u64) -> Result<Value> {
@@ -126,7 +147,8 @@ impl Native {
         self.receive(timeout_s)
     }
     fn set(&mut self, name: &str, value: u64) -> Result<()> {
-        self.call(&format!("set\t{name}\t{value}"), 15)?;
+        self.call(&format!("set\t{name}\t{value}"), 15)
+            .with_context(|| format!("Configure {name}"))?;
         Ok(())
     }
 }
@@ -163,11 +185,46 @@ impl Camera for Native {
             self.hello["capture_protocol"] == 2 && self.hello["live_view_protocol"] == 1,
             "This bridge predates the live-view capture app. Extract the entire new ZIP."
         );
-        // Set destination first, before any preview or release; never select HostPC.
-        self.set("StillImageStoreDestination", 2)?;
+        ensure!(
+            !self.host_mode || self.hello["host_pipeline_protocol"] == 1,
+            "This Sony bridge does not support the bounded RAW queue. Install the matching Pi bridge and controller together."
+        );
+        // A connected callback can precede the SDK's property cache becoming
+        // readable. Wait using read-only queries before any setting writes.
+        let deadline = Instant::now() + Duration::from_secs(5);
+        loop {
+            let status = self.status()?;
+            let required = [
+                "StillImageStoreDestination",
+                "DriveMode",
+                "FocusMode",
+                "FileType",
+            ];
+            let missing: Vec<_> = required
+                .into_iter()
+                .filter(|name| property(&status, name).is_none())
+                .collect();
+            if missing.is_empty() {
+                break;
+            }
+            ensure!(
+                Instant::now() < deadline,
+                "Camera settings did not become readable: {}",
+                missing.join(", ")
+            );
+            thread::sleep(Duration::from_millis(100));
+        }
+        // Host mode is explicit and requires the Linux bridge's checked tmpfs path.
+        self.set(
+            "StillImageStoreDestination",
+            if self.host_mode { 1 } else { 2 },
+        )?;
         self.set("DriveMode", 1)?;
         self.set("FocusMode", 1)?;
         self.set("FileType", 2)?;
+        if self.host_mode {
+            self.set("RAW_FileCompressionType", 5)?;
+        }
         self.call("liveview\t1", 15)?;
         // Optional quality setting is capability-gated; absence does not block MF.
         let status = self.status()?;
@@ -197,7 +254,11 @@ impl Camera for Native {
     }
     fn capture(&mut self, timeout_s: u32) -> Result<Value> {
         self.call(
-            &format!("capture\t1\t{timeout_s}"),
+            &if self.host_mode {
+                format!("capture-host\t{timeout_s}")
+            } else {
+                format!("capture\t1\t{timeout_s}")
+            },
             u64::from(timeout_s) + 20,
         )
     }
@@ -406,6 +467,7 @@ mod tests {
             .unwrap();
         let (_, replies) = mpsc::sync_channel(1);
         let mut camera = Native {
+            host_mode: false,
             child: Some(child),
             input: None,
             replies,

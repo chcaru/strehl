@@ -1,0 +1,7 @@
+{"cfa_wire_exact_roundtrips": 8, "cfa_wire_malformed_refusals": 56}
+{"synthetic_control": "identical-frame-positive", "raw_cfa_bytes": 524288, "spatial_bytes": 269403, "temporal_bytes": 34, "exact": true}
+{"synthetic_control": "fresh-photon-and-read-noise", "raw_cfa_bytes": 524288, "spatial_bytes": 269325, "temporal_bytes": 282570, "exact": true}
+{"synthetic_control": "filtered-reference-fresh-noise", "raw_cfa_bytes": 524288, "spatial_bytes": 269325, "temporal_bytes": 257719, "exact": true}
+{"synthetic_control": "wrong-cfa-phase", "raw_cfa_bytes": 524288, "spatial_bytes": 269325, "temporal_bytes": 348217, "exact": true}
+{"synthetic_control": "changed-exposure", "raw_cfa_bytes": 524288, "spatial_bytes": 316575, "temporal_bytes": 374209, "exact": true}
+{"synthetic_control": "unrelated-random-negative", "raw_cfa_bytes": 524288, "spatial_bytes": 524309, "temporal_bytes": 524309, "exact": true}

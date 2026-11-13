@@ -34,6 +34,7 @@ pub struct Snapshot {
     pub preview_at: Option<Instant>,
     pub preview_error: Option<String>,
     pub completed: usize,
+    pub capture_run: bool,
     pub total: usize,
     pub journal: Option<PathBuf>,
     pub samples: Vec<Sample>,
@@ -60,6 +61,7 @@ impl Default for Snapshot {
             preview_at: None,
             preview_error: None,
             completed: 0,
+            capture_run: false,
             total: 0,
             journal: None,
             samples: vec![],
@@ -297,7 +299,7 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                             phase(
                                 &s,
                                 Phase::Connecting,
-                                "Connecting · preparing MF, RAW and SD-only saving…",
+                                "Connecting · preparing manual focus and RAW capture…",
                             );
                             camera = Some(factory()?);
                             let opened = camera.as_mut().unwrap();
@@ -306,12 +308,18 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                             let identity = opened.identity();
                             update(&s, |v| {
                                 v.connected = true;
+                                v.capture_run = false;
                                 v.connection_generation += 1;
                                 v.failure = None;
                                 v.exposure_uncertain = false;
                                 v.identity = identity;
                                 v.phase = Phase::Ready;
-                                v.message = "Connected · RAW captures stay on the SD card".into();
+                                v.message = if v.status["capture_destination"] == "host-pc" {
+                                    "Connected · Lossless RAW L saves to the PC"
+                                } else {
+                                    "Connected · RAW captures stay on the SD card"
+                                }
+                                .into();
                                 v.suggestion = None;
                                 v.timing = None;
                             });
@@ -335,6 +343,7 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                             }
                             update(&s, |v| {
                                 v.connected = false;
+                                v.capture_run = false;
                                 v.phase = Phase::Disconnected;
                                 v.preview = None;
                                 v.preview_at = None;
@@ -379,6 +388,7 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                                 }
                                 v.identity = identity;
                                 v.connected = true;
+                                v.capture_run = false;
                                 v.phase = Phase::Ready;
                                 v.failure = None;
                                 v.exposure_uncertain = false;
@@ -541,6 +551,7 @@ fn checkpoint(c: &mut dyn Camera, s: &Shared, control: &AtomicU8, resume: Phase)
     let mut paused = false;
     while control.load(Ordering::SeqCst) == PAUSE {
         if !paused {
+            c.finish_transfers()?;
             phase(
                 s,
                 Phase::Paused,
@@ -572,8 +583,9 @@ fn capture(
     let positions = plan.positions()?;
     let status = refresh(c, s)?;
     validate_exposure(&status)?;
+    let host = status["capture_destination"] == "host-pc";
     ensure!(
-        property(&status, "MediaSLOT1_RemainingNumber")
+        host || property(&status, "MediaSLOT1_RemainingNumber")
             .is_some_and(|n| n >= positions.len() as u64),
         "The card does not report enough remaining captures for this plan"
     );
@@ -582,12 +594,14 @@ fn capture(
         .and_then(|shutter| timing::initial_cycle(shutter, plan.settle_ms))
         .context("Cannot estimate timed shutter speed")?;
     let mut log = Journal::create(&root, &plan, c.identity(), status)?;
+    c.sync_journal(&log.directory)?;
     update(s, |v| {
         v.phase = Phase::Capturing;
         v.failure = None;
         v.exposure_uncertain = false;
         v.sequence_id += 1;
         v.completed = 0;
+        v.capture_run = true;
         v.total = positions.len();
         v.journal = Some(log.directory.clone());
         v.message = "Approaching the start from the capture direction…".into();
@@ -644,6 +658,16 @@ fn capture(
                 "capture_intent",
                 json!({"ordinal":ordinal,"target":target,"pixel_shift_shots":1,"camera_status":before}),
             )?;
+            c.sync_journal(&log.directory)?;
+            while !c.prepare_capture()? {
+                if !checkpoint(c, s, control, Phase::Capturing)? {
+                    return Ok(false);
+                }
+                thread::sleep(Duration::from_millis(100));
+            }
+            if !checkpoint(c, s, control, Phase::Capturing)? {
+                return Ok(false);
+            }
             s.lock().unwrap().exposure_uncertain = true;
             let response = c.capture(plan.capture_timeout_s)?;
             validate_capture(&response)?;
@@ -656,9 +680,14 @@ fn capture(
                 }
             });
             log.record(
-                "capture_complete",
+                if response["destination"] == "host-pc-queue" {
+                    "capture_buffered"
+                } else {
+                    "capture_complete"
+                },
                 json!({"ordinal":ordinal,"target":target,"response":response}),
             )?;
+            c.sync_journal(&log.directory)?;
             // Preview failure does not repeat or invalidate a completed exposure.
             if let Err(e) = preview(c, s) {
                 s.lock().unwrap().preview_error = Some(e.to_string());
@@ -666,14 +695,29 @@ fn capture(
         }
         Ok(true)
     })();
+    let result = result.and_then(|done| {
+        if host {
+            update(s, |v| {
+                v.message = "Saving remaining RAWs and metadata on the PC…".into()
+            });
+        }
+        c.finish_transfers()?;
+        Ok(done)
+    });
     match result {
         Ok(done) => {
             let outcome = if done { "complete" } else { "stopped" };
             log.finish(
                 outcome,
                 completed,
-                "Camera events acknowledged; RAW files not downloaded or verified",
+                if host {
+                    "RAWs saved on PC with matching SHA-256 and durable write acknowledgements"
+                } else {
+                    "Camera events acknowledged; RAW files not downloaded or verified"
+                },
             )?;
+            c.sync_journal(&log.directory)?;
+            c.finish_transfers()?;
             phase(
                 s,
                 if done {
@@ -682,8 +726,9 @@ fn capture(
                     Phase::Stopped
                 },
                 format!(
-                    "{} · {completed} captures on SD; metadata saved",
-                    if done { "Complete" } else { "Stopped" }
+                    "{} · {completed} captures on {}; metadata saved",
+                    if done { "Complete" } else { "Stopped" },
+                    if host { "PC" } else { "SD" }
                 ),
             );
             Ok(())
@@ -691,6 +736,9 @@ fn capture(
         Err(e) => {
             let reason = format!("{e:#}");
             let finish = log.finish("uncertain", completed, &reason);
+            if finish.is_ok() {
+                let _ = c.sync_journal(&log.directory);
+            }
             if let Err(log_error) = finish {
                 bail!(
                     "{reason}; also could not finalize the journal: {log_error}. Inspect the SD card before restarting."
@@ -717,6 +765,56 @@ fn validate_exposure(status: &Value) -> Result<()> {
     Ok(())
 }
 fn validate_capture(reply: &Value) -> Result<()> {
+    if reply["destination"] == "host-pc-queue" {
+        ensure!(
+            reply["completion"] == "ram-queued-sha256"
+                && reply["file_verification"] == "ram-sha256"
+                && reply["raw_compression"] == "lossless-l",
+            "RAM capture acknowledgement is incomplete"
+        );
+        let files = reply["files"]
+            .as_array()
+            .context("Missing queued RAW binding")?;
+        ensure!(files.len() == 1, "Expected one queued RAW per plane");
+        let file = &files[0];
+        ensure!(
+            file["durable"] == false
+                && file["bytes"]
+                    .as_u64()
+                    .is_some_and(|n| (1024..=crate::receiver::MAX_RAW).contains(&n))
+                && file["sha256"]
+                    .as_str()
+                    .is_some_and(|s| s.len() == 64 && s.bytes().all(|c| c.is_ascii_hexdigit()))
+                && file["name"]
+                    .as_str()
+                    .is_some_and(crate::receiver::safe_name),
+            "Queued RAW binding is invalid"
+        );
+        return Ok(());
+    }
+    if reply["destination"] == "host-pc" {
+        ensure!(
+            reply["completion"] == "pc-durable-sha256"
+                && reply["file_verification"] == "sha256"
+                && reply["raw_compression"] == "lossless-l",
+            "PC capture acknowledgement is incomplete"
+        );
+        let files = reply["files"]
+            .as_array()
+            .context("Missing PC file receipt")?;
+        ensure!(files.len() == 1, "Expected exactly one RAW per focus plane");
+        let file = &files[0];
+        ensure!(
+            file["durable"] == true
+                && file["bytes"].as_u64().is_some_and(|n| n >= 1024)
+                && file["sha256"]
+                    .as_str()
+                    .is_some_and(|s| s.len() == 64 && s.bytes().all(|c| c.is_ascii_hexdigit()))
+                && file["path"].as_str().is_some_and(|s| !s.is_empty()),
+            "PC file receipt failed durability/checksum checks"
+        );
+        return Ok(());
+    }
     for (key, expected) in [
         ("captured_events", json!(1)),
         ("destination", json!("memory-card")),
@@ -757,6 +855,7 @@ fn scan(
     validate_exposure(&status)?;
     update(s, |v| {
         v.phase = Phase::Scanning;
+        v.capture_run = false;
         v.sequence_id += 1;
         v.samples.clear();
         v.suggestion = None;

@@ -1,0 +1,761 @@
+{
+  "status": "author operational qualification complete",
+  "date_local": "2026-11-12",
+  "timezone": "America/Los_Angeles",
+  "git_base": "122ed990e95e8d4a671ee68ce6bf45a7ac6bdd89",
+  "checkout_dirty": true,
+  "production_binaries_changed": false,
+  "network": [
+    {
+      "case": "onboard-before",
+      "interface": "wlan0",
+      "command": [
+        "wsl",
+        "-d",
+        "Debian",
+        "-u",
+        "root",
+        "--",
+        "iperf3",
+        "-c",
+        "10.0.0.187",
+        "-p",
+        "5217",
+        "-t",
+        "12",
+        "-O",
+        "2",
+        "-R",
+        "-P",
+        "1",
+        "-J"
+      ],
+      "server_command": "sudo iperf3 -s -1 -B 10.0.0.187 --bind-dev wlan0 -p 5217 --idle-timeout 25 -J",
+      "received_Mbps": 187.25872789972902,
+      "received_MBps": 23.407340987466128,
+      "retransmits": 78,
+      "tx_deltas": {
+        "wlan0": 337443863,
+        "wlan1": 0
+      },
+      "pi_environment": {
+        "before": {
+          "load": "0.16 0.11 0.03 1/171 5952\n",
+          "temperature_mC": 49050
+        },
+        "after": {
+          "load": "0.35 0.16 0.05 1/172 5983\n",
+          "temperature_mC": 49050
+        }
+      }
+    },
+    {
+      "case": "edup-5-single",
+      "interface": "wlan1",
+      "command": [
+        "wsl",
+        "-d",
+        "Debian",
+        "-u",
+        "root",
+        "--",
+        "iperf3",
+        "-c",
+        "10.0.0.178",
+        "-p",
+        "5217",
+        "-t",
+        "12",
+        "-O",
+        "2",
+        "-R",
+        "-P",
+        "1",
+        "-J"
+      ],
+      "server_command": "sudo iperf3 -s -1 -B 10.0.0.178 --bind-dev wlan1 -p 5217 --idle-timeout 25 -J",
+      "received_Mbps": 460.57994577416474,
+      "received_MBps": 57.57249322177059,
+      "retransmits": 163,
+      "tx_deltas": {
+        "wlan0": 19692,
+        "wlan1": 857743099
+      },
+      "pi_environment": {
+        "before": {
+          "load": "0.35 0.16 0.05 1/172 5998\n",
+          "temperature_mC": 47400
+        },
+        "after": {
+          "load": "0.57 0.21 0.07 1/172 6027\n",
+          "temperature_mC": 50150
+        }
+      }
+    },
+    {
+      "case": "edup-6-single",
+      "interface": "wlan1",
+      "command": [
+        "wsl",
+        "-d",
+        "Debian",
+        "-u",
+        "root",
+        "--",
+        "iperf3",
+        "-c",
+        "10.0.0.178",
+        "-p",
+        "5217",
+        "-t",
+        "12",
+        "-O",
+        "2",
+        "-R",
+        "-P",
+        "1",
+        "-J"
+      ],
+      "server_command": "sudo iperf3 -s -1 -B 10.0.0.178 --bind-dev wlan1 -p 5217 --idle-timeout 25 -J",
+      "received_Mbps": 368.7496876037762,
+      "received_MBps": 46.09371095047202,
+      "retransmits": 94,
+      "tx_deltas": {
+        "wlan0": 20306,
+        "wlan1": 643560503
+      },
+      "pi_environment": {
+        "before": {
+          "load": "0.19 0.18 0.09 1/183 6242\n",
+          "temperature_mC": 50150
+        },
+        "after": {
+          "load": "0.50 0.25 0.12 2/181 6271\n",
+          "temperature_mC": 50150
+        }
+      }
+    },
+    {
+      "case": "edup-6-four",
+      "interface": "wlan1",
+      "command": [
+        "wsl",
+        "-d",
+        "Debian",
+        "-u",
+        "root",
+        "--",
+        "iperf3",
+        "-c",
+        "10.0.0.178",
+        "-p",
+        "5217",
+        "-t",
+        "12",
+        "-O",
+        "2",
+        "-R",
+        "-P",
+        "4",
+        "-J"
+      ],
+      "server_command": "sudo iperf3 -s -1 -B 10.0.0.178 --bind-dev wlan1 -p 5217 --idle-timeout 25 -J",
+      "received_Mbps": 392.16843710179586,
+      "received_MBps": 49.02105463772448,
+      "retransmits": 81,
+      "tx_deltas": {
+        "wlan0": 37124,
+        "wlan1": 721870372
+      },
+      "pi_environment": {
+        "before": {
+          "load": "0.50 0.25 0.12 1/182 6287\n",
+          "temperature_mC": 50150
+        },
+        "after": {
+          "load": "0.62 0.29 0.13 2/182 6320\n",
+          "temperature_mC": 50700
+        }
+      }
+    },
+    {
+      "case": "edup-5-four",
+      "interface": "wlan1",
+      "command": [
+        "wsl",
+        "-d",
+        "Debian",
+        "-u",
+        "root",
+        "--",
+        "iperf3",
+        "-c",
+        "10.0.0.178",
+        "-p",
+        "5217",
+        "-t",
+        "12",
+        "-O",
+        "2",
+        "-R",
+        "-P",
+        "4",
+        "-J"
+      ],
+      "server_command": "sudo iperf3 -s -1 -B 10.0.0.178 --bind-dev wlan1 -p 5217 --idle-timeout 25 -J",
+      "received_Mbps": 568.2406212531263,
+      "received_MBps": 71.03007765664078,
+      "retransmits": 0,
+      "tx_deltas": {
+        "wlan0": 35192,
+        "wlan1": 1039076758
+      },
+      "pi_environment": {
+        "before": {
+          "load": "0.23 0.25 0.13 1/186 6411\n",
+          "temperature_mC": 49600
+        },
+        "after": {
+          "load": "0.48 0.30 0.15 1/181 6444\n",
+          "temperature_mC": 52900
+        }
+      }
+    },
+    {
+      "case": "edup-5-repeat",
+      "interface": "wlan1",
+      "command": [
+        "wsl",
+        "-d",
+        "Debian",
+        "-u",
+        "root",
+        "--",
+        "iperf3",
+        "-c",
+        "10.0.0.178",
+        "-p",
+        "5217",
+        "-t",
+        "12",
+        "-O",
+        "2",
+        "-R",
+        "-P",
+        "1",
+        "-J"
+      ],
+      "server_command": "sudo iperf3 -s -1 -B 10.0.0.178 --bind-dev wlan1 -p 5217 --idle-timeout 25 -J",
+      "received_Mbps": 572.4362595391858,
+      "received_MBps": 71.55453244239823,
+      "retransmits": 0,
+      "tx_deltas": {
+        "wlan0": 18956,
+        "wlan1": 1037442221
+      },
+      "pi_environment": {
+        "before": {
+          "load": "0.48 0.30 0.15 1/181 6459\n",
+          "temperature_mC": 51800
+        },
+        "after": {
+          "load": "0.60 0.33 0.17 1/181 6488\n",
+          "temperature_mC": 51250
+        }
+      }
+    },
+    {
+      "case": "onboard-after",
+      "interface": "wlan0",
+      "command": [
+        "wsl",
+        "-d",
+        "Debian",
+        "-u",
+        "root",
+        "--",
+        "iperf3",
+        "-c",
+        "10.0.0.187",
+        "-p",
+        "5217",
+        "-t",
+        "12",
+        "-O",
+        "2",
+        "-R",
+        "-P",
+        "1",
+        "-J"
+      ],
+      "server_command": "sudo iperf3 -s -1 -B 10.0.0.187 --bind-dev wlan0 -p 5217 --idle-timeout 25 -J",
+      "received_Mbps": 204.38558588768865,
+      "received_MBps": 25.54819823596108,
+      "retransmits": 64,
+      "tx_deltas": {
+        "wlan0": 378958027,
+        "wlan1": 0
+      },
+      "pi_environment": {
+        "before": {
+          "load": "0.60 0.33 0.17 1/181 6503\n",
+          "temperature_mC": 52900
+        },
+        "after": {
+          "load": "0.53 0.33 0.17 1/181 6532\n",
+          "temperature_mC": 50150
+        }
+      }
+    }
+  ],
+  "camera": {
+    "physical_captures": 2,
+    "folder": "\\\\?\\D:\\StrehlCaptures\\stack-1794546666339-2273",
+    "exact_receipts_and_decodes": [
+      {
+        "file": "\\\\?\\D:\\StrehlCaptures\\stack-1794546666339-2273\\frame-000001.ARW",
+        "bytes": 33169408,
+        "sha256": "c0cf81c32b519f400e38e46a959cb10e038f65e5fc0ab4889c052d0dc453d643",
+        "visible_shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "receipt": {
+          "bytes": 33169408,
+          "durable": true,
+          "ok": true,
+          "path": "\\\\?\\D:\\StrehlCaptures\\stack-1794546666339-2273\\frame-000001.ARW",
+          "saved_unix_ms": 1794546670830,
+          "sha256": "c0cf81c32b519f400e38e46a959cb10e038f65e5fc0ab4889c052d0dc453d643"
+        }
+      },
+      {
+        "file": "\\\\?\\D:\\StrehlCaptures\\stack-1794546666339-2273\\frame-000002.ARW",
+        "bytes": 33165312,
+        "sha256": "062b634fd919315bc6b4b7b85d60f4ac7782a397feff6a4edfbb2c1ae861f9b2",
+        "visible_shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "receipt": {
+          "bytes": 33165312,
+          "durable": true,
+          "ok": true,
+          "path": "\\\\?\\D:\\StrehlCaptures\\stack-1794546666339-2273\\frame-000002.ARW",
+          "saved_unix_ms": 1794546674309,
+          "sha256": "062b634fd919315bc6b4b7b85d60f4ac7782a397feff6a4edfbb2c1ae861f9b2"
+        }
+      }
+    ],
+    "tx_deltas": {
+      "wlan0": 0,
+      "wlan1": 69521479
+    },
+    "focus_returned_to": 36802,
+    "phase": "ready",
+    "pending_frames": 0,
+    "preview_size": [
+      1024,
+      680
+    ],
+    "camera_settings_unchanged": true,
+    "compression_enabled_in_production": false,
+    "final_upload_seconds": 0.517057947,
+    "final_upload_MBps": 64.14235037373868,
+    "queue_peak": 1,
+    "plan": {
+      "approach": 128,
+      "capture_timeout_s": 120,
+      "end": 36803,
+      "settle_ms": 500,
+      "start": 36802,
+      "step": 1
+    },
+    "buffered_events": [
+      {
+        "data": {
+          "ordinal": 0,
+          "response": {
+            "camera_reply": {
+              "bytes": 33169408,
+              "captured_events": 1,
+              "completion": "sdk-download-complete",
+              "destination": "host-ram",
+              "ok": true,
+              "path": "/run/strehl-raw/STREHL00001.ARW",
+              "raw_compression": "lossless-l",
+              "warnings": [
+                131089,
+                131075
+              ]
+            },
+            "camera_seconds": 2.753114414,
+            "completion": "ram-queued-sha256",
+            "destination": "host-pc-queue",
+            "file_verification": "ram-sha256",
+            "files": [
+              {
+                "bytes": 33169408,
+                "durable": false,
+                "name": "frame-000001.ARW",
+                "path": "/run/strehl-raw/STREHL00001.ARW",
+                "sha256": "c0cf81c32b519f400e38e46a959cb10e038f65e5fc0ab4889c052d0dc453d643"
+              }
+            ],
+            "raw_compression": "lossless-l"
+          },
+          "target": 36802
+        },
+        "event": "capture_buffered",
+        "sequence": 7,
+        "unix_ms": 1794546670703
+      },
+      {
+        "data": {
+          "ordinal": 1,
+          "response": {
+            "camera_reply": {
+              "bytes": 33165312,
+              "captured_events": 1,
+              "completion": "sdk-download-complete",
+              "destination": "host-ram",
+              "ok": true,
+              "path": "/run/strehl-raw/STREHL00002.ARW",
+              "raw_compression": "lossless-l",
+              "warnings": [
+                131089,
+                131075
+              ]
+            },
+            "camera_seconds": 2.703093085,
+            "completion": "ram-queued-sha256",
+            "destination": "host-pc-queue",
+            "file_verification": "ram-sha256",
+            "files": [
+              {
+                "bytes": 33165312,
+                "durable": false,
+                "name": "frame-000002.ARW",
+                "path": "/run/strehl-raw/STREHL00002.ARW",
+                "sha256": "062b634fd919315bc6b4b7b85d60f4ac7782a397feff6a4edfbb2c1ae861f9b2"
+              }
+            ],
+            "raw_compression": "lossless-l"
+          },
+          "target": 36803
+        },
+        "event": "capture_buffered",
+        "sequence": 11,
+        "unix_ms": 1794546674279
+      }
+    ]
+  },
+  "replays": [
+    {
+      "repeat": 0,
+      "mode": "identity",
+      "seconds_to_durable": 2.3880415000021458,
+      "tx_deltas": {
+        "wlan0": 0,
+        "wlan1": 127678650
+      },
+      "sender_stats": {
+        "sender_seconds": 2.1425546829996165,
+        "max_rss_KiB": 168816,
+        "user_cpu_s": 0.210677,
+        "system_cpu_s": 0.091426,
+        "load": [
+          0.21728515625,
+          0.240234375,
+          0.17041015625
+        ],
+        "workers": 4
+      },
+      "before": {
+        "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 0 \n    cache \n",
+        "tx": {
+          "wlan0": 3919506989,
+          "wlan1": 4302287927
+        },
+        "load": "0.15 0.23 0.17 1/183 6784\n"
+      },
+      "after": {
+        "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 0 \n    cache \n",
+        "tx": {
+          "wlan0": 3919506989,
+          "wlan1": 4429966577
+        },
+        "load": "0.22 0.24 0.17 1/183 6812\n"
+      },
+      "bytes": 122968064,
+      "wire_bytes": 122968587,
+      "sha256": "453154311a136a0bb08efc4e3f0124e6d7fdc0116a5c413893a5c6b101f25c72",
+      "chunks": 30,
+      "exact": true
+    },
+    {
+      "repeat": 1,
+      "mode": "cfa",
+      "seconds_to_durable": 1.836024100004579,
+      "tx_deltas": {
+        "wlan0": 0,
+        "wlan1": 56618500
+      },
+      "sender_stats": {
+        "sender_seconds": 1.5065984039974865,
+        "max_rss_KiB": 181936,
+        "user_cpu_s": 1.394118,
+        "system_cpu_s": 0.18667599999999998,
+        "load": [
+          0.21728515625,
+          0.240234375,
+          0.17041015625
+        ],
+        "workers": 4
+      },
+      "before": {
+        "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 0 \n    cache \n",
+        "tx": {
+          "wlan0": 3919506989,
+          "wlan1": 4429970764
+        },
+        "load": "0.22 0.24 0.17 1/183 6826\n"
+      },
+      "after": {
+        "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 0 \n    cache \n",
+        "tx": {
+          "wlan0": 3919506989,
+          "wlan1": 4486589264
+        },
+        "load": "0.22 0.24 0.17 1/183 6856\n"
+      },
+      "bytes": 122968064,
+      "wire_bytes": 54525214,
+      "sha256": "453154311a136a0bb08efc4e3f0124e6d7fdc0116a5c413893a5c6b101f25c72",
+      "chunks": 51,
+      "exact": true
+    },
+    {
+      "repeat": 2,
+      "mode": "cfa",
+      "seconds_to_durable": 1.6123093999995035,
+      "tx_deltas": {
+        "wlan0": 0,
+        "wlan1": 56620638
+      },
+      "sender_stats": {
+        "sender_seconds": 1.345575188010116,
+        "max_rss_KiB": 180944,
+        "user_cpu_s": 1.4807329999999999,
+        "system_cpu_s": 0.206429,
+        "load": [
+          0.6005859375,
+          0.3193359375,
+          0.19677734375
+        ],
+        "workers": 4
+      },
+      "before": {
+        "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 0 \n    cache \n",
+        "tx": {
+          "wlan0": 3919506989,
+          "wlan1": 4486593451
+        },
+        "load": "0.22 0.24 0.17 1/183 6870\n"
+      },
+      "after": {
+        "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 0 \n    cache \n",
+        "tx": {
+          "wlan0": 3919506989,
+          "wlan1": 4543214089
+        },
+        "load": "0.60 0.32 0.20 1/183 6900\n"
+      },
+      "bytes": 122968064,
+      "wire_bytes": 54525214,
+      "sha256": "453154311a136a0bb08efc4e3f0124e6d7fdc0116a5c413893a5c6b101f25c72",
+      "chunks": 51,
+      "exact": true
+    },
+    {
+      "repeat": 3,
+      "mode": "identity",
+      "seconds_to_durable": 3.0224051999975927,
+      "tx_deltas": {
+        "wlan0": 0,
+        "wlan1": 127680908
+      },
+      "sender_stats": {
+        "sender_seconds": 2.753325011988636,
+        "max_rss_KiB": 169040,
+        "user_cpu_s": 0.207832,
+        "system_cpu_s": 0.08393199999999999,
+        "load": [
+          0.6005859375,
+          0.3193359375,
+          0.19677734375
+        ],
+        "workers": 4
+      },
+      "before": {
+        "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 0 \n    cache \n",
+        "tx": {
+          "wlan0": 3919506989,
+          "wlan1": 4543218276
+        },
+        "load": "0.60 0.32 0.20 1/183 6914\n"
+      },
+      "after": {
+        "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 0 \n    cache \n",
+        "tx": {
+          "wlan0": 3919506989,
+          "wlan1": 4670899184
+        },
+        "load": "0.60 0.32 0.20 1/183 6942\n"
+      },
+      "bytes": 122968064,
+      "wire_bytes": 122968587,
+      "sha256": "453154311a136a0bb08efc4e3f0124e6d7fdc0116a5c413893a5c6b101f25c72",
+      "chunks": 30,
+      "exact": true
+    }
+  ],
+  "fallback": {
+    "fallback": {
+      "route": "10.0.0.109 dev wlan0 src 10.0.0.187 uid 0 \n    cache \n"
+    },
+    "restored": {
+      "route": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 0 \n    cache \n"
+    },
+    "camera_remained_connected": true,
+    "tested_while_idle": true,
+    "active_capture_failover_tested": false
+  },
+  "ui": {
+    "checks": [
+      {
+        "view": "phone-edup",
+        "preview_size": [
+          1024,
+          680
+        ],
+        "focus_marks_enabled": true,
+        "unmarked_start_disabled": true
+      },
+      {
+        "view": "desktop-existing-address",
+        "preview_size": [
+          1024,
+          680
+        ],
+        "focus_marks_enabled": true,
+        "unmarked_start_disabled": true
+      },
+      {
+        "view": "receiver-desktop",
+        "configured_destination": "\\\\?\\D:\\StrehlCaptures"
+      }
+    ],
+    "browser_errors": [],
+    "actual_android_device_tested": false,
+    "production_ui": true
+  },
+  "receiver_autostart": {
+    "duplicate_prevention_verified": true,
+    "receiver_pid": 19124,
+    "startup_shortcut": "C:\\Users\\chris\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Strehl RAW Receiver.lnk",
+    "script": "C:\\Users\\chris\\AppData\\Local\\StrehlCaptureReceiver\\Start receiver automatically.ps1"
+  },
+  "final_state": {
+    "experiment_raws_remaining": 0,
+    "production_raws_pending": 0,
+    "temperature_mC": 49050,
+    "swap": "Filename\t\t\t\tType\t\tSize\t\tUsed\t\tPriority\n",
+    "route": {
+      "exit": 0,
+      "output": "10.0.0.109 dev wlan1 src 10.0.0.178 uid 0 \n    cache"
+    },
+    "usb": {
+      "exit": 0,
+      "output": "/:  Bus 001.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/2p, 480M\n/:  Bus 002.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/1p, 5000M\n    |__ Port 001: Dev 004, If 0, Class=Imaging, Driver=usbfs, 5000M\n/:  Bus 003.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/2p, 480M\n/:  Bus 004.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/1p, 5000M\n    |__ Port 001: Dev 002, If 0, Class=Vendor Specific Class, Driver=mt7921u, 5000M"
+    },
+    "kernel": {
+      "exit": 0,
+      "output": "6.18.50+rpt-rpi-2712"
+    },
+    "throttling": {
+      "exit": 0,
+      "output": "throttled=0x0"
+    },
+    "service": {
+      "exit": 0,
+      "output": "active"
+    },
+    "rollback_timer": {
+      "exit": 4,
+      "output": "inactive"
+    },
+    "test_port": {
+      "exit": 0,
+      "output": "State Recv-Q Send-Q Local Address:Port Peer Address:Port"
+    },
+    "Strehl home": "connection.interface-name:              wlan0\nconnection.autoconnect:                 yes\nconnection.autoconnect-priority:        0\nipv4.route-metric:                      600\n802-11-wireless.powersave:              2 (disable)\n",
+    "Strehl EDUP 5 GHz": "connection.interface-name:              wlan1\nconnection.autoconnect:                 yes\nconnection.autoconnect-priority:        100\nipv4.route-metric:                      100\n802-11-wireless.powersave:              2 (disable)\n",
+    "Strehl EDUP 6 GHz": "connection.interface-name:              wlan1\nconnection.autoconnect:                 no\nconnection.autoconnect-priority:        0\nipv4.route-metric:                      800\n802-11-wireless.powersave:              2 (disable)\n"
+  },
+  "limitations": [
+    "Short network tests only",
+    "No reboot or new sign-in test",
+    "No active-stack adapter-loss test",
+    "No A7CR hardware test",
+    "Prototype codec not enabled in production",
+    "Dark scene; no optical quality claim",
+    "No independent research review",
+    "Windows CPU load not sampled during timing"
+  ],
+  "source_sha256": {
+    "experiments/sony-edup-2026-11-12/bench-network.py": "f71a4edc65e5afcd6f87268a26ed45b49dbf2ee15845526f4849482e2d787ca8",
+    "experiments/sony-edup-2026-11-12/pi-network.py": "f14bb80b72dd54d9393a10d9c6a1f715cb1c58df14cf91df3b3eff54f76541b9",
+    "experiments/sony-edup-2026-11-12/prefer-edup.py": "82a3e3cad45deaa7c50d999d2ccf5f30dd3f19b8fd176c5bc453f0f6dc96d2d8",
+    "experiments/sony-edup-2026-11-12/qualify-camera.py": "41b4281cb9a9c2634b256b1ad6121a87c1ae51c2d36c13555299f2f75e35b545",
+    "experiments/sony-edup-2026-11-12/remote.py": "016ebeb5292ab789baef3587f561dc739e363c0e66ec07596d1dd0d4d8c82b90",
+    "experiments/sony-edup-2026-11-12/replay-raw.py": "cdff546b0b6c2e4fa4b1bb97345cda1d207f1c9dcc9c7b3930bb5528cbb1755f",
+    "experiments/sony-edup-2026-11-12/verify-ui.py": "d0d11f24481ec2d6475c01d84cab8c30429535ea0c63a44a28ba5774a1ea49f7",
+    "experiments/sony-edup-2026-11-12/wifi-password.py": "a3e82df08dcfa83ada84369068795adc1e90cb60e144c7728963c933c7c14a14",
+    "experiments/sony-edup-2026-11-12/receiver-autostart.ps1": "470c5fddff9c48dd59a0b4aa15d2a6dbb704c0a05caf822c37e113934afc0608",
+    "experiments/sony-raw-compression-2026-11-12/wire.py": "2e59f0e9a6ab9c2efbb8ecd4d788b71489b2535a2f0797ec30e18cd03eaedc12"
+  },
+  "raw_evidence_sha256": {
+    "camera-after-receiver-start.json": "c847840c4ecf5381529a0fa5c80c5124a9998cc72b5d8af649d6873e9cafc2d1",
+    "camera-after-recover.json": "a7c03608be724bde8ee5ce94b7d249a0a9a5c643ffabcd07ce1f64375a1d6e74",
+    "camera-before.json": "5b5bf4d6488d11aab5dd9b4dcc9596c06f802eb3885b3fd687707c93e7a822fe",
+    "camera-recovered.json": "488fd077633ebdbf55ed0785d02cbb07f82e9da5e7a510ef444721e8e4270276",
+    "camera-verification.json": "7942ea1175d2676a1be1f7a0d0dd280b9063ac55b564ca72c7f107f1c5eda27f",
+    "capture-completed.json": "3be0ce39109f8e597e80cc1b11d60d889de737bd8f5254854e4286d75069bbb2",
+    "capture-initial.json": "824729bfa8520cee904079f0dcbb97a298b94e77d8a6310c3b52fc900f499881",
+    "edup-5-four-server.json": "4bd4b29d73a96d843e7d13bec3f5d952c6706c7368d36a88d11b0e0719e747f0",
+    "edup-5-four.json": "dc341a0b2eb057b150a548a1eabcae9af9ec078888dcc27b1261ee4d64454f98",
+    "edup-5-repeat-server.json": "e8dfbf9509881d098e844f0184a7e8985534c4e8254fe6ccc229bd98da4ac288",
+    "edup-5-repeat.json": "3bdef584956e1de8abd5f27b442b64f634bb41feb9770f6ebeb09b2c6d388e8b",
+    "edup-5-single-server.json": "4e6de59ce4ecfa0dd6f9fbfaadff8ce92d684f63d7db15d505db5518c476ad8f",
+    "edup-5-single.json": "57a86b1e29cf93a1d19ca2542605aad2b97a84e5e34dfb4ef71420c6df978ab2",
+    "edup-6-four-server.json": "e93ddc08f78c64291ca4dc28f9a652c32060bfe643cf4255d7108f8bd05a06f0",
+    "edup-6-four.json": "e6da1285e39670ade7de82bd5171414ae76fa47bf00202da5dcc088903ee5ccd",
+    "edup-6-single-server.json": "f3c1d2d7410209dc1dae5c992ac654ffd71f299d14797f424eefbf80086b7232",
+    "edup-6-single.json": "7a5a128580c52a899187e4f36671137d7dfcc8e6e29b1fc947a3ffc6b7f8e748",
+    "fallback-verification.json": "204d1f604eace63e23d5edbfd6d648c636666af93e5fb44d00c54f78bfa32805",
+    "final-state.json": "be40c9c4a3eb02d1e562e99de870fc8c5c04bd5bd594bbb379feffd19d7ab9e8",
+    "metadata-folder-recovery.json": "9da154b79dcc4500f74ad8ab4696e511f8f15d92784760fa7f2154483be0e140",
+    "onboard-after-server.json": "36141d3d61ab931b0277ac894fcd8cebf8df91195c4ee87d9b7318eb08d7424c",
+    "onboard-after.json": "d0dd5b13874bd3e5b7eddcc0facee100b699141d144f04f49b3d66a72460f320",
+    "onboard-before-server.json": "7a3666e2ca9d5b00f983eb9f791b62a286301a403624f192728e48eb17560280",
+    "onboard-before.json": "8c1f6e423b22e800edb37083a76913eb0f5a009beccd40fc9c7dca6c27811e0c",
+    "preferred-route-health.json": "3d566a21ec48a4da1dffba1afbf7ff19874b218f194ddd9811cb692c320481ee",
+    "raw-replays.json": "dffd5f6627f936b3f4fc44bb3cc9bb40470606a4f3ca0a16de8c018b64e82fd2",
+    "receiver-autostart.json": "c652a8e6c4fec64a4ab99bb2cbc06a19b5ae86e4fff0b5e2dff18eb3b481afe0",
+    "ui-verification.json": "201598c662568f6bde2b00aa096cd85f2e5c9c1223c44bb5055dbf71f0dac76d",
+    "wifi-password-applied.json": "8c4f425fb4d5a8c2cac279a3ebc6e4689f91a70797dafa2313e2703b375a5ccf"
+  }
+}
