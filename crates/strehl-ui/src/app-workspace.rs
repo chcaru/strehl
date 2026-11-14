@@ -5,6 +5,7 @@ use crate::workspace_history::{NodeId, StackDraft};
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(super) enum Sidebar {
     Projects,
+    Capture,
     Adjust,
     Edit,
     Export,
@@ -16,6 +17,7 @@ impl Sidebar {
     fn label(self) -> &'static str {
         match self {
             Self::Projects => "Projects",
+            Self::Capture => "Capture",
             Self::Adjust => "Adjust",
             Self::Edit => "Edit",
             Self::Export => "Export",
@@ -27,6 +29,25 @@ impl Sidebar {
 }
 
 impl StrehlApp {
+    pub(super) fn poll_capture(&mut self, ctx: &egui::Context) {
+        if self.sidebar == Some(Sidebar::Capture) {
+            self.capture.activate(ctx);
+        }
+        if let Some(folder) = self.capture.take_handoff() {
+            if self.job.is_some()
+                || self.scan.is_some()
+                || self.replay.is_some()
+                || self.session_import.is_some()
+                || self.picker_active()
+            {
+                self.capture.error = Some(
+                    "Finish the active workspace operation, then open the capture again.".into(),
+                );
+            } else {
+                self.import(folder);
+            }
+        }
+    }
     /// The displayed action and every launch entry point use the same gate.
     /// Nothing is persisted or queued until it is satisfied.
     pub(super) fn stack_start_blocker(&self) -> Option<&'static str> {
@@ -472,6 +493,7 @@ impl StrehlApp {
                 }
                 for (index, pane) in [
                     (0, Sidebar::Projects),
+                    (10, Sidebar::Capture),
                     (1, Sidebar::Adjust),
                     (7, Sidebar::Edit),
                     (9, Sidebar::Export),
@@ -690,7 +712,7 @@ impl StrehlApp {
                                     );
                                 }
                             }
-                            Sidebar::Projects => unreachable!(),
+                            Sidebar::Projects | Sidebar::Capture => unreachable!(),
                         });
                     });
                 }
@@ -952,6 +974,7 @@ fn rail_command(
         7 => crate::workspace_icons::Icon::Edit,
         8 => crate::workspace_icons::Icon::Agent,
         9 => crate::workspace_icons::Icon::Export,
+        10 => crate::workspace_icons::Icon::Camera,
         _ => crate::workspace_icons::Icon::Layout,
     };
     crate::workspace_icons::paint(&p, c, 20.0, icon, color);
@@ -964,6 +987,7 @@ fn rail_command(
     );
     response.on_hover_text(match kind {
         0 => "Projects · folders, stacks and saved renders",
+        10 => "Capture · live camera, focus bounds and RAW receiver",
         1 => "Adjust · settings for the next render",
         2 => "Review · retained processing evidence",
         3 => "Activity · engine observations",

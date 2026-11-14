@@ -992,16 +992,12 @@ fn read_directory(path: &Path, children: bool, cancelled: &AtomicBool) -> Result
             } else {
                 limited = true;
             }
-        } else if !link
-            && kind.is_file()
-            && entry_path
-                .extension()
-                .is_some_and(|extension| extension.eq_ignore_ascii_case("arw"))
-        {
+        } else if !link && kind.is_file() && strehl_raw::is_raw_path(&entry_path) {
             frames.push(entry_path);
         }
     }
     frames.sort();
+    strehl_raw::validate_raw_paths(&frames)?;
     folders.sort_by(|a, b| {
         a.name
             .to_lowercase()

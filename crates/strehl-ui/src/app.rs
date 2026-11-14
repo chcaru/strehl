@@ -169,6 +169,7 @@ pub struct StrehlApp {
     close_after_photo_history: bool,
     process_view: bool,
     sidebar: Option<workspace::Sidebar>,
+    capture: crate::capture_workspace::CaptureWorkspace,
     project_explorer: crate::project_explorer::ProjectExplorer,
     active_stack: Option<crate::workspace_history::NodeId>,
     pending_stack: Option<crate::workspace_history::NodeId>,
@@ -290,6 +291,7 @@ impl StrehlApp {
             close_after_photo_history: false,
             process_view: true,
             sidebar: Some(workspace::Sidebar::Projects),
+            capture: crate::capture_workspace::CaptureWorkspace::new(launch.capture_settings),
             project_explorer: Default::default(),
             active_stack: None,
             pending_stack: None,
@@ -456,6 +458,10 @@ impl StrehlApp {
         if launch.projects {
             app.process_view = true;
             app.sidebar = Some(workspace::Sidebar::Projects);
+        }
+        if launch.capture {
+            app.process_view = true;
+            app.sidebar = Some(workspace::Sidebar::Capture);
         }
         app
     }
@@ -2572,6 +2578,15 @@ impl StrehlApp {
     }
     fn workspace(&mut self, ctx: &egui::Context) {
         self.navigation_rail(ctx);
+        if self.sidebar == Some(workspace::Sidebar::Capture) {
+            let can_import = self.job.is_none()
+                && self.scan.is_none()
+                && self.replay.is_none()
+                && self.session_import.is_none()
+                && !self.picker_active();
+            self.capture.show(ctx, can_import);
+            return;
+        }
         self.sidebar(ctx);
         if self.process_view {
             if self.stack.is_none()
@@ -2694,6 +2709,8 @@ impl StrehlApp {
                     .iter()
                     .all(|i| self.browser.has_thumbnail(*i) || self.browser.error(*i).is_some()));
         let ready = ready
+            && (self.sidebar != Some(workspace::Sidebar::Capture)
+                || self.capture.ready_for_screenshot())
             && (self.sidebar != Some(workspace::Sidebar::Projects)
                 || !self.project_explorer.preview_pending())
             && (!self.bracket_browser.active() || self.bracket_browser.settled(now))
@@ -2803,6 +2820,7 @@ impl StrehlApp {
     }
     fn update_workspace(&mut self, ctx: &egui::Context) {
         self.updates += 1;
+        self.poll_capture(ctx);
         let image_domain = (self.epoch, self.process_view, self.picker_active());
         let domain_changed = ctx.data_mut(|data| {
             let id = egui::Id::new("image-gesture-workspace-domain");

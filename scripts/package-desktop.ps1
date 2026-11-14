@@ -92,6 +92,7 @@ $relativeFiles.Add('experiments/raw-quality-2026-10-27/native-spectral-fusion/pi
 $relativeFiles.Add('scripts/package-desktop.ps1')
 $relativeFiles.Add('scripts/strehl-control.py')
 $relativeFiles.Add('docs/desktop-control.md')
+$relativeFiles.Add('docs/native-capture.md')
 $relativeFiles.Add('docs/multi-stack.md')
 $relativeFiles.Add('docs/multi-stack-tryout.md')
 $relativeFiles.Add('experiments/multi-stack-2026-10-28/brief.md')
@@ -170,6 +171,10 @@ $rebuildGuide = $rebuildGuide.Replace('](raw-decoder-notice.md)', '](source/docs
 [IO.File]::WriteAllText((Join-Path $package 'REBUILD.md'), $rebuildGuide)
 $packageReadme = @'
 # Strehl desktop workspace
+
+Open **Capture** in the left rail for native Pi camera controls, live preview,
+focus bounds, timers and the PC RAW receiver. **Open in Projects** imports a
+durably completed capture. See [native Capture](source/docs/native-capture.md).
 
 Open **Strehl.exe** for the desktop workspace. To combine several focus sweeps,
 choose **Create multi-stack session** from Projects. Repeat fusion, exposure

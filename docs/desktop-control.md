@@ -210,6 +210,24 @@ interactive workspace and follow the [desktop build guide](desktop-build.md).
 
 ## Check the UI without opening a window
 
+Native Capture is available through `launch --capture --capture-settings PATH`
+and `screenshot --capture --capture-settings PATH --png PATH`. The settings file
+contains pairing credentials; do not include it in reports. Capture screenshots
+read live state/preview but never initiate an exposure. `open_capture` selects
+the tab in an existing session. Snapshots expose sanitized `capture` state,
+preview dimensions, receiver status and completed-stack candidates.
+
+`capture_command` carries a `request` with a unique `id`, the camera's
+`camera_revision`, `plan_revision`, `sequence_id`, and a `command` such as
+`{"op":"mark","start":true}`. The outer command still needs the application's
+`expected_revision`. Use the revisions from a fresh snapshot; never fill them
+in after the decision or automatically retry a mutation. `import_capture` with
+an `index` from `capture.completed` rechecks and opens a completed receiver run.
+`start_capture_receiver` starts/attaches the background receiver;
+`set_capture_compression` changes its new-stack default via `compressed: true`
+or `false`. Folder selection remains in the native UI. Closing a headless control
+workspace does not stop the Pi or the background receiver.
+
 The offscreen path paints the real workspace with egui and wgpu into a texture,
 then saves the GPU readback as a PNG. It creates no native window or graphics
 surface and sends no operating-system mouse or keyboard events. It requires a

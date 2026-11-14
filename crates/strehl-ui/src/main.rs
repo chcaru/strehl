@@ -15,6 +15,10 @@ mod camera_metadata;
 #[path = "capture-axis.rs"]
 #[cfg(test)]
 mod capture_axis;
+#[path = "capture-client.rs"]
+mod capture_client;
+#[path = "capture-workspace.rs"]
+mod capture_workspace;
 mod controls;
 #[path = "develop-presets.rs"]
 mod develop_presets;
@@ -136,6 +140,8 @@ pub struct LaunchOptions {
     pub edit: bool,
     pub export: bool,
     pub projects: bool,
+    pub capture: bool,
+    pub capture_settings: Option<PathBuf>,
     pub agent: bool,
     pub headless: bool,
     pub offscreen: bool,
@@ -164,6 +170,21 @@ fn parse_screenshot_ranges(value: &str) -> Option<Vec<[usize; 2]>> {
 }
 
 fn main() -> eframe::Result {
+    if std::env::args_os()
+        .nth(1)
+        .is_some_and(|a| a == "--capture-receiver")
+    {
+        let args: Vec<_> = std::env::args_os().skip(2).collect();
+        if args.len() != 2 || args[0] != "--config" {
+            eprintln!("Usage: Strehl --capture-receiver --config receiver.json");
+            std::process::exit(2);
+        }
+        if let Err(error) = strehl_capture::receiver_service::run(PathBuf::from(&args[1])) {
+            eprintln!("Receiver: {error:#}");
+            std::process::exit(1);
+        }
+        return Ok(());
+    }
     if let Some(code) = agent_interface::run_control_from_args() {
         std::process::exit(code);
     }
@@ -176,6 +197,18 @@ fn main() -> eframe::Result {
     let mut launch = LaunchOptions::default();
     let mut args = std::env::args_os().skip(1);
     while let Some(arg) = args.next() {
+        if arg == "--capture" {
+            launch.capture = true;
+            continue;
+        }
+        if arg == "--capture-settings" {
+            launch.capture_settings = args.next().map(PathBuf::from);
+            if launch.capture_settings.is_none() {
+                eprintln!("--capture-settings requires a local JSON path");
+                std::process::exit(2);
+            }
+            continue;
+        }
         if arg == "--edit" {
             launch.edit = true;
             continue;

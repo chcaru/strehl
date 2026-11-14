@@ -236,10 +236,7 @@ fn scan(directory: &Path, cancelled: &AtomicBool) -> Result<StackScan> {
         ensure!(!cancelled.load(Ordering::Relaxed), "Folder scan cancelled");
         let entry = entry.context("Reading a folder entry")?;
         let path = entry.path();
-        if !path
-            .extension()
-            .is_some_and(|extension| extension.to_string_lossy().eq_ignore_ascii_case("arw"))
-        {
+        if !strehl_raw::is_raw_path(&path) {
             continue;
         }
         let metadata = entry
@@ -258,7 +255,11 @@ fn scan(directory: &Path, cancelled: &AtomicBool) -> Result<StackScan> {
     }
     // Match the CLI's filename order, including case-sensitive Path ordering.
     frames.sort_by(|left, right| left.path.cmp(&right.path));
-    ensure!(!frames.is_empty(), "This folder contains no .arw frames");
+    ensure!(
+        !frames.is_empty(),
+        "This folder contains no .ARW or .ARW.straw frames"
+    );
+    strehl_raw::validate_raw_paths(&frames.iter().map(|f| f.path.clone()).collect::<Vec<_>>())?;
     Ok(StackScan {
         directory,
         frames,
@@ -1519,6 +1520,18 @@ pub(crate) mod tests {
         assert_eq!(scan.frames[1].path.file_name(), Some(OsStr::new("b.ARW")));
         assert_eq!(scan.frames[0].bytes, 2);
         assert_eq!(scan.total_bytes, 5);
+    }
+
+    #[test]
+    fn scan_includes_archived_raws_and_refuses_duplicate_originals() {
+        let directory = TestDirectory::new("archive-scan");
+        let archived = directory.path().join("frame-000001.ARW.straw");
+        fs::write(&archived, b"metadata-only scan fixture").unwrap();
+        let scan = scan(directory.path(), &AtomicBool::new(false)).unwrap();
+        assert_eq!(scan.frames.len(), 1);
+        assert_eq!(scan.frames[0].path.file_name(), archived.file_name());
+        fs::write(directory.path().join("frame-000001.ARW"), b"duplicate").unwrap();
+        assert!(super::scan(directory.path(), &AtomicBool::new(false)).is_err());
     }
 
     #[test]

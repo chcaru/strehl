@@ -80,6 +80,17 @@ pub(crate) enum AdaptiveDevelopIntent {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(tag = "operation", rename_all = "snake_case", deny_unknown_fields)]
 pub(crate) enum AgentCommand {
+    OpenCapture {},
+    StartCaptureReceiver {},
+    SetCaptureCompression {
+        compressed: bool,
+    },
+    CaptureCommand {
+        request: strehl_capture::session::CommandRequest,
+    },
+    ImportCapture {
+        index: usize,
+    },
     Snapshot {},
     /// Inspect one imported source without selecting it or opening a report.
     Metadata {

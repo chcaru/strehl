@@ -193,6 +193,7 @@ pub(crate) fn run_headless(launch: LaunchOptions) -> Result<()> {
 
 impl StrehlApp {
     fn headless_tick(&mut self, ctx: &egui::Context) {
+        self.poll_capture(ctx);
         self.poll(ctx);
         self.poll_editing(ctx);
         self.poll_agent(ctx);

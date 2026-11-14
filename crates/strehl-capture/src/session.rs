@@ -6,7 +6,7 @@ use crate::{
     worker::{Action, PAUSE, STOP, Snapshot, Worker},
 };
 use anyhow::{Context, Result, ensure};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::{
     collections::VecDeque,
@@ -323,7 +323,7 @@ impl Session {
     }
 }
 
-#[derive(Clone, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct CommandRequest {
     pub id: String,
@@ -332,7 +332,7 @@ pub struct CommandRequest {
     pub sequence_id: u64,
     pub command: Command,
 }
-#[derive(Clone, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(tag = "op", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Command {
     Connect {},

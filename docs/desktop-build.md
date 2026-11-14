@@ -41,6 +41,10 @@ See the [experimental mode guide](temporal-energy.md).
 
 ## Native metadata and command control
 
+The **Capture** rail tab includes native live preview and camera/receiver controls.
+The same executable runs the durable RAW receiver in background mode with
+`--capture-receiver --config PATH`. See [native Capture](native-capture.md).
+
 The desktop's **Camera metadata** panel reads a bracket once and presents its AF
 grid, raw focus progression and optical sample curves inside Strehl. It follows
 capture selection on the timeline; chart clicks select the corresponding capture.

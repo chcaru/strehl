@@ -25,6 +25,10 @@ and [release checklist](../../docs/public-release.md).
 
 **Working with a stack**
 
+**Capture** in the left rail controls a headless Pi camera host through native
+live view, focus bounds, sequence controls and PC receiver settings. Completed
+captures open directly in Projects. See [native Capture](../../docs/native-capture.md).
+
 1. Open **Projects** and choose **New stack**, press Ctrl/Cmd+O, or drop a source
    folder onto the workspace. The bracket chooser supports folder navigation,
    camera previews and direct-folder capture counts.

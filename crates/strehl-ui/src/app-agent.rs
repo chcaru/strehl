@@ -364,6 +364,7 @@ impl StrehlApp {
                 "noise_model":self.progress.noise_model,"geometry_error":self.progress.alignment_error});
         let session = self.controls.settings.session.as_ref().map(|session|json!({"mode":session.manifest.mode,"primary_pass":session.manifest.primary_pass,"memory_limit_gib":session.memory_limit_gib,"precision_weights":session.precision_weights,"contribution_maps":session.contribution_maps,"focus_evidence":session.focus_evidence,"reproducibility":session.reproducibility,"original_cfa_reconstruction":session.original_cfa_reconstruction,"anchor_lighting_only":session.anchor_lighting_only,"capture_groups":self.session_ui.groups,"layers":self.session_ui.layers,"selected_output":self.result,"selection_busy":self.session_output_selection.is_some(),"primary_scope":if session.manifest.mode == crate::session_workspace::SessionMode::IndependentViews {"Independent view coordinates and focus; no primary or cross-view geometry."} else if session.manifest.mode == crate::session_workspace::SessionMode::Mosaic {"No primary preference; framing follows measured overlap and coverage."} else if session.manifest.mode == crate::session_workspace::SessionMode::Layers {"Common reference frame and first displayed layer; each layer retains its own appearance."} else {"Framing, appearance and disagreement fallback; automatic reference has no fusion preference."}}));
         let mut snapshot = json!({
+            "capture":self.capture.snapshot(),
             "revision":self.agent.revision, "application":"Strehl", "version":env!("CARGO_PKG_VERSION"),
             "headless":self.headless,"output_directory":self.output,
             "active_stack":self.active_stack, "projects":projects, "project_list_truncated":self.catalog.nodes.len()>256,
@@ -403,6 +404,29 @@ impl StrehlApp {
         use AgentCommand::*;
         command.validate().map_err(anyhow::Error::msg)?;
         match command {
+            OpenCapture {} => {
+                self.sidebar = Some(workspace::Sidebar::Capture);
+                self.process_view = true;
+            }
+            StartCaptureReceiver {} => {
+                self.capture.start_receiver()?;
+            }
+            SetCaptureCompression { compressed } => {
+                self.capture.set_compression(compressed)?;
+            }
+            CaptureCommand { request } => {
+                self.capture.submit(request)?;
+            }
+            ImportCapture { index } => {
+                anyhow::ensure!(
+                    self.job.is_none()
+                        && self.scan.is_none()
+                        && self.replay.is_none()
+                        && self.session_import.is_none(),
+                    "Wait for the active workspace operation"
+                );
+                self.capture.import_completed(index)?;
+            }
             Snapshot {} => return Ok(self.agent_snapshot()),
             Shutdown {} => {
                 anyhow::bail!("Shutdown must run through the application command pump");

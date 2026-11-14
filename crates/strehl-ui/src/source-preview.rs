@@ -3,7 +3,8 @@
 //! These pixels help browse a bracket. They are neither a RAW-accurate rendering
 //! nor a preview of the eventual fused stack. Only classic TIFF directory links
 //! and the documented JPEG offset/length fields are inspected; MakerNotes and
-//! compressed RAW strips are never interpreted.
+//! compressed RAW strips are never interpreted as image samples. Strehl archives
+//! expand in memory with checksum verification, without a restored disk copy.
 
 use std::collections::HashSet;
 use std::fs::File;
@@ -35,6 +36,51 @@ const MAX_DECODE_BYTES: u64 = 512 * 1024 * 1024;
 const THUMBNAIL_MAX_SIDE: u32 = 320;
 pub(crate) const FILMSTRIP_BATCH_MAX: usize = 8;
 const FILMSTRIP_WORKERS: usize = 3;
+
+// Open the logical container only when the JPEG cache needs a read. A warm
+// thumbnail lookup must not decompress a 124 MB RAW just to retrieve its JPEG.
+struct PreviewReader {
+    path: PathBuf,
+    reader: Option<strehl_raw_codec::archive::OriginalReader>,
+}
+impl PreviewReader {
+    fn open(path: &Path) -> Result<(Self, std::fs::Metadata, u64)> {
+        let mut file = File::open(path)?;
+        let metadata = file.metadata()?;
+        ensure!(metadata.is_file(), "Choose a source image file");
+        let archived = strehl_raw_codec::archive::is_archive(path);
+        let length = if archived {
+            strehl_raw_codec::archive::read_header(&mut file)?.bytes
+        } else {
+            metadata.len()
+        };
+        Ok((
+            Self {
+                path: path.into(),
+                reader: (!archived)
+                    .then_some(strehl_raw_codec::archive::OriginalReader::File(file)),
+            },
+            metadata,
+            length,
+        ))
+    }
+    fn reader(&mut self) -> std::io::Result<&mut strehl_raw_codec::archive::OriginalReader> {
+        if self.reader.is_none() {
+            self.reader = Some(strehl_raw_codec::archive::open_original(&self.path)?);
+        }
+        Ok(self.reader.as_mut().unwrap())
+    }
+}
+impl Read for PreviewReader {
+    fn read(&mut self, bytes: &mut [u8]) -> std::io::Result<usize> {
+        self.reader()?.read(bytes)
+    }
+}
+impl Seek for PreviewReader {
+    fn seek(&mut self, position: SeekFrom) -> std::io::Result<u64> {
+        self.reader()?.seek(position)
+    }
+}
 pub(crate) type FilmstripBatch = Vec<(usize, std::result::Result<SourcePreview, String>)>;
 
 #[cfg(test)]
@@ -264,8 +310,8 @@ pub(crate) fn load_draft_source(
 ) -> Result<PreviewImage> {
     ensure!(max_side > 0, "The draft has no usable display size");
     check_cancelled(cancelled)?;
-    let mut file = File::open(path).with_context(|| format!("Opening {}", path.display()))?;
-    let file_len = file.metadata()?.len();
+    let (mut file, _, file_len) =
+        PreviewReader::open(path).with_context(|| format!("Opening {}", path.display()))?;
     let candidates = jpeg_candidates(&mut file, file_len, cancelled)?;
     let mut ranked = Vec::with_capacity(candidates.len());
     for candidate in candidates {
@@ -354,13 +400,10 @@ fn load_browser(
         "The camera preview has no usable display size"
     );
     check_cancelled(cancelled)?;
-    let mut file = File::open(path).with_context(|| format!("Opening {}", path.display()))?;
-    let metadata = file
-        .metadata()
-        .context("Reading the source frame metadata")?;
-    ensure!(metadata.is_file(), "Choose a source image file");
+    let (mut file, metadata, file_len) =
+        PreviewReader::open(path).with_context(|| format!("Opening {}", path.display()))?;
     let stamp = cache::Stamp::new(path, &metadata);
-    let catalog = cache::catalog(&mut file, metadata.len(), stamp.as_ref(), cancelled)?;
+    let catalog = cache::catalog(&mut file, file_len, stamp.as_ref(), cancelled)?;
     let (candidates, source_size) =
         rank_candidates(catalog.to_vec(), small_first, canonical_crop, max_side)?;
     let mut read_bytes = 0;
@@ -371,13 +414,7 @@ fn load_browser(
         if read_bytes > MAX_TOTAL_JPEG_BYTES {
             break;
         }
-        let bytes = cache::payload(
-            &mut file,
-            metadata.len(),
-            stamp.as_ref(),
-            candidate,
-            cancelled,
-        )?;
+        let bytes = cache::payload(&mut file, file_len, stamp.as_ref(), candidate, cancelled)?;
         match decode::decode(&bytes, max_side, cancelled) {
             Ok((image, original_size)) => {
                 check_cancelled(cancelled)?;
@@ -853,6 +890,56 @@ mod tests {
             assert_eq!(preview.rgba.len(), 8 * 12 * 4);
             assert_eq!(std::fs::read(path).unwrap(), bytes);
         }
+    }
+
+    #[test]
+    fn archived_camera_preview_matches_original_and_rejects_corruption() {
+        let directory = TestDirectory::new("archived-preview");
+        let jpeg = jpeg(24, 16);
+        let order = ByteOrder::Little;
+        let mut bytes = tiff(order, 128 + jpeg.len());
+        ifd(
+            &mut bytes,
+            8,
+            &[
+                entry(513, 4, 1, 128, order),
+                entry(514, 4, 1, jpeg.len() as u32, order),
+            ],
+            0,
+            order,
+        );
+        bytes[128..].copy_from_slice(&jpeg);
+        let original = directory.path().join("original.ARW");
+        std::fs::write(&original, &bytes).unwrap();
+        let path = directory.path().join("captured.ARW.straw");
+        let mut archive = Vec::new();
+        strehl_raw_codec::archive::pack(bytes, &mut archive).unwrap();
+        std::fs::write(&path, &archive).unwrap();
+        let expected = load_source_preview(original, 24)
+            .receiver
+            .recv()
+            .unwrap()
+            .unwrap();
+        let actual = load_source_preview(path.clone(), 24)
+            .receiver
+            .recv()
+            .unwrap()
+            .unwrap();
+        assert_eq!(actual.rgba, expected.rgba);
+        assert_eq!(actual.source_size, expected.source_size);
+        assert!(
+            !path.with_extension("").exists(),
+            "preview must not restore a disk copy"
+        );
+        archive[16] ^= 1;
+        std::fs::write(&path, &archive).unwrap();
+        assert!(
+            load_source_preview(path, 24)
+                .receiver
+                .recv()
+                .unwrap()
+                .is_err()
+        );
     }
 
     #[test]

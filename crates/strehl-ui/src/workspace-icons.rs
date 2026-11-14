@@ -5,6 +5,7 @@ use eframe::egui::{self, Color32, Painter, Pos2, Stroke};
 #[derive(Clone, Copy)]
 pub(crate) enum Icon {
     Projects,
+    Camera,
     Folder,
     Stack,
     Photograph,
@@ -44,6 +45,19 @@ pub(crate) fn paint(painter: &Painter, center: Pos2, size: f32, icon: Icon, colo
         ));
     };
     match icon {
+        Icon::Camera => {
+            closed(&[
+                [-8.0, -5.0],
+                [-4.0, -5.0],
+                [-2.0, -8.0],
+                [3.0, -8.0],
+                [5.0, -5.0],
+                [8.0, -5.0],
+                [8.0, 7.0],
+                [-8.0, 7.0],
+            ]);
+            painter.circle_stroke(point(0.0, 1.0), 4.0 * scale, stroke);
+        }
         Icon::Projects | Icon::Folder => {
             // A complete folder silhouette, with an offset second folder for
             // the Projects collection. No stray diagonal "tab" stroke.
