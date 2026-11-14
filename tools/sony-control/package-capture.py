@@ -67,7 +67,7 @@ def main():
         shutil.copy2(path, target)
         inputs.append({'path': relative.as_posix(), 'sha256': digest(path)})
 
-    for folder in ['crates/strehl-capture', 'third-party/egui-wgpu', 'tools/sony-control',
+    for folder in ['crates/strehl-capture', 'crates/strehl-raw-codec', 'third-party/egui-wgpu', 'tools/sony-control',
                    'experiments/sony-capture-ui-2026-11-07', 'experiments/sony-focus-control-2026-11-07',
                    'experiments/sony-focus-control-2026-11-07-capture-review', 'experiments/sony-upgrade-2026-11-07']:
         for path in sorted((ROOT/folder).rglob('*')):
@@ -77,10 +77,11 @@ def main():
         copy_input(ROOT/name)
     # This application deliberately has no dependency on the RAW engine/decoder.
     original = tomllib.loads((ROOT/'Cargo.toml').read_text(encoding='utf-8'))
-    workspace = '[workspace]\nresolver = "3"\nmembers = ["crates/strehl-capture"]\n\n[workspace.package]\n'
+    workspace = '[workspace]\nresolver = "3"\nmembers = ["crates/strehl-capture", "crates/strehl-raw-codec"]\n\n[workspace.package]\n'
     for key in ['version', 'edition', 'rust-version', 'license', 'repository']:
         workspace += f'{key} = {json.dumps(original["workspace"]["package"][key])}\n'
     workspace += '\n[workspace.dependencies]\nanyhow = "1.0"\nclap = { version = "4.5", features = ["derive"] }\n'
+    workspace += 'rayon = "1.12"\nstrehl-raw-codec = { path = "crates/strehl-raw-codec" }\n'
     workspace += '\n[profile.release]\nopt-level = 3\nlto = "thin"\ncodegen-units = 1\nstrip = "symbols"\n'
     workspace += '\n[patch.crates-io]\negui-wgpu = { path = "third-party/egui-wgpu" }\n'
     (source/'Cargo.toml').write_text(workspace, encoding='utf-8', newline='\n')

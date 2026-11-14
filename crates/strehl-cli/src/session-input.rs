@@ -255,10 +255,7 @@ impl SessionSpec {
                     let entry =
                         entry.with_context(|| format!("listing {}", directory.display()))?;
                     let path = entry.path();
-                    let is_arw = path
-                        .extension()
-                        .and_then(|e| e.to_str())
-                        .is_some_and(|e| e.eq_ignore_ascii_case("arw"));
+                    let is_arw = strehl_raw::is_raw_path(&path);
                     if !is_arw {
                         continue;
                     }
@@ -273,6 +270,7 @@ impl SessionSpec {
                     paths.push(path);
                 }
                 // Same lexical path order as ordinary raw_paths, within this segment.
+                strehl_raw::validate_raw_paths(&paths)?;
                 paths.sort();
                 ensure!(
                     !paths.is_empty(),

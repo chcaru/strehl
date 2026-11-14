@@ -54,6 +54,63 @@ pub struct Native {
 }
 
 impl Native {
+    pub fn shots_per_plane(&self) -> usize {
+        if self.hello["group_stream_protocol"] == 1 && self.hello["pixel_shift_shots"] == 4 {
+            4
+        } else {
+            1
+        }
+    }
+    pub fn capture_files(
+        &mut self,
+        timeout_s: u32,
+        ready: &mut dyn FnMut(Value) -> Result<()>,
+    ) -> Result<Value> {
+        if self.shots_per_plane() == 1 {
+            let response = self.capture(timeout_s)?;
+            ready(response.clone())?;
+            return Ok(response);
+        }
+        ensure!(
+            !self.poisoned,
+            "Bridge state is uncertain; reconnect after inspection"
+        );
+        let input = self.input.as_mut().context("Bridge input is closed")?;
+        if let Err(error) = writeln!(input, "capture-host\t{timeout_s}").and_then(|_| input.flush())
+        {
+            self.poisoned = true;
+            return Err(error).context("Write group command; it was not retried");
+        }
+        let mut count = 0;
+        let mut failure = None;
+        loop {
+            let reply = self.receive(u64::from(timeout_s) + 20)?;
+            if reply["event"] == "raw-ready" {
+                count += 1;
+                // Always drain the camera's current group. If queue persistence
+                // fails, completed RAM files remain and no next release is sent.
+                if count > 4 {
+                    failure = Some(anyhow::anyhow!("Unexpected extra group member"));
+                } else if let Err(error) = ready(reply) {
+                    failure = Some(error);
+                }
+            } else {
+                if let Some(error) = failure {
+                    return Err(error);
+                }
+                ensure!(
+                    count == 4
+                        && reply["completion"] == "ptp-group-complete"
+                        && reply["pixel_shift_shots"] == 4
+                        && reply["group_idle"] == true
+                        && reply["buffer_empty"] == true
+                        && reply["files"].as_array().is_some_and(|a| a.len() == 4),
+                    "Four-shot group did not complete; no shutter retry"
+                );
+                return Ok(reply);
+            }
+        }
+    }
     pub fn connect(executable: &Path) -> Result<Self> {
         Self::connect_mode(executable, None)
     }
@@ -170,9 +227,10 @@ pub fn read_reply(reader: &mut impl BufRead) -> Result<Value> {
 
 impl Camera for Native {
     fn identity(&self) -> Value {
-        json!({"backend":"sony-sdk-2.02", "hello":self.hello, "bridge_name":self.executable.file_name(),
+        json!({"backend":if self.shots_per_plane()==4 {"sony-ptp3"}else{"sony-sdk-2.02"}, "hello":self.hello, "bridge_name":self.executable.file_name(),
             "bridge_sha256":std::fs::read(&self.executable).ok().map(|bytes|Sha256::digest(bytes).iter().map(|b|format!("{b:02x}")).collect::<String>()),
-            "pixel_shift_supported_by_this_backend":false})
+            "pixel_shift_supported_by_this_backend":self.shots_per_plane()==4,
+            "pixel_shift_shots":self.shots_per_plane()})
     }
     fn status(&mut self) -> Result<Value> {
         self.call("status", 20)
@@ -189,6 +247,14 @@ impl Camera for Native {
             !self.host_mode || self.hello["host_pipeline_protocol"] == 1,
             "This Sony bridge does not support the bounded RAW queue. Install the matching Pi bridge and controller together."
         );
+        if self.shots_per_plane() == 4 {
+            ensure!(
+                self.host_mode,
+                "A7CR PTP capture requires the RAM-to-PC receiver"
+            );
+            self.call("configure", 20)?;
+            return Ok(());
+        }
         // A connected callback can precede the SDK's property cache becoming
         // readable. Wait using read-only queries before any setting writes.
         let deadline = Instant::now() + Duration::from_secs(5);

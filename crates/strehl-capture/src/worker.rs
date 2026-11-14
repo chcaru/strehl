@@ -315,7 +315,11 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                                 v.identity = identity;
                                 v.phase = Phase::Ready;
                                 v.message = if v.status["capture_destination"] == "host-pc" {
-                                    "Connected · Lossless RAW L saves to the PC"
+                                    if v.status["pixel_shift_shots"] == 4 {
+                                        "Connected · A7CR four-shot pixel shift saves to the PC"
+                                    } else {
+                                        "Connected · Lossless RAW L saves to the PC"
+                                    }
                                 } else {
                                     "Connected · RAW captures stay on the SD card"
                                 }
@@ -589,10 +593,16 @@ fn capture(
             .is_some_and(|n| n >= positions.len() as u64),
         "The card does not report enough remaining captures for this plan"
     );
+    let shots = status["pixel_shift_shots"].as_u64().unwrap_or(1);
+    ensure!(
+        matches!(shots, 1 | 4),
+        "Unsupported number of RAWs per plane"
+    );
     let initial_exposure = status.clone();
     let cycle = property(&status, "ShutterSpeed")
         .and_then(|shutter| timing::initial_cycle(shutter, plan.settle_ms))
-        .context("Cannot estimate timed shutter speed")?;
+        .context("Cannot estimate timed shutter speed")?
+        .mul_f64(shots as f64);
     let mut log = Journal::create(&root, &plan, c.identity(), status)?;
     c.sync_journal(&log.directory)?;
     update(s, |v| {
@@ -656,7 +666,7 @@ fn capture(
             }
             log.record(
                 "capture_intent",
-                json!({"ordinal":ordinal,"target":target,"pixel_shift_shots":1,"camera_status":before}),
+                json!({"ordinal":ordinal,"target":target,"pixel_shift_shots":shots,"camera_status":before}),
             )?;
             c.sync_journal(&log.directory)?;
             while !c.prepare_capture()? {
@@ -670,6 +680,10 @@ fn capture(
             }
             s.lock().unwrap().exposure_uncertain = true;
             let response = c.capture(plan.capture_timeout_s)?;
+            ensure!(
+                response["pixel_shift_shots"].as_u64().unwrap_or(1) == shots,
+                "Capture mode changed during the stack"
+            );
             validate_capture(&response)?;
             completed += 1;
             update(s, |v| {
@@ -726,8 +740,9 @@ fn capture(
                     Phase::Stopped
                 },
                 format!(
-                    "{} · {completed} captures on {}; metadata saved",
+                    "{} · {completed} planes / {} RAWs on {}; metadata saved",
                     if done { "Complete" } else { "Stopped" },
+                    completed as u64 * shots,
                     if host { "PC" } else { "SD" }
                 ),
             );
@@ -766,30 +781,61 @@ fn validate_exposure(status: &Value) -> Result<()> {
 }
 fn validate_capture(reply: &Value) -> Result<()> {
     if reply["destination"] == "host-pc-queue" {
+        let shots = reply["pixel_shift_shots"].as_u64().unwrap_or(1);
+        ensure!(matches!(shots, 1 | 4), "Unsupported group size");
+        if shots == 4 {
+            ensure!(
+                reply["group_complete"] == true
+                    && reply["camera_reply"]["completion"] == "ptp-group-complete"
+                    && reply["camera_reply"]["group_idle"] == true
+                    && reply["camera_reply"]["buffer_empty"] == true,
+                "Incomplete pixel-shift group"
+            );
+        }
         ensure!(
             reply["completion"] == "ram-queued-sha256"
                 && reply["file_verification"] == "ram-sha256"
-                && reply["raw_compression"] == "lossless-l",
+                && reply["raw_compression"]
+                    == if shots == 4 {
+                        "uncompressed"
+                    } else {
+                        "lossless-l"
+                    },
             "RAM capture acknowledgement is incomplete"
         );
         let files = reply["files"]
             .as_array()
             .context("Missing queued RAW binding")?;
-        ensure!(files.len() == 1, "Expected one queued RAW per plane");
-        let file = &files[0];
-        ensure!(
-            file["durable"] == false
-                && file["bytes"]
-                    .as_u64()
-                    .is_some_and(|n| (1024..=crate::receiver::MAX_RAW).contains(&n))
-                && file["sha256"]
-                    .as_str()
-                    .is_some_and(|s| s.len() == 64 && s.bytes().all(|c| c.is_ascii_hexdigit()))
-                && file["name"]
-                    .as_str()
-                    .is_some_and(crate::receiver::safe_name),
-            "Queued RAW binding is invalid"
-        );
+        ensure!(files.len() == shots as usize, "Incomplete RAW group");
+        let mut names = std::collections::HashSet::new();
+        for (index, file) in files.iter().enumerate() {
+            ensure!(
+                names.insert(file["name"].as_str()),
+                "Duplicate RAW group member"
+            );
+            if shots == 4 {
+                ensure!(
+                    file["member_index"] == index + 1
+                        && file["members"] == 4
+                        && file["group_id"].as_str().is_some_and(|v| !v.is_empty())
+                        && file["group_id"] == files[0]["group_id"],
+                    "Mixed or unordered pixel-shift group"
+                );
+            }
+            ensure!(
+                file["durable"] == false
+                    && file["bytes"]
+                        .as_u64()
+                        .is_some_and(|n| (1024..=crate::receiver::MAX_RAW).contains(&n))
+                    && file["sha256"]
+                        .as_str()
+                        .is_some_and(|s| s.len() == 64 && s.bytes().all(|c| c.is_ascii_hexdigit()))
+                    && file["name"]
+                        .as_str()
+                        .is_some_and(crate::receiver::safe_name),
+                "Queued RAW binding is invalid"
+            );
+        }
         return Ok(());
     }
     if reply["destination"] == "host-pc" {
@@ -941,6 +987,40 @@ fn scan(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn four_shot_receipts_require_a_complete_ordered_single_group() {
+        let files:Vec<_>=(1..=4).map(|n|json!({"name":format!("frame-{n:06}.ARW"),"bytes":122_968_064,
+            "sha256":"a".repeat(64),"durable":false,"group_id":"ptp-test-1","member_index":n,"members":4})).collect();
+        let good = json!({"destination":"host-pc-queue","completion":"ram-queued-sha256","file_verification":"ram-sha256",
+            "raw_compression":"uncompressed","pixel_shift_shots":4,"group_complete":true,"files":files,
+            "camera_reply":{"completion":"ptp-group-complete","group_idle":true,"buffer_empty":true}});
+        validate_capture(&good).unwrap();
+        for n in 0..4 {
+            let mut bad = good.clone();
+            bad["files"] = json!(files[..n]);
+            assert!(validate_capture(&bad).is_err());
+        }
+        let mut bad = good.clone();
+        bad["files"][3]["name"] = bad["files"][0]["name"].clone();
+        assert!(validate_capture(&bad).is_err());
+        let mut bad = good.clone();
+        bad["files"][3]["group_id"] = json!("other-group");
+        assert!(validate_capture(&bad).is_err());
+        let mut bad = good.clone();
+        bad["files"][0]["member_index"] = json!(2);
+        assert!(validate_capture(&bad).is_err());
+        for field in ["group_idle", "buffer_empty"] {
+            let mut bad = good.clone();
+            bad["camera_reply"][field] = json!(false);
+            assert!(validate_capture(&bad).is_err());
+        }
+        let mut bad = good.clone();
+        bad["pixel_shift_shots"] = json!(16);
+        assert!(validate_capture(&bad).is_err());
+        let mut bad = good;
+        bad["raw_compression"] = json!("lossless-l");
+        assert!(validate_capture(&bad).is_err());
+    }
     use super::*;
     #[test]
     fn capture_receipt_and_exposure_fail_closed() {

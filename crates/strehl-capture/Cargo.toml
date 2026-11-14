@@ -24,7 +24,12 @@ path = "src/bin/headless.rs"
 name = "strehl-capture-receiver"
 path = "src/bin/receiver.rs"
 
+[[bin]]
+name = "strehl-sony-ptp"
+path = "src/bin/sony-ptp.rs"
+
 [dependencies]
+strehl-raw-codec.workspace = true
 anyhow.workspace = true
 clap.workspace = true
 serde = { version = "=1.0.229", features = ["derive"] }
@@ -47,6 +52,7 @@ rayon.workspace = true
 zstd = { version = "=0.13.3", default-features = false }
 tokio-util = { version = "0.7", features = ["io-util"] }
 bytes = "1"
+libloading = "=0.8.9"
 
 [dev-dependencies]
 tempfile = "3"

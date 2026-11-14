@@ -57,6 +57,31 @@ mod sony_tiff;
 
 pub use identity::{CaptureIdentity, identity};
 
+/// Sony RAWs, including byte-exact compressed Strehl archives.
+pub fn is_raw_path(path: &Path) -> bool {
+    path.extension()
+        .is_some_and(|e| e.eq_ignore_ascii_case("arw"))
+        || strehl_raw_codec::archive::is_archive(path)
+}
+
+/// Prevent an exported ARW beside its archive from becoming two observations.
+pub fn validate_raw_paths(paths: &[PathBuf]) -> anyhow::Result<()> {
+    let mut originals = std::collections::HashSet::new();
+    for path in paths {
+        let original = if strehl_raw_codec::archive::is_archive(path) {
+            path.with_extension("")
+        } else {
+            path.clone()
+        };
+        anyhow::ensure!(
+            originals.insert(original),
+            "Both an ARW and its .straw archive are present in {}. Import only one copy; restore ARWs to a separate folder.",
+            path.parent().unwrap_or(Path::new(".")).display()
+        );
+    }
+    Ok(())
+}
+
 #[derive(Debug, thiserror::Error)]
 pub enum RawError {
     #[error("decode failed for {path}: {source}")]
@@ -300,7 +325,14 @@ fn decode_with(path: &Path, native: bool, buffer: Option<Vec<u16>>) -> Result<Fr
         source: anyhow::anyhow!(e),
     };
 
-    let source = RawSource::new(path).map_err(|e| fail(format!("{e}")))?;
+    let restored;
+    let source = if strehl_raw_codec::archive::is_archive(path) {
+        restored =
+            strehl_raw_codec::archive::read_original(path).map_err(|e| fail(format!("{e:#}")))?;
+        RawSource::new_from_slice(&restored)
+    } else {
+        RawSource::new(path).map_err(|e| fail(format!("{e}")))?
+    };
     let params = RawDecodeParams::default();
 
     let native = if native {

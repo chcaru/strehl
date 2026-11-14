@@ -5,7 +5,6 @@
 //! setting codes remain raw integers. This module does not call decode or select
 //! an optical profile. Source hashes and any correction hypothesis belong to the
 //! caller; the offsets/bytes here describe only the inspected metadata.
-use std::fs::File;
 use std::io::{Read, Seek};
 use std::path::Path;
 
@@ -134,7 +133,7 @@ pub struct SonyOpticalMetadata {
 /// Partial fields stay explicitly None. Malformed fields refuse rather than
 /// becoming absent; unsupported camera/container/layout remains a distinct error.
 pub fn read(path: &Path) -> Result<Option<SonyOpticalMetadata>> {
-    read_from_reader(&mut File::open(path)?)
+    read_from_reader(&mut strehl_raw_codec::archive::open_original(path)?)
 }
 /// Bounded to 128KiB reads, 8MiB header addresses and four distinct directories.
 /// Does not require, read or decode Sony's hidden focus payload.

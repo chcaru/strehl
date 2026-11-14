@@ -332,15 +332,12 @@ fn list_frames(dir: &Path) -> Result<Vec<PathBuf>> {
     let mut v: Vec<PathBuf> = std::fs::read_dir(dir)
         .with_context(|| format!("reading {}", dir.display()))?
         .filter_map(|e| e.ok().map(|e| e.path()))
-        .filter(|p| {
-            p.extension()
-                .map(|e| e.to_string_lossy().eq_ignore_ascii_case("arw"))
-                .unwrap_or(false)
-        })
+        .filter(|p| strehl_raw::is_raw_path(p))
         .collect();
+    strehl_raw::validate_raw_paths(&v)?;
     v.sort();
     if v.is_empty() {
-        bail!("no .arw frames in {}", dir.display());
+        bail!("no RAW frames in {}", dir.display());
     }
     Ok(v)
 }

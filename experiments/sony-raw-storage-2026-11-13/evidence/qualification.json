@@ -1,0 +1,109 @@
+{
+  "status": "author verified; deployed",
+  "raw_count": 4,
+  "raw_bytes": 497643520,
+  "storage_bytes": 149896988,
+  "saved_percent": 69.8786416429174,
+  "camera_seconds": 5.88357422,
+  "member_ready_seconds": [
+    2.111181631,
+    3.330256444,
+    4.423945982,
+    5.515518091
+  ],
+  "uploads": {
+    "frame-000001.ARW.straw": {
+      "upload_seconds": 0.777235854,
+      "wire_MB_per_second": 48.20397799095872,
+      "upload_MB_per_second": 160.06442234971834,
+      "wire_bytes": 37465860
+    },
+    "frame-000002.ARW.straw": {
+      "upload_seconds": 0.654259263,
+      "wire_MB_per_second": 57.25338580341964,
+      "upload_MB_per_second": 190.15062534926616,
+      "wire_bytes": 37458558
+    },
+    "frame-000003.ARW.straw": {
+      "upload_seconds": 0.615713517,
+      "wire_MB_per_second": 60.8689998923639,
+      "upload_MB_per_second": 202.0613492557124,
+      "wire_bytes": 37477866
+    },
+    "frame-000004.ARW.straw": {
+      "upload_seconds": 0.596942067,
+      "wire_MB_per_second": 62.81097291137969,
+      "upload_MB_per_second": 208.42223538586703,
+      "wire_bytes": 37494512
+    }
+  },
+  "queue_peak": 1,
+  "buffer_full_samples": 0,
+  "final_pending": 0,
+  "full_raw_sha256": [
+    "c87c1a2984d75ee32149e26aa8b4796bf19e867fe5fcea57e69ddff928afce80",
+    "9fa28fcb310f9caa08e151b08af8f6b05b7c15cc07a3fef8db4b162bf99f531c",
+    "dbe52b1b6aa0b26105e4c95d56dae512498dcd97cc668a5f17b910ffaf8dd99d",
+    "897a38a80eb625da88a0456f5b65f9d2ae7d45b7bf868b8f4a35de526822d4ad"
+  ],
+  "receiver_sha256": "c5b073378e8e0881f82ca95fe4a19bd862c9bae35192e4ddb7a26d5d0cc949ab",
+  "archive_tool_sha256": "cf5639e358b096285a5ac388908f008f3ed488eff1886a93a3d72ee2b640d6a6",
+  "http_controls": [
+    {
+      "control": "truncated",
+      "status": 503,
+      "no_committed_or_partial_files": true
+    },
+    {
+      "control": "trailing",
+      "status": 503,
+      "no_committed_or_partial_files": true
+    },
+    {
+      "control": "wrong-hash",
+      "status": 503,
+      "no_committed_or_partial_files": true
+    },
+    {
+      "control": "oversized",
+      "status": 503,
+      "no_committed_or_partial_files": true
+    },
+    {
+      "control": "version",
+      "status": 503,
+      "no_committed_or_partial_files": true
+    },
+    {
+      "control": "TCP-disconnect",
+      "no_committed_or_partial_files": true
+    },
+    {
+      "control": "restore-exact-and-no-overwrite",
+      "refusal_exit": 1,
+      "original_sha256": "cf951de6a3c7a2159d20a42d8e228dd88cf6f63c593afc1cbbfe015ea182ee7b"
+    }
+  ],
+  "ui_checks": [
+    {
+      "view": "receiver-local-desktop",
+      "toggle_saved_both_ways": true,
+      "default_left_on": true,
+      "reload_persisted": true,
+      "compressed_receipt_visible": true
+    },
+    {
+      "view": "receiver-LAN-phone-size",
+      "settings_read_only_away_from_PC": true,
+      "no_horizontal_overflow": true
+    },
+    {
+      "view": "camera-phone-size",
+      "preview_1024px": true,
+      "bounds_enabled": true,
+      "unset_start_disabled": true
+    }
+  ],
+  "default_compression": true,
+  "pi_binary_unchanged": true
+}

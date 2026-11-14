@@ -366,7 +366,7 @@ impl Sink {
 const MAX_PENDING_FRAMES: usize = 4;
 const MAX_METADATA: u64 = 64 * 1024 * 1024;
 
-fn memory_room() -> Result<bool> {
+fn memory_room(reservation: u64) -> Result<bool> {
     #[cfg(target_os = "linux")]
     {
         let info = std::fs::read_to_string("/proc/meminfo")?;
@@ -379,10 +379,11 @@ fn memory_room() -> Result<bool> {
         // Reserve a new SDK file, its possible uploader byte body, bounded codec
         // workers and 64 MiB headroom, in addition to the tmpfs capacity gate.
         Ok(available.saturating_mul(1024)
-            >= 2 * MAX_RAW + transport::WORKSPACE_BYTES + 64 * 1024 * 1024)
+            >= reservation + MAX_RAW + transport::WORKSPACE_BYTES + 64 * 1024 * 1024)
     }
     #[cfg(not(target_os = "linux"))]
     {
+        let _ = reservation;
         Ok(true)
     }
 }
@@ -519,6 +520,9 @@ impl UploadQueue {
         Ok(())
     }
     fn room(&self) -> Result<bool> {
+        self.room_for(1, MAX_RAW)
+    }
+    fn room_for(&self, members: usize, reservation: u64) -> Result<bool> {
         let state = self.shared.0.lock().unwrap();
         Self::check(&state)?;
         let root = self.sink.config.ram_directory.canonicalize()?;
@@ -529,9 +533,14 @@ impl UploadQueue {
                 "Unbound file appeared in the RAM buffer; no new exposure. Preserve it before reconnecting."
             );
         }
-        let enough = state.jobs.len() < MAX_PENDING_FRAMES
-            && fs2::available_space(&self.sink.config.ram_directory)? >= MAX_RAW + 4 * 1024 * 1024
-            && memory_room()?;
+        ensure!(
+            (1..=MAX_PENDING_FRAMES).contains(&members),
+            "Invalid group reservation"
+        );
+        let enough = state.jobs.len() + members <= MAX_PENDING_FRAMES
+            && fs2::available_space(&self.sink.config.ram_directory)?
+                >= reservation + 4 * 1024 * 1024
+            && memory_room(reservation)?;
         let waiting = self.sink.report.lock().unwrap()["state"] == "waiting_for_pc";
         if !enough && !waiting {
             self.sink.note(json!({"state":"buffer_full","message":"Waiting for PC delivery to free RAM; no new exposure"}));
@@ -688,7 +697,11 @@ impl Camera for PcCamera {
     fn identity(&self) -> Value {
         let mut v = self.inner.identity();
         v["raw_destination"] = json!("host-pc");
-        v["raw_format"] = json!("lossless-l");
+        v["raw_format"] = json!(if self.inner.shots_per_plane() == 4 {
+            "uncompressed"
+        } else {
+            "lossless-l"
+        });
         v["upload_queue_capacity"] = json!(MAX_PENDING_FRAMES);
         v
     }
@@ -704,7 +717,11 @@ impl Camera for PcCamera {
         self.inner.focus(target, settle_ms)
     }
     fn prepare_capture(&mut self) -> Result<bool> {
-        self.uploads.room()
+        if self.inner.shots_per_plane() == 4 {
+            self.uploads.room_for(4, 4 * crate::ptp::MEMBER_LIMIT)
+        } else {
+            self.uploads.room()
+        }
     }
     fn finish_transfers(&mut self) -> Result<()> {
         self.uploads.finish()
@@ -712,36 +729,51 @@ impl Camera for PcCamera {
     fn capture(&mut self, timeout_s: u32) -> Result<Value> {
         let run = self.run.clone().context("PC run is not registered")?;
         let started = Instant::now();
-        let response = self.inner.capture(timeout_s)?;
-        let camera_seconds = started.elapsed().as_secs_f64();
+        let shots = self.inner.shots_per_plane();
+        let format = if shots == 4 {
+            "uncompressed"
+        } else {
+            "lossless-l"
+        };
+        let plane = self.ordinal / shots + 1;
+        let mut files = Vec::new();
+        let sink = &self.sink;
+        let uploads = &self.uploads;
+        let ordinal = &mut self.ordinal;
+        let response=self.inner.capture_files(timeout_s,&mut |response| {
+            ensure!(response["destination"]=="host-ram" && response["raw_compression"]==format
+                && response["completion"]==if shots==4 {"ptp-object-complete"}else{"sdk-download-complete"},
+                "Bridge did not complete the expected RAW");
+            if shots==4 {
+                ensure!(response["members"]==4 && response["member_index"]==files.len()+1
+                    && response["group_id"].as_str().is_some_and(|s|!s.is_empty()),"Invalid pixel-shift member ordering");
+                if let Some(first)=files.first() {
+                    let first:&Value=first;
+                    ensure!(first["group_id"]==response["group_id"],"Mixed pixel-shift groups");
+                }
+            }
+            let path=sink.raw_path(Path::new(response["path"].as_str().context("Missing downloaded RAW path")?))?;
+            let bytes=std::fs::metadata(&path)?.len();
+            ensure!(response["bytes"].as_u64()==Some(bytes) && (1024..=MAX_RAW).contains(&bytes),"RAW length does not match completion; file retained");
+            let name=format!("frame-{:06}.ARW",*ordinal+1);
+            let sum=hash_file(&path)?;
+            let file=json!({"name":name,"path":path,"bytes":bytes,"sha256":sum,"durable":false,
+                "plane":plane,"group_id":response["group_id"],"member_index":if shots==4 {response["member_index"].clone()}else{json!(1)},"members":shots});
+            let pending=json!({"run":run,"name":name,"path":path,"bytes":bytes,"sha256":sum,
+                "plane":plane,"group_id":response["group_id"],"member_index":file["member_index"],"members":shots,"camera_reply":response});
+            uploads.enqueue(pending)?;
+            *ordinal+=1;
+            files.push(file);
+            Ok(())
+        })?;
         ensure!(
-            response["destination"] == "host-ram"
-                && response["completion"] == "sdk-download-complete"
-                && response["raw_compression"] == "lossless-l",
-            "Bridge did not complete the expected lossless RAW"
+            files.len() == shots,
+            "Missing group member; no focus move or shutter retry"
         );
-        let path = self.sink.raw_path(Path::new(
-            response["path"]
-                .as_str()
-                .context("Missing downloaded RAW path")?,
-        ))?;
-        let bytes = std::fs::metadata(&path)?.len();
-        ensure!(
-            response["bytes"].as_u64() == Some(bytes) && bytes >= 1024,
-            "RAW length does not match the SDK completion"
-        );
-        let name = format!("frame-{:06}.ARW", self.ordinal + 1);
-        ensure!(
-            bytes <= MAX_RAW,
-            "RAW exceeds the reserved RAM bound; file retained"
-        );
-        let sum = hash_file(&path)?;
-        let pending = json!({"run":run,"name":name,"path":path,"bytes":bytes,"sha256":sum,"camera_reply":response});
-        self.uploads.enqueue(pending)?;
-        self.ordinal += 1;
         Ok(
-            json!({"destination":"host-pc-queue","completion":"ram-queued-sha256","file_verification":"ram-sha256","raw_compression":"lossless-l",
-                "files":[{"name":name,"path":path,"bytes":bytes,"sha256":sum,"durable":false}],"camera_reply":response,"camera_seconds":camera_seconds}),
+            json!({"destination":"host-pc-queue","completion":"ram-queued-sha256","file_verification":"ram-sha256",
+            "raw_compression":format,"pixel_shift_shots":shots,"group_complete":shots==1 || response["group_idle"]==true,
+            "files":files,"camera_reply":response,"camera_seconds":started.elapsed().as_secs_f64()}),
         )
     }
     fn preview(&mut self) -> Result<Preview> {
@@ -805,6 +837,7 @@ mod tests {
         save_json(
             &config,
             &ReceiverConfig {
+                compress_raw: false,
                 bind: "127.0.0.1:0".parse().unwrap(),
                 lan: "10.0.0.0/24".into(),
                 key: "a".repeat(48),
@@ -967,6 +1000,7 @@ mod tests {
         save_json(
             &receiver_config,
             &ReceiverConfig {
+                compress_raw: false,
                 bind: "127.0.0.1:0".parse().unwrap(),
                 lan: "10.0.0.0/24".into(),
                 key: "a".repeat(48),

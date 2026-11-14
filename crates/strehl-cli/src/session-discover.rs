@@ -17,9 +17,7 @@ pub const MAX_DEPTH: usize = 4;
 pub const MAX_PASSES: usize = 64;
 
 fn is_raw(path: &Path) -> bool {
-    path.extension()
-        .and_then(|e| e.to_str())
-        .is_some_and(|e| e.eq_ignore_ascii_case("arw"))
+    strehl_raw::is_raw_path(path)
 }
 
 /// Earliest direct RAW modification time in `directory`, or `None` without RAWs.
@@ -185,6 +183,14 @@ mod tests {
     fn discovery_treats_a_raw_folder_itself_as_one_pass() {
         let r = root();
         raw(&r, "DSC01.ARW", 5);
+        let spec = discover(&[r]).unwrap();
+        assert_eq!(spec.passes.len(), 1);
+    }
+
+    #[test]
+    fn discovery_includes_compressed_raw_stacks() {
+        let r = root();
+        raw(&r, "frame-000001.ARW.straw", 5);
         let spec = discover(&[r]).unwrap();
         assert_eq!(spec.passes.len(), 1);
     }

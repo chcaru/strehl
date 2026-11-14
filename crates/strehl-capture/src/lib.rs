@@ -4,6 +4,7 @@ pub mod bounds;
 pub mod journal;
 pub mod lan;
 pub mod model;
+pub mod ptp;
 pub mod receiver;
 pub mod remote;
 pub mod session;

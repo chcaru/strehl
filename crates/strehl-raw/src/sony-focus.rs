@@ -16,7 +16,6 @@
 use crate::sony_tiff::{Reader, SonyTiffError, u16le, u32le};
 #[cfg(test)]
 use std::collections::BTreeSet;
-use std::fs::File;
 #[cfg(test)]
 use std::io::SeekFrom;
 use std::io::{Read, Seek};
@@ -133,7 +132,7 @@ impl SonyFocusMetadata {
 /// cameras, firmware identifiers, and layouts are distinguished from damaged data
 /// by [`SonyFocusError`]. Callers choose how to surface these optional outcomes.
 pub fn read(path: &Path) -> std::result::Result<Option<SonyFocusMetadata>, SonyFocusError> {
-    read_from_reader(&mut File::open(path)?)
+    read_from_reader(&mut strehl_raw_codec::archive::open_original(path)?)
 }
 
 /// Reader form of [`read`]. The stream position after the call is unspecified.

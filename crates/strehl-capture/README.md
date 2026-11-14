@@ -1,30 +1,38 @@
 # Strehl Capture
 
-A Rust capture workspace for the Sony A7C II (`ILCE-7CM2`), with a Windows
-desktop app and a headless Raspberry Pi service.
+A Rust capture workspace with a Windows A7C II (`ILCE-7CM2`) desktop app and
+a headless Raspberry Pi service for A7C II and A7CR (`ILCE-7CR`).
 It uses Strehl's native palette and a small original C++ bridge for Sony's C++
 SDK ABI. The UI, sequence engine, preview analysis and durable journal are Rust.
 The capture executable does not link the RAW decoder or stacking engine.
 
 **The desktop app keeps RAWs on the camera SD card.** Only transient live-view JPEGs reach the
 viewer; they are not saved. Captures are single RAW exposures, each acknowledged
-before the next focus move. A7CR/pixel-shift capture is not enabled in this build;
-see the [separate feasibility answer](../../experiments/sony-capture-ui-2026-11-07/a7cr-sequencing.md).
+before the next focus move. The Windows SDK backend remains A7C II only. The
+Linux Rust PTP backend now supports **A7CR four-shot pixel shift**, delivering
+four original RAWs per focus plane through the Pi receiver. See the
+[hardware qualification](../../experiments/sony-a7cr-2026-11-13/results.md).
 
 The optional [Pi capture service and PC receiver](../../docs/pi-capture.md)
 use a different, explicit storage mode: full-resolution Lossless Compressed RAW L
-passes through unswappable Pi RAM to the PC over the local network. A bounded
+(A7C II) or four uncompressed pixel-shift RAWs (A7CR) pass through unswappable Pi RAM to the PC over the local network. A bounded
 four-file queue overlaps uploads with subsequent captures. The UI separates
 captured from saved counts; pause, stop and completion drain the queue, with
 checksum-verified, flushed PC files required before success. RAWs are not stored on
 either the camera card or the Pi microSD in this mode.
 
 The Pi and receiver automatically negotiate lossless transport compression.
-CFA-aware or generic Zstd coding reduces network bytes while restoring the exact
-original ARW on the PC. Retries retain the RAM source until durable verification;
+CFA-aware or generic Zstd coding reduces network bytes. The PC receiver now keeps
+these bytes as lossless `.ARW.straw` archives by default; **Keep RAWs losslessly
+compressed** in Receiver settings can select ordinary ARWs for new stacks.
+Updated Strehl RAW readers open archives directly; **Restore RAWs.cmd** restores
+the exact original files for older builds and other photo apps. Retries retain
+the RAM source until durable verification;
 older receivers use the original transfer format. The browser shows effective
 RAW MB/s and byte savings. See the [production qualification](../../experiments/sony-transport-2026-11-12/results.md)
 for measured rates, memory bounds and failure tests.
+See the [archive storage qualification](../../experiments/sony-raw-storage-2026-11-13/results.md)
+for measured A7CR sizes and the default-on destination option.
 
 ## Run on the laptop
 

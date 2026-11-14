@@ -1,0 +1,894 @@
+{
+  "classification": "MEASURED and VERIFIED; author qualification, no optical-quality claim",
+  "raw_count": 24,
+  "group_count": 6,
+  "groups": [
+    {
+      "label": "complete-group",
+      "folder": "stack-1794611692641-9758",
+      "raw_count": 4,
+      "planes": [
+        {
+          "focus": 37180,
+          "camera_seconds": 5.89073604,
+          "group_id": "ptp-9774-1",
+          "member_ready_seconds": [
+            2.101815233,
+            3.318781415,
+            4.382996437,
+            5.519345836
+          ]
+        }
+      ],
+      "bytes": 497680384,
+      "wire_bytes": 150408694,
+      "saved_percent": 69.77805458372255,
+      "files": [
+        {
+          "name": "frame-000001.ARW",
+          "bytes": 124420096,
+          "wire_bytes": 37606073,
+          "sha256": "af8137db46474320aeaa4f8cacd9417b35a90d0496155a76c509942fe3986c52",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151500, Shot 1/4 (0x355)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000002.ARW",
+          "bytes": 124420096,
+          "wire_bytes": 37595873,
+          "sha256": "2776805ad282295da33925d8b8f515bc2c0acfcd3524e889a1faa6b01a014e2c",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151500, Shot 2/4 (0x355)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000003.ARW",
+          "bytes": 124420096,
+          "wire_bytes": 37606388,
+          "sha256": "46822fe681f984661882f45446c7ae1b075a423ba4075a950ce024acaa60b17d",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151500, Shot 3/4 (0x355)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000004.ARW",
+          "bytes": 124420096,
+          "wire_bytes": 37600360,
+          "sha256": "9261c6481fa244d22c21fe31de8900b3dfe8741adf8582e0067fd1b161816d6f",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151500, Shot 4/4 (0x355)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        }
+      ]
+    },
+    {
+      "label": "three-planes-pause",
+      "folder": "stack-1794611747115-9758",
+      "raw_count": 12,
+      "planes": [
+        {
+          "focus": 37180,
+          "camera_seconds": 5.9326205739999995,
+          "group_id": "ptp-9774-2",
+          "member_ready_seconds": [
+            2.126465976,
+            3.342999238,
+            4.461139548,
+            5.581897322
+          ]
+        },
+        {
+          "focus": 37181,
+          "camera_seconds": 5.884023408,
+          "group_id": "ptp-9774-3",
+          "member_ready_seconds": [
+            2.100443786,
+            3.257127747,
+            4.372922221,
+            5.537842234
+          ]
+        },
+        {
+          "focus": 37182,
+          "camera_seconds": 5.872134668,
+          "group_id": "ptp-9774-4",
+          "member_ready_seconds": [
+            2.130310033,
+            3.374976813,
+            4.430138696,
+            5.494200571
+          ]
+        }
+      ],
+      "bytes": 1493020672,
+      "wire_bytes": 451126089,
+      "saved_percent": 69.78433738658912,
+      "files": [
+        {
+          "name": "frame-000001.ARW",
+          "bytes": 124420096,
+          "wire_bytes": 37595979,
+          "sha256": "e2394a96c470a504a5b2ba3dc730d98bbe4f81512a9aa7c1bf5c7a3700b786bc",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151554, Shot 1/4 (0x172)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000002.ARW",
+          "bytes": 124420096,
+          "wire_bytes": 37603011,
+          "sha256": "ec7983c7c65e8dbd80431f54e4fff9af010ecdd3ce1cd09fc90c94e775f60174",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151554, Shot 2/4 (0x172)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000003.ARW",
+          "bytes": 124420096,
+          "wire_bytes": 37594990,
+          "sha256": "61f66cf585a21610de09ab8d06af2dc1fdf6ea7038a12760ab376fcda1fcb832",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151554, Shot 3/4 (0x172)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000004.ARW",
+          "bytes": 124416000,
+          "wire_bytes": 37592221,
+          "sha256": "0eba725acd45f5f545af9439774ab6ca17896f8817a8f0d401b95129d7b6cd14",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151554, Shot 4/4 (0x172)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000005.ARW",
+          "bytes": 124420096,
+          "wire_bytes": 37592536,
+          "sha256": "030d3a70e34b2c3520a096359382f11c81c417d1a82370493eae4e76fe6709b2",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151603, Shot 1/4 (0x34f)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000006.ARW",
+          "bytes": 124416000,
+          "wire_bytes": 37594197,
+          "sha256": "56039e32917e2e999d20c972f8f47dc800b96a3387fdd2b43eb49683cca18a81",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151603, Shot 2/4 (0x34f)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000007.ARW",
+          "bytes": 124416000,
+          "wire_bytes": 37588053,
+          "sha256": "f12c250ba039d5b2bda6cefa60f4e0cb3ac92a620f3082e35460a6096ceecd88",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151603, Shot 3/4 (0x34f)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000008.ARW",
+          "bytes": 124420096,
+          "wire_bytes": 37605947,
+          "sha256": "7f8b3fbd4ca8bff86648947da71808aeb3263297cb30416b083c1dc29193ecd8",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151603, Shot 4/4 (0x34f)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000009.ARW",
+          "bytes": 124416000,
+          "wire_bytes": 37585336,
+          "sha256": "0b2c025feb1ff4064f501547e165eb20dbfe9d7c0219ebcae0ea5c3f709ebe47",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151610, Shot 1/4 (0x2b8)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000010.ARW",
+          "bytes": 124420096,
+          "wire_bytes": 37594212,
+          "sha256": "aa96323c7a143463dca6f13d1f9226dbf25f7caa7de147e002ee54117e790e06",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151610, Shot 2/4 (0x2b8)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000011.ARW",
+          "bytes": 124420096,
+          "wire_bytes": 37589439,
+          "sha256": "cdec5a39cc5db6737dee1a70b1dca5868648b35682ad5a17e2b0b15d2cd24596",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151610, Shot 3/4 (0x2b8)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000012.ARW",
+          "bytes": 124416000,
+          "wire_bytes": 37590168,
+          "sha256": "15f2039e3e4aa3f2891650757a6b7e680d38b71ce4be0a70fb6f9585f86b9199",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151610, Shot 4/4 (0x2b8)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        }
+      ]
+    },
+    {
+      "label": "final-build-group",
+      "folder": "stack-1794612335049-9932",
+      "raw_count": 4,
+      "planes": [
+        {
+          "focus": 37180,
+          "camera_seconds": 5.90546476,
+          "group_id": "ptp-9948-1",
+          "member_ready_seconds": [
+            2.09270977,
+            3.326926641,
+            4.447886584,
+            5.559847924
+          ]
+        }
+      ],
+      "bytes": 497745920,
+      "wire_bytes": 151350071,
+      "saved_percent": 69.59290575400397,
+      "files": [
+        {
+          "name": "frame-000001.ARW",
+          "bytes": 124436480,
+          "wire_bytes": 37830395,
+          "sha256": "cf951de6a3c7a2159d20a42d8e228dd88cf6f63c593afc1cbbfe015ea182ee7b",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13152542, Shot 1/4 (0x3ee)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000002.ARW",
+          "bytes": 124436480,
+          "wire_bytes": 37846451,
+          "sha256": "1849d48cee53a6961760dc03428763b05d6cbe6e1d193a6de809c6a82755f907",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13152542, Shot 2/4 (0x3ee)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000003.ARW",
+          "bytes": 124436480,
+          "wire_bytes": 37834586,
+          "sha256": "d3779bc85bef0e43ffab0755d24fd67df9ba16d08c8a997c62203360932e738e",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13152542, Shot 3/4 (0x3ee)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000004.ARW",
+          "bytes": 124436480,
+          "wire_bytes": 37838639,
+          "sha256": "f1d16641beb2680cf1917a8ca3b46c7b465d6469bf549393f4224ec861fe8eca",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13152542, Shot 4/4 (0x3ee)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        }
+      ]
+    },
+    {
+      "label": "browser-stop",
+      "folder": "stack-1794611876360-9758",
+      "raw_count": 4,
+      "planes": [
+        {
+          "focus": 37180,
+          "camera_seconds": 5.939434983,
+          "group_id": "ptp-9774-5",
+          "member_ready_seconds": [
+            2.100456049,
+            3.372190923,
+            4.454521034,
+            5.5671600770000005
+          ]
+        }
+      ],
+      "bytes": 497680384,
+      "wire_bytes": 150466989,
+      "saved_percent": 69.7663412428166,
+      "files": [
+        {
+          "name": "frame-000001.ARW",
+          "bytes": 124420096,
+          "wire_bytes": 37601820,
+          "sha256": "de08405a712b8ab6efda527e3dc60c7576e1bb4b534e7079079bf426c55c006c",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151804, Shot 1/4 (0x228)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000002.ARW",
+          "bytes": 124420096,
+          "wire_bytes": 37626752,
+          "sha256": "89efd0ff908eb431ee4fa46e3716f77de738ce5d21fa090cada63e462796710c",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151804, Shot 2/4 (0x228)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000003.ARW",
+          "bytes": 124420096,
+          "wire_bytes": 37616424,
+          "sha256": "431b8f80750e5568d19d00ea6a13ca1ec91e01e779569c75ed2dac7bdd0dd8c9",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151804, Shot 3/4 (0x228)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        },
+        {
+          "name": "frame-000004.ARW",
+          "bytes": 124420096,
+          "wire_bytes": 37621993,
+          "sha256": "9f53b60962d12fb9e0ed9311d3a7c69a25b80ef4cf7b7af00684117fbc5be6c1",
+          "visible": [
+            6376,
+            9564
+          ],
+          "dtype": "uint16",
+          "cfa": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "exif": {
+            "Model": "ILCE-7CR",
+            "ImageWidth": 9600,
+            "ImageHeight": 6376,
+            "Compression": "Uncompressed",
+            "PixelShiftInfo": "Group 13151804, Shot 4/4 (0x228)",
+            "ExposureTime": 0.6,
+            "FNumber": 5.6,
+            "ISO": 100
+          }
+        }
+      ]
+    }
+  ],
+  "installed": {
+    "strehl-capture-headless": "6909e62edc8f4c0abc76000993c45b26f05f2dbe2bcacecc71ba083b9b4b3758",
+    "strehl-sony-ptp": "26b2364596190e85d9846a5b61916888b7eafcb0740aed0cfcfce63c98b49105"
+  },
+  "checks": {
+    "desktop_tests": 35,
+    "headless_tests": 35,
+    "clippy_windows": true,
+    "clippy_arm64": true,
+    "format": true,
+    "phone_desktop_browser": true,
+    "actual_android_device": false,
+    "hours_long_soak": false
+  },
+  "final_pi": {
+    "load": [
+      0.22412109375,
+      0.19873046875,
+      0.150390625
+    ],
+    "temperature_c": 47.95,
+    "throttled": "throttled=0x0",
+    "mount": "1G    1G rw,nosuid,nodev,noexec,relatime,size=1048576k,mode=700,uid=1001,gid=1001,noswap",
+    "hashes": {
+      "strehl-capture-headless": "6909e62edc8f4c0abc76000993c45b26f05f2dbe2bcacecc71ba083b9b4b3758",
+      "strehl-sony-ptp": "26b2364596190e85d9846a5b61916888b7eafcb0740aed0cfcfce63c98b49105"
+    },
+    "kernel": "6.18.50+rpt-rpi-2712"
+  }
+}

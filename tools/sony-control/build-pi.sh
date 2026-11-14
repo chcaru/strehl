@@ -15,7 +15,8 @@ export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
 export CARGO_TARGET_DIR=/tmp/strehl-pi-build/cargo
 export PATH="/root/.cargo/bin:$PATH"
 cargo build --manifest-path "$source_root/Cargo.toml" --locked -p strehl-capture --no-default-features \
-  --bin strehl-capture-headless --target aarch64-unknown-linux-gnu --release
+  --bin strehl-capture-headless --bin strehl-sony-ptp --target aarch64-unknown-linux-gnu --release
 cp /tmp/strehl-pi-build/cargo/aarch64-unknown-linux-gnu/release/strehl-capture-headless "$output/"
+cp /tmp/strehl-pi-build/cargo/aarch64-unknown-linux-gnu/release/strehl-sony-ptp "$output/"
 cp -a /tmp/strehl-pi-build/bin/. "$output/"
 aarch64-linux-gnu-readelf -h "$output/strehl-capture-headless" "$output/strehl-sony-control"

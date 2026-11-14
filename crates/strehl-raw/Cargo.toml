@@ -9,6 +9,7 @@ authors.workspace = true
 description = "RAW decoding for strehl. Wraps rawler (LGPL-2.1, link only)."
 
 [dependencies]
+strehl-raw-codec.workspace = true
 strehl-core.workspace = true
 rawler.workspace = true
 rayon.workspace = true

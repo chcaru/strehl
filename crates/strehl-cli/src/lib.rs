@@ -1465,13 +1465,9 @@ fn raw_paths(dir: &Path, limit: Option<usize>) -> Result<Vec<PathBuf>> {
     let mut paths: Vec<PathBuf> = std::fs::read_dir(dir)
         .with_context(|| format!("reading {}", dir.display()))?
         .filter_map(|e| e.ok().map(|e| e.path()))
-        .filter(|p| {
-            p.extension()
-                .and_then(|e| e.to_str())
-                .map(|e| matches!(e.to_ascii_lowercase().as_str(), "arw"))
-                .unwrap_or(false)
-        })
+        .filter(|p| strehl_raw::is_raw_path(p))
         .collect();
+    strehl_raw::validate_raw_paths(&paths)?;
     paths.sort();
     if let Some(n) = limit {
         paths.truncate(n);

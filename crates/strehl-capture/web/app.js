@@ -37,7 +37,7 @@ function receive(next){if(!state||(next.camera_revision>=state.camera_revision&&
 function resetSettings(){dirty=false;editRevision=null;render();}
 function render(){
  if(!state)return;
- const s=state,edit=online&&s.editable&&!sending,active=['capturing','scanning','paused'].includes(s.phase),fresh=edit&&s.preview.fresh;
+ const s=state,shots=s.shots_per_plane||1,edit=online&&s.editable&&!sending,active=['capturing','scanning','paused'].includes(s.phase),fresh=edit&&s.preview.fresh;
  $('camera-recovery').hidden=!s.failure||!paired();
  if(s.failure){const tag=`${s.sequence_id}:${s.failure.message}:${s.failure.exposure_uncertain}`;if(tag!==recoveryMessage){recoveryMessage=tag;$('recovery-ack').checked=false;}$('camera-error').textContent=s.failure.message;$('recovery-count').textContent=(s.saved==null?`${s.completed} / ${s.total} captures confirmed.`:`${s.completed} / ${s.total} captured; ${s.saved} saved on PC.`)+(s.failure.exposure_uncertain?' The last exposure is uncertain; inspect the camera and saved files before reconnecting.':'');$('recovery-ack-label').hidden=!s.failure.exposure_uncertain;$('recover-camera').disabled=!online||sending||!s.failure.can_reconnect||(s.failure.exposure_uncertain&&!$('recovery-ack').checked);}else{recoveryMessage='';$('recovery-ack').checked=false;}
  $('demo-label').hidden=!s.demo;$('connection-label').textContent=online?(s.connected?'● Camera connected':'● Remote connected'):'○ Remote offline';
@@ -48,14 +48,14 @@ function render(){
  document.querySelectorAll('[data-go]').forEach(b=>b.disabled=!edit||!(b.dataset.go==='true'?s.start_set:s.end_set));
  for(const [name,property] of [['step','step'],['settle-ms','settle_ms'],['approach','approach'],['timeout','capture_timeout_s']]){const input=$(name);if(!dirty&&document.activeElement!==input)input.value=s.plan[property];input.disabled=!edit;}
  $('settings-actions').hidden=!dirty;$('settings-actions').querySelector('button').disabled=!edit;
- $('plan-count').textContent=s.plan_error|| (s.planned?`${s.planned.toLocaleString()} RAWs · ${s.plan.end>=s.plan.start?'increasing':'decreasing'} sweep`:'Mark both focus bounds');
+ $('plan-count').textContent=s.plan_error|| (s.planned?`${s.planned.toLocaleString()} ${shots===4?`planes / ${(s.planned*shots).toLocaleString()} RAWs`:"RAWs"} · ${s.plan.end>=s.plan.start?'increasing':'decreasing'} sweep`:'Mark both focus bounds');
  $('initial-estimate').textContent=!active&&s.initial_seconds!==null?`Initial estimate ~${duration(s.initial_seconds)}`:'';
  $('start').disabled=!edit||!s.planned||dirty;$('start').hidden=active||!!s.failure;
  $('review-failure').hidden=!s.failure;for(const name of ['pause','stop'])$(name).hidden=!!s.failure;
  $('pause').disabled=!online||sending||!active||s.pending_control===2;$('pause').textContent=s.phase==='paused'?'Resume':'Pause';$('stop').disabled=!online||sending||!active;
  $('survey').disabled=!fresh||!s.start_set||!s.end_set||Math.abs(s.plan.end-s.plan.start)<8||dirty;$('select-roi').disabled=!fresh;
  const host=s.storage?.mode==='host-pc',waiting=host&&['waiting_for_pc','buffer_full','transfer_failed'].includes(s.storage.state);
- $('storage-info').textContent=host?`A7C II · Lossless Compressed RAW L → PC. RAWs use Pi RAM only; metadata is saved beside them.${s.storage.receipt?.encoding==='strehl-raw-v1'?` Lossless transfer: ${Number(s.storage.receipt.transfer_saved_percent||0).toFixed(0)}% fewer bytes; original ARWs saved.`:''}`:'A7C II · RAW → SD card. Journal stays on the camera computer.';
+ $('storage-info').textContent=host?`${shots===4?"A7CR · 4-shot pixel shift · Uncompressed RAW":"A7C II · Lossless Compressed RAW L"} → PC. RAWs use Pi RAM only; metadata is saved beside them.${s.storage.receipt?.encoding==='strehl-raw-v1'?` Lossless transfer: ${Number(s.storage.receipt.transfer_saved_percent||0).toFixed(0)}% fewer bytes; original ARWs saved.`:''}`:'A7C II · RAW → SD card. Journal stays on the camera computer.';
  $('battery').textContent=`Battery ${s.battery===null?'—':s.battery+'%'}`;$('card').textContent=host?(waiting?'Waiting for PC':s.storage.upload_MB_per_second?`${s.storage.upload_MB_per_second.toFixed(1)} RAW MB/s · ${s.storage.pending_frames||0} pending`:'PC storage'):`Card ~${s.card_remaining===null?'—':s.card_remaining.toLocaleString()} left`;
  $('preview-info').textContent=s.preview.error||(s.preview.available?`${s.preview.width} × ${s.preview.height} · ${s.preview.fresh?'live':s.preview.age_seconds===null?'waiting for a fresh frame':`last frame ${Math.floor(s.preview.age_seconds)}s ago`}`:'Waiting for preview');
  $('preview-empty').hidden=!!previewUrl&&s.connected;
@@ -64,8 +64,8 @@ function render(){
  if(!drag)drawRoi(s.roi);
  const ratios=s.magnifier_ratios.join(',');if($('magnifier').dataset.ratios!==ratios){$('magnifier').replaceChildren(...s.magnifier_ratios.map(r=>{const o=document.createElement('option');o.value=r;o.textContent=r===0?'Off':`${r/10}×`;return o;}));$('magnifier').dataset.ratios=ratios;}
  $('magnifier-control').hidden=!s.magnifier_ratios.length;$('magnifier').disabled=!edit;if(s.magnifier_current!==null)$('magnifier').value=s.magnifier_current;
- $('run-message').textContent=!online?'Reconnecting · showing last confirmed status':active&&s.pending_control===2?'Stopping after the active operation…':active&&s.pending_control===1&&s.phase!=='paused'?'Pausing after the active operation…':s.message;
- $('progress').max=s.total||1;$('progress').value=s.saved??s.completed;$('run-count').textContent=s.total?(s.saved==null?`${s.completed} / ${s.total}`:`${s.completed} / ${s.total} captured · ${s.saved} saved`):'';
+ $('run-message').textContent=!online?'Reconnecting · showing last confirmed status':active&&s.pending_control===2?`Stopping after the active ${shots===4?'four-shot group':'operation'}…`:active&&s.pending_control===1&&s.phase!=='paused'?`Pausing after the active ${shots===4?'four-shot group':'operation'}…`:s.message;
+ $('progress').max=s.total||1;$('progress').value=s.saved??s.completed;$('run-count').textContent=s.total?(s.saved==null?`${s.completed} / ${s.total}`:`${s.completed} / ${s.total} planes captured · ${s.storage.saved_frames||0} / ${s.total*shots} RAWs saved`):'';
  $('timer').textContent=waiting?s.storage.message:s.timer?`${online?'':'Last confirmed · '}${s.timer.label}${s.saved!=null&&s.storage.pending_frames?` · ${s.storage.pending_frames} RAWs uploading`:''}`:host?'RAWs save to PC · pause/stop finish queued transfers':'RAWs stay on SD · pause/stop finish the active operation';
  $('survey-result').hidden=!s.samples.length;
  if(s.samples.length)curves(s.samples);

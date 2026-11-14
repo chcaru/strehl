@@ -84,10 +84,14 @@ impl Session {
             .and_then(|p| p.as_ref().ok())
             .map(Vec::len);
         let plan_error = positions.and_then(Result::err).map(|e| e.to_string());
+        let shots = s.status["pixel_shift_shots"].as_u64().unwrap_or(1);
         let initial = planned.and_then(|n| {
             property(&s.status, "ShutterSpeed")
                 .and_then(|speed| timing::initial_cycle(speed, c.plan.settle_ms))
-                .map(|cycle| cycle.mul_f64(n as f64) + timing::initial_setup(c.plan.settle_ms))
+                .map(|cycle| {
+                    cycle.mul_f64((n as u64 * shots) as f64)
+                        + timing::initial_setup(c.plan.settle_ms)
+                })
         });
         let now = Instant::now();
         let timer=s.timing.as_ref().map(|t|json!({"label":t.label(now,s.phase==Phase::Paused),"elapsed":t.elapsed(now).as_secs_f64(),"remaining":t.remaining(now).as_secs_f64(),"finished":t.finished,"paused":s.phase==Phase::Paused}));
@@ -99,6 +103,8 @@ impl Session {
         let saved = (s.capture_run && storage["pipelined"] == true).then(|| {
             storage["saved_frames"]
                 .as_u64()
+                .unwrap_or(0)
+                .checked_div(shots)
                 .unwrap_or(0)
                 .min(s.completed as u64)
         });
@@ -118,7 +124,7 @@ impl Session {
         json!({"camera_revision":s.revision,"plan_revision":c.revision,"sequence_id":s.sequence_id,"phase":s.phase,"connected":s.connected,"busy":s.command_pending,"editable":editable,"message":s.message,"demo":self.demo,
             "position":s.position,"plan":c.plan,"start_set":c.start_set,"end_set":c.end_set,"roi":c.roi,"planned":planned,"plan_error":plan_error,"initial_seconds":initial.map(|t|t.as_secs_f64()),
             "completed":s.completed,"saved":saved,"total":s.total,"timer":timer,"pending_control":self.worker.pending(),
-            "storage":storage,
+            "storage":storage,"shots_per_plane":shots,"camera_model":s.status["model"],
             "failure":s.failure.as_ref().map(|message|json!({"message":message,"exposure_uncertain":s.exposure_uncertain,"can_reconnect":matches!(s.phase,Phase::Fault|Phase::Disconnected)&&!s.command_pending})),
             "battery":property(&s.status,"BatteryRemain").filter(|v|*v<=100),"card_remaining":property(&s.status,"MediaSLOT1_RemainingNumber"),
             "preview":{"available":s.preview.is_some(),"fresh":fresh,"generation":s.preview_generation,"age_seconds":s.preview_at.map(|t|t.elapsed().as_secs_f64()),"error":s.preview_error,"width":s.preview.as_ref().map(|p|p.rgb.width()),"height":s.preview.as_ref().map(|p|p.rgb.height())},

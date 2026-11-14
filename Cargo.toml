@@ -6,6 +6,7 @@ members = [
     "crates/strehl-edit",
     "crates/strehl-core",
     "crates/strehl-raw",
+    "crates/strehl-raw-codec",
     "crates/strehl-plugin",
     "crates/strehl-cli",
     "crates/strehl-ui",
@@ -25,6 +26,7 @@ authors = ["Chris Caruso"]
 strehl-edit = { path = "crates/strehl-edit" }
 strehl-core = { path = "crates/strehl-core" }
 strehl-raw = { path = "crates/strehl-raw" }
+strehl-raw-codec = { path = "crates/strehl-raw-codec" }
 strehl-plugin = { path = "crates/strehl-plugin" }
 
 anyhow = "1.0"

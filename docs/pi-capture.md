@@ -1,9 +1,27 @@
 # Raspberry Pi capture and PC RAW receiver
 
-Strehl Capture can run headlessly on a Pi 5 and use the existing phone/browser
-focus controls. This path currently targets the Sony A7C II, single exposures,
-and full-resolution **Lossless Compressed RAW L**. A7CR and pixel-shift sequencing
-are not enabled. The Windows desktop app's default remains camera-card saving.
+Strehl Capture runs headlessly on a Pi 5 with phone/browser focus controls.
+The A7C II uses the Sony SDK for single **Lossless Compressed RAW L** exposures.
+The **A7CR uses the Rust Sony PTP 3 backend for four-shot pixel shift at each
+focus position**, with original uncompressed ARWs delivered through exact lossless
+transport compression. The Windows desktop app's default remains card saving.
+
+The owner's A7CR installation now selects `/opt/strehl-capture/strehl-sony-ptp`
+in `/etc/strehl-capture/headless.json`. The SDK bridge remains installed for the
+A7C II. Only one backend owns USB. The PTP backend requires Linux and the system
+`libusb-1.0.so.0`; it has no Sony SDK dependency.
+
+Before connecting the A7CR, enable **Pixel Shift Multi Shoot. → 4 images →
+Shortest interval** on the camera. This body reported the remote count as
+read-only while the camera's mode was Off. After the owner enabled it, remote
+count/interval selection and MF worked, and the mode survived disconnect and
+reconnect. If disabled later, the app gives that setup instruction rather than
+silently taking ordinary photographs. Sixteen-shot selection is not implemented.
+
+The [physical A7CR qualification](../experiments/sony-a7cr-2026-11-13/results.md)
+records complete group tags, original-file checksums, full RAW decodes, focus
+alternation, pause/resume and browser stop. It is a short qualification, not an
+hours-long soak or a demonstration of reconstructed image quality.
 
 ## Running the prepared installation
 
@@ -12,12 +30,13 @@ are not enabled. The Windows desktop app's default remains camera-card saving.
    SmallRig NP-FZ100 adapter. Select **Remote Shoot / PC Remote** on the camera;
    close other camera-control applications.
 2. Keep the PC receiver running. Its **Receiver settings** shortcut opens the
-   configurable capture folder. The default for this installation is
+   capture folder and **Keep RAWs losslessly compressed** option (on by default).
+   The default folder for this installation is
    `D:\StrehlCaptures`. **Start receiver.cmd** and **Stop receiver.cmd** live in
    `%LOCALAPPDATA%\StrehlCaptureReceiver`. Stop the stack before stopping the
    receiver. Closing the settings browser does not stop the receiver.
 3. Open the saved **Pi camera control** pairing link. The normal address is
-   `http://10.0.0.187:8787/` for this installation (`strehl.local` where local
+   `http://10.0.0.178:8787/` on the preferred EDUP connection (`strehl.local` where local
    name resolution works). The persistent key in the saved link is required;
    the bare address shows a pairing form. Open the same pairing link on the
    phone using **Copy pairing link** in the controller. Android Chrome may
@@ -26,8 +45,8 @@ are not enabled. The Windows desktop app's default remains camera-card saving.
    focus and mark A/B. Focus step 1 remains the smallest command, with 500 ms
    settling by default. Start with three to five planes before a long stack.
 5. Start, pause, resume and stop work through the shared sequence owner. Pause
-   and stop finish the active exposure and drain queued transfers. The display
-   distinguishes **captured** from **saved on PC**, and shows upload speed and
+   and stop finish the active exposure (the entire four-shot group on A7CR) and drain queued transfers. The display
+   distinguishes **focus planes captured** from **RAWs saved on PC**, and shows upload speed and
    pending files. The initial time estimate is rough; measured cycles teach it
    the actual cadence, with a finishing phase for the final uploads.
 
@@ -44,8 +63,40 @@ keys are private installation data, excluded from source packages and commits.
 
 ## File handling and failure behavior
 
-The Sony SDK finishes one `.ARW` in `/run/strehl-raw`, a dedicated 512 MiB tmpfs
-mounted with `noswap`. The bridge refuses a disk-backed destination. Swap
+New stacks save `.ARW.straw` files by default. They retain the same CFA/Zstd bytes
+sent over Wi-Fi, with a self-contained original-length and SHA-256 header. The
+receiver reconstructs and checks every original byte while receiving, but does
+not write an expanded ARW. Turning compression off in **Receiver settings** on
+the PC saves ordinary `.ARW` files. Folder and storage format are pinned when a
+stack registers; changing settings or restarting cannot change an existing run.
+Stacks registered before this upgrade keep ordinary ARW storage.
+
+Strehl builds with `strehl-raw-codec` read these archives directly, expanding
+one file in memory before RAW decode and metadata inspection. Existing older
+Strehl builds and other photo applications need restored ARWs. Double-click
+**Restore RAWs.cmd** in `%LOCALAPPDATA%\StrehlCaptureReceiver`, select a stack
+and a separate destination folder. The tool verifies the original checksum,
+keeps the compressed source, and refuses to overwrite existing files. For CLI use:
+
+```powershell
+& "$env:LOCALAPPDATA\StrehlCaptureReceiver\strehl-raw-archive.exe" verify "D:\StrehlCaptures\stack-example"
+& "$env:LOCALAPPDATA\StrehlCaptureReceiver\strehl-raw-archive.exe" restore "D:\StrehlCaptures\stack-example" --output-dir "D:\RestoredRaw\stack-example"
+```
+
+JSON manifests, events and receipts stay readable beside the images. Receipts
+distinguish original `bytes`/`sha256`, `wire_bytes`, and actual `storage_bytes`;
+`logical_name` maps the original ARW name to the saved archive path. No existing
+capture is converted or removed. The format is lossless original-file storage,
+not a merged pixel-shift image, and all Sony group/member metadata is retained.
+
+The [storage qualification](../experiments/sony-raw-storage-2026-11-13/results.md)
+records exact restoration, corrupt/interrupted/retry controls, direct RAW import,
+and the installed receiver/browser checks.
+
+The SDK finishes one `.ARW` in `/run/strehl-raw`. The A7CR PTP backend downloads
+each ready member separately and immediately queues it for PC delivery while the
+camera continues the group. The dedicated tmpfs is **1 GiB** in the A7CR
+installation (512 MiB suffices for the A7C II configuration), mounted with `noswap`. The bridge refuses a disk-backed destination. Swap
 generators are disabled, service swap and core dumps are disabled, and service
 temporary directories also use unswappable RAM. The Pi microSD holds software
 and small journals, never the intended RAW spool.
@@ -56,11 +107,15 @@ RAW. An identical retry is acknowledged without creating a duplicate. The Pi
 persists the PC receipt before deleting its RAM copy. A background uploader
 overlaps PC delivery with the next focus move and exposure. At most four
 completed RAWs await acknowledgement; before another exposure the controller
-also reserves 256 MiB plus headroom in the 512 MiB RAM mount. A full queue or a
+also reserves 256 MiB plus headroom for an SDK exposure. A four-shot A7CR group
+requires four free queue slots and reserves four 128 MiB member bounds plus
+headroom before its single shutter release. Uploads can drain slots during that
+group; focus never moves until all four members and camera/buffer idle are
+confirmed. A full queue or a
 reported connection failure prevents the next exposure. Unexpected unbound
 files in that directory stop capture for inspection.
 
-The SDK still finishes each complete RAW in RAM before that file is uploaded.
+Both backends finish each complete RAW in RAM before that file is uploaded.
 Only one camera operation and one upload run at once. The uploader holds one
 additional bounded original byte body in RAM, plus bounded compression buffers.
 Four workers encode independent chunks while HTTP delivers earlier chunks. A
@@ -69,6 +124,19 @@ another exposure, in addition to checking the RAW tmpfs capacity.
 Journal snapshots are coalesced in memory; original capture intents and
 per-file pending bindings remain durable on the Pi microSD. Completion is
 reported only after every queued RAW and the final metadata are acknowledged.
+
+The A7CR journal records each focus plane, group ID and member index (1–4),
+requested/current focus, camera settings, member arrival times, and individual
+file bindings. Sony's original PixelShiftInfo MakerNote remains intact in each
+ARW. Plane ordinals in capture events are zero-based; file bindings use one-based
+`plane` and `member_index`. A partial group is never reported as a complete plane.
+No ARQ/composite is made by this capture app; the four original CFA files and
+provenance remain available for a group-aware reconstruction consumer.
+
+Focus completion uses actual `0xE043` position held at the target for the selected
+settling duration (at least 200 ms), checking `0xC218` results when received.
+The `0xE042` target property alone is insufficient. Step 1 is a normalized camera
+command, not proof of a distinct optical movement at every step.
 
 Each stack has its own folder containing `frame-000001.ARW`, subsequent frames,
 `manifest.json`, `events.jsonl`, `result.json` and `transfer-receipts.jsonl`.

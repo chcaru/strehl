@@ -73,7 +73,6 @@
 //! Tag numbers, offsets and enum values are facts and are used as such.
 //! `exiftool` was run as a program; its source was not read (`AGENTS.md`).
 
-use std::fs::File;
 use std::io::{Read, Seek, SeekFrom};
 use std::path::Path;
 
@@ -188,11 +187,11 @@ impl CaptureIdentity {
 /// a truncated file and a file from a camera that says nothing all return
 /// [`CaptureIdentity::EMPTY`].
 ///
-/// Cheap: it seeks to the handful of directory entries it needs and reads a few
-/// hundred bytes, rather than pulling a 50 MB frame through memory. It does not
-/// decode pixels and it does not touch [`crate::decode`].
+/// Plain files seek to a few directory entries. A `.straw` archive is verified
+/// and expanded in memory first; it never writes a temporary ARW. Neither path
+/// decodes pixels or touches [`crate::decode`].
 pub fn identity(path: &Path) -> CaptureIdentity {
-    match File::open(path) {
+    match strehl_raw_codec::archive::open_original(path) {
         Ok(mut f) => identity_from_reader(&mut f),
         Err(_) => CaptureIdentity::EMPTY,
     }
