@@ -1,0 +1,118 @@
+{
+  "desktop_build_id": "desktop-55c0fc330e607669",
+  "desktop_source_sha256": "55c0fc330e607669c47ad68302591684d2a7d8eaa7293e8aa3b274d03617f81a",
+  "pi_binaries": {
+    "strehl-capture-headless": "adc8391348d4ee45ba044f48b11c84e9f306a9e9436dab0ded5c30fc0123dc4f",
+    "strehl-sony-ptp": "2730b51b12b6ea917ec616e082a3b05e661009b05ac9b24c97803f16ced5918e"
+  },
+  "camera_runs": [
+    {
+      "shots": 1,
+      "folder": "\\\\?\\D:\\StrehlCaptures\\stack-1794623743175-10639",
+      "files": [
+        "frame-000001.ARW.straw"
+      ],
+      "initial_seconds": 3.6,
+      "wall_seconds": 5.938000000009197,
+      "timer": {
+        "elapsed": 5.716357694,
+        "finished": true,
+        "label": "Active time 0m 06s",
+        "paused": false,
+        "remaining": 0.0
+      },
+      "receipt": {
+        "bytes": 124239872,
+        "chunks": 52,
+        "durable": true,
+        "encoding": "strehl-raw-v1",
+        "logical_name": "frame-000001.ARW",
+        "ok": true,
+        "path": "\\\\?\\D:\\StrehlCaptures\\stack-1794623743175-10639\\frame-000001.ARW.straw",
+        "saved_unix_ms": 1794623749058,
+        "sha256": "a60443365d0d0d1572f460aad535195a8b5f291531ecc3b3fe63e71ec639b399",
+        "storage_bytes": 34339273,
+        "storage_encoding": "strehl-archive-v1",
+        "transfer_saved_percent": 72.36054380352228,
+        "upload_MB_per_second": 187.23781178548825,
+        "upload_seconds": 0.663540504,
+        "wire_MB_per_second": 51.75151297169344,
+        "wire_bytes": 34339225
+      }
+    },
+    {
+      "shots": 4,
+      "folder": "\\\\?\\D:\\StrehlCaptures\\stack-1794623749395-10639",
+      "files": [
+        "frame-000001.ARW.straw",
+        "frame-000002.ARW.straw",
+        "frame-000003.ARW.straw",
+        "frame-000004.ARW.straw"
+      ],
+      "initial_seconds": 8.4,
+      "wall_seconds": 9.094000000011874,
+      "timer": {
+        "elapsed": 8.952892383,
+        "finished": true,
+        "label": "Active time 0m 09s",
+        "paused": false,
+        "remaining": 0.0
+      },
+      "receipt": {
+        "bytes": 124239872,
+        "chunks": 52,
+        "durable": true,
+        "encoding": "strehl-raw-v1",
+        "logical_name": "frame-000004.ARW",
+        "ok": true,
+        "path": "\\\\?\\D:\\StrehlCaptures\\stack-1794623749395-10639\\frame-000004.ARW.straw",
+        "saved_unix_ms": 1794623758505,
+        "sha256": "bc6811d3b75b2899f8bfb23fa3901aaf37bc2b80ccb129e23b4454b295888d35",
+        "storage_bytes": 34340975,
+        "storage_encoding": "strehl-archive-v1",
+        "transfer_saved_percent": 72.35917387294153,
+        "upload_MB_per_second": 223.24723868855492,
+        "upload_seconds": 0.556512469,
+        "wire_MB_per_second": 61.70738107936267,
+        "wire_bytes": 34340927
+      }
+    }
+  ],
+  "oversized_refusal": {
+    "message": "Stack needs up to 1209.64 GB including headroom; only 289.11 GB is free. Shorten the stack or choose another disk",
+    "position": 39108,
+    "sequence_id": 0,
+    "storage_required_bytes": 1209639632896,
+    "storage_error": "Stack needs up to 1209.64 GB including headroom; only 289.11 GB is free. Shorten the stack or choose another disk"
+  },
+  "focus_plan_preserved": true,
+  "phone_ui": {
+    "focus_slider_readback": 60632,
+    "single_estimate": "Initial estimate ~0m 04s",
+    "four_estimate": "Initial estimate ~0m 07s",
+    "peaking_pixels": 2962,
+    "permanent_roi_hidden": true,
+    "single_four_toggle": true,
+    "page_errors": []
+  },
+  "native_tests": {
+    "passed": 1047,
+    "ignored": 15
+  },
+  "capture_tests": {
+    "passed": 38
+  },
+  "qr_independently_decoded": true,
+  "desktop_exe_sha256": "540bd70b3a1073a6494aeba28ab15e3a40883908267bba1ad6962387fceb5abb",
+  "native_lifecycle": {
+    "native_receiver_start_and_settings": "passed",
+    "native_pause_resume_stop_restart": "passed",
+    "receiver_survives_workspace_close": "passed"
+  },
+  "screenshots": [
+    "ready-live.png",
+    "lifecycle-ready/native-1440x940.png",
+    "lifecycle-ready/native-1100x760.png",
+    "phone-ui-4/phone-controls.png"
+  ]
+}

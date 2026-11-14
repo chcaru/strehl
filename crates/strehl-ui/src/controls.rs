@@ -109,7 +109,7 @@ impl Controls {
                 ui.horizontal(|ui| {
                     ui.label("Sampling");
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                        egui::ComboBox::from_id_salt("sampler").width(137.0).selected_text(self.settings.resampler.label()).show_ui(ui, |ui| {
+                        crate::theme::Dropdown::from_id_salt("sampler").width(137.0).selected_text(self.settings.resampler.label()).show_ui(ui, |ui| {
                             for item in Resampler::ALL { ui.selectable_value(&mut self.settings.resampler,item,item.label()); }
                         });
                     });

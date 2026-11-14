@@ -138,6 +138,60 @@ impl Sink {
         );
         Ok(value)
     }
+    fn capacity(&self, run: Option<&str>, frames: usize, raw_bytes: u64) -> Result<()> {
+        let path = run.map_or_else(|| "/api/status".into(), |r| format!("/api/runs/{r}"));
+        let response = self
+            .request(reqwest::Method::GET, &path)
+            .timeout(Duration::from_secs(3))
+            .send()?;
+        let value = if let Some(run) = run
+            && matches!(response.status().as_u16(), 404 | 405)
+        {
+            // Existing background receivers may outlive a UI upgrade. Their
+            // idempotent registration reports the pinned folder. Free space is
+            // usable only when that folder belongs to the current default root.
+            let pinned = Self::response(
+                self.request(reqwest::Method::POST, &path)
+                    .timeout(Duration::from_secs(3))
+                    .send()?,
+            )?;
+            let current = Self::response(
+                self.request(reqwest::Method::GET, "/api/status")
+                    .timeout(Duration::from_secs(3))
+                    .send()?,
+            )?;
+            let root = current["folder"]
+                .as_str()
+                .context("Receiver did not report its folder")?
+                .replace('\\', "/");
+            let folder = pinned["folder"]
+                .as_str()
+                .context("Receiver did not report the pinned folder")?
+                .replace('\\', "/");
+            ensure!(
+                folder == format!("{}/{}", root.trim_end_matches('/'), run),
+                "Receiver was upgraded while open and its folder changed. Restart the PC receiver before continuing this stack"
+            );
+            current
+        } else {
+            Self::response(response)?
+        };
+        self.note(json!({"free_bytes":value["free_bytes"],"folder":value["folder"]}));
+        crate::capacity::check(value["free_bytes"].as_u64(), frames, raw_bytes)?;
+        Ok(())
+    }
+    fn refresh_capacity(&self) {
+        let result = self
+            .request(reqwest::Method::GET, "/api/status")
+            .timeout(Duration::from_secs(1))
+            .send()
+            .map_err(anyhow::Error::from)
+            .and_then(Self::response);
+        match result {
+            Ok(v) => self.note(json!({"free_bytes":v["free_bytes"],"folder":v["folder"]})),
+            Err(_) => self.note(json!({"free_bytes":null})),
+        }
+    }
     pub fn ready(&self) -> Result<()> {
         let value = self.retry(false, || {
             let value = Self::response(self.request(reqwest::Method::GET, "/api/status").send()?)?;
@@ -637,6 +691,9 @@ pub struct PcCamera {
     uploads: UploadQueue,
     run: Option<String>,
     ordinal: usize,
+    planned_frames: usize,
+    raw_limit: u64,
+    capacity_at: Instant,
 }
 impl PcCamera {
     pub fn connect(bridge: &Path, config: TransferConfig, report: TransferReport) -> Result<Self> {
@@ -690,6 +747,9 @@ impl PcCamera {
             uploads,
             run: None,
             ordinal: 0,
+            planned_frames: 0,
+            raw_limit: MAX_RAW,
+            capacity_at: Instant::now(),
         })
     }
 }
@@ -697,17 +757,17 @@ impl Camera for PcCamera {
     fn identity(&self) -> Value {
         let mut v = self.inner.identity();
         v["raw_destination"] = json!("host-pc");
-        v["raw_format"] = json!(if self.inner.shots_per_plane() == 4 {
-            "uncompressed"
-        } else {
-            "lossless-l"
-        });
+        v["raw_format"] = json!(self.inner.raw_format());
         v["upload_queue_capacity"] = json!(MAX_PENDING_FRAMES);
         v
     }
     fn status(&mut self) -> Result<Value> {
         let mut v = self.inner.status()?;
         v["capture_destination"] = json!("host-pc");
+        if self.capacity_at.elapsed() >= Duration::from_secs(2) {
+            self.sink.refresh_capacity();
+            self.capacity_at = Instant::now();
+        }
         Ok(v)
     }
     fn configure(&mut self) -> Result<()> {
@@ -716,12 +776,35 @@ impl Camera for PcCamera {
     fn focus(&mut self, target: u16, settle_ms: u32) -> Result<Value> {
         self.inner.focus(target, settle_ms)
     }
+    fn set_pixel_shift(&mut self, shots: usize) -> Result<()> {
+        self.uploads.finish()?;
+        self.inner.set_pixel_shift(shots)
+    }
+    fn prepare_stack(&mut self, frames: usize, raw_bytes: u64) -> Result<()> {
+        self.uploads.finish()?;
+        self.sink.capacity(None, frames, raw_bytes)?;
+        self.planned_frames = frames;
+        self.raw_limit = raw_bytes;
+        Ok(())
+    }
     fn prepare_capture(&mut self) -> Result<bool> {
-        if self.inner.shots_per_plane() == 4 {
-            self.uploads.room_for(4, 4 * crate::ptp::MEMBER_LIMIT)
+        let shots = self.inner.shots_per_plane();
+        let room = if self.inner.group_stream() {
+            self.uploads
+                .room_for(shots, shots as u64 * crate::ptp::MEMBER_LIMIT)?
         } else {
-            self.uploads.room()
+            self.uploads.room()?
+        };
+        if !room {
+            return Ok(false);
         }
+        let pending = self.sink.report.lock().unwrap()["pending_frames"]
+            .as_u64()
+            .unwrap_or(0) as usize;
+        let remaining = self.planned_frames.saturating_sub(self.ordinal) + pending;
+        self.sink
+            .capacity(self.run.as_deref(), remaining.max(shots), self.raw_limit)?;
+        Ok(true)
     }
     fn finish_transfers(&mut self) -> Result<()> {
         self.uploads.finish()
@@ -730,11 +813,8 @@ impl Camera for PcCamera {
         let run = self.run.clone().context("PC run is not registered")?;
         let started = Instant::now();
         let shots = self.inner.shots_per_plane();
-        let format = if shots == 4 {
-            "uncompressed"
-        } else {
-            "lossless-l"
-        };
+        let format = self.inner.raw_format();
+        let group_stream = self.inner.group_stream();
         let plane = self.ordinal / shots + 1;
         let mut files = Vec::new();
         let sink = &self.sink;
@@ -742,10 +822,10 @@ impl Camera for PcCamera {
         let ordinal = &mut self.ordinal;
         let response=self.inner.capture_files(timeout_s,&mut |response| {
             ensure!(response["destination"]=="host-ram" && response["raw_compression"]==format
-                && response["completion"]==if shots==4 {"ptp-object-complete"}else{"sdk-download-complete"},
+                && response["completion"]==if group_stream {"ptp-object-complete"}else{"sdk-download-complete"},
                 "Bridge did not complete the expected RAW");
-            if shots==4 {
-                ensure!(response["members"]==4 && response["member_index"]==files.len()+1
+            if group_stream {
+                ensure!(response["members"]==shots && response["member_index"]==files.len()+1
                     && response["group_id"].as_str().is_some_and(|s|!s.is_empty()),"Invalid pixel-shift member ordering");
                 if let Some(first)=files.first() {
                     let first:&Value=first;
@@ -758,7 +838,7 @@ impl Camera for PcCamera {
             let name=format!("frame-{:06}.ARW",*ordinal+1);
             let sum=hash_file(&path)?;
             let file=json!({"name":name,"path":path,"bytes":bytes,"sha256":sum,"durable":false,
-                "plane":plane,"group_id":response["group_id"],"member_index":if shots==4 {response["member_index"].clone()}else{json!(1)},"members":shots});
+                "plane":plane,"group_id":response["group_id"],"member_index":if group_stream {response["member_index"].clone()}else{json!(1)},"members":shots});
             let pending=json!({"run":run,"name":name,"path":path,"bytes":bytes,"sha256":sum,
                 "plane":plane,"group_id":response["group_id"],"member_index":file["member_index"],"members":shots,"camera_reply":response});
             uploads.enqueue(pending)?;

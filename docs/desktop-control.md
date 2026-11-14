@@ -228,6 +228,16 @@ an `index` from `capture.completed` rechecks and opens a completed receiver run.
 or `false`. Folder selection remains in the native UI. Closing a headless control
 workspace does not stop the Pi or the background receiver.
 
+Capture commands also include `{"op":"focus","target":37308}` (absolute
+normalized focus, while idle) and `{"op":"pixel_shift","shots":4}` (or `1`).
+Use `pixel_shift_options` from state for capability detection. `initial_seconds`,
+`raw_max_bytes`, `storage_required_bytes` and `storage_error` describe the current
+plan. The controller independently checks fresh disk capacity before starting;
+an accepted command is not evidence that an oversized stack began. Confirm its
+phase, sequence ID and status message. Never replay a rejected or unanswered
+shutter request automatically. Pairing keys and QR contents are excluded from
+public snapshots.
+
 The offscreen path paints the real workspace with egui and wgpu into a texture,
 then saves the GPU readback as a PNG. It creates no native window or graphics
 surface and sends no operating-system mouse or keyboard events. It requires a

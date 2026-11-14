@@ -9,6 +9,7 @@ const savedPairing=decodePairing(stored('localStorage',PAIRING_STORE))||decodePa
 let key=validKey(savedPairing.key)?savedPairing.key:'',remoteSession=savedPairing.remoteSession,state=null,online=false,sending=false,dirty=false,editRevision=null,selecting=false,drag=null,previewGeneration=-1,previewBusy=false,previewUrl=null;
 let pairingVersion=0,authFailures=0,failures=0,revoked=false,polling=false,pollTimer=null;
 let recoveryMessage='';
+let focusPending=null,focusFlight=null,focusAnchor=null,focusDragging=false;
 const fragment=new URLSearchParams(location.hash.slice(1));
 if(fragment.has('key')){if(validKey(fragment.get('key'))){key=fragment.get('key');remoteSession='';}history.replaceState(null,'',location.pathname);}
 function notice(text){$('notice').textContent=text;}
@@ -35,6 +36,14 @@ async function command(command,planRevision=null){
 }
 function receive(next){if(!state||(next.camera_revision>=state.camera_revision&&next.plan_revision>=state.plan_revision))state=next;}
 function resetSettings(){dirty=false;editRevision=null;render();}
+async function flushFocus(){
+ if(focusFlight||focusPending===null||sending||!online||!state?.editable)return;
+ const target=focusPending;focusPending=null;
+ if(target===state.position)return;
+ focusFlight={target,revision:state.camera_revision,sent:Date.now()};
+ const ok=await command({op:'focus',target});
+ if(!ok){focusFlight=null;focusPending=null;}schedulePoll(0);
+}
 function render(){
  if(!state)return;
  const s=state,shots=s.shots_per_plane||1,edit=online&&s.editable&&!sending,active=['capturing','scanning','paused'].includes(s.phase),fresh=edit&&s.preview.fresh;
@@ -47,17 +56,36 @@ function render(){
  document.querySelectorAll('[data-mark]').forEach(b=>b.disabled=!edit||s.position===null);
  document.querySelectorAll('[data-go]').forEach(b=>b.disabled=!edit||!(b.dataset.go==='true'?s.start_set:s.end_set));
  for(const [name,property] of [['step','step'],['settle-ms','settle_ms'],['approach','approach'],['timeout','capture_timeout_s']]){const input=$(name);if(!dirty&&document.activeElement!==input)input.value=s.plan[property];input.disabled=!edit;}
+ if(!online||!['ready','complete','stopped','moving'].includes(s.phase)){focusPending=null;focusFlight=null;}
+ if(focusFlight&&Date.now()-focusFlight.sent>15000){focusFlight=null;focusPending=null;notice('Focus move was not confirmed; nothing was repeated.');}
+ if(focusFlight&&!sending&&s.editable&&s.camera_revision>focusFlight.revision){
+  if(s.position!==focusFlight.target){focusPending=null;notice('Focus did not reach the target; nothing was repeated.');}
+  focusFlight=null;
+ }
+ const slider=$('focus-slider');
+ slider.disabled=!online||(!s.editable&&!(focusFlight&&s.phase==='moving'));
+ if(!focusDragging&&focusPending===null&&!focusFlight&&s.position!==null){
+  if(focusAnchor===null||Math.abs(s.position-focusAnchor)>128)focusAnchor=s.position;
+  slider.min=$('focus-fine').checked?Math.max(0,focusAnchor-128):0;
+  slider.max=$('focus-fine').checked?Math.min(65535,focusAnchor+128):65535;slider.value=s.position;
+ }
+ $('focus-target').textContent=slider.value;
+ $('pixel-shift').disabled=!edit||!s.pixel_shift_options?.includes(4)||!!focusFlight;
+ $('pixel-shift').checked=shots===4;
+ $('capacity-info').textContent=s.storage_error||(s.storage_required_bytes?`Up to ${(s.storage_required_bytes/1e9).toFixed(2)} GB including headroom. Compression savings are extra.`:'');
+ if(focusPending!==null&&!focusFlight&&!sending&&s.editable)queueMicrotask(flushFocus);
  $('settings-actions').hidden=!dirty;$('settings-actions').querySelector('button').disabled=!edit;
  $('plan-count').textContent=s.plan_error|| (s.planned?`${s.planned.toLocaleString()} ${shots===4?`planes / ${(s.planned*shots).toLocaleString()} RAWs`:"RAWs"} · ${s.plan.end>=s.plan.start?'increasing':'decreasing'} sweep`:'Mark both focus bounds');
  $('initial-estimate').textContent=!active&&s.initial_seconds!==null?`Initial estimate ~${duration(s.initial_seconds)}`:'';
- $('start').disabled=!edit||!s.planned||dirty;$('start').hidden=active||!!s.failure;
+ $('start').disabled=!edit||!s.planned||dirty||!!s.storage_error||!!focusFlight||focusPending!==null;$('start').hidden=active||!!s.failure;
  $('review-failure').hidden=!s.failure;for(const name of ['pause','stop'])$(name).hidden=!!s.failure;
  $('pause').disabled=!online||sending||!active||s.pending_control===2;$('pause').textContent=s.phase==='paused'?'Resume':'Pause';$('stop').disabled=!online||sending||!active;
  $('survey').disabled=!fresh||!s.start_set||!s.end_set||Math.abs(s.plan.end-s.plan.start)<8||dirty;$('select-roi').disabled=!fresh;
  const host=s.storage?.mode==='host-pc',waiting=host&&['waiting_for_pc','buffer_full','transfer_failed'].includes(s.storage.state);
- $('storage-info').textContent=host?`${shots===4?"A7CR · 4-shot pixel shift · Uncompressed RAW":"A7C II · Lossless Compressed RAW L"} → PC. RAWs use Pi RAM only; metadata is saved beside them.${s.storage.receipt?.encoding==='strehl-raw-v1'?` Lossless transfer: ${Number(s.storage.receipt.transfer_saved_percent||0).toFixed(0)}% fewer bytes; original ARWs saved.`:''}`:'A7C II · RAW → SD card. Journal stays on the camera computer.';
+ $('storage-info').textContent=host?`${`${s.camera_model||"Camera"} · ${shots} RAW${shots===1?"":"s"} per plane`} → PC. RAWs use Pi RAM only; metadata is saved beside them.${s.storage.receipt?.encoding==='strehl-raw-v1'?` Lossless transfer: ${Number(s.storage.receipt.transfer_saved_percent||0).toFixed(0)}% fewer bytes; original ARWs saved.`:''}`:'A7C II · RAW → SD card. Journal stays on the camera computer.';
  $('battery').textContent=`Battery ${s.battery===null?'—':s.battery+'%'}`;$('card').textContent=host?(waiting?'Waiting for PC':s.storage.upload_MB_per_second?`${s.storage.upload_MB_per_second.toFixed(1)} RAW MB/s · ${s.storage.pending_frames||0} pending`:'PC storage'):`Card ~${s.card_remaining===null?'—':s.card_remaining.toLocaleString()} left`;
  $('preview-info').textContent=s.preview.error||(s.preview.available?`${s.preview.width} × ${s.preview.height} · ${s.preview.fresh?'live':s.preview.age_seconds===null?'waiting for a fresh frame':`last frame ${Math.floor(s.preview.age_seconds)}s ago`}`:'Waiting for preview');
+ $('peaking-overlay').hidden=!$('peaking').checked||!s.preview.fresh||!s.connected;
  $('preview-empty').hidden=!!previewUrl&&s.connected;
  if(!s.connected){if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;$('preview').removeAttribute('src');$('preview').hidden=true;$('roi').hidden=true;previewGeneration=-1;$('preview-empty').querySelector('h2').textContent='Bring the subject into focus';$('preview-empty').querySelector('p').textContent='Connect the camera to begin.';}
  else if(!previewUrl){$('preview-empty').querySelector('h2').textContent='Waiting for live preview';$('preview-empty').querySelector('p').textContent='You can still jog focus and mark bounds using the camera display.';}
@@ -73,7 +101,7 @@ function render(){
  $('suggestion-detail').textContent=s.suggestion?.explanation||'Preview texture is a focusing aid; inspect both boundaries.';
  $('apply-bounds').disabled=!edit||!s.suggestion||s.suggestion.clipped;
 }
-function drawRoi(roi){if(!roi||!previewUrl||!state?.connected)return;const box=$('roi');box.hidden=false;box.style.left=`${roi.x*100}%`;box.style.top=`${roi.y*100}%`;box.style.width=`${roi.width*100}%`;box.style.height=`${roi.height*100}%`;}
+function drawRoi(roi){if(!roi||!previewUrl||!state?.connected)return;const box=$('roi');box.hidden=!selecting;box.style.left=`${roi.x*100}%`;box.style.top=`${roi.y*100}%`;box.style.width=`${roi.width*100}%`;box.style.height=`${roi.height*100}%`;}
 function curves(samples){const canvas=$('curves'),w=canvas.clientWidth||600,h=90;canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');ctx.clearRect(0,0,w,h);const max=Math.max(0.00001,...samples.flatMap(s=>s.scores));ctx.strokeStyle='#e6b45070';ctx.lineWidth=1;for(let tile=0;tile<samples[0].scores.length;tile++){ctx.beginPath();samples.forEach((s,i)=>{const x=i/Math.max(1,samples.length-1)*w,y=h-4-(s.scores[tile]/max)*(h-8);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();}}
 async function preview(){if(previewBusy||!online||!state?.preview.available||state.preview.generation===previewGeneration)return;previewBusy=true;const auth=authorization();try{const response=await api('/api/preview',{},auth);if(!response.ok||response.status===204)return;const blob=await response.blob();if(!current(auth)||!online||!state?.connected||!state.preview.available)return;const next=URL.createObjectURL(blob);const previous=previewUrl;previewUrl=next;previewGeneration=Number(response.headers.get('x-preview-generation'));$('preview').src=next;$('preview').hidden=false;$('preview-empty').hidden=true;if(previous)URL.revokeObjectURL(previous);drawRoi(state.roi);}catch{}finally{previewBusy=false;}}
 async function poll(){
@@ -111,6 +139,25 @@ $('camera-connect').addEventListener('click',()=>command({op:state.connected?'di
 $('recovery-ack').addEventListener('change',render);
 $('review-failure').addEventListener('click',()=>$('camera-recovery').scrollIntoView({block:'start'}));
 $('recover-camera').addEventListener('click',()=>command({op:'recover',acknowledge_uncertain:$('recovery-ack').checked}));
+function peakPreview(){
+ const image=$('preview'),canvas=$('peaking-overlay');canvas.hidden=!$('peaking').checked||!state?.preview.fresh||image.hidden;
+ if(canvas.hidden||!image.naturalWidth)return;
+ const w=image.naturalWidth,h=image.naturalHeight;canvas.width=w;canvas.height=h;
+ const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(image,0,0);
+ const source=ctx.getImageData(0,0,w,h),out=ctx.createImageData(w,h),luma=new Float32Array(w*h);
+ for(let i=0;i<w*h;i++)luma[i]=.2126*source.data[4*i]+.7152*source.data[4*i+1]+.0722*source.data[4*i+2];
+ for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){
+  const i=y*w+x;if(Math.abs(4*luma[i]-luma[i-1]-luma[i+1]-luma[i-w]-luma[i+w])*.25>=18){out.data[4*i]=0;out.data[4*i+1]=245;out.data[4*i+2]=210;out.data[4*i+3]=220;}
+ }
+ ctx.putImageData(out,0,0);
+}
+$('preview').addEventListener('load',peakPreview);
+$('peaking').addEventListener('change',peakPreview);
+$('focus-slider').addEventListener('pointerdown',()=>{focusDragging=true;});
+window.addEventListener('pointerup',()=>{focusDragging=false;flushFocus();});
+$('focus-slider').addEventListener('input',()=>{focusPending=Number($('focus-slider').value);$('focus-target').textContent=String(focusPending);flushFocus();});
+$('focus-fine').addEventListener('change',()=>{focusAnchor=state?.position??null;render();});
+$('pixel-shift').addEventListener('change',()=>command({op:'pixel_shift',shots:$('pixel-shift').checked?4:1}));
 document.querySelectorAll('[data-jog]').forEach(b=>b.addEventListener('click',()=>command({op:'jog',delta:Number(b.dataset.jog)})));
 document.querySelectorAll('[data-mark]').forEach(b=>b.addEventListener('click',()=>command({op:'mark',start:b.dataset.mark==='true'})));
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>command({op:'go',start:b.dataset.go==='true'})));

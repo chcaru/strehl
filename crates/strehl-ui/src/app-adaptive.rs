@@ -424,7 +424,7 @@ impl StrehlApp {
                 let width = (ui.available_width() - action_width - ui.spacing().item_spacing.x).max(40.0);
                 ui.allocate_ui_with_layout(egui::vec2(width, super::editing::controls::ACTION_HEIGHT), egui::Layout::left_to_right(egui::Align::Center), |ui| {
                     ui.spacing_mut().icon_width = 12.0;
-                    egui::ComboBox::from_id_salt("adaptive-look").width(width).truncate().selected_text(look)
+                    crate::theme::Dropdown::from_id_salt("adaptive-look").width(width).truncate().selected_text(look)
                         .show_ui(ui, |ui| {
                             for (name, value) in choices {
                                 if ui.selectable_value(&mut parameters, value, name).clicked() {
@@ -482,7 +482,7 @@ impl StrehlApp {
                 if let Some(draft) = &mut self.adaptive.parameters {
                     ui.horizontal(|ui| {
                         ui.label(RichText::new("Tones").size(11.0).color(MUTED));
-                        egui::ComboBox::from_id_salt("adaptive-tone-range")
+                        crate::theme::Dropdown::from_id_salt("adaptive-tone-range")
                             .truncate()
                             .selected_text(match draft.value.tone_range { AdaptiveToneRange::All => "All light", AdaptiveToneRange::Shadows => "Shadows", AdaptiveToneRange::Midtones => "Midtones", AdaptiveToneRange::Highlights => "Highlights" })
                             .show_ui(ui, |ui| {

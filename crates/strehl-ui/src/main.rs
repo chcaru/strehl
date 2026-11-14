@@ -12,6 +12,8 @@ mod app;
 mod bracket_browser;
 #[path = "camera-metadata.rs"]
 mod camera_metadata;
+#[path = "capture-aids.rs"]
+mod capture_aids;
 #[path = "capture-axis.rs"]
 #[cfg(test)]
 mod capture_axis;

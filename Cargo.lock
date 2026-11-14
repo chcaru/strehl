@@ -4338,6 +4338,7 @@ dependencies = [
  "image",
  "jpeg-decoder",
  "objc",
+ "qrcode",
  "raw-window-handle",
  "reqwest",
  "rfd",

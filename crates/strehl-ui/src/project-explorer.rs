@@ -585,7 +585,7 @@ impl ProjectExplorer {
             egui::pos2((cancel_rect.left() - 4.0).max(row.left()), row.bottom()),
         );
         let mut picker_ui = bounded_row_cell(ui, picker_rect, "project-move-picker");
-        egui::ComboBox::from_id_salt("move-project-object")
+        crate::theme::Dropdown::from_id_salt("move-project-object")
             .selected_text("Move to…")
             .width((picker_rect.width() - 18.0).max(1.0))
             .show_ui(&mut picker_ui, |ui| {

@@ -8,6 +8,50 @@ pub const MUTED: Color32 = Color32::from_rgb(141, 150, 162);
 pub const ACCENT: Color32 = Color32::from_rgb(230, 180, 80);
 pub const GREEN: Color32 = Color32::from_rgb(169, 199, 121);
 pub const AMBER: Color32 = Color32::from_rgb(223, 156, 99);
+
+/// Keep the button and popup tied to the parent control's width. egui's Width
+/// option is a minimum, and its popup defaults to Extend; neither bounds long
+/// labels or prevents an expanding parent/menu from feeding the next layout.
+pub struct Dropdown {
+    inner: egui::ComboBox,
+    width: Option<f32>,
+}
+impl Dropdown {
+    pub fn from_id_salt(id: impl std::hash::Hash) -> Self {
+        Self {
+            inner: egui::ComboBox::from_id_salt(id),
+            width: None,
+        }
+    }
+    pub fn width(mut self, width: f32) -> Self {
+        self.width = Some(width);
+        self
+    }
+    pub fn selected_text(mut self, text: impl Into<egui::WidgetText>) -> Self {
+        self.inner = self.inner.selected_text(text);
+        self
+    }
+    pub fn truncate(self) -> Self {
+        self
+    }
+    pub fn show_ui<R>(
+        self,
+        ui: &mut egui::Ui,
+        content: impl FnOnce(&mut egui::Ui) -> R,
+    ) -> egui::InnerResponse<Option<R>> {
+        let width = self
+            .width
+            .unwrap_or(ui.spacing().combo_width)
+            .min(ui.available_width())
+            .max(24.0);
+        self.inner.width(width).truncate().show_ui(ui, |menu| {
+            let margin = egui::Frame::popup(menu.style()).total_margin().sum().x;
+            menu.set_width((width - margin).max(8.0));
+            menu.style_mut().wrap_mode = Some(egui::TextWrapMode::Truncate);
+            content(menu)
+        })
+    }
+}
 /// A single physical pixel at every display scale. Axis-aligned rules sit on
 /// pixel centers, so adjacent panels do not make blurred two-pixel boundaries.
 pub fn rule(p: &egui::Painter, mut from: egui::Pos2, mut to: egui::Pos2, color: Color32) {
@@ -272,6 +316,64 @@ pub fn mark(painter: &egui::Painter, rect: egui::Rect) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn dropdown_does_not_grow_across_pointer_repaints() {
+        let ctx = egui::Context::default();
+        ctx.set_pixels_per_point(1.25);
+        install(&ctx);
+        let mut widths = Vec::new();
+        let mut selected = 0;
+        for frame in 0..45 {
+            let _ = ctx.run(
+                egui::RawInput {
+                    screen_rect: Some(egui::Rect::from_min_size(
+                        egui::Pos2::ZERO,
+                        egui::vec2(900.0, 600.0),
+                    )),
+                    time: Some(frame as f64 / 30.0),
+                    events: vec![egui::Event::PointerMoved(egui::pos2(
+                        60.0 + (frame % 5) as f32,
+                        60.0,
+                    ))],
+                    ..Default::default()
+                },
+                |ctx| {
+                    egui::CentralPanel::default().show(ctx, |ui| {
+                        let combo = Dropdown::from_id_salt("regression-dropdown")
+                            .width(180.0)
+                            .selected_text("Capture mode");
+                        let popup = ui
+                            .make_persistent_id(egui::Id::new("regression-dropdown"))
+                            .with("popup");
+                        egui::Popup::open_id(ctx, popup);
+                        combo.show_ui(ui, |ui| {
+                            for i in 0..45 {
+                                ui.selectable_value(
+                                    &mut selected,
+                                    i,
+                                    format!("Capture preset {i} with an intentionally extremely long folder name that must never widen the overlay"),
+                                );
+                            }
+                            if frame >= 10 {
+                                widths.push(ui.min_rect().width());
+                            }
+                        });
+                    });
+                },
+            );
+        }
+        assert!(widths.len() >= 30, "Must exercise the open popup");
+        let first = widths[0];
+        assert!(
+            first <= 180.0,
+            "Long labels must not expand the dropdown: {first}"
+        );
+        assert!(
+            widths.iter().all(|w| (*w - first).abs() <= 1.0),
+            "Dropdown grew: {widths:?}"
+        );
+    }
 
     fn native_control_colors(
         ctx: &egui::Context,

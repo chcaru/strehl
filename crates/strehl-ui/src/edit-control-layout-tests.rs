@@ -336,3 +336,58 @@ fn actual_profile_menu_applies_signature_and_disabled_pane_cannot_start_it() {
         }
     }
 }
+
+#[test]
+fn actual_profile_dropdown_width_stays_fixed_while_hovering() {
+    let ctx = egui::Context::default();
+    crate::theme::install(&ctx);
+    let mut app = fixture();
+    frame(&mut app, &ctx, 270.0, 0.0, vec![]);
+    let initial = frame(&mut app, &ctx, 270.0, 0.05, vec![]);
+    let at = label(&initial, "Natural").center();
+    frame(
+        &mut app,
+        &ctx,
+        270.0,
+        0.08,
+        vec![egui::Event::PointerMoved(at)],
+    );
+    frame(&mut app, &ctx, 270.0, 0.1, pointer(at, true));
+    frame(&mut app, &ctx, 270.0, 0.15, pointer(at, false));
+    let mut widths = Vec::new();
+    for i in 0..50 {
+        let out = frame(
+            &mut app,
+            &ctx,
+            270.0,
+            0.2 + i as f64 / 30.0,
+            vec![egui::Event::PointerMoved(
+                at + egui::vec2((i % 10) as f32, 40.0),
+            )],
+        );
+        let choice = label(&out, "Signature").center();
+        if i >= 10 {
+            let width = out
+                .shapes
+                .iter()
+                .filter_map(|s| match &s.shape {
+                    egui::Shape::Rect(r)
+                        if r.rect.contains(choice) && r.fill == crate::theme::PANEL =>
+                    {
+                        Some(r.rect.width())
+                    }
+                    _ => None,
+                })
+                .fold(0.0_f32, f32::max);
+            widths.push(width);
+        }
+    }
+    assert!(
+        widths.iter().all(|w| *w > 20.0),
+        "Must find actual popup background"
+    );
+    assert!(
+        widths.iter().all(|w| (*w - widths[0]).abs() < 1.0),
+        "Growing native profile menu: {widths:?}"
+    );
+}

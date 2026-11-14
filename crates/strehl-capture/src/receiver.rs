@@ -178,7 +178,7 @@ impl Receiver {
             )
             .route("/api/status", get(status))
             .route("/api/folder", post(folder))
-            .route("/api/runs/{run}", post(create_run))
+            .route("/api/runs/{run}", post(create_run).get(run_capacity))
             .route("/api/files/{run}/{name}", put(upload))
             .layer(DefaultBodyLimit::max(MAX_RAW as usize))
             .layer(middleware::from_fn_with_state(self.clone(), guard))
@@ -234,6 +234,12 @@ async fn guard(
 }
 async fn status(State(s): State<Arc<Receiver>>) -> Response {
     let c = s.config.lock().unwrap();
+    if !c.folder.is_dir() {
+        return problem(
+            StatusCode::SERVICE_UNAVAILABLE,
+            "Capture folder is missing; choose an available folder on this PC",
+        );
+    }
     match fs2::available_space(&c.folder) {
         Ok(free)=>Json(json!({"ok":true,"protocol":1,"raw_encodings":["identity",transport::ENCODING],"folder":c.folder,"compress_raw":c.compress_raw,"free_bytes":free,"max_raw_bytes":MAX_RAW,"latest":*s.latest.lock().unwrap()})).into_response(),
         Err(e)=>problem(StatusCode::SERVICE_UNAVAILABLE,e)
@@ -265,6 +271,22 @@ async fn folder(
         Ok(())
     })();
     match result{Ok(())=>Json(json!({"ok":true,"message":"Saved for new stacks. Registered stacks keep their folder and storage format."})).into_response(),Err(e)=>problem(StatusCode::BAD_REQUEST,e)}
+}
+// Capacity of the pinned run, independent of later changes to the default folder.
+async fn run_capacity(State(s): State<Arc<Receiver>>, UrlPath(run): UrlPath<String>) -> Response {
+    let result = (|| -> Result<Value> {
+        ensure!(safe_run(&run), "Invalid stack identifier");
+        let runs = s.runs.lock().unwrap();
+        let dest = runs.get(&run).context("Stack is not registered")?;
+        ensure!(dest.folder().is_dir(), "Registered stack folder is missing");
+        Ok(
+            json!({"ok":true,"folder":dest.folder(),"free_bytes":fs2::available_space(dest.folder())?}),
+        )
+    })();
+    match result {
+        Ok(v) => Json(v).into_response(),
+        Err(e) => problem(StatusCode::CONFLICT, e),
+    }
 }
 async fn create_run(State(s): State<Arc<Receiver>>, UrlPath(run): UrlPath<String>) -> Response {
     let _write = s.write_lock.lock().await;
@@ -698,6 +720,44 @@ mod tests {
                 bytes
             );
         }
+    }
+
+    #[tokio::test]
+    async fn capacity_uses_the_registered_folder_after_the_default_changes() {
+        let temp = tempfile::tempdir().unwrap();
+        let config = temp.path().join("receiver.json");
+        let root = temp.path().join("original");
+        save_json(
+            &config,
+            &json!({"bind":"127.0.0.1:0","lan":"10.0.0.0/24","key":"a".repeat(48),"folder":root}),
+        )
+        .unwrap();
+        let receiver = Receiver::open(config).unwrap();
+        assert!(
+            create_run(State(receiver.clone()), UrlPath("stack-pinned".into()))
+                .await
+                .status()
+                .is_success()
+        );
+        receiver.config.lock().unwrap().folder = temp.path().join("missing-default");
+        assert_eq!(
+            status(State(receiver.clone())).await.status(),
+            StatusCode::SERVICE_UNAVAILABLE
+        );
+        let response = run_capacity(State(receiver.clone()), UrlPath("stack-pinned".into())).await;
+        assert!(response.status().is_success());
+        let body = axum::body::to_bytes(response.into_body(), 8192)
+            .await
+            .unwrap();
+        let value: Value = serde_json::from_slice(&body).unwrap();
+        assert_eq!(value["folder"], json!(root.join("stack-pinned")));
+        assert!(value["free_bytes"].as_u64().unwrap() > 0);
+        assert_eq!(
+            run_capacity(State(receiver), UrlPath("stack-unknown".into()))
+                .await
+                .status(),
+            StatusCode::CONFLICT
+        );
     }
 
     #[tokio::test]

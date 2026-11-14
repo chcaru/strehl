@@ -356,7 +356,7 @@ impl StrehlApp {
                     ui.add_space(12.0);
                     ui.label(RichText::new("Color space").small().color(MUTED));
                     let shown = effective_settings(&self.export_pane.settings, origin);
-                    egui::ComboBox::from_id_salt("export-gamut")
+                    crate::theme::Dropdown::from_id_salt("export-gamut")
                         .width(ui.available_width())
                         .selected_text(format!("{}{}", if shown.hdr { "HDR " } else { "" }, shown.color_space.label()))
                         .show_ui(ui, |ui| {

@@ -122,6 +122,7 @@ pub(crate) struct Snapshot {
     pub receiver_error: Option<String>,
     pub completed: Vec<CompletedStack>,
     pub preview: Option<(u64, Arc<egui::ColorImage>)>,
+    pub peaking: Option<(u64, Arc<crate::capture_aids::Peaking>)>,
     pub preview_error: Option<String>,
     pub handoff: Option<PathBuf>,
 }
@@ -457,9 +458,14 @@ fn run(
                                 rgb.as_raw(),
                             ))
                         })();
+                        let peaks = preview
+                            .as_ref()
+                            .ok()
+                            .map(crate::capture_aids::Peaking::analyze);
                         let mut s = output.lock().unwrap();
                         match preview {
                             Ok(image) => {
+                                s.peaking = peaks.map(|p| (generation.unwrap_or(0), Arc::new(p)));
                                 s.preview = Some((generation.unwrap_or(0), Arc::new(image)));
                                 s.preview_error = None;
                                 last_preview = generation;

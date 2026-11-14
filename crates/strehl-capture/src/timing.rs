@@ -22,6 +22,17 @@ pub fn initial_setup(settle_ms: u32) -> Duration {
     Duration::from_millis(u64::from(settle_ms) + 1000)
 }
 
+pub fn initial_plane(shutter: u64, settle_ms: u32, shots: u64) -> Option<Duration> {
+    if !matches!(shots, 1 | 4) {
+        return None;
+    }
+    // Focus settles once per plane. Every member incurs exposure/readout/transfer.
+    // This is explicitly an initial allowance; measured whole-plane cycles take over.
+    Some(Duration::from_secs_f64(
+        (shutter_seconds(shutter)? + 1.0) * shots as f64 + f64::from(settle_ms) / 1000.0,
+    ))
+}
+
 pub fn format_duration(duration: Duration) -> String {
     let secs = duration.as_secs() + u64::from(duration.subsec_nanos() > 0);
     if secs >= 3600 {
@@ -154,6 +165,13 @@ mod tests {
         );
     }
 
+    #[test]
+    fn four_shot_estimate_counts_exposures_but_one_focus_settle() {
+        let shutter = (6 << 16) | 10;
+        assert_eq!(initial_plane(shutter, 500, 1).unwrap().as_secs_f64(), 2.1);
+        assert!((initial_plane(shutter, 500, 4).unwrap().as_secs_f64() - 6.9).abs() < 1e-6);
+        assert!(initial_plane(shutter, 500, 16).is_none());
+    }
     #[test]
     fn observed_cadence_excludes_approach_and_pauses() {
         let t = Instant::now();

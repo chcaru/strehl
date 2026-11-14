@@ -78,6 +78,9 @@ impl Default for Snapshot {
 }
 pub enum Action {
     Connect,
+    PixelShift {
+        shots: usize,
+    },
     Disconnect,
     Recover {
         acknowledge_uncertain: bool,
@@ -406,6 +409,22 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                             });
                             control.store(RUN, Ordering::SeqCst);
                         }
+                        Action::PixelShift { shots } => {
+                            ensure!(
+                                s.lock().unwrap().phase.can_edit(),
+                                "Finish the sequence before changing capture mode"
+                            );
+                            let c = camera.as_mut().context("Connect a camera first")?;
+                            c.set_pixel_shift(shots)?;
+                            refresh(c.as_mut(), &s)?;
+                            update(&s, |v| {
+                                v.timing = None;
+                                v.message = format!(
+                                    "{shots} RAW{} per focal plane",
+                                    if shots == 1 { "" } else { "s" }
+                                );
+                            });
+                        }
                         Action::Move { target, settle_ms } => {
                             ensure!(
                                 s.lock().unwrap().phase.can_edit(),
@@ -588,23 +607,28 @@ fn capture(
     let status = refresh(c, s)?;
     validate_exposure(&status)?;
     let host = status["capture_destination"] == "host-pc";
-    ensure!(
-        host || property(&status, "MediaSLOT1_RemainingNumber")
-            .is_some_and(|n| n >= positions.len() as u64),
-        "The card does not report enough remaining captures for this plan"
-    );
     let shots = status["pixel_shift_shots"].as_u64().unwrap_or(1);
     ensure!(
         matches!(shots, 1 | 4),
         "Unsupported number of RAWs per plane"
     );
+    let frames = positions.len() * shots as usize;
+    ensure!(
+        host || property(&status, "MediaSLOT1_RemainingNumber").is_some_and(|n| n >= frames as u64),
+        "The card does not report enough remaining captures for this plan"
+    );
+    c.prepare_stack(frames, crate::capacity::raw_limit(&status))?;
     let initial_exposure = status.clone();
     let cycle = property(&status, "ShutterSpeed")
-        .and_then(|shutter| timing::initial_cycle(shutter, plan.settle_ms))
-        .context("Cannot estimate timed shutter speed")?
-        .mul_f64(shots as f64);
+        .and_then(|shutter| timing::initial_plane(shutter, plan.settle_ms, shots))
+        .context("Cannot estimate timed shutter speed")?;
     let mut log = Journal::create(&root, &plan, c.identity(), status)?;
     c.sync_journal(&log.directory)?;
+    // Validate the registered destination too: another client could have changed
+    // the default folder between the initial admission and run registration.
+    while !c.prepare_capture()? {
+        thread::sleep(Duration::from_millis(100));
+    }
     update(s, |v| {
         v.phase = Phase::Capturing;
         v.failure = None;
@@ -653,6 +677,10 @@ fn capture(
             }
             let before = refresh(c, s)?;
             validate_exposure(&before)?;
+            ensure!(
+                before["pixel_shift_shots"].as_u64().unwrap_or(1) == shots,
+                "Capture mode changed during the stack; no next shutter was sent"
+            );
             for key in [
                 "ExposureProgramMode",
                 "IsoSensitivity",
@@ -783,7 +811,8 @@ fn validate_capture(reply: &Value) -> Result<()> {
     if reply["destination"] == "host-pc-queue" {
         let shots = reply["pixel_shift_shots"].as_u64().unwrap_or(1);
         ensure!(matches!(shots, 1 | 4), "Unsupported group size");
-        if shots == 4 {
+        let group = reply["camera_reply"]["completion"] == "ptp-group-complete";
+        if shots == 4 || group {
             ensure!(
                 reply["group_complete"] == true
                     && reply["camera_reply"]["completion"] == "ptp-group-complete"
@@ -795,12 +824,7 @@ fn validate_capture(reply: &Value) -> Result<()> {
         ensure!(
             reply["completion"] == "ram-queued-sha256"
                 && reply["file_verification"] == "ram-sha256"
-                && reply["raw_compression"]
-                    == if shots == 4 {
-                        "uncompressed"
-                    } else {
-                        "lossless-l"
-                    },
+                && reply["raw_compression"] == if group { "uncompressed" } else { "lossless-l" },
             "RAM capture acknowledgement is incomplete"
         );
         let files = reply["files"]
@@ -1022,6 +1046,64 @@ mod tests {
         assert!(validate_capture(&bad).is_err());
     }
     use super::*;
+    #[test]
+    fn whole_stack_admission_refuses_before_focus_shutter_or_journal() {
+        struct FullDisk(Demo);
+        impl Camera for FullDisk {
+            fn identity(&self) -> Value {
+                self.0.identity()
+            }
+            fn status(&mut self) -> Result<Value> {
+                let mut s = self.0.status()?;
+                s["capture_destination"] = json!("host-pc");
+                s["raw_max_bytes"] = json!(crate::ptp::MEMBER_LIMIT);
+                Ok(s)
+            }
+            fn configure(&mut self) -> Result<()> {
+                Ok(())
+            }
+            fn prepare_stack(&mut self, frames: usize, raw: u64) -> Result<()> {
+                crate::capacity::check(Some(1024), frames, raw).map(|_| ())
+            }
+            fn focus(&mut self, _: u16, _: u32) -> Result<Value> {
+                panic!("Must not move focus on a full PC disk")
+            }
+            fn capture(&mut self, _: u32) -> Result<Value> {
+                panic!("Must not release shutter on a full PC disk")
+            }
+            fn preview(&mut self) -> Result<Preview> {
+                self.0.preview()
+            }
+            fn magnify(&mut self, _: u32, _: u16, _: u16) -> Result<()> {
+                Ok(())
+            }
+            fn disconnect(&mut self) -> Result<Value> {
+                self.0.disconnect()
+            }
+        }
+        let temp = tempfile::tempdir().unwrap();
+        let shared = Arc::new(Mutex::new(Snapshot::default()));
+        let mut camera = FullDisk(Demo {
+            shots: 4,
+            ..Demo::default()
+        });
+        let plan = Plan {
+            start: 60000,
+            end: 60899,
+            ..Plan::default()
+        };
+        let error = capture(
+            &mut camera,
+            &shared,
+            &AtomicU8::new(RUN),
+            plan,
+            temp.path().into(),
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("Shorten the stack"));
+        assert_eq!(std::fs::read_dir(temp.path()).unwrap().count(), 0);
+        assert!(!shared.lock().unwrap().exposure_uncertain);
+    }
     #[test]
     fn capture_receipt_and_exposure_fail_closed() {
         let mut demo = Demo {

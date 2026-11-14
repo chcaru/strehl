@@ -1,6 +1,7 @@
 //! Capture orchestration. One camera owner; explicit card or RAM-to-PC storage.
 pub mod backend;
 pub mod bounds;
+pub mod capacity;
 pub mod journal;
 pub mod lan;
 pub mod model;

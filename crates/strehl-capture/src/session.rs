@@ -87,11 +87,8 @@ impl Session {
         let shots = s.status["pixel_shift_shots"].as_u64().unwrap_or(1);
         let initial = planned.and_then(|n| {
             property(&s.status, "ShutterSpeed")
-                .and_then(|speed| timing::initial_cycle(speed, c.plan.settle_ms))
-                .map(|cycle| {
-                    cycle.mul_f64((n as u64 * shots) as f64)
-                        + timing::initial_setup(c.plan.settle_ms)
-                })
+                .and_then(|speed| timing::initial_plane(speed, c.plan.settle_ms, shots))
+                .map(|cycle| cycle.mul_f64(n as f64) + timing::initial_setup(c.plan.settle_ms))
         });
         let now = Instant::now();
         let timer=s.timing.as_ref().map(|t|json!({"label":t.label(now,s.phase==Phase::Paused),"elapsed":t.elapsed(now).as_secs_f64(),"remaining":t.remaining(now).as_secs_f64(),"finished":t.finished,"paused":s.phase==Phase::Paused}));
@@ -100,6 +97,28 @@ impl Session {
             .as_ref()
             .map(|report| report.lock().unwrap().clone())
             .unwrap_or_else(|| json!({"mode":"camera-sd"}));
+        let storage_required = planned.and_then(|n| {
+            crate::capacity::required(n * shots as usize, crate::capacity::raw_limit(&s.status))
+                .ok()
+        });
+        let storage_error = planned.and_then(|n| {
+            if storage["mode"] == "host-pc" {
+                crate::capacity::check(
+                    storage["free_bytes"].as_u64(),
+                    n * shots as usize,
+                    crate::capacity::raw_limit(&s.status),
+                )
+                .err()
+                .map(|e| e.to_string())
+            } else if !self.demo
+                && !property(&s.status, "MediaSLOT1_RemainingNumber")
+                    .is_some_and(|free| free >= n as u64 * shots)
+            {
+                Some("The SD card cannot fit this stack".into())
+            } else {
+                None
+            }
+        });
         let saved = (s.capture_run && storage["pipelined"] == true).then(|| {
             storage["saved_frames"]
                 .as_u64()
@@ -124,7 +143,7 @@ impl Session {
         json!({"camera_revision":s.revision,"plan_revision":c.revision,"sequence_id":s.sequence_id,"phase":s.phase,"connected":s.connected,"busy":s.command_pending,"editable":editable,"message":s.message,"demo":self.demo,
             "position":s.position,"plan":c.plan,"start_set":c.start_set,"end_set":c.end_set,"roi":c.roi,"planned":planned,"plan_error":plan_error,"initial_seconds":initial.map(|t|t.as_secs_f64()),
             "completed":s.completed,"saved":saved,"total":s.total,"timer":timer,"pending_control":self.worker.pending(),
-            "storage":storage,"shots_per_plane":shots,"camera_model":s.status["model"],
+            "storage":storage,"storage_required_bytes":storage_required,"storage_error":storage_error,"raw_max_bytes":crate::capacity::raw_limit(&s.status),"shots_per_plane":shots,"pixel_shift_options":s.status["pixel_shift_options"],"camera_model":s.status["model"],
             "failure":s.failure.as_ref().map(|message|json!({"message":message,"exposure_uncertain":s.exposure_uncertain,"can_reconnect":matches!(s.phase,Phase::Fault|Phase::Disconnected)&&!s.command_pending})),
             "battery":property(&s.status,"BatteryRemain").filter(|v|*v<=100),"card_remaining":property(&s.status,"MediaSLOT1_RemainingNumber"),
             "preview":{"available":s.preview.is_some(),"fresh":fresh,"generation":s.preview_generation,"age_seconds":s.preview_at.map(|t|t.elapsed().as_secs_f64()),"error":s.preview_error,"width":s.preview.as_ref().map(|p|p.rgb.width()),"height":s.preview.as_ref().map(|p|p.rgb.height())},
@@ -219,6 +238,24 @@ impl Session {
                         action = Some(Action::Move {
                             target,
                             settle_ms: c.plan.settle_ms,
+                        });
+                    }
+                    Command::Focus { target } => {
+                        action = Some(Action::Move {
+                            target,
+                            settle_ms: 100,
+                        });
+                    }
+                    Command::PixelShift { shots } => {
+                        ensure!(
+                            matches!(shots, 1 | 4)
+                                && s.status["pixel_shift_options"]
+                                    .as_array()
+                                    .is_some_and(|a| a.contains(&json!(shots))),
+                            "This camera does not offer that capture mode"
+                        );
+                        action = Some(Action::PixelShift {
+                            shots: shots as usize,
                         });
                     }
                     Command::Mark { start } => {
@@ -340,6 +377,12 @@ pub enum Command {
     Recover {
         acknowledge_uncertain: bool,
     },
+    Focus {
+        target: u16,
+    },
+    PixelShift {
+        shots: u8,
+    },
     Jog {
         delta: i32,
     },
@@ -374,6 +417,89 @@ pub enum Command {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn absolute_focus_and_mode_selection_refresh_estimates_and_reject_stale_requests() {
+        let temp = tempfile::tempdir().unwrap();
+        let session = Session::new(
+            Arc::new(Worker::new(PathBuf::new(), true)),
+            Arc::new(Mutex::new(Controls::new(temp.path().into()))),
+            true,
+        );
+        session
+            .dispatch(request(&session, "connect-focus", Command::Connect {}))
+            .unwrap();
+        until(&session, |s| s.phase == Phase::Ready && !s.command_pending);
+        session
+            .dispatch(request(
+                &session,
+                "focus-direct",
+                Command::Focus { target: 60500 },
+            ))
+            .unwrap();
+        until(&session, |s| {
+            s.phase == Phase::Ready && !s.command_pending && s.position == Some(60500)
+        });
+        session
+            .dispatch(request(
+                &session,
+                "mark-start",
+                Command::Mark { start: true },
+            ))
+            .unwrap();
+        session
+            .dispatch(request(
+                &session,
+                "mark-ending",
+                Command::Mark { start: false },
+            ))
+            .unwrap();
+        let before = session.state();
+        let stale = request(&session, "old-focus", Command::Focus { target: 61000 });
+        session
+            .dispatch(request(
+                &session,
+                "choose-four",
+                Command::PixelShift { shots: 4 },
+            ))
+            .unwrap();
+        until(&session, |s| {
+            !s.command_pending && s.status["pixel_shift_shots"] == 4
+        });
+        assert!(session.dispatch(stale).is_err());
+        let after = session.state();
+        assert!(
+            after["initial_seconds"].as_f64().unwrap()
+                > 3.0 * before["initial_seconds"].as_f64().unwrap() - 3.0
+        );
+        assert!(
+            after["storage_required_bytes"].as_u64().unwrap()
+                > before["storage_required_bytes"].as_u64().unwrap()
+        );
+        assert_eq!(after["position"], 60500);
+        assert!(
+            session
+                .dispatch(request(
+                    &session,
+                    "reject-sixteen",
+                    Command::PixelShift { shots: 16 }
+                ))
+                .is_err()
+        );
+        session
+            .dispatch(request(
+                &session,
+                "choose-single",
+                Command::PixelShift { shots: 1 },
+            ))
+            .unwrap();
+        until(&session, |s| {
+            !s.command_pending && s.status["pixel_shift_shots"] == 1
+        });
+        assert_eq!(
+            session.state()["initial_seconds"],
+            before["initial_seconds"]
+        );
+    }
     fn request(session: &Session, id: &str, command: Command) -> CommandRequest {
         let state = session.state();
         CommandRequest {

@@ -3,3 +3,5 @@
 .camera-recovery{max-width:900px;margin:18px auto;padding:18px 24px;background:var(--panel);border:1px solid #775249}.camera-recovery #camera-error{color:var(--danger);overflow-wrap:anywhere}.camera-recovery label{display:flex;align-items:flex-start;gap:10px;margin:12px 0}.camera-recovery input{flex:none}.camera-recovery button{margin-top:10px}@media(max-width:760px){.camera-recovery{margin:14px 16px;padding:16px}}
 button.primary:hover:not(:disabled){background:#f1c565;border-color:#f1c565}
 .storage-option{display:flex;align-items:center;gap:10px;margin:18px 0 8px}.storage-option input[type=checkbox]{width:20px;height:20px;flex-shrink:0;accent-color:var(--accent,#c1d6af)}
+
+#focus-slider{width:100%;margin:8px 0}#peaking-overlay{position:absolute;left:0;top:50%;transform:translateY(-50%);width:100%;height:auto;pointer-events:none}label:has(input[type=checkbox]){display:flex;align-items:center;gap:8px}

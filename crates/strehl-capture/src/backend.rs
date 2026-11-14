@@ -22,6 +22,17 @@ pub trait Camera: Send {
     fn identity(&self) -> Value;
     fn status(&mut self) -> Result<Value>;
     fn configure(&mut self) -> Result<()>;
+    fn set_pixel_shift(&mut self, shots: usize) -> Result<()> {
+        ensure!(
+            shots == 1,
+            "Pixel shift is not supported by this camera backend"
+        );
+        Ok(())
+    }
+    /// Fresh whole-stack storage admission, before any lens or shutter action.
+    fn prepare_stack(&mut self, _frames: usize, _max_raw_bytes: u64) -> Result<()> {
+        Ok(())
+    }
     fn focus(&mut self, target: u16, settle_ms: u32) -> Result<Value>;
     fn capture(&mut self, timeout_s: u32) -> Result<Value>;
     fn preview(&mut self) -> Result<Preview>;
@@ -54,6 +65,16 @@ pub struct Native {
 }
 
 impl Native {
+    pub fn group_stream(&self) -> bool {
+        self.hello["group_stream_protocol"] == 1
+    }
+    pub fn raw_format(&self) -> &'static str {
+        if self.group_stream() {
+            "uncompressed"
+        } else {
+            "lossless-l"
+        }
+    }
     pub fn shots_per_plane(&self) -> usize {
         if self.hello["group_stream_protocol"] == 1 && self.hello["pixel_shift_shots"] == 4 {
             4
@@ -66,7 +87,7 @@ impl Native {
         timeout_s: u32,
         ready: &mut dyn FnMut(Value) -> Result<()>,
     ) -> Result<Value> {
-        if self.shots_per_plane() == 1 {
+        if !self.group_stream() {
             let response = self.capture(timeout_s)?;
             ready(response.clone())?;
             return Ok(response);
@@ -81,6 +102,7 @@ impl Native {
             self.poisoned = true;
             return Err(error).context("Write group command; it was not retried");
         }
+        let shots = self.shots_per_plane();
         let mut count = 0;
         let mut failure = None;
         loop {
@@ -89,7 +111,7 @@ impl Native {
                 count += 1;
                 // Always drain the camera's current group. If queue persistence
                 // fails, completed RAM files remain and no next release is sent.
-                if count > 4 {
+                if count > shots {
                     failure = Some(anyhow::anyhow!("Unexpected extra group member"));
                 } else if let Err(error) = ready(reply) {
                     failure = Some(error);
@@ -99,13 +121,13 @@ impl Native {
                     return Err(error);
                 }
                 ensure!(
-                    count == 4
+                    count == shots
                         && reply["completion"] == "ptp-group-complete"
-                        && reply["pixel_shift_shots"] == 4
+                        && reply["pixel_shift_shots"] == shots
                         && reply["group_idle"] == true
                         && reply["buffer_empty"] == true
-                        && reply["files"].as_array().is_some_and(|a| a.len() == 4),
-                    "Four-shot group did not complete; no shutter retry"
+                        && reply["files"].as_array().is_some_and(|a| a.len() == shots),
+                    "Capture group did not complete; no shutter retry"
                 );
                 return Ok(reply);
             }
@@ -227,13 +249,24 @@ pub fn read_reply(reader: &mut impl BufRead) -> Result<Value> {
 
 impl Camera for Native {
     fn identity(&self) -> Value {
-        json!({"backend":if self.shots_per_plane()==4 {"sony-ptp3"}else{"sony-sdk-2.02"}, "hello":self.hello, "bridge_name":self.executable.file_name(),
+        json!({"backend":if self.group_stream() {"sony-ptp3"}else{"sony-sdk-2.02"}, "hello":self.hello, "bridge_name":self.executable.file_name(),
             "bridge_sha256":std::fs::read(&self.executable).ok().map(|bytes|Sha256::digest(bytes).iter().map(|b|format!("{b:02x}")).collect::<String>()),
-            "pixel_shift_supported_by_this_backend":self.shots_per_plane()==4,
+            "pixel_shift_supported_by_this_backend":self.group_stream(),
             "pixel_shift_shots":self.shots_per_plane()})
     }
     fn status(&mut self) -> Result<Value> {
-        self.call("status", 20)
+        let status = self.call("status", 20)?;
+        if self.group_stream() {
+            let shots = status["pixel_shift_shots"]
+                .as_u64()
+                .context("Missing pixel-shift count")?;
+            ensure!(
+                matches!(shots, 1 | 4),
+                "Unsupported pixel-shift count; select one or four"
+            );
+            self.hello["pixel_shift_shots"] = json!(shots);
+        }
+        Ok(status)
     }
     fn configure(&mut self) -> Result<()> {
         if self.hello.is_null() {
@@ -247,7 +280,7 @@ impl Camera for Native {
             !self.host_mode || self.hello["host_pipeline_protocol"] == 1,
             "This Sony bridge does not support the bounded RAW queue. Install the matching Pi bridge and controller together."
         );
-        if self.shots_per_plane() == 4 {
+        if self.group_stream() {
             ensure!(
                 self.host_mode,
                 "A7CR PTP capture requires the RAM-to-PC receiver"
@@ -305,6 +338,19 @@ impl Camera for Native {
             property(&status, "FocusPositionCurrentValue").is_some(),
             "Camera does not expose absolute focus; check the electronic lens and MF mode"
         );
+        Ok(())
+    }
+    fn set_pixel_shift(&mut self, shots: usize) -> Result<()> {
+        ensure!(
+            self.group_stream() && matches!(shots, 1 | 4),
+            "Pixel-shift selection unavailable"
+        );
+        let status = self.call(&format!("pixel-shift\t{shots}"), 20)?;
+        ensure!(
+            status["pixel_shift_shots"] == shots,
+            "Capture mode did not read back"
+        );
+        self.hello["pixel_shift_shots"] = json!(shots);
         Ok(())
     }
     fn focus(&mut self, target: u16, settle_ms: u32) -> Result<Value> {
@@ -398,6 +444,7 @@ impl Drop for Native {
 
 /// Explicit simulator; never selected as a fallback for a failed camera.
 pub struct Demo {
+    pub shots: usize,
     pub position: u16,
     pub frame: u64,
     pub remaining: u64,
@@ -410,6 +457,7 @@ pub struct Demo {
 impl Default for Demo {
     fn default() -> Self {
         Self {
+            shots: 1,
             position: 60627,
             frame: 0,
             remaining: 9000,
@@ -444,9 +492,14 @@ impl Camera for Demo {
                 json!({"value":value,"readable":true,"writable":false}),
             );
         }
-        Ok(json!({"properties":props}))
+        Ok(json!({"properties":props,"pixel_shift_shots":self.shots,"pixel_shift_options":[1,4]}))
     }
     fn configure(&mut self) -> Result<()> {
+        Ok(())
+    }
+    fn set_pixel_shift(&mut self, shots: usize) -> Result<()> {
+        ensure!(matches!(shots, 1 | 4), "Unsupported simulated mode");
+        self.shots = shots;
         Ok(())
     }
     fn focus(&mut self, target: u16, _settle_ms: u32) -> Result<Value> {
@@ -466,10 +519,10 @@ impl Camera for Demo {
             !self.fail_capture,
             "Simulated acknowledgement loss after release"
         );
-        ensure!(self.remaining > 0, "Simulated card full");
-        self.remaining -= 1;
+        ensure!(self.remaining >= self.shots as u64, "Simulated card full");
+        self.remaining -= self.shots as u64;
         Ok(
-            json!({"captured_events":1,"destination":"memory-card","completion":"camera-events-and-card-idle","simulated":true,"card_state":"not-writing","bracket_idle":true,"files":[],"file_verification":"not-performed"}),
+            json!({"captured_events":1,"pixel_shift_shots":self.shots,"destination":"memory-card","completion":"camera-events-and-card-idle","simulated":true,"card_state":"not-writing","bracket_idle":true,"files":[],"file_verification":"not-performed"}),
         )
     }
     fn preview(&mut self) -> Result<Preview> {

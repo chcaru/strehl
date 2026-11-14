@@ -16,8 +16,7 @@ use std::{
 };
 
 const META_LIMIT: usize = 16 * 1024 * 1024;
-pub const MEMBER_LIMIT: u64 = 128 * 1024 * 1024;
-pub const SHOTS: usize = 4;
+pub const MEMBER_LIMIT: u64 = 160 * 1024 * 1024;
 
 trait Link {
     fn write(&mut self, bytes: &[u8]) -> Result<()>;
@@ -411,6 +410,7 @@ struct Camera<L> {
     group: u64,
     uncertain: bool,
     configured: bool,
+    shots: usize,
 }
 impl<L: Link> Camera<L> {
     fn open(link: L, ram: PathBuf) -> Result<Self> {
@@ -440,6 +440,7 @@ impl<L: Link> Camera<L> {
             group: 0,
             uncertain: false,
             configured: false,
+            shots: 4,
         })
     }
     fn set(&mut self, code: u16, n: u64, save: bool) -> Result<()> {
@@ -495,24 +496,43 @@ impl<L: Link> Camera<L> {
         self.set(0xd23a, 4, true)?; // Public protocol allows writes 1 and 4 only.
         self.set(0xd23b, 65535, true)?;
         let p = self.ptp.properties()?;
-        Self::mode(&p)?;
+        self.mode(&p)?;
         self.configured = true;
         Ok(json!({"ok":true,"pixel_shift_shots":4}))
     }
-    fn mode(p: &Properties) -> Result<()> {
+    fn set_pixel_shift(&mut self, shots: usize) -> Result<Value> {
+        ensure!(self.configured && !self.uncertain, "Camera is not ready");
+        ensure!(matches!(shots, 1 | 4), "Select one or four RAWs per plane");
+        Self::idle(&self.ptp.properties()?)?;
+        self.set(0xd23a, shots as u64, true)?;
+        if shots == 4 {
+            self.set(0xd23b, 65535, true)?;
+        }
+        // Keep the lossless transport's known uncompressed sensor representation.
+        self.set(0xd288, 5, true)?;
+        self.shots = shots;
+        let p = self.ptp.properties()?;
+        self.mode(&p)?;
+        self.status()
+    }
+    fn mode(&self, p: &Properties) -> Result<()> {
+        if self.shots == 4 {
+            ensure!(
+                value(p, 0xd239)? == 1 && value(p, 0xd23b)? == 65535,
+                "Four-shot interval/mode changed; no shutter was sent"
+            );
+        }
         for (code, n) in [
             (0x500a, 1),
             (0xd222, 1),
             (0xd253, 1),
             (0xd288, 5),
-            (0xd239, 1),
-            (0xd23a, 4),
-            (0xd23b, 65535),
+            (0xd23a, self.shots as u64),
             (0x5013, 1),
         ] {
             ensure!(
                 value(p, code)? == n,
-                "Four-shot mode invariant 0x{code:04x} changed; no shutter was sent"
+                "Capture mode invariant 0x{code:04x} changed; no shutter was sent"
             );
         }
         Ok(())
@@ -541,12 +561,15 @@ impl<L: Link> Camera<L> {
             (0xd23c, "PixelShiftStatus"),
             (0xd23d, "PixelShiftProgress"),
             (0xd215, "ShootingFileInfo"),
+            (0xd214, "PredictedMaximumFileSize"),
         ] {
             if let Some(v) = p.get(&code).filter(|p| p.enabled != 0) {
                 result.insert(name.into(), json!({"value":v.value,"writable":v.writable && v.enabled==1,"allowed":v.allowed}));
             }
         }
-        Ok(json!({"ok":true,"model":"ILCE-7CR","pixel_shift_shots":4,"properties":result}))
+        Ok(
+            json!({"ok":true,"model":"ILCE-7CR","pixel_shift_shots":value(&p,0xd23a)?,"pixel_shift_options":[1,4],"raw_max_bytes":MEMBER_LIMIT,"properties":result}),
+        )
     }
     fn focus(&mut self, target: u16, settle: u32) -> Result<Value> {
         ensure!(
@@ -555,7 +578,7 @@ impl<L: Link> Camera<L> {
         );
         let p = self.ptp.properties()?;
         Self::idle(&p)?;
-        Self::mode(&p)?;
+        self.mode(&p)?;
         let before = value(&p, 0xe043)?;
         self.ptp.events()?;
         // Target-setting readback is NOT current lens position. Always use E043.
@@ -590,7 +613,7 @@ impl<L: Link> Camera<L> {
             thread::sleep(Duration::from_millis(40));
         }
         Ok(
-            json!({"ok":true,"before":before,"requested":target,"readback":target,"completion":if result_event.is_some(){"event-and-stable-readback"}else{"stable-current-readback"},"focus_result_event":result_event,"settle_ms":settle,"pixel_shift_shots":4}),
+            json!({"ok":true,"before":before,"requested":target,"readback":target,"completion":if result_event.is_some(){"event-and-stable-readback"}else{"stable-current-readback"},"focus_result_event":result_event,"settle_ms":settle,"pixel_shift_shots":self.shots}),
         )
     }
     fn preview(&mut self) -> Result<Value> {
@@ -627,7 +650,7 @@ impl<L: Link> Camera<L> {
         );
         let p = self.ptp.properties()?;
         Self::idle(&p)?;
-        Self::mode(&p)?;
+        self.mode(&p)?;
         ensure!(
             value(&p, 0x500e)? == 1
                 && value(&p, 0xd20d)? != 0
@@ -635,7 +658,7 @@ impl<L: Link> Camera<L> {
             "Use manual timed exposure and fixed ISO"
         );
         ensure!(
-            fs2::available_space(&self.ram)? >= MEMBER_LIMIT * SHOTS as u64 + 4 * 1024 * 1024,
+            fs2::available_space(&self.ram)? >= MEMBER_LIMIT * self.shots as u64 + 4 * 1024 * 1024,
             "Insufficient reserved group RAM"
         );
         let focus = value(&p, 0xe043)?;
@@ -659,7 +682,7 @@ impl<L: Link> Camera<L> {
         loop {
             self.ptp.events()?;
             let p = self.ptp.properties()?;
-            Self::mode(&p)?;
+            self.mode(&p)?;
             ensure!(
                 value(&p, 0xe043)? == focus,
                 "Focus changed within pixel-shift group"
@@ -676,7 +699,7 @@ impl<L: Link> Camera<L> {
             }
             if ready & 0x8000 != 0 && ready & 0x7fff != 0 {
                 ensure!(
-                    files.len() < SHOTS,
+                    files.len() < self.shots,
                     "Unexpected extra RAW; inspect camera buffer before reconnecting"
                 );
                 let (expected, name, sequence) =
@@ -695,11 +718,11 @@ impl<L: Link> Camera<L> {
                     bytes == expected,
                     "Incomplete RAW body retained; never replay shutter"
                 );
-                let item = json!({"ok":true,"event":"raw-ready","destination":"host-ram","completion":"ptp-object-complete","raw_compression":"uncompressed","path":path,"bytes":bytes,"group_id":group,"member_index":files.len()+1,"members":4,"camera_name":name,"camera_sequence":sequence,"focus":focus,"seconds":started.elapsed().as_secs_f64()});
+                let item = json!({"ok":true,"event":"raw-ready","destination":"host-ram","completion":"ptp-object-complete","raw_compression":"uncompressed","path":path,"bytes":bytes,"group_id":group,"member_index":files.len()+1,"members":self.shots,"camera_name":name,"camera_sequence":sequence,"focus":focus,"seconds":started.elapsed().as_secs_f64()});
                 files.push(item.clone());
                 emit(item)?;
                 idle_since = None;
-            } else if files.len() == SHOTS && active == 0 && ready == 0 {
+            } else if files.len() == self.shots && active == 0 && ready == 0 {
                 if idle_since.get_or_insert_with(Instant::now).elapsed()
                     >= Duration::from_millis(250)
                 {
@@ -710,13 +733,13 @@ impl<L: Link> Camera<L> {
             }
             ensure!(
                 started.elapsed() < Duration::from_secs(timeout.into()),
-                "Four-shot group incomplete or timed out; files retained, shutter never retried"
+                "Capture group incomplete or timed out; files retained, shutter never retried"
             );
             thread::sleep(Duration::from_millis(25));
         }
         self.uncertain = false;
         Ok(
-            json!({"ok":true,"destination":"host-ram","completion":"ptp-group-complete","raw_compression":"uncompressed","pixel_shift_shots":4,"group_id":group,"focus":focus,"group_idle":true,"buffer_empty":true,"files":files,"progress":progress,"seconds":started.elapsed().as_secs_f64()}),
+            json!({"ok":true,"destination":"host-ram","completion":"ptp-group-complete","raw_compression":"uncompressed","pixel_shift_shots":self.shots,"group_id":group,"focus":focus,"group_idle":true,"buffer_empty":true,"files":files,"progress":progress,"seconds":started.elapsed().as_secs_f64()}),
         )
     }
     fn close(&mut self) -> Result<Value> {
@@ -925,6 +948,7 @@ pub fn serve() -> Result<()> {
                 match a.as_slice() {
                     ["configure"] => camera.configure(),
                     ["status"] => camera.status(),
+                    ["pixel-shift", shots] => camera.set_pixel_shift(shots.parse()?),
                     ["preview"] => camera.preview(),
                     ["focus", target, settle] => camera.focus(target.parse()?, settle.parse()?),
                     ["capture-host", timeout] => camera.capture(timeout.parse()?, &mut emit),

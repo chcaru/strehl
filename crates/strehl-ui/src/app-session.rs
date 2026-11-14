@@ -160,7 +160,7 @@ impl StrehlApp {
         let mut reload = false;
         ui.add_enabled_ui(enabled, |ui| {
             ui.label(RichText::new("MULTI-STACK SESSION").monospace().size(10.0).color(ACCENT));
-            egui::ComboBox::from_id_salt("session-mode").selected_text(mode_label(session.manifest.mode)).show_ui(ui, |ui| {
+            crate::theme::Dropdown::from_id_salt("session-mode").selected_text(mode_label(session.manifest.mode)).show_ui(ui, |ui| {
                 for mode in MODES { ui.selectable_value(&mut session.manifest.mode, mode, mode_label(mode)); }
             });
             if session.manifest.mode != before.manifest.mode { session.normalize_mode_options(); }
@@ -177,7 +177,7 @@ impl StrehlApp {
             ui.add_space(4.0);
             if crate::session_workspace::primary_available(session.manifest.mode) {
             let selected = session.manifest.primary_pass.and_then(|i| session.manifest.passes.get(i)).map_or("Automatic · no preferred pass", |pass| pass.name.as_str()).to_owned();
-            egui::ComboBox::from_id_salt("session-primary").selected_text(selected).show_ui(ui, |ui| {
+            crate::theme::Dropdown::from_id_salt("session-primary").selected_text(selected).show_ui(ui, |ui| {
                 ui.selectable_value(&mut session.manifest.primary_pass, None, "Automatic · no preferred pass");
                 for (i, pass) in session.manifest.passes.iter().enumerate() { ui.selectable_value(&mut session.manifest.primary_pass, Some(i), format!("Primary: {}", pass.name)); }
             });
@@ -337,7 +337,7 @@ impl StrehlApp {
                         .collect::<Vec<_>>()
                 })
                 .unwrap_or_default();
-            egui::ComboBox::from_id_salt("session-layer-view")
+            crate::theme::Dropdown::from_id_salt("session-layer-view")
                 .selected_text(names.get(current).map_or("Photograph", String::as_str))
                 .show_ui(ui, |ui| {
                     for (index, path) in self.session_ui.layers.iter().enumerate() {

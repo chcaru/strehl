@@ -218,7 +218,7 @@ impl SavedDiagnostics {
             if catalog.maps.is_empty() {
                 ui.small("No optional evidence maps were saved.");
             } else {
-                egui::ComboBox::from_id_salt("saved-session-map")
+                crate::theme::Dropdown::from_id_salt("saved-session-map")
                     .selected_text(
                         self.selected
                             .and_then(|i| catalog.maps.get(i))
