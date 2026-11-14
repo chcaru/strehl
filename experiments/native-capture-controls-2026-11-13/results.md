@@ -117,12 +117,21 @@ The source-inclusive desktop package is
 **Strehl Capture** shortcut points to it. Existing receiver state, launchers and
 desktop settings were backed up; the running receiver and old desktop window
 were left intact. Reopen the desktop using the updated shortcut to load the UI.
-The Pi is updated. The narrow LAN firewall rule needs administrator confirmation
-to point to the new desktop executable; the initial Windows prompt was canceled.
-The running receiver continues to use its existing rule. Pending that approval,
-the sign-in launcher retains the previous allowed receiver executable; the new
-desktop shortcut remains installed. All 896 packaged source-manifest entries
-match the workspace bytes.
+The Pi is updated. After explicit user approval of the second Windows prompt,
+`update-firewall.ps1` updated the existing receiver rule to the new executable.
+Read-back verified it is enabled for inbound TCP 8789 from `10.0.0.0/24` only.
+The sign-in launcher now selects that executable. The running receiver was left
+intact and its authenticated status check passed. Private local receipts are
+`outputs/native-capture-controls-2026-11-13/firewall-approved.json` and
+`receiver-launcher-approved.json` in the same directory.
+
+**VERIFIED:** All 896 packaged source-manifest entries match the workspace bytes
+at code commit `5178f7eb93cf6234c36e98df0af18a93d60ff3cd`. The source-inclusive
+`outputs/Strehl-5178f7eb9-Windows-x64.zip` contains 907 files and is 33,628,768
+bytes. Every ZIP member passed CRC validation; the embedded executable matches
+the tested executable hash above. Archive SHA-256:
+`e218d86fa0b38c4b7c3fe18a52f014ac4dcde3183ac5dc058748330a954511e8`.
+Extract the complete archive and launch `Strehl/Strehl.exe`.
 
 Unrelated `experiments/ca-before-mhc/gpu.rs` remains untouched, with SHA-256
 `56870cbff57787d388ea42e8fe129b53ebcbc8a38e396fc91c5c3e03904e9af7`.
