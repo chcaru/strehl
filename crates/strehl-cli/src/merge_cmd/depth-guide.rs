@@ -993,6 +993,21 @@ pub(super) fn record(index: usize, luma: &[f32]) {
     let Some((w, h)) = tap().as_ref().map(|t| (t.w, t.h)) else {
         return;
     };
+    let e = energies(luma, w, h);
+    store(index, &e[0], &e[1]);
+}
+
+/// The two blurs [`record`] takes the band energies between: their sigmas,
+/// in order (`GpuFold::enable_depth` blurs with the same taps).
+pub(super) fn record_sigmas() -> [f64; 2] {
+    [1.0, 3f64.sqrt()]
+}
+
+/// The cell side of the energies (plane px).
+pub(super) const RECORD_CELL: usize = CELL;
+
+/// [`record`]'s band 0 and 1 cell energies of a `w x h` luma.
+pub(super) fn energies(luma: &[f32], w: usize, h: usize) -> [Vec<f32>; 2] {
     // `two_band_images` and `cell_energy_of`, through reused buffers and
     // without materialising the differences: each cell sums the same
     // `f64::from(a - b)` squares in the same order.
@@ -1001,8 +1016,9 @@ pub(super) fn record(index: usize, luma: &[f32]) {
         .unwrap_or_else(|e| e.into_inner())
         .pop()
         .unwrap_or_default();
-    axial_colour::blur_into(luma, w, h, 1.0, &mut tmp, &mut g1);
-    axial_colour::blur_into(&g1, w, h, 3f64.sqrt(), &mut tmp, &mut g2);
+    let [s1, s2] = record_sigmas();
+    axial_colour::blur_into(luma, w, h, s1, &mut tmp, &mut g1);
+    axial_colour::blur_into(&g1, w, h, s2, &mut tmp, &mut g2);
     let e = [
         cell_energy_of_difference(luma, &g1, w, h),
         cell_energy_of_difference(&g1, &g2, w, h),
@@ -1011,13 +1027,38 @@ pub(super) fn record(index: usize, luma: &[f32]) {
         .lock()
         .unwrap_or_else(|e| e.into_inner())
         .push([tmp, g1, g2]);
+    e
+}
+
+/// [`record`] of energies measured elsewhere (the GPU fold's, which are
+/// [`energies`] bit for bit): `cells` holds band 0's cell grid then band 1's.
+pub(super) fn record_energies(index: usize, cells: &[f32]) -> Result<()> {
+    if let Some(t) = tap().as_ref() {
+        ensure!(
+            cells.len() == 2 * t.cw * t.ch,
+            "depth energies for frame {index}: {} values for 2 x {} cells",
+            cells.len(),
+            t.cw * t.ch
+        );
+    }
+    let half = cells.len() / 2;
+    store(index, &cells[..half], &cells[half..]);
+    Ok(())
+}
+
+fn store(index: usize, band0: &[f32], band1: &[f32]) {
     let mut guard = tap();
     let Some(t) = guard.as_mut() else { return };
     let cells = t.cw * t.ch;
-    for (band, e) in t.energy.iter_mut().zip(&e) {
+    for (band, e) in t.energy.iter_mut().zip([band0, band1]) {
         band[index * cells..(index + 1) * cells].copy_from_slice(e);
     }
     t.placed[index] = true;
+}
+
+/// The luma plane's size while a measurement runs ([`begin_tap`]).
+pub(super) fn tap_size() -> Option<(usize, usize)> {
+    tap().as_ref().map(|t| (t.w, t.h))
 }
 
 /// Finish the measurement taken during the fold: what the pre-pass does

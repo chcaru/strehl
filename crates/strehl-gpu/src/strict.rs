@@ -192,4 +192,7 @@ pub const ENTRY_POINTS: &[&str] = &[
     "null_accum",
     "screen_census",
     "assemble",
+    "dg_blur_h",
+    "dg_blur_v",
+    "dg_energy",
 ];

@@ -194,6 +194,17 @@ impl Frame2Unit {
     }
 }
 
+/// [`blur_into`]'s radius and normalised taps for `sigma` (also what the GPU
+/// fold's depth energies blur with, `GpuFold::enable_depth`).
+pub(super) fn gaussian_taps(sigma: f64) -> (usize, Vec<f32>) {
+    let r = (3.0 * sigma).ceil() as isize;
+    let k: Vec<f32> = (-r..=r)
+        .map(|t| (-0.5 * (t as f64 / sigma).powi(2)).exp() as f32)
+        .collect();
+    let s: f32 = k.iter().sum();
+    (r as usize, k.iter().map(|v| v / s).collect())
+}
+
 /// Separable Gaussian blur of a `w x h` plane, edge clamped.
 pub(super) fn blur(src: &[f32], w: usize, h: usize, sigma: f64) -> Vec<f32> {
     let (mut tmp, mut out) = (Vec::new(), Vec::new());
@@ -211,12 +222,8 @@ pub(super) fn blur_into(
     tmp: &mut Vec<f32>,
     out: &mut Vec<f32>,
 ) {
-    let r = (3.0 * sigma).ceil() as isize;
-    let k: Vec<f32> = (-r..=r)
-        .map(|t| (-0.5 * (t as f64 / sigma).powi(2)).exp() as f32)
-        .collect();
-    let s: f32 = k.iter().sum();
-    let k: Vec<f32> = k.iter().map(|v| v / s).collect();
+    let (ru, k) = gaussian_taps(sigma);
+    let r = ru as isize;
     // Every element of `tmp` is written below; `out` accumulates from zero.
     tmp.resize(w * h, 0.0);
     // Columns whose taps all fall inside the row accumulate tap by tap over

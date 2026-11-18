@@ -1278,3 +1278,73 @@ fn assemble(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroup
     let gyb = 0.5 * (down.z - up.z);
     rgbw[o + 2u * n] = v.z + (bx * gxb + by * gyb);
 }
+
+// ---- Depth energies (`depth_guide::record`, round-2 plan stage Q6a) ----
+// The optical restoration's depth measurement from a frame's level-0 luma:
+// two separable Gaussian blurs (`axial_colour::blur_into`: edge clamped, each
+// output summing its taps in tap order from zero), then per 8 x 8 cell the
+// mean of the squared differences of luma and blur and of the two blurs
+// (`cell_energy_of_difference`: 64 f64 terms in row-major order, divided by
+// 64, rounded to f32). Taps are the CPU's f32 values, widened into consts.
+const C_TAPS: u32 = 91u;
+
+fn dg_ld(in_rgbw: bool, i: u32) -> f32 {
+    if (in_rgbw) { return rgbw[i]; }
+    return work[i];
+}
+
+// a = (src, w, h, dst), b = (r, taps, first tap, flags: 1 src in rgbw).
+// Writes rgbw.
+@compute @workgroup_size(256)
+fn dg_blur_h(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let i = gid(id, nwg);
+    let w = p.a.y;
+    if (i >= w * p.a.z) { return; }
+    let x = i % w; let y = i / w;
+    let r = i32(p.b.x);
+    let src_rgbw = (p.b.w & 1u) != 0u;
+    var acc = 0.0;
+    for (var t = 0u; t < p.b.y; t = t + 1u) {
+        let kv = f32(consts[C_TAPS + p.b.z + t]);
+        acc = acc + kv * dg_ld(src_rgbw, p.a.x + y * w + clampi(i32(x) + i32(t) - r, w));
+    }
+    rgbw[p.a.w + i] = acc;
+}
+
+// a = (src in rgbw, w, h, dst in rgbw), b = (r, taps, first tap, 0).
+@compute @workgroup_size(256)
+fn dg_blur_v(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let i = gid(id, nwg);
+    let w = p.a.y; let h = p.a.z;
+    if (i >= w * h) { return; }
+    let x = i % w; let y = i / w;
+    let r = i32(p.b.x);
+    var o = 0.0;
+    for (var t = 0u; t < p.b.y; t = t + 1u) {
+        let kv = f32(consts[C_TAPS + p.b.z + t]);
+        o = o + kv * rgbw[p.a.x + clampi(i32(y) + i32(t) - r, h) * w + x];
+    }
+    rgbw[p.a.w + i] = o;
+}
+
+// One cell per invocation: a = (first, second, w, dst in rgbw), b = (cw, ch,
+// flags: 1 first in rgbw, 0).
+@compute @workgroup_size(256)
+fn dg_energy(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let c = gid(id, nwg);
+    let cw = p.b.x;
+    if (c >= cw * p.b.y) { return; }
+    let cx = c % cw; let cy = c / cw;
+    let w = p.a.z;
+    let a_rgbw = (p.b.z & 1u) != 0u;
+    var s = f64(0.0);
+    for (var y = 0u; y < 8u; y = y + 1u) {
+        for (var x = 0u; x < 8u; x = x + 1u) {
+            let o = (cy * 8u + y) * w + cx * 8u + x;
+            let d = f64(dg_ld(a_rgbw, p.a.x + o) - rgbw[p.a.y + o]);
+            s = s + d * d;
+        }
+    }
+    // Division by 64 is exact: the same value as the CPU's `s / 64.0`.
+    rgbw[p.a.w + c] = f32(s * f64(0.015625));
+}

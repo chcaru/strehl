@@ -402,6 +402,57 @@ REGISTRY: dict[str, Declared] = {
         ),
         note="Round-2 performance plan stage Q2 (2026-11-18): 153 of 153 scarab frames checked.",
     ),
+    "STREHL_FOLD_TRACE": Declared(
+        kind="diagnostic",
+        default="off",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/fold-trace.rs: `1` times the GPU fold's steps (waiting "
+            "for decodes, upload, probe, fold submit, luma hand-off) and the "
+            "decoder threads' busy and idle time, printed after the fold. Clock "
+            "reads only."
+        ),
+        note="Round-2 performance plan stage Q6b (2026-11-18).",
+    ),
+    "STREHL_FOLD_POOL_THREADS": Declared(
+        kind="control",
+        default="8 (the GPU fold's pool)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd.rs: 1..=256, at most the render's workers, sizes the pool "
+            "the GPU fold stages uploads and records depth on. Threads only. "
+            "MEASURED 2026-11-18: 16 was slower than 8."
+        ),
+        note="Round-2 performance plan, a quantity of the supervisor's plan (section 7).",
+    ),
+    "STREHL_DEPTH_DEVICE": Declared(
+        kind="control",
+        default="on (a GPU-prepared fold measures the restoration's depth energies on the device)",
+        verified="measured",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd.rs / strehl-gpu enable_depth(): `off` reads each frame's "
+            "luma back and measures on the CPU (depth_guide::record), as before. "
+            "The device mirrors blur_into and cell_energy_of_difference operand "
+            "for operand: 196 of 196 scarab frames bit-identical under "
+            "STREHL_DEPTH_CHECK=1."
+        ),
+        note="Round-2 performance plan stage Q6a (2026-11-18).",
+    ),
+    "STREHL_DEPTH_CHECK": Declared(
+        kind="diagnostic",
+        default="off",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd.rs LumaTap: `1` reads the luma back beside the device's "
+            "depth energies and fails the render unless the CPU's energies of "
+            "it are bit-identical; output unchanged."
+        ),
+        note="Round-2 performance plan stage Q6a (2026-11-18).",
+    ),
     "STREHL_READ_AHEAD_MB": Declared(
         kind="control",
         default="3072 (MB of files read ahead and not yet decoded)",

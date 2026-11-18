@@ -75,6 +75,9 @@ enum Kernel {
     NullAccum,
     ScreenCensus,
     Assemble,
+    DgBlurH,
+    DgBlurV,
+    DgEnergy,
 }
 
 impl Kernel {
@@ -517,7 +520,7 @@ pub struct GpuFold {
     /// The full-resolution channel planes (`fold.wgsl`'s `rgbw`).
     rgbw: wgpu::Buffer,
     /// Mapped read-back buffers for level 0's luma, reused.
-    luma_pool: Vec<wgpu::Buffer>,
+    luma_pool: std::sync::Arc<std::sync::Mutex<Vec<wgpu::Buffer>>>,
     /// The frame slot the next [`GpuFold::stage`] fills (0 or 1).
     next_slot: usize,
     /// One persistently mapped upload buffer per frame slot.
@@ -538,6 +541,8 @@ pub struct GpuFold {
     /// Per accumulator: reset before its next fold (lazy, so a finished
     /// chunk can be read before it is cleared).
     pending_reset: Vec<bool>,
+    /// [`GpuFold::enable_depth`]: kept luma is read back as depth energies.
+    depth: Option<DepthPlan>,
     pub adapter: String,
     pub decorated_results: usize,
 }
@@ -671,6 +676,20 @@ pub struct ScreenCensus {
 
 /// Maximum dispatches one frame records; sizes the parameter buffers.
 const MAX_CALLS: usize = 1024;
+
+/// Room for the depth energies' blur taps in `consts` (`fold.wgsl`'s
+/// `C_TAPS`), both blurs together.
+const DEPTH_TAPS_MAX: usize = 64;
+
+/// The depth energies on the device ([`GpuFold::enable_depth`]): each blur's
+/// radius, tap count and first tap in `consts`.
+#[derive(Clone, Copy, Debug)]
+struct DepthPlan {
+    blurs: [(u32, u32, u32); 2],
+    cells: (u32, u32),
+    /// Also read the luma back, after the energies (for checking them).
+    with_luma: bool,
+}
 
 /// Largest coordinate or extent of a square-sum window (packed in 16 bits).
 const SQ_WINDOW_MAX: usize = 0xffff;
@@ -875,6 +894,53 @@ pub struct PendingLuma {
     n: usize,
 }
 
+/// A frame's kept luma handed off by [`GpuFold::luma_handoff`]: read on any
+/// thread, while the fold goes on.
+pub struct LumaReadback {
+    device: wgpu::Device,
+    pending: PendingLuma,
+    pool: std::sync::Arc<std::sync::Mutex<Vec<wgpu::Buffer>>>,
+}
+
+impl LumaReadback {
+    /// Wait for the copy (not for later work), read it, and return the
+    /// read-back buffer to the fold's pool.
+    pub fn read(self) -> Result<Vec<f32>, String> {
+        let LumaReadback {
+            device,
+            pending,
+            pool,
+        } = self;
+        device
+            .poll(wgpu::PollType::Wait {
+                submission_index: Some(pending.index),
+                timeout: None,
+            })
+            .map_err(|e| format!("GPU luma wait: {e:?}"))?;
+        let out = {
+            let view = pending
+                .readback
+                .slice(..)
+                .get_mapped_range()
+                .map_err(|e| format!("mapped luma: {e:?}"))?;
+            // Read-back memory is slow to read on one thread (MEASURED 36 ms
+            // for these 60 MB on the RTX 5090, 1.7 GB/s); in parallel pieces,
+            // as `read_chunk` reads the accumulators.
+            let src = bytemuck::cast_slice::<u8, f32>(&view[..pending.n * 4]);
+            let mut out = vec![0f32; pending.n];
+            out.par_chunks_mut(1 << 18)
+                .zip(src.par_chunks(1 << 18))
+                .for_each(|(d, s)| d.copy_from_slice(s));
+            out
+        };
+        pending.readback.unmap();
+        pool.lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .push(pending.readback);
+        Ok(out)
+    }
+}
+
 /// What [`GpuFold::probe`] reads back.
 #[derive(Debug, Default)]
 pub struct ProbeOutput {
@@ -1059,10 +1125,12 @@ impl GpuFold {
             .map(f64::from),
         );
         debug_assert_eq!(consts.len(), 91, "fold.wgsl consts layout");
+        // `C_TAPS`: the depth energies' blur taps ([`Self::enable_depth`]).
+        consts.extend_from_slice(&[0.0; DEPTH_TAPS_MAX]);
         let consts = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
             label: Some("fold-consts"),
             contents: bytemuck::cast_slice(&consts),
-            usage: wgpu::BufferUsages::STORAGE,
+            usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
         });
         let align = u64::from(limits.min_uniform_buffer_offset_alignment);
         let param_stride = (std::mem::size_of::<Params>() as u64).div_ceil(align) * align;
@@ -1108,7 +1176,8 @@ impl GpuFold {
         let rgbw = small(
             "fold-rgb",
             (layout.rgb_len * 4).max(16),
-            wgpu::BufferUsages::STORAGE,
+            // Read back: the depth energies are written here.
+            wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_SRC,
         );
         let bind = vec![make_binds(
             &device,
@@ -1135,7 +1204,7 @@ impl GpuFold {
             raw_members: 1,
             min_members: 1,
             rgbw,
-            luma_pool: Vec::new(),
+            luma_pool: Default::default(),
             next_slot: 0,
             upload: Vec::new(),
             raw_generation: 0,
@@ -1149,6 +1218,7 @@ impl GpuFold {
             hull,
             frame: 0,
             pending_reset: vec![true],
+            depth: None,
             adapter: adapter_name,
             decorated_results,
         };
@@ -2364,10 +2434,28 @@ impl GpuFold {
             );
         }
         let pending = if keep_luma {
-            let n = l.sizes[0].pixels();
-            let at = u64::from(l.luma_keep) * 4;
+            // The luma itself, or its depth energies (`enable_depth`), and
+            // then the luma when checking them.
+            let luma_keep = l.luma_keep;
+            let luma_n = self.layout.sizes[0].pixels();
+            let (energies, n) = match self.depth {
+                Some(plan) => {
+                    let (at, cells) = self.record_depth(&mut rec, plan, luma_keep);
+                    let n = cells + if plan.with_luma { luma_n } else { 0 };
+                    (
+                        Some((u64::from(at) * 4, cells as u64 * 4, plan.with_luma)),
+                        n,
+                    )
+                }
+                None => (None, luma_n),
+            };
             let bytes = n as u64 * 4;
-            let readback = self.luma_pool.pop().unwrap_or_else(|| {
+            let pooled = self
+                .luma_pool
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .pop();
+            let readback = pooled.unwrap_or_else(|| {
                 self.device.create_buffer(&wgpu::BufferDescriptor {
                     label: Some("fold-luma-readback"),
                     size: bytes,
@@ -2375,8 +2463,21 @@ impl GpuFold {
                     mapped_at_creation: false,
                 })
             });
-            let index = self.submit_with(rec, |encoder, fold| {
-                encoder.copy_buffer_to_buffer(&fold.work, at, &readback, 0, bytes);
+            let luma_at = u64::from(luma_keep) * 4;
+            let index = self.submit_with(rec, |encoder, fold| match energies {
+                None => encoder.copy_buffer_to_buffer(&fold.work, luma_at, &readback, 0, bytes),
+                Some((at, len, with_luma)) => {
+                    encoder.copy_buffer_to_buffer(&fold.rgbw, at, &readback, 0, len);
+                    if with_luma {
+                        encoder.copy_buffer_to_buffer(
+                            &fold.work,
+                            luma_at,
+                            &readback,
+                            len,
+                            luma_n as u64 * 4,
+                        );
+                    }
+                }
             });
             readback
                 .slice(..)
@@ -2390,33 +2491,118 @@ impl GpuFold {
         Ok(pending)
     }
 
+    /// Read kept luma back as depth energies instead of the luma itself:
+    /// [`Self::add_staged_keeping_luma`] then blurs level 0's luma twice on
+    /// the device, separably and edge clamped, with `blurs[k] = (radius,
+    /// taps)` (each output sums its taps in tap order from zero, as
+    /// `axial_colour::blur_into`), and takes per `cell x cell` block the mean
+    /// of the squared differences luma - blur 1 and blur 1 - blur 2 (f64
+    /// sums in row-major order, as `cell_energy_of_difference`). The pending
+    /// read-back then holds those two cell grids, band 0 then band 1, each
+    /// `(w / cell) x (h / cell)` in row-major order, and with `with_luma` the
+    /// luma itself after them (to check the energies against the CPU's).
+    /// Only an 8-px cell, and only with device preparation (its
+    /// full-resolution buffer is the scratch).
+    pub fn enable_depth(
+        &mut self,
+        blurs: [(usize, &[f32]); 2],
+        cell: usize,
+        with_luma: bool,
+    ) -> Result<(), String> {
+        if cell != 8 {
+            return Err("GPU depth energies: only an 8 px cell".into());
+        }
+        if self.full.is_none() {
+            return Err("GPU depth energies need device preparation".into());
+        }
+        let s0 = self.layout.sizes[0];
+        let n = s0.pixels();
+        let cells = (s0.width / cell, s0.height / cell);
+        let need = 3 * n + 2 * cells.0 * cells.1;
+        if need > self.layout.rgb_len as usize {
+            return Err("GPU depth energies: no room in the full-resolution buffer".into());
+        }
+        let mut taps: Vec<f64> = Vec::new();
+        let mut plan = [(0u32, 0u32, 0u32); 2];
+        for (k, (r, t)) in blurs.iter().enumerate() {
+            if t.len() != 2 * r + 1 {
+                return Err("GPU depth energies: a blur's taps do not match its radius".into());
+            }
+            plan[k] = (*r as u32, t.len() as u32, taps.len() as u32);
+            taps.extend(t.iter().map(|&v| f64::from(v)));
+        }
+        if taps.len() > DEPTH_TAPS_MAX {
+            return Err("GPU depth energies: too many taps".into());
+        }
+        self.queue
+            .write_buffer(&self.consts, 91 * 8, bytemuck::cast_slice(&taps));
+        self.depth = Some(DepthPlan {
+            blurs: plan,
+            cells: (cells.0 as u32, cells.1 as u32),
+            with_luma,
+        });
+        Ok(())
+    }
+
+    /// Record the depth energies of the luma kept at `luma` (work arena) into
+    /// the full-resolution buffer; returns where the two cell grids start
+    /// there and how many floats they take.
+    fn record_depth(&self, rec: &mut Recorder, plan: DepthPlan, luma: u32) -> (u32, usize) {
+        let s0 = self.layout.sizes[0];
+        let (w, h) = (s0.width as u32, s0.height as u32);
+        let n = s0.pixels() as u32;
+        let (tmp, g1, g2, e) = (0u32, n, 2 * n, 3 * n);
+        let cells = (plan.cells.0 * plan.cells.1) as usize;
+        let blur = |rec: &mut Recorder, src: u32, src_rgbw: bool, dst: u32, k: usize| {
+            let (r, taps, first) = plan.blurs[k];
+            rec.push(
+                Kernel::DgBlurH,
+                Params {
+                    a: [src, w, h, tmp],
+                    b: [r, taps, first, u32::from(src_rgbw)],
+                    ..Default::default()
+                },
+                n as usize,
+            );
+            rec.push(
+                Kernel::DgBlurV,
+                Params {
+                    a: [tmp, w, h, dst],
+                    b: [r, taps, first, 0],
+                    ..Default::default()
+                },
+                n as usize,
+            );
+        };
+        blur(rec, luma, false, g1, 0);
+        blur(rec, g1, true, g2, 1);
+        for (k, (a, a_rgbw, b)) in [(luma, false, g1), (g1, true, g2)].into_iter().enumerate() {
+            rec.push(
+                Kernel::DgEnergy,
+                Params {
+                    a: [a, b, w, e + (k * cells) as u32],
+                    b: [plan.cells.0, plan.cells.1, u32::from(a_rgbw), 0],
+                    ..Default::default()
+                },
+                cells,
+            );
+        }
+        (e, 2 * cells)
+    }
+
     /// Wait for one frame's kept luma (not for later work) and read it.
     pub fn luma_collect(&mut self, pending: PendingLuma) -> Result<Vec<f32>, String> {
-        self.device
-            .poll(wgpu::PollType::Wait {
-                submission_index: Some(pending.index),
-                timeout: None,
-            })
-            .map_err(|e| format!("GPU luma wait: {e:?}"))?;
-        let out = {
-            let view = pending
-                .readback
-                .slice(..)
-                .get_mapped_range()
-                .map_err(|e| format!("mapped luma: {e:?}"))?;
-            // Read-back memory is slow to read on one thread (MEASURED 36 ms
-            // for these 60 MB on the RTX 5090, 1.7 GB/s); in parallel pieces,
-            // as `read_chunk` reads the accumulators.
-            let src = bytemuck::cast_slice::<u8, f32>(&view[..pending.n * 4]);
-            let mut out = vec![0f32; pending.n];
-            out.par_chunks_mut(1 << 18)
-                .zip(src.par_chunks(1 << 18))
-                .for_each(|(d, s)| d.copy_from_slice(s));
-            out
-        };
-        pending.readback.unmap();
-        self.luma_pool.push(pending.readback);
-        Ok(out)
+        self.luma_handoff(pending).read()
+    }
+
+    /// One frame's kept luma, to be waited for and read on another thread
+    /// ([`LumaReadback::read`]): the fold's own thread then only submits.
+    pub fn luma_handoff(&self, pending: PendingLuma) -> LumaReadback {
+        LumaReadback {
+            device: self.device.clone(),
+            pending,
+            pool: std::sync::Arc::clone(&self.luma_pool),
+        }
     }
 
     /// [`Self::stage`] then [`Self::add_staged`].

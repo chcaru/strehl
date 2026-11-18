@@ -81,6 +81,8 @@ mod decode_ahead;
 #[path = "merge_cmd/depth-guide.rs"]
 mod depth_guide;
 pub(crate) mod dump;
+#[path = "merge_cmd/fold-trace.rs"]
+mod fold_trace;
 #[path = "merge_cmd/frame-refine.rs"]
 mod frame_refine;
 #[path = "merge_cmd/fusion-calibrated.rs"]
@@ -5179,6 +5181,14 @@ struct LumaTap {
     pending: std::collections::VecDeque<(usize, strehl_gpu::PendingLuma)>,
     /// Records running, and its signal.
     busy: std::sync::Arc<(std::sync::Mutex<usize>, std::sync::Condvar)>,
+    /// The first read-back that failed in a record task.
+    failed: std::sync::Arc<std::sync::Mutex<Option<String>>>,
+    /// The device reads back depth energies, not luma
+    /// (`GpuFold::enable_depth`), and with `check` the luma after them.
+    device: bool,
+    check: bool,
+    /// Frames whose device energies were checked against the CPU's.
+    checked: std::sync::Arc<std::sync::atomic::AtomicUsize>,
 }
 
 #[cfg(feature = "gpu")]
@@ -5186,13 +5196,24 @@ impl LumaTap {
     /// Copies left in flight on the device.
     const AHEAD: usize = 2;
     /// Records at once (each holds a 60 MB luma and three blur buffers).
+    /// MEASURED 2026-11-18 (`STREHL_FOLD_TRACE`): on the fold's small pool
+    /// the fold thread waits about 20 ms a plane for room; on the execution
+    /// pool instead, the records take the decoders' cores (decoding 625 ->
+    /// 980 ms a plane) and the fold is slower. The device's own depth
+    /// energies (plan stage Q6a) are the way out.
     const RECORDING: usize = 6;
 
-    /// Read back all but the newest `keep` copies and record them.
+    /// Hand all but the newest `keep` copies to record tasks, which wait for
+    /// and read each copy themselves: the fold's thread does not touch the
+    /// 60 MB (MEASURED 29 ms a plane when it did, 2026-11-18). The records
+    /// are the same either way: each reads its own frame's luma.
     fn collect(&mut self, gpu: &mut strehl_gpu::GpuFold, keep: usize) -> Result<()> {
+        if let Some(e) = self.failed.lock().unwrap_or_else(|e| e.into_inner()).take() {
+            anyhow::bail!(e);
+        }
         while self.pending.len() > keep {
             let (index, pending) = self.pending.pop_front().expect("pending luma");
-            let luma = gpu.luma_collect(pending).map_err(|e| anyhow::anyhow!(e))?;
+            let readback = gpu.luma_handoff(pending);
             {
                 let (count, signal) = &*self.busy;
                 let mut n = count.lock().unwrap_or_else(|e| e.into_inner());
@@ -5202,12 +5223,54 @@ impl LumaTap {
                 *n += 1;
             }
             let busy = std::sync::Arc::clone(&self.busy);
-            rayon::spawn(move || {
-                depth_guide::record(index, &luma);
+            let failed = std::sync::Arc::clone(&self.failed);
+            let checked = std::sync::Arc::clone(&self.checked);
+            let (device, check) = (self.device, self.check);
+            let task = move || {
+                let recorded = readback.read().and_then(|data| {
+                    if !device {
+                        depth_guide::record(index, &data);
+                        return Ok(());
+                    }
+                    let Some((w, h)) = depth_guide::tap_size() else {
+                        return Ok(());
+                    };
+                    let cell = depth_guide::RECORD_CELL;
+                    let cells = 2 * (w / cell) * (h / cell);
+                    if data.len() < cells {
+                        return Err(format!("depth energies for frame {index}: short read-back"));
+                    }
+                    if check {
+                        // `STREHL_DEPTH_CHECK=1`: the CPU's energies of the
+                        // same luma, bit for bit.
+                        let cpu = depth_guide::energies(&data[cells..], w, h);
+                        let same = cpu
+                            .iter()
+                            .flatten()
+                            .zip(&data[..cells])
+                            .all(|(a, b)| a.to_bits() == b.to_bits())
+                            && cpu.iter().map(Vec::len).sum::<usize>() == cells;
+                        if !same {
+                            return Err(format!(
+                                "{DEPTH_CHECK_ENV}: frame {index}'s device depth energies differ \
+                                 from the CPU's"
+                            ));
+                        }
+                        checked.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+                    }
+                    depth_guide::record_energies(index, &data[..cells]).map_err(|e| e.to_string())
+                });
+                if let Err(e) = recorded {
+                    failed
+                        .lock()
+                        .unwrap_or_else(|e| e.into_inner())
+                        .get_or_insert(e);
+                }
                 let (count, signal) = &*busy;
                 *count.lock().unwrap_or_else(|e| e.into_inner()) -= 1;
                 signal.notify_all();
-            });
+            };
+            rayon::spawn(task);
         }
         Ok(())
     }
@@ -5215,10 +5278,22 @@ impl LumaTap {
     /// Record every frame still pending and wait for all records.
     fn finish(&mut self, gpu: &mut strehl_gpu::GpuFold) -> Result<()> {
         self.collect(gpu, 0)?;
-        let (count, signal) = &*self.busy;
-        let mut n = count.lock().unwrap_or_else(|e| e.into_inner());
-        while *n > 0 {
-            n = signal.wait(n).unwrap_or_else(|e| e.into_inner());
+        {
+            let (count, signal) = &*self.busy;
+            let mut n = count.lock().unwrap_or_else(|e| e.into_inner());
+            while *n > 0 {
+                n = signal.wait(n).unwrap_or_else(|e| e.into_inner());
+            }
+        }
+        if let Some(e) = self.failed.lock().unwrap_or_else(|e| e.into_inner()).take() {
+            anyhow::bail!(e);
+        }
+        if self.check {
+            eprintln!(
+                "depth energies  : {} frames' device energies equal the CPU's bit for bit \
+                 ({DEPTH_CHECK_ENV})",
+                self.checked.swap(0, std::sync::atomic::Ordering::Relaxed)
+            );
         }
         Ok(())
     }
@@ -5226,6 +5301,19 @@ impl LumaTap {
 
 /// Threads of the execution pool while the GPU prepares and folds frames.
 const GPU_PREP_FOLD_THREADS: usize = 8;
+
+/// `STREHL_FOLD_POOL_THREADS`: the GPU fold's pool size (1..=256, at most the
+/// render's workers). Scheduling only.
+pub const FOLD_POOL_ENV: &str = "STREHL_FOLD_POOL_THREADS";
+
+/// `STREHL_DEPTH_DEVICE=off`: measure the depth energies of a GPU-prepared
+/// fold on the CPU from read-back luma, as before plan stage Q6a. The same
+/// energies either way.
+pub const DEPTH_DEVICE_ENV: &str = "STREHL_DEPTH_DEVICE";
+
+/// `STREHL_DEPTH_CHECK=1`: read the luma back beside the device's depth
+/// energies and fail unless the CPU's energies of it are bit-identical.
+pub const DEPTH_CHECK_ENV: &str = "STREHL_DEPTH_CHECK";
 
 /// End a canonical chunk folded on the device into the selected accumulator:
 /// read its totals into a new merge (the first chunk) or absorb them into
@@ -5474,20 +5562,26 @@ impl RawPyramidSource<'_> {
             .get(index)
             .context("Pyramid source index out of bounds")?;
         let serial = self.serial.load(std::sync::atomic::Ordering::Relaxed);
-        let frame = if serial {
-            strehl_raw::decode_serial(path, buffer)?
-        } else {
-            match buffer {
-                Some(b) => strehl_raw::decode_into(path, b)?,
-                None => strehl_raw::decode(path)?,
+        let frame = fold_trace::time(fold_trace::Step::DecodeFile, || {
+            if serial {
+                strehl_raw::decode_serial(path, buffer)
+            } else {
+                match buffer {
+                    Some(b) => strehl_raw::decode_into(path, b),
+                    None => strehl_raw::decode(path),
+                }
             }
-        };
+        })?;
         let _ = self.layout.set((frame.active.y, frame.buffer_height));
         // The gather reads the frame's capture identity (its lateral-colour
         // profile); read it here, on the decoding thread, once per file.
-        let _ = strehl_raw::identity_cached(path);
+        let _ = fold_trace::time(fold_trace::Step::Identity, || {
+            strehl_raw::identity_cached(path)
+        });
         if let Some(groups) = self.groups {
-            groups.prepare_with(index, path, &frame, serial)?;
+            fold_trace::time(fold_trace::Step::Group, || {
+                groups.prepare_with(index, path, &frame, serial)
+            })?;
         }
         #[cfg(feature = "research-lens-warp")]
         if let Some(lens) = self.lens {
@@ -6491,8 +6585,7 @@ impl BandWorker {
         if let Some(progress) = progress {
             progress.merge_step(index, "decode", None, "started");
         }
-        let frame = source
-            .decode(index)
+        let frame = fold_trace::time(fold_trace::Step::WaitDecode, || source.decode(index))
             .with_context(|| format!("frame {index}"))?;
         // A checked pixel-shift group's other members, parked by the decode
         // (`load_frame_impl_observed` takes them the same way).
@@ -6590,8 +6683,8 @@ impl BandWorker {
                 .residuals
                 .map(|(r, sign)| r.map(|v| [sign * v[0] as f32, sign * v[1] as f32])),
         });
-        let staged = gpu
-            .stage(&strehl_gpu::RawFrame {
+        let staged = fold_trace::time(fold_trace::Step::Stage, || {
+            gpu.stage(&strehl_gpu::RawFrame {
                 data: &frame.data,
                 stride: frame.stride,
                 active: [frame.active.x, frame.active.y],
@@ -6601,7 +6694,8 @@ impl BandWorker {
                 carried,
                 group,
             })
-            .map_err(|e| anyhow::anyhow!(e))?;
+        })
+        .map_err(|e| anyhow::anyhow!(e))?;
         // The device holds its own copy now.
         if let Some(m) = measured {
             crate::pixel_shift_cmd::recycle_members(m.members);
@@ -6615,9 +6709,10 @@ impl BandWorker {
                     level: fill.level,
                     sigma: fill.sigma,
                 };
-                let pending = gpu
-                    .probe_submit(&staged, noise, &rects)
-                    .map_err(|e| anyhow::anyhow!(e))?;
+                let pending = fold_trace::time(fold_trace::Step::ProbeSubmit, || {
+                    gpu.probe_submit(&staged, noise, &rects)
+                })
+                .map_err(|e| anyhow::anyhow!(e))?;
                 Some((pending, rects))
             }
             _ => None,
@@ -6655,7 +6750,10 @@ impl BandWorker {
             .as_mut()
             .expect("GPU preparation without a GPU fold");
         if let (Some(floor), Some((pending, rects))) = (self.floor.as_mut(), probe) {
-            let out = gpu.probe_collect(pending).map_err(|e| anyhow::anyhow!(e))?;
+            let out = fold_trace::time(fold_trace::Step::ProbeCollect, || {
+                gpu.probe_collect(pending)
+            })
+            .map_err(|e| anyhow::anyhow!(e))?;
             floor.external_accept(&rects, &out.sums)?;
             self.beta
                 .extend(floor.last().iter().copied().take_while(|b| b.is_finite()));
@@ -6697,26 +6795,18 @@ impl BandWorker {
             .and_then(|p| p.null_floor())
             .map(|(beta, var)| self.merge.note_external_null_frame(&beta, var));
         let frame_beta = (!self.beta.is_empty()).then_some(self.beta.as_slice());
-        let added = if depth_guide::tap_active() {
-            // The depth measurement taken during the fold reads this frame's
-            // luma, copied before the fold decomposes it.
-            gpu.add_staged_keeping_luma(
-                &mut self.merge,
-                &staged,
-                green,
-                frame_beta,
-                units.as_deref(),
-            )
-            .map(|p| self.luma_tap.pending.push_back((index, p)))
-        } else {
-            gpu.add_staged(
-                &mut self.merge,
-                &staged,
-                green,
-                frame_beta,
-                units.as_deref(),
-            )
-        };
+        let merge = &mut self.merge;
+        let luma_tap = &mut self.luma_tap;
+        let added = fold_trace::time(fold_trace::Step::Add, || {
+            if depth_guide::tap_active() {
+                // The depth measurement taken during the fold reads this
+                // frame's luma, copied before the fold decomposes it.
+                gpu.add_staged_keeping_luma(merge, &staged, green, frame_beta, units.as_deref())
+                    .map(|p| luma_tap.pending.push_back((index, p)))
+            } else {
+                gpu.add_staged(merge, &staged, green, frame_beta, units.as_deref())
+            }
+        });
         self.swap_half();
         self.next_half();
         added.map_err(|e| anyhow::anyhow!(e))?;
@@ -6724,7 +6814,10 @@ impl BandWorker {
             .gpu
             .as_mut()
             .expect("GPU preparation without a GPU fold");
-        self.luma_tap.collect(gpu, LumaTap::AHEAD)?;
+        let luma_tap = &mut self.luma_tap;
+        fold_trace::time(fold_trace::Step::Luma, || {
+            luma_tap.collect(gpu, LumaTap::AHEAD)
+        })?;
         if let Some(progress) = progress {
             progress.merge_step(index, "gather", None, "finished");
             gpu_fold_phases(
@@ -9672,10 +9765,12 @@ fn run_pyramid_prepared_with_sensor(
         .filter(|&i| warps.is_none_or(|m| matches!(m.warp(i), Ok(FrameWarp::Placed(_)))))
         .count();
     std::thread::spawn(move || strehl_core::pyramid::prepare_ensemble_null(&cfg, expected_frames));
-    let pool = ThreadPoolBuilder::new()
-        .num_threads(workers)
-        .build()
-        .context("building Pyramid execution pool")?;
+    let pool = std::sync::Arc::new(
+        ThreadPoolBuilder::new()
+            .num_threads(workers)
+            .build()
+            .context("building Pyramid execution pool")?,
+    );
     let (mut worker, gpu_line) = BandWorker::for_route(
         domain,
         cfg,
@@ -9683,6 +9778,41 @@ fn run_pyramid_prepared_with_sensor(
         gpu_prep_refusal(warps, defect_plan.is_some(), levels),
     )?;
     eprintln!("gpu fold        : {gpu_line}");
+    // The depth measurement taken during a GPU-prepared fold: its band
+    // energies on the device (plan stage Q6a), unless switched off.
+    #[cfg(feature = "gpu")]
+    if worker.gpu_prep
+        && depth_guide::tap_active()
+        && !std::env::var(DEPTH_DEVICE_ENV).is_ok_and(|v| v.trim() == "off")
+        && let Some(gpu) = worker.gpu.as_mut()
+    {
+        let [s1, s2] = depth_guide::record_sigmas();
+        let (t1, t2) = (
+            axial_colour::gaussian_taps(s1),
+            axial_colour::gaussian_taps(s2),
+        );
+        let check = std::env::var(DEPTH_CHECK_ENV).is_ok_and(|v| v.trim() == "1");
+        match gpu.enable_depth(
+            [(t1.0, &t1.1), (t2.0, &t2.1)],
+            depth_guide::RECORD_CELL,
+            check,
+        ) {
+            Ok(()) => {
+                worker.luma_tap.device = true;
+                worker.luma_tap.check = check;
+                eprintln!(
+                    "depth energies  : on the device ({DEPTH_DEVICE_ENV}=off measures them on \
+                     the CPU){}",
+                    if check {
+                        format!("; each frame checked against the CPU's ({DEPTH_CHECK_ENV})")
+                    } else {
+                        String::new()
+                    }
+                );
+            }
+            Err(why) => eprintln!("depth energies  : on the CPU ({why})"),
+        }
+    }
     // Preparing on the device folds frame by frame; decoding still runs ahead.
     let lookahead = if worker.gpu_prep { 1 } else { lookahead };
     // Under GPU preparation the fold's own CPU work is staging and the depth
@@ -9691,16 +9821,21 @@ fn run_pyramid_prepared_with_sensor(
     // spent 270 core-seconds more for a slower fold). Threads only, never
     // arithmetic. The full pool stays for the work after the fold.
     let small_pool = if worker.gpu_prep {
+        let threads = std::env::var(FOLD_POOL_ENV)
+            .ok()
+            .and_then(|v| v.trim().parse::<usize>().ok())
+            .filter(|n| (1..=256).contains(n))
+            .unwrap_or(GPU_PREP_FOLD_THREADS);
         Some(
             ThreadPoolBuilder::new()
-                .num_threads(workers.min(GPU_PREP_FOLD_THREADS))
+                .num_threads(workers.min(threads))
                 .build()
                 .context("building the GPU fold's pool")?,
         )
     } else {
         None
     };
-    let fold_pool = small_pool.as_ref().unwrap_or(&pool);
+    let fold_pool = small_pool.as_ref().unwrap_or(&*pool);
     // A GPU chunk's accumulators live on the device until the chunk ends, so
     // the desktop's live mid-chunk accumulator view has nothing to read.
     let live_view = !worker.gpu_active();
@@ -9734,6 +9869,8 @@ fn run_pyramid_prepared_with_sensor(
         );
     }
     let source = &ahead;
+    fold_trace::begin();
+    let t_trace = Instant::now();
     std::thread::scope(|scope| -> Result<()> {
         let pin = worker.gpu_prep;
         for i in 0..decoders {
@@ -9937,6 +10074,7 @@ fn run_pyramid_prepared_with_sensor(
         strehl_raw::preload::clear();
         fold_result
     })?;
+    fold_trace::report(t_trace.elapsed().as_secs_f64());
     let (hashed, trusted) = strehl_raw::trust::take_counts();
     if hashed + trusted > 0 {
         eprintln!(

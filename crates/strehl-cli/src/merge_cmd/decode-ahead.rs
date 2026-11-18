@@ -235,7 +235,7 @@ impl<'s, S: PyramidFrameSource> DecodeAhead<'s, S> {
     /// allows, decode it outside the lock, publish it.
     pub(super) fn run_decoder(&self) {
         loop {
-            let (index, spare) = {
+            let claimed = super::fold_trace::time(super::fold_trace::Step::DecoderIdle, || {
                 let mut st = self.lock();
                 loop {
                     if !st.retired.is_empty() {
@@ -246,7 +246,7 @@ impl<'s, S: PyramidFrameSource> DecodeAhead<'s, S> {
                         continue;
                     }
                     if st.stop || st.claimed >= self.plan.len() {
-                        return;
+                        return None;
                     }
                     if st.claimed < st.taken + self.window {
                         break;
@@ -255,14 +255,19 @@ impl<'s, S: PyramidFrameSource> DecodeAhead<'s, S> {
                 }
                 let index = self.plan[st.claimed];
                 st.claimed += 1;
-                (index, st.spare.pop())
+                Some((index, st.spare.pop()))
+            });
+            let Some((index, spare)) = claimed else {
+                return;
             };
             // A panic here must still publish a result: the fold is waiting for
             // this index and would otherwise wait forever instead of failing.
-            let frame = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| match spare {
-                Some(buffer) => self.inner.decode_reusing(index, buffer),
-                None => self.inner.decode(index),
-            }))
+            let frame = super::fold_trace::time(super::fold_trace::Step::Decode, || {
+                std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| match spare {
+                    Some(buffer) => self.inner.decode_reusing(index, buffer),
+                    None => self.inner.decode(index),
+                }))
+            })
             .unwrap_or_else(|_| Err(anyhow::anyhow!("decoding frame {index} panicked")));
             let mut st = self.lock();
             st.ready.insert(index, frame);
