@@ -861,8 +861,11 @@ CPU, is in [the GPU fold proposal](proposals/2026-11-gpu-resident-fold-and-plann
 
 ### The GPU fold
 
-`crates/strehl-gpu` (engine feature `gpu`; `STREHL_GPU_FOLD=on|auto|off`, the desktop
-requests `auto`) runs the default fold on a Vulkan GPU with the merge's accumulators resident
+`crates/strehl-gpu` (engine feature `gpu`, a default feature of the CLI since 2026-11-18;
+`STREHL_GPU_FOLD=on|auto|off`, unset meaning `auto`: the device is used when it passes
+`strehl_gpu::self_test`, a synthetic fold compared bit for bit with the CPU's and recorded
+per adapter, driver and shader in `cache_root()/gpu/`) runs the default fold on a Vulkan
+GPU with the merge's accumulators resident
 in device memory for each canonical chunk. At a chunk's end they are written into the CPU
 `BandMerge`, which absorbs, thresholds and collapses exactly as before; chunking and
 reduction order are unchanged. It is **bit-identical** to the CPU fold, which rests on four

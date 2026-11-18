@@ -5408,9 +5408,11 @@ fn gpu_prep_refusal(warps: Option<&WarpMap>, defect: bool, levels: Levels) -> Op
 pub const GPU_PREP_ENV: &str = "STREHL_GPU_PREP";
 
 /// `STREHL_GPU_FOLD`: `on` folds on the GPU (feature `gpu`) and refuses to run
-/// if it cannot; `auto` folds on the GPU when an eligible device and
-/// configuration exist and otherwise on the CPU, saying which and why; `off`
-/// or unset folds on the CPU. Every choice produces identical pixels.
+/// if it cannot; `auto`, or unset, folds on the GPU when an eligible device
+/// and configuration exist and the device passes its self-test
+/// (`strehl_gpu::self_test`, kept per adapter, driver and shader), and
+/// otherwise on the CPU, saying which and why; `off` folds on the CPU. Every
+/// choice produces identical pixels.
 pub const GPU_FOLD_ENV: &str = "STREHL_GPU_FOLD";
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -5420,13 +5422,30 @@ enum GpuFoldRequest {
     On,
 }
 
+/// Whether the device folds bit for bit as the CPU does
+/// (`strehl_gpu::self_test`), recorded in `cache_root()/gpu/` per adapter,
+/// driver and shader.
+#[cfg(feature = "gpu")]
+fn gpu_self_test() -> std::result::Result<(), String> {
+    let dir = align_cmd::cache_root().join("gpu");
+    strehl_gpu::set_pipeline_cache_dir(dir.clone());
+    strehl_gpu::self_test(Some(&dir))
+}
+
+#[cfg(not(feature = "gpu"))]
+fn gpu_self_test() -> std::result::Result<(), String> {
+    Err("this engine was built without the `gpu` feature".into())
+}
+
 fn gpu_fold_requested() -> Result<GpuFoldRequest> {
     match std::env::var(GPU_FOLD_ENV) {
-        Err(std::env::VarError::NotPresent) => Ok(GpuFoldRequest::Off),
+        // The GPU route by default (round-2 plan stage Q0, owner's decision
+        // 2026-11-18), behind the device's self-test.
+        Err(std::env::VarError::NotPresent) => Ok(GpuFoldRequest::Auto),
         Err(e) => Err(e).context(GPU_FOLD_ENV),
         Ok(v) => match v.trim() {
-            "" | "off" | "0" => Ok(GpuFoldRequest::Off),
-            "auto" => Ok(GpuFoldRequest::Auto),
+            "off" | "0" => Ok(GpuFoldRequest::Off),
+            "" | "auto" => Ok(GpuFoldRequest::Auto),
             "on" | "1" => Ok(GpuFoldRequest::On),
             other => anyhow::bail!("{GPU_FOLD_ENV}={other:?} is not on, auto or off"),
         },
@@ -6468,6 +6487,10 @@ impl BandWorker {
                 "{}=depth has no GPU implementation",
                 depth_guide::ENV
             ))
+        } else if request == GpuFoldRequest::Auto
+            && let Err(why) = gpu_self_test()
+        {
+            Err(format!("the device's self-test: {why}"))
         } else {
             self.try_gpu(prep)
         };

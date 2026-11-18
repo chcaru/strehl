@@ -30,8 +30,10 @@ use strehl_core::pyramid::{BandMerge, BaseBand, Combine, FoldCombine, LevelScala
 use wgpu::util::DeviceExt;
 
 mod context;
+mod selftest;
 pub mod strict;
 pub use context::set_pipeline_cache_dir;
+pub use selftest::self_test;
 
 const SHADER: &str = include_str!("fold.wgsl");
 const WG: u32 = 256;
@@ -1024,6 +1026,7 @@ impl GpuFold {
             adapter: adapter_name,
             decorated_results,
             profiling,
+            key: _,
         } = ctx;
 
         let ensemble = cfg.ensemble;

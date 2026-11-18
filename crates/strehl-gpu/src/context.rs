@@ -27,6 +27,15 @@ pub(crate) struct Context {
     pub adapter: String,
     pub decorated_results: usize,
     pub profiling: bool,
+    /// Adapter, driver and shader, as a file-name-safe key
+    /// ([`self_test_key`]).
+    pub key: String,
+}
+
+/// A key naming this process's adapter, its driver and the shader's words,
+/// safe in a file name; `None` without a device.
+pub(crate) fn self_test_key() -> Option<String> {
+    shared().ok().map(|c| c.key)
 }
 
 static SHARED: Mutex<Option<Context>> = Mutex::new(None);
@@ -48,6 +57,31 @@ pub(crate) fn shared() -> Result<Context, String> {
     let ctx = build()?;
     *slot = Some(ctx.clone());
     Ok(ctx)
+}
+
+/// Remove the files beside `kept` that share its name up to the last `-`
+/// (the same adapter, an older shader): a changed shader leaves nothing
+/// behind.
+pub(crate) fn remove_siblings(kept: &std::path::Path) {
+    let (Some(dir), Some(name)) = (kept.parent(), kept.file_name().and_then(|n| n.to_str())) else {
+        return;
+    };
+    let Some(cut) = name.rfind('-') else {
+        return;
+    };
+    let prefix = &name[..=cut];
+    let Ok(entries) = std::fs::read_dir(dir) else {
+        return;
+    };
+    for entry in entries.flatten() {
+        let other = entry.file_name();
+        let Some(other) = other.to_str() else {
+            continue;
+        };
+        if other != name && other.starts_with(prefix) {
+            let _ = std::fs::remove_file(entry.path());
+        }
+    }
 }
 
 /// FNV-1a over the shader's words: the cache file's name changes with them.
@@ -196,8 +230,18 @@ fn build() -> Result<Context, String> {
             {
                 let _ = std::fs::remove_file(&partial);
             }
+            remove_siblings(&path);
         }
     }
+    let identity = format!(
+        "{} {} {} {:x} {:x}",
+        info.name, info.driver, info.driver_info, info.vendor, info.device
+    );
+    let key = format!(
+        "{:016x}-{:016x}",
+        words_hash(&identity.bytes().map(u32::from).collect::<Vec<_>>()),
+        words_hash(&words)
+    );
     Ok(Context {
         device,
         queue,
@@ -207,5 +251,6 @@ fn build() -> Result<Context, String> {
         adapter: info.name,
         decorated_results,
         profiling,
+        key,
     })
 }

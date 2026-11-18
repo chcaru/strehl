@@ -39,7 +39,9 @@ sha2 = "=0.11.0"
 mimalloc = { version = "0.1", default-features = false }
 
 [features]
-# The bit-exact GPU fold. Off at runtime unless STREHL_GPU_FOLD=on.
+# The bit-exact GPU fold: used by default when the device passes its
+# self-test (STREHL_GPU_FOLD unset or auto); off with STREHL_GPU_FOLD=off.
+default = ["gpu"]
 gpu = ["dep:strehl-gpu"]
 # Multi-stack sessions (`strehl session`, desktop "Best result"): experimental,
 # off by default and not in default builds. The session specification types and

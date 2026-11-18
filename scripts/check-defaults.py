@@ -402,6 +402,35 @@ REGISTRY: dict[str, Declared] = {
         ),
         note="Round-2 performance plan stage Q2 (2026-11-18): 153 of 153 scarab frames checked.",
     ),
+    "STREHL_GPU_FOLD": Declared(
+        kind="control",
+        default="auto (the GPU fold when the device passes its self-test; the CLI builds with `gpu` by default)",
+        verified="measured",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd.rs gpu_fold_requested(): unset, empty or `auto` -> the "
+            "device folds when strehl_gpu::self_test passes (a synthetic fold "
+            "compared bit for bit with the CPU, kept per adapter, driver and "
+            "shader in cache_root()/gpu) and the configuration is eligible, "
+            "else the CPU with the reason printed; `on` requires the device; "
+            "`off` or `0` the CPU. Bit-identical output on every route "
+            "(scarab reference SHA-256 on both; A7C II byte-freeze 5/5 under "
+            "auto and off)."
+        ),
+        note="Round-2 performance plan stage Q0; owner's decision 2026-11-18.",
+    ),
+    "STREHL_NO_WIDE_VECTORS": Declared(
+        kind="control",
+        default="off (CPU kernels with independent lanes use AVX-512 where the CPU has it)",
+        verified="code",
+        backend="any",
+        evidence=(
+            "strehl-core/src/align.rs wide_vectors(): set (any value) keeps the "
+            "baseline copy of the NCC offset lanes. The lanes never combine, "
+            "so both copies give the same bits (tested)."
+        ),
+        note="Round-2 performance plan stages Q9a and Q0 (run-time dispatch).",
+    ),
     "STREHL_FOLD_TRACE": Declared(
         kind="diagnostic",
         default="off",

@@ -1698,6 +1698,11 @@ fn render(r: &Freeze, stack_dir: &Path, pass: u32) -> Rendered {
         .output()
         .unwrap_or_else(|e| panic!("running `{}`: {e}", env!("CARGO_BIN_EXE_strehl")));
     let log = String::from_utf8_lossy(&output.stderr).into_owned();
+    // Which fold route the row ran (the GPU route is the default where the
+    // device passes its self-test); shown with `--nocapture`.
+    for line in log.lines().filter(|l| l.starts_with("gpu fold")) {
+        eprintln!("{} pass {pass}: {}", r.id, line.trim());
+    }
 
     let after = entry_names(stack_dir);
     assert_eq!(
