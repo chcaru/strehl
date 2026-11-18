@@ -390,6 +390,18 @@ REGISTRY: dict[str, Declared] = {
         ),
         note="Round-2 performance plan stage Q5f (owner, 2026-11-18: verify at ingest, not at every render).",
     ),
+    "STREHL_REFERENCE_CHECK": Declared(
+        kind="diagnostic",
+        default="off",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd.rs gather_restoration_references(): `1` prepares every "
+            "column-windowed reference frame again over whole bands and fails "
+            "the render unless every crop is bit-identical; output unchanged."
+        ),
+        note="Round-2 performance plan stage Q2 (2026-11-18): 153 of 153 scarab frames checked.",
+    ),
     "STREHL_READ_AHEAD_MB": Declared(
         kind="control",
         default="3072 (MB of files read ahead and not yet decoded)",

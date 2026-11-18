@@ -672,13 +672,34 @@ pub fn compensate_rows(
     sign: f32,
     out: [&mut [f32]; 3],
 ) {
+    compensate_rows_cols(raw, w, rows, y0, offsets, residuals, sign, out, 0..w);
+}
+
+/// [`compensate_rows`] of the columns `xs` only: the same value at each of
+/// them (every output reads its own column and the clamped columns either
+/// side, the clamp at the row's own ends). `raw` needs valid triples only at
+/// columns `xs.start - 1 ..= xs.end` (within the row); outputs outside `xs`
+/// are left as they are.
+#[allow(clippy::too_many_arguments)]
+pub fn compensate_rows_cols(
+    raw: &[[f32; 3]],
+    w: usize,
+    rows: usize,
+    y0: isize,
+    offsets: &[(isize, isize); 4],
+    residuals: &[[f64; 2]; 4],
+    sign: f32,
+    out: [&mut [f32]; 3],
+    xs: std::ops::Range<usize>,
+) {
     assert_eq!(raw.len(), (rows + 2) * w);
+    assert!(xs.end <= w, "columns past the row");
     let [r, g, b] = out;
     let res: [[f32; 2]; 4] = residuals.map(|v| [sign * v[0] as f32, sign * v[1] as f32]);
     for k in 0..rows {
         let y = y0 + k as isize;
         let (up, mid, down) = (k * w, (k + 1) * w, (k + 2) * w);
-        for x in 0..w {
+        for x in xs.clone() {
             let (xm, xp) = (x.saturating_sub(1), (x + 1).min(w - 1));
             let span = (xp - xm).max(1) as f32;
             let grad = |c: usize| {
@@ -705,6 +726,83 @@ pub fn compensate_rows(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Every column window of `compensate_rows_cols`, given valid triples
+    /// only at the window and one column either side, writes exactly what
+    /// the whole-row `compensate_rows` writes there and nothing elsewhere,
+    /// at the row's ends included.
+    #[test]
+    fn compensated_columns_equal_the_whole_row() {
+        let (w, rows) = (37usize, 5usize);
+        let mut seed = 0x1234_5678_9ABC_DEF0u64;
+        let mut next = || {
+            seed ^= seed << 13;
+            seed ^= seed >> 7;
+            seed ^= seed << 17;
+            ((seed >> 40) as f32 / (1u64 << 24) as f32 - 0.5) * 4000.0
+        };
+        let raw: Vec<[f32; 3]> = (0..(rows + 2) * w)
+            .map(|_| [next(), next(), next()])
+            .collect();
+        let offsets = [(0, 0), (1, 0), (1, 1), (0, 1)];
+        let residuals = [[0.0, 0.0], [0.13, -0.07], [-0.21, 0.05], [0.04, 0.3]];
+        let mut want = [
+            vec![0f32; rows * w],
+            vec![0f32; rows * w],
+            vec![0f32; rows * w],
+        ];
+        {
+            let [r, g, b] = &mut want;
+            compensate_rows(&raw, w, rows, 3, &offsets, &residuals, 1.0, [r, g, b]);
+        }
+        for (a, b) in [
+            (0usize, 1usize),
+            (0, 5),
+            (3, 9),
+            (10, 37),
+            (36, 37),
+            (0, 37),
+        ] {
+            // Only the window and its neighbours hold the real triples.
+            let mut partial = vec![[f32::NAN; 3]; raw.len()];
+            for e in 0..rows + 2 {
+                for x in a.saturating_sub(1)..(b + 1).min(w) {
+                    partial[e * w + x] = raw[e * w + x];
+                }
+            }
+            let mut got = [
+                vec![-7.0f32; rows * w],
+                vec![-7.0f32; rows * w],
+                vec![-7.0f32; rows * w],
+            ];
+            {
+                let [r, g, bb] = &mut got;
+                compensate_rows_cols(
+                    &partial,
+                    w,
+                    rows,
+                    3,
+                    &offsets,
+                    &residuals,
+                    1.0,
+                    [r, g, bb],
+                    a..b,
+                );
+            }
+            for c in 0..3 {
+                for k in 0..rows {
+                    for x in 0..w {
+                        let (v, u) = (got[c][k * w + x], want[c][k * w + x]);
+                        if (a..b).contains(&x) {
+                            assert_eq!(v.to_bits(), u.to_bits(), "{a}..{b} c{c} k{k} x{x}");
+                        } else {
+                            assert_eq!(v, -7.0, "{a}..{b} wrote outside its columns");
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /// A smooth-plus-texture scene sampled into four RGGB mosaics shifted by
     /// `shifts` photosites, in a buffer with a margin, with optional gains.

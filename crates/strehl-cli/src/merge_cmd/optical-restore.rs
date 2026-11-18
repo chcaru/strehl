@@ -396,24 +396,43 @@ pub(super) fn plan_tiles(
 }
 
 /// The frames the planned tiles take their reference planes from, each once
-/// in index order, with the analysis-plane rows [`observe`] crops from that
-/// frame for them (one range per tile).
-pub(super) fn reference_rows() -> Vec<(usize, Vec<std::ops::Range<usize>>)> {
+/// in index order, with the analysis-plane rows and columns [`observe`]
+/// crops from that frame for them (one pair per tile).
+pub(super) fn reference_windows() -> Vec<(usize, Vec<Window>)> {
     let guard = state();
     let Some(st) = guard.as_ref() else {
         return Vec::new();
     };
-    let mut by_frame: std::collections::BTreeMap<usize, Vec<std::ops::Range<usize>>> =
-        Default::default();
+    let mut by_frame: std::collections::BTreeMap<usize, Vec<Window>> = Default::default();
     for t in &st.tiles {
         for &k in &t.frames {
-            by_frame
-                .entry(k)
-                .or_default()
-                .push(t.y0 - MARGIN..t.y0 + TP + MARGIN);
+            by_frame.entry(k).or_default().push(Window {
+                rows: t.y0 - MARGIN..t.y0 + TP + MARGIN,
+                cols: t.x0 - MARGIN..t.x0 + TP + MARGIN,
+            });
         }
     }
     by_frame.into_iter().collect()
+}
+
+/// One tile's crop, analysis-plane rows and columns.
+pub(super) struct Window {
+    pub rows: std::ops::Range<usize>,
+    pub cols: std::ops::Range<usize>,
+}
+
+/// The crops [`observe`] would keep from frame `index`'s planes, in tile
+/// order (for checking a cheaper preparation against a full one).
+pub(super) fn crops_of(index: usize, planes: &[Vec<f32>]) -> Vec<Vec<Vec<f32>>> {
+    let guard = state();
+    let Some(st) = guard.as_ref() else {
+        return Vec::new();
+    };
+    st.tiles
+        .iter()
+        .filter(|t| t.frames.contains(&index))
+        .map(|t| crop(planes, st.width, t.x0, t.y0))
+        .collect()
 }
 
 /// Keep frame `index`'s prepared planes on the tiles whose reference it is.

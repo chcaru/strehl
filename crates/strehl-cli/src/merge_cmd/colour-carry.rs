@@ -261,7 +261,21 @@ pub(super) fn copy_carried(
             })
             .for_each(|(y, row)| {
                 let o = (r.y + y) * domain.full.width + r.x;
-                row.copy_from_slice(&src[o..o + local.width]);
+                // Only the gather's computed columns, when it computed some
+                // (`columns`).
+                match super::local_columns(
+                    scratch.columns.as_deref(),
+                    (r.y + y) / align_cmd::BAND_ROWS,
+                    r.x,
+                    local.width,
+                ) {
+                    None => row.copy_from_slice(&src[o..o + local.width]),
+                    Some(spans) => {
+                        for (a, b) in spans {
+                            row[a..b].copy_from_slice(&src[o + a..o + b]);
+                        }
+                    }
+                }
             });
     }
     Ok(())

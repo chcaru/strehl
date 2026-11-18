@@ -4907,12 +4907,14 @@ fn extract_planes(
     planes: &mut [Vec<f32>],
 ) -> Result<()> {
     extract_planes_bands(
-        data, stride, active_x, active_y, black, domain, offsets, planes, None,
+        data, stride, active_x, active_y, black, domain, offsets, planes, None, None,
     )
 }
 
 /// [`extract_planes`] of only the rows in the gather bands `only` marks
-/// (`WarpScratch::bands`, full-plane rows); other rows are left as they are.
+/// (`WarpScratch::bands`, full-plane rows), and in a band with `columns`
+/// (`WarpScratch::columns`, full-plane columns) only those; other samples
+/// are left as they are.
 #[allow(clippy::too_many_arguments)]
 fn extract_planes_bands(
     data: &[u16],
@@ -4924,6 +4926,7 @@ fn extract_planes_bands(
     offsets: &[(usize, usize)],
     planes: &mut [Vec<f32>],
     only: Option<&[bool]>,
+    columns: Option<&[Vec<(usize, usize)>]>,
 ) -> Result<()> {
     ensure!(
         offsets.len() == planes.len(),
@@ -4968,24 +4971,59 @@ fn extract_planes_bands(
                     let full_y = domain.rect.y + local_y;
                     let row =
                         (active_y + 2 * full_y + dy) * stride + active_x + 2 * domain.rect.x + dx;
-                    for (local_x, value) in dst.iter_mut().enumerate() {
-                        #[cfg(not(feature = "native-signed-black"))]
+                    let whole = [(0, local.width)];
+                    let spans = local_columns(
+                        columns,
+                        full_y / align_cmd::BAND_ROWS,
+                        domain.rect.x,
+                        local.width,
+                    );
+                    for &(a, b) in spans.as_deref().unwrap_or(&whole) {
+                        for (local_x, value) in
+                            dst[a..b].iter_mut().enumerate().map(|(i, v)| (a + i, v))
                         {
-                            *value = (f32::from(data[row + 2 * local_x]) - black).max(0.0);
-                        }
-                        #[cfg(feature = "native-signed-black")]
-                        {
-                            let sample = f32::from(data[row + 2 * local_x]) - black;
-                            *value = if signed_black {
-                                sample
-                            } else {
-                                sample.max(0.0)
-                            };
+                            #[cfg(not(feature = "native-signed-black"))]
+                            {
+                                *value = (f32::from(data[row + 2 * local_x]) - black).max(0.0);
+                            }
+                            #[cfg(feature = "native-signed-black")]
+                            {
+                                let sample = f32::from(data[row + 2 * local_x]) - black;
+                                *value = if signed_black {
+                                    sample
+                                } else {
+                                    sample.max(0.0)
+                                };
+                            }
                         }
                     }
                 });
         });
     Ok(())
+}
+
+/// A band's [`align_cmd::WarpScratch::columns`] (full-plane columns) as
+/// columns of the analysis rectangle starting at `rect_x`, `width` wide;
+/// `None` when the band has none (every column).
+fn local_columns(
+    columns: Option<&[Vec<(usize, usize)>]>,
+    band: usize,
+    rect_x: usize,
+    width: usize,
+) -> Option<Vec<(usize, usize)>> {
+    let spans = columns?.get(band)?;
+    Some(
+        spans
+            .iter()
+            .map(|&(c0, c1)| {
+                (
+                    c0.saturating_sub(rect_x).min(width),
+                    c1.saturating_sub(rect_x).min(width),
+                )
+            })
+            .filter(|(a, b)| a < b)
+            .collect(),
+    )
 }
 
 /// A merged image ready to be developed, whichever backend produced it.
@@ -7193,6 +7231,13 @@ fn prepare_frame_into(
     )? {
         return Ok(false);
     }
+    // A consumer of a few columns (`WarpScratch::columns`, the reference
+    // tiles) reads the planes only: no luma was built, and none of what
+    // follows reads the planes it reads (the axial colour, which does, is
+    // never combined with it; `gather_restoration_references`).
+    if warp.columns.is_some() {
+        return Ok(true);
+    }
     // The optical restoration's depth measurement, from this luma
     // (`STREHL_DEPTH_PASS=fused`; a no-op otherwise).
     depth_guide::record(index, luma);
@@ -7246,22 +7291,45 @@ fn gather_restoration_references<S: PyramidFrameSource>(
     pool: &rayon::ThreadPool,
 ) -> Result<()> {
     let started = Instant::now();
-    let plan = optical_restore::reference_rows();
+    let plan = optical_restore::reference_windows();
     let full = domain.full;
     let bands = full.height.div_ceil(align_cmd::BAND_ROWS);
-    // Per frame: the gather's bands covering its crops' rows, and the buffer
-    // rows those bands can read (`None`: decode everything).
+    // The axial colour rewrites the planes from the frame's luma, which a
+    // column-windowed preparation does not build: whole bands then.
+    let windowed = !axial_colour::is_active();
+    // Per frame: the gather's bands covering its crops' rows, each band's
+    // crop columns (full-plane, merged), and the buffer rows those bands can
+    // read (`None`: decode everything).
     let layout = source.buffer_layout();
-    let mut requests: Vec<(usize, Vec<bool>, Option<Vec<bool>>)> = Vec::new();
+    type Request = (
+        usize,
+        Vec<bool>,
+        Vec<Vec<(usize, usize)>>,
+        Option<Vec<bool>>,
+    );
+    let mut requests: Vec<Request> = Vec::new();
     for (index, windows) in &plan {
         let mut mask = vec![false; bands];
+        let mut cols: Vec<Vec<(usize, usize)>> = vec![Vec::new(); bands];
         for w in windows {
-            let (a, b) = (domain.rect.y + w.start, domain.rect.y + w.end);
-            for m in
-                &mut mask[a / align_cmd::BAND_ROWS..b.div_ceil(align_cmd::BAND_ROWS).min(bands)]
-            {
-                *m = true;
+            let (a, b) = (domain.rect.y + w.rows.start, domain.rect.y + w.rows.end);
+            let span = (domain.rect.x + w.cols.start, domain.rect.x + w.cols.end);
+            let touched = a / align_cmd::BAND_ROWS..b.div_ceil(align_cmd::BAND_ROWS).min(bands);
+            for band in touched {
+                mask[band] = true;
+                cols[band].push(span);
             }
+        }
+        for spans in &mut cols {
+            spans.sort_unstable();
+            let mut merged: Vec<(usize, usize)> = Vec::with_capacity(spans.len());
+            for &(c0, c1) in spans.iter() {
+                match merged.last_mut() {
+                    Some(last) if c0 <= last.1 => last.1 = last.1.max(c1),
+                    _ => merged.push((c0, c1)),
+                }
+            }
+            *spans = merged;
         }
         let placed = warps.and_then(|map| match map.warp(*index) {
             Ok(FrameWarp::Placed(t)) => Some(frame_refine::adjust(*index, *t)),
@@ -7291,20 +7359,26 @@ fn gather_restoration_references<S: PyramidFrameSource>(
             }
             _ => None,
         };
-        requests.push((*index, mask, rows));
+        requests.push((*index, mask, cols, rows));
     }
     let partial = RowSource {
         inner: source,
         rows: requests
             .iter()
-            .filter_map(|(i, _, rows)| rows.clone().map(|r| (*i, r)))
+            .filter_map(|(i, _, _, rows)| rows.clone().map(|r| (*i, r)))
             .collect(),
         valid: Default::default(),
     };
+    // `STREHL_REFERENCE_CHECK=1`: prepare every reference frame a second
+    // time over whole bands and require each crop to equal the windowed
+    // preparation's, bit for bit (slow; a verification, never a default).
+    let check = std::env::var(REFERENCE_CHECK_ENV).is_ok_and(|v| v.trim() == "1");
+    let checked = std::sync::atomic::AtomicUsize::new(0);
     // Each slot holds a frame, its group's members and every plane: about
     // 2.5 GB of committed memory at 61 MP with colour carry (MEASURED: eight
-    // slots raised the render's peak by 10 GB and were no faster than four).
-    // Each slot takes the next frame as soon as it is free.
+    // slots raised the render's peak by 10 GB and were no faster than four;
+    // column-windowed, twelve slots raised it by 19 GB and were no faster,
+    // 2026-11-18). Each slot takes the next frame as soon as it is free.
     let width = workers.clamp(1, 4);
     let mut slots: Vec<FramePrep> = (0..width.min(requests.len()))
         .map(|_| {
@@ -7317,36 +7391,65 @@ fn gather_restoration_references<S: PyramidFrameSource>(
     let next = std::sync::atomic::AtomicUsize::new(0);
     pool.install(|| -> Result<()> {
         slots.par_iter_mut().try_for_each(|slot| -> Result<()> {
-            while let Some((index, mask, _)) =
+            while let Some((index, mask, cols, _)) =
                 requests.get(next.fetch_add(1, std::sync::atomic::Ordering::Relaxed))
             {
                 let index = *index;
                 slot.warp.bands = Some(mask.clone());
+                slot.warp.columns = windowed.then(|| cols.clone());
                 let fast = slot.prepare(domain, &partial, index, levels, noise, warps, None, None);
                 if fast.is_err() || !slot.accepted {
                     // Whatever stopped it (a row the plan missed, a group not
                     // measured here), the whole frame again.
                     again.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
                     slot.warp.bands = None;
+                    slot.warp.columns = None;
                     slot.prepare(domain, source, index, levels, noise, warps, None, None)?;
                 }
+                let windowed_frame = slot.warp.columns.is_some();
                 slot.warp.bands = None;
+                slot.warp.columns = None;
                 ensure!(
                     slot.accepted,
                     "optical restoration: reference frame {index} was folded but is refused now"
                 );
+                if check && windowed_frame {
+                    let crops = optical_restore::crops_of(index, &slot.planes);
+                    slot.prepare(domain, source, index, levels, noise, warps, None, None)?;
+                    ensure!(
+                        slot.accepted,
+                        "{REFERENCE_CHECK_ENV}: frame {index} refused in full"
+                    );
+                    let whole = optical_restore::crops_of(index, &slot.planes);
+                    let bits = |c: &[Vec<Vec<f32>>]| -> Vec<u32> {
+                        c.iter().flatten().flatten().map(|v| v.to_bits()).collect()
+                    };
+                    ensure!(
+                        bits(&crops) == bits(&whole),
+                        "{REFERENCE_CHECK_ENV}: frame {index}'s windowed crops differ from the \
+                         full preparation's"
+                    );
+                    checked.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+                }
                 optical_restore::observe(index, &slot.planes);
             }
             Ok(())
         })
     })?;
     let again = again.load(std::sync::atomic::Ordering::Relaxed);
+    let checked = checked.load(std::sync::atomic::Ordering::Relaxed);
     eprintln!(
-        "reference tiles : {} frames gathered again over the rows of the optical restoration's \
-         in-focus tiles{} ({:.1} s)",
+        "reference tiles : {} frames gathered again over the {} of the optical restoration's \
+         in-focus tiles{}{} ({:.1} s)",
         requests.len(),
+        if windowed { "rows and columns" } else { "rows" },
         if again > 0 {
             format!(", {again} of them in full")
+        } else {
+            String::new()
+        },
+        if check {
+            format!("; {checked} checked bit for bit against whole bands ({REFERENCE_CHECK_ENV})")
         } else {
             String::new()
         },
@@ -7354,6 +7457,10 @@ fn gather_restoration_references<S: PyramidFrameSource>(
     );
     Ok(())
 }
+
+/// `STREHL_REFERENCE_CHECK=1` checks every column-windowed reference frame
+/// against a whole-band preparation ([`gather_restoration_references`]).
+pub const REFERENCE_CHECK_ENV: &str = "STREHL_REFERENCE_CHECK";
 
 /// A source decoding only the planned rows of the frames it has a plan for
 /// ([`gather_restoration_references`]), and everything else in full.
@@ -7904,11 +8011,20 @@ fn load_frame_impl_observed(
                 &BAND_PLANE_OFFSETS,
                 &mut planes[..BAND_PLANES],
                 scratch.bands.as_deref(),
+                scratch.columns.as_deref(),
             )?;
         }
         if carry {
             colour_carry::copy_carried(scratch, domain, planes)?;
         }
+    }
+    // A consumer of a few columns (`WarpScratch::columns`: the optical
+    // restoration's reference tiles) reads no luma.
+    if scratch.columns.is_some() {
+        if let Some(progress) = progress {
+            progress.merge_step(index, "extract", None, "finished");
+        }
+        return Ok(true);
     }
 
     // Green luma, `L = (G1 + G2) / 2`, exactly as `plane::green_luma`

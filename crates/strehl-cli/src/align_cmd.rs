@@ -2472,6 +2472,15 @@ pub struct WarpScratch {
     /// For a consumer that reads a few rows of the frame (the optical
     /// restoration's reference tiles). `None`: every band.
     pub(crate) bands: Option<Vec<bool>>,
+    /// With [`Self::bands`]: per band, the plane columns `[c0, c1)` a consumer
+    /// reads (merged, in order). The gather of a checked pixel-shift group
+    /// then computes only those columns of the band, the write-back and the
+    /// extraction only those; a band without an entry, or a frame assembled
+    /// by Malvar, is computed across the whole width. Every value computed
+    /// is the value the full gather computes (the pull carries no state along
+    /// a row). Also: the consumer does not read the frame's luma, which is
+    /// then not built. `None`: every column, and the luma.
+    pub(crate) columns: Option<Vec<Vec<(usize, usize)>>>,
     /// The frame's and its group's buffer rows that hold decoded samples
     /// (`strehl_raw::decode_rows`); a band that would read another row is
     /// an error, never a wrong value. `None`: every row.
@@ -2586,9 +2595,15 @@ impl WarpScratch {
             carried_fresh: false,
             flat: None,
             bands: None,
+            columns: None,
             valid_rows: None,
         }
     }
+}
+
+/// [`WarpScratch::columns`] of band `band`, when the consumer gave some.
+fn band_columns(columns: Option<&[Vec<(usize, usize)>]>, band: usize) -> Option<&[(usize, usize)]> {
+    columns.and_then(|c| c.get(band)).map(Vec::as_slice)
 }
 
 /// Size a reusable full-resolution buffer without touching retained contents.
@@ -2867,12 +2882,13 @@ pub(crate) fn writeback_fullres_site(
     mode: WarpWriteback,
 ) -> usize {
     writeback_fullres_site_bands(
-        data, stride, active, geom, site, dst, cover, inv, black, mode, None,
+        data, stride, active, geom, site, dst, cover, inv, black, mode, None, None,
     )
 }
 
 /// [`writeback_fullres_site`] of only the plane rows in the bands `only`
-/// marks ([`WarpScratch::bands`]); other rows are left as they are.
+/// marks ([`WarpScratch::bands`]), and in a band with `columns`
+/// ([`WarpScratch::columns`]) only those columns; the rest is left as it is.
 #[allow(clippy::too_many_arguments)]
 fn writeback_fullres_site_bands(
     data: &mut [u16],
@@ -2886,6 +2902,7 @@ fn writeback_fullres_site_bands(
     black: f32,
     mode: WarpWriteback,
     only: Option<&[bool]>,
+    columns: Option<&[Vec<(usize, usize)>]>,
 ) -> usize {
     let (gw, gh) = (geom.width, geom.height);
     let (ax, ay) = active;
@@ -2893,21 +2910,25 @@ fn writeback_fullres_site_bands(
     let black_dn = black.round().clamp(0.0, u16::MAX as f32) as u16;
     let wanted =
         |py: usize| only.is_none_or(|m| m.get(py / GATHER_BAND_ROWS).copied().unwrap_or(false));
+    let whole = [(0, gw)];
+    let spans = |py: usize| band_columns(columns, py / GATHER_BAND_ROWS).unwrap_or(&whole);
     match mode {
         WarpWriteback::Serial => {
             let mut covered = 0usize;
             for py in (0..gh).filter(|&py| wanted(py)) {
                 let row = (ay + 2 * py + dy) * stride + ax + dx;
                 let lo = py * gw;
-                for px in 0..gw {
-                    data[row + 2 * px] = if cover[lo + px] {
-                        covered += 1;
-                        (dst[lo + px] * inv + black)
-                            .round()
-                            .clamp(0.0, u16::MAX as f32) as u16
-                    } else {
-                        black_dn
-                    };
+                for &(c0, c1) in spans(py) {
+                    for px in c0..c1 {
+                        data[row + 2 * px] = if cover[lo + px] {
+                            covered += 1;
+                            (dst[lo + px] * inv + black)
+                                .round()
+                                .clamp(0.0, u16::MAX as f32) as u16
+                        } else {
+                            black_dn
+                        };
+                    }
                 }
             }
             covered
@@ -2921,17 +2942,19 @@ fn writeback_fullres_site_bands(
             .zip(cover[..geom.pixels()].par_chunks_exact(gw))
             .enumerate()
             .filter(|(py, _)| wanted(*py))
-            .map(|(_, ((row, values), covered))| {
+            .map(|(py, ((row, values), covered))| {
                 let mut count = 0usize;
-                for px in 0..gw {
-                    row[ax + dx + 2 * px] = if covered[px] {
-                        count += 1;
-                        (values[px] * inv + black)
-                            .round()
-                            .clamp(0.0, u16::MAX as f32) as u16
-                    } else {
-                        black_dn
-                    };
+                for &(c0, c1) in spans(py) {
+                    for px in c0..c1 {
+                        row[ax + dx + 2 * px] = if covered[px] {
+                            count += 1;
+                            (values[px] * inv + black)
+                                .round()
+                                .clamp(0.0, u16::MAX as f32) as u16
+                        } else {
+                            black_dn
+                        };
+                    }
                 }
                 count
             })
@@ -2975,8 +2998,10 @@ fn warp_frame_in_place_fullres_outputs<const GREEN_ONLY: bool>(
     {
         return Ok(covered);
     }
-    // A consumer of a few rows (`WarpScratch::bands`) writes back only those.
+    // A consumer of a few rows (`WarpScratch::bands`) writes back only those,
+    // and of a few columns of them (`WarpScratch::columns`) only those.
     let only = scratch.bands.clone();
+    let columns = scratch.columns.clone();
     warp_frame_fullres_with_sink::<GREEN_ONLY, _>(
         frame,
         t,
@@ -2996,6 +3021,7 @@ fn warp_frame_in_place_fullres_outputs<const GREEN_ONLY: bool>(
                 black,
                 execution,
                 only.as_deref(),
+                columns.as_deref(),
             ))
         },
     )
@@ -3671,8 +3697,15 @@ where
     // Measured channel rows of a pixel-shift group: for each site, the member
     // whose shifted photosite has that colour, black-subtracted, divided by the
     // member's exposure gain and white-balanced like the Malvar mosaic. Green
-    // is the mean of its two samples. Integer indexing only.
-    let measured_rows = |ylo: usize, rows: usize, r: &mut [f32], g: &mut [f32], b: &mut [f32]| {
+    // is the mean of its two samples. Integer indexing only. Only the columns
+    // `xs` of each row (`WarpScratch::columns`; every column otherwise), each
+    // the value the whole row would hold there.
+    let measured_rows = |ylo: usize,
+                         rows: usize,
+                         xs: std::ops::Range<usize>,
+                         r: &mut [f32],
+                         g: &mut [f32],
+                         b: &mut [f32]| {
         let m = measured.as_ref().expect("measured group");
         let sources: [&[u16]; 4] = [
             data,
@@ -3704,7 +3737,7 @@ where
             None => {
                 for k in 0..rows {
                     let y = (ylo + k) as isize;
-                    for x in 0..fw {
+                    for x in xs.clone() {
                         let v = sample(y, x);
                         let i = k * fw + x;
                         r[i] = v[0];
@@ -3715,15 +3748,28 @@ where
             }
             Some((residuals, sign)) => {
                 // One assembled row above and below (clamped at the frame's
-                // edges) for the vertical gradient.
-                let raw: Vec<[f32; 3]> = (0..rows + 2)
-                    .flat_map(|e| (0..fw).map(move |x| (e, x)))
-                    .map(|(e, x)| {
+                // edges) for the vertical gradient, and the column either
+                // side of the window for the horizontal one.
+                let rx = xs.start.saturating_sub(1)..(xs.end + 1).min(fw);
+                let raw: Vec<[f32; 3]> = if rx.len() == fw {
+                    (0..rows + 2)
+                        .flat_map(|e| (0..fw).map(move |x| (e, x)))
+                        .map(|(e, x)| {
+                            let y = (ylo as isize - 1 + e as isize).clamp(0, fh as isize - 1);
+                            sample(y, x)
+                        })
+                        .collect()
+                } else {
+                    let mut raw = vec![[0f32; 3]; (rows + 2) * fw];
+                    for e in 0..rows + 2 {
                         let y = (ylo as isize - 1 + e as isize).clamp(0, fh as isize - 1);
-                        sample(y, x)
-                    })
-                    .collect();
-                strehl_core::pixel_shift::compensate_rows(
+                        for x in rx.clone() {
+                            raw[e * fw + x] = sample(y, x);
+                        }
+                    }
+                    raw
+                };
+                strehl_core::pixel_shift::compensate_rows_cols(
                     &raw,
                     fw,
                     rows,
@@ -3731,11 +3777,17 @@ where
                     &m.offsets,
                     &residuals,
                     sign,
-                    [&mut r[..rows * fw], &mut g[..rows * fw], &mut b[..rows * fw]],
+                    [
+                        &mut r[..rows * fw],
+                        &mut g[..rows * fw],
+                        &mut b[..rows * fw],
+                    ],
+                    xs,
                 );
             }
         }
     };
+    let columns = scratch.columns.clone();
     // `WarpScratch::bands` / `valid_rows`: a consumer that needs only some
     // rows (the optical restoration's reference tiles, after a row-range
     // decode).
@@ -3749,6 +3801,7 @@ where
             .unwrap_or(0)
     });
     let unreadable = std::sync::atomic::AtomicBool::new(false);
+    let measured_group = measured.is_some();
     views
         .into_par_iter()
         .enumerate()
@@ -3793,148 +3846,214 @@ where
                     return;
                 }
             }
+            // `WarpScratch::columns`: under a measured group, only the
+            // consumer's columns of this band, each window from the source
+            // columns its pulls can read (the corners of an affine map bound
+            // it; two columns of slack each way cover the taps and rounding).
+            let ranges = if measured.is_some() {
+                band_columns(columns.as_deref(), band)
+            } else {
+                None
+            };
+            let source_cols = |c0: usize, c1: usize| -> std::ops::Range<usize> {
+                let (mut lo, mut hi) = (f64::INFINITY, f64::NEG_INFINITY);
+                for s in &sites {
+                    let green = s.share.map(|(_, tg)| tg);
+                    for st in std::iter::once(s.t).chain(green) {
+                        for py in [py0, py1 - 1] {
+                            for px in [c0, c1 - 1] {
+                                let (sx, _) = st.apply_at(
+                                    px as f64 + s.offset.0,
+                                    py as f64 + s.offset.1,
+                                    centre.0,
+                                    centre.1,
+                                );
+                                let x = 2.0 * sx;
+                                if !x.is_finite() {
+                                    return 0..fw;
+                                }
+                                lo = lo.min(x);
+                                hi = hi.max(x);
+                            }
+                        }
+                    }
+                }
+                let first = (lo.floor() - 2.0).clamp(0.0, (fw - 1) as f64) as usize;
+                let last = (hi.floor() + 3.0).clamp(0.0, (fw - 1) as f64) as usize;
+                first..(last + 1).max(first)
+            };
+            let whole = [(0, gw)];
             GATHER_BAND_BUFS.with(|cell| {
                 let mut guard = cell.borrow_mut();
                 let bufs = &mut *guard;
-                let (ylo, rows) = match span {
-                    Some((ylo, yhi)) if measured.is_some() => {
-                        let n = (yhi - ylo + 1) * fw;
-                        let r = grown(&mut bufs.r, n);
-                        let g = grown(&mut bufs.g, n);
-                        let b = grown(&mut bufs.b, n);
-                        measured_rows(ylo, yhi - ylo + 1, r, g, b);
-                        if let Some([ar, ab]) = shares {
-                            // The own bands: red and blue less their
-                            // green-band share, at the same photosite.
-                            for ((rv, bv), gv) in r.iter_mut().zip(b.iter_mut()).zip(g.iter()) {
-                                *rv -= ar * gv;
-                                *bv -= ab * gv;
-                            }
-                        }
-                        (ylo, n)
-                    }
-                    Some((ylo, yhi)) => {
-                        let (ma, mb) = strehl_core::demosaic::MosaicRows::span(fh, ylo, yhi);
-                        let mos = grown(&mut bufs.mos, (mb - ma + 1) * fw);
-                        for (k, orow) in mos.chunks_mut(fw).enumerate() {
-                            let y = ma + k;
-                            let row = (ay + y) * stride + ax;
-                            match flat {
-                                None => {
-                                    for (x, o) in orow.iter_mut().enumerate() {
-                                        *o = (data[row + x] as f32 - black)
-                                            * gain[rggb_channel_index(x, y)];
-                                    }
-                                }
-                                Some(f) => {
-                                    for (x, o) in orow.iter_mut().enumerate() {
-                                        *o = (data[row + x] as f32 - black)
-                                            * f[row + x]
-                                            * gain[rggb_channel_index(x, y)];
-                                    }
-                                }
-                            }
-                        }
-                        let win = strehl_core::demosaic::MosaicRows {
-                            data: mos,
-                            width: fw,
-                            height: fh,
-                            first: ma,
-                        };
-                        let n = (yhi - ylo + 1) * fw;
-                        let g = grown(&mut bufs.g, n);
-                        if GREEN_ONLY {
-                            for (k, grow) in g.chunks_mut(fw).enumerate() {
-                                strehl_core::demosaic::demosaic_malvar_green_rows(
-                                    &win,
-                                    ylo + k,
-                                    grow,
-                                );
-                            }
-                        } else {
+                for &(c0, c1) in ranges.unwrap_or(&whole) {
+                    let xs = if ranges.is_some() {
+                        source_cols(c0, c1)
+                    } else {
+                        0..fw
+                    };
+                    let (ylo, rows) = match span {
+                        Some((ylo, yhi)) if measured.is_some() => {
+                            let nrows = yhi - ylo + 1;
+                            let n = nrows * fw;
                             let r = grown(&mut bufs.r, n);
+                            let g = grown(&mut bufs.g, n);
                             let b = grown(&mut bufs.b, n);
-                            for (k, ((rr, gg), bb)) in r
-                                .chunks_mut(fw)
-                                .zip(g.chunks_mut(fw))
-                                .zip(b.chunks_mut(fw))
-                                .enumerate()
-                            {
-                                strehl_core::demosaic::demosaic_malvar_rows_planar(
-                                    &win,
-                                    ylo + k,
-                                    rr,
-                                    gg,
-                                    bb,
-                                );
+                            measured_rows(ylo, nrows, xs.clone(), r, g, b);
+                            if let Some([ar, ab]) = shares {
+                                // The own bands: red and blue less their
+                                // green-band share, at the same photosite.
+                                if xs.len() == fw {
+                                    for ((rv, bv), gv) in
+                                        r.iter_mut().zip(b.iter_mut()).zip(g.iter())
+                                    {
+                                        *rv -= ar * gv;
+                                        *bv -= ab * gv;
+                                    }
+                                } else {
+                                    for k in 0..nrows {
+                                        for i in xs.clone().map(|x| k * fw + x) {
+                                            r[i] -= ar * g[i];
+                                            b[i] -= ab * g[i];
+                                        }
+                                    }
+                                }
                             }
+                            (ylo, n)
                         }
-                        (ylo, n)
-                    }
-                    None => (0, 0),
-                };
-                let GatherBandBufs {
-                    r: br,
-                    g: bg,
-                    b: bb,
-                    share: bs,
-                    share_cover: bsc,
-                    ..
-                } = bufs;
-                for (s, (dst, cover)) in sites.iter().zip(planes.iter_mut()) {
-                    let channel: &[f32] = match s.ci {
-                        0 => &br[..rows],
-                        2 => &bb[..rows],
-                        _ => &bg[..rows],
-                    };
-                    let src = strehl_core::align::PlaneRows {
-                        data: channel,
-                        width: fw,
-                        height: fh,
-                        first: ylo,
-                    };
-                    for (k, (drow, crow)) in
-                        dst.chunks_mut(gw).zip(cover.chunks_mut(gw)).enumerate()
-                    {
-                        strehl_core::align::gather_rows_catmull_rom_checked(
-                            src,
-                            s.t,
-                            2.0,
-                            s.offset,
-                            py0 + k,
-                            centre,
-                            drow,
-                            crow,
-                        );
-                        if let Some((a, tg)) = s.share {
-                            // The green-band share, where green images it.
-                            let green = strehl_core::align::PlaneRows {
-                                data: &bg[..rows],
+                        Some((ylo, yhi)) => {
+                            let (ma, mb) = strehl_core::demosaic::MosaicRows::span(fh, ylo, yhi);
+                            let mos = grown(&mut bufs.mos, (mb - ma + 1) * fw);
+                            for (k, orow) in mos.chunks_mut(fw).enumerate() {
+                                let y = ma + k;
+                                let row = (ay + y) * stride + ax;
+                                match flat {
+                                    None => {
+                                        for (x, o) in orow.iter_mut().enumerate() {
+                                            *o = (data[row + x] as f32 - black)
+                                                * gain[rggb_channel_index(x, y)];
+                                        }
+                                    }
+                                    Some(f) => {
+                                        for (x, o) in orow.iter_mut().enumerate() {
+                                            *o = (data[row + x] as f32 - black)
+                                                * f[row + x]
+                                                * gain[rggb_channel_index(x, y)];
+                                        }
+                                    }
+                                }
+                            }
+                            let win = strehl_core::demosaic::MosaicRows {
+                                data: mos,
                                 width: fw,
                                 height: fh,
-                                first: ylo,
+                                first: ma,
                             };
-                            if bs.len() < gw {
-                                bs.resize(gw, 0.0);
-                                bsc.resize(gw, false);
+                            let n = (yhi - ylo + 1) * fw;
+                            let g = grown(&mut bufs.g, n);
+                            if GREEN_ONLY {
+                                for (k, grow) in g.chunks_mut(fw).enumerate() {
+                                    strehl_core::demosaic::demosaic_malvar_green_rows(
+                                        &win,
+                                        ylo + k,
+                                        grow,
+                                    );
+                                }
+                            } else {
+                                let r = grown(&mut bufs.r, n);
+                                let b = grown(&mut bufs.b, n);
+                                for (k, ((rr, gg), bb)) in r
+                                    .chunks_mut(fw)
+                                    .zip(g.chunks_mut(fw))
+                                    .zip(b.chunks_mut(fw))
+                                    .enumerate()
+                                {
+                                    strehl_core::demosaic::demosaic_malvar_rows_planar(
+                                        &win,
+                                        ylo + k,
+                                        rr,
+                                        gg,
+                                        bb,
+                                    );
+                                }
                             }
+                            (ylo, n)
+                        }
+                        None => (0, 0),
+                    };
+                    let GatherBandBufs {
+                        r: br,
+                        g: bg,
+                        b: bb,
+                        share: bs,
+                        share_cover: bsc,
+                        ..
+                    } = &mut *bufs;
+                    // Output pixel `c0 + j` is pulled exactly as in the whole
+                    // row: its coordinate is `j + (c0 + ox)`, the same exactly
+                    // representable sum as `(c0 + j) + ox`.
+                    let cw = c1 - c0;
+                    for (s, (dst, cover)) in sites.iter().zip(planes.iter_mut()) {
+                        let channel: &[f32] = match s.ci {
+                            0 => &br[..rows],
+                            2 => &bb[..rows],
+                            _ => &bg[..rows],
+                        };
+                        let src = strehl_core::align::PlaneRows {
+                            data: channel,
+                            width: fw,
+                            height: fh,
+                            first: ylo,
+                        };
+                        let offset = if c0 == 0 {
+                            s.offset
+                        } else {
+                            (s.offset.0 + c0 as f64, s.offset.1)
+                        };
+                        for (k, (drow, crow)) in
+                            dst.chunks_mut(gw).zip(cover.chunks_mut(gw)).enumerate()
+                        {
+                            let (drow, crow) = (&mut drow[c0..c1], &mut crow[c0..c1]);
                             strehl_core::align::gather_rows_catmull_rom_checked(
-                                green,
-                                tg,
+                                src,
+                                s.t,
                                 2.0,
-                                s.offset,
+                                offset,
                                 py0 + k,
                                 centre,
-                                &mut bs[..gw],
-                                &mut bsc[..gw],
+                                drow,
+                                crow,
                             );
-                            for ((o, c), (v, vc)) in drow
-                                .iter_mut()
-                                .zip(crow.iter_mut())
-                                .zip(bs.iter().zip(bsc.iter()))
-                            {
-                                *o += a * v;
-                                *c &= *vc;
+                            if let Some((a, tg)) = s.share {
+                                // The green-band share, where green images it.
+                                let green = strehl_core::align::PlaneRows {
+                                    data: &bg[..rows],
+                                    width: fw,
+                                    height: fh,
+                                    first: ylo,
+                                };
+                                if bs.len() < gw {
+                                    bs.resize(gw, 0.0);
+                                    bsc.resize(gw, false);
+                                }
+                                strehl_core::align::gather_rows_catmull_rom_checked(
+                                    green,
+                                    tg,
+                                    2.0,
+                                    offset,
+                                    py0 + k,
+                                    centre,
+                                    &mut bs[..cw],
+                                    &mut bsc[..cw],
+                                );
+                                for ((o, c), (v, vc)) in drow
+                                    .iter_mut()
+                                    .zip(crow.iter_mut())
+                                    .zip(bs[..cw].iter().zip(bsc[..cw].iter()))
+                                {
+                                    *o += a * v;
+                                    *c &= *vc;
+                                }
                             }
                         }
                     }
@@ -3963,7 +4082,10 @@ where
             let si = native_sites + k;
             let inv = 1.0 / gain[s.ci];
             let cover = &scratch.site_cover[si][..px];
-            // Row by row; only the computed bands' rows under `bands`.
+            // Row by row; only the computed bands' rows under `bands`, and
+            // their computed columns under `columns`.
+            let whole = [(0, gw)];
+            let windowed = measured_group;
             scratch.site_dst[si][..px]
                 .par_chunks_mut(gw)
                 .zip(cover.par_chunks(gw))
@@ -3972,14 +4094,19 @@ where
                     only.as_ref()
                         .is_none_or(|m| m.get(py / GATHER_BAND_ROWS).copied().unwrap_or(false))
                 })
-                .for_each(|(_, (row, covered))| {
-                    for (v, c) in row.iter_mut().zip(covered) {
-                        *v = if *c {
-                            let dn = (*v * inv + black).round().clamp(0.0, u16::MAX as f32);
-                            (dn - black).max(0.0)
-                        } else {
-                            0.0
-                        };
+                .for_each(|(py, (row, covered))| {
+                    let spans = band_columns(columns.as_deref(), py / GATHER_BAND_ROWS)
+                        .filter(|_| windowed)
+                        .unwrap_or(&whole);
+                    for &(c0, c1) in spans {
+                        for (v, c) in row[c0..c1].iter_mut().zip(&covered[c0..c1]) {
+                            *v = if *c {
+                                let dn = (*v * inv + black).round().clamp(0.0, u16::MAX as f32);
+                                (dn - black).max(0.0)
+                            } else {
+                                0.0
+                            };
+                        }
                     }
                 });
             scratch.site_dst[si].truncate(px);
