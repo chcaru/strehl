@@ -9821,6 +9821,15 @@ fn run_pyramid_prepared_with_sensor(
         strehl_raw::preload::clear();
         fold_result
     })?;
+    let (hashed, trusted) = strehl_raw::trust::take_counts();
+    if hashed + trusted > 0 {
+        eprintln!(
+            "archive checks  : {hashed} decodes verified against their SHA-256 (and recorded), \
+             {trusted} vouched for by a transfer receipt or an earlier verification ({}=always \
+             verifies every decode)",
+            strehl_raw::trust::ARCHIVE_VERIFY_ENV
+        );
+    }
     if worker.gpu_prep {
         let ([cache, drive, buffered], bytes, busy) = strehl_raw::preload::take_stats();
         if cache + drive + buffered > 0 {

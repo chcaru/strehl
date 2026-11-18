@@ -46,6 +46,9 @@ pub struct CfaFile {
     pub crop: Option<Crop>,
     /// Whether the original file's SHA-256 was checked (archives only).
     pub verified_sha256: bool,
+    /// The original file's SHA-256 the archive's envelope declares (lower
+    /// case hex); empty for an unarchived file.
+    pub declared_sha256: String,
     /// [`decode_archive_rows`]: the sample rows decoded (a superset of those
     /// asked for, whole chunks); every other row is unspecified. `None` when
     /// every row was decoded.
@@ -525,7 +528,22 @@ fn sample_bytes(samples: &[u16]) -> &[u8] {
 /// Decode an archive whose original is a plain CFA-strip TIFF directly into
 /// samples. `buffer` is reused when its length matches.
 pub fn decode_archive(path: &Path, buffer: Option<Vec<u16>>) -> Result<Option<CfaFile>> {
-    decode_archive_impl(path, buffer, None, false)
+    decode_archive_impl(path, buffer, None, false, None)
+}
+
+/// [`decode_archive`] (`serial`: [`decode_archive_serial`]) that skips the
+/// whole-file SHA-256 when the envelope declares exactly `trusted`: the
+/// caller already holds a verification of this file (a transfer receipt or
+/// an earlier verified decode, `strehl_raw::trust`). The same samples; the
+/// result's `verified_sha256` says whether the hash was checked now. With a
+/// different declared hash, or `None`, the file is verified as always.
+pub fn decode_archive_trusting(
+    path: &Path,
+    buffer: Option<Vec<u16>>,
+    serial: bool,
+    trusted: Option<&str>,
+) -> Result<Option<CfaFile>> {
+    decode_archive_impl(path, buffer, None, serial, trusted)
 }
 
 /// [`decode_archive`] on the calling thread alone, for callers that already
@@ -537,7 +555,7 @@ pub fn decode_archive(path: &Path, buffer: Option<Vec<u16>>) -> Result<Option<Cf
 /// 74 files/s on 16 threads against 50 for the pool-parallel decode, whose
 /// every decode streams its file, samples and checksum through memory.
 pub fn decode_archive_serial(path: &Path, buffer: Option<Vec<u16>>) -> Result<Option<CfaFile>> {
-    decode_archive_impl(path, buffer, None, true)
+    decode_archive_impl(path, buffer, None, true, None)
 }
 
 /// A decoding thread's reused state for [`decode_archive_serial`].
@@ -566,7 +584,7 @@ pub fn decode_archive_rows(
     rows: &[bool],
     buffer: Option<Vec<u16>>,
 ) -> Result<Option<CfaFile>> {
-    decode_archive_impl(path, buffer, Some(rows), false)
+    decode_archive_impl(path, buffer, Some(rows), false, None)
 }
 
 /// An archive's bytes: read here, or read whole by a reader thread
@@ -613,6 +631,7 @@ fn decode_archive_impl(
     buffer: Option<Vec<u16>>,
     rows: Option<&[bool]>,
     serial: bool,
+    trusted: Option<&str>,
 ) -> Result<Option<CfaFile>> {
     if cfg!(target_endian = "big") {
         return Ok(None);
@@ -671,6 +690,8 @@ fn decode_archive_impl(
         }
     };
     let header = archive::read_header(&file[..])?;
+    // Skip the whole-file hash only for the exact hash the caller trusts.
+    let hashing = !trusted.is_some_and(|s| s.eq_ignore_ascii_case(&header.sha256));
     let length = header.bytes as usize;
     let body = archive::HEADER_BYTES as usize;
     ensure!(
@@ -814,7 +835,9 @@ fn decode_archive_impl(
                     unpredict_rows(&scratch[..c.n], w, dst.len() / w, rows, |y, row| {
                         dst[y * w..(y + 1) * w].copy_from_slice(row);
                         #[cfg(target_endian = "little")]
-                        hash.update(sample_bytes(row));
+                        if hashing {
+                            hash.update(sample_bytes(row));
+                        }
                     });
                 }
                 _ => {
@@ -823,7 +846,9 @@ fn decode_archive_impl(
                         *d = u16::from_le_bytes(*b);
                     }
                     #[cfg(target_endian = "little")]
-                    hash.update(sample_bytes(dst));
+                    if hashing {
+                        hash.update(sample_bytes(dst));
+                    }
                 }
             }
         }
@@ -831,9 +856,11 @@ fn decode_archive_impl(
         for c in &chunks[last + 1..] {
             suffix.extend_from_slice(&decode_bytes(&file, c)?);
         }
-        hash.update(&suffix);
-        let sum: String = hash.finalize().iter().map(|b| format!("{b:02x}")).collect();
-        ensure!(sum == header.sha256, "RAW archive checksum mismatch");
+        if hashing {
+            hash.update(&suffix);
+            let sum: String = hash.finalize().iter().map(|b| format!("{b:02x}")).collect();
+            ensure!(sum == header.sha256, "RAW archive checksum mismatch");
+        }
         let crop = crop(&prefix, length)?;
         if let Some(mut r) = resident.take() {
             file.release(Some(&mut r));
@@ -845,7 +872,8 @@ fn decode_archive_impl(
             height: layout.height,
             samples,
             crop,
-            verified_sha256: true,
+            verified_sha256: hashing,
+            declared_sha256: header.sha256,
             decoded_rows: None,
         }));
     }
@@ -883,6 +911,7 @@ fn decode_archive_impl(
             samples,
             crop,
             verified_sha256: false,
+            declared_sha256: header.sha256,
             decoded_rows,
         }));
     }
@@ -891,13 +920,15 @@ fn decode_archive_impl(
         suffix.extend_from_slice(&decode_bytes(&file, c)?);
     }
     drop(file);
-    let mut hash = Sha256::new();
-    hash.update(&prefix);
-    #[cfg(target_endian = "little")]
-    hash.update(sample_bytes(&samples));
-    hash.update(&suffix);
-    let sum: String = hash.finalize().iter().map(|b| format!("{b:02x}")).collect();
-    ensure!(sum == header.sha256, "RAW archive checksum mismatch");
+    if hashing {
+        let mut hash = Sha256::new();
+        hash.update(&prefix);
+        #[cfg(target_endian = "little")]
+        hash.update(sample_bytes(&samples));
+        hash.update(&suffix);
+        let sum: String = hash.finalize().iter().map(|b| format!("{b:02x}")).collect();
+        ensure!(sum == header.sha256, "RAW archive checksum mismatch");
+    }
     let crop = crop(&prefix, length)?;
     Ok(Some(CfaFile {
         prefix,
@@ -905,7 +936,8 @@ fn decode_archive_impl(
         height: layout.height,
         samples,
         crop,
-        verified_sha256: true,
+        verified_sha256: hashing,
+        declared_sha256: header.sha256,
         decoded_rows: None,
     }))
 }
@@ -947,6 +979,7 @@ pub fn read_plain(path: &Path, buffer: Option<Vec<u16>>) -> Result<Option<CfaFil
         samples,
         crop,
         verified_sha256: false,
+        declared_sha256: String::new(),
         decoded_rows: None,
     }))
 }
@@ -1092,6 +1125,44 @@ mod tests {
                     );
                 }
             }
+        }
+    }
+
+    /// A trusted hash skips only the check of that exact hash: the same
+    /// samples, reported unverified; any other hash, or a file whose envelope
+    /// was altered, is verified (and refused when wrong) as always.
+    #[test]
+    fn a_trusted_hash_skips_only_its_own_check() {
+        let original = fixture(128, 520);
+        let path = archived(&original);
+        let full = decode_archive(&path, None).unwrap().unwrap();
+        assert!(full.verified_sha256);
+        assert_eq!(full.declared_sha256.len(), 64);
+        for serial in [false, true] {
+            let sha = full.declared_sha256.to_ascii_uppercase();
+            let skip = decode_archive_trusting(&path, None, serial, Some(&sha))
+                .unwrap()
+                .unwrap();
+            assert!(!skip.verified_sha256);
+            assert_eq!(skip.samples, full.samples);
+            assert_eq!(skip.prefix, full.prefix);
+            let other = decode_archive_trusting(&path, None, serial, Some("00"))
+                .unwrap()
+                .unwrap();
+            assert!(other.verified_sha256);
+        }
+        let bad = tempfile::Builder::new()
+            .suffix(".straw")
+            .tempfile()
+            .unwrap();
+        let mut wrong_hash = std::fs::read(&path).unwrap();
+        wrong_hash[20] ^= 1;
+        std::fs::write(bad.path(), &wrong_hash).unwrap();
+        for serial in [false, true] {
+            assert!(
+                decode_archive_trusting(bad.path(), None, serial, Some(&full.declared_sha256))
+                    .is_err()
+            );
         }
     }
 

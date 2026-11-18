@@ -374,6 +374,22 @@ REGISTRY: dict[str, Declared] = {
         ),
         note="Round-2 performance plan stage Q4 (2026-11-18).",
     ),
+    "STREHL_ARCHIVE_VERIFY": Declared(
+        kind="control",
+        default="recorded (a full decode skips the SHA-256 of an archive a transfer receipt or an earlier verification vouches for)",
+        verified="code",
+        backend="any",
+        evidence=(
+            "strehl-raw/src/trust.rs trusted_sha256(): `always` -> every full "
+            "decode hashes the original file, as before; otherwise an `ok`, "
+            "durable receipt of the same length saved no earlier than the file's "
+            "modification time, or a record of a verified decode with the same "
+            "length and modification time (cache_root()/verified), lets the "
+            "decode skip the hash when the envelope declares that hash. "
+            "Decoding is a pure function of the file: byte-identical output."
+        ),
+        note="Round-2 performance plan stage Q5f (owner, 2026-11-18: verify at ingest, not at every render).",
+    ),
     "STREHL_READ_AHEAD_MB": Declared(
         kind="control",
         default="3072 (MB of files read ahead and not yet decoded)",

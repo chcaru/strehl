@@ -1035,6 +1035,9 @@ where
             "STREHL_RESEARCH_LENS_MAP applies only to stack; unset it for other commands"
         );
     }
+    // Archives verified in full are recorded beside the warp maps, so later
+    // processes may skip their hash (`strehl_raw::trust`). Never in a capture.
+    strehl_raw::trust::set_store(align_cmd::cache_root().join("verified"));
     let result = match command {
         #[cfg(feature = "multi-stack")]
         Command::Session { action } => session_cmd::run(action),

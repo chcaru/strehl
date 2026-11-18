@@ -15,13 +15,12 @@ rawler.workspace = true
 rayon.workspace = true
 thiserror.workspace = true
 anyhow.workspace = true
+# Reading the receiver's transfer receipts (`trust`).
+serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
 
 [[example]]
 name = "rea-dark-audit"
 path = "../../experiments/rea-a7c2-2026-10-24-d/raw-dark-audit.rs"
-
-[dev-dependencies]
-serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
 
 [[example]]
 name = "a7cr-dark-analysis"

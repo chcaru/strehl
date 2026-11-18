@@ -54,6 +54,7 @@ pub mod sony_focus;
 pub mod sony_optical;
 #[path = "sony-tiff.rs"]
 mod sony_tiff;
+pub mod trust;
 
 pub use identity::{CaptureIdentity, identity, identity_cached};
 /// Whole files read ahead by reader threads for [`decode_serial`].
@@ -405,14 +406,33 @@ fn decode_with(
                     .contains(s)
             })
         });
+        // A full decode of a file a receipt or an earlier verification
+        // vouches for skips the whole-file hash (`trust`, plan stage Q5f).
+        let trusted = match partial {
+            Some(_) => None,
+            None => trust::trusted_sha256(path),
+        };
         let cfa = match partial {
             Some(rows) => strehl_raw_codec::cfa::decode_archive_rows(path, rows, buffer.take()),
-            None if serial => strehl_raw_codec::cfa::decode_archive_serial(path, buffer.take()),
-            None => strehl_raw_codec::cfa::decode_archive(path, buffer.take()),
+            None => strehl_raw_codec::cfa::decode_archive_trusting(
+                path,
+                buffer.take(),
+                serial,
+                trusted.as_deref(),
+            ),
         }
         .map_err(|e| fail(format!("{e:#}")))?;
         if let Some(cfa) = cfa {
-            if cfa.verified_sha256
+            let full = cfa.decoded_rows.is_none();
+            if full && cfa.verified_sha256 {
+                trust::record_verified(path, &cfa.declared_sha256);
+            } else if full && trusted.is_some() {
+                trust::note_trusted();
+            }
+            // Verified here, or vouched for: what a later partial decode of
+            // this file requires.
+            if full
+                && (cfa.verified_sha256 || trusted.is_some())
                 && let Some(s) = stamp
             {
                 verified()
