@@ -1,0 +1,17 @@
+== predictor (baseline x86-64 build), 2026-11-18T10:14:50
+frame-000041.ARW.straw: 50 CFA chunks, 61.2 M samples | product predictor 0.0657 s (1.07 ns/sample) | row-buffered, two rows at once 0.0285 s (0.47 ns/sample) | identical: true
+frame-000042.ARW.straw: 50 CFA chunks, 61.2 M samples | product predictor 0.0657 s (1.07 ns/sample) | row-buffered, two rows at once 0.0288 s (0.47 ns/sample) | identical: true
+frame-000043.ARW.straw: 50 CFA chunks, 61.2 M samples | product predictor 0.0658 s (1.08 ns/sample) | row-buffered, two rows at once 0.0287 s (0.47 ns/sample) | identical: true
+random residuals, 216 shapes (widths 2-257, 1-17 rows, full-range values): identical: true
+one chunk (128 rows x 9600) in cache, ns per sample: residuals 0.052 | neighbour sums 0.068 | chains 0.224 | copy out 0.018 | whole row-buffered 0.388 | product 1.079 | identical true
+== alignment NCC kernel, baseline x86-64 build
+fine 128 px, radius 6: 64 tile searches, 7360 offsets scored | product 0.106 s | offset lanes 0.017 s | 6.2x | every score bit-identical: true
+coarse 32 px, radius 10: 64 tile searches, 18610 offsets scored | product 0.017 s | offset lanes 0.003 s | 5.8x | every score bit-identical: true
+== alignment NCC kernel, built with -C target-cpu=native (stale predictor code in this build; NCC only)
+fine 128 px, radius 6: 64 tile searches, 7360 offsets scored | product 0.090 s | offset lanes 0.009 s | 10.3x | every score bit-identical: true
+coarse 32 px, radius 10: 64 tile searches, 18610 offsets scored | product 0.013 s | offset lanes 0.001 s | 9.8x | every score bit-identical: true
+== group check, product code as of 2026-11-17 (outputs/a7cr-perf/bench), whole pool then RAYON_NUM_THREADS=1
+group 40: decode x4 in parallel 0.160 s | register 0.038 0.037 0.037 s | witness 0.072 s | check total 0.184 s | offsets [(0, -1), (1, -1), (1, 0)] mean z2 1.12
+group 41: decode x4 in parallel 0.119 s | register 0.041 0.040 0.040 s | witness 0.070 s | check total 0.191 s | offsets [(0, -1), (1, -1), (1, 0)] mean z2 1.11
+group 40: decode x4 in parallel 0.865 s | register 0.095 0.094 0.093 s | witness 1.082 s | check total 1.364 s | offsets [(0, -1), (1, -1), (1, 0)] mean z2 1.12
+group 41: decode x4 in parallel 0.814 s | register 0.095 0.094 0.095 s | witness 1.138 s | check total 1.423 s | offsets [(0, -1), (1, -1), (1, 0)] mean z2 1.11

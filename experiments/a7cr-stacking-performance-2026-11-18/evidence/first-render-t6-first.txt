@@ -1,0 +1,14 @@
+== stages (stages.py t6-first): product binary, first render with an empty cache
+   t_end    wall  cores kern%   readGB   diskGB   gpu%  gpuPk  privGB  devMiB  until
+   24.65   24.65   22.1     2    12.74     3.04      2      6     3.7    1365  frames          : 196 from D:/StrehlCaptures/stack-1794786793543-11226
+   25.54    0.89    2.0    55     0.01     0.00      2      4     7.4    3176  gpu fold        : ON, NVIDIA GeForce RTX 5090 (2364 MB device memory);
+   34.47    8.93   22.5    39     8.36     1.25     11     80     6.4    6616  folded          : 25 / 196 frames in 9.8 s (0.39 s per frame, 32 execu
+   36.34    1.87   23.9     1     0.00     0.00      5     39     3.3    6616  collapse+write  : 1.9 s
+   37.17    0.83    1.4    15     0.82     0.00      0      2     2.1    1365  frames          : 196 from D:/StrehlCaptures/stack-1794786793543-11226
+   38.53    1.36    1.7    29     0.00     0.00      0      1    17.7    5523  gpu fold        : ON, NVIDIA GeForce RTX 5090 (5121 MB device memory);
+   90.05   51.52   24.7    18    92.33    26.65     13     76    22.4   13003  depth map       : measured during the fold for the optical restoration
+  101.71   11.66   18.8     8     8.11     4.17      2     21    31.4   12999  reference tiles : 153 frames gathered again over the rows of the optic
+  103.86    2.15   11.4     4     0.00     0.00      2      5    13.0   12999  half-stacks     : alternate folded frames finished separately for the 
+  107.03    3.17   20.8     2     0.00     0.00      2      6     7.5    1364  optical restore : ON (default for pixel-shift stacks) -- target Gaussi
+  107.30    0.27   24.2     1     0.00     0.00      3      6     7.5    1364  wrote           : outputs/a7cr-perf-2/t.tif (9504 x 6336, 16-bit RGB, 
+  107.60    0.30    0.8   100     0.00     0.00      2      3     2.0    1364  exit

@@ -1,0 +1,118 @@
+== stages (stages.py t3-tp): instrumented build, later render, GPU route
+   t_end    wall  cores kern%   readGB   diskGB   gpu%  gpuPk  privGB  devMiB  until
+    1.59    1.59    0.4    23     0.82     0.18      0      1     0.3    2423  frames          : 196 from D:/StrehlCaptures/stack-1794786793543-11226
+    3.73    2.14    1.6    38     0.01     0.00      3     26     7.4    5689  gpu fold        : ON, NVIDIA GeForce RTX 5090 (2364 MB device memory);
+    6.65    2.92    9.9    21     8.86     2.56     15     78     7.1    7674  folded          : 25 / 196 frames in 5.1 s (0.20 s per frame, 32 execu
+    8.70    2.05   21.6     3     0.03     0.00      2     32     3.3    7674  collapse+write  : 2.0 s
+    9.52    0.82    1.0    33     0.78     0.00      1      1     2.1    2423  frames          : 196 from D:/StrehlCaptures/stack-1794786793543-11226
+   10.63    1.11    1.3    31     0.01     0.08      0      1    23.1    4238  gpu fold        : ON, NVIDIA GeForce RTX 5090 (5121 MB device memory);
+   31.66   21.03   19.9    29    92.37    38.55     31     85    22.6   14072  depth map       : measured during the fold for the optical restoration
+   43.52   11.86   19.4     9     8.11     4.14      1     30    31.0   14046  reference tiles : 153 frames gathered again over the rows of the optic
+   45.70    2.18   11.9     4     0.00     0.00      0      2    13.0   14046  half-stacks     : alternate folded frames finished separately for the 
+   48.83    3.13   21.9     2     0.00     0.00      0      2     7.5    2421  optical restore : ON (default for pixel-shift stacks) -- target Gaussi
+   49.10    0.27   12.4     5     0.00     0.00      1      1     7.6    2421  wrote           : outputs/a7cr-perf-2/t.tif (9504 x 6336, 16-bit RGB, 
+   49.50    0.40    0.8    90     0.00     0.00      1      1     1.0    2421  exit
+
+== timers (tp.py t3.tp.csv); start.alignment_load spans the whole pass and is not a load time
+timer                             n   total s  mean ms   p50 ms   p90 ms   max ms
+raw.decode                     1492    308.54   206.80   224.38   410.03   835.07
+ahead.decode_plane              221    282.46  1278.10  1228.45  1747.65  2231.78
+codec.decode_serial             881    272.74   309.58   282.46   433.03   800.32
+codec.zstd                      881     76.46    86.79    82.02   132.55   187.66
+codec.unpredict                 881     76.32    86.63    80.42   112.24   374.47
+ahead.prefetch_plane            192     66.11   344.32   350.92   491.83   685.41
+codec.read                      881     53.02    60.18    51.62    94.04   529.48
+ahead.decoder_wait              253     47.89   189.29   117.58   441.32  1611.95
+codec.sha                       881     46.80    53.12    50.39    65.31    99.19
+start.alignment_load              2     46.64 23320.67 23320.67 39585.21 39585.21
+ref.frame                       153     45.49   297.33   272.69   438.45   763.73
+luma.record                     196     38.76   197.77   158.49   362.82  1509.85
+codec.decode_rows               609     27.71    45.50    37.00    81.57   225.14
+prep.decode                     153     18.65   121.93   107.25   199.03   292.47
+prep.gather                     153     18.65   121.87   111.59   213.23   377.05
+main.reference_tiles              1     11.83 11834.80 11834.80 11834.80 11834.80
+fold.gpu_start_rest             221      8.77    39.66    33.85    50.64   589.96
+fold.stage                      221      8.47    38.32    32.30    49.00   588.24
+gpu.stage_copy                  221      7.20    32.59    31.43    46.73    91.03
+fold.luma_collect               221      6.42    29.06    17.30    75.91   160.22
+gpu.luma_copy                   196      6.42    32.77    18.44    84.31   160.16
+fold.wait_decode                221      5.50    24.89     0.02    64.76   914.04
+raw.meta_image                 1492      4.18     2.80     1.36     6.34   113.52
+prep.extract_carry              153      3.65    23.88    14.20    37.95   333.46
+write.restore                     1      2.34  2339.00  2339.00  2339.00  2339.00
+ref.observe                     153      2.24    14.63     2.11    52.89   162.27
+main.attach_gpu                   2      2.05  1026.21  1026.21  1887.64  1887.64
+start.sony_focus_preflight        2      1.92   959.83   959.83  1189.55  1189.55
+main.finish_chunk                 3      1.79   596.47   294.12  1360.86  1360.86
+gpu.module_and_pipelines          2      1.60   799.33   799.33  1593.82  1593.82
+prep.luma                       153      1.45     9.45     5.41     9.81   189.12
+preview.ca_measure                1      1.39  1387.37  1387.37  1387.37  1387.37
+main.bandworker_new               2      1.13   564.14   564.14   877.61   877.61
+main.finish_full                  2      1.05   527.44   527.44   629.96   629.96
+main.half_even_finish             1      1.05  1047.13  1047.13  1047.13  1047.13
+prep.variance                   153      0.85     5.52     3.24     7.93   123.81
+gpu.read_chunk                    4      0.75   186.84   181.84   256.11   256.11
+main.drop_worker                  2      0.69   347.12   347.12   404.26   404.26
+fold.add_staged                 221      0.54     2.44     1.98     4.71    14.02
+fold.probe_collect              221      0.51     2.30     0.08     5.30   341.28
+gpu.read_copy                     4      0.49   122.53   116.64   167.99   167.99
+main.half_odd_finish              1      0.43   432.32   432.32   432.32   432.32
+gpu.instance_adapter_device       2      0.33   166.23   166.23   249.43   249.43
+gpu.stage_submit                221      0.31     1.41     0.50     0.93   188.59
+raw.meta_iso                   1492      0.30     0.20     0.15     0.35    10.58
+gpu.read_wait                     4      0.24    59.16    60.20    80.80    80.80
+fold.probe_submit               221      0.23     1.06     0.61     1.55    66.37
+start.first_decode                2      0.23   117.08   117.08   119.05   119.05
+codec.decode_par                  2      0.21   103.25   103.25   118.14   118.14
+main.absorb_odd                   1      0.20   196.88   196.88   196.88   196.88
+write.smooth_chroma               1      0.16   155.77   155.77   155.77   155.77
+write.develop_and_tiff            1      0.12   119.92   119.92   119.92   119.92
+main.halves_workspace             1      0.11   105.23   105.23   105.23   105.23
+write.native_planes               2      0.10    49.49    49.49    53.24    53.24
+fold.luma_finish                  3      0.10    31.89     0.00    95.65    95.65
+write.carried_rgb                 1      0.07    74.92    74.92    74.92    74.92
+gpu.buffers_and_binds             2      0.06    31.73    31.73    37.83    37.83
+main.finish_tap                   1      0.05    52.88    52.88    52.88    52.88
+gpu.luma_poll                   196      0.05     0.25     0.04     0.08    22.40
+write.mosaic                      2      0.05    23.91    23.91    24.56    24.56
+start.stack_groups                2      0.05    23.75    23.75    26.81    26.81
+gpu.stage_poll                  221      0.05     0.21     0.20     0.35     1.06
+gpu.second_accumulator            1      0.01     7.99     7.99     7.99     7.99
+gpu.shader_compile                2      0.01     3.33     3.33     3.40     3.40
+fold.retire                     221      0.00     0.01     0.01     0.02     0.18
+gpu.first_reset                   2      0.00     0.27     0.27     0.29     0.29
+luma.wait_recording             196      0.00     0.00     0.00     0.00     0.01
+prep.depth_record               153      0.00     0.00     0.00     0.00     0.00
+main.drop_odd                     1      0.00     0.07     0.07     0.07     0.07
+
+== per decoder thread, main fold (tp-threads.py t3.tp.csv 10 31 ...)
+thread             codec.decode_serial              codec.read              codec.zstd         codec.unpredict               codec.sha
+decoder-0           52 x      303.6 ms      52 x       45.0 ms      52 x       81.7 ms      52 x       84.3 ms      52 x       53.1 ms
+decoder-1           53 x      273.3 ms      53 x       53.7 ms      53 x       73.1 ms      53 x       77.6 ms      53 x       49.7 ms
+decoder-2           52 x      300.1 ms      52 x       54.1 ms      52 x       84.0 ms      52 x       83.1 ms      52 x       52.5 ms
+decoder-3           60 x      268.7 ms      60 x       49.4 ms      60 x       71.5 ms      60 x       76.2 ms      60 x       49.2 ms
+decoder-4           48 x      290.3 ms      48 x       58.0 ms      48 x       85.9 ms      48 x       83.0 ms      48 x       51.8 ms
+decoder-5           60 x      265.4 ms      60 x       51.5 ms      60 x       72.7 ms      60 x       77.0 ms      60 x       49.4 ms
+decoder-6           56 x      260.6 ms      56 x       51.2 ms      56 x       69.4 ms      56 x       74.8 ms      56 x       47.8 ms
+decoder-7           60 x      257.2 ms      60 x       41.3 ms      60 x       69.3 ms      60 x       75.9 ms      60 x       49.6 ms
+decoder-8           44 x      367.7 ms      44 x       65.9 ms      44 x      108.1 ms      44 x       99.4 ms      44 x       60.7 ms
+decoder-9           44 x      368.7 ms      44 x       71.3 ms      44 x      116.4 ms      44 x      103.2 ms      44 x       59.8 ms
+decoder-10          44 x      384.6 ms      44 x       79.9 ms      44 x      113.3 ms      44 x      100.3 ms      44 x       59.8 ms
+decoder-11          40 x      361.2 ms      40 x       76.1 ms      40 x      107.9 ms      40 x      102.8 ms      40 x       56.3 ms
+decoder-12          40 x      407.2 ms      40 x       86.0 ms      40 x      112.7 ms      40 x      106.5 ms      40 x       59.5 ms
+decoder-13          40 x      363.3 ms      40 x       83.1 ms      40 x      108.3 ms      40 x       98.2 ms      40 x       57.4 ms
+decoder-14          44 x      373.4 ms      44 x       76.4 ms      44 x      107.2 ms      44 x       96.8 ms      44 x       58.1 ms
+decoder-15          44 x      349.3 ms      44 x       74.8 ms      44 x       99.7 ms      44 x       92.9 ms      44 x       55.5 ms
+
+planes folded per second, 2 s bins:
+4-6s:12.5 12-14s:10.0 14-16s:9.5 16-18s:10.5 18-20s:10.5 20-22s:11.5 22-24s:9.5 24-26s:10.0 26-28s:12.0 28-30s:14.5
+
+== CPU seconds per thread role (threads.py t3-tp 10.63 31.66 43.52), user / kernel
+thread role                           n      0-11 s u/k     11-32 s u/k     32-44 s u/k     44-49 s u/k
+decoder-#                            32    15.4 /   4.2   178.7 /  60.6     0.0 /   0.0     0.0 /   0.0
+pool-#                               64     0.0 /   0.0     0.0 /   0.0   192.1 /  20.7     4.2 /   0.4
+(unnamed)                            56    43.4 /   2.0    10.7 /   0.5    11.4 /   0.4    91.6 /   1.8
+foldpool-#                           16     3.8 /   0.6   106.3 /   7.2     0.1 /   0.0     0.0 /   0.0
+prefetch-#                            4     0.0 /   0.0     0.1 /  48.8     0.0 /   0.0     0.0 /   0.0
+main                                  1     3.6 /   1.7     0.0 /   0.1     0.2 /   0.2     0.8 /   0.5
+TOTAL                               173    66.1 /   8.5   295.9 / 117.2   203.8 /  21.3    96.7 /   2.7

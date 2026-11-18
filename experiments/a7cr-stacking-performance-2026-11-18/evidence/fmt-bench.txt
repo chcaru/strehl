@@ -1,0 +1,3 @@
+three files, 183.6 M samples; bits per sample. Format 1 as stored: 8.403 (files of 64.3 MB)
+  format 1's predictor (left, up, up-left, up-right): order-0 entropy 7.909 | entropy given context 7.702 | split code (raw low bits + coded high part) 7.650 | Rice per block 7.722 | fixed width per block 8.245 | with 3 exceptions 8.222
+  row-above predictor ((a + 2b + c + 2) >> 2)  : order-0 entropy 8.122 | entropy given context 7.914 | split code (raw low bits + coded high part) 7.810 | Rice per block 7.888 | fixed width per block 8.382 | with 3 exceptions 8.364

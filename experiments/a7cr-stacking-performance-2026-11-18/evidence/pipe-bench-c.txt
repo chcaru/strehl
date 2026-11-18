@@ -1,0 +1,7 @@
+the same 320 archives copied to C: (WD SN8100); cold = purged from the system cache first; 2026-11-18T11:04:50
+pipe mode huc  4 readers -> 16 decoders (cores), 320 files: 2.81 s, 113.9 files/s (7.06 GB/s read) | readers busy 52 %, decoders busy 96 % (waiting for a file 2 %) | checksum failures 0
+pipe mode huc  6 readers -> 26 decoders (none), 320 files: 2.74 s, 116.9 files/s (7.25 GB/s read) | readers busy 35 %, decoders busy 95 % (waiting for a file 3 %) | checksum failures 0
+pipe mode huc  8 readers -> 24 decoders (none), 320 files: 2.75 s, 116.3 files/s (7.21 GB/s read) | readers busy 27 %, decoders busy 95 % (waiting for a file 3 %) | checksum failures 0
+pipe mode hc   4 readers -> 28 decoders (none), 320 files: 4.41 s, 72.6 files/s (4.50 GB/s read) | readers busy 96 %, decoders busy 44 % (waiting for a file 54 %) | checksum failures 0
+pipe mode uc   6 readers -> 26 decoders (none), 320 files: 2.50 s, 128.2 files/s (7.95 GB/s read) | readers busy 31 %, decoders busy 94 % (waiting for a file 4 %) | checksum failures 0
+pipe mode huc  2 readers -> 16 decoders (cores), 320 files: 2.86 s, 111.8 files/s (6.93 GB/s read) | readers busy 51 %, decoders busy 96 % (waiting for a file 2 %) | checksum failures 0

@@ -1,0 +1,20 @@
+[package]
+name = "a7cr-perf-bench2"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+# Prototypes sizing the second A7CR performance plan
+# (docs/proposals/2026-11-a7cr-stacking-performance-plan-2.md); not part of the
+# product workspace and not product code.
+[workspace]
+
+[dependencies]
+strehl-raw-codec = { path = "../../../crates/strehl-raw-codec" }
+sha2 = "=0.11.0"
+zstd = { version = "=0.13.3", default-features = false }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
