@@ -160,6 +160,273 @@ pub fn crop(bytes: &[u8], total: usize) -> Result<Option<Crop>> {
 /// `planar` holds the zigzag residual low bytes then high bytes, as
 /// [`crate::predict`] produces them. Bit-identical to `predict(.., true)`.
 fn unpredict_into(planar: &[u8], width: usize, dst: &mut [u16]) {
+    let rows = dst.len() / width;
+    ROWS.with_borrow_mut(|st| {
+        unpredict_rows(planar, width, rows, st, |y, row| {
+            dst[y * width..(y + 1) * width].copy_from_slice(row);
+        });
+    });
+}
+
+thread_local! {
+    /// [`unpredict_into`]'s row buffers, per decoding thread.
+    static ROWS: std::cell::RefCell<Rows> = std::cell::RefCell::new(Rows::default());
+}
+
+/// Row buffers of the row-buffered predictor ([`unpredict_rows`]). Nothing
+/// is read back from the destination, so it may be write-only memory.
+#[derive(Default)]
+pub(crate) struct Rows {
+    /// Residuals of the one or two rows in hand.
+    r: [Vec<u16>; 2],
+    /// `up[x - 2] + up[x] + up[x + 2]` of the same rows.
+    u: [Vec<u32>; 2],
+    /// The two rows above (row `y - 2` at index `y & 1`).
+    hist: [Vec<u16>; 2],
+    /// The rows being built.
+    cur: [Vec<u16>; 2],
+}
+
+impl Rows {
+    fn fit(&mut self, width: usize) {
+        for v in self.r.iter_mut().chain(&mut self.hist).chain(&mut self.cur) {
+            v.resize(width, 0);
+        }
+        for v in &mut self.u {
+            v.resize(width, 0);
+        }
+    }
+}
+
+/// A row's residuals from its zigzag low and high bytes.
+#[inline]
+fn unzig_row(lo: &[u8], hi: &[u8], out: &mut [u16]) {
+    for ((o, &l), &h) in out.iter_mut().zip(lo).zip(hi) {
+        let z = u16::from(l) | (u16::from(h) << 8);
+        *o = (z >> 1) ^ 0u16.wrapping_sub(z & 1);
+    }
+}
+
+/// The three above-row terms of each interior sample, `u[x] = up[x - 2] +
+/// up[x] + up[x + 2]` for `x` in `2..last`: no carried dependency, so the
+/// compiler vectorises it.
+#[inline]
+fn up_sums(up: &[u16], last: usize, u: &mut [u32]) {
+    if last <= 2 {
+        return;
+    }
+    let n = last - 2;
+    let (a, b, c) = (&up[..n], &up[2..2 + n], &up[4..4 + n]);
+    for (((o, &a), &b), &c) in u[2..2 + n].iter_mut().zip(a).zip(b).zip(c) {
+        *o = u32::from(a) + u32::from(b) + u32::from(c);
+    }
+}
+
+/// The last two columns: the median edge detector, as `predict` encodes them.
+#[inline]
+fn med_tail(cur: &mut [u16], up: &[u16], r: &[u16], last: usize, width: usize) {
+    for x in last..width {
+        let (left, upv, corner) = (
+            u32::from(cur[x - 2]),
+            u32::from(up[x]),
+            u32::from(up[x - 2]),
+        );
+        let p = if corner >= left.max(upv) {
+            left.min(upv)
+        } else if corner <= left.min(upv) {
+            left.max(upv)
+        } else {
+            left + upv - corner
+        };
+        cur[x] = (p as u16).wrapping_add(r[x]);
+    }
+}
+
+/// One interior row from the row two above it: two carried chains (the two
+/// colours of the row), each `((left + u[x]) / 4) + r[x]` modulo 2^16.
+#[inline]
+fn row_one(cur: &mut [u16], up: &[u16], r: &[u16], u: &[u32], width: usize) {
+    let last = width.saturating_sub(2).max(2);
+    let (mut a, mut b) = (up[0].wrapping_add(r[0]), up[1].wrapping_add(r[1]));
+    cur[0] = a;
+    cur[1] = b;
+    let mut x = 2;
+    while x + 1 < last {
+        a = (((u32::from(a) + u[x]) >> 2) as u16).wrapping_add(r[x]);
+        b = (((u32::from(b) + u[x + 1]) >> 2) as u16).wrapping_add(r[x + 1]);
+        cur[x] = a;
+        cur[x + 1] = b;
+        x += 2;
+    }
+    if x < last {
+        a = (((u32::from(a) + u[x]) >> 2) as u16).wrapping_add(r[x]);
+        cur[x] = a;
+    }
+    med_tail(cur, up, r, last, width);
+}
+
+/// Two interior rows (`y`, `y + 1`) at once: they depend only on rows
+/// `y - 2` and `y - 1`, so their four chains are independent and run
+/// interleaved. The carried values live in 32-bit registers holding 16-bit
+/// values; each step is add, shift, add, mask, which is
+/// `((sum / 4) as u16).wrapping_add(r)` exactly.
+#[inline]
+#[allow(clippy::too_many_arguments)]
+fn row_pair(
+    c0: &mut [u16],
+    c1: &mut [u16],
+    up0: &[u16],
+    up1: &[u16],
+    r0: &[u16],
+    r1: &[u16],
+    u0: &[u32],
+    u1: &[u32],
+    width: usize,
+) {
+    let last = width.saturating_sub(2).max(2);
+    let (c0, c1) = (&mut c0[..width], &mut c1[..width]);
+    let (r0, r1, u0, u1) = (&r0[..width], &r1[..width], &u0[..width], &u1[..width]);
+    let (a16, b16) = (up0[0].wrapping_add(r0[0]), up0[1].wrapping_add(r0[1]));
+    let (c16, d16) = (up1[0].wrapping_add(r1[0]), up1[1].wrapping_add(r1[1]));
+    c0[0] = a16;
+    c0[1] = b16;
+    c1[0] = c16;
+    c1[1] = d16;
+    let (mut a, mut b, mut c, mut d) = (
+        u32::from(a16),
+        u32::from(b16),
+        u32::from(c16),
+        u32::from(d16),
+    );
+    let mut x = 2;
+    if last > 2 && last <= width {
+        let pairs = (last - 2) / 2;
+        let span = 2..2 + 2 * pairs;
+        let it = c0[span.clone()]
+            .as_chunks_mut::<2>()
+            .0
+            .iter_mut()
+            .zip(c1[span.clone()].as_chunks_mut::<2>().0)
+            .zip(
+                u0[span.clone()]
+                    .as_chunks::<2>()
+                    .0
+                    .iter()
+                    .zip(u1[span.clone()].as_chunks::<2>().0),
+            )
+            .zip(
+                r0[span.clone()]
+                    .as_chunks::<2>()
+                    .0
+                    .iter()
+                    .zip(r1[span].as_chunks::<2>().0),
+            );
+        for (((o0, o1), (p0, p1)), (q0, q1)) in it {
+            a = (((a + p0[0]) >> 2) + u32::from(q0[0])) & 0xffff;
+            b = (((b + p0[1]) >> 2) + u32::from(q0[1])) & 0xffff;
+            c = (((c + p1[0]) >> 2) + u32::from(q1[0])) & 0xffff;
+            d = (((d + p1[1]) >> 2) + u32::from(q1[1])) & 0xffff;
+            o0[0] = a as u16;
+            o0[1] = b as u16;
+            o1[0] = c as u16;
+            o1[1] = d as u16;
+        }
+        x = 2 + 2 * pairs;
+    }
+    if x < last {
+        c0[x] = (((a + u0[x]) >> 2) as u16).wrapping_add(r0[x]);
+        c1[x] = (((c + u1[x]) >> 2) as u16).wrapping_add(r1[x]);
+    }
+    med_tail(c0, up0, r0, last, width);
+    med_tail(c1, up1, r1, last, width);
+}
+
+/// The samples [`unpredict_into`] writes, built in row buffers and handed to
+/// `emit(row index, samples)` one row at a time, in order. Rows 0-1 carry
+/// along the row from the left (`x - 2`); later rows predict from the row two
+/// above and the left, `(left + up[x - 2] + up[x] + up[x + 2]) / 4`, with the
+/// median edge detector on the last two columns, exactly as
+/// [`crate::predict`] encodes. MEASURED (2026-11-18, `bench2 pred` on the
+/// A7CR scarab archives): 0.39 ns per sample against 1.08 for the loop that
+/// read each row back from the destination.
+pub(crate) fn unpredict_rows(
+    planar: &[u8],
+    width: usize,
+    rows: usize,
+    st: &mut Rows,
+    mut emit: impl FnMut(usize, &[u16]),
+) {
+    let n = rows * width;
+    debug_assert!(planar.len() >= 2 * n);
+    let (lo, hi) = planar.split_at(n);
+    st.fit(width);
+    let Rows { r, u, hist, cur } = st;
+    for y in 0..rows.min(2) {
+        let row = y * width;
+        unzig_row(&lo[row..row + width], &hi[row..row + width], &mut r[0]);
+        let (c, r) = (&mut cur[0][..width], &r[0][..width]);
+        let (mut a, mut b) = (r[0], if width > 1 { r[1] } else { 0 });
+        c[0] = a;
+        if width > 1 {
+            c[1] = b;
+        }
+        let mut x = 2;
+        while x + 1 < width {
+            a = a.wrapping_add(r[x]);
+            b = b.wrapping_add(r[x + 1]);
+            c[x] = a;
+            c[x + 1] = b;
+            x += 2;
+        }
+        if x < width {
+            c[x] = a.wrapping_add(r[x]);
+        }
+        emit(y, c);
+        std::mem::swap(&mut hist[y & 1], &mut cur[0]);
+    }
+    let mut y = 2;
+    let last = width.saturating_sub(2).max(2);
+    while y + 1 < rows {
+        let (row0, row1) = (y * width, (y + 1) * width);
+        let (ra, rb) = r.split_at_mut(1);
+        unzig_row(&lo[row0..row0 + width], &hi[row0..row0 + width], &mut ra[0]);
+        unzig_row(&lo[row1..row1 + width], &hi[row1..row1 + width], &mut rb[0]);
+        let (ua, ub) = u.split_at_mut(1);
+        up_sums(&hist[y & 1], last, &mut ua[0]);
+        up_sums(&hist[(y + 1) & 1], last, &mut ub[0]);
+        let (ca, cb) = cur.split_at_mut(1);
+        row_pair(
+            &mut ca[0],
+            &mut cb[0],
+            &hist[y & 1],
+            &hist[(y + 1) & 1],
+            &ra[0],
+            &rb[0],
+            &ua[0],
+            &ub[0],
+            width,
+        );
+        emit(y, &ca[0][..width]);
+        emit(y + 1, &cb[0][..width]);
+        std::mem::swap(&mut hist[y & 1], &mut ca[0]);
+        std::mem::swap(&mut hist[(y + 1) & 1], &mut cb[0]);
+        y += 2;
+    }
+    if y < rows {
+        let row = y * width;
+        unzig_row(&lo[row..row + width], &hi[row..row + width], &mut r[0]);
+        up_sums(&hist[y & 1], last, &mut u[0]);
+        let (ca, _) = cur.split_at_mut(1);
+        row_one(&mut ca[0], &hist[y & 1], &r[0], &u[0], width);
+        emit(y, &ca[0][..width]);
+        std::mem::swap(&mut hist[y & 1], &mut ca[0]);
+    }
+}
+
+/// The predictor's inverse as it was written before [`unpredict_rows`]: the
+/// reference the row-buffered form is tested against.
+#[cfg(test)]
+fn unpredict_reference(planar: &[u8], width: usize, dst: &mut [u16]) {
     let n = dst.len();
     debug_assert_eq!(planar.len(), 2 * n);
     let (lo, hi) = planar.split_at(n);
@@ -275,9 +542,11 @@ pub fn decode_archive_serial(path: &Path, buffer: Option<Vec<u16>>) -> Result<Op
 
 /// A decoding thread's reused state for [`decode_archive_serial`].
 struct Resident {
-    file: Vec<u8>,
+    /// This thread's file buffer, for files no reader read.
+    read: Option<crate::preload::AlignedBuf>,
     scratch: Vec<u8>,
     zstd: zstd::bulk::Decompressor<'static>,
+    rows: Rows,
 }
 
 thread_local! {
@@ -300,6 +569,45 @@ pub fn decode_archive_rows(
     decode_archive_impl(path, buffer, Some(rows), false)
 }
 
+/// An archive's bytes: read here, or read whole by a reader thread
+/// (`preload`). Only a partial decode writes into them, and it always reads
+/// its own.
+enum FileBytes {
+    Owned(Vec<u8>),
+    Read(crate::preload::AlignedBuf),
+}
+
+impl std::ops::Deref for FileBytes {
+    type Target = [u8];
+    fn deref(&self) -> &[u8] {
+        match self {
+            FileBytes::Owned(v) => v,
+            FileBytes::Read(b) => b,
+        }
+    }
+}
+
+impl std::ops::DerefMut for FileBytes {
+    fn deref_mut(&mut self) -> &mut [u8] {
+        match self {
+            FileBytes::Owned(v) => v,
+            FileBytes::Read(_) => unreachable!("a partial decode reads its own bytes"),
+        }
+    }
+}
+
+impl FileBytes {
+    /// Give a whole-file buffer back to the decoding thread for its next
+    /// file that no reader read.
+    fn release(self, resident: Option<&mut Resident>) {
+        match (self, resident) {
+            (FileBytes::Read(b), Some(r)) if r.read.is_none() => r.read = Some(b),
+            (FileBytes::Read(b), _) => crate::preload::recycle(b),
+            (FileBytes::Owned(_), _) => {}
+        }
+    }
+}
+
 fn decode_archive_impl(
     path: &Path,
     buffer: Option<Vec<u16>>,
@@ -315,9 +623,10 @@ fn decode_archive_impl(
         match RESIDENT.with_borrow_mut(Option::take) {
             Some(r) => Some(r),
             None => Some(Resident {
-                file: Vec::new(),
+                read: None,
                 scratch: Vec::new(),
                 zstd: zstd::bulk::Decompressor::new()?,
+                rows: Rows::default(),
             }),
         }
     } else {
@@ -330,23 +639,35 @@ fn decode_archive_impl(
         Some(_) => Some(File::open(path).with_context(|| format!("Open {}", path.display()))?),
         None => None,
     };
+    // A serial decode's file: read whole by a reader thread already
+    // (`preload`), or read whole here the same way (unbuffered when the file
+    // cache does not hold it). The same bytes either way.
+    let preloaded = match resident.as_mut() {
+        Some(r) => match crate::preload::take(path) {
+            Some(b) => Some(b),
+            None => Some(
+                crate::preload::read_whole(
+                    path,
+                    crate::preload::ReadMode::from_env(),
+                    r.read.take(),
+                )
+                .with_context(|| format!("Read {}", path.display()))?
+                .0,
+            ),
+        },
+        None => None,
+    };
     let mut file = match sparse.as_mut() {
-        None if resident.is_some() => {
-            let r = resident.as_mut().expect("resident state");
-            let mut file = std::mem::take(&mut r.file);
-            file.clear();
-            File::open(path)
-                .and_then(|mut f| f.read_to_end(&mut file))
-                .with_context(|| format!("Read {}", path.display()))?;
-            file
-        }
-        None => std::fs::read(path).with_context(|| format!("Read {}", path.display()))?,
+        None if preloaded.is_some() => FileBytes::Read(preloaded.expect("checked")),
+        None => FileBytes::Owned(
+            std::fs::read(path).with_context(|| format!("Read {}", path.display()))?,
+        ),
         Some(f) => {
             let len = f.metadata()?.len() as usize;
             let mut file = vec![0u8; len];
             let head = (archive::HEADER_BYTES as usize + 16).min(len);
             read_at(f, &mut file[..head], 0)?;
-            file
+            FileBytes::Owned(file)
         }
     };
     let header = archive::read_header(&file[..])?;
@@ -486,17 +807,25 @@ fn decode_archive_impl(
                         .zstd
                         .decompress_to_buffer(payload, &mut r.scratch[..c.n])?;
                     ensure!(got == c.n, "Decoded chunk length mismatch");
-                    unpredict_into(&r.scratch[..c.n], c.width, dst);
+                    // Each finished row is written once and hashed from the
+                    // row buffer: the same bytes in the same order.
+                    let w = c.width;
+                    let Resident { scratch, rows, .. } = r;
+                    unpredict_rows(&scratch[..c.n], w, dst.len() / w, rows, |y, row| {
+                        dst[y * w..(y + 1) * w].copy_from_slice(row);
+                        #[cfg(target_endian = "little")]
+                        hash.update(sample_bytes(row));
+                    });
                 }
                 _ => {
                     let raw = decode_bytes(&file, c)?;
                     for (d, b) in dst.iter_mut().zip(raw.as_chunks::<2>().0) {
                         *d = u16::from_le_bytes(*b);
                     }
+                    #[cfg(target_endian = "little")]
+                    hash.update(sample_bytes(dst));
                 }
             }
-            #[cfg(target_endian = "little")]
-            hash.update(sample_bytes(dst));
         }
         let mut suffix = Vec::new();
         for c in &chunks[last + 1..] {
@@ -507,7 +836,7 @@ fn decode_archive_impl(
         ensure!(sum == header.sha256, "RAW archive checksum mismatch");
         let crop = crop(&prefix, length)?;
         if let Some(mut r) = resident.take() {
-            r.file = file;
+            file.release(Some(&mut r));
             RESIDENT.with_borrow_mut(|slot| *slot = Some(r));
         }
         return Ok(Some(CfaFile {
@@ -762,6 +1091,42 @@ mod tests {
                         "row {y}"
                     );
                 }
+            }
+        }
+    }
+
+    /// The row-buffered inverse writes exactly what the reference loop
+    /// writes, on full-range random residuals at every width from 2 to 257
+    /// and every row count from 1 to 17 (odd and even, below and past the
+    /// two carried rows and the paired rows).
+    #[test]
+    fn row_buffered_unpredict_equals_the_reference_loop() {
+        let mut seed = 0x9E37_79B9_7F4A_7C15u64;
+        let mut next = move || {
+            seed ^= seed << 13;
+            seed ^= seed >> 7;
+            seed ^= seed << 17;
+            seed
+        };
+        let mut st = Rows::default();
+        for width in 2..=257usize {
+            for rows in 1..=17usize {
+                let n = width * rows;
+                let planar: Vec<u8> = (0..2 * n).map(|_| next() as u8).collect();
+                let mut want = vec![0u16; n];
+                unpredict_reference(&planar, width, &mut want);
+                let mut got = vec![0xA5A5u16; n];
+                let mut seen = 0;
+                unpredict_rows(&planar, width, rows, &mut st, |y, row| {
+                    assert_eq!(y, seen, "rows are emitted in order");
+                    seen += 1;
+                    got[y * width..(y + 1) * width].copy_from_slice(row);
+                });
+                assert_eq!(seen, rows);
+                assert_eq!(got, want, "width {width}, rows {rows}");
+                let mut via = vec![0u16; n];
+                unpredict_into(&planar, width, &mut via);
+                assert_eq!(via, want, "width {width}, rows {rows}");
             }
         }
     }

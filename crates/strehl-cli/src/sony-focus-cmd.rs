@@ -540,9 +540,12 @@ pub(crate) fn audit_paths(paths: &[PathBuf], records: bool) -> AuditReport {
 }
 
 fn audit_paths_with_optical(paths: &[PathBuf], records: bool, optical: bool) -> AuditReport {
+    use rayon::prelude::*;
+    // Each file is inspected on its own; the collected order is the input
+    // order whatever the pool does.
     report(
         paths
-            .iter()
+            .par_iter()
             .enumerate()
             .map(|(i, p)| {
                 let mut frame = inspect_path(i, p, records);
@@ -586,6 +589,18 @@ fn summary_line(report: &AuditReport) -> String {
 /// Nonfatal read-only preflight for the normal stack path.
 pub(crate) fn print_preflight(paths: &[PathBuf]) {
     if !preflight_enabled(std::env::var_os("STREHL_SONY_FOCUS_AUDIT").as_deref()) {
+        return;
+    }
+    // Every file of a camera the reader does not support is `Unsupported`,
+    // an outcome this preflight never prints: decide from the identity of
+    // the stack's first and last files, which the decode reads anyway, and
+    // open nothing else. An unreadable identity runs the audit as before.
+    let unsupported = |p: &PathBuf| {
+        let id = strehl_raw::identity_cached(p);
+        matches!((&id.make, &id.model), (Some(make), Some(model))
+            if !sony_focus::camera_supported(make, model))
+    };
+    if paths.first().is_some_and(unsupported) && paths.last().is_some_and(unsupported) {
         return;
     }
     let report = audit_paths(paths, false);

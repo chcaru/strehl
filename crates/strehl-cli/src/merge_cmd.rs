@@ -5516,8 +5516,10 @@ impl PyramidFrameSource for RawPyramidSource<'_> {
         self.serial.store(on, std::sync::atomic::Ordering::Relaxed);
     }
 
-    /// Read the file through once, in large sequential reads into a reused
-    /// buffer, so the decode finds it in the file cache.
+    /// Read the frame's files whole, once, and keep them for the decode
+    /// (`strehl_raw_codec::preload`): the decoder then reads nothing. Under a
+    /// serial decode only (decode-ahead's decoders), which is what takes them;
+    /// otherwise the old cache warming, a read into a discarded buffer.
     fn prefetch(&self, index: usize) {
         use std::io::Read;
         thread_local! {
@@ -5526,10 +5528,15 @@ impl PyramidFrameSource for RawPyramidSource<'_> {
         let Some(path) = self.paths.get(index) else {
             return;
         };
+        let keep = self.serial.load(std::sync::atomic::Ordering::Relaxed);
         // A pixel-shift plane's other members too: the decode reads them
         // right after member 1 (`StackGroups::prepare`).
         let members = self.groups.and_then(|g| g.members_of(path));
         for p in std::iter::once(path).chain(members.into_iter().flatten()) {
+            if keep {
+                strehl_raw::preload::fetch(p);
+                continue;
+            }
             let Ok(mut file) = std::fs::File::open(p) else {
                 continue;
             };
@@ -6159,6 +6166,34 @@ pub(crate) mod fine_support_candidate_tests {
     ));
 }
 
+/// Frees running on helper threads ([`drop_later`]).
+static DROPPING: std::sync::Mutex<Vec<std::thread::JoinHandle<()>>> =
+    std::sync::Mutex::new(Vec::new());
+
+/// Drop `value` on a helper thread: large host vectors and a device's
+/// buffers take tenths of a second to free, which the tail need not wait
+/// for. [`wait_for_drops`] waits for them before the next fold allocates.
+fn drop_later<T: Send + 'static>(value: T) {
+    let handle = std::thread::Builder::new()
+        .name("strehl-free".into())
+        .spawn(move || drop(value));
+    if let Ok(handle) = handle {
+        DROPPING
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .push(handle);
+    }
+}
+
+/// Wait for every [`drop_later`] so far, so a new fold's memory is not
+/// allocated beside the old one's.
+fn wait_for_drops() {
+    let handles = std::mem::take(&mut *DROPPING.lock().unwrap_or_else(|e| e.into_inner()));
+    for handle in handles {
+        let _ = handle.join();
+    }
+}
+
 /// The CPU fold's workspace, which only a worker without a GPU fold has.
 fn cpu_workspace(fws: &mut Option<FrameWorkspace>) -> &mut FrameWorkspace {
     fws.as_mut()
@@ -6199,6 +6234,92 @@ impl BandWorker {
             #[cfg(feature = "gpu")]
             luma_tap: LumaTap::default(),
         }
+    }
+
+    /// [`Self::new`] for a fold an external executor will hold: the merges'
+    /// totals are never allocated (`BandMerge::new_released`), nor the CPU
+    /// fold's workspace, nor, when `device_prep`, the CPU's preparation
+    /// buffers. The state [`Self::try_gpu`] leaves a [`Self::new`] worker in,
+    /// without allocating and zeroing several gigabytes first.
+    fn new_external(domain: PyramidDomain, cfg: MergeConfig, device_prep: bool) -> Self {
+        let geom = domain.analysis();
+        let px = geom.pixels();
+        let band_planes = colour_carry::band_planes();
+        Self {
+            #[cfg(feature = "temporal-energy")]
+            config: cfg,
+            domain,
+            merge: BandMerge::new_released(geom.width, geom.height, band_planes, cfg),
+            alt: halves_wanted()
+                .then(|| BandMerge::new_released(geom.width, geom.height, band_planes, cfg)),
+            half: false,
+            fws: None,
+            warp: if device_prep {
+                WarpScratch::default()
+            } else {
+                WarpScratch::new(domain.full)
+            },
+            planes: if device_prep {
+                Vec::new()
+            } else {
+                (0..band_planes).map(|_| vec![0.0; px]).collect()
+            },
+            luma: if device_prep {
+                Vec::new()
+            } else {
+                vec![0.0; px]
+            },
+            var: if device_prep {
+                Vec::new()
+            } else {
+                vec![0.0; px]
+            },
+            floor: gatefloor::enabled().then(|| gatefloor::Probe::new(domain, cfg.bands)),
+            beta: Vec::new(),
+            beta_sum: Vec::new(),
+            beta_n: 0,
+            #[cfg(feature = "native-green-cue")]
+            green_cue: None,
+            #[cfg(feature = "gpu")]
+            gpu: None,
+            gpu_prep: false,
+            #[cfg(feature = "gpu")]
+            luma_tap: LumaTap::default(),
+        }
+    }
+
+    /// The worker for this render with its fold route decided: a GPU fold
+    /// when `STREHL_GPU_FOLD` asks for one and it attaches, built without
+    /// the host state it would only free ([`Self::new_external`]); otherwise
+    /// the CPU fold's worker. Returns the banner line of the decision.
+    fn for_route(
+        domain: PyramidDomain,
+        cfg: MergeConfig,
+        temporal_active: bool,
+        prep: Option<&'static str>,
+    ) -> Result<(Self, String)> {
+        wait_for_drops();
+        let request = gpu_fold_requested()?;
+        let may_attach = cfg!(feature = "gpu")
+            && request != GpuFoldRequest::Off
+            && !temporal_active
+            && depth_guide::active().is_none()
+            && BandMerge::new_released_refusal(cfg).is_none();
+        if may_attach {
+            // Compiled pipelines survive between processes (scheduling only).
+            #[cfg(feature = "gpu")]
+            strehl_gpu::set_pipeline_cache_dir(align_cmd::cache_root().join("gpu"));
+            let mut lean = Self::new_external(domain, cfg, prep.is_none());
+            let line = lean.attach_gpu(temporal_active, prep)?;
+            if lean.gpu_active() {
+                return Ok((lean, line));
+            }
+            // `auto` found no eligible device: the CPU fold, fully built.
+            return Ok((Self::new(domain, cfg), line));
+        }
+        let mut worker = Self::new(domain, cfg);
+        let line = worker.attach_gpu(temporal_active, prep)?;
+        Ok((worker, line))
     }
 
     /// Attach the GPU fold if `STREHL_GPU_FOLD` asks for it; returns the
@@ -9439,14 +9560,13 @@ fn run_pyramid_prepared_with_sensor(
         .num_threads(workers)
         .build()
         .context("building Pyramid execution pool")?;
-    let mut worker = BandWorker::new(domain, cfg);
-    eprintln!(
-        "gpu fold        : {}",
-        worker.attach_gpu(
-            temporal_active,
-            gpu_prep_refusal(warps, defect_plan.is_some(), levels)
-        )?
-    );
+    let (mut worker, gpu_line) = BandWorker::for_route(
+        domain,
+        cfg,
+        temporal_active,
+        gpu_prep_refusal(warps, defect_plan.is_some(), levels),
+    )?;
+    eprintln!("gpu fold        : {gpu_line}");
     // Preparing on the device folds frame by frame; decoding still runs ahead.
     let lookahead = if worker.gpu_prep { 1 } else { lookahead };
     // Under GPU preparation the fold's own CPU work is staging and the depth
@@ -9696,8 +9816,26 @@ fn run_pyramid_prepared_with_sensor(
             Ok(())
         });
         ahead.stop();
+        // Files read for decodes that will not come (a failed fold); wakes
+        // any reader waiting for room.
+        strehl_raw::preload::clear();
         fold_result
     })?;
+    if worker.gpu_prep {
+        let ([cache, drive, buffered], bytes, busy) = strehl_raw::preload::take_stats();
+        if cache + drive + buffered > 0 {
+            eprintln!(
+                "file reads      : {} from the file cache, {} from the drive unbuffered, {} buffered; \
+                 {:.1} GB, {:.1} reader-seconds ({})",
+                cache,
+                drive,
+                buffered,
+                bytes as f64 / 1e9,
+                busy.as_secs_f64(),
+                strehl_raw::preload::READ_MODE_ENV
+            );
+        }
+    }
     let source = original_source;
     source.decode_serially(false);
     if tap.is_some() {
@@ -9722,7 +9860,9 @@ fn run_pyramid_prepared_with_sensor(
         merged = Some(whole);
         merged_alt = alt;
     } else {
-        drop(worker);
+        // The device's buffers and the worker's host state are freed beside
+        // the tail (0.3-0.4 s per pass, MEASURED 2026-11-18).
+        drop_later(worker);
     }
     let mut merge = merged.context("no frames were folded")?;
     // `STREHL_OPTICAL_RESTORE` with a half-stack that folded nothing (a stack
@@ -9752,7 +9892,7 @@ fn run_pyramid_prepared_with_sensor(
         let even_planes = merge.finish(&mut ws);
         let odd_planes = odd.finish(&mut ws);
         merge.absorb(&odd);
-        drop(odd);
+        drop_later(odd);
         fusion_calibrated::route_halves(even_planes, odd_planes);
         eprintln!(
             "half-stacks     : alternate folded frames finished separately for the optical              restoration's noise measurement ({:.1} s)",

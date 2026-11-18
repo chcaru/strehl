@@ -143,6 +143,12 @@ pub fn read_from_reader<R: Read + Seek>(
     Reader::new(reader)?.inspect()
 }
 
+/// Whether [`read`] can find focus metadata in a file from this camera at
+/// all (EXIF `Make` and `Model`). Any other camera is `Unsupported`.
+pub fn camera_supported(make: &str, model: &str) -> bool {
+    make == "SONY" && model == "ILCE-7CM2"
+}
+
 type Result<T> = std::result::Result<T, SonyFocusError>;
 const PAYLOAD_BYTES: usize = 8192;
 const SUPPORTED_HEADER: [u32; 10] = [3, 0, 40, 40, 1, 3058, 80, 2, 16, 3140];
@@ -199,7 +205,7 @@ impl<R: Read + Seek> Reader<'_, R> {
         let main = self.directory(u32le(&header, 4) as u64, None)?;
         let make = self.text(main.required(0x010f)?)?;
         let model = self.text(main.required(0x0110)?)?;
-        if make != "SONY" || model != "ILCE-7CM2" {
+        if !camera_supported(&make, &model) {
             return Err(unsupported(format!("camera {make} {model}")));
         }
         let Some(exif_pointer) = main.get(0x8769) else {

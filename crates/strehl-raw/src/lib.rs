@@ -56,6 +56,8 @@ pub mod sony_optical;
 mod sony_tiff;
 
 pub use identity::{CaptureIdentity, identity, identity_cached};
+/// Whole files read ahead by reader threads for [`decode_serial`].
+pub use strehl_raw_codec::preload;
 
 /// Sony RAWs, including byte-exact compressed Strehl archives.
 pub fn is_raw_path(path: &Path) -> bool {

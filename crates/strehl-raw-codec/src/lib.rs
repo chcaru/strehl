@@ -590,3 +590,4 @@ mod tests {
 
 pub mod archive;
 pub mod cfa;
+pub mod preload;

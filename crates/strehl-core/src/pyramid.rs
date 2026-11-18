@@ -1889,6 +1889,23 @@ fn resolve_soft_numerator(numerator: f32, denominator: f32) -> f32 {
 
 impl BandMerge {
     pub fn new(width: usize, height: usize, planes: usize, cfg: MergeConfig) -> Self {
+        Self::build(width, height, planes, cfg, false)
+    }
+
+    /// The merge [`Self::new`] followed by [`Self::release_external_totals`]
+    /// would leave, without allocating (and touching) the totals first: for a
+    /// fold an external executor holds on its device from the first frame.
+    /// Panics where `release_external_totals` would.
+    pub fn new_released(width: usize, height: usize, planes: usize, cfg: MergeConfig) -> Self {
+        let merge = Self::build(width, height, planes, cfg, true);
+        assert!(
+            merge.external_fold_refusal().is_none(),
+            "only a merge an external executor folds can release its totals"
+        );
+        merge
+    }
+
+    fn build(width: usize, height: usize, planes: usize, cfg: MergeConfig, released: bool) -> Self {
         assert!(planes > 0, "a merge needs at least one plane");
         if cfg.admission == AdmissionMode::FloorPedestalV1 {
             assert!(
@@ -1910,16 +1927,21 @@ impl BandMerge {
         }
         let sizes = level_sizes(width, height, cfg.bands);
         let nl = sizes.len();
+        // A total an external executor holds: empty when `released`, exactly
+        // as `release_external_totals` leaves it (`best` is never one: an
+        // external fold is soft-power, where it is empty anyway).
+        let total =
+            |n: usize, v: f32| -> Vec<f32> { if released { Vec::new() } else { vec![v; n] } };
         let per_level =
-            || -> Vec<Vec<f32>> { sizes.iter().map(|s| vec![0.0; s.pixels()]).collect() };
+            || -> Vec<Vec<f32>> { sizes.iter().map(|s| total(s.pixels(), 0.0)).collect() };
         Self {
             cfg,
             planes,
             num: (0..nl * planes)
-                .map(|i| vec![0.0; sizes[i / planes].pixels()])
+                .map(|i| total(sizes[i / planes].pixels(), 0.0))
                 .collect(),
             usum: (0..nl * planes)
-                .map(|i| vec![0.0; sizes[i / planes].pixels()])
+                .map(|i| total(sizes[i / planes].pixels(), 0.0))
                 .collect(),
             den: per_level(),
             fkey: match cfg.fallback {
@@ -1939,20 +1961,20 @@ impl BandMerge {
                 }
             },
             best: match cfg.select {
-                SelectMode::HardMax => per_level(),
+                SelectMode::HardMax => sizes.iter().map(|s| vec![0.0; s.pixels()]).collect(),
                 SelectMode::SoftPower => Vec::new(),
             },
             // Seeded at the identities so the first frame sets both, rather
             // than seeding from frame 0 and special-casing it.
             lo: match cfg.hull.bounds() {
                 true => (0..planes)
-                    .map(|_| vec![f32::INFINITY; sizes[0].pixels()])
+                    .map(|_| total(sizes[0].pixels(), f32::INFINITY))
                     .collect(),
                 false => Vec::new(),
             },
             hi: match cfg.hull.bounds() {
                 true => (0..planes)
-                    .map(|_| vec![f32::NEG_INFINITY; sizes[0].pixels()])
+                    .map(|_| total(sizes[0].pixels(), f32::NEG_INFINITY))
                     .collect(),
                 false => Vec::new(),
             },
@@ -2061,7 +2083,7 @@ impl BandMerge {
             } else {
                 Vec::new()
             },
-            released: false,
+            released,
             guide: None,
             sizes,
         }
@@ -2342,7 +2364,23 @@ impl BandMerge {
     /// mean fallback, an input-range hull or none, either base band, portable
     /// weight math, and no diagnostics or research hooks.
     pub fn external_fold_refusal(&self) -> Option<&'static str> {
-        let c = self.cfg;
+        if !self.dmax.is_empty() {
+            return Some("weight diagnostics are on");
+        }
+        Self::config_refusal(self.cfg)
+    }
+
+    /// Why [`Self::new_released`] would refuse a merge of this configuration
+    /// now, or `None`: [`Self::external_fold_refusal`] of the merge
+    /// [`Self::new`] would build.
+    pub fn new_released_refusal(cfg: MergeConfig) -> Option<&'static str> {
+        if weight_dump_prefix().is_some() {
+            return Some("weight diagnostics are on");
+        }
+        Self::config_refusal(cfg)
+    }
+
+    fn config_refusal(c: MergeConfig) -> Option<&'static str> {
         if cfg!(any(
             feature = "m194h-pedestal-causality",
             feature = "native-sensor-transfer",
@@ -2369,9 +2407,6 @@ impl BandMerge {
         }
         if c.hull.bounds_each_level() {
             return Some("the per-level hull is on");
-        }
-        if !self.dmax.is_empty() {
-            return Some("weight diagnostics are on");
         }
         if platform_weight_math() {
             return Some("STREHL_WEIGHT_MATH=platform");
@@ -5066,6 +5101,29 @@ mod tests {
         (0..w * h)
             .map(|i| (i % 97) as f32 * 0.37 + (i / 97) as f32 * 0.11)
             .collect()
+    }
+
+    /// `new_released` is `new` then `release_external_totals`, field for
+    /// field, with and without the ensemble gate and the hull.
+    #[test]
+    fn new_released_is_new_then_release() {
+        for (ensemble, hull) in [(true, true), (false, true), (true, false)] {
+            let defaults = MergeConfig::default();
+            let cfg = MergeConfig {
+                ensemble,
+                hull: if hull { defaults.hull } else { Hull::Unclamped },
+                ..defaults
+            };
+            for (w, h, planes) in [(300, 200, 4), (97, 61, 12), (8, 8, 1)] {
+                let mut released = BandMerge::new(w, h, planes, cfg);
+                if released.external_fold_refusal().is_some() {
+                    continue;
+                }
+                released.release_external_totals();
+                let direct = BandMerge::new_released(w, h, planes, cfg);
+                assert_eq!(format!("{released:?}"), format!("{direct:?}"));
+            }
+        }
     }
 
     /// `EXTERNAL_ABSORB` with `absorb_external_remainder` must be `absorb` (or,

@@ -359,6 +359,32 @@ REGISTRY: dict[str, Declared] = {
         ),
         note="Performance plan stage P3 (2026-11-18); `prepass` is the comparison route.",
     ),
+    "STREHL_READ_MODE": Declared(
+        kind="control",
+        default="auto (each file's first 64 KiB timed: cached files read through the cache, others unbuffered)",
+        verified="code",
+        backend="any",
+        evidence=(
+            "strehl-raw-codec/src/preload.rs ReadMode::from_env()/read_whole(): "
+            "unset or any other value -> auto; `buffered` reads through the "
+            "file cache; `unbuffered` bypasses it (Windows "
+            "FILE_FLAG_NO_BUFFERING; elsewhere buffered). Applies to whole-file "
+            "reads of the serial decode and its reader threads. Bytes are "
+            "bytes: byte-identical output in every mode."
+        ),
+        note="Round-2 performance plan stage Q4 (2026-11-18).",
+    ),
+    "STREHL_READ_AHEAD_MB": Declared(
+        kind="control",
+        default="3072 (MB of files read ahead and not yet decoded)",
+        verified="code",
+        backend="any",
+        evidence=(
+            "strehl-raw-codec/src/preload.rs limit(): a positive integer of MB, "
+            "at least one file; readers wait for room. Scheduling only."
+        ),
+        note="Round-2 performance plan stage Q4 (2026-11-18).",
+    ),
     "STREHL_OPTICAL_RESTORE_SIGMA": Declared(
         kind="control",
         default="0.70 (the prototype's arm f5)",

@@ -21,7 +21,6 @@
 //! Subnormal f32 values may be flushed on the device. The fold's values are
 //! DN-scale band coefficients and energies, so this is not expected to occur;
 //! the end-to-end pixel comparison is the check.
-use std::borrow::Cow;
 
 use rayon::prelude::*;
 use strehl_core::portable_math::{
@@ -30,7 +29,9 @@ use strehl_core::portable_math::{
 use strehl_core::pyramid::{BandMerge, BaseBand, Combine, FoldCombine, LevelScalars, LevelSize};
 use wgpu::util::DeviceExt;
 
+mod context;
 pub mod strict;
+pub use context::set_pipeline_cache_dir;
 
 const SHADER: &str = include_str!("fold.wgsl");
 const WG: u32 = 256;
@@ -947,43 +948,17 @@ impl GpuFold {
         // Any plane count (colour carry folds twelve): `accum` adds them four
         // per dispatch, and the arenas' size check below refuses a geometry
         // whose accumulators do not fit one binding.
-        let (words, decorated_results) = strict::compile(SHADER)?;
-        let mut descriptor = wgpu::InstanceDescriptor::new_without_display_handle();
-        descriptor.backends = wgpu::Backends::VULKAN;
-        let instance = wgpu::Instance::new(descriptor);
-        let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
-            power_preference: wgpu::PowerPreference::HighPerformance,
-            force_fallback_adapter: false,
-            compatible_surface: None,
-            apply_limit_buckets: false,
-        }))
-        .map_err(|e| e.to_string())?;
-        let info = adapter.get_info();
-        if info.device_type != wgpu::DeviceType::DiscreteGpu {
-            return Err(format!(
-                "GPU fold requires a discrete GPU, got {}",
-                info.name
-            ));
-        }
-        let mut features = wgpu::Features::PASSTHROUGH_SHADERS | wgpu::Features::SHADER_F64;
-        if !adapter.features().contains(features) {
-            return Err("GPU fold requires Vulkan passthrough shaders and f64".into());
-        }
-        let profiling = std::env::var_os(PROFILE_ENV).is_some()
-            && adapter.features().contains(wgpu::Features::TIMESTAMP_QUERY);
-        if profiling {
-            features |= wgpu::Features::TIMESTAMP_QUERY;
-        }
-        let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
-            label: Some("strehl-gpu-fold"),
-            required_features: features,
-            required_limits: adapter.limits(),
-            experimental_features: wgpu::ExperimentalFeatures::disabled(),
-            memory_hints: wgpu::MemoryHints::Performance,
-            trace: wgpu::Trace::Off,
-        }))
-        .map_err(|e| e.to_string())?;
-        let limits = device.limits();
+        let ctx = context::shared()?;
+        let context::Context {
+            device,
+            queue,
+            bgl,
+            pipelines,
+            limits,
+            adapter: adapter_name,
+            decorated_results,
+            profiling,
+        } = ctx;
 
         let ensemble = cfg.ensemble;
         let hull = cfg.hull.bounds();
@@ -1101,30 +1076,6 @@ impl GpuFold {
                 })
             })
             .collect();
-        let entry = |binding, ty| wgpu::BindGroupLayoutEntry {
-            binding,
-            visibility: wgpu::ShaderStages::COMPUTE,
-            ty: wgpu::BindingType::Buffer {
-                ty,
-                has_dynamic_offset: binding == 0,
-                min_binding_size: None,
-            },
-            count: None,
-        };
-        let bgl = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-            label: Some("fold-layout"),
-            entries: &[
-                entry(0, wgpu::BufferBindingType::Uniform),
-                entry(1, wgpu::BufferBindingType::Storage { read_only: false }),
-                entry(2, wgpu::BufferBindingType::Storage { read_only: false }),
-                entry(3, wgpu::BufferBindingType::Storage { read_only: true }),
-                entry(4, wgpu::BufferBindingType::Storage { read_only: false }),
-                entry(5, wgpu::BufferBindingType::Storage { read_only: true }),
-                entry(6, wgpu::BufferBindingType::Storage { read_only: false }),
-                entry(7, wgpu::BufferBindingType::Storage { read_only: false }),
-                entry(8, wgpu::BufferBindingType::Storage { read_only: false }),
-            ],
-        });
         let small = |label, size, usage| {
             device.create_buffer(&wgpu::BufferDescriptor {
                 label: Some(label),
@@ -1165,43 +1116,6 @@ impl GpuFold {
             &params,
             [&work, &acc[0], &consts, &raw, &xf, &red, &acc[1], &rgbw],
         )];
-        let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
-            label: Some("fold-pipeline-layout"),
-            bind_group_layouts: &[Some(&bgl)],
-            immediate_size: 0,
-        });
-        // SAFETY: the words are this crate's own embedded shader, validated by
-        // naga and altered only by added NoContraction decorations (`strict`).
-        // Passthrough is required because naga's SPIR-V frontend drops them.
-        let module = unsafe {
-            device.create_shader_module_passthrough(wgpu::ShaderModuleDescriptorPassthrough {
-                label: Some("strehl-fold"),
-                spirv: Some(Cow::Borrowed(&words)),
-                entry_points: Cow::Owned(
-                    strict::ENTRY_POINTS
-                        .iter()
-                        .map(|name| wgpu::PassthroughShaderEntryPoint {
-                            name: Cow::Borrowed(*name),
-                            workgroup_size: (WG, 1, 1),
-                        })
-                        .collect(),
-                ),
-                ..Default::default()
-            })
-        };
-        let pipelines = strict::ENTRY_POINTS
-            .iter()
-            .map(|name| {
-                device.create_compute_pipeline(&wgpu::ComputePipelineDescriptor {
-                    label: Some(name),
-                    layout: Some(&pipeline_layout),
-                    module: &module,
-                    entry_point: Some(name),
-                    compilation_options: Default::default(),
-                    cache: None,
-                })
-            })
-            .collect();
         let profile = profiling.then(|| Profile::new(&device, &queue));
         let mut fold = Self {
             profile,
@@ -1235,7 +1149,7 @@ impl GpuFold {
             hull,
             frame: 0,
             pending_reset: vec![true],
-            adapter: info.name,
+            adapter: adapter_name,
             decorated_results,
         };
         fold.reset_accumulators();
