@@ -49,6 +49,12 @@ pub struct CfaFile {
     /// The original file's SHA-256 the archive's envelope declares (lower
     /// case hex); empty for an unarchived file.
     pub declared_sha256: String,
+    /// A full archive decode's original bytes after the strip (the rest of
+    /// the TIFF metadata) and the original file's length: with `prefix`,
+    /// every metadata byte (`archive::sparse_from_parts`). Empty, and 0, for
+    /// a partial decode or an unarchived file.
+    pub suffix: Vec<u8>,
+    pub original_length: u64,
     /// [`decode_archive_rows`]: the sample rows decoded (a superset of those
     /// asked for, whole chunks); every other row is unspecified. `None` when
     /// every row was decoded.
@@ -487,6 +493,12 @@ fn read_at(f: &mut File, buf: &mut [u8], at: u64) -> Result<()> {
     Ok(())
 }
 
+/// Fill `buf` from the file at `path`, byte `at`, through a handle of its own.
+fn read_exact_at(path: &Path, buf: &mut [u8], at: u64) -> Result<()> {
+    let mut f = File::open(path).with_context(|| format!("Open {}", path.display()))?;
+    read_at(&mut f, buf, at)
+}
+
 struct Chunk {
     start: usize,
     n: usize,
@@ -798,12 +810,31 @@ fn decode_archive_impl(
             if let Some(d) = decoded_rows.as_mut() {
                 d[chunk_rows(c)].fill(true);
             }
-            if let Some(f) = sparse.as_mut() {
-                read_at(f, &mut file[c.payload.clone()], c.payload.start as u64)?;
-            }
             jobs.push((c, head));
         }
         rest = tail;
+    }
+    if sparse.is_some() {
+        // The wanted chunks' payloads, read at once on separate handles (a
+        // synchronous handle serialises its reads), so the drive sees many
+        // requests: MEASURED 2.3 GB/s for the reference pass's partial
+        // decodes read one chunk after another (2026-11-18). The same bytes.
+        let mut wanted_payloads: Vec<std::ops::Range<usize>> =
+            jobs.iter().map(|(c, _)| c.payload.clone()).collect();
+        wanted_payloads.sort_by_key(|r| r.start);
+        let mut slices: Vec<(u64, &mut [u8])> = Vec::with_capacity(wanted_payloads.len());
+        let mut rest_file: &mut [u8] = &mut file;
+        let mut base = 0usize;
+        for r in wanted_payloads {
+            let (_, tail) = rest_file.split_at_mut(r.start - base);
+            let (piece, tail) = tail.split_at_mut(r.len());
+            slices.push((r.start as u64, piece));
+            rest_file = tail;
+            base = r.end;
+        }
+        slices
+            .into_par_iter()
+            .try_for_each(|(at, piece)| read_exact_at(path, piece, at))?;
     }
     if let Some(r) = resident.as_mut() {
         // In order, on this thread; each chunk hashed while its samples are
@@ -874,6 +905,8 @@ fn decode_archive_impl(
             crop,
             verified_sha256: hashing,
             declared_sha256: header.sha256,
+            suffix,
+            original_length: length as u64,
             decoded_rows: None,
         }));
     }
@@ -912,6 +945,8 @@ fn decode_archive_impl(
             crop,
             verified_sha256: false,
             declared_sha256: header.sha256,
+            suffix: Vec::new(),
+            original_length: 0,
             decoded_rows,
         }));
     }
@@ -938,6 +973,8 @@ fn decode_archive_impl(
         crop,
         verified_sha256: hashing,
         declared_sha256: header.sha256,
+        suffix,
+        original_length: length as u64,
         decoded_rows: None,
     }))
 }
@@ -980,6 +1017,8 @@ pub fn read_plain(path: &Path, buffer: Option<Vec<u16>>) -> Result<Option<CfaFil
         crop,
         verified_sha256: false,
         declared_sha256: String::new(),
+        suffix: Vec::new(),
+        original_length: 0,
         decoded_rows: None,
     }))
 }

@@ -7461,7 +7461,9 @@ fn gather_restoration_references<S: PyramidFrameSource>(
             .filter_map(|(i, _, _, rows)| rows.clone().map(|r| (*i, r)))
             .collect(),
         valid: Default::default(),
+        decode_nanos: Default::default(),
     };
+    let prepare_nanos = std::sync::atomic::AtomicU64::new(0);
     // `STREHL_REFERENCE_CHECK=1`: prepare every reference frame a second
     // time over whole bands and require each crop to equal the windowed
     // preparation's, bit for bit (slow; a verification, never a default).
@@ -7490,7 +7492,12 @@ fn gather_restoration_references<S: PyramidFrameSource>(
                 let index = *index;
                 slot.warp.bands = Some(mask.clone());
                 slot.warp.columns = windowed.then(|| cols.clone());
+                let started = Instant::now();
                 let fast = slot.prepare(domain, &partial, index, levels, noise, warps, None, None);
+                prepare_nanos.fetch_add(
+                    started.elapsed().as_nanos() as u64,
+                    std::sync::atomic::Ordering::Relaxed,
+                );
                 if fast.is_err() || !slot.accepted {
                     // Whatever stopped it (a row the plan missed, a group not
                     // measured here), the whole frame again.
@@ -7531,9 +7538,12 @@ fn gather_restoration_references<S: PyramidFrameSource>(
     })?;
     let again = again.load(std::sync::atomic::Ordering::Relaxed);
     let checked = checked.load(std::sync::atomic::Ordering::Relaxed);
+    let thread_secs = |n: &std::sync::atomic::AtomicU64| {
+        n.load(std::sync::atomic::Ordering::Relaxed) as f64 * 1e-9
+    };
     eprintln!(
         "reference tiles : {} frames gathered again over the {} of the optical restoration's \
-         in-focus tiles{}{} ({:.1} s)",
+         in-focus tiles{}{} ({:.1} s; {:.1} slot-seconds, {:.1} of them decoding rows)",
         requests.len(),
         if windowed { "rows and columns" } else { "rows" },
         if again > 0 {
@@ -7546,7 +7556,9 @@ fn gather_restoration_references<S: PyramidFrameSource>(
         } else {
             String::new()
         },
-        started.elapsed().as_secs_f64()
+        started.elapsed().as_secs_f64(),
+        thread_secs(&prepare_nanos),
+        thread_secs(&partial.decode_nanos)
     );
     Ok(())
 }
@@ -7561,6 +7573,8 @@ struct RowSource<'a, S: PyramidFrameSource> {
     inner: &'a S,
     rows: std::collections::HashMap<usize, Vec<bool>>,
     valid: std::sync::Mutex<std::collections::HashMap<usize, std::sync::Arc<Vec<bool>>>>,
+    /// Time spent in row-range decodes (summed over threads).
+    decode_nanos: std::sync::atomic::AtomicU64,
 }
 
 impl<S: PyramidFrameSource> PyramidFrameSource for RowSource<'_, S> {
@@ -7571,7 +7585,13 @@ impl<S: PyramidFrameSource> PyramidFrameSource for RowSource<'_, S> {
         let Some(rows) = self.rows.get(&index) else {
             return self.inner.decode(index);
         };
-        let (frame, valid) = self.inner.decode_rows(index, rows)?;
+        let started = Instant::now();
+        let decoded = self.inner.decode_rows(index, rows);
+        self.decode_nanos.fetch_add(
+            started.elapsed().as_nanos() as u64,
+            std::sync::atomic::Ordering::Relaxed,
+        );
+        let (frame, valid) = decoded?;
         let mut v = self.valid.lock().unwrap_or_else(|e| e.into_inner());
         match valid {
             Some(valid) => v.insert(index, std::sync::Arc::new(valid)),
@@ -10101,21 +10121,22 @@ fn run_pyramid_prepared_with_sensor(
     }
     let source = original_source;
     source.decode_serially(false);
-    if tap.is_some() {
-        // The depth map from the energies the fold recorded, then the planned
-        // tiles' reference frames, prepared again exactly as the fold
-        // prepared them (the pre-pass route keeps them as the fold passes).
+    // The depth map from the energies the fold recorded; the planned tiles'
+    // reference frames are then prepared again exactly as the fold prepared
+    // them (the pre-pass route keeps them as the fold passes), below.
+    let reference_ca = if tap.is_some() {
         depth_guide::finish_tap()?;
         drop(tap);
         // The lateral-colour profile the gather composes each channel with,
         // for planning the rows it reads.
-        let ident = strehl_raw::identity(&paths[0]);
-        let ca =
-            strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?;
-        gather_restoration_references(
-            source, domain, cfg, levels, &noise, warps, ca, workers, &pool,
-        )?;
-    }
+        let ident = strehl_raw::identity_cached(&paths[0]);
+        Some(strehl_core::optics::profile_for_capture_env(
+            ident.model.as_deref(),
+            ident.lens_type3,
+        )?)
+    } else {
+        None
+    };
     if merged.is_none() && folded_total > 0 {
         let BandWorker {
             merge: whole, alt, ..
@@ -10146,22 +10167,40 @@ fn run_pyramid_prepared_with_sensor(
             anyhow::bail!("{}=on: {why}", optical_restore::ENV);
         }
     }
-    if let Some(odd) = merged_alt.take() {
-        // `STREHL_OPTICAL_RESTORE`: `merge` holds every second folded frame
-        // and `odd` the others. Finish each half, then fold them into the full
-        // stack.
-        let t_halves = Instant::now();
-        let mut ws = Workspace::new(&sizes);
-        let even_planes = merge.finish(&mut ws);
-        let odd_planes = odd.finish(&mut ws);
-        merge.absorb(&odd);
-        drop_later(odd);
-        fusion_calibrated::route_halves(even_planes, odd_planes);
-        eprintln!(
-            "half-stacks     : alternate folded frames finished separately for the optical              restoration's noise measurement ({:.1} s)",
-            t_halves.elapsed().as_secs_f64()
-        );
-    }
+    // The reference tiles and the half-stacks need nothing of each other (the
+    // restoration needs both): they run at once (plan stage Q2, step 4).
+    let halves = merged_alt.take();
+    std::thread::scope(|scope| -> Result<()> {
+        let references = reference_ca.map(|ca| {
+            let (noise, pool) = (&noise, &pool);
+            scope.spawn(move || {
+                gather_restoration_references(
+                    source, domain, cfg, levels, noise, warps, ca, workers, pool,
+                )
+            })
+        });
+        if let Some(odd) = halves {
+            // `STREHL_OPTICAL_RESTORE`: `merge` holds every second folded
+            // frame and `odd` the others. Finish each half, then fold them into
+            // the full stack.
+            let t_halves = Instant::now();
+            let mut ws = Workspace::new(&sizes);
+            let even_planes = merge.finish(&mut ws);
+            let odd_planes = odd.finish(&mut ws);
+            merge.absorb(&odd);
+            drop_later(odd);
+            fusion_calibrated::route_halves(even_planes, odd_planes);
+            eprintln!(
+                "half-stacks     : alternate folded frames finished separately for the optical              restoration's noise measurement ({:.1} s)",
+                t_halves.elapsed().as_secs_f64()
+            );
+        }
+        match references.map(|h| h.join()) {
+            Some(Ok(done)) => done,
+            Some(Err(_)) => anyhow::bail!("the reference tiles' preparation panicked"),
+            None => Ok(()),
+        }
+    })?;
     ensure!(
         folded_total > 0,
         "every frame was refused by the alignment solve"

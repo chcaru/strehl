@@ -168,6 +168,29 @@ pub fn open_original(path: &Path) -> io::Result<OriginalReader> {
         File::open(path).map(OriginalReader::File)
     }
 }
+/// [`open_original`]'s sparse reader from metadata already decoded (a full
+/// CFA decode's `prefix` and `suffix`, `cfa::CfaFile`): the original's first
+/// `prefix.len()` bytes and its last `suffix.len()` bytes of `length`. A read
+/// of the bytes between expands and verifies the whole original from `path`,
+/// as the sparse reader does.
+pub fn sparse_from_parts(
+    path: &Path,
+    length: u64,
+    prefix: Vec<u8>,
+    suffix: Vec<u8>,
+) -> OriginalReader {
+    let suffix_start = length.saturating_sub(suffix.len() as u64);
+    OriginalReader::Sparse(Box::new(Sparse {
+        path: path.to_owned(),
+        length,
+        prefix,
+        suffix_start,
+        suffix,
+        position: 0,
+        full: None,
+    }))
+}
+
 struct Entry {
     start: u64,
     n: usize,

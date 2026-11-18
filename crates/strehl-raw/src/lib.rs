@@ -424,6 +424,21 @@ fn decode_with(
         .map_err(|e| fail(format!("{e:#}")))?;
         if let Some(cfa) = cfa {
             let full = cfa.decoded_rows.is_none();
+            // The capture identity from the metadata this decode holds, so
+            // asking for it later does not read the file again (the reader
+            // threads read archives around the file cache).
+            if full
+                && cfa.original_length > 0
+                && let Some(key) = stamp.clone()
+            {
+                let mut reader = strehl_raw_codec::archive::sparse_from_parts(
+                    path,
+                    cfa.original_length,
+                    cfa.prefix.clone(),
+                    cfa.suffix.clone(),
+                );
+                identity::prime(key, &mut reader);
+            }
             if full && cfa.verified_sha256 {
                 trust::record_verified(path, &cfa.declared_sha256);
             } else if full && trusted.is_some() {
