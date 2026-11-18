@@ -154,34 +154,33 @@ impl Integral {
                 }
             });
         // Column pass: each column accumulates top to bottom, as a serial
-        // `row[y] += row[y - 1]` sweep would, but blocks of columns run in
-        // parallel through a strip copy. Every element's additions keep their
-        // order, so the sums are bit-identical to the serial sweep.
+        // `row[y] += row[y - 1]` sweep would, with blocks of columns in
+        // parallel, in place: each element becomes its row prefix plus the
+        // finished element above it, the same addition in the same order, so
+        // the sums are bit-identical to the serial sweep (and to the strip
+        // copies this pass used to go through, 2 x 120 MB per integral at
+        // 61 MP).
         const COLUMNS: usize = 256;
         let rows = h + 1;
-        let strips: Vec<Vec<f64>> = (0..stride.div_ceil(COLUMNS))
-            .into_par_iter()
-            .map(|b| {
-                let (xa, xb) = (b * COLUMNS, ((b + 1) * COLUMNS).min(stride));
-                let bw = xb - xa;
-                let mut strip = vec![0f64; bw * rows];
-                strip[..bw].copy_from_slice(&sum[xa..xb]);
-                for y in 1..rows {
-                    let (above, rest) = strip.split_at_mut(y * bw);
-                    let prev = &above[(y - 1) * bw..];
-                    let src = &sum[y * stride + xa..y * stride + xb];
-                    for ((c, p), s) in rest[..bw].iter_mut().zip(prev).zip(src) {
-                        *c = *s + *p;
+        struct Cells(*mut f64);
+        // SAFETY: each task below writes only its own columns.
+        unsafe impl Send for Cells {}
+        unsafe impl Sync for Cells {}
+        let cells = Cells(sum.as_mut_ptr());
+        let cells = &cells;
+        (0..stride.div_ceil(COLUMNS)).into_par_iter().for_each(|b| {
+            let (xa, xb) = (b * COLUMNS, ((b + 1) * COLUMNS).min(stride));
+            for y in 1..rows {
+                // SAFETY: rows `y - 1` and `y` lie in `sum`; block `b`
+                // alone reads and writes columns `xa..xb`, and reads row
+                // `y - 1` only after writing it.
+                unsafe {
+                    let above = cells.0.add((y - 1) * stride);
+                    let here = cells.0.add(y * stride);
+                    for x in xa..xb {
+                        *here.add(x) = *here.add(x) + *above.add(x);
                     }
                 }
-                strip
-            })
-            .collect();
-        sum.par_chunks_mut(stride).enumerate().for_each(|(y, row)| {
-            for (b, strip) in strips.iter().enumerate() {
-                let (xa, xb) = (b * COLUMNS, ((b + 1) * COLUMNS).min(stride));
-                let bw = xb - xa;
-                row[xa..xb].copy_from_slice(&strip[y * bw..(y + 1) * bw]);
             }
         });
         Self { x0, y0, w, sum }
@@ -433,6 +432,29 @@ pub fn witness(
     variance: impl Fn(f32) -> f32 + Sync,
     tile: usize,
 ) -> Witness {
+    witness_impl::<true>(members, offsets, gains, variance, tile)
+}
+
+/// [`witness`] without the photon-transfer bins ([`Witness::ptc`] empty),
+/// for a caller that does not read them (the group check): every other
+/// field is the same, from the same sums in the same order.
+pub fn witness_without_ptc(
+    members: &[MemberView<'_>; 4],
+    offsets: &[(isize, isize); 4],
+    gains: &[f64; 4],
+    variance: impl Fn(f32) -> f32 + Sync,
+    tile: usize,
+) -> Witness {
+    witness_impl::<false>(members, offsets, gains, variance, tile)
+}
+
+fn witness_impl<const PTC: bool>(
+    members: &[MemberView<'_>; 4],
+    offsets: &[(isize, isize); 4],
+    gains: &[f64; 4],
+    variance: impl Fn(f32) -> f32 + Sync,
+    tile: usize,
+) -> Witness {
     if !covers_all_parities(offsets) {
         return Witness {
             tile,
@@ -487,7 +509,6 @@ pub fn witness(
                         members[a].unclipped(x + o.0 + 1, y + o.1 - 1),
                         members[a].unclipped(x + o.0 - 1, y + o.1 + 1),
                     ) {
-                        let grad = (p - q).abs().max((r - u).abs());
                         let (d1, d2) = (f64::from((q - p) * inv[a]), f64::from((r - u) * inv[a]));
                         let (gx, gy) = (0.25 * (d1 + d2), 0.25 * (d1 - d2));
                         if gx * gx + gy * gy > 25.0 * f64::from(vs) {
@@ -500,7 +521,8 @@ pub fn witness(
                             acc[3] += gx * d;
                             acc[4] += gy * d;
                         }
-                        if grad * grad < 4.0 * vs && s > 0.0 {
+                        let grad = (p - q).abs().max((r - u).abs());
+                        if PTC && grad * grad < 4.0 * vs && s > 0.0 {
                             let bin = edges(f64::from(s)).min(BINS);
                             ptc[bin][0] += f64::from(s);
                             ptc[bin][1] += d * d;

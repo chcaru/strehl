@@ -979,6 +979,194 @@ pub fn ncc_tile(
     )
 }
 
+/// Lanes of [`NccSearch::scores_lanes`]: x offsets of one search row at once.
+const NCC_LANES: usize = 16;
+
+/// One tile's NCC search over its window: the mean-removed reference tile
+/// `a` and its sum of squares `sa`, against `moving` at every offset
+/// `(bx + i, by + j)`, `|i|, |j| <= radius`, of the tile at `(tx, ty)`. Each
+/// score is written at `(j + radius) * n + (i + radius)`; an offset outside
+/// the plane, or with no variance, keeps `-inf`.
+struct NccSearch<'a> {
+    a: &'a [f32],
+    sa: f32,
+    moving: PlaneRef<'a>,
+    tx: usize,
+    ty: usize,
+    bx: i32,
+    by: i32,
+    ts: usize,
+    radius: i32,
+}
+
+impl NccSearch<'_> {
+    /// One offset at a time: the moving window's mean, then the cross and
+    /// self sums, each a single f32 chain over (y, x) in raster order.
+    fn scores_scalar(&self, scores: &mut [f32]) {
+        let &Self {
+            a,
+            sa,
+            moving,
+            tx,
+            ty,
+            bx,
+            by,
+            ts,
+            radius,
+        } = self;
+        let n = (2 * radius + 1) as usize;
+        for j in -radius..=radius {
+            for i in -radius..=radius {
+                let ox = tx as i32 + bx + i;
+                let oy = ty as i32 + by + j;
+                if ox < 0
+                    || oy < 0
+                    || ox as usize + ts > moving.width
+                    || oy as usize + ts > moving.height
+                {
+                    continue;
+                }
+                let (ox, oy) = (ox as usize, oy as usize);
+                let mut mb = 0f32;
+                for y in 0..ts {
+                    let row = (oy + y) * moving.width + ox;
+                    for x in 0..ts {
+                        mb += moving.data[row + x];
+                    }
+                }
+                mb /= (ts * ts) as f32;
+                let (mut num, mut sb) = (0f32, 0f32);
+                for y in 0..ts {
+                    let row = (oy + y) * moving.width + ox;
+                    for x in 0..ts {
+                        let bv = moving.data[row + x] - mb;
+                        num += a[y * ts + x] * bv;
+                        sb += bv * bv;
+                    }
+                }
+                if sb <= 1e-6 {
+                    continue;
+                }
+                let s = num / (sa * sb).sqrt();
+                scores[(j + radius) as usize * n + (i + radius) as usize] = s;
+            }
+        }
+    }
+
+    /// [`Self::scores_scalar`]'s scores, sixteen x offsets of a search row at
+    /// once: lane `l` reads `moving[row + x + l]`, so each lane performs
+    /// exactly its offset's operations in the same order and every score is
+    /// bit-identical (the lanes never combine). Needs `moving.width >= ts + 15`.
+    /// MEASURED (round-2 plan section 3.7, `bench2 ncc`): 5.0-6.2 times the
+    /// scalar search compiled for baseline x86-64, 10.3 times with this CPU's
+    /// vectors; on x86-64 an AVX-512 copy is chosen at run time.
+    fn scores_lanes(&self, scores: &mut [f32]) {
+        #[cfg(target_arch = "x86_64")]
+        if wide_vectors() {
+            // SAFETY: the CPU reports the features the copy is compiled for.
+            unsafe { self.scores_lanes_avx512(scores) };
+            return;
+        }
+        self.scores_lanes_impl(scores);
+    }
+
+    #[cfg(target_arch = "x86_64")]
+    #[target_feature(enable = "avx512f,avx512vl,avx2")]
+    unsafe fn scores_lanes_avx512(&self, scores: &mut [f32]) {
+        self.scores_lanes_impl(scores);
+    }
+
+    #[inline(always)]
+    fn scores_lanes_impl(&self, scores: &mut [f32]) {
+        let &Self {
+            a,
+            sa,
+            moving,
+            tx,
+            ty,
+            bx,
+            by,
+            ts,
+            radius,
+        } = self;
+        const LANES: usize = NCC_LANES;
+        let n = (2 * radius + 1) as usize;
+        let (mw, mh) = (moving.width as i32, moving.height as i32);
+        let i_lo = (-radius).max(-(tx as i32 + bx));
+        let i_hi = radius.min(mw - ts as i32 - tx as i32 - bx);
+        if i_lo > i_hi {
+            return;
+        }
+        let scale = (ts * ts) as f32;
+        for j in -radius..=radius {
+            let oy = ty as i32 + by + j;
+            if oy < 0 || oy + ts as i32 > mh {
+                continue;
+            }
+            let oy = oy as usize;
+            let mut i0 = i_lo;
+            while i0 <= i_hi {
+                let ox0 = (tx as i32 + bx + i0) as usize;
+                // Sixteen lanes are read whatever `lanes` is; near the right
+                // edge the block starts further left so the read stays in the
+                // plane, and the surplus lanes at its start are ignored.
+                let base = ox0.min(moving.width - ts - (LANES - 1));
+                let shift = ox0 - base;
+                let lanes = ((i_hi - i0 + 1) as usize).min(LANES - shift);
+                let mut mb = [0f32; LANES];
+                for y in 0..ts {
+                    let row = &moving.data[(oy + y) * moving.width + base..][..ts + LANES - 1];
+                    for x in 0..ts {
+                        let w: &[f32; LANES] = row[x..x + LANES].try_into().expect("16 lanes");
+                        for l in 0..LANES {
+                            mb[l] += w[l];
+                        }
+                    }
+                }
+                for m in &mut mb {
+                    *m /= scale;
+                }
+                let (mut num, mut sb) = ([0f32; LANES], [0f32; LANES]);
+                for y in 0..ts {
+                    let row = &moving.data[(oy + y) * moving.width + base..][..ts + LANES - 1];
+                    let arow = &a[y * ts..(y + 1) * ts];
+                    for x in 0..ts {
+                        let w: &[f32; LANES] = row[x..x + LANES].try_into().expect("16 lanes");
+                        let av = arow[x];
+                        for l in 0..LANES {
+                            let bv = w[l] - mb[l];
+                            num[l] += av * bv;
+                            sb[l] += bv * bv;
+                        }
+                    }
+                }
+                for l in 0..lanes {
+                    let lane = l + shift;
+                    if sb[lane] <= 1e-6 {
+                        continue;
+                    }
+                    let s = num[lane] / (sa * sb[lane]).sqrt();
+                    let i = i0 + l as i32;
+                    scores[(j + radius) as usize * n + (i + radius) as usize] = s;
+                }
+                i0 += lanes as i32;
+            }
+        }
+    }
+}
+
+/// Whether this CPU runs the AVX-512 copy of the lane kernels (once).
+#[cfg(target_arch = "x86_64")]
+fn wide_vectors() -> bool {
+    static WIDE: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+    *WIDE.get_or_init(|| {
+        std::env::var_os("STREHL_NO_WIDE_VECTORS").is_none()
+            && std::arch::is_x86_feature_detected!("avx512f")
+            && std::arch::is_x86_feature_detected!("avx512vl")
+            && std::arch::is_x86_feature_detected!("avx2")
+    })
+}
+
 fn ncc_tile_impl<const SINC: bool>(
     reference: PlaneRef<'_>,
     moving: PlaneRef<'_>,
@@ -1023,48 +1211,30 @@ fn ncc_tile_impl<const SINC: bool>(
     let (bx, by) = (px.round() as i32, py.round() as i32);
     let n = (2 * radius + 1) as usize;
     let mut scores = vec![f32::NEG_INFINITY; n * n];
+    let search = NccSearch {
+        a: &a,
+        sa,
+        moving,
+        tx,
+        ty,
+        bx,
+        by,
+        ts,
+        radius,
+    };
+    if moving.width >= ts + NCC_LANES - 1 {
+        search.scores_lanes(&mut scores);
+    } else {
+        search.scores_scalar(&mut scores);
+    }
+    // The first best in raster order, as the search loop kept it: a skipped
+    // offset holds -inf and never wins.
     let (mut best, mut bi, mut bj) = (f32::NEG_INFINITY, 0usize, 0usize);
-
-    for j in -radius..=radius {
-        for i in -radius..=radius {
-            let ox = tx as i32 + bx + i;
-            let oy = ty as i32 + by + j;
-            if ox < 0
-                || oy < 0
-                || ox as usize + ts > moving.width
-                || oy as usize + ts > moving.height
-            {
-                continue;
-            }
-            let (ox, oy) = (ox as usize, oy as usize);
-            let mut mb = 0f32;
-            for y in 0..ts {
-                let row = (oy + y) * moving.width + ox;
-                for x in 0..ts {
-                    mb += moving.data[row + x];
-                }
-            }
-            mb /= (ts * ts) as f32;
-            let (mut num, mut sb) = (0f32, 0f32);
-            for y in 0..ts {
-                let row = (oy + y) * moving.width + ox;
-                for x in 0..ts {
-                    let bv = moving.data[row + x] - mb;
-                    num += a[y * ts + x] * bv;
-                    sb += bv * bv;
-                }
-            }
-            if sb <= 1e-6 {
-                continue;
-            }
-            let s = num / (sa * sb).sqrt();
-            let (ii, jj) = ((i + radius) as usize, (j + radius) as usize);
-            scores[jj * n + ii] = s;
-            if s > best {
-                best = s;
-                bi = ii;
-                bj = jj;
-            }
+    for (k, &s) in scores.iter().enumerate() {
+        if s > best {
+            best = s;
+            bi = k % n;
+            bj = k / n;
         }
     }
 
@@ -4172,6 +4342,110 @@ pub fn gather_into(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The lane search writes every score the scalar search writes, bit for
+    /// bit, for tiles at every edge of the plane (where offsets fall outside
+    /// it), fine and coarse windows, structured and flat moving planes; in
+    /// the baseline copy and, where the CPU has it, the AVX-512 copy.
+    #[test]
+    fn ncc_lane_scores_equal_the_scalar_search() {
+        let synthetic = |width: usize, height: usize, seed: u64, shift: (usize, usize)| {
+            let mut state = seed;
+            let mut next = move || {
+                state ^= state << 13;
+                state ^= state >> 7;
+                state ^= state << 17;
+                state
+            };
+            let noise: Vec<f32> = (0..(width + 64) * (height + 64))
+                .map(|_| (next() % 4096) as f32 * 0.5)
+                .collect();
+            let mut data = vec![0f32; width * height];
+            for y in 0..height {
+                for x in 0..width {
+                    let (sx, sy) = (x + shift.0, y + shift.1);
+                    let smooth =
+                        3000.0 + 2000.0 * ((sx as f32 * 0.021).sin() * (sy as f32 * 0.017).cos());
+                    data[y * width + x] =
+                        ((smooth + noise[sy * (width + 64) + sx]) * 2.0).round() * 0.5;
+                }
+            }
+            data
+        };
+        let (w, h) = (300usize, 220usize);
+        let reference = synthetic(w, h, 0x9e37_79b9_7f4a_7c15, (8, 8));
+        let movings = [
+            synthetic(w, h, 0x9e37_79b9_7f4a_7c15, (11, 6)),
+            synthetic(w, h, 0xdead_beef_cafe_f00d, (9, 9)),
+            vec![7.5f32; w * h],
+        ];
+        let rp = PlaneRef {
+            data: &reference,
+            width: w,
+            height: h,
+        };
+        for (ts, radius) in [(64usize, 6i32), (32, 10), (16, 3)] {
+            let n = (2 * radius + 1) as usize;
+            for m in &movings {
+                let mp = PlaneRef {
+                    data: m,
+                    width: w,
+                    height: h,
+                };
+                for (tx, ty) in [
+                    (0, 0),
+                    (4, 3),
+                    (w - ts, h - ts),
+                    (w - ts - 3, 10),
+                    (100, h - ts - 2),
+                    (140, 90),
+                    (w - ts - 20, h - ts - 20),
+                ] {
+                    let mut a = vec![0f32; ts * ts];
+                    let mut mean = 0f32;
+                    for y in 0..ts {
+                        for x in 0..ts {
+                            let v = rp.data[(ty + y) * w + tx + x];
+                            a[y * ts + x] = v;
+                            mean += v;
+                        }
+                    }
+                    mean /= (ts * ts) as f32;
+                    let mut sa = 0f32;
+                    for v in a.iter_mut() {
+                        *v -= mean;
+                        sa += *v * *v;
+                    }
+                    for (bx, by) in [(0, 0), (3, -2), (-5, 4), (7, 7), (-9, -9)] {
+                        let s = NccSearch {
+                            a: &a,
+                            sa,
+                            moving: mp,
+                            tx,
+                            ty,
+                            bx,
+                            by,
+                            ts,
+                            radius,
+                        };
+                        let mut want = vec![f32::NEG_INFINITY; n * n];
+                        s.scores_scalar(&mut want);
+                        let bits = |v: &[f32]| v.iter().map(|x| x.to_bits()).collect::<Vec<_>>();
+                        let mut got = vec![f32::NEG_INFINITY; n * n];
+                        s.scores_lanes_impl(&mut got);
+                        assert_eq!(bits(&got), bits(&want), "baseline {ts} {tx},{ty} {bx},{by}");
+                        let mut got = vec![f32::NEG_INFINITY; n * n];
+                        s.scores_lanes(&mut got);
+                        assert_eq!(
+                            bits(&got),
+                            bits(&want),
+                            "dispatched {ts} {tx},{ty} {bx},{by}"
+                        );
+                    }
+                }
+            }
+        }
+    }
 
     /// A banded system shaped like the alignment ladder: edges at spans
     /// 1, 2, 4, ... up to `max_span`, plus three-frame smoothness rows, with

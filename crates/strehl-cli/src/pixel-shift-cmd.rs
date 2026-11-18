@@ -848,12 +848,28 @@ pub struct GroupMeasurement {
 /// measurements of another version are measured again.
 pub const GROUP_CHECK_VERSION: u32 = 1;
 
+/// Run `f` on a rayon pool of one thread kept by the calling thread, so its
+/// parallel loops run in turn there rather than on the shared pool.
+fn on_one_thread<R: Send>(f: impl FnOnce() -> R + Send) -> R {
+    thread_local! {
+        static ONE: Option<rayon::ThreadPool> =
+            rayon::ThreadPoolBuilder::new().num_threads(1).build().ok();
+    }
+    let mut f = Some(f);
+    let pooled = ONE.with(|pool| pool.as_ref().map(|p| p.install(f.take().expect("once"))));
+    match pooled {
+        Some(r) => r,
+        None => (f.take().expect("not run"))(),
+    }
+}
+
 /// Measure one complete four-member group (see [`GroupMeasurement`]).
 pub fn measure(
     frames: [&strehl_raw::Frame; 4],
     noise: &strehl_core::noise::NoiseModel,
 ) -> GroupMeasurement {
-    measure_with_witness(frames, noise).0
+    // The witness's photon-transfer bins are for reports only.
+    measure_impl(frames, noise, false).0
 }
 
 /// [`measure`], also returning the whole witness for reports.
@@ -861,17 +877,24 @@ pub fn measure_with_witness(
     frames: [&strehl_raw::Frame; 4],
     noise: &strehl_core::noise::NoiseModel,
 ) -> (GroupMeasurement, Option<pixel_shift::Witness>) {
+    measure_impl(frames, noise, true)
+}
+
+fn measure_impl(
+    frames: [&strehl_raw::Frame; 4],
+    noise: &strehl_core::noise::NoiseModel,
+    ptc: bool,
+) -> (GroupMeasurement, Option<pixel_shift::Witness>) {
     let first = frames[0];
     let m = views_of(frames);
     let c = check_group(&m);
     let witness = c.parities.then(|| {
-        pixel_shift::witness(
-            &m,
-            &c.offsets,
-            &c.gains,
-            |s| noise.variance(strehl_core::CfaPlane::G1, s),
-            64,
-        )
+        let variance = |s| noise.variance(strehl_core::CfaPlane::G1, s);
+        if ptc {
+            pixel_shift::witness(&m, &c.offsets, &c.gains, variance, 64)
+        } else {
+            pixel_shift::witness_without_ptc(&m, &c.offsets, &c.gains, variance, 64)
+        }
     });
     // Scale-free tile outlier ratio: an uncalibrated model scales every tile
     // alike and cancels; motion, a focus slip or a wrong member does not.
@@ -1172,10 +1195,19 @@ impl StackGroups {
             // Judged above: it passes.
             Some(m) => (m, None),
             None => {
-                let m = std::sync::Arc::new(measure(
-                    [first, &members[0], &members[1], &members[2]],
-                    noise,
-                ));
+                let frames = [first, &members[0], &members[1], &members[2]];
+                // Under decode-ahead every decoding thread checks its own
+                // groups: on a pool of one thread each, not the shared pool
+                // the sixteen decoders' checks would contend for (MEASURED,
+                // round-2 plan section 3.7: 1.36 core-seconds a group on one
+                // thread, about 4.4 CPU-seconds through the shared pool). The
+                // sums are added in row order whatever the pool
+                // (`a_group_measures_the_same_bits_on_any_pool`).
+                let m = std::sync::Arc::new(if serial {
+                    on_one_thread(|| measure(frames, noise))
+                } else {
+                    measure(frames, noise)
+                });
                 if let (Some(j), Some(k)) = (self.journal.as_ref(), journal_key) {
                     j.append(k, index, &m);
                 }
