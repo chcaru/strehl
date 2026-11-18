@@ -7,6 +7,65 @@ says exactly what to shoot, why, and what it unblocks.
 
 ## START HERE — one session, in value order
 
+> **New 2026-11-14, A7CR (supersedes nothing below; it unblocks the new body).**
+> Darks, photon transfer (ISO 100), 16 static four-shot groups and the disturbed
+> groups (careful walking, regular walking, tapping) are done, and the A7CR now has a
+> measured noise profile; the paired single-shot and four-shot stacks (a coin cell,
+> 107 planes each) are captured too. Nothing more is needed for this plan; see
+> [the calibration results](../experiments/a7cr-calibration-2026-11-14/results.md#captures-still-needed-owner).
+>
+> **New 2026-11-15, A7CR full-potential prototype** ([results](../experiments/a7cr-full-potential-2026-11-14/results.md)).
+> It was measured on one subject, so three four-shot stacks would say which of
+> its numbers are properties of the pipeline. In value order:
+> 1. ~~**A matte subject**~~ **Shot 2026-11-15 (white scarab); results in the
+>    same file.** (paper fibre, fabric, an insect wing: nothing mirror-like,
+>    nothing clipped), same rig and settings as the coin stack. Restoration rings
+>    on the coin's glints; this decides how sharp a target ordinary subjects take.
+> 2. **The coin again, shot quiet**: nobody walking, a shorter exposure if the light
+>    allows. 19 of the 107 groups held a member smeared during its 2 s exposure.
+> 3. **Bare lens (no teleconverter) with 16-shot pixel shift**, same subject.
+>    Derived, not measured: the same sampling of the subject as today's rig over
+>    four times the area. Needs the 16-shot assembly written first; do not shoot
+>    until asked.
+> 4. **New 2026-11-16: a second four-shot subject, any kind** (ideally with some
+>    colour and a bright edge against a dark background), same rig. Colour carry,
+>    optical restoration and the compensated group gate are now on by default for
+>    pixel-shift stacks on the strength of the scarab alone; this checks that
+>    default. Single-shot and four-shot runs of the same subject, as for the scarab.
+>
+> **New 2026-11-16, A7CR four-shot quality investigation** (two rounds;
+> [proposal](proposals/2026-11-a7cr-four-shot-quality-improvements.md) section 9).
+> None urgent, all short. Round 2 changed the list: 5 is now optional, 7 and 8 are
+> new.
+> 5. **A flat-field series. OPTIONAL since round 2** (the sensor's response map can
+>    be built from a stack's own raw frames: measured, 83-90 % of the pattern's power
+>    removed). Still useful as a cross-check and as the fallback for short stacks.
+>    If you shoot it: lens as for a stack; a plain matte white target, even light,
+>    focus run far off it so nothing is resolved; ISO 100, single-shot, shutter
+>    chosen so green sits near 8 000 DN above black (about half scale); 256 frames
+>    at one fixed focus position, nudging the target between four blocks of 64 if
+>    convenient. About ten minutes. Fewer or dimmer frames are not worth having: the
+>    existing 32-frame burst, used as a map, made the pattern worse.
+> 6. **A shadow reference stack** (only before depth-guided fusion is considered
+>    for default-on): a matte white card with a clean edge over a deep black cavity
+>    (a box lined with black flock), stacked four-shot through the edge's depth.
+>    It settles which merge has the right shadow level next to a bright edge.
+> 7. **New, round 2: the resolution slide as a focus stack, under your stack
+>    lights.** The black-on-clear slide you used for calibration, lit exactly as a
+>    subject is (not room light), four-shot, stacked through its depth at the normal
+>    focus step, 30-40 planes; leave it tilted. Fifteen minutes. A neutral target
+>    shows each colour channel's sharpness against green's: on the room-light slide
+>    blue came out softest (0.78-0.87 of green's contrast) where the restoration
+>    assumes it is sharpest, which is part of the coloured rim on bright-on-dark
+>    edges. This capture gives the table that corrects it.
+> 8. **New, round 2, optional: a light-balance pair.** One subject and framing, two
+>    short four-shot stacks of about 20 planes: the first as normal, the second with
+>    a magenta gel over the lamps and the shutter lengthened until green's histogram
+>    is back where it was. Your green exposure is already at the top of the sensor's
+>    linear range (measured), but red and blue use only 32 % and 27 % of it. Derived,
+>    not measured: up to 0.7x the shot noise in red and blue. The pair tests it, and
+>    tests whether the longer exposure costs more in member motion than it gains.
+
 *This index was added 2026-08-24 overnight. There are now 19 open requests across
 this document and that is not a list anyone can act on over coffee. **Shoot the
 first two and stop** if you only have twenty minutes — everything below them is

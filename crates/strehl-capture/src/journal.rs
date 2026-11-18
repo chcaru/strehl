@@ -36,9 +36,27 @@ fn write_new(path: &Path, value: &Value) -> Result<()> {
     Ok(())
 }
 impl Journal {
-    pub fn create(root: &Path, plan: &Plan, identity: Value, status: Value) -> Result<Self> {
+    pub fn create(
+        root: &Path,
+        plan: &Plan,
+        positions: &[u16],
+        kind: &str,
+        identity: Value,
+        status: Value,
+    ) -> Result<Self> {
         plan.validate()?;
+        ensure!(!positions.is_empty(), "No focus positions to capture");
         let host = status["capture_destination"] == "host-pc";
+        // Top-level fields summarise the run as configured at its start. Per-file
+        // bindings in events.jsonl and the in-file camera tags remain authoritative.
+        let shots = status["pixel_shift_shots"].as_u64().unwrap_or(1);
+        let raw_format = if !host {
+            "camera-setting"
+        } else if identity["raw_format"] == "uncompressed" {
+            "sony-uncompressed"
+        } else {
+            "sony-lossless-compressed-raw-l"
+        };
         std::fs::create_dir_all(root).context("Create capture-journal folder")?;
         let directory = root.join(format!("stack-{}-{}", now_ms(), std::process::id()));
         std::fs::create_dir(&directory)
@@ -46,12 +64,14 @@ impl Journal {
         write_new(
             &directory.join("manifest.json"),
             &json!({
-            "schema":"strehl-capture-v1", "build":env!("CARGO_PKG_VERSION"),
+            "schema":"strehl-capture-v2", "build":env!("CARGO_PKG_VERSION"),
             "executable_sha256":Sha256::digest(std::fs::read(std::env::current_exe()?)?).iter().map(|b|format!("{b:02x}")).collect::<String>(), "started_unix_ms":now_ms(),
-                "camera":identity,"initial_status":status,"plan":plan,"focus_positions":plan.positions()?,
+                "camera":identity,"initial_status":status,"plan":plan,"capture_kind":kind,"focus_positions":positions,
+                "planned_planes":positions.len(),"planned_raws":positions.len() as u64*shots,
                 "focus_units":"normalized-uint16-not-metric", "raw_destination":if host {"host-pc"} else {"camera-sd-card"}, "raws_downloaded":host,
-                "raw_format":if host {"sony-lossless-compressed-raw-l"} else {"camera-setting"},
-                "pixel_shift_shots":1,"file_binding":if host {"ordinal-filename-bytes-sha256"} else {"unbound-camera-event-ordinals"}, "preview_saved":false,
+                "raw_format":raw_format,
+                "pixel_shift_shots":shots,"file_binding":if host {"ordinal-filename-bytes-sha256"} else {"unbound-camera-event-ordinals"}, "preview_saved":false,
+                "authority":"Top-level fields summarise the run at its start; per-file bindings in events.jsonl (plane, group_id, member_index, sha256) and in-file camera tags are authoritative.",
                 "matching_note":if host {"Each capture_buffered or capture_complete event binds its focus plane to one ordinal filename, byte length and SHA-256. Buffered files are not yet durable; transfer-receipts.jsonl confirms PC delivery. No manual exposures during a run."} else {"Associate ordered RAWs from this run using camera timestamps and count; no filename or checksum binding is claimed. Do not insert manual exposures during a run."}
             }),
         )?;
@@ -142,19 +162,67 @@ mod tests {
             end: 502,
             ..Plan::default()
         };
-        let mut journal =
-            Journal::create(&temp.path().join("logs"), &plan, json!({}), json!({})).unwrap();
+        let mut journal = Journal::create(
+            &temp.path().join("logs"),
+            &plan,
+            &plan.positions().unwrap(),
+            "plan",
+            json!({}),
+            json!({}),
+        )
+        .unwrap();
         journal
             .record("capture_intent", json!({"ordinal":0}))
             .unwrap();
         assert!(export(&journal.directory, &card).is_err());
         journal.finish("uncertain", 0, "No retry").unwrap();
         let dest = export(&journal.directory, &card).unwrap();
+        let manifest: Value = serde_json::from_slice(
+            &std::fs::read(journal.directory.join("manifest.json")).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(manifest["planned_planes"], 3);
+        assert_eq!(manifest["pixel_shift_shots"], 1);
+        assert_eq!(manifest["raw_format"], "camera-setting");
         assert_eq!(std::fs::read(&raw).unwrap(), b"untouched");
         assert!(export(&journal.directory, &card).is_err());
         assert_eq!(
             std::fs::read(dest.join("events.jsonl")).unwrap(),
             std::fs::read(journal.directory.join("events.jsonl")).unwrap()
         );
+    }
+}
+
+#[cfg(test)]
+mod summary_tests {
+    use super::*;
+    #[test]
+    fn top_level_summary_reports_the_runs_actual_mode_and_format() {
+        let temp = tempfile::tempdir().unwrap();
+        let plan = Plan {
+            start: 500,
+            end: 500,
+            ..Plan::default()
+        };
+        let journal = Journal::create(
+            temp.path(),
+            &plan,
+            &[500, 500, 500],
+            "positions",
+            json!({"raw_format":"uncompressed"}),
+            json!({"capture_destination":"host-pc","pixel_shift_shots":4}),
+        )
+        .unwrap();
+        let manifest: Value = serde_json::from_slice(
+            &std::fs::read(journal.directory.join("manifest.json")).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(manifest["schema"], "strehl-capture-v2");
+        assert_eq!(manifest["pixel_shift_shots"], 4);
+        assert_eq!(manifest["raw_format"], "sony-uncompressed");
+        assert_eq!(manifest["planned_planes"], 3);
+        assert_eq!(manifest["planned_raws"], 12);
+        assert_eq!(manifest["capture_kind"], "positions");
+        assert_eq!(manifest["focus_positions"], json!([500, 500, 500]));
     }
 }

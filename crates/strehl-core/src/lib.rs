@@ -35,8 +35,12 @@ pub mod merge;
 pub mod mosaic;
 pub mod noise;
 pub mod optics;
+#[path = "optical-restore.rs"]
+pub mod optical_restore;
 pub mod outlier;
 pub mod photometric;
+#[path = "pixel-shift.rs"]
+pub mod pixel_shift;
 pub mod plane;
 #[path = "precision-mean.rs"]
 pub mod precision_mean;

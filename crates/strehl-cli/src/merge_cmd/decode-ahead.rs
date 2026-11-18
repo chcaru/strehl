@@ -331,6 +331,12 @@ impl<S: PyramidFrameSource> PyramidFrameSource for DecodeAhead<'_, S> {
     fn len(&self) -> usize {
         self.inner.len()
     }
+    fn take_measured(&self, index: usize) -> Option<crate::align_cmd::MeasuredGroup> {
+        self.inner.take_measured(index)
+    }
+    fn decode_direct(&self, index: usize) -> Result<Frame> {
+        self.inner.decode_direct(index)
+    }
     #[cfg(feature = "gpu")]
     fn retire(&self, frame: Frame) {
         let mut st = self.lock();

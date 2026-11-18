@@ -131,6 +131,349 @@ class Declared:
 
 
 REGISTRY: dict[str, Declared] = {
+    "STREHL_AXIAL_CA": Declared(
+        kind="control",
+        default="off (red and blue are gathered at green's elected frame, as before)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/axial-colour.rs mode(): unset, empty, `0` or `off` -> "
+            "Mode::Off and install_if_requested returns None, so apply() is a "
+            "no-op; `on` measures per-channel focus offsets and reads the "
+            "coarse part of red and blue from the frames where they focus, "
+            "registered to the borrowing frame on green; `unregistered` skips "
+            "the registration and `placebo` reverses the offsets (control "
+            "arms); anything else is an error. The estimator refuses it."
+        ),
+        note=(
+            "Opt-in until measured on more than one A7CR subject; see "
+            "experiments/a7cr-full-potential-2026-11-14/results.md."
+        ),
+    ),
+    "STREHL_FUSION": Declared(
+        kind="control",
+        default="off (the shipping per-coefficient election)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/depth-guide.rs requested_mode(): unset, empty, `0`, "
+            "`off` or `election` -> false and install_if_requested returns None, "
+            "so no guide is set and BandMerge folds exactly as before; `depth` "
+            "measures per-band focus planes and coherent widths and weights "
+            "every frame by its transfer (pyramid-depth-guide.rs); "
+            "`calibrated` (2026-11-17, merge_cmd/fusion-calibrated.rs) folds the "
+            "election, then the fusion, and writes the fusion's bands up to "
+            "16 plane px brought to the election's amplitude over the "
+            "election's coarse remainder; anything else is an error. Refused "
+            "with the GPU fold, temporal energy, hard-max selection and the "
+            "estimator."
+        ),
+        note=(
+            "Opt-in: on the A7CR scarab it reads 0.53x the default's "
+            "fine-band noise but 0.78x its finest detail; worthwhile with "
+            "restoration, which is not ported yet. See "
+            "experiments/a7cr-full-potential-2026-11-14/results.md."
+        ),
+    ),
+    "STREHL_PIXEL_SHIFT_RESIDUAL": Declared(
+        kind="quality",
+        default="compensate (members' measured residual corrected; gate on what is left)",
+        verified="measured",
+        backend="pyramid",
+        evidence=(
+            "pixel-shift-cmd.rs ResidualMode::from_env(): unset, empty or "
+            "`compensate` -> Compensate; `off` restores the integer-offset "
+            "assembly and the raw-witness gate; `negate` is the placebo. "
+            "MEASURED (2026-11-16): an unset render under "
+            "STREHL_PIXEL_SHIFT=remosaic is byte-identical to an explicit "
+            "`compensate` one (A7CR scarab, odd half); only read when "
+            "pixel-shift assembly is on."
+        ),
+        note=(
+            "Rescues the groups the 0.2-photosite raw gate demoted for "
+            "member motion: 1.43x fine-detail SNR on the A7CR scarab."
+        ),
+    ),
+    "STREHL_CARRY_RGB": Declared(
+        kind="control",
+        default="on under pixel-shift assembly (STREHL_PIXEL_SHIFT=remosaic), off otherwise",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/colour-carry.rs setting(): `0` or `off` -> off; unset or "
+            "empty -> on only when pixel_shift_cmd::assembly_requested() and no "
+            "blocker (not --demosaic, axial colour, region repair, "
+            "STREHL_RESTORE, temporal energy, GPU fold) applies, else "
+            "band_planes() stays 4 and the gather carries nothing; `on` folds "
+            "12 planes and writes full-resolution RGB. MEASURED 2026-11-16: a "
+            "single-shot scarab render is byte-identical to the build before "
+            "the default changed; a pixel-shift render with nothing set equals "
+            "an explicit on+restore one byte for byte. With it on, "
+            "the native-site channels are bit-identical to the plain render "
+            "(A7CR scarab four-shot, 60,217,344 samples, 2026-11-15)."
+        ),
+        note="On by default for pixel-shift stacks (owner decision 2026-11-16); still to be measured on a second subject.",
+    ),
+    "STREHL_CA_COMPONENTS": Declared(
+        kind="control",
+        default="off (one lateral-colour scale per channel, the profile's)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/colour-components.rs mode(): unset, empty, `0` or `off` "
+            "-> Mode::Off and split_for() returns None, so the banded gather "
+            "builds its sites from the profile exactly as before (site_profile "
+            "= ca, no share); `on` gathers four-shot groups' red and blue less "
+            "the profile's green-band share at the own bands' scales and adds "
+            "the share back at green's coordinates; `placebo` reverses the "
+            "share. Only groups with measured channels are touched."
+        ),
+        note=(
+            "Opt-in (proposal item 8, 2026-11-16): shares and own-band scales "
+            "from one A7CR subject under one light."
+        ),
+    ),
+    "STREHL_SELF_FLAT": Declared(
+        kind="control",
+        default="off (no response-pattern correction)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/self-flat.rs mode(): unset, empty, `0` or `off` -> "
+            "Mode::Off and install_if_requested returns None, so map_for() "
+            "returns None, WarpScratch::flat stays None and the banded gather "
+            "reads every sample by the unchanged expression; `on` builds "
+            "cross-fitted response maps from every raw frame before the fold "
+            "and divides each sample by its photosite's map at the gather; "
+            "`placebo` applies the map rolled by (5, 3) photosites."
+        ),
+        note=(
+            "Opt-in (proposal item 1, 2026-11-16): one pass over every raw "
+            "frame before the fold."
+        ),
+    ),
+    "STREHL_REFINE_FRAMES": Declared(
+        kind="control",
+        default="off (the alignment's placements are gathered as solved)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/frame-refine.rs mode(): unset, empty, `0` or `off` -> "
+            "Mode::Off, install_if_requested returns None, CORRECTION stays "
+            "None and adjust() returns the placement unchanged; `on` gathers "
+            "every frame once, measures each against the frames 2-4 planes "
+            "before it, fits one rate of scale and translation per plane and "
+            "composes rate x (frame - anchor) into each placement; `placebo` "
+            "reverses it."
+        ),
+        note=(
+            "Opt-in (proposal item 10, 2026-11-17). MEASURED harmful on the scarab "
+            "run: under fusion green fine signal 0.814 to 0.783 of the election's, "
+            "signal-to-noise down in every channel (experiments/a7cr-fourshot-impl-"
+            "2026-11-17/results.md). Keep off."
+        ),
+    ),
+    "STREHL_REFINE_FRAMES_DUMP": Declared(
+        kind="control",
+        default="unset (nothing is written)",
+        verified="code",
+        backend="pyramid",
+        evidence="merge_cmd/frame-refine.rs: when set under STREHL_REFINE_FRAMES, writes the measured frame pairs as JSON; changes no render.",
+        note="Experiment hook for inspecting the frame refinement's measurement.",
+    ),
+    "STREHL_OPTICAL_RESTORE_GATHER": Declared(
+        kind="control",
+        default="off (the restoration's model omits the gather kernel)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/optical-restore.rs gather_in_model(): unset, empty, `0` "
+            "or `off` -> false, ChannelModel::gather is None and system_mtf() "
+            "and the cutoff fits read exactly as before; `on` multiplies the "
+            "system transfer by the phase-averaged Catmull-Rom response per "
+            "axis and divides the reference spectra by its power before the "
+            "cutoff fit. Read only when the optical restoration runs."
+        ),
+        note="Opt-in (proposal item 5, 2026-11-16): raises restored fine detail and its grain together.",
+    ),
+    "STREHL_CHROMA_FILTER": Declared(
+        kind="control",
+        default="smooth (colour differences smoothed at 1 px)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/optical-restore.rs chroma_measured(): unset, empty or "
+            "`smooth` -> false, restore() returns false and the write calls "
+            "colour_carry::smooth_chroma as before; `measured` filters each "
+            "colour difference with a Wiener filter designed from the restored "
+            "halves' spectra inside the restoration and skips the smoothing "
+            "(falls back to it when the restoration does not run)."
+        ),
+        note="Opt-in (proposal item 3, 2026-11-16); wants STREHL_CA_COMPONENTS=on first.",
+    ),
+    "STREHL_OPTICAL_RESTORE": Declared(
+        kind="control",
+        default="on under pixel-shift assembly with colour carry, off otherwise",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/optical-restore.rs setting(): `0` or `off` -> off; unset "
+            "or empty -> on only under pixel-shift assembly with the colour carry "
+            "active and no blocker, and then a stack it cannot measure is "
+            "written unrestored with a warning (MEASURED: one-frame and "
+            "out-of-focus-range renders completed); off, no half-stack "
+            "accumulator is created, the depth measurement is skipped unless "
+            "STREHL_FUSION=depth, and the write takes the shipping branch."
+        ),
+        note="Default for pixel-shift stacks (owner decision 2026-11-16; second subject pending). Explicitly on, it refuses a stack whose diffraction cutoff it cannot measure.",
+    ),
+    "STREHL_GROUP_JOURNAL": Declared(
+        kind="control",
+        default="on (pixel-shift group measurements are kept in cache_root()/groups/)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "pixel-shift-cmd.rs journal_enabled()/GroupJournal: unset, empty, "
+            "`on` or `1` -> each group's measurement is read from, or appended "
+            "to, a per-folder journal beside the warp maps, keyed by the code "
+            "version, the four archives' SHA-256 and the noise model, every "
+            "float stored as exact bits; `off` or `0` measures every group in "
+            "every process. The measurement is the same either way, so the "
+            "output is byte-identical."
+        ),
+        note="Performance plan stage P2 (2026-11-18).",
+    ),
+    "STREHL_DEPTH_PASS": Declared(
+        kind="control",
+        default="fused (the restoration's depth map is measured during the fold where eligible)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/depth-guide.rs prepass_forced()/begin_tap(): unset, empty "
+            "or `fused` -> the band energies come from the fold's own luma and "
+            "the reference tiles' frames are prepared again after the fold, "
+            "when restoration is on, fusion off, STREHL_FRAME_PARITY unset and "
+            "no defect plan or temporal energy; otherwise, or with `prepass`, "
+            "the separate pre-pass runs as before. Both routes give "
+            "byte-identical output."
+        ),
+        note="Performance plan stage P3 (2026-11-18); `prepass` is the comparison route.",
+    ),
+    "STREHL_OPTICAL_RESTORE_SIGMA": Declared(
+        kind="control",
+        default="0.70 (the prototype's arm f5)",
+        verified="code",
+        backend="pyramid",
+        evidence="merge_cmd/optical-restore.rs sigma_t(): unset -> 0.70 px; read only under STREHL_OPTICAL_RESTORE=on.",
+        note="Experiment knob for the target sharpness.",
+    ),
+    "STREHL_OPTICAL_RESTORE_CUTOFF": Declared(
+        kind="control",
+        default="unset (the cutoff is measured on the stack)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/optical-restore.rs cutoff_override(): unset -> None and "
+            "the fitted cutoffs are used if measurable; three numbers replace "
+            "them, and the log says so. Read only under STREHL_OPTICAL_RESTORE=on."
+        ),
+        note="For single-shot stacks: cutoffs measured on a four-shot run of the same setup.",
+    ),
+    "STREHL_OPTICAL_RESTORE_DUMP": Declared(
+        kind="control",
+        default="unset (nothing is written)",
+        verified="code",
+        backend="pyramid",
+        evidence="merge_cmd/optical-restore.rs: when set, writes the measured spectra and fits as JSON; changes no render.",
+        note="Experiment hook for inspecting the restoration's measurement.",
+    ),
+    "STREHL_FUSION_WIDTH": Declared(
+        kind="control",
+        default="1 (the measured coherent widths)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/depth-guide.rs width_scale(): unset -> 1.0; a positive "
+            "finite number multiplies every level's transfer width; only read "
+            "under STREHL_FUSION=depth."
+        ),
+        note="Experiment knob for the width trade-off; not a setting to ship.",
+    ),
+    "STREHL_FUSION_COARSE": Declared(
+        kind="control",
+        default="guide (every level takes the depth guide's weights)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/depth-guide.rs coarse_election(): unset, empty or "
+            "`guide` -> false and the guide covers every level; `election` "
+            "builds it with_guided_levels(3), so coarser levels keep the "
+            "soft election. Read only under STREHL_FUSION=depth."
+        ),
+        note=(
+            "Experiment knob: on the A7CR scarab it trims the near-edge glow "
+            "(0.94-0.99 against 1.00-1.04 of plain pixel shift) for 10 % of "
+            "the fusion's signal-to-noise; the fusion's general ~10 % "
+            "shadow lift is unchanged."
+        ),
+    ),
+    "STREHL_FUSION_DUMP": Declared(
+        kind="control",
+        default="unset (nothing is written)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/depth-guide.rs: when set under STREHL_FUSION=depth, "
+            "writes the per-band depth maps and band 0's peak confidence as "
+            "raw f32; changes no render."
+        ),
+        note="Experiment hook for inspecting the depth maps.",
+    ),
+    "STREHL_AXIAL_DUMP": Declared(
+        kind="control",
+        default="unset (nothing is written)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/axial-colour.rs dump_if_requested(): returns at once "
+            "unless the variable is set; set, it writes each gathered frame's "
+            "red, green-site-1 and blue planes to that directory before the "
+            "axial correction. It changes no render."
+        ),
+        note=(
+            "Experiment hook: the input of axial-probe.py in "
+            "experiments/a7cr-full-potential-2026-11-14/. About 180 MB per "
+            "A7CR frame."
+        ),
+    ),
+    "STREHL_PIXEL_SHIFT": Declared(
+        kind="control",
+        default="off (every RAW is an ordinary frame; four-shot groups are not assembled)",
+        verified="measured",
+        backend="pyramid",
+        evidence=(
+            "pixel-shift-cmd.rs StackGroups::from_env: unset, empty or `off` "
+            "returns None and merge_cmd stacks crate::raw_paths as before; "
+            "`remosaic` discovers groups; `remosaic-ungated` and `member1` are "
+            "comparison arms (assemble every lattice-covering group; fold every "
+            "group as member 1); any other value is an error. "
+            "MEASURED 2026-11-14: A7C II byte-freeze 5/5 unchanged with it "
+            "unset; on the synthetic truth run remosaic lowered green RMSE "
+            "118 -> 106 DN (experiments/a7cr-impl-2026-11-14/results.md)."
+        ),
+        note=(
+            "Plan stage E. Opt-in until real static groups (capture 2) set "
+            "the witness thresholds and an independent review has run."
+        ),
+    ),
+    "STREHL_TIMING_PLANE": Declared(
+        kind="control",
+        default="3516x2344 (bug-7 geometry)",
+        verified="code",
+        backend="any",
+        evidence="strehl-gpu/tests/timing.rs plane(): test-only geometry for the ignored device timing tests.",
+        note="Diagnostic; never read by the engine.",
+    ),
     # ---------------- control / infrastructure ----------------
     "STREHL_BUILD_ID": Declared(
         kind="control",

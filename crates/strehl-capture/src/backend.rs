@@ -29,6 +29,10 @@ pub trait Camera: Send {
         );
         Ok(())
     }
+    /// Manual ISO and timed shutter, as the camera's own property codes.
+    fn set_exposure(&mut self, _iso: u64, _shutter: u64) -> Result<()> {
+        bail!("Remote exposure control is not supported by this camera backend")
+    }
     /// Fresh whole-stack storage admission, before any lens or shutter action.
     fn prepare_stack(&mut self, _frames: usize, _max_raw_bytes: u64) -> Result<()> {
         Ok(())
@@ -353,6 +357,19 @@ impl Camera for Native {
         self.hello["pixel_shift_shots"] = json!(shots);
         Ok(())
     }
+    fn set_exposure(&mut self, iso: u64, shutter: u64) -> Result<()> {
+        ensure!(
+            self.group_stream() && self.hello["exposure_protocol"] == 1,
+            "This Pi bridge predates remote exposure control; install the matching bridge"
+        );
+        let status = self.call(&format!("exposure	{iso}	{shutter}"), 20)?;
+        ensure!(
+            property(&status, "IsoSensitivity") == Some(iso)
+                && property(&status, "ShutterSpeed") == Some(shutter),
+            "Exposure did not read back"
+        );
+        Ok(())
+    }
     fn focus(&mut self, target: u16, settle_ms: u32) -> Result<Value> {
         let value = self.call(
             &format!("focus\t{target}\t{settle_ms}"),
@@ -445,6 +462,8 @@ impl Drop for Native {
 /// Explicit simulator; never selected as a fallback for a failed camera.
 pub struct Demo {
     pub shots: usize,
+    pub iso: u64,
+    pub shutter: u64,
     pub position: u16,
     pub frame: u64,
     pub remaining: u64,
@@ -458,6 +477,8 @@ impl Default for Demo {
     fn default() -> Self {
         Self {
             shots: 1,
+            iso: 100,
+            shutter: (1 << 16) | 5,
             position: 60627,
             frame: 0,
             remaining: 9000,
@@ -482,16 +503,18 @@ impl Camera for Demo {
             ("USBPowerSupply", 2),
             ("StillImageStoreDestination", 2),
             ("FNumber", 560),
-            ("IsoSensitivity", 100),
+            ("IsoSensitivity", self.iso),
             ("FocusMode", 1),
             ("ExposureProgramMode", 1),
-            ("ShutterSpeed", (1 << 16) | 5),
+            ("ShutterSpeed", self.shutter),
         ] {
             props.insert(
                 name.into(),
                 json!({"value":value,"readable":true,"writable":false}),
             );
         }
+        props.insert("IsoSensitivity".into(), json!({"value":self.iso,"readable":true,"writable":true,"allowed":[100,200,400,800,1600]}));
+        props.insert("ShutterSpeed".into(), json!({"value":self.shutter,"readable":true,"writable":true,"allowed":[393226,65546,65541]}));
         Ok(json!({"properties":props,"pixel_shift_shots":self.shots,"pixel_shift_options":[1,4]}))
     }
     fn configure(&mut self) -> Result<()> {
@@ -500,6 +523,15 @@ impl Camera for Demo {
     fn set_pixel_shift(&mut self, shots: usize) -> Result<()> {
         ensure!(matches!(shots, 1 | 4), "Unsupported simulated mode");
         self.shots = shots;
+        Ok(())
+    }
+    fn set_exposure(&mut self, iso: u64, shutter: u64) -> Result<()> {
+        ensure!(
+            [100, 200, 400, 800, 1600].contains(&iso) && [393226, 65546, 65541].contains(&shutter),
+            "Unsupported simulated exposure"
+        );
+        self.iso = iso;
+        self.shutter = shutter;
         Ok(())
     }
     fn focus(&mut self, target: u16, _settle_ms: u32) -> Result<Value> {

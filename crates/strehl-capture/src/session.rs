@@ -147,7 +147,8 @@ impl Session {
             "failure":s.failure.as_ref().map(|message|json!({"message":message,"exposure_uncertain":s.exposure_uncertain,"can_reconnect":matches!(s.phase,Phase::Fault|Phase::Disconnected)&&!s.command_pending})),
             "battery":property(&s.status,"BatteryRemain").filter(|v|*v<=100),"card_remaining":property(&s.status,"MediaSLOT1_RemainingNumber"),
             "preview":{"available":s.preview.is_some(),"fresh":fresh,"generation":s.preview_generation,"age_seconds":s.preview_at.map(|t|t.elapsed().as_secs_f64()),"error":s.preview_error,"width":s.preview.as_ref().map(|p|p.rgb.width()),"height":s.preview.as_ref().map(|p|p.rgb.height())},
-            "magnifier_ratios":ratios,"magnifier_current":property(&s.status,"Focus_Magnifier_Setting").map(|n|n>>32),"suggestion":s.suggestion,"samples":s.samples})
+            "magnifier_ratios":ratios,"magnifier_current":property(&s.status,"Focus_Magnifier_Setting").map(|n|n>>32),"suggestion":s.suggestion,"samples":s.samples,
+            "exposure":exposure_summary(&s.status)})
     }
     pub fn dispatch(&self, request: CommandRequest) -> Result<()> {
         ensure!(
@@ -314,7 +315,35 @@ impl Session {
                         action = Some(Action::Capture {
                             plan: c.plan.clone(),
                             root: c.root.clone(),
+                            positions: None,
                         });
+                    }
+                    Command::CapturePositions { positions } => {
+                        // Bursts (one position repeated) and retakes of chosen
+                        // planes, with the plan's settle/approach and direction.
+                        let mut plan = c.plan.clone();
+                        if !c.start_set || !c.end_set {
+                            plan.start = positions.first().copied().unwrap_or(0);
+                            plan.end = positions.last().copied().unwrap_or(0);
+                        }
+                        crate::worker::validate_positions(&plan, &positions)?;
+                        self.worker.request_resume();
+                        action = Some(Action::Capture {
+                            plan,
+                            root: c.root.clone(),
+                            positions: Some(positions),
+                        });
+                    }
+                    Command::Exposure { iso, shutter } => {
+                        for (name, value) in [("IsoSensitivity", iso), ("ShutterSpeed", shutter)] {
+                            ensure!(
+                                s.status["properties"][name]["allowed"]
+                                    .as_array()
+                                    .is_some_and(|a| a.contains(&json!(value))),
+                                "The camera does not offer that {name} value"
+                            );
+                        }
+                        action = Some(Action::Exposure { iso, shutter });
                     }
                     Command::Survey {} => {
                         ensure!(
@@ -360,6 +389,22 @@ impl Session {
     }
 }
 
+fn exposure_summary(status: &Value) -> Value {
+    let props = &status["properties"];
+    match property(status, "IsoSensitivity") {
+        None => Value::Null,
+        Some(iso) => json!({
+            "iso": iso,
+            "shutter": property(status, "ShutterSpeed"),
+            "f_number": property(status, "FNumber"),
+            "iso_options": props["IsoSensitivity"]["allowed"],
+            "shutter_options": props["ShutterSpeed"]["allowed"],
+            "writable": props["IsoSensitivity"]["writable"] == true
+                && props["ShutterSpeed"]["writable"] == true,
+        }),
+    }
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct CommandRequest {
@@ -402,6 +447,15 @@ pub enum Command {
         roi: Roi,
     },
     Start {},
+    /// Capture the listed focus positions (repeat one for a burst).
+    CapturePositions {
+        positions: Vec<u16>,
+    },
+    /// Manual ISO and shutter as the camera's property values.
+    Exposure {
+        iso: u64,
+        shutter: u64,
+    },
     Pause {},
     Resume {},
     Stop {},

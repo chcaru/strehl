@@ -55,7 +55,7 @@ pub mod sony_optical;
 #[path = "sony-tiff.rs"]
 mod sony_tiff;
 
-pub use identity::{CaptureIdentity, identity};
+pub use identity::{CaptureIdentity, identity, identity_cached};
 
 /// Sony RAWs, including byte-exact compressed Strehl archives.
 pub fn is_raw_path(path: &Path) -> bool {
@@ -299,7 +299,58 @@ impl QuadSource for Frame {
 /// [`lossless_jpeg`], everything else by the linked decoder; see
 /// [`DECODER_ENV`].
 pub fn decode(path: &Path) -> Result<Frame, RawError> {
-    decode_with(path, native_decoder_enabled(), None)
+    decode_with(path, native_decoder_enabled(), None, None, false).map(|(f, _)| f)
+}
+
+/// The original file's SHA-256 an archive declares in its envelope -- the
+/// hash its full decode verifies -- or `None` for a file that is not an
+/// archive or cannot be read. Reads 48 bytes.
+pub fn archive_sha256(path: &Path) -> Option<String> {
+    if !strehl_raw_codec::archive::is_archive(path) {
+        return None;
+    }
+    let file = std::fs::File::open(path).ok()?;
+    strehl_raw_codec::archive::read_header(file)
+        .ok()
+        .map(|h| h.sha256)
+}
+
+/// [`decode`] (into `buffer`, when given) on the calling thread alone, for
+/// callers that run many decodes at once: an archive's chunks are decoded in
+/// order, cache-resident (`strehl_raw_codec::cfa::decode_archive_serial`).
+/// The same frame, checksum and errors as [`decode`].
+pub fn decode_serial(path: &Path, buffer: Option<Vec<u16>>) -> Result<Frame, RawError> {
+    decode_with(path, native_decoder_enabled(), buffer, None, true).map(|(f, _)| f)
+}
+
+/// Archives this process has decoded in full with their whole-file SHA-256
+/// verified, by path, length and modification time: what [`decode_rows`]
+/// requires before it trusts a partial decode, which cannot be checked.
+fn verified()
+-> &'static std::sync::Mutex<std::collections::HashSet<(PathBuf, u64, std::time::SystemTime)>> {
+    static SET: std::sync::OnceLock<
+        std::sync::Mutex<std::collections::HashSet<(PathBuf, u64, std::time::SystemTime)>>,
+    > = std::sync::OnceLock::new();
+    SET.get_or_init(Default::default)
+}
+
+fn file_stamp(path: &Path) -> Option<(PathBuf, u64, std::time::SystemTime)> {
+    let m = std::fs::metadata(path).ok()?;
+    Some((path.to_path_buf(), m.len(), m.modified().ok()?))
+}
+
+/// [`decode_into`] of only the sample rows `rows` marks (one flag per buffer
+/// row), when the file is a plain-CFA archive this process has already
+/// decoded in full and verified; otherwise a full [`decode_into`]. Returns
+/// the frame and the buffer rows that hold samples (`None`: every row). The
+/// rows decoded equal a full decode's; the others are unspecified, so a
+/// caller must read only rows marked decoded.
+pub fn decode_rows(
+    path: &Path,
+    rows: &[bool],
+    buffer: Option<Vec<u16>>,
+) -> Result<(Frame, Option<Vec<bool>>), RawError> {
+    decode_with(path, native_decoder_enabled(), buffer, Some(rows), false)
 }
 
 /// [`decode`], writing the samples into `buffer`'s allocation when this
@@ -309,40 +360,122 @@ pub fn decode(path: &Path) -> Result<Frame, RawError> {
 /// buffers means no page faults. Every sample is overwritten. Otherwise the
 /// buffer is dropped.
 pub fn decode_into(path: &Path, buffer: Vec<u16>) -> Result<Frame, RawError> {
-    decode_with(path, native_decoder_enabled(), Some(buffer))
+    decode_with(path, native_decoder_enabled(), Some(buffer), None, false).map(|(f, _)| f)
 }
 
 /// [`decode`] with every pixel decoded by the linked decoder, for checking
 /// that both decoders agree.
 #[doc(hidden)]
 pub fn decode_linked(path: &Path) -> Result<Frame, RawError> {
-    decode_with(path, false, None)
+    decode_with(path, false, None, None, false).map(|(f, _)| f)
 }
 
-fn decode_with(path: &Path, native: bool, buffer: Option<Vec<u16>>) -> Result<Frame, RawError> {
+fn decode_with(
+    path: &Path,
+    native: bool,
+    buffer: Option<Vec<u16>>,
+    rows: Option<&[bool]>,
+    serial: bool,
+) -> Result<(Frame, Option<Vec<bool>>), RawError> {
     let fail = |e: String| RawError::Decode {
         path: path.to_path_buf(),
         source: anyhow::anyhow!(e),
     };
 
-    let restored;
-    let source = if strehl_raw_codec::archive::is_archive(path) {
-        restored =
-            strehl_raw_codec::archive::read_original(path).map_err(|e| fail(format!("{e:#}")))?;
-        RawSource::new_from_slice(&restored)
-    } else {
-        RawSource::new(path).map_err(|e| fail(format!("{e}")))?
-    };
     let params = RawDecodeParams::default();
-
-    let native = if native {
-        native_pixels(&source, &params, buffer)
-    } else {
-        None
-    };
-    let img = match native {
-        Some(img) => img,
-        None => rawler::decode(&source, &params).map_err(|e| fail(format!("{e:?}")))?,
+    let mut buffer = buffer;
+    let archived = strehl_raw_codec::archive::is_archive(path);
+    // Plain CFA strips (Sony uncompressed, archived or not) are read straight
+    // into the sample buffer; the linked decoder sees only the metadata bytes,
+    // which are also where ISO and the crop are read.
+    let mut crop = None;
+    let mut direct = None;
+    let mut opened = None;
+    let mut decoded_rows = None;
+    if native && archived {
+        // A partial decode only of a file already verified in full here.
+        let stamp = file_stamp(path);
+        let partial = rows.filter(|_| {
+            stamp.as_ref().is_some_and(|s| {
+                verified()
+                    .lock()
+                    .unwrap_or_else(|e| e.into_inner())
+                    .contains(s)
+            })
+        });
+        let cfa = match partial {
+            Some(rows) => strehl_raw_codec::cfa::decode_archive_rows(path, rows, buffer.take()),
+            None if serial => strehl_raw_codec::cfa::decode_archive_serial(path, buffer.take()),
+            None => strehl_raw_codec::cfa::decode_archive(path, buffer.take()),
+        }
+        .map_err(|e| fail(format!("{e:#}")))?;
+        if let Some(cfa) = cfa {
+            if cfa.verified_sha256
+                && let Some(s) = stamp
+            {
+                verified()
+                    .lock()
+                    .unwrap_or_else(|e| e.into_inner())
+                    .insert(s);
+            }
+            decoded_rows = cfa.decoded_rows;
+            let prefix = RawSource::new_from_slice(&cfa.prefix);
+            if let Some(img) = metadata_image(&prefix, &params, cfa.width, cfa.height) {
+                crop = cfa.crop;
+                direct = Some((img, cfa.samples, prefix));
+            }
+        }
+    } else if native {
+        let file = RawSource::new(path).map_err(|e| fail(format!("{e}")))?;
+        let plain = strehl_raw_codec::layout(file.buf()).and_then(|layout| {
+            let prefix = RawSource::new_from_slice(&file.buf()[..layout.offset]);
+            metadata_image(&prefix, &params, layout.width, layout.height).map(|img| (layout, img))
+        });
+        match plain {
+            Some((layout, img)) => {
+                let n = layout.width * layout.height;
+                let mut data = match buffer.take() {
+                    Some(b) if b.len() == n => b,
+                    _ => vec![0u16; n],
+                };
+                let strip = &file.buf()[layout.offset..layout.offset + layout.length];
+                for (d, b) in data.iter_mut().zip(strip.as_chunks::<2>().0) {
+                    *d = u16::from_le_bytes(*b);
+                }
+                crop = strehl_raw_codec::cfa::crop(file.buf(), file.buf().len())
+                    .map_err(|e| fail(format!("{e:#}")))?;
+                direct = Some((img, data, file));
+            }
+            None => opened = Some(file),
+        }
+    }
+    let (img, source) = match direct {
+        Some((mut img, data, meta)) => {
+            img.data = rawler::RawImageData::Integer(data);
+            (img, meta)
+        }
+        None => {
+            let source = match opened {
+                Some(source) => source,
+                None if archived => RawSource::new_from_slice(
+                    &strehl_raw_codec::archive::read_original(path)
+                        .map_err(|e| fail(format!("{e:#}")))?,
+                ),
+                None => RawSource::new(path).map_err(|e| fail(format!("{e}")))?,
+            };
+            crop = strehl_raw_codec::cfa::crop(source.buf(), source.buf().len())
+                .map_err(|e| fail(format!("{e:#}")))?;
+            let pixels = if native {
+                native_pixels(&source, &params, buffer)
+            } else {
+                None
+            };
+            let img = match pixels {
+                Some(img) => img,
+                None => rawler::decode(&source, &params).map_err(|e| fail(format!("{e:?}")))?,
+            };
+            (img, source)
+        }
     };
 
     // ISO is best-effort: a frame that decodes but has no ISO tag must still
@@ -372,20 +505,33 @@ fn decode_with(path: &Path, native: bool, buffer: Option<Vec<u16>>) -> Result<Fr
 
     // Fall back to the whole buffer only if no active area is declared. That is
     // a correctness hazard, not a convenience: see the module docs.
-    let active = img
-        .active_area
-        .map(|r| Region {
-            x: r.p.x,
-            y: r.p.y,
-            width: r.d.w,
-            height: r.d.h,
-        })
-        .unwrap_or(Region {
-            x: 0,
-            y: 0,
-            width: img.width,
-            height: img.height,
-        });
+    // The decoder's active area wins when it is a proper sub-rectangle (the
+    // A7C II's 7032x4688 of 7168x5120). When it is absent or merely the whole
+    // buffer, the raw IFD's declared crop is used (the A7CR's 9504x6336 at
+    // (32, 20) of 9600x6376); the whole buffer is the last resort.
+    let whole = Region {
+        x: 0,
+        y: 0,
+        width: img.width,
+        height: img.height,
+    };
+    let decoded = img.active_area.map(|r| Region {
+        x: r.p.x,
+        y: r.p.y,
+        width: r.d.w,
+        height: r.d.h,
+    });
+    let declared = crop.map(|c| Region {
+        x: c.x,
+        y: c.y,
+        width: c.width,
+        height: c.height,
+    });
+    let active = match (decoded, declared) {
+        (Some(d), _) if d != whole => d,
+        (_, Some(c)) => c,
+        _ => whole,
+    };
 
     let black = img
         .blacklevel
@@ -395,29 +541,32 @@ fn decode_with(path: &Path, native: bool, buffer: Option<Vec<u16>>) -> Result<Fr
         .unwrap_or(0.0);
     let white = img.whitelevel.0.first().copied().unwrap_or(u16::MAX as u32) as f32;
 
-    Ok(Frame {
-        data,
-        stride: img.width,
-        buffer_height: img.height,
-        active,
-        levels: Levels { black, white },
-        iso,
-        wb_coeffs: img.wb_coeffs,
-        xyz_to_cam_rgbe: img.xyz_to_cam,
-        color_matrices: img
-            .color_matrix
-            .iter()
-            .filter(|(_, m)| m.len() >= 9)
-            .map(|(ill, m)| {
-                (
-                    format!("{ill:?}"),
-                    [[m[0], m[1], m[2]], [m[3], m[4], m[5]], [m[6], m[7], m[8]]],
-                )
-            })
-            .collect(),
-        camera: img.clean_model.clone(),
-        path: path.to_path_buf(),
-    })
+    Ok((
+        Frame {
+            data,
+            stride: img.width,
+            buffer_height: img.height,
+            active,
+            levels: Levels { black, white },
+            iso,
+            wb_coeffs: img.wb_coeffs,
+            xyz_to_cam_rgbe: img.xyz_to_cam,
+            color_matrices: img
+                .color_matrix
+                .iter()
+                .filter(|(_, m)| m.len() >= 9)
+                .map(|(ill, m)| {
+                    (
+                        format!("{ill:?}"),
+                        [[m[0], m[1], m[2]], [m[3], m[4], m[5]], [m[6], m[7], m[8]]],
+                    )
+                })
+                .collect(),
+            camera: img.clean_model.clone(),
+            path: path.to_path_buf(),
+        },
+        decoded_rows,
+    ))
 }
 
 /// `STREHL_RAW_DECODER=rawler` decodes every pixel with the linked decoder
@@ -430,6 +579,20 @@ fn native_decoder_enabled() -> bool {
     *ENABLED.get_or_init(|| {
         std::env::var(DECODER_ENV).map_or(true, |v| !v.trim().eq_ignore_ascii_case("rawler"))
     })
+}
+
+/// The linked decoder's image with no pixels, from metadata bytes alone,
+/// when its geometry is the expected single-channel `width x height`.
+fn metadata_image(
+    prefix: &RawSource,
+    params: &RawDecodeParams,
+    width: usize,
+    height: usize,
+) -> Option<rawler::RawImage> {
+    let img = rawler::get_decoder(prefix)
+        .and_then(|d| d.raw_image(prefix, params, true))
+        .ok()?;
+    (img.width == width && img.height == height && img.cpp == 1).then_some(img)
 }
 
 /// The linked decoder's image with its pixels decoded by [`lossless_jpeg`]:

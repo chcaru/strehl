@@ -123,6 +123,80 @@ pub fn measure(width: usize, height: usize, rgb: &[f32]) -> Option<Residual> {
     })
 }
 
+/// [`measure`] restricted to one band of detail: each channel is replaced by
+/// its difference of Gaussians at `sigma_fine` and `sigma_coarse` px before
+/// the measurement. A red or blue channel's displacement against green can
+/// depend on scale (its own band and the green-band light it records sit at
+/// different magnifications), and an unrestricted measurement reads the
+/// band that dominates its gradients.
+pub fn measure_band(
+    width: usize,
+    height: usize,
+    rgb: &[f32],
+    sigma_fine: f64,
+    sigma_coarse: f64,
+) -> Option<Residual> {
+    assert_eq!(
+        rgb.len(),
+        width * height * 3,
+        "rgb is not width x height x 3"
+    );
+    let mut band = vec![0.0f32; rgb.len()];
+    for c in 0..3 {
+        let plane: Vec<f32> = rgb.iter().skip(c).step_by(3).copied().collect();
+        let fine = gaussian(&plane, width, height, sigma_fine);
+        let coarse = gaussian(&plane, width, height, sigma_coarse);
+        band.par_chunks_mut(3)
+            .zip(fine.par_iter().zip(coarse.par_iter()))
+            .for_each(|(px, (a, b))| px[c] = a - b);
+    }
+    measure(width, height, &band)
+}
+
+/// Separable Gaussian blur of a `width x height` plane, reflecting at the
+/// border; `sigma <= 0` returns the plane.
+fn gaussian(plane: &[f32], width: usize, height: usize, sigma: f64) -> Vec<f32> {
+    if sigma <= 0.0 {
+        return plane.to_vec();
+    }
+    let r = (3.0 * sigma).ceil() as isize;
+    let mut taps: Vec<f32> = (-r..=r)
+        .map(|k| (-(k * k) as f64 / (2.0 * sigma * sigma)).exp() as f32)
+        .collect();
+    let sum: f32 = taps.iter().sum();
+    taps.iter_mut().for_each(|t| *t /= sum);
+    let reflect = |v: isize, n: usize| -> usize {
+        let n = n as isize;
+        let mut v = v;
+        while v < 0 || v >= n {
+            v = if v < 0 { -v - 1 } else { 2 * n - 1 - v };
+        }
+        v as usize
+    };
+    let mut tmp = vec![0.0f32; plane.len()];
+    tmp.par_chunks_mut(width).enumerate().for_each(|(y, row)| {
+        let src = &plane[y * width..(y + 1) * width];
+        for (x, o) in row.iter_mut().enumerate() {
+            *o = taps
+                .iter()
+                .enumerate()
+                .map(|(k, t)| t * src[reflect(x as isize + k as isize - r, width)])
+                .sum();
+        }
+    });
+    let mut out = vec![0.0f32; plane.len()];
+    out.par_chunks_mut(width).enumerate().for_each(|(y, row)| {
+        for (k, t) in taps.iter().enumerate() {
+            let yy = reflect(y as isize + k as isize - r, height);
+            let src = &tmp[yy * width..(yy + 1) * width];
+            for (o, s) in row.iter_mut().zip(src) {
+                *o += t * s;
+            }
+        }
+    });
+    out
+}
+
 /// Measure on an RGGB mosaic (`width x height`, even dimensions; R at even
 /// row and column, G at the two mixed sites, B at odd row and column).
 ///

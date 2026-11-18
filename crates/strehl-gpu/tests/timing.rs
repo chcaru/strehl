@@ -6,10 +6,22 @@ use std::time::Instant;
 use strehl_core::pyramid::{BandMerge, MergeConfig, level_sizes};
 use strehl_gpu::{GpuFold, GreenNoise, ProbeNoise, RawFrame, SitePull};
 
+/// Plane geometry: bug-7 by default; `STREHL_TIMING_PLANE=4752x3168` is the
+/// A7CR's 9504 x 6336 active area.
+fn plane() -> (usize, usize) {
+    std::env::var("STREHL_TIMING_PLANE")
+        .ok()
+        .and_then(|v| {
+            let (w, h) = v.split_once('x')?;
+            Some((w.trim().parse().ok()?, h.trim().parse().ok()?))
+        })
+        .unwrap_or((3516, 2344))
+}
+
 #[test]
 #[ignore = "timing on a Vulkan GPU with f64"]
 fn device_stage_timing() {
-    let (gw, gh) = (3516usize, 2344usize);
+    let (gw, gh) = plane();
     let stride = 2 * gw + 16;
     let cfg = MergeConfig {
         bands: 7,
@@ -32,6 +44,8 @@ fn device_stage_timing() {
         black: 512.0,
         gain: [2.0, 1.0, 1.6],
         pulls: Some([pull(0.0), pull(0.01), pull(0.02), pull(0.03)]),
+        carried: None,
+        group: None,
     };
     let noise = ProbeNoise {
         seed: 7,
@@ -85,7 +99,7 @@ fn device_stage_timing() {
 #[test]
 #[ignore = "timing on a Vulkan GPU with f64"]
 fn production_frame_timing() {
-    let (gw, gh) = (3516usize, 2344usize);
+    let (gw, gh) = plane();
     let stride = 2 * gw + 16;
     let cfg = MergeConfig {
         bands: 7,
@@ -108,6 +122,8 @@ fn production_frame_timing() {
         black: 512.0,
         gain: [2.0, 1.0, 1.6],
         pulls: Some([pull(0.0), pull(0.01), pull(0.02), pull(0.03)]),
+        carried: None,
+        group: None,
     };
     let noise = ProbeNoise {
         seed: 7,
@@ -173,7 +189,7 @@ fn production_frame_timing() {
 #[test]
 #[ignore = "timing on a Vulkan GPU with f64"]
 fn upload_timing() {
-    let (gw, gh) = (3516usize, 2344usize);
+    let (gw, gh) = plane();
     let stride = 2 * gw + 16;
     let cfg = MergeConfig {
         bands: 7,
@@ -196,6 +212,8 @@ fn upload_timing() {
                 b: [0.0, 0.0],
             }; 4],
         ),
+        carried: None,
+        group: None,
     };
     let noise = ProbeNoise {
         seed: 7,

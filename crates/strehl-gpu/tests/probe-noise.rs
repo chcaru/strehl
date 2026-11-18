@@ -92,6 +92,8 @@ fn the_device_probe_noise_matches_the_cpu_fill() {
                 black: 512.0,
                 gain: [2.0, 1.0, 1.5],
                 pulls: Some([ident; 4]),
+                carried: None,
+                group: None,
             };
             let got = gpu.probe_frame(&frame, noise).expect("probe frame");
             let mut want = data.clone();

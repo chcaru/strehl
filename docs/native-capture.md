@@ -112,9 +112,28 @@ stopped or partially transferred groups remain available on disk for recovery.
 The native UI lists the eight most recent complete runs among the last 32
 registered runs. Older runs remain accessible through Projects' normal import.
 
-Incremental alignment, fusion and development while capture continues are a
-separate next stage. There is no provisional stacked photograph yet, and importing
-a pixel-shift group does not claim that the ordinary stack renderer performs a
-dedicated Sony pixel-shift reconstruction. That work must preserve group identity,
-handle late/failed uploads and distinguish provisional results from a finalized
-render. The receiver's durable receipts provide the natural admission boundary.
+Since 2026-11-14 the engine has three pieces of this, from the command line only:
+
+- `strehl pixel-shift <run>` checks every recorded four-shot group: member offsets
+  measured per group, exposure gains, the green witness (two green samples of each
+  scene site from different members) and its noise statistics.
+- `STREHL_PIXEL_SHIFT=remosaic strehl stack <run> ...` stacks one frame per focal
+  plane and gathers each group's measured red, green and blue instead of estimating
+  them by demosaic. A group that fails its checks folds as its first member and is
+  named in the banner. Off by default; frame preparation runs on the CPU in this
+  mode.
+- `strehl follow <run> [--out photo.tif]` runs beside a capture: it admits each
+  plane only after durable receipts, checks it, keeps its own journal outside the
+  capture folder, prints failed planes as a controller `capture_positions` retake
+  command, and at the end runs the ordinary stack, so the final photograph is the
+  same as a later `strehl stack`.
+
+There is still no live alignment or provisional stacked photograph, and none of
+this is in the native UI yet.
+
+The controller also accepts `exposure {iso, shutter}` (camera property values,
+manual mode only, restored when the camera is released) and
+`capture_positions {positions}` (a fixed-focus burst or retakes, approached in the
+plan's direction). The manifest schema is `strehl-capture-v2`: its top level
+reports the run's real pixel-shift count, RAW format and planned planes; per-file
+bindings in `events.jsonl` remain authoritative.

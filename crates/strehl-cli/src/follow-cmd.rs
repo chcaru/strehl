@@ -1,0 +1,278 @@
+//! `strehl follow <run>`: check a capture run while it is being captured
+//! (plan stage S1, first cut).
+//!
+//! The engine polls the run's own records and admits a focal plane only when
+//! every bound member has a durable receipt with the bound SHA-256. It never
+//! reads a file without its receipt and never writes inside the capture
+//! folder. Each admitted plane is decoded once (archives verify their whole
+//! SHA-256 on decode) and, for a four-shot group, checked exactly as
+//! `STREHL_PIXEL_SHIFT=remosaic` will check it in the stack: geometry,
+//! structure, the colour-exact green witness, margins and levels. One JSON
+//! line per plane goes to a journal under the cache root; a restarted engine
+//! replays it and resumes.
+//!
+//! When the run's `result.json` appears and every recorded plane is checked,
+//! the engine prints the planes to retake (failed groups, with the focus
+//! position the controller recorded) as a `capture_positions` command, and,
+//! with `--out`, runs the ordinary `stack` on the folder. The closing
+//! photograph is therefore the offline result by construction (plan decision
+//! 6). Not yet built: live alignment pair measurement, the provisional
+//! preview, and resource throttling beyond one plane at a time.
+use anyhow::{Context, Result, ensure};
+use rayon::prelude::*;
+use serde_json::{Value, json};
+use std::collections::BTreeMap;
+use std::io::Write;
+use std::path::{Path, PathBuf};
+use std::time::{Duration, Instant};
+
+#[derive(clap::Args, Debug)]
+pub struct FollowArgs {
+    /// Capture run folder (manifest.json, events.jsonl, transfer-receipts.jsonl).
+    pub dir: PathBuf,
+    /// Poll interval in milliseconds.
+    #[arg(long, default_value_t = 1000)]
+    pub interval_ms: u64,
+    /// Give up if nothing new is admitted for this many seconds (0 = never).
+    #[arg(long, default_value_t = 0)]
+    pub idle_timeout_s: u64,
+    /// At the end, stack the run to this TIFF (four-shot runs use
+    /// STREHL_PIXEL_SHIFT=remosaic). Extra `stack` arguments follow `--`.
+    #[arg(long)]
+    pub out: Option<PathBuf>,
+    /// Arguments passed to the closing `stack` after the folder and --out.
+    #[arg(last = true)]
+    pub stack_args: Vec<String>,
+}
+
+fn journal_path(dir: &Path) -> Result<PathBuf> {
+    let canonical = dir
+        .canonicalize()
+        .with_context(|| format!("resolve {}", dir.display()))?;
+    let name = canonical
+        .file_name()
+        .and_then(|n| n.to_str())
+        .unwrap_or("run")
+        .to_string();
+    let digest = {
+        use std::hash::{Hash, Hasher};
+        let mut h = std::collections::hash_map::DefaultHasher::new();
+        canonical.to_string_lossy().to_lowercase().hash(&mut h);
+        h.finish()
+    };
+    let root = crate::align_cmd::cache_root().join("follow");
+    std::fs::create_dir_all(&root)?;
+    Ok(root.join(format!("{name}-{digest:016x}.jsonl")))
+}
+
+fn check_plane(
+    g: &crate::pixel_shift_cmd::RecordedGroup,
+    noise: &mut Option<strehl_core::noise::NoiseModel>,
+    journal: Option<&crate::pixel_shift_cmd::GroupJournal>,
+) -> Value {
+    let started = Instant::now();
+    let frames: Result<Vec<strehl_raw::Frame>> = g
+        .files
+        .par_iter()
+        .map(|f| strehl_raw::decode(&f.path).with_context(|| f.name.clone()))
+        .collect();
+    let frames = match frames {
+        Ok(f) => f,
+        Err(e) => {
+            return json!({"plane":g.plane,"target":g.target,"verdict":"failed","reason":format!("decode: {e:#}"),"retake":true});
+        }
+    };
+    let first = &frames[0];
+    let noise = noise.get_or_insert_with(|| {
+        strehl_core::profile::noise_model_for(
+            &first.camera,
+            first.iso,
+            strehl_core::noise::Levels {
+                black: first.levels.black,
+                white: first.levels.white,
+            },
+        )
+    });
+    let mut out = json!({"plane":g.plane,"target":g.target,"members":frames.len(),
+        "names":g.files.iter().map(|f| f.name.clone()).collect::<Vec<_>>()});
+    if frames.len() == 4 {
+        // The stack's own gate, so a group the stack will assemble is not
+        // flagged for a retake. The measurement goes to the group journal
+        // (`STREHL_GROUP_JOURNAL`) the render reads, so the closing render
+        // measures no group this has.
+        let paths: Vec<&Path> = g.files.iter().map(|f| f.path.as_path()).collect();
+        let (m, w) = crate::pixel_shift_cmd::measure_journaled(
+            journal,
+            [paths[0], paths[1], paths[2], paths[3]],
+            [&frames[0], &frames[1], &frames[2], &frames[3]],
+            noise,
+            g.plane as usize,
+        );
+        let reason = crate::pixel_shift_cmd::judge(
+            &m,
+            crate::pixel_shift_cmd::ResidualMode::from_env().unwrap_or_default(),
+        );
+        let c = &m.check;
+        out["offsets"] = json!(c.offsets);
+        out["structure"] = json!(c.precision);
+        out["gains"] = json!(c.gains);
+        match (w, &m.witness) {
+            (Some(w), _) => {
+                out["witness_pair_shift_px"] = json!(w.pair_shift);
+                out["witness_mean_z2_injected"] = json!(w.mean_z2);
+            }
+            (None, Some(s)) => out["witness_pair_shift_px"] = json!(s.pair_shift),
+            (None, None) => {}
+        }
+        out["verdict"] = json!(if reason.is_some() { "demote" } else { "pass" });
+        out["reason"] = json!(reason);
+        out["retake"] = json!(reason.is_some());
+    } else {
+        out["verdict"] = json!("decoded");
+        out["retake"] = json!(false);
+    }
+    out["seconds"] = json!(started.elapsed().as_secs_f64());
+    out
+}
+
+pub fn run(args: &FollowArgs) -> Result<()> {
+    // A run registered a moment ago may not have its journal yet: wait for
+    // it (bounded) rather than fail.
+    let wait = Duration::from_secs(args.idle_timeout_s.max(30));
+    let started = Instant::now();
+    while !args.dir.join("events.jsonl").is_file() {
+        ensure!(
+            started.elapsed() < wait,
+            "{} is not a capture run (no events.jsonl after {} s)",
+            args.dir.display(),
+            wait.as_secs()
+        );
+        std::thread::sleep(Duration::from_millis(args.interval_ms));
+    }
+    let journal = journal_path(&args.dir)?;
+    // Resume: planes already checked in an earlier session.
+    let mut done: BTreeMap<u64, Value> = BTreeMap::new();
+    if let Ok(text) = std::fs::read_to_string(&journal) {
+        for line in text.lines() {
+            if let Ok(v) = serde_json::from_str::<Value>(line)
+                && let Some(p) = v["plane"].as_u64()
+            {
+                done.insert(p, v);
+            }
+        }
+    }
+    println!("run             : {}", args.dir.display());
+    println!(
+        "journal         : {} ({} planes already checked)",
+        journal.display(),
+        done.len()
+    );
+    let mut sink = std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(&journal)?;
+    let mut noise = None;
+    // The render's group journal: every group measured here is measured
+    // once, ever (`STREHL_GROUP_JOURNAL`).
+    let groups_journal = crate::pixel_shift_cmd::GroupJournal::open(&args.dir)?;
+    let mut last_progress = Instant::now();
+    loop {
+        let groups = crate::pixel_shift_cmd::recorded_groups(&args.dir)?;
+        let mut admitted = 0;
+        let fresh: Vec<&crate::pixel_shift_cmd::RecordedGroup> = groups
+            .iter()
+            .filter(|g| g.complete && !done.contains_key(&g.plane))
+            .collect();
+        for g in fresh {
+            let v = check_plane(g, &mut noise, groups_journal.as_ref());
+            println!(
+                "plane {:>4}      : {} {}{}",
+                g.plane,
+                v["verdict"].as_str().unwrap_or("?"),
+                v["reason"].as_str().unwrap_or(""),
+                v["seconds"]
+                    .as_f64()
+                    .map(|s| format!(" ({s:.2} s)"))
+                    .unwrap_or_default()
+            );
+            writeln!(sink, "{v}")?;
+            sink.flush()?;
+            done.insert(g.plane, v);
+            admitted += 1;
+            last_progress = Instant::now();
+        }
+        let finished = args.dir.join("result.json").is_file();
+        let pending = groups
+            .iter()
+            .filter(|g| !done.contains_key(&g.plane))
+            .count();
+        if finished && groups.iter().all(|g| g.complete) && pending == 0 {
+            break;
+        }
+        if finished && admitted == 0 && pending > 0 {
+            // Finished but some planes can never complete (missing or
+            // undurable members): report and stop rather than wait forever.
+            for g in groups.iter().filter(|g| !g.complete) {
+                let v = json!({"plane":g.plane,"target":g.target,"verdict":"incomplete","retake":true,
+                    "reason":"a bound member has no durable receipt with its hash"});
+                println!("plane {:>4}      : incomplete", g.plane);
+                writeln!(sink, "{v}")?;
+                done.insert(g.plane, v);
+            }
+            break;
+        }
+        if args.idle_timeout_s > 0
+            && last_progress.elapsed() > Duration::from_secs(args.idle_timeout_s)
+        {
+            anyhow::bail!(
+                "no plane admitted for {} s; the journal keeps progress",
+                args.idle_timeout_s
+            );
+        }
+        std::thread::sleep(Duration::from_millis(args.interval_ms));
+    }
+    let retakes: Vec<u64> = done
+        .values()
+        .filter(|v| v["retake"] == true)
+        .filter_map(|v| v["target"].as_u64())
+        .collect();
+    let passed = done.values().filter(|v| v["verdict"] == "pass").count();
+    let demoted = done
+        .values()
+        .filter(|v| v["verdict"] != "pass" && v["verdict"] != "decoded")
+        .count();
+    println!(
+        "checked         : {} planes, {passed} four-shot groups pass, {demoted} need attention",
+        done.len()
+    );
+    if !retakes.is_empty() {
+        let mut positions = retakes.clone();
+        positions.sort_unstable();
+        println!(
+            "retake          : {}",
+            json!({"op":"capture_positions","positions":positions})
+        );
+    }
+    if let Some(out) = &args.out {
+        let four = done.values().any(|v| v["members"] == 4);
+        let exe = std::env::current_exe()?;
+        let mut cmd = std::process::Command::new(exe);
+        cmd.arg("stack").arg(&args.dir).arg("--out").arg(out);
+        cmd.args(&args.stack_args);
+        if four {
+            cmd.env(crate::pixel_shift_cmd::PIXEL_SHIFT_ENV, "remosaic");
+        }
+        println!(
+            "closing stack   : {}{}",
+            if four {
+                "STREHL_PIXEL_SHIFT=remosaic "
+            } else {
+                ""
+            },
+            out.display()
+        );
+        let status = cmd.status().context("run the closing stack")?;
+        ensure!(status.success(), "closing stack failed: {status}");
+    }
+    Ok(())
+}

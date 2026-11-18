@@ -197,6 +197,32 @@ pub fn identity(path: &Path) -> CaptureIdentity {
     }
 }
 
+/// [`identity`], remembered for the life of the process per file (path,
+/// length and modification time): the same answer, read once. An archive's
+/// identity verifies and expands its metadata, about 20 ms on an A7CR
+/// archive, and a render asks for every frame's several times.
+pub fn identity_cached(path: &Path) -> CaptureIdentity {
+    type Key = (std::path::PathBuf, u64, std::time::SystemTime);
+    static SEEN: std::sync::OnceLock<
+        std::sync::Mutex<std::collections::HashMap<Key, CaptureIdentity>>,
+    > = std::sync::OnceLock::new();
+    let key = std::fs::metadata(path)
+        .ok()
+        .and_then(|m| Some((path.to_path_buf(), m.len(), m.modified().ok()?)));
+    let Some(key) = key else {
+        return identity(path);
+    };
+    let seen = SEEN.get_or_init(Default::default);
+    if let Some(id) = seen.lock().unwrap_or_else(|e| e.into_inner()).get(&key) {
+        return id.clone();
+    }
+    let id = identity(path);
+    seen.lock()
+        .unwrap_or_else(|e| e.into_inner())
+        .insert(key, id.clone());
+    id
+}
+
 /// [`identity`] over anything seekable — the form the tests use, and the form
 /// to reach for when the bytes are already in hand.
 pub fn identity_from_reader<R: Read + Seek>(r: &mut R) -> CaptureIdentity {

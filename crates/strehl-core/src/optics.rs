@@ -527,7 +527,142 @@ pub const A7C2_FE100GM_2XTC_X4CPL: OpticalProfile = OpticalProfile {
     lens_type3: 33094,
 };
 
-const PROFILES: [&OpticalProfile; 1] = [&A7C2_FE100GM_2XTC_X4CPL];
+/// The same lens and teleconverter on the **A7CR** (ILCE-7CR, 61 MP).
+///
+/// Measured 2026-11-15 on the shipped stacker's own uncorrected full-resolution
+/// renders (`strehl stack --demosaic`, no profile matched, so no correction) of
+/// both runs of A7CR capture 3, a coin cell: the single-shot run
+/// `stack-1794689213508-11226` and the four-shot run folded as member 1
+/// `stack-1794689780304-11226`, 107 planes each, f/5.6 (wide open with the
+/// teleconverter), ISO 100. Instrument: per 128-px tile, band-passed red (blue)
+/// regressed on band-passed green and its gradient, photosites near clipping
+/// left out; `d = eps (x - c) + t`, Huber-fitted, coarse band then fine band
+/// after resampling (`experiments/a7cr-full-potential-2026-11-14/lateral-profile.py`).
+///
+/// | | single-shot | member 1 |
+/// | --- | --- | --- |
+/// | red eps | -463.8 ppm | -465.4 ppm |
+/// | blue eps | +205.8 ppm | +205.3 ppm |
+///
+/// **Independent confirmation of the A7C II record.** Lateral CA in this unit
+/// (scale minus one) is a property of the glass, not of the body, and the
+/// A7C II record for the same lens and converter reads -508.4 / +174.4 ppm,
+/// measured by a different instrument on different subjects with a stated
+/// subject-to-subject spread of 151 ppm in red. The two bodies agree within
+/// that spread.
+///
+/// **Measured where red is read from green's frame**, which is what the
+/// shipped merge does. With `STREHL_AXIAL_CA=on` red and blue are read from
+/// the frames where they focus, and the full-potential prototype measured red
+/// at about -800 ppm there; the per-capture refinement (`--refine-ca`, default
+/// on) measures and adds that difference on each stack, within its bounds.
+pub const A7CR_FE100GM_2XTC: OpticalProfile = OpticalProfile {
+    key: "a7cr-fe100gm-2xtc",
+    optical_path: "Sony A7CR + FE 100mm F2.8 Macro GM + 2x teleconverter                    (front filter not recorded)",
+    measured_from: "A7CR capture 3 (coin cell), shipped renders of the single-shot run                     and of the four-shot run as member 1; 3014-3022 gated tiles each",
+    measured_at: Some("f/5.6 (wide open with the 2x teleconverter), one focus range, ISO 100"),
+    version: 1,
+    // Tiles reached 0.985 of the half diagonal: measured to the corner.
+    support_r_max: Some(0.985),
+    // Mean of the two renders above.
+    eps_r: -464.6e-6,
+    eps_b: Some(205.6e-6),
+    // Recorded, not applied (see `applied_form`): fitted jointly with eps, in
+    // plane px (half the sensor-px fit), mean of the two renders.
+    translation: (0.030, -0.140),
+    // Single-shot render. `r_squared` is the fraction of tile displacement
+    // power the radial model removes (1.467 -> 0.276 sensor px rms);
+    // `permutation_p` is the bound from 2000 shuffles of displacement vectors
+    // across tile positions, none of which reached the observed |eps|.
+    fit_r: FitStats {
+        r_squared: 0.965,
+        permutation_p: 0.0005,
+        residual_rms_sensel: 0.138,
+        n_regions: 3014,
+    },
+    fit_b: Some(FitStats {
+        r_squared: 0.951,
+        permutation_p: 0.0005,
+        residual_rms_sensel: 0.075,
+        n_regions: 3016,
+    }),
+    body_model: "ILCE-7CR",
+    lens_type3: 33094,
+};
+
+/// [`A7CR_FE100GM_2XTC`] as applied: translation zeroed, for the reason
+/// [`A7C2_FE100GM_2XTC_X4CPL_RADIAL`] gives.
+pub const A7CR_FE100GM_2XTC_RADIAL: OpticalProfile = OpticalProfile {
+    translation: (0.0, 0.0),
+    ..A7CR_FE100GM_2XTC
+};
+
+const PROFILES: [&OpticalProfile; 2] = [&A7C2_FE100GM_2XTC_X4CPL, &A7CR_FE100GM_2XTC];
+
+/// A red or blue channel as two images: its own band, displaced by lateral
+/// colour, and a share of green-band light that its filter passes and that
+/// the lens images where it images green.
+///
+/// MEASURED on the A7CR scarab four-shot run under the stack lights
+/// (2026-11-16, `experiments/a7cr-fourshot-quality-2026-11-16/results-round2.md`
+/// R7): in raw frames, with no resampling, red's displacement against green
+/// falls from -539 ppm at 0.03-0.08 cycles/px to -16 ppm at 0.24-0.42 (blue
+/// +166 to +6), and the fine part's transfer from green is flat at about
+/// 0.2 of green's raw signal on the axes and the diagonals (spectral overlap,
+/// not neighbour crosstalk, which would fall and change sign). The profile's
+/// one scale per channel fits the coarse mixture and leaves fine red 1.03 px
+/// rms from green in a render.
+///
+/// Only four-shot groups can use it: every site holds a measured green.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct ColourComponents {
+    /// The [`OpticalProfile::key`] these components refine.
+    pub profile_key: &'static str,
+    /// Share of green's raw signal (black-subtracted DN, before white
+    /// balance) in red's and in blue's raw signal at the same photosite.
+    pub share_r: f64,
+    pub share_b: f64,
+    /// The own bands' radial magnification error relative to green (scale
+    /// minus one), in place of the profile's mixture figures.
+    pub own_eps_r: f64,
+    pub own_eps_b: f64,
+    pub measured_from: &'static str,
+}
+
+/// The A7CR record's components. Shares 0.18 / 0.17: where the fine-band
+/// displacement crosses zero on the scarab (the raw-frame transfer reads
+/// 0.22 and 0.15-0.19). Own bands -865 / +285 ppm: the profile's
+/// -464.6 / +205.6 plus the -400 / +80 ppm that nulled the coarse band with
+/// those shares (the full-potential prototype read -800 / +259 with each
+/// channel at its own focus). One subject under one light: the own bands'
+/// scale moves with the light's spectrum, so the per-capture refinement is
+/// to be run on the own bands, and the shares are to be checked per stack.
+pub const A7CR_FE100GM_2XTC_COMPONENTS: ColourComponents = ColourComponents {
+    profile_key: "a7cr-fe100gm-2xtc",
+    share_r: 0.18,
+    share_b: 0.17,
+    own_eps_r: -865.0e-6,
+    own_eps_b: 285.0e-6,
+    measured_from: "A7CR scarab four-shot run (stack-1794786793543-11226), stack lights, 2026-11-16",
+};
+
+/// The component record for a profile, if one was measured.
+pub fn colour_components(profile: &OpticalProfile) -> Option<&'static ColourComponents> {
+    [&A7CR_FE100GM_2XTC_COMPONENTS]
+        .into_iter()
+        .find(|c| c.profile_key == profile.key)
+}
+
+impl ColourComponents {
+    /// `profile` with its red and blue scales replaced by the own bands'.
+    pub fn own_band_profile(&self, profile: &OpticalProfile) -> OpticalProfile {
+        OpticalProfile {
+            eps_r: self.own_eps_r,
+            eps_b: Some(self.own_eps_b),
+            ..*profile
+        }
+    }
+}
 
 /// Which colour a CFA site carries, for an **RGGB** mosaic.
 ///
@@ -739,8 +874,8 @@ pub fn profile_from_setting(
         return Ok(None);
     }
     // The radial-only forms are what get applied; see the const's docs.
-    if raw == A7C2_FE100GM_2XTC_X4CPL.key {
-        return Ok(Some(&A7C2_FE100GM_2XTC_X4CPL_RADIAL));
+    if let Some(p) = PROFILES.iter().copied().find(|p| p.key == raw) {
+        return Ok(Some(applied_form(p)));
     }
     Err(CaConfigError::UnknownProfile { key: raw.to_string() })
 }
@@ -768,6 +903,9 @@ pub fn active_profile() -> Result<Option<&'static OpticalProfile>, CaConfigError
 fn applied_form(recorded: &'static OpticalProfile) -> &'static OpticalProfile {
     if recorded.key == A7C2_FE100GM_2XTC_X4CPL.key {
         return &A7C2_FE100GM_2XTC_X4CPL_RADIAL;
+    }
+    if recorded.key == A7CR_FE100GM_2XTC.key {
+        return &A7CR_FE100GM_2XTC_RADIAL;
     }
     // A profile with no registered radial-only twin. Unreachable today, and
     // `every_profile_has_a_radial_form` exists to keep it that way: if that test
@@ -1806,6 +1944,34 @@ mod tests {
             .unwrap()
             .unwrap();
         assert_eq!(*got, *via_env, "two routes, one profile");
+    }
+
+    /// The A7CR profile matches its own body with the same composed lens, and
+    /// neither body's profile matches the other body.
+    #[test]
+    fn the_a7cr_profile_matches_only_the_a7cr() {
+        let got = profile_for_capture(None, Some("ILCE-7CR"), Some(33094))
+            .unwrap()
+            .unwrap();
+        assert_eq!(*got, A7CR_FE100GM_2XTC_RADIAL);
+        assert_eq!(got.translation, (0.0, 0.0));
+        let a7c2 = profile_for_capture(None, Some("ILCE-7CM2"), Some(33094))
+            .unwrap()
+            .unwrap();
+        assert_eq!(*a7c2, A7C2_FE100GM_2XTC_X4CPL_RADIAL);
+        assert_eq!(
+            profile_for_capture(None, Some("ILCE-7CR"), Some(32893)).unwrap(),
+            None
+        );
+        let named = profile_from_setting(Some(A7CR_FE100GM_2XTC.key))
+            .unwrap()
+            .unwrap();
+        assert_eq!(*named, A7CR_FE100GM_2XTC_RADIAL);
+        // Same glass, two bodies: the coefficients must agree within the
+        // A7C II record's stated subject-to-subject spread (151 ppm red).
+        let (cr, c2) = (&A7CR_FE100GM_2XTC, &A7C2_FE100GM_2XTC_X4CPL);
+        assert!((cr.eps_r - c2.eps_r).abs() < 151e-6);
+        assert!((cr.eps_b.unwrap() - c2.eps_b.unwrap()).abs() < 151e-6);
     }
 
     /// Every profile must have a registered radial-only twin.

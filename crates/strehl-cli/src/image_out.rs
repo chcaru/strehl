@@ -1486,6 +1486,91 @@ pub(crate) fn write_demosaiced_with_master_coverage(
     write_rgb16_described(path, width as u32, height as u32, &rgb, dev)
 }
 
+/// Develop full-resolution linear camera RGB and write it: the
+/// [`write_demosaiced_with_master_coverage`] path for an image that is
+/// already RGB at every photosite (colour carried through the merge, or a
+/// restored demosaic). `rgb_lin` is `width * height * 3` interleaved samples,
+/// normalised like that path's mosaic.
+///
+/// The tone is measured as [`tone_from_mosaic`] measures it, on each quad's
+/// native-site samples (red at the even-even site, green the mean of the two
+/// green sites, blue at the odd-odd one), so an image whose native sites hold
+/// the mosaic's values gets the mosaic's tone exactly.
+pub(crate) fn write_rgb_full(
+    path: &Path,
+    width: usize,
+    height: usize,
+    rgb_lin: &[f32],
+    dev: &Develop,
+    linear_master: Option<&Path>,
+    baked_recipe: Option<&strehl_edit::DevelopmentRecipe>,
+) -> Result<()> {
+    assert_eq!(rgb_lin.len(), width * height * 3);
+    let (px, _) = rgb_lin.as_chunks::<3>();
+    let dev = &resolve_tone(dev, || {
+        let mut lum = Vec::with_capacity((width / TONE_STRIDE + 1) * (height / TONE_STRIDE + 1));
+        let mut y = 0;
+        while y + 1 < height {
+            let mut x = 0;
+            while x + 1 < width {
+                let i = y * width + x;
+                let r = px[i][0];
+                let g = 0.5 * (px[i + 1][1] + px[i + width][1]);
+                let b = px[i + width + 1][2];
+                let v = match &dev.matrix {
+                    Some(m) => m.develop([r, g, b]),
+                    None => [r, g, b],
+                };
+                lum.push(luma709(v));
+                x += 2 * TONE_STRIDE;
+            }
+            y += 2 * TONE_STRIDE;
+        }
+        Tone::from_luminance(&mut lum)
+    });
+    if let Some(master) = linear_master {
+        let matrix = dev
+            .matrix
+            .context("scene-linear master requires a camera color matrix")?;
+        let pixels: Vec<f32> = px
+            .par_iter()
+            .flat_map_iter(|p| matrix.develop(*p))
+            .collect();
+        let image = strehl_edit::LinearImage {
+            width: width as u32,
+            height: height as u32,
+            pixels,
+            origin: strehl_edit::ImageOrigin::SceneLinear,
+            baseline: dev.tone.map(|tone| strehl_edit::DisplayBaseline {
+                black: tone.black,
+                white: tone.white,
+                contrast: tone.contrast,
+                exposure_gain: dev.exposure_gain,
+            }),
+            baked_recipe: baked_recipe.cloned(),
+        };
+        if let Some(parent) = master.parent().filter(|p| !p.as_os_str().is_empty()) {
+            std::fs::create_dir_all(parent)?;
+        }
+        strehl_edit::save_linear_tiff(master, &image)?;
+        eprintln!(
+            "linear master   : {} ({width} x {height}, RGB32-float, BT.709/D65, pre-tone)",
+            master.display()
+        );
+    }
+    let mut rgb = vec![0u16; width * height * 3];
+    rgb.par_chunks_mut(width * 3)
+        .zip(rgb_lin.par_chunks(width * 3))
+        .for_each(|(row, src)| {
+            let (px_in, _) = src.as_chunks::<3>();
+            let (px_out, _) = row.as_chunks_mut::<3>();
+            for (s, d) in px_in.iter().zip(px_out.iter_mut()) {
+                *d = develop_pixel(*s, dev);
+            }
+        });
+    write_rgb16_described(path, width as u32, height as u32, &rgb, dev)
+}
+
 /// Distance from the quad centre to the red and blue CFA sites, in binned
 /// pixels. Red is at `-COSITE_SHIFT` on both axes and blue at `+COSITE_SHIFT`,
 /// so each is resampled by the negation of its own offset.

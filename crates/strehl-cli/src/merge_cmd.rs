@@ -70,13 +70,29 @@ use strehl_raw::Frame;
 use crate::align_cmd::{self, WarpScratch};
 use crate::image_out;
 
+#[path = "merge_cmd/axial-colour.rs"]
+mod axial_colour;
+#[path = "merge_cmd/colour-carry.rs"]
+mod colour_carry;
+#[path = "merge_cmd/colour-components.rs"]
+pub(crate) mod colour_components;
 #[path = "merge_cmd/decode-ahead.rs"]
 mod decode_ahead;
+#[path = "merge_cmd/depth-guide.rs"]
+mod depth_guide;
 pub(crate) mod dump;
+#[path = "merge_cmd/frame-refine.rs"]
+mod frame_refine;
+#[path = "merge_cmd/fusion-calibrated.rs"]
+mod fusion_calibrated;
 pub(crate) mod gatefloor;
 pub(crate) mod halo;
+#[path = "merge_cmd/optical-restore.rs"]
+mod optical_restore;
 #[path = "merge_cmd/region-repair.rs"]
 mod region_repair;
+#[path = "merge_cmd/self-flat.rs"]
+mod self_flat;
 #[path = "merge_cmd/sensor-master.rs"]
 pub(crate) mod sensor_master;
 #[cfg(feature = "multi-stack")]
@@ -3254,6 +3270,22 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
     // after the first decode (53.4 s), which reads as a slow arm in a matrix.
     align_cmd::preflight_ca_profile()?;
     preflight_defect_backend_support(opts.backend)?;
+    ensure!(
+        !colour_carry::requested()? && !optical_restore::requested()?,
+        "{} and {} are implemented on the pyramid merge only",
+        colour_carry::ENV,
+        optical_restore::ENV
+    );
+    ensure!(
+        !axial_colour::requested()?,
+        "{}=on is implemented for the pyramid merge (the default) only, not --merge estimator",
+        axial_colour::ENV
+    );
+    ensure!(
+        !depth_guide::requested()?,
+        "{}=depth is a pyramid-merge mode; the estimator backend cannot use it",
+        depth_guide::ENV
+    );
     ensure!(!opts.gates.is_empty(), "at least one --gate is required");
     ensure!(
         opts.gates.iter().all(|g| g.is_finite() && *g >= 0.0),
@@ -4874,6 +4906,25 @@ fn extract_planes(
     offsets: &[(usize, usize)],
     planes: &mut [Vec<f32>],
 ) -> Result<()> {
+    extract_planes_bands(
+        data, stride, active_x, active_y, black, domain, offsets, planes, None,
+    )
+}
+
+/// [`extract_planes`] of only the rows in the gather bands `only` marks
+/// (`WarpScratch::bands`, full-plane rows); other rows are left as they are.
+#[allow(clippy::too_many_arguments)]
+fn extract_planes_bands(
+    data: &[u16],
+    stride: usize,
+    active_x: usize,
+    active_y: usize,
+    black: f32,
+    domain: PyramidDomain,
+    offsets: &[(usize, usize)],
+    planes: &mut [Vec<f32>],
+    only: Option<&[bool]>,
+) -> Result<()> {
     ensure!(
         offsets.len() == planes.len(),
         "{} CFA offsets were supplied for {} destination planes",
@@ -4906,6 +4957,13 @@ fn extract_planes(
         .for_each(|(out, (dx, dy))| {
             out.par_chunks_mut(local.width)
                 .enumerate()
+                .filter(|(local_y, _)| {
+                    only.is_none_or(|m| {
+                        m.get((domain.rect.y + local_y) / align_cmd::BAND_ROWS)
+                            .copied()
+                            .unwrap_or(false)
+                    })
+                })
                 .for_each(|(local_y, dst)| {
                     let full_y = domain.rect.y + local_y;
                     let row =
@@ -5034,6 +5092,13 @@ struct BandWorker {
     /// This chunk's accumulator. Under a GPU fold the device holds the totals
     /// and this only counts frames: its totals are released.
     merge: BandMerge,
+    /// `STREHL_OPTICAL_RESTORE`: the accumulator of every second folded
+    /// frame; `merge` then holds the others. Each is a half-stack and their
+    /// sum the full one. Alternating over the frames actually folded (not the
+    /// index parity) keeps the halves balanced under `STREHL_FRAME_PARITY`.
+    alt: Option<BandMerge>,
+    /// Whether the next folded frame belongs to `alt`.
+    half: bool,
     /// The CPU fold's workspace; `None` once a GPU fold is attached. Under
     /// GPU preparation `warp`, `planes`, `luma` and `var` are emptied too.
     fws: Option<FrameWorkspace>,
@@ -5060,6 +5125,102 @@ struct BandWorker {
     gpu: Option<strehl_gpu::GpuFold>,
     /// The GPU also prepares each frame (gather, probe, extraction).
     gpu_prep: bool,
+    /// Frames' luma read back from the device for the depth measurement
+    /// taken during the fold.
+    #[cfg(feature = "gpu")]
+    luma_tap: LumaTap,
+}
+
+/// Under GPU preparation with the depth measured during the fold: each
+/// frame's level-0 luma, copied on the device before the fold decomposes it,
+/// is read back a frame or two later (never stalling the device) and handed
+/// to `depth_guide::record` on the execution pool, a few frames at a time.
+#[cfg(feature = "gpu")]
+#[derive(Default)]
+struct LumaTap {
+    pending: std::collections::VecDeque<(usize, strehl_gpu::PendingLuma)>,
+    /// Records running, and its signal.
+    busy: std::sync::Arc<(std::sync::Mutex<usize>, std::sync::Condvar)>,
+}
+
+#[cfg(feature = "gpu")]
+impl LumaTap {
+    /// Copies left in flight on the device.
+    const AHEAD: usize = 2;
+    /// Records at once (each holds a 60 MB luma and three blur buffers).
+    const RECORDING: usize = 6;
+
+    /// Read back all but the newest `keep` copies and record them.
+    fn collect(&mut self, gpu: &mut strehl_gpu::GpuFold, keep: usize) -> Result<()> {
+        while self.pending.len() > keep {
+            let (index, pending) = self.pending.pop_front().expect("pending luma");
+            let luma = gpu.luma_collect(pending).map_err(|e| anyhow::anyhow!(e))?;
+            {
+                let (count, signal) = &*self.busy;
+                let mut n = count.lock().unwrap_or_else(|e| e.into_inner());
+                while *n >= Self::RECORDING {
+                    n = signal.wait(n).unwrap_or_else(|e| e.into_inner());
+                }
+                *n += 1;
+            }
+            let busy = std::sync::Arc::clone(&self.busy);
+            rayon::spawn(move || {
+                depth_guide::record(index, &luma);
+                let (count, signal) = &*busy;
+                *count.lock().unwrap_or_else(|e| e.into_inner()) -= 1;
+                signal.notify_all();
+            });
+        }
+        Ok(())
+    }
+
+    /// Record every frame still pending and wait for all records.
+    fn finish(&mut self, gpu: &mut strehl_gpu::GpuFold) -> Result<()> {
+        self.collect(gpu, 0)?;
+        let (count, signal) = &*self.busy;
+        let mut n = count.lock().unwrap_or_else(|e| e.into_inner());
+        while *n > 0 {
+            n = signal.wait(n).unwrap_or_else(|e| e.into_inner());
+        }
+        Ok(())
+    }
+}
+
+/// Threads of the execution pool while the GPU prepares and folds frames.
+const GPU_PREP_FOLD_THREADS: usize = 8;
+
+/// End a canonical chunk folded on the device into the selected accumulator:
+/// read its totals into a new merge (the first chunk) or absorb them into
+/// `merged` (`absorb_chunk`, the same arithmetic as `absorb`), then move what
+/// the host-side `counter` holds (frame counts, and the null windows the
+/// device does not accumulate). Without device preparation the null windows
+/// are accumulated in the counter and travel with the counts.
+#[cfg(feature = "gpu")]
+fn finish_device_chunk(
+    gpu: &mut strehl_gpu::GpuFold,
+    counter: &BandMerge,
+    merged: &mut Option<BandMerge>,
+    g: PlaneGeometry,
+) {
+    let device_null = gpu.null_levels();
+    let first = merged.is_none();
+    let total = match merged.as_mut() {
+        Some(total) => {
+            gpu.absorb_chunk(total);
+            total
+        }
+        None => {
+            let mut total = BandMerge::new(
+                g.width,
+                g.height,
+                colour_carry::band_planes(),
+                counter.config(),
+            );
+            gpu.finish_chunk(&mut total);
+            merged.insert(total)
+        }
+    };
+    total.absorb_external_remainder(counter, &device_null, first);
 }
 
 /// Why the GPU cannot also prepare frames for this render, or `None`.
@@ -5071,6 +5232,19 @@ struct BandWorker {
 fn gpu_prep_refusal(warps: Option<&WarpMap>, defect: bool, levels: Levels) -> Option<&'static str> {
     if std::env::var(GPU_PREP_ENV).is_ok_and(|v| v.trim() == "off") {
         return Some("STREHL_GPU_PREP=off");
+    }
+    // Pixel-shift groups are assembled on the device (`assemble`) and the
+    // carried channels gathered there; these are what it does not mirror.
+    if self_flat::mode().map_or(true, |m| m != self_flat::Mode::Off) {
+        return Some("a self-built flat field is applied on the CPU");
+    }
+    if colour_components::mode().map_or(true, |m| m != colour_components::Mode::Off) {
+        return Some("lateral colour by component is gathered on the CPU");
+    }
+    if optical_restore::active() && !depth_guide::tap_active() {
+        // The pre-pass route keeps the reference tiles as the fold passes,
+        // from planes the device does not hand back.
+        return Some("the optical restoration's depth is measured by the pre-pass");
     }
     if cfg!(any(
         feature = "native-direct-planes",
@@ -5161,14 +5335,51 @@ trait PyramidFrameSource: Sync {
     }
     fn len(&self) -> usize;
     fn decode(&self, index: usize) -> Result<Frame>;
+    /// [`Self::decode`] outside any decode-ahead plan: an extra, out-of-order
+    /// read of a frame (`STREHL_AXIAL_CA`'s neighbour gathers). A planned
+    /// source serves each planned index once and in order, so routing such a
+    /// read through [`Self::decode`] waits forever.
+    fn decode_direct(&self, index: usize) -> Result<Frame> {
+        self.decode(index)
+    }
+    /// The other members of frame `index`'s checked pixel-shift group, once,
+    /// after its [`Self::decode`]. `None` for an ordinary or demoted frame.
+    fn take_measured(&self, _index: usize) -> Option<crate::align_cmd::MeasuredGroup> {
+        None
+    }
     /// [`Self::decode`] into the sample buffer of a frame the fold has
     /// finished with (`strehl_raw::decode_into`); the same frame either way.
     fn decode_reusing(&self, index: usize, _buffer: Vec<u16>) -> Result<Frame> {
         self.decode(index)
     }
+    /// [`Self::decode`] of only the buffer rows `rows` marks, for the frame
+    /// and its group (`strehl_raw::decode_rows`): the frame, and the buffer
+    /// rows that hold samples (`None`: every row). A source that cannot
+    /// decodes everything.
+    fn decode_rows(&self, index: usize, _rows: &[bool]) -> Result<(Frame, Option<Vec<bool>>)> {
+        Ok((self.decode(index)?, None))
+    }
+    /// The decoded frames' active-area top row and buffer height, once a
+    /// frame has been decoded (for planning [`Self::decode_rows`]).
+    fn buffer_layout(&self) -> Option<(usize, usize)> {
+        None
+    }
+    /// Decode each frame on the calling thread alone (`strehl_raw::
+    /// decode_serial`) from now on: for a fold whose decoders run many at
+    /// once (GPU preparation). The same frames either way.
+    fn decode_serially(&self, _on: bool) {}
+    /// The rows [`Self::decode_rows`] decoded for frame `index`, once, for
+    /// the gather's check (`WarpScratch::valid_rows`).
+    fn take_valid_rows(&self, _index: usize) -> Option<std::sync::Arc<Vec<bool>>> {
+        None
+    }
     /// Bring frame `index`'s file into the operating system's file cache ahead
     /// of its decode (`decode_ahead`'s prefetchers). Scheduling only.
     fn prefetch(&self, _index: usize) {}
+    /// Prefetch threads for this source (`decode_ahead`).
+    fn prefetchers(&self) -> usize {
+        decode_ahead::PREFETCHERS
+    }
     /// Hand back a frame the fold has finished with. Freeing a 66 MB buffer
     /// costs milliseconds, so a source with threads of its own frees it there
     /// rather than on the fold's critical path.
@@ -5208,6 +5419,14 @@ struct RawPyramidSource<'a> {
     paths: &'a [PathBuf],
     #[cfg(feature = "research-lens-warp")]
     lens: Option<&'a crate::lens_research::RuntimeMap>,
+    /// `STREHL_PIXEL_SHIFT=remosaic`: each focal plane's member-1 path maps
+    /// to its members 2-4, and checked groups are parked here between their
+    /// decode and their warp.
+    groups: Option<&'a crate::pixel_shift_cmd::StackGroups>,
+    /// The first decoded frame's active top row and buffer height.
+    layout: std::sync::OnceLock<(usize, usize)>,
+    /// [`PyramidFrameSource::decode_serially`].
+    serial: std::sync::atomic::AtomicBool,
 }
 
 impl RawPyramidSource<'_> {
@@ -5216,10 +5435,22 @@ impl RawPyramidSource<'_> {
             .paths
             .get(index)
             .context("Pyramid source index out of bounds")?;
-        let frame = match buffer {
-            Some(b) => strehl_raw::decode_into(path, b)?,
-            None => strehl_raw::decode(path)?,
+        let serial = self.serial.load(std::sync::atomic::Ordering::Relaxed);
+        let frame = if serial {
+            strehl_raw::decode_serial(path, buffer)?
+        } else {
+            match buffer {
+                Some(b) => strehl_raw::decode_into(path, b)?,
+                None => strehl_raw::decode(path)?,
+            }
         };
+        let _ = self.layout.set((frame.active.y, frame.buffer_height));
+        // The gather reads the frame's capture identity (its lateral-colour
+        // profile); read it here, on the decoding thread, once per file.
+        let _ = strehl_raw::identity_cached(path);
+        if let Some(groups) = self.groups {
+            groups.prepare_with(index, path, &frame, serial)?;
+        }
         #[cfg(feature = "research-lens-warp")]
         if let Some(lens) = self.lens {
             lens.validate_frame(index, &frame)?;
@@ -5247,8 +5478,42 @@ impl PyramidFrameSource for RawPyramidSource<'_> {
         self.decode_with(index, None)
     }
 
+    fn take_measured(&self, index: usize) -> Option<crate::align_cmd::MeasuredGroup> {
+        self.groups.and_then(|g| g.take(index))
+    }
+
     fn decode_reusing(&self, index: usize, buffer: Vec<u16>) -> Result<Frame> {
         self.decode_with(index, Some(buffer))
+    }
+
+    /// Partial only for archives this process verified in full and groups
+    /// it already measured; the decoded rows are those every member holds.
+    fn decode_rows(&self, index: usize, rows: &[bool]) -> Result<(Frame, Option<Vec<bool>>)> {
+        #[cfg(feature = "research-lens-warp")]
+        if self.lens.is_some() {
+            return Ok((self.decode(index)?, None));
+        }
+        let path = self
+            .paths
+            .get(index)
+            .context("Pyramid source index out of bounds")?;
+        let (frame, mut valid) = strehl_raw::decode_rows(path, rows, None)?;
+        if let Some(groups) = self.groups {
+            let members = groups.prepare_rows(index, path, &frame, rows)?;
+            valid = match (valid, members) {
+                (Some(a), Some(b)) => Some(a.iter().zip(&b).map(|(a, b)| *a && *b).collect()),
+                (a, b) => a.or(b),
+            };
+        }
+        Ok((frame, valid))
+    }
+
+    fn buffer_layout(&self) -> Option<(usize, usize)> {
+        self.layout.get().copied()
+    }
+
+    fn decode_serially(&self, on: bool) {
+        self.serial.store(on, std::sync::atomic::Ordering::Relaxed);
     }
 
     /// Read the file through once, in large sequential reads into a reused
@@ -5258,10 +5523,27 @@ impl PyramidFrameSource for RawPyramidSource<'_> {
         thread_local! {
             static BUF: std::cell::RefCell<Vec<u8>> = std::cell::RefCell::new(vec![0; 4 << 20]);
         }
-        let Some(Ok(mut file)) = self.paths.get(index).map(std::fs::File::open) else {
+        let Some(path) = self.paths.get(index) else {
             return;
         };
-        BUF.with_borrow_mut(|buf| while matches!(file.read(buf), Ok(n) if n > 0) {});
+        // A pixel-shift plane's other members too: the decode reads them
+        // right after member 1 (`StackGroups::prepare`).
+        let members = self.groups.and_then(|g| g.members_of(path));
+        for p in std::iter::once(path).chain(members.into_iter().flatten()) {
+            let Ok(mut file) = std::fs::File::open(p) else {
+                continue;
+            };
+            BUF.with_borrow_mut(|buf| while matches!(file.read(buf), Ok(n) if n > 0) {});
+        }
+    }
+
+    fn prefetchers(&self) -> usize {
+        // Four files a plane: four readers keep the disk's queue full.
+        if self.groups.is_some() {
+            4
+        } else {
+            decode_ahead::PREFETCHERS
+        }
     }
 
     #[cfg(all(test, feature = "native-direct-planes"))]
@@ -5892,12 +6174,17 @@ impl BandWorker {
             #[cfg(feature = "temporal-energy")]
             config: cfg,
             domain,
-            merge: BandMerge::new(geom.width, geom.height, BAND_PLANES, cfg),
-            fws: Some(FrameWorkspace::new(&sizes, BAND_PLANES)),
+            merge: BandMerge::new(geom.width, geom.height, colour_carry::band_planes(), cfg),
+            alt: halves_wanted()
+                .then(|| BandMerge::new(geom.width, geom.height, colour_carry::band_planes(), cfg)),
+            half: false,
+            fws: Some(FrameWorkspace::new(&sizes, colour_carry::band_planes())),
             // The warp is deliberately still evaluated on the original plane.
             // Only its prepared outputs become compact.
             warp: WarpScratch::new(domain.full),
-            planes: (0..BAND_PLANES).map(|_| vec![0.0; px]).collect(),
+            planes: (0..colour_carry::band_planes())
+                .map(|_| vec![0.0; px])
+                .collect(),
             luma: vec![0.0; px],
             var: vec![0.0; px],
             floor: gatefloor::enabled().then(|| gatefloor::Probe::new(domain, cfg.bands)),
@@ -5909,6 +6196,8 @@ impl BandWorker {
             #[cfg(feature = "gpu")]
             gpu: None,
             gpu_prep: false,
+            #[cfg(feature = "gpu")]
+            luma_tap: LumaTap::default(),
         }
     }
 
@@ -5921,6 +6210,11 @@ impl BandWorker {
         }
         let outcome = if temporal_active {
             Err("the temporal-energy fold has no GPU implementation".to_string())
+        } else if depth_guide::active().is_some() {
+            Err(format!(
+                "{}=depth has no GPU implementation",
+                depth_guide::ENV
+            ))
         } else {
             self.try_gpu(prep)
         };
@@ -5957,6 +6251,23 @@ impl BandWorker {
                 Some(why) => format!("CPU ({why})"),
             }
         );
+        let mut gpu = gpu;
+        if crate::pixel_shift_cmd::assembly_requested() {
+            // Room for a group's four members from the first frame on.
+            gpu.reserve_members(4);
+        }
+        if self.alt.is_some() {
+            // `STREHL_OPTICAL_RESTORE`: the other half-stack's accumulator.
+            gpu.add_second_accumulator()?;
+        }
+        let line = if gpu.accumulators() > 1 {
+            format!(
+                "{line}\n                  two half-stack accumulators on the device ({} MB in all)",
+                gpu.device_bytes() >> 20
+            )
+        } else {
+            line
+        };
         self.gpu_prep = prep_refusal.is_none();
         self.gpu = Some(gpu);
         // Memory the device now stands in for, never touched again: the
@@ -5965,6 +6276,9 @@ impl BandWorker {
         // preparation on the device, the CPU's preparation buffers too. About
         // 0.8 + 0.9 + 0.3 GB at 33 MP.
         self.merge.release_external_totals();
+        if let Some(alt) = self.alt.as_mut() {
+            alt.release_external_totals();
+        }
         self.fws = None;
         if self.gpu_prep {
             self.warp = WarpScratch::default();
@@ -6021,6 +6335,9 @@ impl BandWorker {
         let frame = source
             .decode(index)
             .with_context(|| format!("frame {index}"))?;
+        // A checked pixel-shift group's other members, parked by the decode
+        // (`load_frame_impl_observed` takes them the same way).
+        let measured = source.take_measured(index);
         validate_pyramid_frame(&frame, self.domain.full, index)?;
         ensure!(
             frame.levels == levels,
@@ -6036,10 +6353,15 @@ impl BandWorker {
         }
         let t = match warps {
             Some(map) => match map.warp(index)? {
-                FrameWarp::Placed(t) => Some(*t),
+                // `STREHL_REFINE_FRAMES`: the placement composed with this
+                // frame's measured residual (identity when off), as the CPU.
+                FrameWarp::Placed(t) => Some(frame_refine::adjust(index, *t)),
                 FrameWarp::Refused(_) => {
                     if let Some(progress) = progress {
                         progress.merge_step(index, "gather", None, "skipped");
+                    }
+                    if let Some(m) = measured {
+                        crate::pixel_shift_cmd::recycle_members(m.members);
                     }
                     source.retire(frame);
                     return Ok(GpuStarted::Skipped(index));
@@ -6047,27 +6369,46 @@ impl BandWorker {
             },
             None => None,
         };
-        let pulls = match t {
+        ensure!(
+            measured.is_none() || t.is_some(),
+            "pixel-shift assembly needs the aligned gather and no defect correction"
+        );
+        if let Some(m) = &measured {
+            ensure!(
+                m.members.iter().all(|f| f.levels == frame.levels
+                    && f.stride == frame.stride
+                    && f.active == frame.active),
+                "pixel-shift members disagree in geometry or levels"
+            );
+        }
+        // The site pulls exactly as `warp_fullres_banded` builds its sites:
+        // each channel through its own lateral-colour transform.
+        let (pulls, carried) = match t {
             Some(t) => {
-                let ident = strehl_raw::identity(&frame.path);
+                let ident = strehl_raw::identity_cached(&frame.path);
                 let ca = strehl_core::optics::profile_for_capture_env(
                     ident.model.as_deref(),
                     ident.lens_type3,
                 )?;
-                let pull = |dx: usize, dy: usize| {
-                    let s = strehl_core::optics::OpticalProfile::compose(
-                        ca,
-                        strehl_core::optics::cfa_site_channel(dx, dy),
-                        t,
-                    );
+                let pull = |channel: strehl_core::optics::Channel| {
+                    let s = strehl_core::optics::OpticalProfile::compose(ca, channel, t);
                     strehl_gpu::SitePull {
                         a: [s.a.re, s.a.im],
                         b: [s.b.re, s.b.im],
                     }
                 };
-                Some([pull(0, 0), pull(1, 0), pull(0, 1), pull(1, 1)])
+                let channel_of = |ci: usize| match ci {
+                    0 => strehl_core::optics::Channel::Red,
+                    2 => strehl_core::optics::Channel::Blue,
+                    _ => strehl_core::optics::Channel::Green,
+                };
+                let native = [(0, 0), (1, 0), (0, 1), (1, 1)]
+                    .map(|(dx, dy)| pull(strehl_core::optics::cfa_site_channel(dx, dy)));
+                let carried = colour_carry::active()
+                    .then(|| align_cmd::CARRIED_SITES.map(|(_, _, ci)| pull(channel_of(ci))));
+                (Some(native), carried)
             }
-            None => None,
+            None => (None, None),
         };
         let black = levels.black;
         let gpu = self
@@ -6077,6 +6418,19 @@ impl BandWorker {
         if let Some(progress) = progress {
             progress.merge_step(index, "gather", None, "started");
         }
+        let group = measured.as_ref().map(|m| strehl_gpu::RawGroup {
+            members: [
+                &m.members[0].data[..],
+                &m.members[1].data[..],
+                &m.members[2].data[..],
+            ],
+            offsets: m.offsets,
+            // `measured_rows`' inverse gains and `compensate_rows`' residuals.
+            inv: m.gains.map(|g| (1.0 / g) as f32),
+            residuals: m
+                .residuals
+                .map(|(r, sign)| r.map(|v| [sign * v[0] as f32, sign * v[1] as f32])),
+        });
         let staged = gpu
             .stage(&strehl_gpu::RawFrame {
                 data: &frame.data,
@@ -6085,9 +6439,14 @@ impl BandWorker {
                 black,
                 gain: align_cmd::wb_gains(&frame.wb_coeffs),
                 pulls,
+                carried,
+                group,
             })
             .map_err(|e| anyhow::anyhow!(e))?;
         // The device holds its own copy now.
+        if let Some(m) = measured {
+            crate::pixel_shift_cmd::recycle_members(m.members);
+        }
         source.retire(frame);
         let probe = match (self.floor.as_ref(), t) {
             (Some(probe), Some(_)) => {
@@ -6160,6 +6519,15 @@ impl BandWorker {
                 g2.read_noise_e * g2.gain_dn_per_e,
             ],
         };
+        // `STREHL_OPTICAL_RESTORE`: this frame's half-stack, as `fold_observed`
+        // brackets the CPU add -- its counting merge in `self.merge`, its
+        // totals in the device's accumulator of the same half.
+        self.swap_half();
+        let gpu = self
+            .gpu
+            .as_mut()
+            .expect("GPU preparation without a GPU fold");
+        gpu.select_accumulator(usize::from(self.half));
         // The ensemble null is accumulated on the device from the probe's
         // packed bands; here it is only counted, exactly where
         // `add_null_windows` would count it. Null windows and the fold share no
@@ -6169,14 +6537,35 @@ impl BandWorker {
             .as_ref()
             .and_then(|p| p.null_floor())
             .map(|(beta, var)| self.merge.note_external_null_frame(&beta, var));
-        gpu.add_staged(
-            &mut self.merge,
-            &staged,
-            green,
-            frame_beta,
-            units.as_deref(),
-        )
-        .map_err(|e| anyhow::anyhow!(e))?;
+        let frame_beta = (!self.beta.is_empty()).then_some(self.beta.as_slice());
+        let added = if depth_guide::tap_active() {
+            // The depth measurement taken during the fold reads this frame's
+            // luma, copied before the fold decomposes it.
+            gpu.add_staged_keeping_luma(
+                &mut self.merge,
+                &staged,
+                green,
+                frame_beta,
+                units.as_deref(),
+            )
+            .map(|p| self.luma_tap.pending.push_back((index, p)))
+        } else {
+            gpu.add_staged(
+                &mut self.merge,
+                &staged,
+                green,
+                frame_beta,
+                units.as_deref(),
+            )
+        };
+        self.swap_half();
+        self.next_half();
+        added.map_err(|e| anyhow::anyhow!(e))?;
+        let gpu = self
+            .gpu
+            .as_mut()
+            .expect("GPU preparation without a GPU fold");
+        self.luma_tap.collect(gpu, LumaTap::AHEAD)?;
         if let Some(progress) = progress {
             progress.merge_step(index, "gather", None, "finished");
             gpu_fold_phases(
@@ -6222,6 +6611,9 @@ impl BandWorker {
         if let Some(started) = pending {
             finish(self, started)?;
         }
+        if let Some(gpu) = self.gpu.as_mut() {
+            self.luma_tap.finish(gpu)?;
+        }
         Ok(folded)
     }
     fn gpu_active(&self) -> bool {
@@ -6237,41 +6629,84 @@ impl BandWorker {
     /// read into a new merge, later ones are absorbed as they are read
     /// (`absorb_chunk`, the same arithmetic as `absorb`), so the chunk never
     /// needs host totals of its own.
-    fn finish_chunk(&mut self, merged: &mut Option<BandMerge>) {
+    fn finish_chunk(&mut self, merged: &mut Option<BandMerge>, merged_alt: &mut Option<BandMerge>) {
+        let g = self.domain.analysis();
+        // `STREHL_GPU_PROFILE`: the chunk's per-kernel device time.
+        #[cfg(feature = "gpu")]
+        if let Some(report) = self.gpu.as_ref().and_then(|gpu| gpu.profile_report()) {
+            eprintln!("gpu profile     : {report}");
+        }
+        #[cfg(feature = "gpu")]
+        if let (Some(gpu), Some(alt)) = (self.gpu.as_mut(), self.alt.as_ref()) {
+            // The other half-stack's totals are in the device's second
+            // accumulator; `alt` only counts its frames.
+            gpu.select_accumulator(1);
+            finish_device_chunk(gpu, alt, merged_alt, g);
+            gpu.select_accumulator(0);
+            self.finish_chunk_main(merged);
+            return;
+        }
+        if let Some(alt) = self.alt.as_mut() {
+            match merged_alt.as_mut() {
+                Some(total) => total.absorb(alt),
+                None => {
+                    let fresh = BandMerge::new(
+                        g.width,
+                        g.height,
+                        colour_carry::band_planes(),
+                        alt.config(),
+                    );
+                    *merged_alt = Some(std::mem::replace(alt, fresh));
+                }
+            }
+        }
+        self.finish_chunk_main(merged);
+    }
+
+    fn finish_chunk_main(&mut self, merged: &mut Option<BandMerge>) {
         let g = self.domain.analysis();
         #[cfg(feature = "gpu")]
         if let Some(gpu) = self.gpu.as_mut() {
-            // Without device preparation the null windows are accumulated
-            // here, in `self.merge`, and travel with the counts.
-            let device_null = gpu.null_levels();
-            let first = merged.is_none();
-            let total = match merged.as_mut() {
-                Some(total) => {
-                    gpu.absorb_chunk(total);
-                    total
-                }
-                None => {
-                    let mut total =
-                        BandMerge::new(g.width, g.height, BAND_PLANES, self.merge.config());
-                    gpu.finish_chunk(&mut total);
-                    merged.insert(total)
-                }
-            };
-            total.absorb_external_remainder(&self.merge, &device_null, first);
+            gpu.select_accumulator(0);
+            finish_device_chunk(gpu, &self.merge, merged, g);
             return;
         }
         match merged.as_mut() {
             Some(total) => total.absorb(&self.merge),
             None => {
-                let fresh = BandMerge::new(g.width, g.height, BAND_PLANES, self.merge.config());
+                let fresh = BandMerge::new(
+                    g.width,
+                    g.height,
+                    colour_carry::band_planes(),
+                    self.merge.config(),
+                );
                 *merged = Some(std::mem::replace(&mut self.merge, fresh));
             }
+        }
+    }
+
+    /// `STREHL_OPTICAL_RESTORE`: put this frame's half-stack in `merge`
+    /// (called again after the add to put it back, then [`Self::next_half`]).
+    fn swap_half(&mut self) {
+        if let Some(alt) = self.alt.as_mut()
+            && self.half
+        {
+            std::mem::swap(&mut self.merge, alt);
+        }
+    }
+
+    fn next_half(&mut self) {
+        if self.alt.is_some() {
+            self.half = !self.half;
         }
     }
 
     /// Restore chunk-local fold state while retaining every allocation.
     fn reset_chunk(&mut self) {
         self.merge.reset_for_reuse();
+        if let Some(alt) = self.alt.as_mut() {
+            alt.reset_for_reuse();
+        }
         self.beta_sum.fill(0.0);
         self.beta_n = 0;
     }
@@ -6342,6 +6777,26 @@ impl BandWorker {
         if !self.prepare_observed(source, index, levels, noise, warps, defect, progress)? {
             return Ok(false);
         }
+        optical_restore::observe(index, &self.planes);
+        self.swap_half();
+        let added = self.fold_prepared_self(source, index, progress);
+        self.swap_half();
+        self.next_half();
+        added
+    }
+
+    /// The add of [`Self::fold_observed`], on this worker's own prepared
+    /// buffers, into `self.merge`.
+    fn fold_prepared_self(
+        &mut self,
+        #[cfg_attr(
+            not(all(test, feature = "native-direct-planes")),
+            allow(unused_variables)
+        )]
+        source: &impl PyramidFrameSource,
+        index: usize,
+        progress: Option<&crate::ui_progress::Progress>,
+    ) -> Result<bool> {
         if let Some((levels, beta, var)) = self.floor.as_ref().and_then(|p| p.null_frame()) {
             self.merge.add_null_frame(&levels, &beta, var);
         }
@@ -6359,6 +6814,9 @@ impl BandWorker {
         #[cfg(all(test, feature = "native-direct-planes"))]
         source.observe_direct_inputs(index, &self.planes, &self.luma, frame_beta)?;
         let refs: Vec<&[f32]> = self.planes.iter().map(|v| v.as_slice()).collect();
+        if let Some(guide) = depth_guide::active() {
+            self.merge.set_guide(guide, index as f32);
+        }
         #[cfg(all(test, feature = "native-sensor-transfer"))]
         native_sensor_transfer::inputs(&self.planes, &self.luma, &self.var, frame_beta);
         #[cfg(feature = "native-pyramid-profile")]
@@ -6371,6 +6829,8 @@ impl BandWorker {
         });
         #[cfg(feature = "gpu")]
         if let Some(gpu) = self.gpu.as_mut() {
+            // The half-stack this frame belongs to (`swap_half`).
+            gpu.select_accumulator(usize::from(self.half));
             gpu.add_frame(&mut self.merge, &refs, &self.var, frame_beta);
             if let Some(tap) = tap.as_ref() {
                 gpu_fold_phases(tap, self.merge.sizes().len());
@@ -6442,6 +6902,19 @@ impl BandWorker {
         index: usize,
         progress: Option<&crate::ui_progress::Progress>,
     ) {
+        optical_restore::observe(index, &prep.planes);
+        self.swap_half();
+        self.add_prepared_main(prep, index, progress);
+        self.swap_half();
+        self.next_half();
+    }
+
+    fn add_prepared_main(
+        &mut self,
+        prep: &FramePrep,
+        index: usize,
+        progress: Option<&crate::ui_progress::Progress>,
+    ) {
         if let Some((levels, beta, var)) = prep.floor.as_ref().and_then(|p| p.null_frame()) {
             self.merge.add_null_frame(&levels, &beta, var);
         }
@@ -6456,6 +6929,9 @@ impl BandWorker {
             self.beta_n += 1;
         }
         let refs: Vec<&[f32]> = prep.planes.iter().map(|v| v.as_slice()).collect();
+        if let Some(guide) = depth_guide::active() {
+            self.merge.set_guide(guide, index as f32);
+        }
         #[cfg(feature = "native-pyramid-profile")]
         let add_phase = native_pyramid_profile::start(native_pyramid_profile::ADD);
         if let Some(fws) = self.fws.as_mut() {
@@ -6466,6 +6942,8 @@ impl BandWorker {
         });
         #[cfg(feature = "gpu")]
         if let Some(gpu) = self.gpu.as_mut() {
+            // The half-stack this frame belongs to (`swap_half`).
+            gpu.select_accumulator(usize::from(self.half));
             gpu.add_frame(&mut self.merge, &refs, &prep.var, frame_beta);
             if let Some(tap) = tap.as_ref() {
                 gpu_fold_phases(tap, self.merge.sizes().len());
@@ -6594,6 +7072,13 @@ fn prepare_frame_into(
     )? {
         return Ok(false);
     }
+    // The optical restoration's depth measurement, from this luma
+    // (`STREHL_DEPTH_PASS=fused`; a no-op otherwise).
+    depth_guide::record(index, luma);
+    // STREHL_AXIAL_CA: red and blue from the frames where they focus. After
+    // the luma is built, so the election is untouched.
+    axial_colour::dump_if_requested(index, domain, planes)?;
+    axial_colour::apply(source, index, domain, levels, warps, luma, planes)?;
     #[cfg(feature = "native-pyramid-profile")]
     let variance_phase = native_pyramid_profile::start(native_pyramid_profile::VARIANCE);
     luma_variance(luma, noise, var);
@@ -6610,6 +7095,178 @@ fn prepare_frame_into(
         beta.extend(p.last().iter().copied().take_while(|b| b.is_finite()));
     }
     Ok(true)
+}
+
+/// The optical restoration's reference tiles after a fold that measured depth
+/// as it went (`depth_guide::begin_tap`): each planned tile's frames are
+/// prepared again by [`prepare_frame_into`], the function that prepared them
+/// for the fold, and handed to `optical_restore::observe` as the fold would
+/// have handed them. A few frames at a time.
+///
+/// Only what the crops read is redone: the gather computes just the bands of
+/// rows the frame's tiles cover (`WarpScratch::bands`), and the frame and its
+/// group are decoded only over the rows those bands can read
+/// ([`PyramidFrameSource::decode_rows`], planned conservatively by
+/// `align_cmd::fullres_source_rows`). Every value a crop takes is computed
+/// as the fold computed it, from the same samples (a row-range decode equals
+/// the full decode's rows), and a band that would read a row not decoded is
+/// an error, after which that frame is prepared again in full. No floor
+/// probe: it reads the gathered frame and writes none of the planes.
+#[allow(clippy::too_many_arguments)]
+fn gather_restoration_references<S: PyramidFrameSource>(
+    source: &S,
+    domain: PyramidDomain,
+    cfg: MergeConfig,
+    levels: Levels,
+    noise: &NoiseModel,
+    warps: Option<&WarpMap>,
+    ca: Option<&strehl_core::optics::OpticalProfile>,
+    workers: usize,
+    pool: &rayon::ThreadPool,
+) -> Result<()> {
+    let started = Instant::now();
+    let plan = optical_restore::reference_rows();
+    let full = domain.full;
+    let bands = full.height.div_ceil(align_cmd::BAND_ROWS);
+    // Per frame: the gather's bands covering its crops' rows, and the buffer
+    // rows those bands can read (`None`: decode everything).
+    let layout = source.buffer_layout();
+    let mut requests: Vec<(usize, Vec<bool>, Option<Vec<bool>>)> = Vec::new();
+    for (index, windows) in &plan {
+        let mut mask = vec![false; bands];
+        for w in windows {
+            let (a, b) = (domain.rect.y + w.start, domain.rect.y + w.end);
+            for m in
+                &mut mask[a / align_cmd::BAND_ROWS..b.div_ceil(align_cmd::BAND_ROWS).min(bands)]
+            {
+                *m = true;
+            }
+        }
+        let placed = warps.and_then(|map| match map.warp(*index) {
+            Ok(FrameWarp::Placed(t)) => Some(frame_refine::adjust(*index, *t)),
+            _ => None,
+        });
+        let rows = match (layout, placed) {
+            (Some((ay, height)), Some(t)) => {
+                let mut rows = vec![false; height];
+                let mut planned = true;
+                for (band, _) in mask.iter().enumerate().filter(|(_, m)| **m) {
+                    let py = (
+                        band * align_cmd::BAND_ROWS,
+                        ((band + 1) * align_cmd::BAND_ROWS).min(full.height),
+                    );
+                    // Malvar's two rows, the compensation's one and a
+                    // member's offset, each way, and slack.
+                    match align_cmd::fullres_source_rows(t, full, ca, py, 8) {
+                        Some((lo, hi)) => {
+                            let first = (ay + lo).saturating_sub(8);
+                            let last = (ay + hi + 8).min(height - 1);
+                            rows[first..=last].fill(true);
+                        }
+                        None => planned = false,
+                    }
+                }
+                planned.then_some(rows)
+            }
+            _ => None,
+        };
+        requests.push((*index, mask, rows));
+    }
+    let partial = RowSource {
+        inner: source,
+        rows: requests
+            .iter()
+            .filter_map(|(i, _, rows)| rows.clone().map(|r| (*i, r)))
+            .collect(),
+        valid: Default::default(),
+    };
+    // Each slot holds a frame, its group's members and every plane: about
+    // 2.5 GB of committed memory at 61 MP with colour carry (MEASURED: eight
+    // slots raised the render's peak by 10 GB and were no faster than four).
+    // Each slot takes the next frame as soon as it is free.
+    let width = workers.clamp(1, 4);
+    let mut slots: Vec<FramePrep> = (0..width.min(requests.len()))
+        .map(|_| {
+            let mut slot = FramePrep::new(domain, cfg);
+            slot.floor = None;
+            slot
+        })
+        .collect();
+    let again = std::sync::atomic::AtomicUsize::new(0);
+    let next = std::sync::atomic::AtomicUsize::new(0);
+    pool.install(|| -> Result<()> {
+        slots.par_iter_mut().try_for_each(|slot| -> Result<()> {
+            while let Some((index, mask, _)) =
+                requests.get(next.fetch_add(1, std::sync::atomic::Ordering::Relaxed))
+            {
+                let index = *index;
+                slot.warp.bands = Some(mask.clone());
+                let fast = slot.prepare(domain, &partial, index, levels, noise, warps, None, None);
+                if fast.is_err() || !slot.accepted {
+                    // Whatever stopped it (a row the plan missed, a group not
+                    // measured here), the whole frame again.
+                    again.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+                    slot.warp.bands = None;
+                    slot.prepare(domain, source, index, levels, noise, warps, None, None)?;
+                }
+                slot.warp.bands = None;
+                ensure!(
+                    slot.accepted,
+                    "optical restoration: reference frame {index} was folded but is refused now"
+                );
+                optical_restore::observe(index, &slot.planes);
+            }
+            Ok(())
+        })
+    })?;
+    let again = again.load(std::sync::atomic::Ordering::Relaxed);
+    eprintln!(
+        "reference tiles : {} frames gathered again over the rows of the optical restoration's \
+         in-focus tiles{} ({:.1} s)",
+        requests.len(),
+        if again > 0 {
+            format!(", {again} of them in full")
+        } else {
+            String::new()
+        },
+        started.elapsed().as_secs_f64()
+    );
+    Ok(())
+}
+
+/// A source decoding only the planned rows of the frames it has a plan for
+/// ([`gather_restoration_references`]), and everything else in full.
+struct RowSource<'a, S: PyramidFrameSource> {
+    inner: &'a S,
+    rows: std::collections::HashMap<usize, Vec<bool>>,
+    valid: std::sync::Mutex<std::collections::HashMap<usize, std::sync::Arc<Vec<bool>>>>,
+}
+
+impl<S: PyramidFrameSource> PyramidFrameSource for RowSource<'_, S> {
+    fn len(&self) -> usize {
+        self.inner.len()
+    }
+    fn decode(&self, index: usize) -> Result<Frame> {
+        let Some(rows) = self.rows.get(&index) else {
+            return self.inner.decode(index);
+        };
+        let (frame, valid) = self.inner.decode_rows(index, rows)?;
+        let mut v = self.valid.lock().unwrap_or_else(|e| e.into_inner());
+        match valid {
+            Some(valid) => v.insert(index, std::sync::Arc::new(valid)),
+            None => v.remove(&index),
+        };
+        Ok(frame)
+    }
+    fn take_measured(&self, index: usize) -> Option<crate::align_cmd::MeasuredGroup> {
+        self.inner.take_measured(index)
+    }
+    fn take_valid_rows(&self, index: usize) -> Option<std::sync::Arc<Vec<bool>>> {
+        self.valid
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .remove(&index)
+    }
 }
 
 /// One look-ahead slot: its own preparation buffers, so several frames can be
@@ -6629,7 +7286,9 @@ impl FramePrep {
         let px = domain.analysis().pixels();
         Self {
             warp: WarpScratch::new(domain.full),
-            planes: (0..BAND_PLANES).map(|_| vec![0.0; px]).collect(),
+            planes: (0..colour_carry::band_planes())
+                .map(|_| vec![0.0; px])
+                .collect(),
             luma: vec![0.0; px],
             var: vec![0.0; px],
             floor: gatefloor::enabled().then(|| gatefloor::Probe::new(domain, cfg.bands)),
@@ -6882,6 +7541,29 @@ fn load_frame_impl_observed(
         let mut frame = source
             .decode(index)
             .with_context(|| format!("frame {index}"))?;
+        scratch.measured = source.take_measured(index);
+        // After a row-range decode, the rows that hold samples: the gather
+        // refuses to read any other.
+        scratch.valid_rows = source.take_valid_rows(index);
+        scratch.flat = self_flat::map_for(index);
+        if let Some(f) = &scratch.flat {
+            self_flat::check_geometry(f, &frame)?;
+        }
+        ensure!(
+            scratch.measured.is_none() || (warps.is_some() && defect.is_none()),
+            "pixel-shift assembly needs the aligned gather and no defect correction"
+        );
+        // `STREHL_CARRY_RGB`: a destination with room for the carried planes
+        // asks the gather for them.
+        let carry = planes.len() == colour_carry::PLANES;
+        scratch.carry_rgb = carry;
+        scratch.carried_fresh = false;
+        #[cfg(feature = "native-direct-planes")]
+        ensure!(
+            !(carry && direct_mode != align_cmd::DirectPlaneMode::Off),
+            "{} cannot combine with direct plane gathering",
+            colour_carry::ENV
+        );
         validate_pyramid_frame(&frame, domain.full, index)?;
         ensure!(
             frame.levels == levels,
@@ -6904,7 +7586,7 @@ fn load_frame_impl_observed(
                         && noise.plane(CfaPlane::G2).levels == levels,
                     "native green cue requires the injected source levels"
                 );
-                let ident = strehl_raw::identity(&frame.path);
+                let ident = strehl_raw::identity_cached(&frame.path);
                 ensure!(
                     strehl_core::optics::profile_for_capture_env(
                         ident.model.as_deref(),
@@ -6967,6 +7649,9 @@ fn load_frame_impl_observed(
         if let Some(map) = warps {
             match map.warp(index)? {
                 FrameWarp::Placed(t) => {
+                    // `STREHL_REFINE_FRAMES`: the placement composed with
+                    // this frame's measured residual (identity when off).
+                    let t = &frame_refine::adjust(index, *t);
                     if let Some(progress) = progress {
                         progress.merge_step(index, "gather", None, "started");
                     }
@@ -7088,7 +7773,7 @@ fn load_frame_impl_observed(
         }
         let black = levels.black;
         if !direct_consumed {
-            extract_planes(
+            extract_planes_bands(
                 &frame.data,
                 frame.stride,
                 frame.active.x,
@@ -7096,8 +7781,12 @@ fn load_frame_impl_observed(
                 black,
                 domain,
                 &BAND_PLANE_OFFSETS,
-                planes,
+                &mut planes[..BAND_PLANES],
+                scratch.bands.as_deref(),
             )?;
+        }
+        if carry {
+            colour_carry::copy_carried(scratch, domain, planes)?;
         }
     }
 
@@ -7856,15 +8545,54 @@ struct PreparedPyramid<'a> {
 /// * **No gate ladder.** Its gate is a band-power threshold, not the
 ///   estimator's focus-noise gate, and the two are not the same number.
 fn run_pyramid(opts: &MergeOptions) -> Result<()> {
+    // Measured once, before the lateral-CA preview, so the preview measures
+    // the channels the render will actually use.
+    let _axial = axial_colour::install_if_requested(opts)?;
     if ca_refine::requested()? && ca_refine::applicable(opts)? {
         return ca_refine::run_refined(opts);
     }
-    run_pyramid_once(opts)
+    run_pyramid_final(opts)
+}
+
+/// Whether the fold keeps alternate frames in separate half-stack
+/// accumulators: for the optical restoration's noise measurement, and for
+/// the calibrated fusion's gains (not in a lateral-CA preview).
+fn halves_wanted() -> bool {
+    optical_restore::active() || (fusion_calibrated::requested() && !ca_refine::preview_active())
+}
+
+/// The render that writes the output: one pyramid render, or the two folds
+/// of `STREHL_FUSION=calibrated`.
+fn run_pyramid_final(opts: &MergeOptions) -> Result<()> {
+    if fusion_calibrated::requested() {
+        fusion_calibrated::run(opts)
+    } else {
+        run_pyramid_once(opts)
+    }
 }
 
 /// One pyramid render. [`run_pyramid`] calls it once, or twice -- a preview
 /// and the refined render -- under `STREHL_REFINE_CA=on`.
+///
+/// A defaulted optical restoration that measured depth during the fold and
+/// found none renders again without restoring: the bytes an unrestored
+/// render would have had from the start (its fold has no half-stacks and its
+/// own canonical chunks). One extra fold on a stack with no usable depth.
 fn run_pyramid_once(opts: &MergeOptions) -> Result<()> {
+    match run_pyramid_attempt(opts) {
+        Err(e) if e.downcast_ref::<depth_guide::Unmeasured>().is_some() => {
+            eprintln!(
+                "optical restore : the depth measured during the fold is unusable; rendering \
+                 again without the restoration"
+            );
+            let _without = optical_restore::Without::new(format!("{e:#}"));
+            run_pyramid_attempt(opts)
+        }
+        other => other,
+    }
+}
+
+fn run_pyramid_attempt(opts: &MergeOptions) -> Result<()> {
     // Ask once, up front, and throw the answer away. `warp_frame_in_place`
     // re-reads the profile per frame, so a typo'd STREHL_FIX_CA would otherwise
     // surface only after a full decode.
@@ -7890,8 +8618,23 @@ fn run_pyramid_once(opts: &MergeOptions) -> Result<()> {
     let exposure = Exposure::resolve(opts.srgb, opts.exposure, opts.auto_exposure)?;
 
     let t_start = Instant::now();
-    let paths = crate::raw_paths(&opts.dir, opts.limit)?;
+    // `STREHL_PIXEL_SHIFT=remosaic`: one frame per focal plane (member 1 of
+    // each recorded four-shot group), its measured channels assembled at the
+    // gather. Off (the default) stacks every RAW as an ordinary frame.
+    let stack_groups = crate::pixel_shift_cmd::StackGroups::from_env(&opts.dir, opts.limit)?;
+    let paths = match &stack_groups {
+        Some(g) => g.planes.clone(),
+        None => crate::raw_paths(&opts.dir, opts.limit)?,
+    };
     let paths = only_frame(paths);
+    if let Some(g) = &stack_groups {
+        eprintln!("{}", g.banner());
+    }
+    if let Some(first) = paths.first()
+        && let Some(line) = colour_components::banner(first)?
+    {
+        eprintln!("{line}");
+    }
     #[cfg(feature = "research-lens-warp")]
     let lens_map = crate::lens_research::load_for_render(&paths)?;
     crate::sony_focus_cmd::print_preflight(&paths);
@@ -7928,6 +8671,10 @@ fn run_pyramid_once(opts: &MergeOptions) -> Result<()> {
     drop(first);
 
     let noise = profile::noise_model_for(&camera, iso, levels);
+    // `STREHL_SELF_FLAT`: the response maps, built from every raw frame of
+    // the stack before the fold (cached for a second pass over the stack).
+    let _self_flat =
+        self_flat::install_if_requested(&paths, stack_groups.as_ref(), &noise, &camera)?;
     // Coverage must be resolved before any pyramid-sized allocation or banner
     // is produced: under Crop, the rectangle is the level-zero geometry rather
     // than a writer-time view onto `geom`.
@@ -7988,8 +8735,11 @@ fn run_pyramid_once(opts: &MergeOptions) -> Result<()> {
         paths: &paths,
         #[cfg(feature = "research-lens-warp")]
         lens: lens_map.as_ref(),
+        groups: stack_groups.as_ref(),
+        layout: std::sync::OnceLock::new(),
+        serial: std::sync::atomic::AtomicBool::new(false),
     };
-    run_pyramid_prepared_with_sensor(
+    let rendered = run_pyramid_prepared_with_sensor(
         opts,
         PreparedPyramid {
             paths: &paths,
@@ -8010,7 +8760,11 @@ fn run_pyramid_once(opts: &MergeOptions) -> Result<()> {
         },
         &source,
         sensor_provenance,
-    )
+    );
+    if let Some(line) = stack_groups.as_ref().and_then(|g| g.journal_line()) {
+        eprintln!("{line}");
+    }
+    rendered
 }
 
 #[cfg(test)]
@@ -8094,12 +8848,30 @@ mod ca_refine {
     /// frames the fold will decode.
     pub(super) fn preview_would_keep(index: usize) -> bool {
         let stride = STRIDE.load(Ordering::Relaxed);
-        stride <= 1 || index.is_multiple_of(stride)
+        stride <= 1 || on_stride(index, stride)
+    }
+
+    /// Every `stride`-th frame counted from the first frame
+    /// `STREHL_FRAME_PARITY` keeps (index 0 when it is unset or `even`, so
+    /// the default preview is unchanged). Counting from 0 under `odd`, an
+    /// even stride kept no frame at all and the preview failed ("every frame
+    /// was refused by the alignment solve"; found 2026-11-16 on the A7CR
+    /// four-shot run, whose 784 raw files give stride 8).
+    fn on_stride(index: usize, stride: usize) -> bool {
+        let first = match std::env::var("STREHL_FRAME_PARITY").ok().as_deref() {
+            Some("odd") => 1,
+            Some(other) => other
+                .split_once('-')
+                .and_then(|(a, _)| a.parse::<usize>().ok())
+                .unwrap_or(0),
+            None => 0,
+        };
+        index >= first && (index - first).is_multiple_of(stride)
     }
 
     pub(super) fn preview_keeps(index: usize) -> bool {
         let stride = STRIDE.load(Ordering::Relaxed);
-        let keep = stride <= 1 || index.is_multiple_of(stride);
+        let keep = stride <= 1 || on_stride(index, stride);
         if keep && stride > 0 {
             let taken = TAKEN.fetch_add(1, Ordering::Relaxed) + 1;
             crate::ui_progress::fringe_preview("folded", taken, TAKING.load(Ordering::Relaxed));
@@ -8132,28 +8904,53 @@ mod ca_refine {
     }
 
     pub(super) fn run_refined(opts: &MergeOptions) -> Result<()> {
-        let paths = only_frame(crate::raw_paths(&opts.dir, opts.limit)?);
-        let frames = paths.len();
+        let raws = only_frame(crate::raw_paths(&opts.dir, opts.limit)?);
+        // The stride stays derived from the RAW file count, as before
+        // pixel-shift stacks folded one frame per group: deriving it from the
+        // focal planes would fold different preview planes and move the
+        // measured refinement.
+        let frames = raws.len();
+        // The list both passes align and fold: one frame per focal plane under
+        // `STREHL_PIXEL_SHIFT`, else every RAW (`run_pyramid_once`). Aligning
+        // every RAW of a pixel-shift stack cost 110 s on the A7CR scarab run
+        // and wrote a map nothing read.
+        let paths = match crate::pixel_shift_cmd::StackGroups::from_env(&opts.dir, opts.limit)? {
+            Some(g) => only_frame(g.planes),
+            None => raws,
+        };
         // Align first, with progress, so a fresh stack's alignment is visible
         // in the desktop; both passes below then load it from the cache.
         {
-            let progress = crate::ui_progress::Progress::new(frames);
+            let progress = crate::ui_progress::Progress::new(paths.len());
             progress.stage("alignment");
             alignment_for_observed(&opts.dir, &paths, opts.resampler, progress.observer())?;
         }
-        begin_preview(frames);
+        begin_preview_of(frames, paths.len());
+        // Lateral colour by component: the preview gathers red's and blue's
+        // own bands alone, so what it measures is the own bands' residual,
+        // which is what the refinement then corrects.
+        colour_components::set_own_only(colour_components::mode()? != colour_components::Mode::Off);
         let preview = run_pyramid_once(opts);
+        colour_components::set_own_only(false);
         let measured = end_preview();
         preview.context("lateral-CA refinement preview pass")?;
         install(measured);
-        let out = run_pyramid_once(opts);
+        let out = run_pyramid_final(opts);
         strehl_core::optics::set_ca_refinement(None);
         out
     }
 
     /// Start a preview over every Nth of `frames` (see [`stride_for`]):
     /// clear any refinement, skip frames, silence desktop progress.
+    #[cfg(feature = "multi-stack")]
     pub(super) fn begin_preview(frames: usize) {
+        begin_preview_of(frames, frames);
+    }
+
+    /// [`begin_preview`] with the stride derived from `frames` and the
+    /// progress total from the `folded` frames the passes actually walk (the
+    /// focal planes of a pixel-shift stack).
+    fn begin_preview_of(frames: usize, folded: usize) {
         let stride = stride_for(frames);
         strehl_core::optics::set_ca_refinement(None);
         *RESULT.lock().unwrap_or_else(|e| e.into_inner()) = None;
@@ -8162,8 +8959,8 @@ mod ca_refine {
              lateral CA the profile leaves (default; --refine-ca=off skips it)"
         );
         TAKEN.store(0, Ordering::Relaxed);
-        TAKING.store(frames.div_ceil(stride), Ordering::Relaxed);
-        crate::ui_progress::fringe_preview("started", 0, frames.div_ceil(stride));
+        TAKING.store(folded.div_ceil(stride), Ordering::Relaxed);
+        crate::ui_progress::fringe_preview("started", 0, folded.div_ceil(stride));
         STRIDE.store(stride, Ordering::Relaxed);
         crate::ui_progress::set_muted(true);
     }
@@ -8327,6 +9124,19 @@ fn run_pyramid_prepared_with_sensor(
             temporal_mode
         );
     }
+    ensure!(
+        !(axial_colour::is_active() && temporal_active),
+        "{}=on cannot combine with temporal energy",
+        axial_colour::ENV
+    );
+    let _carry = colour_carry::activate_if_requested(opts, temporal_active)?;
+    let _restore = optical_restore::activate_if_requested(opts, temporal_active)?;
+    ensure!(
+        !(temporal_active && (colour_carry::active() || optical_restore::active())),
+        "{} and {} cannot combine with temporal energy",
+        colour_carry::ENV,
+        optical_restore::ENV
+    );
     let progress = crate::ui_progress::Progress::new(paths.len());
     let analysis_geom = domain.analysis();
     let repairs = region_repair::Repairs::load(opts.region_recipe.as_deref())?;
@@ -8507,10 +9317,19 @@ fn run_pyramid_prepared_with_sensor(
         BandMerge::planning_accumulator_floats(geom.width, geom.height, BAND_PLANES, cfg);
     let ws_floats = FrameWorkspace::planning_floats(&budget_sizes, BAND_PLANES);
     // Preserve the pre-M172 partition formula exactly. It now chooses
-    // arithmetic chunks, not simultaneously resident workers.
+    // arithmetic chunks, not simultaneously resident workers. Four planes
+    // even under `STREHL_CARRY_RGB`, so the carried render's native planes
+    // are folded in the same chunks, hence bit-identical, to a plain one's.
     let planning_bytes =
         4 * (acc_floats + ws_floats + (BAND_PLANES + 2) * geom.pixels()) + frame_bytes;
-    let canonical_chunks = canonical_band_chunks(planning_bytes, paths.len());
+    // `STREHL_OPTICAL_RESTORE` folds in one chunk: two half-stack
+    // accumulators are already resident, and a second chunk would hold a
+    // retained and a scratch copy of each.
+    let canonical_chunks = if halves_wanted() {
+        1
+    } else {
+        canonical_band_chunks(planning_bytes, paths.len())
+    };
     let workers = band_workers(planning_bytes, paths.len())?;
     let per_chunk = paths.len().div_ceil(canonical_chunks);
     let lookahead = prepare_lookahead(workers, domain, temporal_active)?.min(per_chunk.max(1));
@@ -8539,6 +9358,66 @@ fn run_pyramid_prepared_with_sensor(
     );
 
     let warps = alignment.as_ref().map(|(m, _, _)| m);
+    // STREHL_REFINE_FRAMES: one gather of every frame to measure what the
+    // alignment leaves between neighbouring planes, before anything else
+    // gathers them.
+    let _frames = frame_refine::install_if_requested(source, paths.len(), domain, levels, warps)?;
+    // A render run again after its depth proved unusable during the fold:
+    // abandon the defaulted restoration here, where and as the pre-pass's
+    // failure would have (the chunks above were planned with it on).
+    if let Some(why) = optical_restore::abandoned_before()
+        && optical_restore::defaulted()
+        && optical_restore::active()
+    {
+        optical_restore::abandon(&format!("its depth measurement failed: {why}"));
+    }
+    // The optical restoration's depth map, measured during the fold where
+    // nothing else needs it first (`STREHL_DEPTH_PASS`).
+    let tap = match depth_guide::begin_tap(
+        paths.len(),
+        domain,
+        warps,
+        defect_plan.is_some(),
+        temporal_active,
+    ) {
+        Ok(t) => t,
+        Err(e) if optical_restore::defaulted() && !depth_guide::requested()? => {
+            optical_restore::abandon(&format!("its depth measurement failed: {e:#}"));
+            None
+        }
+        Err(e) => return Err(e),
+    };
+    // STREHL_FUSION=depth: one gather of every frame to measure the focus
+    // plane, before the fold. The guide replaces the election, so the
+    // ensemble gate (a judgement on the election) is off for this render.
+    let depth_result = if tap.is_some() {
+        Ok(None)
+    } else {
+        depth_guide::install_if_requested(source, paths.len(), domain, levels, warps, cfg.bands)
+    };
+    let _depth = match depth_result {
+        Ok(d) => d,
+        // A defaulted restoration whose depth measurement cannot run (no
+        // focus peaks, too few placed frames) leaves the render unrestored.
+        Err(e) if optical_restore::defaulted() && !depth_guide::requested()? => {
+            optical_restore::abandon(&format!("its depth measurement failed: {e:#}"));
+            None
+        }
+        Err(e) => return Err(e),
+    };
+    if depth_guide::active().is_some() {
+        ensure!(
+            cfg.select == strehl_core::pyramid::SelectMode::SoftPower,
+            "{}=depth replaces the soft election; --pyramid-select hard-max cannot combine with it",
+            depth_guide::ENV
+        );
+        ensure!(
+            !temporal_active,
+            "{}=depth cannot combine with temporal energy",
+            depth_guide::ENV
+        );
+        cfg.ensemble = false;
+    }
     #[cfg(feature = "native-boundary-radiance")]
     let observed_source =
         native_boundary_radiance::ObservedSource::new(source, levels, &noise, domain, warps)?;
@@ -8570,10 +9449,27 @@ fn run_pyramid_prepared_with_sensor(
     );
     // Preparing on the device folds frame by frame; decoding still runs ahead.
     let lookahead = if worker.gpu_prep { 1 } else { lookahead };
+    // Under GPU preparation the fold's own CPU work is staging and the depth
+    // records: a pool of a few threads, so its idle workers do not spin
+    // against the decoders (MEASURED on the A7CR scarab run: 32 threads
+    // spent 270 core-seconds more for a slower fold). Threads only, never
+    // arithmetic. The full pool stays for the work after the fold.
+    let small_pool = if worker.gpu_prep {
+        Some(
+            ThreadPoolBuilder::new()
+                .num_threads(workers.min(GPU_PREP_FOLD_THREADS))
+                .build()
+                .context("building the GPU fold's pool")?,
+        )
+    } else {
+        None
+    };
+    let fold_pool = small_pool.as_ref().unwrap_or(&pool);
     // A GPU chunk's accumulators live on the device until the chunk ends, so
     // the desktop's live mid-chunk accumulator view has nothing to read.
     let live_view = !worker.gpu_active();
     let mut merged: Option<BandMerge> = None;
+    let mut merged_alt: Option<BandMerge> = None;
     let mut folded_total = 0usize;
     let mut beta_sum: Vec<f64> = Vec::new();
     let mut beta_n = 0usize;
@@ -8587,6 +9483,9 @@ fn run_pyramid_prepared_with_sensor(
         fold_decode_plan(paths.len())
     };
     let original_source = source;
+    // Under GPU preparation decoding bounds the fold, and its decoders run
+    // side by side: each decodes its file on its own thread, cache-resident.
+    source.decode_serially(worker.gpu_prep);
     let decoders = decode_ahead::decoders(worker.gpu_prep);
     let ahead = decode_ahead::DecodeAhead::new(
         original_source,
@@ -8611,10 +9510,10 @@ fn run_pyramid_prepared_with_sensor(
                 ahead.run_decoder()
             });
         }
-        for _ in 0..decode_ahead::PREFETCHERS {
+        for _ in 0..original_source.prefetchers() {
             scope.spawn(|| ahead.run_prefetcher(decode_ahead::PREFETCH_AHEAD));
         }
-        let fold_result = pool.install(|| -> Result<()> {
+        let fold_result = fold_pool.install(|| -> Result<()> {
             #[cfg(feature = "temporal-energy")]
             if temporal_active {
                 let result = temporal_cpu::fold(
@@ -8648,6 +9547,16 @@ fn run_pyramid_prepared_with_sensor(
                 let gpu_pipelined = worker.gpu_prep;
                 #[cfg(not(feature = "gpu"))]
                 let gpu_pipelined = false;
+                ensure!(
+                    !(gpu_pipelined && axial_colour::is_active()),
+                    "{}=on cannot combine with GPU frame preparation (STREHL_GPU_FOLD)",
+                    axial_colour::ENV
+                );
+                ensure!(
+                    !(worker.gpu_active() && depth_guide::active().is_some()),
+                    "{}=depth cannot combine with the GPU fold (STREHL_GPU_FOLD)",
+                    depth_guide::ENV
+                );
                 if gpu_pipelined {
                     #[cfg(feature = "gpu")]
                     {
@@ -8763,7 +9672,15 @@ fn run_pyramid_prepared_with_sensor(
                     *acc += value;
                 }
                 beta_n += worker.beta_n;
-                worker.finish_chunk(&mut merged);
+                // A single-chunk restoration fold leaves its accumulators in
+                // the worker; they are moved out after the fold, so no empty
+                // replacement is allocated beside them. Under a GPU fold the
+                // totals are on the device and are read back here.
+                if worker.gpu_active()
+                    || !(halves_wanted() && chunks.peek().is_none() && merged.is_none())
+                {
+                    worker.finish_chunk(&mut merged, &mut merged_alt);
+                }
                 if let Some(acc) = merged.as_ref() {
                     progress.accumulator(
                         acc,
@@ -8782,8 +9699,66 @@ fn run_pyramid_prepared_with_sensor(
         fold_result
     })?;
     let source = original_source;
-    drop(worker);
-    let merge = merged.context("no frames were folded")?;
+    source.decode_serially(false);
+    if tap.is_some() {
+        // The depth map from the energies the fold recorded, then the planned
+        // tiles' reference frames, prepared again exactly as the fold
+        // prepared them (the pre-pass route keeps them as the fold passes).
+        depth_guide::finish_tap()?;
+        drop(tap);
+        // The lateral-colour profile the gather composes each channel with,
+        // for planning the rows it reads.
+        let ident = strehl_raw::identity(&paths[0]);
+        let ca =
+            strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?;
+        gather_restoration_references(
+            source, domain, cfg, levels, &noise, warps, ca, workers, &pool,
+        )?;
+    }
+    if merged.is_none() && folded_total > 0 {
+        let BandWorker {
+            merge: whole, alt, ..
+        } = worker;
+        merged = Some(whole);
+        merged_alt = alt;
+    } else {
+        drop(worker);
+    }
+    let mut merge = merged.context("no frames were folded")?;
+    // `STREHL_OPTICAL_RESTORE` with a half-stack that folded nothing (a stack
+    // of one frame): there is no noise to measure. Fold the halves together
+    // and restore nothing.
+    if let Some(odd) = merged_alt.take_if(|odd| odd.frames() == 0 || merge.frames() == 0) {
+        if odd.frames() > 0 {
+            if merge.frames() == 0 {
+                merge = odd;
+            } else {
+                merge.absorb(&odd);
+            }
+        }
+        let why = "a half-stack folded no frames (the restoration needs at least two)";
+        if optical_restore::defaulted() {
+            optical_restore::abandon(why);
+        } else {
+            anyhow::bail!("{}=on: {why}", optical_restore::ENV);
+        }
+    }
+    if let Some(odd) = merged_alt.take() {
+        // `STREHL_OPTICAL_RESTORE`: `merge` holds every second folded frame
+        // and `odd` the others. Finish each half, then fold them into the full
+        // stack.
+        let t_halves = Instant::now();
+        let mut ws = Workspace::new(&sizes);
+        let even_planes = merge.finish(&mut ws);
+        let odd_planes = odd.finish(&mut ws);
+        merge.absorb(&odd);
+        drop(odd);
+        fusion_calibrated::route_halves(even_planes, odd_planes);
+        eprintln!(
+            "half-stacks     : alternate folded frames finished separately for the optical              restoration's noise measurement ({:.1} s)",
+            t_halves.elapsed().as_secs_f64()
+        );
+    }
     ensure!(
         folded_total > 0,
         "every frame was refused by the alignment solve"
@@ -8917,9 +9892,10 @@ fn run_pyramid_prepared_with_sensor(
     drop(ws);
     drop(merge);
     ensure!(
-        planes.len() == BAND_PLANES,
-        "the band merge returned {} planes, not {BAND_PLANES}",
-        planes.len()
+        planes.len() == colour_carry::band_planes(),
+        "the band merge returned {} planes, not {}",
+        planes.len(),
+        colour_carry::band_planes()
     );
 
     #[cfg(feature = "native-boundary-radiance")]
@@ -8945,6 +9921,16 @@ fn run_pyramid_prepared_with_sensor(
             )
         })?;
         progress.render_step("region-repair", "finished");
+    }
+    // `STREHL_FUSION=calibrated`: the election pass keeps its planes and
+    // writes nothing; the fusion pass is calibrated against them here, with
+    // its half-stacks, before the restoration measures it.
+    if fusion_calibrated::election_pass() {
+        fusion_calibrated::keep(planes)?;
+        return Ok(());
+    }
+    if fusion_calibrated::fusion_pass() {
+        fusion_calibrated::combine(&mut planes, analysis_geom.width, analysis_geom.height)?;
     }
     progress.reconstruction(&planes, sizes[0], paths.len() - 1, folded_total);
     progress.render_step("reconstruct", "finished");
@@ -10724,6 +11710,123 @@ fn write_merged_observed_with_reconstruction(
             // channel's detail for another, or a colour matrix mixes them --
             // and write nothing.
             ca_refine::capture(mw, mh, &mosaic);
+            return Ok(());
+        }
+        // `STREHL_CARRY_RGB` and `STREHL_OPTICAL_RESTORE`: full-resolution
+        // linear RGB, then the write. Without the carry it is the Malvar
+        // demosaic of the same mosaic the default branch below writes.
+        let carried = match &merged {
+            Merged::Bands { planes: raw, .. } if raw.len() == colour_carry::PLANES => Some(*raw),
+            _ => None,
+        };
+        let restoring = optical_restore::active();
+        if carried.is_some() || restoring {
+            ensure!(
+                reconstruction.is_none() && coverage.is_none() && restore.is_none(),
+                "{} and {} write one full-resolution view, without the gather-kernel restoration",
+                colour_carry::ENV,
+                optical_restore::ENV
+            );
+            let mut rgb = match carried {
+                Some(raw) => {
+                    let mut all = planes;
+                    for (p, plane) in raw.iter().enumerate().skip(BAND_PLANES) {
+                        let gain = gains[colour_carry::plane_channel(p)];
+                        all.push(plane.iter().map(|v| norm(v.max(0.0), gain)).collect());
+                    }
+                    colour_carry::interleave(&all, geom.width, geom.height)
+                }
+                None => {
+                    drop(planes);
+                    let m = strehl_core::demosaic::Mosaic {
+                        data: &mosaic,
+                        width: mw,
+                        height: mh,
+                    };
+                    let mut rgb = vec![0f32; mw * mh * 3];
+                    rgb.par_chunks_mut(mw * 3)
+                        .enumerate()
+                        .for_each(|(y, row)| strehl_core::demosaic::demosaic_row(&m, y, row));
+                    rgb
+                }
+            };
+            drop(mosaic);
+            let mut restored_ok = false;
+            let mut chroma_filtered = false;
+            if restoring {
+                let Merged::Bands { planes: raw, .. } = &merged else {
+                    anyhow::bail!("{} needs the pyramid merge", optical_restore::ENV);
+                };
+                let restored = optical_restore::restore(
+                    &mut rgb,
+                    mw,
+                    mh,
+                    raw,
+                    optical_restore::Norm {
+                        gains,
+                        exposure: eg,
+                        range,
+                    },
+                );
+                // Defaulted, a stack the restoration cannot measure is
+                // written unrestored; asked for, it is an error. The image is
+                // untouched until every measurement has succeeded.
+                match restored {
+                    Ok(chroma) => {
+                        restored_ok = true;
+                        chroma_filtered = chroma;
+                    }
+                    Err(e) if optical_restore::defaulted() => eprintln!(
+                        "optical restore : NOT APPLIED -- on by default, but {e:#}; writing the \
+                         unrestored image"
+                    ),
+                    Err(e) => return Err(e),
+                }
+            }
+            // The per-stack check of lateral colour by component, on the
+            // channels as merged (and restored), before any smoothing ties
+            // red and blue to green.
+            if carried.is_some() && colour_components::mode()? != colour_components::Mode::Off {
+                colour_components::report_residuals(&rgb, mw, mh);
+            }
+            // After the restoration, which works on each channel as measured:
+            // smoothing first would hand red and blue green's fine detail.
+            // `STREHL_CHROMA_FILTER=measured` replaced it inside the
+            // restoration; when that could not run, the smoothing stands.
+            if carried.is_some() && !chroma_filtered {
+                if optical_restore::chroma_measured()? {
+                    eprintln!(
+                        "chroma filter   : {}=measured asked for, but the restoration did not \
+                         run on this render; the 1 px smoothing is applied instead",
+                        optical_restore::CHROMA_ENV
+                    );
+                }
+                colour_carry::smooth_chroma(&mut rgb, mw, mh);
+            }
+            if let Some(progress) = progress {
+                progress.render_step("develop", "finished");
+                progress.render_step("write", "started");
+            }
+            image_out::write_rgb_full(path, mw, mh, &rgb, &dev, linear_master, baked_recipe)?;
+            if let Some(progress) = progress {
+                progress.render_step("write", "finished");
+            }
+            eprintln!();
+            eprintln!(
+                "wrote           : {} ({mw} x {mh}, 16-bit RGB, {}, {}{})",
+                path.display(),
+                dev.caveat(),
+                if carried.is_some() {
+                    "colour carried through the merge, no demosaic"
+                } else {
+                    "Malvar-He-Cutler demosaic"
+                },
+                if restored_ok {
+                    ", optically restored"
+                } else {
+                    ""
+                }
+            );
             return Ok(());
         }
         if let Some(progress) = progress {

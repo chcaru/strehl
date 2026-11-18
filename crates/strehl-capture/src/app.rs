@@ -527,6 +527,7 @@ impl App {
                     Action::Capture {
                         plan: settings.plan.clone(),
                         root: settings.root.clone(),
+                        positions: None,
                     },
                 );
             }

@@ -134,18 +134,158 @@ pub fn read_original(path: &Path) -> Result<Vec<u8>> {
 }
 
 /// Seekable original bytes for TIFF metadata readers. Plain files still seek
-/// directly on disk; archived files are verified and expanded only in memory.
+/// directly on disk. An archive is opened sparsely: only the chunks before the
+/// first CFA chunk and after the last one (the TIFF metadata) are decoded, a
+/// few kilobytes of reads. A read that touches the pixel strip first expands
+/// the whole original in memory and verifies its SHA-256, so no strip byte is
+/// served unverified. Metadata bytes are not hash-verified on this path; every
+/// pixel decode ([`crate::cfa::decode_archive`], [`read_original`]) verifies
+/// the whole file, metadata included.
 pub enum OriginalReader {
     File(File),
     Memory(io::Cursor<Vec<u8>>),
+    Sparse(Box<Sparse>),
+}
+pub struct Sparse {
+    path: std::path::PathBuf,
+    length: u64,
+    prefix: Vec<u8>,
+    suffix_start: u64,
+    suffix: Vec<u8>,
+    position: u64,
+    full: Option<Vec<u8>>,
 }
 pub fn open_original(path: &Path) -> io::Result<OriginalReader> {
     if is_archive(path) {
-        read_original(path)
-            .map(|b| OriginalReader::Memory(io::Cursor::new(b)))
-            .map_err(io::Error::other)
+        match open_sparse(path) {
+            Ok(Some(sparse)) => Ok(OriginalReader::Sparse(Box::new(sparse))),
+            Ok(None) => read_original(path)
+                .map(|b| OriginalReader::Memory(io::Cursor::new(b)))
+                .map_err(io::Error::other),
+            Err(e) => Err(io::Error::other(e)),
+        }
     } else {
         File::open(path).map(OriginalReader::File)
+    }
+}
+struct Entry {
+    start: u64,
+    n: usize,
+    packed: usize,
+    mode: u8,
+    width: usize,
+    at: u64,
+}
+fn open_sparse(path: &Path) -> Result<Option<Sparse>> {
+    let mut f = BufReader::new(File::open(path)?);
+    let header = read_header(&mut f)?;
+    let mut magic = [0u8; 16];
+    f.read_exact(&mut magic)?;
+    ensure!(
+        &magic[..8] == crate::MAGIC && u64::from_le_bytes(magic[8..].try_into()?) == header.bytes,
+        "Unsupported or inconsistent transport header"
+    );
+    let mut entries = Vec::new();
+    let (mut at, mut total) = (HEADER_BYTES + 16, 0u64);
+    while total < header.bytes {
+        ensure!(
+            entries.len() < crate::MAX_CHUNKS,
+            "Too many transport chunks"
+        );
+        let mut h = [0u8; 13];
+        f.read_exact(&mut h).context("Truncated chunk header")?;
+        let n = u32::from_le_bytes(h[..4].try_into()?) as usize;
+        let packed = u32::from_le_bytes(h[4..8].try_into()?) as usize;
+        ensure!(
+            n > 0
+                && n <= crate::MAX_CHUNK
+                && packed > 0
+                && packed <= n
+                && total + n as u64 <= header.bytes,
+            "Invalid chunk lengths"
+        );
+        entries.push(Entry {
+            start: total,
+            n,
+            packed,
+            mode: h[8],
+            width: u32::from_le_bytes(h[9..].try_into()?) as usize,
+            at: at + 13,
+        });
+        f.seek_relative(packed as i64)?;
+        at += 13 + packed as u64;
+        total += n as u64;
+    }
+    let (Some(first), Some(last)) = (
+        entries.iter().position(|e| e.mode == 8),
+        entries.iter().rposition(|e| e.mode == 8),
+    ) else {
+        return Ok(None);
+    };
+    let mut chunk = |e: &Entry| -> Result<Vec<u8>> {
+        // Re-frame the one chunk as a single-chunk transport stream so the
+        // standard bounded decoder validates it.
+        let mut stream = crate::MAGIC.to_vec();
+        stream.extend_from_slice(&(e.n as u64).to_le_bytes());
+        stream.extend_from_slice(&(e.n as u32).to_le_bytes());
+        stream.extend_from_slice(&(e.packed as u32).to_le_bytes());
+        stream.push(e.mode);
+        stream.extend_from_slice(&(e.width as u32).to_le_bytes());
+        let body = stream.len();
+        stream.resize(body + e.packed, 0);
+        f.seek(SeekFrom::Start(e.at))?;
+        f.read_exact(&mut stream[body..])?;
+        let mut out = Vec::with_capacity(e.n);
+        decode(stream.as_slice(), &mut out, e.n as u64, true)?;
+        Ok(out)
+    };
+    let mut prefix = Vec::new();
+    for e in &entries[..first] {
+        prefix.extend_from_slice(&chunk(e)?);
+    }
+    let mut suffix = Vec::new();
+    for e in &entries[last + 1..] {
+        suffix.extend_from_slice(&chunk(e)?);
+    }
+    let suffix_start = entries.get(last + 1).map_or(header.bytes, |e| e.start);
+    Ok(Some(Sparse {
+        path: path.to_owned(),
+        length: header.bytes,
+        prefix,
+        suffix_start,
+        suffix,
+        position: 0,
+        full: None,
+    }))
+}
+impl Sparse {
+    fn read(&mut self, out: &mut [u8]) -> io::Result<usize> {
+        if self.position >= self.length || out.is_empty() {
+            return Ok(0);
+        }
+        let p = self.position;
+        let n = if let Some(full) = &self.full {
+            let at = p as usize;
+            let n = out.len().min(full.len() - at);
+            out[..n].copy_from_slice(&full[at..at + n]);
+            n
+        } else if p < self.prefix.len() as u64 {
+            let at = p as usize;
+            let n = out.len().min(self.prefix.len() - at);
+            out[..n].copy_from_slice(&self.prefix[at..at + n]);
+            n
+        } else if p >= self.suffix_start {
+            let at = (p - self.suffix_start) as usize;
+            let n = out.len().min(self.suffix.len() - at);
+            out[..n].copy_from_slice(&self.suffix[at..at + n]);
+            n
+        } else {
+            // The pixel strip: expand and verify everything, then serve it.
+            self.full = Some(read_original(&self.path).map_err(io::Error::other)?);
+            return self.read(out);
+        };
+        self.position += n as u64;
+        Ok(n)
     }
 }
 impl Read for OriginalReader {
@@ -153,6 +293,7 @@ impl Read for OriginalReader {
         match self {
             Self::File(f) => f.read(out),
             Self::Memory(b) => b.read(out),
+            Self::Sparse(s) => s.read(out),
         }
     }
 }
@@ -161,6 +302,17 @@ impl Seek for OriginalReader {
         match self {
             Self::File(f) => f.seek(pos),
             Self::Memory(b) => b.seek(pos),
+            Self::Sparse(s) => {
+                let target = match pos {
+                    SeekFrom::Start(n) => Some(n),
+                    SeekFrom::End(d) => s.length.checked_add_signed(d),
+                    SeekFrom::Current(d) => s.position.checked_add_signed(d),
+                };
+                s.position = target.ok_or_else(|| {
+                    io::Error::new(io::ErrorKind::InvalidInput, "seek before start")
+                })?;
+                Ok(s.position)
+            }
         }
     }
 }
@@ -200,5 +352,41 @@ mod tests {
         )
         .unwrap();
         assert_eq!(retained, archive);
+    }
+    #[test]
+    fn sparse_reader_serves_metadata_and_verifies_before_any_strip_byte() {
+        let original = crate::tests::fixture(128, 520);
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("frame.ARW.straw");
+        let mut archive = Vec::new();
+        pack(original.clone(), &mut archive).unwrap();
+        std::fs::write(&path, &archive).unwrap();
+        let mut r = open_original(&path).unwrap();
+        assert!(matches!(r, OriginalReader::Sparse(_)));
+        let mut head = [0u8; 256];
+        r.read_exact(&mut head).unwrap();
+        assert_eq!(head, original[..256]);
+        let mut tail = Vec::new();
+        r.seek(SeekFrom::End(-101)).unwrap();
+        r.read_to_end(&mut tail).unwrap();
+        assert_eq!(tail, original[original.len() - 101..]);
+        // Reading across the strip returns exactly the original bytes.
+        let mut all = Vec::new();
+        r.seek(SeekFrom::Start(0)).unwrap();
+        r.read_to_end(&mut all).unwrap();
+        assert_eq!(all, original);
+        // A corrupted strip chunk: metadata still reads, the strip refuses.
+        let mut bad = archive.clone();
+        let first = HEADER_BYTES as usize + 16;
+        let prefix_packed = u32::from_le_bytes(bad[first + 4..first + 8].try_into().unwrap());
+        let strip_payload = first + 13 + prefix_packed as usize + 13;
+        assert_eq!(bad[strip_payload - 5], 8, "first strip chunk is CFA");
+        bad[strip_payload + 40] ^= 0x40;
+        std::fs::write(&path, &bad).unwrap();
+        let mut r = open_original(&path).unwrap();
+        r.read_exact(&mut head).unwrap();
+        assert_eq!(head, original[..256]);
+        r.seek(SeekFrom::Start(300)).unwrap();
+        assert!(r.read(&mut head).is_err());
     }
 }

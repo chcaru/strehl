@@ -13,13 +13,13 @@ impl Rng {
     }
 }
 
-/// Four integer-valued planes, as `(u16 - black).max(0)` gives: a scene whose
-/// sharp region moves with `f`, plus noise, clipped at zero like real data.
-fn frame(w: usize, h: usize, f: usize, rng: &mut Rng) -> Vec<Vec<f32>> {
+/// `planes` integer-valued planes, as `(u16 - black).max(0)` gives: a scene
+/// whose sharp region moves with `f`, plus noise, clipped at zero like real data.
+fn frame_of(planes: usize, w: usize, h: usize, f: usize, rng: &mut Rng) -> Vec<Vec<f32>> {
     // The left third is flat ground: weights there sit at the exp(-80) clamp,
     // so the soft-power numerator is subnormal -- the case a flushing device
     // gets wrong.
-    (0..4)
+    (0..planes)
         .map(|c| {
             (0..w * h)
                 .map(|i| {
@@ -41,6 +41,10 @@ fn frame(w: usize, h: usize, f: usize, rng: &mut Rng) -> Vec<Vec<f32>> {
                 .collect()
         })
         .collect()
+}
+
+fn frame(w: usize, h: usize, f: usize, rng: &mut Rng) -> Vec<Vec<f32>> {
+    frame_of(4, w, h, f, rng)
 }
 
 fn bits(v: &[Vec<f32>]) -> Vec<Vec<u32>> {
@@ -202,4 +206,152 @@ fn absorbing_device_chunks_is_the_cpu_absorb() {
         bits(&device.finish(&mut ws)),
         "collapsed output differs"
     );
+}
+
+const NAMES: [&str; 9] = [
+    "num", "usum", "den", "zmax", "zsum", "lsum", "esum", "lo", "hi",
+];
+
+fn assert_same(a: &mut BandMerge, b: &mut BandMerge, what: &str) {
+    assert_eq!(a.frames(), b.frames(), "{what}: frame counts");
+    for ((x, y), name) in snapshot(a).iter().zip(&snapshot(b)).zip(NAMES) {
+        for (k, (lx, ly)) in x.iter().zip(y).enumerate() {
+            let diff = lx.iter().zip(ly).filter(|(p, q)| p != q).count();
+            assert_eq!(
+                diff,
+                0,
+                "{what}: {name}[{k}] differs at {diff} of {}",
+                lx.len()
+            );
+        }
+    }
+}
+
+/// Colour carry folds twelve planes: `accum` then runs three dispatches per
+/// level, the first adding the shared weight to `den`. Every total and the
+/// collapsed planes must equal the CPU's.
+#[test]
+#[ignore = "needs a Vulkan GPU with f64"]
+fn twelve_planes_fold_bit_identically() {
+    twelve_planes(None);
+    // About half the totals per bank: both of `fold.wgsl`'s accumulator
+    // bindings in use, as at 61 MP.
+    twelve_planes(Some(2_500_000));
+}
+
+fn twelve_planes(bank_limit: Option<u64>) {
+    let (w, h, frames, planes) = (321usize, 214usize, 5usize, 12usize);
+    let cfg = MergeConfig {
+        bands: 6,
+        ..Default::default()
+    };
+    let sizes = level_sizes(w, h, cfg.bands);
+    let mut rng = Rng(0x5EED_0012_F00D_CAFE);
+    let beta: Vec<f32> = vec![0.41, 0.093, 0.021, 0.006];
+    let mut cpu = BandMerge::new(w, h, planes, cfg);
+    let mut gpu_merge = BandMerge::new(w, h, planes, cfg);
+    let mut gpu = match bank_limit {
+        None => GpuFold::new(&gpu_merge),
+        Some(n) => GpuFold::with_bank_limit(&gpu_merge, n),
+    }
+    .expect("GPU fold");
+    assert_eq!(
+        gpu.accumulator_bank_count(),
+        1 + usize::from(bank_limit.is_some())
+    );
+    let mut fws = FrameWorkspace::new(&sizes, planes);
+    for f in 0..frames {
+        let data = frame_of(planes, w, h, f, &mut rng);
+        let luma: Vec<f32> = data[1]
+            .iter()
+            .zip(&data[2])
+            .map(|(a, b)| 0.5 * (a + b))
+            .collect();
+        let var: Vec<f32> = luma.iter().map(|l| 0.3 * l.max(0.0) + 7.0).collect();
+        let refs: Vec<&[f32]> = data.iter().map(Vec::as_slice).collect();
+        fws.next_frame();
+        cpu.add_frame_with_gain(&refs, &luma, &var, Some(&beta), &mut fws);
+        gpu.add_frame(&mut gpu_merge, &refs, &var, Some(&beta));
+    }
+    gpu.finish_chunk(&mut gpu_merge);
+    assert_same(&mut cpu, &mut gpu_merge, "twelve planes");
+    let mut ws = Workspace::new(&sizes);
+    assert_eq!(
+        bits(&cpu.finish(&mut ws)),
+        bits(&gpu_merge.finish(&mut ws)),
+        "collapsed output differs"
+    );
+}
+
+/// Two half-stacks (`STREHL_OPTICAL_RESTORE`): frames alternate between two
+/// device accumulators, counted by two merges whose totals were released,
+/// against two CPU merges folding the same frames. Each half, read back
+/// after both were folded, equals its CPU merge; then a second chunk on the
+/// same accumulators (lazily reset) does too.
+#[test]
+#[ignore = "needs a Vulkan GPU with f64"]
+fn two_accumulators_fold_two_half_stacks() {
+    let (w, h, frames, planes) = (257usize, 190usize, 7usize, 12usize);
+    let cfg = MergeConfig {
+        bands: 6,
+        ..Default::default()
+    };
+    let sizes = level_sizes(w, h, cfg.bands);
+    let mut rng = Rng(0x0BAD_C0DE_1234_5678);
+    let beta: Vec<f32> = vec![0.41, 0.093, 0.021, 0.006];
+    let mut cpu = [
+        BandMerge::new(w, h, planes, cfg),
+        BandMerge::new(w, h, planes, cfg),
+    ];
+    let mut counter = [
+        BandMerge::new(w, h, planes, cfg),
+        BandMerge::new(w, h, planes, cfg),
+    ];
+    let mut gpu = GpuFold::with_bank_limit(&counter[0], 2_000_000).expect("GPU fold");
+    gpu.add_second_accumulator().expect("second accumulator");
+    assert_eq!(gpu.accumulator_bank_count(), 2);
+    assert_eq!(gpu.accumulators(), 2);
+    for c in &mut counter {
+        c.release_external_totals();
+    }
+    let mut fws = FrameWorkspace::new(&sizes, planes);
+    for chunk in 0..2 {
+        if chunk > 0 {
+            for m in cpu.iter_mut().chain(counter.iter_mut()) {
+                m.reset_for_reuse();
+            }
+        }
+        for f in 0..frames {
+            let data = frame_of(planes, w, h, 10 * chunk + f, &mut rng);
+            let luma: Vec<f32> = data[1]
+                .iter()
+                .zip(&data[2])
+                .map(|(a, b)| 0.5 * (a + b))
+                .collect();
+            let var: Vec<f32> = luma.iter().map(|l| 0.3 * l.max(0.0) + 7.0).collect();
+            let refs: Vec<&[f32]> = data.iter().map(Vec::as_slice).collect();
+            let half = f % 2;
+            fws.next_frame();
+            cpu[half].add_frame_with_gain(&refs, &luma, &var, Some(&beta), &mut fws);
+            gpu.select_accumulator(half);
+            gpu.add_frame(&mut counter[half], &refs, &var, Some(&beta));
+        }
+        for half in 0..2 {
+            let mut total = BandMerge::new(w, h, planes, cfg);
+            gpu.select_accumulator(half);
+            gpu.finish_chunk(&mut total);
+            total.absorb_external_remainder(&counter[half], &gpu.null_levels(), true);
+            assert_same(
+                &mut cpu[half],
+                &mut total,
+                &format!("chunk {chunk} half {half}"),
+            );
+            let mut ws = Workspace::new(&sizes);
+            assert_eq!(
+                bits(&cpu[half].clone().finish(&mut ws)),
+                bits(&total.finish(&mut ws)),
+                "chunk {chunk} half {half}: collapsed output differs"
+            );
+        }
+    }
 }

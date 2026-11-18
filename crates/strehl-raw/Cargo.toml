@@ -19,3 +19,22 @@ anyhow.workspace = true
 [[example]]
 name = "rea-dark-audit"
 path = "../../experiments/rea-a7c2-2026-10-24-d/raw-dark-audit.rs"
+
+[dev-dependencies]
+serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
+
+[[example]]
+name = "a7cr-dark-analysis"
+path = "../../experiments/a7cr-calibration-2026-11-14/dark-analysis.rs"
+
+[[example]]
+name = "a7cr-scene-levels"
+path = "../../experiments/a7cr-calibration-2026-11-14/scene-levels.rs"
+
+[[example]]
+name = "a7cr-ptc-analysis"
+path = "../../experiments/a7cr-calibration-2026-11-14/ptc-analysis.rs"
+
+[[example]]
+name = "a7cr-pair-noise"
+path = "../../experiments/a7cr-calibration-2026-11-14/pair-noise.rs"

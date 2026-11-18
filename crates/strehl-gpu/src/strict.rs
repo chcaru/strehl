@@ -191,4 +191,5 @@ pub const ENTRY_POINTS: &[&str] = &[
     "pack",
     "null_accum",
     "screen_census",
+    "assemble",
 ];

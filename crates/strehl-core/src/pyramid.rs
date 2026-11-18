@@ -73,8 +73,11 @@ use std::sync::{Mutex, OnceLock};
 use crate::noise::NoiseModel;
 use rayon::prelude::*;
 
+#[path = "pyramid-depth-guide.rs"]
+mod depth_guide;
 #[path = "pyramid-observer.rs"]
 mod observer;
+pub use depth_guide::DepthGuide;
 pub use observer::{AccumulatorObservation, BandObservation, FoldPhase, MergeObserver};
 
 #[cfg(feature = "temporal-energy")]
@@ -1809,6 +1812,11 @@ pub struct BandMerge {
     /// [`Self::release_external_totals`] freed the totals: an external
     /// executor's counter only.
     released: bool,
+    /// Depth-guided fusion (`DepthGuide`) and the stack index of the frame
+    /// being folded. `None` is the shipping election. Set per frame by
+    /// [`Self::set_guide`]; under it `den` sums `t^2`, so the output is the
+    /// matched filter `sum(t L) / sum(t^2)`.
+    guide: Option<(std::sync::Arc<DepthGuide>, f32)>,
 }
 
 /// One level's window of the ensemble gate's null accumulators.
@@ -2054,6 +2062,7 @@ impl BandMerge {
                 Vec::new()
             },
             released: false,
+            guide: None,
             sizes,
         }
     }
@@ -2612,6 +2621,19 @@ impl BandMerge {
     /// can fold one canonical chunk, absorb it left-to-right, reset this
     /// scratch accumulator and fold the next chunk without retaining one
     /// full-frame accumulator per chunk.
+    /// Fold the next frame with depth-guided weights (`DepthGuide`): `frame`
+    /// is its index in the stack (the depth map's units). Requires
+    /// [`SelectMode::SoftPower`] and the ensemble gate off, which the merge
+    /// would otherwise apply on top of weights it did not compute.
+    pub fn set_guide(&mut self, guide: std::sync::Arc<DepthGuide>, frame: f32) {
+        assert!(
+            self.cfg.select == SelectMode::SoftPower && !self.cfg.ensemble,
+            "depth-guided fusion needs soft selection with the ensemble gate off"
+        );
+        assert!(frame.is_finite());
+        self.guide = Some((guide, frame));
+    }
+
     pub fn reset_for_reuse(&mut self) {
         #[cfg(feature = "m194h-pedestal-causality")]
         m194h::reset(self);
@@ -2951,7 +2973,18 @@ impl BandMerge {
             // arm.
             let averaged = k + self.cfg.mean_coarse >= nb;
             let w = &mut ws.weight[..px];
-            if averaged {
+            if let Some((guide, frame)) = &self.guide
+                && guide.guides(k)
+            {
+                // Depth-guided fusion: the weight is the band's transfer at
+                // this frame's distance from the measured focus plane. See
+                // `DepthGuide`. A `mean_coarse` band is still a plain mean.
+                if averaged {
+                    w.fill(0.0);
+                } else {
+                    guide.fill(k, *frame, w);
+                }
+            } else if averaged {
                 w.fill(0.0);
             } else {
                 let beta = Self::beta_for(&self.gain, frame_beta, k);
@@ -3348,7 +3381,15 @@ impl BandMerge {
         let den = &mut self.den[k][..px];
         match self.cfg.select {
             SelectMode::SoftPower => {
-                den.par_iter_mut().zip(w).for_each(|(d, wv)| *d += wv);
+                if self
+                    .guide
+                    .as_ref()
+                    .is_some_and(|(g, _)| g.guides(k) && g.matched(k))
+                {
+                    den.par_iter_mut().zip(w).for_each(|(d, wv)| *d += wv * wv);
+                } else {
+                    den.par_iter_mut().zip(w).for_each(|(d, wv)| *d += wv);
+                }
                 let first = k * self.planes;
                 self.num[first..first + self.planes]
                     .par_iter_mut()
@@ -3582,14 +3623,14 @@ impl BandMerge {
                 "cannot absorb a merge with a different hull mode"
             );
             for c in 0..self.planes {
-                for ((a, b), (x, y)) in self.lo[c]
-                    .iter_mut()
+                self.lo[c]
+                    .par_iter_mut()
                     .zip(&other.lo[c])
-                    .zip(self.hi[c].iter_mut().zip(&other.hi[c]))
-                {
-                    *a = a.min(*b);
-                    *x = x.max(*y);
-                }
+                    .zip(self.hi[c].par_iter_mut().zip(&other.hi[c]))
+                    .for_each(|((a, b), (x, y))| {
+                        *a = a.min(*b);
+                        *x = x.max(*y);
+                    });
             }
             // The coarser-level hulls are min/max folds exactly as level 0 is,
             // so they absorb identically. Missing this is the failure mode the
@@ -3613,18 +3654,16 @@ impl BandMerge {
         }
         match self.cfg.select {
             SelectMode::SoftPower => {
+                // One addition per element, elements side by side.
+                let add = |dst: &mut [f32], src: &[f32]| {
+                    dst.par_iter_mut().zip(src).for_each(|(a, b)| *a += b);
+                };
                 for k in 0..self.sizes.len() {
-                    for (a, b) in self.den[k].iter_mut().zip(&other.den[k]) {
-                        *a += b;
-                    }
+                    add(&mut self.den[k], &other.den[k]);
                     for c in 0..self.planes {
                         let i = k * self.planes + c;
-                        for (a, b) in self.num[i].iter_mut().zip(&other.num[i]) {
-                            *a += b;
-                        }
-                        for (a, b) in self.usum[i].iter_mut().zip(&other.usum[i]) {
-                            *a += b;
-                        }
+                        add(&mut self.num[i], &other.num[i]);
+                        add(&mut self.usum[i], &other.usum[i]);
                     }
                 }
             }
@@ -3901,10 +3940,12 @@ impl BandMerge {
                     let out = pyr.level_mut(k);
                     match self.cfg.select {
                         SelectMode::SoftPower => {
-                            for j in 0..out.len() {
-                                out[j] = if den[j] > 0.0 {
+                            // Each coefficient resolved on its own: in parallel.
+                            let blend = blends[k].as_deref();
+                            out.par_iter_mut().enumerate().for_each(|(j, o)| {
+                                *o = if den[j] > 0.0 {
                                     let sel = resolve_soft_numerator(num[j], den[j]);
-                                    match &blends[k] {
+                                    match blend {
                                         Some(b) if b[j] < 1.0 => {
                                             let mean = usum[j] * inv_n;
                                             mean + b[j] * (sel - mean)
@@ -3914,7 +3955,7 @@ impl BandMerge {
                                 } else {
                                     subgate(j)
                                 };
-                            }
+                            });
                         }
                         SelectMode::HardMax => {
                             for j in 0..out.len() {
@@ -3964,9 +4005,10 @@ impl BandMerge {
                 #[cfg(feature = "native-correction-variance")]
                 garnet_spatial_trace::pre_hull(census.as_mut(), self, c, &img);
                 if self.cfg.hull.bounds() {
-                    for ((p, l), h) in img.iter_mut().zip(&self.lo[c]).zip(&self.hi[c]) {
-                        *p = p.clamp(*l, *h);
-                    }
+                    img.par_iter_mut()
+                        .zip(&self.lo[c])
+                        .zip(&self.hi[c])
+                        .for_each(|((p, l), h)| *p = p.clamp(*l, *h));
                 }
                 #[cfg(feature = "m194h-pedestal-causality")]
                 m194h::post_hull(c, &img);

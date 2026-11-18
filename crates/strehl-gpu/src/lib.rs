@@ -73,6 +73,7 @@ enum Kernel {
     Pack,
     NullAccum,
     ScreenCensus,
+    Assemble,
 }
 
 impl Kernel {
@@ -98,8 +99,12 @@ struct Layout {
     ev_b: u32,
     coarse: u32,
     /// Three full-resolution channel planes (`2gw x 2gh` each), when the
-    /// device prepares frames.
+    /// device prepares frames: an offset into their own buffer (`rgbw`).
     rgb: u32,
+    rgb_len: u64,
+    /// A copy of level 0's luma before the fold decomposes it in place, read
+    /// back for the depth measurement taken during the fold.
+    luma_keep: u32,
     /// The gate-floor probe's luma pyramid, when the device prepares frames.
     probe_lv: Vec<u32>,
     work_len: u64,
@@ -115,7 +120,8 @@ struct Layout {
     /// The ensemble null's windows, per level, when the device prepares
     /// frames and the merge has them.
     null: Vec<Option<NullRegion>>,
-    acc_len: u64,
+    /// Elements per accumulator bank (one storage binding each).
+    acc_len: Vec<u64>,
 }
 
 /// One level's ensemble-null window on the device: its rectangle within the
@@ -138,6 +144,7 @@ impl Layout {
         hull: bool,
         full: Option<(usize, usize)>,
         null_rects: &[Option<[usize; 4]>],
+        bank_elems: u64,
     ) -> Self {
         let nl = sizes.len();
         let n0 = sizes[0].pixels() as u64;
@@ -160,9 +167,13 @@ impl Layout {
         let ev_a = take(sizes[0].pixels());
         let ev_b = take(sizes[0].pixels());
         let coarse = take(sizes[nl - 1].pixels());
-        let (rgb, probe_lv) = match full {
-            Some((gw, gh)) => (take(3 * 4 * gw * gh), pyramid(&mut take)),
-            None => (0, Vec::new()),
+        let (rgb_len, probe_lv, luma_keep) = match full {
+            Some((gw, gh)) => (
+                (3 * 4 * gw * gh) as u64,
+                pyramid(&mut take),
+                take(sizes[0].pixels()),
+            ),
+            None => (0, Vec::new(), 0),
         };
         let null_rects: Vec<Option<[usize; 4]>> = if full.is_some() {
             null_rects.to_vec()
@@ -180,10 +191,17 @@ impl Layout {
             })
             .collect();
         let work_len = work;
-        let mut acc = 0u64;
+        // Accumulator regions fill bank 0, then bank 1 (`ACC_BANK` set in the
+        // offset); a region never straddles two.
+        let mut acc_len = vec![0u64];
         let mut put = |n: usize| {
-            let at = acc as u32;
-            acc += n as u64;
+            let bank = acc_len.len() - 1;
+            if acc_len[bank] + n as u64 > bank_elems {
+                acc_len.push(0);
+            }
+            let bank = acc_len.len() - 1;
+            let at = acc_len[bank] as u32 | if bank > 0 { ACC_BANK } else { 0 };
+            acc_len[bank] += n as u64;
             at
         };
         let num = (0..nl * planes)
@@ -239,7 +257,9 @@ impl Layout {
             ev_a,
             ev_b,
             coarse,
-            rgb,
+            rgb: 0,
+            rgb_len,
+            luma_keep,
             probe_lv,
             work_len,
             num,
@@ -252,8 +272,22 @@ impl Layout {
             lo,
             hi,
             null,
-            acc_len: acc,
+            acc_len,
         }
+    }
+}
+
+/// Offset flag of an accumulator region in the second bank (`acc_hi` in
+/// `fold.wgsl`). Bank offsets stay below 2^29 elements, so adding an index
+/// within a region never reaches the flag.
+const ACC_BANK: u32 = 0x4000_0000;
+
+/// A bank's index and the element offset within it.
+fn acc_bank(offset: u32) -> (usize, usize) {
+    if offset >= ACC_BANK {
+        (1, (offset - ACC_BANK) as usize)
+    } else {
+        (0, offset as usize)
     }
 }
 
@@ -418,31 +452,38 @@ impl Recorder {
         }
     }
 
+    /// `accumulate_level` for level `k`: one dispatch per four planes, the
+    /// first also adding the weight to `den` (flag `0x100`). Every
+    /// accumulator element receives exactly one addition per frame.
     fn accum(&mut self, l: &Layout, weight: u32, k: usize) {
-        let mut b = [0u32; 4];
-        let mut c = [0u32; 4];
-        let mut d = [0u32; 4];
-        for p in 0..l.planes {
-            b[p] = l.plane_lv[p][k];
-            c[p] = l.num[k * l.planes + p];
-            d[p] = l.usum[k * l.planes + p];
+        for first in (0..l.planes).step_by(4) {
+            let group = (l.planes - first).min(4);
+            let mut b = [0u32; 4];
+            let mut c = [0u32; 4];
+            let mut d = [0u32; 4];
+            for (j, p) in (first..first + group).enumerate() {
+                b[j] = l.plane_lv[p][k];
+                c[j] = l.num[k * l.planes + p];
+                d[j] = l.usum[k * l.planes + p];
+            }
+            let den = if first == 0 { 0x100 } else { 0 };
+            self.push(
+                Kernel::Accum,
+                Params {
+                    a: [
+                        weight,
+                        l.den[k],
+                        l.sizes[k].pixels() as u32,
+                        group as u32 | den,
+                    ],
+                    b,
+                    c,
+                    d,
+                    ..Default::default()
+                },
+                l.sizes[k].pixels(),
+            );
         }
-        self.push(
-            Kernel::Accum,
-            Params {
-                a: [
-                    weight,
-                    l.den[k],
-                    l.sizes[k].pixels() as u32,
-                    l.planes as u32,
-                ],
-                b,
-                c,
-                d,
-                ..Default::default()
-            },
-            l.sizes[k].pixels(),
-        );
     }
 }
 
@@ -453,16 +494,29 @@ pub struct GpuFold {
     device: wgpu::Device,
     queue: wgpu::Queue,
     pipelines: Vec<wgpu::ComputePipeline>,
-    bind: Vec<wgpu::BindGroup>,
+    /// Bind groups per accumulator, then per parameter slot.
+    bind: Vec<Vec<wgpu::BindGroup>>,
     params: Vec<wgpu::Buffer>,
     param_stride: u64,
     work: wgpu::Buffer,
-    acc: wgpu::Buffer,
+    /// The accumulator arenas: one, or two when the caller folds two
+    /// half-stacks ([GpuFold::add_second_accumulator]).
+    acc: Vec<[wgpu::Buffer; 2]>,
+    /// The accumulator the next fold, reset and read-back address.
+    target: usize,
     bgl: wgpu::BindGroupLayout,
     consts: wgpu::Buffer,
     /// Raw u16 frames, main then probe, two samples per word.
     raw: wgpu::Buffer,
+    /// Samples per frame in `raw` (even), and frames per frame slot.
     raw_samples: u64,
+    raw_members: usize,
+    /// At least this many frames per slot ([`GpuFold::reserve_members`]).
+    min_members: usize,
+    /// The full-resolution channel planes (`fold.wgsl`'s `rgbw`).
+    rgbw: wgpu::Buffer,
+    /// Mapped read-back buffers for level 0's luma, reused.
+    luma_pool: Vec<wgpu::Buffer>,
     /// The frame slot the next [`GpuFold::stage`] fills (0 or 1).
     next_slot: usize,
     /// One persistently mapped upload buffer per frame slot.
@@ -480,7 +534,9 @@ pub struct GpuFold {
     ensemble: bool,
     hull: bool,
     frame: usize,
-    pending_reset: bool,
+    /// Per accumulator: reset before its next fold (lazy, so a finished
+    /// chunk can be read before it is cleared).
+    pending_reset: Vec<bool>,
     pub adapter: String,
     pub decorated_results: usize,
 }
@@ -629,27 +685,53 @@ fn red_len(sizes: &[LevelSize]) -> u64 {
     (parts + 2 + rows + sizes.len() + 16) as u64
 }
 
-/// Raw buffer slots: two frame slots, then the probe's.
-const RAW_SLOTS: usize = 3;
+/// Raw buffer slots: two frame slots (each of `members` frames: a pixel-shift
+/// group's four members, side by side), then the probe's (one frame).
 const PROBE_SLOT: usize = 2;
 
-/// `xf` index of the probe noise's level, sigma and f32-screen margin.
-const XF_NOISE: u64 = 64;
+/// Frames the raw buffer holds for members frames per frame slot: two
+/// frame slots, then the probe's single frame.
+fn raw_frames(members: usize) -> u64 {
+    2 * members as u64 + 1
+}
 
-/// f64s in `xf`: two frame slots of four site pulls (8 each), then the probe
-/// noise's level, sigma and f32-screen margin.
-const XF_LEN: u64 = 67;
+/// Site pulls per frame slot: the four CFA sites, then the eight carried
+/// channels ([`CARRIED_SITES`]).
+const PULLS: usize = 12;
+
+/// `xf` index of the probe noise's level, sigma and f32-screen margin.
+const XF_NOISE: u64 = 2 * 8 * PULLS as u64;
+
+/// f64s in `xf`: two frame slots of twelve site pulls (8 each), then the
+/// probe noise's level, sigma and f32-screen margin.
+const XF_LEN: u64 = XF_NOISE + 3;
+
+/// One accumulator arena's two banks (`fold.wgsl`'s `acc` and `acc_hi`): a
+/// second bank only when the totals exceed one binding, else a stand-in of
+/// one word that no offset reaches.
+fn accumulator_banks(device: &wgpu::Device, lens: &[u64], label: &str) -> [wgpu::Buffer; 2] {
+    std::array::from_fn(|bank| {
+        device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some(label),
+            size: lens.get(bank).map_or(16, |n| (n * 4).max(16)),
+            usage: wgpu::BufferUsages::STORAGE
+                | wgpu::BufferUsages::COPY_DST
+                | wgpu::BufferUsages::COPY_SRC,
+            mapped_at_creation: false,
+        })
+    })
+}
 
 fn make_binds(
     device: &wgpu::Device,
     bgl: &wgpu::BindGroupLayout,
     params: &[wgpu::Buffer],
-    [work, acc, consts, raw, xf, red]: [&wgpu::Buffer; 6],
+    [work, acc, consts, raw, xf, red, acc_hi, rgb]: [&wgpu::Buffer; 8],
 ) -> Vec<wgpu::BindGroup> {
     params
         .iter()
         .map(|pb| {
-            let storage = [work, acc, consts, raw, xf, red];
+            let storage = [work, acc, consts, raw, xf, red, acc_hi, rgb];
             let mut entries = vec![wgpu::BindGroupEntry {
                 binding: 0,
                 resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
@@ -694,6 +776,51 @@ pub struct RawFrame<'a> {
     /// Per CFA site in `(0,0) (1,0) (0,1) (1,1)` order; `None` extracts the
     /// frame unwarped.
     pub pulls: Option<[SitePull; 4]>,
+    /// `STREHL_CARRY_RGB`: the carried channels' pulls in [`CARRIED_SITES`]
+    /// order; the fold then gathers twelve planes (needs `pulls`).
+    pub carried: Option<[SitePull; 8]>,
+    /// A checked pixel-shift group whose member 1 is `data`: its channels are
+    /// assembled from the members (`assemble`) instead of demosaiced.
+    pub group: Option<RawGroup<'a>>,
+}
+
+/// A pixel-shift group's other members and measurements for [`RawFrame`]
+/// (`align_cmd::MeasuredGroup`).
+pub struct RawGroup<'a> {
+    /// Members 2-4's buffers: the frame's stride, height and active area.
+    pub members: [&'a [u16]; 3],
+    /// Each member's integer offset (`strehl_core::pixel_shift`), member 1's
+    /// `(0, 0)`; at most 7 photosites each way.
+    pub offsets: [(isize, isize); 4],
+    /// Each member's `(1 / exposure gain) as f32`.
+    pub inv: [f32; 4],
+    /// Each member's residual as `compensate_rows` applies it
+    /// (`sign * r as f32`), or `None` to assemble at the integer offsets.
+    pub residuals: Option<[[f32; 2]; 4]>,
+}
+
+/// The eight non-native `(dx, dy, channel)` samples of a quad that the carry
+/// gathers, in the order of the fold's planes 4-11: `align_cmd::CARRIED_SITES`.
+pub const CARRIED_SITES: [(usize, usize, usize); 8] = [
+    (0, 0, 1),
+    (0, 0, 2),
+    (1, 0, 0),
+    (1, 0, 2),
+    (0, 1, 0),
+    (0, 1, 2),
+    (1, 1, 0),
+    (1, 1, 1),
+];
+
+/// A staged group's `assemble` parameters.
+#[derive(Clone, Copy, Debug)]
+struct GroupParams {
+    /// Member offsets, 8 bits each: `(ox + 8) | (oy + 8) << 4`.
+    offsets: u32,
+    /// `site_members` per parity class, 8 bits each.
+    table: u32,
+    inv: [f32; 4],
+    residuals: Option<[[f32; 2]; 4]>,
 }
 
 /// The gate-floor probe's noise fill (`gatefloor::ProbeFill`): SplitMix64
@@ -726,6 +853,9 @@ pub struct Staged {
     black: f32,
     gain: [f32; 3],
     warped: bool,
+    /// Twelve planes are gathered (four native, eight carried).
+    carried: bool,
+    group: Option<GroupParams>,
 }
 
 /// A probe submitted by [`GpuFold::probe_submit`], read by
@@ -734,6 +864,14 @@ pub struct PendingProbe {
     readback: wgpu::Buffer,
     index: wgpu::SubmissionIndex,
     sums: usize,
+}
+
+/// A frame's level-0 luma copied by [`GpuFold::add_staged_keeping_luma`],
+/// read by [`GpuFold::luma_collect`].
+pub struct PendingLuma {
+    readback: wgpu::Buffer,
+    index: wgpu::SubmissionIndex,
+    n: usize,
 }
 
 /// What [`GpuFold::probe`] reads back.
@@ -766,7 +904,14 @@ fn site_channel(dx: usize, dy: usize) -> usize {
 impl GpuFold {
     /// A fold for `merge`'s geometry and configuration, or why there is none.
     pub fn new(merge: &BandMerge) -> Result<Self, String> {
-        Self::build(merge, None)
+        Self::build(merge, None, None)
+    }
+
+    /// [`Self::new`] with accumulator banks of at most `bank_elems` f32s, so
+    /// a test can put small totals in both banks (`fold.wgsl`'s `acc_hi`).
+    #[doc(hidden)]
+    pub fn with_bank_limit(merge: &BandMerge, bank_elems: u64) -> Result<Self, String> {
+        Self::build(merge, None, Some(bank_elems))
     }
 
     /// A fold that also prepares frames on the device: `full` is the frame's
@@ -784,20 +929,24 @@ impl GpuFold {
         {
             return Err("GPU preparation: analysis rectangle does not fit the frame".into());
         }
-        let mut fold = Self::build(merge, Some(full))?;
+        let mut fold = Self::build(merge, Some(full), None)?;
         fold.rect = rect;
         Ok(fold)
     }
 
-    fn build(merge: &BandMerge, full: Option<(usize, usize)>) -> Result<Self, String> {
+    fn build(
+        merge: &BandMerge,
+        full: Option<(usize, usize)>,
+        bank_limit: Option<u64>,
+    ) -> Result<Self, String> {
         if let Some(why) = merge.external_fold_refusal() {
             return Err(format!("GPU fold unavailable: {why}"));
         }
         let cfg = merge.config();
         let planes = merge.planes();
-        if planes > 4 {
-            return Err("GPU fold supports at most four planes".into());
-        }
+        // Any plane count (colour carry folds twelve): `accum` adds them four
+        // per dispatch, and the arenas' size check below refuses a geometry
+        // whose accumulators do not fit one binding.
         let (words, decorated_results) = strict::compile(SHADER)?;
         let mut descriptor = wgpu::InstanceDescriptor::new_without_display_handle();
         descriptor.backends = wgpu::Backends::VULKAN;
@@ -845,15 +994,34 @@ impl GpuFold {
             .into_iter()
             .map(|r| r.map(|[x, y, w, h]| [x + 2, y + 2, w - 4, h - 4]))
             .collect();
-        let layout = Layout::new(merge.sizes(), planes, ensemble, hull, full, &null_rects);
-        let (work_bytes, acc_bytes) = (layout.work_len * 4, layout.acc_len * 4);
-        for (name, bytes) in [("workspace", work_bytes), ("accumulators", acc_bytes)] {
-            if bytes > limits.max_storage_buffer_binding_size || bytes > limits.max_buffer_size {
-                return Err(format!(
-                    "GPU fold {name} needs {bytes} bytes, above this device's {} byte binding limit",
-                    limits.max_storage_buffer_binding_size
-                ));
-            }
+        // One storage binding's elements (wgpu caps a binding below 2 GiB);
+        // the accumulators may span two.
+        let binding = limits
+            .max_storage_buffer_binding_size
+            .min(limits.max_buffer_size);
+        let bank_elems = (binding / 4)
+            .min(u64::from(ACC_BANK) / 2)
+            .min(bank_limit.unwrap_or(u64::MAX));
+        let layout = Layout::new(
+            merge.sizes(),
+            planes,
+            ensemble,
+            hull,
+            full,
+            &null_rects,
+            bank_elems,
+        );
+        let work_bytes = layout.work_len * 4;
+        if work_bytes > binding {
+            return Err(format!(
+                "GPU fold workspace needs {work_bytes} bytes, above this device's {binding} byte binding limit"
+            ));
+        }
+        if layout.acc_len.len() > 2 {
+            return Err(format!(
+                "GPU fold accumulators need {} bytes, above two of this device's {binding} byte bindings",
+                layout.acc_len.iter().sum::<u64>() * 4
+            ));
         }
         let storage = |label, size| {
             device.create_buffer(&wgpu::BufferDescriptor {
@@ -871,7 +1039,7 @@ impl GpuFold {
             "fold.wgsl reads the screen tables at offset 0"
         );
         queue.write_buffer(&work, 0, bytemuck::cast_slice(&weight_screen_tables()));
-        let acc = storage("fold-acc", acc_bytes);
+        let acc = accumulator_banks(&device, &layout.acc_len, "fold-acc");
         let mut consts: Vec<f64> = Vec::with_capacity(30);
         consts.extend_from_slice(&LN_SERIES);
         consts.extend_from_slice(&EXP_SERIES);
@@ -953,6 +1121,8 @@ impl GpuFold {
                 entry(4, wgpu::BufferBindingType::Storage { read_only: false }),
                 entry(5, wgpu::BufferBindingType::Storage { read_only: true }),
                 entry(6, wgpu::BufferBindingType::Storage { read_only: false }),
+                entry(7, wgpu::BufferBindingType::Storage { read_only: false }),
+                entry(8, wgpu::BufferBindingType::Storage { read_only: false }),
             ],
         });
         let small = |label, size, usage| {
@@ -978,12 +1148,23 @@ impl GpuFold {
             8 * red_len(&layout.sizes),
             wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_SRC,
         );
-        let bind = make_binds(
+        if layout.rgb_len * 4 > binding {
+            return Err(format!(
+                "GPU preparation's channel planes need {} bytes, above this device's {binding} byte binding limit",
+                layout.rgb_len * 4
+            ));
+        }
+        let rgbw = small(
+            "fold-rgb",
+            (layout.rgb_len * 4).max(16),
+            wgpu::BufferUsages::STORAGE,
+        );
+        let bind = vec![make_binds(
             &device,
             &bgl,
             &params,
-            [&work, &acc, &consts, &raw, &xf, &red],
-        );
+            [&work, &acc[0], &consts, &raw, &xf, &red, &acc[1], &rgbw],
+        )];
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label: Some("fold-pipeline-layout"),
             bind_group_layouts: &[Some(&bgl)],
@@ -1031,11 +1212,16 @@ impl GpuFold {
             params,
             param_stride,
             work,
-            acc,
+            acc: vec![acc],
+            target: 0,
             bgl,
             consts,
             raw,
             raw_samples: 0,
+            raw_members: 1,
+            min_members: 1,
+            rgbw,
+            luma_pool: Vec::new(),
             next_slot: 0,
             upload: Vec::new(),
             raw_generation: 0,
@@ -1048,7 +1234,7 @@ impl GpuFold {
             ensemble,
             hull,
             frame: 0,
-            pending_reset: true,
+            pending_reset: vec![true],
             adapter: info.name,
             decorated_results,
         };
@@ -1088,7 +1274,75 @@ impl GpuFold {
 
     /// Bytes of device memory the fold holds.
     pub fn device_bytes(&self) -> u64 {
-        (self.layout.work_len + self.layout.acc_len) * 4
+        (self.layout.work_len + self.layout.acc_len.iter().sum::<u64>() * self.acc.len() as u64) * 4
+    }
+
+    /// A second accumulator arena, for a fold that keeps two half-stacks
+    /// (`STREHL_OPTICAL_RESTORE`): [`Self::select_accumulator`] then chooses
+    /// which one the next fold, read-back and reset address. Each holds its
+    /// own totals, hull and ensemble windows, as two CPU merges would.
+    pub fn add_second_accumulator(&mut self) -> Result<(), String> {
+        if self.acc.len() > 1 {
+            return Ok(());
+        }
+        let bytes = self.layout.acc_len.iter().sum::<u64>() * 4;
+        let scope = self.device.push_error_scope(wgpu::ErrorFilter::OutOfMemory);
+        let acc = accumulator_banks(&self.device, &self.layout.acc_len, "fold-acc-alt");
+        if let Some(e) = pollster::block_on(scope.pop()) {
+            return Err(format!(
+                "GPU fold: a second {bytes}-byte accumulator does not fit this device: {e}"
+            ));
+        }
+        self.acc.push(acc);
+        self.pending_reset.push(true);
+        self.rebind();
+        let target = self.target;
+        self.target = 1;
+        self.reset_accumulators();
+        self.target = target;
+        Ok(())
+    }
+
+    /// Bindings each accumulator arena spans (one, or two past one binding).
+    #[doc(hidden)]
+    pub fn accumulator_bank_count(&self) -> usize {
+        self.layout.acc_len.len()
+    }
+
+    /// The accumulator arenas this fold holds.
+    pub fn accumulators(&self) -> usize {
+        self.acc.len()
+    }
+
+    /// Fold into, read back and reset accumulator `target` from now on.
+    pub fn select_accumulator(&mut self, target: usize) {
+        assert!(target < self.acc.len(), "no accumulator {target}");
+        self.target = target;
+    }
+
+    /// Bind groups for every accumulator over the current buffers.
+    fn rebind(&mut self) {
+        self.bind = self
+            .acc
+            .iter()
+            .map(|acc| {
+                make_binds(
+                    &self.device,
+                    &self.bgl,
+                    &self.params,
+                    [
+                        &self.work,
+                        &acc[0],
+                        &self.consts,
+                        &self.raw,
+                        &self.xf,
+                        &self.red,
+                        &acc[1],
+                        &self.rgbw,
+                    ],
+                )
+            })
+            .collect();
     }
 
     fn submit(&mut self, rec: Recorder) -> wgpu::SubmissionIndex {
@@ -1133,7 +1387,7 @@ impl GpuFold {
                 pass.set_pipeline(&self.pipelines[k.index()]);
                 pass.set_bind_group(
                     0,
-                    &self.bind[slot],
+                    &self.bind[self.target][slot],
                     &[(i as u64 * self.param_stride) as u32],
                 );
                 let groups = n.div_ceil(WG);
@@ -1167,7 +1421,7 @@ impl GpuFold {
                 pass.set_pipeline(&self.pipelines[k.index()]);
                 pass.set_bind_group(
                     0,
-                    &self.bind[slot],
+                    &self.bind[self.target][slot],
                     &[(i as u64 * self.param_stride) as u32],
                 );
                 let groups = n.div_ceil(WG);
@@ -1218,7 +1472,10 @@ impl GpuFold {
 
     fn reset_accumulators(&mut self) {
         let mut rec = Recorder { calls: Vec::new() };
-        rec.fill(0, self.layout.acc_len as usize, 0.0, true);
+        for (bank, &n) in self.layout.acc_len.iter().enumerate() {
+            let at = if bank > 0 { ACC_BANK } else { 0 };
+            rec.fill(at, n as usize, 0.0, true);
+        }
         for c in 0..self.layout.lo.len() {
             rec.fill(
                 self.layout.lo[c],
@@ -1234,7 +1491,7 @@ impl GpuFold {
             );
         }
         self.submit(rec);
-        self.pending_reset = false;
+        self.pending_reset[self.target] = false;
     }
 
     fn upload(&self, at: u32, data: &[f32]) {
@@ -1259,7 +1516,7 @@ impl GpuFold {
         variance: &[f32],
         frame_beta: Option<&[f32]>,
     ) {
-        if self.pending_reset {
+        if self.pending_reset[self.target] {
             self.reset_accumulators();
         }
         let l = &self.layout;
@@ -1273,14 +1530,20 @@ impl GpuFold {
         }
         self.upload(l.var_lv[0], variance);
         let mut rec = Recorder { calls: Vec::new() };
-        self.record_fold(&mut rec, &scalars, None);
+        self.record_fold(&mut rec, &scalars, None, false);
         self.submit(rec);
         merge.note_external_frame();
     }
 
     /// The fold's dispatches for planes already at `plane_lv[c][0]`; with
     /// `noise`, the luma variance is computed here rather than uploaded.
-    fn record_fold(&self, rec: &mut Recorder, scalars: &[LevelScalars], noise: Option<GreenNoise>) {
+    fn record_fold(
+        &self,
+        rec: &mut Recorder,
+        scalars: &[LevelScalars],
+        noise: Option<GreenNoise>,
+        keep_luma: bool,
+    ) {
         let l = &self.layout;
         let n0 = l.sizes[0].pixels();
         let sizes = &l.sizes;
@@ -1295,6 +1558,19 @@ impl GpuFold {
             },
             n0,
         );
+        if keep_luma {
+            // The level-0 luma as formed, before `laplacian` rewrites it.
+            let s = sizes[0];
+            rec.push(
+                Kernel::Pack,
+                Params {
+                    a: [l.luma_lv[0], s.width as u32, 0, s.width as u32],
+                    b: [0, s.height as u32, l.luma_keep, 0],
+                    ..Default::default()
+                },
+                n0,
+            );
+        }
         if let Some(nz) = noise {
             rec.push(
                 Kernel::Variance,
@@ -1384,14 +1660,19 @@ impl GpuFold {
     /// Size the raw buffer for frames of `samples` u16 each: two frame slots,
     /// alternating so one frame can be staged and probed while the other is
     /// still to be folded, and the probe's slot.
-    fn ensure_raw(&mut self, samples: usize) {
-        let samples = samples as u64 + (samples as u64 & 1);
-        if self.raw_samples == samples {
+    fn ensure_raw(&mut self, samples: usize, members: usize) {
+        // A whole number of 8-byte words per member, so every member's region
+        // in a frame slot can be mapped on its own (`stage`).
+        let samples = (samples as u64).next_multiple_of(4);
+        let members = members.max(self.min_members);
+        if self.raw_samples == samples && self.raw_members >= members {
             return;
         }
+        let members = members.max(self.raw_members);
+        self.raw_members = members;
         self.raw = self.device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("fold-raw"),
-            size: samples * 2 * RAW_SLOTS as u64,
+            size: samples * 2 * raw_frames(members),
             usage: wgpu::BufferUsages::STORAGE
                 | wgpu::BufferUsages::COPY_DST
                 | wgpu::BufferUsages::COPY_SRC,
@@ -1404,7 +1685,7 @@ impl GpuFold {
             .map(|_| UploadSlot {
                 buffer: self.device.create_buffer(&wgpu::BufferDescriptor {
                     label: Some("fold-upload"),
-                    size: samples * 2,
+                    size: samples * 2 * members as u64,
                     usage: wgpu::BufferUsages::MAP_WRITE | wgpu::BufferUsages::COPY_SRC,
                     mapped_at_creation: true,
                 }),
@@ -1412,49 +1693,100 @@ impl GpuFold {
                 mapped: std::sync::Arc::new(std::sync::atomic::AtomicBool::new(true)),
             })
             .collect();
-        self.bind = make_binds(
-            &self.device,
-            &self.bgl,
-            &self.params,
-            [
-                &self.work,
-                &self.acc,
-                &self.consts,
-                &self.raw,
-                &self.xf,
-                &self.red,
-            ],
-        );
+        self.rebind();
     }
 
-    /// The first sample of `slot`'s frame in the raw buffer.
+    /// The first sample of `slot`'s frame (its member 1) in the raw buffer.
     fn raw_base(&self, slot: usize) -> u32 {
-        (slot as u64 * self.raw_samples) as u32
+        (slot as u64 * self.raw_members as u64 * self.raw_samples) as u32
     }
 
-    /// Upload `frame` into the next frame slot and its pulls into that slot's
-    /// `xf` sites. wgpu copies the samples before this returns, so the caller
-    /// may free the frame at once. The slot stays valid until the second
-    /// `stage` after this one.
+    /// Hold room for `members` frames per frame slot from the first stage on
+    /// (a pixel-shift stack: four), so a group arriving after single frames
+    /// does not reallocate the raw buffer under staged frames.
+    pub fn reserve_members(&mut self, members: usize) {
+        self.min_members = members.max(1);
+    }
+
+    /// Upload `frame` (with its group's members, side by side in the slot)
+    /// into the next frame slot and its pulls into that slot's `xf` sites.
+    /// wgpu copies the samples before this returns, so the caller may free
+    /// the frames at once. The slot stays valid until the second `stage`
+    /// after this one.
     pub fn stage(&mut self, frame: &RawFrame<'_>) -> Result<Staged, String> {
         let (gw, gh) = self.full.ok_or("GPU preparation layout")?;
         let (width, rows) = (2 * gw, 2 * gh);
-        let padded = frame.data.len() as u64 + (frame.data.len() as u64 & 1);
+        let members = if frame.group.is_some() { 4 } else { 1 };
+        let padded = (frame.data.len() as u64).next_multiple_of(4);
         if frame.stride < frame.active[0] + width
             || frame.data.len() < (frame.active[1] + rows) * frame.stride
             || (width * rows) as u64 + 2 > u64::from(u32::MAX)
-            || RAW_SLOTS as u64 * padded > u64::from(u32::MAX)
+            || raw_frames(members.max(self.min_members)) * padded > i32::MAX as u64
         {
             return Err("GPU preparation: frame geometry out of range".into());
         }
-        self.ensure_raw(frame.data.len());
+        if frame.carried.is_some() && frame.pulls.is_none() {
+            return Err("GPU preparation: carried channels need the aligned gather".into());
+        }
+        let group = match &frame.group {
+            None => None,
+            Some(g) => {
+                if frame.pulls.is_none() {
+                    return Err(
+                        "pixel-shift assembly needs the aligned gather and no defect correction"
+                            .into(),
+                    );
+                }
+                if g.members.iter().any(|m| m.len() != frame.data.len()) {
+                    return Err("GPU preparation: group members differ in size".into());
+                }
+                if g.offsets
+                    .iter()
+                    .any(|&(x, y)| !(-8..8).contains(&x) || !(-8..8).contains(&y))
+                {
+                    return Err("GPU preparation: a member offset beyond 7 photosites".into());
+                }
+                let offsets = g
+                    .offsets
+                    .iter()
+                    .enumerate()
+                    .fold(0u32, |acc, (j, &(x, y))| {
+                        acc | (((x + 8) as u32 | ((y + 8) as u32) << 4) << (8 * j))
+                    });
+                let mut table = 0u32;
+                for class in 0..4usize {
+                    let sm = strehl_core::pixel_shift::site_members(
+                        &g.offsets,
+                        (class & 1) as isize,
+                        (class >> 1) as isize,
+                    );
+                    if sm.iter().any(|&k| k > 3) {
+                        return Err(
+                            "GPU preparation: group offsets do not cover the CFA parities".into(),
+                        );
+                    }
+                    let packed = sm[0] as u32
+                        | (sm[1] as u32) << 2
+                        | (sm[2] as u32) << 4
+                        | (sm[3] as u32) << 6;
+                    table |= packed << (8 * class);
+                }
+                Some(GroupParams {
+                    offsets,
+                    table,
+                    inv: g.inv,
+                    residuals: g.residuals,
+                })
+            }
+        };
+        self.ensure_raw(frame.data.len(), members);
         let slot = self.next_slot;
         self.next_slot ^= 1;
         let base = u64::from(self.raw_base(slot)) * 2;
         // Through this slot's persistently mapped upload buffer: wait for its
         // last copy out (two frames ago) and the re-map, fill it in parallel
         // chunks, then copy it to the device. No staging memory is allocated
-        // per frame. An odd trailing sample is padded to a whole word.
+        // per frame. Each member's tail is zero-padded to its slot length.
         let up = &mut self.upload[slot];
         if let Some(index) = up.copy.take() {
             self.device
@@ -1467,29 +1799,36 @@ impl GpuFold {
         if !up.mapped.load(std::sync::atomic::Ordering::Acquire) {
             return Err("GPU upload buffer was not re-mapped".into());
         }
-        let bytes: &[u8] = bytemuck::cast_slice(frame.data);
-        // Mapped ranges start 8-byte aligned and span whole words, so chunks
-        // are fixed-size over the (word-padded) buffer and the last one carries
-        // the zero padding.
+        let sources: Vec<&[u8]> = std::iter::once(frame.data)
+            .chain(frame.group.iter().flat_map(|g| g.members))
+            .map(bytemuck::cast_slice)
+            .collect();
+        // Mapped ranges start 8-byte aligned and span whole words: each
+        // member's region is a multiple of 8 bytes (`ensure_raw`), and so is
+        // every chunk within it.
         const UPLOAD_CHUNK: usize = 1 << 22;
-        let size = (self.raw_samples * 2) as usize;
+        let per = (self.raw_samples * 2) as usize;
+        let jobs: Vec<(usize, usize, usize)> = (0..sources.len())
+            .flat_map(|j| {
+                (0..per.div_ceil(UPLOAD_CHUNK))
+                    .map(move |i| (j, i * UPLOAD_CHUNK, ((i + 1) * UPLOAD_CHUNK).min(per)))
+            })
+            .collect();
         let buffer = &up.buffer;
-        (0..size.div_ceil(UPLOAD_CHUNK))
-            .into_par_iter()
-            .for_each(|i| {
-                let (at, end) = (i * UPLOAD_CHUNK, ((i + 1) * UPLOAD_CHUNK).min(size));
-                let data = &bytes[at.min(bytes.len())..end.min(bytes.len())];
-                let mut view = buffer
-                    .slice(at as u64..end as u64)
-                    .get_mapped_range_mut()
-                    .expect("mapped upload buffer");
-                view.slice(..data.len()).copy_from_slice(data);
-                if data.len() < end - at {
-                    view.slice(data.len()..)
-                        .copy_from_slice(&vec![0u8; end - at - data.len()]);
-                }
-            });
-        let size = size as u64;
+        jobs.into_par_iter().for_each(|(j, at, end)| {
+            let bytes = sources[j];
+            let data = &bytes[at.min(bytes.len())..end.min(bytes.len())];
+            let mut view = buffer
+                .slice((j * per + at) as u64..(j * per + end) as u64)
+                .get_mapped_range_mut()
+                .expect("mapped upload buffer");
+            view.slice(..data.len()).copy_from_slice(data);
+            if data.len() < end - at {
+                view.slice(data.len()..)
+                    .copy_from_slice(&vec![0u8; end - at - data.len()]);
+            }
+        });
+        let size = (sources.len() * per) as u64;
         up.mapped.store(false, std::sync::atomic::Ordering::Release);
         up.buffer.unmap();
         let mut encoder = self
@@ -1510,8 +1849,15 @@ impl GpuFold {
         up.copy = Some(index);
         let (cx, cy) = (gw as f64 * 0.5, gh as f64 * 0.5);
         if let Some(pulls) = frame.pulls {
-            let mut xf = [0f64; 32];
-            for (i, (&(dx, dy), t)) in SITES.iter().zip(pulls.iter()).enumerate() {
+            let mut xf = [0f64; 8 * PULLS];
+            let native = SITES.iter().zip(pulls.iter());
+            let carried = CARRIED_SITES
+                .iter()
+                .map(|&(dx, dy, _)| (dx, dy))
+                .zip(frame.carried.iter().flatten());
+            let site_pulls: Vec<((usize, usize), &SitePull)> =
+                native.map(|(&s, t)| (s, t)).chain(carried).collect();
+            for (i, ((dx, dy), t)) in site_pulls.into_iter().enumerate() {
                 xf[8 * i..8 * i + 8].copy_from_slice(&[
                     t.a[0],
                     t.a[1],
@@ -1523,8 +1869,11 @@ impl GpuFold {
                     cy,
                 ]);
             }
-            self.queue
-                .write_buffer(&self.xf, (slot * 32 * 8) as u64, bytemuck::cast_slice(&xf));
+            self.queue.write_buffer(
+                &self.xf,
+                (slot * 8 * PULLS * 8) as u64,
+                bytemuck::cast_slice(&xf),
+            );
         }
         Ok(Staged {
             slot,
@@ -1535,6 +1884,8 @@ impl GpuFold {
             black: frame.black,
             gain: frame.gain,
             warped: frame.pulls.is_some(),
+            carried: frame.carried.is_some(),
+            group,
         })
     }
 
@@ -1547,7 +1898,10 @@ impl GpuFold {
 
     /// Record the gather (or unwarped extraction) of `sites` of the frame at
     /// raw sample `base`, through slot `pulls`' site pulls, into the given
-    /// level-0 planes.
+    /// level-0 planes. Sites 0-3 are the CFA sites, 4-11 the carried channels
+    /// ([`CARRIED_SITES`]). A staged group's channels are assembled from its
+    /// members (`assemble`); otherwise, and for the probe (`green_only`),
+    /// demosaiced from member 1 (`mhc`).
     #[allow(clippy::too_many_arguments)]
     fn record_gather(
         &self,
@@ -1565,7 +1919,8 @@ impl GpuFold {
         let rect = [rx as u32, ry as u32, lw as u32, lh as u32];
         let black = frame.black;
         let black_dn = black.round().clamp(0.0, f32::from(u16::MAX)) as u16;
-        let raw_base = base + (frame.active[1] * frame.stride + frame.active[0]) as u32;
+        let origin = (frame.active[1] * frame.stride + frame.active[0]) as u32;
+        let raw_base = base + origin;
         let l = &self.layout;
         if !frame.warped {
             for (&s, &d) in sites.iter().zip(dst) {
@@ -1584,20 +1939,51 @@ impl GpuFold {
             }
             return;
         }
-        rec.push(
-            Kernel::Mhc,
-            Params {
-                a: [l.rgb, fw as u32, fh as u32, u32::from(green_only)],
-                b: [raw_base, frame.stride as u32, 0, 0],
-                f: [black, frame.gain[0], frame.gain[1], frame.gain[2]],
-                ..Default::default()
-            },
-            // One invocation per 2x2 quad.
-            gw * gh,
-        );
+        match frame.group.filter(|_| !green_only) {
+            Some(g) => {
+                let member = |j: usize| raw_base + (j as u64 * self.raw_samples) as u32;
+                let (rx, ry) = match g.residuals {
+                    Some(r) => (r.map(|v| v[0].to_bits()), r.map(|v| v[1].to_bits())),
+                    None => ([0; 4], [0; 4]),
+                };
+                rec.push(
+                    Kernel::Assemble,
+                    Params {
+                        a: [
+                            l.rgb,
+                            fw as u32,
+                            fh as u32,
+                            u32::from(g.residuals.is_some()),
+                        ],
+                        b: [member(0), member(1), member(2), member(3)],
+                        c: [frame.stride as u32, g.offsets, g.table, 0],
+                        d: rx,
+                        e: ry,
+                        f: [black, frame.gain[0], frame.gain[1], frame.gain[2]],
+                        g: g.inv,
+                    },
+                    fw * fh,
+                );
+            }
+            None => rec.push(
+                Kernel::Mhc,
+                Params {
+                    a: [l.rgb, fw as u32, fh as u32, u32::from(green_only)],
+                    b: [raw_base, frame.stride as u32, 0, 0],
+                    f: [black, frame.gain[0], frame.gain[1], frame.gain[2]],
+                    ..Default::default()
+                },
+                // One invocation per 2x2 quad.
+                gw * gh,
+            ),
+        }
         for (&s, &d) in sites.iter().zip(dst) {
-            let (dx, dy) = SITES[s];
-            let ci = site_channel(dx, dy);
+            let ci = if s < 4 {
+                let (dx, dy) = SITES[s];
+                site_channel(dx, dy)
+            } else {
+                CARRIED_SITES[s - 4].2
+            };
             let plane = if green_only {
                 l.rgb
             } else {
@@ -1609,7 +1995,7 @@ impl GpuFold {
                 Params {
                     a: [plane, fw as u32, fh as u32, d],
                     b: rect,
-                    c: [u32::from(black_dn), (4 * pulls + s) as u32, 0, 0],
+                    c: [u32::from(black_dn), (PULLS * pulls + s) as u32, 0, 0],
                     f: [black, inv, 0.0, 0.0],
                     ..Default::default()
                 },
@@ -1825,8 +2211,8 @@ impl GpuFold {
         const PER: u32 = 256;
         const INVOCATIONS: u32 = 1 << 18;
         let words = 4 * u64::from(INVOCATIONS);
-        if self.raw_samples * 2 * (RAW_SLOTS as u64) < words * 4 {
-            self.ensure_raw((words * 2) as usize);
+        if self.raw_samples * 2 * raw_frames(self.raw_members) < words * 4 {
+            self.ensure_raw((words * 2) as usize, 1);
         }
         let readback = self.device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("screen-census"),
@@ -1985,7 +2371,8 @@ impl GpuFold {
     /// `load_frame` + `luma_variance` + `add_frame_with_gain`. With
     /// `null_units` (from `BandMerge::note_external_null_frame`), the frame's
     /// probe, packed by [`Self::probe_submit`], is also added to the ensemble
-    /// null: `BandMerge::add_null_windows`.
+    /// null: `BandMerge::add_null_windows`. A frame staged with carried
+    /// channels gathers all twelve planes.
     pub fn add_staged(
         &mut self,
         merge: &mut BandMerge,
@@ -1994,25 +2381,53 @@ impl GpuFold {
         frame_beta: Option<&[f32]>,
         null_units: Option<&[Option<f32>]>,
     ) -> Result<(), String> {
+        self.add_staged_impl(merge, frame, noise, frame_beta, null_units, false)
+            .map(|_| ())
+    }
+
+    /// [`Self::add_staged`], also copying level 0's green luma (before the
+    /// fold decomposes it) to a host buffer: [`Self::luma_collect`] waits for
+    /// it alone, so the caller collects it a frame later without stalling.
+    pub fn add_staged_keeping_luma(
+        &mut self,
+        merge: &mut BandMerge,
+        frame: &Staged,
+        noise: GreenNoise,
+        frame_beta: Option<&[f32]>,
+        null_units: Option<&[Option<f32>]>,
+    ) -> Result<PendingLuma, String> {
+        self.add_staged_impl(merge, frame, noise, frame_beta, null_units, true)
+            .map(|p| p.expect("luma kept"))
+    }
+
+    fn add_staged_impl(
+        &mut self,
+        merge: &mut BandMerge,
+        frame: &Staged,
+        noise: GreenNoise,
+        frame_beta: Option<&[f32]>,
+        null_units: Option<&[Option<f32>]>,
+        keep_luma: bool,
+    ) -> Result<Option<PendingLuma>, String> {
         self.check_staged(frame)?;
-        if self.pending_reset {
+        let sites = if frame.carried { PULLS } else { SITES.len() };
+        if self.layout.planes != sites {
+            return Err(format!(
+                "GPU preparation: {sites} gathered planes for a {}-plane fold",
+                self.layout.planes
+            ));
+        }
+        if self.pending_reset[self.target] {
             self.reset_accumulators();
         }
         let scalars: Vec<LevelScalars> = merge.level_scalars(frame_beta);
         let base = self.raw_base(frame.slot);
         let l = &self.layout;
-        let dst: Vec<u32> = (0..4).map(|c| l.plane_lv[c][0]).collect();
+        let dst: Vec<u32> = (0..sites).map(|c| l.plane_lv[c][0]).collect();
+        let all: Vec<usize> = (0..sites).collect();
         let mut rec = Recorder { calls: Vec::new() };
-        self.record_gather(
-            &mut rec,
-            frame,
-            base,
-            frame.slot,
-            &[0, 1, 2, 3],
-            &dst,
-            false,
-        );
-        self.record_fold(&mut rec, &scalars, Some(noise));
+        self.record_gather(&mut rec, frame, base, frame.slot, &all, &dst, false);
+        self.record_fold(&mut rec, &scalars, Some(noise), keep_luma);
         for (region, unit) in l.null.iter().zip(null_units.unwrap_or(&[])) {
             let (Some(region), Some(unit)) = (region, unit) else {
                 continue;
@@ -2034,9 +2449,60 @@ impl GpuFold {
                 n,
             );
         }
-        self.submit(rec);
+        let pending = if keep_luma {
+            let n = l.sizes[0].pixels();
+            let at = u64::from(l.luma_keep) * 4;
+            let bytes = n as u64 * 4;
+            let readback = self.luma_pool.pop().unwrap_or_else(|| {
+                self.device.create_buffer(&wgpu::BufferDescriptor {
+                    label: Some("fold-luma-readback"),
+                    size: bytes,
+                    usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+                    mapped_at_creation: false,
+                })
+            });
+            let index = self.submit_with(rec, |encoder, fold| {
+                encoder.copy_buffer_to_buffer(&fold.work, at, &readback, 0, bytes);
+            });
+            readback
+                .slice(..)
+                .map_async(wgpu::MapMode::Read, |r| r.expect("map luma readback"));
+            Some(PendingLuma { readback, index, n })
+        } else {
+            self.submit(rec);
+            None
+        };
         merge.note_external_frame();
-        Ok(())
+        Ok(pending)
+    }
+
+    /// Wait for one frame's kept luma (not for later work) and read it.
+    pub fn luma_collect(&mut self, pending: PendingLuma) -> Result<Vec<f32>, String> {
+        self.device
+            .poll(wgpu::PollType::Wait {
+                submission_index: Some(pending.index),
+                timeout: None,
+            })
+            .map_err(|e| format!("GPU luma wait: {e:?}"))?;
+        let out = {
+            let view = pending
+                .readback
+                .slice(..)
+                .get_mapped_range()
+                .map_err(|e| format!("mapped luma: {e:?}"))?;
+            // Read-back memory is slow to read on one thread (MEASURED 36 ms
+            // for these 60 MB on the RTX 5090, 1.7 GB/s); in parallel pieces,
+            // as `read_chunk` reads the accumulators.
+            let src = bytemuck::cast_slice::<u8, f32>(&view[..pending.n * 4]);
+            let mut out = vec![0f32; pending.n];
+            out.par_chunks_mut(1 << 18)
+                .zip(src.par_chunks(1 << 18))
+                .for_each(|(d, s)| d.copy_from_slice(s));
+            out
+        };
+        pending.readback.unmap();
+        self.luma_pool.push(pending.readback);
+        Ok(out)
     }
 
     /// [`Self::stage`] then [`Self::add_staged`].
@@ -2081,7 +2547,8 @@ impl GpuFold {
     /// Read the accumulators back into `merge`: copied, or combined by `ops`.
     fn read_chunk(&mut self, merge: &mut BandMerge, ops: Option<FoldCombine>) {
         let l = &self.layout;
-        type Region<'a> = (usize, &'a mut [f32], Option<Combine>);
+        // (bank, offset within the bank, destination, combination)
+        type Region<'a> = (usize, usize, &'a mut [f32], Option<Combine>);
         let mut regions: Vec<Region<'_>> = Vec::new();
         let (t, null) = merge.all_totals_mut();
         let op = |pick: fn(&FoldCombine) -> Combine| ops.as_ref().map(pick);
@@ -2092,7 +2559,8 @@ impl GpuFold {
             op: Option<Combine>,
         ) {
             for (d, &o) in dst.iter_mut().zip(at) {
-                regions.push((o as usize, &mut d[..], op));
+                let (bank, o) = acc_bank(o);
+                regions.push((bank, o, &mut d[..], op));
             }
         }
         add(&mut regions, t.num, &l.num, op(|c| c.num));
@@ -2113,63 +2581,73 @@ impl GpuFold {
         for (totals, region) in null.into_iter().zip(&l.null) {
             if let (Some(totals), Some(region)) = (totals, region) {
                 for (i, (dst, &o)) in totals.into_iter().zip(&region.acc).enumerate() {
-                    regions.push((o as usize, dst, ops.map(|c| c.null[i])));
+                    let (bank, o) = acc_bank(o);
+                    regions.push((bank, o, dst, ops.map(|c| c.null[i])));
                 }
             }
         }
         assert!(
-            regions.iter().all(|r| !r.1.is_empty()),
+            regions.iter().all(|r| !r.2.is_empty()),
             "reading a chunk back into released totals"
         );
-        regions.sort_by_key(|r| r.0);
+        regions.sort_by_key(|r| (r.0, r.1));
         const PIECE: usize = 16 << 20; // floats: 64 MB
-        let total = l.acc_len as usize;
-        let piece = PIECE.min(total.max(1));
+        let largest = l.acc_len.iter().copied().max().unwrap_or(0) as usize;
+        let piece = PIECE.min(largest.max(1));
         let readback = self.device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("fold-readback"),
             size: piece as u64 * 4,
             usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
             mapped_at_creation: false,
         });
-        let mut start = 0usize;
-        while start < total {
-            let n = piece.min(total - start);
-            let mut encoder = self
-                .device
-                .create_command_encoder(&wgpu::CommandEncoderDescriptor {
-                    label: Some("fold-readback"),
-                });
-            encoder.copy_buffer_to_buffer(&self.acc, start as u64 * 4, &readback, 0, n as u64 * 4);
-            let index = self.queue.submit([encoder.finish()]);
-            let slice = readback.slice(..n as u64 * 4);
-            slice.map_async(wgpu::MapMode::Read, |r| r.expect("map fold readback"));
-            self.device
-                .poll(wgpu::PollType::Wait {
-                    submission_index: Some(index),
-                    timeout: None,
-                })
-                .expect("GPU fold wait");
-            {
-                let view = slice.get_mapped_range().expect("mapped readback");
-                let all: &[f32] = bytemuck::cast_slice(&view[..]);
-                let end = start + n;
-                regions
-                    .par_iter_mut()
-                    .filter(|(o, d, _)| *o < end && *o + d.len() > start)
-                    .for_each(|(o, d, op)| {
-                        let from = start.max(*o);
-                        let to = end.min(*o + d.len());
-                        let (dst, src) =
-                            (&mut d[from - *o..to - *o], &all[from - start..to - start]);
-                        match op {
-                            None => dst.copy_from_slice(src),
-                            Some(op) => op.apply(dst, src),
-                        }
-                    });
+        for (bank, &len) in l.acc_len.iter().enumerate() {
+            let total = len as usize;
+            let mut start = 0usize;
+            while start < total {
+                let n = piece.min(total - start);
+                let mut encoder =
+                    self.device
+                        .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                            label: Some("fold-readback"),
+                        });
+                encoder.copy_buffer_to_buffer(
+                    &self.acc[self.target][bank],
+                    start as u64 * 4,
+                    &readback,
+                    0,
+                    n as u64 * 4,
+                );
+                let index = self.queue.submit([encoder.finish()]);
+                let slice = readback.slice(..n as u64 * 4);
+                slice.map_async(wgpu::MapMode::Read, |r| r.expect("map fold readback"));
+                self.device
+                    .poll(wgpu::PollType::Wait {
+                        submission_index: Some(index),
+                        timeout: None,
+                    })
+                    .expect("GPU fold wait");
+                {
+                    let view = slice.get_mapped_range().expect("mapped readback");
+                    let all: &[f32] = bytemuck::cast_slice(&view[..]);
+                    let end = start + n;
+                    regions
+                        .par_iter_mut()
+                        .filter(|(b, o, d, _)| *b == bank && *o < end && *o + d.len() > start)
+                        .for_each(|(_, o, d, op)| {
+                            let from = start.max(*o);
+                            let to = end.min(*o + d.len());
+                            let (dst, src) =
+                                (&mut d[from - *o..to - *o], &all[from - start..to - start]);
+                            match op {
+                                None => dst.copy_from_slice(src),
+                                Some(op) => op.apply(dst, src),
+                            }
+                        });
+                }
+                readback.unmap();
+                start += n;
             }
-            readback.unmap();
-            start += n;
         }
-        self.pending_reset = true;
+        self.pending_reset[self.target] = true;
     }
 }

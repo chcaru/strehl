@@ -442,6 +442,65 @@ time; skipped automatically with no matching profile, `--fix-ca=off`, alignment 
 (blue); bug-4's red residual +250 → +10 ppm. With `--refine-ca=off` the output is pixel-identical to the profile-only render.
 See `experiments/image-quality-2026-11-02/results.md` section 3c.
 
+**A7CR profile (2026-11-15).** `a7cr-fe100gm-2xtc` (ILCE-7CR + `LensType3` 33094):
+`eps_r = −464.6e-6`, `eps_b = +205.6e-6`, measured on the shipped stacker's own
+uncorrected renders of both runs of A7CR capture 3 (3014–3022 tiles, permutation
+p ≤ 0.0005, measured to 0.985 of the half diagonal). It agrees with the A7C II record for
+the same lens and converter within that record's stated subject-to-subject spread, as it
+should: in this unit lateral CA belongs to the glass. Default on by the gear guard, so
+A7C II renders are unchanged (byte-freeze 5/5). MEASURED on capture 3 against the
+uncorrected renders, from two independent captures over 91 in-focus tiles: coherent R−G
+fringe amplitude −26 %, B−G −27 %, fine-detail signal within 2.5 %. See
+`experiments/a7cr-full-potential-2026-11-14/results.md`.
+
+**Axial colour — OFF by default (`STREHL_AXIAL_CA=on`; `unregistered` and `placebo` are
+its control arms).** The pyramid elects on green and replays the weights into red and blue,
+so red and blue come from the frame where green is sharp (SYNTHESIS fact 1413). With the
+switch on, `merge_cmd/axial-colour.rs` first measures each channel's through-focus peak per
+64 px tile from every frame and fits a smooth offset field in frames per channel
+(green-site-1 against green-site-2 is printed as the null). A channel whose band amplitude
+at its own focus is under 1.03 of its amplitude at green's is left alone. Merged frame `k`
+then takes the coarse part of the channel (what a Gaussian of 1.0 plane px passes) from the
+frame nearest `k + d(x)`, after registering that frame to frame `k` on green luma; finer
+detail stays the frame's own. The election and its noise model are untouched. Refused with
+pixel-shift assembly, defect correction, the GPU fold, temporal energy and the estimator.
+
+Why it has that shape (MEASURED on A7CR capture 3, red +5.5 frames, blue +2.1, null −0.009;
+`experiments/a7cr-full-potential-2026-11-14/results.md`): frames five apart sit 0.53 sensor
+px rms from each other after the alignment (0.18 px for neighbours), all three colours
+together, so unregistered borrowed red fringes; and a frame's finest red is consumed by the
+demosaic as a correction to that frame's green, so borrowing all of red cost 5–7 % of fine
+detail in every channel. With both handled: coherent R−G fringing −33 % against −26 % for
+lateral alone, B−G and fine detail unchanged (within 0.3 %), the reversed-offset placebo
+24 % worse than lateral alone. Costs about 2.5x wall clock single-shot (148 s against
+60 s). The gain is small because that stack oversamples focus about tenfold; it stays off
+until measured on a second subject. `STREHL_AXIAL_DUMP=<dir>` is the experiment hook that
+writes the gathered planes for `axial-probe.py`.
+
+**Depth-guided fusion (OFF by default); colour carry and optical restoration (ON by default for pixel-shift stacks only, pending a second subject).**
+`STREHL_FUSION=depth` (`pyramid-depth-guide.rs`, `merge_cmd/depth-guide.rs`) replaces the
+per-coefficient election with weights from a measured focus plane and through-focus
+transfer per band. `STREHL_CARRY_RGB=on` (`merge_cmd/colour-carry.rs`) makes the gather keep
+every site's three channels (measured for a pixel-shift group) and the merge fold 12 planes
+on the same green election, written as full-resolution RGB with no second demosaic; red and
+blue are then green plus their difference from green smoothed at 1 px (`raw` skips that).
+`STREHL_OPTICAL_RESTORE=on` (`strehl-core/src/optical-restore.rs`,
+`merge_cmd/optical-restore.rs`) keeps alternate frames in a second accumulator, measures
+signal and noise spectra from the two half-stacks and a reference of two frames at each
+tile's focus, fits one diffraction aperture for all three channels, and applies a
+windowed Wiener kernel toward a Gaussian target at the write. A single-shot stack cannot
+show the lens's roll-off above its 0.5 cycles/px Nyquist, so restoration refuses it unless
+given cutoffs (`STREHL_OPTICAL_RESTORE_CUTOFF`). MEASURED on the A7CR scarab four-shot run
+(odd/even halves): all three together read 1.16-1.38x plain pixel shift's finest detail at
+0.60-0.78x its noise; the fusion also lifts dark areas by about 10 %, which is why it stays
+off. On a pixel-shift stack the carry and the restoration switch on unless set `off`; a
+defaulted one that cannot run (an unsupported combination, a stack it cannot measure)
+stays off and says so instead of failing the render. Within pixel-shift assembly, each member's measured sub-photosite residual is
+compensated to first order and the witness gate judges what is left
+(`STREHL_PIXEL_SHIFT_RESIDUAL`, default `compensate`): on the scarab that assembles 13 of the
+14 groups the raw gate demoted for member motion, for 1.43x the fine-detail signal-to-noise.
+See `experiments/a7cr-full-potential-2026-11-14/results.md`.
+
 ### Sensor defects — OPT-IN, off by default
 
 Two defect classes with two different arithmetics: **hot** pixels are additive
@@ -864,6 +923,21 @@ So the worker's own merge only counts frames, and holds the ensemble null's wind
 CPU prepares frames (`absorb_external_remainder` moves both): attaching the GPU fold releases its totals
 (`release_external_totals`), the CPU fold's workspace and, under GPU preparation, the CPU's
 preparation buffers. None of this changes an operation's inputs or order.
+
+**Four-shot groups, carried colour and two half-stacks** (2026-11-18,
+`docs/proposals/2026-11-a7cr-stacking-performance-plan.md` section 12). A pixel-shift group's
+four members are staged side by side in one frame slot, and the `assemble` kernel builds the
+three full-resolution channels from them exactly as `warp_fullres_banded`'s measured rows and
+`pixel_shift::compensate_rows` do (integer indexing, the same f32 operations in the same
+order), in place of Malvar; colour carry gathers twelve sites, and `accum` adds the planes four
+per dispatch. Optical restoration's two half-stacks fold into two accumulator arenas
+(`GpuFold::add_second_accumulator`, `select_accumulator`). wgpu caps a storage binding below
+2 GiB, so each arena spans two bindings (`acc`, `acc_hi`; the bank is bit 30 of an offset) and
+the full-resolution channels have their own (`rgbw`). The device copies each frame's level-0
+luma for the depth measurement taken during the fold (`depth_guide::record`). Device tests pin
+twelve planes, both banks and both accumulators against the CPU fold; the scarab four-shot
+render, the preview's measured refinement and every residual mode are byte-identical to the
+CPU route.
 
 The engine executables (CLI and desktop) use mimalloc as the global allocator
 (`strehl_cli::EngineAllocator`). Every frame allocates and frees ~100 MB of decoder buffers;

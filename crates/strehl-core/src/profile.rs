@@ -384,7 +384,56 @@ pub const A7C2_MEASURED_GREEN_GAIN_DN_PER_E: f32 = 0.224_103;
 /// The divisor implied by [`A7C2_MEASURED_GREEN_GAIN_DN_PER_E`] at ISO 100.
 pub const A7C2_MEASURED_GAIN_DIVISOR: f32 = 100.0 / A7C2_MEASURED_GREEN_GAIN_DN_PER_E;
 
-const PROFILES: [&CameraProfile; 1] = [&A7C2];
+/// Sony A7CR. Every constant is MEASURED on this body, 2026-11-14
+/// (`experiments/a7cr-calibration-2026-11-14/results.md`): black 512 and
+/// white 15360 from the decoder; dual conversion gain switching at ISO 400
+/// from lens-capped darks at 13 ISO settings (read noise in DN drops from 3.85
+/// at ISO 320 to 2.24 at ISO 400); ISO 50 is a pull of ISO 100 (identical
+/// dark sigma), so the analogue base is 100.
+///
+/// The gain is the photon-transfer gain itself, so [`gain_divisor`] and
+/// [`measured_gain_divisor`] are the same number and the measured-gain
+/// correction is the identity on this body.
+///
+/// Each mode's read noise is measured at that mode's base ISO (pooled-RMS
+/// green dark sigma 1.334 DN at ISO 100 and 2.2395 DN at ISO 400, divided by
+/// the gain there). Within a mode the measured electron read noise falls
+/// slowly with ISO (3.30 e- at 100 to 2.98 at 320; 1.39 at 400 to 1.27 at
+/// 6400), so this choice over-predicts the dark floor by at most 11% (ISO 320)
+/// and 10% (ISO 6400) and never under-predicts it by more than 0.6% (ISO 500).
+/// The relative least-squares optimum would under-predict the owner's working
+/// ISO 100 by 5.7%, which is the over-confident direction.
+///
+/// Gain above ISO 100 is assumed proportional to ISO (UNVERIFIED: photon
+/// transfer was measured at ISO 100 only). Blue is not modelled apart: its
+/// temporal noise is about 8% lower in variance than this model at every
+/// signal and 5.6% lower in dark sigma, with positive neighbour correlation
+/// (camera processing on blue, MEASURED), so the shared coefficients are
+/// conservative there. PRNU is not measured on this body.
+///
+/// [`gain_divisor`]: CameraProfile::gain_divisor
+/// [`measured_gain_divisor`]: CameraProfile::measured_gain_divisor
+const A7CR: CameraProfile = CameraProfile {
+    model: "ILCE-7CR",
+    gain_divisor: A7CR_MEASURED_GAIN_DIVISOR,
+    base_iso: 100.0,
+    read_noise_e_low: 1.334 / A7CR_MEASURED_GREEN_GAIN_DN_PER_E,
+    read_noise_e_high: 2.2395 / (4.0 * A7CR_MEASURED_GREEN_GAIN_DN_PER_E),
+    second_base_iso: 400.0,
+    measured_gain_divisor: Some(A7CR_MEASURED_GAIN_DIVISOR),
+    measured_prnu: None,
+};
+
+/// A7CR green photon-transfer gain at ISO 100, MEASURED 2026-11-14: weighted
+/// fit of temporal variance against signal over three static defocused
+/// series (0.6, 2.5 and 6 s; 64 frames) with illumination drift removed;
+/// G1 0.40401, G2 0.40398, G2/G1 0.99993. Two-frame differences with drift
+/// removed per tile give 0.4039-0.4068 on the same data.
+pub const A7CR_MEASURED_GREEN_GAIN_DN_PER_E: f32 = 0.4040;
+/// The divisor implied by [`A7CR_MEASURED_GREEN_GAIN_DN_PER_E`] at ISO 100.
+pub const A7CR_MEASURED_GAIN_DIVISOR: f32 = 100.0 / A7CR_MEASURED_GREEN_GAIN_DN_PER_E;
+
+const PROFILES: [&CameraProfile; 2] = [&A7C2, &A7CR];
 
 pub fn by_model(model: &str) -> Option<&'static CameraProfile> {
     PROFILES.iter().copied().find(|p| p.model == model)
@@ -882,6 +931,58 @@ mod tests {
         for s in (0..=15_360).step_by(211) {
             let s = s as f32;
             assert_eq!(a.sigma(CfaPlane::G1, s).to_bits(), b.sigma(CfaPlane::G1, s).to_bits());
+        }
+    }
+
+    /// Lens-capped A7CR darks, 2026-11-14: ISO and the mean of the G1 and G2
+    /// pooled-RMS temporal sigma in DN
+    /// (`experiments/a7cr-calibration-2026-11-14/results.md`).
+    const A7CR_DARK_SIGMA_DN: [(f32, f32); 13] = [
+        (100.0, 1.334),
+        (125.0, 1.637),
+        (160.0, 1.994),
+        (200.0, 2.481),
+        (250.0, 3.0785),
+        (320.0, 3.8505),
+        (400.0, 2.2395),
+        (500.0, 2.817),
+        (640.0, 3.5355),
+        (800.0, 4.4705),
+        (1600.0, 8.701),
+        (3200.0, 16.9425),
+        (6400.0, 32.896),
+    ];
+
+    #[test]
+    fn the_a7cr_profile_reproduces_its_dark_floor_and_errs_high_within_a_mode() {
+        let p = by_model("ILCE-7CR").unwrap();
+        let m = noise_model_for("ILCE-7CR", Some(100.0), levels());
+        assert_eq!(m.provenance, Provenance::Profile);
+        assert!((p.gain_dn_per_e(100.0) - 0.4040).abs() < 1e-6);
+        for (iso, measured) in A7CR_DARK_SIGMA_DN {
+            let predicted = p.noise_model(iso, levels()).sigma(CfaPlane::G1, 0.0);
+            let rel = predicted / measured - 1.0;
+            // Exact at each mode's base, never more than 0.6% low, at most
+            // 11% high (ISO 320, the top of the low-gain mode).
+            assert!((-0.007..=0.11).contains(&rel), "ISO {iso}: {rel:+.4}");
+            if iso == 100.0 || iso == 400.0 {
+                assert!(rel.abs() < 1e-4, "ISO {iso}: {rel:+.6}");
+            }
+        }
+        // The measured-gain correction is the identity on this body.
+        let c = p.noise_model_with(
+            100.0,
+            levels(),
+            Corrections {
+                measured_gain: true,
+                prnu: false,
+            },
+        );
+        for s in [0.0f32, 100.0, 5000.0] {
+            assert_eq!(
+                c.sigma(CfaPlane::G1, s).to_bits(),
+                m.sigma(CfaPlane::G1, s).to_bits()
+            );
         }
     }
 }

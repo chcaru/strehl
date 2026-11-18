@@ -780,6 +780,10 @@ impl Camera for PcCamera {
         self.uploads.finish()?;
         self.inner.set_pixel_shift(shots)
     }
+    fn set_exposure(&mut self, iso: u64, shutter: u64) -> Result<()> {
+        self.uploads.finish()?;
+        self.inner.set_exposure(iso, shutter)
+    }
     fn prepare_stack(&mut self, frames: usize, raw_bytes: u64) -> Result<()> {
         self.uploads.finish()?;
         self.sink.capacity(None, frames, raw_bytes)?;

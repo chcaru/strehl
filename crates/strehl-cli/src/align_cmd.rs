@@ -1951,7 +1951,7 @@ fn merge_config(n: usize, resampler: Resampler) -> (usize, Vec<usize>, Resampler
 
 /// Root of the warp-map cache: `%LOCALAPPDATA%\strehl\warpmaps` on Windows,
 /// `$XDG_CACHE_HOME/strehl/warpmaps` elsewhere, falling back to the temp dir.
-fn cache_root() -> PathBuf {
+pub(crate) fn cache_root() -> PathBuf {
     std::env::var_os("STREHL_CACHE_DIR")
         .map(PathBuf::from)
         .unwrap_or_else(|| {
@@ -2448,6 +2448,123 @@ pub struct WarpScratch {
     /// gather, which finishes every site before any sink writes the frame.
     site_dst: Vec<Vec<f32>>,
     site_cover: Vec<Vec<bool>>,
+    /// Members 2-4 of the four-shot pixel-shift group whose member 1 is the
+    /// frame about to be warped (`STREHL_PIXEL_SHIFT=remosaic`). When present,
+    /// the banded gather reads each site's measured red, green and blue from
+    /// the members instead of estimating them with Malvar. Taken by the warp.
+    pub(crate) measured: Option<MeasuredGroup>,
+    /// `STREHL_CARRY_RGB`: also gather each site's two non-native channels
+    /// (measured for a pixel-shift group, Malvar otherwise) into
+    /// [`Self::carried`], in [`CARRIED_SITES`] order. Banded gather only.
+    pub(crate) carry_rgb: bool,
+    /// The carried channels on the full quad grid, black-subtracted and
+    /// quantised exactly as the native sites' write-back and extraction do.
+    pub(crate) carried: Vec<Vec<f32>>,
+    /// `STREHL_SELF_FLAT`: the factor each raw sample of this frame (and of
+    /// its group's members) is multiplied by after black subtraction, over
+    /// the whole decoded buffer. Set by the consumer per frame.
+    pub(crate) flat: Option<std::sync::Arc<Vec<f32>>>,
+    /// Set by the gather that filled [`Self::carried`]; the consumer clears
+    /// it before each frame, so a stale frame's colour cannot be read.
+    pub(crate) carried_fresh: bool,
+    /// The banded gather computes only the destination bands marked here
+    /// (`GATHER_BAND_ROWS` plane rows each); the others keep stale values.
+    /// For a consumer that reads a few rows of the frame (the optical
+    /// restoration's reference tiles). `None`: every band.
+    pub(crate) bands: Option<Vec<bool>>,
+    /// The frame's and its group's buffer rows that hold decoded samples
+    /// (`strehl_raw::decode_rows`); a band that would read another row is
+    /// an error, never a wrong value. `None`: every row.
+    pub(crate) valid_rows: Option<std::sync::Arc<Vec<bool>>>,
+}
+
+/// Plane rows per band of the banded gather, for [`WarpScratch::bands`].
+pub(crate) const BAND_ROWS: usize = GATHER_BAND_ROWS;
+
+/// Full-resolution active rows, inclusive, that the banded gather of plane
+/// rows `py0..py1` can read for any CFA site or carried channel of a frame
+/// placed by `t` under the lateral-colour profile `ca`: the union of
+/// [`band_source_rows`] over the three channels' transforms and the four
+/// site offsets, widened by `margin`. A planning bound; the gather checks
+/// what it actually reads against [`WarpScratch::valid_rows`].
+pub(crate) fn fullres_source_rows(
+    t: Similarity,
+    geom: PlaneGeometry,
+    ca: Option<&strehl_core::optics::OpticalProfile>,
+    (py0, py1): (usize, usize),
+    margin: usize,
+) -> Option<(usize, usize)> {
+    let (gw, gh) = (geom.width, geom.height);
+    let fh = 2 * gh;
+    let centre = (gw as f64 * 0.5, gh as f64 * 0.5);
+    let mut span: Option<(usize, usize)> = None;
+    for channel in [
+        strehl_core::optics::Channel::Red,
+        strehl_core::optics::Channel::Green,
+        strehl_core::optics::Channel::Blue,
+    ] {
+        let st = strehl_core::optics::OpticalProfile::compose(ca, channel, t);
+        for offset in [(0.0, 0.0), (0.5, 0.0), (0.0, 0.5), (0.5, 0.5)] {
+            if let Some((a, b)) = band_source_rows(st, offset, py0, py1, gw, centre, fh) {
+                span = Some(span.map_or((a, b), |(lo, hi)| (lo.min(a), hi.max(b))));
+            }
+        }
+    }
+    span.map(|(a, b)| (a.saturating_sub(margin), (b + margin).min(fh - 1)))
+}
+
+/// The eight non-native `(dx, dy, channel)` samples of a quad that
+/// `STREHL_CARRY_RGB` carries beside the four CFA sites (channel 0 red, 1
+/// green, 2 blue): green and blue at red's site, red and blue at each green
+/// site, red and green at blue's.
+pub(crate) const CARRIED_SITES: [(usize, usize, usize); 8] = [
+    (0, 0, 1),
+    (0, 0, 2),
+    (1, 0, 0),
+    (1, 0, 2),
+    (0, 1, 0),
+    (0, 1, 2),
+    (1, 1, 0),
+    (1, 1, 1),
+];
+
+/// A checked pixel-shift group's other members, in member-1 coordinates.
+/// See `strehl_core::pixel_shift` for the offset convention.
+pub(crate) struct MeasuredGroup {
+    pub members: [strehl_raw::Frame; 3],
+    pub offsets: [(isize, isize); 4],
+    pub gains: [f64; 4],
+    /// `STREHL_PIXEL_SHIFT_RESIDUAL`: each member's measured sub-photosite
+    /// residual and the sign to apply it with (`1` compensates, `-1` is the
+    /// placebo); `None` assembles at the integer offsets only.
+    pub residuals: Option<([[f64; 2]; 4], f32)>,
+}
+
+/// Sample buffers of pixel-shift members the gather has finished with, for
+/// the next group's decodes (`strehl_raw::decode_serial` overwrites every
+/// sample): a group's three members are 3 x 122 MB at 61 MP, and fresh pages
+/// cost first-touch faults and zeroing on every plane.
+fn member_buffers() -> &'static std::sync::Mutex<Vec<Vec<u16>>> {
+    static POOL: std::sync::OnceLock<std::sync::Mutex<Vec<Vec<u16>>>> = std::sync::OnceLock::new();
+    POOL.get_or_init(Default::default)
+}
+
+/// Member buffers kept: three groups'.
+const MEMBER_BUFFERS_KEPT: usize = 9;
+
+/// A member buffer the pool holds, if any.
+pub(crate) fn take_member_buffer() -> Option<Vec<u16>> {
+    member_buffers().lock().unwrap().pop()
+}
+
+/// Return a group's member buffers to the pool once nothing reads them.
+pub(crate) fn recycle_members(members: [strehl_raw::Frame; 3]) {
+    let mut pool = member_buffers().lock().unwrap();
+    for f in members {
+        if pool.len() < MEMBER_BUFFERS_KEPT {
+            pool.push(f.data);
+        }
+    }
 }
 
 impl WarpScratch {
@@ -2463,6 +2580,13 @@ impl WarpScratch {
             bp: Vec::new(),
             site_dst: Vec::new(),
             site_cover: Vec::new(),
+            measured: None,
+            carry_rgb: false,
+            carried: Vec::new(),
+            carried_fresh: false,
+            flat: None,
+            bands: None,
+            valid_rows: None,
         }
     }
 }
@@ -2592,7 +2716,7 @@ pub fn warp_frame_in_place_plane(
     // does not show up in a render. Hoisting it to stack level would still be
     // better and is noted as a follow-up rather than done here, because this
     // function is the narrowest place the change can be made correctly.
-    let ident = strehl_raw::identity(&frame.path);
+    let ident = strehl_raw::identity_cached(&frame.path);
     let ca =
         strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?;
 
@@ -2727,6 +2851,9 @@ fn warp_writeback_mode() -> Result<WarpWriteback> {
 /// write can change another row's input. Only integer coverage is reduced;
 /// no image-sized buffer or floating-point reduction is introduced.
 #[allow(clippy::too_many_arguments)]
+// The experiments' feature-gated tests call it; the product writes back
+// through `writeback_fullres_site_bands`.
+#[allow(dead_code)]
 pub(crate) fn writeback_fullres_site(
     data: &mut [u16],
     stride: usize,
@@ -2739,14 +2866,37 @@ pub(crate) fn writeback_fullres_site(
     black: f32,
     mode: WarpWriteback,
 ) -> usize {
+    writeback_fullres_site_bands(
+        data, stride, active, geom, site, dst, cover, inv, black, mode, None,
+    )
+}
+
+/// [`writeback_fullres_site`] of only the plane rows in the bands `only`
+/// marks ([`WarpScratch::bands`]); other rows are left as they are.
+#[allow(clippy::too_many_arguments)]
+fn writeback_fullres_site_bands(
+    data: &mut [u16],
+    stride: usize,
+    active: (usize, usize),
+    geom: PlaneGeometry,
+    site: (usize, usize),
+    dst: &[f32],
+    cover: &[bool],
+    inv: f32,
+    black: f32,
+    mode: WarpWriteback,
+    only: Option<&[bool]>,
+) -> usize {
     let (gw, gh) = (geom.width, geom.height);
     let (ax, ay) = active;
     let (dx, dy) = site;
     let black_dn = black.round().clamp(0.0, u16::MAX as f32) as u16;
+    let wanted =
+        |py: usize| only.is_none_or(|m| m.get(py / GATHER_BAND_ROWS).copied().unwrap_or(false));
     match mode {
         WarpWriteback::Serial => {
             let mut covered = 0usize;
-            for py in 0..gh {
+            for py in (0..gh).filter(|&py| wanted(py)) {
                 let row = (ay + 2 * py + dy) * stride + ax + dx;
                 let lo = py * gw;
                 for px in 0..gw {
@@ -2769,7 +2919,9 @@ pub(crate) fn writeback_fullres_site(
             .take(gh)
             .zip(dst[..geom.pixels()].par_chunks_exact(gw))
             .zip(cover[..geom.pixels()].par_chunks_exact(gw))
-            .map(|((row, values), covered)| {
+            .enumerate()
+            .filter(|(py, _)| wanted(*py))
+            .map(|(_, ((row, values), covered))| {
                 let mut count = 0usize;
                 for px in 0..gw {
                     row[ax + dx + 2 * px] = if covered[px] {
@@ -2823,6 +2975,8 @@ fn warp_frame_in_place_fullres_outputs<const GREEN_ONLY: bool>(
     {
         return Ok(covered);
     }
+    // A consumer of a few rows (`WarpScratch::bands`) writes back only those.
+    let only = scratch.bands.clone();
     warp_frame_fullres_with_sink::<GREEN_ONLY, _>(
         frame,
         t,
@@ -2830,7 +2984,7 @@ fn warp_frame_in_place_fullres_outputs<const GREEN_ONLY: bool>(
         resampler,
         scratch,
         |frame, site, dst, cover, inv, black, execution| {
-            Ok(writeback_fullres_site(
+            Ok(writeback_fullres_site_bands(
                 &mut frame.data,
                 frame.stride,
                 (frame.active.x, frame.active.y),
@@ -2841,6 +2995,7 @@ fn warp_frame_in_place_fullres_outputs<const GREEN_ONLY: bool>(
                 inv,
                 black,
                 execution,
+                only.as_deref(),
             ))
         },
     )
@@ -2992,7 +3147,11 @@ where
             ca_override.is_none(),
             "direct CFA does not support the GPU test CA override"
         );
-        let ident = strehl_raw::identity(&frame.path);
+        anyhow::ensure!(
+            scratch.flat.is_none(),
+            "direct CFA does not support STREHL_SELF_FLAT"
+        );
+        let ident = strehl_raw::identity_cached(&frame.path);
         let ca =
             strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?;
         return direct_cfa::warp::<GREEN_ONLY, F>(frame, t, geom, resampler, scratch, sink, ca);
@@ -3024,8 +3183,20 @@ where
         && gw >= 4
         && gh >= 4
         && banded_gather_enabled()?;
+    anyhow::ensure!(
+        banded || scratch.measured.is_none(),
+        "pixel-shift assembly is implemented on the default banded Catmull-Rom gather only"
+    );
+    anyhow::ensure!(
+        banded || !scratch.carry_rgb,
+        "STREHL_CARRY_RGB is implemented on the default banded Catmull-Rom gather only"
+    );
+    anyhow::ensure!(
+        banded || scratch.flat.is_none(),
+        "STREHL_SELF_FLAT is implemented on the default banded Catmull-Rom gather only"
+    );
     if banded {
-        let ident = strehl_raw::identity(&frame.path);
+        let ident = strehl_raw::identity_cached(&frame.path);
         let ca =
             strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?;
         return warp_fullres_banded::<GREEN_ONLY, F>(frame, t, geom, scratch, sink, ca, writeback);
@@ -3086,12 +3257,12 @@ where
     // Same gear-guarded CA resolution as the shipped path; `None` => `compose`
     // returns `t` untouched.
     #[cfg(not(all(test, feature = "native-gpu-gather")))]
-    let ident = strehl_raw::identity(&frame.path);
+    let ident = strehl_raw::identity_cached(&frame.path);
     #[cfg(all(test, feature = "native-gpu-gather"))]
     let ident = if ca_override.is_some() {
         strehl_raw::CaptureIdentity::default()
     } else {
-        strehl_raw::identity(&frame.path)
+        strehl_raw::identity_cached(&frame.path)
     };
     #[cfg(not(all(test, feature = "native-gpu-gather")))]
     let ca =
@@ -3260,6 +3431,9 @@ struct GatherBandBufs {
     r: Vec<f32>,
     g: Vec<f32>,
     b: Vec<f32>,
+    /// One destination row of the green-band share (`STREHL_CA_COMPONENTS`).
+    share: Vec<f32>,
+    share_cover: Vec<bool>,
 }
 
 thread_local! {
@@ -3363,6 +3537,9 @@ where
         ci: usize,
         t: Similarity,
         offset: (f64, f64),
+        /// `STREHL_CA_COMPONENTS`: the green-band share (white-balanced
+        /// units) to add back, gathered through green's transform.
+        share: Option<(f32, Similarity)>,
     }
     let (gw, gh) = (geom.width, geom.height);
     let (fw, fh) = (2 * gw, 2 * gh);
@@ -3370,33 +3547,85 @@ where
     let (stride, ax, ay) = (frame.stride, frame.active.x, frame.active.y);
     let gain = wb_gains(&frame.wb_coeffs);
     let centre = (gw as f64 * 0.5, gh as f64 * 0.5);
-    // The whole-plane route's site order: dy outer, dx inner.
-    let sites: Vec<Site> = [(0, 0), (1, 0), (0, 1), (1, 1)]
+    let measured = scratch.measured.take();
+    // Lateral colour by component: four-shot groups only, where every site
+    // holds a measured green (`merge_cmd::colour_components`).
+    let split = if measured.is_some() && !GREEN_ONLY {
+        crate::merge_cmd::colour_components::split_for(ca)?
+    } else {
+        None
+    };
+    // Shares in the white-balanced units of the measured rows.
+    let shares = split.map(|s| {
+        [
+            (s.share_r * f64::from(gain[0]) / f64::from(gain[1])) as f32,
+            (s.share_b * f64::from(gain[2]) / f64::from(gain[1])) as f32,
+        ]
+    });
+    let add_back = shares.is_some() && !crate::merge_cmd::colour_components::own_only();
+    let site_profile = split.as_ref().map(|s| &s.own).or(ca);
+    // The whole-plane route's site order: dy outer, dx inner. Carried
+    // channels follow the four native sites, each through its own channel's
+    // lateral-colour transform.
+    // The green-only noise probe shares the frame's scratch and never carries;
+    // it leaves the frame's carried planes as the frame's gather wrote them.
+    let carry = scratch.carry_rgb && !GREEN_ONLY;
+    let channel_of = |ci: usize| match ci {
+        0 => strehl_core::optics::Channel::Red,
+        2 => strehl_core::optics::Channel::Blue,
+        _ => strehl_core::optics::Channel::Green,
+    };
+    let native = [(0, 0), (1, 0), (0, 1), (1, 1)]
         .into_iter()
         .filter(|&(dx, dy)| !GREEN_ONLY || rggb_channel_index(dx, dy) == 1)
-        .map(|(dx, dy)| Site {
+        .map(|(dx, dy)| (dx, dy, rggb_channel_index(dx, dy)));
+    let extra = CARRIED_SITES.iter().copied().filter(|_| carry);
+    let sites: Vec<Site> = native
+        .chain(extra)
+        .map(|(dx, dy, ci)| Site {
             dx,
             dy,
-            ci: rggb_channel_index(dx, dy),
-            t: strehl_core::optics::OpticalProfile::compose(
-                ca,
-                strehl_core::optics::cfa_site_channel(dx, dy),
-                t,
-            ),
+            ci,
+            t: strehl_core::optics::OpticalProfile::compose(site_profile, channel_of(ci), t),
             offset: (dx as f64 * 0.5, dy as f64 * 0.5),
+            share: match (shares, ci) {
+                (Some(a), 0 | 2) if add_back => Some((
+                    a[ci / 2],
+                    strehl_core::optics::OpticalProfile::compose(
+                        ca,
+                        strehl_core::optics::Channel::Green,
+                        t,
+                    ),
+                )),
+                _ => None,
+            },
         })
         .collect();
 
     let px = geom.pixels();
     scratch.site_dst.resize_with(sites.len(), Vec::new);
     scratch.site_cover.resize_with(sites.len(), Vec::new);
+    if carry {
+        // Reuse the previous frame's carried buffers as this frame's carried
+        // destinations (they were swapped out of here after its gather).
+        let first = sites.len() - CARRIED_SITES.len();
+        for (k, c) in scratch.carried.iter_mut().enumerate() {
+            if c.len() == px && scratch.site_dst[first + k].len() != px {
+                std::mem::swap(c, &mut scratch.site_dst[first + k]);
+            }
+        }
+    }
     for (d, c) in scratch
         .site_dst
         .iter_mut()
         .zip(scratch.site_cover.iter_mut())
     {
+        // Sized independently: a destination may arrive full-sized from the
+        // carried swap above while its coverage does not.
         if d.len() != px {
             *d = vec![0.0; px];
+        }
+        if c.len() != px {
             *c = vec![false; px];
         }
     }
@@ -3419,32 +3648,191 @@ where
         }
     }
 
+    if let Some(m) = &measured {
+        anyhow::ensure!(
+            m.members.iter().all(|f| f.levels == frame.levels
+                && f.stride == frame.stride
+                && f.active == frame.active),
+            "pixel-shift members disagree in geometry or levels"
+        );
+    }
     let data = &frame.data;
+    // `STREHL_SELF_FLAT`: one factor per raw sample, for the frame and its
+    // members alike (a group's members share a focal plane, so a segment).
+    let flat = scratch.flat.clone();
+    if let Some(f) = &flat {
+        anyhow::ensure!(
+            f.len() == frame.stride * frame.buffer_height,
+            "STREHL_SELF_FLAT: the response map does not cover {}'s buffer",
+            frame.path.display()
+        );
+    }
+    let flat: Option<&[f32]> = flat.as_deref().map(Vec::as_slice);
+    // Measured channel rows of a pixel-shift group: for each site, the member
+    // whose shifted photosite has that colour, black-subtracted, divided by the
+    // member's exposure gain and white-balanced like the Malvar mosaic. Green
+    // is the mean of its two samples. Integer indexing only.
+    let measured_rows = |ylo: usize, rows: usize, r: &mut [f32], g: &mut [f32], b: &mut [f32]| {
+        let m = measured.as_ref().expect("measured group");
+        let sources: [&[u16]; 4] = [
+            data,
+            &m.members[0].data,
+            &m.members[1].data,
+            &m.members[2].data,
+        ];
+        let inv: [f32; 4] = m.gains.map(|g| (1.0 / g) as f32);
+        let sample = |y: isize, x: usize| -> [f32; 3] {
+            let xi = x as isize;
+            let sm = strehl_core::pixel_shift::site_members(&m.offsets, xi, y);
+            let at = |j: usize| {
+                let (ox, oy) = m.offsets[j];
+                let by = (ay as isize + y + oy) as usize;
+                let bx = (ax as isize + xi + ox) as usize;
+                let i = by * stride + bx;
+                match flat {
+                    None => (sources[j][i] as f32 - black) * inv[j],
+                    Some(f) => (sources[j][i] as f32 - black) * f[i] * inv[j],
+                }
+            };
+            [
+                at(sm[0]) * gain[0],
+                (at(sm[1]) + at(sm[2])) * 0.5 * gain[1],
+                at(sm[3]) * gain[2],
+            ]
+        };
+        match m.residuals {
+            None => {
+                for k in 0..rows {
+                    let y = (ylo + k) as isize;
+                    for x in 0..fw {
+                        let v = sample(y, x);
+                        let i = k * fw + x;
+                        r[i] = v[0];
+                        g[i] = v[1];
+                        b[i] = v[2];
+                    }
+                }
+            }
+            Some((residuals, sign)) => {
+                // One assembled row above and below (clamped at the frame's
+                // edges) for the vertical gradient.
+                let raw: Vec<[f32; 3]> = (0..rows + 2)
+                    .flat_map(|e| (0..fw).map(move |x| (e, x)))
+                    .map(|(e, x)| {
+                        let y = (ylo as isize - 1 + e as isize).clamp(0, fh as isize - 1);
+                        sample(y, x)
+                    })
+                    .collect();
+                strehl_core::pixel_shift::compensate_rows(
+                    &raw,
+                    fw,
+                    rows,
+                    ylo as isize,
+                    &m.offsets,
+                    &residuals,
+                    sign,
+                    [&mut r[..rows * fw], &mut g[..rows * fw], &mut b[..rows * fw]],
+                );
+            }
+        }
+    };
+    // `WarpScratch::bands` / `valid_rows`: a consumer that needs only some
+    // rows (the optical restoration's reference tiles, after a row-range
+    // decode).
+    let only = scratch.bands.clone();
+    let valid = scratch.valid_rows.clone();
+    let reach_y = measured.as_ref().map_or(0, |m| {
+        m.offsets
+            .iter()
+            .map(|o| o.1.unsigned_abs())
+            .max()
+            .unwrap_or(0)
+    });
+    let unreadable = std::sync::atomic::AtomicBool::new(false);
     views
         .into_par_iter()
         .enumerate()
         .for_each(|(band, mut planes)| {
+            if only
+                .as_ref()
+                .is_some_and(|m| !m.get(band).copied().unwrap_or(false))
+            {
+                return;
+            }
             let py0 = band * GATHER_BAND_ROWS;
             let py1 = (py0 + GATHER_BAND_ROWS).min(gh);
             let mut span: Option<(usize, usize)> = None;
             for s in &sites {
-                if let Some((a, b)) = band_source_rows(s.t, s.offset, py0, py1, gw, centre, fh) {
-                    span = Some(span.map_or((a, b), |(lo, hi)| (lo.min(a), hi.max(b))));
+                let green = s.share.map(|(_, tg)| tg);
+                for st in std::iter::once(s.t).chain(green) {
+                    if let Some((a, b)) = band_source_rows(st, s.offset, py0, py1, gw, centre, fh) {
+                        span = Some(span.map_or((a, b), |(lo, hi)| (lo.min(a), hi.max(b))));
+                    }
+                }
+            }
+            if let (Some(v), Some((ylo, yhi))) = (valid.as_ref(), span) {
+                // The active rows this band reads: the measured rows with one
+                // row each way for the compensation and every member's
+                // vertical offset, or the Malvar window's two rows each way
+                // (reflected inside the frame).
+                let (lo, hi) = if measured.is_some() {
+                    (
+                        ylo as isize - 1 - reach_y as isize,
+                        (yhi + 1 + reach_y) as isize,
+                    )
+                } else {
+                    let (ma, mb) = strehl_core::demosaic::MosaicRows::span(fh, ylo, yhi);
+                    (ma as isize, mb as isize)
+                };
+                let ok = (lo..=hi).all(|y| {
+                    let b = ay as isize + y;
+                    b < 0 || v.get(b as usize).copied().unwrap_or(true)
+                });
+                if !ok {
+                    unreadable.store(true, std::sync::atomic::Ordering::Relaxed);
+                    return;
                 }
             }
             GATHER_BAND_BUFS.with(|cell| {
                 let mut guard = cell.borrow_mut();
                 let bufs = &mut *guard;
                 let (ylo, rows) = match span {
+                    Some((ylo, yhi)) if measured.is_some() => {
+                        let n = (yhi - ylo + 1) * fw;
+                        let r = grown(&mut bufs.r, n);
+                        let g = grown(&mut bufs.g, n);
+                        let b = grown(&mut bufs.b, n);
+                        measured_rows(ylo, yhi - ylo + 1, r, g, b);
+                        if let Some([ar, ab]) = shares {
+                            // The own bands: red and blue less their
+                            // green-band share, at the same photosite.
+                            for ((rv, bv), gv) in r.iter_mut().zip(b.iter_mut()).zip(g.iter()) {
+                                *rv -= ar * gv;
+                                *bv -= ab * gv;
+                            }
+                        }
+                        (ylo, n)
+                    }
                     Some((ylo, yhi)) => {
                         let (ma, mb) = strehl_core::demosaic::MosaicRows::span(fh, ylo, yhi);
                         let mos = grown(&mut bufs.mos, (mb - ma + 1) * fw);
                         for (k, orow) in mos.chunks_mut(fw).enumerate() {
                             let y = ma + k;
                             let row = (ay + y) * stride + ax;
-                            for (x, o) in orow.iter_mut().enumerate() {
-                                *o =
-                                    (data[row + x] as f32 - black) * gain[rggb_channel_index(x, y)];
+                            match flat {
+                                None => {
+                                    for (x, o) in orow.iter_mut().enumerate() {
+                                        *o = (data[row + x] as f32 - black)
+                                            * gain[rggb_channel_index(x, y)];
+                                    }
+                                }
+                                Some(f) => {
+                                    for (x, o) in orow.iter_mut().enumerate() {
+                                        *o = (data[row + x] as f32 - black)
+                                            * f[row + x]
+                                            * gain[rggb_channel_index(x, y)];
+                                    }
+                                }
                             }
                         }
                         let win = strehl_core::demosaic::MosaicRows {
@@ -3485,11 +3873,19 @@ where
                     }
                     None => (0, 0),
                 };
+                let GatherBandBufs {
+                    r: br,
+                    g: bg,
+                    b: bb,
+                    share: bs,
+                    share_cover: bsc,
+                    ..
+                } = bufs;
                 for (s, (dst, cover)) in sites.iter().zip(planes.iter_mut()) {
                     let channel: &[f32] = match s.ci {
-                        0 => &bufs.r[..rows],
-                        2 => &bufs.b[..rows],
-                        _ => &bufs.g[..rows],
+                        0 => &br[..rows],
+                        2 => &bb[..rows],
+                        _ => &bg[..rows],
                     };
                     let src = strehl_core::align::PlaneRows {
                         data: channel,
@@ -3510,13 +3906,88 @@ where
                             drow,
                             crow,
                         );
+                        if let Some((a, tg)) = s.share {
+                            // The green-band share, where green images it.
+                            let green = strehl_core::align::PlaneRows {
+                                data: &bg[..rows],
+                                width: fw,
+                                height: fh,
+                                first: ylo,
+                            };
+                            if bs.len() < gw {
+                                bs.resize(gw, 0.0);
+                                bsc.resize(gw, false);
+                            }
+                            strehl_core::align::gather_rows_catmull_rom_checked(
+                                green,
+                                tg,
+                                2.0,
+                                s.offset,
+                                py0 + k,
+                                centre,
+                                &mut bs[..gw],
+                                &mut bsc[..gw],
+                            );
+                            for ((o, c), (v, vc)) in drow
+                                .iter_mut()
+                                .zip(crow.iter_mut())
+                                .zip(bs.iter().zip(bsc.iter()))
+                            {
+                                *o += a * v;
+                                *c &= *vc;
+                            }
+                        }
                     }
                 }
             });
         });
+    // Every band has read the members: their buffers serve the next group's
+    // decodes.
+    if let Some(m) = measured {
+        recycle_members(m.members);
+    }
+    anyhow::ensure!(
+        !unreadable.load(std::sync::atomic::Ordering::Relaxed),
+        "the gather of {} would read rows that were not decoded",
+        frame.path.display()
+    );
 
     let mut covered_total = 0usize;
-    for (si, s) in sites.iter().enumerate() {
+    let native_sites = sites.len() - if carry { CARRIED_SITES.len() } else { 0 };
+    if carry {
+        // The carried channels, quantised as `writeback_fullres_site` and
+        // `extract_planes` treat a native site: `round(v / gain + black)` to
+        // u16, then `(dn - black).max(0)`; uncovered samples read zero.
+        scratch.carried.resize_with(CARRIED_SITES.len(), Vec::new);
+        for (k, s) in sites[native_sites..].iter().enumerate() {
+            let si = native_sites + k;
+            let inv = 1.0 / gain[s.ci];
+            let cover = &scratch.site_cover[si][..px];
+            // Row by row; only the computed bands' rows under `bands`.
+            scratch.site_dst[si][..px]
+                .par_chunks_mut(gw)
+                .zip(cover.par_chunks(gw))
+                .enumerate()
+                .filter(|(py, _)| {
+                    only.as_ref()
+                        .is_none_or(|m| m.get(py / GATHER_BAND_ROWS).copied().unwrap_or(false))
+                })
+                .for_each(|(_, (row, covered))| {
+                    for (v, c) in row.iter_mut().zip(covered) {
+                        *v = if *c {
+                            let dn = (*v * inv + black).round().clamp(0.0, u16::MAX as f32);
+                            (dn - black).max(0.0)
+                        } else {
+                            0.0
+                        };
+                    }
+                });
+            scratch.site_dst[si].truncate(px);
+            std::mem::swap(&mut scratch.carried[k], &mut scratch.site_dst[si]);
+        }
+        scratch.carried_fresh = true;
+    }
+    for (si, s) in sites.iter().enumerate().take(native_sites) {
         let inv = 1.0 / gain[s.ci];
         covered_total += sink(
             frame,
@@ -3528,7 +3999,7 @@ where
             writeback,
         )?;
     }
-    Ok(covered_total as f64 / (sites.len() * px) as f64)
+    Ok(covered_total as f64 / (native_sites * px) as f64)
 }
 
 #[cfg(all(test, feature = "native-gpu-gather"))]

@@ -80,6 +80,18 @@ native-gpu-gather = ["dep:strehl-native-gpu-gather"]
 [target.'cfg(windows)'.dependencies]
 windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_Storage_FileSystem", "Win32_System_SystemInformation", "Win32_System_Threading"] }
 [[example]]
+name = "a7cr-single-group"
+path = "../../experiments/a7cr-impl-2026-11-14/single-group.rs"
+
+[[example]]
+name = "a7cr-export-members"
+path = "../../experiments/a7cr-full-potential-2026-11-14/export-members.rs"
+
+[[example]]
+name = "a7cr-export-demosaic1"
+path = "../../experiments/a7cr-full-potential-2026-11-14/export-demosaic1.rs"
+
+[[example]]
 name = "rea-native-roi"
 path = "../../experiments/rea-a7c2-2026-10-24-i/native-roi/raw-roi-export.rs"
 

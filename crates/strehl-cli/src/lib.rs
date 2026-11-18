@@ -62,6 +62,10 @@ mod session_reproducibility;
 #[cfg(feature = "multi-stack")]
 #[path = "session-sampling.rs"]
 pub mod session_sampling;
+#[path = "follow-cmd.rs"]
+mod follow_cmd;
+#[path = "pixel-shift-cmd.rs"]
+pub mod pixel_shift_cmd;
 #[path = "sony-focus-cmd.rs"]
 mod sony_focus_cmd;
 #[path = "sony-focus-report.rs"]
@@ -177,6 +181,14 @@ enum Command {
     /// stack and writes it to disk with its own provenance and held-out error,
     /// for the merge to gather through.
     Align(align_cmd::AlignArgs),
+
+    /// Check a capture run's four-shot pixel-shift groups: member offsets,
+    /// sub-photosite residuals, exposure gains and the green witness.
+    PixelShift(pixel_shift_cmd::PixelShiftArgs),
+
+    /// Check a capture run's focal planes while it is captured, then report
+    /// retakes and optionally run the ordinary stack (plan stage S1).
+    Follow(follow_cmd::FollowArgs),
 
     /// Decode a directory of RAW files and report what was found.
     ///
@@ -1032,6 +1044,8 @@ where
         Command::Develop(args) => develop_cmd::run(&args),
         Command::ImportPreset(args) => develop_cmd::import(&args),
         Command::Probe { dir, limit } => probe(&dir, limit),
+        Command::PixelShift(args) => pixel_shift_cmd::run(&args),
+        Command::Follow(args) => follow_cmd::run(&args),
         Command::Focus { action } => match action {
             FocusAction::Inspect(args) => sony_focus_cmd::run(&args),
             FocusAction::List { gate } => focus_plugin::list(gate),

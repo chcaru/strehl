@@ -515,6 +515,30 @@ impl<L: Link> Camera<L> {
         self.mode(&p)?;
         self.status()
     }
+    /// Manual-mode ISO and shutter. Both are saved, so release restores the
+    /// owner's original exposure exactly as it restores the capture mode.
+    fn set_exposure(&mut self, iso: u64, shutter: u64) -> Result<Value> {
+        ensure!(self.configured && !self.uncertain, "Camera is not ready");
+        let p = self.ptp.properties()?;
+        Self::idle(&p)?;
+        ensure!(
+            value(&p, 0x500e)? == 1,
+            "Set the camera to M (manual exposure) before changing exposure remotely"
+        );
+        ensure!(
+            iso & 0xff_ffff != 0xff_ffff && shutter != 0,
+            "Choose a fixed ISO and a timed shutter speed"
+        );
+        self.set(0xd21e, iso, true)?;
+        self.set(0xd20d, shutter, true)?;
+        let p = self.ptp.properties()?;
+        self.mode(&p)?;
+        ensure!(
+            value(&p, 0xd21e)? == iso && value(&p, 0xd20d)? == shutter,
+            "Exposure did not read back"
+        );
+        self.status()
+    }
     fn mode(&self, p: &Properties) -> Result<()> {
         if self.shots == 4 {
             ensure!(
@@ -935,7 +959,7 @@ pub fn serve() -> Result<()> {
             Ok(())
         };
         emit(
-            json!({"ok":true,"model":"ILCE-7CR","backend":"sony-ptp3","capture_protocol":2,"live_view_protocol":1,"host_pipeline_protocol":1,"group_stream_protocol":1,"pixel_shift_shots":4,"raw_format":"uncompressed"}),
+            json!({"ok":true,"model":"ILCE-7CR","backend":"sony-ptp3","capture_protocol":2,"live_view_protocol":1,"host_pipeline_protocol":1,"group_stream_protocol":1,"exposure_protocol":1,"pixel_shift_shots":4,"raw_format":"uncompressed"}),
         )?;
         for line in std::io::stdin().lock().lines() {
             let line = line?;
@@ -949,6 +973,9 @@ pub fn serve() -> Result<()> {
                     ["configure"] => camera.configure(),
                     ["status"] => camera.status(),
                     ["pixel-shift", shots] => camera.set_pixel_shift(shots.parse()?),
+                    ["exposure", iso, shutter] => {
+                        camera.set_exposure(iso.parse()?, shutter.parse()?)
+                    }
                     ["preview"] => camera.preview(),
                     ["focus", target, settle] => camera.focus(target.parse()?, settle.parse()?),
                     ["capture-host", timeout] => camera.capture(timeout.parse()?, &mut emit),

@@ -28,6 +28,24 @@ struct P {
 @group(0) @binding(5) var<storage, read> xf: array<f64>;
 // f64 partial sums.
 @group(0) @binding(6) var<storage, read_write> red: array<f64>;
+// The accumulators' second bank: wgpu caps a storage binding below 2 GiB,
+// and twelve planes' totals at 61 MP need 3.8 GB. An accumulator offset
+// with ACC_BANK set addresses acc_hi (each region lies in one bank).
+@group(0) @binding(7) var<storage, read_write> acc_hi: array<f32>;
+const ACC_BANK: u32 = 0x40000000u;
+// Full-resolution planar channels (`mhc`, `assemble`), read by `gather`:
+// their own binding, so the work arena stays below the binding cap with
+// twelve planes' pyramids.
+@group(0) @binding(8) var<storage, read_write> rgbw: array<f32>;
+
+fn acc_ld(o: u32) -> f32 {
+    if (o >= ACC_BANK) { return acc_hi[o - ACC_BANK]; }
+    return acc[o];
+}
+
+fn acc_st(o: u32, v: f32) {
+    if (o >= ACC_BANK) { acc_hi[o - ACC_BANK] = v; } else { acc[o] = v; }
+}
 
 // consts layout: [0..12) LN_SERIES, [12..27) EXP_SERIES, 27 LN2, 28 INV_LN2, 29 SQRT2,
 // [30..45) LN64_SERIES, [45..56) SIN_SERIES, [56..67) COS_SERIES, 67 PIO2_HI,
@@ -313,7 +331,7 @@ fn fill(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) n
     let i = gid(id, nwg);
     if (i >= p.a.y) { return; }
     let v = bitcast<f32>(p.a.z);
-    if (p.a.w == 0u) { work[p.a.x + i] = v; } else { acc[p.a.x + i] = v; }
+    if (p.a.w == 0u) { work[p.a.x + i] = v; } else { acc_st(p.a.x + i, v); }
 }
 
 // a = (g1, g2, dst, n): luma = 0.5 * (g1 + g2)
@@ -330,8 +348,8 @@ fn hull(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) n
     let i = gid(id, nwg);
     if (i >= p.a.w) { return; }
     let v = work[p.a.x + i];
-    acc[p.a.y + i] = min(acc[p.a.y + i], v);
-    acc[p.a.z + i] = max(acc[p.a.z + i], v);
+    acc_st(p.a.y + i, min(acc_ld(p.a.y + i), v));
+    acc_st(p.a.z + i, max(acc_ld(p.a.z + i), v));
 }
 
 // reduce, horizontal: a = (src, sw, sh, scratch), b.x = dw. Over dw x sh.
@@ -465,25 +483,30 @@ fn level(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) 
     work[p.b.y + i] = select_weight(excess, fl, pw);
     if ((flags & 2u) != 0u) {
         let z = div(e, max(beta * max(v, 0.0), 1.0));
-        acc[p.c.x + i] = max(acc[p.c.x + i], z);
-        acc[p.c.y + i] = acc[p.c.y + i] + z;
-        acc[p.c.z + i] = acc[p.c.z + i] + work[p.a.z + i];
-        acc[p.c.w + i] = acc[p.c.w + i] + e;
+        acc_st(p.c.x + i, max(acc_ld(p.c.x + i), z));
+        acc_st(p.c.y + i, acc_ld(p.c.y + i) + z);
+        acc_st(p.c.z + i, acc_ld(p.c.z + i) + work[p.a.z + i]);
+        acc_st(p.c.w + i, acc_ld(p.c.w + i) + e);
     }
 }
 
-// accumulate_level, soft-power: a = (weight, den, n, planes),
+// accumulate_level, soft-power: a = (weight, den, n, planes | 0x100 adds den),
 // b = plane level offsets (work), c = num offsets (acc), d = usum offsets (acc).
 @compute @workgroup_size(256)
 fn accum(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
     let i = gid(id, nwg);
     if (i >= p.a.z) { return; }
     let w = work[p.a.x + i];
-    acc[p.a.y + i] = acc[p.a.y + i] + w;
-    for (var c = 0u; c < p.a.w; c = c + 1u) {
+    // a.w: the planes in this dispatch (at most four), | 0x100 on the
+    // dispatch that also adds the shared weight to den (the first of a
+    // level's), so each element still receives one addition per frame.
+    if ((p.a.w & 0x100u) != 0u) {
+        acc_st(p.a.y + i, acc_ld(p.a.y + i) + w);
+    }
+    for (var c = 0u; c < (p.a.w & 0xffu); c = c + 1u) {
         let l = work[p.b[c] + i];
-        acc[p.c[c] + i] = acc[p.c[c] + i] + w * div(l, 65536.0);
-        acc[p.d[c] + i] = acc[p.d[c] + i] + l;
+        acc_st(p.c[c] + i, acc_ld(p.c[c] + i) + w * div(l, 65536.0));
+        acc_st(p.d[c] + i, acc_ld(p.d[c] + i) + l);
     }
 }
 
@@ -647,28 +670,28 @@ fn mhc(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nw
     let g2 = tap(m, xi, yi + 1, inside);
     let b = tap(m, xi + 1, yi + 1, inside);
     if (p.a.w != 0u) {
-        work[o] = conv_g(m, xi, yi, inside);
-        work[o + 1u] = g1;
-        work[o + fw] = g2;
-        work[o + fw + 1u] = conv_g(m, xi + 1, yi + 1, inside);
+        rgbw[o] = conv_g(m, xi, yi, inside);
+        rgbw[o + 1u] = g1;
+        rgbw[o + fw] = g2;
+        rgbw[o + fw + 1u] = conv_g(m, xi + 1, yi + 1, inside);
         return;
     }
     // (x, y): red known.
-    work[o] = r;
-    work[o + n] = conv_g(m, xi, yi, inside);
-    work[o + 2u * n] = conv_x(m, xi, yi, inside);
+    rgbw[o] = r;
+    rgbw[o + n] = conv_g(m, xi, yi, inside);
+    rgbw[o + 2u * n] = conv_x(m, xi, yi, inside);
     // (x + 1, y): green on a red row.
-    work[o + 1u] = conv_h(m, xi + 1, yi, inside);
-    work[o + n + 1u] = g1;
-    work[o + 2u * n + 1u] = conv_v(m, xi + 1, yi, inside);
+    rgbw[o + 1u] = conv_h(m, xi + 1, yi, inside);
+    rgbw[o + n + 1u] = g1;
+    rgbw[o + 2u * n + 1u] = conv_v(m, xi + 1, yi, inside);
     // (x, y + 1): green on a blue row.
-    work[o + fw] = conv_v(m, xi, yi + 1, inside);
-    work[o + n + fw] = g2;
-    work[o + 2u * n + fw] = conv_h(m, xi, yi + 1, inside);
+    rgbw[o + fw] = conv_v(m, xi, yi + 1, inside);
+    rgbw[o + n + fw] = g2;
+    rgbw[o + 2u * n + fw] = conv_h(m, xi, yi + 1, inside);
     // (x + 1, y + 1): blue known.
-    work[o + fw + 1u] = conv_x(m, xi + 1, yi + 1, inside);
-    work[o + n + fw + 1u] = conv_g(m, xi + 1, yi + 1, inside);
-    work[o + 2u * n + fw + 1u] = b;
+    rgbw[o + fw + 1u] = conv_x(m, xi + 1, yi + 1, inside);
+    rgbw[o + n + fw + 1u] = conv_g(m, xi + 1, yi + 1, inside);
+    rgbw[o + 2u * n + fw + 1u] = b;
 }
 fn cr_weights(f: f32) -> vec4<f32> {
     let f2 = f * f;
@@ -713,10 +736,10 @@ fn gather_value(src: u32, fw: u32, fh: u32, s: u32, px: u32, py: u32) -> f32 {
         for (var dy = 0u; dy < 4u; dy = dy + 1u) {
             let row = base + dy * fw;
             var r = 0.0;
-            r = r + work[row] * wx[0];
-            r = r + work[row + 1u] * wx[1];
-            r = r + work[row + 2u] * wx[2];
-            r = r + work[row + 3u] * wx[3];
+            r = r + rgbw[row] * wx[0];
+            r = r + rgbw[row + 1u] * wx[1];
+            r = r + rgbw[row + 2u] * wx[2];
+            r = r + rgbw[row + 3u] * wx[3];
             acc = acc + r * wy[dy];
         }
         code = quantize(acc * p.f.y + black);
@@ -969,7 +992,7 @@ fn probe_pair(seed: vec2<u32>, row: u32, col: u32, width: u32) -> vec2<u32> {
     let n = row * width + (col & ~1u) + 1u;
     let k1 = splitmix24(seed, n);
     let k2 = splitmix24(seed, n + 1u);
-    let level = xf[64u]; let sigma = xf[65u]; let margin = xf[66u];
+    let level = xf[192u]; let sigma = xf[193u]; let margin = xf[194u];
     let g32 = gaussian_pair_f32(k1, k2);
     let a = screened(level + sigma * f64(g32.x), margin);
     let b = screened(level + sigma * f64(g32.y), margin);
@@ -981,7 +1004,7 @@ fn probe_pair(seed: vec2<u32>, row: u32, col: u32, width: u32) -> vec2<u32> {
 // One word of the probe slot from a frame slot, noise where the fill reaches.
 // a = (words, probe word base, stride, width), b = (ax, ay, rows, frame word base),
 // c = (seed lo, seed hi);
-// xf[64], xf[65] = level, sigma.
+// xf[192], xf[193] = level, sigma.
 @compute @workgroup_size(256)
 fn noise(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
     let w = gid(id, nwg);
@@ -1105,10 +1128,10 @@ fn null_accum(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgro
     let lv = work[p.a.x + i];
     let e = work[p.a.y + i];
     let z = div(e, p.f.x);
-    acc[p.b.x + i] = max(acc[p.b.x + i], z);
-    acc[p.b.y + i] = acc[p.b.y + i] + z;
-    acc[p.b.z + i] = acc[p.b.z + i] + lv;
-    acc[p.b.w + i] = acc[p.b.w + i] + e;
+    acc_st(p.b.x + i, max(acc_ld(p.b.x + i), z));
+    acc_st(p.b.y + i, acc_ld(p.b.y + i) + z);
+    acc_st(p.b.z + i, acc_ld(p.b.z + i) + lv);
+    acc_st(p.b.w + i, acc_ld(p.b.w + i) + e);
 }
 
 // ---------------------------------------------------------------------------
@@ -1164,4 +1187,94 @@ fn screen_census(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_work
     raw[4u * t + 1u] = fell;
     raw[4u * t + 2u] = first;
     raw[4u * t + 3u] = bitcast<u32>(worst);
+}
+
+// ---------------------------------------------------------------------------
+// Pixel-shift assembly: align_cmd::warp_fullres_banded's measured rows and,
+// when compensating, strehl_core::pixel_shift::compensate_rows, one
+// full-resolution sample per invocation, into the planar channels `mhc`
+// writes for a single frame. Every float operation is the CPU's, in its
+// order, on the same operand types; the residuals arrive already multiplied
+// by their sign as f32 and the inverse exposure gains as `(1 / g) as f32`.
+// a = (rgb, fw, fh, flags: 1 = compensate)
+// b = each member's active-origin sample index in `raw`
+// c = (stride, member offsets: 8 bits each, (ox + 8) | (oy + 8) << 4,
+//      site table: 8 bits per parity class (x & 1) | (y & 1) << 1, two bits per
+//      colour [red, green a, green b, blue] (pixel_shift::site_members), 0)
+// d, e = each member's residual x, y (f32 bits)
+// f = (black, gain R, gain G, gain B), g = each member's 1 / exposure gain
+// ---------------------------------------------------------------------------
+
+// Member j's black-subtracted, exposure-normalised sample at member 1's
+// active (x, y): `(dn - black) * inv[j]`.
+fn asm_at(j: u32, x: i32, y: i32) -> f32 {
+    let o = (p.c.y >> (8u * j)) & 0xffu;
+    let ox = i32(o & 0xfu) - 8;
+    let oy = i32(o >> 4u) - 8;
+    let pos = u32(i32(p.b[j]) + i32(p.c.x) * (y + oy) + (x + ox));
+    return (f32(sensel(0u, pos)) - p.f.x) * p.g[j];
+}
+
+// The members delivering [red, green a, green b, blue] at (x, y).
+fn asm_members(x: i32, y: i32) -> u32 {
+    let parity = u32(x & 1) | (u32(y & 1) << 1u);
+    return (p.c.z >> (8u * parity)) & 0xffu;
+}
+
+// measured_rows' `sample`: white-balanced red, green (the mean of two) and blue.
+fn asm_sample(x: i32, y: i32) -> vec3<f32> {
+    let t = asm_members(x, y);
+    let r = asm_at(t & 3u, x, y) * p.f.y;
+    let g = (asm_at((t >> 2u) & 3u, x, y) + asm_at((t >> 4u) & 3u, x, y)) * 0.5 * p.f.z;
+    let b = asm_at((t >> 6u) & 3u, x, y) * p.f.w;
+    return vec3(r, g, b);
+}
+
+@compute @workgroup_size(256)
+fn assemble(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let i = gid(id, nwg);
+    let fw = p.a.y; let fh = p.a.z;
+    let n = fw * fh;
+    if (i >= n) { return; }
+    let x = i32(i % fw); let y = i32(i / fw);
+    let v = asm_sample(x, y);
+    let o = p.a.x + i;
+    if ((p.a.w & 1u) == 0u) {
+        rgbw[o] = v.x;
+        rgbw[o + n] = v.y;
+        rgbw[o + 2u * n] = v.z;
+        return;
+    }
+    // compensate_rows: a central difference in x (span 1 at the frame's edge),
+    // half the difference of the clamped rows above and below in y.
+    let xm = max(x - 1, 0);
+    let xp = min(x + 1, i32(fw) - 1);
+    let span = f32(max(xp - xm, 1));
+    let left = asm_sample(xm, y);
+    let right = asm_sample(xp, y);
+    let up = asm_sample(x, clamp(y - 1, 0, i32(fh) - 1));
+    let down = asm_sample(x, clamp(y + 1, 0, i32(fh) - 1));
+    let t = asm_members(x, y);
+    let m0 = t & 3u;
+    let m1 = (t >> 2u) & 3u;
+    let m2 = (t >> 4u) & 3u;
+    let m3 = (t >> 6u) & 3u;
+    // red: v + (r . grad)
+    let rx = bitcast<f32>(p.d[m0]);
+    let ry = bitcast<f32>(p.e[m0]);
+    let gxr = div(right.x - left.x, span);
+    let gyr = 0.5 * (down.x - up.x);
+    rgbw[o] = v.x + (rx * gxr + ry * gyr);
+    // green: the mean of its two members' residuals
+    let dgx = 0.5 * (bitcast<f32>(p.d[m1]) + bitcast<f32>(p.d[m2]));
+    let dgy = 0.5 * (bitcast<f32>(p.e[m1]) + bitcast<f32>(p.e[m2]));
+    let gxg = div(right.y - left.y, span);
+    let gyg = 0.5 * (down.y - up.y);
+    rgbw[o + n] = v.y + (dgx * gxg + dgy * gyg);
+    // blue
+    let bx = bitcast<f32>(p.d[m3]);
+    let by = bitcast<f32>(p.e[m3]);
+    let gxb = div(right.z - left.z, span);
+    let gyb = 0.5 * (down.z - up.z);
+    rgbw[o + 2u * n] = v.z + (bx * gxb + by * gyb);
 }

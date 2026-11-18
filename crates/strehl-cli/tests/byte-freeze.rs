@@ -519,6 +519,17 @@ const RENDER_ENV: &[&str] = &[
     // came to be in this list.
     "STREHL_FULLRES_GATHER",
     "STREHL_ONLY_FRAME",
+    // `remosaic` replaces the frame list with one frame per recorded pixel-shift
+    // focal plane; on a capture run with groups it is a different stack.
+    "STREHL_PIXEL_SHIFT",
+    // Four-shot quality switches (2026-11-16), all off by default and read
+    // only on pixel-shift stacks or by an explicit request; cleared so an
+    // ambient value cannot reach a row.
+    "STREHL_CA_COMPONENTS",
+    "STREHL_SELF_FLAT",
+    "STREHL_OPTICAL_RESTORE_GATHER",
+    "STREHL_CHROMA_FILTER",
+    "STREHL_REFINE_FRAMES",
     // Which merge runs, and how its fold is partitioned. `STREHL_MERGE` is the
     // most dangerous entry in this list: it selects the whole backend, so an
     // ambient `STREHL_MERGE=pyramid` would render a completely different

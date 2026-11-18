@@ -43,6 +43,12 @@ pub struct Layout {
 /// Read only bounded, standard TIFF scalar tags. Anything unsupported falls
 /// back to byte compression. This never decodes Sony's compressed RAW stream.
 pub fn layout(bytes: &[u8]) -> Option<Layout> {
+    raw_ifd(bytes, bytes.len()).map(|(layout, _)| layout)
+}
+
+/// [`layout`] over a metadata prefix of a file `total` bytes long, also
+/// returning the raw IFD's offset. The strip may lie beyond `bytes`.
+pub fn raw_ifd(bytes: &[u8], total: usize) -> Option<(Layout, usize)> {
     fn u16_at(b: &[u8], at: usize) -> Option<u16> {
         Some(u16::from_le_bytes(
             b.get(at..at.checked_add(2)?)?.try_into().ok()?,
@@ -105,17 +111,21 @@ pub fn layout(bytes: &[u8]) -> Option<Layout> {
                 || !width.is_multiple_of(2)
                 || !height.is_multiple_of(2)
                 || width.checked_mul(height)?.checked_mul(2)? != length
-                || offset.checked_add(length)? > bytes.len()
+                || offset.checked_add(length)? > total
+                || total < bytes.len()
                 || found.is_some()
             {
                 return None;
             }
-            found = Some(Layout {
-                width,
-                height,
-                offset,
-                length,
-            });
+            found = Some((
+                Layout {
+                    width,
+                    height,
+                    offset,
+                    length,
+                },
+                at,
+            ));
         }
     }
     found
@@ -579,3 +589,4 @@ mod tests {
 }
 
 pub mod archive;
+pub mod cfa;

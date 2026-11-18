@@ -7,7 +7,9 @@
 //!     --test lossless-jpeg -- --ignored --nocapture
 //! ```
 //!
-//! Each directory is searched recursively for `.ARW` files.
+//! Each directory is searched recursively for `.ARW` files and `.ARW.straw`
+//! archives; for Sony uncompressed files (A7CR) the native side is the direct
+//! CFA path (`strehl_raw_codec::cfa`), including its crop reading.
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicUsize, Ordering};
 
@@ -21,7 +23,9 @@ fn arw_files(dir: &Path, out: &mut Vec<PathBuf>) {
         let p = e.path();
         if p.is_dir() {
             arw_files(&p, out);
-        } else if p.extension().is_some_and(|x| x.eq_ignore_ascii_case("arw")) {
+        } else if p.extension().is_some_and(|x| x.eq_ignore_ascii_case("arw"))
+            || strehl_raw_codec::archive::is_archive(&p)
+        {
             out.push(p);
         }
     }

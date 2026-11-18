@@ -102,6 +102,13 @@ pub enum Action {
     Capture {
         plan: Plan,
         root: PathBuf,
+        /// Explicit focus positions (burst or retake), approached in the plan's
+        /// direction. `None` captures the plan's own positions.
+        positions: Option<Vec<u16>>,
+    },
+    Exposure {
+        iso: u64,
+        shutter: u64,
     },
     Scan {
         plan: Plan,
@@ -479,7 +486,11 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                             refresh(c.as_mut(), &s)?;
                             phase(&s, Phase::Ready, "Camera focus magnifier updated");
                         }
-                        Action::Capture { plan, root } => {
+                        Action::Capture {
+                            plan,
+                            root,
+                            positions,
+                        } => {
                             ensure!(
                                 s.lock().unwrap().phase.can_edit(),
                                 "A sequence is already active"
@@ -490,7 +501,21 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                                 &control,
                                 plan,
                                 root,
+                                positions,
                             )?;
+                        }
+                        Action::Exposure { iso, shutter } => {
+                            ensure!(
+                                s.lock().unwrap().phase.can_edit(),
+                                "Finish the sequence before changing exposure"
+                            );
+                            let c = camera.as_mut().context("Connect a camera first")?;
+                            c.set_exposure(iso, shutter)?;
+                            refresh(c.as_mut(), &s)?;
+                            update(&s, |v| {
+                                v.timing = None;
+                                v.message = "Exposure updated".into();
+                            });
                         }
                         Action::Scan { plan, roi } => {
                             ensure!(
@@ -602,8 +627,21 @@ fn capture(
     control: &AtomicU8,
     plan: Plan,
     root: PathBuf,
+    explicit: Option<Vec<u16>>,
 ) -> Result<()> {
-    let positions = plan.positions()?;
+    plan.validate()?;
+    let kind = if explicit.is_some() {
+        "positions"
+    } else {
+        "plan"
+    };
+    let positions = match explicit {
+        Some(positions) => {
+            validate_positions(&plan, &positions)?;
+            positions
+        }
+        None => plan.positions()?,
+    };
     let status = refresh(c, s)?;
     validate_exposure(&status)?;
     let host = status["capture_destination"] == "host-pc";
@@ -622,7 +660,7 @@ fn capture(
     let cycle = property(&status, "ShutterSpeed")
         .and_then(|shutter| timing::initial_plane(shutter, plan.settle_ms, shots))
         .context("Cannot estimate timed shutter speed")?;
-    let mut log = Journal::create(&root, &plan, c.identity(), status)?;
+    let mut log = Journal::create(&root, &plan, &positions, kind, c.identity(), status)?;
     c.sync_journal(&log.directory)?;
     // Validate the registered destination too: another client could have changed
     // the default folder between the initial admission and run registration.
@@ -651,7 +689,9 @@ fn capture(
         if !checkpoint(c, s, control, Phase::Capturing)? {
             return Ok(false);
         }
-        let prestart = plan.prestart()?;
+        let prestart =
+            u16::try_from(i32::from(positions[0]) - plan.direction() * i32::from(plan.approach))
+                .context("Shorten Approach; the first position is too close to the lens limit")?;
         log.record("approach_intent", json!({"target":prestart}))?;
         let response = c.focus(prestart, plan.settle_ms)?;
         log.record("approach_complete", response)?;
@@ -790,6 +830,26 @@ fn capture(
             Err(e)
         }
     }
+}
+
+/// Explicit positions must keep the plan's approach direction so that every
+/// plane is reached from the same side (repeats are allowed: a burst).
+pub fn validate_positions(plan: &Plan, positions: &[u16]) -> Result<()> {
+    ensure!(
+        (1..=4096).contains(&positions.len()),
+        "Choose 1-4096 focus positions"
+    );
+    let direction = plan.direction();
+    ensure!(
+        positions
+            .windows(2)
+            .all(|w| (i32::from(w[1]) - i32::from(w[0])) * direction >= 0),
+        "Positions must follow the capture direction so each plane is approached from the same side"
+    );
+    u16::try_from(i32::from(positions[0]) - direction * i32::from(plan.approach))
+        .ok()
+        .context("Shorten Approach; the first position is too close to the lens limit")?;
+    Ok(())
 }
 
 fn validate_exposure(status: &Value) -> Result<()> {
@@ -1098,11 +1158,56 @@ mod tests {
             &AtomicU8::new(RUN),
             plan,
             temp.path().into(),
+            None,
         )
         .unwrap_err();
         assert!(error.to_string().contains("Shorten the stack"));
         assert_eq!(std::fs::read_dir(temp.path()).unwrap().count(), 0);
         assert!(!shared.lock().unwrap().exposure_uncertain);
+    }
+    #[test]
+    fn exposure_and_explicit_position_burst_capture() {
+        let temp = tempfile::tempdir().unwrap();
+        let w = Worker::new(PathBuf::new(), true);
+        w.send(0, Action::Connect).unwrap();
+        let s = until(&w, |s| s.phase == Phase::Ready && !s.command_pending);
+        w.send(
+            s.revision,
+            Action::Exposure {
+                iso: 800,
+                shutter: 65546,
+            },
+        )
+        .unwrap();
+        let s = until(&w, |s| !s.command_pending);
+        assert_eq!(property(&s.status, "IsoSensitivity"), Some(800));
+        assert_eq!(property(&s.status, "ShutterSpeed"), Some(65546));
+        let plan = Plan {
+            start: 60600,
+            end: 60620,
+            ..Plan::default()
+        };
+        assert!(validate_positions(&plan, &[60610, 60600]).is_err());
+        assert!(validate_positions(&plan, &[]).is_err());
+        validate_positions(&plan, &[60600, 60600, 60605]).unwrap();
+        w.send(
+            s.revision,
+            Action::Capture {
+                plan,
+                root: temp.path().into(),
+                positions: Some(vec![60605; 3]),
+            },
+        )
+        .unwrap();
+        let done = until(&w, |s| s.phase == Phase::Complete && !s.command_pending);
+        assert_eq!(done.completed, 3);
+        let journal = done.journal.unwrap();
+        let manifest: Value =
+            serde_json::from_slice(&std::fs::read(journal.join("manifest.json")).unwrap()).unwrap();
+        assert_eq!(manifest["focus_positions"], json!([60605, 60605, 60605]));
+        assert_eq!(manifest["capture_kind"], "positions");
+        let events = std::fs::read_to_string(journal.join("events.jsonl")).unwrap();
+        assert!(events.contains(r#""target":60477"#), "approach from below");
     }
     #[test]
     fn capture_receipt_and_exposure_fail_closed() {
@@ -1311,6 +1416,7 @@ mod tests {
                     ..Plan::default()
                 },
                 root: temp.path().to_owned(),
+                positions: None,
             },
         )
         .unwrap();
@@ -1354,6 +1460,7 @@ mod tests {
                     ..Plan::default()
                 },
                 root: temp.path().to_owned(),
+                positions: None,
             },
         )
         .unwrap();
@@ -1420,6 +1527,7 @@ mod tests {
                 Action::Capture {
                     plan: plan.clone(),
                     root: temp.path().into(),
+                    positions: None,
                 },
             )
             .unwrap();
@@ -1433,7 +1541,8 @@ mod tests {
                     fault.revision,
                     Action::Capture {
                         plan: plan.clone(),
-                        root: temp.path().into()
+                        root: temp.path().into(),
+                        positions: None,
                     }
                 )
                 .is_err()
@@ -1472,6 +1581,7 @@ mod tests {
                 Action::Capture {
                     plan,
                     root: temp.path().into(),
+                    positions: None,
                 },
             )
             .unwrap();

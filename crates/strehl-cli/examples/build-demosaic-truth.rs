@@ -54,6 +54,15 @@ mod align_cmd;
 #[allow(dead_code)]
 #[path = "../src/ui-progress.rs"]
 mod ui_progress;
+/// `align_cmd.rs` gathers four-shot colour by component through
+/// `crate::merge_cmd::colour_components`; included by path, "the crate" is
+/// this file, so the one module it needs is included here too.
+#[allow(dead_code)]
+mod merge_cmd {
+    use anyhow::{Context, Result};
+    #[path = "../../src/merge_cmd/colour-components.rs"]
+    pub(crate) mod colour_components;
+}
 
 use std::f64::consts::TAU;
 use std::path::PathBuf;
