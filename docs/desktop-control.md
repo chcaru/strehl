@@ -224,7 +224,11 @@ process's checker, and the counts `checked`, `passed`, `attention`,
 `retake_positions` and `align_pairs`, plus `retaken` (planes taken again during the capture). Error
 correction is the controller's `error_correction` state, set between stacks
 with `capture_command` `{"op":"error_correction","enabled":true}`. `note` says what became of the last
-finished capture. `scripts/replay-capture.py` re-creates a recorded run file by file
+finished capture. `capture.stored_raws` lists, per camera model, the newest
+registered run with RAW receipts and its mean original and stored bytes per RAW
+and storage encoding: the basis of the expected stack size beside the worst
+case. The receiver status carries `archive_format` (2, or 1 when the receiver
+writes format 1). `scripts/replay-capture.py` re-creates a recorded run file by file
 at its recorded pace and can register it with a scratch receiver configuration.
 Use it to exercise this without a camera.
 

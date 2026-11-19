@@ -117,9 +117,131 @@ pub(crate) struct InProgress {
     pub folder: PathBuf,
     pub idle: Duration,
 }
+/// What a past capture's RAWs took on disk: the newest registered run of
+/// each camera model with RAW receipts. The basis of the capture screen's
+/// expected stack size.
+#[derive(Clone, Debug, PartialEq, Serialize)]
+pub(crate) struct StoredRaws {
+    pub folder: PathBuf,
+    pub model: String,
+    /// The manifest's `raw_format` (`sony-uncompressed` is a plain CFA strip).
+    pub raw_format: String,
+    pub raws: usize,
+    /// Mean original RAW bytes and mean bytes stored per RAW.
+    pub original: u64,
+    pub stored: u64,
+    /// The receipts' storage encoding (one per run).
+    pub encoding: String,
+}
+
+/// Format 2's size against format 1's on plain-CFA RAWs. MEASURED on the
+/// A7CR scarab capture (784 RAWs, 51.21 GB to 49.00 GB, 2026-11-19).
+pub(crate) const FORMAT_2_OVER_1: f64 = 49.00 / 51.21;
+
+impl StoredRaws {
+    /// Expected bytes on disk per RAW of a new capture with this camera, and
+    /// how that was reckoned: the receiver now compresses (`compress`) in
+    /// archive `format`.
+    pub fn expected(&self, compress: bool, format: u8) -> (u64, String) {
+        let last = format!("your last {} capture", self.model);
+        match (compress, self.encoding.as_str()) {
+            (false, _) => (self.original, format!("uncompressed, as {last}")),
+            (true, "strehl-archive-v2") => (self.stored, format!("as {last}")),
+            (true, "strehl-archive-v1")
+                if format == 2 && self.raw_format == "sony-uncompressed" =>
+            {
+                (
+                    (self.stored as f64 * FORMAT_2_OVER_1) as u64,
+                    format!("{last} less 4 % for archive format 2"),
+                )
+            }
+            (true, "strehl-archive-v1") => (self.stored, format!("as {last}")),
+            _ => (self.original, format!("uncompressed size of {last}")),
+        }
+    }
+}
+
+/// [`StoredRaws`] of one run folder, or `None` without a manifest naming the
+/// camera or with fewer than four RAW receipts.
+pub(crate) fn stored_raws(folder: &Path) -> Option<StoredRaws> {
+    let manifest: Value =
+        serde_json::from_slice(&read_file(&folder.join("manifest.json"), 4 * 1024 * 1024).ok()?)
+            .ok()?;
+    let model = manifest["initial_status"]["model"].as_str()?.to_owned();
+    let raw_format = manifest["raw_format"].as_str().unwrap_or("").to_owned();
+    let text = read_file(&folder.join("transfer-receipts.jsonl"), 64 * 1024 * 1024).ok()?;
+    let (mut raws, mut original, mut stored) = (0u64, 0u64, 0u64);
+    let mut encoding = String::new();
+    for line in text.split(|b| *b == b'\n').filter(|l| !l.is_empty()) {
+        let Ok(r) = serde_json::from_slice::<Value>(line) else {
+            continue;
+        };
+        if !r["logical_name"]
+            .as_str()
+            .is_some_and(|n| n.ends_with(".ARW"))
+            || r["ok"] != true
+        {
+            continue;
+        }
+        let (Some(b), Some(s)) = (r["bytes"].as_u64(), r["storage_bytes"].as_u64()) else {
+            continue;
+        };
+        raws += 1;
+        original += b;
+        stored += s;
+        encoding = r["storage_encoding"]
+            .as_str()
+            .unwrap_or("identity")
+            .to_owned();
+    }
+    (raws >= 4).then(|| StoredRaws {
+        folder: folder.to_owned(),
+        model,
+        raw_format,
+        raws: raws as usize,
+        original: original / raws,
+        stored: stored / raws,
+        encoding,
+    })
+}
+
+/// Run folders' [`StoredRaws`] by the receipts' modification time, so an
+/// unchanged run is not read again.
+pub(crate) type StoredCache =
+    BTreeMap<PathBuf, (Option<std::time::SystemTime>, Option<StoredRaws>)>;
+
+/// The newest [`StoredRaws`] of each camera model among the registered runs.
+fn stored_by_model(config_path: &Path, cache: &mut StoredCache) -> Result<Vec<StoredRaws>> {
+    let mut found: Vec<StoredRaws> = Vec::new();
+    let runs = registered_runs(config_path)?;
+    cache.retain(|folder, _| runs.contains(folder));
+    for folder in runs {
+        let changed = folder
+            .join("transfer-receipts.jsonl")
+            .metadata()
+            .and_then(|m| m.modified())
+            .ok();
+        let entry = match cache.get(&folder) {
+            Some((when, s)) if *when == changed => s.clone(),
+            _ => {
+                let s = stored_raws(&folder);
+                cache.insert(folder.clone(), (changed, s.clone()));
+                s
+            }
+        };
+        if let Some(s) = entry
+            && !found.iter().any(|f| f.model == s.model)
+        {
+            found.push(s);
+        }
+    }
+    Ok(found)
+}
+
 #[derive(Clone, Default)]
 pub(crate) struct Snapshot {
     pub in_progress: Option<InProgress>,
+    pub stored: Vec<StoredRaws>,
     pub state: Value,
     pub online: bool,
     pub observed: Option<Instant>,
@@ -147,7 +269,7 @@ impl Snapshot {
             "connection_error":self.connection_error,"command_error":self.command_error,"notice":self.notice,
             "receiver":self.receiver,"receiver_error":self.receiver_error,"completed":self.completed,
             "preview":self.preview.as_ref().map(|(generation,image)|json!({"generation":generation,"width":image.width(),"height":image.height()})),
-            "preview_error":self.preview_error,
+            "preview_error":self.preview_error,"stored_raws":self.stored,
             "in_progress":self.in_progress.as_ref().map(|r| json!({"folder":r.folder,"idle_seconds":r.idle.as_secs_f64()}))})
     }
     pub fn request(&self, command: Command) -> Result<CommandRequest> {
@@ -364,6 +486,7 @@ fn run(
     let mut configured = config.normalize().is_ok();
     let mut receiver_due = Instant::now();
     let mut history_due = Instant::now();
+    let mut stored_cache = StoredCache::new();
     let mut last_preview = None;
     loop {
         match requests.recv_timeout(Duration::from_millis(200)) {
@@ -533,7 +656,12 @@ fn run(
         }
         if Instant::now() >= history_due {
             let completed = completed_stacks(&config.receiver_config).unwrap_or_default();
-            output.lock().unwrap().completed = completed;
+            let stored =
+                stored_by_model(&config.receiver_config, &mut stored_cache).unwrap_or_default();
+            let mut s = output.lock().unwrap();
+            s.completed = completed;
+            s.stored = stored;
+            drop(s);
             history_due = Instant::now() + Duration::from_secs(5);
         }
         ctx.request_repaint();
@@ -601,7 +729,7 @@ pub(crate) fn verify_completed(folder: &Path) -> Result<CompletedStack> {
             "RAW has no durable receipt"
         );
         let stored = match r["storage_encoding"].as_str() {
-            Some("strehl-archive-v1") => format!("{name}.straw"),
+            Some("strehl-archive-v1" | "strehl-archive-v2") => format!("{name}.straw"),
             Some("identity") | None => name,
             _ => anyhow::bail!("Unknown RAW storage format"),
         };
@@ -803,6 +931,109 @@ mod tests {
             .collect();
         std::fs::write(&journal, gap.join("\n")).unwrap();
         assert!(verify_completed(folder).is_err(), "a missing frame number");
+    }
+    /// The newest run of each camera with RAW receipts gives its mean sizes;
+    /// a run without a model or with too few RAWs gives nothing; an unchanged
+    /// run is served from the cache, a changed one is read again.
+    #[test]
+    fn stored_sizes_come_from_each_cameras_newest_run() {
+        let dir = tempfile::tempdir().unwrap();
+        let config = dir.path().join("receiver.json");
+        let run = |name: &str, model: Option<&str>, raws: usize, stored: u64, encoding: &str| {
+            let folder = dir.path().join(name);
+            std::fs::create_dir(&folder).unwrap();
+            let mut manifest = json!({"raw_format":"sony-uncompressed"});
+            if let Some(m) = model {
+                manifest["initial_status"] = json!({"model": m});
+            }
+            save_json(&folder.join("manifest.json"), &manifest).unwrap();
+            let lines: Vec<String> = (1..=raws)
+                .map(|n| {
+                    json!({"logical_name":format!("frame-{n:06}.ARW"),"ok":true,"bytes":100 + n as u64,
+                        "storage_bytes":stored,"storage_encoding":encoding})
+                    .to_string()
+                })
+                .chain([json!({"logical_name":"manifest.json","ok":true,"bytes":9,"storage_bytes":9,
+                    "storage_encoding":"identity"})
+                .to_string()])
+                .collect();
+            std::fs::write(folder.join("transfer-receipts.jsonl"), lines.join("\n")).unwrap();
+            std::thread::sleep(Duration::from_millis(30));
+            folder
+        };
+        let old_r = run("stack-1", Some("ILCE-7CR"), 8, 60, "strehl-archive-v1");
+        let ii = run("stack-2", Some("ILCE-7CM2"), 4, 40, "strehl-archive-v1");
+        let _few = run("stack-3", Some("ILCE-7CR"), 3, 10, "strehl-archive-v2");
+        let _anonymous = run("stack-4", None, 8, 10, "strehl-archive-v2");
+        let new_r = run("stack-5", Some("ILCE-7CR"), 4, 50, "strehl-archive-v2");
+        save_json(
+            &config.with_extension("runs.json"),
+            &json!({"stack-1":old_r,"stack-2":ii,"stack-3":dir.path().join("stack-3"),
+                "stack-4":dir.path().join("stack-4"),"stack-5":{"folder":new_r,"compress_raw":true}}),
+        )
+        .unwrap();
+        let mut cache = StoredCache::new();
+        let found = stored_by_model(&config, &mut cache).unwrap();
+        assert_eq!(found.len(), 2);
+        assert_eq!(found[0].folder, new_r);
+        assert_eq!(
+            (found[0].raws, found[0].original, found[0].stored),
+            (4, 102, 50)
+        );
+        assert_eq!(found[0].encoding, "strehl-archive-v2");
+        assert_eq!(
+            (found[1].model.as_str(), found[1].stored),
+            ("ILCE-7CM2", 40)
+        );
+        assert_eq!(cache.len(), 5);
+        // The cache answers for unchanged runs; a changed run is read again.
+        let ii_stored = |cache: &mut StoredCache| {
+            stored_by_model(&config, cache)
+                .unwrap()
+                .into_iter()
+                .find(|s| s.model == "ILCE-7CM2")
+                .unwrap()
+                .stored
+        };
+        cache.get_mut(&ii).unwrap().1.as_mut().unwrap().stored = 41;
+        assert_eq!(ii_stored(&mut cache), 41);
+        std::fs::write(
+            ii.join("transfer-receipts.jsonl"),
+            (1..=4)
+                .map(|n| {
+                    json!({"logical_name":format!("frame-{n:06}.ARW"),"ok":true,"bytes":100,
+                        "storage_bytes":30,"storage_encoding":"strehl-archive-v1"})
+                    .to_string()
+                })
+                .collect::<Vec<_>>()
+                .join("\n"),
+        )
+        .unwrap();
+        assert_eq!(ii_stored(&mut cache), 30);
+        // What a new capture is expected to take, by the receiver's storage.
+        let r = &found[0];
+        assert_eq!(r.expected(true, 2).0, 50);
+        assert_eq!(r.expected(false, 2).0, 102, "uncompressed: the originals");
+        let v1 = StoredRaws {
+            encoding: "strehl-archive-v1".into(),
+            stored: 1000,
+            ..r.clone()
+        };
+        assert_eq!(v1.expected(true, 2).0, (1000.0 * FORMAT_2_OVER_1) as u64);
+        assert_eq!(
+            v1.expected(true, 1).0,
+            1000,
+            "an older receiver keeps format 1"
+        );
+        let compressed_raws = StoredRaws {
+            raw_format: "sony-lossless-compressed-raw-l".into(),
+            ..v1.clone()
+        };
+        assert_eq!(
+            compressed_raws.expected(true, 2).0,
+            1000,
+            "not a plain strip: format 1"
+        );
     }
     #[test]
     fn only_the_newest_run_with_a_journal_and_no_result_is_in_progress() {

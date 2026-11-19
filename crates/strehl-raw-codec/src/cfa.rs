@@ -363,16 +363,37 @@ pub(crate) fn unpredict_rows(
     width: usize,
     rows: usize,
     st: &mut Rows,
-    mut emit: impl FnMut(usize, &[u16]),
+    emit: impl FnMut(usize, &[u16]),
 ) {
     let n = rows * width;
     debug_assert!(planar.len() >= 2 * n);
     let (lo, hi) = planar.split_at(n);
+    unpredict_rows_from(
+        width,
+        rows,
+        st,
+        |y, out| {
+            let row = y * width;
+            unzig_row(&lo[row..row + width], &hi[row..row + width], out);
+        },
+        emit,
+    );
+}
+
+/// [`unpredict_rows`] over any residual source: `residual(y, out)` writes
+/// row `y`'s residuals (the wrapped differences, not zigzagged). Archive
+/// format 2 decodes its residuals into a row of its own.
+pub(crate) fn unpredict_rows_from(
+    width: usize,
+    rows: usize,
+    st: &mut Rows,
+    mut residual: impl FnMut(usize, &mut [u16]),
+    mut emit: impl FnMut(usize, &[u16]),
+) {
     st.fit(width);
     let Rows { r, u, hist, cur } = st;
     for y in 0..rows.min(2) {
-        let row = y * width;
-        unzig_row(&lo[row..row + width], &hi[row..row + width], &mut r[0]);
+        residual(y, &mut r[0][..width]);
         let (c, r) = (&mut cur[0][..width], &r[0][..width]);
         let (mut a, mut b) = (r[0], if width > 1 { r[1] } else { 0 });
         c[0] = a;
@@ -396,10 +417,9 @@ pub(crate) fn unpredict_rows(
     let mut y = 2;
     let last = width.saturating_sub(2).max(2);
     while y + 1 < rows {
-        let (row0, row1) = (y * width, (y + 1) * width);
         let (ra, rb) = r.split_at_mut(1);
-        unzig_row(&lo[row0..row0 + width], &hi[row0..row0 + width], &mut ra[0]);
-        unzig_row(&lo[row1..row1 + width], &hi[row1..row1 + width], &mut rb[0]);
+        residual(y, &mut ra[0][..width]);
+        residual(y + 1, &mut rb[0][..width]);
         let (ua, ub) = u.split_at_mut(1);
         up_sums(&hist[y & 1], last, &mut ua[0]);
         up_sums(&hist[(y + 1) & 1], last, &mut ub[0]);
@@ -422,8 +442,7 @@ pub(crate) fn unpredict_rows(
         y += 2;
     }
     if y < rows {
-        let row = y * width;
-        unzig_row(&lo[row..row + width], &hi[row..row + width], &mut r[0]);
+        residual(y, &mut r[0][..width]);
         up_sums(&hist[y & 1], last, &mut u[0]);
         let (ca, _) = cur.split_at_mut(1);
         row_one(&mut ca[0], &hist[y & 1], &r[0], &u[0], width);
@@ -531,7 +550,7 @@ fn decode_bytes(file: &[u8], c: &Chunk) -> Result<Vec<u8>> {
 }
 
 #[cfg(target_endian = "little")]
-fn sample_bytes(samples: &[u16]) -> &[u8] {
+pub(crate) fn sample_bytes(samples: &[u16]) -> &[u8] {
     // SAFETY: u16 has no padding and alignment 2 >= 1; on a little-endian host
     // these are exactly the strip's original little-endian bytes.
     unsafe { std::slice::from_raw_parts(samples.as_ptr().cast::<u8>(), samples.len() * 2) }
@@ -577,10 +596,13 @@ struct Resident {
     scratch: Vec<u8>,
     zstd: zstd::bulk::Decompressor<'static>,
     rows: Rows,
+    v2: crate::v2::Scratch,
 }
 
 thread_local! {
     static RESIDENT: std::cell::RefCell<Option<Resident>> = const { std::cell::RefCell::new(None) };
+    /// A pool thread's format-2 tables and rows, for the parallel decode.
+    static V2: std::cell::RefCell<crate::v2::Scratch> = std::cell::RefCell::new(Default::default());
 }
 
 /// [`decode_archive`] of only the CFA chunks holding a row `rows` marks (one
@@ -658,6 +680,7 @@ fn decode_archive_impl(
                 scratch: Vec::new(),
                 zstd: zstd::bulk::Decompressor::new()?,
                 rows: Rows::default(),
+                v2: Default::default(),
             }),
         }
     } else {
@@ -701,6 +724,9 @@ fn decode_archive_impl(
             FileBytes::Owned(file)
         }
     };
+    if crate::v2::is_v2(&file) {
+        return decode_v2(path, file, sparse, buffer, rows, resident, trusted);
+    }
     let header = archive::read_header(&file[..])?;
     // Skip the whole-file hash only for the exact hash the caller trusts.
     let hashing = !trusted.is_some_and(|s| s.eq_ignore_ascii_case(&header.sha256));
@@ -979,6 +1005,179 @@ fn decode_archive_impl(
     }))
 }
 
+/// [`decode_archive_impl`] for an archive in format 2 (`crate::v2`): the same
+/// results, errors and checksum verdict. Its index places every chunk, so a
+/// partial decode reads the index, the metadata and the wanted chunks only;
+/// every chunk's CRC is checked before it is decoded, on every route.
+fn decode_v2(
+    path: &Path,
+    mut file: FileBytes,
+    mut sparse: Option<File>,
+    buffer: Option<Vec<u16>>,
+    rows: Option<&[bool]>,
+    mut resident: Option<Resident>,
+    trusted: Option<&str>,
+) -> Result<Option<CfaFile>> {
+    use crate::v2;
+    let file_len = file.len() as u64;
+    let head = v2::head_len(&file)?;
+    ensure!(file.len() >= head, "Truncated archive index");
+    if let Some(f) = sparse.as_mut() {
+        read_at(f, &mut file[..head], 0)?;
+    }
+    let index = v2::parse(&file[..head], file_len)?;
+    let hashing = !trusted.is_some_and(|s| s.eq_ignore_ascii_case(&index.sha256));
+    let Some(first) = index.entries.iter().position(|e| e.samples()) else {
+        return Ok(None);
+    };
+    let last = index
+        .entries
+        .iter()
+        .rposition(|e| e.samples())
+        .expect("found");
+    ensure!(
+        index.entries[first..=last].iter().all(|e| e.samples()),
+        "Archive sample chunks are not contiguous"
+    );
+    let outside = |e: &v2::Entry| !e.samples();
+    if let Some(f) = sparse.as_mut() {
+        for e in index.entries.iter().filter(|e| outside(e)) {
+            read_at(f, &mut file[e.payload()], e.offset)?;
+        }
+    }
+    let mut prefix = Vec::with_capacity(index.strip_offset);
+    for e in &index.entries[..first] {
+        prefix.extend_from_slice(&v2::chunk_bytes(e, &file[e.payload()])?);
+    }
+    // The metadata must describe the strip the index declares, as format 1's
+    // route requires of its chunks; otherwise the general route decodes it.
+    let Some((layout, _)) = raw_ifd(&prefix, index.length) else {
+        return Ok(None);
+    };
+    if layout.offset != prefix.len()
+        || layout.offset != index.strip_offset
+        || (layout.width, layout.height) != (index.width, index.height)
+    {
+        return Ok(None);
+    }
+    let width = index.width;
+    let count = width * index.height;
+    let mut samples = match buffer {
+        Some(b) if b.len() == count => b,
+        _ => vec![0u16; count],
+    };
+    let strip = &index.entries[first..=last];
+    let wanted = |e: &v2::Entry| {
+        rows.is_none_or(|r| index.rows(e).any(|y| r.get(y).copied().unwrap_or(false)))
+    };
+    let mut decoded_rows = rows.map(|_| vec![false; index.height]);
+    let mut jobs = Vec::with_capacity(strip.len());
+    let mut rest = samples.as_mut_slice();
+    for e in strip {
+        let (head, tail) = rest.split_at_mut(e.len / 2);
+        if wanted(e) {
+            if let Some(d) = decoded_rows.as_mut() {
+                d[index.rows(e)].fill(true);
+            }
+            jobs.push((e, head));
+        }
+        rest = tail;
+    }
+    if sparse.is_some() {
+        // The wanted payloads at once on separate handles, as format 1 does.
+        let mut slices: Vec<(u64, &mut [u8])> = Vec::with_capacity(jobs.len());
+        let mut rest_file: &mut [u8] = &mut file;
+        let mut base = 0usize;
+        for (e, _) in &jobs {
+            let r = e.payload();
+            let (_, tail) = rest_file.split_at_mut(r.start - base);
+            let (piece, tail) = tail.split_at_mut(r.len());
+            slices.push((r.start as u64, piece));
+            rest_file = tail;
+            base = r.end;
+        }
+        slices
+            .into_par_iter()
+            .try_for_each(|(at, piece)| read_exact_at(path, piece, at))?;
+    }
+    let suffix = |file: &[u8]| -> Result<Vec<u8>> {
+        let mut suffix = Vec::new();
+        for e in &index.entries[last + 1..] {
+            suffix.extend_from_slice(&v2::chunk_bytes(e, &file[e.payload()])?);
+        }
+        Ok(suffix)
+    };
+    let done = |samples: Vec<u16>,
+                suffix: Vec<u8>,
+                verified: bool,
+                decoded_rows: Option<Vec<bool>>|
+     -> Result<Option<CfaFile>> {
+        Ok(Some(CfaFile {
+            crop: crop(&prefix, index.length)?,
+            prefix: prefix.clone(),
+            width,
+            height: index.height,
+            samples,
+            verified_sha256: verified,
+            declared_sha256: index.sha256.clone(),
+            original_length: if decoded_rows.is_some() {
+                0
+            } else {
+                index.length as u64
+            },
+            suffix,
+            decoded_rows,
+        }))
+    };
+    if let Some(mut r) = resident.take() {
+        // In order on this thread, each row hashed while it is in cache.
+        let mut hash = Sha256::new();
+        hash.update(&prefix);
+        for (e, dst) in jobs {
+            v2::decode_samples(e, &file[e.payload()], width, &mut r.v2, |y, row| {
+                dst[y * width..(y + 1) * width].copy_from_slice(row);
+                #[cfg(target_endian = "little")]
+                if hashing {
+                    hash.update(sample_bytes(row));
+                }
+            })?;
+        }
+        let suffix = suffix(&file)?;
+        if hashing {
+            hash.update(&suffix);
+            let sum: String = hash.finalize().iter().map(|b| format!("{b:02x}")).collect();
+            ensure!(sum == index.sha256, "RAW archive checksum mismatch");
+        }
+        file.release(Some(&mut r));
+        RESIDENT.with_borrow_mut(|slot| *slot = Some(r));
+        return done(samples, suffix, hashing, None);
+    }
+    jobs.into_par_iter()
+        .try_for_each(|(e, dst)| -> Result<()> {
+            V2.with_borrow_mut(|st| {
+                v2::decode_samples(e, &file[e.payload()], width, st, |y, row| {
+                    dst[y * width..(y + 1) * width].copy_from_slice(row);
+                })
+            })
+        })?;
+    if decoded_rows.is_some() {
+        drop(file);
+        return done(samples, Vec::new(), false, decoded_rows);
+    }
+    let suffix = suffix(&file)?;
+    drop(file);
+    if hashing {
+        let mut hash = Sha256::new();
+        hash.update(&prefix);
+        #[cfg(target_endian = "little")]
+        hash.update(sample_bytes(&samples));
+        hash.update(&suffix);
+        let sum: String = hash.finalize().iter().map(|b| format!("{b:02x}")).collect();
+        ensure!(sum == index.sha256, "RAW archive checksum mismatch");
+    }
+    done(samples, suffix, hashing, None)
+}
+
 /// Read an unarchived plain-strip TIFF's samples directly into `buffer`.
 pub fn read_plain(path: &Path, buffer: Option<Vec<u16>>) -> Result<Option<CfaFile>> {
     if cfg!(target_endian = "big") {
@@ -1067,6 +1266,116 @@ mod tests {
         archive::pack(original.to_vec(), &mut out).unwrap();
         std::fs::write(file.path(), out).unwrap();
         file.into_temp_path()
+    }
+
+    fn archived_as(original: &[u8], format: u8) -> tempfile::TempPath {
+        let sha: String = Sha256::digest(original)
+            .iter()
+            .map(|b| format!("{b:02x}"))
+            .collect();
+        let (bytes, stored) = archive::store(original, &sha, format).unwrap();
+        assert_eq!(stored, format);
+        let file = tempfile::Builder::new()
+            .suffix(".ARW.straw")
+            .tempfile()
+            .unwrap();
+        std::fs::write(file.path(), bytes).unwrap();
+        file.into_temp_path()
+    }
+
+    /// Format 2 gives exactly format 1's samples, metadata, crop and
+    /// checksum verdicts on every route (pool, serial, trusted, row range,
+    /// metadata reader, whole original), and refuses a damaged chunk even
+    /// when the whole-file hash is trusted and skipped.
+    #[test]
+    fn format_2_decodes_like_format_1_on_every_route() {
+        for (w, h, cropped) in [(128, 520, true), (200, 96, false), (66, 34, false)] {
+            let mut original = fixture(w, h);
+            if cropped {
+                original = with_crop(original, Some([4, 2, 120, 512]), None);
+            }
+            let one = archived_as(&original, 1);
+            let two = archived_as(&original, 2);
+            let a = decode_archive(&one, None).unwrap().unwrap();
+            let b = decode_archive(&two, None).unwrap().unwrap();
+            assert!(a.verified_sha256 && b.verified_sha256);
+            assert_eq!(a.samples, b.samples);
+            assert_eq!(a.prefix, b.prefix);
+            assert_eq!(a.suffix, b.suffix);
+            assert_eq!(a.crop, b.crop);
+            assert_eq!(a.declared_sha256, b.declared_sha256);
+            assert_eq!(a.original_length, b.original_length);
+            for _ in 0..2 {
+                let s = decode_archive_serial(&two, Some(vec![9; w * h]))
+                    .unwrap()
+                    .unwrap();
+                assert!(s.verified_sha256);
+                assert_eq!(s.samples, a.samples);
+                assert_eq!(s.suffix, a.suffix);
+            }
+            for serial in [false, true] {
+                let t = decode_archive_trusting(&two, None, serial, Some(&a.declared_sha256))
+                    .unwrap()
+                    .unwrap();
+                assert!(!t.verified_sha256);
+                assert_eq!(t.samples, a.samples);
+            }
+            for wanted in [
+                vec![0usize],
+                vec![h - 1],
+                vec![h / 2, h / 2 + 1],
+                Vec::new(),
+            ] {
+                let mut rows = vec![false; h];
+                for &y in &wanted {
+                    rows[y] = true;
+                }
+                let part = decode_archive_rows(&two, &rows, Some(vec![0xBEEF; w * h]))
+                    .unwrap()
+                    .unwrap();
+                let decoded = part.decoded_rows.unwrap();
+                for &y in &wanted {
+                    assert!(decoded[y]);
+                }
+                assert_eq!(decoded.iter().any(|d| *d), !wanted.is_empty());
+                for (y, d) in decoded.iter().enumerate() {
+                    if *d {
+                        assert_eq!(
+                            part.samples[y * w..(y + 1) * w],
+                            a.samples[y * w..(y + 1) * w]
+                        );
+                    }
+                }
+            }
+            assert_eq!(archive::read_original(&two).unwrap(), original);
+            assert!(archive::verify(&two).is_ok());
+            let mut r = archive::open_original(&two).unwrap();
+            assert!(matches!(r, archive::OriginalReader::Sparse(_)));
+            let mut all = Vec::new();
+            r.read_to_end(&mut all).unwrap();
+            assert_eq!(all, original);
+            let header = archive::read_header(std::fs::File::open(&two).unwrap()).unwrap();
+            assert_eq!(
+                (header.format, header.sha256),
+                (2, a.declared_sha256.clone())
+            );
+            // One flipped bit near the end: the last sample chunk or the metadata after it.
+            let mut bad = std::fs::read(&two).unwrap();
+            let n = bad.len();
+            bad[n - 40] ^= 0x04;
+            let damaged = tempfile::Builder::new()
+                .suffix(".ARW.straw")
+                .tempfile()
+                .unwrap();
+            std::fs::write(damaged.path(), &bad).unwrap();
+            for serial in [false, true] {
+                assert!(
+                    decode_archive_trusting(damaged.path(), None, serial, Some(&a.declared_sha256))
+                        .is_err()
+                );
+            }
+            assert!(archive::verify(damaged.path()).is_err());
+        }
     }
 
     #[test]

@@ -243,16 +243,65 @@ Verification (MEASURED unless marked):
   1 superseded; `pixel-shift` and the stack chose `ptp-20730-2-retake` for plane 2.
 - **Unchanged without retakes:** reference renders 6/6 (scarab four-shot full `02A6C8C2`),
   byte-freeze 5/5.
-- **NOT DONE: the controller on the Pi.** Installing it was refused by the session's
-  permission policy while the owner was away. The ARM64 build (SHA-256 `6ea2e003...`, 11-19
-  source) and `outputs/error-correction-2026-11-19/deploy.py install` (backup, health check,
-  automatic rollback) are ready. The PC receiver with the verdict store is installed, and
-  older controllers ignore it.
+- **The controller on the Pi** was installed on 2026-11-19 once the owner approved it
+  (SHA-256 `6ea2e003...`; backup `/root/strehl-before-error-correction-1795108517`; rollback
+  with `deploy.py rollback <backup>`). "Manage power during stack" was switched on again
+  afterwards: the controller does not keep it across a restart.
+
+## Q19: archive format 2 (2026-11-19, built)
+
+The owner asked for it to be built and wired end to end. `crates/strehl-raw-codec/src/v2.rs`
+holds the format and its documentation. It keeps format 1's predictor and codes the
+residuals per block of 32 same-colour samples: a shift `k`, the `k` low bits raw, the high
+part by a canonical code per `k` per 64-row chunk, in eight lanes decoded in lockstep, with
+the shifts delta-coded. Each chunk has a CRC-32, and an index locates every chunk.
+
+**The plan's gate did not hold as written.** The plan asked for 4 % smaller and 2.5 times
+cheaper to decode per core. Its baseline was 123-166 ms a file, but format 1 now decodes in
+88 ms on one thread (Q5a's row pairs and the serial route). The code's entropy bound leaves
+no room for a 2.5-times gain against that. Format 2 was built for size at an unchanged
+render time, and measured so:
+
+| MEASURED (scarab, 9950X3D) | Format 1 | Format 2 |
+| --- | ---: | ---: |
+| 784 archives | 51.21 GB | 49.00 GB (4.32 % smaller) |
+| bits per sample, 16 files | 8.541 | 8.171 |
+| one-thread decode, trusted / hashed | 88.0 / 131.1 ms | 95.6 / 138.5 ms |
+| GPU render, cached (`v2-f1-warm`, `v2-f2-warm`) | 20.4 s | 20.1 s |
+| GPU render, empty cache | 42.1 s (`v2-f1-first`) | 42.0 s (`v2-on-f2-gpu-full`) |
+| reference renders (quick set) | 3/3 | 3/3, the same hashes |
+
+What sets the size: about 3 MB of each 125.6 MB original is embedded previews, which
+neither format compresses. The samples cost 7.7 bits in format 2 against 8.1 in format 1.
+Tried and measured on four files: chunks of 32, 64 and 128 rows (under 0.1 % apart), shift
+offsets 1 to 4 (3 best), a 64-symbol alphabet (fewer escapes, same size as 32), delta-coded
+shifts (0.127 to 0.053 bits a sample, about 0.9 %), and cost-chosen shifts (0.1 %). Speed came
+from keeping the eight lanes' positions in registers: escapes leave the fast path for the
+whole group, so the loop holds no call. A BMI2 build of the loop is chosen at run time
+(about 130 ms to 89 ms a file). Evidence: `evidence/archive-v2-bench.txt`;
+`outputs/q-impl/runs.txt` for the renders.
+
+Wiring:
+- **Receiver:** writes format 2 for plain-CFA RAWs. The original is restored in memory,
+  checked against the sender's SHA-256, stored with `archive::store` and decoded again
+  before anything is kept, so the Pi lets go of a RAW only for an archive that restores
+  exactly. Receipts say `strehl-archive-v2`, and its status carries `archive_format`.
+- **Readers:** the engine's direct decode (pool, serial, trusted, row range), the
+  whole-file restore, the metadata reader, the archive tool, receipt trust (`trust.rs`),
+  completeness checks (`capture-client.rs`), the replay script and the receiver page.
+- **Desktop:** the capture screen shows the expected size on disk, from the newest capture
+  with the same camera model, beside the worst case that admission uses.
+- `STREHL_ARCHIVE_FORMAT=1` writes format 1 (diagnostic). Existing captures are not
+  rewritten; `examples/v2-copy.rs` makes a format-2 copy for testing.
+
+Tests: round trips on every geometry and on hostile content; any flipped byte refused.
+Mutation-checked: without the chunk CRC, the damage tests fail. The engine's routes give
+format 1's results. The receiver stores format 2 either way a RAW arrives; with
+`STREHL_ARCHIVE_FORMAT=1` its test fails as it should. The byte-freeze is 5/5.
 
 ## Not built
 
 Q1b (one stack context), Q1f, Q5d-e (decoding into upload memory, helper placement; Q5c
 was measured and not kept, above), Q7 (collapse on the device), Q11 (the supervisor:
 today's adaptivity is the per-file read mode and the device self-test), Q13 (measured above)
-to Q16, Q19
-(archive format 2; its prototype gate is the next step there).
+to Q16. Q19's device decode (step 4) and the Pi-side encoder are not built.

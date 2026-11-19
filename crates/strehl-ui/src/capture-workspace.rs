@@ -1242,10 +1242,12 @@ impl CaptureWorkspace {
             ui.colored_label(AMBER, error);
         }
         if let Some(bytes) = s.state["storage_required_bytes"].as_u64() {
-            ui.small(format!(
-                "{} RAWs · up to {:.2} GB including headroom; compression savings are extra",
-                total * shots,
-                bytes as f64 / 1e9
+            ui.small(storage_line(
+                total as u64 * shots,
+                bytes,
+                &s.stored,
+                s.state["camera_model"].as_str(),
+                &s.receiver,
             ));
         }
         if let Some(error) = s.state["plan_error"].as_str() {
@@ -1369,8 +1371,89 @@ fn duration(seconds: Option<f64>) -> String {
     format!("{:02}:{:02}:{:02}", n / 3600, n / 60 % 60, n % 60)
 }
 
+/// The capture screen's storage line: the expected size on disk, from the
+/// last capture with this camera (`stored`) as the receiver now stores RAWs,
+/// and the worst case the stack must find free to start (`required`: every
+/// RAW at the camera's largest size, uncompressed, with headroom).
+fn storage_line(
+    raws: u64,
+    required: u64,
+    stored: &[crate::capture_client::StoredRaws],
+    model: Option<&str>,
+    receiver: &serde_json::Value,
+) -> String {
+    let worst = format!(
+        "up to {:.1} GB must be free to start",
+        required as f64 / 1e9
+    );
+    let past = model.and_then(|m| stored.iter().find(|s| s.model == m));
+    match past {
+        Some(past) if receiver["ok"] == true => {
+            let compress = receiver["compress_raw"].as_bool().unwrap_or(true);
+            let format = receiver["archive_format"].as_u64().unwrap_or(1) as u8;
+            let (per_raw, basis) = past.expected(compress, format);
+            format!(
+                "{raws} RAWs · about {:.1} GB on disk ({basis}) · {worst}",
+                (raws * per_raw) as f64 / 1e9
+            )
+        }
+        _ => format!("{raws} RAWs · {worst}; compression savings are extra"),
+    }
+}
+
 #[cfg(test)]
 mod tests {
+    /// The expected size follows the last capture with the connected camera
+    /// as the receiver stores RAWs now; with no such capture only the worst
+    /// case is given.
+    #[test]
+    fn the_storage_line_expects_what_the_receiver_will_store() {
+        use crate::capture_client::StoredRaws;
+        use serde_json::json;
+        let past = |encoding: &str| StoredRaws {
+            folder: "stack".into(),
+            model: "ILCE-7CR".into(),
+            raw_format: "sony-uncompressed".into(),
+            raws: 784,
+            original: 125_600_000,
+            stored: 65_000_000,
+            encoding: encoding.into(),
+        };
+        let receiver = |compress: bool, format: Option<u64>| {
+            let mut r = json!({"ok":true,"compress_raw":compress});
+            if let Some(f) = format {
+                r["archive_format"] = json!(f);
+            }
+            r
+        };
+        let line = |stored: &[StoredRaws], model: &str, r: serde_json::Value| {
+            storage_line(784, 132_000_000_000, stored, Some(model), &r)
+        };
+        let v2 = [past("strehl-archive-v2")];
+        let v1 = [past("strehl-archive-v1")];
+        assert_eq!(
+            line(&v2, "ILCE-7CR", receiver(true, Some(2))),
+            "784 RAWs · about 51.0 GB on disk (as your last ILCE-7CR capture) · up to 132.0 GB must be free to start"
+        );
+        let l = line(&v1, "ILCE-7CR", receiver(true, Some(2)));
+        assert!(
+            l.contains("about 48.8 GB") && l.contains("less 4 % for archive format 2"),
+            "{l}"
+        );
+        let l = line(&v1, "ILCE-7CR", receiver(true, None));
+        assert!(l.contains("about 51.0 GB"), "an older receiver: {l}");
+        let l = line(&v2, "ILCE-7CR", receiver(false, Some(2)));
+        assert!(
+            l.contains("about 98.5 GB") && l.contains("uncompressed"),
+            "{l}"
+        );
+        assert_eq!(
+            line(&v2, "ILCE-7CM2", receiver(true, Some(2))),
+            "784 RAWs · up to 132.0 GB must be free to start; compression savings are extra"
+        );
+        assert!(!line(&v2, "ILCE-7CR", json!(null)).contains("about"));
+    }
+
     #[test]
     fn accepted_marks_update_with_an_unapplied_step_edit() {
         let tmp = tempfile::tempdir().unwrap();

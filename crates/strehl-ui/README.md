@@ -96,6 +96,13 @@ the planes retaken. If no check arrives within 15 s, the camera stops waiting fo
 the rest of that capture and carries on as without error correction. The checks
 reach the camera through this PC's receiver.
 
+**Disk space** (Capture screen): below the plan, the expected size of the stack
+on disk, measured from the newest capture made with the same camera model and
+adjusted to how the receiver stores RAWs now (uncompressed RAWs in archive
+format 2 are 4 % smaller than in format 1), beside the worst case the disk must
+have free before the stack can start (every RAW at the camera's largest size,
+uncompressed). Only the worst case decides whether the stack may start.
+
 **Working with several passes of one subject**
 
 Multi-stack sessions are experimental and only in builds with the `multi-stack`

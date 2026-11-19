@@ -81,7 +81,7 @@ def main():
         # As the receiver registers a run (a receiver opening this registry
         # requires both fields); a replay keeps the source's stored form.
         runs[run] = {"folder": dest, "compress_raw": any(
-            r.get("storage_encoding") == "strehl-archive-v1" for r in rows)}
+            r.get("storage_encoding") in ("strehl-archive-v1", "strehl-archive-v2") for r in rows)}
         with open(index + ".partial", "w", encoding="utf-8") as f:
             json.dump(runs, f)
         os.replace(index + ".partial", index)

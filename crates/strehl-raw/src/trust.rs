@@ -101,7 +101,10 @@ fn load(dir: &Path) -> DirIndex {
                 continue;
             };
             let ok = v["ok"].as_bool() == Some(true) && v["durable"].as_bool() == Some(true);
-            let archive = v["storage_encoding"].as_str() == Some("strehl-archive-v1");
+            let archive = matches!(
+                v["storage_encoding"].as_str(),
+                Some("strehl-archive-v1" | "strehl-archive-v2")
+            );
             let (Some(path), Some(length), Some(sha), Some(saved)) = (
                 v["path"].as_str(),
                 v["storage_bytes"].as_u64(),
@@ -284,15 +287,19 @@ mod tests {
         let dir = &root;
         let a = dir.join("a.ARW.straw");
         let b = dir.join("b.ARW.straw");
+        let c = dir.join("c.ARW.straw");
+        let d = dir.join("d.ARW.straw");
         std::fs::write(&a, b"0123456789").unwrap();
         std::fs::write(&b, b"abc").unwrap();
+        std::fs::write(&c, b"01234").unwrap();
+        std::fs::write(&d, b"012").unwrap();
         let now_ms = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap()
             .as_millis() as u64;
-        let receipt = |path: &Path, bytes: u64, ok: bool| {
+        let receipt = |path: &Path, bytes: u64, ok: bool, encoding: &str| {
             serde_json::json!({
-                "ok": ok, "durable": true, "storage_encoding": "strehl-archive-v1",
+                "ok": ok, "durable": true, "storage_encoding": encoding,
                 "path": path.to_string_lossy(), "storage_bytes": bytes,
                 "sha256": "ABCDEF", "saved_unix_ms": now_ms + 1000,
             })
@@ -300,11 +307,20 @@ mod tests {
         };
         std::fs::write(
             dir.join("transfer-receipts.jsonl"),
-            format!("{}\n{}\n", receipt(&a, 10, true), receipt(&b, 3, false)),
+            format!(
+                "{}\n{}\n{}\n{}\n",
+                receipt(&a, 10, true, "strehl-archive-v1"),
+                receipt(&b, 3, false, "strehl-archive-v1"),
+                receipt(&c, 5, true, "strehl-archive-v2"),
+                receipt(&d, 3, true, "identity"),
+            ),
         )
         .unwrap();
-        // A receipt of the right length, saved after the file was written.
+        // A receipt of the right length, saved after the file was written,
+        // for an archive in either format; never for another storage.
         assert_eq!(trusted_sha256(&a).as_deref(), Some("abcdef"));
+        assert_eq!(trusted_sha256(&c).as_deref(), Some("abcdef"));
+        assert_eq!(trusted_sha256(&d), None);
         // Not `ok`: not trusted.
         assert_eq!(trusted_sha256(&b), None);
         // A record: trusted while the file is unchanged.

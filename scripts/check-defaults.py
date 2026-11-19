@@ -419,6 +419,19 @@ REGISTRY: dict[str, Declared] = {
         ),
         note="Error correction during capture (2026-11-19).",
     ),
+    "STREHL_ARCHIVE_FORMAT": Declared(
+        kind="diagnostic",
+        default="unset (format 2 for plain-CFA RAWs)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "strehl-raw-codec archive.rs default_format(): `1` makes the receiver "
+            "and `strehl-raw-archive pack` write archive format 1 instead of 2. "
+            "Readers accept both formats whatever it says; renders of either "
+            "format are byte-identical (scarab reference renders, 2026-11-19)."
+        ),
+        note="Archive format 2, plan stage Q19 (2026-11-19).",
+    ),
     "STREHL_DEPTH_PASS": Declared(
         kind="control",
         default="fused (the restoration's depth map is measured during the fold where eligible)",

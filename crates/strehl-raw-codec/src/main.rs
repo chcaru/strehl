@@ -95,11 +95,16 @@ fn main() -> Result<()> {
             std::fs::create_dir_all(directory)?;
             let mut bytes = Vec::new();
             file.take(MAX_RAW + 1).read_to_end(&mut bytes)?;
+            let sha: String = <sha2::Sha256 as sha2::Digest>::digest(&bytes)
+                .iter()
+                .map(|b| format!("{b:02x}"))
+                .collect();
+            let (stored, format) = archive::store(&bytes, &sha, archive::default_format())?;
             let mut temp = tempfile::NamedTempFile::new_in(directory)?;
-            archive::pack(bytes, &mut temp)?;
+            std::io::Write::write_all(&mut temp, &stored)?;
             archive::verify(temp.path())?;
             persist(temp, &output)?;
-            println!("Archived: {}", output.display());
+            println!("Archived (format {format}): {}", output.display());
         }
     }
     Ok(())

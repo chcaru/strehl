@@ -1,7 +1,11 @@
 //! STRHARC1: 48-byte header (magic, u64 LE original size, binary SHA-256),
 //! followed by an unchanged STRHRAW1 transport stream. No lossy conversion.
 //! Every complete read verifies the original bytes, including all metadata.
-use crate::{Decoded, Encoder, MAX_RAW, WORKERS, decode};
+//!
+//! STRHARC2 ([`crate::v2`]) has the same 48-byte envelope, then an index and
+//! a code built for decoding. Every reader here takes either; the magic
+//! decides. Format 1 stays readable for good.
+use crate::{Decoded, Encoder, MAX_RAW, WORKERS, decode, v2};
 use anyhow::{Context, Result, ensure};
 use sha2::{Digest, Sha256};
 use std::{
@@ -13,6 +17,7 @@ use std::{
 
 pub const EXTENSION: &str = "straw";
 pub const ENCODING: &str = "strehl-archive-v1";
+pub const ENCODING_V2: &str = v2::ENCODING;
 pub const HEADER_BYTES: u64 = 48;
 const MAGIC: &[u8; 8] = b"STRHARC1";
 
@@ -25,6 +30,17 @@ pub fn is_archive(path: &Path) -> bool {
 pub struct Header {
     pub bytes: u64,
     pub sha256: String,
+    /// 1 or 2.
+    pub format: u8,
+}
+
+/// The storage format new archives are written in: 2, or 1 when
+/// `STREHL_ARCHIVE_FORMAT=1` asks for the old one (a diagnostic switch).
+pub fn default_format() -> u8 {
+    match std::env::var("STREHL_ARCHIVE_FORMAT").as_deref() {
+        Ok("1") => 1,
+        _ => 2,
+    }
 }
 
 pub fn write_header(mut out: impl Write, length: u64, sha256: &str) -> Result<()> {
@@ -49,16 +65,33 @@ pub fn read_header(mut input: impl Read) -> Result<Header> {
     input
         .read_exact(&mut h)
         .context("Truncated RAW archive header")?;
-    ensure!(&h[..8] == MAGIC, "Unsupported RAW archive version");
+    let format = if &h[..8] == MAGIC {
+        1
+    } else if &h[..8] == v2::MAGIC {
+        2
+    } else {
+        anyhow::bail!("Unsupported RAW archive version")
+    };
     let bytes = u64::from_le_bytes(h[8..16].try_into()?);
     ensure!(bytes > 0 && bytes <= MAX_RAW, "Invalid archive RAW length");
     Ok(Header {
         bytes,
         sha256: h[16..].iter().map(|b| format!("{b:02x}")).collect(),
+        format,
     })
 }
 
+/// Restore the original bytes of an archive in either format, verifying
+/// every byte against the envelope's SHA-256.
 pub fn unpack(mut input: impl Read, output: impl Write) -> Result<Decoded> {
+    let mut magic = [0u8; 8];
+    input
+        .read_exact(&mut magic)
+        .context("Truncated RAW archive header")?;
+    if &magic == v2::MAGIC {
+        return v2::unpack(io::Cursor::new(magic).chain(input), output);
+    }
+    let mut input = io::Cursor::new(magic).chain(input);
     let header = read_header(&mut input)?;
     let decoded = decode(input, output, header.bytes, true)?;
     ensure!(
@@ -121,10 +154,51 @@ pub fn pack(bytes: Vec<u8>, mut output: impl Write) -> Result<()> {
     Ok(())
 }
 
+/// Store `original` (SHA-256 `sha256`, lower-case hex) as an archive in
+/// `format`, and before returning it decode the stored bytes again and check
+/// them against `sha256`: an archive is the only copy of a capture, so no
+/// file leaves here that does not restore exactly. Files that are not a
+/// plain CFA strip are stored in format 1 whatever is asked.
+pub fn store(original: &[u8], sha256: &str, format: u8) -> Result<(Vec<u8>, u8)> {
+    ensure!(
+        !original.is_empty() && original.len() as u64 <= MAX_RAW,
+        "Invalid RAW size"
+    );
+    let (stored, format) = match (format == 2)
+        .then(|| v2::encode(original, sha256))
+        .transpose()?
+        .flatten()
+    {
+        Some(bytes) => (bytes, 2),
+        None => {
+            let mut out = Vec::with_capacity(original.len() / 2);
+            write_header(&mut out, original.len() as u64, sha256)?;
+            let pool = Arc::new(
+                rayon::ThreadPoolBuilder::new()
+                    .num_threads(WORKERS)
+                    .build()?,
+            );
+            io::copy(&mut Encoder::new(original.to_vec().into(), pool)?, &mut out)?;
+            (out, 1)
+        }
+    };
+    let check = unpack(stored.as_slice(), io::sink())?;
+    ensure!(
+        check.sha256 == sha256 && check.bytes == original.len() as u64,
+        "A new archive did not restore its original; nothing was stored"
+    );
+    Ok((stored, format))
+}
+
 pub fn read_original(path: &Path) -> Result<Vec<u8>> {
     let mut input = BufReader::new(File::open(path)?);
     let header = read_header(&mut input)?;
     let mut bytes = Vec::with_capacity(header.bytes as usize);
+    if header.format == 2 {
+        let mut input = BufReader::new(File::open(path)?);
+        v2::unpack(&mut input, &mut bytes)?;
+        return Ok(bytes);
+    }
     let decoded = decode(input, &mut bytes, header.bytes, true)?;
     ensure!(
         decoded.sha256 == header.sha256,
@@ -199,9 +273,59 @@ struct Entry {
     width: usize,
     at: u64,
 }
+/// [`open_sparse`] for format 2: the index places the metadata chunks.
+fn open_sparse_v2(path: &Path) -> Result<Option<Sparse>> {
+    let mut f = File::open(path)?;
+    let file_len = f.metadata()?.len();
+    let mut first = [0u8; 52];
+    f.read_exact(&mut first)
+        .context("Truncated RAW archive header")?;
+    let mut head = first.to_vec();
+    head.resize(v2::head_len(&first)?, 0);
+    f.read_exact(&mut head[52..])
+        .context("Truncated archive index")?;
+    let index = v2::parse(&head, file_len)?;
+    let (Some(first), Some(last)) = (
+        index.entries.iter().position(|e| e.samples()),
+        index.entries.iter().rposition(|e| e.samples()),
+    ) else {
+        return Ok(None);
+    };
+    let mut chunk = |e: &v2::Entry| -> Result<Vec<u8>> {
+        let mut payload = vec![0u8; e.stored];
+        f.seek(SeekFrom::Start(e.offset))?;
+        f.read_exact(&mut payload)?;
+        v2::chunk_bytes(e, &payload)
+    };
+    let mut prefix = Vec::new();
+    for e in &index.entries[..first] {
+        prefix.extend_from_slice(&chunk(e)?);
+    }
+    let mut suffix = Vec::new();
+    for e in &index.entries[last + 1..] {
+        suffix.extend_from_slice(&chunk(e)?);
+    }
+    let suffix_start = index
+        .entries
+        .get(last + 1)
+        .map_or(index.length, |e| e.start) as u64;
+    Ok(Some(Sparse {
+        path: path.to_owned(),
+        length: index.length as u64,
+        prefix,
+        suffix_start,
+        suffix,
+        position: 0,
+        full: None,
+    }))
+}
+
 fn open_sparse(path: &Path) -> Result<Option<Sparse>> {
     let mut f = BufReader::new(File::open(path)?);
     let header = read_header(&mut f)?;
+    if header.format == 2 {
+        return open_sparse_v2(path);
+    }
     let mut magic = [0u8; 16];
     f.read_exact(&mut magic)?;
     ensure!(

@@ -280,7 +280,7 @@ async fn status(State(s): State<Arc<Receiver>>) -> Response {
         );
     }
     match fs2::available_space(&c.folder) {
-        Ok(free)=>Json(json!({"ok":true,"protocol":1,"raw_encodings":["identity",transport::ENCODING],"folder":c.folder,"compress_raw":c.compress_raw,"free_bytes":free,"max_raw_bytes":MAX_RAW,"latest":*s.latest.lock().unwrap(),"verdicts":1})).into_response(),
+        Ok(free)=>Json(json!({"ok":true,"protocol":1,"raw_encodings":["identity",transport::ENCODING],"folder":c.folder,"compress_raw":c.compress_raw,"free_bytes":free,"max_raw_bytes":MAX_RAW,"latest":*s.latest.lock().unwrap(),"verdicts":1,"archive_format":archive::default_format()})).into_response(),
         Err(e)=>problem(StatusCode::SERVICE_UNAVAILABLE,e)
     }
 }
@@ -580,20 +580,29 @@ async fn receive_file(
         });
     let reader = SyncIoBridge::new(StreamReader::new(Box::pin(stream)));
     let expected_copy = expected.clone();
-    let (decoded, temp) = tokio::task::spawn_blocking(move || -> Result<_> {
+    let format = archive::default_format();
+    let (decoded, temp, stored_format) = tokio::task::spawn_blocking(move || -> Result<_> {
         let mut temp = temp;
+        let mut stored_format = 0u8;
         let decoded = if let Some(file) = temp.as_mut() {
             let mut output = BufWriter::with_capacity(1024 * 1024, file.as_file_mut());
-            let decoded = if archive_raw && compressed {
+            let decoded = if archive_raw && format == 1 && compressed {
+                stored_format = 1;
                 archive::retain(reader, &mut output, length, &expected_copy)?
             } else if archive_raw {
+                // The original in memory, checked against the sender's hash,
+                // then stored; `store` decodes what it made before it is
+                // written, so the Pi's copy is released only for an archive
+                // known to restore exactly.
                 let mut bytes = Vec::with_capacity(length as usize);
-                let decoded = transport::decode(reader, &mut bytes, length, false)?;
+                let decoded = transport::decode(reader, &mut bytes, length, compressed)?;
                 ensure!(
                     decoded.sha256 == expected_copy,
                     "Checksum mismatch; file was not committed"
                 );
-                archive::pack(bytes, &mut output)?;
+                let (stored, f) = archive::store(&bytes, &expected_copy, format)?;
+                stored_format = f;
+                output.write_all(&stored)?;
                 decoded
             } else {
                 transport::decode(reader, &mut output, length, compressed)?
@@ -614,13 +623,22 @@ async fn receive_file(
         if let Some(file) = &temp {
             file.as_file().sync_all()?;
         }
-        Ok((decoded, temp))
+        Ok((decoded, temp, stored_format))
     })
     .await??;
-    let storage_encoding = if archive_raw {
-        archive::ENCODING
+    let stored_format = if duplicate && archive_raw {
+        let path = destination.clone();
+        tokio::task::spawn_blocking(move || -> Result<u8> {
+            Ok(archive::read_header(File::open(path)?)?.format)
+        })
+        .await??
     } else {
-        "identity"
+        stored_format
+    };
+    let storage_encoding = match (archive_raw, stored_format) {
+        (false, _) => "identity",
+        (true, 2) => archive::ENCODING_V2,
+        (true, _) => archive::ENCODING,
     };
     if duplicate {
         return Ok(
@@ -967,6 +985,118 @@ mod tests {
                 std::fs::read(root.join(plain_run).join(name)).unwrap(),
                 bytes
             );
+        }
+    }
+
+    /// A plain-strip TIFF (one IFD, 16-bit CFA strip) with textured samples
+    /// and metadata on both sides of the strip.
+    fn cfa_raw(width: usize, height: usize) -> Vec<u8> {
+        let offset = 256;
+        let mut data = vec![0u8; offset + width * height * 2 + 99];
+        data[..4].copy_from_slice(b"II*\0");
+        data[4..8].copy_from_slice(&8u32.to_le_bytes());
+        let tags = [
+            (256u16, width),
+            (257, height),
+            (258, 16),
+            (259, 1),
+            (262, 32803),
+            (273, offset),
+            (277, 1),
+            (279, width * height * 2),
+        ];
+        data[8..10].copy_from_slice(&(tags.len() as u16).to_le_bytes());
+        for (i, (tag, value)) in tags.into_iter().enumerate() {
+            let p = 10 + i * 12;
+            data[p..p + 2].copy_from_slice(&tag.to_le_bytes());
+            data[p + 2..p + 4].copy_from_slice(&4u16.to_le_bytes());
+            data[p + 4..p + 8].copy_from_slice(&1u32.to_le_bytes());
+            data[p + 8..p + 12].copy_from_slice(&(value as u32).to_le_bytes());
+        }
+        let mut seed = 0x2545_F491_4F6C_DD1Du64;
+        for i in 0..width * height {
+            seed ^= seed << 13;
+            seed ^= seed >> 7;
+            seed ^= seed << 17;
+            let v = (((i / width) * 5 + (i % width) * 3) as u64 + seed % 40) as u16;
+            data[offset + 2 * i..offset + 2 * i + 2].copy_from_slice(&v.to_le_bytes());
+        }
+        let end = data.len();
+        data[end - 99..].fill(7);
+        data
+    }
+
+    /// A RAW with a plain CFA strip is stored in format 2 whichever way it
+    /// arrives (the Pi's compressed transport or identity), restores exactly,
+    /// is recognised on a retry, and a damaged stored copy is never
+    /// acknowledged.
+    #[tokio::test]
+    async fn plain_cfa_raws_are_stored_in_format_2() {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().join("captures");
+        std::fs::create_dir(&root).unwrap();
+        let config = temp.path().join("receiver.json");
+        save_json(
+            &config,
+            &json!({"bind":"127.0.0.1:0","lan":"10.0.0.0/24","key":"a".repeat(48),"folder":root}),
+        )
+        .unwrap();
+        let s = Receiver::open(config).unwrap();
+        let run = "stack-v2";
+        assert!(
+            create_run(State(s.clone()), UrlPath(run.into()))
+                .await
+                .status()
+                .is_success()
+        );
+        let bytes = cfa_raw(256, 160);
+        let sum: String = Sha256::digest(&bytes)
+            .iter()
+            .map(|b| format!("{b:02x}"))
+            .collect();
+        let mut v1 = Vec::new();
+        archive::pack(bytes.clone(), &mut v1).unwrap();
+        let wire = v1[archive::HEADER_BYTES as usize..].to_vec();
+        let request = |body: Vec<u8>, compressed: bool| {
+            let mut b = Request::builder()
+                .header("x-content-sha256", sum.as_str())
+                .header(header::CONTENT_LENGTH, body.len());
+            if compressed {
+                b = b
+                    .header(transport::ENCODING_HEADER, transport::ENCODING)
+                    .header(transport::LENGTH_HEADER, bytes.len());
+            }
+            b.body(Body::from(body)).unwrap()
+        };
+        for (name, body, compressed) in [
+            ("frame-000001.ARW", wire.clone(), true),
+            ("frame-000002.ARW", bytes.clone(), false),
+        ] {
+            let receipt = receive_file(&s, run, name, request(body.clone(), compressed))
+                .await
+                .unwrap();
+            assert_eq!(receipt["storage_encoding"], archive::ENCODING_V2);
+            let file = root.join(run).join(format!("{name}.straw"));
+            let stored = std::fs::read(&file).unwrap();
+            assert_eq!(&stored[..8], b"STRHARC2");
+            assert_eq!(receipt["storage_bytes"], stored.len());
+            assert_eq!(archive::read_original(&file).unwrap(), bytes);
+            let retry = receive_file(&s, run, name, request(body.clone(), compressed))
+                .await
+                .unwrap();
+            assert_eq!(retry["already_saved"], true);
+            assert_eq!(retry["storage_encoding"], archive::ENCODING_V2);
+            let mut corrupt = stored.clone();
+            let n = corrupt.len();
+            corrupt[n - 300] ^= 0x20;
+            std::fs::write(&file, &corrupt).unwrap();
+            assert!(
+                receive_file(&s, run, name, request(body, compressed))
+                    .await
+                    .is_err(),
+                "a damaged stored copy must never acknowledge the Pi's original"
+            );
+            std::fs::write(&file, &stored).unwrap();
         }
     }
 

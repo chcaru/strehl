@@ -13,8 +13,10 @@ pixel-shift groups and the bounded RAM upload queue.
    this PC. The application does not create an internet relay.
 2. Check **Receiver ready** and the destination under **Storage on this PC**.
    Choose a folder and save it. **Keep RAWs losslessly compressed** defaults to
-   on in the receiver; Strehl reads `.ARW.straw` directly. Folder and format
-   changes apply to new stacks; registered stacks retain their choices.
+   on in the receiver; Strehl reads `.ARW.straw` directly. Uncompressed RAWs
+   are stored in archive format 2 (about 4 % smaller than format 1, which
+   older captures keep; see `crates/strehl-raw-codec/README.md`). Folder and
+   format changes apply to new stacks; registered stacks retain their choices.
 3. Connect the camera if needed. Use the live preview, zoom, focus slider or jog buttons
    and **Mark Start / Mark End**. Each button reads the current position from
    the lens. Both values update even with an unapplied step or settle edit.
@@ -116,6 +118,13 @@ savings. It can therefore reject a stack that would fit after compression. Other
 programs can consume disk space later; the per-plane check stops further capture
 if that happens. Already captured RAM files are preserved by the existing recovery
 path. Receiver folder changes do not redirect an active stack.
+
+Beside that worst case, the desktop shows the size the stack is expected to take
+on disk: the mean stored size per RAW of the newest registered capture made with
+the connected camera model, as the receiver stores RAWs now. A format-1 capture
+of uncompressed RAWs counts 4 % less once the receiver writes format 2 (the
+measured difference). With no earlier capture from that camera only the worst
+case is shown.
 
 An older receiver already running at upgrade can be used while its default folder
 still matches the registered stack. Changing it mid-stack requires restarting the

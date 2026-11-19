@@ -1,0 +1,21 @@
+# examples/v2-bench.rs, every 49th scarab archive (stack-1794786793543-11226), 2026-11-19 10:44, host CPU load before 1 %, AMD Ryzen 9 9950X3D, one thread per decode, best of five, files in the OS cache
+file | original MB | format 1 MB | format 2 MB | ratio | decode ms f1 / f2 (trusted) | f1 / f2 (hashed) | encode ms (1 thread)
+9600x6376 strip at 3194880; metadata 3196928 bytes stored as 2986634 in 2 chunks; 100 sample chunks
+frame-000001.ARW.straw | 125.6 | 62.01 | 59.88 | 0.9657 | 85.5 / 93.9 | 128.4 / 136.9 | 651
+frame-000050.ARW.straw | 125.8 | 62.64 | 60.38 | 0.9639 | 87.0 / 93.9 | 129.4 / 137.7 | 629
+frame-000099.ARW.straw | 125.9 | 63.36 | 60.95 | 0.9619 | 82.4 / 95.0 | 125.1 / 137.5 | 628
+frame-000148.ARW.straw | 126.1 | 64.12 | 61.55 | 0.9600 | 84.1 / 95.0 | 126.6 / 138.1 | 629
+frame-000197.ARW.straw | 126.3 | 64.95 | 62.19 | 0.9575 | 85.6 / 95.8 | 135.2 / 138.3 | 630
+frame-000246.ARW.straw | 126.5 | 65.74 | 62.78 | 0.9550 | 94.6 / 96.0 | 136.8 / 138.8 | 632
+frame-000295.ARW.straw | 126.6 | 66.51 | 63.36 | 0.9526 | 94.7 / 95.7 | 137.5 / 138.6 | 640
+frame-000344.ARW.straw | 126.7 | 67.08 | 63.79 | 0.9510 | 89.6 / 96.6 | 132.7 / 138.9 | 636
+frame-000393.ARW.straw | 126.8 | 67.49 | 64.11 | 0.9499 | 89.4 / 95.9 | 132.1 / 139.0 | 640
+frame-000442.ARW.straw | 126.8 | 67.53 | 64.19 | 0.9506 | 96.4 / 95.3 | 139.1 / 138.6 | 638
+frame-000491.ARW.straw | 126.7 | 67.16 | 63.93 | 0.9519 | 88.2 / 95.5 | 131.1 / 138.2 | 639
+frame-000540.ARW.straw | 126.7 | 67.17 | 63.94 | 0.9519 | 86.2 / 96.1 | 129.1 / 138.7 | 635
+frame-000589.ARW.straw | 126.5 | 66.59 | 63.53 | 0.9541 | 91.2 / 95.1 | 134.2 / 138.2 | 633
+frame-000638.ARW.straw | 126.3 | 65.75 | 62.92 | 0.9570 | 84.5 / 95.6 | 127.0 / 138.5 | 636
+frame-000687.ARW.straw | 126.1 | 64.54 | 62.00 | 0.9606 | 82.3 / 94.6 | 124.8 / 137.3 | 635
+frame-000736.ARW.straw | 125.7 | 62.91 | 60.75 | 0.9657 | 86.2 / 99.3 | 129.1 / 142.3 | 629
+16 files, 61.2 M samples each: format 2 / format 1 size 0.9567 (4.33 % smaller); bits per sample 8.541 / 8.171
+one-thread decode per file: trusted 88.0 -> 95.6 ms (0.92x); hashed 131.1 -> 138.5 ms (0.95x); encode 635 ms
