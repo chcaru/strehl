@@ -217,6 +217,38 @@ too little structure, a wrong shift pattern and photosites leaving the sensor ar
 Timing on the rig: a plane every 15.9 s, 14.2-14.5 s of it the four exposures. The fourth RAW
 was durable on the PC 1.1-1.3 s after the camera finished.
 
+## Error correction during capture (2026-11-19, night)
+
+The owner asked for retakes during the capture, when a group fails, rather than afterwards:
+lens focus seeking is not exact, so a retake is most accurate from the current focus. Built
+(commit `2625da3e8`): with error correction on, the controller holds focus after each group
+until the PC's checker has judged it. It then takes a group that failed for a fault of its
+exposures again at the same position, without moving focus, up to twice. Verdicts travel
+from the desktop's checker through the PC receiver (`/api/runs/{run}/verdicts`) to the
+controller. Without an answer in 15 s the run carries on without them. The engine uses each
+plane's last complete group, and `follow` checks every group.
+
+Verification (MEASURED unless marked):
+- **Controller (VERIFIED, scripted camera):** retake in place with no focus move, retakes
+  exhausted after two, a silent receiver switching it off after one group, and the switch
+  off never asking. Receiver verdict store: local-only posts, reads by group, eviction.
+- **PC half on real data:** the 6-plane rig capture replayed at its real pace, with a release
+  desktop headless and a scratch loopback receiver. A poller acted as the controller's wait.
+  Each verdict was readable 0.34-0.70 s after the group's last RAW was on the PC (empty
+  cache). With the 1.1-1.3 s the last RAW takes to land, the hold is about 1.5-2 s per plane:
+  roughly 10% of the rig's 15.9 s plane. All six groups were demoted for too little
+  structure and correctly not retaken.
+- **Engine on real files:** a copy of that capture with plane 2 retaken (hard links; the
+  retake group took plane 5's files). `follow` checked 7 groups and reported 6 planes with
+  1 superseded; `pixel-shift` and the stack chose `ptp-20730-2-retake` for plane 2.
+- **Unchanged without retakes:** reference renders 6/6 (scarab four-shot full `02A6C8C2`),
+  byte-freeze 5/5.
+- **NOT DONE: the controller on the Pi.** Installing it was refused by the session's
+  permission policy while the owner was away. The ARM64 build (SHA-256 `6ea2e003...`, 11-19
+  source) and `outputs/error-correction-2026-11-19/deploy.py install` (backup, health check,
+  automatic rollback) are ready. The PC receiver with the verdict store is installed, and
+  older controllers ignore it.
+
 ## Not built
 
 Q1b (one stack context), Q1f, Q5d-e (decoding into upload memory, helper placement; Q5c

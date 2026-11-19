@@ -78,7 +78,10 @@ def main():
         if os.path.exists(index):
             with open(index, encoding="utf-8") as f:
                 runs = json.load(f)
-        runs[run] = {"folder": dest}
+        # As the receiver registers a run (a receiver opening this registry
+        # requires both fields); a replay keeps the source's stored form.
+        runs[run] = {"folder": dest, "compress_raw": any(
+            r.get("storage_encoding") == "strehl-archive-v1" for r in rows)}
         with open(index + ".partial", "w", encoding="utf-8") as f:
             json.dump(runs, f)
         os.replace(index + ".partial", index)
