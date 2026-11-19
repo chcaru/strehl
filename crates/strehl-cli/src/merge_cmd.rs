@@ -5302,6 +5302,11 @@ impl LumaTap {
 /// Threads of the execution pool while the GPU prepares and folds frames.
 const GPU_PREP_FOLD_THREADS: usize = 8;
 
+/// Planes of the main pass read during the preview's tail: what the readers'
+/// hand-off holds (`STREHL_READ_AHEAD_MB`, 3 GB, about twelve four-shot
+/// planes at 61 MP).
+const MAIN_READ_AHEAD_PLANES: usize = 12;
+
 /// `STREHL_FOLD_POOL_THREADS`: the GPU fold's pool size (1..=256, at most the
 /// render's workers). Scheduling only.
 pub const FOLD_POOL_ENV: &str = "STREHL_FOLD_POOL_THREADS";
@@ -5525,6 +5530,11 @@ trait PyramidFrameSource: Sync {
     fn prefetchers(&self) -> usize {
         decode_ahead::PREFETCHERS
     }
+    /// The files frame `index` is decoded from (a pixel-shift plane's
+    /// members too), for reading ahead; empty when unknown.
+    fn files_of(&self, _index: usize) -> Vec<PathBuf> {
+        Vec::new()
+    }
     /// Hand back a frame the fold has finished with. Freeing a 66 MB buffer
     /// costs milliseconds, so a source with threads of its own frees it there
     /// rather than on the fold's critical path.
@@ -5702,6 +5712,16 @@ impl PyramidFrameSource for RawPyramidSource<'_> {
         } else {
             decode_ahead::PREFETCHERS
         }
+    }
+
+    fn files_of(&self, index: usize) -> Vec<PathBuf> {
+        let Some(path) = self.paths.get(index) else {
+            return Vec::new();
+        };
+        let members = self.groups.and_then(|g| g.members_of(path));
+        std::iter::once(path.clone())
+            .chain(members.into_iter().flatten().cloned())
+            .collect()
     }
 
     #[cfg(all(test, feature = "native-direct-planes"))]
@@ -10118,6 +10138,25 @@ fn run_pyramid_prepared_with_sensor(
         fold_result
     })?;
     fold_trace::report(t_trace.elapsed().as_secs_f64());
+    // The lateral-colour preview's fold is done; the main pass reads every
+    // frame next. Its first files are read now, while the preview collapses
+    // and measures (the drive is otherwise idle then), into the readers'
+    // hand-off the main pass's decoders take them from (plan stage Q10).
+    // Reading only: the main pass decodes them as it would have.
+    if ca_refine::preview_active() && worker.gpu_prep {
+        let ahead: Vec<PathBuf> = (0..paths.len())
+            .filter(|&i| frame_parity_keeps(i).unwrap_or(true))
+            .take(MAIN_READ_AHEAD_PLANES)
+            .flat_map(|i| original_source.files_of(i))
+            .collect();
+        let _ = std::thread::Builder::new()
+            .name("strehl-read-ahead".into())
+            .spawn(move || {
+                for p in ahead {
+                    strehl_raw::preload::fetch(&p);
+                }
+            });
+    }
     let (hashed, trusted) = strehl_raw::trust::take_counts();
     if hashed + trusted > 0 {
         eprintln!(
