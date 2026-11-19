@@ -10115,7 +10115,15 @@ fn run_pyramid_prepared_with_sensor(
                 if worker.gpu_active()
                     || !(halves_wanted() && chunks.peek().is_none() && merged.is_none())
                 {
-                    worker.finish_chunk(&mut merged, &mut merged_alt);
+                    #[cfg(feature = "gpu")]
+                    if fold_trace::on()
+                        && let Some(gpu) = worker.gpu.as_ref()
+                    {
+                        fold_trace::time(fold_trace::Step::DeviceDrain, || gpu.wait_idle());
+                    }
+                    fold_trace::time(fold_trace::Step::Finish, || {
+                        worker.finish_chunk(&mut merged, &mut merged_alt)
+                    });
                 }
                 if let Some(acc) = merged.as_ref() {
                     progress.accumulator(

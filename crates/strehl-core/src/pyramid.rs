@@ -1887,6 +1887,19 @@ fn resolve_soft_numerator(numerator: f32, denominator: f32) -> f32 {
     (numerator / denominator) * SOFT_NUMERATOR_SCALE
 }
 
+/// `vec![v; n]`, written by the whole pool.
+///
+/// A zeroed allocation is only free when the memory comes fresh from the
+/// OS. The CLI's allocator (mimalloc) reuses what the fold just freed and
+/// zeroes it on the calling thread: two sets of totals at 61 MP with colour
+/// carry took 0.36-0.59 s each to allocate after a GPU fold (MEASURED on
+/// the scarab stack, 2026-11-18). The values are the same in any order.
+fn filled(n: usize, v: f32) -> Vec<f32> {
+    let mut out = Vec::with_capacity(n);
+    out.par_extend(rayon::iter::repeat_n(v, n));
+    out
+}
+
 impl BandMerge {
     pub fn new(width: usize, height: usize, planes: usize, cfg: MergeConfig) -> Self {
         Self::build(width, height, planes, cfg, false)
@@ -1931,7 +1944,7 @@ impl BandMerge {
         // as `release_external_totals` leaves it (`best` is never one: an
         // external fold is soft-power, where it is empty anyway).
         let total =
-            |n: usize, v: f32| -> Vec<f32> { if released { Vec::new() } else { vec![v; n] } };
+            |n: usize, v: f32| -> Vec<f32> { if released { Vec::new() } else { filled(n, v) } };
         let per_level =
             || -> Vec<Vec<f32>> { sizes.iter().map(|s| total(s.pixels(), 0.0)).collect() };
         Self {

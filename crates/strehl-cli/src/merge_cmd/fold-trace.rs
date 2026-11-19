@@ -28,9 +28,14 @@ pub(super) enum Step {
     Identity,
     /// Within it: the group's other members (and their check).
     Group,
+    /// When tracing only: waiting for the device to run the chunk's queued
+    /// fold work, so [`Step::Finish`] is the readback alone.
+    DeviceDrain,
+    /// Reading the chunk's totals back from the device (`finish_chunk`).
+    Finish,
 }
 
-const STEPS: usize = 11;
+const STEPS: usize = 13;
 const NAMES: [&str; STEPS] = [
     "fold thread waiting for decodes",
     "upload (stage)",
@@ -43,6 +48,8 @@ const NAMES: [&str; STEPS] = [
     "  of which member 1's decode",
     "  of which identity",
     "  of which members 2-4",
+    "device draining queued fold work",
+    "totals read back",
 ];
 
 static ON: AtomicBool = AtomicBool::new(false);
@@ -57,6 +64,11 @@ pub(super) fn begin() {
         n.store(0, Ordering::Relaxed);
         c.store(0, Ordering::Relaxed);
     }
+}
+
+/// Whether this fold is traced.
+pub(super) fn on() -> bool {
+    ON.load(Ordering::Relaxed)
 }
 
 /// Run `f`, adding its time to `step` when tracing.

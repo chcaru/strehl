@@ -2628,6 +2628,15 @@ impl GpuFold {
     /// accumulators are over a gigabyte at 33 MP, and a host-visible copy of
     /// all of them at once was that much more peak memory beside the CPU
     /// merge being written.
+    /// Wait until the device has run everything submitted so far (for
+    /// timing: the readback waits for it anyway).
+    pub fn wait_idle(&self) {
+        let _ = self.device.poll(wgpu::PollType::Wait {
+            submission_index: None,
+            timeout: None,
+        });
+    }
+
     pub fn finish_chunk(&mut self, merge: &mut BandMerge) {
         self.read_chunk(merge, None);
     }
@@ -2697,60 +2706,96 @@ impl GpuFold {
         );
         regions.sort_by_key(|r| (r.0, r.1));
         const PIECE: usize = 16 << 20; // floats: 64 MB
+        // Pieces in flight: while the host copies one piece out, the device
+        // copies the next ones into their own buffers. Each piece is still
+        // read exactly once into the same destinations, so the totals are
+        // the same bytes as one piece at a time.
+        const IN_FLIGHT: usize = 4;
         let largest = l.acc_len.iter().copied().max().unwrap_or(0) as usize;
         let piece = PIECE.min(largest.max(1));
-        let readback = self.device.create_buffer(&wgpu::BufferDescriptor {
-            label: Some("fold-readback"),
-            size: piece as u64 * 4,
-            usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
-            mapped_at_creation: false,
-        });
-        for (bank, &len) in l.acc_len.iter().enumerate() {
-            let total = len as usize;
-            let mut start = 0usize;
-            while start < total {
-                let n = piece.min(total - start);
-                let mut encoder =
-                    self.device
-                        .create_command_encoder(&wgpu::CommandEncoderDescriptor {
-                            label: Some("fold-readback"),
-                        });
-                encoder.copy_buffer_to_buffer(
-                    &self.acc[self.target][bank],
-                    start as u64 * 4,
-                    &readback,
-                    0,
-                    n as u64 * 4,
-                );
-                let index = self.queue.submit([encoder.finish()]);
-                let slice = readback.slice(..n as u64 * 4);
-                slice.map_async(wgpu::MapMode::Read, |r| r.expect("map fold readback"));
-                self.device
-                    .poll(wgpu::PollType::Wait {
-                        submission_index: Some(index),
-                        timeout: None,
-                    })
-                    .expect("GPU fold wait");
-                {
-                    let view = slice.get_mapped_range().expect("mapped readback");
-                    let all: &[f32] = bytemuck::cast_slice(&view[..]);
-                    let end = start + n;
-                    regions
-                        .par_iter_mut()
-                        .filter(|(b, o, d, _)| *b == bank && *o < end && *o + d.len() > start)
-                        .for_each(|(_, o, d, op)| {
-                            let from = start.max(*o);
-                            let to = end.min(*o + d.len());
-                            let (dst, src) =
-                                (&mut d[from - *o..to - *o], &all[from - start..to - start]);
-                            match op {
+        let pieces: Vec<(usize, usize, usize)> = l
+            .acc_len
+            .iter()
+            .enumerate()
+            .flat_map(|(bank, &len)| {
+                let total = len as usize;
+                (0..total.div_ceil(piece))
+                    .map(move |k| (bank, k * piece, piece.min(total - k * piece)))
+            })
+            .collect();
+        let buffers: Vec<wgpu::Buffer> = (0..IN_FLIGHT.min(pieces.len()))
+            .map(|_| {
+                self.device.create_buffer(&wgpu::BufferDescriptor {
+                    label: Some("fold-readback"),
+                    size: piece as u64 * 4,
+                    usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+                    mapped_at_creation: false,
+                })
+            })
+            .collect();
+        let submit = |k: usize| -> wgpu::SubmissionIndex {
+            let (bank, start, n) = pieces[k];
+            let readback = &buffers[k % buffers.len()];
+            let mut encoder = self
+                .device
+                .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                    label: Some("fold-readback"),
+                });
+            encoder.copy_buffer_to_buffer(
+                &self.acc[self.target][bank],
+                start as u64 * 4,
+                readback,
+                0,
+                n as u64 * 4,
+            );
+            let index = self.queue.submit([encoder.finish()]);
+            readback
+                .slice(..n as u64 * 4)
+                .map_async(wgpu::MapMode::Read, |r| r.expect("map fold readback"));
+            index
+        };
+        let mut queued: std::collections::VecDeque<wgpu::SubmissionIndex> =
+            (0..buffers.len()).map(submit).collect();
+        for k in 0..pieces.len() {
+            let (bank, start, n) = pieces[k];
+            let index = queued.pop_front().expect("a queued readback piece");
+            self.device
+                .poll(wgpu::PollType::Wait {
+                    submission_index: Some(index),
+                    timeout: None,
+                })
+                .expect("GPU fold wait");
+            let readback = &buffers[k % buffers.len()];
+            let slice = readback.slice(..n as u64 * 4);
+            {
+                let view = slice.get_mapped_range().expect("mapped readback");
+                let all: &[f32] = bytemuck::cast_slice(&view[..]);
+                let end = start + n;
+                // A piece usually lies in one or two destinations: split each
+                // overlap into 1 MB runs so the copy (and the first touch of
+                // freshly allocated totals) uses the whole pool. Every
+                // combine is elementwise, so the split cannot change a value.
+                const RUN: usize = 1 << 18;
+                regions
+                    .iter_mut()
+                    .filter(|(b, o, d, _)| *b == bank && *o < end && *o + d.len() > start)
+                    .for_each(|(_, o, d, op)| {
+                        let from = start.max(*o);
+                        let to = end.min(*o + d.len());
+                        let (dst, src) =
+                            (&mut d[from - *o..to - *o], &all[from - start..to - start]);
+                        let op = *op;
+                        dst.par_chunks_mut(RUN)
+                            .zip(src.par_chunks(RUN))
+                            .for_each(|(dst, src)| match op {
                                 None => dst.copy_from_slice(src),
                                 Some(op) => op.apply(dst, src),
-                            }
-                        });
-                }
-                readback.unmap();
-                start += n;
+                            });
+                    });
+            }
+            readback.unmap();
+            if k + buffers.len() < pieces.len() {
+                queued.push_back(submit(k + buffers.len()));
             }
         }
         self.pending_reset[self.target] = true;
