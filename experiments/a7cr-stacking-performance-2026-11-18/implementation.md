@@ -294,6 +294,17 @@ Wiring:
 - `STREHL_ARCHIVE_FORMAT=1` writes format 1 (diagnostic). Existing captures are not
   rewritten; `examples/v2-copy.rs` makes a format-2 copy for testing.
 
+**Live on the rig (MEASURED, 2026-11-19 10:54).** A 6-plane four-shot A7CR stack ran with
+error correction on. The receiver ran from the installed desktop
+(`%LOCALAPPDATA%\Programs\Strehl`, build `desktop-5b266b4978abd781`), and the desktop
+followed headless. Plane 3 failed its check ("witness pairs misregistered by 0.386
+photosite") and was taken again in place once. The checker checked 6 planes and measured
+12 alignment pairs; the stack was saved 7 s after the capture ended. Power management
+switched the camera and light off. All 28 RAWs were stored as `STRHARC2` (receipts
+`strehl-archive-v2`) at 41.9 % of their original size, against 42.7 % for the same scene in
+format 1 the night before. `strehl-raw-archive verify` passed every file. The desktop's
+expected-size basis then moved to this run: 52.6 MB per RAW, in format 2.
+
 Tests: round trips on every geometry and on hostile content; any flipped byte refused.
 Mutation-checked: without the chunk CRC, the damage tests fail. The engine's routes give
 format 1's results. The receiver stores format 2 either way a RAW arrives; with

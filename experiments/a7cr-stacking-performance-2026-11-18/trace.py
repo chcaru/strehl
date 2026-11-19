@@ -12,6 +12,7 @@ read bytes, process read ops, private bytes, working set, threads, host CPU %
 standby bytes, disk read bytes of the capture's physical drive.
 """
 import argparse
+import atexit
 import hashlib
 import os
 import subprocess
@@ -121,6 +122,10 @@ def main():
     gpu = subprocess.Popen(
         ['nvidia-smi', '--query-gpu=timestamp,utilization.gpu,utilization.memory,memory.used,power.draw',
          '--format=csv,noheader,nounits', '-lms', '100'], stdout=gpu_log, stderr=subprocess.DEVNULL)
+    # The logger runs until stopped: stop it on any exit of this script, not
+    # only the normal one (two were found still logging a day after their
+    # traces, 2026-11-19). A killed interpreter still leaves it running.
+    atexit.register(gpu.kill)
     time.sleep(0.3)
     t0 = time.perf_counter()
     wall0 = time.time()
