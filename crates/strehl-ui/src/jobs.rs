@@ -259,6 +259,28 @@ fn scan(directory: &Path, cancelled: &AtomicBool) -> Result<StackScan> {
         !frames.is_empty(),
         "This folder contains no .ARW or .ARW.straw frames"
     );
+    // A four-shot pixel-shift capture stacks one frame per focal plane, so
+    // its captures are the engine's planes, in the engine's order: timeline
+    // indices, capture limits and source ranges then mean what the stack
+    // means by them. The folder's size still counts every member.
+    if let Some(planes) = strehl_cli::pixel_shift_cmd::four_shot_planes(&directory)
+        .context("Reading the capture's pixel-shift groups")?
+    {
+        let mut by_name: std::collections::HashMap<_, _> = frames
+            .drain(..)
+            .map(|frame| (frame.path.file_name().map(ToOwned::to_owned), frame))
+            .collect();
+        frames = planes
+            .iter()
+            .map(|plane| {
+                by_name
+                    .remove(&plane.file_name().map(ToOwned::to_owned))
+                    .with_context(|| {
+                        format!("The capture records {}, but it is missing", plane.display())
+                    })
+            })
+            .collect::<Result<_>>()?;
+    }
     strehl_raw::validate_raw_paths(&frames.iter().map(|f| f.path.clone()).collect::<Vec<_>>())?;
     Ok(StackScan {
         directory,
@@ -550,8 +572,12 @@ fn run_render(
         let partial = directory.join("result.partial.tiff");
         let output = directory.join("result.tiff");
         let log = directory.join("render.log");
-        let cache = directory.join("cache");
-        fs::create_dir(&cache).context("Creating the render's private cache")?;
+        // The engine's shared cache, as the CLI and `strehl follow` use it:
+        // warp maps, group and alignment-pair journals, verified-archive
+        // records and GPU caches are keyed by their inputs, so a later render
+        // of the same capture reuses them instead of measuring again.
+        let cache = strehl_cli::default_cache_root();
+        fs::create_dir_all(&cache).context("Creating the engine cache")?;
         if let Some(recipe) = &request.recipe {
             let bytes = serde_json::to_vec_pretty(recipe)?;
             for name in ["region-recipe.json", "result.strehl-edits.json"] {
@@ -577,10 +603,15 @@ fn run_render(
             .unwrap_or_else(|| "engine default".into());
         writeln!(
             log_file,
-            "Strehl desktop render\nProgram: {:?}\nArguments: {:?}\nInherited STREHL_* overrides removed; STREHL_CACHE_DIR explicitly set to {}.\nRAYON_NUM_THREADS: {workers}. STREHL_PYRAMID_WORKERS: {workers}.\nExecution limits only; engine canonical reduction order and memory plan preserved.\nTemporal detail smoothing: {} (experimental saved recipe setting).\n",
+            "Strehl desktop render\nProgram: {:?}\nArguments: {:?}\nInherited STREHL_* overrides removed; STREHL_CACHE_DIR explicitly set to the shared engine cache {}.\nPixel shift: {}.\nRAYON_NUM_THREADS: {workers}. STREHL_PYRAMID_WORKERS: {workers}.\nExecution limits only; engine canonical reduction order and memory plan preserved.\nTemporal detail smoothing: {} (experimental saved recipe setting).\n",
             command.get_program(),
             command.get_args().collect::<Vec<_>>(),
             cache.display(),
+            if pixel_shift_requested(&command) {
+                "four-shot groups assembled from measured channels (STREHL_PIXEL_SHIFT=remosaic)"
+            } else {
+                "off (no recorded four-shot group)"
+            },
             if request.settings.temporal_energy {
                 "on"
             } else {
@@ -780,12 +811,29 @@ pub(crate) fn render_command(
         command.arg("--cover=crop");
     }
     configure_render_environment(&mut command, request, std::env::vars_os());
+    // A capture that records four-shot groups is stacked as its focal planes,
+    // each assembled from its four members' measured channels, as `scan`
+    // lists it. Set after the inherited overrides are removed.
+    if strehl_cli::pixel_shift_cmd::four_shot_planes(source)
+        .context("Reading the capture's pixel-shift groups")?
+        .is_some()
+    {
+        command.env(strehl_cli::pixel_shift_cmd::PIXEL_SHIFT_ENV, "remosaic");
+    }
     #[cfg(windows)]
     {
         use std::os::windows::process::CommandExt;
         command.creation_flags(0x0800_0000); // CREATE_NO_WINDOW, no shell involved.
     }
     Ok(command)
+}
+
+/// Whether `command` assembles four-shot groups (see [`render_command`]).
+pub(crate) fn pixel_shift_requested(command: &Command) -> bool {
+    command.get_envs().any(|(name, value)| {
+        name == strehl_cli::pixel_shift_cmd::PIXEL_SHIFT_ENV
+            && value == Some(std::ffi::OsStr::new("remosaic"))
+    })
 }
 
 fn configure_render_environment(
@@ -1532,6 +1580,153 @@ pub(crate) mod tests {
         assert_eq!(scan.frames[0].path.file_name(), archived.file_name());
         fs::write(directory.path().join("frame-000001.ARW"), b"duplicate").unwrap();
         assert!(super::scan(directory.path(), &AtomicBool::new(false)).is_err());
+    }
+
+    /// A capture folder recording `groups` (plane, file prefix, members) with a
+    /// durable receipt for every file except those named in `unreceipted`.
+    fn capture_folder(
+        label: &str,
+        groups: &[(u64, &str, u64)],
+        unreceipted: &[&str],
+    ) -> TestDirectory {
+        let directory = TestDirectory::new(label);
+        let (mut events, mut receipts) = (String::new(), String::new());
+        let mut size = 1;
+        for &(plane, prefix, members) in groups {
+            let files: Vec<_> = (1..=members)
+                .map(|member| {
+                    let name = format!("{prefix}-{member}.ARW");
+                    let sha = format!("{:064x}", plane * 10 + member);
+                    size += 1;
+                    fs::write(directory.path().join(format!("{name}.straw")), vec![0_u8; size])
+                        .unwrap();
+                    if !unreceipted.contains(&name.as_str()) {
+                        receipts += &format!(
+                            "{}\n",
+                            serde_json::json!({"logical_name": name, "sha256": sha, "durable": true, "ok": true})
+                        );
+                    }
+                    serde_json::json!({"name": name, "plane": plane, "sha256": sha,
+                        "group_id": format!("g{plane}"), "member_index": member, "members": members})
+                })
+                .collect();
+            events += &format!(
+                "{}\n",
+                serde_json::json!({"event": "capture_complete", "data": {"target": plane, "response": {"files": files}}})
+            );
+        }
+        fs::write(directory.path().join("events.jsonl"), events).unwrap();
+        fs::write(directory.path().join("transfer-receipts.jsonl"), receipts).unwrap();
+        directory
+    }
+
+    /// A four-shot capture is listed and stacked as its focal planes, in the
+    /// engine's plane order (not filename order), with every member counted
+    /// in its size; the render assembles the groups. A capture with no
+    /// complete four-shot group stays an ordinary stack of every RAW.
+    #[test]
+    fn four_shot_captures_scan_and_stack_as_focal_planes() {
+        let partial = Path::new("out/result.partial.tiff");
+        let four = capture_folder("four-shot", &[(0, "b", 4), (1, "a", 4), (2, "c", 1)], &[]);
+        let scan = scan(four.path(), &AtomicBool::new(false)).unwrap();
+        let names: Vec<_> = scan
+            .frames
+            .iter()
+            .map(|frame| {
+                frame
+                    .path
+                    .file_name()
+                    .unwrap()
+                    .to_string_lossy()
+                    .into_owned()
+            })
+            .collect();
+        assert_eq!(names, ["b-1.ARW.straw", "a-1.ARW.straw", "c-1.ARW.straw"]);
+        assert_eq!(
+            scan.frames
+                .iter()
+                .map(|frame| frame.bytes)
+                .collect::<Vec<_>>(),
+            [2, 6, 10]
+        );
+        assert_eq!(scan.total_bytes, (2..=10).sum::<u64>());
+        let request = request(four.path().to_path_buf(), PathBuf::from("out"));
+        let command = render_command(&request, four.path(), partial).unwrap();
+        assert!(pixel_shift_requested(&command));
+
+        // Member 3 of the only four-shot group never arrived durably: no
+        // complete group, so every RAW is an ordinary frame, unassembled.
+        let broken = capture_folder(
+            "incomplete-four-shot",
+            &[(0, "b", 4), (1, "c", 1)],
+            &["b-3.ARW"],
+        );
+        let scan = super::scan(broken.path(), &AtomicBool::new(false)).unwrap();
+        assert_eq!(scan.frames.len(), 5);
+        let request = super::tests::request(broken.path().to_path_buf(), PathBuf::from("out"));
+        assert!(!pixel_shift_requested(
+            &render_command(&request, broken.path(), partial).unwrap()
+        ));
+
+        // A deleted member 1 leaves its group incomplete: the plane is its
+        // first durable member, exactly as the engine stacks it.
+        let missing = capture_folder("missing-member", &[(0, "b", 4), (1, "a", 4)], &[]);
+        fs::remove_file(missing.path().join("a-1.ARW.straw")).unwrap();
+        let scan = super::scan(missing.path(), &AtomicBool::new(false)).unwrap();
+        assert_eq!(
+            scan.frames
+                .iter()
+                .map(|frame| frame
+                    .path
+                    .file_name()
+                    .unwrap()
+                    .to_string_lossy()
+                    .into_owned())
+                .collect::<Vec<_>>(),
+            ["b-1.ARW.straw", "a-2.ARW.straw"]
+        );
+        assert_eq!(
+            strehl_cli::pixel_shift_cmd::four_shot_planes(missing.path())
+                .unwrap()
+                .unwrap()
+                .iter()
+                .map(|plane| plane.file_name().unwrap().to_owned())
+                .collect::<Vec<_>>(),
+            scan.frames
+                .iter()
+                .map(|frame| frame.path.file_name().unwrap().to_owned())
+                .collect::<Vec<_>>()
+        );
+    }
+
+    /// The desktop's whole render path on a real capture, as the app starts it
+    /// (all workers, a retained master, default settings). Opt-in: set
+    /// `STREHL_UI_E2E_STACK` (capture folder), `STREHL_UI_E2E_ENGINE` (engine
+    /// executable) and `STREHL_UI_E2E_OUT` (output parent).
+    #[test]
+    #[ignore = "renders a real capture; needs STREHL_UI_E2E_STACK, _ENGINE and _OUT"]
+    fn desktop_render_of_a_real_capture() {
+        let var = |name: &str| PathBuf::from(std::env::var_os(name).expect(name));
+        let mut request = request(var("STREHL_UI_E2E_STACK"), var("STREHL_UI_E2E_OUT"));
+        request.executable = var("STREHL_UI_E2E_ENGINE");
+        request.worker_threads = Some(MachineResources::detect().maximum_workers());
+        request.retain_master = true;
+        // Drained as the app drains it: a full queue blocks the render worker.
+        let (sender, receiver) = mpsc::sync_channel(EVENT_CAPACITY);
+        let drain = thread::spawn(move || receiver.iter().count());
+        let started = std::time::Instant::now();
+        let outcome = run_render(&request, &Arc::new(AtomicBool::new(false)), &sender);
+        drop(sender);
+        drain.join().unwrap();
+        let seconds = started.elapsed().as_secs_f64();
+        let RenderOutcome::Completed { output, log, .. } = outcome else {
+            panic!("render did not complete: {outcome:?}");
+        };
+        println!(
+            "desktop render: {seconds:.1} s, {}, log {}",
+            output.display(),
+            log.display()
+        );
     }
 
     #[test]

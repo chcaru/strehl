@@ -521,7 +521,7 @@ fn report(frames: Vec<FrameReport>, records: bool) -> AuditReport {
     AuditReport {
         schema: "strehl-sony-focus-audit-v1",
         strehl_version: super::VERSION,
-        input_order: "caller order; focus inspect uses non-recursive filename order; never sorted by metadata values",
+        input_order: "caller order; focus inspect uses non-recursive filename order, or a four-shot capture's focal planes in plane order; never sorted by metadata values",
         records_included: records,
         limits: LIMITS,
         file_count: frames.len(),
@@ -660,6 +660,13 @@ fn input_paths(input: &Path, limit: Option<usize>) -> Result<Vec<PathBuf>> {
             "expected an ARW file or bracket directory"
         );
         Ok(vec![input.to_owned()])
+    } else if let Some(mut planes) = crate::pixel_shift_cmd::four_shot_planes(input)? {
+        // A four-shot capture's frames are its focal planes, as `stack` and
+        // the desktop number them; members 2-4 repeat member 1's focus.
+        if let Some(n) = limit {
+            planes.truncate(n);
+        }
+        Ok(planes)
     } else {
         super::raw_paths(input, limit)
     }

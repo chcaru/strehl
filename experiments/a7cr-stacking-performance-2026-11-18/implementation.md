@@ -115,6 +115,46 @@ order; the plan's device mirror does (integrals one invocation per row then per 
 with members already staged for the fold. Worth up to about 16 s of a first render, and
 nothing for a render after `strehl follow`, which journals every group during the capture.
 
+## The desktop (MEASURED, 2026-11-18, later)
+
+Asked whether the work reached the desktop: the engine did (the desktop runs it in a child
+process with `STREHL_GPU_FOLD=auto`), the four-shot path did not. Found by reading
+`crates/strehl-ui/src/jobs.rs` and confirmed by running its render function (`run_render`,
+the app's own request: every worker, a retained master, default settings) on the scarab
+capture through an opt-in test (`desktop_render_of_a_real_capture`), with `LOCALAPPDATA`
+pointed at an empty scratch folder so first and later renders are both measured.
+
+- **Four-shot never assembled.** The desktop removes every inherited `STREHL_*` variable and
+  never set `STREHL_PIXEL_SHIFT`, so a four-shot capture stacked as 784 ordinary frames.
+  Now `strehl_cli::pixel_shift_cmd::four_shot_planes` lists a capture's focal planes; the
+  desktop's scan shows them as its captures (timeline indices, capture limits and source
+  ranges then count planes, as the engine does) and the render sets `remosaic`. `focus
+  inspect` on a four-shot folder lists the same planes, so the metadata panel still matches.
+- **Every render started cold.** Each render had its own new `STREHL_CACHE_DIR` inside its
+  output folder, so no warp map, group or alignment-pair journal, verified-archive record or
+  GPU self-test and pipeline cache ever carried over. Renders now use the engine's shared
+  cache (`strehl_cli::default_cache_root`), as the CLI and `strehl follow` do.
+- **Every full-resolution A7CR render failed publication** ("Memory limit exceeded"):
+  `image` reserves the decoded buffer from the viewer's 512 MiB budget and gives the TIFF
+  decoder what is left, so any 16-bit RGB TIFF over 44.7 MP was refused. The budget is now
+  twice the viewer's own 80 MP limit at 16-bit RGBA; a test writes a 48 MP TIFF that the old
+  budget refused.
+- **The confidence map, on by default in the desktop, cost two passes.** The lateral-CA
+  preview built one too (82 s, then overwritten); it no longer does. The render's own pass ran
+  all 196 planes serially because an optically restored stack folds in one chunk; its integer
+  counts are now split across workers by memory and cores (6 here), 81 s to 50 s.
+
+| Desktop render, scarab | Four-shot on, before the confidence and publication fixes | Now |
+| --- | --- | --- |
+| First render (empty cache) | about 205 s of engine time (preview 94 s, render 102 s); publication of the same bytes failed in the next run | 97.4 s, published |
+| Later render | (every render was a first render) | 73.8 s: preview 5.1 s, main fold 13.2 s, confidence pass 50.4 s |
+
+All four runs wrote the same three files: result `FA5E8482...`, master `7F06B3CB...`,
+confidence map `FE8A612A...`; the preview's skipped map and the split pass change no byte.
+The confidence pass is now most of a later desktop render; it gathers every plane again on
+the CPU (colour-carried, about 0.4 s of the machine a plane). Moving it to the device, where
+the fold already gathers the same planes bit for bit, is the next step there.
+
 ## Not built
 
 Q1b (one stack context), Q1f, Q5d-e (decoding into upload memory, helper placement; Q5c

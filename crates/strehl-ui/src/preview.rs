@@ -13,7 +13,12 @@ pub(crate) mod explorer;
 
 const MAX_IMAGE_SIDE: u32 = 32_768;
 const MAX_IMAGE_PIXELS: u64 = 80_000_000;
-const MAX_DECODE_BYTES: u64 = 512 * 1024 * 1024;
+/// Twice the largest image the pixel limit admits at 16-bit RGBA: `image`
+/// reserves the decoded buffer from this budget and then gives the TIFF
+/// decoder only what is left, so a budget under twice the image refuses it.
+/// At 512 MiB every TIFF over 44.7 MP of 16-bit RGB was refused, including
+/// each full-resolution A7CR render (9504 x 6336, 361 MB) at publication.
+const MAX_DECODE_BYTES: u64 = 2 * 8 * MAX_IMAGE_PIXELS;
 pub(crate) const OVERVIEW_SIDE: u32 = 1600;
 
 pub struct PreviewImage {
@@ -147,6 +152,24 @@ fn validate_dimensions(width: u32, height: u32) -> Result<()> {
 mod tests {
     use super::*;
     use crate::jobs::tests::TestDirectory;
+
+    /// A 16-bit RGB TIFF above half the old 512 MiB budget (48 MP, 288 MB
+    /// decoded) validates; the old budget refused it before reading a pixel.
+    #[test]
+    fn a_large_sixteen_bit_tiff_validates() {
+        let directory = TestDirectory::new("large-tiff");
+        let path = directory.path().join("large.tiff");
+        let (width, height) = (8_000_u32, 6_000_u32);
+        image::ImageBuffer::<image::Rgb<u16>, _>::from_raw(
+            width,
+            height,
+            vec![0_u16; 3 * width as usize * height as usize],
+        )
+        .unwrap()
+        .save(&path)
+        .unwrap();
+        validate_tiff(&path).unwrap();
+    }
 
     #[test]
     fn zero_and_oversized_dimensions_are_rejected_before_rgba_allocation() {

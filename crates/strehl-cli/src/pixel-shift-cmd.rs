@@ -997,6 +997,66 @@ pub fn judge(m: &GroupMeasurement, residual: ResidualMode) -> Option<String> {
     }
 }
 
+/// A capture's focal planes as `remosaic` stacks them, with members 2-4 of
+/// each complete four-shot group.
+struct PlaneList {
+    planes: Vec<PathBuf>,
+    members: HashMap<PathBuf, [PathBuf; 3]>,
+    four: usize,
+    single: usize,
+    incomplete: usize,
+}
+
+fn plane_list(groups: &[RecordedGroup]) -> PlaneList {
+    let mut list = PlaneList {
+        planes: Vec::new(),
+        members: HashMap::new(),
+        four: 0,
+        single: 0,
+        incomplete: 0,
+    };
+    for g in groups {
+        match (g.complete, g.files.len()) {
+            (true, 4) => {
+                list.planes.push(g.files[0].path.clone());
+                list.members.insert(
+                    g.files[0].path.clone(),
+                    [1, 2, 3].map(|k| g.files[k].path.clone()),
+                );
+                list.four += 1;
+            }
+            (true, 1) => {
+                list.planes.push(g.files[0].path.clone());
+                list.single += 1;
+            }
+            _ => {
+                // An incomplete group contributes its first durable member
+                // as an ordinary frame, and says so; never silently dropped.
+                if let Some(f) = g.files.iter().find(|f| f.durable) {
+                    list.planes.push(f.path.clone());
+                }
+                list.incomplete += 1;
+            }
+        }
+    }
+    list
+}
+
+/// The frames a four-shot capture folder stacks as under `remosaic`: one
+/// path per focal plane, in the order the stack numbers them (member 1 of a
+/// four-shot group, the RAW of a single-shot plane, the first durable member
+/// of an incomplete group). `None` when the folder records no complete
+/// four-shot group, or has no capture journal at all: such a folder stacks
+/// as ordinary frames. For callers that must agree with the stack about
+/// frame indices, such as the desktop's capture timeline.
+pub fn four_shot_planes(dir: &Path) -> Result<Option<Vec<PathBuf>>> {
+    if !dir.join("events.jsonl").is_file() {
+        return Ok(None);
+    }
+    let list = plane_list(&recorded_groups(dir)?);
+    Ok((list.four > 0 && !list.planes.is_empty()).then_some(list.planes))
+}
+
 impl StackGroups {
     pub fn from_env(dir: &Path, limit: Option<usize>) -> Result<Option<Self>> {
         match std::env::var(PIXEL_SHIFT_ENV)
@@ -1015,34 +1075,13 @@ impl StackGroups {
     }
 
     pub fn discover(dir: &Path, limit: Option<usize>, mode: GroupMode) -> Result<Self> {
-        let groups = recorded_groups(dir)?;
-        let mut planes = Vec::new();
-        let mut members = HashMap::new();
-        let (mut four, mut single, mut incomplete) = (0, 0, 0);
-        for g in &groups {
-            match (g.complete, g.files.len()) {
-                (true, 4) => {
-                    planes.push(g.files[0].path.clone());
-                    members.insert(
-                        g.files[0].path.clone(),
-                        [1, 2, 3].map(|k| g.files[k].path.clone()),
-                    );
-                    four += 1;
-                }
-                (true, 1) => {
-                    planes.push(g.files[0].path.clone());
-                    single += 1;
-                }
-                _ => {
-                    // An incomplete group contributes its first durable member
-                    // as an ordinary frame, and says so; never silently dropped.
-                    if let Some(f) = g.files.iter().find(|f| f.durable) {
-                        planes.push(f.path.clone());
-                    }
-                    incomplete += 1;
-                }
-            }
-        }
+        let PlaneList {
+            mut planes,
+            members,
+            four,
+            single,
+            incomplete,
+        } = plane_list(&recorded_groups(dir)?);
         if let Some(n) = limit {
             planes.truncate(n);
         }

@@ -2,7 +2,8 @@
 
 Strehl is a native Rust workspace for RAW focus stacking. Windows is the primary
 desktop target; source import currently accepts Sony ARW brackets. The application
-includes its processing engine. Stacking runs on the CPU and the GPU draws the
+includes its processing engine. Stacking folds on an eligible GPU when the machine
+has one and on the CPU otherwise, with identical pixels; the GPU also draws the
 workspace. See the [build prerequisites](../../docs/desktop-build.md).
 
 For scripted work, use the [local control guide](../../docs/desktop-control.md)
@@ -51,6 +52,19 @@ captures open directly in Projects. See [native Capture](../../docs/native-captu
    restores its photograph and recorded observations without rendering again.
    Source previews are withheld if the recorded source identities no longer match.
    Identity checks use ordered paths, sizes and modification times, not file hashes.
+
+A capture that records four-shot pixel-shift groups opens as its focal planes: one
+capture per focus position (member 1's file), in the order the capture recorded
+them, and the render assembles each plane from its four members' measured channels
+(`STREHL_PIXEL_SHIFT=remosaic`; the render log says so). Capture limits and
+source ranges count focal planes. A capture with no complete four-shot group opens
+as an ordinary stack of every RAW.
+
+Renders share the engine's cache (`%LOCALAPPDATA%\strehl\warpmaps` on Windows, the
+same one the CLI and `strehl follow` use): alignment, pixel-shift group
+measurements, verified-archive records and GPU setup are kept, keyed by what they
+were computed from, so a later render of the same capture skips them. The render
+log names the folder.
 
 **Working with several passes of one subject**
 

@@ -994,6 +994,15 @@ enum Command {
     },
 }
 
+/// The engine's cache folder when `STREHL_CACHE_DIR` is unset
+/// (`%LOCALAPPDATA%\strehl\warpmaps` on Windows). It holds warp maps, the
+/// group and alignment-edge journals, verified-archive records and the GPU
+/// self-test and pipeline caches, each keyed by what it was computed from,
+/// and is shared by every command and by `strehl follow`.
+pub fn default_cache_root() -> PathBuf {
+    align_cmd::default_cache_root()
+}
+
 /// Run the same command-line engine used by the standalone executable.
 ///
 /// Arguments include the program name, as with `std::env::args_os()`.

@@ -2222,14 +2222,17 @@ fn merge_config(n: usize, resampler: Resampler) -> (usize, Vec<usize>, Resampler
 pub(crate) fn cache_root() -> PathBuf {
     std::env::var_os("STREHL_CACHE_DIR")
         .map(PathBuf::from)
-        .unwrap_or_else(|| {
-            std::env::var_os("LOCALAPPDATA")
-                .or_else(|| std::env::var_os("XDG_CACHE_HOME"))
-                .map(PathBuf::from)
-                .unwrap_or_else(std::env::temp_dir)
-                .join("strehl")
-                .join("warpmaps")
-        })
+        .unwrap_or_else(default_cache_root)
+}
+
+/// [`cache_root`] when `STREHL_CACHE_DIR` is unset.
+pub(crate) fn default_cache_root() -> PathBuf {
+    std::env::var_os("LOCALAPPDATA")
+        .or_else(|| std::env::var_os("XDG_CACHE_HOME"))
+        .map(PathBuf::from)
+        .unwrap_or_else(std::env::temp_dir)
+        .join("strehl")
+        .join("warpmaps")
 }
 
 /// Reference frame for a merge-side solve: the **middle** frame.

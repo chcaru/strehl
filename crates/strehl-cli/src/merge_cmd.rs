@@ -8389,6 +8389,30 @@ struct Centrality {
     seen: Vec<u32>,
 }
 
+/// Frames per worker of the confidence pass. Its counts are integers, so any
+/// split of the frames gives the same map; the split is chosen by memory
+/// ([`MEMORY_BUDGET_BYTES`]) and cores, never narrower than the fold's
+/// `per_chunk`. The fold's own chunking is no guide: an optically restored
+/// stack folds in one chunk, which made this pass serial (81 s for the 196
+/// planes of the A7CR scarab stack). A worker holds its planes, luma and
+/// counts on the analysis grid, warp scratch on the full plane, and up to
+/// four decoded frames (a pixel-shift group's members).
+fn confidence_chunk(
+    frames: usize,
+    per_chunk: usize,
+    domain: PyramidDomain,
+    frame_bytes: usize,
+) -> usize {
+    let px = domain.analysis().pixels();
+    let full = domain.full.pixels();
+    let per_worker = 4 * (BAND_PLANES + 1) * px + 8 * px + 9 * full + 4 * frame_bytes;
+    let cores = std::thread::available_parallelism().map_or(1, |n| n.get());
+    let workers = (MEMORY_BUDGET_BYTES / per_worker.max(1))
+        .clamp(1, cores)
+        .min(frames.max(1));
+    frames.div_ceil(workers).min(per_chunk.max(1)).max(1)
+}
+
 // Keep the existing confidence inputs explicit when adding the shared source.
 #[allow(clippy::too_many_arguments)]
 fn confidence_pass(
@@ -10539,7 +10563,10 @@ fn run_pyramid_prepared_with_sensor(
     // the write: the question it answers is about the merged output, so the
     // merged output has to exist first, and reporting it before the image is
     // written means a run that fails to write still leaves the evidence.
-    if let Some(cpath) = confidence_map_path(opts) {
+    // Not for a lateral-CA preview: it writes nothing, and its map (a second
+    // pass over every frame, 82 s on the A7CR scarab stack) was overwritten
+    // by the render's own.
+    if let Some(cpath) = confidence_map_path(opts).filter(|_| !ca_refine::preview_active()) {
         let t_conf = Instant::now();
         let px = analysis_geom.pixels();
         let mut merged_luma = vec![0.0f32; px];
@@ -10581,7 +10608,7 @@ fn run_pyramid_prepared_with_sensor(
                 warps,
                 defect,
                 &merged_luma,
-                per_chunk,
+                confidence_chunk(paths.len(), per_chunk, domain, frame_bytes),
                 Some(observer),
             )?
         } else {
@@ -10593,7 +10620,7 @@ fn run_pyramid_prepared_with_sensor(
                 warps,
                 defect,
                 &merged_luma,
-                per_chunk,
+                confidence_chunk(paths.len(), per_chunk, domain, frame_bytes),
             )?
         };
         if let Some(parent) = cpath.parent() {
@@ -10601,9 +10628,15 @@ fn run_pyramid_prepared_with_sensor(
         }
         write_confidence_map(&cpath, &conf, analysis_geom)?;
         eprintln!(
-            "                  second pass over {} frames in {:.1} s",
+            "                  second pass over {} frames in {:.1} s ({} at a time)",
             paths.len(),
-            t_conf.elapsed().as_secs_f64()
+            t_conf.elapsed().as_secs_f64(),
+            paths.len().div_ceil(confidence_chunk(
+                paths.len(),
+                per_chunk,
+                domain,
+                frame_bytes
+            ))
         );
         eprintln!();
     }
