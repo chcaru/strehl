@@ -14,6 +14,7 @@ path = "src/main.rs"
 
 [dependencies]
 anyhow.workspace = true
+chrono = { version = "=0.4.45", default-features = false, features = ["clock"] }
 strehl-core.workspace = true
 strehl-edit.workspace = true
 strehl-raw.workspace = true

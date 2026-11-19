@@ -12,8 +12,11 @@ use std::{
 };
 use strehl_capture::{
     model::{Plan, Roi},
+    power::Outlet,
     session::{Command, CommandRequest},
 };
+#[path = "capture-schedule.rs"]
+mod schedule_ui;
 
 pub(crate) struct CaptureWorkspace {
     config: Config,
@@ -22,6 +25,7 @@ pub(crate) struct CaptureWorkspace {
     pub error: Option<String>,
     texture: Option<(u64, egui::TextureHandle)>,
     draft: Plan,
+    confirmed_plan: Plan,
     draft_revision: u64,
     draft_dirty: bool,
     acknowledge_uncertain: bool,
@@ -43,6 +47,8 @@ pub(crate) struct CaptureWorkspace {
     focus_range: u8,
     focus_pending: Option<u16>,
     focus_flight: Option<(u16, u64, Instant)>,
+    schedule_ui: schedule_ui::ScheduleUi,
+    warmup_edit: Option<u32>,
 }
 impl CaptureWorkspace {
     pub fn new(path: Option<PathBuf>) -> Self {
@@ -56,6 +62,7 @@ impl CaptureWorkspace {
             error,
             texture: None,
             draft: Plan::default(),
+            confirmed_plan: Plan::default(),
             draft_revision: 0,
             draft_dirty: false,
             acknowledge_uncertain: false,
@@ -77,6 +84,8 @@ impl CaptureWorkspace {
             focus_range: 0,
             focus_pending: None,
             focus_flight: None,
+            schedule_ui: Default::default(),
+            warmup_edit: None,
         }
     }
     pub fn activate(&mut self, ctx: &egui::Context) {
@@ -157,11 +166,8 @@ impl CaptureWorkspace {
                 && (s.preview.is_some() || s.state["preview"]["available"] != true))
                 || s.connection_error.is_some()
                 || self.config.controller.is_empty());
-        if !self.draft_dirty
-            && let Ok(plan) = serde_json::from_value(s.state["plan"].clone())
-        {
-            self.draft = plan;
-            self.draft_revision = s.state["plan_revision"].as_u64().unwrap_or(0);
+        if let Ok(plan) = serde_json::from_value(s.state["plan"].clone()) {
+            self.sync_plan(plan, s.state["plan_revision"].as_u64().unwrap_or(0));
         }
         if !self.folder_dirty {
             self.folder_draft = s.receiver["folder"].as_str().unwrap_or_default().into();
@@ -232,6 +238,7 @@ impl CaptureWorkspace {
                         ui.label(RichText::new("CAPTURE").color(ACCENT).size(12.0).strong());
                         ui.add_space(12.0);
                         self.connection_ui(ui, &s);
+                        self.power_ui(ui, &s);
                         ui.add_space(12.0);
                         ui.separator();
                         ui.add_space(10.0);
@@ -327,6 +334,20 @@ impl CaptureWorkspace {
                 ui.small("This QR includes your private pairing key.");
                 ui.small("Android Chrome may need Nearby devices permission.");
             });
+    }
+    fn sync_plan(&mut self, plan: Plan, revision: u64) {
+        // Only the sequence settings are editable drafts. The Pi owns both marks.
+        self.draft.start = plan.start;
+        self.draft.end = plan.end;
+        self.confirmed_plan.start = plan.start;
+        self.confirmed_plan.end = plan.end;
+        if !self.draft_dirty {
+            self.draft = plan.clone();
+            self.confirmed_plan = plan;
+            self.draft_revision = revision;
+        } else if self.confirmed_plan == plan {
+            self.draft_revision = revision;
+        }
     }
     fn observe_focus(&mut self, s: &Snapshot) {
         let phase = s.state["phase"].as_str().unwrap_or_default();
@@ -495,6 +516,99 @@ impl CaptureWorkspace {
         if let Some(error) = &s.connection_error {
             ui.colored_label(AMBER, error);
         }
+    }
+    fn power_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot) {
+        let power = &s.state["power"];
+        if !power.is_object() {
+            return;
+        }
+        let idle = s.fresh() && !s.pending && power["available"] == true;
+        egui::CollapsingHeader::new("Studio power")
+            .default_open(true)
+            .show(ui, |ui| {
+                for (name, device, on_label, off_label) in [
+                    ("light", Outlet::Light, "Light on", "Light off"),
+                    (
+                        "camera",
+                        Outlet::Camera,
+                        "Power on & connect",
+                        "Shut down camera",
+                    ),
+                ] {
+                    let p = &power[name];
+                    let state = p["on"].as_bool();
+                    ui.label(match (state, p["watts"].as_f64()) {
+                        (Some(on), Some(w)) => {
+                            format!("{device:?} {} · {w:.1} W", if on { "on" } else { "off" })
+                        }
+                        _ => format!(
+                            "{device:?} · {}",
+                            p["error"].as_str().unwrap_or("Waiting for outlet")
+                        ),
+                    });
+                    ui.horizontal_wrapped(|ui| {
+                        for (on, label) in [(true, on_label), (false, off_label)] {
+                            let allowed = match device {
+                                Outlet::Light => state != Some(on),
+                                Outlet::Camera => {
+                                    power[if on {
+                                        "can_start_camera"
+                                    } else {
+                                        "can_stop_camera"
+                                    }] == true
+                                }
+                            };
+                            if ui
+                                .add_enabled(idle && allowed, egui::Button::new(label))
+                                .clicked()
+                            {
+                                self.command(s, Command::Power { device, on });
+                            }
+                        }
+                    });
+                }
+                let mut enabled = power["manage_stack"] == true;
+                if ui
+                    .add_enabled(
+                        idle && power["can_manage"] == true,
+                        egui::Checkbox::new(
+                            &mut enabled,
+                            "Warm light at start, power both off after saving",
+                        ),
+                    )
+                    .changed()
+                {
+                    self.command(s, Command::PowerPlan { enabled });
+                }
+                if let Some(e) = power["error"].as_str() {
+                    ui.colored_label(AMBER, e);
+                }
+                if s.state["schedule"].is_object() {
+                    let saved = power["warmup_seconds"].as_u64().unwrap_or(5) as u32;
+                    let mut secs = self.warmup_edit.unwrap_or(saved);
+                    ui.horizontal_wrapped(|ui| {
+                        ui.label("Light warmup");
+                        if ui
+                            .add_enabled(
+                                idle,
+                                egui::DragValue::new(&mut secs).range(0..=300).suffix(" s"),
+                            )
+                            .changed()
+                        {
+                            self.warmup_edit = Some(secs);
+                        }
+                        if secs != saved
+                            && ui
+                                .add_enabled(idle, egui::Button::new("Save warmup"))
+                                .clicked()
+                        {
+                            self.command(s, Command::SetWarmup { seconds: secs });
+                            self.warmup_edit = None;
+                        }
+                    });
+                    ui.small("Delay from switching the light on to starting the focus sweep.");
+                }
+            });
     }
     fn focus_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot) {
         ui.label(RichText::new("Focus bounds").strong());
@@ -802,25 +916,42 @@ impl CaptureWorkspace {
         } else {
             None
         };
+        let start = s.fresh()
+            && s.state["editable"] == true
+            && s.state["start_set"] == true
+            && s.state["end_set"] == true
+            && s.state["plan_error"].is_null()
+            && !self.draft_dirty
+            && self.focus_pending.is_none()
+            && self.focus_flight.is_none()
+            && capacity_error.is_none()
+            && (s.receiver["ok"] == true || s.state["demo"] == true);
         ui.horizontal_wrapped(|ui| {
-            let start = s.fresh()
-                && s.state["editable"] == true
-                && s.state["start_set"] == true
-                && s.state["end_set"] == true
-                && s.state["plan_error"].is_null()
-                && !self.draft_dirty
-                && self.focus_pending.is_none()
-                && self.focus_flight.is_none()
-                && capacity_error.is_none()
-                && (s.receiver["ok"] == true || s.state["demo"] == true);
             if ui
                 .add_enabled(
-                    start && !s.pending,
-                    egui::Button::new(RichText::new("Start stack").color(BG)).fill(ACCENT),
+                    start && !s.pending && !self.schedule_ui.editing(),
+                    egui::Button::new(
+                        RichText::new(if s.state["schedule"]["job"]["stage"] == "armed" {
+                            "Start stack now"
+                        } else {
+                            "Start stack"
+                        })
+                        .color(BG),
+                    )
+                    .fill(ACCENT),
                 )
                 .clicked()
             {
                 self.command(s, Command::Start {});
+            }
+            if s.state["schedule"].is_object()
+                && !matches!(
+                    s.state["schedule"]["job"]["stage"].as_str(),
+                    Some("armed" | "running")
+                )
+                && ui.button("Schedule stack…").clicked()
+            {
+                self.schedule_ui.open(s);
             }
             if phase == "paused" {
                 if ui
@@ -865,6 +996,9 @@ impl CaptureWorkspace {
                 format!("{total} planes · {} RAWs planned", total * shots)
             });
         });
+        if let Some(cmd) = self.schedule_ui.show(ui, s, start && !s.pending) {
+            self.command(s, cmd);
+        }
         if let Some(error) = &capacity_error {
             ui.colored_label(AMBER, error);
         }
@@ -998,6 +1132,37 @@ fn duration(seconds: Option<f64>) -> String {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn accepted_marks_update_with_an_unapplied_step_edit() {
+        let tmp = tempfile::tempdir().unwrap();
+        let mut ui = CaptureWorkspace::new(Some(tmp.path().join("capture.json")));
+        let mut plan = Plan {
+            start: 39000,
+            end: 39001,
+            ..Default::default()
+        };
+        ui.sync_plan(plan.clone(), 1);
+        ui.draft.step = 8;
+        ui.draft_dirty = true;
+        plan.start = 39100;
+        plan.end = 39800;
+        ui.sync_plan(plan.clone(), 2);
+        assert_eq!(
+            (
+                ui.draft.start,
+                ui.draft.end,
+                ui.draft.step,
+                ui.draft_revision
+            ),
+            (39100, 39800, 8, 2)
+        );
+        plan.step = 4;
+        ui.sync_plan(plan, 3);
+        assert_eq!(
+            ui.draft_revision, 2,
+            "conflicting settings must still require review"
+        );
+    }
     use super::*;
     fn ready() -> Snapshot {
         Snapshot {

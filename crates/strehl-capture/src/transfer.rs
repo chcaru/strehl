@@ -875,6 +875,18 @@ impl Camera for PcCamera {
         }
         Ok(result)
     }
+    fn standby(&mut self) -> Result<()> {
+        self.uploads.finish()?;
+        ensure!(
+            std::fs::read_dir(&self.sink.config.ram_directory)?
+                .next()
+                .is_none(),
+            "RAWs are still in Pi memory; camera supply left on"
+        );
+        self.inner.standby()?;
+        self.uploads.close();
+        Ok(())
+    }
     fn sync_journal(&mut self, directory: &Path) -> Result<()> {
         let run = directory
             .file_name()

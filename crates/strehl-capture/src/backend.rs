@@ -42,6 +42,9 @@ pub trait Camera: Send {
     fn preview(&mut self) -> Result<Preview>;
     fn magnify(&mut self, ratio_tenths: u32, x: u16, y: u16) -> Result<()>;
     fn disconnect(&mut self) -> Result<Value>;
+    fn standby(&mut self) -> Result<()> {
+        bail!("This camera backend does not support verified standby")
+    }
     fn sync_journal(&mut self, _directory: &Path) -> Result<()> {
         Ok(())
     }
@@ -425,6 +428,21 @@ impl Camera for Native {
             || json!({"restored":false,"reason":"Connection was already released"}),
         ))
     }
+    fn standby(&mut self) -> Result<()> {
+        ensure!(
+            self.hello["power_off_protocol"] == 1,
+            "The connected camera bridge cannot confirm standby"
+        );
+        let reply = self.call("power-off", 55)?;
+        ensure!(
+            reply["standby"] == true && reply["usb_absent"] == true && reply["restored"] == true,
+            "Camera standby was not confirmed; supply left on"
+        );
+        self.input.take();
+        self.release_reply = Some(reply);
+        self.disconnect()?;
+        Ok(())
+    }
 }
 
 fn decode_preview(response: &Value) -> Result<Preview> {
@@ -515,7 +533,9 @@ impl Camera for Demo {
         }
         props.insert("IsoSensitivity".into(), json!({"value":self.iso,"readable":true,"writable":true,"allowed":[100,200,400,800,1600]}));
         props.insert("ShutterSpeed".into(), json!({"value":self.shutter,"readable":true,"writable":true,"allowed":[393226,65546,65541]}));
-        Ok(json!({"properties":props,"pixel_shift_shots":self.shots,"pixel_shift_options":[1,4]}))
+        Ok(
+            json!({"model":"Simulator","properties":props,"pixel_shift_shots":self.shots,"pixel_shift_options":[1,4]}),
+        )
     }
     fn configure(&mut self) -> Result<()> {
         Ok(())

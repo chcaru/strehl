@@ -5,11 +5,13 @@ pub mod capacity;
 pub mod journal;
 pub mod lan;
 pub mod model;
+pub mod power;
 pub mod ptp;
 pub mod receiver;
 #[path = "receiver-service.rs"]
 pub mod receiver_service;
 pub mod remote;
+pub mod schedule;
 pub mod session;
 pub mod timing;
 pub mod transfer;

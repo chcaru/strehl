@@ -16,8 +16,9 @@ pixel-shift groups and the bounded RAM upload queue.
    on in the receiver; Strehl reads `.ARW.straw` directly. Folder and format
    changes apply to new stacks; registered stacks retain their choices.
 3. Connect the camera if needed. Use the live preview, zoom, focus slider or jog buttons
-   and **Mark Start / Mark End**. Both marks work independently of JPEG preview
-   health. Step **1** is the smallest normalized camera command unit; it is not
+   and **Mark Start / Mark End**. Each button reads the current position from
+   the lens. Both values update even with an unapplied step or settle edit.
+   Step **1** is the smallest normalized camera command unit; it is not
    a calibrated distance or a guarantee of lens encoder resolution.
 4. Optionally select the subject region and survey a broad marked range.
    The survey suggests tighter bounds from live-view sharpness. A clipped survey
@@ -45,6 +46,46 @@ plan can reject an outdated request; inspect the refreshed state before retrying
 Scan it with the phone camera. It includes the private pairing key; keep it out
 of shared screenshots. Android Chrome may require **Nearby devices** permission.
 Pairing has no timer and survives an hours-long stack.
+
+**Studio power** appears on the paired desktop and phone when the Pi has two
+configured Shelly Plug US Gen4 outlets. **Light on/off** switches the KL 1500 LCD.
+Leave its own mains switch on at the desired brightness. **Power on & connect**
+supplies the camera's dummy battery and waits for the A7CR to appear over USB.
+**Shut down camera** restores the camera settings, requests Sony standby, checks
+that the body has left USB, then switches off the camera outlet. The Pi and PC
+receiver keep their independent supplies.
+
+For an unattended stack, connect the camera, review the marks, then select
+**Warm light at start, power both off after saving** before starting. The Pi
+warms the lamp and checks its measured load before the first exposure. On
+completion or an orderly stop, it waits for the last RAW and metadata receipts
+before shutdown. Check **Studio power** for any outlet error. An uncertain
+exposure leaves the camera powered for recovery. After a power cycle, inspect
+the preview and mark the bounds for the next stack.
+
+**Light warmup** is the minimum time between switching on the illuminator and
+starting the focus sweep. It applies once per stack. The default is five seconds.
+Choose **0–300 seconds** and **Save warmup** in Studio power to change the Pi's
+default. Zero skips the timed delay. Strehl still checks for measured lamp power
+before moving to the start and taking an exposure.
+
+### Schedule one stack
+
+1. Connect and focus the camera, mark both ends, and apply your sequence edits.
+   Select **Schedule stack** on the desktop or phone. Enter the date and time in
+   that device's local time zone. The selected time starts preparation.
+2. Choose whether to power the camera and light on, the lamp warmup for this
+   run, and which devices to switch off after the final files are saved.
+   **Schedule this stack** saves the marks, step, approach, settle time, exposure,
+   aperture check and pixel-shift mode on the Pi. Later edits to the live plan
+   apply to future stacks. You can use Studio power to switch the rig off while
+   it waits. Leave the physical switches on and keep the Pi and receiver PC awake.
+3. The schedule stays visible on both controllers. Use **Cancel schedule**
+   before it starts or **Stop scheduled stack** during the run. A future schedule
+   survives a Pi service restart. If the Pi was offline at the start time, or
+   the camera was busy or needed recovery, the status explains the missed run.
+   A restart during capture records an interruption and requires a new schedule
+   to capture again.
 
 The focus slider offers **Fine** (128 command units either side), **Marked range**,
 and **Full lens**. It sends one movement at a time and keeps only the latest drag

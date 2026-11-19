@@ -9,7 +9,9 @@ use std::{
 };
 use strehl_capture::{
     lan::Lan,
+    power::{PowerConfig, RigPower},
     remote::WebServer,
+    schedule,
     session::{Controls, Session},
     transfer::{PcCamera, TransferConfig},
     worker::Worker,
@@ -31,6 +33,8 @@ struct Config {
     bridge: PathBuf,
     journal_directory: PathBuf,
     transfer: TransferConfig,
+    #[serde(default)]
+    power: Option<PowerConfig>,
 }
 fn main() -> Result<()> {
     let args = Args::parse();
@@ -46,13 +50,20 @@ fn main() -> Result<()> {
         let bridge = config.bridge;
         let transfer = config.transfer.clone();
         let report = report.clone();
-        Worker::with_factory(Box::new(move || {
-            Ok(Box::new(PcCamera::connect(
-                &bridge,
-                transfer.clone(),
-                report.clone(),
-            )?))
-        }))
+        let power = config
+            .power
+            .map(|p| RigPower::new(p, Lan::parse(&transfer.lan)?))
+            .transpose()?;
+        Worker::with_power(
+            Box::new(move || {
+                Ok(Box::new(PcCamera::connect(
+                    &bridge,
+                    transfer.clone(),
+                    report.clone(),
+                )?))
+            }),
+            power,
+        )
     };
     let worker = Arc::new(worker);
     let mut session = Session::new(
@@ -63,12 +74,23 @@ fn main() -> Result<()> {
     if !args.demo {
         session.transfer = Some(report);
     }
+    let default_warmup = worker.power.as_ref().map_or(5, |rig| rig.warmup_seconds());
+    let store = schedule::store(
+        config.transfer.state_directory.join("studio-schedule.json"),
+        default_warmup,
+    )?;
+    if let Some(rig) = &worker.power {
+        rig.set_warmup(store.lock().unwrap().warmup());
+    }
+    session.schedule = Some(store);
+    let session = Arc::new(session);
     let server = WebServer::start_configured(
-        Arc::new(session),
+        session.clone(),
         config.bind,
         Some(config.pairing_key),
         Some(Lan::parse(&config.transfer.lan)?),
     )?;
+    schedule::start_clock(&session)?;
     println!(
         "Strehl Capture listening on port {} (local network only).",
         server.port

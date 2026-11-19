@@ -766,7 +766,7 @@ impl<L: Link> Camera<L> {
             json!({"ok":true,"destination":"host-ram","completion":"ptp-group-complete","raw_compression":"uncompressed","pixel_shift_shots":self.shots,"group_id":group,"focus":focus,"group_idle":true,"buffer_empty":true,"files":files,"progress":progress,"seconds":started.elapsed().as_secs_f64()}),
         )
     }
-    fn close(&mut self) -> Result<Value> {
+    fn restore_settings(&mut self) -> Vec<String> {
         let mut errors = Vec::new();
         if !self.uncertain && !self.ptp.poisoned {
             for (code, n) in self.saved.clone().into_iter().rev() {
@@ -779,6 +779,50 @@ impl<L: Link> Camera<L> {
                 "Uncertain operation: settings and focus left untouched for inspection".into(),
             );
         }
+        errors
+    }
+    #[cfg(target_os = "linux")]
+    fn power_off(&mut self) -> Result<Value> {
+        ensure!(
+            self.configured && !self.uncertain && !self.ptp.poisoned,
+            "Recover the camera before shutdown"
+        );
+        Self::idle(&self.ptp.properties()?)?;
+        let errors = self.restore_settings();
+        ensure!(
+            errors.is_empty(),
+            "Keeping camera powered. Settings restoration failed: {errors:?}"
+        );
+        Self::idle(&self.ptp.properties()?)?;
+        ensure!(
+            usb::count_a7cr()? == 1,
+            "Camera USB identity changed before shutdown"
+        );
+        // Sony PTP 3, Power Off (0xD301). A body can leave USB before its
+        // response or button-up arrives. Its disappearance is independent
+        // evidence; never replay the button or cut AC on a timeout alone.
+        let sent = match self
+            .button(0xd301, true)
+            .and_then(|()| self.button(0xd301, false))
+        {
+            // The camera explicitly rejected the command with a valid response.
+            Err(e) if !self.ptp.poisoned => {
+                return Err(e).context("Sony declined standby; camera supply left on");
+            }
+            result => result,
+        };
+        let deadline = Instant::now() + Duration::from_secs(15);
+        while usb::count_a7cr()? != 0 {
+            if Instant::now() >= deadline {
+                sent?;
+                bail!("Sony standby did not release USB; camera supply left on");
+            }
+            thread::sleep(Duration::from_millis(100));
+        }
+        Ok(json!({"ok":true,"restored":true,"standby":true,"usb_absent":true}))
+    }
+    fn close(&mut self) -> Result<Value> {
+        let errors = self.restore_settings();
         if !self.ptp.poisoned {
             self.ptp.command(0x1003, &[], None)?;
         }
@@ -803,23 +847,28 @@ mod usb {
         close: unsafe extern "C" fn(*mut c_void),
         exit: unsafe extern "C" fn(*mut c_void),
     }
+    pub(crate) fn count_a7cr() -> Result<usize> {
+        fn id(path: &Path) -> std::io::Result<Option<String>> {
+            match std::fs::read_to_string(path) {
+                Ok(s) => Ok(Some(s.trim().to_owned())),
+                Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(None),
+                Err(e) => Err(e),
+            }
+        }
+        let mut matches = 0;
+        for e in std::fs::read_dir("/sys/bus/usb/devices")? {
+            let p = e?.path();
+            if id(&p.join("idVendor"))?.as_deref() == Some("054c")
+                && id(&p.join("idProduct"))?.as_deref() == Some("0e88")
+            {
+                matches += 1;
+            }
+        }
+        Ok(matches)
+    }
     impl Usb {
         pub fn open() -> Result<Self> {
-            let mut matches = 0;
-            for e in std::fs::read_dir("/sys/bus/usb/devices")? {
-                let p = e?.path();
-                if std::fs::read_to_string(p.join("idVendor"))
-                    .unwrap_or_default()
-                    .trim()
-                    == "054c"
-                    && std::fs::read_to_string(p.join("idProduct"))
-                        .unwrap_or_default()
-                        .trim()
-                        == "0e88"
-                {
-                    matches += 1;
-                }
-            }
+            let matches = count_a7cr()?;
             ensure!(
                 matches == 1,
                 "Connect exactly one ILCE-7CR in USB Remote Shoot; found {matches}"
@@ -841,13 +890,28 @@ mod usb {
                 let exit = *lib.get::<unsafe extern "C" fn(*mut c_void)>(b"libusb_exit\0")?;
                 let bulk = *lib.get::<Transfer>(b"libusb_bulk_transfer\0")?;
                 let interrupt = *lib.get::<Transfer>(b"libusb_interrupt_transfer\0")?;
-                let mut context = std::ptr::null_mut();
-                ensure!(init(&mut context) == 0, "Initialize libusb failed");
-                let device = open(context, 0x054c, 0x0e88);
-                if device.is_null() {
+                // After a cold start sysfs can publish the Sony ID before udev
+                // grants access to the device node. Retry only opening a handle,
+                // before claiming an interface or issuing any PTP command.
+                let deadline = Instant::now() + Duration::from_secs(6);
+                let (context, device) = loop {
+                    let mut context = std::ptr::null_mut();
+                    ensure!(init(&mut context) == 0, "Initialize libusb failed");
+                    let device = open(context, 0x054c, 0x0e88);
+                    if !device.is_null() {
+                        break (context, device);
+                    }
                     exit(context);
-                    bail!("Open A7CR USB failed; check udev permissions and USB mode");
-                }
+                    ensure!(
+                        Instant::now() < deadline,
+                        "Open A7CR USB failed; check udev permissions and USB mode"
+                    );
+                    thread::sleep(Duration::from_millis(150));
+                    ensure!(
+                        count_a7cr()? == 1,
+                        "A7CR USB identity changed while opening"
+                    );
+                };
                 if claim(device, 0) != 0 {
                     close(device);
                     exit(context);
@@ -943,6 +1007,15 @@ mod usb {
     }
 }
 
+#[cfg(target_os = "linux")]
+pub(crate) fn a7cr_usb_count() -> Result<usize> {
+    usb::count_a7cr()
+}
+#[cfg(not(target_os = "linux"))]
+pub(crate) fn a7cr_usb_count() -> Result<usize> {
+    bail!("Camera supply control requires the Linux A7CR USB host")
+}
+
 pub fn serve() -> Result<()> {
     #[cfg(target_os = "linux")]
     {
@@ -959,7 +1032,7 @@ pub fn serve() -> Result<()> {
             Ok(())
         };
         emit(
-            json!({"ok":true,"model":"ILCE-7CR","backend":"sony-ptp3","capture_protocol":2,"live_view_protocol":1,"host_pipeline_protocol":1,"group_stream_protocol":1,"exposure_protocol":1,"pixel_shift_shots":4,"raw_format":"uncompressed"}),
+            json!({"ok":true,"model":"ILCE-7CR","backend":"sony-ptp3","capture_protocol":2,"live_view_protocol":1,"host_pipeline_protocol":1,"group_stream_protocol":1,"power_off_protocol":1,"exposure_protocol":1,"pixel_shift_shots":4,"raw_format":"uncompressed"}),
         )?;
         for line in std::io::stdin().lock().lines() {
             let line = line?;
@@ -967,6 +1040,18 @@ pub fn serve() -> Result<()> {
             if a[0] == "quit" {
                 emit(camera.close()?)?;
                 return Ok(());
+            }
+            if a.as_slice() == ["power-off"] {
+                match camera.power_off() {
+                    Ok(reply) => {
+                        emit(reply)?;
+                        return Ok(());
+                    }
+                    Err(e) => {
+                        emit(json!({"ok":false,"error":format!("{e:#}")}))?;
+                        continue;
+                    }
+                }
             }
             let result = (|| -> Result<Value> {
                 match a.as_slice() {

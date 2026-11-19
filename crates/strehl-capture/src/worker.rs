@@ -3,6 +3,8 @@ use crate::{
     bounds::{self, Sample, Suggestion},
     journal::{self, Journal},
     model::{Phase, Plan, Roi},
+    power::{Outlet, RigPower},
+    schedule::{Recipe, StackPower},
     timing::{self, RunTiming},
 };
 use anyhow::{Context, Result, bail, ensure};
@@ -46,6 +48,9 @@ pub struct Snapshot {
     pub connection_generation: u64,
     pub failure: Option<String>,
     pub exposure_uncertain: bool,
+    pub manage_power: bool,
+    pub power_error: Option<String>,
+    pub standby_at: Option<Instant>,
 }
 impl Default for Snapshot {
     fn default() -> Self {
@@ -73,11 +78,25 @@ impl Default for Snapshot {
             connection_generation: 0,
             failure: None,
             exposure_uncertain: false,
+            manage_power: false,
+            power_error: None,
+            standby_at: None,
         }
     }
 }
 pub enum Action {
     Connect,
+    ReadMark(mpsc::SyncSender<Result<u16, String>>),
+    Scheduled {
+        recipe: Box<Recipe>,
+        root: PathBuf,
+        reply: mpsc::Sender<Result<Phase, String>>,
+    },
+    Power {
+        device: Outlet,
+        on: bool,
+    },
+    PowerPlan(bool),
     PixelShift {
         shots: usize,
     },
@@ -127,6 +146,7 @@ pub struct Worker {
     state: Shared,
     tx: mpsc::SyncSender<Envelope>,
     pub control: Arc<AtomicU8>,
+    pub power: Option<Arc<RigPower>>,
     join: Option<thread::JoinHandle<()>>,
 }
 type Factory = Box<dyn Fn() -> Result<Box<dyn Camera>> + Send>;
@@ -141,21 +161,37 @@ impl Worker {
         }))
     }
     pub fn with_factory(factory: Factory) -> Self {
+        Self::with_power(factory, None)
+    }
+    pub fn with_power(factory: Factory, power: Option<Arc<RigPower>>) -> Self {
         let (tx, rx) = mpsc::sync_channel::<Envelope>(16);
         let state = Arc::new(Mutex::new(Snapshot::default()));
         let control = Arc::new(AtomicU8::new(RUN));
         let s = state.clone();
         let c = control.clone();
-        let join = thread::spawn(move || run(factory, rx, s, c));
+        let rig = power.clone();
+        let join = thread::spawn(move || run(factory, rx, s, c, rig));
         Self {
             state,
             tx,
             control,
+            power,
             join: Some(join),
         }
     }
     pub fn snapshot(&self) -> Snapshot {
         self.state.lock().unwrap().clone()
+    }
+    pub fn mark_position(&self, revision: u64, start: bool) -> Result<u16> {
+        let (tx, rx) = mpsc::sync_channel(1);
+        self.send(revision, Action::ReadMark(tx))?;
+        let position = rx
+            .recv_timeout(Duration::from_secs(2))
+            .context("Could not read the current lens position in time; the mark was kept")?
+            .map_err(anyhow::Error::msg)?;
+        let bound = if start { "Start" } else { "End" };
+        self.state.lock().unwrap().message = format!("{bound} marked at {position}");
+        Ok(position)
     }
     pub fn send(&self, revision: u64, action: Action) -> Result<()> {
         let mut state = self.state.lock().unwrap();
@@ -167,6 +203,13 @@ impl Worker {
             !state.command_pending,
             "A camera command is already pending"
         );
+        if matches!(action, Action::Power { .. } | Action::PowerPlan(_)) {
+            ensure!(self.power.is_some(), "Studio outlets are not configured");
+            ensure!(
+                !state.phase.active() && !state.exposure_uncertain,
+                "Finish or recover the current exposure before switching power"
+            );
+        }
         if let Action::Recover {
             acknowledge_uncertain,
         } = &action
@@ -191,6 +234,13 @@ impl Worker {
             ensure!(
                 state.connected && state.phase.can_edit(),
                 "Connect a ready camera first"
+            );
+            self.control.store(RUN, Ordering::SeqCst);
+        }
+        if matches!(&action, Action::Scheduled { .. }) {
+            ensure!(
+                !state.phase.active() && !state.exposure_uncertain && state.failure.is_none(),
+                "Camera requires attention before scheduled capture"
             );
             self.control.store(RUN, Ordering::SeqCst);
         }
@@ -287,7 +337,113 @@ fn refresh(camera: &mut dyn Camera, s: &Shared) -> Result<Value> {
     position.context("Camera did not return focus information; check the lens connection and MF mode, then reconnect")?;
     Ok(status)
 }
-fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<AtomicU8>) {
+fn connect_camera(
+    factory: &Factory,
+    camera: &mut Option<Box<dyn Camera>>,
+    s: &Shared,
+) -> Result<()> {
+    ensure!(camera.is_none(), "Camera is already connected");
+    phase(
+        s,
+        Phase::Connecting,
+        "Connecting · preparing manual focus and RAW capture…",
+    );
+    *camera = Some(factory()?);
+    let opened = camera.as_mut().unwrap();
+    opened.configure()?;
+    refresh(opened.as_mut(), s)?;
+    let identity = opened.identity();
+    update(s, |v| {
+        v.connected = true;
+        v.capture_run = false;
+        v.connection_generation += 1;
+        v.standby_at = None;
+        v.failure = None;
+        v.exposure_uncertain = false;
+        v.identity = identity;
+        v.phase = Phase::Ready;
+        v.message = if v.status["capture_destination"] == "host-pc" {
+            if v.status["pixel_shift_shots"] == 4 {
+                "Connected · A7CR four-shot pixel shift saves to the PC"
+            } else {
+                "Connected · RAW saves to the PC"
+            }
+        } else {
+            "Connected · RAW captures stay on the SD card"
+        }
+        .into();
+        v.suggestion = None;
+        v.timing = None;
+    });
+    Ok(())
+}
+fn wake_camera(
+    rig: &RigPower,
+    factory: &Factory,
+    camera: &mut Option<Box<dyn Camera>>,
+    s: &Shared,
+) -> Result<()> {
+    ensure!(camera.is_none(), "Camera is already connected");
+    rig.set(Outlet::Camera, true)?;
+    phase(
+        s,
+        Phase::Connecting,
+        "Camera supply on · waiting for the A7CR over USB…",
+    );
+    let end = Instant::now() + Duration::from_secs(30);
+    while crate::ptp::a7cr_usb_count()? != 1 {
+        ensure!(
+            Instant::now() < end,
+            "Camera supply is on but the A7CR did not appear over USB. Check its physical switch and USB Remote Shoot mode"
+        );
+        thread::sleep(Duration::from_millis(200));
+    }
+    connect_camera(factory, camera, s)
+}
+fn switch_camera_off(
+    rig: &RigPower,
+    camera: &mut Option<Box<dyn Camera>>,
+    s: &Shared,
+) -> Result<()> {
+    if let Some(c) = camera.as_mut() {
+        ensure!(
+            rig.read(Outlet::Camera)?["on"] == true,
+            "Camera outlet is already off; check its power source"
+        );
+        c.standby()?;
+        *camera = None;
+        update(s, |v| {
+            v.standby_at = Some(Instant::now());
+            v.connected = false;
+            v.preview = None;
+            v.preview_at = None;
+            v.preview_error = None;
+            v.position = None;
+            v.connection_generation += 1;
+            if !matches!(v.phase, Phase::Complete | Phase::Stopped) {
+                v.phase = Phase::Disconnected;
+                v.status = Value::Null;
+            }
+        });
+    }
+    ensure!(
+        s.lock()
+            .unwrap()
+            .standby_at
+            .is_some_and(|t| t.elapsed() < Duration::from_secs(90))
+            && crate::ptp::a7cr_usb_count()? == 0,
+        "Connect the camera first so Strehl can confirm standby before cutting power"
+    );
+    rig.set(Outlet::Camera, false)?;
+    Ok(())
+}
+fn run(
+    factory: Factory,
+    rx: mpsc::Receiver<Envelope>,
+    s: Shared,
+    control: Arc<AtomicU8>,
+    power: Option<Arc<RigPower>>,
+) {
     let mut camera: Option<Box<dyn Camera>> = None;
     let mut last_status = Instant::now();
     loop {
@@ -302,41 +458,76 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                     });
                     continue;
                 }
+                if let Action::ReadMark(reply) = envelope.action {
+                    let position = (|| {
+                        let cam = camera.as_mut().context("Connect a camera to mark focus")?;
+                        refresh(cam.as_mut(), &s)?;
+                        s.lock()
+                            .unwrap()
+                            .position
+                            .context("Focus position unavailable")
+                    })();
+                    update(&s, |v| v.command_pending = false);
+                    let _ = reply.send(position.map_err(|e| format!("{e:#}")));
+                    continue;
+                }
+                let scheduled_reply = if let Action::Scheduled { reply, .. } = &envelope.action {
+                    Some(reply.clone())
+                } else {
+                    None
+                };
                 let result = (|| -> Result<()> {
                     match envelope.action {
+                        Action::ReadMark(_) => unreachable!(),
                         Action::Connect => {
-                            ensure!(camera.is_none(), "Camera is already connected");
-                            phase(
-                                &s,
-                                Phase::Connecting,
-                                "Connecting · preparing manual focus and RAW capture…",
-                            );
-                            camera = Some(factory()?);
-                            let opened = camera.as_mut().unwrap();
-                            opened.configure()?;
-                            refresh(opened.as_mut(), &s)?;
-                            let identity = opened.identity();
-                            update(&s, |v| {
-                                v.connected = true;
-                                v.capture_run = false;
-                                v.connection_generation += 1;
-                                v.failure = None;
-                                v.exposure_uncertain = false;
-                                v.identity = identity;
-                                v.phase = Phase::Ready;
-                                v.message = if v.status["capture_destination"] == "host-pc" {
-                                    if v.status["pixel_shift_shots"] == 4 {
-                                        "Connected · A7CR four-shot pixel shift saves to the PC"
-                                    } else {
-                                        "Connected · Lossless RAW L saves to the PC"
+                            connect_camera(&factory, &mut camera, &s)?;
+                        }
+                        Action::PowerPlan(enabled) => {
+                            ensure!(power.is_some(), "Studio outlets are not configured");
+                            update(&s, |v| v.manage_power = enabled);
+                        }
+                        Action::Power { device, on } => {
+                            let rig = power
+                                .as_deref()
+                                .context("Studio outlets are not configured")?;
+                            let result = (|| -> Result<()> {
+                                match device {
+                                    Outlet::Light => {
+                                        rig.set(device, on)?;
                                     }
-                                } else {
-                                    "Connected · RAW captures stay on the SD card"
+                                    Outlet::Camera if on => {
+                                        wake_camera(rig, &factory, &mut camera, &s)?;
+                                    }
+                                    Outlet::Camera => {
+                                        switch_camera_off(rig, &mut camera, &s)?;
+                                    }
                                 }
-                                .into();
-                                v.suggestion = None;
-                                v.timing = None;
+                                Ok(())
+                            })();
+                            update(&s, |v| {
+                                v.power_error = result.as_ref().err().map(|e| format!("{e:#}"));
+                                if result.is_ok() && device == Outlet::Camera && !on {
+                                    v.message = "Camera shut down · supply off".into();
+                                }
                             });
+                            // An outlet failure is separate from a camera/RAW failure. A rejected
+                            // light request must not put a disconnected camera into recovery.
+                            let connecting = s.lock().unwrap().phase == Phase::Connecting;
+                            if let Err(error) = result
+                                && device == Outlet::Camera
+                                && (camera.is_some() || connecting)
+                            {
+                                phase(
+                                    &s,
+                                    if camera.is_some() {
+                                        Phase::Fault
+                                    } else {
+                                        Phase::Disconnected
+                                    },
+                                    format!("{error:#}"),
+                                );
+                                update(&s, |v| v.connected = camera.is_some());
+                            }
                         }
                         Action::Disconnect => {
                             phase(
@@ -404,6 +595,9 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                                 v.connected = true;
                                 v.capture_run = false;
                                 v.phase = Phase::Ready;
+                                if v.power_error == before.failure {
+                                    v.power_error = None;
+                                }
                                 v.failure = None;
                                 v.exposure_uncertain = false;
                                 v.preview = None;
@@ -495,13 +689,84 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                                 s.lock().unwrap().phase.can_edit(),
                                 "A sequence is already active"
                             );
-                            capture(
-                                camera.as_mut().context("Connect a camera first")?.as_mut(),
+                            let options = if s.lock().unwrap().manage_power {
+                                StackPower::managed()
+                            } else {
+                                StackPower::default()
+                            };
+                            run_stack(
+                                &mut camera,
                                 &s,
                                 &control,
-                                plan,
-                                root,
-                                positions,
+                                power.as_deref(),
+                                StackRun {
+                                    plan,
+                                    root,
+                                    positions,
+                                    options,
+                                    warmup: power.as_ref().map_or(0, |rig| rig.warmup_seconds()),
+                                },
+                            )?;
+                        }
+                        Action::Scheduled { recipe, root, .. } => {
+                            if control.load(Ordering::SeqCst) == STOP {
+                                phase(
+                                    &s,
+                                    Phase::Stopped,
+                                    "Scheduled stack stopped before starting",
+                                );
+                                return Ok(());
+                            }
+                            if camera.is_none() {
+                                if recipe.power.wake_camera {
+                                    wake_camera(
+                                        power.as_deref().context("Camera outlet unavailable")?,
+                                        &factory,
+                                        &mut camera,
+                                        &s,
+                                    )?;
+                                } else {
+                                    connect_camera(&factory, &mut camera, &s)?;
+                                }
+                            }
+                            let c = camera.as_mut().context("Camera missing")?.as_mut();
+                            let current = refresh(c, &s)?;
+                            ensure!(
+                                current["model"] == recipe.model
+                                    && property(&current, "FNumber") == Some(recipe.aperture),
+                                "Camera model or aperture differs from the scheduled stack"
+                            );
+                            if current["pixel_shift_shots"].as_u64().unwrap_or(1)
+                                != recipe.shots as u64
+                            {
+                                c.set_pixel_shift(recipe.shots)?;
+                            }
+                            if property(&current, "IsoSensitivity") != Some(recipe.iso)
+                                || property(&current, "ShutterSpeed") != Some(recipe.shutter)
+                            {
+                                c.set_exposure(recipe.iso, recipe.shutter)?;
+                            }
+                            let current = refresh(c, &s)?;
+                            ensure!(
+                                current["pixel_shift_shots"].as_u64().unwrap_or(1)
+                                    == recipe.shots as u64
+                                    && property(&current, "IsoSensitivity") == Some(recipe.iso)
+                                    && property(&current, "ShutterSpeed") == Some(recipe.shutter)
+                                    && property(&current, "FNumber") == Some(recipe.aperture),
+                                "Scheduled exposure or pixel-shift mode was not confirmed"
+                            );
+                            run_stack(
+                                &mut camera,
+                                &s,
+                                &control,
+                                power.as_deref(),
+                                StackRun {
+                                    plan: recipe.plan,
+                                    root,
+                                    positions: None,
+                                    options: recipe.power,
+                                    warmup: recipe.warmup_seconds,
+                                },
                             )?;
                         }
                         Action::Exposure { iso, shutter } => {
@@ -549,7 +814,7 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                     }
                     Ok(())
                 })();
-                if let Err(error) = result {
+                if let Err(ref error) = result {
                     update(&s, |v| {
                         if camera.is_none() {
                             v.phase = Phase::Disconnected;
@@ -569,6 +834,13 @@ fn run(factory: Factory, rx: mpsc::Receiver<Envelope>, s: Shared, control: Arc<A
                     });
                 }
                 update(&s, |v| v.command_pending = false);
+                if let Some(reply) = scheduled_reply {
+                    let _ = reply.send(
+                        result
+                            .map(|()| s.lock().unwrap().phase.clone())
+                            .map_err(|e| format!("{e:#}")),
+                    );
+                }
             }
             Err(mpsc::RecvTimeoutError::Disconnected) => break,
             Err(mpsc::RecvTimeoutError::Timeout) => {
@@ -621,6 +893,69 @@ fn checkpoint(c: &mut dyn Camera, s: &Shared, control: &AtomicU8, resume: Phase)
     Ok(true)
 }
 
+struct StackRun {
+    plan: Plan,
+    root: PathBuf,
+    positions: Option<Vec<u16>>,
+    options: StackPower,
+    warmup: u32,
+}
+fn run_stack(
+    camera: &mut Option<Box<dyn Camera>>,
+    s: &Shared,
+    control: &AtomicU8,
+    rig: Option<&RigPower>,
+    run: StackRun,
+) -> Result<()> {
+    let p = run.options;
+    ensure!(
+        !p.uses_plugs() || rig.is_some(),
+        "Studio outlets are not configured"
+    );
+    if p.camera_off {
+        ensure!(
+            s.lock().unwrap().identity["hello"]["power_off_protocol"] == 1,
+            "This camera cannot confirm an orderly power-off"
+        );
+    }
+    let lamp = rig.filter(|_| p.light_on).map(|r| (r, run.warmup));
+    capture(
+        camera.as_mut().context("Connect a camera first")?.as_mut(),
+        s,
+        control,
+        run.plan,
+        run.root,
+        run.positions,
+        lamp,
+    )?;
+    // Both writes follow the final durable journal receipt. Attempt the other
+    // requested outlet even if the first reports a fault.
+    if let Some(rig) = rig.filter(|_| p.light_off || p.camera_off) {
+        let light = if p.light_off {
+            rig.set(Outlet::Light, false).map(|_| ())
+        } else {
+            Ok(())
+        };
+        let body = if p.camera_off {
+            switch_camera_off(rig, camera, s)
+        } else {
+            Ok(())
+        };
+        let errors: Vec<_> = [light, body]
+            .into_iter()
+            .filter_map(|r| r.err().map(|e| format!("{e:#}")))
+            .collect();
+        update(s, |v| {
+            v.power_error = (!errors.is_empty()).then(|| errors.join(". "))
+        });
+        ensure!(
+            errors.is_empty(),
+            "Capture saved; studio power needs attention: {}",
+            errors.join(". ")
+        );
+    }
+    Ok(())
+}
 fn capture(
     c: &mut dyn Camera,
     s: &Shared,
@@ -628,6 +963,7 @@ fn capture(
     plan: Plan,
     root: PathBuf,
     explicit: Option<Vec<u16>>,
+    managed: Option<(&RigPower, u32)>,
 ) -> Result<()> {
     plan.validate()?;
     let kind = if explicit.is_some() {
@@ -680,12 +1016,45 @@ fn capture(
         v.timing = Some(RunTiming::new(
             positions.len(),
             cycle,
-            timing::initial_setup(plan.settle_ms),
+            timing::initial_setup(plan.settle_ms)
+                + Duration::from_secs(managed.map_or(0, |(_, secs)| u64::from(secs))),
             Instant::now(),
         ));
     });
     let mut completed = 0;
+    let mut light_requested = false;
     let result = (|| -> Result<bool> {
+        if let Some((rig, warmup)) = managed {
+            update(s, |v| {
+                v.power_error = None;
+                v.message = format!("Studio light on · warming for {warmup} s");
+            });
+            light_requested = true;
+            rig.set(Outlet::Light, true)?;
+            let until = Instant::now() + Duration::from_secs(u64::from(warmup));
+            while Instant::now() < until {
+                if !checkpoint(c, s, control, Phase::Capturing)? {
+                    return Ok(false);
+                }
+                thread::sleep(Duration::from_millis(100));
+            }
+            // The meter can still show the previous zero for a moment after the relay closes.
+            let meter_deadline = Instant::now() + Duration::from_secs(5);
+            loop {
+                let reading = rig.read(Outlet::Light)?;
+                if reading["on"] == true && reading["watts"].as_f64().is_some_and(|w| w > 0.) {
+                    break;
+                }
+                ensure!(
+                    reading["on"] == true && Instant::now() < meter_deadline,
+                    "Light outlet has no measured load. Switch the KL 1500 LCD on and check its power cord before starting"
+                );
+                if !checkpoint(c, s, control, Phase::Capturing)? {
+                    return Ok(false);
+                }
+                thread::sleep(Duration::from_millis(200));
+            }
+        }
         if !checkpoint(c, s, control, Phase::Capturing)? {
             return Ok(false);
         }
@@ -817,6 +1186,16 @@ fn capture(
             Ok(())
         }
         Err(e) => {
+            let exposure_known = !s.lock().unwrap().exposure_uncertain;
+            if let Some((rig, _)) = managed
+                && light_requested
+                && exposure_known
+                && let Err(power_error) = rig.set(Outlet::Light, false)
+            {
+                update(s, |v| {
+                    v.power_error = Some(format!("Check the light outlet: {power_error:#}"))
+                });
+            }
             let reason = format!("{e:#}");
             let finish = log.finish("uncertain", completed, &reason);
             if finish.is_ok() {
@@ -1072,6 +1451,19 @@ fn scan(
 #[cfg(test)]
 mod tests {
     #[test]
+    fn marking_reads_the_lens_even_if_the_idle_cache_is_stale() {
+        let w = Worker::new(PathBuf::new(), true);
+        w.send(0, Action::Connect).unwrap();
+        let ready = until(&w, |s| s.phase == Phase::Ready && !s.command_pending);
+        w.state.lock().unwrap().position = Some(1);
+        assert_ne!(ready.position, Some(1));
+        assert_eq!(
+            w.mark_position(ready.revision, true).unwrap(),
+            ready.position.unwrap()
+        );
+        assert_eq!(w.snapshot().position, ready.position);
+    }
+    #[test]
     fn four_shot_receipts_require_a_complete_ordered_single_group() {
         let files:Vec<_>=(1..=4).map(|n|json!({"name":format!("frame-{n:06}.ARW"),"bytes":122_968_064,
             "sha256":"a".repeat(64),"durable":false,"group_id":"ptp-test-1","member_index":n,"members":4})).collect();
@@ -1158,6 +1550,7 @@ mod tests {
             &AtomicU8::new(RUN),
             plan,
             temp.path().into(),
+            None,
             None,
         )
         .unwrap_err();

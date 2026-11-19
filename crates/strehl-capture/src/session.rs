@@ -2,6 +2,8 @@
 use crate::{
     backend::property,
     model::{Phase, Plan, Roi},
+    power::Outlet,
+    schedule::{self, Recipe, StackPower, Stage, Store},
     timing,
     worker::{Action, PAUSE, STOP, Snapshot, Worker},
 };
@@ -58,6 +60,7 @@ pub struct Session {
     pub controls: Arc<Mutex<Controls>>,
     pub demo: bool,
     pub transfer: Option<crate::transfer::TransferReport>,
+    pub schedule: Option<Mutex<Store>>,
     recent: Mutex<VecDeque<String>>,
 }
 impl Session {
@@ -67,6 +70,7 @@ impl Session {
             controls,
             demo,
             transfer: None,
+            schedule: None,
             recent: Mutex::new(VecDeque::new()),
         }
     }
@@ -88,7 +92,17 @@ impl Session {
         let initial = planned.and_then(|n| {
             property(&s.status, "ShutterSpeed")
                 .and_then(|speed| timing::initial_plane(speed, c.plan.settle_ms, shots))
-                .map(|cycle| cycle.mul_f64(n as f64) + timing::initial_setup(c.plan.settle_ms))
+                .map(|cycle| {
+                    let warmup = self
+                        .worker
+                        .power
+                        .as_ref()
+                        .filter(|_| s.manage_power)
+                        .map_or(0, |rig| rig.warmup_seconds());
+                    cycle.mul_f64(n as f64)
+                        + timing::initial_setup(c.plan.settle_ms)
+                        + Duration::from_secs(warmup.into())
+                })
         });
         let now = Instant::now();
         let timer=s.timing.as_ref().map(|t|json!({"label":t.label(now,s.phase==Phase::Paused),"elapsed":t.elapsed(now).as_secs_f64(),"remaining":t.remaining(now).as_secs_f64(),"finished":t.finished,"paused":s.phase==Phase::Paused}));
@@ -140,7 +154,29 @@ impl Session {
         };
         ratios.sort_unstable();
         ratios.dedup();
-        json!({"camera_revision":s.revision,"plan_revision":c.revision,"sequence_id":s.sequence_id,"phase":s.phase,"connected":s.connected,"busy":s.command_pending,"editable":editable,"message":s.message,"demo":self.demo,
+        let power = self.worker.power.as_ref().map(|rig| {
+            let mut p = rig.status();
+            let idle = !s.phase.active() && !s.command_pending && !s.exposure_uncertain;
+            p["available"] = json!(idle);
+            p["can_start_camera"] = json!(idle && !s.connected);
+            p["can_stop_camera"] = json!(
+                idle && ((s.connected
+                    && s.phase.can_edit()
+                    && s.identity["hello"]["power_off_protocol"] == 1)
+                    || s.standby_at
+                        .is_some_and(|t| t.elapsed() < Duration::from_secs(90))
+                        && p["camera"]["on"] != false)
+            );
+            p["can_manage"] = json!(editable && s.identity["hello"]["power_off_protocol"] == 1);
+            p["manage_stack"] = json!(s.manage_power);
+            p["error"] = json!(s.power_error);
+            p
+        });
+        let schedule = self
+            .schedule
+            .as_ref()
+            .map(|store| store.lock().unwrap().public());
+        let mut state = json!({"camera_revision":s.revision,"plan_revision":c.revision,"sequence_id":s.sequence_id,"phase":s.phase,"connected":s.connected,"busy":s.command_pending,"editable":editable,"message":s.message,"demo":self.demo,"power":power,
             "position":s.position,"plan":c.plan,"start_set":c.start_set,"end_set":c.end_set,"roi":c.roi,"planned":planned,"plan_error":plan_error,"initial_seconds":initial.map(|t|t.as_secs_f64()),
             "completed":s.completed,"saved":saved,"total":s.total,"timer":timer,"pending_control":self.worker.pending(),
             "storage":storage,"storage_required_bytes":storage_required,"storage_error":storage_error,"raw_max_bytes":crate::capacity::raw_limit(&s.status),"shots_per_plane":shots,"pixel_shift_options":s.status["pixel_shift_options"],"camera_model":s.status["model"],
@@ -148,7 +184,9 @@ impl Session {
             "battery":property(&s.status,"BatteryRemain").filter(|v|*v<=100),"card_remaining":property(&s.status,"MediaSLOT1_RemainingNumber"),
             "preview":{"available":s.preview.is_some(),"fresh":fresh,"generation":s.preview_generation,"age_seconds":s.preview_at.map(|t|t.elapsed().as_secs_f64()),"error":s.preview_error,"width":s.preview.as_ref().map(|p|p.rgb.width()),"height":s.preview.as_ref().map(|p|p.rgb.height())},
             "magnifier_ratios":ratios,"magnifier_current":property(&s.status,"Focus_Magnifier_Setting").map(|n|n>>32),"suggestion":s.suggestion,"samples":s.samples,
-            "exposure":exposure_summary(&s.status)})
+            "exposure":exposure_summary(&s.status)});
+        state["schedule"] = json!(schedule);
+        state
     }
     pub fn dispatch(&self, request: CommandRequest) -> Result<()> {
         ensure!(
@@ -165,7 +203,7 @@ impl Session {
             !recent.contains(&request.id),
             "Duplicate command ignored; check the current status"
         );
-        recent.push_back(request.id);
+        recent.push_back(request.id.clone());
         if recent.len() > 128 {
             recent.pop_front();
         }
@@ -197,9 +235,35 @@ impl Session {
             }
             return Ok(());
         }
+        if let Command::CancelSchedule { ref id } = request.command {
+            let mut store = self
+                .schedule
+                .as_ref()
+                .context("Scheduling unavailable")?
+                .lock()
+                .unwrap();
+            if store
+                .job()
+                .is_some_and(|job| job.id == *id && job.stage == Stage::Running)
+            {
+                self.worker.request_stop();
+            } else {
+                store.cancel(id)?;
+            }
+            c.revision += 1;
+            return Ok(());
+        }
         ensure!(
             request.camera_revision == s.revision && request.plan_revision == c.revision,
             "State changed on another controller; review the current values and try again"
+        );
+        ensure!(
+            !self.schedule.as_ref().is_some_and(|store| store
+                .lock()
+                .unwrap()
+                .job()
+                .is_some_and(|j| j.stage == Stage::Running)),
+            "A scheduled stack is running"
         );
         ensure!(
             !s.command_pending && !s.phase.active(),
@@ -207,9 +271,110 @@ impl Session {
         );
         let mut action = None;
         match request.command {
+            Command::SetWarmup { seconds } => {
+                let rig = self
+                    .worker
+                    .power
+                    .as_ref()
+                    .context("Studio outlets are not configured")?;
+                self.schedule
+                    .as_ref()
+                    .context("Warmup settings unavailable")?
+                    .lock()
+                    .unwrap()
+                    .set_warmup(seconds)?;
+                rig.set_warmup(seconds);
+            }
+            Command::ScheduleStack {
+                start_at,
+                power,
+                warmup_seconds,
+            } => {
+                ensure!(
+                    s.connected
+                        && s.phase.can_edit()
+                        && !s.exposure_uncertain
+                        && s.failure.is_none()
+                        && c.start_set
+                        && c.end_set,
+                    "Connect the camera and mark both focus bounds before scheduling"
+                );
+                let rig = self.worker.power.as_deref();
+                ensure!(
+                    !power.uses_plugs() || rig.is_some(),
+                    "Studio outlets are not configured"
+                );
+                ensure!(
+                    !power.camera_off || s.identity["hello"]["power_off_protocol"] == 1,
+                    "Camera does not support verified shutdown"
+                );
+                let warmup =
+                    warmup_seconds.unwrap_or_else(|| rig.map_or(0, |r| r.warmup_seconds()));
+                ensure!(warmup <= 300, "Choose a light warmup from 0 to 300 seconds");
+                let recipe = Recipe::from_live(&c.plan, &s.status, power, warmup)?;
+                let raw_count = c.plan.positions()?.len() * recipe.shots;
+                if let Some(report) = &self.transfer {
+                    crate::capacity::check(
+                        report.lock().unwrap()["free_bytes"].as_u64(),
+                        raw_count,
+                        crate::capacity::raw_limit(&s.status),
+                    )?;
+                } else if !self.demo {
+                    ensure!(
+                        property(&s.status, "MediaSLOT1_RemainingNumber")
+                            .is_some_and(|n| n >= raw_count as u64),
+                        "The card cannot fit the scheduled stack"
+                    );
+                }
+                self.schedule
+                    .as_ref()
+                    .context("Scheduling unavailable")?
+                    .lock()
+                    .unwrap()
+                    .arm(request.id, start_at, recipe, schedule::now())?;
+            }
+            Command::Power { device, on } => {
+                if device == Outlet::Camera && on {
+                    ensure!(!s.connected, "Camera is already connected");
+                }
+                ensure!(
+                    !s.exposure_uncertain,
+                    "Recover the uncertain exposure first"
+                );
+                if device == Outlet::Camera && !on && s.connected {
+                    ensure!(
+                        s.phase.can_edit() && s.identity["hello"]["power_off_protocol"] == 1,
+                        "Reconnect a ready A7CR before shutting it down"
+                    );
+                }
+                action = Some(Action::Power { device, on });
+            }
+            Command::PowerPlan { enabled } => {
+                ensure!(
+                    s.connected
+                        && s.phase.can_edit()
+                        && (!enabled || s.identity["hello"]["power_off_protocol"] == 1),
+                    "Connect a camera that supports verified standby first"
+                );
+                action = Some(Action::PowerPlan(enabled));
+            }
             Command::Connect {} => {
                 ensure!(!s.connected, "Camera is already connected");
-                action = Some(Action::Connect);
+                action = Some(
+                    if self
+                        .worker
+                        .power
+                        .as_ref()
+                        .is_some_and(|p| p.status()["camera"]["on"] == false)
+                    {
+                        Action::Power {
+                            device: Outlet::Camera,
+                            on: true,
+                        }
+                    } else {
+                        Action::Connect
+                    },
+                );
             }
             Command::Disconnect {} => {
                 ensure!(s.connected, "Camera is not connected");
@@ -260,7 +425,7 @@ impl Session {
                         });
                     }
                     Command::Mark { start } => {
-                        let p = s.position.context("Camera focus position unavailable")?;
+                        let p = self.worker.mark_position(s.revision, start)?;
                         if start {
                             c.plan.start = p;
                             c.start_set = true;
@@ -417,6 +582,24 @@ pub struct CommandRequest {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(tag = "op", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Command {
+    SetWarmup {
+        seconds: u32,
+    },
+    ScheduleStack {
+        start_at: u64,
+        power: StackPower,
+        warmup_seconds: Option<u32>,
+    },
+    CancelSchedule {
+        id: String,
+    },
+    Power {
+        device: Outlet,
+        on: bool,
+    },
+    PowerPlan {
+        enabled: bool,
+    },
     Connect {},
     Disconnect {},
     Recover {

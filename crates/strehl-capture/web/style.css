@@ -5,3 +5,6 @@ button.primary:hover:not(:disabled){background:#f1c565;border-color:#f1c565}
 .storage-option{display:flex;align-items:center;gap:10px;margin:18px 0 8px}.storage-option input[type=checkbox]{width:20px;height:20px;flex-shrink:0;accent-color:var(--accent,#c1d6af)}
 
 #focus-slider{width:100%;margin:8px 0}#peaking-overlay{position:absolute;left:0;top:50%;transform:translateY(-50%);width:100%;height:auto;pointer-events:none}label:has(input[type=checkbox]){display:flex;align-items:center;gap:8px}
+#studio-power .jogs{grid-template-columns:repeat(2,minmax(0,1fr));margin:8px 0}
+#warmup-form{align-items:end;margin:10px 0}#schedule-form{display:grid;gap:8px;margin-top:12px}#schedule-power label{margin:6px 0}#schedule-time{max-width:100%}#schedule-status{overflow-wrap:anywhere}
+#capture-footer.editing-schedule{display:none}

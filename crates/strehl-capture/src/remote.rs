@@ -311,9 +311,18 @@ async fn command_route(
     State(state): State<Arc<WebState>>,
     Json(request): Json<CommandRequest>,
 ) -> Response {
-    match state.session.dispatch(request) {
-        Ok(()) => Json(json!({"ok":true,"state":state.session.state()})).into_response(),
-        Err(error) => problem(StatusCode::CONFLICT, &error.to_string()),
+    match tokio::task::spawn_blocking(move || {
+        state.session.dispatch(request)?;
+        Ok::<_, anyhow::Error>(state.session.state())
+    })
+    .await
+    {
+        Ok(Ok(snapshot)) => Json(json!({"ok":true,"state":snapshot})).into_response(),
+        Ok(Err(error)) => problem(StatusCode::CONFLICT, &error.to_string()),
+        Err(_) => problem(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Camera command worker unavailable",
+        ),
     }
 }
 async fn preview_route(State(state): State<Arc<WebState>>) -> Response {

@@ -36,6 +36,51 @@ async function command(command,planRevision=null){
 }
 function receive(next){if(!state||(next.camera_revision>=state.camera_revision&&next.plan_revision>=state.plan_revision))state=next;}
 function resetSettings(){dirty=false;editRevision=null;render();}
+let editedSettingsBase=null,warmupDirty=false;
+function settingsKey(plan){return JSON.stringify([plan.step,plan.settle_ms,plan.approach,plan.capture_timeout_s]);}
+function localMinute(d){
+ const pad=n=>String(n).padStart(2,'0');
+ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());
+}
+function scheduledTime(){
+ const text=$('schedule-time').value, date=new Date(text);
+ if(!text||!Number.isFinite(date.getTime())||localMinute(date)!==text)throw Error('Choose a valid local date and time.');
+ const tomorrow=new Date(date);tomorrow.setDate(date.getDate()+1);
+ const fold=tomorrow.getTime()-date.getTime()-86400000;
+ if(fold>0&&localMinute(new Date(date.getTime()+fold))===text)throw Error('This time occurs twice at the daylight-saving change. Choose another time.');
+ if(date.getTime()<=Date.now())throw Error('Choose a future local date and time.');
+ return Math.floor(date.getTime()/1000);
+}
+function renderSchedule(s,edit){
+ const section=$('stack-schedule'),schedule=s.schedule;
+ section.hidden=!schedule;
+ $('capture-footer').classList.toggle('editing-schedule',!!schedule&&$('schedule-editor').open&&!s.busy&&!['armed','running'].includes(schedule.job?.stage));
+ if(!schedule)return;
+ const job=schedule.job,active=job&&['armed','running'].includes(job.stage);
+ const status=$('schedule-status');
+ status.hidden=!job&&!schedule.error;
+ status.textContent=schedule.error||'';
+ if(job&&!schedule.error){
+  const r=job.recipe;
+  status.textContent=new Date(job.start_at*1000).toLocaleString()+' · '+job.message;
+  if(active)status.textContent+=' · '+r.plan.start+' → '+r.plan.end+' · step '+r.plan.step+' · '+r.shots+' RAWs/plane';
+ }
+ $('cancel-schedule').hidden=!active;
+ $('cancel-schedule').disabled=!online||sending;
+ $('cancel-schedule').textContent=job?.stage==='running'?'Stop scheduled stack':'Cancel schedule';
+ $('schedule-editor').hidden=!!active;
+ $('schedule-power').hidden=!s.power;
+ $('schedule-warmup').disabled=!s.power||!$('schedule-light').checked;
+ if(!$('schedule-time').value)$('schedule-time').value=localMinute(new Date(Date.now()+600000));
+ if(!$('schedule-warmup').value)$('schedule-warmup').value=s.power?.warmup_seconds??5;
+ $('schedule-zone').textContent=Intl.DateTimeFormat().resolvedOptions().timeZone;
+ let reason='';
+ try{scheduledTime();}catch(e){reason=e.message;}
+ if(!reason&&(!edit||!s.planned||dirty||s.storage_error||focusFlight||focusPending!==null))
+  reason=s.storage_error||'Connect the camera, apply edits and check both focus marks.';
+ $('schedule-hint').textContent=reason||((s.planned||0)+' focus planes · '+((s.planned||0)*(s.shots_per_plane||1))+' RAWs');
+ $('arm-schedule').disabled=!!reason||!!active;
+}
 async function flushFocus(){
  if(focusFlight||focusPending===null||sending||!online||!state?.editable)return;
  const target=focusPending;focusPending=null;
@@ -47,13 +92,33 @@ async function flushFocus(){
 function render(){
  if(!state)return;
  const s=state,shots=s.shots_per_plane||1,edit=online&&s.editable&&!sending,active=['capturing','scanning','paused'].includes(s.phase),fresh=edit&&s.preview.fresh;
+ if(dirty&&editedSettingsBase===settingsKey(s.plan))editRevision=s.plan_revision;
+ renderSchedule(s,edit);
+ const power=s.power;
+ $('studio-power').hidden=!power;
+ if(power){
+  const label=p=>typeof p?.on==='boolean'?(p.on?'on':'off')+' · '+p.watts.toFixed(1)+' W':(p?.error||'waiting');
+  $('power-status').textContent='Light '+label(power.light)+' / Camera '+label(power.camera);
+  const idle=online&&!sending&&power.available;
+  $('power-light-on').disabled=!idle||power.light?.on===true;
+  $('power-light-off').disabled=!idle||power.light?.on===false;
+  $('power-camera-on').disabled=!idle||!power.can_start_camera;
+  $('power-camera-off').disabled=!idle||!power.can_stop_camera;
+  $('power-manage').disabled=!idle||!power.can_manage;
+  $('power-manage').checked=power.manage_stack;
+  $('warmup-form').hidden=!s.schedule;
+  if(!warmupDirty)$('warmup').value=power.warmup_seconds;
+  $('warmup').disabled=!idle;
+  $('save-warmup').disabled=!idle||!warmupDirty;
+  $('power-error').hidden=!power.error;$('power-error').textContent=power.error||'';
+ }
  $('camera-recovery').hidden=!s.failure||!paired();
  if(s.failure){const tag=`${s.sequence_id}:${s.failure.message}:${s.failure.exposure_uncertain}`;if(tag!==recoveryMessage){recoveryMessage=tag;$('recovery-ack').checked=false;}$('camera-error').textContent=s.failure.message;$('recovery-count').textContent=(s.saved==null?`${s.completed} / ${s.total} captures confirmed.`:`${s.completed} / ${s.total} captured; ${s.saved} saved on PC.`)+(s.failure.exposure_uncertain?' The last exposure is uncertain; inspect the camera and saved files before reconnecting.':'');$('recovery-ack-label').hidden=!s.failure.exposure_uncertain;$('recover-camera').disabled=!online||sending||!s.failure.can_reconnect||(s.failure.exposure_uncertain&&!$('recovery-ack').checked);}else{recoveryMessage='';$('recovery-ack').checked=false;}
  $('demo-label').hidden=!s.demo;$('connection-label').textContent=online?(s.connected?'● Camera connected':'● Remote connected'):'○ Remote offline';
  $('camera-connect').textContent=s.connected?'Disconnect':'Connect camera';$('camera-connect').disabled=!online||sending||s.busy||['connecting','disconnecting'].includes(s.phase);
  $('position').textContent=s.position??'—';$('start-position').textContent=s.start_set?s.plan.start:'Not marked';$('end-position').textContent=s.end_set?s.plan.end:'Not marked';
  document.querySelectorAll('[data-jog]').forEach(b=>{const target=(s.position??0)+Number(b.dataset.jog);b.disabled=!edit||s.position===null||target<0||target>65535;});
- document.querySelectorAll('[data-mark]').forEach(b=>b.disabled=!edit||s.position===null);
+ document.querySelectorAll('[data-mark]').forEach(b=>b.disabled=!edit||s.position===null||focusDragging||focusPending!==null||!!focusFlight);
  document.querySelectorAll('[data-go]').forEach(b=>b.disabled=!edit||!(b.dataset.go==='true'?s.start_set:s.end_set));
  for(const [name,property] of [['step','step'],['settle-ms','settle_ms'],['approach','approach'],['timeout','capture_timeout_s']]){const input=$(name);if(!dirty&&document.activeElement!==input)input.value=s.plan[property];input.disabled=!edit;}
  if(!online||!['ready','complete','stopped','moving'].includes(s.phase)){focusPending=null;focusFlight=null;}
@@ -78,6 +143,7 @@ function render(){
  $('plan-count').textContent=s.plan_error|| (s.planned?`${s.planned.toLocaleString()} ${shots===4?`planes / ${(s.planned*shots).toLocaleString()} RAWs`:"RAWs"} · ${s.plan.end>=s.plan.start?'increasing':'decreasing'} sweep`:'Mark both focus bounds');
  $('initial-estimate').textContent=!active&&s.initial_seconds!==null?`Initial estimate ~${duration(s.initial_seconds)}`:'';
  $('start').disabled=!edit||!s.planned||dirty||!!s.storage_error||!!focusFlight||focusPending!==null;$('start').hidden=active||!!s.failure;
+ $('start').textContent=s.schedule?.job?.stage==='armed'?'Start stack now':'Start stack';
  $('review-failure').hidden=!s.failure;for(const name of ['pause','stop'])$(name).hidden=!!s.failure;
  $('pause').disabled=!online||sending||!active||s.pending_control===2;$('pause').textContent=s.phase==='paused'?'Resume':'Pause';$('stop').disabled=!online||sending||!active;
  $('survey').disabled=!fresh||!s.start_set||!s.end_set||Math.abs(s.plan.end-s.plan.start)<8||dirty;$('select-roi').disabled=!fresh;
@@ -136,6 +202,31 @@ window.addEventListener('online',()=>schedulePoll());
 window.addEventListener('pageshow',()=>schedulePoll());
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedulePoll();});
 $('camera-connect').addEventListener('click',()=>command({op:state.connected?'disconnect':'connect'}));
+for(const device of ['light','camera'])for(const on of [true,false]){
+ $('power-'+device+'-'+(on?'on':'off')).addEventListener('click',()=>command({op:'power',device,on}));
+}
+$('power-manage').addEventListener('change',()=>command({op:'power_plan',enabled:$('power-manage').checked}));
+$('warmup').addEventListener('input',()=>{warmupDirty=true;render();});
+$('warmup-form').addEventListener('submit',async e=>{
+ e.preventDefault();
+ if(await command({op:'set_warmup',seconds:Number($('warmup').value)})){
+  warmupDirty=false;if(!$('schedule-editor').open)$('schedule-warmup').value=state.power.warmup_seconds;render();
+ }
+});
+$('schedule-form').addEventListener('input',()=>render());
+$('schedule-editor').addEventListener('toggle',()=>{
+ if($('schedule-editor').open&&state)$('schedule-warmup').value=state.power?.warmup_seconds??5;
+ render();
+});
+$('schedule-form').addEventListener('submit',async e=>{
+ e.preventDefault();
+ let start;try{start=scheduledTime();}catch(error){notice(error.message);return;}
+ const checked=id=>!!state.power&&$(id).checked;
+ const ok=await command({op:'schedule_stack',start_at:start,warmup_seconds:Number($('schedule-warmup').value),
+  power:{wake_camera:checked('schedule-wake'),light_on:checked('schedule-light'),light_off:checked('schedule-light-off'),camera_off:checked('schedule-camera-off')}});
+ if(ok)$('schedule-editor').open=false;
+});
+$('cancel-schedule').addEventListener('click',()=>{const id=state?.schedule?.job?.id;if(id)command({op:'cancel_schedule',id});});
 $('recovery-ack').addEventListener('change',render);
 $('review-failure').addEventListener('click',()=>$('camera-recovery').scrollIntoView({block:'start'}));
 $('recover-camera').addEventListener('click',()=>command({op:'recover',acknowledge_uncertain:$('recovery-ack').checked}));
@@ -161,7 +252,7 @@ $('pixel-shift').addEventListener('change',()=>command({op:'pixel_shift',shots:$
 document.querySelectorAll('[data-jog]').forEach(b=>b.addEventListener('click',()=>command({op:'jog',delta:Number(b.dataset.jog)})));
 document.querySelectorAll('[data-mark]').forEach(b=>b.addEventListener('click',()=>command({op:'mark',start:b.dataset.mark==='true'})));
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>command({op:'go',start:b.dataset.go==='true'})));
-for(const name of ['step','settle-ms','approach','timeout'])$(name).addEventListener('input',()=>{if(!dirty)editRevision=state.plan_revision;dirty=true;$('settings-actions').hidden=false;});
+for(const name of ['step','settle-ms','approach','timeout'])$(name).addEventListener('input',()=>{if(!dirty){editRevision=state.plan_revision;editedSettingsBase=settingsKey(state.plan);}dirty=true;$('settings-actions').hidden=false;});
 $('settings-form').addEventListener('submit',async e=>{e.preventDefault();const ok=await command({op:'settings',step:Number($('step').value),settle_ms:Number($('settle-ms').value),approach:Number($('approach').value),capture_timeout_s:Number($('timeout').value)},editRevision);if(ok)resetSettings();});
 $('reset-settings').addEventListener('click',resetSettings);
 $('start').addEventListener('click',()=>command({op:'start'}));$('pause').addEventListener('click',()=>command({op:state.phase==='paused'?'resume':'pause'}));$('stop').addEventListener('click',()=>command({op:'stop'}));$('survey').addEventListener('click',()=>command({op:'survey'}));$('apply-bounds').addEventListener('click',()=>command({op:'apply_bounds'}));

@@ -351,13 +351,22 @@ fn run(
                     match work {
                         Work::Command(request) => {
                             ensure!(configured, "Configure the Pi connection first");
-                            post_json(
+                            let reply = post_json(
                                 &client,
                                 &config.controller,
                                 "/api/command",
                                 &config.pairing_key,
                                 &request,
                             )?;
+                            if let Some(live) =
+                                reply.get("state").filter(|v| v["camera_revision"].is_u64())
+                            {
+                                let mut s = output.lock().unwrap();
+                                s.state = live.clone();
+                                s.observed = Some(Instant::now());
+                                s.online = true;
+                                s.connection_error = None;
+                            }
                             Ok("Request accepted")
                         }
                         Work::Configure(mut next) => {
@@ -699,6 +708,9 @@ mod tests {
                 );
                 std::thread::sleep(Duration::from_millis(10));
             };
+            // Windows can inherit the listening socket's nonblocking mode.
+            // Read the full request before simulating a lost acknowledgement.
+            socket.set_nonblocking(false).unwrap();
             socket
                 .set_read_timeout(Some(Duration::from_secs(3)))
                 .unwrap();
@@ -714,6 +726,7 @@ mod tests {
                     break;
                 }
             }
+            assert!(bytes.windows(7).any(|w| w == b"\"start\""));
             drop(socket);
             listener.set_nonblocking(true).unwrap();
             std::thread::sleep(Duration::from_millis(250));

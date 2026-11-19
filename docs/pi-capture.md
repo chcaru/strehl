@@ -61,6 +61,26 @@ uses this PC's LAN address, `10.0.0.109:8789`; reserve that address in the route
 or update `/etc/strehl-capture/headless.json` if it changes. Settings and pairing
 keys are private installation data, excluded from source packages and commits.
 
+## Optional studio outlets
+
+Join both Shelly Plug US Gen4 outlets to the trusted home Wi-Fi. The Pi's
+optional `power` object in `/etc/strehl-capture/headless.json` has `light` and
+`camera` entries, each with its factory `id` (such as
+`shellyplugusg4-001122334455`) and optional numeric LAN `ip`. Choose a different
+device for each role. A DHCP reservation makes the address stable. The Pi
+can also resolve the device ID with `.local` where mDNS is available. Use
+`warmup_seconds` in the power object to adjust the default five-second lamp
+warmup. This integration uses the plugs' local HTTP RPC on the trusted LAN
+with plug authentication disabled. Strehl's pairing remains required for its
+controller. Verify the role, switch readback and loaded watts in person before
+using unattended capture. **Save warmup** on either controller overrides the
+installation default. The one-time stack schedule and warmup preference live in
+`studio-schedule.json` in the transfer state directory. The Pi writes its claim
+to disk before handing the saved plan to the camera worker. At run time the
+worker rechecks capture mode, exposure, aperture and receiver capacity. The
+scheduled stack can wake a powered-down A7CR. See the
+[Capture scheduling instructions](native-capture.md#schedule-one-stack).
+
 ## File handling and failure behavior
 
 New stacks save `.ARW.straw` files by default. They retain the same CFA/Zstd bytes

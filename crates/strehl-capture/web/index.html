@@ -14,11 +14,29 @@
  <div id="survey-result" hidden><p class="eyebrow">PREVIEW SURVEY</p><canvas id="curves" height="90"></canvas><div class="survey-suggestion"><span id="suggestion"></span><button id="apply-bounds">Apply suggested bounds</button></div><p id="suggestion-detail" class="small muted"></p></div>
 </section>
 <aside class="controls">
+ <section id="studio-power" class="control-section" hidden><p class="eyebrow">STUDIO POWER</p><p id="power-status" class="small"></p><div class="jogs"><button id="power-light-on">Light on</button><button id="power-light-off">Light off</button></div><div class="jogs"><button id="power-camera-on">Power on &amp; connect</button><button id="power-camera-off">Shut down camera</button></div><label><input id="power-manage" type="checkbox">Warm light at start, power both off after saving</label>
+ <form id="warmup-form" class="fields"><label>Light warmup · seconds <input id="warmup" type="number" min="0" max="300" required></label><button id="save-warmup" type="submit">Save warmup</button></form><p class="small muted">Delay from switching the light on to starting the focus sweep.</p><p id="power-error" class="small" hidden></p></section>
  <div class="control-section"><p class="eyebrow">FOCUS POSITION</p><div class="position"><strong id="position">—</strong><span>command units</span></div><label>Scrub focus <input id="focus-slider" type="range" min="0" max="65535" step="1" disabled><output id="focus-target"></output></label><label><input id="focus-fine" type="checkbox" checked>Fine range (±128)</label><div class="jogs" aria-label="Jog focus"><button data-jog="-128">−128</button><button data-jog="-16">−16</button><button data-jog="-1">−1</button><button data-jog="1">+1</button><button data-jog="16">+16</button><button data-jog="128">+128</button></div><p class="small muted">Jog to each boundary, then mark it. If preview fails, use the camera display.</p></div>
  <div class="marks"><div class="mark"><p class="eyebrow">A · START</p><strong id="start-position">Not marked</strong><button data-mark="true">Mark current</button><button data-go="true" class="quiet">Go to mark</button></div><div class="mark"><p class="eyebrow">B · END</p><strong id="end-position">Not marked</strong><button data-mark="false">Mark current</button><button data-go="false" class="quiet">Go to mark</button></div></div>
  <form id="settings-form" class="control-section"><p class="eyebrow">CAPTURE PLAN</p><label><input id="pixel-shift" type="checkbox" disabled>4-shot pixel shift</label><div class="fields"><label>Focus step <input id="step" type="number" min="1" max="65535" value="1" required></label><label>Settle · ms <input id="settle-ms" type="number" min="100" max="30000" step="50" value="500" required></label></div><p class="small muted">1 is the smallest command. Adjacent positions can repeat physical focus.</p><details><summary>Approach &amp; timeout</summary><div class="fields"><label>Approach · units <input id="approach" type="number" min="1" max="4096" value="128" required></label><label>Shutter timeout · s <input id="timeout" type="number" min="5" max="3600" value="120" required></label></div></details><div id="settings-actions" hidden><button type="submit">Apply settings</button><button type="button" id="reset-settings" class="quiet">Reset</button></div><p id="plan-count" class="accent">Mark both focus bounds</p><p id="initial-estimate" class="small muted"></p><p id="capacity-info" class="small muted"></p></form>
  <div class="control-section"><button id="survey" disabled>Sweep preview</button><p class="small muted">Choose rough bounds and a subject region first. The sweep suggests tighter bounds without taking RAWs.</p></div>
  <div class="camera-stats"><span id="battery">Battery —</span><span id="card">Card —</span></div><p id="storage-info" class="small muted">Camera storage details appear after connection.<br>Pairing is remembered on this browser.</p><button id="copy-pairing" class="quiet small">Copy pairing link</button><input id="share-link" aria-label="Pairing link to copy" readonly hidden><button id="unpair" class="quiet small">Forget this browser</button>
+ <section id="stack-schedule" class="control-section" hidden>
+  <p id="schedule-status" role="status" hidden></p><button id="cancel-schedule" hidden>Cancel schedule</button>
+  <details id="schedule-editor"><summary>Schedule stack</summary>
+   <form id="schedule-form"><label>Start preparation at local time <input id="schedule-time" type="datetime-local" required></label>
+    <p id="schedule-zone" class="small muted"></p>
+    <div id="schedule-power"><p>Before the stack</p>
+     <label><input type="checkbox" id="schedule-wake" checked>Power on camera if needed</label>
+     <label><input type="checkbox" id="schedule-light" checked>Turn on light</label>
+     <label>Light warmup · seconds <input id="schedule-warmup" type="number" min="0" max="300" required></label>
+     <p>After the files are saved</p>
+     <label><input type="checkbox" id="schedule-light-off" checked>Turn off light</label>
+     <label><input type="checkbox" id="schedule-camera-off" checked>Shut down camera</label>
+    </div><p class="small muted">The Pi saves these marks and settings. Keep the Pi and receiver PC awake.</p>
+    <button id="arm-schedule" class="primary" type="submit">Schedule this stack</button><p id="schedule-hint" class="small"></p>
+   </form></details>
+ </section>
 </aside>
 </main>
 <footer id="capture-footer" hidden><div class="run-info"><span id="run-message">Ready</span><div class="progress-row"><progress id="progress" max="1" value="0"></progress><span id="run-count"></span></div><span id="timer" class="timer"></span></div><div class="capture-actions"><button id="review-failure" class="primary" hidden>Recovery options</button><button id="start" class="primary" disabled>Start stack</button><button id="pause" disabled>Pause</button><button id="stop" class="stop" disabled>Stop</button></div></footer>
