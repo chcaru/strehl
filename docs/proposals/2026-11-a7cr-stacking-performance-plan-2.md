@@ -1,7 +1,10 @@
 # A7CR four-shot stacking performance, round 2: investigation and plan
 
-**Status:** Proposal. Investigation finished 2026-11-18; nothing in this document is
-implemented. Evidence and prototypes:
+**Status:** Partly implemented (2026-11-18): Q0, Q1a/c/d/e, Q2, Q3a-c, Q4, Q5a/b/f, Q6,
+Q8, Q9a and Q10's read-ahead are on `main`; results per stage and what is not built in
+[`implementation.md`](../../experiments/a7cr-stacking-performance-2026-11-18/implementation.md)
+(later render 45.6 s to 23-24 s, first render 107.7 s to 48.8 s, bytes unchanged).
+Evidence and prototypes:
 [`experiments/a7cr-stacking-performance-2026-11-18/`](../../experiments/a7cr-stacking-performance-2026-11-18/results.md).
 **Date:** 2026-11-18.
 **Owner's direction (2026-11-18, after the first draft):** pull out all the stops. The GPU
@@ -11,8 +14,7 @@ and the result adapts to the machine and the drive it finds. Section 10 records 
 settled; sections 8 and 9 are therefore part of the plan, not an appendix.
 **Baseline.** The measurements were taken on the owner's working tree of 2026-11-18,
 which carries round 1's implementation (the GPU four-shot fold, the group journal, the
-fused depth pass). At the time of writing that implementation is not committed: a reader
-of `main` alone has this plan but not the code it starts from.
+fused depth pass), committed to `main` as `ace830def` before the stages below were built.
 **Scope:** `strehl-cli`, `strehl-gpu`, `strehl-core`, `strehl-raw`, `strehl-raw-codec`,
 `strehl-capture`'s receiver, `strehl follow`, and the build.
 **Audience:** an implementing agent, coordinated by the owner. Each stage says what to
@@ -935,15 +937,12 @@ upgrade command. (4) The device decode and the supervisor's rule for it.
 4. A new archive format is on the table and must still compress: Q19, 6 % smaller.
 5. Custom builds and custom components at every layer are acceptable: Q0, Q19.
 
-**Still the owner's.**
+**Taken by the owner on 2026-11-18, after this plan.**
 
-1. When to flip the default (Q0): recommended once Q5-Q7 pass on both drives.
-2. Whether to rewrite existing captures as format 2 (`strehl archive upgrade`): 3 GB per
-   stack and faster renders against rewriting folders that are otherwise read-only.
-3. Whether byte-exact restoration of the original ARW must survive. It costs 2 MB of
-   embedded previews per file, 3 % of a stack. This plan keeps it.
-4. Round 1's implementation is not committed. Whoever implements this plan needs that
-   tree, or needs round 1 committed first.
+1. Flip the GPU default: done (Q0, `2ea8017b9`), behind the device self-test.
+2. Existing captures are not rewritten as format 2.
+3. The original ARW stays restorable byte for byte.
+4. Round 1's implementation is committed (`ace830def`).
 
 ## 11. Risks
 
