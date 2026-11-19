@@ -19,6 +19,8 @@
 
 #[path = "direct-cfa-gather.rs"]
 pub(crate) mod direct_cfa;
+#[path = "align-edge-journal.rs"]
+pub(crate) mod edge_journal;
 
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
@@ -603,38 +605,286 @@ struct LadderFrame {
 /// pairs share no state. Results are tagged with their ordinal in `pairs` and
 /// returned in that order, so the solve sees the same rows in the same order.
 /// Decoding the next batch overlaps measuring the current one.
+///
+/// # The edge journal
+///
+/// With `journal`, a pair whose two files were measured before (by `strehl
+/// follow` during the capture, or an earlier solve) is read from it, bit for
+/// bit, and a frame no unmeasured pair touches is never decoded; every pair
+/// measured here is added to it. With every pair journalled, nothing is
+/// decoded at all.
 fn measure_ladder_streaming(
     paths: &[PathBuf],
     pairs: &[(usize, usize)],
     cfg: &AlignConfig,
     threads: usize,
     progress: Option<&crate::ui_progress::Progress>,
+    journal: Option<&edge_journal::EdgeJournal>,
 ) -> Result<(PlaneGeometry, Vec<AlignEdge>)> {
-    measure_ladder_streaming_with(
+    let keys = match journal {
+        Some(_) => edge_journal::EdgeJournal::file_keys(paths),
+        None => vec![None; paths.len()],
+    };
+    let pair_key = |i: usize, j: usize| Some((keys[i].as_deref()?, keys[j].as_deref()?));
+    let looked_up: Vec<Option<edge_journal::Measured>> = pairs
+        .iter()
+        .map(|&(i, j)| {
+            let (a, b) = pair_key(i, j)?;
+            journal?.get(a, b)
+        })
+        .collect();
+    // Journalled geometry must agree: a disagreement means a record is not
+    // what it claims, so nothing is taken from the journal.
+    let journal_geom = looked_up.iter().flatten().map(|m| m.geom).next();
+    let looked_up = if looked_up
+        .iter()
+        .flatten()
+        .all(|m| Some(m.geom) == journal_geom)
+    {
+        looked_up
+    } else {
+        eprintln!("alignment      : journalled edges disagree on the plane size; measuring all");
+        vec![None; pairs.len()]
+    };
+    let known: Vec<Option<Option<AlignEdge>>> = looked_up
+        .iter()
+        .zip(pairs)
+        .map(|(m, &(i, j))| m.map(|m| m.fit.map(|f| f.edge(i, j))))
+        .collect();
+    if let Some(geom) = journal_geom
+        && known.iter().all(Option::is_some)
+    {
+        if let Some(progress) = progress {
+            progress.alignment_phase("pairs", pairs.len());
+            for (&(i, j), k) in pairs.iter().zip(&known) {
+                progress.alignment_pair_started(i, j, pairs.len());
+                progress.alignment_pair_finished(i, j, matches!(k, Some(Some(_))), pairs.len());
+            }
+        }
+        return Ok((geom, known.into_iter().flatten().flatten().collect()));
+    }
+    let (geom, edges, measured) = measure_ladder_streaming_with(
         paths.len(),
         pairs,
         cfg,
         threads,
         progress,
         LADDER_WINDOW_BYTES,
+        &known,
         |index| {
             let path = &paths[index];
             let raw =
                 strehl_raw::decode(path).with_context(|| format!("decoding {}", path.display()))?;
-            let geom = PlaneGeometry {
-                width: raw.active.width / 2,
-                height: raw.active.height / 2,
-            };
-            let mut plane = vec![0f32; geom.pixels()];
-            green_luma(&raw, raw.levels.black as f32, &mut plane);
-            Ok((geom, plane))
+            Ok(alignment_plane(&raw))
         },
+    )?;
+    if let Some(journal) = journal {
+        let entries: Vec<(String, String, edge_journal::Measured)> = measured
+            .into_iter()
+            .filter_map(|(ordinal, edge)| {
+                let (i, j) = pairs[ordinal];
+                let (a, b) = pair_key(i, j)?;
+                Some((
+                    a.to_string(),
+                    b.to_string(),
+                    edge_journal::Measured {
+                        geom,
+                        fit: edge.as_ref().map(edge_journal::Fit::of),
+                    },
+                ))
+            })
+            .collect();
+        journal.append(&entries);
+    }
+    Ok((geom, edges))
+}
+
+/// A frame's alignment plane: the green luma of its active area at half
+/// resolution. One function for the solve and for `strehl follow`, so a
+/// journalled edge was measured on exactly the plane the solve would build.
+pub(crate) fn alignment_plane(raw: &strehl_raw::Frame) -> (PlaneGeometry, Vec<f32>) {
+    let geom = PlaneGeometry {
+        width: raw.active.width / 2,
+        height: raw.active.height / 2,
+    };
+    let mut plane = vec![0f32; geom.pixels()];
+    green_luma(raw, raw.levels.black, &mut plane);
+    (geom, plane)
+}
+
+/// One pair's measurement, as the ladder makes it: `None` when refused.
+fn measure_pair(
+    a: &LadderFrame,
+    b: &LadderFrame,
+    geom: PlaneGeometry,
+    spots: &[(usize, usize)],
+    cfg: &AlignConfig,
+    (i, j): (usize, usize),
+) -> Option<AlignEdge> {
+    let fa = AlignFrame {
+        plane: PlaneRef::from_geometry(&a.plane, geom)?,
+        pyramid: a.pyramid.as_ref()?,
+    };
+    let fb = AlignFrame {
+        plane: PlaneRef::from_geometry(&b.plane, geom)?,
+        pyramid: b.pyramid.as_ref()?,
+    };
+    let fit = align_pair(fa, fb, spots, cfg).ok()?;
+    Some(AlignEdge {
+        i,
+        j,
+        t: fit.similarity(),
+        rms: fit.rms as f64,
+        used: fit.used,
+        lever: fit.lever_rms as f64,
+    })
+}
+
+/// The ladder's frame for one alignment plane: the plane and its pyramid.
+fn ladder_frame(geom: PlaneGeometry, plane: Vec<f32>, cfg: &AlignConfig) -> LadderFrame {
+    let pyramid = PlaneRef::from_geometry(&plane, geom).and_then(|v| AlignPyramid::build(v, cfg));
+    LadderFrame { plane, pyramid }
+}
+
+/// The tile grid the ladder measures every pair on: a function of the plane
+/// size alone.
+fn ladder_spots(
+    geom: PlaneGeometry,
+    plane: &[f32],
+    cfg: &AlignConfig,
+) -> Result<Vec<(usize, usize)>> {
+    let p0 = PlaneRef::from_geometry(plane, geom).context("plane view")?;
+    tile_grid(
+        p0,
+        cfg.fine_tile,
+        cfg.fine_grid.0,
+        cfg.fine_grid.1,
+        cfg.margin,
     )
+    .context("the fine tile grid does not fit in this plane")
+}
+
+/// Memory `strehl follow` may hold for its window of alignment planes
+/// (`STREHL_FOLLOW_ALIGN_MB`; `0` measures nothing live).
+const FOLLOW_ALIGN_ENV: &str = "STREHL_FOLLOW_ALIGN_MB";
+const FOLLOW_ALIGN_DEFAULT_MB: usize = 10 << 10;
+
+/// The edge ladder measured while a capture runs (performance plan Q12):
+/// each plane `strehl follow` admits is measured against the planes up to
+/// the largest span before it, and every pair goes to the edge journal the
+/// closing render's solve reads.
+///
+/// The pairs are the ladder's own: for a plane at position `j` among those
+/// admitted, `(j - s, j)` for every span `s`. A record is keyed by its two
+/// files, not by positions, so a render that orders the planes differently
+/// (an incomplete group contributes a plane `follow` never admits) simply
+/// finds fewer of its pairs and measures the rest itself.
+pub(crate) struct LiveLadder {
+    cfg: AlignConfig,
+    journal: edge_journal::EdgeJournal,
+    window: std::collections::VecDeque<(String, LadderFrame)>,
+    geom: Option<PlaneGeometry>,
+    spots: Vec<(usize, usize)>,
+    capacity: usize,
+    budget: usize,
+}
+
+impl LiveLadder {
+    /// `None` when the render would not measure a ladder (alignment off, a
+    /// refused subject), the edge journal is off, or the budget is zero.
+    pub(crate) fn open(dir: &Path) -> Result<Option<Self>> {
+        let mb = match std::env::var(FOLLOW_ALIGN_ENV) {
+            Err(std::env::VarError::NotPresent) => FOLLOW_ALIGN_DEFAULT_MB,
+            Err(e) => return Err(e).context(FOLLOW_ALIGN_ENV),
+            Ok(v) => v
+                .trim()
+                .parse()
+                .with_context(|| format!("{FOLLOW_ALIGN_ENV}={v:?} is not a whole number"))?,
+        };
+        if mb == 0 || !align_enabled() || is_tilted_subject(dir) {
+            return Ok(None);
+        }
+        let cfg = AlignConfig::deep();
+        let Some(journal) = edge_journal::EdgeJournal::open(dir, &cfg)? else {
+            return Ok(None);
+        };
+        Ok(Some(Self {
+            cfg,
+            journal,
+            window: Default::default(),
+            geom: None,
+            spots: Vec::new(),
+            capacity: 0,
+            budget: mb << 20,
+        }))
+    }
+
+    /// The window's length in planes: the largest span, unless the budget
+    /// holds fewer (then the longest spans are left to the render).
+    pub(crate) fn capacity(&self) -> usize {
+        self.capacity
+    }
+
+    /// Admit the next plane, `raw` being the decode of `path` (its first
+    /// member), and measure its pairs with the planes before it. Returns the
+    /// pairs measured now; pairs already journalled are not measured again.
+    pub(crate) fn push(&mut self, path: &Path, raw: &strehl_raw::Frame) -> Result<usize> {
+        let Some(sha) = strehl_raw::archive_sha256(path) else {
+            // Not an archive: no identity to journal under.
+            return Ok(0);
+        };
+        let (geom, plane) = alignment_plane(raw);
+        if self.geom != Some(geom) {
+            self.window.clear();
+            self.spots = ladder_spots(geom, &plane, &self.cfg)?;
+            self.geom = Some(geom);
+            let frame_bytes = 4 * geom.pixels() + 4 * geom.pixels() / 32;
+            let max_span = DEFAULT_SPANS.iter().copied().max().unwrap_or(1);
+            self.capacity = (self.budget / frame_bytes.max(1)).min(max_span);
+        }
+        if self.capacity == 0 {
+            return Ok(0);
+        }
+        let frame = ladder_frame(geom, plane, &self.cfg);
+        let len = self.window.len();
+        let todo: Vec<&(String, LadderFrame)> = DEFAULT_SPANS
+            .iter()
+            .filter(|&&s| s <= len)
+            .map(|&s| &self.window[len - s])
+            .filter(|(a, _)| !self.journal.contains(a, &sha))
+            .collect();
+        let (spots, cfg) = (&self.spots, &self.cfg);
+        let entries: Vec<(String, String, edge_journal::Measured)> = todo
+            .into_par_iter()
+            .map(|(a, earlier)| {
+                let edge = measure_pair(earlier, &frame, geom, spots, cfg, (0, 1));
+                (
+                    a.clone(),
+                    sha.clone(),
+                    edge_journal::Measured {
+                        geom,
+                        fit: edge.as_ref().map(edge_journal::Fit::of),
+                    },
+                )
+            })
+            .collect();
+        self.journal.append(&entries);
+        self.window.push_back((sha, frame));
+        while self.window.len() > self.capacity {
+            self.window.pop_front();
+        }
+        Ok(entries.len())
+    }
 }
 
 /// [`measure_ladder_streaming`] over any plane source: `load(index)` returns
 /// frame `index`'s green-luma plane, and `window_bytes` budgets the window.
-#[allow(clippy::too_many_arguments)]
+///
+/// `known[ordinal]` is `Some` for a pair already measured (`Some(None)`: it
+/// was refused): it is not measured again, and a frame only known pairs touch
+/// is not loaded. At least one pair must be unknown. Returns the geometry, the
+/// edges of every pair in `pairs` order, and the pairs measured here.
+#[allow(clippy::too_many_arguments, clippy::type_complexity)]
 fn measure_ladder_streaming_with(
     n: usize,
     pairs: &[(usize, usize)],
@@ -642,64 +892,74 @@ fn measure_ladder_streaming_with(
     threads: usize,
     progress: Option<&crate::ui_progress::Progress>,
     window_bytes: usize,
+    known: &[Option<Option<AlignEdge>>],
     load: impl Fn(usize) -> Result<(PlaneGeometry, Vec<f32>)> + Sync,
-) -> Result<(PlaneGeometry, Vec<AlignEdge>)> {
+) -> Result<(
+    PlaneGeometry,
+    Vec<AlignEdge>,
+    Vec<(usize, Option<AlignEdge>)>,
+)> {
     anyhow::ensure!(n > 0, "no frames to align");
     anyhow::ensure!(
         pairs.iter().all(|&(i, j)| i < j && j < n),
         "alignment pairs must be ordered and inside the bracket"
     );
+    anyhow::ensure!(known.len() == pairs.len(), "one entry per pair");
     let pool = rayon::ThreadPoolBuilder::new()
         .num_threads(threads)
         .build()
         .context("alignment pool")?;
     let max_span = pairs.iter().map(|&(i, j)| j - i).max().unwrap_or(0);
-    // Pairs grouped by their later frame, keeping each pair's ordinal.
+    // Unmeasured pairs grouped by their later frame, keeping each pair's
+    // ordinal, and the frames they read.
     let mut by_j: Vec<Vec<(usize, usize)>> = vec![Vec::new(); n];
+    let mut needed = vec![n == 1 || pairs.is_empty(); n];
     for (ordinal, &(i, j)) in pairs.iter().enumerate() {
-        by_j[j].push((ordinal, i));
+        if known[ordinal].is_none() {
+            by_j[j].push((ordinal, i));
+            needed[i] = true;
+            needed[j] = true;
+        }
     }
+    let Some(first_needed) = needed.iter().position(|&x| x) else {
+        anyhow::bail!("every pair is already measured; nothing to load");
+    };
 
     let decode_one = |index: usize| -> Result<(PlaneGeometry, LadderFrame)> {
         if let Some(progress) = progress {
             progress.alignment_plane_started(index);
         }
         let (geom, plane) = load(index)?;
-        let pyramid =
-            PlaneRef::from_geometry(&plane, geom).and_then(|v| AlignPyramid::build(v, cfg));
+        let frame = ladder_frame(geom, plane, cfg);
         if let Some(progress) = progress {
             progress.alignment_plane_finished(index);
         }
-        Ok((geom, LadderFrame { plane, pyramid }))
+        Ok((geom, frame))
     };
 
     if let Some(progress) = progress {
         progress.alignment_phase("planes", n);
+        for index in (0..n).filter(|&k| !needed[k]) {
+            progress.alignment_plane_started(index);
+            progress.alignment_plane_finished(index);
+        }
     }
     // The first frame fixes the geometry, and with it the batch size.
-    let (geom, first) = pool.install(|| decode_one(0))?;
+    let (geom, first) = pool.install(|| decode_one(first_needed))?;
     let frame_bytes = 4 * geom.pixels() + 4 * geom.pixels() / 32;
     let resident = window_bytes / frame_bytes.max(1);
     let batch = (resident.saturating_sub(max_span + 1) / 2).clamp(4, 64);
-    let spots = {
-        let p0 = PlaneRef::from_geometry(&first.plane, geom).context("plane view")?;
-        tile_grid(
-            p0,
-            cfg.fine_tile,
-            cfg.fine_grid.0,
-            cfg.fine_grid.1,
-            cfg.margin,
-        )
-        .context("the fine tile grid does not fit in this plane")?
-    };
+    let spots = ladder_spots(geom, &first.plane, cfg)?;
 
     let mut window: Vec<Option<LadderFrame>> = (0..n).map(|_| None).collect();
-    window[0] = Some(first);
+    window[first_needed] = Some(first);
     let mut results: Vec<(usize, Option<AlignEdge>)> = Vec::with_capacity(pairs.len());
     let mut pairs_announced = false;
 
     let decode_batch = |range: std::ops::Range<usize>| -> Result<Vec<(usize, LadderFrame)>> {
         range
+            .filter(|&index| needed[index])
+            .collect::<Vec<_>>()
             .into_par_iter()
             .map(|index| {
                 let (g, frame) = decode_one(index)?;
@@ -719,27 +979,10 @@ fn measure_ladder_streaming_with(
                 if let Some(progress) = progress {
                     progress.alignment_pair_started(i, j, pairs.len());
                 }
-                let edge = (|| {
-                    let fi = window[i].as_ref()?;
-                    let fj = window[j].as_ref()?;
-                    let a = AlignFrame {
-                        plane: PlaneRef::from_geometry(&fi.plane, geom)?,
-                        pyramid: fi.pyramid.as_ref()?,
-                    };
-                    let b = AlignFrame {
-                        plane: PlaneRef::from_geometry(&fj.plane, geom)?,
-                        pyramid: fj.pyramid.as_ref()?,
-                    };
-                    let fit = align_pair(a, b, &spots, cfg).ok()?;
-                    Some(AlignEdge {
-                        i,
-                        j,
-                        t: fit.similarity(),
-                        rms: fit.rms as f64,
-                        used: fit.used,
-                        lever: fit.lever_rms as f64,
-                    })
-                })();
+                let edge = match (&window[i], &window[j]) {
+                    (Some(fi), Some(fj)) => measure_pair(fi, fj, geom, &spots, cfg, (i, j)),
+                    _ => None,
+                };
                 if let Some(progress) = progress {
                     progress.alignment_pair_finished(i, j, edge.is_some(), pairs.len());
                 }
@@ -749,9 +992,9 @@ fn measure_ladder_streaming_with(
     };
 
     pool.install(|| -> Result<()> {
-        // Frames [0, decoded) are in the window or already evicted; the
-        // batch [measured, decoded) is ready to measure.
-        let mut decoded = 1usize;
+        // Frames [0, decoded) are in the window, already evicted or not
+        // needed; the batch [measured, decoded) is ready to measure.
+        let mut decoded = first_needed + 1;
         let mut measured = 0usize;
         while measured < n {
             if decoded == measured || decoded < n.min(measured + batch) {
@@ -793,14 +1036,38 @@ fn measure_ladder_streaming_with(
     {
         progress.alignment_phase("pairs", pairs.len());
     }
+    if let Some(progress) = progress {
+        for (&(i, j), k) in pairs.iter().zip(known) {
+            if let Some(edge) = k {
+                progress.alignment_pair_started(i, j, pairs.len());
+                progress.alignment_pair_finished(i, j, edge.is_some(), pairs.len());
+            }
+        }
+    }
+    results.sort_unstable_by_key(|&(ordinal, _)| ordinal);
+    let measured = results.clone();
+    results.extend(
+        known
+            .iter()
+            .enumerate()
+            .filter_map(|(ordinal, k)| Some((ordinal, (*k)?))),
+    );
     results.sort_unstable_by_key(|&(ordinal, _)| ordinal);
     anyhow::ensure!(
-        results.len() == pairs.len(),
+        results.len() == pairs.len()
+            && results
+                .iter()
+                .enumerate()
+                .all(|(k, &(ordinal, _))| k == ordinal),
         "measured {} of {} alignment pairs",
         results.len(),
         pairs.len()
     );
-    Ok((geom, results.into_iter().filter_map(|(_, e)| e).collect()))
+    Ok((
+        geom,
+        results.into_iter().filter_map(|(_, e)| e).collect(),
+        measured,
+    ))
 }
 
 /// Resolve the lateral-CA profile once, **before any frame is decoded**.
@@ -888,7 +1155,8 @@ pub fn run(args: &AlignArgs) -> Result<()> {
     let pairs = ladder_pairs(n, &args.spans);
 
     let t1 = std::time::Instant::now();
-    let (geom, edges) = measure_ladder_streaming(&paths, &pairs, &cfg, args.threads, None)?;
+    // A measurement command: every pair is measured here, never read.
+    let (geom, edges) = measure_ladder_streaming(&paths, &pairs, &cfg, args.threads, None, None)?;
     println!(
         "  decoded {n} frames and measured {}/{} edges in {:.1} s ({:.1}% refused), plane {}x{}",
         edges.len(),
@@ -2021,7 +2289,9 @@ fn solve_map_observed(
     let pairs = ladder_pairs(n, spans);
 
     let t1 = std::time::Instant::now();
-    let (geom, edges) = measure_ladder_streaming(paths, &pairs, &cfg, threads, progress)?;
+    let journal = edge_journal::EdgeJournal::open(dir, &cfg)?;
+    let (geom, edges) =
+        measure_ladder_streaming(paths, &pairs, &cfg, threads, progress, journal.as_ref())?;
     if verbose {
         println!(
             "  decoded {n} frames and measured {}/{} edges in {:.1} s ({:.1}% refused), \
@@ -2033,6 +2303,17 @@ fn solve_map_observed(
             geom.width,
             geom.height
         );
+    }
+    if let Some(journal) = &journal {
+        use std::sync::atomic::Ordering;
+        let used = journal.used.load(Ordering::Relaxed);
+        if used > 0 {
+            eprintln!(
+                "alignment      : {used} of {} pairs from the edge journal ({:.1} s)",
+                pairs.len(),
+                t1.elapsed().as_secs_f64()
+            );
+        }
     }
 
     finish_measured_map(
@@ -4700,15 +4981,50 @@ mod tests {
         );
         // Six frames of budget: the batch clamps to its minimum of 4, so the
         // window holds the 16-frame span plus two batches and evicts the rest.
+        let unknown = vec![None; pairs.len()];
         for budget in [6 * 4 * geom.pixels(), usize::MAX / 2] {
-            let (g, streamed) =
-                measure_ladder_streaming_with(n, &pairs, &cfg, 3, None, budget, |k| {
+            let (g, streamed, measured) =
+                measure_ladder_streaming_with(n, &pairs, &cfg, 3, None, budget, &unknown, |k| {
                     Ok((geom, plane(k)))
                 })
                 .unwrap();
             assert_eq!(g, geom);
             assert_eq!(bits(&whole), bits(&streamed), "budget {budget}");
+            assert_eq!(measured.len(), pairs.len());
         }
+
+        // The edge journal's contract: pairs measured before (accepted or
+        // refused) are taken as given, a frame only they touch is never
+        // loaded, and the edges are the same rows in the same order.
+        let by_pair: std::collections::HashMap<(usize, usize), AlignEdge> =
+            whole.iter().map(|e| ((e.i, e.j), *e)).collect();
+        let known: Vec<Option<Option<AlignEdge>>> = pairs
+            .iter()
+            .map(|&(i, j)| (j < 25).then(|| by_pair.get(&(i, j)).copied()))
+            .collect();
+        assert!(
+            known.iter().any(|k| matches!(k, Some(None))),
+            "a known refusal"
+        );
+        let loads = std::sync::Mutex::new(Vec::new());
+        let (g, streamed, measured) =
+            measure_ladder_streaming_with(n, &pairs, &cfg, 3, None, usize::MAX / 2, &known, |k| {
+                loads.lock().unwrap().push(k);
+                Ok((geom, plane(k)))
+            })
+            .unwrap();
+        assert_eq!(g, geom);
+        assert_eq!(bits(&whole), bits(&streamed));
+        let mut loads = loads.into_inner().unwrap();
+        loads.sort_unstable();
+        // The earliest unknown pair is (25 - 16, 25).
+        assert_eq!(loads, (9..n).collect::<Vec<_>>());
+        assert!(
+            measured
+                .iter()
+                .all(|&(ordinal, _)| known[ordinal].is_none())
+        );
+        assert_eq!(measured.len(), known.iter().filter(|k| k.is_none()).count());
     }
 
     #[test]

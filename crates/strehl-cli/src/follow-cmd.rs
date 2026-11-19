@@ -69,6 +69,7 @@ fn check_plane(
     g: &crate::pixel_shift_cmd::RecordedGroup,
     noise: &mut Option<strehl_core::noise::NoiseModel>,
     journal: Option<&crate::pixel_shift_cmd::GroupJournal>,
+    ladder: Option<&mut crate::align_cmd::LiveLadder>,
 ) -> Value {
     let started = Instant::now();
     let frames: Result<Vec<strehl_raw::Frame>> = g
@@ -95,6 +96,18 @@ fn check_plane(
     });
     let mut out = json!({"plane":g.plane,"target":g.target,"members":frames.len(),
         "names":g.files.iter().map(|f| f.name.clone()).collect::<Vec<_>>()});
+    // The render's alignment plane is the group's first member: measure its
+    // ladder pairs now, into the edge journal the closing render reads.
+    if let Some(ladder) = ladder {
+        let t = Instant::now();
+        match ladder.push(&g.files[0].path, first) {
+            Ok(pairs) => {
+                out["align_pairs"] = json!(pairs);
+                out["align_seconds"] = json!(t.elapsed().as_secs_f64());
+            }
+            Err(e) => out["align_error"] = json!(format!("{e:#}")),
+        }
+    }
     if frames.len() == 4 {
         // The stack's own gate, so a group the stack will assemble is not
         // flagged for a retake. The measurement goes to the group journal
@@ -175,6 +188,16 @@ pub fn run(args: &FollowArgs) -> Result<()> {
     // The render's group journal: every group measured here is measured
     // once, ever (`STREHL_GROUP_JOURNAL`).
     let groups_journal = crate::pixel_shift_cmd::GroupJournal::open(&args.dir)?;
+    // And its alignment pairs (`STREHL_EDGE_JOURNAL`, `STREHL_FOLLOW_ALIGN_MB`).
+    let mut ladder = crate::align_cmd::LiveLadder::open(&args.dir)?;
+    println!(
+        "alignment pairs : {}",
+        if ladder.is_some() {
+            "measured as planes arrive (edge journal)"
+        } else {
+            "left to the render"
+        }
+    );
     let mut last_progress = Instant::now();
     loop {
         let groups = crate::pixel_shift_cmd::recorded_groups(&args.dir)?;
@@ -184,16 +207,21 @@ pub fn run(args: &FollowArgs) -> Result<()> {
             .filter(|g| g.complete && !done.contains_key(&g.plane))
             .collect();
         for g in fresh {
-            let v = check_plane(g, &mut noise, groups_journal.as_ref());
+            let v = check_plane(g, &mut noise, groups_journal.as_ref(), ladder.as_mut());
             println!(
-                "plane {:>4}      : {} {}{}",
+                "plane {:>4}      : {} {}{}{}",
                 g.plane,
                 v["verdict"].as_str().unwrap_or("?"),
                 v["reason"].as_str().unwrap_or(""),
                 v["seconds"]
                     .as_f64()
                     .map(|s| format!(" ({s:.2} s)"))
-                    .unwrap_or_default()
+                    .unwrap_or_default(),
+                match (v["align_pairs"].as_u64(), v["align_error"].as_str()) {
+                    (Some(p), _) => format!(", {p} alignment pairs"),
+                    (None, Some(e)) => format!(", alignment pairs failed: {e}"),
+                    _ => String::new(),
+                }
             );
             writeln!(sink, "{v}")?;
             sink.flush()?;
@@ -245,6 +273,16 @@ pub fn run(args: &FollowArgs) -> Result<()> {
         "checked         : {} planes, {passed} four-shot groups pass, {demoted} need attention",
         done.len()
     );
+    if let Some(ladder) = &ladder {
+        let pairs: u64 = done
+            .values()
+            .filter_map(|v| v["align_pairs"].as_u64())
+            .sum();
+        println!(
+            "alignment pairs : {pairs} measured this session, window {} planes",
+            ladder.capacity()
+        );
+    }
     if !retakes.is_empty() {
         let mut positions = retakes.clone();
         positions.sort_unstable();

@@ -343,6 +343,36 @@ REGISTRY: dict[str, Declared] = {
         ),
         note="Performance plan stage P2 (2026-11-18).",
     ),
+    "STREHL_EDGE_JOURNAL": Declared(
+        kind="control",
+        default="on (alignment edges are kept in cache_root()/edges/)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "align-edge-journal.rs enabled()/EdgeJournal: unset, empty, `on` or "
+            "`1` -> a solve reads each ladder pair from, or appends it to, a "
+            "per-folder journal keyed by both archives' SHA-256 and the "
+            "estimator's version and configuration, every float stored as exact "
+            "bits (refusals too), and decodes only the frames an unjournalled "
+            "pair needs; `off` or `0` measures every pair. The edges are the "
+            "same either way, so the warp map and output are byte-identical."
+        ),
+        note="Round-2 performance plan stage Q12 (2026-11-18).",
+    ),
+    "STREHL_FOLLOW_ALIGN_MB": Declared(
+        kind="control",
+        default="10240 (strehl follow measures alignment pairs as planes arrive)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "align_cmd.rs LiveLadder::open: the memory `strehl follow` may hold "
+            "for its window of alignment planes; the window is the largest span "
+            "(128 planes) unless the budget holds fewer. `0` measures no pairs "
+            "during the capture, leaving them to the render. Affects only when "
+            "pairs are measured, never their values."
+        ),
+        note="Round-2 performance plan stage Q12 (2026-11-18).",
+    ),
     "STREHL_DEPTH_PASS": Declared(
         kind="control",
         default="fused (the restoration's depth map is measured during the fold where eligible)",
