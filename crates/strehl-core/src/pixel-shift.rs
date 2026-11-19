@@ -470,7 +470,15 @@ fn witness_impl<const PTC: bool>(
     // `site_members` depends on the site's parity only.
     let table: [[usize; 4]; 4] =
         std::array::from_fn(|p| site_members(offsets, (p & 1) as isize, (p >> 1) as isize));
-    // Per tile row: z^2 sums per tile, PTC sums.
+    // Per tile row: z^2 sums per tile, PTC sums. Without the bins, each row's
+    // site terms in one pass and the sums after it (`witness_row_terms`).
+    if !PTC {
+        let rows: Vec<WitnessRow> = (0..tiles[1])
+            .into_par_iter()
+            .map(|ty| witness_row_terms(members, offsets, &inv, &table, &variance, tile, ty))
+            .collect();
+        return witness_finish(rows, offsets, tile, tiles);
+    }
     let rows: Vec<WitnessRow> = (0..tiles[1])
         .into_par_iter()
         .map(|ty| {
@@ -534,6 +542,157 @@ fn witness_impl<const PTC: bool>(
             (z2, n, ptc, pair)
         })
         .collect();
+    witness_finish(rows, offsets, tile, tiles)
+}
+
+/// One tile row of [`witness_without_ptc`]: per row of sites, every site's
+/// terms in one pass (inside the buffer straight from the rows, without the
+/// per-sample bounds and `Option`s; at the edges as [`witness`] reads
+/// them), then the sums in site order. The same terms, from the same
+/// expressions, added in the same order as [`witness`]'s loop: the same bits
+/// (`the_witness_without_bins_is_the_witness`). MEASURED on two A7CR scarab
+/// groups on one thread: 588 ms to 400 ms (2026-11-18).
+#[allow(clippy::too_many_arguments)]
+fn witness_row_terms(
+    members: &[MemberView<'_>; 4],
+    offsets: &[(isize, isize); 4],
+    inv: &[f32; 4],
+    table: &[[usize; 4]; 4],
+    variance: &(impl Fn(f32) -> f32 + Sync),
+    tile: usize,
+    ty: usize,
+) -> WitnessRow {
+    const BINS: usize = 48;
+    fn row<'a>(m: &MemberView<'a>, yy: isize) -> Option<&'a [u16]> {
+        let by = m.active[1] as isize + yy;
+        (by >= 0 && (by as usize) < m.buffer_height)
+            .then(|| &m.data[by as usize * m.stride..(by as usize + 1) * m.stride])
+    }
+    let (w, h) = (members[0].active[2], members[0].active[3]);
+    let tiles_x = w.div_ceil(tile);
+    let mut z2 = vec![0f64; tiles_x];
+    let mut n = vec![0u64; tiles_x];
+    let mut pair = [[[0f64; 5]; 2]; 4];
+    // One row's site terms.
+    let mut zt = vec![0f64; w];
+    let mut zok = vec![false; w];
+    let mut pt = vec![[0f64; 5]; w];
+    let mut pok = vec![false; w];
+    for y in ty * tile..((ty + 1) * tile).min(h) {
+        let yi = y as isize;
+        for px in 0..2usize {
+            let sm = table[px | ((y & 1) << 1)];
+            let (a, b) = (sm[1], sm[2]);
+            let (ma, mb) = (&members[a], &members[b]);
+            let (oa, ob) = (offsets[a], offsets[b]);
+            let (ia, ib) = (inv[a], inv[b]);
+            let ivar = ia * ia + ib * ib;
+            let (clip_a, clip_b) = (
+                CLIP_FRACTION * (ma.white - ma.black),
+                CLIP_FRACTION * (mb.white - mb.black),
+            );
+            // Member a's rows y - 1, y, y + 1 about its offset; member b's.
+            let rows = (
+                row(ma, yi + oa.1),
+                row(ma, yi + oa.1 - 1),
+                row(ma, yi + oa.1 + 1),
+                row(mb, yi + ob.1),
+            );
+            // Columns where every read of this parity is inside the buffer.
+            let xa0 = ma.active[0] as isize + oa.0;
+            let xb0 = mb.active[0] as isize + ob.0;
+            let lo = (1 - xa0).max(-xb0).max(0) as usize;
+            let hi = (ma.stride as isize - 1 - xa0)
+                .min(mb.stride as isize - xb0)
+                .clamp(0, w as isize) as usize;
+            let mut x = px;
+            while x < w {
+                let xi = x as isize;
+                let read = match rows {
+                    (Some(ra), Some(ru), Some(rd), Some(rb)) if x >= lo && x < hi => {
+                        let ka = (xa0 + xi) as usize;
+                        let kb = (xb0 + xi) as usize;
+                        let ga = f32::from(ra[ka]) - ma.black;
+                        let gb = f32::from(rb[kb]) - mb.black;
+                        let p = f32::from(ru[ka - 1]) - ma.black;
+                        let q = f32::from(rd[ka + 1]) - ma.black;
+                        let r = f32::from(ru[ka + 1]) - ma.black;
+                        let u = f32::from(rd[ka - 1]) - ma.black;
+                        (
+                            (ga < clip_a).then_some(ga),
+                            (gb < clip_b).then_some(gb),
+                            (p < clip_a && q < clip_a && r < clip_a && u < clip_a)
+                                .then_some((p, q, r, u)),
+                        )
+                    }
+                    _ => (
+                        ma.unclipped(xi + oa.0, yi + oa.1),
+                        mb.unclipped(xi + ob.0, yi + ob.1),
+                        match (
+                            ma.unclipped(xi + oa.0 - 1, yi + oa.1 - 1),
+                            ma.unclipped(xi + oa.0 + 1, yi + oa.1 + 1),
+                            ma.unclipped(xi + oa.0 + 1, yi + oa.1 - 1),
+                            ma.unclipped(xi + oa.0 - 1, yi + oa.1 + 1),
+                        ) {
+                            (Some(p), Some(q), Some(r), Some(u)) => Some((p, q, r, u)),
+                            _ => None,
+                        },
+                    ),
+                };
+                zok[x] = false;
+                pok[x] = false;
+                if let (Some(ga), Some(gb), neighbours) = read {
+                    let (ga, gb) = (ga * ia, gb * ib);
+                    let s = 0.5 * (ga + gb);
+                    let vs = variance(s);
+                    let var = vs * ivar;
+                    let d = f64::from(ga - gb);
+                    if var > 0.0 {
+                        zt[x] = d * d / f64::from(var);
+                        zok[x] = true;
+                    }
+                    if let Some((p, q, r, u)) = neighbours {
+                        let (d1, d2) = (f64::from((q - p) * ia), f64::from((r - u) * ia));
+                        let (gx, gy) = (0.25 * (d1 + d2), 0.25 * (d1 - d2));
+                        if gx * gx + gy * gy > 25.0 * f64::from(vs) {
+                            pt[x] = [gx * gx, gx * gy, gy * gy, gx * d, gy * d];
+                            pok[x] = true;
+                        }
+                    }
+                }
+                x += 2;
+            }
+        }
+        // The sums, in site order.
+        let qy = 2 * usize::from(y >= h / 2);
+        for x in 0..w {
+            if zok[x] {
+                let t = x / tile;
+                z2[t] += zt[x];
+                n[t] += 1;
+            }
+            if pok[x] {
+                let acc = &mut pair[usize::from(x >= w / 2) + qy][(x + y) & 1];
+                let v = &pt[x];
+                acc[0] += v[0];
+                acc[1] += v[1];
+                acc[2] += v[2];
+                acc[3] += v[3];
+                acc[4] += v[4];
+            }
+        }
+    }
+    (z2, n, vec![[0f64; 3]; BINS + 1], pair)
+}
+
+/// [`witness`]'s reduction of its tile rows, in row order.
+fn witness_finish(
+    rows: Vec<WitnessRow>,
+    offsets: &[(isize, isize); 4],
+    tile: usize,
+    tiles: [usize; 2],
+) -> Witness {
+    const BINS: usize = 48;
     let mut out = Witness {
         tile,
         tiles,
@@ -865,6 +1024,59 @@ mod tests {
             black: 512.0,
             white: 15360.0,
         })
+    }
+
+    /// `witness_without_ptc` (the per-row form) gives every field of
+    /// `witness` but the bins, bit for bit: groups whose members are
+    /// shifted out to the buffer's edge (the per-sample path) and back, with
+    /// gains, clipped samples and tiles that do not divide the frame.
+    #[test]
+    fn the_witness_without_bins_is_the_witness() {
+        for shifts in [
+            [(0, 0), (1, 0), (1, 1), (0, 1)],
+            [(0, 0), (0, -1), (1, -1), (1, 0)],
+            [(0, 0), (-1, 0), (-1, -1), (0, -1)],
+            [(0, 0), (1, 2), (-1, 1), (2, -3)],
+        ] {
+            let (mut data, mut active) = group(shifts, [1.0, 1.02, 0.97, 1.05]);
+            // Clipped samples, and an active area reaching the buffer edge.
+            for (k, d) in data.iter_mut().enumerate() {
+                for i in (k * 37..d.len()).step_by(211) {
+                    d[i] = 15300;
+                }
+            }
+            for (active_x, tile) in [(8usize, 64usize), (0, 17), (19, 32)] {
+                active[0] = active_x;
+                active[2] = 180 - active_x.max(1) - 1;
+                let v = views(&data, active);
+                let offsets: [(isize, isize); 4] = shifts;
+                if !covers_all_parities(&offsets) {
+                    continue;
+                }
+                let gains = [1.0, 1.02, 0.97, 1.05];
+                let variance = |s: f32| 0.37 * s.max(0.0) + 5.0;
+                let full = witness(&v, &offsets, &gains, variance, tile);
+                let part = witness_without_ptc(&v, &offsets, &gains, variance, tile);
+                let bits = |x: &[f32]| x.iter().map(|v| v.to_bits()).collect::<Vec<_>>();
+                assert_eq!(
+                    bits(&full.tile_z2),
+                    bits(&part.tile_z2),
+                    "{shifts:?} {tile}"
+                );
+                assert_eq!(full.mean_z2.to_bits(), part.mean_z2.to_bits());
+                assert_eq!(
+                    format!("{:?}", full.pair_shift),
+                    format!("{:?}", part.pair_shift)
+                );
+                assert_eq!(
+                    format!("{:?}", full.pair_shift_quadrants),
+                    format!("{:?}", part.pair_shift_quadrants)
+                );
+                assert_eq!(full.pair_members, part.pair_members);
+                assert_eq!((full.tile, full.tiles), (part.tile, part.tiles));
+                assert!(part.ptc.is_empty());
+            }
+        }
     }
 
     /// The strip-parallel column pass against the serial sweep it replaced,
