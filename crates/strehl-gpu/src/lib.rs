@@ -30,9 +30,11 @@ use strehl_core::pyramid::{BandMerge, BaseBand, Combine, FoldCombine, LevelScala
 use wgpu::util::DeviceExt;
 
 mod context;
+mod convolve;
 mod selftest;
 pub mod strict;
 pub use context::set_pipeline_cache_dir;
+pub use convolve::convolve;
 pub use selftest::self_test;
 
 const SHADER: &str = include_str!("fold.wgsl");

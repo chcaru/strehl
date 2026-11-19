@@ -431,6 +431,32 @@ REGISTRY: dict[str, Declared] = {
         ),
         note="Round-2 performance plan stages Q9a and Q0 (run-time dispatch).",
     ),
+    "STREHL_RESTORE_DEVICE": Declared(
+        kind="control",
+        default="on (the optical restoration's convolutions on the device when there is one)",
+        verified="measured",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/optical-restore.rs convolve(): `off` (or "
+            "STREHL_GPU_FOLD=off) keeps core::convolve on the CPU; otherwise "
+            "strehl_gpu::convolve, the same live taps in (ky, kx) order, a "
+            "multiply then an add each, mirrored borders. Bit-identical: device "
+            "test at radii 4/5/17/32 and every scarab convolution under "
+            "STREHL_RESTORE_CHECK=1."
+        ),
+        note="Round-2 performance plan stage Q8 (2026-11-18).",
+    ),
+    "STREHL_RESTORE_CHECK": Declared(
+        kind="diagnostic",
+        default="off",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/optical-restore.rs convolve(): `1` runs every device "
+            "convolution on the CPU too and fails unless bit-identical."
+        ),
+        note="Round-2 performance plan stage Q8 (2026-11-18).",
+    ),
     "STREHL_FOLD_TRACE": Declared(
         kind="diagnostic",
         default="off",

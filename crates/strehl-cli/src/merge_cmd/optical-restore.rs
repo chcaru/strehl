@@ -461,6 +461,41 @@ fn crop(planes: &[Vec<f32>], w: usize, x0: usize, y0: usize) -> Vec<Vec<f32>> {
         .collect()
 }
 
+/// `STREHL_RESTORE_DEVICE=off`: the restoration's convolutions on the CPU
+/// (`core::convolve`) rather than the device (`strehl_gpu::convolve`, the
+/// same operations in the same order; round-2 plan stage Q8).
+pub(super) const RESTORE_DEVICE_ENV: &str = "STREHL_RESTORE_DEVICE";
+
+/// `STREHL_RESTORE_CHECK=1`: every device convolution is also run on the
+/// CPU and the render fails unless the two are bit-identical.
+pub(super) const RESTORE_CHECK_ENV: &str = "STREHL_RESTORE_CHECK";
+
+/// `core::convolve`, on the device when there is one (and it has not been
+/// switched off), else on the CPU; the same bits either way (with
+/// [`RESTORE_CHECK_ENV`], checked).
+fn convolve(src: &[f32], w: usize, h: usize, k: &core::Kernel) -> Result<Vec<f32>> {
+    #[cfg(feature = "gpu")]
+    if !std::env::var(RESTORE_DEVICE_ENV).is_ok_and(|v| v.trim() == "off")
+        && std::env::var(super::GPU_FOLD_ENV).map_or(true, |v| v.trim() != "off")
+        && let Ok(out) = strehl_gpu::convolve(src, w, h, k.radius, &k.taps)
+    {
+        if std::env::var(RESTORE_CHECK_ENV).is_ok_and(|v| v.trim() == "1") {
+            let cpu = core::convolve(src, w, h, k);
+            ensure!(
+                cpu.iter()
+                    .zip(&out)
+                    .all(|(a, b)| a.to_bits() == b.to_bits()),
+                "{RESTORE_CHECK_ENV}: the device convolution differs from the CPU's"
+            );
+            eprintln!(
+                "optical restore : device convolution checked bit for bit ({RESTORE_CHECK_ENV})"
+            );
+        }
+        return Ok(out);
+    }
+    Ok(core::convolve(src, w, h, k))
+}
+
 /// Keep the two finished half-stacks (odd and even frames).
 pub(super) fn stash_halves(a: Vec<Vec<f32>>, b: Vec<Vec<f32>>) {
     if let Some(st) = state().as_mut() {
@@ -589,6 +624,18 @@ pub(super) fn restore(
     norm: Norm,
 ) -> Result<bool> {
     let started = Instant::now();
+    // `STREHL_FOLD_TRACE=1`: the restoration's phases, timed.
+    let trace = std::env::var(super::fold_trace::ENV).is_ok_and(|v| v.trim() == "1");
+    let mut last = Instant::now();
+    let mut phase = |name: &str| {
+        if trace {
+            eprintln!(
+                "restore trace   : {name} {:.0} ms",
+                last.elapsed().as_secs_f64() * 1e3
+            );
+        }
+        last = Instant::now();
+    };
     let sigma = sigma_t()?;
     let gather =
         gather_in_model()?.then(|| core::gather_table(strehl_core::align::Resampler::CatmullRom));
@@ -673,6 +720,7 @@ pub(super) fn restore(
             }
         }
     }
+    phase("tile spectra");
     ensure!(
         used >= MIN_TILES,
         "optical restoration: {used} usable in-focus tiles ({} planned, {no_ref} missing a reference frame, \
@@ -829,6 +877,7 @@ pub(super) fn restore(
             }))?,
         )?;
     }
+    phase("fits and kernel design");
     // Highlight guard: keep the unrestored value within about ten photosites
     // of a near-clipped sample, with a smooth hand-over (quad grid).
     let hotq: Vec<f32> = (0..gw * gh)
@@ -839,11 +888,12 @@ pub(super) fn restore(
     let soft = axial_colour::blur(&near, gw, gh, 2.0);
     let keep: Vec<f32> = soft.iter().map(|v| 1.0 - v.clamp(0.0, 1.0)).collect();
     let guarded = keep.iter().filter(|v| **v < 0.999).count() as f64 / keep.len() as f64;
+    phase("highlight guard");
     for c in 0..3 {
         let off = ROOT_OFFSET_DN * norm.scale(c);
         let x: Vec<f32> = rgb.par_chunks_exact(3).map(|p| p[c]).collect();
         let root: Vec<f32> = x.par_iter().map(|v| (v.max(0.0) + off).sqrt()).collect();
-        let y = core::convolve(&root, mw, mh, &kernels[c]);
+        let y = convolve(&root, mw, mh, &kernels[c])?;
         rgb.par_chunks_exact_mut(3)
             .zip(y.par_iter().zip(x.par_iter()))
             .enumerate()
@@ -852,6 +902,7 @@ pub(super) fn restore(
                 let k = keep[(i / mw / 2) * gw + (i % mw) / 2];
                 p[c] = x + k * (restored - x);
             });
+        phase("a channel's restoration");
     }
     // The measured chroma filter, on the restored image: per colour
     // difference, the Wiener filter of the difference the restored halves
@@ -894,7 +945,7 @@ pub(super) fn restore(
             let grid = core::radial_grid(&filters[k], 128);
             let kern = core::kernel(&grid, 128, MAX_RADIUS, TOLERANCE, (0.05, 0.45));
             let d: Vec<f32> = rgb.par_chunks_exact(3).map(|p| p[c] - p[1]).collect();
-            let fd = core::convolve(&d, mw, mh, &kern);
+            let fd = convolve(&d, mw, mh, &kern)?;
             rgb.par_chunks_exact_mut(3)
                 .zip(fd.par_iter())
                 .for_each(|(p, d)| p[c] = p[1] + d);
