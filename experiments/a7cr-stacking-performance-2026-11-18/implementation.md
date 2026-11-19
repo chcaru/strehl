@@ -155,6 +155,55 @@ The confidence pass is now most of a later desktop render; it gathers every plan
 the CPU (colour-carried, about 0.4 s of the machine a plane). Moving it to the device, where
 the fold already gathers the same planes bit for bit, is the next step there.
 
+## Stacking during capture in the desktop (MEASURED, 2026-11-19)
+
+The owner asked for stacking during capture from the Capture screen, and for the confidence
+map to be off by default. Both are built.
+
+- **The checker.** While the newest run registered with this PC's receiver has a capture
+  journal and no `result.json`, the desktop runs `strehl follow` on it. It runs as a child
+  at below-normal priority, with the shared cache and no inherited `STREHL_*` overrides,
+  the same environment its renders get. The Capture screen shows the plane journal: planes
+  checked, four-shot groups that pass, planes needing attention, retake focus positions and
+  alignment pairs. Once the checker has finished and the run verifies complete, the desktop
+  opens it in Projects and stacks it with the current settings. It does this only if that
+  interrupts nothing; otherwise it leaves a note. A run idle for 10 minutes with the camera
+  not capturing stops being followed.
+- **One checker per run.** `follow` now holds an exclusive operating-system lock beside its
+  journal. A second `follow` on the same run exits with an error naming the lock. A second
+  desktop window shows the first one's progress instead of checking again, and takes over
+  if that checker ends while the capture is still running.
+- **A receiver defect this exposed.** The receiver replaces `events.jsonl` with
+  `MoveFileExW`. On Windows that fails with "Access is denied" while another process has the
+  file open, even one opened as the engine opens it. With a checker reading the journal
+  every second, an update can collide with a read. The camera host retries for 10 s, so a
+  capture would have recovered, but each collision showed "Waiting for PC receiver" and
+  stalled the queue. The receiver now retries the replace for up to 1 s. A test holds a
+  reader open across an update, and it fails without the retry. The first end-to-end
+  attempt hit exactly this in the replay script, which replaced the file the same way.
+- **The confidence map** is off for new stacks; saved recipes keep their own setting.
+- `scripts/replay-capture.py` re-creates a recorded run file by file at its recorded pace
+  (scaled), hard-linking RAWs on the same volume. It can also register the run with a
+  scratch receiver configuration.
+
+The test was a release desktop, headless on the Capture tab, with `LOCALAPPDATA` pointed at
+an empty scratch folder, following a 3x replay of the scarab capture: 196 four-shot planes,
+784 RAWs, 1072 s.
+
+| Scarab capture, desktop, empty cache | Wait after the capture ends |
+| --- | --- |
+| Before this round's changes (confidence map on) | 97.4 s (the first render above) |
+| Confidence map off, stacked after the capture (no checker) | 51.8 s |
+| Stacked during the capture | 27.7 s: `result.json` landed 01:22:02.9, photograph saved 01:22:30.5 |
+
+During the capture the checker never fell more than one plane behind arrival. The closing
+stack took 1413 of 1413 alignment pairs from the edge journal and reused 171 + 25 group
+measurements, measuring none (engine 8.3 + 17.6 s). The master is `7F06B3CB...` in all three
+rows. The result is `579111D0...`, which is `FA5E8482...` once the TIFF's Software tag
+carries the earlier build's identity. Stacking during the capture therefore writes the same
+photograph as stacking afterwards. At the real pace (one plane every 16 s) the checker is
+idle most of the time.
+
 ## Not built
 
 Q1b (one stack context), Q1f, Q5d-e (decoding into upload memory, helper placement; Q5c

@@ -66,6 +66,24 @@ measurements, verified-archive records and GPU setup are kept, keyed by what the
 were computed from, so a later render of the same capture skips them. The render
 log names the folder.
 
+**Stack while capturing** (on the Capture screen, on by default) puts that cache to
+work during the capture. When the newest run registered with this PC's receiver
+has a capture journal and no result yet, the desktop runs the engine's
+`strehl follow` on it at below-normal priority. As each focal plane's RAWs all have
+durable receipts, it decodes the plane, checks a four-shot group as the stack
+will, and measures the plane's alignment pairs. The panel shows the planes checked,
+the four-shot groups that pass, the planes the stack will not assemble as recorded
+and the focus positions worth retaking. **Stack when the capture finishes** then
+opens the completed capture in Projects and starts the stack with the current
+settings, which reads those measurements instead of repeating them. It does this
+only when nothing else is running and either Capture is the open tab or no other
+bracket is loaded; otherwise it leaves a note. A stopped or incomplete capture is
+never stacked automatically. Only one checker runs per capture, whichever window or
+command started it; another Strehl window shows its progress. The checker's
+journal and log are in the cache's `follow` folder. Restarting it resumes where it
+stopped, and a run with no new RAWs for 10 minutes, with the camera idle, is no
+longer followed. Both switches reset to on when the desktop starts.
+
 **Working with several passes of one subject**
 
 Multi-stack sessions are experimental and only in builds with the `multi-stack`
@@ -220,8 +238,9 @@ regions on the original camera JPEG are an approximate normalized projection,
 not a measured registration. A source comparison does not turn camera pixels into
 an aligned diagnostic surface.
 
-**Save confidence map** adds an observation-balance pass and is enabled for new
-stacks. Saved recipes retain their own setting. When present, the map can be viewed
+**Save confidence map** adds an observation-balance pass: a second decode and warp
+of every frame on the CPU, which can take longer than the stack itself. It is off
+for new stacks; saved recipes retain their own setting. When present, the map can be viewed
 as **Observation balance**. It describes the rank balance of aligned observations;
 it is not a confidence probability or defect detector. Missing observations and
 bounded diagnostic retention remain explicit. **Activity** provides the engine

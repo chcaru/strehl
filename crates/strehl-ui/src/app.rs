@@ -170,6 +170,8 @@ pub struct StrehlApp {
     process_view: bool,
     sidebar: Option<workspace::Sidebar>,
     capture: crate::capture_workspace::CaptureWorkspace,
+    /// A finished capture opened in Projects, stacked once its frames are read.
+    stack_when_read: Option<PathBuf>,
     project_explorer: crate::project_explorer::ProjectExplorer,
     active_stack: Option<crate::workspace_history::NodeId>,
     pending_stack: Option<crate::workspace_history::NodeId>,
@@ -292,6 +294,7 @@ impl StrehlApp {
             process_view: true,
             sidebar: Some(workspace::Sidebar::Projects),
             capture: crate::capture_workspace::CaptureWorkspace::new(launch.capture_settings),
+            stack_when_read: None,
             project_explorer: Default::default(),
             active_stack: None,
             pending_stack: None,

@@ -169,8 +169,13 @@ Since 2026-11-14 the engine has three pieces of this, from the command line only
   command, and at the end runs the ordinary stack, so the final photograph is the
   same as a later `strehl stack`.
 
-There is still no live alignment or provisional stacked photograph, and none of
-this is in the native UI yet.
+Since then `follow` also measures each plane's alignment pairs as it arrives, and
+one checker runs per run (it holds a lock beside its journal). The desktop's Capture
+screen runs it on the capture being written (**Stack while capturing**, on by
+default). When the capture completes, it opens it in Projects and stacks it there,
+reusing every check and alignment pair; see the
+[desktop README](../crates/strehl-ui/README.md). There is still no provisional
+stacked photograph during the capture.
 
 The controller also accepts `exposure {iso, shutter}` (camera property values,
 manual mode only, restored when the camera is released) and

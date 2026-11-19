@@ -59,7 +59,7 @@ fn session_workspace_old_recipes_keep_ordinary_defaults_and_no_session_field() {
             .get("session")
             .is_none()
     );
-    assert!(settings.confidence_map && settings.correct_lateral_ca);
+    assert!(!settings.confidence_map && settings.correct_lateral_ca);
 }
 
 #[test]

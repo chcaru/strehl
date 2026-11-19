@@ -216,6 +216,15 @@ contains pairing credentials; do not include it in reports. Capture screenshots
 read live state/preview but never initiate an exposure. `open_capture` selects
 the tab in an existing session. Snapshots expose sanitized `capture` state,
 preview dimensions, receiver status and completed-stack candidates.
+`capture.in_progress` names the run being written (newest registered run with a
+capture journal and no `result.json`). `capture.follow` reports stacking during
+capture: the switches, and under `checker` the followed run, its `state`
+(`running`, `finished`, `failed`, `stopped`), whether it only `observing` another
+process's checker, and the counts `checked`, `passed`, `attention`,
+`retake_positions` and `align_pairs`. `note` says what became of the last
+finished capture. `scripts/replay-capture.py` re-creates a recorded run file by file
+at its recorded pace and can register it with a scratch receiver configuration.
+Use it to exercise this without a camera.
 
 `capture_command` carries a `request` with a unique `id`, the camera's
 `camera_revision`, `plan_revision`, `sequence_id`, and a `command` such as

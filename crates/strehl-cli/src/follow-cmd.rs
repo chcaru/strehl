@@ -46,6 +46,12 @@ pub struct FollowArgs {
 }
 
 fn journal_path(dir: &Path) -> Result<PathBuf> {
+    journal_in(&crate::align_cmd::cache_root(), dir)
+}
+
+/// The run's plane journal under the cache root `root`: one JSON line per
+/// checked plane, which the desktop reads to show progress.
+pub(crate) fn journal_in(root: &Path, dir: &Path) -> Result<PathBuf> {
     let canonical = dir
         .canonicalize()
         .with_context(|| format!("resolve {}", dir.display()))?;
@@ -60,7 +66,7 @@ fn journal_path(dir: &Path) -> Result<PathBuf> {
         canonical.to_string_lossy().to_lowercase().hash(&mut h);
         h.finish()
     };
-    let root = crate::align_cmd::cache_root().join("follow");
+    let root = root.join("follow");
     std::fs::create_dir_all(&root)?;
     Ok(root.join(format!("{name}-{digest:016x}.jsonl")))
 }
@@ -163,6 +169,29 @@ pub fn run(args: &FollowArgs) -> Result<()> {
         std::thread::sleep(Duration::from_millis(args.interval_ms));
     }
     let journal = journal_path(&args.dir)?;
+    // One checker per run: a second would measure every plane again. The
+    // lock is the operating system's, so it ends with this process however
+    // it ends; the desktop reads it to show another checker's progress.
+    let lock_path = crate::follow_lock_path(&journal);
+    let _lock = {
+        let file = std::fs::OpenOptions::new()
+            .create(true)
+            .truncate(false)
+            .write(true)
+            .open(&lock_path)
+            .with_context(|| format!("open {}", lock_path.display()))?;
+        match file.try_lock() {
+            Ok(()) => file,
+            Err(std::fs::TryLockError::WouldBlock) => anyhow::bail!(
+                "{} is already being followed by another process ({} is locked)",
+                args.dir.display(),
+                lock_path.display()
+            ),
+            Err(std::fs::TryLockError::Error(e)) => {
+                return Err(e).with_context(|| format!("lock {}", lock_path.display()));
+            }
+        }
+    };
     // Resume: planes already checked in an earlier session.
     let mut done: BTreeMap<u64, Value> = BTreeMap::new();
     if let Ok(text) = std::fs::read_to_string(&journal) {

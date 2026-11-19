@@ -269,7 +269,7 @@ impl ObservationBalance {
                 theme::MUTED,
             );
             ui.interact(rect, ui.id().with("confidence-unavailable"), Sense::hover())
-                .on_hover_text(if self.pending.is_some() { "Loading the saved confidence map and checking its image dimensions." } else { "This result has no usable confidence map: it may be absent, unreadable or belong to another image domain. New stacks save it by default; for a reopened stack enable Save confidence map in Adjust, then Stack. The map measures observation balance, not image quality." });
+                .on_hover_text(if self.pending.is_some() { "Loading the saved confidence map and checking its image dimensions." } else { "This result has no usable confidence map: it may be absent, unreadable or belong to another image domain. To save one, enable Save confidence map in Adjust, then Stack. The map measures observation balance, not image quality." });
             return false;
         }
         let response = ui.interact(rect, ui.id().with("observation-balance"), Sense::click());

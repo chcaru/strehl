@@ -533,7 +533,25 @@ async fn receive_file(
             prefix == old,
             "Journal update must preserve all prior records"
         );
-        temp.persist(&destination).map_err(|e| e.error)?;
+        // Windows refuses to replace a file another process has open, and
+        // the engine following this capture reads the journal every second.
+        // Such a read takes milliseconds: try again briefly rather than
+        // failing the upload.
+        let mut temp = temp;
+        let mut attempts = 0;
+        loop {
+            match temp.persist(&destination) {
+                Ok(_) => break,
+                Err(e)
+                    if e.error.kind() == std::io::ErrorKind::PermissionDenied && attempts < 40 =>
+                {
+                    temp = e.file;
+                    attempts += 1;
+                    tokio::time::sleep(std::time::Duration::from_millis(25)).await;
+                }
+                Err(e) => return Err(e.error.into()),
+            }
+        }
     } else {
         temp.persist_noclobber(&destination).map_err(|e| e.error)?;
     }
@@ -557,6 +575,56 @@ async fn receive_file(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The engine following a capture reads its journal every second. An
+    /// update that lands during such a read must still be saved.
+    #[cfg(windows)]
+    #[tokio::test]
+    async fn journal_update_succeeds_while_a_reader_has_it_open() {
+        let temp = tempfile::tempdir().unwrap();
+        let config = temp.path().join("receiver.json");
+        let root = temp.path().join("images");
+        std::fs::create_dir_all(&root).unwrap();
+        save_json(
+            &config,
+            &json!({"bind":"127.0.0.1:0","lan":"10.0.0.0/24","key":"a".repeat(48),"folder":root}),
+        )
+        .unwrap();
+        let s = Receiver::open(config).unwrap();
+        let run = "stack-journal-reader";
+        assert!(
+            create_run(State(s.clone()), UrlPath(run.into()))
+                .await
+                .status()
+                .is_success()
+        );
+        let upload = |body: &'static [u8]| {
+            let sum: String = Sha256::digest(body)
+                .iter()
+                .map(|b| format!("{b:02x}"))
+                .collect();
+            Request::builder()
+                .header("x-content-sha256", sum)
+                .header(header::CONTENT_LENGTH, body.len())
+                .body(Body::from(body))
+                .unwrap()
+        };
+        receive_file(&s, run, "events.jsonl", upload(b"{\"a\":1}\n"))
+            .await
+            .unwrap();
+        let journal = root.join(run).join("events.jsonl");
+        // A reader opened the way the engine opens it, held across the update.
+        let reader = std::fs::File::open(&journal).unwrap();
+        let release = std::thread::spawn(move || {
+            std::thread::sleep(std::time::Duration::from_millis(300));
+            drop(reader);
+        });
+        receive_file(&s, run, "events.jsonl", upload(b"{\"a\":1}\n{\"b\":2}\n"))
+            .await
+            .unwrap();
+        release.join().unwrap();
+        assert_eq!(std::fs::read(&journal).unwrap(), b"{\"a\":1}\n{\"b\":2}\n");
+    }
 
     #[tokio::test]
     async fn default_archive_pins_runs_validates_retries_and_migrates_old_settings() {

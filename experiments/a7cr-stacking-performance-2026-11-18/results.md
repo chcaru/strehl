@@ -26,7 +26,7 @@ build of the working tree (`cbca976b7e96-dirty`, `--features gpu`), which is not
 | `evidence/proto-bench.txt` | Predictor and alignment-search prototypes (bit-identity, then time); the group check on one thread |
 | `evidence/fmt-bench.txt` | Bits per sample of candidate codes for a second archive format |
 | `anchors.md` | Where each stage's code is (functions, approximate lines on 2026-11-18) |
-| `implementation.md` | The stages built on 2026-11-18: results per stage, what was measured and not kept, the desktop's four-shot and cache wiring, what is not built |
+| `implementation.md` | The stages built on 2026-11-18: results per stage, what was measured and not kept, the desktop's four-shot and cache wiring, stacking during capture in the desktop, what is not built |
 | `evidence/implementation-runs.txt` | Every render of the implementation: binary, environment, wall, CPU, memory, host load, output SHA-256 |
 | `evidence/q18-hit-rate.txt` | How well the preview predicts the restoration's reference frames (stage Q18's simulation) |
 | `trace.py`, `stages.py`, `threads.py` | Run a command under a 100 ms timeline (process CPU, bytes read, drive reads, memory, device use, per-thread CPU) and cut it at the render's banner lines |

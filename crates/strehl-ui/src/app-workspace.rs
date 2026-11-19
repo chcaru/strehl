@@ -33,6 +33,57 @@ impl StrehlApp {
         if self.sidebar == Some(Sidebar::Capture) {
             self.capture.activate(ctx);
         }
+        self.capture.poll_follow(self.engine.as_deref());
+        if let Some(folder) = self.capture.take_finished_capture() {
+            let name = folder
+                .file_name()
+                .unwrap_or_default()
+                .to_string_lossy()
+                .into_owned();
+            // A finished capture opens itself only when that interrupts
+            // nothing: no operation in flight, and either Capture is the open
+            // tab or no other bracket is loaded.
+            let busy = self.job.is_some()
+                || self.scan.is_some()
+                || self.replay.is_some()
+                || self.session_import.is_some()
+                || self.picker_active();
+            if busy || !(self.sidebar == Some(Sidebar::Capture) || self.stack.is_none()) {
+                self.capture.follow_note = Some(format!(
+                    "{name} is checked. Open it from Completed captures to stack it."
+                ));
+            } else {
+                self.capture.follow_note = Some(format!("Opened {name} in Projects."));
+                self.import(folder.clone());
+                self.stack_when_read = Some(folder);
+            }
+        }
+        if let Some(folder) = &self.stack_when_read
+            && self.scan.is_none()
+        {
+            let same = self.stack.as_ref().is_some_and(|stack| {
+                std::fs::canonicalize(&stack.directory).ok() == std::fs::canonicalize(folder).ok()
+            });
+            let name = folder
+                .file_name()
+                .unwrap_or_default()
+                .to_string_lossy()
+                .into_owned();
+            self.stack_when_read = None;
+            if same {
+                match self.stack_start_blocker() {
+                    None => {
+                        self.start_render();
+                        self.capture.follow_note = Some(format!("Stacking {name} in Projects."));
+                    }
+                    Some(reason) => {
+                        self.capture.follow_note = Some(format!(
+                            "{name} is open in Projects. Not stacked: {reason}."
+                        ));
+                    }
+                }
+            }
+        }
         if let Some(folder) = self.capture.take_handoff() {
             if self.job.is_some()
                 || self.scan.is_some()

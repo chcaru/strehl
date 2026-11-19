@@ -358,6 +358,7 @@ pub struct RenderSettings {
     pub frame_limit: Option<usize>,
     pub auto_exposure: bool,
     /// An optional second pass writes a centrality rank, not a quality score.
+    /// Off for new stacks: it decodes and warps every frame again on the CPU.
     pub confidence_map: bool,
 }
 
@@ -376,7 +377,7 @@ impl Default for RenderSettings {
             crop_to_coverage: false,
             frame_limit: None,
             auto_exposure: false,
-            confidence_map: true,
+            confidence_map: false,
         }
     }
 }
@@ -1805,11 +1806,6 @@ pub(crate) mod tests {
                 "--srgb",
                 "--out",
                 "new output/result.partial.tiff",
-                "--confidence-map",
-                Path::new("new output")
-                    .join("confidence.partial.tiff")
-                    .to_str()
-                    .unwrap(),
             ]
         );
         request.exposure_ev = Some(-1.5);
@@ -1823,6 +1819,7 @@ pub(crate) mod tests {
             binned: true,
             correct_lateral_ca: false,
             crop_to_coverage: true,
+            confidence_map: true,
             ..RenderSettings::default()
         };
         let explicit = render_command(&request, &request.source, partial).unwrap();
@@ -1841,6 +1838,7 @@ pub(crate) mod tests {
             "--fix-ca=off",
             "--refine-ca=off",
             "--cover=crop",
+            "--confidence-map",
         ] {
             assert!(
                 arguments.iter().any(|value| value == argument),
@@ -1919,7 +1917,7 @@ pub(crate) mod tests {
         let legacy = r#"{"pyramid_bands":8,"pyramid_exponent":2.25,"pyramid_sharpen":1.6,"resampler":"Lanczos3","binned":true,"correct_lateral_ca":false,"crop_to_coverage":true}"#;
         let mut settings: RenderSettings = serde_json::from_str(legacy).unwrap();
         assert_eq!(settings.frame_limit, None);
-        assert!(!settings.auto_exposure && settings.confidence_map);
+        assert!(!settings.auto_exposure && !settings.confidence_map);
         assert_eq!(settings.pyramid_bands, Some(8));
         assert_eq!(settings.resampler, Resampler::Lanczos3);
         settings.frame_limit = Some(17);

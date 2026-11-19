@@ -109,8 +109,17 @@ pub(crate) struct CompletedStack {
     pub planes: usize,
     pub shots_per_plane: usize,
 }
+/// The newest run registered with this PC's receiver while it has no
+/// `result.json`: the capture being written now, or one that ended without
+/// finishing. `idle` is the time since its records last changed.
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) struct InProgress {
+    pub folder: PathBuf,
+    pub idle: Duration,
+}
 #[derive(Clone, Default)]
 pub(crate) struct Snapshot {
+    pub in_progress: Option<InProgress>,
     pub state: Value,
     pub online: bool,
     pub observed: Option<Instant>,
@@ -138,7 +147,8 @@ impl Snapshot {
             "connection_error":self.connection_error,"command_error":self.command_error,"notice":self.notice,
             "receiver":self.receiver,"receiver_error":self.receiver_error,"completed":self.completed,
             "preview":self.preview.as_ref().map(|(generation,image)|json!({"generation":generation,"width":image.width(),"height":image.height()})),
-            "preview_error":self.preview_error})
+            "preview_error":self.preview_error,
+            "in_progress":self.in_progress.as_ref().map(|r| json!({"folder":r.folder,"idle_seconds":r.idle.as_secs_f64()}))})
     }
     pub fn request(&self, command: Command) -> Result<CommandRequest> {
         ensure!(
@@ -491,6 +501,8 @@ fn run(
             }
         }
         if Instant::now() >= receiver_due {
+            let in_progress = in_progress_run(&config.receiver_config).unwrap_or(None);
+            output.lock().unwrap().in_progress = in_progress;
             let result = receiver_config(&config)
                 .and_then(|(settings, url)| get_json(&client, &url, "/api/status", &settings.key));
             let mut s = output.lock().unwrap();
@@ -595,16 +607,44 @@ pub(crate) fn verify_completed(folder: &Path) -> Result<CompletedStack> {
         shots_per_plane: shots,
     })
 }
-fn completed_stacks(config_path: &Path) -> Result<Vec<CompletedStack>> {
+/// The receiver's run folders, newest first (identifiers are
+/// `stack-<unix ms>-<pid>`, so their order is their start order).
+fn registered_runs(config_path: &Path) -> Result<Vec<PathBuf>> {
     let registry: BTreeMap<String, Value> = serde_json::from_slice(&read_file(
         &config_path.with_extension("runs.json"),
         8 * 1024 * 1024,
     )?)?;
+    Ok(registry
+        .values()
+        .rev()
+        .take(32)
+        .filter_map(|entry| entry.as_str().or_else(|| entry["folder"].as_str()))
+        .map(PathBuf::from)
+        .collect())
+}
+/// See [`InProgress`]. Only the newest registered run is considered, and only
+/// once its capture journal exists (the engine follows nothing without it).
+pub(crate) fn in_progress_run(config_path: &Path) -> Result<Option<InProgress>> {
+    let Some(folder) = registered_runs(config_path)?.into_iter().next() else {
+        return Ok(None);
+    };
+    let events = folder.join("events.jsonl");
+    if folder.join("result.json").exists() || !events.is_file() {
+        return Ok(None);
+    }
+    let changed = [events, folder.join("transfer-receipts.jsonl")]
+        .iter()
+        .filter_map(|p| p.metadata().and_then(|m| m.modified()).ok())
+        .max();
+    let idle = changed
+        .and_then(|t| t.elapsed().ok())
+        .unwrap_or(Duration::ZERO);
+    Ok(Some(InProgress { folder, idle }))
+}
+fn completed_stacks(config_path: &Path) -> Result<Vec<CompletedStack>> {
     let mut completed = Vec::new();
-    for (_, entry) in registry.iter().rev().take(32) {
-        if let Some(folder) = entry.as_str().or_else(|| entry["folder"].as_str())
-            && let Ok(stack) = verify_completed(Path::new(folder))
-        {
+    for folder in registered_runs(config_path)? {
+        if let Ok(stack) = verify_completed(&folder) {
             completed.push(stack);
         }
         if completed.len() == 8 {
@@ -689,6 +729,39 @@ mod tests {
             verify_completed(folder).is_err(),
             "stopped stacks must not be promoted"
         );
+    }
+    #[test]
+    fn only_the_newest_run_with_a_journal_and_no_result_is_in_progress() {
+        let dir = tempfile::tempdir().unwrap();
+        let config = dir.path().join("receiver.json");
+        assert!(in_progress_run(&config).is_err(), "no registry");
+        let old = dir.path().join("stack-1794000000000-1");
+        let new = dir.path().join("stack-1794000000500-2");
+        for run in [&old, &new] {
+            std::fs::create_dir(run).unwrap();
+        }
+        save_json(
+            &config.with_extension("runs.json"),
+            &json!({"stack-1794000000500-2":{"folder":new},"stack-1794000000000-1":old}),
+        )
+        .unwrap();
+        assert_eq!(
+            in_progress_run(&config).unwrap(),
+            None,
+            "no capture journal yet"
+        );
+        std::fs::write(old.join("events.jsonl"), b"{}\n").unwrap();
+        assert_eq!(
+            in_progress_run(&config).unwrap(),
+            None,
+            "an older run is never followed"
+        );
+        std::fs::write(new.join("events.jsonl"), b"{}\n").unwrap();
+        let found = in_progress_run(&config).unwrap().unwrap();
+        assert_eq!(found.folder, new);
+        assert!(found.idle < Duration::from_secs(60));
+        std::fs::write(new.join("result.json"), b"{}").unwrap();
+        assert_eq!(in_progress_run(&config).unwrap(), None, "finished");
     }
     #[test]
     fn lost_acknowledgement_does_not_replay_an_exposure() {

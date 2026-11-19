@@ -15,6 +15,8 @@ use strehl_capture::{
     power::Outlet,
     session::{Command, CommandRequest},
 };
+#[path = "capture-follow.rs"]
+mod follow;
 #[path = "capture-schedule.rs"]
 mod schedule_ui;
 
@@ -49,6 +51,16 @@ pub(crate) struct CaptureWorkspace {
     focus_flight: Option<(u16, u64, Instant)>,
     schedule_ui: schedule_ui::ScheduleUi,
     warmup_edit: Option<u32>,
+    /// Stacking during capture: check and align planes as they arrive.
+    pub follow_enabled: bool,
+    /// Open a finished, checked capture in Projects and stack it.
+    pub stack_when_done: bool,
+    follower: Option<follow::Follower>,
+    /// The run whose checker could not start; not retried until asked.
+    follow_refused: Option<(PathBuf, String)>,
+    finished_capture: Option<PathBuf>,
+    /// What became of the last finished capture, from the workspace.
+    pub follow_note: Option<String>,
 }
 impl CaptureWorkspace {
     pub fn new(path: Option<PathBuf>) -> Self {
@@ -86,7 +98,80 @@ impl CaptureWorkspace {
             focus_flight: None,
             schedule_ui: Default::default(),
             warmup_edit: None,
+            follow_enabled: true,
+            stack_when_done: true,
+            follower: None,
+            follow_refused: None,
+            finished_capture: None,
+            follow_note: None,
         }
+    }
+    /// Starts, watches and ends the engine's checker for the capture being
+    /// written (see `capture-follow.rs`). Called every frame, whichever tab
+    /// is open, once Capture has connected.
+    pub fn poll_follow(&mut self, engine: Option<&std::path::Path>) {
+        let Some(connection) = &self.connection else {
+            return;
+        };
+        let s = connection.snapshot();
+        let capturing = matches!(s.state["phase"].as_str(), Some("capturing" | "paused"));
+        let current = s.in_progress.as_ref();
+        if let Some(f) = &mut self.follower {
+            f.poll();
+            if f.running() {
+                let followed = current.filter(|r| r.folder == f.run);
+                if !self.follow_enabled {
+                    f.stop("Turned off; the planes checked so far are kept");
+                } else if current.is_some()
+                    && followed.is_none()
+                    && !f.run.join("result.json").exists()
+                {
+                    f.stop("A newer capture started");
+                } else if followed.is_some_and(|r| r.idle > follow::ABANDONED) && !capturing {
+                    f.stop("No new RAWs for 10 minutes; the planes checked so far are kept");
+                }
+            }
+            if f.state == follow::State::Finished && !f.offered {
+                f.offered = true;
+                if self.stack_when_done && crate::capture_client::verify_completed(&f.run).is_ok() {
+                    self.finished_capture = Some(f.run.clone());
+                }
+            }
+        }
+        let Some(run) = current else { return };
+        let fresh = self
+            .follower
+            .as_ref()
+            .is_none_or(|f| !f.running() && (f.run != run.folder || f.observing));
+        let refused = self
+            .follow_refused
+            .as_ref()
+            .is_some_and(|(r, _)| *r == run.folder);
+        if self.follow_enabled
+            && fresh
+            && !refused
+            && (capturing || run.idle < follow::ABANDONED)
+            && let Some(engine) = engine
+        {
+            match follow::Follower::start(engine, &run.folder) {
+                Ok(f) => {
+                    self.follower = Some(f);
+                    self.follow_note = None;
+                }
+                Err(e) => self.follow_refused = Some((run.folder.clone(), format!("{e:#}"))),
+            }
+        }
+    }
+    /// A capture that finished, was checked while it ran, and is to be
+    /// opened in Projects and stacked.
+    pub fn take_finished_capture(&mut self) -> Option<PathBuf> {
+        self.finished_capture.take()
+    }
+    fn follow_public(&self) -> Value {
+        json!({"enabled":self.follow_enabled,"stack_when_done":self.stack_when_done,
+            "checker":self.follower.as_ref().map(follow::Follower::public),
+            "refused":self.follow_refused.as_ref().map(|(run, e)| json!({"run":run,"error":e})),
+            "note":self.follow_note})
     }
     pub fn activate(&mut self, ctx: &egui::Context) {
         if self.connection.is_none() {
@@ -97,11 +182,25 @@ impl CaptureWorkspace {
         }
     }
     pub fn snapshot(&self) -> Value {
-        self.connection
+        let mut value = self
+            .connection
             .as_ref()
             .map_or(json!({"online":false,"initialized":false}), |c| {
                 c.snapshot().public()
-            })
+            });
+        value["follow"] = self.follow_public();
+        value
+    }
+    /// Turns stacking during capture on or off. Turning it on, or retrying,
+    /// lets a stopped or failed checker start again.
+    pub fn set_follow(&mut self, enabled: bool) {
+        self.follow_enabled = enabled;
+        if enabled {
+            self.follow_refused = None;
+            if self.follower.as_ref().is_some_and(|f| !f.running()) {
+                self.follower = None;
+            }
+        }
     }
     pub fn ready_for_screenshot(&self) -> bool {
         // The background thread may publish new status halfway through paint.
@@ -247,6 +346,10 @@ impl CaptureWorkspace {
                         ui.separator();
                         ui.add_space(10.0);
                         self.storage_ui(ui, &s);
+                        ui.add_space(12.0);
+                        ui.separator();
+                        ui.add_space(10.0);
+                        self.follow_ui(ui, &s);
                         ui.add_space(12.0);
                         ui.separator();
                         ui.add_space(10.0);
@@ -786,6 +889,107 @@ impl CaptureWorkspace {
             }
         }
     }
+    fn follow_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot) {
+        ui.label(RichText::new("Stack while capturing").strong());
+        let mut enabled = self.follow_enabled;
+        if ui
+            .checkbox(&mut enabled, "Check and align planes as they arrive")
+            .on_hover_text("Each focal plane is decoded, checked and aligned as soon as all its RAWs are saved on this PC. The final stack reuses that work, so it finishes sooner. Runs at low priority.")
+            .changed()
+        {
+            self.set_follow(enabled);
+        }
+        ui.add_enabled(
+            self.follow_enabled,
+            egui::Checkbox::new(&mut self.stack_when_done, "Stack when the capture finishes"),
+        )
+        .on_hover_text("Open the finished capture in Projects and start the stack with your current settings. Skipped while another stack or import is running.");
+        let saved = s.state["saved"].as_u64();
+        match &self.follower {
+            Some(f) => {
+                let p = &f.progress;
+                let name = f.run.file_name().unwrap_or_default().to_string_lossy();
+                let counts = format!(
+                    "{} planes checked{}",
+                    p.checked,
+                    if p.passed > 0 {
+                        format!(" · {} four-shot groups pass", p.passed)
+                    } else {
+                        String::new()
+                    }
+                );
+                match &f.state {
+                    follow::State::Running => {
+                        ui.horizontal_wrapped(|ui| {
+                            ui.spinner();
+                            ui.label(match saved {
+                                Some(saved) if saved > p.checked as u64 => {
+                                    format!("{counts} · {saved} saved")
+                                }
+                                _ => counts.clone(),
+                            });
+                        });
+                        ui.small(if f.observing {
+                            format!("{name} is being checked by another Strehl window")
+                        } else {
+                            format!("Following {name}")
+                        });
+                    }
+                    follow::State::Finished => {
+                        ui.colored_label(GREEN, format!("Capture checked · {counts}"));
+                    }
+                    follow::State::Failed(e) => {
+                        ui.colored_label(AMBER, format!("Checking stopped: {e}"));
+                        ui.small(format!("{counts}. Log: {}", f.log.display()));
+                    }
+                    follow::State::Stopped(why) => {
+                        ui.colored_label(MUTED, format!("{why}. {counts}."));
+                    }
+                }
+                if p.align_pairs > 0 {
+                    ui.small(format!("{} alignment pairs measured", p.align_pairs));
+                }
+                if p.attention > 0 {
+                    ui.colored_label(
+                        AMBER,
+                        format!(
+                            "{} plane{} the stack will not assemble as recorded",
+                            p.attention,
+                            if p.attention == 1 { "" } else { "s" }
+                        ),
+                    );
+                }
+                if !p.retake.is_empty() {
+                    let shown: Vec<String> = p.retake.iter().take(8).map(u64::to_string).collect();
+                    ui.small(format!(
+                        "Worth retaking at focus {}{}",
+                        shown.join(", "),
+                        if p.retake.len() > 8 { ", …" } else { "" }
+                    ));
+                }
+            }
+            None if !self.follow_enabled => {
+                ui.small("Off. A capture is stacked from the start when you open it.");
+            }
+            None => {
+                ui.small("Starts with the next capture saved on this PC.");
+            }
+        }
+        if let Some((_, e)) = &self.follow_refused {
+            ui.colored_label(AMBER, format!("Could not start checking: {e}"));
+        }
+        let retry = self.follow_refused.is_some()
+            || self
+                .follower
+                .as_ref()
+                .is_some_and(|f| matches!(f.state, follow::State::Failed(_)));
+        if retry && self.follow_enabled && ui.button("Try again").clicked() {
+            self.set_follow(true);
+        }
+        if let Some(note) = &self.follow_note {
+            ui.small(note);
+        }
+    }
     fn completed_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot, can_import: bool) {
         ui.label(RichText::new("Completed captures").strong());
         if s.completed.is_empty() {
@@ -830,7 +1034,7 @@ impl CaptureWorkspace {
             let result = self.import_completed(self.selected_stack);
             self.record(result);
         }
-        ui.small("Open the complete bracket for processing. Streaming reconstruction comes next.");
+        ui.small("Open the complete bracket for processing.");
     }
     fn sequence_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot) {
         let phase = s.state["phase"].as_str().unwrap_or("disconnected");

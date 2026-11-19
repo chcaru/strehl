@@ -1003,6 +1003,19 @@ pub fn default_cache_root() -> PathBuf {
     align_cmd::default_cache_root()
 }
 
+/// Where `strehl follow <run>` with `STREHL_CACHE_DIR=cache_root` keeps the
+/// run's plane journal: one JSON line per checked focal plane (`plane`,
+/// `target`, `verdict`, `retake`, `align_pairs`, ...). Creates its folder.
+pub fn follow_journal_path(cache_root: &Path, run: &Path) -> Result<PathBuf> {
+    follow_cmd::journal_in(cache_root, run)
+}
+
+/// The file a running `strehl follow` holds an exclusive lock on, beside
+/// [`follow_journal_path`]: locked means the run is being checked now.
+pub fn follow_lock_path(journal: &Path) -> PathBuf {
+    journal.with_extension("lock")
+}
+
 /// Run the same command-line engine used by the standalone executable.
 ///
 /// Arguments include the program name, as with `std::env::args_os()`.
