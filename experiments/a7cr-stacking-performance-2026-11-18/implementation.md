@@ -16,12 +16,13 @@ went around the cache.
 
 | Render | Round 1 final | Now | What bounds it now |
 | --- | --- | --- | --- |
-| Later render, GPU route, stack on D: | 45.6 s (49 s in the plan's runs) | 23.0-23.8 s | the main fold reads 47.5 GB from D: in 10.6 s (the drive's floor is 8.3 s); preview 4 s; reference tiles; restoration |
-| The same with no switch set (`auto`, the new default) | CPU route, 197.5 s | 25.2 s (self-test recorded on the first run) | as above |
-| First render (empty cache folder: no map, no journal) | 107.7 s (plan's run); 83.2 s at the start of Q3 | 48.8 s | group checks on the decoder threads (about 1.6 s a plane), alignment about 5.6 s |
-| CPU route, full stack | 197.5 s | 181.3 s | the CPU fold (plan Q15, not built) |
-| Process CPU, later render | 799 s | 335-345 s | |
-| Peak private memory, later render | 32.6 GB | 26.7-27.1 GB | |
+| Later render, GPU route, stack on D: | 45.6 s (49 s in the plan's runs) | 19.6-20.5 s (after Q18; 23.0-23.8 s before it) | the main fold, about 10 s: decoders 84 % busy in an 18-plane window behind an in-order fold thread that copies each plane into upload memory (4.3 s); preview 4 s; restoration |
+| The same with no switch set (`auto`, the new default) | CPU route, 197.5 s | 25.2 s at Q0 (self-test recorded on the first run) | as above |
+| Closing render after `strehl follow` | as a first render | 24.6 s at Q12 (30.2 s without its edge journal) | as a later render |
+| First render (empty cache folder: no map, no journal) | 107.7 s (plan's run); 83.2 s at the start of Q3 | 41.2-42.0 s (48.8 s before Q18) | group checks on the decoder threads, about 16 s of wall time (Q13 below) |
+| CPU route, full stack | 197.5 s | 179.5-181.3 s | the CPU fold (plan Q15, not built) |
+| Process CPU, later render | 799 s | 286-298 s | |
+| Peak private memory, later render | 32.6 GB | 30.3 GB (26.7-27.1 GB before Q18's 4,501 crops) | |
 
 Every render above wrote the reference bytes (full `02A6C8C2...`); every commit also
 reproduced `--limit 24`, `--limit 8` and both residual modes on the GPU route and
@@ -44,7 +45,7 @@ and `off` after Q0.
 | Q10 (read-ahead) | `3203c0209` | 23.0-23.8 s | the main pass's first files read while the preview collapses |
 | Q3 (witness rows) | `b4d0a3629` | (first render) 50.9 to 48.8 s | the witness's terms per row, then the sums in order: 588 to 400 ms a group on one thread |
 | Q12 | `93d425bae` | (closing render after `strehl follow`) 30.2 to 24.6 s | an edge journal keyed by both archives' SHA-256 and the estimator; `follow` measures each plane's ladder pairs as it arrives (1,413 pairs); the solve decodes only frames an unjournalled pair needs; warp maps byte-identical (`9EBD2B78...`) fresh, journalled and without |
-| Q18 | (this commit) | 22.8 to 19.6-20.0 s (capture off against on, alternating) | the preview measures depth on the device and predicts 643 candidate tiles; the main fold copies their windows of each gathered plane for frames within 3 of the predicted focus (4,501 crops); the plan takes 373 of its 400 reference crops from them and gathers 10 frames instead of 153; peak memory +3.4 GB (30.3 GB) |
+| Q18 | `b929f7d73` | 22.8 to 19.6-20.0 s (capture off against on, alternating) | the preview measures depth on the device and predicts 643 candidate tiles; the main fold copies their windows of each gathered plane for frames within 3 of the predicted focus (4,501 crops); the plan takes 373 of its 400 reference crops from them and gathers 10 frames instead of 153; peak memory +3.4 GB (30.3 GB) |
 | Fold end | `0d106d3df` | main fold 10.2-10.4 to 9.9-10.1 s | the totals' readback after the fold was 1.45 s, mostly allocating the host totals on one thread (mimalloc zeroes reused memory); parallel fill, pipelined readback, parallel copy-out: 1.1-1.2 s |
 
 ## Measured and not kept
@@ -97,9 +98,27 @@ Start 0.8 s; preview fold 2.0 s; preview collapse and colour measurement 2.0 s; 
 later (8 GB read at 1.6 GB/s, CPU-bound row decodes); restoration and write 3.4 s (tile
 spectra 0.7 s, highlight guard 0.2 s, three channels 0.3 s each); exit 0.3 s.
 
+## Q13: what a first render spends on group checks (MEASURED, not built)
+
+A first render after Q18 took 41.2-42.0 s against 19.6-20.5 s for a later render. Under
+`STREHL_FOLD_TRACE`, a first render's main fold took 23.4 s against about 10 s (members 2-4
+1,555 ms a plane against about 375 ms when the journal holds the group) and its preview
+4.6 s against 2.0 s: about 16 s of wall time are the group checks, CPU-bound on the
+decoder threads (14.3 of 16 cores busy). The plan's estimate (about 3 s after Q3) was low.
+
+Per group, with sixteen checks running at once (temporary timers, `tmpcheck` run): member
+1's integral image 119 ms, the three members' fits 590 ms (each another integral of about
+15 M f64 samples and up to seven Gauss-Newton passes), the witness 628 ms. Every value
+reaches the journal and the gates, so a faster form must keep each f64 addition in its
+order; the plan's device mirror does (integrals one invocation per row then per column,
+`normal` one per row, the witness one per tile row, totals combined on the CPU in order),
+with members already staged for the fold. Worth up to about 16 s of a first render, and
+nothing for a render after `strehl follow`, which journals every group during the capture.
+
 ## Not built
 
 Q1b (one stack context), Q1f, Q5d-e (decoding into upload memory, helper placement; Q5c
 was measured and not kept, above), Q7 (collapse on the device), Q11 (the supervisor:
-today's adaptivity is the per-file read mode and the device self-test), Q13-Q16, Q19
+today's adaptivity is the per-file read mode and the device self-test), Q13 (measured above)
+to Q16, Q19
 (archive format 2; its prototype gate is the next step there).
