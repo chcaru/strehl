@@ -44,6 +44,7 @@ and `off` after Q0.
 | Q10 (read-ahead) | `3203c0209` | 23.0-23.8 s | the main pass's first files read while the preview collapses |
 | Q3 (witness rows) | `b4d0a3629` | (first render) 50.9 to 48.8 s | the witness's terms per row, then the sums in order: 588 to 400 ms a group on one thread |
 | Q12 | `93d425bae` | (closing render after `strehl follow`) 30.2 to 24.6 s | an edge journal keyed by both archives' SHA-256 and the estimator; `follow` measures each plane's ladder pairs as it arrives (1,413 pairs); the solve decodes only frames an unjournalled pair needs; warp maps byte-identical (`9EBD2B78...`) fresh, journalled and without |
+| Q18 | (this commit) | 22.8 to 19.6-20.0 s (capture off against on, alternating) | the preview measures depth on the device and predicts 643 candidate tiles; the main fold copies their windows of each gathered plane for frames within 3 of the predicted focus (4,501 crops); the plan takes 373 of its 400 reference crops from them and gathers 10 frames instead of 153; peak memory +3.4 GB (30.3 GB) |
 | Fold end | `0d106d3df` | main fold 10.2-10.4 to 9.9-10.1 s | the totals' readback after the fold was 1.45 s, mostly allocating the host totals on one thread (mimalloc zeroes reused memory); parallel fill, pipelined readback, parallel copy-out: 1.1-1.2 s |
 
 ## Measured and not kept
@@ -81,6 +82,14 @@ of crops, read back over the fold. The simulation's first version reported a per
 prediction because `analyse` builds its curves from every frame whatever its mask says;
 its stride-1 control now reproduces the plan and the stride-8 run shows misses.
 
+Built (Q18 row above). VERIFIED: under `STREHL_CAPTURE_CHECK=1` all 373 captured crops the
+plan would use equal the gathered ones bit for bit, and a build that shifted every window by
+one pixel failed that check (exit 1). The first build's output differed from the reference
+although its crops were identical: after the fold, `observe` still wrote every tile a
+gathered frame served, overwriting captured crops with windows that gather no longer
+computed. Q2's `STREHL_REFERENCE_CHECK=1` caught it (frame 181); the fix skips slots a
+capture filled, and the remaining 10 frames pass that check.
+
 ## Where the later render's time is now (MEASURED, `trace.py`, 24.7 s run)
 
 Start 0.8 s; preview fold 2.0 s; preview collapse and colour measurement 2.0 s; main fold
@@ -92,6 +101,5 @@ spectra 0.7 s, highlight guard 0.2 s, three channels 0.3 s each); exit 0.3 s.
 
 Q1b (one stack context), Q1f, Q5d-e (decoding into upload memory, helper placement; Q5c
 was measured and not kept, above), Q7 (collapse on the device), Q11 (the supervisor:
-today's adaptivity is the per-file read mode and the device self-test), Q13-Q16, Q18 (its
-hit rate is now measured, above), Q19 (archive format 2; its prototype gate is the next
-step there).
+today's adaptivity is the per-file read mode and the device self-test), Q13-Q16, Q19
+(archive format 2; its prototype gate is the next step there).

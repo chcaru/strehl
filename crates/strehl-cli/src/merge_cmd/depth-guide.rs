@@ -957,6 +957,83 @@ pub(super) fn begin_tap(
     Ok(Some(TapGuard))
 }
 
+/// The lateral-colour preview's depth measurement, for predicting the
+/// optical restoration's reference crops (round-2 plan stage Q18,
+/// `optical_restore::predict`): the same tap as [`begin_tap`]'s, over the
+/// frames the preview folds. Only under GPU preparation (the caller's
+/// condition), where the device measures the energies.
+pub(super) fn begin_preview_tap(frames: usize, domain: PyramidDomain) -> Option<TapGuard> {
+    optical_restore::clear_prediction();
+    if !ca_refine::preview_active() || tap().is_some() {
+        return None;
+    }
+    let g = domain.analysis();
+    let (w, h) = (g.width, g.height);
+    let (cw, ch) = (w / CELL, h / CELL);
+    if cw < 4 || ch < 4 {
+        return None;
+    }
+    let cells = cw * ch;
+    *tap() = Some(Tap {
+        w,
+        h,
+        cw,
+        ch,
+        energy: [
+            vec![f32::NAN; frames * cells],
+            vec![f32::NAN; frames * cells],
+        ],
+        placed: vec![false; frames],
+        started: Instant::now(),
+    });
+    Some(TapGuard)
+}
+
+/// Finish the preview's tap: the depth map of the frames it recorded alone
+/// (`analyse` builds every cell's curve from all the energies it is given,
+/// whatever its mask says, so it is given only those frames), its focus in
+/// the whole stack's frame units, and the restoration's candidate tiles
+/// predicted from it. Ends the tap. A failure only means nothing is
+/// captured: it is reported, never the render's error.
+pub(super) fn finish_preview_tap() {
+    let Some(t) = tap().take() else { return };
+    let cells = t.cw * t.ch;
+    let kept: Vec<usize> = (0..t.placed.len()).filter(|&k| t.placed[k]).collect();
+    let energy: Vec<Vec<f32>> = t
+        .energy
+        .iter()
+        .map(|e| {
+            kept.iter()
+                .flat_map(|&k| e[k * cells..(k + 1) * cells].iter().copied())
+                .collect()
+        })
+        .collect();
+    let a = match analyse(&energy, &vec![true; kept.len()], cells, t.cw, t.ch) {
+        Ok(a) => a,
+        Err(e) => {
+            eprintln!("reference crops : not predicted ({e:#}); gathered after the fold");
+            return;
+        }
+    };
+    // A focus between the j-th and (j+1)-th recorded frames, in frames.
+    let at = |d: f32| -> f32 {
+        let j = (d.max(0.0).floor() as usize).min(kept.len().saturating_sub(2));
+        let (a, b) = (kept[j] as f32, kept[(j + 1).min(kept.len() - 1)] as f32);
+        a + (d - j as f32) * (b - a)
+    };
+    let depth: Vec<f32> = a.depths[0].iter().map(|&d| at(d)).collect();
+    let confident: Vec<bool> = a.fits[0]
+        .iter()
+        .map(|f| f.is_some_and(|f| f.1 >= 5.0))
+        .collect();
+    let n = optical_restore::predict(t.w, t.h, t.cw, CELL, &depth, &confident);
+    eprintln!(
+        "reference crops : {n} candidate tiles predicted from the preview's {} frames, to be \
+         captured during the fold",
+        kept.len()
+    );
+}
+
 /// [`record`]'s blur buffers, kept between frames (a fresh 60 MB plane per
 /// blur cost first-touch page faults on every frame).
 static RECORD_BUFFERS: std::sync::Mutex<Vec<[Vec<f32>; 3]>> = std::sync::Mutex::new(Vec::new());

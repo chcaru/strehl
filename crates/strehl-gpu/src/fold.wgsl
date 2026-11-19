@@ -1348,3 +1348,25 @@ fn dg_energy(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgrou
     // Division by 64 is exact: the same value as the CPU's `s / 64.0`.
     rgbw[p.a.w + c] = f32(s * f64(0.015625));
 }
+
+// The optical restoration's reference crops of one gathered plane, packed
+// into the full-resolution buffer after the gather has read it (round-2
+// plan stage Q18). A copy: the crops hold the plane's own bits.
+// a = (plane at level 0 in work, plane width, windows, dst in rgbw),
+// b = (plane index, planes, side, first window in consts); window k's
+// top-left corner is (consts[C_CROPS + b.w + 2k], consts[C_CROPS + b.w + 2k + 1]).
+const C_CROPS: u32 = 155u;
+
+@compute @workgroup_size(256)
+fn crop(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let i = gid(id, nwg);
+    let side = p.b.z;
+    let per = side * side;
+    if (i >= p.a.z * per) { return; }
+    let k = i / per;
+    let r = (i % per) / side;
+    let c = i % side;
+    let x = u32(consts[C_CROPS + p.b.w + 2u * k]);
+    let y = u32(consts[C_CROPS + p.b.w + 2u * k + 1u]);
+    rgbw[p.a.w + (k * p.b.y + p.b.x) * per + r * side + c] = work[p.a.x + (y + r) * p.a.y + x + c];
+}

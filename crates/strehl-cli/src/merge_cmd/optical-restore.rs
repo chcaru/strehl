@@ -239,7 +239,12 @@ struct State {
     width: usize,
     tiles: Vec<Tile>,
     halves: Option<[Vec<Vec<f32>>; 2]>,
+    /// Crops captured during the fold ([`capture`]), by frame and tile core.
+    captured: Captured,
 }
+
+/// One crop per plane, by (frame, tile core).
+type Captured = std::collections::HashMap<(usize, (usize, usize)), Vec<Vec<f32>>>;
 
 static STATE: Mutex<Option<State>> = Mutex::new(None);
 
@@ -258,6 +263,7 @@ pub(super) struct Active;
 impl Drop for Active {
     fn drop(&mut self) {
         *state() = None;
+        clear_prediction();
         DEFAULTED.store(false, std::sync::atomic::Ordering::Relaxed);
     }
 }
@@ -324,6 +330,25 @@ pub(super) fn activate_if_requested(
     );
     *state() = Some(State::default());
     Ok(Some(Active))
+}
+
+/// Whether the render after the lateral-colour preview will restore, as
+/// [`activate_if_requested`] decides it there (without its messages): for
+/// predicting its reference crops in the preview. The colour carry is not
+/// asked: the preview runs before it is switched on. A wrong answer costs
+/// only a prediction nobody uses.
+pub(super) fn would_activate(opts: &MergeOptions, temporal_active: bool) -> bool {
+    match setting() {
+        Ok(Some(true)) => true,
+        Ok(None) => {
+            crate::pixel_shift_cmd::assembly_requested()
+                && opts.demosaic
+                && opts.region_recipe.is_none()
+                && strehl_core::restore::gain_cap_from_env().is_none()
+                && !temporal_active
+        }
+        _ => false,
+    }
 }
 
 /// Choose the spectrum tiles from the depth measurement: `depth` is the
@@ -395,6 +420,173 @@ pub(super) fn plan_tiles(
     st.tiles = found.into_iter().map(|(_, t)| t).collect();
 }
 
+/// `STREHL_REFERENCE_CAPTURE=off`: no reference crops captured during the
+/// fold; every planned tile's frames are gathered again after it (Q2).
+pub(super) const CAPTURE_ENV: &str = "STREHL_REFERENCE_CAPTURE";
+/// `STREHL_CAPTURE_CHECK=1`: capture, gather every planned tile again as
+/// well, and fail the render unless each captured crop it uses equals the
+/// gathered one bit for bit.
+pub(super) const CAPTURE_CHECK_ENV: &str = "STREHL_CAPTURE_CHECK";
+/// Frames captured either side of a tile's predicted focus. MEASURED on the
+/// scarab stack (`experiments/a7cr-stacking-performance-2026-11-18/evidence/
+/// q18-hit-rate.txt`): the preview's prediction is within 2.6 frames of the
+/// plan's focus for every tile it predicts; three frames either side held
+/// both reference frames for 186 of the 200 planned tiles.
+const CAPTURE_RADIUS: f32 = 3.0;
+
+/// Round-2 performance plan stage Q18. The tiles' reference frames are known
+/// only after the fold (from its depth energies), and gathering them again
+/// then cost about 3 s of every render (153 frames read and decoded over the
+/// tiles' rows). The preview, folded first from every eighth plane, measures
+/// a coarse depth map of its own: each candidate tile's focus to about a
+/// frame, though not which tiles the plan will rank highest. So every
+/// candidate is cropped from the frames near its predicted focus as the
+/// fold gathers them (`GpuFold::add_staged_keeping_luma_cropped`, copies of
+/// the gathered planes), and the plan takes what was captured; a tile whose
+/// frame was not captured is gathered again as before. The crops are the
+/// fold's own planes, which the gather after the fold reproduces bit for bit
+/// (`STREHL_CAPTURE_CHECK`), so the photograph cannot change.
+static PREDICTION: Mutex<Vec<((usize, usize), f32)>> = Mutex::new(Vec::new());
+
+pub(super) fn capture_enabled() -> Result<bool> {
+    match std::env::var(CAPTURE_ENV) {
+        Err(std::env::VarError::NotPresent) => Ok(true),
+        Err(e) => Err(e).context(CAPTURE_ENV),
+        Ok(v) => match v.trim() {
+            "" | "on" | "1" => Ok(true),
+            "off" | "0" => Ok(false),
+            other => anyhow::bail!("{CAPTURE_ENV}={other:?} is not on or off"),
+        },
+    }
+}
+
+fn capture_check() -> bool {
+    std::env::var(CAPTURE_CHECK_ENV).is_ok_and(|v| v.trim() == "1")
+}
+
+pub(super) fn clear_prediction() {
+    PREDICTION.lock().unwrap_or_else(|e| e.into_inner()).clear();
+}
+
+/// Keep the preview's candidate tiles and their focus (frame units of the
+/// whole stack): every tile [`plan_tiles`] could choose from this depth
+/// map. Returns how many.
+pub(super) fn predict(
+    w: usize,
+    h: usize,
+    cw: usize,
+    cell: usize,
+    depth: &[f32],
+    confident: &[bool],
+) -> usize {
+    let per = TP / cell;
+    let mut found = Vec::new();
+    for ty in 1..(h / TP).saturating_sub(1) {
+        for tx in 1..(w / TP).saturating_sub(1) {
+            let (x0, y0) = (tx * TP, ty * TP);
+            let mut d = Vec::with_capacity(per * per);
+            for cy in y0 / cell..y0 / cell + per {
+                for cx in x0 / cell..x0 / cell + per {
+                    if confident[cy * cw + cx] {
+                        d.push(depth[cy * cw + cx]);
+                    }
+                }
+            }
+            if d.len() * 2 < per * per {
+                continue;
+            }
+            d.sort_by(f32::total_cmp);
+            found.push(((x0, y0), d[d.len() / 2]));
+        }
+    }
+    let n = found.len();
+    *PREDICTION.lock().unwrap_or_else(|e| e.into_inner()) = found;
+    n
+}
+
+/// The crops' side and the tile cores frame `index` is captured for: the
+/// predicted tiles whose focus is within [`CAPTURE_RADIUS`] of it. Empty
+/// unless this render restores and capture is on.
+pub(super) fn capture_windows(index: usize) -> Vec<(usize, usize)> {
+    if !active() {
+        return Vec::new();
+    }
+    PREDICTION
+        .lock()
+        .unwrap_or_else(|e| e.into_inner())
+        .iter()
+        .filter(|(_, focus)| (index as f32 - focus.round()).abs() <= CAPTURE_RADIUS)
+        .map(|&(at, _)| at)
+        .collect()
+}
+
+/// A crop's corner for the tile core at `at`, and its side.
+pub(super) fn crop_window(at: (usize, usize)) -> (usize, usize, usize) {
+    (at.0 - MARGIN, at.1 - MARGIN, SIDE)
+}
+
+/// Keep frame `index`'s crops for `tiles` (cores, in the order captured):
+/// `data` holds them window by window, plane by plane, rows of `SIDE`.
+pub(super) fn capture(
+    index: usize,
+    tiles: &[(usize, usize)],
+    data: &[f32],
+    planes: usize,
+) -> Result<()> {
+    let per = SIDE * SIDE;
+    ensure!(
+        data.len() == tiles.len() * planes * per,
+        "captured crops for frame {index}: {} values for {} windows",
+        data.len(),
+        tiles.len()
+    );
+    let mut guard = state();
+    let Some(st) = guard.as_mut() else {
+        return Ok(());
+    };
+    for (k, &at) in tiles.iter().enumerate() {
+        let crop: Vec<Vec<f32>> = (0..planes)
+            .map(|c| data[(k * planes + c) * per..(k * planes + c + 1) * per].to_vec())
+            .collect();
+        st.captured.insert((index, at), crop);
+    }
+    Ok(())
+}
+
+/// After [`plan_tiles`]: give each planned tile the crops captured for its
+/// frames, and drop the rest. Returns (reference crops taken, crops
+/// captured). Under [`CAPTURE_CHECK_ENV`] nothing is taken: the crops are
+/// kept for [`observe`] to compare with the gathered ones.
+pub(super) fn use_captured() -> (usize, usize) {
+    let mut guard = state();
+    let Some(st) = guard.as_mut() else {
+        return (0, 0);
+    };
+    let captured = st.captured.len();
+    if capture_check() {
+        return (0, captured);
+    }
+    let mut taken = 0;
+    for t in &mut st.tiles {
+        for slot in 0..2 {
+            if let Some(crop) = st.captured.remove(&(t.frames[slot], (t.x0, t.y0))) {
+                t.reference[slot] = Some(crop);
+                taken += 1;
+            }
+        }
+    }
+    st.captured.clear();
+    (taken, captured)
+}
+
+/// Under [`CAPTURE_CHECK_ENV`]: how many captured crops [`observe`] found
+/// equal to the gathered ones (any difference fails the render there).
+static CHECKED: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+
+pub(super) fn take_checked() -> usize {
+    CHECKED.swap(0, std::sync::atomic::Ordering::Relaxed)
+}
+
 /// The frames the planned tiles take their reference planes from, each once
 /// in index order, with the analysis-plane rows and columns [`observe`]
 /// crops from that frame for them (one pair per tile).
@@ -405,7 +597,13 @@ pub(super) fn reference_windows() -> Vec<(usize, Vec<Window>)> {
     };
     let mut by_frame: std::collections::BTreeMap<usize, Vec<Window>> = Default::default();
     for t in &st.tiles {
-        for &k in &t.frames {
+        // A crop captured during the fold ([`use_captured`]) is not gathered.
+        for (&k, _) in t
+            .frames
+            .iter()
+            .zip(&t.reference)
+            .filter(|(_, r)| r.is_none())
+        {
             by_frame.entry(k).or_default().push(Window {
                 rows: t.y0 - MARGIN..t.y0 + TP + MARGIN,
                 cols: t.x0 - MARGIN..t.x0 + TP + MARGIN,
@@ -428,9 +626,15 @@ pub(super) fn crops_of(index: usize, planes: &[Vec<f32>]) -> Vec<Vec<Vec<f32>>> 
     let Some(st) = guard.as_ref() else {
         return Vec::new();
     };
+    // A slot a capture filled was not gathered: its window may not be.
     st.tiles
         .iter()
-        .filter(|t| t.frames.contains(&index))
+        .filter(|t| {
+            t.frames
+                .iter()
+                .zip(&t.reference)
+                .any(|(&k, r)| k == index && r.is_none())
+        })
         .map(|t| crop(planes, st.width, t.x0, t.y0))
         .collect()
 }
@@ -440,12 +644,61 @@ pub(super) fn observe(index: usize, planes: &[Vec<f32>]) {
     let mut guard = state();
     let Some(st) = guard.as_mut() else { return };
     let w = st.width;
+    let check = capture_check();
     for t in st.tiles.iter_mut() {
         let Some(slot) = t.frames.iter().position(|&k| k == index) else {
             continue;
         };
-        t.reference[slot] = Some(crop(planes, w, t.x0, t.y0));
+        // Filled from a crop captured during the fold (`use_captured`):
+        // this frame was gathered for other tiles, and only over theirs.
+        if t.reference[slot].is_some() {
+            continue;
+        }
+        let gathered = crop(planes, w, t.x0, t.y0);
+        if check && let Some(captured) = st.captured.get(&(index, (t.x0, t.y0))) {
+            let same = captured.len() == gathered.len()
+                && captured
+                    .iter()
+                    .flatten()
+                    .zip(gathered.iter().flatten())
+                    .all(|(a, b)| a.to_bits() == b.to_bits())
+                && captured
+                    .iter()
+                    .map(Vec::len)
+                    .eq(gathered.iter().map(Vec::len));
+            if same {
+                CHECKED.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+            } else {
+                CHECK_FAILED
+                    .lock()
+                    .unwrap_or_else(|e| e.into_inner())
+                    .get_or_insert(format!(
+                        "{CAPTURE_CHECK_ENV}: frame {index}'s crop captured for the tile at {:?} \
+                         differs from the gathered one",
+                        (t.x0, t.y0)
+                    ));
+            }
+        }
+        t.reference[slot] = Some(gathered);
     }
+}
+
+static CHECK_FAILED: Mutex<Option<String>> = Mutex::new(None);
+
+/// Under [`CAPTURE_CHECK_ENV`]: fail if any captured crop differed, else
+/// drop the captured crops (the gathered ones are in use).
+pub(super) fn capture_verdict() -> Result<()> {
+    if let Some(why) = CHECK_FAILED
+        .lock()
+        .unwrap_or_else(|e| e.into_inner())
+        .take()
+    {
+        anyhow::bail!(why);
+    }
+    if let Some(st) = state().as_mut() {
+        st.captured.clear();
+    }
+    Ok(())
 }
 
 fn crop(planes: &[Vec<f32>], w: usize, x0: usize, y0: usize) -> Vec<Vec<f32>> {

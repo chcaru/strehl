@@ -5178,7 +5178,10 @@ struct BandWorker {
 #[cfg(feature = "gpu")]
 #[derive(Default)]
 struct LumaTap {
-    pending: std::collections::VecDeque<(usize, strehl_gpu::PendingLuma)>,
+    /// Per frame: its index, its read-back, and the tile cores it was
+    /// cropped for (`optical_restore::capture_windows`).
+    #[allow(clippy::type_complexity)]
+    pending: std::collections::VecDeque<(usize, strehl_gpu::PendingLuma, Vec<(usize, usize)>)>,
     /// Records running, and its signal.
     busy: std::sync::Arc<(std::sync::Mutex<usize>, std::sync::Condvar)>,
     /// The first read-back that failed in a record task.
@@ -5211,8 +5214,9 @@ impl LumaTap {
         if let Some(e) = self.failed.lock().unwrap_or_else(|e| e.into_inner()).take() {
             anyhow::bail!(e);
         }
+        let planes = gpu.crop_shape().0;
         while self.pending.len() > keep {
-            let (index, pending) = self.pending.pop_front().expect("pending luma");
+            let (index, pending, tiles) = self.pending.pop_front().expect("pending luma");
             let readback = gpu.luma_handoff(pending);
             {
                 let (count, signal) = &*self.busy;
@@ -5258,7 +5262,16 @@ impl LumaTap {
                         }
                         checked.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
                     }
-                    depth_guide::record_energies(index, &data[..cells]).map_err(|e| e.to_string())
+                    depth_guide::record_energies(index, &data[..cells])
+                        .map_err(|e| e.to_string())?;
+                    // The crops follow the energies (and the luma, kept
+                    // with them for the check).
+                    if !tiles.is_empty() {
+                        let at = cells + if check { w * h } else { 0 };
+                        optical_restore::capture(index, &tiles, &data[at..], planes)
+                            .map_err(|e| e.to_string())?;
+                    }
+                    Ok(())
                 });
                 if let Err(e) = recorded {
                     failed
@@ -6843,9 +6856,39 @@ impl BandWorker {
         let added = fold_trace::time(fold_trace::Step::Add, || {
             if depth_guide::tap_active() {
                 // The depth measurement taken during the fold reads this
-                // frame's luma, copied before the fold decomposes it.
-                gpu.add_staged_keeping_luma(merge, &staged, green, frame_beta, units.as_deref())
-                    .map(|p| luma_tap.pending.push_back((index, p)))
+                // frame's luma, copied before the fold decomposes it; with
+                // the device's energies, the restoration's predicted
+                // reference crops ride along (plan stage Q18).
+                let mut tiles = if luma_tap.device {
+                    optical_restore::capture_windows(index)
+                } else {
+                    Vec::new()
+                };
+                let side = tiles
+                    .first()
+                    .map_or(0, |&at| optical_restore::crop_window(at).2);
+                tiles.truncate(gpu.crop_capacity(side));
+                let added = if tiles.is_empty() {
+                    gpu.add_staged_keeping_luma(merge, &staged, green, frame_beta, units.as_deref())
+                } else {
+                    let corners: Vec<(u32, u32)> = tiles
+                        .iter()
+                        .map(|&at| {
+                            let (x, y, _) = optical_restore::crop_window(at);
+                            (x as u32, y as u32)
+                        })
+                        .collect();
+                    gpu.add_staged_keeping_luma_cropped(
+                        merge,
+                        &staged,
+                        green,
+                        frame_beta,
+                        units.as_deref(),
+                        &corners,
+                        side as u32,
+                    )
+                };
+                added.map(|p| luma_tap.pending.push_back((index, p, tiles)))
             } else {
                 gpu.add_staged(merge, &staged, green, frame_beta, units.as_deref())
             }
@@ -7427,6 +7470,25 @@ fn gather_restoration_references<S: PyramidFrameSource>(
     pool: &rayon::ThreadPool,
 ) -> Result<()> {
     let started = Instant::now();
+    // Crops captured during the fold (plan stage Q18) first: only the
+    // planned frames no capture holds are gathered below.
+    let (taken, captured) = optical_restore::use_captured();
+    if captured > 0 {
+        eprintln!(
+            "reference crops : {taken} of the planned tiles' reference crops captured during the \
+             fold ({captured} captured from the preview's prediction; {}=off gathers them all \
+             again{})",
+            optical_restore::CAPTURE_ENV,
+            if taken == 0 {
+                format!(
+                    "; {} compares them below",
+                    optical_restore::CAPTURE_CHECK_ENV
+                )
+            } else {
+                String::new()
+            }
+        );
+    }
     let plan = optical_restore::reference_windows();
     let full = domain.full;
     let bands = full.height.div_ceil(align_cmd::BAND_ROWS);
@@ -7603,6 +7665,15 @@ fn gather_restoration_references<S: PyramidFrameSource>(
         thread_secs(&prepare_nanos),
         thread_secs(&partial.decode_nanos)
     );
+    optical_restore::capture_verdict()?;
+    let crops_checked = optical_restore::take_checked();
+    if crops_checked > 0 {
+        eprintln!(
+            "reference crops : {crops_checked} captured crops equal the gathered ones bit for bit \
+             ({})",
+            optical_restore::CAPTURE_CHECK_ENV
+        );
+    }
     Ok(())
 }
 
@@ -9841,6 +9912,19 @@ fn run_pyramid_prepared_with_sensor(
         gpu_prep_refusal(warps, defect_plan.is_some(), levels),
     )?;
     eprintln!("gpu fold        : {gpu_line}");
+    // The lateral-colour preview measures depth too, when the render after
+    // it will restore: to predict the reference crops that render captures
+    // as it folds (plan stage Q18). Device energies only.
+    let preview_tap = if worker.gpu_prep
+        && ca_refine::preview_active()
+        && optical_restore::capture_enabled()?
+        && optical_restore::would_activate(opts, temporal_active)
+        && !std::env::var(DEPTH_DEVICE_ENV).is_ok_and(|v| v.trim() == "off")
+    {
+        depth_guide::begin_preview_tap(paths.len(), domain)
+    } else {
+        None
+    };
     // The depth measurement taken during a GPU-prepared fold: its band
     // energies on the device (plan stage Q6a), unless switched off.
     #[cfg(feature = "gpu")]
@@ -10191,6 +10275,10 @@ fn run_pyramid_prepared_with_sensor(
     }
     let source = original_source;
     source.decode_serially(false);
+    if let Some(guard) = preview_tap {
+        depth_guide::finish_preview_tap();
+        drop(guard);
+    }
     // The depth map from the energies the fold recorded; the planned tiles'
     // reference frames are then prepared again exactly as the fold prepared
     // them (the pre-pass route keeps them as the fold passes), below.

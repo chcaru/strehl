@@ -359,6 +359,37 @@ REGISTRY: dict[str, Declared] = {
         ),
         note="Round-2 performance plan stage Q12 (2026-11-18).",
     ),
+    "STREHL_REFERENCE_CAPTURE": Declared(
+        kind="control",
+        default="on (the optical restoration's reference crops are captured during a GPU fold)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/optical-restore.rs capture_enabled(): unset, empty, `on` or "
+            "`1` -> the lateral-colour preview measures depth on the device, "
+            "predicts the restoration's candidate tiles and their focus, and the "
+            "main GPU fold copies those tiles' windows of its gathered planes "
+            "(fold.wgsl `crop`) for the frames within 3 of each prediction; the "
+            "plan takes captured crops and gathers only the rest again. `off` or "
+            "`0` gathers every planned frame after the fold. The crops are the "
+            "fold's own planes, so the output is byte-identical "
+            "(STREHL_CAPTURE_CHECK)."
+        ),
+        note="Round-2 performance plan stage Q18 (2026-11-18).",
+    ),
+    "STREHL_CAPTURE_CHECK": Declared(
+        kind="diagnostic",
+        default="off",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/optical-restore.rs observe(): `1` captures as usual but "
+            "uses no captured crop, gathers every planned frame after the fold, "
+            "and fails the render unless each captured crop it would have used "
+            "equals the gathered one bit for bit; output unchanged."
+        ),
+        note="Round-2 performance plan stage Q18 (2026-11-18).",
+    ),
     "STREHL_FOLLOW_ALIGN_MB": Declared(
         kind="control",
         default="10240 (strehl follow measures alignment pairs as planes arrive)",

@@ -82,7 +82,13 @@ enum Kernel {
     DgBlurH,
     DgBlurV,
     DgEnergy,
+    Crop,
 }
+
+/// Windows one frame may crop ([`GpuFold::add_staged_keeping_luma_cropped`]),
+/// in each of the two halves of the consts region `fold.wgsl` calls
+/// `C_CROPS`.
+pub const CROP_WINDOWS_MAX: usize = 1024;
 
 impl Kernel {
     fn index(self) -> usize {
@@ -547,6 +553,8 @@ pub struct GpuFold {
     pending_reset: Vec<bool>,
     /// [`GpuFold::enable_depth`]: kept luma is read back as depth energies.
     depth: Option<DepthPlan>,
+    /// Which half of `C_CROPS` the next cropped frame's windows go to.
+    crop_half: usize,
     pub adapter: String,
     pub decorated_results: usize,
 }
@@ -1132,6 +1140,9 @@ impl GpuFold {
         debug_assert_eq!(consts.len(), 91, "fold.wgsl consts layout");
         // `C_TAPS`: the depth energies' blur taps ([`Self::enable_depth`]).
         consts.extend_from_slice(&[0.0; DEPTH_TAPS_MAX]);
+        // `C_CROPS`: two halves of window corners, alternated per frame.
+        debug_assert_eq!(consts.len(), 155, "fold.wgsl C_CROPS");
+        consts.extend(std::iter::repeat_n(0.0, 2 * 2 * CROP_WINDOWS_MAX));
         let consts = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
             label: Some("fold-consts"),
             contents: bytemuck::cast_slice(&consts),
@@ -1224,6 +1235,7 @@ impl GpuFold {
             frame: 0,
             pending_reset: vec![true],
             depth: None,
+            crop_half: 0,
             adapter: adapter_name,
             decorated_results,
         };
@@ -2370,7 +2382,7 @@ impl GpuFold {
         frame_beta: Option<&[f32]>,
         null_units: Option<&[Option<f32>]>,
     ) -> Result<(), String> {
-        self.add_staged_impl(merge, frame, noise, frame_beta, null_units, false)
+        self.add_staged_impl(merge, frame, noise, frame_beta, null_units, false, None)
             .map(|_| ())
     }
 
@@ -2385,10 +2397,65 @@ impl GpuFold {
         frame_beta: Option<&[f32]>,
         null_units: Option<&[Option<f32>]>,
     ) -> Result<PendingLuma, String> {
-        self.add_staged_impl(merge, frame, noise, frame_beta, null_units, true)
+        self.add_staged_impl(merge, frame, noise, frame_beta, null_units, true, None)
             .map(|p| p.expect("luma kept"))
     }
 
+    /// [`Self::add_staged_keeping_luma`] with the device's depth energies
+    /// ([`Self::enable_depth`]), also copying `side x side` windows of every
+    /// gathered plane at level 0, top-left corners `windows`, right after the
+    /// gather (round-2 plan stage Q18). The read-back holds the energies, the
+    /// luma when kept with them, then the crops: window by window, plane by
+    /// plane, rows of `side`. Copies, so each crop is the plane's own bits.
+    #[allow(clippy::too_many_arguments)]
+    pub fn add_staged_keeping_luma_cropped(
+        &mut self,
+        merge: &mut BandMerge,
+        frame: &Staged,
+        noise: GreenNoise,
+        frame_beta: Option<&[f32]>,
+        null_units: Option<&[Option<f32>]>,
+        windows: &[(u32, u32)],
+        side: u32,
+    ) -> Result<PendingLuma, String> {
+        self.add_staged_impl(
+            merge,
+            frame,
+            noise,
+            frame_beta,
+            null_units,
+            true,
+            Some((windows, side)),
+        )
+        .map(|p| p.expect("luma kept"))
+    }
+
+    /// The gathered planes' count and level-0 size: the crops' shape.
+    pub fn crop_shape(&self) -> (usize, usize, usize) {
+        let s0 = self.layout.sizes[0];
+        (self.layout.planes, s0.width, s0.height)
+    }
+
+    /// How many `side x side` windows one frame can crop: none without the
+    /// device's depth energies.
+    pub fn crop_capacity(&self, side: usize) -> usize {
+        let Ok(at) = self.crop_base() else { return 0 };
+        let per = (self.layout.planes * side * side) as u64;
+        (self.layout.rgb_len.saturating_sub(at) / per.max(1)).min(CROP_WINDOWS_MAX as u64) as usize
+    }
+
+    /// Where crops go in the full-resolution buffer: past the depth
+    /// energies' scratch and cells (`record_depth`), which the fold writes
+    /// later in the same submission.
+    fn crop_base(&self) -> Result<u64, String> {
+        let plan = self
+            .depth
+            .ok_or("GPU crops need the device's depth energies")?;
+        let n = self.layout.sizes[0].pixels() as u64;
+        Ok(3 * n + 2 * u64::from(plan.cells.0) * u64::from(plan.cells.1))
+    }
+
+    #[allow(clippy::too_many_arguments)]
     fn add_staged_impl(
         &mut self,
         merge: &mut BandMerge,
@@ -2397,6 +2464,7 @@ impl GpuFold {
         frame_beta: Option<&[f32]>,
         null_units: Option<&[Option<f32>]>,
         keep_luma: bool,
+        crops: Option<(&[(u32, u32)], u32)>,
     ) -> Result<Option<PendingLuma>, String> {
         self.check_staged(frame)?;
         let sites = if frame.carried { PULLS } else { SITES.len() };
@@ -2406,6 +2474,38 @@ impl GpuFold {
                 self.layout.planes
             ));
         }
+        // The crops' place and size, checked before anything is recorded.
+        let crops = match crops {
+            Some((windows, side)) if !windows.is_empty() => {
+                let s0 = self.layout.sizes[0];
+                let at = self.crop_base()?;
+                let floats =
+                    windows.len() as u64 * sites as u64 * u64::from(side) * u64::from(side);
+                if windows.len() > CROP_WINDOWS_MAX
+                    || at + floats > self.layout.rgb_len
+                    || windows.iter().any(|&(x, y)| {
+                        x as usize + side as usize > s0.width
+                            || y as usize + side as usize > s0.height
+                    })
+                {
+                    return Err("GPU crops: windows out of range or beyond the buffer".into());
+                }
+                let half = self.crop_half;
+                self.crop_half ^= 1;
+                let corners: Vec<f64> = windows
+                    .iter()
+                    .flat_map(|&(x, y)| [f64::from(x), f64::from(y)])
+                    .collect();
+                let first = (half * 2 * CROP_WINDOWS_MAX) as u32;
+                self.queue.write_buffer(
+                    &self.consts,
+                    (155 + u64::from(first)) * 8,
+                    bytemuck::cast_slice(&corners),
+                );
+                Some((windows.len() as u32, side, first, at as u32, floats))
+            }
+            _ => None,
+        };
         if self.pending_reset[self.target] {
             self.reset_accumulators();
         }
@@ -2416,6 +2516,20 @@ impl GpuFold {
         let all: Vec<usize> = (0..sites).collect();
         let mut rec = Recorder { calls: Vec::new() };
         self.record_gather(&mut rec, frame, base, frame.slot, &all, &dst, false);
+        if let Some((count, side, first, at, _)) = crops {
+            let w = l.sizes[0].width as u32;
+            for (c, &plane) in dst.iter().enumerate() {
+                rec.push(
+                    Kernel::Crop,
+                    Params {
+                        a: [plane, w, count, at],
+                        b: [c as u32, sites as u32, side, first],
+                        ..Default::default()
+                    },
+                    (count * side * side) as usize,
+                );
+            }
+        }
         self.record_fold(&mut rec, &scalars, Some(noise), keep_luma);
         for (region, unit) in l.null.iter().zip(null_units.unwrap_or(&[])) {
             let (Some(region), Some(unit)) = (region, unit) else {
@@ -2443,7 +2557,7 @@ impl GpuFold {
             // then the luma when checking them.
             let luma_keep = l.luma_keep;
             let luma_n = self.layout.sizes[0].pixels();
-            let (energies, n) = match self.depth {
+            let (energies, mut n) = match self.depth {
                 Some(plan) => {
                     let (at, cells) = self.record_depth(&mut rec, plan, luma_keep);
                     let n = cells + if plan.with_luma { luma_n } else { 0 };
@@ -2454,12 +2568,26 @@ impl GpuFold {
                 }
                 None => (None, luma_n),
             };
+            // The crops after them (`crop_base` requires the energies).
+            let cropped = crops.map(|(_, _, _, at, floats)| {
+                let to = n as u64 * 4;
+                n += floats as usize;
+                (u64::from(at) * 4, to, floats * 4)
+            });
             let bytes = n as u64 * 4;
-            let pooled = self
-                .luma_pool
-                .lock()
-                .unwrap_or_else(|e| e.into_inner())
-                .pop();
+            // A pooled buffer large enough (a frame's crops vary in size);
+            // else a new one, dropping one pooled buffer so the pool stays
+            // the size of the copies in flight.
+            let pooled = {
+                let mut pool = self.luma_pool.lock().unwrap_or_else(|e| e.into_inner());
+                match pool.iter().position(|b| b.size() >= bytes) {
+                    Some(i) => Some(pool.swap_remove(i)),
+                    None => {
+                        pool.pop();
+                        None
+                    }
+                }
+            };
             let readback = pooled.unwrap_or_else(|| {
                 self.device.create_buffer(&wgpu::BufferDescriptor {
                     label: Some("fold-luma-readback"),
@@ -2469,19 +2597,24 @@ impl GpuFold {
                 })
             });
             let luma_at = u64::from(luma_keep) * 4;
-            let index = self.submit_with(rec, |encoder, fold| match energies {
-                None => encoder.copy_buffer_to_buffer(&fold.work, luma_at, &readback, 0, bytes),
-                Some((at, len, with_luma)) => {
-                    encoder.copy_buffer_to_buffer(&fold.rgbw, at, &readback, 0, len);
-                    if with_luma {
-                        encoder.copy_buffer_to_buffer(
-                            &fold.work,
-                            luma_at,
-                            &readback,
-                            len,
-                            luma_n as u64 * 4,
-                        );
+            let index = self.submit_with(rec, |encoder, fold| {
+                match energies {
+                    None => encoder.copy_buffer_to_buffer(&fold.work, luma_at, &readback, 0, bytes),
+                    Some((at, len, with_luma)) => {
+                        encoder.copy_buffer_to_buffer(&fold.rgbw, at, &readback, 0, len);
+                        if with_luma {
+                            encoder.copy_buffer_to_buffer(
+                                &fold.work,
+                                luma_at,
+                                &readback,
+                                len,
+                                luma_n as u64 * 4,
+                            );
+                        }
                     }
+                }
+                if let Some((from, to, len)) = cropped {
+                    encoder.copy_buffer_to_buffer(&fold.rgbw, from, &readback, to, len);
                 }
             });
             readback
