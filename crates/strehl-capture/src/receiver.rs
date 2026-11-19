@@ -73,6 +73,42 @@ pub struct Receiver {
     runs: Mutex<BTreeMap<String, RunDestination>>,
     write_lock: tokio::sync::Mutex<()>,
     latest: Mutex<Value>,
+    verdicts: Mutex<Verdicts>,
+}
+
+/// Group checks posted by this PC's checker while a capture runs, read by
+/// the camera host for error correction (hold focus, retake a failed group
+/// in place). Memory only, for the most recent runs: a verdict matters only
+/// while its capture is running.
+#[derive(Default)]
+struct Verdicts {
+    runs: std::collections::VecDeque<(String, BTreeMap<String, Value>)>,
+}
+const VERDICT_RUNS: usize = 4;
+const VERDICTS_PER_RUN: usize = 16384;
+impl Verdicts {
+    fn insert(&mut self, run: &str, group: String, verdict: Value) {
+        if !self.runs.iter().any(|(r, _)| r == run) {
+            if self.runs.len() == VERDICT_RUNS {
+                self.runs.pop_front();
+            }
+            self.runs.push_back((run.to_owned(), BTreeMap::new()));
+        }
+        let groups = &mut self.runs.iter_mut().find(|(r, _)| r == run).unwrap().1;
+        if groups.len() < VERDICTS_PER_RUN || groups.contains_key(&group) {
+            groups.insert(group, verdict);
+        }
+    }
+    fn get(&self, run: &str, group: &str) -> Option<&Value> {
+        self.runs.iter().find(|(r, _)| r == run)?.1.get(group)
+    }
+}
+/// A group identity as the checker records it: the camera's group id or a
+/// frame name.
+fn safe_group(s: &str) -> bool {
+    (1..=128).contains(&s.len())
+        && s.bytes()
+            .all(|c| c.is_ascii_alphanumeric() || matches!(c, b'-' | b'_' | b'.'))
 }
 pub fn save_json(path: &Path, value: &impl Serialize) -> Result<()> {
     let parent = path.parent().context("Configuration has no parent")?;
@@ -142,6 +178,7 @@ impl Receiver {
             runs: Mutex::new(runs),
             write_lock: tokio::sync::Mutex::new(()),
             latest: Mutex::new(json!({})),
+            verdicts: Mutex::new(Verdicts::default()),
         }))
     }
     pub fn bind(&self) -> SocketAddr {
@@ -179,6 +216,8 @@ impl Receiver {
             .route("/api/status", get(status))
             .route("/api/folder", post(folder))
             .route("/api/runs/{run}", post(create_run).get(run_capacity))
+            .route("/api/runs/{run}/verdicts", post(post_verdicts))
+            .route("/api/runs/{run}/verdicts/{group}", get(get_verdict))
             .route("/api/files/{run}/{name}", put(upload))
             .layer(DefaultBodyLimit::max(MAX_RAW as usize))
             .layer(middleware::from_fn_with_state(self.clone(), guard))
@@ -241,7 +280,7 @@ async fn status(State(s): State<Arc<Receiver>>) -> Response {
         );
     }
     match fs2::available_space(&c.folder) {
-        Ok(free)=>Json(json!({"ok":true,"protocol":1,"raw_encodings":["identity",transport::ENCODING],"folder":c.folder,"compress_raw":c.compress_raw,"free_bytes":free,"max_raw_bytes":MAX_RAW,"latest":*s.latest.lock().unwrap()})).into_response(),
+        Ok(free)=>Json(json!({"ok":true,"protocol":1,"raw_encodings":["identity",transport::ENCODING],"folder":c.folder,"compress_raw":c.compress_raw,"free_bytes":free,"max_raw_bytes":MAX_RAW,"latest":*s.latest.lock().unwrap(),"verdicts":1})).into_response(),
         Err(e)=>problem(StatusCode::SERVICE_UNAVAILABLE,e)
     }
 }
@@ -271,6 +310,72 @@ async fn folder(
         Ok(())
     })();
     match result{Ok(())=>Json(json!({"ok":true,"message":"Saved for new stacks. Registered stacks keep their folder and storage format."})).into_response(),Err(e)=>problem(StatusCode::BAD_REQUEST,e)}
+}
+/// The checker's verdicts, from this PC only:
+/// `{"verdicts":[{"group_id","plane","verdict","retake","reason"}, ...]}`.
+async fn post_verdicts(
+    State(s): State<Arc<Receiver>>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    UrlPath(run): UrlPath<String>,
+    Json(data): Json<Value>,
+) -> Response {
+    if !peer.ip().is_loopback() {
+        return problem(StatusCode::FORBIDDEN, "Group checks come from this PC");
+    }
+    let result = (|| -> Result<usize> {
+        ensure!(safe_run(&run), "Invalid stack identifier");
+        let list = data["verdicts"].as_array().context("Missing verdicts")?;
+        ensure!(list.len() <= 4096, "Too many verdicts in one request");
+        let mut verdicts = s.verdicts.lock().unwrap();
+        for v in list {
+            let group = v["group_id"].as_str().context("Missing group")?;
+            ensure!(safe_group(group), "Invalid group identifier");
+            let verdict = v["verdict"].as_str().context("Missing verdict")?;
+            ensure!(
+                matches!(
+                    verdict,
+                    "pass" | "decoded" | "demote" | "failed" | "incomplete"
+                ),
+                "Unknown verdict"
+            );
+            let reason: String = v["reason"]
+                .as_str()
+                .unwrap_or("")
+                .chars()
+                .take(300)
+                .collect();
+            verdicts.insert(
+                &run,
+                group.to_owned(),
+                json!({"verdict":verdict,"retake":v["retake"] == true,"reason":reason,
+                    "plane":v["plane"].as_u64()}),
+            );
+        }
+        Ok(list.len())
+    })();
+    match result {
+        Ok(n) => Json(json!({"ok":true,"stored":n})).into_response(),
+        Err(e) => problem(StatusCode::BAD_REQUEST, e),
+    }
+}
+/// One group's verdict for the camera host: `state` is `pending` until the
+/// checker has posted it.
+async fn get_verdict(
+    State(s): State<Arc<Receiver>>,
+    UrlPath((run, group)): UrlPath<(String, String)>,
+) -> Response {
+    if !safe_run(&run) || !safe_group(&group) {
+        return problem(StatusCode::BAD_REQUEST, "Invalid identifier");
+    }
+    match s.verdicts.lock().unwrap().get(&run, &group) {
+        Some(v) => {
+            let mut v = v.clone();
+            v["ok"] = json!(true);
+            v["state"] = json!("checked");
+            Json(v).into_response()
+        }
+        None => Json(json!({"ok":true,"state":"pending"})).into_response(),
+    }
 }
 // Capacity of the pinned run, independent of later changes to the default folder.
 async fn run_capacity(State(s): State<Arc<Receiver>>, UrlPath(run): UrlPath<String>) -> Response {
@@ -575,6 +680,81 @@ async fn receive_file(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Group checks are posted from this PC and read by the camera host;
+    /// only the most recent runs are kept.
+    #[tokio::test]
+    async fn verdicts_are_posted_locally_and_read_by_group() {
+        let temp = tempfile::tempdir().unwrap();
+        let config = temp.path().join("receiver.json");
+        save_json(
+            &config,
+            &json!({"bind":"127.0.0.1:0","lan":"10.0.0.0/24","key":"a".repeat(48),"folder":temp.path().join("images")}),
+        )
+        .unwrap();
+        let s = Receiver::open(config).unwrap();
+        let read = |run: &str, group: &str| {
+            let s = s.clone();
+            let (run, group) = (run.to_owned(), group.to_owned());
+            async move {
+                let r = get_verdict(State(s), UrlPath((run, group))).await;
+                let bytes = axum::body::to_bytes(r.into_body(), 4096).await.unwrap();
+                serde_json::from_slice::<Value>(&bytes).unwrap()
+            }
+        };
+        let run = "stack-1795000000000-1";
+        assert_eq!(read(run, "ptp-1-2").await["state"], "pending");
+        let body = json!({"verdicts":[{"group_id":"ptp-1-2","plane":2,"verdict":"demote","retake":true,
+            "reason":"witness tiles disagree locally"},{"group_id":"frame-000001.ARW","plane":1,"verdict":"decoded","retake":false}]});
+        let lan = post_verdicts(
+            State(s.clone()),
+            ConnectInfo("10.0.0.13:1".parse().unwrap()),
+            UrlPath(run.into()),
+            Json(body.clone()),
+        )
+        .await;
+        assert_eq!(
+            lan.status(),
+            StatusCode::FORBIDDEN,
+            "only this PC posts checks"
+        );
+        let local = post_verdicts(
+            State(s.clone()),
+            ConnectInfo("127.0.0.1:1".parse().unwrap()),
+            UrlPath(run.into()),
+            Json(body),
+        )
+        .await;
+        assert!(local.status().is_success());
+        let v = read(run, "ptp-1-2").await;
+        assert_eq!(
+            (v["state"].as_str(), v["retake"].as_bool()),
+            (Some("checked"), Some(true))
+        );
+        assert_eq!(read(run, "frame-000001.ARW").await["retake"], false);
+        let bad = post_verdicts(
+            State(s.clone()),
+            ConnectInfo("127.0.0.1:1".parse().unwrap()),
+            UrlPath(run.into()),
+            Json(json!({"verdicts":[{"group_id":"../x","verdict":"pass"}]})),
+        )
+        .await;
+        assert_eq!(bad.status(), StatusCode::BAD_REQUEST);
+        for n in 2..=VERDICT_RUNS + 1 {
+            post_verdicts(
+                State(s.clone()),
+                ConnectInfo("127.0.0.1:1".parse().unwrap()),
+                UrlPath(format!("stack-179500000000{n}-1")),
+                Json(json!({"verdicts":[{"group_id":"g","verdict":"pass"}]})),
+            )
+            .await;
+        }
+        assert_eq!(
+            read(run, "ptp-1-2").await["state"],
+            "pending",
+            "oldest run evicted"
+        );
+    }
 
     /// The engine following a capture reads its journal every second. An
     /// update that lands during such a read must still be saved.

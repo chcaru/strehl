@@ -153,7 +153,7 @@ impl CaptureWorkspace {
             && (capturing || run.idle < follow::ABANDONED)
             && let Some(engine) = engine
         {
-            match follow::Follower::start(engine, &run.folder) {
+            match follow::Follower::start(engine, &run.folder, Some(self.config.clone())) {
                 Ok(f) => {
                     self.follower = Some(f);
                     self.follow_note = None;
@@ -904,6 +904,34 @@ impl CaptureWorkspace {
             egui::Checkbox::new(&mut self.stack_when_done, "Stack when the capture finishes"),
         )
         .on_hover_text("Open the finished capture in Projects and start the stack with your current settings. Skipped while another stack or import is running.");
+        // Error correction is the camera host's setting; its verdicts come
+        // from this checker, so it needs the checker on.
+        let supported = s.state["error_correction"].is_boolean();
+        let active = matches!(
+            s.state["phase"].as_str(),
+            Some("capturing" | "paused" | "scanning")
+        );
+        let mut correct = s.state["error_correction"] == true;
+        if ui
+            .add_enabled(
+                supported && s.fresh() && !s.pending && !active && (self.follow_enabled || correct),
+                egui::Checkbox::new(&mut correct, "Error correction"),
+            )
+            .on_hover_text(if supported {
+                "After each plane the camera holds focus until this PC has checked it (about 2 s), and takes a group that failed for movement, a focus slip or a level change again on the spot, up to twice. Planes that fail for too little detail are not retaken. Needs the checks above."
+            } else {
+                "Update the camera host to use error correction."
+            })
+            .changed()
+        {
+            self.command(s, Command::ErrorCorrection { enabled: correct });
+        }
+        if s.state["error_correction"] == true && !self.follow_enabled {
+            ui.colored_label(
+                AMBER,
+                "Error correction needs the checks above; without them the camera stops waiting after one plane.",
+            );
+        }
         let saved = s.state["saved"].as_u64();
         match &self.follower {
             Some(f) => {
@@ -948,6 +976,13 @@ impl CaptureWorkspace {
                 }
                 if p.align_pairs > 0 {
                     ui.small(format!("{} alignment pairs measured", p.align_pairs));
+                }
+                if p.retaken > 0 {
+                    ui.small(format!(
+                        "{} plane{} retaken during the capture",
+                        p.retaken,
+                        if p.retaken == 1 { "" } else { "s" }
+                    ));
                 }
                 if p.attention > 0 {
                     ui.colored_label(

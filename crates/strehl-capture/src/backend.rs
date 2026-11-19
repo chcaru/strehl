@@ -54,6 +54,15 @@ pub trait Camera: Send {
     fn finish_transfers(&mut self) -> Result<()> {
         Ok(())
     }
+    /// Error correction: the PC checker's verdict on a captured group (its
+    /// camera group id, or its frame name for a single shot). `None` while
+    /// it is pending; an error when this backend or receiver cannot answer.
+    fn verdict(&mut self, _group: &str) -> Result<Option<Value>> {
+        bail!("This camera backend does not receive group checks")
+    }
+    /// The next capture repeats the plane just captured (a retake) instead
+    /// of starting the next one.
+    fn repeat_plane(&mut self) {}
 }
 
 pub fn property(status: &Value, name: &str) -> Option<u64> {

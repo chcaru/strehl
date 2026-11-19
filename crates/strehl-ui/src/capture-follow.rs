@@ -15,18 +15,22 @@
 use anyhow::{Context, Result};
 use serde_json::{Value, json};
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, BTreeSet, HashSet},
     fs,
     io::Write,
     path::{Path, PathBuf},
     process::{Command, Stdio},
+    sync::mpsc,
     time::{Duration, Instant},
 };
 
 /// A run whose records have not changed for this long, with the camera not
 /// capturing, is no longer followed.
 pub(crate) const ABANDONED: Duration = Duration::from_secs(600);
-const POLL: Duration = Duration::from_millis(500);
+/// With error correction the camera host holds focus until a group's check
+/// arrives, so the journal is read often and the checker polls quickly.
+const POLL: Duration = Duration::from_millis(200);
+const FOLLOW_INTERVAL_MS: &str = "250";
 
 /// What the checker has recorded for a run so far.
 #[derive(Clone, Debug, Default, PartialEq)]
@@ -43,20 +47,30 @@ pub(crate) struct Progress {
     pub retake: Vec<u64>,
     /// Alignment pairs measured while capturing.
     pub align_pairs: u64,
+    /// Planes taken again during the capture (error correction).
+    pub retaken: usize,
 }
 
-/// Reads the checker's journal: one JSON line per plane, a later line for a
-/// plane replacing an earlier one, as the engine reads it when it resumes.
+/// Reads the checker's journal: one JSON line per checked group, a later
+/// line for a plane (its retake) replacing an earlier one, as the stack
+/// uses the plane's last group.
 pub(crate) fn progress(journal: &str) -> Progress {
     let mut planes = BTreeMap::new();
+    let mut groups: BTreeMap<u64, BTreeSet<String>> = BTreeMap::new();
     for line in journal.lines() {
         if let Ok(v) = serde_json::from_str::<Value>(line)
             && let Some(plane) = v["plane"].as_u64()
         {
+            if let Some(group) = v["group_id"].as_str() {
+                groups.entry(plane).or_default().insert(group.to_owned());
+            }
             planes.insert(plane, v);
         }
     }
-    let mut p = Progress::default();
+    let mut p = Progress {
+        retaken: groups.values().filter(|g| g.len() > 1).count(),
+        ..Progress::default()
+    };
     for v in planes.values() {
         let verdict = v["verdict"].as_str().unwrap_or("");
         if verdict != "incomplete" {
@@ -103,6 +117,43 @@ pub(crate) struct Follower {
     pub started: Instant,
     /// Set once the finished capture was offered to Projects.
     pub offered: bool,
+    /// Error correction: each checked group's verdict goes to this PC's
+    /// receiver, where the camera host reads it.
+    relay: Option<mpsc::Sender<Vec<Value>>>,
+    relayed: HashSet<String>,
+}
+
+/// The journal lines the camera host needs, keyed by group: the checker's
+/// verdict on each checked group.
+pub(crate) fn verdicts(journal: &str) -> Vec<Value> {
+    journal
+        .lines()
+        .filter_map(|line| serde_json::from_str::<Value>(line).ok())
+        .filter(|v| v["group_id"].is_string() && v["verdict"].is_string())
+        .map(|v| {
+            json!({"group_id":v["group_id"],"plane":v["plane"],"verdict":v["verdict"],
+                "retake":v["retake"] == true,"reason":v["reason"]})
+        })
+        .collect()
+}
+
+/// Posts verdicts in order, retrying briefly: the camera host waits for them.
+fn relay_thread(config: crate::capture_client::Config, run: String) -> mpsc::Sender<Vec<Value>> {
+    let (sender, receiver) = mpsc::channel::<Vec<Value>>();
+    let _ = std::thread::Builder::new()
+        .name("strehl-verdict-relay".into())
+        .spawn(move || {
+            for batch in receiver {
+                for attempt in 0..10 {
+                    match crate::capture_client::post_verdicts(&config, &run, &batch) {
+                        Ok(()) => break,
+                        Err(_) if attempt < 9 => std::thread::sleep(Duration::from_millis(200)),
+                        Err(_) => {}
+                    }
+                }
+            }
+        });
+    sender
 }
 
 /// The engine invocation: `follow <run>` with the desktop's shared cache and
@@ -110,7 +161,9 @@ pub(crate) struct Follower {
 /// the measurements are keyed exactly as the closing render looks them up.
 pub(crate) fn command(engine: &Path, run: &Path, cache: &Path) -> Result<Command> {
     let mut command = crate::engine::command(engine)?;
-    command.arg("follow").arg(run);
+    command
+        .args(["follow", "--interval-ms", FOLLOW_INTERVAL_MS])
+        .arg(run);
     crate::jobs::remove_experimental_overrides(&mut command, std::env::vars_os());
     command.env("STREHL_CACHE_DIR", cache);
     command.env_remove("RAYON_NUM_THREADS");
@@ -124,7 +177,13 @@ pub(crate) fn command(engine: &Path, run: &Path, cache: &Path) -> Result<Command
 }
 
 impl Follower {
-    pub fn start(engine: &Path, run: &Path) -> Result<Self> {
+    /// `relay`: the capture settings naming this PC's receiver, to hand each
+    /// verdict to the camera host (error correction).
+    pub fn start(
+        engine: &Path,
+        run: &Path,
+        relay: Option<crate::capture_client::Config>,
+    ) -> Result<Self> {
         let cache = strehl_cli::default_cache_root();
         fs::create_dir_all(&cache).context("Creating the engine cache")?;
         let journal = strehl_cli::follow_journal_path(&cache, run)
@@ -144,6 +203,8 @@ impl Follower {
             polled: None,
             started: Instant::now(),
             offered: false,
+            relay: None,
+            relayed: HashSet::new(),
         };
         if locked_elsewhere(&follower.lock) {
             // The other checker's own window opens the finished capture.
@@ -175,6 +236,9 @@ impl Follower {
             .spawn()
             .context("Starting the engine's capture checker")?;
         follower.child = Some(crate::jobs::OwnedChild(child));
+        follower.relay = relay
+            .zip(run.file_name().and_then(|n| n.to_str()))
+            .map(|(config, name)| relay_thread(config, name.to_owned()));
         follower.read_journal();
         Ok(follower)
     }
@@ -243,6 +307,18 @@ impl Follower {
         if let Ok(text) = fs::read_to_string(&self.journal) {
             self.progress = progress(&text);
             self.journal_len = len;
+            if let Some(relay) = &self.relay {
+                let fresh: Vec<Value> = verdicts(&text)
+                    .into_iter()
+                    .filter(|v| {
+                        self.relayed
+                            .insert(v["group_id"].as_str().unwrap_or_default().to_owned())
+                    })
+                    .collect();
+                if !fresh.is_empty() {
+                    let _ = relay.send(fresh);
+                }
+            }
         }
     }
 
@@ -257,7 +333,8 @@ impl Follower {
             "seconds":self.started.elapsed().as_secs_f64(),
             "checked":self.progress.checked,"passed":self.progress.passed,
             "attention":self.progress.attention,"retake_positions":self.progress.retake,
-            "align_pairs":self.progress.align_pairs})
+            "align_pairs":self.progress.align_pairs,"retaken":self.progress.retaken,
+            "relaying_verdicts":self.relay.is_some()})
     }
 }
 
@@ -310,9 +387,33 @@ mod tests {
                 attention: 2,
                 retake: vec![90, 110],
                 align_pairs: 6,
+                retaken: 0,
             }
         );
         assert_eq!(progress(""), Progress::default());
+    }
+
+    #[test]
+    fn a_retake_replaces_its_plane_and_every_group_is_relayed() {
+        let journal = [
+            r#"{"plane":1,"target":100,"group_id":"g1","verdict":"pass","retake":false}"#,
+            r#"{"plane":2,"target":110,"group_id":"g2","verdict":"demote","reason":"witness tiles disagree locally","retake":true}"#,
+            r#"{"plane":2,"target":110,"group_id":"g2b","verdict":"pass","retake":false}"#,
+            r#"{"plane":3,"target":120,"verdict":"pass"}"#,
+        ]
+        .join("\n");
+        let p = progress(&journal);
+        assert_eq!((p.checked, p.passed, p.attention, p.retaken), (3, 3, 0, 1));
+        assert!(p.retake.is_empty(), "the retake passed");
+        let v = verdicts(&journal);
+        let groups: Vec<_> = v.iter().map(|v| v["group_id"].as_str().unwrap()).collect();
+        assert_eq!(
+            groups,
+            ["g1", "g2", "g2b"],
+            "lines without a group are not relayed"
+        );
+        assert_eq!(v[1]["retake"], true);
+        assert_eq!(v[1]["reason"], "witness tiles disagree locally");
     }
 
     #[test]
@@ -325,7 +426,10 @@ mod tests {
         let command = command(&engine, Path::new("run-folder"), cache).unwrap();
         unsafe { std::env::remove_var("STREHL_FOLLOW_TEST_OVERRIDE") };
         let args: Vec<_> = command.get_args().collect();
-        assert_eq!(&args[args.len() - 2..], ["follow", "run-folder"]);
+        assert_eq!(
+            &args[args.len() - 4..],
+            ["follow", "--interval-ms", FOLLOW_INTERVAL_MS, "run-folder"]
+        );
         let envs: BTreeMap<_, _> = command.get_envs().collect();
         assert_eq!(
             envs.get(std::ffi::OsStr::new("STREHL_CACHE_DIR")),

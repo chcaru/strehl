@@ -691,6 +691,10 @@ pub struct PcCamera {
     uploads: UploadQueue,
     run: Option<String>,
     ordinal: usize,
+    /// Planes captured in this run, and whether the next capture repeats
+    /// the last one (a retake).
+    planes: usize,
+    repeat: bool,
     planned_frames: usize,
     raw_limit: u64,
     capacity_at: Instant,
@@ -747,6 +751,8 @@ impl PcCamera {
             uploads,
             run: None,
             ordinal: 0,
+            planes: 0,
+            repeat: false,
             planned_frames: 0,
             raw_limit: MAX_RAW,
             capacity_at: Instant::now(),
@@ -819,7 +825,12 @@ impl Camera for PcCamera {
         let shots = self.inner.shots_per_plane();
         let format = self.inner.raw_format();
         let group_stream = self.inner.group_stream();
-        let plane = self.ordinal / shots + 1;
+        // Planes are counted, not derived from the file count: a retake
+        // (error correction) records more files for the same plane.
+        if !std::mem::take(&mut self.repeat) || self.planes == 0 {
+            self.planes += 1;
+        }
+        let plane = self.planes;
         let mut files = Vec::new();
         let sink = &self.sink;
         let uploads = &self.uploads;
@@ -904,8 +915,26 @@ impl Camera for PcCamera {
             )?;
             self.run = Some(run.into());
             self.ordinal = 0;
+            self.planes = 0;
+            self.repeat = false;
         }
         self.uploads.snapshot(directory, run)
+    }
+    fn verdict(&mut self, group: &str) -> Result<Option<Value>> {
+        let run = self.run.clone().context("PC run is not registered")?;
+        let value = Sink::response(
+            self.sink
+                .request(
+                    reqwest::Method::GET,
+                    &format!("/api/runs/{run}/verdicts/{group}"),
+                )
+                .timeout(Duration::from_secs(2))
+                .send()?,
+        )?;
+        Ok((value["state"] == "checked").then_some(value))
+    }
+    fn repeat_plane(&mut self) {
+        self.repeat = true;
     }
 }
 

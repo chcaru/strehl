@@ -51,6 +51,9 @@ pub struct Snapshot {
     pub manage_power: bool,
     pub power_error: Option<String>,
     pub standby_at: Option<Instant>,
+    /// Hold focus after each group until the PC's check arrives, and take a
+    /// group that failed for a fault of its exposures again in place.
+    pub error_correction: bool,
 }
 impl Default for Snapshot {
     fn default() -> Self {
@@ -81,6 +84,7 @@ impl Default for Snapshot {
             manage_power: false,
             power_error: None,
             standby_at: None,
+            error_correction: false,
         }
     }
 }
@@ -97,6 +101,7 @@ pub enum Action {
         on: bool,
     },
     PowerPlan(bool),
+    ErrorCorrection(bool),
     PixelShift {
         shots: usize,
     },
@@ -485,6 +490,9 @@ fn run(
                         Action::PowerPlan(enabled) => {
                             ensure!(power.is_some(), "Studio outlets are not configured");
                             update(&s, |v| v.manage_power = enabled);
+                        }
+                        Action::ErrorCorrection(enabled) => {
+                            update(&s, |v| v.error_correction = enabled);
                         }
                         Action::Power { device, on } => {
                             let rig = power
@@ -1023,6 +1031,8 @@ fn capture(
     });
     let mut completed = 0;
     let mut light_requested = false;
+    // Error correction needs the PC's checker, so only a run stored there.
+    let mut verify = host && s.lock().unwrap().error_correction;
     let result = (|| -> Result<bool> {
         if let Some((rig, warmup)) = managed {
             update(s, |v| {
@@ -1084,64 +1094,116 @@ fn capture(
             if !checkpoint(c, s, control, Phase::Capturing)? {
                 return Ok(false);
             }
-            let before = refresh(c, s)?;
-            validate_exposure(&before)?;
-            ensure!(
-                before["pixel_shift_shots"].as_u64().unwrap_or(1) == shots,
-                "Capture mode changed during the stack; no next shutter was sent"
-            );
-            for key in [
-                "ExposureProgramMode",
-                "IsoSensitivity",
-                "ShutterSpeed",
-                "FNumber",
-            ] {
+            // Error correction repeats this block at the same focus position.
+            let mut retakes = 0;
+            loop {
+                let before = refresh(c, s)?;
+                validate_exposure(&before)?;
                 ensure!(
-                    property(&before, key) == property(&initial_exposure, key),
-                    "{key} changed during the run; sequence stopped before the next shutter"
+                    before["pixel_shift_shots"].as_u64().unwrap_or(1) == shots,
+                    "Capture mode changed during the stack; no next shutter was sent"
                 );
-            }
-            log.record(
+                for key in [
+                    "ExposureProgramMode",
+                    "IsoSensitivity",
+                    "ShutterSpeed",
+                    "FNumber",
+                ] {
+                    ensure!(
+                        property(&before, key) == property(&initial_exposure, key),
+                        "{key} changed during the run; sequence stopped before the next shutter"
+                    );
+                }
+                log.record(
                 "capture_intent",
                 json!({"ordinal":ordinal,"target":target,"pixel_shift_shots":shots,"camera_status":before}),
             )?;
-            c.sync_journal(&log.directory)?;
-            while !c.prepare_capture()? {
+                c.sync_journal(&log.directory)?;
+                while !c.prepare_capture()? {
+                    if !checkpoint(c, s, control, Phase::Capturing)? {
+                        return Ok(false);
+                    }
+                    thread::sleep(Duration::from_millis(100));
+                }
                 if !checkpoint(c, s, control, Phase::Capturing)? {
                     return Ok(false);
                 }
-                thread::sleep(Duration::from_millis(100));
-            }
-            if !checkpoint(c, s, control, Phase::Capturing)? {
-                return Ok(false);
-            }
-            s.lock().unwrap().exposure_uncertain = true;
-            let response = c.capture(plan.capture_timeout_s)?;
-            ensure!(
-                response["pixel_shift_shots"].as_u64().unwrap_or(1) == shots,
-                "Capture mode changed during the stack"
-            );
-            validate_capture(&response)?;
-            completed += 1;
-            update(s, |v| {
-                v.exposure_uncertain = false;
-                v.completed = completed;
-                if let Some(timing) = &mut v.timing {
-                    timing.complete_cycle(Instant::now());
+                s.lock().unwrap().exposure_uncertain = true;
+                let response = c.capture(plan.capture_timeout_s)?;
+                ensure!(
+                    response["pixel_shift_shots"].as_u64().unwrap_or(1) == shots,
+                    "Capture mode changed during the stack"
+                );
+                validate_capture(&response)?;
+                if retakes == 0 {
+                    completed += 1;
                 }
-            });
-            log.record(
-                if response["destination"] == "host-pc-queue" {
-                    "capture_buffered"
-                } else {
-                    "capture_complete"
-                },
-                json!({"ordinal":ordinal,"target":target,"response":response}),
-            )?;
-            c.sync_journal(&log.directory)?;
-            // Preview failure does not repeat or invalidate a completed exposure.
-            if let Err(e) = preview(c, s) {
-                s.lock().unwrap().preview_error = Some(e.to_string());
+                update(s, |v| {
+                    v.exposure_uncertain = false;
+                    v.completed = completed;
+                    if retakes == 0
+                        && let Some(timing) = &mut v.timing
+                    {
+                        timing.complete_cycle(Instant::now());
+                    }
+                });
+                log.record(
+                    if response["destination"] == "host-pc-queue" {
+                        "capture_buffered"
+                    } else {
+                        "capture_complete"
+                    },
+                    json!({"ordinal":ordinal,"target":target,"response":response}),
+                )?;
+                c.sync_journal(&log.directory)?;
+                // Preview failure does not repeat or invalidate a completed exposure.
+                if let Err(e) = preview(c, s) {
+                    s.lock().unwrap().preview_error = Some(e.to_string());
+                }
+                if !verify {
+                    break;
+                }
+                let group = group_key(&response).context("Captured group has no identity")?;
+                update(s, |v| {
+                    v.message =
+                        format!("Plane {} of {} · checking on the PC…", ordinal + 1, v.total)
+                });
+                match await_verdict(c, s, control, &group)? {
+                    Checked::Stop => return Ok(false),
+                    Checked::Pass => break,
+                    Checked::Retake(reason) if retakes < MAX_RETAKES => {
+                        retakes += 1;
+                        log.record(
+                        "retake_intent",
+                        json!({"ordinal":ordinal,"target":target,"group":group,"retake":retakes,"reason":reason}),
+                    )?;
+                        update(s, |v| {
+                            v.message = format!(
+                                "Plane {} of {} · retaking in place: {reason}",
+                                ordinal + 1,
+                                v.total
+                            )
+                        });
+                        c.repeat_plane();
+                    }
+                    Checked::Retake(reason) => {
+                        log.record(
+                        "retake_exhausted",
+                        json!({"ordinal":ordinal,"target":target,"group":group,"retakes":retakes,"reason":reason}),
+                    )?;
+                        break;
+                    }
+                    Checked::Unanswered(why) => {
+                        // Never stall a capture on the PC: stop waiting for
+                        // this run's checks and carry on as without them.
+                        verify = false;
+                        log.record(
+                            "error_correction_off",
+                            json!({"ordinal":ordinal,"group":group,"reason":why}),
+                        )?;
+                        break;
+                    }
+                }
             }
         }
         Ok(true)
@@ -1208,6 +1270,75 @@ fn capture(
             }
             Err(e)
         }
+    }
+}
+
+/// Error correction: retakes of one plane before keeping what it has.
+const MAX_RETAKES: usize = 2;
+/// How long a group's check may take to arrive. It normally arrives about
+/// 1.5-2 s after the group (the last RAW reaches the PC in 1.1-1.3 s and the
+/// check takes 0.2-0.4 s); without one, error correction stops for the run.
+const VERDICT_WAIT: Duration = Duration::from_secs(15);
+
+enum Checked {
+    Pass,
+    Retake(String),
+    /// No answer in time, or the backend or receiver cannot answer.
+    Unanswered(String),
+    Stop,
+}
+
+/// A captured group's identity as the PC's checker records it: the camera's
+/// group id, or for a single shot without one, its frame name.
+fn group_key(response: &Value) -> Option<String> {
+    let first = response["files"].as_array()?.first()?;
+    first["group_id"]
+        .as_str()
+        .filter(|g| !g.is_empty())
+        .or_else(|| first["name"].as_str())
+        .map(str::to_owned)
+}
+
+/// Holds focus until the PC has checked `group`. Pause and stop still apply.
+fn await_verdict(
+    c: &mut dyn Camera,
+    s: &Shared,
+    control: &AtomicU8,
+    group: &str,
+) -> Result<Checked> {
+    let deadline = Instant::now() + VERDICT_WAIT;
+    loop {
+        match c.verdict(group) {
+            Ok(Some(v)) => {
+                return Ok(if v["retake"] == true {
+                    Checked::Retake(v["reason"].as_str().unwrap_or("check failed").to_owned())
+                } else {
+                    Checked::Pass
+                });
+            }
+            Ok(None) => {}
+            Err(e) => {
+                // A receiver without the verdict store, or a backend without
+                // a PC, will never answer; a dropped request may.
+                let permanent = e.downcast_ref::<reqwest::Error>().is_none_or(|http| {
+                    http.status()
+                        .is_some_and(|s| matches!(s.as_u16(), 404 | 405))
+                });
+                if permanent {
+                    return Ok(Checked::Unanswered(format!("{e:#}")));
+                }
+            }
+        }
+        if Instant::now() >= deadline {
+            return Ok(Checked::Unanswered(format!(
+                "no check from the PC within {} s",
+                VERDICT_WAIT.as_secs()
+            )));
+        }
+        if !checkpoint(c, s, control, Phase::Capturing)? {
+            return Ok(Checked::Stop);
+        }
+        thread::sleep(Duration::from_millis(150));
     }
 }
 
@@ -1498,6 +1629,171 @@ mod tests {
         assert!(validate_capture(&bad).is_err());
     }
     use super::*;
+
+    /// A four-shot camera storing to the PC whose checker fails the groups
+    /// named in `retake` (or never answers, with `answer: false`).
+    struct Checked {
+        demo: Demo,
+        captures: usize,
+        focuses: Vec<u16>,
+        repeats: usize,
+        asked: Vec<String>,
+        retake: Vec<&'static str>,
+        answer: bool,
+    }
+    impl Checked {
+        fn new(retake: Vec<&'static str>, answer: bool) -> Self {
+            Self {
+                demo: Demo {
+                    shots: 4,
+                    ..Demo::default()
+                },
+                captures: 0,
+                focuses: Vec::new(),
+                repeats: 0,
+                asked: Vec::new(),
+                retake,
+                answer,
+            }
+        }
+    }
+    impl Camera for Checked {
+        fn identity(&self) -> Value {
+            self.demo.identity()
+        }
+        fn status(&mut self) -> Result<Value> {
+            let mut s = self.demo.status()?;
+            s["capture_destination"] = json!("host-pc");
+            s["raw_max_bytes"] = json!(crate::ptp::MEMBER_LIMIT);
+            Ok(s)
+        }
+        fn configure(&mut self) -> Result<()> {
+            Ok(())
+        }
+        fn focus(&mut self, target: u16, settle_ms: u32) -> Result<Value> {
+            self.focuses.push(target);
+            self.demo.focus(target, settle_ms)
+        }
+        fn capture(&mut self, _: u32) -> Result<Value> {
+            self.captures += 1;
+            let n = self.captures;
+            let files: Vec<_> = (1..=4)
+                .map(|k| json!({"name":format!("frame-{:06}.ARW",(n-1)*4+k),"bytes":122_968_064,
+                    "sha256":"a".repeat(64),"durable":false,"group_id":format!("ptp-test-{n}"),"member_index":k,"members":4}))
+                .collect();
+            Ok(
+                json!({"destination":"host-pc-queue","completion":"ram-queued-sha256","file_verification":"ram-sha256",
+                "raw_compression":"uncompressed","pixel_shift_shots":4,"group_complete":true,"files":files,
+                "camera_reply":{"completion":"ptp-group-complete","group_idle":true,"buffer_empty":true}}),
+            )
+        }
+        fn preview(&mut self) -> Result<Preview> {
+            self.demo.preview()
+        }
+        fn magnify(&mut self, _: u32, _: u16, _: u16) -> Result<()> {
+            Ok(())
+        }
+        fn disconnect(&mut self) -> Result<Value> {
+            self.demo.disconnect()
+        }
+        fn verdict(&mut self, group: &str) -> Result<Option<Value>> {
+            self.asked.push(group.to_owned());
+            if !self.answer {
+                bail!("no verdict store");
+            }
+            let retake = self.retake.contains(&group);
+            Ok(Some(
+                json!({"state":"checked","retake":retake,"reason":if retake {"witness tiles disagree locally"} else {""}}),
+            ))
+        }
+        fn repeat_plane(&mut self) {
+            self.repeats += 1;
+        }
+    }
+    fn checked_run(camera: &mut Checked, error_correction: bool) -> (Snapshot, String) {
+        let temp = tempfile::tempdir().unwrap();
+        let shared = Arc::new(Mutex::new(Snapshot {
+            error_correction,
+            ..Snapshot::default()
+        }));
+        let plan = Plan {
+            start: 60000,
+            end: 60002,
+            step: 1,
+            ..Plan::default()
+        };
+        capture(
+            camera,
+            &shared,
+            &AtomicU8::new(RUN),
+            plan,
+            temp.path().into(),
+            None,
+            None,
+        )
+        .unwrap();
+        let run = std::fs::read_dir(temp.path())
+            .unwrap()
+            .next()
+            .unwrap()
+            .unwrap()
+            .path();
+        let journal = std::fs::read_to_string(run.join("events.jsonl")).unwrap();
+        let s = shared.lock().unwrap().clone();
+        (s, journal)
+    }
+    #[test]
+    fn error_correction_retakes_a_failed_group_in_place() {
+        let mut camera = Checked::new(vec!["ptp-test-2"], true);
+        let (s, journal) = checked_run(&mut camera, true);
+        // Plane 2's first group failed: one more group, at the same focus.
+        assert_eq!(camera.captures, 4);
+        assert_eq!(camera.repeats, 1);
+        assert_eq!(
+            &camera.focuses[1..],
+            [60000, 60001, 60002],
+            "no focus move for the retake"
+        );
+        assert_eq!(
+            camera.asked,
+            ["ptp-test-1", "ptp-test-2", "ptp-test-3", "ptp-test-4"]
+        );
+        assert_eq!(s.completed, 3, "a retake is not a new plane");
+        assert_eq!(s.phase, Phase::Complete);
+        assert_eq!(journal.matches("\"event\":\"retake_intent\"").count(), 1);
+        assert!(journal.contains("\"group\":\"ptp-test-2\""));
+        assert_eq!(journal.matches("\"event\":\"capture_buffered\"").count(), 4);
+    }
+    #[test]
+    fn error_correction_gives_up_on_a_plane_and_on_a_silent_pc() {
+        // Every group of the plane fails: two retakes, then the plane keeps
+        // what it has and the stack goes on.
+        let mut camera = Checked::new(vec!["ptp-test-1", "ptp-test-2", "ptp-test-3"], true);
+        let (s, journal) = checked_run(&mut camera, true);
+        assert_eq!(camera.captures, 3 + 2);
+        assert_eq!(journal.matches("\"event\":\"retake_exhausted\"").count(), 1);
+        assert_eq!(s.completed, 3);
+        // A receiver that cannot answer: asked once, then the run carries on.
+        let mut camera = Checked::new(vec![], false);
+        let (s, journal) = checked_run(&mut camera, true);
+        assert_eq!(
+            (camera.captures, camera.asked.len(), s.completed),
+            (3, 1, 3)
+        );
+        assert_eq!(
+            journal
+                .matches("\"event\":\"error_correction_off\"")
+                .count(),
+            1
+        );
+        // Off: never asked.
+        let mut camera = Checked::new(vec!["ptp-test-1"], true);
+        let (s, _) = checked_run(&mut camera, false);
+        assert_eq!(
+            (camera.captures, camera.asked.len(), s.completed),
+            (3, 0, 3)
+        );
+    }
     #[test]
     fn whole_stack_admission_refuses_before_focus_shutter_or_journal() {
         struct FullDisk(Demo);

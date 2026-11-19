@@ -404,6 +404,21 @@ REGISTRY: dict[str, Declared] = {
         ),
         note="Round-2 performance plan stage Q12 (2026-11-18).",
     ),
+    "STREHL_FOLLOW_RETAKE_PLANES": Declared(
+        kind="diagnostic",
+        default="unset (no plane is forced)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "follow-cmd.rs forced_retakes(): a comma list of plane numbers whose "
+            "first checked group `strehl follow` reports as needing a retake, so "
+            "error correction's in-place retake can be exercised on the rig. "
+            "Only the follow journal (and the camera host reading it) sees it; "
+            "the stack judges every group itself. The desktop strips STREHL_* "
+            "from the checker, so it never applies there."
+        ),
+        note="Error correction during capture (2026-11-19).",
+    ),
     "STREHL_DEPTH_PASS": Declared(
         kind="control",
         default="fused (the restoration's depth map is measured during the fold where eligible)",

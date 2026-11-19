@@ -71,6 +71,25 @@ pub(crate) fn journal_in(root: &Path, dir: &Path) -> Result<PathBuf> {
     Ok(root.join(format!("{name}-{digest:016x}.jsonl")))
 }
 
+/// `STREHL_FOLLOW_RETAKE_PLANES`: planes whose first checked group is
+/// reported as needing a retake whatever its measurements, to exercise error
+/// correction on the rig. Diagnostic; never set by the desktop.
+fn forced_retakes() -> Result<Vec<u64>> {
+    match std::env::var("STREHL_FOLLOW_RETAKE_PLANES") {
+        Err(std::env::VarError::NotPresent) => Ok(Vec::new()),
+        Err(e) => Err(e).context("STREHL_FOLLOW_RETAKE_PLANES"),
+        Ok(v) => v
+            .split(',')
+            .filter(|p| !p.trim().is_empty())
+            .map(|p| {
+                p.trim().parse().with_context(|| {
+                    format!("STREHL_FOLLOW_RETAKE_PLANES={v:?}: {p:?} is not a plane number")
+                })
+            })
+            .collect(),
+    }
+}
+
 fn check_plane(
     g: &crate::pixel_shift_cmd::RecordedGroup,
     noise: &mut Option<strehl_core::noise::NoiseModel>,
@@ -86,7 +105,7 @@ fn check_plane(
     let frames = match frames {
         Ok(f) => f,
         Err(e) => {
-            return json!({"plane":g.plane,"target":g.target,"verdict":"failed","reason":format!("decode: {e:#}"),"retake":true});
+            return json!({"plane":g.plane,"target":g.target,"group_id":g.key(),"verdict":"failed","reason":format!("decode: {e:#}"),"retake":true});
         }
     };
     let first = &frames[0];
@@ -100,7 +119,7 @@ fn check_plane(
             },
         )
     });
-    let mut out = json!({"plane":g.plane,"target":g.target,"members":frames.len(),
+    let mut out = json!({"plane":g.plane,"target":g.target,"group_id":g.key(),"members":frames.len(),
         "names":g.files.iter().map(|f| f.name.clone()).collect::<Vec<_>>()});
     // The render's alignment plane is the group's first member: measure its
     // ladder pairs now, into the edge journal the closing render reads.
@@ -192,14 +211,16 @@ pub fn run(args: &FollowArgs) -> Result<()> {
             }
         }
     };
-    // Resume: planes already checked in an earlier session.
-    let mut done: BTreeMap<u64, Value> = BTreeMap::new();
+    // Resume: groups already checked in an earlier session, by group (a
+    // plane retaken during the capture has more than one). A line from
+    // before groups were recorded names only its plane and is checked again.
+    let mut done: BTreeMap<String, Value> = BTreeMap::new();
     if let Ok(text) = std::fs::read_to_string(&journal) {
         for line in text.lines() {
             if let Ok(v) = serde_json::from_str::<Value>(line)
-                && let Some(p) = v["plane"].as_u64()
+                && let Some(key) = v["group_id"].as_str()
             {
-                done.insert(p, v);
+                done.insert(key.to_string(), v);
             }
         }
     }
@@ -227,16 +248,35 @@ pub fn run(args: &FollowArgs) -> Result<()> {
             "left to the render"
         }
     );
+    let forced = forced_retakes()?;
+    // A forced plane's first group only, also across a resumed session.
+    let mut forced_done: std::collections::HashSet<u64> =
+        done.values().filter_map(|v| v["plane"].as_u64()).collect();
+    if !forced.is_empty() {
+        println!("forced retakes  : planes {forced:?} (STREHL_FOLLOW_RETAKE_PLANES)");
+    }
     let mut last_progress = Instant::now();
+    let mut planes;
+    let mut recorded;
     loop {
-        let groups = crate::pixel_shift_cmd::recorded_groups(&args.dir)?;
+        // Every group is checked, a retake included; the plane's last
+        // complete group is the one the stack uses.
+        let all = crate::pixel_shift_cmd::all_groups(&args.dir)?;
+        recorded = all.len();
+        planes = crate::pixel_shift_cmd::plane_groups(all.clone());
+        let groups = &planes;
         let mut admitted = 0;
-        let fresh: Vec<&crate::pixel_shift_cmd::RecordedGroup> = groups
+        let fresh: Vec<&crate::pixel_shift_cmd::RecordedGroup> = all
             .iter()
-            .filter(|g| g.complete && !done.contains_key(&g.plane))
+            .filter(|g| g.complete && !done.contains_key(&g.key()))
             .collect();
         for g in fresh {
-            let v = check_plane(g, &mut noise, groups_journal.as_ref(), ladder.as_mut());
+            let mut v = check_plane(g, &mut noise, groups_journal.as_ref(), ladder.as_mut());
+            if forced.contains(&g.plane) && forced_done.insert(g.plane) {
+                v["verdict"] = json!("demote");
+                v["reason"] = json!("forced retake (STREHL_FOLLOW_RETAKE_PLANES)");
+                v["retake"] = json!(true);
+            }
             println!(
                 "plane {:>4}      : {} {}{}{}",
                 g.plane,
@@ -254,14 +294,14 @@ pub fn run(args: &FollowArgs) -> Result<()> {
             );
             writeln!(sink, "{v}")?;
             sink.flush()?;
-            done.insert(g.plane, v);
+            done.insert(g.key(), v);
             admitted += 1;
             last_progress = Instant::now();
         }
         let finished = args.dir.join("result.json").is_file();
         let pending = groups
             .iter()
-            .filter(|g| !done.contains_key(&g.plane))
+            .filter(|g| !done.contains_key(&g.key()))
             .count();
         if finished && groups.iter().all(|g| g.complete) && pending == 0 {
             break;
@@ -270,11 +310,11 @@ pub fn run(args: &FollowArgs) -> Result<()> {
             // Finished but some planes can never complete (missing or
             // undurable members): report and stop rather than wait forever.
             for g in groups.iter().filter(|g| !g.complete) {
-                let v = json!({"plane":g.plane,"target":g.target,"verdict":"incomplete","retake":true,
+                let v = json!({"plane":g.plane,"target":g.target,"group_id":g.key(),"verdict":"incomplete","retake":true,
                     "reason":"a bound member has no durable receipt with its hash"});
                 println!("plane {:>4}      : incomplete", g.plane);
                 writeln!(sink, "{v}")?;
-                done.insert(g.plane, v);
+                done.insert(g.key(), v);
             }
             break;
         }
@@ -288,20 +328,28 @@ pub fn run(args: &FollowArgs) -> Result<()> {
         }
         std::thread::sleep(Duration::from_millis(args.interval_ms));
     }
-    let retakes: Vec<u64> = done
-        .values()
+    // The verdicts of the groups the stack uses, one a plane.
+    let used: Vec<&Value> = planes.iter().filter_map(|g| done.get(&g.key())).collect();
+    let retakes: Vec<u64> = used
+        .iter()
         .filter(|v| v["retake"] == true)
         .filter_map(|v| v["target"].as_u64())
         .collect();
-    let passed = done.values().filter(|v| v["verdict"] == "pass").count();
-    let demoted = done
-        .values()
+    let passed = used.iter().filter(|v| v["verdict"] == "pass").count();
+    let demoted = used
+        .iter()
         .filter(|v| v["verdict"] != "pass" && v["verdict"] != "decoded")
         .count();
     println!(
         "checked         : {} planes, {passed} four-shot groups pass, {demoted} need attention",
-        done.len()
+        used.len()
     );
+    if recorded > planes.len() {
+        println!(
+            "retaken         : {} groups superseded by a retake during the capture",
+            recorded - planes.len()
+        );
+    }
     if let Some(ladder) = &ladder {
         let pairs: u64 = done
             .values()
@@ -321,7 +369,7 @@ pub fn run(args: &FollowArgs) -> Result<()> {
         );
     }
     if let Some(out) = &args.out {
-        let four = done.values().any(|v| v["members"] == 4);
+        let four = used.iter().any(|v| v["members"] == 4);
         let exe = std::env::current_exe()?;
         let mut cmd = std::process::Command::new(exe);
         cmd.arg("stack").arg(&args.dir).arg("--out").arg(out);

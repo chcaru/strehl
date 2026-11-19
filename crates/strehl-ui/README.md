@@ -84,6 +84,18 @@ journal and log are in the cache's `follow` folder. Restarting it resumes where 
 stopped, and a run with no new RAWs for 10 minutes, with the camera idle, is no
 longer followed. Both switches reset to on when the desktop starts.
 
+**Error correction** (Capture screen, off by default; it is the camera host's
+setting) uses those checks during the capture. After each plane the camera holds
+focus until this PC has checked the group, about 2 s on the A7CR. If the group
+failed for a fault of its exposures, it is taken again on the spot, without
+moving focus, up to twice. Such faults are movement or a focus slip between the
+shots (the green witness disagrees) or a level change. Planes that fail for too
+little scene detail, or for anything else a new exposure would repeat, are not
+retaken. The stack uses each plane's last complete group, and the panel counts
+the planes retaken. If no check arrives within 15 s, the camera stops waiting for
+the rest of that capture and carries on as without error correction. The checks
+reach the camera through this PC's receiver.
+
 **Working with several passes of one subject**
 
 Multi-stack sessions are experimental and only in builds with the `multi-stack`

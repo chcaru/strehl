@@ -221,7 +221,9 @@ capture journal and no `result.json`). `capture.follow` reports stacking during
 capture: the switches, and under `checker` the followed run, its `state`
 (`running`, `finished`, `failed`, `stopped`), whether it only `observing` another
 process's checker, and the counts `checked`, `passed`, `attention`,
-`retake_positions` and `align_pairs`. `note` says what became of the last
+`retake_positions` and `align_pairs`, plus `retaken` (planes taken again during the capture). Error
+correction is the controller's `error_correction` state, set between stacks
+with `capture_command` `{"op":"error_correction","enabled":true}`. `note` says what became of the last
 finished capture. `scripts/replay-capture.py` re-creates a recorded run file by file
 at its recorded pace and can register it with a scratch receiver configuration.
 Use it to exercise this without a camera.

@@ -186,6 +186,7 @@ impl Session {
             "magnifier_ratios":ratios,"magnifier_current":property(&s.status,"Focus_Magnifier_Setting").map(|n|n>>32),"suggestion":s.suggestion,"samples":s.samples,
             "exposure":exposure_summary(&s.status)});
         state["schedule"] = json!(schedule);
+        state["error_correction"] = json!(s.error_correction);
         state
     }
     pub fn dispatch(&self, request: CommandRequest) -> Result<()> {
@@ -357,6 +358,13 @@ impl Session {
                     "Connect a camera that supports verified standby first"
                 );
                 action = Some(Action::PowerPlan(enabled));
+            }
+            Command::ErrorCorrection { enabled } => {
+                ensure!(
+                    !s.phase.active() && !s.command_pending,
+                    "Change error correction between stacks"
+                );
+                action = Some(Action::ErrorCorrection(enabled));
             }
             Command::Connect {} => {
                 ensure!(!s.connected, "Camera is already connected");
@@ -598,6 +606,11 @@ pub enum Command {
         on: bool,
     },
     PowerPlan {
+        enabled: bool,
+    },
+    /// Hold focus after each group until the PC has checked it, and retake
+    /// a group that failed for a fault of its exposures in place.
+    ErrorCorrection {
         enabled: bool,
     },
     Connect {},

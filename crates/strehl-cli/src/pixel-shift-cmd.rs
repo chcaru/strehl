@@ -81,8 +81,44 @@ pub fn receipts(dir: &Path) -> Result<HashMap<String, String>> {
         .collect())
 }
 
-/// The run's recorded groups, in plane order.
+impl RecordedGroup {
+    /// The group's identity within its run: the camera's group id, or for a
+    /// single-shot file without one, its file name.
+    pub fn key(&self) -> String {
+        if self.group_id.is_empty() {
+            self.files
+                .first()
+                .map_or_else(String::new, |f| f.name.clone())
+        } else {
+            self.group_id.clone()
+        }
+    }
+}
+
+/// The run's focal planes, in plane order, each as the group the stack uses:
+/// its last complete group, so a retake taken during the capture (error
+/// correction) supersedes the group it repeats; or, if no group of the plane
+/// is complete, its last group. A run without retakes has one group a plane.
 pub fn recorded_groups(dir: &Path) -> Result<Vec<RecordedGroup>> {
+    Ok(plane_groups(all_groups(dir)?))
+}
+
+/// [`recorded_groups`]'s choice among [`all_groups`].
+pub fn plane_groups(groups: Vec<RecordedGroup>) -> Vec<RecordedGroup> {
+    let mut planes: BTreeMap<u64, RecordedGroup> = BTreeMap::new();
+    for g in groups {
+        match planes.get(&g.plane) {
+            Some(kept) if kept.complete && !g.complete => {}
+            _ => {
+                planes.insert(g.plane, g);
+            }
+        }
+    }
+    planes.into_values().collect()
+}
+
+/// Every group the run recorded, retakes included, in recording order.
+pub fn all_groups(dir: &Path) -> Result<Vec<RecordedGroup>> {
     let events = dir.join("events.jsonl");
     ensure!(
         events.is_file(),
@@ -90,7 +126,8 @@ pub fn recorded_groups(dir: &Path) -> Result<Vec<RecordedGroup>> {
         dir.display()
     );
     let durable = receipts(dir)?;
-    let mut groups: BTreeMap<u64, RecordedGroup> = BTreeMap::new();
+    let mut groups: Vec<RecordedGroup> = Vec::new();
+    let mut index: HashMap<(u64, String), usize> = HashMap::new();
     for e in jsonl(&events)? {
         if !matches!(
             e["event"].as_str(),
@@ -126,20 +163,27 @@ pub fn recorded_groups(dir: &Path) -> Result<Vec<RecordedGroup>> {
                 members: f["members"].as_u64().unwrap_or(1),
                 sha256: sha.into(),
             };
-            groups
-                .entry(plane)
-                .or_insert_with(|| RecordedGroup {
+            // Members of one exposure group share its id; a single-shot file
+            // without one is a group of its own.
+            let key = if bound.group_id.is_empty() && bound.members == 1 {
+                bound.name.clone()
+            } else {
+                bound.group_id.clone()
+            };
+            let at = *index.entry((plane, key)).or_insert_with(|| {
+                groups.push(RecordedGroup {
                     plane,
                     target,
                     group_id: bound.group_id.clone(),
                     files: Vec::new(),
                     complete: false,
-                })
-                .files
-                .push(bound);
+                });
+                groups.len() - 1
+            });
+            groups[at].files.push(bound);
         }
     }
-    for g in groups.values_mut() {
+    for g in &mut groups {
         g.files.sort_by_key(|f| f.member_index);
         let n = g.files.first().map_or(0, |f| f.members) as usize;
         g.complete = n > 0
@@ -151,7 +195,7 @@ pub fn recorded_groups(dir: &Path) -> Result<Vec<RecordedGroup>> {
                     && f.durable
             });
     }
-    Ok(groups.into_values().collect())
+    Ok(groups)
 }
 
 /// Measured geometry and photometry of one four-member group.
@@ -1590,6 +1634,73 @@ mod tests {
         assert!(a.witness.is_some(), "the planted group covers the lattice");
         assert_eq!(bits(&a), bits(&b));
         assert_eq!(judge(&a, ResidualMode::Compensate), None, "{:?}", a);
+    }
+
+    /// Writes a capture folder: one `capture_buffered` event per group
+    /// `(plane, group id, first frame number, members durable)`, four
+    /// members each, with receipts for the durable ones.
+    fn capture_folder(name: &str, groups: &[(u64, &str, usize, usize)]) -> PathBuf {
+        let dir = std::env::temp_dir().join(format!("strehl-retake-{name}-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        let (mut events, mut receipts) = (String::new(), String::new());
+        for &(plane, group, first, durable) in groups {
+            let files: Vec<Value> = (0..4)
+                .map(|k| {
+                    let name = format!("frame-{:06}.ARW", first + k);
+                    let sha = format!("{:064x}", first + k);
+                    std::fs::write(dir.join(&name), b"raw").unwrap();
+                    if k < durable {
+                        receipts.push_str(&json!({"logical_name":name,"sha256":sha,"durable":true,"ok":true}).to_string());
+                        receipts.push('\n');
+                    }
+                    json!({"name":name,"plane":plane,"sha256":sha,"group_id":group,"member_index":k+1,"members":4})
+                })
+                .collect();
+            events.push_str(
+                &json!({"event":"capture_buffered","data":{"target":100+plane,"response":{"files":files}}})
+                    .to_string(),
+            );
+            events.push('\n');
+        }
+        std::fs::write(dir.join("events.jsonl"), events).unwrap();
+        std::fs::write(dir.join("transfer-receipts.jsonl"), receipts).unwrap();
+        dir
+    }
+
+    /// A plane retaken during the capture keeps its last complete group; a
+    /// run without retakes reads exactly as before.
+    #[test]
+    fn a_retaken_plane_uses_its_last_complete_group() {
+        let plain = capture_folder("plain", &[(1, "g1", 1, 4), (2, "g2", 5, 4)]);
+        let groups = recorded_groups(&plain).unwrap();
+        assert_eq!(groups.len(), 2);
+        assert!(groups.iter().all(|g| g.complete && g.files.len() == 4));
+        assert_eq!(all_groups(&plain).unwrap().len(), 2);
+
+        // Plane 2 failed its check and was retaken as g2b; plane 3's retake
+        // g3b never completed, so plane 3 keeps its complete first group.
+        let dir = capture_folder(
+            "retaken",
+            &[
+                (1, "g1", 1, 4),
+                (2, "g2", 5, 4),
+                (2, "g2b", 9, 4),
+                (3, "g3", 13, 4),
+                (3, "g3b", 17, 2),
+            ],
+        );
+        assert_eq!(all_groups(&dir).unwrap().len(), 5);
+        let groups = recorded_groups(&dir).unwrap();
+        let chosen: Vec<(u64, &str, bool)> = groups
+            .iter()
+            .map(|g| (g.plane, g.group_id.as_str(), g.complete))
+            .collect();
+        assert_eq!(chosen, [(1, "g1", true), (2, "g2b", true), (3, "g3", true)]);
+        assert_eq!(groups[1].files[0].name, "frame-000009.ARW");
+        assert_eq!(groups[1].key(), "g2b");
+        let _ = std::fs::remove_dir_all(&plain);
+        let _ = std::fs::remove_dir_all(&dir);
     }
 
     /// A retake is suggested only for a fault of the exposures, never for a

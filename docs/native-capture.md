@@ -177,6 +177,20 @@ reusing every check and alignment pair; see the
 [desktop README](../crates/strehl-ui/README.md). There is still no provisional
 stacked photograph during the capture.
 
+Error correction (2026-11-19) closes the loop to the camera:
+- The desktop posts each checked group's verdict to the PC receiver
+  (`POST /api/runs/{run}/verdicts`, loopback only; memory only, last four runs).
+- The controller, with `error_correction` on, holds focus after each group and
+  reads `GET /api/runs/{run}/verdicts/{group}`.
+- A group that failed for a fault of its exposures is captured again at the same
+  position (`retake_intent` in `events.jsonl`; the files carry the same `plane`),
+  up to twice (`retake_exhausted`). That means witness misregistration,
+  disagreeing witness tiles or level disagreement (`retake_helps`).
+- Without an answer in 15 s, or from a receiver without the store, it records
+  `error_correction_off` and continues.
+- The engine uses each plane's last complete group (`recorded_groups`), and
+  `follow` checks every group, retakes included.
+
 The controller also accepts `exposure {iso, shutter}` (camera property values,
 manual mode only, restored when the camera is released) and
 `capture_positions {positions}` (a fixed-focus burst or retakes, approached in the

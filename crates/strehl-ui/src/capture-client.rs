@@ -295,6 +295,19 @@ fn post_json(
     );
     Ok(value)
 }
+/// Error correction: hands the in-capture checker's verdicts to this PC's
+/// receiver, where the camera host reads them by group.
+pub(crate) fn post_verdicts(config: &Config, run: &str, verdicts: &[Value]) -> Result<()> {
+    let (settings, url) = receiver_config(config)?;
+    post_json(
+        &client()?,
+        &url,
+        &format!("/api/runs/{run}/verdicts"),
+        &settings.key,
+        &json!({"verdicts":verdicts}),
+    )?;
+    Ok(())
+}
 fn receiver_config(config: &Config) -> Result<(ReceiverConfig, String)> {
     let value: ReceiverConfig = serde_json::from_slice(&read_file(&config.receiver_config, 65536)?)
         .context("Read this PC's receiver settings")?;
@@ -560,7 +573,6 @@ pub(crate) fn verify_completed(folder: &Path) -> Result<CompletedStack> {
         result["completed_camera_events"].as_u64() == Some(planes as u64),
         "Incomplete focal planes"
     );
-    let frames = planes * shots;
     let mut receipts = BTreeMap::new();
     for line in read_file(&folder.join("transfer-receipts.jsonl"), 64 * 1024 * 1024)?
         .split(|b| *b == b'\n')
@@ -571,7 +583,14 @@ pub(crate) fn verify_completed(folder: &Path) -> Result<CompletedStack> {
             receipts.insert(name.to_owned(), r);
         }
     }
-    ensure!(receipts.len() == frames, "Incomplete RAW receipts");
+    // Error correction can take a plane's group again during the capture, so
+    // a complete run has at least one group a plane, in whole groups, with
+    // every RAW it numbered received.
+    let frames = receipts.len();
+    ensure!(
+        frames >= planes * shots && frames.is_multiple_of(shots),
+        "Incomplete RAW receipts"
+    );
     for ordinal in 1..=frames {
         let name = format!("frame-{ordinal:06}.ARW");
         let r = receipts.get(&name).context("Missing RAW member")?;
@@ -748,6 +767,42 @@ mod tests {
             verify_completed(folder).is_err(),
             "stopped stacks must not be promoted"
         );
+    }
+    #[test]
+    fn a_completed_capture_may_hold_whole_retaken_groups() {
+        let dir = tempfile::tempdir().unwrap();
+        let folder = dir.path();
+        save_json(
+            &folder.join("manifest.json"),
+            &json!({"focus_positions":[123],"camera":{"pixel_shift_shots":4}}),
+        )
+        .unwrap();
+        save_json(
+            &folder.join("result.json"),
+            &json!({"outcome":"complete","raw_file_verification":"pc-durable-sha256","completed_camera_events":1}),
+        )
+        .unwrap();
+        let receipt = |n: usize| {
+            let name = format!("frame-{n:06}.ARW");
+            std::fs::write(folder.join(format!("{name}.straw")), b"fixture").unwrap();
+            json!({"logical_name":name,"ok":true,"durable":true,"sha256":"a".repeat(64),"storage_bytes":7,"storage_encoding":"strehl-archive-v1"}).to_string()
+        };
+        let journal = folder.join("transfer-receipts.jsonl");
+        // The plane's group, then its retake taken during the capture.
+        let all: Vec<String> = (1..=8).map(receipt).collect();
+        std::fs::write(&journal, all.join("\n")).unwrap();
+        assert_eq!(verify_completed(folder).unwrap().frames, 8);
+        std::fs::write(&journal, all[..7].join("\n")).unwrap();
+        assert!(verify_completed(folder).is_err(), "a partial retake group");
+        let gap: Vec<String> = all
+            .iter()
+            .take(4)
+            .cloned()
+            .chain([receipt(12)])
+            .chain(all[5..8].iter().cloned())
+            .collect();
+        std::fs::write(&journal, gap.join("\n")).unwrap();
+        assert!(verify_completed(folder).is_err(), "a missing frame number");
     }
     #[test]
     fn only_the_newest_run_with_a_journal_and_no_result_is_in_progress() {
