@@ -1,7 +1,8 @@
 # A7CR four-shot stacking performance, round 2: investigation and plan
 
 **Status:** Partly implemented (2026-11-18): Q0, Q1a/c/d/e, Q2, Q3a-c, Q4, Q5a/b/f, Q6,
-Q8, Q9a and Q10's read-ahead are on `main`; results per stage and what is not built in
+Q8, Q9a, Q10's read-ahead and Q12 are on `main`; Q10's decode-ahead and Q5c were measured
+and not kept; Q18's hit rate is measured; results per stage and what is not built in
 [`implementation.md`](../../experiments/a7cr-stacking-performance-2026-11-18/implementation.md)
 (later render 45.6 s to 23-24 s, first render 107.7 s to 48.8 s, bytes unchanged).
 Evidence and prototypes:

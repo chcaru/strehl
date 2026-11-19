@@ -1,0 +1,35 @@
+# Q18 hit-rate simulation (round-2 plan, section 8: speculative reference capture), 2026-11-18.
+#
+# Question: before the main fold ends, can the preview (every 8th plane: 0, 8, ..., 192; 25 of
+# 196) predict which frames the optical restoration's planned tiles take their reference crops
+# from, closely enough to capture those crops during the fold?
+#
+# Method: a temporary build (not committed) ran, after the main fold's depth tap, the plan twice:
+# from the full energies (the real plan: depth_guide::analyse, then optical_restore::plan_tiles'
+# selection, top 200 tiles by confident fraction, each taking the two folded frames nearest its
+# median focus) and from the preview's 25 frames alone (energies compacted to those frames, so
+# `analyse` sees only them; its focus scaled back by the stride). Control: stride 1 must reproduce
+# the real plan exactly. A first version passed `analyse` a reduced mask, which it does not use to
+# select frames (it builds every cell's curve from all frames' energies): it reported a perfect
+# prediction, which the control could not distinguish. The compaction fixed it; the stride-8 run
+# then shows misses, so the measure can fail.
+#
+# Input: scarab capture, GPU route, later render, output SHA-256 02A6C8C2... (unchanged).
+
+stride 1 (control): 196 frames; 200 of 200 actual tiles in the predicted top 200;
+  |focus_full - focus_preview| max 0.0 frames; every capture radius 200 of 200.
+
+stride 8 (the preview): 25 frames; preview candidates 643 (full: 695)
+  tile set:  predicted top 200 holds 81 of the 200 planned tiles; top 300: 118; top 400: 149;
+             all 643 candidates: 187 (13 planned tiles have no preview focus)
+  focus:     |focus_full - focus_preview| over 187 tiles: p50 0.62, p90 1.00, p99 1.93, max 2.61 frames
+  capture radius R (frames round(preview focus) +- R, every preview candidate):
+             R=2: 184 of 200 tiles fully captured (5 crops per tile)
+             R=3: 186 of 200 (7)
+             R=4: 187 of 200 (9); R=6, 8, 12: 187 of 200
+
+Reading (DERIVED): the preview predicts each tile's focus to about a frame, but not which tiles
+the plan will rank highest; capturing every preview candidate (643 tiles) at R=3 holds both
+reference crops for 186 of 200 tiles (93 %), the rest fall back to the column-windowed gather
+(Q2). Size at 136 x 136 px x 12 planes x f32 (888 KB a crop): 643 x 7 crops = about 4 GB of host
+memory, read back over the fold. One stack: the hit rate is UNVERIFIED on other subjects.

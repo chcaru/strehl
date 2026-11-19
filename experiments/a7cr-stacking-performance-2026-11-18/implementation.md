@@ -43,6 +43,8 @@ and `off` after Q0.
 | Q8 | `7723e9fec` | 24.1 s | restoration convolutions on the device, bit-identical (device test; every scarab convolution under `STREHL_RESTORE_CHECK=1`) |
 | Q10 (read-ahead) | `3203c0209` | 23.0-23.8 s | the main pass's first files read while the preview collapses |
 | Q3 (witness rows) | `b4d0a3629` | (first render) 50.9 to 48.8 s | the witness's terms per row, then the sums in order: 588 to 400 ms a group on one thread |
+| Q12 | `93d425bae` | (closing render after `strehl follow`) 30.2 to 24.6 s | an edge journal keyed by both archives' SHA-256 and the estimator; `follow` measures each plane's ladder pairs as it arrives (1,413 pairs); the solve decodes only frames an unjournalled pair needs; warp maps byte-identical (`9EBD2B78...`) fresh, journalled and without |
+| Fold end | `0d106d3df` | main fold 10.2-10.4 to 9.9-10.1 s | the totals' readback after the fold was 1.45 s, mostly allocating the host totals on one thread (mimalloc zeroes reused memory); parallel fill, pipelined readback, parallel copy-out: 1.1-1.2 s |
 
 ## Measured and not kept
 
@@ -58,6 +60,26 @@ and `off` after Q0.
   too, about 53 ms a partial file); no net gain, reverted.
 - The witness's terms gathered into arrays for vector code: 617 ms (baseline) and 606 ms
   (built for this CPU) against 400 ms for the row form.
+- Q10's second half, as a deeper read-ahead of the main pass during the preview's tail
+  (12, 24 or 40 planes, with the hand-off raised to match): the main fold stayed at
+  10.3-11.0 s in every arm (`q10x-*`). The drive is not what bounds the main fold: about
+  13 decoders are 84 % busy and idle the rest waiting for room in the 18-plane window,
+  while the in-order fold thread spends 4.3 s copying planes into upload memory.
+- Q5c, as members 2-4 offered to idle decoders as jobs (file-sized work without changing
+  the window): decoder idle time 21 s to 9 s, main fold unchanged (9.95-10.08 s against
+  9.88-10.07 s, three alternating pairs `ab-*`), 20 CPU-seconds more; first renders
+  44.5/45.1 s against 45.9/45.3 s, within their noise. Reverted.
+
+## Q18: the hit-rate simulation
+
+[`evidence/q18-hit-rate.txt`](evidence/q18-hit-rate.txt). The preview's 25 planes predict
+each planned tile's focus within a frame (p90 1.0, max 2.6 frames) but not which tiles the
+plan ranks highest (81 of the 200 in the preview's own top 200). Capturing every preview
+candidate (643 tiles) at three frames either side of its predicted focus holds both
+reference crops for 186 of 200 tiles; the rest would fall back to Q2's gather. About 4 GB
+of crops, read back over the fold. The simulation's first version reported a perfect
+prediction because `analyse` builds its curves from every frame whatever its mask says;
+its stride-1 control now reproduces the plan and the stride-8 run shows misses.
 
 ## Where the later render's time is now (MEASURED, `trace.py`, 24.7 s run)
 
@@ -68,8 +90,8 @@ spectra 0.7 s, highlight guard 0.2 s, three channels 0.3 s each); exit 0.3 s.
 
 ## Not built
 
-Q1b (one stack context), Q1f, Q5c-e (file-sized decode jobs, decoding into upload memory,
-helper placement), Q7 (collapse on the device), Q11 (the supervisor: today's adaptivity is
-the per-file read mode and the device self-test), Q12 (live alignment pairs during
-`strehl follow`; `follow` already journals group checks), Q13-Q16, Q18, Q19 (archive
-format 2; its prototype gate is the next step there).
+Q1b (one stack context), Q1f, Q5d-e (decoding into upload memory, helper placement; Q5c
+was measured and not kept, above), Q7 (collapse on the device), Q11 (the supervisor:
+today's adaptivity is the per-file read mode and the device self-test), Q13-Q16, Q18 (its
+hit rate is now measured, above), Q19 (archive format 2; its prototype gate is the next
+step there).
