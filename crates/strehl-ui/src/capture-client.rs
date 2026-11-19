@@ -607,23 +607,42 @@ pub(crate) fn verify_completed(folder: &Path) -> Result<CompletedStack> {
         shots_per_plane: shots,
     })
 }
-/// The receiver's run folders, newest first (identifiers are
-/// `stack-<unix ms>-<pid>`, so their order is their start order).
+/// The receiver's existing run folders, most recently active first.
+/// Identifiers do not order runs: most are `stack-<unix ms>-<pid>`, but a
+/// hand-named run (`stack-wifi-check-...`) sorts after all of them.
 fn registered_runs(config_path: &Path) -> Result<Vec<PathBuf>> {
     let registry: BTreeMap<String, Value> = serde_json::from_slice(&read_file(
         &config_path.with_extension("runs.json"),
         8 * 1024 * 1024,
     )?)?;
-    Ok(registry
+    let mut runs: Vec<(std::time::SystemTime, PathBuf)> = registry
         .values()
-        .rev()
-        .take(32)
         .filter_map(|entry| entry.as_str().or_else(|| entry["folder"].as_str()))
         .map(PathBuf::from)
+        .filter_map(|folder| last_activity(&folder).map(|t| (t, folder)))
+        .collect();
+    runs.sort_by_key(|(changed, _)| std::cmp::Reverse(*changed));
+    Ok(runs
+        .into_iter()
+        .take(32)
+        .map(|(_, folder)| folder)
         .collect())
 }
-/// See [`InProgress`]. Only the newest registered run is considered, and only
-/// once its capture journal exists (the engine follows nothing without it).
+/// When a run folder last changed: the folder itself (a file was added) or
+/// the two records the receiver appends to and replaces.
+fn last_activity(folder: &Path) -> Option<std::time::SystemTime> {
+    [
+        folder.to_path_buf(),
+        folder.join("events.jsonl"),
+        folder.join("transfer-receipts.jsonl"),
+    ]
+    .iter()
+    .filter_map(|p| p.metadata().and_then(|m| m.modified()).ok())
+    .max()
+}
+/// See [`InProgress`]. Only the most recently active registered run is
+/// considered, and only once its capture journal exists (the engine follows
+/// nothing without it).
 pub(crate) fn in_progress_run(config_path: &Path) -> Result<Option<InProgress>> {
     let Some(folder) = registered_runs(config_path)?.into_iter().next() else {
         return Ok(None);
@@ -735,26 +754,24 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let config = dir.path().join("receiver.json");
         assert!(in_progress_run(&config).is_err(), "no registry");
-        let old = dir.path().join("stack-1794000000000-1");
+        // A hand-named run sorts after every timestamped one; activity, not
+        // the name, says which run is current.
+        let old = dir.path().join("stack-wifi-check-1794458669");
         let new = dir.path().join("stack-1794000000500-2");
-        for run in [&old, &new] {
-            std::fs::create_dir(run).unwrap();
-        }
+        std::fs::create_dir(&old).unwrap();
+        std::fs::write(old.join("events.jsonl"), b"{}\n").unwrap();
+        std::thread::sleep(Duration::from_millis(50));
+        std::fs::create_dir(&new).unwrap();
         save_json(
             &config.with_extension("runs.json"),
-            &json!({"stack-1794000000500-2":{"folder":new},"stack-1794000000000-1":old}),
+            &json!({"stack-1794000000500-2":{"folder":new},"stack-wifi-check-1794458669":old,
+                "stack-1794000000000-9":dir.path().join("deleted")}),
         )
         .unwrap();
         assert_eq!(
             in_progress_run(&config).unwrap(),
             None,
-            "no capture journal yet"
-        );
-        std::fs::write(old.join("events.jsonl"), b"{}\n").unwrap();
-        assert_eq!(
-            in_progress_run(&config).unwrap(),
-            None,
-            "an older run is never followed"
+            "the newest run has no capture journal yet; an older run is never followed"
         );
         std::fs::write(new.join("events.jsonl"), b"{}\n").unwrap();
         let found = in_progress_run(&config).unwrap().unwrap();

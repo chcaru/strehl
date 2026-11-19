@@ -127,10 +127,8 @@ fn check_plane(
             noise,
             g.plane as usize,
         );
-        let reason = crate::pixel_shift_cmd::judge(
-            &m,
-            crate::pixel_shift_cmd::ResidualMode::from_env().unwrap_or_default(),
-        );
+        let residual = crate::pixel_shift_cmd::ResidualMode::from_env().unwrap_or_default();
+        let reason = crate::pixel_shift_cmd::judge(&m, residual);
         let c = &m.check;
         out["offsets"] = json!(c.offsets);
         out["structure"] = json!(c.precision);
@@ -145,7 +143,9 @@ fn check_plane(
         }
         out["verdict"] = json!(if reason.is_some() { "demote" } else { "pass" });
         out["reason"] = json!(reason);
-        out["retake"] = json!(reason.is_some());
+        // Only a fault of the exposures is worth a retake; a plane with too
+        // little structure would be demoted again.
+        out["retake"] = json!(crate::pixel_shift_cmd::retake_helps(&m, residual));
     } else {
         out["verdict"] = json!("decoded");
         out["retake"] = json!(false);

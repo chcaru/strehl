@@ -942,6 +942,20 @@ fn measure_impl(
 /// the reason it is demoted. Cheap; `residual` decides whether the witness
 /// gate judges what residual compensation leaves.
 pub fn judge(m: &GroupMeasurement, residual: ResidualMode) -> Option<String> {
+    demotion(m, residual).map(|(reason, _)| reason)
+}
+
+/// Whether taking the group again could make it pass: only when something
+/// changed between its exposures (motion, a focus slip, a level change).
+/// Too little scene structure, a wrong shift pattern or photosites leaving
+/// the sensor are properties of the plane or the camera mode, and a retake
+/// would fail the same way.
+pub fn retake_helps(m: &GroupMeasurement, residual: ResidualMode) -> bool {
+    demotion(m, residual).is_some_and(|(_, retake)| retake)
+}
+
+/// [`judge`]'s reason, and whether a retake could help ([`retake_helps`]).
+fn demotion(m: &GroupMeasurement, residual: ResidualMode) -> Option<(String, bool)> {
     let c = &m.check;
     let tile_ratio = m.witness.as_ref().map_or(f64::NAN, |w| w.tile_ratio);
     let max_residual = m.witness.as_ref().map_or(f64::INFINITY, |w| {
@@ -969,29 +983,41 @@ pub fn judge(m: &GroupMeasurement, residual: ResidualMode) -> Option<String> {
         .unwrap_or(0);
     let margins = m.margins;
     if !c.parities {
-        Some(format!(
-            "offsets {:?} do not cover the four CFA parities",
-            &c.offsets[1..]
+        Some((
+            format!(
+                "offsets {:?} do not cover the four CFA parities",
+                &c.offsets[1..]
+            ),
+            false,
         ))
     } else if c.precision[1..].iter().any(|r| !(*r > 0.8)) {
-        Some("offsets unmeasurable (too little scene structure)".into())
+        Some((
+            "offsets unmeasurable (too little scene structure)".into(),
+            false,
+        ))
     } else if !(max_residual < PAIR_SHIFT_TOLERANCE_PX) {
-        Some(format!(
-            "witness pairs misregistered by {max_residual:.3} photosite{}",
-            if residual == ResidualMode::Off {
-                ""
-            } else {
-                " after residual compensation"
-            }
+        Some((
+            format!(
+                "witness pairs misregistered by {max_residual:.3} photosite{}",
+                if residual == ResidualMode::Off {
+                    ""
+                } else {
+                    " after residual compensation"
+                }
+            ),
+            true,
         ))
     } else if !(tile_ratio < TILE_RATIO_TOLERANCE) {
-        Some(format!(
-            "witness tiles disagree locally (p99/median z^2 {tile_ratio:.2}): motion, a focus slip or a wrong member"
+        Some((
+            format!(
+                "witness tiles disagree locally (p99/median z^2 {tile_ratio:.2}): motion, a focus slip or a wrong member"
+            ),
+            true,
         ))
     } else if margins.iter().any(|m| *m < reach) {
-        Some("shifted photosites leave the sensor buffer".into())
+        Some(("shifted photosites leave the sensor buffer".into(), false))
     } else if !m.levels_agree {
-        Some("members disagree in black or white level".into())
+        Some(("members disagree in black or white level".into(), true))
     } else {
         None
     }
@@ -1564,5 +1590,38 @@ mod tests {
         assert!(a.witness.is_some(), "the planted group covers the lattice");
         assert_eq!(bits(&a), bits(&b));
         assert_eq!(judge(&a, ResidualMode::Compensate), None, "{:?}", a);
+    }
+
+    /// A retake is suggested only for a fault of the exposures, never for a
+    /// plane a retake would fail the same way.
+    #[test]
+    fn only_exposure_faults_are_worth_a_retake() {
+        let frames = synthetic_group([(0, 0), (1, 0), (1, 1), (0, 1)], [1.0, 1.004, 0.997, 1.0]);
+        let good = measure(
+            [&frames[0], &frames[1], &frames[2], &frames[3]],
+            &synthetic_noise(),
+        );
+        let r = ResidualMode::Compensate;
+        assert!(!retake_helps(&good, r), "a passing group needs no retake");
+        let mut flat = good.clone();
+        flat.check.precision[2] = 0.3;
+        assert!(
+            judge(&flat, r)
+                .unwrap()
+                .contains("too little scene structure")
+        );
+        assert!(!retake_helps(&flat, r));
+        let mut moved = good.clone();
+        moved.witness.as_mut().unwrap().tile_ratio = TILE_RATIO_TOLERANCE * 2.0;
+        assert!(judge(&moved, r).unwrap().contains("witness tiles disagree"));
+        assert!(retake_helps(&moved, r));
+        let mut flicker = good.clone();
+        flicker.levels_agree = false;
+        assert!(judge(&flicker, r).unwrap().contains("black or white level"));
+        assert!(retake_helps(&flicker, r));
+        let mut edge = good;
+        edge.margins = [0; 4];
+        assert!(judge(&edge, r).unwrap().contains("leave the sensor buffer"));
+        assert!(!retake_helps(&edge, r));
     }
 }

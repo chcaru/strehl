@@ -204,6 +204,19 @@ carries the earlier build's identity. Stacking during the capture therefore writ
 photograph as stacking afterwards. At the real pace (one plane every 16 s) the checker is
 idle most of the time.
 
+**On the rig (2026-11-19, 6 planes x 4 shots, a short test range).** The first live stack found
+a bug the replay could not: the desktop ranked registered runs by name. A hand-named test run
+(`stack-wifi-check-...`) sorts after every timestamped one, so the real capture was never
+followed. Runs are now ranked by their folders' last activity. Run again, the checker started
+5 s after Start and checked each plane in 0.23-0.33 s. The photograph was saved 6.8 s after
+the capture ended, taking 11 of 11 alignment pairs from the checker. Every plane was demoted
+for too little scene structure, as the test range was mostly out of focus. `follow` had flagged
+all six as retakes; it now flags only the reasons a retake can fix. Those are witness
+misregistration, locally disagreeing witness tiles, and disagreeing black or white levels;
+too little structure, a wrong shift pattern and photosites leaving the sensor are excluded.
+Timing on the rig: a plane every 15.9 s, 14.2-14.5 s of it the four exposures. The fourth RAW
+was durable on the PC 1.1-1.3 s after the camera finished.
+
 ## Not built
 
 Q1b (one stack context), Q1f, Q5d-e (decoding into upload memory, helper placement; Q5c
