@@ -559,6 +559,39 @@ REGISTRY: dict[str, Declared] = {
         ),
         note="Round-2 performance plan stage Q6b (2026-11-18).",
     ),
+    "STREHL_DEVICE_FINISH": Declared(
+        kind="control",
+        default="on (a single-chunk GPU fold is resolved, collapsed and clamped on the device)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd.rs device_finish_wanted(): a GPU fold of one canonical "
+            "chunk with no region repair reads back only den, the ensemble sums, "
+            "the null windows (and the green planes' num/usum when the desktop "
+            "observes) into a BandMerge::new_device_finish merge; the host "
+            "computes the blend maps (BandMerge::finish_plan) and the device "
+            "resolves, collapses and clamps each plane (GpuFold::finish_planes; "
+            "fold.wgsl resolve, expand_add_v, clamp_hull) and absorbs the "
+            "half-stacks (combine). `off` reads every total back and finishes "
+            "on the CPU as before. Bit-identical: strehl-gpu "
+            "tests/fold.rs the_device_finish_is_finish_with_report and "
+            "STREHL_FINISH_CHECK."
+        ),
+        note="Round-3 performance plan stage R2 (2026-11-19).",
+    ),
+    "STREHL_FINISH_CHECK": Declared(
+        kind="diagnostic",
+        default="off",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd.rs finish_check(): `1` also reads every total of a "
+            "device-finished pass back, finishes on the CPU and fails unless "
+            "each half-stack's planes, the stack's planes and the ensemble "
+            "report are bit-identical."
+        ),
+        note="Round-3 performance plan stage R2 (2026-11-19).",
+    ),
     "STREHL_FOLD_POOL_THREADS": Declared(
         kind="control",
         default="8 (the GPU fold's pool)",

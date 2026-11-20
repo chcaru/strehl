@@ -1370,3 +1370,91 @@ fn crop(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) n
     let y = u32(consts[C_CROPS + p.b.w + 2u * k + 1u]);
     rgbw[p.a.w + (k * p.b.y + p.b.x) * per + r * side + c] = work[p.a.x + (y + r) * p.a.y + x + c];
 }
+
+// ---------------------------------------------------------------------------
+// The finish on the device (round-3 performance plan, R2): the default route
+// of BandMerge::finish_with_report -- soft-power resolve with the mean
+// fallback and the host's blend maps, the collapse, the input-range hull
+// clamp -- and BandMerge::absorb's combination of two accumulators, each
+// operand for operand.
+// ---------------------------------------------------------------------------
+
+// Resolve one level of one plane into `work`:
+// a = (num, den, usum, n) accumulator offsets and count,
+// b = (out, blend, has blend, 0) work offsets; f.x = 1.0 / frames as f32.
+// `den > 0`: sel = (num / den) * 65536 (resolve_soft_numerator), lerped
+// toward the mean where the blend is below 1; otherwise the mean.
+@compute @workgroup_size(256)
+fn resolve(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let i = gid(id, nwg);
+    if (i >= p.a.w) { return; }
+    let den = acc_ld(p.a.y + i);
+    var o: f32;
+    if (den > 0.0) {
+        let sel = div(acc_ld(p.a.x + i), den) * 65536.0;
+        o = sel;
+        if (p.b.z != 0u) {
+            let b = work[p.b.y + i];
+            if (b < 1.0) {
+                let mean = acc_ld(p.a.z + i) * p.f.x;
+                o = mean + b * (sel - mean);
+            }
+        }
+    } else {
+        o = acc_ld(p.a.z + i) * p.f.x;
+    }
+    work[p.b.x + i] = o;
+}
+
+// expand, vertical, added to the level in place (Pyramid::collapse's
+// `expanded += data[k]`): a = (scratch, dw, sh, dst), b.x = dh. dst = e + dst.
+@compute @workgroup_size(256)
+fn expand_add_v(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let i = gid(id, nwg);
+    let dw = p.a.y; let sh = p.a.z;
+    if (i >= dw * p.b.x) { return; }
+    let x = i % dw; let y = i / dw;
+    let c = y / 2u;
+    let s = p.a.x;
+    var e: f32;
+    if (y % 2u == 0u) {
+        e = 0.125 * work[s + clampi(i32(c) - 1, sh) * dw + x]
+            + 0.75 * work[s + c * dw + x]
+            + 0.125 * work[s + clampi(i32(c) + 1, sh) * dw + x];
+    } else {
+        e = 0.5 * (work[s + c * dw + x] + work[s + clampi(i32(c) + 1, sh) * dw + x]);
+    }
+    work[p.a.w + i] = e + work[p.a.w + i];
+}
+
+// f32::clamp to the input-range hull, in place: a = (img, lo, hi, n), lo and
+// hi accumulator offsets.
+@compute @workgroup_size(256)
+fn clamp_hull(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let i = gid(id, nwg);
+    if (i >= p.a.w) { return; }
+    var v = work[p.a.x + i];
+    let lo = acc_ld(p.a.y + i);
+    let hi = acc_ld(p.a.z + i);
+    if (v < lo) { v = lo; }
+    if (v > hi) { v = hi; }
+    work[p.a.x + i] = v;
+}
+
+// absorb's `a = op(a, b)` into this accumulator from a copy of the other's
+// in `work`: a = (dst accumulator offset, src work offset, n, op), op 0 add,
+// 1 min, 2 max (the fold's hull uses the same min and max).
+@compute @workgroup_size(256)
+fn combine(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let i = gid(id, nwg);
+    if (i >= p.a.z) { return; }
+    let a = acc_ld(p.a.x + i);
+    let b = work[p.a.y + i];
+    var v: f32;
+    switch p.a.w {
+        case 1u: { v = min(a, b); }
+        case 2u: { v = max(a, b); }
+        default: { v = a + b; }
+    }
+    acc_st(p.a.x + i, v);
+}

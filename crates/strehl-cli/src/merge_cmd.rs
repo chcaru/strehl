@@ -5165,6 +5165,19 @@ struct BandWorker {
     gpu: Option<strehl_gpu::GpuFold>,
     /// The GPU also prepares each frame (gather, probe, extraction).
     gpu_prep: bool,
+    /// Round-3 plan R2: the chunk is read back only partly and finished on
+    /// the device ([`device_finish_wanted`]); `Some(green view)` when set.
+    device_finish: Option<bool>,
+    /// The device accumulator a chunk folds into when there are no
+    /// half-stacks: the first chunk's, then the second for every later chunk
+    /// of a pass finished on the device (it is absorbed into the first after
+    /// each chunk, as the host absorbs chunks).
+    #[cfg_attr(not(feature = "gpu"), allow(dead_code))]
+    chunk_acc: usize,
+    /// `STREHL_FINISH_CHECK` on a pass finished on the device without
+    /// half-stacks: every chunk also read back whole and absorbed on the host,
+    /// as before round-3 plan R2, for the CPU's finish to compare with.
+    check_merged: Option<BandMerge>,
     /// Frames' luma read back from the device for the depth measurement
     /// taken during the fold.
     #[cfg(feature = "gpu")]
@@ -5365,6 +5378,152 @@ fn finish_device_chunk(
         }
     };
     total.absorb_external_remainder(counter, &device_null, first);
+}
+
+/// `STREHL_DEVICE_FINISH=off`: read every total of a GPU fold back and
+/// finish on the CPU, as before round-3 plan R2. The same planes either way.
+pub const DEVICE_FINISH_ENV: &str = "STREHL_DEVICE_FINISH";
+
+/// `STREHL_FINISH_CHECK=1`: also read every total back, finish on the CPU and
+/// fail unless the device's planes (each half-stack's and the stack's) and the
+/// ensemble report are bit-identical.
+pub const FINISH_CHECK_ENV: &str = "STREHL_FINISH_CHECK";
+
+fn finish_check() -> bool {
+    std::env::var(FINISH_CHECK_ENV).is_ok_and(|v| v.trim() == "1")
+}
+
+/// Whether a pass's merge is finished on the device (round-3 plan R2): a GPU
+/// fold with no region repair (which finishes merges of its own on the CPU).
+fn device_finish_wanted(gpu_active: bool, repairs: &region_repair::Repairs) -> bool {
+    gpu_active
+        && !repairs.active()
+        && !std::env::var(DEVICE_FINISH_ENV).is_ok_and(|v| v.trim().eq_ignore_ascii_case("off"))
+}
+
+/// The GPU that holds a device-finish pass's totals after its fold.
+#[cfg(feature = "gpu")]
+type FinishDevice = strehl_gpu::GpuFold;
+#[cfg(not(feature = "gpu"))]
+enum FinishDevice {}
+
+/// The worker's GPU, when its pass is finished on the device.
+fn take_finish_device(worker: &mut BandWorker) -> Option<FinishDevice> {
+    #[cfg(feature = "gpu")]
+    if worker.device_finish.is_some() {
+        return worker.gpu.take();
+    }
+    let _ = worker;
+    None
+}
+
+/// `merge`'s planes, finished on the device from accumulator `acc` with the
+/// host's `plan` ([`strehl_gpu::GpuFold::finish_planes`]).
+fn device_finish(
+    device: &mut FinishDevice,
+    acc: usize,
+    plan: &strehl_core::pyramid::FinishPlan,
+) -> Result<Vec<Vec<f32>>> {
+    #[cfg(feature = "gpu")]
+    {
+        device.select_accumulator(acc);
+        device.finish_planes(plan).map_err(|e| anyhow::anyhow!(e))
+    }
+    #[cfg(not(feature = "gpu"))]
+    {
+        let _ = (acc, plan);
+        match *device {}
+    }
+}
+
+/// The second half-stack's device totals absorbed into the first's.
+fn device_absorb(device: &mut FinishDevice) -> Result<()> {
+    #[cfg(feature = "gpu")]
+    {
+        device
+            .absorb_second_accumulator()
+            .map_err(|e| anyhow::anyhow!(e))
+    }
+    #[cfg(not(feature = "gpu"))]
+    match *device {}
+}
+
+/// A host merge with every total of accumulator `acc`, as
+/// [`finish_device_chunk`] reads a first chunk, counted as `partial` (a
+/// [`BandMerge::new_device_finish`] merge of the same accumulator).
+fn host_merge(
+    device: &mut FinishDevice,
+    acc: usize,
+    partial: &BandMerge,
+    g: PlaneGeometry,
+) -> BandMerge {
+    #[cfg(feature = "gpu")]
+    {
+        let mut full = BandMerge::new(
+            g.width,
+            g.height,
+            colour_carry::band_planes(),
+            partial.config(),
+        );
+        device.select_accumulator(acc);
+        device.finish_chunk(&mut full);
+        full.absorb_external_remainder(partial, &device.null_levels(), true);
+        full
+    }
+    #[cfg(not(feature = "gpu"))]
+    {
+        let _ = (acc, partial, g);
+        match *device {}
+    }
+}
+
+/// `STREHL_FINISH_CHECK`: fail unless two sets of planes are the same bits.
+fn same_planes(cpu: &[Vec<f32>], device: &[Vec<f32>], what: &str) -> Result<()> {
+    ensure!(
+        cpu.len() == device.len(),
+        "{FINISH_CHECK_ENV}: {what}: {} planes on the CPU, {} on the device",
+        cpu.len(),
+        device.len()
+    );
+    for (c, (a, b)) in cpu.iter().zip(device).enumerate() {
+        let differ = a
+            .iter()
+            .zip(b)
+            .filter(|(x, y)| x.to_bits() != y.to_bits())
+            .count();
+        ensure!(
+            a.len() == b.len() && differ == 0,
+            "{FINISH_CHECK_ENV}: {what}: plane {c} differs at {differ} of {} pixels",
+            a.len()
+        );
+    }
+    Ok(())
+}
+
+/// [`finish_device_chunk`] for a pass finished on the device (round-3 plan
+/// R2): the pass's only chunk is read into a [`BandMerge::new_device_finish`]
+/// merge, which holds what the host computes of the finish (and, with
+/// `green_view`, the totals the desktop's accumulator view reads); the rest
+/// stays on the device for [`device_finish`].
+#[cfg(feature = "gpu")]
+fn finish_device_chunk_partial(
+    gpu: &mut strehl_gpu::GpuFold,
+    counter: &BandMerge,
+    merged: &mut Option<BandMerge>,
+    g: PlaneGeometry,
+    green_view: bool,
+) {
+    assert!(merged.is_none(), "a chunk is read into a new merge");
+    let mut total = BandMerge::new_device_finish(
+        g.width,
+        g.height,
+        colour_carry::band_planes(),
+        counter.config(),
+        green_view,
+    );
+    gpu.finish_chunk_partial(&mut total);
+    total.absorb_external_remainder(counter, &gpu.null_levels(), true);
+    *merged = Some(total);
 }
 
 /// Why the GPU cannot also prepare frames for this render, or `None`.
@@ -6415,6 +6574,9 @@ impl BandWorker {
             #[cfg(feature = "gpu")]
             gpu: None,
             gpu_prep: false,
+            device_finish: None,
+            chunk_acc: 0,
+            check_merged: None,
             #[cfg(feature = "gpu")]
             luma_tap: LumaTap::default(),
         }
@@ -6467,6 +6629,9 @@ impl BandWorker {
             #[cfg(feature = "gpu")]
             gpu: None,
             gpu_prep: false,
+            device_finish: None,
+            chunk_acc: 0,
+            check_merged: None,
             #[cfg(feature = "gpu")]
             luma_tap: LumaTap::default(),
         }
@@ -6836,11 +7001,12 @@ impl BandWorker {
         // brackets the CPU add -- its counting merge in `self.merge`, its
         // totals in the device's accumulator of the same half.
         self.swap_half();
+        let target = self.fold_accumulator();
         let gpu = self
             .gpu
             .as_mut()
             .expect("GPU preparation without a GPU fold");
-        gpu.select_accumulator(usize::from(self.half));
+        gpu.select_accumulator(target);
         // The ensemble null is accumulated on the device from the probe's
         // packed bands; here it is only counted, exactly where
         // `add_null_windows` would count it. Null windows and the fold share no
@@ -6979,7 +7145,10 @@ impl BandWorker {
             // The other half-stack's totals are in the device's second
             // accumulator; `alt` only counts its frames.
             gpu.select_accumulator(1);
-            finish_device_chunk(gpu, alt, merged_alt, g);
+            match self.device_finish {
+                Some(view) => finish_device_chunk_partial(gpu, alt, merged_alt, g, view),
+                None => finish_device_chunk(gpu, alt, merged_alt, g),
+            }
             gpu.select_accumulator(0);
             self.finish_chunk_main(merged);
             return;
@@ -7006,7 +7175,35 @@ impl BandWorker {
         #[cfg(feature = "gpu")]
         if let Some(gpu) = self.gpu.as_mut() {
             gpu.select_accumulator(0);
-            finish_device_chunk(gpu, &self.merge, merged, g);
+            if self.device_finish.is_some() && self.alt.is_none() && finish_check() {
+                // The chunk read whole before the device combines it.
+                gpu.select_accumulator(self.chunk_acc);
+                finish_device_chunk(gpu, &self.merge, &mut self.check_merged, g);
+                gpu.select_accumulator(0);
+            }
+            match self.device_finish {
+                Some(view) if merged.is_none() => {
+                    finish_device_chunk_partial(gpu, &self.merge, merged, g, view);
+                    // Later chunks fold into the second accumulator.
+                    self.chunk_acc = 1;
+                }
+                Some(view) => {
+                    // A later chunk, in the second accumulator: its host part
+                    // absorbed as the host absorbs a chunk, its device part
+                    // into the first accumulator with the same operations.
+                    gpu.select_accumulator(1);
+                    let mut chunk = None;
+                    finish_device_chunk_partial(gpu, &self.merge, &mut chunk, g, view);
+                    let chunk = chunk.expect("read above");
+                    merged
+                        .as_mut()
+                        .expect("matched above")
+                        .absorb_device_finish(&chunk);
+                    gpu.absorb_second_accumulator()
+                        .expect("the device absorbs a chunk");
+                }
+                None => finish_device_chunk(gpu, &self.merge, merged, g),
+            }
             return;
         }
         match merged.as_mut() {
@@ -7040,6 +7237,17 @@ impl BandWorker {
     }
 
     /// Restore chunk-local fold state while retaining every allocation.
+    /// The device accumulator this frame folds into: its half-stack's, or the
+    /// chunk's ([`Self::chunk_acc`]).
+    #[cfg_attr(not(feature = "gpu"), allow(dead_code))]
+    fn fold_accumulator(&self) -> usize {
+        if self.alt.is_some() {
+            usize::from(self.half)
+        } else {
+            self.chunk_acc
+        }
+    }
+
     fn reset_chunk(&mut self) {
         self.merge.reset_for_reuse();
         if let Some(alt) = self.alt.as_mut() {
@@ -7166,9 +7374,11 @@ impl BandWorker {
             crate::ui_progress::FrameTap::new(progress, index, self.merge.sizes().len())
         });
         #[cfg(feature = "gpu")]
+        let target = self.fold_accumulator();
+        #[cfg(feature = "gpu")]
         if let Some(gpu) = self.gpu.as_mut() {
             // The half-stack this frame belongs to (`swap_half`).
-            gpu.select_accumulator(usize::from(self.half));
+            gpu.select_accumulator(target);
             gpu.add_frame(&mut self.merge, &refs, &self.var, frame_beta);
             if let Some(tap) = tap.as_ref() {
                 gpu_fold_phases(tap, self.merge.sizes().len());
@@ -7279,9 +7489,11 @@ impl BandWorker {
             crate::ui_progress::FrameTap::new(progress, index, self.merge.sizes().len())
         });
         #[cfg(feature = "gpu")]
+        let target = self.fold_accumulator();
+        #[cfg(feature = "gpu")]
         if let Some(gpu) = self.gpu.as_mut() {
             // The half-stack this frame belongs to (`swap_half`).
-            gpu.select_accumulator(usize::from(self.half));
+            gpu.select_accumulator(target);
             gpu.add_frame(&mut self.merge, &refs, &prep.var, frame_beta);
             if let Some(tap) = tap.as_ref() {
                 gpu_fold_phases(tap, self.merge.sizes().len());
@@ -10010,6 +10222,25 @@ fn run_pyramid_prepared_with_sensor(
     // A GPU chunk's accumulators live on the device until the chunk ends, so
     // the desktop's live mid-chunk accumulator view has nothing to read.
     let live_view = !worker.gpu_active();
+    // Round-3 plan R2: a single-chunk GPU fold is read back only partly and
+    // finished on the device; with the desktop observing, the green planes'
+    // totals its accumulator view reads come back too.
+    worker.device_finish =
+        device_finish_wanted(worker.gpu_active(), &repairs).then(|| progress.observer().is_some());
+    // Several canonical chunks and no half-stacks: the second accumulator
+    // takes every chunk after the first; without room for it, finish on the
+    // CPU as before.
+    #[cfg(feature = "gpu")]
+    if worker.device_finish.is_some()
+        && canonical_chunks > 1
+        && worker.alt.is_none()
+        && let Some(gpu) = worker.gpu.as_mut()
+        && gpu.accumulators() < 2
+        && let Err(e) = gpu.add_second_accumulator()
+    {
+        eprintln!("device finish   : off -- {e}");
+        worker.device_finish = None;
+    }
     let mut merged: Option<BandMerge> = None;
     let mut merged_alt: Option<BandMerge> = None;
     let mut folded_total = 0usize;
@@ -10319,6 +10550,11 @@ fn run_pyramid_prepared_with_sensor(
     } else {
         None
     };
+    // The device that holds a device-finish pass's totals (round-3 plan R2).
+    let mut device = take_finish_device(&mut worker);
+    let g = domain.analysis();
+    // `STREHL_FINISH_CHECK=1`: the CPU's finish of every total, read back.
+    let mut check_full: Option<BandMerge> = worker.check_merged.take();
     if merged.is_none() && folded_total > 0 {
         let BandWorker {
             merge: whole, alt, ..
@@ -10334,6 +10570,18 @@ fn run_pyramid_prepared_with_sensor(
     // `STREHL_OPTICAL_RESTORE` with a half-stack that folded nothing (a stack
     // of one frame): there is no noise to measure. Fold the halves together
     // and restore nothing.
+    if let Some(dev) = device.as_mut()
+        && merged_alt
+            .as_ref()
+            .is_some_and(|odd| odd.frames() == 0 || merge.frames() == 0)
+    {
+        // A half-stack folded nothing: finish on the CPU as before.
+        let odd = merged_alt.take().expect("checked above");
+        let host_odd = host_merge(dev, 1, &odd, g);
+        merge = host_merge(dev, 0, &merge, g);
+        merged_alt = Some(host_odd);
+        drop_later(device.take());
+    }
     if let Some(odd) = merged_alt.take_if(|odd| odd.frames() == 0 || merge.frames() == 0) {
         if odd.frames() > 0 {
             if merge.frames() == 0 {
@@ -10367,9 +10615,37 @@ fn run_pyramid_prepared_with_sensor(
             // the full stack.
             let t_halves = Instant::now();
             let mut ws = Workspace::new(&sizes);
-            let even_planes = merge.finish(&mut ws);
-            let odd_planes = odd.finish(&mut ws);
-            merge.absorb(&odd);
+            let (even_planes, odd_planes) = match device.as_mut() {
+                Some(dev) => {
+                    // The host's part of each half's finish (the blend
+                    // maps), side by side; the device resolves and collapses.
+                    let (even_plan, odd_plan) =
+                        rayon::join(|| merge.finish_plan(), || odd.finish_plan());
+                    let even_planes = device_finish(dev, 0, &even_plan)?;
+                    let odd_planes = device_finish(dev, 1, &odd_plan)?;
+                    if finish_check() {
+                        let mut host_even = host_merge(dev, 0, &merge, g);
+                        let host_odd = host_merge(dev, 1, &odd, g);
+                        same_planes(
+                            &host_even.finish(&mut ws),
+                            &even_planes,
+                            "the even half-stack",
+                        )?;
+                        same_planes(&host_odd.finish(&mut ws), &odd_planes, "the odd half-stack")?;
+                        host_even.absorb(&host_odd);
+                        check_full = Some(host_even);
+                    }
+                    device_absorb(dev)?;
+                    merge.absorb_device_finish(&odd);
+                    (even_planes, odd_planes)
+                }
+                None => {
+                    let even_planes = merge.finish(&mut ws);
+                    let odd_planes = odd.finish(&mut ws);
+                    merge.absorb(&odd);
+                    (even_planes, odd_planes)
+                }
+            };
             drop_later(odd);
             fusion_calibrated::route_halves(even_planes, odd_planes);
             eprintln!(
@@ -10493,7 +10769,27 @@ fn run_pyramid_prepared_with_sensor(
     let t_out = Instant::now();
     let mut ws = Workspace::new(&sizes);
     progress.render_step("reconstruct", "started");
-    let (mut planes, ensemble_report) = merge.finish_with_report(&mut ws);
+    let (mut planes, ensemble_report) = match device.as_mut() {
+        Some(dev) => {
+            let plan = merge.finish_plan();
+            let planes = device_finish(dev, 0, &plan)?;
+            if let Some(host) = check_full.take() {
+                let (cpu, report) = host.finish_with_report(&mut ws);
+                same_planes(&cpu, &planes, "the stack")?;
+                ensure!(
+                    report == plan.report,
+                    "{FINISH_CHECK_ENV}: the ensemble report differs"
+                );
+                drop_later(host);
+                eprintln!(
+                    "finish check    : the device's finish is bit-identical to the CPU's ({FINISH_CHECK_ENV})"
+                );
+            }
+            drop_later(device.take());
+            (planes, plan.report)
+        }
+        None => merge.finish_with_report(&mut ws),
+    };
     if let Some(levels) = ensemble_report {
         for l in levels {
             let t = l.thresholds;

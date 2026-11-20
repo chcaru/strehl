@@ -196,4 +196,8 @@ pub const ENTRY_POINTS: &[&str] = &[
     "dg_blur_v",
     "dg_energy",
     "crop",
+    "resolve",
+    "expand_add_v",
+    "clamp_hull",
+    "combine",
 ];

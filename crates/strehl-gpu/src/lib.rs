@@ -26,7 +26,9 @@ use rayon::prelude::*;
 use strehl_core::portable_math::{
     COS_SERIES, EXP_SERIES, LN_SERIES, LN_UNIFORM_FLOOR, LN64_SERIES, PIO2_HI, PIO2_LO, SIN_SERIES,
 };
-use strehl_core::pyramid::{BandMerge, BaseBand, Combine, FoldCombine, LevelScalars, LevelSize};
+use strehl_core::pyramid::{
+    BandMerge, BaseBand, Combine, FinishPlan, FoldCombine, LevelScalars, LevelSize,
+};
 use wgpu::util::DeviceExt;
 
 mod context;
@@ -83,6 +85,10 @@ enum Kernel {
     DgBlurV,
     DgEnergy,
     Crop,
+    Resolve,
+    ExpandAddV,
+    ClampHull,
+    Combine,
 }
 
 /// Windows one frame may crop ([`GpuFold::add_staged_keeping_luma_cropped`]),
@@ -2774,6 +2780,255 @@ impl GpuFold {
         self.read_chunk(merge, None);
     }
 
+    /// [`Self::finish_chunk`] into a [`BandMerge::new_device_finish`] merge:
+    /// only the totals it holds are read back (`den`, the ensemble sums and
+    /// null windows, and the green view's `num` and `usum` when asked for).
+    /// The others stay on the device for [`Self::finish_planes`].
+    pub fn finish_chunk_partial(&mut self, merge: &mut BandMerge) {
+        self.read_chunk_into(merge, None, true);
+    }
+
+    /// `BandMerge::finish_with_report`'s planes for the selected
+    /// accumulator, computed on the device from the totals it holds and the
+    /// host's [`FinishPlan`] (round-3 plan R2): per plane, each level resolved
+    /// (`resolve`), the pyramid collapsed (`expand_h`, `expand_add_v`) and
+    /// clamped to the input-range hull (`clamp_hull`), then level 0 read back.
+    /// Every kernel mirrors its CPU expression operand for operand. Only the
+    /// default route: soft-power with the mean fallback and an input-range
+    /// hull or none, which is what the fold itself requires.
+    pub fn finish_planes(&mut self, plan: &FinishPlan) -> Result<Vec<Vec<f32>>, String> {
+        let l = &self.layout;
+        let nl = l.sizes.len();
+        if plan.blends.len() != nl {
+            return Err("GPU finish: blend maps for another level count".into());
+        }
+        if plan.clamp != self.hull {
+            return Err("GPU finish: the hull differs from the fold's".into());
+        }
+        for (k, blend) in plan.blends.iter().enumerate() {
+            if let Some(b) = blend {
+                if b.len() != l.sizes[k].pixels() {
+                    return Err("GPU finish: a blend map of the wrong size".into());
+                }
+                // The fold's variance pyramid is free once it has finished.
+                self.queue.write_buffer(
+                    &self.work,
+                    u64::from(l.var_lv[k]) * 4,
+                    bytemuck::cast_slice(b),
+                );
+            }
+        }
+        let mut rec = Recorder { calls: Vec::new() };
+        for c in 0..l.planes {
+            let lv = &l.plane_lv[c];
+            for (k, size) in l.sizes.iter().enumerate() {
+                let i = k * l.planes + c;
+                rec.push(
+                    Kernel::Resolve,
+                    Params {
+                        a: [l.num[i], l.den[k], l.usum[i], size.pixels() as u32],
+                        b: [lv[k], l.var_lv[k], plan.blends[k].is_some() as u32, 0],
+                        f: [plan.inv_n, 0.0, 0.0, 0.0],
+                        ..Default::default()
+                    },
+                    size.pixels(),
+                );
+            }
+            for k in (0..nl - 1).rev() {
+                let (s, d) = (l.sizes[k + 1], l.sizes[k]);
+                rec.push(
+                    Kernel::ExpandH,
+                    Params {
+                        a: [lv[k + 1], s.width as u32, s.height as u32, l.scratch],
+                        b: [d.width as u32, 0, 0, 0],
+                        ..Default::default()
+                    },
+                    d.width * s.height,
+                );
+                rec.push(
+                    Kernel::ExpandAddV,
+                    Params {
+                        a: [l.scratch, d.width as u32, s.height as u32, lv[k]],
+                        b: [d.height as u32, 0, 0, 0],
+                        ..Default::default()
+                    },
+                    d.pixels(),
+                );
+            }
+            if plan.clamp {
+                rec.push(
+                    Kernel::ClampHull,
+                    Params {
+                        a: [lv[0], l.lo[c], l.hi[c], l.sizes[0].pixels() as u32],
+                        ..Default::default()
+                    },
+                    l.sizes[0].pixels(),
+                );
+            }
+        }
+        let regions: Vec<(u32, usize)> = (0..l.planes)
+            .map(|c| (l.plane_lv[c][0], l.sizes[0].pixels()))
+            .collect();
+        self.submit(rec);
+        Ok(self.read_work(&regions))
+    }
+
+    /// `merge.absorb(&other)` for the totals the device holds: the second
+    /// accumulator's `num`, `usum`, `den` and hull combined into the first's
+    /// with [`BandMerge::EXTERNAL_ABSORB`]'s operations, through a copy in the
+    /// planes' pyramids (free after their finish). The first accumulator is
+    /// selected afterwards. The host merges absorb the rest
+    /// ([`BandMerge::absorb_device_finish`]).
+    pub fn absorb_second_accumulator(&mut self) -> Result<(), String> {
+        if self.acc.len() != 2 {
+            return Err("GPU absorb: there is no second accumulator".into());
+        }
+        let l = &self.layout;
+        let ops = BandMerge::EXTERNAL_ABSORB;
+        let code = |c: Combine| match c {
+            Combine::Add => 0u32,
+            Combine::Min => 1,
+            Combine::Max => 2,
+        };
+        let mut regions: Vec<(u32, usize, u32)> = Vec::new();
+        for (k, size) in l.sizes.iter().enumerate() {
+            for c in 0..l.planes {
+                let i = k * l.planes + c;
+                regions.push((l.num[i], size.pixels(), code(ops.num)));
+                regions.push((l.usum[i], size.pixels(), code(ops.usum)));
+            }
+            regions.push((l.den[k], size.pixels(), code(ops.den)));
+        }
+        let n0 = l.sizes[0].pixels();
+        for (&lo, &hi) in l.lo.iter().zip(&l.hi) {
+            regions.push((lo, n0, code(ops.lo)));
+            regions.push((hi, n0, code(ops.hi)));
+        }
+        // The planes' pyramids are contiguous in the work arena.
+        let last = l.sizes.len() - 1;
+        let staging = l.plane_lv[0][0];
+        let room = (l.plane_lv[l.planes - 1][last] - staging) as usize + l.sizes[last].pixels();
+        self.select_accumulator(0);
+        for (offset, len, op) in regions {
+            let (bank, start) = acc_bank(offset);
+            let mut done = 0usize;
+            while done < len {
+                let n = room.min(len - done);
+                let mut encoder =
+                    self.device
+                        .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                            label: Some("fold-absorb-copy"),
+                        });
+                encoder.copy_buffer_to_buffer(
+                    &self.acc[1][bank],
+                    (start + done) as u64 * 4,
+                    &self.work,
+                    u64::from(staging) * 4,
+                    n as u64 * 4,
+                );
+                self.queue.submit([encoder.finish()]);
+                let mut rec = Recorder { calls: Vec::new() };
+                rec.push(
+                    Kernel::Combine,
+                    Params {
+                        a: [offset + done as u32, staging, n as u32, op],
+                        ..Default::default()
+                    },
+                    n,
+                );
+                self.submit(rec);
+                done += n;
+            }
+        }
+        Ok(())
+    }
+
+    /// Read `regions` of the work arena (offset, length in floats) back to
+    /// the host, pieces in flight as `read_chunk` reads totals.
+    fn read_work(&self, regions: &[(u32, usize)]) -> Vec<Vec<f32>> {
+        const PIECE: usize = 16 << 20;
+        const IN_FLIGHT: usize = 4;
+        let mut out: Vec<Vec<f32>> = regions
+            .iter()
+            .map(|&(_, n)| {
+                let mut v = Vec::with_capacity(n);
+                v.par_extend(rayon::iter::repeat_n(0.0f32, n));
+                v
+            })
+            .collect();
+        let pieces: Vec<(usize, usize, usize)> = regions
+            .iter()
+            .enumerate()
+            .flat_map(|(r, &(_, n))| {
+                (0..n.div_ceil(PIECE)).map(move |k| (r, k * PIECE, PIECE.min(n - k * PIECE)))
+            })
+            .collect();
+        if pieces.is_empty() {
+            return out;
+        }
+        let buffers: Vec<wgpu::Buffer> = (0..IN_FLIGHT.min(pieces.len()))
+            .map(|_| {
+                self.device.create_buffer(&wgpu::BufferDescriptor {
+                    label: Some("fold-finish-readback"),
+                    size: PIECE as u64 * 4,
+                    usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+                    mapped_at_creation: false,
+                })
+            })
+            .collect();
+        let submit = |k: usize| -> wgpu::SubmissionIndex {
+            let (r, start, n) = pieces[k];
+            let readback = &buffers[k % buffers.len()];
+            let mut encoder = self
+                .device
+                .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                    label: Some("fold-finish-readback"),
+                });
+            encoder.copy_buffer_to_buffer(
+                &self.work,
+                (u64::from(regions[r].0) + start as u64) * 4,
+                readback,
+                0,
+                n as u64 * 4,
+            );
+            let index = self.queue.submit([encoder.finish()]);
+            readback
+                .slice(..n as u64 * 4)
+                .map_async(wgpu::MapMode::Read, |r| r.expect("map finish readback"));
+            index
+        };
+        let mut queued: std::collections::VecDeque<wgpu::SubmissionIndex> =
+            (0..buffers.len()).map(submit).collect();
+        for k in 0..pieces.len() {
+            let (r, start, n) = pieces[k];
+            let index = queued.pop_front().expect("a queued readback piece");
+            self.device
+                .poll(wgpu::PollType::Wait {
+                    submission_index: Some(index),
+                    timeout: None,
+                })
+                .expect("GPU finish wait");
+            let readback = &buffers[k % buffers.len()];
+            {
+                let view = readback
+                    .slice(..n as u64 * 4)
+                    .get_mapped_range()
+                    .expect("mapped finish readback");
+                let src: &[f32] = bytemuck::cast_slice(&view[..]);
+                const RUN: usize = 1 << 18;
+                out[r][start..start + n]
+                    .par_chunks_mut(RUN)
+                    .zip(src.par_chunks(RUN))
+                    .for_each(|(d, s)| d.copy_from_slice(s));
+            }
+            readback.unmap();
+            if k + buffers.len() < pieces.len() {
+                queued.push_back(submit(k + buffers.len()));
+            }
+        }
+        out
+    }
+
     /// Absorb the chunk's accumulators into `merge`, which holds earlier
     /// chunks, exactly as `merge.absorb(&chunk)` would with the chunk read
     /// back ([`BandMerge::EXTERNAL_ABSORB`]), and reset the device's. No
@@ -2793,6 +3048,12 @@ impl GpuFold {
 
     /// Read the accumulators back into `merge`: copied, or combined by `ops`.
     fn read_chunk(&mut self, merge: &mut BandMerge, ops: Option<FoldCombine>) {
+        self.read_chunk_into(merge, ops, false);
+    }
+
+    /// `read_chunk`; with `partial`, totals the merge does not hold (empty,
+    /// [`BandMerge::new_device_finish`]) are left on the device.
+    fn read_chunk_into(&mut self, merge: &mut BandMerge, ops: Option<FoldCombine>, partial: bool) {
         let l = &self.layout;
         // (bank, offset within the bank, destination, combination)
         type Region<'a> = (usize, usize, &'a mut [f32], Option<Combine>);
@@ -2832,6 +3093,9 @@ impl GpuFold {
                     regions.push((bank, o, dst, ops.map(|c| c.null[i])));
                 }
             }
+        }
+        if partial {
+            regions.retain(|r| !r.2.is_empty());
         }
         assert!(
             regions.iter().all(|r| !r.2.is_empty()),

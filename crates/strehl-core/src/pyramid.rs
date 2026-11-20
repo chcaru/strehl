@@ -1812,6 +1812,9 @@ pub struct BandMerge {
     /// [`Self::release_external_totals`] freed the totals: an external
     /// executor's counter only.
     released: bool,
+    /// [`Self::new_device_finish`]: released, but holding what the finish
+    /// computes on the host, so it takes a chunk's counts and null windows.
+    device_finish: bool,
     /// Depth-guided fusion (`DepthGuide`) and the stack index of the frame
     /// being folded. `None` is the shipping election. Set per frame by
     /// [`Self::set_guide`]; under it `den` sums `t^2`, so the output is the
@@ -2097,6 +2100,7 @@ impl BandMerge {
                 Vec::new()
             },
             released,
+            device_finish: false,
             guide: None,
             sizes,
         }
@@ -2549,7 +2553,10 @@ impl BandMerge {
             !first || (self.frames == 0 && self.null.iter().all(|n| n.frames == 0)),
             "a first chunk is copied into a new merge"
         );
-        assert!(!self.released, "cannot absorb into released totals");
+        assert!(
+            !self.released || self.device_finish,
+            "cannot absorb into released totals"
+        );
         assert_eq!(
             (
                 &self.sizes,
@@ -2616,6 +2623,132 @@ impl BandMerge {
             }
         }
         self.released = true;
+    }
+
+    /// A merge whose resolve, collapse and hull clamp an external executor
+    /// (the GPU fold) performs from totals it keeps on its device (round-3
+    /// plan R2). The host holds only what the finish computes on the CPU and
+    /// what the run log reads: `den` ([`Self::averaged_fraction`]), the
+    /// ensemble sums and null windows ([`Self::finish_plan`]). With
+    /// `green_view` it also holds the green planes' `num` and `usum` at every
+    /// level, which the desktop's accumulator view reads. The rest is released
+    /// as in [`Self::new_released`]: this merge cannot fold, finish or
+    /// [`Self::absorb`] on the CPU; it absorbs another of its kind with
+    /// [`Self::absorb_device_finish`].
+    pub fn new_device_finish(
+        width: usize,
+        height: usize,
+        planes: usize,
+        cfg: MergeConfig,
+        green_view: bool,
+    ) -> Self {
+        let mut merge = Self::new_released(width, height, planes, cfg);
+        merge.device_finish = true;
+        let sizes = merge.sizes.clone();
+        for totals in [
+            &mut merge.den,
+            &mut merge.zmax,
+            &mut merge.zsum,
+            &mut merge.lsum,
+            &mut merge.esum,
+        ] {
+            for (values, size) in totals.iter_mut().zip(&sizes) {
+                *values = filled(size.pixels(), 0.0);
+            }
+        }
+        if green_view {
+            for (k, size) in sizes.iter().enumerate() {
+                for c in Self::green_view_planes(planes) {
+                    merge.num[k * planes + c] = filled(size.pixels(), 0.0);
+                    merge.usum[k * planes + c] = filled(size.pixels(), 0.0);
+                }
+            }
+        }
+        merge
+    }
+
+    /// The planes the accumulator view resolves (`pyramid-observer.rs`).
+    fn green_view_planes(planes: usize) -> std::ops::Range<usize> {
+        if planes >= 3 { 1..3 } else { 0..1 }
+    }
+
+    /// [`Self::absorb`] for two [`Self::new_device_finish`] merges: the
+    /// totals they hold, combined exactly as `absorb` combines them, and the
+    /// frame counts. The executor combines the rest on its device.
+    pub fn absorb_device_finish(&mut self, other: &BandMerge) {
+        assert!(
+            self.device_finish && other.device_finish,
+            "absorb_device_finish combines merges whose totals a device holds"
+        );
+        assert_eq!(
+            (
+                &self.sizes,
+                self.planes,
+                self.cfg.admission,
+                self.null.len(),
+                self.zmax.len()
+            ),
+            (
+                &other.sizes,
+                other.planes,
+                other.cfg.admission,
+                other.null.len(),
+                other.zmax.len()
+            ),
+            "cannot absorb a differently shaped merge"
+        );
+        assert_eq!(
+            self.cfg.select,
+            SelectMode::SoftPower,
+            "a device finish is soft-power"
+        );
+        // `absorb`'s soft-power additions, for the totals held here.
+        let add = |dst: &mut [f32], src: &[f32]| {
+            assert_eq!(dst.len(), src.len(), "combining unequal accumulators");
+            dst.par_iter_mut().zip(src).for_each(|(a, b)| *a += b);
+        };
+        for k in 0..self.sizes.len() {
+            add(&mut self.den[k], &other.den[k]);
+            for c in 0..self.planes {
+                let i = k * self.planes + c;
+                if !self.num[i].is_empty() && !other.num[i].is_empty() {
+                    add(&mut self.num[i], &other.num[i]);
+                    add(&mut self.usum[i], &other.usum[i]);
+                }
+            }
+        }
+        for (dst, src) in self.zmax.iter_mut().zip(&other.zmax) {
+            for (a, b) in dst.iter_mut().zip(src) {
+                *a = a.max(*b);
+            }
+        }
+        for (dst, src) in self
+            .zsum
+            .iter_mut()
+            .chain(self.lsum.iter_mut())
+            .chain(self.esum.iter_mut())
+            .zip(other.zsum.iter().chain(&other.lsum).chain(&other.esum))
+        {
+            for (a, b) in dst.iter_mut().zip(src) {
+                *a += b;
+            }
+        }
+        for (dst, src) in self.null.iter_mut().zip(&other.null) {
+            dst.frames += src.frames;
+            for (a, b) in dst.zmax.iter_mut().zip(&src.zmax) {
+                *a = a.max(*b);
+            }
+            for (a, b) in dst
+                .zsum
+                .iter_mut()
+                .chain(dst.lsum.iter_mut())
+                .chain(dst.esum.iter_mut())
+                .zip(src.zsum.iter().chain(&src.lsum).chain(&src.esum))
+            {
+                *a += b;
+            }
+        }
+        self.frames += other.frames;
     }
 
     pub fn band_gain(&self) -> &BandGain {
@@ -3912,43 +4045,14 @@ impl BandMerge {
         assert!(self.frames > 0, "cannot finish a merge with no frames");
         self.assert_pedestal_accumulators_finite();
         self.dump_weights();
-        // Per level, how far each coefficient may select (1) versus fall back to
-        // the plain mean of every frame (0). Computed once, shared by planes.
-        let mut blends: Vec<Option<Vec<f32>>> = (0..self.sizes.len())
-            .map(|k| self.ensemble_blend_level(k))
-            .collect();
-        // A weighted base band takes its weights from the coarsest band's
-        // selection, so it must also take that band's ensemble judgement:
-        // where the coarsest band is noise, the base is the plain mean too.
-        let nb = self.sizes.len() - 1;
-        if self.cfg.base == BaseBand::WeightedFromCoarsest
-            && nb >= 1
-            && let Some(coarsest) = blends[nb - 1].clone()
-        {
-            let from = self.sizes[nb - 1];
-            let mut base = vec![0.0f32; self.sizes[nb].pixels()];
-            let mut scratch = vec![0.0f32; from.pixels() + from.width];
-            reduce(&coarsest, from, &mut base, &mut scratch);
-            blends[nb] = Some(base);
-        }
-        let report = (!self.zmax.is_empty()).then(|| {
-            blends
-                .iter()
-                .enumerate()
-                .take(nb)
-                .filter_map(|(k, b)| {
-                    b.as_ref().map(|b| EnsembleLevel {
-                        level: k,
-                        thresholds: self.ensemble_thresholds(k),
-                        averaged: b.iter().filter(|v| **v <= 0.0).count() as f64 / b.len() as f64,
-                        mean_blend: b.iter().map(|v| f64::from(*v)).sum::<f64>() / b.len() as f64,
-                    })
-                })
-                .collect()
-        });
+        let FinishPlan {
+            blends,
+            report,
+            inv_n,
+            ..
+        } = self.finish_plan();
         #[cfg(feature = "native-correction-variance")]
         let mut census = garnet_spatial_trace::start(self);
-        let inv_n = 1.0 / self.frames as f32;
         let planes = (0..self.planes)
             .map(|c| {
                 let mut pyr = Pyramid::zeros(&self.sizes);
@@ -4066,6 +4170,57 @@ impl BandMerge {
             })
             .collect();
         (planes, report)
+    }
+
+    /// What [`Self::finish_with_report`] computes before it resolves any
+    /// coefficient: the per-level ensemble blend maps (the base's reduced from
+    /// the coarsest band's when the base is weighted), the gate's report, and
+    /// `1 / frames`. They read only the ensemble sums, the null windows and
+    /// the frame count, so a merge whose other totals an external executor
+    /// holds ([`Self::new_device_finish`]) has them on the host, and the
+    /// executor resolves, collapses and clamps with them (round-3 plan R2).
+    pub fn finish_plan(&self) -> FinishPlan {
+        assert!(self.frames > 0, "cannot finish a merge with no frames");
+        // Per level, how far each coefficient may select (1) versus fall back to
+        // the plain mean of every frame (0). Computed once, shared by planes.
+        let mut blends: Vec<Option<Vec<f32>>> = (0..self.sizes.len())
+            .map(|k| self.ensemble_blend_level(k))
+            .collect();
+        // A weighted base band takes its weights from the coarsest band's
+        // selection, so it must also take that band's ensemble judgement:
+        // where the coarsest band is noise, the base is the plain mean too.
+        let nb = self.sizes.len() - 1;
+        if self.cfg.base == BaseBand::WeightedFromCoarsest
+            && nb >= 1
+            && let Some(coarsest) = blends[nb - 1].clone()
+        {
+            let from = self.sizes[nb - 1];
+            let mut base = vec![0.0f32; self.sizes[nb].pixels()];
+            let mut scratch = vec![0.0f32; from.pixels() + from.width];
+            reduce(&coarsest, from, &mut base, &mut scratch);
+            blends[nb] = Some(base);
+        }
+        let report = (!self.zmax.is_empty()).then(|| {
+            blends
+                .iter()
+                .enumerate()
+                .take(nb)
+                .filter_map(|(k, b)| {
+                    b.as_ref().map(|b| EnsembleLevel {
+                        level: k,
+                        thresholds: self.ensemble_thresholds(k),
+                        averaged: b.iter().filter(|v| **v <= 0.0).count() as f64 / b.len() as f64,
+                        mean_blend: b.iter().map(|v| f64::from(*v)).sum::<f64>() / b.len() as f64,
+                    })
+                })
+                .collect()
+        });
+        FinishPlan {
+            blends,
+            report,
+            inv_n: 1.0 / self.frames as f32,
+            clamp: self.cfg.hull.bounds(),
+        }
     }
 
     /// [`Pyramid::collapse`], with the partial reconstruction clamped to the
@@ -4356,6 +4511,19 @@ pub fn pooled_evidence_default() -> bool {
 
 /// Environment override for the ensemble gate's default (`0`/`off` disables).
 pub const ENSEMBLE_ENV: &str = "STREHL_PYRAMID_ENSEMBLE";
+
+/// What [`BandMerge::finish_with_report`] computes on the host before it
+/// resolves any coefficient ([`BandMerge::finish_plan`]).
+#[derive(Debug, Clone)]
+pub struct FinishPlan {
+    /// Per level, the ensemble blend map (`None`: select everywhere).
+    pub blends: Vec<Option<Vec<f32>>>,
+    pub report: Option<Vec<EnsembleLevel>>,
+    /// `1.0 / frames as f32`, the mean's factor.
+    pub inv_n: f32,
+    /// Whether the reconstruction is clamped to the input-range hull.
+    pub clamp: bool,
+}
 
 /// What the ensemble gate did at one level, for the run log.
 #[derive(Debug, Clone, Copy, PartialEq)]

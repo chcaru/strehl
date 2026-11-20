@@ -355,3 +355,95 @@ fn two_accumulators_fold_two_half_stacks() {
         }
     }
 }
+
+/// Round-3 plan R2: the finish on the device. Two half-stacks folded on the
+/// device and read back only partly (`finish_chunk_partial` into
+/// `new_device_finish` merges) finish on the device (`finish_planes`) to the
+/// CPU merges' `finish_with_report` planes, bit for bit, with the same
+/// ensemble report and averaged fractions; then the halves absorbed on the
+/// device (`absorb_second_accumulator`) and on the host
+/// (`absorb_device_finish`) finish to the CPU's `absorb` then `finish`, and
+/// the green view's totals equal the CPU's.
+#[test]
+#[ignore = "needs a Vulkan GPU with f64"]
+fn the_device_finish_is_finish_with_report() {
+    let (w, h, frames, planes) = (257usize, 190usize, 7usize, 12usize);
+    let cfg = MergeConfig {
+        bands: 6,
+        ..Default::default()
+    };
+    let sizes = level_sizes(w, h, cfg.bands);
+    let mut rng = Rng(0x5EED_F1A1_2026_1119);
+    let beta: Vec<f32> = vec![0.41, 0.093, 0.021, 0.006];
+    let mut cpu = [
+        BandMerge::new(w, h, planes, cfg),
+        BandMerge::new(w, h, planes, cfg),
+    ];
+    let mut counter = [
+        BandMerge::new(w, h, planes, cfg),
+        BandMerge::new(w, h, planes, cfg),
+    ];
+    let mut gpu = GpuFold::with_bank_limit(&counter[0], 2_000_000).expect("GPU fold");
+    gpu.add_second_accumulator().expect("second accumulator");
+    for c in &mut counter {
+        c.release_external_totals();
+    }
+    let mut fws = FrameWorkspace::new(&sizes, planes);
+    for f in 0..frames {
+        let data = frame_of(planes, w, h, f, &mut rng);
+        let luma: Vec<f32> = data[1]
+            .iter()
+            .zip(&data[2])
+            .map(|(a, b)| 0.5 * (a + b))
+            .collect();
+        let var: Vec<f32> = luma.iter().map(|l| 0.3 * l.max(0.0) + 7.0).collect();
+        let refs: Vec<&[f32]> = data.iter().map(Vec::as_slice).collect();
+        let half = f % 2;
+        fws.next_frame();
+        cpu[half].add_frame_with_gain(&refs, &luma, &var, Some(&beta), &mut fws);
+        gpu.select_accumulator(half);
+        gpu.add_frame(&mut counter[half], &refs, &var, Some(&beta));
+    }
+    let mut partial: Vec<BandMerge> = Vec::new();
+    let mut ws = Workspace::new(&sizes);
+    for half in 0..2 {
+        let mut m = BandMerge::new_device_finish(w, h, planes, cfg, true);
+        gpu.select_accumulator(half);
+        gpu.finish_chunk_partial(&mut m);
+        m.absorb_external_remainder(&counter[half], &gpu.null_levels(), true);
+        let plan = m.finish_plan();
+        let device = gpu.finish_planes(&plan).expect("device finish");
+        let (host, report) = cpu[half].clone().finish_with_report(&mut ws);
+        assert_eq!(
+            bits(&host),
+            bits(&device),
+            "half {half}: finished planes differ"
+        );
+        assert_eq!(report, plan.report, "half {half}: ensemble report differs");
+        assert_eq!(
+            cpu[half].averaged_fraction(),
+            m.averaged_fraction(),
+            "half {half}: averaged fraction differs"
+        );
+        partial.push(m);
+    }
+    let odd = partial.pop().expect("odd half");
+    let mut even = partial.pop().expect("even half");
+    gpu.absorb_second_accumulator().expect("device absorb");
+    even.absorb_device_finish(&odd);
+    let [mut a, b] = cpu;
+    a.absorb(&b);
+    let plan = even.finish_plan();
+    let device = gpu
+        .finish_planes(&plan)
+        .expect("device finish of the whole");
+    let (host, report) = a.clone().finish_with_report(&mut ws);
+    assert_eq!(
+        bits(&host),
+        bits(&device),
+        "absorbed: finished planes differ"
+    );
+    assert_eq!(report, plan.report, "absorbed: ensemble report differs");
+    assert_eq!(a.averaged_fraction(), even.averaged_fraction());
+    assert_eq!(a.frames(), even.frames());
+}
