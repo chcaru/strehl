@@ -63,10 +63,14 @@ MEASURED, VERIFIED, DERIVED, ARGUED, UNVERIFIED.
 | 1000 ms | 45 of 48 | | 6.00-6.02 s |
 | 2000 ms | 48 of 48; 20 of 24 (walking) | 0.089 (0.168) px | 7.03-7.05 s |
 
-Up to about 550 ms the settle is hidden behind the last RAW's fetch. The default stays
-500 ms. ARGUED: with error correction on, the 6 % of groups a short settle misses cost
-about 0.5 s a plane in retakes, against 1.4 s a plane for a 2 s settle; without error
-correction, or with people moving about, 2000 ms is the safe choice.
+Repeated once the owner had left (`evidence/ab-settle-empty-house.txt`): 500 ms 45 of 48,
+2000 ms 48 of 48, and two of the three misses at 500 ms were the first plane, right after
+the 128-unit approach move (0.320 and 0.201 px; the third was a local tile disagreement).
+So the plane reached straight after an approach move (the first, and a retake's) now
+settles at least 2000 ms; every other plane keeps the 500 ms default, which the last RAW's
+fetch hides. Four runs of 12 planes with that (`ab-settle-first-plane.txt`): 48 of 48 pass,
+first-plane shifts 0.05-0.15 px, plane period 5.66-5.69 s, 1.7 s more a run. ARGUED: with
+people moving about, a 2000 ms settle on every plane is the safe choice (1.4 s a plane).
 
 ### Exposure floor (D6a) (MEASURED, ISO raised to keep the brightness, 8 planes each)
 

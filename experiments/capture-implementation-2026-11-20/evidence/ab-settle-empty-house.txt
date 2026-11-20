@@ -1,0 +1,8 @@
+settle  500 ms: stack-1795202740437-4303  wall 70.8 s, plane period 5.68 s, 11/12 pass, witness shift max per plane 0.320 0.124 0.151 0.128 0.086 0.112 0.163 0.147 0.086 0.120 0.021 0.073
+settle 2000 ms: stack-1795202814969-4303  wall 88.7 s, plane period 7.03 s, 12/12 pass, witness shift max per plane 0.081 0.089 0.054 0.114 0.133 0.090 0.125 0.139 0.107 0.099 0.138 0.112
+settle  500 ms: stack-1795202907345-4303  wall 70.8 s, plane period 5.68 s, 11/12 pass, witness shift max per plane 0.201 0.093 0.083 0.081 0.158 0.142 0.073 0.070 0.128 0.076 0.134 0.182
+settle 2000 ms: stack-1795202981876-4303  wall 88.8 s, plane period 7.03 s, 12/12 pass, witness shift max per plane 0.166 0.109 0.121 0.094 0.139 0.110 0.061 0.114 0.099 0.093 0.031 0.134
+settle  500 ms: stack-1795203074331-4303  wall 70.8 s, plane period 5.67 s, 11/12 pass, witness shift max per plane 0.062 0.088 0.094 0.125 0.101 0.115 0.071 0.045 0.121 0.132 0.095 0.158
+settle 2000 ms: stack-1795203148800-4303  wall 88.8 s, plane period 7.05 s, 12/12 pass, witness shift max per plane 0.114 0.134 0.100 0.079 0.142 0.105 0.084 0.161 0.106 0.085 0.093 0.105
+settle  500 ms: stack-1795203241294-4303  wall 70.6 s, plane period 5.66 s, 12/12 pass, witness shift max per plane 0.101 0.114 0.123 0.105 0.031 0.076 0.084 0.111 0.097 0.166 0.082 0.105
+settle 2000 ms: stack-1795203315548-4303  wall 88.7 s, plane period 7.03 s, 12/12 pass, witness shift max per plane 0.099 0.115 0.085 0.128 0.076 0.059 0.113 0.081 0.106 0.081 0.052 0.190

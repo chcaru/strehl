@@ -1131,7 +1131,13 @@ fn capture(
                 }
             }
             log.record("focus_intent", json!({"ordinal":ordinal,"target":target}))?;
-            let response = c.focus(target, plan.settle_ms)?;
+            // The first plane follows the approach move, the run's largest.
+            let settle = if ordinal == 0 {
+                after_approach(plan.settle_ms)
+            } else {
+                plan.settle_ms
+            };
+            let response = c.focus(target, settle)?;
             log.record(
                 "focus_complete",
                 json!({"ordinal":ordinal,"response":response}),
@@ -1248,6 +1254,16 @@ fn capture(
             Err(e)
         }
     }
+}
+
+/// The settle before a plane reached straight after the approach move.
+/// MEASURED (2026-11-20, empty house, 48 groups each): with 500 ms, 45 groups
+/// passed and two of the three misses were the first plane, right after the
+/// approach; with 2000 ms all 48 passed. A plane reached by one step has the
+/// time the last RAW's fetch takes anyway.
+const AFTER_APPROACH_MS: u32 = 2000;
+fn after_approach(settle_ms: u32) -> u32 {
+    settle_ms.max(AFTER_APPROACH_MS)
 }
 
 /// Error correction: retakes of one plane before keeping what it has.
@@ -1457,7 +1473,7 @@ fn retake(
         u16::try_from(i32::from(o.target) - ctx.plan.direction() * i32::from(ctx.plan.approach))
             .context("Retake approach beyond the lens limit")?;
     let first = c.focus(below, ctx.plan.settle_ms)?;
-    let at = c.focus(o.target, ctx.plan.settle_ms)?;
+    let at = c.focus(o.target, after_approach(ctx.plan.settle_ms))?;
     log.record(
         "retake_focus",
         json!({"ordinal":o.ordinal,"target":o.target,"approach":first,"response":at}),
@@ -1774,6 +1790,7 @@ mod tests {
         demo: Demo,
         captures: usize,
         focuses: Vec<u16>,
+        settles: Vec<u32>,
         repeats: usize,
         asked: Vec<String>,
         retake: Vec<&'static str>,
@@ -1792,6 +1809,7 @@ mod tests {
                 },
                 captures: 0,
                 focuses: Vec::new(),
+                settles: Vec::new(),
                 repeats: 0,
                 asked: Vec::new(),
                 retake,
@@ -1816,6 +1834,7 @@ mod tests {
         }
         fn focus(&mut self, target: u16, settle_ms: u32) -> Result<Value> {
             self.focuses.push(target);
+            self.settles.push(settle_ms);
             self.ops.push(format!("focus {target}"));
             self.demo.focus(target, settle_ms)
         }
@@ -1906,6 +1925,8 @@ mod tests {
             [60000, 60001, 60001 - 128, 60001, 60002],
             "the retake approaches its plane from the capture side"
         );
+        // Planes reached straight after an approach move settle longer.
+        assert_eq!(&camera.settles[1..], [2000, 500, 500, 2000, 500]);
         assert_eq!(
             camera.asked,
             ["ptp-test-1", "ptp-test-2", "ptp-test-3", "ptp-test-4"]
