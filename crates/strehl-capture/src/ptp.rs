@@ -411,7 +411,135 @@ struct Camera<L> {
     uncertain: bool,
     configured: bool,
     shots: usize,
+    /// Where the last group sent the lens after its last exposure, and when
+    /// the camera reported that move's result: the next `focus` to the same
+    /// target only waits out what is left of its settle.
+    pre_moved: Option<(u16, Instant)>,
 }
+
+/// Camera events the bridge acts on (Sony PTP 3 event codes).
+const EVENT_IMAGE_ARRIVED: u16 = 0xc206;
+const EVENT_FOCUS_RESULT: u16 = 0xc218;
+
+/// What a capture loop does next.
+#[derive(Debug, PartialEq)]
+enum Act {
+    Wait,
+    /// Fetch the RAW the camera reports ready.
+    Fetch,
+    /// Every exposure of the group is in the camera: send the lens on.
+    Move(u16),
+    /// Group fetched, camera idle and the lens (if sent) settled.
+    Done,
+}
+
+/// One group's progress, decided only from what the camera reports, so the
+/// order of a capture can be tested with scripted reports. Times are seconds
+/// since the shutter.
+struct Group {
+    shots: usize,
+    focus: u64,
+    next: Option<(u16, f64)>,
+    arrivals: usize,
+    active_seen: bool,
+    files: usize,
+    moved_at: Option<f64>,
+    result_at: Option<f64>,
+    at_target_since: Option<f64>,
+    idle_since: Option<f64>,
+}
+impl Group {
+    fn new(shots: usize, focus: u64, next: Option<(u16, u32)>) -> Self {
+        Self {
+            shots,
+            focus,
+            next: next.map(|(t, ms)| (t, f64::from(ms) / 1000.0)),
+            arrivals: 0,
+            active_seen: false,
+            files: 0,
+            moved_at: None,
+            result_at: None,
+            at_target_since: None,
+            idle_since: None,
+        }
+    }
+    /// The lens may leave only once every exposure is in the camera: the
+    /// group's last image-arrival event, or the camera reporting the group
+    /// over after it was seen active.
+    fn exposed(&self, active: u64) -> bool {
+        self.arrivals >= self.shots || (self.active_seen && active == 0)
+    }
+    fn step(
+        &mut self,
+        t: f64,
+        events: &[(u16, u32)],
+        active: u64,
+        ready: u64,
+        lens: u64,
+    ) -> Result<Act> {
+        for &(code, arg) in events {
+            if code == EVENT_IMAGE_ARRIVED && self.moved_at.is_none() {
+                self.arrivals += 1;
+            } else if code == EVENT_FOCUS_RESULT && self.moved_at.is_some() {
+                ensure!(
+                    arg == 1,
+                    "Camera rejected the move to the next plane: {arg}"
+                );
+                self.result_at.get_or_insert(t);
+            }
+        }
+        self.active_seen |= active != 0;
+        if self.moved_at.is_none() {
+            ensure!(lens == self.focus, "Focus changed within pixel-shift group");
+        }
+        if let Some((target, _)) = self.next
+            && self.moved_at.is_none()
+            && self.exposed(active)
+        {
+            self.moved_at = Some(t);
+            return Ok(Act::Move(target));
+        }
+        if ready & 0x8000 != 0 && ready & 0x7fff != 0 {
+            ensure!(
+                self.files < self.shots,
+                "Unexpected extra RAW; inspect camera buffer before reconnecting"
+            );
+            self.idle_since = None;
+            return Ok(Act::Fetch);
+        }
+        let settled = match self.next {
+            None => true,
+            Some((target, settle)) => {
+                if self.moved_at.is_some() && lens == u64::from(target) {
+                    let since = *self.at_target_since.get_or_insert(t);
+                    match self.result_at {
+                        Some(at) => t - at >= settle,
+                        // No focus-result event: the readback rule of old.
+                        None => t - since >= settle.max(0.2),
+                    }
+                } else {
+                    self.at_target_since = None;
+                    false
+                }
+            }
+        };
+        if self.files == self.shots && active == 0 && ready == 0 {
+            let since = *self.idle_since.get_or_insert(t);
+            // The pipelined order overlaps this check with the lens's settle.
+            let needed = if self.next.is_some() { 0.08 } else { 0.25 };
+            if t - since >= needed && settled {
+                return Ok(Act::Done);
+            }
+        } else {
+            self.idle_since = None;
+        }
+        Ok(Act::Wait)
+    }
+    fn fetched(&mut self) {
+        self.files += 1;
+    }
+}
+
 impl<L: Link> Camera<L> {
     fn open(link: L, ram: PathBuf) -> Result<Self> {
         let mut ptp = Ptp::new(link);
@@ -441,6 +569,7 @@ impl<L: Link> Camera<L> {
             uncertain: false,
             configured: false,
             shots: 4,
+            pre_moved: None,
         })
     }
     fn set(&mut self, code: u16, n: u64, save: bool) -> Result<()> {
@@ -600,31 +729,62 @@ impl<L: Link> Camera<L> {
             self.configured && !self.uncertain && (100..=30000).contains(&settle),
             "Focus unavailable or invalid settling delay"
         );
+        let started = Instant::now();
         let p = self.ptp.properties()?;
         Self::idle(&p)?;
         self.mode(&p)?;
         let before = value(&p, 0xe043)?;
+        let settle_for = Duration::from_millis(settle.into());
+        // The last group sent the lens here after its last exposure and the
+        // camera reported the move's result: wait out the rest of the settle.
+        if let Some((moved_to, result_at)) = self.pre_moved.take()
+            && moved_to == target
+            && before == u64::from(target)
+        {
+            let since = result_at.elapsed();
+            if since < settle_for {
+                thread::sleep(settle_for - since);
+            }
+            let p = self.ptp.properties()?;
+            ensure!(
+                value(&p, 0xe043)? == u64::from(target),
+                "Focus did not hold target {target}; no exposure"
+            );
+            return Ok(
+                json!({"ok":true,"before":before,"requested":target,"readback":target,"completion":"moved-during-previous-group","focus_result_event":1,"settle_ms":settle,"settle_from":"focus-result-event","settled_before_ms":since.as_millis().min(u128::from(settle)),"seconds":started.elapsed().as_secs_f64(),"pixel_shift_shots":self.shots}),
+            );
+        }
         self.ptp.events()?;
+        let moved = before != u64::from(target);
         // Target-setting readback is NOT current lens position. Always use E043.
-        if before != u64::from(target) {
+        if moved {
             self.set(0xe042, target.into(), false)?;
         }
-        let deadline =
-            Instant::now() + Duration::from_secs(10) + Duration::from_millis(settle.into());
+        let deadline = Instant::now() + Duration::from_secs(10) + settle_for;
         let mut stable = None;
-        let mut result_event = None;
+        let mut result_at = None;
         loop {
             for (code, result) in self.ptp.events()? {
-                if code == 0xc218 {
+                if code == EVENT_FOCUS_RESULT && moved {
                     ensure!(result == 1, "Camera rejected focus movement: {result}");
-                    result_event = Some(result);
+                    result_at.get_or_insert_with(Instant::now);
                 }
             }
             let p = self.ptp.properties()?;
             let actual = value(&p, 0xe043)?;
             if actual == u64::from(target) {
-                let since = stable.get_or_insert_with(Instant::now);
-                if since.elapsed() >= Duration::from_millis(u64::from(settle).max(200)) {
+                let since = *stable.get_or_insert_with(Instant::now);
+                // MEASURED (2026-11-20): the lens arrives about 0.18 s after
+                // the command and the camera's focus-result event comes at
+                // 0.20-0.25 s, while the position readback lags by up to
+                // 0.67 s. The settle counts from the event; without one, from
+                // a stable readback as before.
+                let done = match result_at {
+                    Some(at) => at.elapsed() >= settle_for,
+                    None if !moved => true,
+                    None => since.elapsed() >= settle_for.max(Duration::from_millis(200)),
+                };
+                if done {
                     break;
                 }
             } else {
@@ -634,10 +794,15 @@ impl<L: Link> Camera<L> {
                 Instant::now() < deadline,
                 "Focus did not reach and hold target {target}; no exposure"
             );
-            thread::sleep(Duration::from_millis(40));
+            thread::sleep(Duration::from_millis(10));
         }
+        let completion = match (result_at.is_some(), moved) {
+            (true, _) => "focus-result-event-and-readback",
+            (false, true) => "stable-current-readback",
+            (false, false) => "already-at-target",
+        };
         Ok(
-            json!({"ok":true,"before":before,"requested":target,"readback":target,"completion":if result_event.is_some(){"event-and-stable-readback"}else{"stable-current-readback"},"focus_result_event":result_event,"settle_ms":settle,"pixel_shift_shots":self.shots}),
+            json!({"ok":true,"before":before,"requested":target,"readback":target,"completion":completion,"focus_result_event":result_at.map(|_|1),"settle_ms":settle,"settle_from":"focus-result-event","seconds":started.elapsed().as_secs_f64(),"pixel_shift_shots":self.shots}),
         )
     }
     fn preview(&mut self) -> Result<Value> {
@@ -663,15 +828,25 @@ impl<L: Link> Camera<L> {
         )?;
         Ok(())
     }
+    /// One group. With `next`, the lens is sent to the next plane as soon as
+    /// the group's last exposure is in the camera, and the group ends when
+    /// its RAWs are fetched and that move has settled (`next.1` ms after the
+    /// camera's focus result), so the next `focus` is immediate.
     fn capture(
         &mut self,
         timeout: u32,
+        next: Option<(u16, u32)>,
         emit: &mut impl FnMut(Value) -> Result<()>,
     ) -> Result<Value> {
         ensure!(
             self.configured && !self.uncertain && (5..=3600).contains(&timeout),
             "Capture unavailable or invalid timeout"
         );
+        ensure!(
+            next.is_none_or(|(_, settle)| (100..=30000).contains(&settle)),
+            "Invalid settling delay for the next plane"
+        );
+        self.pre_moved = None;
         let p = self.ptp.properties()?;
         Self::idle(&p)?;
         self.mode(&p)?;
@@ -692,78 +867,86 @@ impl<L: Link> Camera<L> {
         let started = Instant::now();
         let mut files = Vec::new();
         let mut progress = Vec::new();
+        let mut moved = None;
+        let mut state = Group::new(self.shots, focus, next);
         self.uncertain = true; // Set BEFORE any shutter transition. Never retry it.
-        self.button(0xd2c1, true)?;
-        thread::sleep(Duration::from_millis(200));
-        let release = self.button(0xd2c2, true);
+        // MEASURED (2026-11-20): in manual focus the half press needs no pause
+        // before the full press (5.42 s to the fourth RAW against 5.58 s).
+        let half = self.button(0xd2c1, true);
+        let release = half.and_then(|()| self.button(0xd2c2, true));
         // Balanced button-up commands are cleanup, never another exposure.
         let up2 = self.button(0xd2c2, false);
         let up1 = self.button(0xd2c1, false);
         release?;
         up2?;
         up1?;
-        let mut idle_since = None;
         loop {
-            self.ptp.events()?;
+            let events = self.ptp.events()?;
             let p = self.ptp.properties()?;
-            self.mode(&p)?;
-            ensure!(
-                value(&p, 0xe043)? == focus,
-                "Focus changed within pixel-shift group"
-            );
+            if moved.is_none() {
+                self.mode(&p)?;
+            }
             let active = value(&p, 0xd23c)?;
             let member = value(&p, 0xd23d)?;
             let ready = value(&p, 0xd215)?;
+            let lens = value(&p, 0xe043)?;
+            let t = started.elapsed().as_secs_f64();
             if progress.len() < 4096
                 && progress.last().is_none_or(|v: &Value| {
                     v["active"] != active || v["member"] != member || v["buffer"] != ready
                 })
             {
-                progress.push(json!({"seconds":started.elapsed().as_secs_f64(),"active":active,"member":member,"buffer":ready}));
+                progress.push(json!({"seconds":t,"active":active,"member":member,"buffer":ready}));
             }
-            if ready & 0x8000 != 0 && ready & 0x7fff != 0 {
-                ensure!(
-                    files.len() < self.shots,
-                    "Unexpected extra RAW; inspect camera buffer before reconnecting"
-                );
-                let (expected, name, sequence) =
-                    object_info(&self.ptp.command(0x1008, &[0xffffc001], None)?)?;
-                let path = self.ram.join(format!("{group}-{:02}.ARW", files.len() + 1));
-                let mut file = OpenOptions::new()
-                    .write(true)
-                    .create_new(true)
-                    .open(&path)?;
-                let bytes = self
-                    .ptp
-                    .stream(0x1009, &[0xffffc001], None, expected, &mut file)?;
-                file.flush()?;
-                drop(file);
-                ensure!(
-                    bytes == expected,
-                    "Incomplete RAW body retained; never replay shutter"
-                );
-                let item = json!({"ok":true,"event":"raw-ready","destination":"host-ram","completion":"ptp-object-complete","raw_compression":"uncompressed","path":path,"bytes":bytes,"group_id":group,"member_index":files.len()+1,"members":self.shots,"camera_name":name,"camera_sequence":sequence,"focus":focus,"seconds":started.elapsed().as_secs_f64()});
-                files.push(item.clone());
-                emit(item)?;
-                idle_since = None;
-            } else if files.len() == self.shots && active == 0 && ready == 0 {
-                if idle_since.get_or_insert_with(Instant::now).elapsed()
-                    >= Duration::from_millis(250)
-                {
-                    break;
+            match state.step(t, &events, active, ready, lens)? {
+                Act::Move(target) => {
+                    self.ptp
+                        .command(0x9205, &[0xe042, 1], Some(&target.to_le_bytes()))?;
+                    moved = Some(t);
                 }
-            } else {
-                idle_since = None;
+                Act::Fetch => {
+                    let (expected, name, sequence) =
+                        object_info(&self.ptp.command(0x1008, &[0xffffc001], None)?)?;
+                    let path = self.ram.join(format!("{group}-{:02}.ARW", files.len() + 1));
+                    let mut file = OpenOptions::new()
+                        .write(true)
+                        .create_new(true)
+                        .open(&path)?;
+                    let bytes =
+                        self.ptp
+                            .stream(0x1009, &[0xffffc001], None, expected, &mut file)?;
+                    file.flush()?;
+                    drop(file);
+                    ensure!(
+                        bytes == expected,
+                        "Incomplete RAW body retained; never replay shutter"
+                    );
+                    state.fetched();
+                    let item = json!({"ok":true,"event":"raw-ready","destination":"host-ram","completion":"ptp-object-complete","raw_compression":"uncompressed","path":path,"bytes":bytes,"group_id":group,"member_index":files.len()+1,"members":self.shots,"camera_name":name,"camera_sequence":sequence,"focus":focus,"seconds":started.elapsed().as_secs_f64()});
+                    files.push(item.clone());
+                    emit(item)?;
+                    continue;
+                }
+                Act::Done => break,
+                Act::Wait => {}
             }
             ensure!(
                 started.elapsed() < Duration::from_secs(timeout.into()),
                 "Capture group incomplete or timed out; files retained, shutter never retried"
             );
-            thread::sleep(Duration::from_millis(25));
+            thread::sleep(Duration::from_millis(5));
         }
         self.uncertain = false;
+        let next_focus = next.map(|(target, settle)| {
+            let result = state.result_at;
+            if let Some(at) = result {
+                self.pre_moved = Some((target, started + Duration::from_secs_f64(at)));
+            }
+            json!({"requested":target,"readback":target,"settle_ms":settle,"moved_seconds":moved,
+                "focus_result_seconds":result,"focus_result_event":result.map(|_|1)})
+        });
         Ok(
-            json!({"ok":true,"destination":"host-ram","completion":"ptp-group-complete","raw_compression":"uncompressed","pixel_shift_shots":self.shots,"group_id":group,"focus":focus,"group_idle":true,"buffer_empty":true,"files":files,"progress":progress,"seconds":started.elapsed().as_secs_f64()}),
+            json!({"ok":true,"destination":"host-ram","completion":"ptp-group-complete","raw_compression":"uncompressed","pixel_shift_shots":self.shots,"group_id":group,"focus":focus,"group_idle":true,"buffer_empty":true,"files":files,"progress":progress,"image_arrivals":state.arrivals,"next_focus":next_focus,"seconds":started.elapsed().as_secs_f64()}),
         )
     }
     fn restore_settings(&mut self) -> Vec<String> {
@@ -1062,7 +1245,7 @@ pub fn serve() -> Result<()> {
             Ok(())
         };
         emit(
-            json!({"ok":true,"model":"ILCE-7CR","backend":"sony-ptp3","capture_protocol":2,"live_view_protocol":1,"host_pipeline_protocol":1,"group_stream_protocol":1,"power_off_protocol":1,"exposure_protocol":1,"pixel_shift_shots":4,"raw_format":"uncompressed"}),
+            json!({"ok":true,"model":"ILCE-7CR","backend":"sony-ptp3","capture_protocol":2,"live_view_protocol":1,"host_pipeline_protocol":1,"group_stream_protocol":1,"power_off_protocol":1,"exposure_protocol":1,"pipeline_protocol":1,"pixel_shift_shots":4,"raw_format":"uncompressed"}),
         )?;
         for line in std::io::stdin().lock().lines() {
             let line = line?;
@@ -1093,7 +1276,12 @@ pub fn serve() -> Result<()> {
                     }
                     ["preview"] => camera.preview(),
                     ["focus", target, settle] => camera.focus(target.parse()?, settle.parse()?),
-                    ["capture-host", timeout] => camera.capture(timeout.parse()?, &mut emit),
+                    ["capture-host", timeout] => camera.capture(timeout.parse()?, None, &mut emit),
+                    ["capture-host", timeout, target, settle] => camera.capture(
+                        timeout.parse()?,
+                        Some((target.parse()?, settle.parse()?)),
+                        &mut emit,
+                    ),
                     ["magnify", ratio, x, y] => {
                         let (r, x, y): (u64, u16, u16) = (ratio.parse()?, x.parse()?, y.parse()?);
                         ensure!(
@@ -1152,6 +1340,122 @@ mod tests {
             writes: vec![],
         })
     }
+    /// A scripted four-shot group as the camera reported it on 2026-11-20
+    /// (`l3-overlap`): arrivals at 1.11, 2.28, 3.39, 4.53 s; RAWs ready
+    /// after each of the first three arrivals and 0.35 s after the fourth.
+    fn script(
+        group: &mut Group,
+        move_result: u32,
+        lens_after_move: u64,
+    ) -> Result<Vec<(f64, Act)>> {
+        let mut acts = Vec::new();
+        let mut moved_at: Option<f64> = None;
+        let mut fetching: Vec<f64> = Vec::new();
+        let mut t = 0.0;
+        while t < 8.0 {
+            let mut events = Vec::new();
+            for arrival in [1.11, 2.28, 3.39, 4.53] {
+                if (t - arrival) >= 0.0 && (t - arrival) < 0.005 {
+                    events.push((EVENT_IMAGE_ARRIVED, 0));
+                    fetching.push(arrival + 0.35);
+                }
+            }
+            if let Some(at) = moved_at
+                && (t - at - 0.22f64).abs() < 0.0025
+            {
+                events.push((EVENT_FOCUS_RESULT, move_result));
+            }
+            let active = u64::from(t > 0.1 && t < 4.6);
+            let ready = if fetching.iter().any(|&r| t >= r) {
+                0x8001
+            } else {
+                0
+            };
+            let lens = match moved_at {
+                Some(at) if t >= at + 0.3 => lens_after_move,
+                _ => 100,
+            };
+            let act = group.step(t, &events, active, ready, lens)?;
+            match act {
+                Act::Fetch => {
+                    let first = fetching.iter().position(|&r| t >= r).unwrap();
+                    fetching.remove(first);
+                    group.fetched();
+                    acts.push((t, Act::Fetch));
+                }
+                Act::Move(target) => {
+                    moved_at = Some(t);
+                    acts.push((t, Act::Move(target)));
+                }
+                Act::Done => {
+                    acts.push((t, Act::Done));
+                    return Ok(acts);
+                }
+                Act::Wait => {}
+            }
+            t += 0.005;
+        }
+        bail!("group never finished")
+    }
+
+    #[test]
+    fn the_lens_leaves_only_after_the_last_exposure_and_the_group_waits_for_its_settle() {
+        let mut g = Group::new(4, 100, Some((108, 300)));
+        let acts = script(&mut g, 1, 108).unwrap();
+        let moves: Vec<_> = acts
+            .iter()
+            .filter(|a| matches!(a.1, Act::Move(_)))
+            .collect();
+        assert_eq!(moves.len(), 1);
+        assert_eq!(moves[0].1, Act::Move(108));
+        // Not before the fourth image arrived, and not later than one poll after it.
+        assert!(moves[0].0 >= 4.53 && moves[0].0 < 4.54, "{acts:?}");
+        // Three RAWs fetched before the move, the fourth after it.
+        let fetches: Vec<f64> = acts
+            .iter()
+            .filter(|a| a.1 == Act::Fetch)
+            .map(|a| a.0)
+            .collect();
+        assert_eq!(fetches.len(), 4);
+        assert!(fetches[2] < moves[0].0 && fetches[3] > moves[0].0);
+        // Done only once the focus result is 300 ms old (move + 0.22 + 0.3).
+        let done = acts.last().unwrap();
+        assert_eq!(done.1, Act::Done);
+        assert!(
+            done.0 >= moves[0].0 + 0.52 && done.0 < moves[0].0 + 0.6,
+            "{acts:?}"
+        );
+    }
+
+    #[test]
+    fn without_a_next_plane_the_group_ends_as_before() {
+        let mut g = Group::new(4, 100, None);
+        let acts = script(&mut g, 1, 100).unwrap();
+        assert!(acts.iter().all(|a| !matches!(a.1, Act::Move(_))));
+        assert_eq!(acts.iter().filter(|a| a.1 == Act::Fetch).count(), 4);
+        // The 250 ms idle check after the last fetch.
+        let last_fetch = acts.iter().rev().find(|a| a.1 == Act::Fetch).unwrap().0;
+        assert!(acts.last().unwrap().0 >= last_fetch + 0.25);
+    }
+
+    #[test]
+    fn a_rejected_move_a_lens_that_never_arrives_and_a_focus_change_fail_the_group() {
+        let mut g = Group::new(4, 100, Some((108, 300)));
+        assert!(script(&mut g, 2, 108).is_err());
+        let mut g = Group::new(4, 100, Some((108, 300)));
+        assert!(script(&mut g, 1, 104).is_err());
+        let mut g = Group::new(4, 100, None);
+        assert!(g.step(0.5, &[], 1, 0, 101).is_err());
+    }
+
+    #[test]
+    fn a_fifth_raw_is_refused() {
+        let mut g = Group::new(1, 100, None);
+        assert_eq!(g.step(1.5, &[], 0, 0x8001, 100).unwrap(), Act::Fetch);
+        g.fetched();
+        assert!(g.step(1.6, &[], 0, 0x8001, 100).is_err());
+    }
+
     #[test]
     fn interrupt_timeout_with_arrived_bytes_keeps_focus_result() {
         let mut b = header(16, 4, 0xc218, u32::MAX);

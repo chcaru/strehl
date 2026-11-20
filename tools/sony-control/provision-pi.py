@@ -95,7 +95,7 @@ Before=strehl-capture.service
 What=tmpfs
 Where=/run/strehl-raw
 Type=tmpfs
-Options=size=512M,noswap,nodev,nosuid,noexec,mode=0700,uid=1001,gid=1001
+Options=size=2G,noswap,nodev,nosuid,noexec,mode=0700,uid=1001,gid=1001
 
 [Install]
 WantedBy=multi-user.target''')

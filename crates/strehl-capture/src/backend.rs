@@ -63,6 +63,18 @@ pub trait Camera: Send {
     /// The next capture repeats the plane just captured (a retake) instead
     /// of starting the next one.
     fn repeat_plane(&mut self) {}
+    /// The next capture retakes plane `plane` (the number its files carry),
+    /// visited again after later planes. Without a number: the plane just
+    /// captured.
+    fn retake_plane(&mut self, plane: Option<u64>) {
+        let _ = plane;
+        self.repeat_plane();
+    }
+    /// The plane after the next capture, and its settle: a backend that can
+    /// sends the lens there as soon as that capture's last exposure is in
+    /// the camera, so the following `focus` does not wait for a move. `None`
+    /// keeps the lens where it is (a retake may follow, or the run ends).
+    fn set_next_focus(&mut self, _next: Option<(u16, u32)>) {}
 }
 
 pub fn property(status: &Value, name: &str) -> Option<u64> {
@@ -78,9 +90,18 @@ pub struct Native {
     executable: PathBuf,
     release_reply: Option<Value>,
     host_mode: bool,
+    /// Sent with the next group command when the bridge supports it.
+    next_focus: Option<(u16, u32)>,
 }
 
 impl Native {
+    /// The bridge moves the lens to the next plane during a group.
+    pub fn pipelined(&self) -> bool {
+        self.hello["pipeline_protocol"] == 1
+    }
+    pub fn set_next_focus(&mut self, next: Option<(u16, u32)>) {
+        self.next_focus = next;
+    }
     pub fn group_stream(&self) -> bool {
         self.hello["group_stream_protocol"] == 1
     }
@@ -112,9 +133,13 @@ impl Native {
             !self.poisoned,
             "Bridge state is uncertain; reconnect after inspection"
         );
+        let next = self.next_focus.take().filter(|_| self.pipelined());
+        let command = match next {
+            Some((target, settle)) => format!("capture-host\t{timeout_s}\t{target}\t{settle}"),
+            None => format!("capture-host\t{timeout_s}"),
+        };
         let input = self.input.as_mut().context("Bridge input is closed")?;
-        if let Err(error) = writeln!(input, "capture-host\t{timeout_s}").and_then(|_| input.flush())
-        {
+        if let Err(error) = writeln!(input, "{command}").and_then(|_| input.flush()) {
             self.poisoned = true;
             return Err(error).context("Write group command; it was not retried");
         }
@@ -204,6 +229,7 @@ impl Native {
             executable: executable.to_owned(),
             release_reply: None,
             host_mode: ram_directory.is_some(),
+            next_focus: None,
         })
     }
     fn receive(&mut self, timeout_s: u64) -> Result<Value> {
@@ -655,6 +681,7 @@ mod tests {
             poisoned: true,
             executable: PathBuf::new(),
             release_reply: Some(json!({"restored":false,"reason":"fixture: uncertain operation"})),
+            next_focus: None,
         };
         assert!(
             camera

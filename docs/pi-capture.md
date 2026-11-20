@@ -115,8 +115,15 @@ and the installed receiver/browser checks.
 
 The SDK finishes one `.ARW` in `/run/strehl-raw`. The A7CR PTP backend downloads
 each ready member separately and immediately queues it for PC delivery while the
-camera continues the group. The dedicated tmpfs is **1 GiB** in the A7CR
-installation (512 MiB suffices for the A7C II configuration), mounted with `noswap`. The bridge refuses a disk-backed destination. Swap
+camera continues the group. Once a group's last exposure is in the camera, the lens
+is sent on to the next plane while that member is still being fetched; the settle
+counts from the camera's focus-result event (MEASURED 2026-11-20: 7.3 s a four-shot
+plane at 0.6 s became 5.65 s). Two uploads run at once, each RAW is hashed once on
+the Pi and checked by the receiver, and the journal is sent as appends. With error
+correction the controller does not wait for the PC's check: a plane the PC asks to
+retake is visited again later, from the capture side. The dedicated tmpfs is
+**2 GiB** in the A7CR installation (so the next group can be taken while one uploads;
+512 MiB suffices for the A7C II configuration), mounted with `noswap`. The bridge refuses a disk-backed destination. Swap
 generators are disabled, service swap and core dumps are disabled, and service
 temporary directories also use unswappable RAM. The Pi microSD holds software
 and small journals, never the intended RAW spool.

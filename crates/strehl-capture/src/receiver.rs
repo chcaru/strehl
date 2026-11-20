@@ -280,7 +280,7 @@ async fn status(State(s): State<Arc<Receiver>>) -> Response {
         );
     }
     match fs2::available_space(&c.folder) {
-        Ok(free)=>Json(json!({"ok":true,"protocol":1,"raw_encodings":["identity",transport::ENCODING],"folder":c.folder,"compress_raw":c.compress_raw,"free_bytes":free,"max_raw_bytes":MAX_RAW,"latest":*s.latest.lock().unwrap(),"verdicts":1,"archive_format":archive::default_format()})).into_response(),
+        Ok(free)=>Json(json!({"ok":true,"protocol":1,"raw_encodings":["identity",transport::ENCODING],"folder":c.folder,"compress_raw":c.compress_raw,"free_bytes":free,"max_raw_bytes":MAX_RAW,"latest":*s.latest.lock().unwrap(),"verdicts":1,"journal_append":1,"archive_format":archive::default_format()})).into_response(),
         Err(e)=>problem(StatusCode::SERVICE_UNAVAILABLE,e)
     }
 }
@@ -440,9 +440,23 @@ async fn upload(
     let result = receive_file(&s, &run, &name, request).await;
     match result {
         Ok(v) => Json(v).into_response(),
+        // The sender decides whether its copy or the transfer is at fault.
+        Err(e) if e.downcast_ref::<Mismatch>().is_some() => {
+            problem(StatusCode::UNPROCESSABLE_ENTITY, e)
+        }
         Err(e) => problem(StatusCode::SERVICE_UNAVAILABLE, e),
     }
 }
+/// What was received does not hash to the checksum the sender declared.
+#[derive(Debug)]
+struct Mismatch;
+impl std::fmt::Display for Mismatch {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("Checksum mismatch; file was not committed")
+    }
+}
+impl std::error::Error for Mismatch {}
+
 async fn receive_file(
     s: &Receiver,
     run: &str,
@@ -450,7 +464,13 @@ async fn receive_file(
     request: Request<Body>,
 ) -> Result<Value> {
     ensure!(safe_run(run) && safe_name(name), "Invalid destination name");
-    let _write = s.write_lock.lock().await;
+    if let Some(offset) = request.headers().get(crate::transfer::APPEND_HEADER) {
+        let offset: u64 = offset.to_str()?.parse()?;
+        return append_journal(s, run, name, offset, request).await;
+    }
+    // Held while names are checked and while a file is committed, not while
+    // a body streams: uploads of different RAWs proceed side by side.
+    let write = s.write_lock.lock().await;
     let target = s
         .runs
         .lock()
@@ -557,6 +577,7 @@ async fn receive_file(
         duplicate || fs2::available_space(&directory)? > length + 512 * 1024 * 1024,
         "PC disk is full; free space before capture can continue"
     );
+    drop(write);
     let temp = if duplicate {
         None
     } else {
@@ -596,10 +617,9 @@ async fn receive_file(
                 // known to restore exactly.
                 let mut bytes = Vec::with_capacity(length as usize);
                 let decoded = transport::decode(reader, &mut bytes, length, compressed)?;
-                ensure!(
-                    decoded.sha256 == expected_copy,
-                    "Checksum mismatch; file was not committed"
-                );
+                if decoded.sha256 != expected_copy {
+                    return Err(Mismatch.into());
+                }
                 let (stored, f) = archive::store(&bytes, &expected_copy, format)?;
                 stored_format = f;
                 output.write_all(&stored)?;
@@ -612,10 +632,9 @@ async fn receive_file(
         } else {
             transport::decode(reader, std::io::sink(), length, compressed)?
         };
-        ensure!(
-            decoded.sha256 == expected_copy,
-            "Checksum mismatch; file was not committed"
-        );
+        if decoded.sha256 != expected_copy {
+            return Err(Mismatch.into());
+        }
         ensure!(
             wire_length.is_none_or(|n| n == decoded.wire_bytes),
             "Wire length mismatch"
@@ -648,6 +667,7 @@ async fn receive_file(
         );
     }
     let temp = temp.context("Missing upload partial file")?;
+    let _write = s.write_lock.lock().await;
     if destination.exists() {
         let old = std::fs::read(&destination)?;
         let mut prefix = vec![0; old.len()];
@@ -695,9 +715,116 @@ async fn receive_file(
     Ok(receipt)
 }
 
+/// Appends to a run's journal when the receiver's copy is exactly `offset`
+/// bytes long (the controller sends only what the receiver does not have).
+async fn append_journal(
+    s: &Receiver,
+    run: &str,
+    name: &str,
+    offset: u64,
+    request: Request<Body>,
+) -> Result<Value> {
+    ensure!(name == "events.jsonl", "Only the journal can be appended to");
+    let _write = s.write_lock.lock().await;
+    let directory = s
+        .runs
+        .lock()
+        .unwrap()
+        .get(run)
+        .cloned()
+        .context("Register the stack before uploading")?
+        .folder()
+        .to_path_buf();
+    let expected = request
+        .headers()
+        .get("x-content-sha256")
+        .context("Missing checksum")?
+        .to_str()?
+        .to_owned();
+    let length: u64 = request
+        .headers()
+        .get(header::CONTENT_LENGTH)
+        .context("Missing length")?
+        .to_str()?
+        .parse()?;
+    ensure!(length <= 64 * 1024 * 1024, "Journal append too large");
+    let destination = directory.join(name);
+    let current = std::fs::metadata(&destination).map(|m| m.len()).unwrap_or(0);
+    if current != offset {
+        // Not an error: the controller sends the whole journal instead.
+        return Ok(json!({"ok":true,"appended":false,"bytes":current}));
+    }
+    let body = axum::body::to_bytes(request.into_body(), length as usize + 1).await?;
+    ensure!(body.len() as u64 == length, "Journal append length mismatch");
+    let sum: String = Sha256::digest(&body)
+        .iter()
+        .map(|b| format!("{b:02x}"))
+        .collect();
+    ensure!(sum == expected, "Checksum mismatch; journal append not committed");
+    let path = destination.clone();
+    tokio::task::spawn_blocking(move || -> Result<()> {
+        let mut file = OpenOptions::new().append(true).open(&path)?;
+        file.write_all(&body)?;
+        file.sync_all()?;
+        Ok(())
+    })
+    .await??;
+    Ok(json!({"ok":true,"appended":true,"durable":true,"logical_name":name,"append_offset":offset,
+        "bytes":offset + length,"sha256":sum,"path":destination,"saved_unix_ms":crate::journal::now_ms()}))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The controller sends the journal's new lines only; a receiver whose
+    /// copy is not exactly as long as the controller thinks refuses, and
+    /// the controller sends the whole file.
+    #[tokio::test]
+    async fn journal_appends_only_onto_the_copy_they_extend() {
+        let temp = tempfile::tempdir().unwrap();
+        let config = temp.path().join("receiver.json");
+        let images = temp.path().join("images");
+        std::fs::create_dir_all(&images).unwrap();
+        save_json(
+            &config,
+            &json!({"bind":"127.0.0.1:0","lan":"10.0.0.0/24","key":"a".repeat(48),"folder":images}),
+        )
+        .unwrap();
+        let s = Receiver::open(config).unwrap();
+        let run = "stack-1-append";
+        create_run(State(s.clone()), UrlPath(run.into())).await;
+        let put = |body: &'static [u8], offset: Option<u64>| {
+            let sum: String = Sha256::digest(body).iter().map(|b| format!("{b:02x}")).collect();
+            let mut r = Request::builder()
+                .header("x-content-sha256", sum)
+                .header(header::CONTENT_LENGTH, body.len());
+            if let Some(offset) = offset {
+                r = r.header(crate::transfer::APPEND_HEADER, offset);
+            }
+            r.body(Body::from(body)).unwrap()
+        };
+        receive_file(&s, run, "events.jsonl", put(b"{\"a\":1}\n", None)).await.unwrap();
+        let v = receive_file(&s, run, "events.jsonl", put(b"{\"b\":2}\n", Some(8))).await.unwrap();
+        assert_eq!(v["appended"], true);
+        let journal = images.join(run).join("events.jsonl");
+        assert_eq!(std::fs::read(&journal).unwrap(), b"{\"a\":1}\n{\"b\":2}\n");
+        // A stale offset changes nothing.
+        let v = receive_file(&s, run, "events.jsonl", put(b"{\"c\":3}\n", Some(8))).await.unwrap();
+        assert_eq!(v["appended"], false);
+        assert_eq!(std::fs::read(&journal).unwrap().len(), 16);
+        // A body that does not match its checksum is refused.
+        let bad = Request::builder()
+            .header("x-content-sha256", "0".repeat(64))
+            .header(header::CONTENT_LENGTH, 8)
+            .header(crate::transfer::APPEND_HEADER, 16)
+            .body(Body::from(&b"{\"d\":4}\n"[..]))
+            .unwrap();
+        assert!(receive_file(&s, run, "events.jsonl", bad).await.is_err());
+        assert_eq!(std::fs::read(&journal).unwrap().len(), 16);
+        // Only the journal.
+        assert!(receive_file(&s, run, "manifest.json", put(b"{}", Some(0))).await.is_err());
+    }
 
     /// Group checks are posted from this PC and read by the camera host;
     /// only the most recent runs are kept.

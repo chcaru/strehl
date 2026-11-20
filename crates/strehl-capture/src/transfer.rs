@@ -41,8 +41,22 @@ pub struct Sink {
     client: reqwest::blocking::Client,
     report: TransferReport,
     compression: Arc<AtomicBool>,
+    journal_append: Arc<AtomicBool>,
     encoders: Arc<rayon::ThreadPool>,
 }
+/// The receiver appends the body to its copy of `events.jsonl` when the copy
+/// is exactly this many bytes long.
+pub const APPEND_HEADER: &str = "x-append-offset";
+
+/// An upload that must not be retried.
+#[derive(Debug)]
+struct Fatal(&'static str);
+impl std::fmt::Display for Fatal {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(self.0)
+    }
+}
+impl std::error::Error for Fatal {}
 impl Sink {
     pub fn new(config: TransferConfig, report: TransferReport) -> Result<Self> {
         let url = reqwest::Url::parse(&config.receiver)?;
@@ -75,6 +89,7 @@ impl Sink {
             client,
             report,
             compression: Arc::new(AtomicBool::new(false)),
+            journal_append: Arc::new(AtomicBool::new(false)),
             encoders: Arc::new(
                 rayon::ThreadPoolBuilder::new()
                     .num_threads(transport::WORKERS)
@@ -113,6 +128,9 @@ impl Sink {
                     return Ok(value);
                 }
                 Err(e) => {
+                    if e.downcast_ref::<Fatal>().is_some() {
+                        return Err(e);
+                    }
                     if std::time::Instant::now() >= deadline {
                         return Err(e).context("PC transfer stopped; any pending RAW is retained in Pi RAM. Restore the receiver and use Reconnect camera");
                     }
@@ -209,6 +227,8 @@ impl Sink {
                 .as_array()
                 .is_some_and(|values| values.iter().any(|v| v == transport::ENCODING));
         self.compression.store(compression, Ordering::Relaxed);
+        self.journal_append
+            .store(value["journal_append"] == 1, Ordering::Relaxed);
         self.note(json!({"mode":"host-pc","state":"ready","folder":value["folder"],"free_bytes":value["free_bytes"],"message":"Lossless RAW L → PC · images buffered in RAM only"}));
         Ok(())
     }
@@ -247,14 +267,17 @@ impl Sink {
         );
         let length = bytes.len() as u64;
         ensure!(length <= MAX_RAW, "File exceeds transfer bound");
-        let sum: String = Sha256::digest(&bytes)
-            .iter()
-            .map(|b| format!("{b:02x}"))
-            .collect();
-        ensure!(
-            expected.is_none_or(|s| s == sum),
-            "Buffered RAW changed; retained for inspection"
-        );
+        // A RAW was hashed when it reached the Pi. That hash is the one sent:
+        // the receiver hashes what it receives and refuses a mismatch, so a
+        // RAM copy that changed is still caught, without a second pass here
+        // (MEASURED 2026-11-20: 0.4 s of each RAW's 1.36 s to the PC).
+        let sum: String = match expected {
+            Some(sum) => sum.to_owned(),
+            None => Sha256::digest(&bytes)
+                .iter()
+                .map(|b| format!("{b:02x}"))
+                .collect(),
+        };
         // The immutable original body is shared with a bounded four-job encoder.
         // Each retry restarts the stream; no complete compressed copy is retained.
         let bytes = bytes::Bytes::from(bytes);
@@ -296,6 +319,20 @@ impl Sink {
                     .body(bytes.clone())
             };
             let r = request.send()?;
+            if r.status() == reqwest::StatusCode::UNPROCESSABLE_ENTITY {
+                // The receiver's hash of what arrived differs from the one sent.
+                // Only now is the RAM copy hashed again: changed, it is kept
+                // for inspection and never sent; unchanged, the transfer was
+                // damaged and is sent again.
+                let local: String = Sha256::digest(bytes.as_ref())
+                    .iter()
+                    .map(|b| format!("{b:02x}"))
+                    .collect();
+                if local != sum {
+                    return Err(Fatal("Buffered RAW changed; retained for inspection").into());
+                }
+                anyhow::bail!("Transfer damaged on the way to the PC; sending again");
+            }
             // A receiver explicitly refusing a once-advertised encoding can have
             // been rolled back during this run. Retrying original bytes is safe;
             // it retries delivery, never the shutter.
@@ -338,6 +375,40 @@ impl Sink {
                 .max(0.0)
         );
         Ok(receipt)
+    }
+    /// Sends the part of a run's journal the receiver does not have yet.
+    /// `Ok(false)` when the receiver cannot take an append (an older
+    /// receiver, or its copy differs): the caller sends the whole file.
+    fn append_journal(&self, run: &str, bytes: &[u8], offset: usize) -> Result<bool> {
+        ensure!(offset <= bytes.len(), "Journal shrank");
+        if !self.journal_append.load(Ordering::Relaxed) || offset == 0 {
+            return Ok(false);
+        }
+        let body = bytes[offset..].to_vec();
+        if body.is_empty() {
+            return Ok(true);
+        }
+        let sum: String = Sha256::digest(&body)
+            .iter()
+            .map(|b| format!("{b:02x}"))
+            .collect();
+        let response = self
+            .request(
+                reqwest::Method::PUT,
+                &format!("/api/files/{run}/events.jsonl"),
+            )
+            .header("x-content-sha256", &sum)
+            .header(APPEND_HEADER, offset)
+            .header(reqwest::header::CONTENT_LENGTH, body.len())
+            .body(body)
+            .send();
+        match response
+            .map_err(anyhow::Error::from)
+            .and_then(Self::response)
+        {
+            Ok(receipt) => Ok(receipt["appended"] == true),
+            Err(_) => Ok(false),
+        }
     }
     fn raw_path(&self, path: &Path) -> Result<PathBuf> {
         let root = self.config.ram_directory.canonicalize()?;
@@ -417,7 +488,13 @@ impl Sink {
         Ok(receipt)
     }
 }
-const MAX_PENDING_FRAMES: usize = 4;
+/// RAWs the Pi may hold for the PC. Admission also needs RAM and tmpfs room
+/// for a whole group, so a 1 GiB tmpfs still admits one group at a time; the
+/// studio Pi's 2 GiB lets the next group's shutter go while one uploads.
+const MAX_PENDING_FRAMES: usize = 8;
+/// Uploads at once. MEASURED (2026-11-20, studio Wi-Fi): 58 MB/s on one TCP
+/// stream, 69 MB/s on two or four.
+const UPLOAD_WORKERS: usize = 2;
 const MAX_METADATA: u64 = 64 * 1024 * 1024;
 
 fn memory_room(reservation: u64) -> Result<bool> {
@@ -447,6 +524,8 @@ struct Job {
     intent: PathBuf,
     raw: PathBuf,
     bytes: u64,
+    /// An upload worker has it.
+    claimed: bool,
 }
 #[derive(Clone)]
 struct Metadata {
@@ -460,6 +539,12 @@ struct QueueState {
     metadata: Option<Metadata>,
     metadata_revision: u64,
     metadata_done: u64,
+    /// A worker is sending a metadata snapshot (one at a time, in order).
+    metadata_busy: bool,
+    /// A RAW was saved since the last metadata snapshot was taken.
+    raw_since_metadata: bool,
+    /// How much of each run's journal the receiver has.
+    journal_sent: Option<(String, usize)>,
     closed: bool,
     error: Option<String>,
     captured: usize,
@@ -470,7 +555,7 @@ type SharedQueue = Arc<(Mutex<QueueState>, Condvar)>;
 struct UploadQueue {
     shared: SharedQueue,
     sink: Sink,
-    thread: Option<JoinHandle<()>>,
+    threads: Vec<JoinHandle<()>>,
 }
 fn progress(sink: &Sink, state: &QueueState) {
     sink.note(json!({"pipelined":true,"captured_frames":state.captured,"saved_frames":state.saved,
@@ -481,51 +566,75 @@ impl UploadQueue {
     fn new(sink: Sink) -> Result<Self> {
         let shared = Arc::new((Mutex::new(QueueState::default()), Condvar::new()));
         progress(&sink, &shared.0.lock().unwrap());
-        let worker = shared.clone();
-        let worker_sink = sink.clone();
-        let thread = thread::Builder::new()
-            .name("raw-upload".into())
-            .spawn(move || {
-                let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                    Self::run(&worker_sink, &worker)
-                }));
-                let failure = match result {
-                    Ok(Ok(())) => None,
-                    Ok(Err(e)) => Some(format!("{e:#}")),
-                    Err(_) => Some("Transfer worker failed; pending RAWs retained in RAM".into()),
-                };
-                if let Some(error) = failure {
-                    worker.0.lock().unwrap().error = Some(error.clone());
-                    worker_sink.note(json!({"state":"transfer_failed","message":error}));
-                }
-                worker.1.notify_all();
-            })?;
+        let mut threads = Vec::new();
+        for i in 0..UPLOAD_WORKERS {
+            let worker = shared.clone();
+            let worker_sink = sink.clone();
+            threads.push(
+                thread::Builder::new()
+                    .name(format!("raw-upload-{i}"))
+                    .spawn(move || {
+                        let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                            Self::run(&worker_sink, &worker)
+                        }));
+                        let failure = match result {
+                            Ok(Ok(())) => None,
+                            Ok(Err(e)) => Some(format!("{e:#}")),
+                            Err(_) => {
+                                Some("Transfer worker failed; pending RAWs retained in RAM".into())
+                            }
+                        };
+                        if let Some(error) = failure {
+                            let mut state = worker.0.lock().unwrap();
+                            state.error.get_or_insert(error.clone());
+                            drop(state);
+                            worker_sink.note(json!({"state":"transfer_failed","message":error}));
+                        }
+                        worker.1.notify_all();
+                    })?,
+            );
+        }
         Ok(Self {
             shared,
             sink,
-            thread: Some(thread),
+            threads,
         })
     }
+    /// One upload worker. RAWs go in capture order but up to
+    /// `UPLOAD_WORKERS` at once; a journal snapshot goes after a RAW (or
+    /// when there is none), one snapshot at a time and only as an append
+    /// after the first.
     fn run(sink: &Sink, shared: &SharedQueue) -> Result<()> {
         enum Task {
             Raw(Job),
-            Metadata(Metadata),
+            Metadata(Metadata, usize),
         }
-        let mut last_raw = false;
         loop {
             let task = {
                 let mut state = shared.0.lock().unwrap();
                 loop {
-                    let pending_metadata = state.metadata_revision > state.metadata_done;
-                    if pending_metadata && (last_raw || state.jobs.is_empty()) {
-                        break Task::Metadata(
-                            state.metadata.clone().context("Missing journal snapshot")?,
-                        );
+                    if state.error.is_some() {
+                        return Ok(());
                     }
-                    if let Some(job) = state.jobs.front() {
-                        break Task::Raw(job.clone());
+                    let unclaimed = state.jobs.iter().position(|j| !j.claimed);
+                    let pending_metadata =
+                        state.metadata_revision > state.metadata_done && !state.metadata_busy;
+                    if pending_metadata && (state.raw_since_metadata || unclaimed.is_none()) {
+                        let snapshot =
+                            state.metadata.clone().context("Missing journal snapshot")?;
+                        let sent = match &state.journal_sent {
+                            Some((run, sent)) if *run == snapshot.run => *sent,
+                            _ => 0,
+                        };
+                        state.metadata_busy = true;
+                        state.raw_since_metadata = false;
+                        break Task::Metadata(snapshot, sent);
                     }
-                    if state.closed {
+                    if let Some(i) = unclaimed {
+                        state.jobs[i].claimed = true;
+                        break Task::Raw(state.jobs[i].clone());
+                    }
+                    if state.closed && state.jobs.is_empty() && !state.metadata_busy {
                         return Ok(());
                     }
                     state = shared.1.wait(state).unwrap();
@@ -535,21 +644,34 @@ impl UploadQueue {
                 Task::Raw(job) => {
                     sink.deliver_pending(&job.intent)?;
                     let mut state = shared.0.lock().unwrap();
-                    ensure!(
-                        state.jobs.front().is_some_and(|j| j.intent == job.intent),
-                        "Upload queue order changed"
-                    );
-                    state.jobs.pop_front();
+                    let i = state
+                        .jobs
+                        .iter()
+                        .position(|j| j.intent == job.intent && j.claimed)
+                        .context("Upload queue lost a claimed RAW")?;
+                    state.jobs.remove(i);
                     state.saved += 1;
+                    state.raw_since_metadata = true;
                     progress(sink, &state);
-                    last_raw = true;
                 }
-                Task::Metadata(snapshot) => {
-                    for (name, bytes) in snapshot.files {
-                        sink.put_bytes(&snapshot.run, &name, bytes.as_ref().clone(), None)?;
+                Task::Metadata(snapshot, sent) => {
+                    let mut journal = None;
+                    for (name, bytes) in &snapshot.files {
+                        if name == "events.jsonl" {
+                            if !sink.append_journal(&snapshot.run, bytes, sent)? {
+                                sink.put_bytes(&snapshot.run, name, bytes.as_ref().clone(), None)?;
+                            }
+                            journal = Some(bytes.len());
+                        } else {
+                            sink.put_bytes(&snapshot.run, name, bytes.as_ref().clone(), None)?;
+                        }
                     }
-                    shared.0.lock().unwrap().metadata_done = snapshot.revision;
-                    last_raw = false;
+                    let mut state = shared.0.lock().unwrap();
+                    state.metadata_done = snapshot.revision;
+                    state.metadata_busy = false;
+                    if let Some(length) = journal {
+                        state.journal_sent = Some((snapshot.run.clone(), length));
+                    }
                 }
             }
             shared.1.notify_all();
@@ -567,7 +689,9 @@ impl UploadQueue {
         self.finish()?;
         let mut state = self.shared.0.lock().unwrap();
         ensure!(!state.closed, "Transfer queue is closed");
+        let journal_sent = state.journal_sent.take();
         *state = QueueState::default();
+        state.journal_sent = journal_sent;
         self.sink
             .note(json!({"receipt":null,"upload_MB_per_second":null}));
         progress(&self.sink, &state);
@@ -632,7 +756,12 @@ impl UploadQueue {
             !state.closed && state.jobs.len() < MAX_PENDING_FRAMES,
             "RAW retained; upload queue cannot accept another frame"
         );
-        state.jobs.push_back(Job { intent, raw, bytes });
+        state.jobs.push_back(Job {
+            intent,
+            raw,
+            bytes,
+            claimed: false,
+        });
         state.captured += 1;
         state.peak = state.peak.max(state.jobs.len());
         progress(&self.sink, &state);
@@ -665,7 +794,10 @@ impl UploadQueue {
         let mut state = self.shared.0.lock().unwrap();
         loop {
             Self::check(&state)?;
-            if state.jobs.is_empty() && state.metadata_done == state.metadata_revision {
+            if state.jobs.is_empty()
+                && state.metadata_done == state.metadata_revision
+                && !state.metadata_busy
+            {
                 return Ok(());
             }
             state = self.shared.1.wait(state).unwrap();
@@ -674,7 +806,7 @@ impl UploadQueue {
     fn close(&mut self) {
         self.shared.0.lock().unwrap().closed = true;
         self.shared.1.notify_all();
-        if let Some(thread) = self.thread.take() {
+        for thread in self.threads.drain(..) {
             let _ = thread.join();
         }
     }
@@ -683,6 +815,54 @@ impl Drop for UploadQueue {
     fn drop(&mut self) {
         self.close();
     }
+}
+
+/// Sends the journal of the run that was capturing when the controller last
+/// stopped, so the PC has its final state.
+fn recover_journal(sink: &Sink, state: &Path) -> Result<()> {
+    let active = state.join("active-journal.json");
+    if active.exists() {
+        let record: Value = serde_json::from_slice(&std::fs::read(&active)?)?;
+        let directory = Path::new(
+            record["directory"]
+                .as_str()
+                .context("Missing recovery journal")?,
+        );
+        let run = directory
+            .file_name()
+            .and_then(|s| s.to_str())
+            .context("Invalid recovery journal")?;
+        match sink.register(run) {
+            Ok(()) => {
+                for name in ["manifest.json", "events.jsonl", "result.json"] {
+                    let path = directory.join(name);
+                    if path.exists() {
+                        sink.put(run, name, &path)?;
+                    }
+                }
+            }
+            // The run finished on the Pi and every RAW was acknowledged
+            // (none is pending above), but the PC no longer has its
+            // folder: the owner deleted the stack there. Nothing of it is
+            // left to deliver; refusing to connect would only strand the
+            // camera.
+            Err(e) if directory.join("result.json").is_file() && refused_missing(&e) => {
+                std::fs::remove_file(&active)?;
+            }
+            Err(e) => return Err(e),
+        }
+    }
+    Ok(())
+}
+
+/// The receiver refused to register a run because its folder is gone
+/// (HTTP 409 from `POST /api/runs/{run}`).
+fn refused_missing(e: &anyhow::Error) -> bool {
+    e.chain().any(|c| {
+        c.downcast_ref::<reqwest::Error>()
+            .and_then(reqwest::Error::status)
+            == Some(reqwest::StatusCode::CONFLICT)
+    })
 }
 
 pub struct PcCamera {
@@ -695,9 +875,13 @@ pub struct PcCamera {
     /// the last one (a retake).
     planes: usize,
     repeat: bool,
+    /// The next capture retakes this earlier plane.
+    retake: Option<usize>,
     planned_frames: usize,
     raw_limit: u64,
     capacity_at: Instant,
+    /// When the PC last confirmed room for the rest of the run.
+    run_capacity_at: Option<Instant>,
 }
 impl PcCamera {
     pub fn connect(bridge: &Path, config: TransferConfig, report: TransferReport) -> Result<Self> {
@@ -719,26 +903,7 @@ impl PcCamera {
                 sink.deliver_pending(&entry)?;
             }
         }
-        let active = config.state_directory.join("active-journal.json");
-        if active.exists() {
-            let record: Value = serde_json::from_slice(&std::fs::read(&active)?)?;
-            let directory = Path::new(
-                record["directory"]
-                    .as_str()
-                    .context("Missing recovery journal")?,
-            );
-            let run = directory
-                .file_name()
-                .and_then(|s| s.to_str())
-                .context("Invalid recovery journal")?;
-            sink.register(run)?;
-            for name in ["manifest.json", "events.jsonl", "result.json"] {
-                let path = directory.join(name);
-                if path.exists() {
-                    sink.put(run, name, &path)?;
-                }
-            }
-        }
+        recover_journal(&sink, &config.state_directory)?;
         ensure!(
             std::fs::read_dir(&config.ram_directory)?.next().is_none(),
             "Unbound RAW remains in RAM from an interrupted camera download. Preserve it before reconnecting; no new exposure was taken"
@@ -753,9 +918,11 @@ impl PcCamera {
             ordinal: 0,
             planes: 0,
             repeat: false,
+            retake: None,
             planned_frames: 0,
             raw_limit: MAX_RAW,
             capacity_at: Instant::now(),
+            run_capacity_at: None,
         })
     }
 }
@@ -812,8 +979,17 @@ impl Camera for PcCamera {
             .as_u64()
             .unwrap_or(0) as usize;
         let remaining = self.planned_frames.saturating_sub(self.ordinal) + pending;
-        self.sink
-            .capacity(self.run.as_deref(), remaining.max(shots), self.raw_limit)?;
+        // Room for the whole rest of the run was confirmed at most 5 s ago:
+        // the run has only used some of it since. Asking on every plane cost
+        // a round trip over the busy uplink before every shutter.
+        if self
+            .run_capacity_at
+            .is_none_or(|at| at.elapsed() >= Duration::from_secs(5))
+        {
+            self.sink
+                .capacity(self.run.as_deref(), remaining.max(shots), self.raw_limit)?;
+            self.run_capacity_at = Some(Instant::now());
+        }
         Ok(true)
     }
     fn finish_transfers(&mut self) -> Result<()> {
@@ -827,10 +1003,22 @@ impl Camera for PcCamera {
         let group_stream = self.inner.group_stream();
         // Planes are counted, not derived from the file count: a retake
         // (error correction) records more files for the same plane.
-        if !std::mem::take(&mut self.repeat) || self.planes == 0 {
-            self.planes += 1;
-        }
-        let plane = self.planes;
+        let plane = match self
+            .retake
+            .take()
+            .filter(|&p| (1..=self.planes).contains(&p))
+        {
+            Some(plane) => {
+                self.repeat = false;
+                plane
+            }
+            None => {
+                if !std::mem::take(&mut self.repeat) || self.planes == 0 {
+                    self.planes += 1;
+                }
+                self.planes
+            }
+        };
         let mut files = Vec::new();
         let sink = &self.sink;
         let uploads = &self.uploads;
@@ -914,9 +1102,11 @@ impl Camera for PcCamera {
                 &json!({"directory":directory}),
             )?;
             self.run = Some(run.into());
+            self.run_capacity_at = None;
             self.ordinal = 0;
             self.planes = 0;
             self.repeat = false;
+            self.retake = None;
         }
         self.uploads.snapshot(directory, run)
     }
@@ -935,6 +1125,15 @@ impl Camera for PcCamera {
     }
     fn repeat_plane(&mut self) {
         self.repeat = true;
+    }
+    fn retake_plane(&mut self, plane: Option<u64>) {
+        match plane {
+            Some(p) => self.retake = usize::try_from(p).ok(),
+            None => self.repeat = true,
+        }
+    }
+    fn set_next_focus(&mut self, next: Option<(u16, u32)>) {
+        self.inner.set_next_focus(next);
     }
 }
 
@@ -984,11 +1183,16 @@ mod tests {
                 let first = first.clone();
                 let entered = entered.clone();
                 async move {
-                    if request.uri().path().ends_with(".ARW") && first.swap(false, Ordering::SeqCst)
+                    if !request.uri().path().ends_with(".ARW") {
+                        return next.run(request).await;
+                    }
+                    let _ = entered.send(());
+                    // Every RAW waits for the gate. The bound also makes a
+                    // failing test release its owned server.
+                    let _ = tokio::time::timeout(Duration::from_secs(10), gate.acquire()).await;
+                    if request.uri().path().ends_with("frame-000001.ARW")
+                        && first.swap(false, Ordering::SeqCst)
                     {
-                        entered.send(()).unwrap();
-                        // The bound also makes a failing test release its owned server.
-                        let _ = tokio::time::timeout(Duration::from_secs(10), gate.acquire()).await;
                         let committed = next.run(request).await;
                         assert!(committed.status().is_success());
                         // Lose the first acknowledgement after the file is durable.
@@ -1035,20 +1239,24 @@ mod tests {
         sink.register(run).unwrap();
         let mut queue = UploadQueue::new(sink.clone()).unwrap();
         let mut bindings = Vec::new();
-        for i in 0..4 {
+        for i in 0..MAX_PENDING_FRAMES {
             assert!(queue.room().unwrap());
             let raw = ram.join(format!("source-{i}.ARW"));
             std::fs::write(&raw, vec![i as u8; 65536]).unwrap();
             let binding = json!({"run":run,"name":format!("frame-{:06}.ARW",i+1),"path":raw,"bytes":65536,"sha256":hash_file(&raw).unwrap()});
             queue.enqueue(binding.clone()).unwrap();
             bindings.push(binding);
-            if i == 0 {
-                uploading.recv_timeout(Duration::from_secs(5)).unwrap();
+            if i == 1 {
+                // Two real HTTP uploads are in flight at once.
+                for _ in 0..UPLOAD_WORKERS {
+                    uploading.recv_timeout(Duration::from_secs(5)).unwrap();
+                }
             }
         }
-        // A real HTTP upload is blocked while subsequent complete RAWs are queued.
+        // Blocked uploads while complete RAWs fill the queue.
         assert!(!queue.room().unwrap());
-        assert_eq!(std::fs::read_dir(&ram).unwrap().count(), 4);
+        assert!(uploading.recv_timeout(Duration::from_millis(300)).is_err());
+        assert_eq!(std::fs::read_dir(&ram).unwrap().count(), MAX_PENDING_FRAMES);
         assert_eq!(sink.report.lock().unwrap()["saved_frames"], 0);
         let journal = temp.path().join(run);
         std::fs::create_dir(&journal).unwrap();
@@ -1057,11 +1265,17 @@ mod tests {
         let latest = b"{\"one\":1}\n{\"two\":2}\n";
         std::fs::write(journal.join("events.jsonl"), latest).unwrap();
         queue.snapshot(&journal, run).unwrap();
-        gate.add_permits(1);
+        gate.add_permits(1000);
         queue.finish().unwrap();
-        assert_eq!(sink.report.lock().unwrap()["saved_frames"], 4);
+        assert_eq!(
+            sink.report.lock().unwrap()["saved_frames"],
+            MAX_PENDING_FRAMES
+        );
         assert_eq!(sink.report.lock().unwrap()["pending_frames"], 0);
-        assert_eq!(sink.report.lock().unwrap()["queue_peak"], 4);
+        assert_eq!(
+            sink.report.lock().unwrap()["queue_peak"],
+            MAX_PENDING_FRAMES
+        );
         assert_eq!(std::fs::read_dir(&ram).unwrap().count(), 0);
         assert_eq!(
             std::fs::read(pc.join(run).join("events.jsonl")).unwrap(),
@@ -1093,11 +1307,11 @@ mod tests {
         let mut queue = UploadQueue::new(sink.clone()).unwrap();
         let raw = ram.join("corrupt.ARW");
         std::fs::write(&raw, vec![23u8; 65536]).unwrap();
-        queue.enqueue(json!({"run":run,"name":"frame-000005.ARW","path":raw,"bytes":65536,"sha256":"0".repeat(64)})).unwrap();
+        queue.enqueue(json!({"run":run,"name":"frame-000099.ARW","path":raw,"bytes":65536,"sha256":"0".repeat(64)})).unwrap();
         assert!(queue.finish().is_err());
         assert!(queue.room().is_err());
         assert!(raw.exists());
-        assert!(!pc.join(run).join("frame-000005.ARW").exists());
+        assert!(!pc.join(run).join("frame-000099.ARW").exists());
         assert!(
             state
                 .join("pending-transfers")
@@ -1107,6 +1321,92 @@ mod tests {
                 .is_some()
         );
         queue.close();
+        shutdown.send(()).unwrap();
+        server.join().unwrap();
+    }
+
+    /// The owner deleted a finished stack's folder on the PC: the controller
+    /// still connects. An unfinished run's journal is still owed and refused.
+    #[test]
+    fn a_finished_run_deleted_on_the_pc_does_not_block_connecting() {
+        let temp = tempfile::tempdir().unwrap();
+        let config = temp.path().join("receiver.json");
+        let pc = temp.path().join("pc");
+        save_json(
+            &config,
+            &ReceiverConfig {
+                compress_raw: false,
+                bind: "127.0.0.1:0".parse().unwrap(),
+                lan: "10.0.0.0/24".into(),
+                key: "a".repeat(48),
+                folder: pc.clone(),
+            },
+        )
+        .unwrap();
+        let receiver = Receiver::open(config).unwrap();
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        listener.set_nonblocking(true).unwrap();
+        let router = receiver.router();
+        let (shutdown, stopped) = tokio::sync::oneshot::channel();
+        let server = thread::spawn(move || {
+            tokio::runtime::Runtime::new().unwrap().block_on(async {
+                axum::serve(
+                    tokio::net::TcpListener::from_std(listener).unwrap(),
+                    router.into_make_service_with_connect_info::<SocketAddr>(),
+                )
+                .with_graceful_shutdown(async {
+                    let _ = stopped.await;
+                })
+                .await
+                .unwrap();
+            })
+        });
+        let state = temp.path().join("state");
+        std::fs::create_dir(&state).unwrap();
+        let sink = Sink::new(
+            TransferConfig {
+                receiver: format!("http://{address}"),
+                key: "a".repeat(48),
+                lan: "10.0.0.0/24".into(),
+                ram_directory: temp.path().join("ram"),
+                state_directory: state.clone(),
+                transport_compression: false,
+            },
+            Arc::new(Mutex::new(json!({}))),
+        )
+        .unwrap();
+        let journal = temp.path().join("journal").join("stack-1-deleted");
+        std::fs::create_dir_all(&journal).unwrap();
+        std::fs::write(journal.join("manifest.json"), b"{}").unwrap();
+        std::fs::write(
+            journal.join("events.jsonl"),
+            b"{\"a\":1}
+",
+        )
+        .unwrap();
+        let active = state.join("active-journal.json");
+        save_json(&active, &json!({"directory":journal})).unwrap();
+        // Registered and then deleted by the owner, before the run finished.
+        sink.register("stack-1-deleted").unwrap();
+        std::fs::remove_dir_all(pc.join("stack-1-deleted")).unwrap();
+        assert!(recover_journal(&sink, &state).is_err());
+        assert!(active.exists());
+        // Finished on the Pi: nothing is owed, the record is dropped.
+        std::fs::write(journal.join("result.json"), b"{}").unwrap();
+        recover_journal(&sink, &state).unwrap();
+        assert!(!active.exists());
+        // A run the PC still has is re-sent as before.
+        let kept = temp.path().join("journal").join("stack-1-kept");
+        std::fs::create_dir_all(&kept).unwrap();
+        std::fs::write(kept.join("manifest.json"), b"{}").unwrap();
+        std::fs::write(kept.join("result.json"), b"{}").unwrap();
+        save_json(&active, &json!({"directory":kept})).unwrap();
+        recover_journal(&sink, &state).unwrap();
+        assert_eq!(
+            std::fs::read(pc.join("stack-1-kept").join("result.json")).unwrap(),
+            b"{}"
+        );
         shutdown.send(()).unwrap();
         server.join().unwrap();
     }

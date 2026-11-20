@@ -724,9 +724,11 @@ mod tests {
         });
         assert!(session.dispatch(stale).is_err());
         let after = session.state();
+        // Four exposures a plane: MEASURED about 2.6 times a single shot's
+        // plane at 0.6 s (5.6 s against 2.15 s, `timing::initial_plane`).
         assert!(
             after["initial_seconds"].as_f64().unwrap()
-                > 3.0 * before["initial_seconds"].as_f64().unwrap() - 3.0
+                > 2.0 * before["initial_seconds"].as_f64().unwrap() - 3.0
         );
         assert!(
             after["storage_required_bytes"].as_u64().unwrap()

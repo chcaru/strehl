@@ -26,10 +26,21 @@ pub fn initial_plane(shutter: u64, settle_ms: u32, shots: u64) -> Option<Duratio
     if !matches!(shots, 1 | 4) {
         return None;
     }
-    // Focus settles once per plane. Every member incurs exposure/readout/transfer.
-    // This is explicitly an initial allowance; measured whole-plane cycles take over.
+    // MEASURED on the studio A7CR (2026-11-20, pipelined controller): the
+    // camera spends about 0.55 s on each image beyond its exposure, and a plane
+    // adds about 1.0 s (the last RAW's fetch, the controller's own steps). The
+    // lens moves to the next plane during that fetch, so a settle up to about
+    // 0.55 s after the camera's focus result costs nothing. 0.6 s four-shot:
+    // 5.6 s predicted, 5.65-5.69 s measured; with a 2 s settle 7.05 against
+    // 7.03. Shorter exposures stop helping where the camera's own cadence
+    // and the RAW fetches take over: MEASURED 4.29-4.44 s a four-shot plane
+    // and 1.64-1.79 s a single shot from 1/6 s down to 1/25 s. An initial
+    // allowance; measured whole-plane cycles take over.
+    let settle = f64::from(settle_ms) / 1000.0;
+    let floor = if shots == 4 { 0.83 } else { 0.65 };
+    let image = (shutter_seconds(shutter)? + 0.55).max(floor);
     Some(Duration::from_secs_f64(
-        (shutter_seconds(shutter)? + 1.0) * shots as f64 + f64::from(settle_ms) / 1000.0,
+        image * shots as f64 + 1.0 + (settle - 0.55).max(0.0),
     ))
 }
 
@@ -168,8 +179,22 @@ mod tests {
     #[test]
     fn four_shot_estimate_counts_exposures_but_one_focus_settle() {
         let shutter = (6 << 16) | 10;
-        assert_eq!(initial_plane(shutter, 500, 1).unwrap().as_secs_f64(), 2.1);
-        assert!((initial_plane(shutter, 500, 4).unwrap().as_secs_f64() - 6.9).abs() < 1e-6);
+        let plane = |settle, shots| initial_plane(shutter, settle, shots).unwrap().as_secs_f64();
+        // The rig's measured periods (2026-11-20): 5.65-5.69 s and 7.03 s.
+        assert!((plane(500, 4) - 5.6).abs() < 1e-6);
+        assert!((plane(2000, 4) - 7.05).abs() < 1e-6);
+        assert!((plane(500, 1) - 2.15).abs() < 1e-6);
+        // A settle the last RAW's fetch hides costs nothing.
+        assert_eq!(plane(100, 4), plane(500, 4));
+        // Below about 1/6 s the camera sets the pace (4.29-4.44 s measured).
+        let fast = |num: u64, den: u64, shots| {
+            initial_plane((num << 16) | den, 500, shots)
+                .unwrap()
+                .as_secs_f64()
+        };
+        assert!((fast(1, 25, 4) - 4.32).abs() < 1e-6);
+        assert_eq!(fast(1, 25, 4), fast(1, 10, 4));
+        assert!((fast(1, 25, 1) - 1.65).abs() < 1e-6);
         assert!(initial_plane(shutter, 500, 16).is_none());
     }
     #[test]

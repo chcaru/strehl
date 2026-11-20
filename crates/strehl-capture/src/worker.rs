@@ -1098,9 +1098,37 @@ fn capture(
         if let Some(timing) = &mut s.lock().unwrap().timing {
             timing.approached(Instant::now());
         }
+        let targets = positions.clone();
+        let ctx = Run {
+            s,
+            control,
+            plan: &plan,
+            shots,
+            initial: &initial_exposure,
+        };
+        // Error correction (2026-11-20): the controller does not hold focus
+        // for the PC's check. Groups still being checked are collected
+        // between planes; a plane the PC asks to retake is visited again
+        // through the approach move, and the run goes on. MEASURED: a plane
+        // revisited that way lands within about one step of the first visit,
+        // far inside the depth a point stays sharp over, and a hold cost
+        // 1.5-2 s a plane.
+        let mut owed: Vec<Owed> = Vec::new();
         for (ordinal, target) in positions.into_iter().enumerate() {
             if !checkpoint(c, s, control, Phase::Capturing)? {
                 return Ok(false);
+            }
+            if verify {
+                let Some(due) = collect_verdicts(c, &ctx, &mut log, &mut owed, &mut verify, false)?
+                else {
+                    return Ok(false);
+                };
+                for (o, reason) in due {
+                    let next = Some((target, plan.settle_ms));
+                    if !retake(c, &ctx, &mut log, &mut owed, o, &reason, next)? {
+                        return Ok(false);
+                    }
+                }
             }
             log.record("focus_intent", json!({"ordinal":ordinal,"target":target}))?;
             let response = c.focus(target, plan.settle_ms)?;
@@ -1115,115 +1143,43 @@ fn capture(
             if !checkpoint(c, s, control, Phase::Capturing)? {
                 return Ok(false);
             }
-            // Error correction repeats this block at the same focus position.
-            let mut retakes = 0;
-            loop {
-                let before = refresh(c, s)?;
-                validate_exposure(&before)?;
-                ensure!(
-                    before["pixel_shift_shots"].as_u64().unwrap_or(1) == shots,
-                    "Capture mode changed during the stack; no next shutter was sent"
-                );
-                for key in [
-                    "ExposureProgramMode",
-                    "IsoSensitivity",
-                    "ShutterSpeed",
-                    "FNumber",
-                ] {
-                    ensure!(
-                        property(&before, key) == property(&initial_exposure, key),
-                        "{key} changed during the run; sequence stopped before the next shutter"
-                    );
+            // The lens goes on to the next plane as soon as this group's last
+            // exposure is in the camera (MEASURED 2026-11-20: 7.3 s a
+            // four-shot plane to 5.65).
+            let next = targets.get(ordinal + 1).map(|&n| (n, plan.settle_ms));
+            let Some(response) = take_group(c, &ctx, &mut log, ordinal, target, next)? else {
+                return Ok(false);
+            };
+            completed += 1;
+            update(s, |v| {
+                v.completed = completed;
+                if let Some(timing) = &mut v.timing {
+                    timing.complete_cycle(Instant::now());
                 }
-                log.record(
-                "capture_intent",
-                json!({"ordinal":ordinal,"target":target,"pixel_shift_shots":shots,"camera_status":before}),
-            )?;
-                c.sync_journal(&log.directory)?;
-                while !c.prepare_capture()? {
-                    if !checkpoint(c, s, control, Phase::Capturing)? {
-                        return Ok(false);
-                    }
-                    thread::sleep(Duration::from_millis(100));
-                }
-                if !checkpoint(c, s, control, Phase::Capturing)? {
+            });
+            if verify {
+                owed.push(Owed {
+                    ordinal,
+                    target,
+                    plane: plane_of(&response),
+                    group: group_key(&response).context("Captured group has no identity")?,
+                    retakes: 0,
+                    since: Instant::now(),
+                });
+            }
+        }
+        // The last planes' checks: wait for them, retaking as asked.
+        while verify && !owed.is_empty() {
+            update(s, |v| {
+                v.message = "Checking the last planes on the PC…".into()
+            });
+            let Some(due) = collect_verdicts(c, &ctx, &mut log, &mut owed, &mut verify, true)?
+            else {
+                return Ok(false);
+            };
+            for (o, reason) in due {
+                if !retake(c, &ctx, &mut log, &mut owed, o, &reason, None)? {
                     return Ok(false);
-                }
-                s.lock().unwrap().exposure_uncertain = true;
-                let response = c.capture(plan.capture_timeout_s)?;
-                ensure!(
-                    response["pixel_shift_shots"].as_u64().unwrap_or(1) == shots,
-                    "Capture mode changed during the stack"
-                );
-                validate_capture(&response)?;
-                if retakes == 0 {
-                    completed += 1;
-                }
-                update(s, |v| {
-                    v.exposure_uncertain = false;
-                    v.completed = completed;
-                    if retakes == 0
-                        && let Some(timing) = &mut v.timing
-                    {
-                        timing.complete_cycle(Instant::now());
-                    }
-                });
-                log.record(
-                    if response["destination"] == "host-pc-queue" {
-                        "capture_buffered"
-                    } else {
-                        "capture_complete"
-                    },
-                    json!({"ordinal":ordinal,"target":target,"response":response}),
-                )?;
-                c.sync_journal(&log.directory)?;
-                // Preview failure does not repeat or invalidate a completed exposure.
-                if let Err(e) = preview(c, s) {
-                    s.lock().unwrap().preview_error = Some(e.to_string());
-                }
-                if !verify {
-                    break;
-                }
-                let group = group_key(&response).context("Captured group has no identity")?;
-                update(s, |v| {
-                    v.message =
-                        format!("Plane {} of {} · checking on the PC…", ordinal + 1, v.total)
-                });
-                match await_verdict(c, s, control, &group)? {
-                    Checked::Stop => return Ok(false),
-                    Checked::Pass => break,
-                    Checked::Retake(reason) if retakes < MAX_RETAKES => {
-                        retakes += 1;
-                        log.record(
-                        "retake_intent",
-                        json!({"ordinal":ordinal,"target":target,"group":group,"retake":retakes,"reason":reason}),
-                    )?;
-                        update(s, |v| {
-                            v.message = format!(
-                                "Plane {} of {} · retaking in place: {reason}",
-                                ordinal + 1,
-                                v.total
-                            )
-                        });
-                        c.repeat_plane();
-                    }
-                    Checked::Retake(reason) => {
-                        log.record(
-                        "retake_exhausted",
-                        json!({"ordinal":ordinal,"target":target,"group":group,"retakes":retakes,"reason":reason}),
-                    )?;
-                        break;
-                    }
-                    Checked::Unanswered(why) => {
-                        // Never stall a capture on the PC: stop waiting for
-                        // this run's checks and carry on as without them.
-                        verify = false;
-                        log.record(
-                            "error_correction_off",
-                            json!({"ordinal":ordinal,"group":group,"reason":why}),
-                        )?;
-                        break;
-                    }
                 }
             }
         }
@@ -1298,16 +1254,9 @@ fn capture(
 const MAX_RETAKES: usize = 2;
 /// How long a group's check may take to arrive. It normally arrives about
 /// 1.5-2 s after the group (the last RAW reaches the PC in 1.1-1.3 s and the
-/// check takes 0.2-0.4 s); without one, error correction stops for the run.
+/// check takes 0.2-0.4 s), during the next plane; without one, error
+/// correction stops for the run.
 const VERDICT_WAIT: Duration = Duration::from_secs(15);
-
-enum Checked {
-    Pass,
-    Retake(String),
-    /// No answer in time, or the backend or receiver cannot answer.
-    Unanswered(String),
-    Stop,
-}
 
 /// A captured group's identity as the PC's checker records it: the camera's
 /// group id, or for a single shot without one, its frame name.
@@ -1320,47 +1269,215 @@ fn group_key(response: &Value) -> Option<String> {
         .map(str::to_owned)
 }
 
-/// Holds focus until the PC has checked `group`. Pause and stop still apply.
-fn await_verdict(
+/// What a capture run carries into each group.
+struct Run<'a> {
+    s: &'a Shared,
+    control: &'a AtomicU8,
+    plan: &'a Plan,
+    shots: u64,
+    initial: &'a Value,
+}
+
+/// A group the PC is still checking (error correction).
+struct Owed {
+    ordinal: usize,
+    target: u16,
+    /// The plane number its files carry, when the backend numbers planes.
+    plane: Option<u64>,
+    group: String,
+    retakes: usize,
+    since: Instant,
+}
+
+/// The plane number a captured group's files carry.
+fn plane_of(response: &Value) -> Option<u64> {
+    response["files"].as_array()?.first()?["plane"].as_u64()
+}
+
+/// One group at the lens's current position: the exposure checked against
+/// the run's, the intent recorded before the shutter, room for its RAWs, the
+/// capture and its record. `next`: where the lens may go once the group's
+/// last exposure is in the camera. `None` when the run was stopped.
+fn take_group(
     c: &mut dyn Camera,
-    s: &Shared,
-    control: &AtomicU8,
-    group: &str,
-) -> Result<Checked> {
-    let deadline = Instant::now() + VERDICT_WAIT;
+    ctx: &Run,
+    log: &mut Journal,
+    ordinal: usize,
+    target: u16,
+    next: Option<(u16, u32)>,
+) -> Result<Option<Value>> {
+    let s = ctx.s;
+    let before = refresh(c, s)?;
+    validate_exposure(&before)?;
+    ensure!(
+        before["pixel_shift_shots"].as_u64().unwrap_or(1) == ctx.shots,
+        "Capture mode changed during the stack; no next shutter was sent"
+    );
+    for key in [
+        "ExposureProgramMode",
+        "IsoSensitivity",
+        "ShutterSpeed",
+        "FNumber",
+    ] {
+        ensure!(
+            property(&before, key) == property(ctx.initial, key),
+            "{key} changed during the run; sequence stopped before the next shutter"
+        );
+    }
+    log.record(
+        "capture_intent",
+        json!({"ordinal":ordinal,"target":target,"pixel_shift_shots":ctx.shots,"camera_status":before}),
+    )?;
+    c.sync_journal(&log.directory)?;
+    while !c.prepare_capture()? {
+        if !checkpoint(c, s, ctx.control, Phase::Capturing)? {
+            return Ok(None);
+        }
+        thread::sleep(Duration::from_millis(100));
+    }
+    if !checkpoint(c, s, ctx.control, Phase::Capturing)? {
+        return Ok(None);
+    }
+    c.set_next_focus(next);
+    s.lock().unwrap().exposure_uncertain = true;
+    let response = c.capture(ctx.plan.capture_timeout_s)?;
+    ensure!(
+        response["pixel_shift_shots"].as_u64().unwrap_or(1) == ctx.shots,
+        "Capture mode changed during the stack"
+    );
+    validate_capture(&response)?;
+    s.lock().unwrap().exposure_uncertain = false;
+    log.record(
+        if response["destination"] == "host-pc-queue" {
+            "capture_buffered"
+        } else {
+            "capture_complete"
+        },
+        json!({"ordinal":ordinal,"target":target,"response":response}),
+    )?;
+    c.sync_journal(&log.directory)?;
+    // Preview failure does not repeat or invalidate a completed exposure.
+    if let Err(e) = preview(c, s) {
+        s.lock().unwrap().preview_error = Some(e.to_string());
+    }
+    Ok(Some(response))
+}
+
+/// Error correction: the PC's verdicts on the groups it is still checking.
+/// Returns the groups to retake now (`wait`: until at least one verdict is
+/// due or none is owed). A group unanswered for `VERDICT_WAIT`, or a PC that
+/// cannot answer, turns error correction off for the run: the capture is
+/// never stalled on the PC. `None` when the run was stopped.
+fn collect_verdicts(
+    c: &mut dyn Camera,
+    ctx: &Run,
+    log: &mut Journal,
+    owed: &mut Vec<Owed>,
+    verify: &mut bool,
+    wait: bool,
+) -> Result<Option<Vec<(Owed, String)>>> {
+    let mut due = Vec::new();
     loop {
-        match c.verdict(group) {
-            Ok(Some(v)) => {
-                return Ok(if v["retake"] == true {
-                    Checked::Retake(v["reason"].as_str().unwrap_or("check failed").to_owned())
-                } else {
-                    Checked::Pass
-                });
-            }
-            Ok(None) => {}
-            Err(e) => {
-                // A receiver without the verdict store, or a backend without
-                // a PC, will never answer; a dropped request may.
-                let permanent = e.downcast_ref::<reqwest::Error>().is_none_or(|http| {
-                    http.status()
-                        .is_some_and(|s| matches!(s.as_u16(), 404 | 405))
-                });
-                if permanent {
-                    return Ok(Checked::Unanswered(format!("{e:#}")));
+        let mut i = 0;
+        while i < owed.len() {
+            let unanswered = match c.verdict(&owed[i].group) {
+                Ok(Some(v)) => {
+                    let o = owed.remove(i);
+                    if v["retake"] == true {
+                        let reason = v["reason"].as_str().unwrap_or("check failed").to_owned();
+                        if o.retakes < MAX_RETAKES {
+                            due.push((o, reason));
+                        } else {
+                            log.record(
+                                "retake_exhausted",
+                                json!({"ordinal":o.ordinal,"target":o.target,"group":o.group,"retakes":o.retakes,"reason":reason}),
+                            )?;
+                        }
+                    }
+                    continue;
                 }
+                Ok(None) => (owed[i].since.elapsed() >= VERDICT_WAIT)
+                    .then(|| format!("no check from the PC within {} s", VERDICT_WAIT.as_secs())),
+                Err(e) => {
+                    // A receiver without the verdict store, or a backend
+                    // without a PC, will never answer; a dropped request may.
+                    let permanent = e.downcast_ref::<reqwest::Error>().is_none_or(|http| {
+                        http.status()
+                            .is_some_and(|s| matches!(s.as_u16(), 404 | 405))
+                    });
+                    permanent.then(|| format!("{e:#}"))
+                }
+            };
+            if let Some(why) = unanswered {
+                *verify = false;
+                log.record(
+                    "error_correction_off",
+                    json!({"ordinal":owed[i].ordinal,"group":owed[i].group,"reason":why}),
+                )?;
+                owed.clear();
+                return Ok(Some(due));
             }
+            i += 1;
         }
-        if Instant::now() >= deadline {
-            return Ok(Checked::Unanswered(format!(
-                "no check from the PC within {} s",
-                VERDICT_WAIT.as_secs()
-            )));
+        if !wait || owed.is_empty() || !due.is_empty() {
+            return Ok(Some(due));
         }
-        if !checkpoint(c, s, control, Phase::Capturing)? {
-            return Ok(Checked::Stop);
+        if !checkpoint(c, ctx.s, ctx.control, Phase::Capturing)? {
+            return Ok(None);
         }
         thread::sleep(Duration::from_millis(150));
     }
+}
+
+/// Visits a plane again for a retake: below it by the approach move, so it
+/// is reached from the capture side as before, then a group recorded under
+/// the plane's own number. Its check is owed like any other group's.
+fn retake(
+    c: &mut dyn Camera,
+    ctx: &Run,
+    log: &mut Journal,
+    owed: &mut Vec<Owed>,
+    o: Owed,
+    reason: &str,
+    next: Option<(u16, u32)>,
+) -> Result<bool> {
+    let n = o.retakes + 1;
+    log.record(
+        "retake_intent",
+        json!({"ordinal":o.ordinal,"target":o.target,"group":o.group,"retake":n,"reason":reason}),
+    )?;
+    update(ctx.s, |v| {
+        v.message = format!(
+            "Plane {} of {} · retaking: {reason}",
+            o.ordinal + 1,
+            v.total
+        )
+    });
+    let below =
+        u16::try_from(i32::from(o.target) - ctx.plan.direction() * i32::from(ctx.plan.approach))
+            .context("Retake approach beyond the lens limit")?;
+    let first = c.focus(below, ctx.plan.settle_ms)?;
+    let at = c.focus(o.target, ctx.plan.settle_ms)?;
+    log.record(
+        "retake_focus",
+        json!({"ordinal":o.ordinal,"target":o.target,"approach":first,"response":at}),
+    )?;
+    if !checkpoint(c, ctx.s, ctx.control, Phase::Capturing)? {
+        return Ok(false);
+    }
+    c.retake_plane(o.plane);
+    let Some(response) = take_group(c, ctx, log, o.ordinal, o.target, next)? else {
+        return Ok(false);
+    };
+    owed.push(Owed {
+        ordinal: o.ordinal,
+        target: o.target,
+        plane: o.plane.or_else(|| plane_of(&response)),
+        group: group_key(&response).context("Captured group has no identity")?,
+        retakes: n,
+        since: Instant::now(),
+    });
+    Ok(true)
 }
 
 /// Explicit positions must keep the plan's approach direction so that every
@@ -1661,6 +1778,10 @@ mod tests {
         asked: Vec<String>,
         retake: Vec<&'static str>,
         answer: bool,
+        /// Each group's check is pending for this many asks first.
+        late: usize,
+        /// Focus moves and verdicts in the order they happened.
+        ops: Vec<String>,
     }
     impl Checked {
         fn new(retake: Vec<&'static str>, answer: bool) -> Self {
@@ -1675,6 +1796,8 @@ mod tests {
                 asked: Vec::new(),
                 retake,
                 answer,
+                late: 0,
+                ops: Vec::new(),
             }
         }
     }
@@ -1693,10 +1816,12 @@ mod tests {
         }
         fn focus(&mut self, target: u16, settle_ms: u32) -> Result<Value> {
             self.focuses.push(target);
+            self.ops.push(format!("focus {target}"));
             self.demo.focus(target, settle_ms)
         }
         fn capture(&mut self, _: u32) -> Result<Value> {
             self.captures += 1;
+            self.ops.push(format!("capture ptp-test-{}", self.captures));
             let n = self.captures;
             let files: Vec<_> = (1..=4)
                 .map(|k| json!({"name":format!("frame-{:06}.ARW",(n-1)*4+k),"bytes":122_968_064,
@@ -1722,6 +1847,10 @@ mod tests {
             if !self.answer {
                 bail!("no verdict store");
             }
+            if self.asked.iter().filter(|g| *g == group).count() <= self.late {
+                return Ok(None);
+            }
+            self.ops.push(format!("verdict {group}"));
             let retake = self.retake.contains(&group);
             Ok(Some(
                 json!({"state":"checked","retake":retake,"reason":if retake {"witness tiles disagree locally"} else {""}}),
@@ -1764,16 +1893,18 @@ mod tests {
         (s, journal)
     }
     #[test]
-    fn error_correction_retakes_a_failed_group_in_place() {
+    fn error_correction_retakes_a_failed_plane_later_through_the_approach() {
         let mut camera = Checked::new(vec!["ptp-test-2"], true);
         let (s, journal) = checked_run(&mut camera, true);
-        // Plane 2's first group failed: one more group, at the same focus.
+        // Plane 2's first group failed. Its check came back while the lens was
+        // on the way to plane 3; plane 2 was visited again from below (the
+        // approach of 128), retaken, and the run went on to plane 3.
         assert_eq!(camera.captures, 4);
         assert_eq!(camera.repeats, 1);
         assert_eq!(
             &camera.focuses[1..],
-            [60000, 60001, 60002],
-            "no focus move for the retake"
+            [60000, 60001, 60001 - 128, 60001, 60002],
+            "the retake approaches its plane from the capture side"
         );
         assert_eq!(
             camera.asked,
@@ -1782,16 +1913,33 @@ mod tests {
         assert_eq!(s.completed, 3, "a retake is not a new plane");
         assert_eq!(s.phase, Phase::Complete);
         assert_eq!(journal.matches("\"event\":\"retake_intent\"").count(), 1);
+        assert_eq!(journal.matches("\"event\":\"retake_focus\"").count(), 1);
         assert!(journal.contains("\"group\":\"ptp-test-2\""));
         assert_eq!(journal.matches("\"event\":\"capture_buffered\"").count(), 4);
     }
     #[test]
+    fn error_correction_never_holds_the_next_plane_for_a_check() {
+        // Every check answers only on its third ask: the planes are taken
+        // while their predecessors are still being checked.
+        let mut camera = Checked::new(vec![], true);
+        camera.late = 2;
+        let (s, _) = checked_run(&mut camera, true);
+        let at = |op: &str| camera.ops.iter().position(|o| o == op).unwrap();
+        assert!(at("capture ptp-test-2") < at("verdict ptp-test-1"));
+        assert!(at("capture ptp-test-3") < at("verdict ptp-test-2"));
+        assert_eq!((camera.captures, s.completed), (3, 3));
+        // The run ends only once every check has come back.
+        assert!(at("verdict ptp-test-3") > at("capture ptp-test-3"));
+        assert_eq!(s.phase, Phase::Complete);
+    }
+    #[test]
     fn error_correction_gives_up_on_a_plane_and_on_a_silent_pc() {
-        // Every group of the plane fails: two retakes, then the plane keeps
-        // what it has and the stack goes on.
-        let mut camera = Checked::new(vec!["ptp-test-1", "ptp-test-2", "ptp-test-3"], true);
+        // Plane 1 fails three times: two retakes, then it keeps what it has
+        // and the stack goes on.
+        let mut camera = Checked::new(vec!["ptp-test-1", "ptp-test-2", "ptp-test-4"], true);
         let (s, journal) = checked_run(&mut camera, true);
         assert_eq!(camera.captures, 3 + 2);
+        assert_eq!(journal.matches("\"event\":\"retake_intent\"").count(), 2);
         assert_eq!(journal.matches("\"event\":\"retake_exhausted\"").count(), 1);
         assert_eq!(s.completed, 3);
         // A receiver that cannot answer: asked once, then the run carries on.
