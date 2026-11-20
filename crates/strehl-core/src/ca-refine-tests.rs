@@ -221,3 +221,171 @@ fn the_mosaic_path_recovers_a_planted_shift_and_reads_zero_without_one() {
         r.blue
     );
 }
+
+/// The FFT with its twiddle factors and window from tables (round-3
+/// performance work) against the form that evaluated them per butterfly and
+/// per sample: the same bits for forward and inverse transforms and for the
+/// windowed spectrum, on noise with a wide dynamic range.
+#[test]
+fn tabled_twiddles_and_window_are_the_per_butterfly_transform() {
+    fn fft1_reference(data: &mut [Cx], start: usize, stride: usize, inverse: bool) {
+        let n = TILE;
+        let idx = |i: usize| start + i * stride;
+        for i in 0..n {
+            let j = ((i as u32).reverse_bits() >> (32 - LOG2_TILE)) as usize;
+            if j > i {
+                data.swap(idx(i), idx(j));
+            }
+        }
+        let sign = if inverse { 1.0 } else { -1.0 };
+        let mut len = 2;
+        while len <= n {
+            for s in (0..n).step_by(len) {
+                for k in 0..len / 2 {
+                    let w = Cx::expi(sign * std::f64::consts::TAU * k as f64 / len as f64);
+                    let (a, b) = (idx(s + k), idx(s + k + len / 2));
+                    let t = w.mul(data[b]);
+                    let u = data[a];
+                    data[a] = Cx {
+                        re: u.re + t.re,
+                        im: u.im + t.im,
+                    };
+                    data[b] = Cx {
+                        re: u.re - t.re,
+                        im: u.im - t.im,
+                    };
+                }
+            }
+            len <<= 1;
+        }
+    }
+    let bits = |v: &[Cx]| -> Vec<(u64, u64)> {
+        v.iter().map(|c| (c.re.to_bits(), c.im.to_bits())).collect()
+    };
+    let mut state = 0x2545_F491_4F6C_DD1Du64;
+    let mut next = || {
+        state ^= state << 13;
+        state ^= state >> 7;
+        state ^= state << 17;
+        (state >> 11) as f64 / (1u64 << 53) as f64
+    };
+    for inverse in [false, true] {
+        let input: Vec<Cx> = (0..TILE * TILE)
+            .map(|i| Cx {
+                re: (next() - 0.5) * 10f64.powi((i % 7) as i32 - 3),
+                im: if inverse { next() - 0.5 } else { 0.0 },
+            })
+            .collect();
+        let mut tabled = input.clone();
+        fft2_in_place(&mut tabled, inverse);
+        let mut reference = input;
+        for r in 0..TILE {
+            fft1_reference(&mut reference, r * TILE, 1, inverse);
+        }
+        for c in 0..TILE {
+            fft1_reference(&mut reference, c, TILE, inverse);
+        }
+        assert_eq!(bits(&tabled), bits(&reference), "inverse {inverse}");
+    }
+    let tile: Vec<f32> = (0..TILE * TILE).map(|_| (next() * 4000.0) as f32).collect();
+    let mean = tile.iter().map(|x| f64::from(*x)).sum::<f64>() / tile.len() as f64;
+    let window =
+        |i: usize| 0.5 - 0.5 * (std::f64::consts::TAU * (i as f64 + 0.5) / TILE as f64).cos();
+    let mut reference: Vec<Cx> = tile
+        .iter()
+        .enumerate()
+        .map(|(i, x)| Cx {
+            re: (f64::from(*x) - mean) * window(i % TILE) * window(i / TILE),
+            im: 0.0,
+        })
+        .collect();
+    for r in 0..TILE {
+        fft1_reference(&mut reference, r * TILE, 1, false);
+    }
+    for c in 0..TILE {
+        fft1_reference(&mut reference, c, TILE, false);
+    }
+    assert_eq!(bits(&fft2(&tile)), bits(&reference), "windowed spectrum");
+}
+
+/// The upsampled-DFT refinement with its sums advanced side by side against
+/// the form that took one output at a time: every grid value the same to the
+/// bit, on random spectra at both refinement factors and several starts.
+#[test]
+fn side_by_side_refinement_sums_are_the_one_at_a_time_sums() {
+    fn refine_reference(product: &[Cx], sy: f64, sx: f64, factor: f64) -> Vec<f64> {
+        let n = TILE;
+        let dftshift = (REGION as f64 / 2.0).trunc();
+        let (oy, ox) = (dftshift - sy * factor, dftshift - sx * factor);
+        let kernel = |offset: f64| -> Vec<Cx> {
+            (0..REGION)
+                .flat_map(|u| {
+                    (0..n).map(move |k| {
+                        Cx::expi(-std::f64::consts::TAU * (u as f64 - offset) * fftfreq(k, factor))
+                    })
+                })
+                .collect()
+        };
+        let (kx, ky) = (kernel(ox), kernel(oy));
+        let mut half = vec![Cx::default(); n * REGION];
+        for y in 0..n {
+            for u in 0..REGION {
+                let mut acc = Cx::default();
+                for k in 0..n {
+                    let t = kx[u * n + k].mul(product[y * n + k].conj());
+                    acc.re += t.re;
+                    acc.im += t.im;
+                }
+                half[y * REGION + u] = acc;
+            }
+        }
+        let mut grid = Vec::with_capacity(REGION * REGION);
+        for v in 0..REGION {
+            for u in 0..REGION {
+                let mut acc = Cx::default();
+                for y in 0..n {
+                    let t = ky[v * n + y].mul(half[y * REGION + u]);
+                    acc.re += t.re;
+                    acc.im += t.im;
+                }
+                grid.push(acc.norm2());
+            }
+        }
+        grid
+    }
+    let mut state = 0x9E37_79B9_7F4A_7C15u64;
+    let mut next = || {
+        state ^= state << 13;
+        state ^= state >> 7;
+        state ^= state << 17;
+        (state >> 11) as f64 / (1u64 << 53) as f64
+    };
+    for trial in 0..4 {
+        let product: Vec<Cx> = (0..TILE * TILE)
+            .map(|_| Cx {
+                re: next() - 0.5,
+                im: next() - 0.5,
+            })
+            .collect();
+        for (sy, sx) in [(0.0, 0.0), (1.25, -0.4), (-2.0, 2.7)] {
+            for factor in [UPSAMPLE, UPSAMPLE * 20.0] {
+                let (sy, sx) = (
+                    (sy * factor).round() / factor,
+                    (sx * factor).round() / factor,
+                );
+                let got: Vec<u64> = refine_grid(&product, sy, sx, factor)
+                    .iter()
+                    .map(|v| v.to_bits())
+                    .collect();
+                let want: Vec<u64> = refine_reference(&product, sy, sx, factor)
+                    .iter()
+                    .map(|v| v.to_bits())
+                    .collect();
+                assert_eq!(
+                    got, want,
+                    "trial {trial} start ({sy}, {sx}) factor {factor}"
+                );
+            }
+        }
+    }
+}

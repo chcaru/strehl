@@ -375,6 +375,33 @@ impl Cx {
     }
 }
 
+/// The twiddle factor of butterfly `k` at stage length `len`, exactly as the
+/// FFT once evaluated it per butterfly.
+fn twiddle(sign: f64, k: usize, len: usize) -> Cx {
+    Cx::expi(sign * std::f64::consts::TAU * k as f64 / len as f64)
+}
+
+/// Every stage's twiddle factors for one direction, `[len / 2 - 1 + k]` for
+/// stage length `len`: [`twiddle`] evaluated once per process instead of once
+/// per butterfly (2.6 million `cos` and `sin` pairs a tile, most of the
+/// measurement's time). The same expression gives the same values, so the
+/// transform is bit-identical.
+fn twiddles(inverse: bool) -> &'static [Cx] {
+    static TABLES: std::sync::OnceLock<[Vec<Cx>; 2]> = std::sync::OnceLock::new();
+    let tables = TABLES.get_or_init(|| {
+        [-1.0, 1.0].map(|sign| {
+            let mut table = Vec::with_capacity(TILE);
+            let mut len = 2;
+            while len <= TILE {
+                table.extend((0..len / 2).map(|k| twiddle(sign, k, len)));
+                len <<= 1;
+            }
+            table
+        })
+    });
+    &tables[usize::from(inverse)]
+}
+
 /// In-place radix-2 FFT of a `TILE`-long run with stride; `inverse` flips the
 /// exponent sign (no 1/n scaling: only argmax positions are used).
 fn fft1(data: &mut [Cx], start: usize, stride: usize, inverse: bool) {
@@ -386,12 +413,12 @@ fn fft1(data: &mut [Cx], start: usize, stride: usize, inverse: bool) {
             data.swap(idx(i), idx(j));
         }
     }
-    let sign = if inverse { 1.0 } else { -1.0 };
+    let table = twiddles(inverse);
     let mut len = 2;
     while len <= n {
+        let stage = &table[len / 2 - 1..len - 1];
         for s in (0..n).step_by(len) {
-            for k in 0..len / 2 {
-                let w = Cx::expi(sign * std::f64::consts::TAU * k as f64 / len as f64);
+            for (k, &w) in stage.iter().enumerate() {
                 let (a, b) = (idx(s + k), idx(s + k + len / 2));
                 let t = w.mul(data[b]);
                 let u = data[a];
@@ -413,8 +440,47 @@ fn fft2_in_place(data: &mut [Cx], inverse: bool) {
     for r in 0..TILE {
         fft1(data, r * TILE, 1, inverse);
     }
-    for c in 0..TILE {
-        fft1(data, c, TILE, inverse);
+    fft_columns(data, inverse);
+}
+
+/// [`fft1`] down every column of a `TILE x TILE` tile at once: each row swap
+/// and butterfly is applied across a whole row, so every element undergoes
+/// exactly the operations, in the order, that [`fft1`] applies to its
+/// column (`fft1(data, c, TILE, inverse)` for each `c`), while memory is read
+/// along rows instead of 4 KB apart.
+fn fft_columns(data: &mut [Cx], inverse: bool) {
+    let n = TILE;
+    for i in 0..n {
+        let j = ((i as u32).reverse_bits() >> (32 - LOG2_TILE)) as usize;
+        if j > i {
+            let (low, high) = data.split_at_mut(j * n);
+            low[i * n..i * n + n].swap_with_slice(&mut high[..n]);
+        }
+    }
+    let table = twiddles(inverse);
+    let mut len = 2;
+    while len <= n {
+        let stage = &table[len / 2 - 1..len - 1];
+        for s in (0..n).step_by(len) {
+            for (k, &w) in stage.iter().enumerate() {
+                let (a, b) = (s + k, s + k + len / 2);
+                let (low, high) = data.split_at_mut(b * n);
+                let (ra, rb) = (&mut low[a * n..a * n + n], &mut high[..n]);
+                for (x, y) in ra.iter_mut().zip(rb.iter_mut()) {
+                    let t = w.mul(*y);
+                    let u = *x;
+                    *x = Cx {
+                        re: u.re + t.re,
+                        im: u.im + t.im,
+                    };
+                    *y = Cx {
+                        re: u.re - t.re,
+                        im: u.im - t.im,
+                    };
+                }
+            }
+        }
+        len <<= 1;
     }
 }
 
@@ -424,8 +490,11 @@ fn fft2_in_place(data: &mut [Cx], inverse: bool) {
 /// (0.25 -> 0.219); windowed, ~5% (0.25 -> 0.234; 400 ppm -> 399).
 fn fft2(v: &[f32]) -> Vec<Cx> {
     let mean = v.iter().map(|x| f64::from(*x)).sum::<f64>() / v.len() as f64;
-    let hann =
-        |i: usize| 0.5 - 0.5 * (std::f64::consts::TAU * (i as f64 + 0.5) / TILE as f64).cos();
+    // The window's `TILE` values, evaluated once per process by the same
+    // expression rather than twice per sample.
+    static HANN: std::sync::OnceLock<Vec<f64>> = std::sync::OnceLock::new();
+    let table = HANN.get_or_init(|| (0..TILE).map(hann).collect());
+    let hann = |i: usize| table[i];
     let mut d: Vec<Cx> = v
         .iter()
         .enumerate()
@@ -436,6 +505,11 @@ fn fft2(v: &[f32]) -> Vec<Cx> {
         .collect();
     fft2_in_place(&mut d, false);
     d
+}
+
+/// The Hann window's weight at index `i` of a tile side.
+fn hann(i: usize) -> f64 {
+    0.5 - 0.5 * (std::f64::consts::TAU * (i as f64 + 0.5) / TILE as f64).cos()
 }
 
 /// numpy's `fftfreq(TILE, d)` at index `k`.
@@ -494,11 +568,33 @@ const REGION: usize = 30;
 
 /// The cross-correlation peak near `(sy, sx)` on a grid of `1/factor` px.
 fn refine_peak(product: &[Cx], sy: f64, sx: f64, factor: f64) -> (f64, f64) {
-    let n = TILE;
     let (sy, sx) = (
         (sy * factor).round() / factor,
         (sx * factor).round() / factor,
     );
+    let dftshift = (REGION as f64 / 2.0).trunc();
+    let grid = refine_grid(product, sy, sx, factor);
+    let (mut best, mut peak) = (-1.0, (0usize, 0usize));
+    for v in 0..REGION {
+        for u in 0..REGION {
+            let m = grid[v * REGION + u];
+            if m > best {
+                best = m;
+                peak = (v, u);
+            }
+        }
+    }
+    (
+        sy + (peak.0 as f64 - dftshift) / factor,
+        sx + (peak.1 as f64 - dftshift) / factor,
+    )
+}
+
+/// The squared magnitude of the upsampled cross-correlation at every point
+/// of [`refine_peak`]'s grid (`[v * REGION + u]`), centred on the rounded
+/// `(sy, sx)`.
+fn refine_grid(product: &[Cx], sy: f64, sx: f64, factor: f64) -> Vec<f64> {
+    let n = TILE;
     let dftshift = (REGION as f64 / 2.0).trunc();
     let (oy, ox) = (dftshift - sy * factor, dftshift - sx * factor);
     let kernel = |offset: f64| -> Vec<Cx> {
@@ -511,39 +607,45 @@ fn refine_peak(product: &[Cx], sy: f64, sx: f64, factor: f64) -> (f64, f64) {
             .collect()
     };
     let (kx, ky) = (kernel(ox), kernel(oy));
+    // `kx` with `k` outermost, so the `REGION` sums below advance side by
+    // side: each still adds its terms in ascending `k` (then `y`), exactly
+    // the chain of a sum taken one output at a time.
+    let mut kx_t = vec![Cx::default(); n * REGION];
+    for u in 0..REGION {
+        for k in 0..n {
+            kx_t[k * REGION + u] = kx[u * n + k];
+        }
+    }
     // Contract the column axis first: `half[y][u]`.
     let mut half = vec![Cx::default(); n * REGION];
     for y in 0..n {
-        for u in 0..REGION {
-            let mut acc = Cx::default();
-            for k in 0..n {
-                let t = kx[u * n + k].mul(product[y * n + k].conj());
-                acc.re += t.re;
-                acc.im += t.im;
+        let acc = &mut half[y * REGION..y * REGION + REGION];
+        for k in 0..n {
+            let p = product[y * n + k].conj();
+            for (a, w) in acc.iter_mut().zip(&kx_t[k * REGION..k * REGION + REGION]) {
+                let t = w.mul(p);
+                a.re += t.re;
+                a.im += t.im;
             }
-            half[y * REGION + u] = acc;
         }
     }
-    let (mut best, mut peak) = (-1.0, (0usize, 0usize));
+    let mut grid = vec![0.0f64; REGION * REGION];
+    let mut acc = [Cx::default(); REGION];
     for v in 0..REGION {
-        for u in 0..REGION {
-            let mut acc = Cx::default();
-            for y in 0..n {
-                let t = ky[v * n + y].mul(half[y * REGION + u]);
-                acc.re += t.re;
-                acc.im += t.im;
-            }
-            let m = acc.norm2();
-            if m > best {
-                best = m;
-                peak = (v, u);
+        acc.fill(Cx::default());
+        for y in 0..n {
+            let w = ky[v * n + y];
+            for (a, h) in acc.iter_mut().zip(&half[y * REGION..y * REGION + REGION]) {
+                let t = w.mul(*h);
+                a.re += t.re;
+                a.im += t.im;
             }
         }
+        for (g, a) in grid[v * REGION..v * REGION + REGION].iter_mut().zip(&acc) {
+            *g = a.norm2();
+        }
     }
-    (
-        sy + (peak.0 as f64 - dftshift) / factor,
-        sx + (peak.1 as f64 - dftshift) / factor,
-    )
+    grid
 }
 
 /// Structure-weighted least squares of `d = t + scale * pos`, iteratively
