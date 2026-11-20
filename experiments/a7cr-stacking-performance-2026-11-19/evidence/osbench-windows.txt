@@ -1,0 +1,15 @@
+host_cpu_before_pct=0.9 time=2026-11-19T13:34:52 Windows 11 26200, NTFS on C: (WD SN8100)
+os=windows cpus=32
+first touch,  1 threads: 207 ns/page per thread, 3.52 M pages/s (13.4 GiB/s)
+first touch,  4 threads: 306 ns/page per thread, 9.03 M pages/s (34.5 GiB/s)
+first touch, 16 threads: 608 ns/page per thread, 16.05 M pages/s (61.2 GiB/s)
+second touch (no fault): 13.5 ns/page
+thread round trip: 770 ns
+direct read, 1 threads, 64 MiB blocks: 10.78 GiB/s
+direct read, 4 threads, 64 MiB blocks: 13.60 GiB/s
+direct read, 8 threads, 64 MiB blocks: 13.48 GiB/s
+direct read, 4 threads, 1 MiB blocks: 13.70 GiB/s
+cached read, 1 threads, 8 MiB blocks: 13.44 GiB/s
+cached read, 4 threads, 8 MiB blocks: 21.18 GiB/s
+cached read, 16 threads, 8 MiB blocks: 19.07 GiB/s
+open + 64 KiB read + close: 13.2 us

@@ -4,7 +4,8 @@
 
 Writes <tag>.log (stderr, each line prefixed with seconds since start),
 <tag>.csv (the timeline), <tag>.gpu.csv (nvidia-smi at 100 ms) and appends one
-summary line to runs.txt. Nothing here touches the capture folder.
+summary line to runs.txt (with the process's page faults, in millions, as last
+sampled). Nothing here touches the capture folder.
 
 Columns of the timeline: t, process user CPU s, process kernel CPU s, process
 read bytes, process read ops, private bytes, working set, threads, host CPU %
@@ -150,6 +151,8 @@ def main():
         threading.Thread(target=thread_sampler, args=(psutil.Process(proc.pid), t0, tstop, tsink), daemon=True).start()
     rows = []
     peak_priv = 0
+    faults = 0
+    other = (0, 0)
     last = None
     disk0 = psutil.disk_io_counters(perdisk=True).get(a.disk)
     while proc.poll() is None:
@@ -167,6 +170,8 @@ def main():
         sb = standby()
         d = psutil.disk_io_counters(perdisk=True).get(a.disk)
         peak_priv = max(peak_priv, mi.private)
+        faults = mi.num_page_faults
+        other = (io.other_count, io.write_bytes)
         rows.append((t, ct.user, ct.system, io.read_bytes, io.read_count, mi.private, mi.rss, nt,
                      sum(per) / len(per), sum(1 for x in per if x > 50.0), vm.available,
                      sb[0] + sb[1] + sb[2], (d.read_bytes - disk0.read_bytes) if d and disk0 else -1,
@@ -208,8 +213,9 @@ def main():
     kern = last[0].system if last else 0.0
     rd = last[1].read_bytes if last else 0
     summary = ('wall_s=%.1f user_s=%.1f kernel_s=%.1f avg_cores=%.1f read_GB=%.2f peak_private_GB=%.2f '
-               'host_cpu_before_pct=%.0f exit=%d sha=%s' % (
-                   wall, user, kern, (user + kern) / wall, rd / 2**30, peak_priv / 2**30, host_before,
+               'page_faults_M=%.2f other_ops=%d write_GB=%.2f host_cpu_before_pct=%.0f exit=%d sha=%s' % (
+                   wall, user, kern, (user + kern) / wall, rd / 2**30, peak_priv / 2**30, faults / 1e6, other[0],
+                   other[1] / 2**30, host_before,
                    proc.returncode, sha))
     stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(wall0))
     with open(os.path.join(HERE, 'runs.txt'), 'a', encoding='utf-8') as f:

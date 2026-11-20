@@ -1,0 +1,503 @@
+===== full-a
+    0.26 | CA refinement   : PREVIEW pass over every 8th of 784 frames, measuring the lateral CA the profile leaves (default; --refine-ca=off skips it)
+    0.34 | memory plan     : 2 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 32 execution threads
+    0.88 | gpu fold        : ON, NVIDIA GeForce RTX 5090 (2364 MB device memory); bit-identical to the CPU fold
+    0.88 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+    3.07 | fold trace      : 2.20 s of fold (STREHL_FOLD_TRACE)
+    3.07 |                   fold thread waiting for decodes      0.93 s over    25 (37.4 ms each)
+    3.07 |                   upload (stage)                       0.58 s over    25 (23.3 ms each)
+    3.07 |                   probe submit                         0.00 s over    25 (0.2 ms each)
+    3.07 |                   probe collect                        0.28 s over    25 (11.1 ms each)
+    3.07 |                   fold submit                          0.01 s over    25 (0.5 ms each)
+    3.07 |                   decoder threads decoding            20.24 s over    25 (809.8 ms each)
+    3.07 |                   decoder threads idle                 4.29 s over    41 (104.6 ms each)
+    3.07 |                     of which member 1's decode         6.16 s over    25 (246.3 ms each)
+    3.07 |                     of which identity                  0.00 s over    25 (0.1 ms each)
+    3.07 |                     of which members 2-4              14.08 s over    25 (563.3 ms each)
+    3.07 |                   totals read back                     0.36 s over     2 (178.3 ms each)
+    3.07 | file reads      : 6 from the file cache, 30 from the drive unbuffered, 0 buffered; 2.3 GB, 3.7 reader-seconds (STREHL_READ_MODE)
+    3.12 | reference crops : 643 candidate tiles predicted from the preview's 25 frames, to be captured during the fold
+    3.12 | folded          : 25 / 196 frames in 2.8 s (0.11 s per frame, 32 execution threads)
+    5.15 | collapse+write  : 2.0 s
+    5.15 | total           : 4.9 s
+    5.15 | CA refinement   : measured red t (-0.092, -0.115) px, scale -12.6 ppm (688 of 694 tiles, rms 0.217 px)
+    5.24 | memory plan     : 1 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 32 execution threads
+    5.37 | gpu fold        : ON, NVIDIA GeForce RTX 5090 (5121 MB device memory); bit-identical to the CPU fold
+    5.37 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+   15.48 | fold trace      : 10.22 s of fold (STREHL_FOLD_TRACE)
+   15.48 |                   fold thread waiting for decodes      2.33 s over   196 (11.9 ms each)
+   15.48 |                   upload (stage)                       4.86 s over   196 (24.8 ms each)
+   15.48 |                   probe submit                         0.10 s over   196 (0.5 ms each)
+   15.48 |                   probe collect                        0.40 s over   196 (2.0 ms each)
+   15.48 |                   fold submit                          1.27 s over   196 (6.5 ms each)
+   15.48 |                   decoder threads decoding           112.70 s over   196 (575.0 ms each)
+   15.48 |                   decoder threads idle                25.36 s over   212 (119.6 ms each)
+   15.48 |                     of which member 1's decode        28.43 s over   196 (145.1 ms each)
+   15.48 |                     of which identity                  0.03 s over   196 (0.1 ms each)
+   15.48 |                     of which members 2-4              84.24 s over   196 (429.8 ms each)
+   15.48 |                   totals read back                     1.17 s over     1 (1173.7 ms each)
+   15.48 | file reads      : 63 from the file cache, 709 from the drive unbuffered, 0 buffered; 50.5 GB, 26.5 reader-seconds (STREHL_READ_MODE)
+   15.53 | depth map       : measured during the fold for the optical restoration's in-focus tiles (594 x 396 cells of 8 plane px from 196 placed frames, 10.3 s since the fold began); fusion off
+   15.54 | reference crops : 373 of the planned tiles' reference crops captured during the fold (4501 captured from the preview's prediction; STREHL_REFERENCE_CAPTURE=off gathers them all again)
+   16.44 | reference tiles : 10 frames gathered again over the rows and columns of the optical restoration's in-focus tiles (0.9 s; 2.1 slot-seconds, 1.2 of them decoding rows)
+   17.56 | half-stacks     : alternate folded frames finished separately for the optical              restoration's noise measurement (2.0 s)
+   17.56 | folded          : 196 / 196 frames in 12.3 s (0.06 s per frame, 32 execution threads)
+   18.51 | restore trace   : tile spectra 341 ms
+   18.82 | restore trace   : fits and kernel design 305 ms
+   18.87 | restore trace   : highlight guard 54 ms
+   19.27 | restore trace   : a channel's restoration 404 ms
+   19.59 | restore trace   : a channel's restoration 313 ms
+   20.04 | restore trace   : a channel's restoration 318 ms
+   20.19 | wrote           : outputs/perf-plan-3/traces/t.tif (9504 x 6336, 16-bit RGB, linear camera-native RGB, colour carried through the merge, no demosaic, optically restored)
+   20.19 | collapse+write  : 2.6 s
+   20.19 | total           : 15.0 s
+===== l8-a
+    0.05 | CA refinement   : PREVIEW pass over every 1th of 8 frames, measuring the lateral CA the profile leaves (default; --refine-ca=off skips it)
+    0.14 | memory plan     : 2 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 8 execution threads
+    0.54 | gpu fold        : ON, NVIDIA GeForce RTX 5090 (2364 MB device memory); bit-identical to the CPU fold
+    0.54 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+    1.73 | fold trace      : 1.16 s of fold (STREHL_FOLD_TRACE)
+    1.73 |                   fold thread waiting for decodes      0.41 s over     8 (51.8 ms each)
+    1.73 |                   upload (stage)                       0.26 s over     8 (32.8 ms each)
+    1.73 |                   probe submit                         0.00 s over     8 (0.2 ms each)
+    1.73 |                   probe collect                        0.13 s over     8 (16.5 ms each)
+    1.73 |                   fold submit                          0.00 s over     8 (0.5 ms each)
+    1.73 |                   decoder threads decoding             3.90 s over     8 (488.0 ms each)
+    1.73 |                   decoder threads idle                 0.00 s over    24 (0.0 ms each)
+    1.73 |                     of which member 1's decode         1.19 s over     8 (148.7 ms each)
+    1.73 |                     of which identity                  0.00 s over     8 (0.1 ms each)
+    1.73 |                     of which members 2-4               2.71 s over     8 (339.2 ms each)
+    1.73 |                   totals read back                     0.29 s over     2 (147.3 ms each)
+    1.74 | reference crops : not predicted (STREHL_FUSION=depth: only 1789 of 235224 cells show a focus peak; this stack has no usable depth); gathered after the fold
+    1.74 | folded          : 8 / 8 frames in 1.6 s (0.20 s per frame, 8 execution threads)
+    3.07 | collapse+write  : 1.3 s
+    3.07 | total           : 3.0 s
+    3.07 | CA refinement   : measured red t (-0.216, -0.507) px, scale -35.9 ppm (420 of 420 tiles, rms 0.925 px)
+    3.18 | memory plan     : 1 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 8 execution threads
+    3.22 | gpu fold        : ON, NVIDIA GeForce RTX 5090 (5121 MB device memory); bit-identical to the CPU fold
+    3.22 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+    5.01 | fold trace      : 1.78 s of fold (STREHL_FOLD_TRACE)
+    5.01 |                   fold thread waiting for decodes      0.37 s over     8 (46.0 ms each)
+    5.01 |                   upload (stage)                       0.21 s over     8 (25.7 ms each)
+    5.01 |                   probe submit                         0.01 s over     8 (1.7 ms each)
+    5.01 |                   probe collect                        0.23 s over     8 (29.0 ms each)
+    5.01 |                   fold submit                          0.01 s over     8 (0.9 ms each)
+    5.01 |                   decoder threads decoding             2.80 s over     8 (350.0 ms each)
+    5.01 |                   decoder threads idle                 0.00 s over    24 (0.0 ms each)
+    5.01 |                     of which member 1's decode         0.75 s over     8 (93.5 ms each)
+    5.01 |                     of which identity                  0.00 s over     8 (0.1 ms each)
+    5.01 |                     of which members 2-4               2.05 s over     8 (256.5 ms each)
+    5.01 |                   totals read back                     0.90 s over     1 (899.0 ms each)
+    5.01 | file reads      : 25 from the file cache, 7 from the drive unbuffered, 0 buffered; 2.0 GB, 0.5 reader-seconds (STREHL_READ_MODE)
+    5.19 | optical restore : the depth measured during the fold is unusable; rendering again without the restoration
+    5.24 | memory plan     : 1 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 8 execution threads
+    5.24 | optical restore : off for this render -- on by default for pixel-shift stacks, but its depth measurement failed: STREHL_FUSION=depth: only 1789 of 235224 cells show a focus peak; this stack
+    5.27 | gpu fold        : ON, NVIDIA GeForce RTX 5090 (5121 MB device memory); bit-identical to the CPU fold
+    5.27 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+    6.94 | fold trace      : 1.64 s of fold (STREHL_FOLD_TRACE)
+    6.94 |                   fold thread waiting for decodes      0.45 s over     8 (56.9 ms each)
+    6.94 |                   upload (stage)                       0.20 s over     8 (25.3 ms each)
+    6.94 |                   probe submit                         0.05 s over     8 (6.6 ms each)
+    6.94 |                   probe collect                        0.24 s over     8 (29.8 ms each)
+    6.94 |                   fold submit                          0.10 s over     8 (12.9 ms each)
+    6.94 |                   decoder threads decoding             3.48 s over     8 (434.8 ms each)
+    6.94 |                   decoder threads idle                 0.00 s over    24 (0.0 ms each)
+    6.94 |                     of which member 1's decode         1.02 s over     8 (127.4 ms each)
+    6.94 |                     of which identity                  0.00 s over     8 (0.1 ms each)
+    6.94 |                     of which members 2-4               2.46 s over     8 (307.3 ms each)
+    6.94 |                   totals read back                     0.53 s over     1 (530.0 ms each)
+    6.94 | folded          : 8 / 8 frames in 1.7 s (0.21 s per frame, 8 execution threads)
+    7.77 | wrote           : outputs/perf-plan-3/traces/t8.tif (9504 x 6336, 16-bit RGB, linear camera-native RGB, colour carried through the merge, no demosaic)
+    7.77 | collapse+write  : 0.9 s
+    7.77 | total           : 2.6 s
+===== gpu-profile-l24
+    0.06 | CA refinement   : PREVIEW pass over every 1th of 24 frames, measuring the lateral CA the profile leaves (default; --refine-ca=off skips it)
+    0.15 | memory plan     : 2 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 24 execution threads
+    0.58 | gpu fold        : ON, NVIDIA GeForce RTX 5090 (2364 MB device memory); bit-identical to the CPU fold
+    0.59 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+    2.18 | gpu profile     : device time 181.6 ms in kernels, 215.3 ms from each submission's first kernel to its last
+    2.18 |   gather             72 dispatches     47.11 ms  25.9%, gaps before    0.97 ms
+    2.18 |   assemble           12 dispatches     34.83 ms  19.2%, gaps before    0.00 ms
+    2.18 |   noise              12 dispatches     20.60 ms  11.3%, gaps before    0.00 ms
+    2.18 |   accum              96 dispatches     14.43 ms   7.9%, gaps before    1.37 ms
+    2.18 |   level              84 dispatches     10.90 ms   6.0%, gaps before    0.52 ms
+    2.18 |   hull               48 dispatches      9.31 ms   5.1%, gaps before    0.36 ms
+    2.18 |   expand_sub_v      504 dispatches      9.05 ms   5.0%, gaps before    3.14 ms
+    2.18 |   reduce_h          672 dispatches      4.98 ms   2.7%, gaps before    4.28 ms
+    2.18 |   variance           12 dispatches      3.86 ms   2.1%, gaps before    0.09 ms
+    2.18 |   dg_blur_v          24 dispatches      3.67 ms   2.0%, gaps before    0.17 ms
+    2.18 |   dg_blur_h          24 dispatches      3.64 ms   2.0%, gaps before    0.19 ms
+    2.18 |   mhc                12 dispatches      2.78 ms   1.5%, gaps before    0.13 ms
+    2.18 |   smooth_v          168 dispatches      2.57 ms   1.4%, gaps before    1.15 ms
+    2.18 |   expand_h          504 dispatches      2.47 ms   1.4%, gaps before    3.29 ms
+    2.18 |   reduce_v          672 dispatches      2.45 ms   1.3%, gaps before    4.23 ms
+    2.18 |   demean             12 dispatches      2.00 ms   1.1%, gaps before    0.11 ms
+    2.18 |   luma               24 dispatches      1.97 ms   1.1%, gaps before    0.37 ms
+    2.18 |   smooth_h          168 dispatches      1.91 ms   1.1%, gaps before    3.00 ms
+    2.18 |   fill                9 dispatches      1.16 ms   0.6%, gaps before    0.05 ms
+    2.18 |   pack              180 dispatches      0.98 ms   0.5%, gaps before    1.12 ms
+    2.18 |   sum64              12 dispatches      0.45 ms   0.2%, gaps before    0.08 ms
+    2.18 |   null_accum         84 dispatches      0.35 ms   0.2%, gaps before    0.79 ms
+    2.18 |   dg_energy          24 dispatches      0.04 ms   0.0%, gaps before    1.30 ms
+    2.18 |   rowsq              12 dispatches      0.02 ms   0.0%, gaps before    0.07 ms
+    2.18 |   sum64_finish       12 dispatches      0.02 ms   0.0%, gaps before    0.17 ms
+    2.18 |   rowsq_finish       12 dispatches      0.02 ms   0.0%, gaps before    6.74 ms
+    2.96 | gpu profile     : device time 365.0 ms in kernels, 432.3 ms from each submission's first kernel to its last
+    2.96 |   gather            144 dispatches     94.24 ms  25.8%, gaps before    1.94 ms
+    2.96 |   assemble           24 dispatches     70.55 ms  19.3%, gaps before    0.00 ms
+    2.96 |   noise              24 dispatches     41.22 ms  11.3%, gaps before    0.00 ms
+    2.96 |   accum             192 dispatches     28.82 ms   7.9%, gaps before    2.75 ms
+    2.96 |   level             168 dispatches     22.52 ms   6.2%, gaps before    1.04 ms
+    2.96 |   hull               96 dispatches     18.62 ms   5.1%, gaps before    0.72 ms
+    2.96 |   expand_sub_v     1008 dispatches     18.10 ms   5.0%, gaps before    6.29 ms
+    2.96 |   reduce_h         1344 dispatches      9.97 ms   2.7%, gaps before    8.58 ms
+    2.96 |   variance           24 dispatches      7.72 ms   2.1%, gaps before    0.17 ms
+    2.96 |   dg_blur_v          48 dispatches      7.33 ms   2.0%, gaps before    0.34 ms
+    2.96 |   dg_blur_h          48 dispatches      7.29 ms   2.0%, gaps before    0.38 ms
+    2.96 |   mhc                24 dispatches      5.55 ms   1.5%, gaps before    0.26 ms
+    2.96 |   smooth_v          336 dispatches      5.14 ms   1.4%, gaps before    2.30 ms
+    2.96 |   expand_h         1008 dispatches      5.00 ms   1.4%, gaps before    6.77 ms
+    2.96 |   reduce_v         1344 dispatches      4.91 ms   1.3%, gaps before    8.52 ms
+    2.96 |   smooth_h          336 dispatches      4.07 ms   1.1%, gaps before    5.58 ms
+    2.96 |   demean             24 dispatches      4.00 ms   1.1%, gaps before    0.22 ms
+    2.96 |   luma               48 dispatches      3.95 ms   1.1%, gaps before    0.75 ms
+    2.96 |   fill               18 dispatches      2.31 ms   0.6%, gaps before    0.09 ms
+    2.96 |   pack              360 dispatches      1.96 ms   0.5%, gaps before    2.24 ms
+    2.96 |   sum64              24 dispatches      0.90 ms   0.2%, gaps before    0.16 ms
+    2.96 |   null_accum        168 dispatches      0.70 ms   0.2%, gaps before    1.57 ms
+    2.96 |   dg_energy          48 dispatches      0.07 ms   0.0%, gaps before    2.63 ms
+    2.96 |   rowsq              24 dispatches      0.04 ms   0.0%, gaps before    0.15 ms
+    2.96 |   rowsq_finish       24 dispatches      0.03 ms   0.0%, gaps before   13.47 ms
+    2.96 |   sum64_finish       24 dispatches      0.03 ms   0.0%, gaps before    0.34 ms
+    3.08 | fold trace      : 2.49 s of fold (STREHL_FOLD_TRACE)
+    3.08 |                   fold thread waiting for decodes      0.75 s over    24 (31.3 ms each)
+    3.08 |                   upload (stage)                       0.65 s over    24 (26.9 ms each)
+    3.08 |                   probe submit                         0.29 s over    24 (12.1 ms each)
+    3.08 |                   probe collect                        0.00 s over    24 (0.0 ms each)
+    3.08 |                   fold submit                          0.43 s over    24 (18.0 ms each)
+    3.08 |                   decoder threads decoding            18.17 s over    24 (757.0 ms each)
+    3.08 |                   decoder threads idle                 4.49 s over    40 (112.2 ms each)
+    3.08 |                     of which member 1's decode         5.06 s over    24 (210.7 ms each)
+    3.08 |                     of which identity                  0.00 s over    24 (0.1 ms each)
+    3.08 |                     of which members 2-4              13.11 s over    24 (546.2 ms each)
+    3.08 |                   totals read back                     0.32 s over     2 (158.1 ms each)
+    3.08 | file reads      : 0 from the file cache, 40 from the drive unbuffered, 0 buffered; 2.5 GB, 3.5 reader-seconds (STREHL_READ_MODE)
+    3.26 | reference crops : 0 candidate tiles predicted from the preview's 24 frames, to be captured during the fold
+    3.26 | folded          : 24 / 24 frames in 3.1 s (0.13 s per frame, 24 execution threads)
+    4.67 | collapse+write  : 1.4 s
+    4.67 | total           : 4.6 s
+    4.67 | CA refinement   : measured red t (-0.278, -0.585) px, scale -64.9 ppm (384 of 386 tiles, rms 0.726 px)
+    4.74 | memory plan     : 1 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 24 execution threads
+    4.87 | gpu fold        : ON, NVIDIA GeForce RTX 5090 (5121 MB device memory); bit-identical to the CPU fold
+    4.87 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+    7.44 | gpu profile     : device time 664.5 ms in kernels, 778.9 ms from each submission's first kernel to its last
+    7.44 |   gather            336 dispatches    221.30 ms  33.3%, gaps before    4.99 ms
+    7.44 |   accum             576 dispatches     96.56 ms  14.5%, gaps before    8.43 ms
+    7.44 |   assemble           24 dispatches     70.20 ms  10.6%, gaps before    0.00 ms
+    7.44 |   hull              288 dispatches     61.91 ms   9.3%, gaps before    2.23 ms
+    7.44 |   expand_sub_v     2352 dispatches     46.92 ms   7.1%, gaps before   15.51 ms
+    7.44 |   noise              24 dispatches     42.44 ms   6.4%, gaps before    0.00 ms
+    7.44 |   level             168 dispatches     23.36 ms   3.5%, gaps before    1.07 ms
+    7.44 |   reduce_h         2688 dispatches     22.14 ms   3.3%, gaps before   17.67 ms
+    7.44 |   expand_h         2352 dispatches     11.53 ms   1.7%, gaps before   15.91 ms
+    7.44 |   reduce_v         2688 dispatches      9.94 ms   1.5%, gaps before   17.69 ms
+    7.44 |   variance           24 dispatches      7.73 ms   1.2%, gaps before    0.17 ms
+    7.44 |   dg_blur_h          48 dispatches      7.63 ms   1.1%, gaps before    0.37 ms
+    7.44 |   dg_blur_v          48 dispatches      7.50 ms   1.1%, gaps before    0.36 ms
+    7.44 |   mhc                24 dispatches      6.59 ms   1.0%, gaps before    0.27 ms
+    7.44 |   fill               52 dispatches      6.20 ms   0.9%, gaps before    0.30 ms
+    7.44 |   smooth_v          336 dispatches      5.58 ms   0.8%, gaps before    2.35 ms
+    7.44 |   luma               48 dispatches      4.55 ms   0.7%, gaps before    0.75 ms
+    7.44 |   demean             24 dispatches      4.34 ms   0.7%, gaps before    0.23 ms
+    7.44 |   smooth_h          336 dispatches      4.22 ms   0.6%, gaps before    5.18 ms
+    7.44 |   pack              360 dispatches      2.09 ms   0.3%, gaps before    2.31 ms
+    7.44 |   sum64              24 dispatches      0.91 ms   0.1%, gaps before    0.17 ms
+    7.44 |   null_accum        168 dispatches      0.72 ms   0.1%, gaps before    1.58 ms
+    7.44 |   dg_energy          48 dispatches      0.07 ms   0.0%, gaps before    2.80 ms
+    7.44 |   rowsq              24 dispatches      0.04 ms   0.0%, gaps before    0.16 ms
+    7.44 |   rowsq_finish       24 dispatches      0.03 ms   0.0%, gaps before   13.48 ms
+    7.44 |   sum64_finish       24 dispatches      0.03 ms   0.0%, gaps before    0.35 ms
+    8.42 | fold trace      : 3.54 s of fold (STREHL_FOLD_TRACE)
+    8.42 |                   fold thread waiting for decodes      0.50 s over    24 (20.9 ms each)
+    8.42 |                   upload (stage)                       0.59 s over    24 (24.7 ms each)
+    8.42 |                   probe submit                         0.37 s over    24 (15.3 ms each)
+    8.42 |                   probe collect                        0.00 s over    24 (0.0 ms each)
+    8.42 |                   fold submit                          1.11 s over    24 (46.1 ms each)
+    8.42 |                   decoder threads decoding            12.33 s over    24 (513.9 ms each)
+    8.42 |                   decoder threads idle                 7.72 s over    40 (192.9 ms each)
+    8.42 |                     of which member 1's decode         3.20 s over    24 (133.5 ms each)
+    8.42 |                     of which identity                  0.00 s over    24 (0.1 ms each)
+    8.42 |                     of which members 2-4               9.13 s over    24 (380.3 ms each)
+    8.42 |                   totals read back                     0.97 s over     1 (965.5 ms each)
+    8.42 | file reads      : 8 from the file cache, 76 from the drive unbuffered, 0 buffered; 5.3 GB, 2.7 reader-seconds (STREHL_READ_MODE)
+    8.43 | depth map       : measured during the fold for the optical restoration's in-focus tiles (594 x 396 cells of 8 plane px from 24 placed frames, 3.7 s since the fold began); fusion off
+    8.43 | reference tiles : 0 frames gathered again over the rows and columns of the optical restoration's in-focus tiles (0.0 s; 0.0 slot-seconds, 0.0 of them decoding rows)
+    9.54 | half-stacks     : alternate folded frames finished separately for the optical              restoration's noise measurement (1.1 s)
+    9.54 | folded          : 24 / 24 frames in 4.8 s (0.20 s per frame, 24 execution threads)
+   10.26 | restore trace   : tile spectra 2 ms
+   10.48 | wrote           : outputs/perf-plan-3/traces/w.tif (9504 x 6336, 16-bit RGB, linear camera-native RGB, colour carried through the merge, no demosaic)
+   10.48 | collapse+write  : 1.0 s
+   10.48 | total           : 5.8 s
+===== c-first
+    6.25 | CA refinement   : PREVIEW pass over every 8th of 784 frames, measuring the lateral CA the profile leaves (default; --refine-ca=off skips it)
+    6.44 | memory plan     : 2 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 32 execution threads
+    7.62 | gpu fold        : ON, NVIDIA GeForce RTX 5090 (2364 MB device memory); bit-identical to the CPU fold
+    7.65 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+   13.14 | fold trace      : 5.47 s of fold (STREHL_FOLD_TRACE)
+   13.14 |                   fold thread waiting for decodes      3.84 s over    25 (153.7 ms each)
+   13.14 |                   upload (stage)                       0.85 s over    25 (34.1 ms each)
+   13.14 |                   probe submit                         0.01 s over    25 (0.3 ms each)
+   13.14 |                   probe collect                        0.33 s over    25 (13.3 ms each)
+   13.14 |                   fold submit                          0.02 s over    25 (0.7 ms each)
+   13.14 |                   decoder threads decoding            61.73 s over    25 (2469.0 ms each)
+   13.14 |                   decoder threads idle                 5.23 s over    41 (127.5 ms each)
+   13.14 |                     of which member 1's decode         4.81 s over    25 (192.5 ms each)
+   13.14 |                     of which identity                  0.00 s over    25 (0.2 ms each)
+   13.14 |                     of which members 2-4              56.91 s over    25 (2276.3 ms each)
+   13.14 |                   totals read back                     0.38 s over     2 (191.6 ms each)
+   13.14 | file reads      : 0 from the file cache, 40 from the drive unbuffered, 0 buffered; 2.6 GB, 1.5 reader-seconds (STREHL_READ_MODE)
+   13.19 | reference crops : 643 candidate tiles predicted from the preview's 25 frames, to be captured during the fold
+   13.19 | folded          : 25 / 196 frames in 6.8 s (0.27 s per frame, 32 execution threads)
+   15.14 | collapse+write  : 1.9 s
+   15.14 | total           : 8.9 s
+   15.14 | CA refinement   : measured red t (-0.092, -0.115) px, scale -12.6 ppm (688 of 694 tiles, rms 0.217 px)
+   15.24 | memory plan     : 1 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 32 execution threads
+   15.35 | gpu fold        : ON, NVIDIA GeForce RTX 5090 (5121 MB device memory); bit-identical to the CPU fold
+   15.35 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+   39.67 | fold trace      : 24.42 s of fold (STREHL_FOLD_TRACE)
+   39.67 |                   fold thread waiting for decodes     15.66 s over   196 (79.9 ms each)
+   39.68 |                   upload (stage)                       5.69 s over   196 (29.0 ms each)
+   39.68 |                   probe submit                         0.11 s over   196 (0.6 ms each)
+   39.68 |                   probe collect                        0.12 s over   196 (0.6 ms each)
+   39.68 |                   fold submit                          1.68 s over   196 (8.6 ms each)
+   39.68 |                   decoder threads decoding           351.19 s over   196 (1791.8 ms each)
+   39.68 |                   decoder threads idle                 8.89 s over   212 (41.9 ms each)
+   39.68 |                     of which member 1's decode        31.55 s over   196 (161.0 ms each)
+   39.68 |                     of which identity                  0.05 s over   196 (0.3 ms each)
+   39.68 |                     of which members 2-4             319.58 s over   196 (1630.5 ms each)
+   39.68 |                   totals read back                     1.06 s over     1 (1060.5 ms each)
+   39.68 | file reads      : 21 from the file cache, 751 from the drive unbuffered, 0 buffered; 50.5 GB, 12.6 reader-seconds (STREHL_READ_MODE)
+   39.74 | depth map       : measured during the fold for the optical restoration's in-focus tiles (594 x 396 cells of 8 plane px from 196 placed frames, 24.5 s since the fold began); fusion off
+   39.74 | reference crops : 373 of the planned tiles' reference crops captured during the fold (4501 captured from the preview's prediction; STREHL_REFERENCE_CAPTURE=off gathers them all again)
+   40.67 | reference tiles : 10 frames gathered again over the rows and columns of the optical restoration's in-focus tiles (0.9 s; 2.2 slot-seconds, 1.1 of them decoding rows)
+   42.02 | half-stacks     : alternate folded frames finished separately for the optical              restoration's noise measurement (2.3 s)
+   42.02 | folded          : 196 / 196 frames in 26.8 s (0.14 s per frame, 32 execution threads)
+   42.92 | restore trace   : tile spectra 334 ms
+   42.98 | restore trace   : fits and kernel design 69 ms
+   43.22 | restore trace   : highlight guard 239 ms
+   43.67 | restore trace   : a channel's restoration 402 ms
+   43.97 | restore trace   : a channel's restoration 313 ms
+   44.31 | restore trace   : a channel's restoration 286 ms
+   44.52 | wrote           : outputs/perf-plan-3/traces/w.tif (9504 x 6336, 16-bit RGB, linear camera-native RGB, colour carried through the merge, no demosaic, optically restored)
+   44.52 | collapse+write  : 2.5 s
+   44.52 | total           : 29.4 s
+===== c-later-1
+    0.05 | CA refinement   : PREVIEW pass over every 8th of 784 frames, measuring the lateral CA the profile leaves (default; --refine-ca=off skips it)
+    0.15 | memory plan     : 2 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 32 execution threads
+    0.55 | gpu fold        : ON, NVIDIA GeForce RTX 5090 (2364 MB device memory); bit-identical to the CPU fold
+    0.59 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+    2.48 | fold trace      : 1.89 s of fold (STREHL_FOLD_TRACE)
+    2.48 |                   fold thread waiting for decodes      0.60 s over    25 (24.2 ms each)
+    2.48 |                   upload (stage)                       0.59 s over    25 (23.8 ms each)
+    2.48 |                   probe submit                         0.00 s over    25 (0.2 ms each)
+    2.48 |                   probe collect                        0.26 s over    25 (10.2 ms each)
+    2.48 |                   fold submit                          0.01 s over    25 (0.5 ms each)
+    2.48 |                   decoder threads decoding            14.73 s over    25 (589.4 ms each)
+    2.48 |                   decoder threads idle                 4.35 s over    41 (106.0 ms each)
+    2.48 |                     of which member 1's decode         4.28 s over    25 (171.1 ms each)
+    2.48 |                     of which identity                  0.00 s over    25 (0.1 ms each)
+    2.48 |                     of which members 2-4              10.45 s over    25 (418.2 ms each)
+    2.48 |                   totals read back                     0.39 s over     2 (194.6 ms each)
+    2.48 | file reads      : 0 from the file cache, 36 from the drive unbuffered, 0 buffered; 2.3 GB, 1.4 reader-seconds (STREHL_READ_MODE)
+    2.52 | reference crops : 643 candidate tiles predicted from the preview's 25 frames, to be captured during the fold
+    2.52 | folded          : 25 / 196 frames in 2.4 s (0.09 s per frame, 32 execution threads)
+    4.49 | collapse+write  : 1.9 s
+    4.49 | total           : 4.4 s
+    4.49 | CA refinement   : measured red t (-0.092, -0.115) px, scale -12.6 ppm (688 of 694 tiles, rms 0.217 px)
+    4.54 | memory plan     : 1 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 32 execution threads
+    4.59 | gpu fold        : ON, NVIDIA GeForce RTX 5090 (5121 MB device memory); bit-identical to the CPU fold
+    4.59 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+   14.66 | fold trace      : 10.07 s of fold (STREHL_FOLD_TRACE)
+   14.66 |                   fold thread waiting for decodes      2.35 s over   196 (12.0 ms each)
+   14.66 |                   upload (stage)                       4.93 s over   196 (25.1 ms each)
+   14.66 |                   probe submit                         0.09 s over   196 (0.5 ms each)
+   14.66 |                   probe collect                        0.40 s over   196 (2.1 ms each)
+   14.66 |                   fold submit                          1.11 s over   196 (5.7 ms each)
+   14.66 |                   decoder threads decoding           107.55 s over   196 (548.7 ms each)
+   14.66 |                   decoder threads idle                27.10 s over   212 (127.8 ms each)
+   14.66 |                     of which member 1's decode        28.40 s over   196 (144.9 ms each)
+   14.66 |                     of which identity                  0.04 s over   196 (0.2 ms each)
+   14.66 |                     of which members 2-4              79.12 s over   196 (403.7 ms each)
+   14.66 |                   totals read back                     1.09 s over     1 (1092.5 ms each)
+   14.66 | file reads      : 6 from the file cache, 762 from the drive unbuffered, 0 buffered; 50.2 GB, 10.7 reader-seconds (STREHL_READ_MODE)
+   14.72 | depth map       : measured during the fold for the optical restoration's in-focus tiles (594 x 396 cells of 8 plane px from 196 placed frames, 10.2 s since the fold began); fusion off
+   14.72 | reference crops : 373 of the planned tiles' reference crops captured during the fold (4501 captured from the preview's prediction; STREHL_REFERENCE_CAPTURE=off gathers them all again)
+   16.17 | reference tiles : 10 frames gathered again over the rows and columns of the optical restoration's in-focus tiles (1.4 s; 2.6 slot-seconds, 1.6 of them decoding rows)
+   16.25 | half-stacks     : alternate folded frames finished separately for the optical              restoration's noise measurement (1.5 s)
+   16.25 | folded          : 196 / 196 frames in 11.7 s (0.06 s per frame, 32 execution threads)
+   17.75 | restore trace   : tile spectra 808 ms
+   17.89 | restore trace   : fits and kernel design 139 ms
+   17.95 | restore trace   : highlight guard 61 ms
+   18.26 | restore trace   : a channel's restoration 310 ms
+   18.55 | restore trace   : a channel's restoration 285 ms
+   18.85 | restore trace   : a channel's restoration 303 ms
+   19.19 | wrote           : outputs/perf-plan-3/traces/w.tif (9504 x 6336, 16-bit RGB, linear camera-native RGB, colour carried through the merge, no demosaic, optically restored)
+   19.19 | collapse+write  : 2.9 s
+   19.19 | total           : 14.7 s
+===== c-later-2
+    0.05 | CA refinement   : PREVIEW pass over every 8th of 784 frames, measuring the lateral CA the profile leaves (default; --refine-ca=off skips it)
+    0.15 | memory plan     : 2 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 32 execution threads
+    0.55 | gpu fold        : ON, NVIDIA GeForce RTX 5090 (2364 MB device memory); bit-identical to the CPU fold
+    0.59 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+    2.56 | fold trace      : 1.93 s of fold (STREHL_FOLD_TRACE)
+    2.56 |                   fold thread waiting for decodes      0.64 s over    25 (25.8 ms each)
+    2.56 |                   upload (stage)                       0.51 s over    25 (20.5 ms each)
+    2.56 |                   probe submit                         0.06 s over    25 (2.3 ms each)
+    2.56 |                   probe collect                        0.27 s over    25 (10.7 ms each)
+    2.56 |                   fold submit                          0.01 s over    25 (0.5 ms each)
+    2.56 |                   decoder threads decoding            14.36 s over    25 (574.3 ms each)
+    2.56 |                   decoder threads idle                 4.73 s over    41 (115.4 ms each)
+    2.56 |                     of which member 1's decode         4.09 s over    25 (163.5 ms each)
+    2.56 |                     of which identity                  0.00 s over    25 (0.2 ms each)
+    2.56 |                     of which members 2-4              10.27 s over    25 (410.6 ms each)
+    2.56 |                   totals read back                     0.36 s over     2 (178.9 ms each)
+    2.56 | file reads      : 0 from the file cache, 44 from the drive unbuffered, 0 buffered; 2.9 GB, 1.7 reader-seconds (STREHL_READ_MODE)
+    2.56 | reference crops : 643 candidate tiles predicted from the preview's 25 frames, to be captured during the fold
+    2.56 | folded          : 25 / 196 frames in 2.4 s (0.10 s per frame, 32 execution threads)
+    4.41 | collapse+write  : 1.8 s
+    4.41 | total           : 4.3 s
+    4.41 | CA refinement   : measured red t (-0.092, -0.115) px, scale -12.6 ppm (688 of 694 tiles, rms 0.217 px)
+    4.50 | memory plan     : 1 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 32 execution threads
+    4.56 | gpu fold        : ON, NVIDIA GeForce RTX 5090 (5121 MB device memory); bit-identical to the CPU fold
+    4.56 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+   14.72 | fold trace      : 10.15 s of fold (STREHL_FOLD_TRACE)
+   14.72 |                   fold thread waiting for decodes      2.20 s over   196 (11.2 ms each)
+   14.72 |                   upload (stage)                       5.00 s over   196 (25.5 ms each)
+   14.72 |                   probe submit                         0.10 s over   196 (0.5 ms each)
+   14.72 |                   probe collect                        0.44 s over   196 (2.2 ms each)
+   14.72 |                   fold submit                          1.21 s over   196 (6.2 ms each)
+   14.72 |                   decoder threads decoding           108.25 s over   196 (552.3 ms each)
+   14.72 |                   decoder threads idle                28.84 s over   212 (136.0 ms each)
+   14.72 |                     of which member 1's decode        27.86 s over   196 (142.1 ms each)
+   14.72 |                     of which identity                  0.07 s over   196 (0.3 ms each)
+   14.72 |                     of which members 2-4              80.32 s over   196 (409.8 ms each)
+   14.72 |                   totals read back                     1.10 s over     1 (1096.9 ms each)
+   14.72 | file reads      : 5 from the file cache, 771 from the drive unbuffered, 0 buffered; 50.7 GB, 10.8 reader-seconds (STREHL_READ_MODE)
+   14.77 | depth map       : measured during the fold for the optical restoration's in-focus tiles (594 x 396 cells of 8 plane px from 196 placed frames, 10.2 s since the fold began); fusion off
+   14.78 | reference crops : 373 of the planned tiles' reference crops captured during the fold (4501 captured from the preview's prediction; STREHL_REFERENCE_CAPTURE=off gathers them all again)
+   15.68 | reference tiles : 10 frames gathered again over the rows and columns of the optical restoration's in-focus tiles (0.9 s; 2.0 slot-seconds, 1.1 of them decoding rows)
+   16.89 | half-stacks     : alternate folded frames finished separately for the optical              restoration's noise measurement (2.1 s)
+   16.89 | folded          : 196 / 196 frames in 12.4 s (0.06 s per frame, 32 execution threads)
+   17.85 | restore trace   : tile spectra 347 ms
+   18.08 | restore trace   : fits and kernel design 231 ms
+   18.16 | restore trace   : highlight guard 45 ms
+   18.50 | restore trace   : a channel's restoration 378 ms
+   18.80 | restore trace   : a channel's restoration 300 ms
+   19.09 | restore trace   : a channel's restoration 286 ms
+   19.46 | wrote           : outputs/perf-plan-3/traces/w.tif (9504 x 6336, 16-bit RGB, linear camera-native RGB, colour carried through the merge, no demosaic, optically restored)
+   19.46 | collapse+write  : 2.6 s
+   19.46 | total           : 15.1 s
+===== c-later-3
+    0.05 | CA refinement   : PREVIEW pass over every 8th of 784 frames, measuring the lateral CA the profile leaves (default; --refine-ca=off skips it)
+    0.15 | memory plan     : 2 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 32 execution threads
+    0.55 | gpu fold        : ON, NVIDIA GeForce RTX 5090 (2364 MB device memory); bit-identical to the CPU fold
+    0.59 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+    2.44 | fold trace      : 1.83 s of fold (STREHL_FOLD_TRACE)
+    2.44 |                   fold thread waiting for decodes      0.52 s over    25 (20.9 ms each)
+    2.44 |                   upload (stage)                       0.63 s over    25 (25.1 ms each)
+    2.44 |                   probe submit                         0.01 s over    25 (0.2 ms each)
+    2.44 |                   probe collect                        0.25 s over    25 (10.1 ms each)
+    2.44 |                   fold submit                          0.01 s over    25 (0.5 ms each)
+    2.44 |                   decoder threads decoding            14.77 s over    25 (590.9 ms each)
+    2.44 |                   decoder threads idle                 3.47 s over    41 (84.5 ms each)
+    2.44 |                     of which member 1's decode         4.16 s over    25 (166.6 ms each)
+    2.44 |                     of which identity                  0.00 s over    25 (0.1 ms each)
+    2.44 |                     of which members 2-4              10.60 s over    25 (424.2 ms each)
+    2.44 |                   totals read back                     0.37 s over     2 (186.7 ms each)
+    2.44 | file reads      : 0 from the file cache, 36 from the drive unbuffered, 0 buffered; 2.3 GB, 1.4 reader-seconds (STREHL_READ_MODE)
+    2.46 | reference crops : 643 candidate tiles predicted from the preview's 25 frames, to be captured during the fold
+    2.46 | folded          : 25 / 196 frames in 2.3 s (0.09 s per frame, 32 execution threads)
+    4.28 | collapse+write  : 1.8 s
+    4.28 | total           : 4.2 s
+    4.28 | CA refinement   : measured red t (-0.092, -0.115) px, scale -12.6 ppm (688 of 694 tiles, rms 0.217 px)
+    4.36 | memory plan     : 1 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 32 execution threads
+    4.41 | gpu fold        : ON, NVIDIA GeForce RTX 5090 (5121 MB device memory); bit-identical to the CPU fold
+    4.41 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+   14.28 | fold trace      : 9.87 s of fold (STREHL_FOLD_TRACE)
+   14.28 |                   fold thread waiting for decodes      2.23 s over   196 (11.4 ms each)
+   14.28 |                   upload (stage)                       4.81 s over   196 (24.5 ms each)
+   14.28 |                   probe submit                         0.10 s over   196 (0.5 ms each)
+   14.28 |                   probe collect                        0.47 s over   196 (2.4 ms each)
+   14.28 |                   fold submit                          1.16 s over   196 (5.9 ms each)
+   14.28 |                   decoder threads decoding           106.81 s over   196 (545.0 ms each)
+   14.28 |                   decoder threads idle                27.26 s over   212 (128.6 ms each)
+   14.29 |                     of which member 1's decode        27.50 s over   196 (140.3 ms each)
+   14.29 |                     of which identity                  0.04 s over   196 (0.2 ms each)
+   14.29 |                     of which members 2-4              79.27 s over   196 (404.4 ms each)
+   14.29 |                   totals read back                     1.02 s over     1 (1017.8 ms each)
+   14.29 | file reads      : 4 from the file cache, 768 from the drive unbuffered, 0 buffered; 50.5 GB, 10.4 reader-seconds (STREHL_READ_MODE)
+   14.34 | depth map       : measured during the fold for the optical restoration's in-focus tiles (594 x 396 cells of 8 plane px from 196 placed frames, 10.0 s since the fold began); fusion off
+   14.34 | reference crops : 373 of the planned tiles' reference crops captured during the fold (4501 captured from the preview's prediction; STREHL_REFERENCE_CAPTURE=off gathers them all again)
+   15.26 | reference tiles : 10 frames gathered again over the rows and columns of the optical restoration's in-focus tiles (0.9 s; 1.8 slot-seconds, 1.1 of them decoding rows)
+   16.35 | half-stacks     : alternate folded frames finished separately for the optical              restoration's noise measurement (2.0 s)
+   16.35 | folded          : 196 / 196 frames in 12.0 s (0.06 s per frame, 32 execution threads)
+   17.29 | restore trace   : tile spectra 325 ms
+   17.54 | restore trace   : fits and kernel design 245 ms
+   17.59 | restore trace   : highlight guard 48 ms
+   18.13 | restore trace   : a channel's restoration 527 ms
+   18.46 | restore trace   : a channel's restoration 300 ms
+   18.75 | restore trace   : a channel's restoration 286 ms
+   19.02 | wrote           : outputs/perf-plan-3/traces/w.tif (9504 x 6336, 16-bit RGB, linear camera-native RGB, colour carried through the merge, no demosaic, optically restored)
+   19.02 | collapse+write  : 2.7 s
+   19.02 | total           : 14.7 s
+===== igpu-on-l24
+    0.03 | CA refinement   : PREVIEW pass over every 1th of 24 frames, measuring the lateral CA the profile leaves (default; --refine-ca=off skips it)
+    0.12 | memory plan     : 2 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 24 execution threads
+    0.41 |     STREHL_GPU_FOLD=on: GPU fold requires a discrete GPU, got AMD Radeon(TM) Graphics
+===== igpu-auto-l24
+    0.25 | CA refinement   : PREVIEW pass over every 1th of 24 frames, measuring the lateral CA the profile leaves (default; --refine-ca=off skips it)
+    0.32 | memory plan     : 2 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 24 execution threads
+    2.37 | gpu fold        : ON, AMD Radeon(TM) Graphics (2364 MB device memory); bit-identical to the CPU fold
+    2.38 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+   38.56 | fold trace      : 36.19 s of fold (STREHL_FOLD_TRACE)
+   38.56 |                   fold thread waiting for decodes      0.62 s over    24 (25.8 ms each)
+   38.56 |                   upload (stage)                       0.81 s over    24 (33.9 ms each)
+   38.56 |                   probe submit                         0.00 s over    24 (0.2 ms each)
+   38.56 |                   probe collect                       30.14 s over    24 (1255.9 ms each)
+   38.56 |                   fold submit                          0.01 s over    24 (0.5 ms each)
+   38.56 |                   decoder threads decoding            13.41 s over    24 (558.8 ms each)
+   38.56 |                   decoder threads idle                63.04 s over    40 (1576.0 ms each)
+   38.56 |                     of which member 1's decode         4.12 s over    24 (171.8 ms each)
+   38.56 |                     of which identity                  0.00 s over    24 (0.1 ms each)
+   38.56 |                     of which members 2-4               9.28 s over    24 (386.8 ms each)
+   38.56 |                   totals read back                     0.58 s over     2 (291.4 ms each)
+   38.56 | file reads      : 0 from the file cache, 36 from the drive unbuffered, 0 buffered; 2.3 GB, 1.5 reader-seconds (STREHL_READ_MODE)
+   38.62 | reference crops : 0 candidate tiles predicted from the preview's 24 frames, to be captured during the fold
+   38.62 | folded          : 24 / 24 frames in 38.3 s (1.59 s per frame, 24 execution threads)
+   39.78 | collapse+write  : 1.2 s
+   39.78 | total           : 39.5 s
+   39.78 | CA refinement   : measured red t (-0.278, -0.585) px, scale -64.9 ppm (384 of 386 tiles, rms 0.726 px)
+   39.84 | memory plan     : 1 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 24 execution threads
+   40.57 | gpu fold        : ON, AMD Radeon(TM) Graphics (5121 MB device memory); bit-identical to the CPU fold
+   40.57 | decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+   97.20 | fold trace      : 56.63 s of fold (STREHL_FOLD_TRACE)
+   97.20 |                   fold thread waiting for decodes      0.60 s over    24 (25.1 ms each)
+   97.20 |                   upload (stage)                       0.74 s over    24 (30.7 ms each)
+   97.20 |                   probe submit                         0.00 s over    24 (0.2 ms each)
+   97.20 |                   probe collect                       50.03 s over    24 (2084.5 ms each)
+   97.20 |                   fold submit                          0.02 s over    24 (0.7 ms each)
+   97.20 |                   decoder threads decoding            12.77 s over    24 (532.2 ms each)
+   97.20 |                   decoder threads idle                88.57 s over    40 (2214.3 ms each)
+   97.20 |                     of which member 1's decode         3.93 s over    24 (163.6 ms each)
+   97.20 |                     of which identity                  0.00 s over    24 (0.2 ms each)
+   97.20 |                     of which members 2-4               8.84 s over    24 (368.4 ms each)
+   97.20 |                   totals read back                     1.61 s over     1 (1609.9 ms each)
+   97.20 | file reads      : 6 from the file cache, 78 from the drive unbuffered, 0 buffered; 5.3 GB, 2.1 reader-seconds (STREHL_READ_MODE)
+   97.22 | depth map       : measured during the fold for the optical restoration's in-focus tiles (594 x 396 cells of 8 plane px from 24 placed frames, 57.4 s since the fold began); fusion off
+   97.22 | reference tiles : 0 frames gathered again over the rows and columns of the optical restoration's in-focus tiles (0.0 s; 0.0 slot-seconds, 0.0 of them decoding rows)
+   98.40 | half-stacks     : alternate folded frames finished separately for the optical              restoration's noise measurement (1.2 s)
+   98.40 | folded          : 24 / 24 frames in 58.6 s (2.44 s per frame, 24 execution threads)
+   99.00 | restore trace   : tile spectra 2 ms
+   99.25 | wrote           : outputs/perf-plan-3/traces/w.tif (9504 x 6336, 16-bit RGB, linear camera-native RGB, colour carried through the merge, no demosaic)
+   99.25 | collapse+write  : 0.8 s
+   99.25 | total           : 59.5 s

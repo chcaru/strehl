@@ -1,0 +1,31 @@
+uptime: 663852.25 s
+-- devices now (sysfs): path, speed Mbit/s, vendor:product, product
+  1-1 12 054c:0d68 USB Bus-powered Device
+  4-1 5000 0e8d:7961 Wireless_Device
+  usb1 480 1d6b:0002 xHCI Host Controller
+  usb2 5000 1d6b:0003 xHCI Host Controller
+  usb3 480 1d6b:0002 xHCI Host Controller
+  usb4 5000 1d6b:0003 xHCI Host Controller
+-- lsusb -t
+/:  Bus 001.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/2p, 480M
+    |__ Port 001: Dev 079, If 0, Class=Human Interface Device, Driver=usbhid, 12M
+/:  Bus 002.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/1p, 5000M
+/:  Bus 003.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/2p, 480M
+/:  Bus 004.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/1p, 5000M
+    |__ Port 001: Dev 002, If 0, Class=Vendor Specific Class, Driver=mt7921u, 5000M
+
+-- kernel log, USB enumerations (journalctl -k, all boots kept)
+0 kernel lines; 0 usb lines
+
+first line: [Thu Nov 12 04:50:19 2026] Booting Linux on physical CPU 0x0000000000 [0x414fd0b1]
+last line : [Thu Nov 19 18:56:14 2026] hid-generic 0003:054C:0D68.003A: input,hidraw0: USB HID v1.11 D
+enumerations in the buffer: 84 from [Thu Nov 12 04:50:38 2026]  to [Thu Nov 19 18:56:14 2026] 
+  ('1-1', 'full-speed', 'ILCE-7CR') x6 first Thu Nov 19 05:09:02 2026 last Thu Nov 19 10:06:07 2026
+  ('1-1', 'full-speed', 'USB Bus-powered Device') x57 first Thu Nov 12 04:50:38 2026 last Thu Nov 19 18:56:14 2026
+  ('1-1', 'high-speed', 'ILCE-7CR') x14 first Sun Nov 15 22:44:13 2026 last Thu Nov 19 18:53:08 2026
+  ('2-1', 'SuperSpeed', 'ILCE-7CM2') x3 first Thu Nov 12 04:50:48 2026 last Fri Nov 13 04:40:08 2026
+  ('2-1', 'SuperSpeed', 'ILCE-7CR') x3 first Fri Nov 13 22:45:47 2026 last Sat Nov 14 18:56:21 2026
+  ('4-1', 'SuperSpeed', 'Wireless_Device') x1 first Fri Nov 13 04:39:40 2026 last Fri Nov 13 04:39:40 2026
+['[Fri Nov 13 04:39:40 2026] usb 4-1: new SuperSpeed USB device number 2 using xhci-hcd', '[Fri Nov 13 04:39:41 2026] usb 4-1: reset SuperSpeed USB device number 2 using xhci-hcd', '[Fri Nov 13 04:40:
+
+

@@ -1,0 +1,30 @@
+== WSL2, ext4 in the distro's VHDX ==
+always [madvise] never
+os=linux cpus=32
+first touch,  1 threads: 537 ns/page per thread, 1.65 M pages/s (6.3 GiB/s)
+first touch,  4 threads: 724 ns/page per thread, 3.85 M pages/s (14.7 GiB/s)
+first touch, 16 threads: 2015 ns/page per thread, 4.75 M pages/s (18.1 GiB/s)
+second touch (no fault): 7.2 ns/page
+thread round trip: 47814 ns
+direct read, 1 threads, 64 MiB blocks: 11.33 GiB/s
+direct read, 4 threads, 64 MiB blocks: 13.05 GiB/s
+direct read, 8 threads, 64 MiB blocks: 13.58 GiB/s
+direct read, 4 threads, 1 MiB blocks: 12.65 GiB/s
+cached read, 1 threads, 8 MiB blocks: 34.65 GiB/s
+cached read, 4 threads, 8 MiB blocks: 39.42 GiB/s
+cached read, 16 threads, 8 MiB blocks: 30.42 GiB/s
+open + 64 KiB read + close: 1.6 us
+== WSL2, the same with transparent huge pages off for this process is not settable without root; THP state above ==
+== WSL2, Windows drive through 9p (/mnt/c) ==
+first touch,  1 threads: 892 ns/page per thread, 1.04 M pages/s (4.0 GiB/s)
+first touch,  4 threads: 717 ns/page per thread, 3.87 M pages/s (14.8 GiB/s)
+first touch, 16 threads: 2063 ns/page per thread, 4.64 M pages/s (17.7 GiB/s)
+thread round trip: 47160 ns
+direct read, 1 threads, 64 MiB blocks: 0.24 GiB/s
+direct read, 4 threads, 64 MiB blocks: 0.48 GiB/s
+direct read, 8 threads, 64 MiB blocks: 0.47 GiB/s
+direct read, 4 threads, 1 MiB blocks: 0.45 GiB/s
+cached read, 1 threads, 8 MiB blocks: 0.24 GiB/s
+cached read, 4 threads, 8 MiB blocks: 0.45 GiB/s
+cached read, 16 threads, 8 MiB blocks: 0.44 GiB/s
+open + 64 KiB read + close: 1484.7 us

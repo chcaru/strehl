@@ -1,0 +1,50 @@
+11-13 15:15 stack-1794611692641-9758     four-shot groups=  1  capture()= 5.87 s  RAW 3->4 gap=1.14 s (>= 109 MB/s)  plane period=nan s
+11-13 15:15 stack-1794611747115-9758     four-shot groups=  3  capture()= 5.87 s  RAW 3->4 gap=1.12 s (>= 111 MB/s)  plane period=8.0 s
+11-13 15:18 stack-1794611876360-9758     four-shot groups=  1  capture()= 5.92 s  RAW 3->4 gap=1.11 s (>= 112 MB/s)  plane period=nan s
+11-13 15:25 stack-1794612335049-9932     four-shot groups=  1  capture()= 5.89 s  RAW 3->4 gap=1.11 s (>= 112 MB/s)  plane period=nan s
+11-13 15:54 stack-1794614074886-9932     four-shot groups=  1  capture()= 5.87 s  RAW 3->4 gap=1.09 s (>= 114 MB/s)  plane period=nan s
+11-13 16:44 stack-1794617090499-9932     four-shot groups=  1  capture()= 5.82 s  RAW 3->4 gap=1.11 s (>= 112 MB/s)  plane period=nan s
+11-13 17:10 stack-1794618614613-9932     four-shot groups=  1  capture()= 5.89 s  RAW 3->4 gap=1.17 s (>= 106 MB/s)  plane period=nan s
+11-13 18:20 stack-1794622810272-10510    single    shots=  1  capture()= 2.14 s  period=nan s
+11-13 18:20 stack-1794622816581-10510    four-shot groups=  1  capture()= 5.84 s  RAW 3->4 gap=1.16 s (>= 108 MB/s)  plane period=nan s
+11-13 18:35 stack-1794623743175-10639    single    shots=  1  capture()= 2.13 s  period=nan s
+11-13 18:35 stack-1794623749395-10639    four-shot groups=  1  capture()= 5.87 s  RAW 3->4 gap=1.15 s (>= 108 MB/s)  plane period=nan s
+11-14 00:46 stack-1794645991941-10639    single    shots= 32  capture()= 2.12 s  period=3.1 s
+11-14 00:50 stack-1794646224061-11226    single    shots= 16  capture()= 2.12 s  period=3.1 s
+11-14 00:51 stack-1794646279022-11226    single    shots= 16  capture()= 2.13 s  period=3.1 s
+11-14 00:52 stack-1794646334587-11226    single    shots= 16  capture()= 2.11 s  period=3.1 s
+11-14 00:53 stack-1794646390130-11226    single    shots= 16  capture()= 2.14 s  period=3.1 s
+11-14 00:54 stack-1794646445728-11226    single    shots= 16  capture()= 2.13 s  period=3.5 s
+11-14 00:55 stack-1794646504038-11226    single    shots= 16  capture()= 2.13 s  period=3.1 s
+11-14 00:56 stack-1794646559590-11226    single    shots= 16  capture()= 2.12 s  period=3.1 s
+11-14 00:56 stack-1794646615055-11226    single    shots= 16  capture()= 2.12 s  period=3.1 s
+11-14 00:57 stack-1794646669791-11226    single    shots= 16  capture()= 2.13 s  period=3.1 s
+11-14 00:58 stack-1794646725108-11226    single    shots= 16  capture()= 2.13 s  period=3.1 s
+11-14 00:59 stack-1794646781346-11226    single    shots= 16  capture()= 2.13 s  period=3.4 s
+11-14 01:00 stack-1794646838907-11226    single    shots= 16  capture()= 2.12 s  period=3.4 s
+11-14 01:01 stack-1794646897331-11226    single    shots= 16  capture()= 2.14 s  period=3.6 s
+11-14 01:02 stack-1794646957742-11226    single    shots= 16  capture()= 1.62 s  period=2.6 s
+11-14 01:03 stack-1794647005639-11226    single    shots= 16  capture()= 4.02 s  period=5.0 s
+11-14 01:05 stack-1794647092116-11226    four-shot groups=  4  capture()= 5.86 s  RAW 3->4 gap=1.12 s (>= 110 MB/s)  plane period=6.5 s
+11-14 11:11 stack-1794683497219-11226    single    shots=  1  capture()= 2.24 s  period=nan s
+11-14 11:14 stack-1794683631859-11226    four-shot groups=  8  capture()= 6.00 s  RAW 3->4 gap=1.15 s (>= 110 MB/s)  plane period=7.3 s
+11-14 11:16 stack-1794683752817-11226    four-shot groups=  8  capture()= 9.66 s  RAW 3->4 gap=2.08 s (>=  62 MB/s)  plane period=10.9 s
+11-14 11:22 stack-1794684170599-11226    single    shots=  1  capture()= 4.02 s  period=nan s
+11-14 11:23 stack-1794684207243-11226    single    shots= 16  capture()= 2.13 s  period=3.3 s
+11-14 11:24 stack-1794684263347-11226    single    shots= 32  capture()= 4.05 s  period=5.4 s
+11-14 11:27 stack-1794684439651-11226    single    shots= 16  capture()= 7.85 s  period=9.3 s
+11-14 12:05 stack-1794686724346-11226    four-shot groups=  6  capture()= 5.97 s  RAW 3->4 gap=1.15 s (>= 111 MB/s)  plane period=7.1 s
+11-14 12:15 stack-1794687317465-11226    four-shot groups=  6  capture()= 5.98 s  RAW 3->4 gap=1.15 s (>= 111 MB/s)  plane period=7.1 s
+11-14 12:18 stack-1794687527310-11226    four-shot groups=  4  capture()= 6.00 s  RAW 3->4 gap=1.15 s (>= 111 MB/s)  plane period=7.0 s
+11-14 12:42 stack-1794688969510-11226    single    shots= 21  capture()= 3.58 s  period=5.3 s
+11-14 12:47 stack-1794689213508-11226    single    shots=107  capture()= 3.57 s  period=5.3 s
+11-14 12:56 stack-1794689780304-11226    four-shot groups=107  capture()=11.39 s  RAW 3->4 gap=2.52 s (>=  52 MB/s)  plane period=12.8 s
+11-15 15:12 stack-1794784320932-11226    single    shots=  1  capture()= 4.30 s  period=nan s
+11-15 15:13 stack-1794784427766-11226    single    shots=  1  capture()= 4.83 s  period=nan s
+11-15 15:31 stack-1794785495615-11226    single    shots=196  capture()= 4.89 s  period=6.6 s
+11-15 15:53 stack-1794786793543-11226    four-shot groups=196  capture()=15.02 s  RAW 3->4 gap=3.22 s (>=  39 MB/s)  plane period=16.4 s
+11-18 21:38 stack-1795066704327-19315    four-shot groups=  2  capture()=14.48 s  RAW 3->4 gap=3.06 s (>=  41 MB/s)  plane period=nan s
+11-18 22:28 stack-1795069686364-20317    four-shot groups=  2  capture()=14.82 s  RAW 3->4 gap=3.15 s (>=  40 MB/s)  plane period=nan s
+11-19 01:58 stack-1795082306428-20449    four-shot groups=  6  capture()=14.60 s  RAW 3->4 gap=3.12 s (>=  40 MB/s)  plane period=15.9 s
+11-19 02:07 stack-1795082802466-20449    four-shot groups=  6  capture()=14.58 s  RAW 3->4 gap=3.13 s (>=  40 MB/s)  plane period=16.1 s
+11-19 10:54 stack-1795114440478-21246    four-shot groups=  7  capture()=14.62 s  RAW 3->4 gap=3.11 s (>=  40 MB/s)  plane period=17.5 s

@@ -1,0 +1,57 @@
+== wsl-cpu-first: STREHL_GPU_FOLD=off
+exit=0
+wsl-cpu-first wall_s=56.379 user_s=898.541 kernel_s=153.850
+group journal   : 0 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; /home/chris/strehl-wsl-cache/groups/scarab24-55eeca9002b3109a.jsonl)
+alignment       : ON (sidecar), reference frame 12, 24 placed / 0 refused, 0.0 s
+gpu fold        : off (CPU fold; STREHL_GPU_FOLD=on or auto folds on the GPU)
+folded          : 24 / 24 frames in 20.3 s (0.84 s per frame, 24 execution threads)
+total           : 22.3 s
+alignment       : ON (sidecar), reference frame 12, 24 placed / 0 refused, 0.0 s
+gpu fold        : off (CPU fold; STREHL_GPU_FOLD=on or auto folds on the GPU)
+folded          : 24 / 24 frames in 30.6 s (1.27 s per frame, 24 execution threads)
+total           : 33.0 s
+e37e8e6feb9acf1f21745b0a97464a3a140035b99dfae4f0f32c54d581e64165
+== wsl-cpu-later: STREHL_GPU_FOLD=off
+exit=0
+wsl-cpu-later wall_s=52.218 user_s=858.117 kernel_s=105.306
+group journal   : 0 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; /home/chris/strehl-wsl-cache/groups/scarab24-55eeca9002b3109a.jsonl)
+alignment       : ON (sidecar), reference frame 12, 24 placed / 0 refused, 0.0 s
+gpu fold        : off (CPU fold; STREHL_GPU_FOLD=on or auto folds on the GPU)
+folded          : 24 / 24 frames in 17.1 s (0.71 s per frame, 24 execution threads)
+total           : 19.2 s
+alignment       : ON (sidecar), reference frame 12, 24 placed / 0 refused, 0.0 s
+gpu fold        : off (CPU fold; STREHL_GPU_FOLD=on or auto folds on the GPU)
+folded          : 24 / 24 frames in 31.0 s (1.29 s per frame, 24 execution threads)
+total           : 33.0 s
+e37e8e6feb9acf1f21745b0a97464a3a140035b99dfae4f0f32c54d581e64165
+== wsl-cpu-later2: STREHL_GPU_FOLD=off
+wsl-cpu-later2 wall_s=54.137 user_s=831.911 kernel_s=127.958
+exit=0
+group journal   : 0 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; /home/chris/strehl-wsl-cache/groups/scarab24-55eeca9002b3109a.jsonl)
+alignment       : ON (sidecar), reference frame 12, 24 placed / 0 refused, 0.0 s
+gpu fold        : off (CPU fold; STREHL_GPU_FOLD=on or auto folds on the GPU)
+folded          : 24 / 24 frames in 17.5 s (0.73 s per frame, 24 execution threads)
+total           : 19.6 s
+alignment       : ON (sidecar), reference frame 12, 24 placed / 0 refused, 0.0 s
+gpu fold        : off (CPU fold; STREHL_GPU_FOLD=on or auto folds on the GPU)
+folded          : 24 / 24 frames in 32.5 s (1.36 s per frame, 24 execution threads)
+total           : 34.5 s
+e37e8e6feb9acf1f21745b0a97464a3a140035b99dfae4f0f32c54d581e64165
+== wsl-gpu-on: STREHL_GPU_FOLD=on
+exit=1
+wsl-gpu-on wall_s=1.957 user_s=4.314 kernel_s=7.228
+    STREHL_GPU_FOLD=on: No suitable graphics adapter found; noop not requested, vulkan drivers/libraries could not be loaded, metal not requested, dx12 not requested, gl not requested, webgpu not requ
+alignment       : ON (sidecar), reference frame 12, 24 placed / 0 refused, 0.0 s
+== wsl-auto: STREHL_GPU_FOLD=auto
+wsl-auto wall_s=55.604 user_s=870.726 kernel_s=113.997
+exit=0
+group journal   : 0 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; /home/chris/strehl-wsl-cache/groups/scarab24-55eeca9002b3109a.jsonl)
+alignment       : ON (sidecar), reference frame 12, 24 placed / 0 refused, 0.0 s
+gpu fold        : off (auto: the device's self-test: No suitable graphics adapter found; noop not requested, vulkan drivers/libraries could not be loaded, metal not reque
+folded          : 24 / 24 frames in 18.6 s (0.77 s per frame, 24 execution threads)
+total           : 20.7 s
+alignment       : ON (sidecar), reference frame 12, 24 placed / 0 refused, 0.0 s
+gpu fold        : off (auto: the device's self-test: No suitable graphics adapter found; noop not requested, vulkan drivers/libraries could not be loaded, metal not reque
+folded          : 24 / 24 frames in 32.5 s (1.35 s per frame, 24 execution threads)
+total           : 34.9 s
+e37e8e6feb9acf1f21745b0a97464a3a140035b99dfae4f0f32c54d581e64165

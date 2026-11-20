@@ -1,0 +1,8 @@
+# strehl-raw-codec example v2-bench, the same 8 archives (every 12th of the scarab capture's first 96), one thread, files in the OS cache
+## Windows (target/release/examples/v2-bench.exe)
+frame-000085.ARW.straw | 125.9 | 63.20 | 60.82 | 0.9623 | 83.0 / 93.8 | 125.7 / 137.3 | 624
+8 files, 61.2 M samples each: format 2 / format 1 size 0.9642 (3.58 % smaller); bits per sample 8.177 / 7.884
+one-thread decode per file: trusted 82.8 -> 94.5 ms (0.88x); hashed 125.5 -> 137.4 ms (0.91x); encode 640 ms
+## WSL2 Debian 13 (same source, rustc 1.98.0)
+8 files, 61.2 M samples each: format 2 / format 1 size 0.9642 (3.58 % smaller); bits per sample 8.177 / 7.884
+one-thread decode per file: trusted 73.2 -> 89.3 ms (0.82x); hashed 116.4 -> 132.3 ms (0.88x); encode 640 ms
