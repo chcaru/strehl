@@ -1,0 +1,62 @@
+{
+ "shots_before": 4,
+ "stages": [
+  [
+   0.6,
+   "switching"
+  ],
+  [
+   1.8,
+   "capturing"
+  ],
+  [
+   59.8,
+   "measuring"
+  ],
+  [
+   61.0,
+   "done"
+  ]
+ ],
+ "result": {
+  "oversampling": 0.875,
+  "planes": 25,
+  "spacing": 8.0,
+  "suggested_step": 7,
+  "summary": "Detail stays sharp over about 50 focus units; this run's step of 8 suits it (suggested 7).",
+  "tiles": 14652,
+  "tiles_measured": 841,
+  "width": 49.60854789090081,
+  "width_p10": 33.38502577563486,
+  "width_p90": 64.27152849661798
+ },
+ "survey_runs_left": [],
+ "shots_after": 4,
+ "plan_after": {
+  "approach": 128,
+  "capture_timeout_s": 120,
+  "end": 41600,
+  "settle_ms": 500,
+  "start": 40500,
+  "step": 1
+ },
+ "focus_step": {
+  "oversampling": 2.0,
+  "planes": 196,
+  "spacing": 8.0,
+  "suggested_step": 16,
+  "summary": "Detail stays sharp over about 113 focus units. A step of 16 would have been enough here, 2.0 times this run's 8: about 50 % of the planes, the time and the disk. (Width / 7; measured on one subject so far.)",
+  "tiles": 14652,
+  "tiles_measured": 11102,
+  "width": 113.00052464176406,
+  "width_p10": 95.46275432257971,
+  "width_p90": 132.1514573937602
+ },
+ "compact_estimate": {
+  "before_bytes": 51210058733,
+  "estimated_after_bytes": 18382433123,
+  "added_variance": 0.07716456363218731,
+  "applied": false,
+  "error": null
+ }
+}

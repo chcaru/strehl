@@ -1,0 +1,55 @@
+stack-1794466222200-2273         0.0 GB  not measured: Error: D:\StrehlCaptures\stack-1794466222200-2273 has 0 measurable focus positions; at least 5 are needed
+stack-1794546666339-2273         0.1 GB  not measured: Error: D:\StrehlCaptures\stack-1794546666339-2273 has 0 measurable focus positions; at least 5 are needed
+stack-1794549760762-7547         0.1 GB  not measured: Error: D:\StrehlCaptures\stack-1794549760762-7547 has 0 measurable focus positions; at least 5 are needed
+stack-1794611465892-9543         0.2 GB  not measured: Error: D:\StrehlCaptures\stack-1794611465892-9543 has 0 measurable focus positions; at least 5 are needed
+stack-1794611692641-9758         0.5 GB  not measured: Error: D:\StrehlCaptures\stack-1794611692641-9758 has 0 measurable focus positions; at least 5 are needed
+stack-1794611747115-9758         1.5 GB  not measured: Error: D:\StrehlCaptures\stack-1794611747115-9758 has 0 measurable focus positions; at least 5 are needed
+stack-1794611876360-9758         0.5 GB  not measured: Error: D:\StrehlCaptures\stack-1794611876360-9758 has 0 measurable focus positions; at least 5 are needed
+stack-1794612335049-9932         0.5 GB  not measured: Error: D:\StrehlCaptures\stack-1794612335049-9932 has 0 measurable focus positions; at least 5 are needed
+stack-1794614074886-9932         0.1 GB  not measured: Error: D:\StrehlCaptures\stack-1794614074886-9932 has 1 measurable focus positions; at least 5 are needed
+stack-1794617090499-9932         0.1 GB  not measured: Error: D:\StrehlCaptures\stack-1794617090499-9932 has 1 measurable focus positions; at least 5 are needed
+stack-1794618614613-9932         0.1 GB  not measured: Error: D:\StrehlCaptures\stack-1794618614613-9932 has 1 measurable focus positions; at least 5 are needed
+stack-1794622810272-10510        0.0 GB  not measured: Error: D:\StrehlCaptures\stack-1794622810272-10510 has 1 measurable focus positions; at least 5 are needed
+stack-1794622816581-10510        0.1 GB  not measured: Error: D:\StrehlCaptures\stack-1794622816581-10510 has 1 measurable focus positions; at least 5 are needed
+stack-1794623743175-10639        0.0 GB  not measured: Error: D:\StrehlCaptures\stack-1794623743175-10639 has 1 measurable focus positions; at least 5 are needed
+stack-1794623749395-10639        0.1 GB  not measured: Error: D:\StrehlCaptures\stack-1794623749395-10639 has 1 measurable focus positions; at least 5 are needed
+stack-1794645991941-10639        0.7 GB   32 planes  not measurable (1 tiles)
+stack-1794646224061-11226        0.4 GB   16 planes  not measurable (0 tiles)
+stack-1794646279022-11226        0.4 GB   16 planes  not measurable (1 tiles)
+stack-1794646334587-11226        0.4 GB   16 planes  not measurable (0 tiles)
+stack-1794646390130-11226        0.4 GB   16 planes  not measurable (0 tiles)
+stack-1794646445728-11226        0.5 GB   16 planes  not measurable (0 tiles)
+stack-1794646504038-11226        0.5 GB   16 planes  not measurable (1 tiles)
+stack-1794646559590-11226        0.4 GB   16 planes  not measurable (0 tiles)
+stack-1794646615055-11226        0.4 GB   16 planes  not measurable (0 tiles)
+stack-1794646669791-11226        0.5 GB   16 planes  not measurable (2 tiles)
+stack-1794646725108-11226        0.5 GB   16 planes  not measurable (0 tiles)
+stack-1794646781346-11226        0.7 GB   16 planes  not measurable (1 tiles)
+stack-1794646838907-11226        0.8 GB   16 planes  not measurable (1 tiles)
+stack-1794646897331-11226        0.9 GB   16 planes  not measurable (0 tiles)
+stack-1794646957742-11226        0.4 GB   16 planes  not measurable (0 tiles)
+stack-1794647005639-11226        0.4 GB   16 planes  not measurable (1 tiles)
+stack-1794647092116-11226        0.4 GB  not measured: Error: D:\StrehlCaptures\stack-1794647092116-11226 has 4 measurable focus positions; at least 5 are needed
+stack-1794683497219-11226        0.1 GB  not measured: Error: D:\StrehlCaptures\stack-1794683497219-11226 has 1 measurable focus positions; at least 5 are needed
+stack-1794683631859-11226        1.6 GB  not measured: Error: D:\StrehlCaptures\stack-1794683631859-11226 has 1 measurable focus positions; at least 5 are needed
+stack-1794683752817-11226        1.9 GB  not measured: Error: D:\StrehlCaptures\stack-1794683752817-11226 has 1 measurable focus positions; at least 5 are needed
+stack-1794684170599-11226        0.1 GB  not measured: Error: D:\StrehlCaptures\stack-1794684170599-11226 has 1 measurable focus positions; at least 5 are needed
+stack-1794684207243-11226        0.7 GB  not measured: Error: D:\StrehlCaptures\stack-1794684207243-11226 has 1 measurable focus positions; at least 5 are needed
+stack-1794684263347-11226        1.6 GB  not measured: Error: D:\StrehlCaptures\stack-1794684263347-11226 has 1 measurable focus positions; at least 5 are needed
+stack-1794684439651-11226        0.9 GB  not measured: Error: D:\StrehlCaptures\stack-1794684439651-11226 has 1 measurable focus positions; at least 5 are needed
+stack-1794686724346-11226        1.2 GB  not measured: Error: D:\StrehlCaptures\stack-1794686724346-11226 has 1 measurable focus positions; at least 5 are needed
+stack-1794687317465-11226        1.2 GB  not measured: Error: D:\StrehlCaptures\stack-1794687317465-11226 has 1 measurable focus positions; at least 5 are needed
+stack-1794687527310-11226        0.8 GB  not measured: Error: D:\StrehlCaptures\stack-1794687527310-11226 has 1 measurable focus positions; at least 5 are needed
+stack-1794688969510-11226        1.4 GB   21 planes at   10  sharp width    69 (p10-p90   40-  90,  6470 tiles)  suggested step   9  -> keep every 1:  21 planes,    1.4 GB, saves    0.0 GB
+stack-1794689213508-11226        6.4 GB  107 planes at    8  sharp width    86 (p10-p90   66- 115, 12039 tiles)  suggested step  12  -> keep every 1: 107 planes,    6.4 GB, saves    0.0 GB
+stack-1794689780304-11226       25.8 GB  107 planes at    8  sharp width    88 (p10-p90   65- 122, 11954 tiles)  suggested step  12  -> keep every 1: 107 planes,   25.8 GB, saves    0.0 GB
+stack-1794784320932-11226        0.1 GB  not measured: Error: D:\StrehlCaptures\stack-1794784320932-11226 has 1 measurable focus positions; at least 5 are needed
+stack-1794784427766-11226        0.1 GB  not measured: Error: D:\StrehlCaptures\stack-1794784427766-11226 has 1 measurable focus positions; at least 5 are needed
+stack-1794785495615-11226       12.8 GB  196 planes at    8  sharp width   115 (p10-p90  100- 133, 11154 tiles)  suggested step  16  -> keep every 2:  98 planes,    6.4 GB, saves    6.4 GB
+stack-1794786793543-11226       51.2 GB  196 planes at    8  sharp width   113 (p10-p90   95- 132, 11102 tiles)  suggested step  16  -> keep every 2:  98 planes,   25.6 GB, saves   25.6 GB
+stack-1795066704327-19315        0.4 GB  not measured: Error: D:\StrehlCaptures\stack-1795066704327-19315 has 2 measurable focus positions; at least 5 are needed
+stack-1795069686364-20317        0.4 GB  not measured: Error: D:\StrehlCaptures\stack-1795069686364-20317 has 2 measurable focus positions; at least 5 are needed
+stack-1795082306428-20449        1.3 GB    6 planes  not measurable (0 tiles)
+stack-1795082802466-20449        1.3 GB    6 planes  not measurable (0 tiles)
+stack-1795114440478-21246        1.5 GB    6 planes  not measurable (0 tiles)
+measured stacks: 97.7 GB; thinning to the suggested step saves 32.0 GB

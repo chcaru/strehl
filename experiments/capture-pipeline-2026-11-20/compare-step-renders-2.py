@@ -19,7 +19,7 @@ import tifffile
 
 src, out = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
 out.mkdir(parents=True, exist_ok=True)
-names = ['full', 's2', 's4']
+names = sys.argv[3].split(',') if len(sys.argv) > 3 else ['full', 's2', 's4']
 T = 128
 SCALES = [0.5, 0.7, 1.0, 1.5, 2.5]
 img, level, energy = {}, {}, {}
@@ -57,9 +57,7 @@ for s in SCALES:
         r = (energy[(n, s)][detail] - floors[n]) / np.maximum(energy[('full', s)][detail] - floors['full'], 1e-30)
         row.append((np.median(r), np.percentile(r, 10)))
     fl = [np.median(energy[(n, s)][flat] / energy[('full', s)][flat]) for n in names[1:]]
-    print('%.1f px   %6.1fx%s   %.3f, %.3f   %.3f [%.3f], %.3f [%.3f]   %.3f, %.3f' % (
-        s, snr, '' if snr >= 10 else ' (noise-limited: do not read)', fl[0], fl[1], row[0][0], row[0][1], row[1][0], row[1][1],
-        np.sqrt(row[0][0]), np.sqrt(row[1][0])))
+    print('%.1f px   %6.1fx%s   ' % (s, snr, '' if snr >= 10 else ' (noise-limited: do not read)') + '   '.join('%s: flat %.3f detail %.3f [p10 %.3f] amplitude %.3f' % (n, f, r[0], r[1], np.sqrt(r[0])) for n, f, r in zip(names[1:], fl, row)))
 
 
 def show(a, scale):

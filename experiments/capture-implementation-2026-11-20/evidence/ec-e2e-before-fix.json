@@ -1,0 +1,144 @@
+{
+ "run": "stack-1795200888447-4096",
+ "phase": "complete",
+ "message": "Complete \u00b7 12 planes / 48 RAWs on PC; metadata saved",
+ "wall_s": 223.67301416397095,
+ "mean_capture_interval_s": 6.70215625,
+ "events": {
+  "created": 1,
+  "approach_intent": 1,
+  "approach_complete": 1,
+  "focus_intent": 12,
+  "focus_complete": 12,
+  "capture_intent": 33,
+  "capture_buffered": 33,
+  "retake_intent": 21,
+  "retake_focus": 21,
+  "retake_exhausted": 9,
+  "error_correction_off": 1,
+  "finished": 1
+ },
+ "retakes": [
+  [
+   1,
+   1,
+   "witness pairs misregistered by 0.390 photosite after residual compensation"
+  ],
+  [
+   2,
+   1,
+   "witness pairs misregistered by 0.418 photosite after residual compensation"
+  ],
+  [
+   1,
+   2,
+   "witness pairs misregistered by 0.413 photosite after residual compensation"
+  ],
+  [
+   3,
+   1,
+   "forced retake (STREHL_FOLLOW_RETAKE_PLANES)"
+  ],
+  [
+   2,
+   2,
+   "witness pairs misregistered by 0.388 photosite after residual compensation"
+  ],
+  [
+   4,
+   1,
+   "witness pairs misregistered by 0.408 photosite after residual compensation"
+  ],
+  [
+   3,
+   2,
+   "witness pairs misregistered by 0.436 photosite after residual compensation"
+  ],
+  [
+   5,
+   1,
+   "witness pairs misregistered by 0.414 photosite after residual compensation"
+  ],
+  [
+   4,
+   2,
+   "witness pairs misregistered by 0.392 photosite after residual compensation"
+  ],
+  [
+   6,
+   1,
+   "witness pairs misregistered by 0.420 photosite after residual compensation"
+  ],
+  [
+   5,
+   2,
+   "witness pairs misregistered by 0.409 photosite after residual compensation"
+  ],
+  [
+   7,
+   1,
+   "forced retake (STREHL_FOLLOW_RETAKE_PLANES)"
+  ],
+  [
+   6,
+   2,
+   "witness pairs misregistered by 0.407 photosite after residual compensation"
+  ],
+  [
+   8,
+   1,
+   "witness pairs misregistered by 0.438 photosite after residual compensation"
+  ],
+  [
+   7,
+   2,
+   "witness pairs misregistered by 0.442 photosite after residual compensation"
+  ],
+  [
+   9,
+   1,
+   "witness pairs misregistered by 0.436 photosite after residual compensation"
+  ],
+  [
+   8,
+   2,
+   "witness pairs misregistered by 0.432 photosite after residual compensation"
+  ],
+  [
+   10,
+   1,
+   "witness pairs misregistered by 0.447 photosite after residual compensation"
+  ],
+  [
+   9,
+   2,
+   "witness pairs misregistered by 0.437 photosite after residual compensation"
+  ],
+  [
+   11,
+   1,
+   "witness pairs misregistered by 0.466 photosite after residual compensation"
+  ],
+  [
+   10,
+   2,
+   "witness pairs misregistered by 0.433 photosite after residual compensation"
+  ]
+ ],
+ "verdicts_posted": 30,
+ "engine_check": [
+  "groups          : 12 recorded planes, 12 four-shot, 12 complete",
+  "plane    1      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.137 px gains 1.0035 0.9981 0.9949 | z2 mean 1.00 tiles p50 0.97 p99 1.38 | pass",
+  "plane    2      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.110 px gains 0.9933 0.9914 0.9922 | z2 mean 1.00 tiles p50 0.96 p99 1.45 | pass",
+  "plane    3      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.099 px gains 0.9949 1.0173 1.0148 | z2 mean 1.00 tiles p50 0.98 p99 1.20 | pass",
+  "plane    4      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.090 px gains 1.0023 1.0057 1.0156 | z2 mean 1.00 tiles p50 0.97 p99 1.34 | pass",
+  "plane    5      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.123 px gains 1.0004 1.0184 1.0196 | z2 mean 1.00 tiles p50 0.98 p99 1.22 | pass",
+  "plane    6      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.050 px gains 0.9809 0.9894 0.9880 | z2 mean 0.98 tiles p50 0.96 p99 1.16 | pass",
+  "plane    7      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.057 px gains 0.9977 0.9918 0.9900 | z2 mean 0.99 tiles p50 0.96 p99 1.40 | pass",
+  "plane    8      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.095 px gains 0.9998 1.0049 1.0015 | z2 mean 1.01 tiles p50 0.97 p99 1.62 | pass",
+  "plane    9      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.148 px gains 1.0032 1.0000 1.0016 | z2 mean 1.00 tiles p50 0.97 p99 1.42 | pass",
+  "plane   10      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.225 px gains 0.9968 1.0126 1.0310 | z2 mean 1.02 tiles p50 0.98 p99 1.72 | demote: witness pairs misregistered beyond tolerance",
+  "plane   11      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.104 px gains 0.9987 0.9995 0.9963 | z2 mean 0.99 tiles p50 0.97 p99 1.25 | pass",
+  "plane   12      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.072 px gains 0.9959 0.9963 0.9947 | z2 mean 0.99 tiles p50 0.96 p99 1.18 | pass"
+ ]
+}

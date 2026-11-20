@@ -1,0 +1,29 @@
+54 of 107 planes (stride 2, offset 0; original planes 1..107), 216 files, 13.0 GB -> D:\StrehlCaptures\thin-proof-dark-107
+dark-107 full: exit 0, 29.0 s
+dark-107 s2: exit 0, 17.3 s
+631 flat tiles, 315 detail tiles (the full render's top tenth by 1.5 px gradient energy)
+
+scale   signal/noise in detail tiles (full)   (every 2nd plane against all planes; restored from the run's console output)
+0.5 px     20.6x   s2: flat 1.069 detail 1.014 [p10 0.984] amplitude 1.007
+0.7 px     20.8x   s2: flat 1.054 detail 1.013 [p10 0.984] amplitude 1.006
+1.0 px     20.6x   s2: flat 1.048 detail 1.010 [p10 0.986] amplitude 1.005
+1.5 px     21.0x   s2: flat 1.034 detail 1.008 [p10 0.989] amplitude 1.004
+2.5 px     21.8x   s2: flat 1.019 detail 1.006 [p10 0.988] amplitude 1.003
+crops at the strongest edges, 200 % nearest neighbour (left to right: full, every 2nd plane, every 4th plane)
+98 of 196 planes (stride 2, offset 0; original planes 1..195), 98 files, 6.4 GB -> D:\StrehlCaptures\thin-proof-scarab-single
+scarab-single full: exit 0, 11.9 s
+scarab-single s2: exit 0, 7.6 s
+631 flat tiles, 315 detail tiles (the full render's top tenth by 1.5 px gradient energy)
+
+scale   signal/noise in detail tiles (full)   flat-tile energy vs full: s2, s4   detail energy vs full (floor removed): s2 median [p10], s4 median [p10]   amplitude s2, s4
+0.5 px      9.9x (noise-limited: do not read)   s2: flat 0.989 detail 1.004 [p10 0.995] amplitude 1.002
+0.7 px     10.3x   s2: flat 0.989 detail 1.002 [p10 0.993] amplitude 1.001
+1.0 px     10.6x   s2: flat 0.991 detail 1.001 [p10 0.992] amplitude 1.000
+1.5 px     10.7x   s2: flat 0.992 detail 1.000 [p10 0.992] amplitude 1.000
+2.5 px     10.8x   s2: flat 0.995 detail 1.000 [p10 0.992] amplitude 1.000
+
+crops at the strongest edges, 200 % nearest neighbour (left to right: full, every 2nd plane, every 4th plane)
+   edge-0-y710-x6279.png: origin y=710 x=6279, 160 px square each, shown at 200 %
+   edge-1-y2351-x8818.png: origin y=2351 x=8818, 160 px square each, shown at 200 %
+   edge-2-y1806-x6781.png: origin y=1806 x=6781, 160 px square each, shown at 200 %
+   edge-3-y2095-x7938.png: origin y=2095 x=7938, 160 px square each, shown at 200 %

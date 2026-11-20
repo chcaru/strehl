@@ -1,0 +1,8 @@
+restored 125616128 bytes
+   IFD0 JPEG at 192674, 215205 bytes, tags NonexNone, decodes to (1616, 1080)
+   IFD1 JPEG at 43928, 8454 bytes, tags NonexNone, decodes to (160, 120)
+   IFD2 JPEG at 192674, 215205 bytes, tags 1616x1080, decodes to (1616, 1080)
+original 125616128 bytes
+   IFD0 JPEG at 192674, 215205 bytes, tags NonexNone, decodes to (1616, 1080)
+   IFD1 JPEG at 43928, 8454 bytes, tags NonexNone, decodes to (160, 120)
+   IFD2 JPEG at 409600, 2784657 bytes, tags 9504x6336, decodes to (9504, 6336)

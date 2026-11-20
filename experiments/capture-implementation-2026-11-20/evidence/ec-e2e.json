@@ -1,0 +1,47 @@
+{
+ "run": "stack-1795201335974-4096",
+ "phase": "complete",
+ "message": "Complete \u00b7 12 planes / 48 RAWs on PC; metadata saved",
+ "wall_s": 85.79805111885071,
+ "mean_capture_interval_s": 5.926846153846155,
+ "events": {
+  "created": 1,
+  "approach_intent": 1,
+  "approach_complete": 1,
+  "focus_intent": 12,
+  "focus_complete": 12,
+  "capture_intent": 14,
+  "capture_buffered": 14,
+  "retake_intent": 2,
+  "retake_focus": 2,
+  "finished": 1
+ },
+ "retakes": [
+  [
+   3,
+   1,
+   "forced retake (STREHL_FOLLOW_RETAKE_PLANES)"
+  ],
+  [
+   7,
+   1,
+   "forced retake (STREHL_FOLLOW_RETAKE_PLANES)"
+  ]
+ ],
+ "verdicts_posted": 14,
+ "engine_check": [
+  "groups          : 12 recorded planes, 12 four-shot, 12 complete",
+  "plane    1      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.054 px gains 1.0020 1.0020 1.0032 | z2 mean 0.99 tiles p50 0.97 p99 1.15 | pass",
+  "plane    2      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.082 px gains 0.9960 0.9997 1.0002 | z2 mean 0.99 tiles p50 0.97 p99 1.14 | pass",
+  "plane    3      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.019 px gains 0.9986 0.9931 0.9962 | z2 mean 0.99 tiles p50 0.97 p99 1.14 | pass",
+  "plane    4      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.134 px gains 1.0074 1.0067 1.0074 | z2 mean 1.00 tiles p50 0.98 p99 1.30 | pass",
+  "plane    5      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.189 px gains 1.0013 1.0004 1.0033 | z2 mean 1.00 tiles p50 0.97 p99 1.47 | pass",
+  "plane    6      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.090 px gains 1.0174 1.0224 1.0151 | z2 mean 1.01 tiles p50 0.98 p99 1.19 | pass",
+  "plane    7      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.117 px gains 1.0020 1.0016 1.0018 | z2 mean 0.99 tiles p50 0.97 p99 1.19 | pass",
+  "plane    8      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.037 px gains 0.9986 1.0018 1.0002 | z2 mean 0.99 tiles p50 0.97 p99 1.15 | pass",
+  "plane    9      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.081 px gains 0.9976 0.9989 0.9959 | z2 mean 0.99 tiles p50 0.97 p99 1.15 | pass",
+  "plane   10      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.134 px gains 0.9995 0.9976 0.9984 | z2 mean 1.00 tiles p50 0.97 p99 1.52 | pass",
+  "plane   11      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.068 px gains 0.9988 0.9991 0.9955 | z2 mean 0.99 tiles p50 0.97 p99 1.15 | pass",
+  "plane   12      : offsets [(0, -1), (1, -1), (1, 0)] witness shift max 0.119 px gains 1.0007 0.9998 1.0005 | z2 mean 1.00 tiles p50 0.97 p99 1.49 | pass"
+ ]
+}

@@ -1,0 +1,9 @@
+window y=352 x=1040, 1536 px square (most detailed part of a1)
+control: a2 against a2 shifted 0.300 px reads 0.261 px (+0.261, -0.000)
+pair            shift px  (dx, dy)            sharpness ratio
+a1 vs a2       0.068   (+0.050, +0.046)   1.0228   same plane, no move
+a1 vs c1r      0.171   (+0.041, -0.166)   1.0193   revisited
+a1 vs c2r      0.169   (+0.159, +0.055)   1.0034   revisited
+a1 vs c3r      0.277   (+0.114, -0.252)   0.9192   revisited
+a1 vs c1f1     0.383   (-0.309, +0.226)   1.0596   one plane on (8 units)
+a1 vs c1f3     1.089   (-0.952, +0.530)   1.2168   three planes on

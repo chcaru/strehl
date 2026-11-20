@@ -1,0 +1,11 @@
+10:21:24 light | phase complete connected True busy False editable True | camera True 3.8 W light True 0.0 W p
+settle  500 ms: stack-1795198892716-3703  wall 71.5 s, plane period 5.66 s, 10/12 pass, witness shift max per plane 0.135 0.076 0.070 0.049 0.205 0.092 0.144 0.108 0.039 0.051 0.054 0.154
+settle 2000 ms: stack-1795198967877-3703  wall 88.8 s, plane period 7.05 s, 12/12 pass, witness shift max per plane 0.112 0.073 0.140 0.160 0.081 0.094 0.111 0.088 0.066 0.099 0.091 0.165
+settle  500 ms: stack-1795199060315-3703  wall 70.9 s, plane period 5.69 s, 12/12 pass, witness shift max per plane 0.086 0.113 0.101 0.087 0.140 0.065 0.084 0.125 0.149 0.178 0.144 0.159
+settle 2000 ms: stack-1795199134792-3703  wall 88.6 s, plane period 7.03 s, 12/12 pass, witness shift max per plane 0.073 0.066 0.040 0.079 0.135 0.150 0.077 0.064 0.087 0.062 0.109 0.099
+settle  500 ms: stack-1795199227101-3703  wall 70.9 s, plane period 5.68 s, 11/12 pass, witness shift max per plane 0.077 0.073 0.053 0.114 0.113 0.062 0.146 0.205 0.062 0.085 0.101 0.120
+settle 2000 ms: stack-1795199301617-3703  wall 88.8 s, plane period 7.04 s, 12/12 pass, witness shift max per plane 0.063 0.049 0.114 0.135 0.108 0.063 0.030 0.116 0.131 0.046 0.077 0.168
+settle  500 ms: stack-1795199394023-3703  wall 70.9 s, plane period 5.68 s, 12/12 pass, witness shift max per plane 0.092 0.101 0.049 0.144 0.079 0.116 0.091 0.157 0.143 0.121 0.034 0.108
+settle 2000 ms: stack-1795199468579-3703  wall 88.7 s, plane period 7.03 s, 12/12 pass, witness shift max per plane 0.069 0.122 0.051 0.060 0.103 0.117 0.107 0.110 0.033 0.075 0.085 0.159
+
+[exited with code 0]

@@ -1,7 +1,10 @@
 # A7CR capture and storage, round 4: the pipeline, the focus step and the bytes
 
-**Status:** Proposal (2026-11-20). Nothing here is built. Investigation and experiments
-only; no product code changed.
+**Status:** Partly built (2026-11-20, later): K1-K3, F1-F2, A4 (with D4's JPEG drop) and
+the desktop's calibrate, focus-step and compact actions are on `main` and installed;
+thinning (D2) was measured and proven but nothing was deleted; K4's settle stays at
+500 ms; A1, A2, A3 and F3 are not built. Results:
+[implementation](../../experiments/capture-implementation-2026-11-20/results.md).
 **Date:** 2026-11-20.
 **Owner's questions:** what else speeds up capture end to end, first-time stacking and
 follow mode included? Is the camera driver slower than the camera's own focus bracketing,

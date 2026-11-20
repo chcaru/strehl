@@ -1,0 +1,10 @@
+stack-1795196761420-3703: 48 RAWs, 125.4 MB each, wire 47.4 MB (37.8 %), stored 46.2 MB; lag Pi-has-it -> PC-saved: median 1.15 s (1.11-1.40)
+   last-RAW-saved period 5.65 s median; wire per plane 190 MB -> 33.6 MB/s averaged over the period
+stack-1795196885933-3703: 48 RAWs, 125.4 MB each, wire 47.4 MB (37.9 %), stored 46.2 MB; lag Pi-has-it -> PC-saved: median 1.13 s (1.10-1.26)
+   last-RAW-saved period 5.69 s median; wire per plane 190 MB -> 33.4 MB/s averaged over the period
+stack-1795196960596-3703: 48 RAWs, 125.5 MB each, wire 47.5 MB (37.9 %), stored 46.3 MB; lag Pi-has-it -> PC-saved: median 1.17 s (1.11-1.88)
+   last-RAW-saved period 7.03 s median; wire per plane 190 MB -> 27.0 MB/s averaged over the period
+stack-1795197053191-3703: 48 RAWs, 125.2 MB each, wire 47.1 MB (37.5 %), stored 45.8 MB; lag Pi-has-it -> PC-saved: median 1.13 s (1.09-1.36)
+   last-RAW-saved period 5.66 s median; wire per plane 188 MB -> 33.2 MB/s averaged over the period
+stack-1795197127739-3703: 48 RAWs, 125.2 MB each, wire 46.8 MB (37.4 %), stored 45.6 MB; lag Pi-has-it -> PC-saved: median 1.12 s (1.09-1.84)
+   last-RAW-saved period 7.03 s median; wire per plane 187 MB -> 26.6 MB/s averaged over the period

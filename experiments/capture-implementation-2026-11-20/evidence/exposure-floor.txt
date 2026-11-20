@@ -1,0 +1,9 @@
+four-shot 0.600 s ISO  100: plane period 5.67 s (model 5.60), capture() 5.56 s, wire 47.5 MB a RAW, lag to PC median 1.11 s max 1.19 s, queue peak 1, stack-1795201448751-4096
+single    0.600 s ISO  100: plane period 2.25 s (model 2.15), capture() 2.14 s, wire 47.4 MB a RAW, lag to PC median 1.14 s max 1.79 s, queue peak 1, stack-1795201497013-4096
+skipped 196618 ISO 200: not offered
+four-shot 0.167 s ISO  400: plane period 4.44 s (model 3.87), capture() 4.31 s, wire 56.7 MB a RAW, lag to PC median 1.42 s max 1.67 s, queue peak 2, stack-1795201518928-4096
+single    0.167 s ISO  400: plane period 1.79 s (model 1.72), capture() 1.69 s, wire 56.6 MB a RAW, lag to PC median 1.27 s max 1.34 s, queue peak 1, stack-1795201557584-4096
+four-shot 0.100 s ISO  640: plane period 4.32 s (model 3.60), capture() 4.20 s, wire 59.8 MB a RAW, lag to PC median 1.53 s max 1.88 s, queue peak 3, stack-1795201575598-4096
+single    0.100 s ISO  640: plane period 1.72 s (model 1.65), capture() 1.61 s, wire 60.1 MB a RAW, lag to PC median 1.31 s max 1.40 s, queue peak 1, stack-1795201613093-4096
+four-shot 0.040 s ISO 1600: plane period 4.29 s (model 3.36), capture() 4.14 s, wire 67.3 MB a RAW, lag to PC median 2.03 s max 2.24 s, queue peak 3, stack-1795201630671-4096
+single    0.040 s ISO 1600: plane period 1.64 s (model 1.59), capture() 1.54 s, wire 67.2 MB a RAW, lag to PC median 1.42 s max 1.46 s, queue peak 1, stack-1795201668649-4096

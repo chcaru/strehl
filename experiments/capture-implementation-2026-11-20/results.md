@@ -1,0 +1,140 @@
+# Capture and storage, round 4: implementation results (2026-11-20)
+
+What was built from [the round-4 plan](../../docs/proposals/2026-11-a7cr-capture-and-storage-plan-4.md)
+after the owner's decisions, and what the rig and the recorded stacks measured. Commits on
+`main`: `c4148fbe1` (engine: focus step, compact), `98db0e465` (capture: K1-K3),
+`1a975d323` (desktop: calibrate, focus step, compact), `ef200f6bc` (retake rule, compacted
+JPEG size). Installed: the studio Pi's controller and bridge (backups
+`/root/strehl-before-round4-1795196379`, the originals, and later ones) and the owner's
+desktop and receiver, in place.
+
+Rig: ILCE-7CR, f/5.6, ISO 100, 0.6 s unless stated, four-shot; subject a pencil and a
+printed part (structured lettering and layer lines at lens position 41000). Labels:
+MEASURED, VERIFIED, DERIVED, ARGUED, UNVERIFIED.
+
+## Owner's decisions and what became of them
+
+| Decision | Done |
+| --- | --- |
+| D1 focus step: determine the ideal step, maybe a Capture feature | `strehl focus-step`; Capture screen "Calibrate step" and "Measure focus step" |
+| D2 thinning: numbers and proof, nothing permanent | numbers for every stack on disk and three proofs below; nothing deleted |
+| D3 compact as an optional action on finished stacks | `strehl compact`, Capture screen "Compact…" with an estimate and a confirmation |
+| D4 drop the large preview JPEG | compacted files point the full-size JPEG's IFD at the preview |
+| D5 deferred retakes: experiment first | measured acceptable, built (K3) |
+| D6a exposure floor, a calibrate feature | floor measured; "Calibrate step" reports planes and time |
+| D6b two upload streams by default | built (K2) |
+
+## Capture (MEASURED on the rig)
+
+| Four-shot plane, 0.6 s | Before | Now |
+| --- | ---: | ---: |
+| Plane period, error correction off | 7.3 s | 5.65-5.69 s (11 runs) |
+| Focus step between planes | 1.25 s | 0.02 s (the lens moved during the last RAW's fetch) |
+| A RAW on the Pi to saved on the PC | 1.36 s | 1.11-1.15 s |
+| 12 planes with error correction and 2 retakes | about 108 s (DERIVED, 9 s a plane) | 85.8 s, every group passing |
+
+- **K1.** The bridge acts on the camera's events, sends the lens on once the group's last
+  exposure is in the camera, and ends the group when its RAWs are fetched and the move has
+  settled; the settle counts from the camera's focus-result event. The remaining gap to the
+  lab's 5.09 s is the last RAW, still fetched before the next shutter.
+- **K2.** Two uploads at once, one hash per RAW, journal appends (one whole-journal upload
+  per run, then appends), an 8-RAW queue in a 2 GiB tmpfs, the receiver's lock only around
+  name checks and commits. Queue peaks of 2-3 at short exposures show uploads overlapping.
+- **K3.** Verdicts are collected between planes; a failed plane is visited again later
+  through the approach move. **D5 experiment** (`l11-return`, lab bridge): the same plane
+  taken twice reads 0.068 px apart, a revisit after three planes forward and the approach
+  back 0.17-0.28 px (sharpness 0.92-1.02), one plane on 0.38 px. A revisit lands within
+  about one step of the first visit, far inside the 50-113 units a point stays sharp over:
+  acceptable. A retake costs about 8.5 s.
+- **Checker fix.** On the plain subject `follow` asked to retake every group: its gate
+  judges what remains after the measured sub-photosite residual is subtracted, and that
+  residual was about 0.4 photosite off while the witness pairs themselves agreed to
+  0.05-0.15. A retake cannot fix the scene's estimate, so such groups are no longer
+  retaken; the render's gate is unchanged (`evidence/ec-e2e-before-fix.json`).
+- **Bug fixed.** Deleting a finished stack's folder on the PC left the Pi refusing to
+  connect (its recovery re-sent that run's journal and the receiver refused a missing
+  folder). Found when today's first connect failed after last night's cleanup.
+
+### Settle (K4) (MEASURED, interleaved 12-plane runs; the engine's group check)
+
+| Settle after the focus result | Groups passing | Witness shift, median (max) | Plane period |
+| --- | ---: | --- | ---: |
+| 500 ms | 45 of 48 (still house); 13 of 24 (owner walking) | 0.101 (0.205) px | 5.66-5.69 s |
+| 1000 ms | 45 of 48 | | 6.00-6.02 s |
+| 2000 ms | 48 of 48; 20 of 24 (walking) | 0.089 (0.168) px | 7.03-7.05 s |
+
+Up to about 550 ms the settle is hidden behind the last RAW's fetch. The default stays
+500 ms. ARGUED: with error correction on, the 6 % of groups a short settle misses cost
+about 0.5 s a plane in retakes, against 1.4 s a plane for a 2 s settle; without error
+correction, or with people moving about, 2000 ms is the safe choice.
+
+### Exposure floor (D6a) (MEASURED, ISO raised to keep the brightness, 8 planes each)
+
+| Exposure | ISO | Four-shot plane | Single-shot plane | Wire per RAW | RAW to PC |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 0.6 s | 100 | 5.67 s | 2.25 s | 47.5 MB | 1.11 s |
+| 1/6 s | 400 | 4.44 s | 1.79 s | 56.7 MB | 1.42 s |
+| 1/10 s | 640 | 4.32 s | 1.72 s | 59.8 MB | 1.53 s |
+| 1/25 s | 1600 | 4.29 s | 1.64 s | 67.3 MB | 2.03 s |
+
+Below about 1/6 s the camera's own cadence and the four fetches set the pace; at ISO 1600
+a four-shot plane puts 63 MB/s on the Wi-Fi, against the two-stream ceiling of 69 MB/s.
+The plane-time estimate (`timing::initial_plane`) now has that floor.
+
+## The focus step (D1, D2)
+
+`strehl focus-step` (MEASURED): the scarab stack's fine detail stays sharp over 113 units
+(10th-90th percentile 95-132), suggested step 16, twice the 8 it was taken at; 4.7 s for
+196 planes. The rig's pencil subject: 50 units (33-64), suggested 7. The ideal step
+differs by setup, which is why the Capture screen calibrates it: "Calibrate step" (25
+single RAWs, 61 s end to end through the control interface, survey deleted, pixel shift
+restored) and "Measure focus step" on a completed capture.
+
+**Thinning (numbers and proof only; nothing was deleted)** (`evidence/thinning-numbers.txt`,
+`thinning-proof.txt`):
+
+| Stack | Size | Planes at step | Sharp width | Suggested | Every 2nd plane keeps | Saves |
+| --- | ---: | --- | ---: | ---: | ---: | ---: |
+| scarab, four-shot | 51.2 GB | 196 at 8 | 113 | 16 | 98 planes | 25.6 GB |
+| scarab, single shot | 12.8 GB | 196 at 8 | 115 | 16 | 98 planes | 6.4 GB |
+| dark background, four-shot | 25.8 GB | 107 at 8 | 88 | 12 | (1.5 times finer than needed: not thinned) | 0 |
+| dark background, single | 6.4 GB | 107 at 8 | 86 | 12 | | 0 |
+
+Proof, renders from all planes against every second plane (detail energy where signal
+dominates, floor removed; flat-tile energy is noise):
+
+| Stack | Detail energy | Flat-tile energy (noise) | Crops at 200 % |
+| --- | --- | --- | --- |
+| scarab, four-shot (round-4 study) | 0.998-1.000 | 0.992-0.998 | same |
+| scarab, single shot | 1.000-1.004 | 0.989-0.995 | same |
+| dark stack (step 16, width 88: past the suggested step) | 1.006-1.014 | 1.019-1.069 (noise +1-3 % in amplitude) | same |
+
+## Compact (D3, D4)
+
+`strehl compact` (MEASURED on a hard-linked copy of the whole scarab stack; the capture
+itself was hash-checked unchanged): 784 files in 2 min 28 s, 51.2 GB to 18.6 GB; the dry
+run estimated 18.4 GB from four files in 1.4 s. Render from the compacted stack against the
+lossless one (`evidence/compact-scarab-render.txt`): noise amplitude within 0.05 %, detail
+energy 1.0000-1.0003, channel means within 3e-5; crops indistinguishable. First render
+46 s (empty cache, every file verified), later 21 s. The merge adds the quantiser's 7.7 %
+of variance to its noise model for compacted frames; every other render is unchanged
+(6/6 reference hashes, byte-freeze 5/5). In a compacted file the full-size JPEG's IFD
+points at the 1616 x 1080 preview and states its size (`compacted-jpeg-check.txt`).
+
+## Not built, and what is next
+
+- The last RAW of a group fetched during the next group's first exposure (5.65 s to about
+  5.1 s a plane); it crosses group boundaries in the bridge's binding.
+- `strehl thin` (F3 deletion): decision D2 asked for numbers only.
+- A3 (a better lossless predictor) and A2 (deleting groups superseded by retakes).
+- The render's gate on plain subjects: it demotes groups whose measured residual is off;
+  a render-quality question, not changed here.
+- The 8 CLI tests that need `STREHL_DEFECT`, `STREHL_M194G_BRIDGE_PRIVATE_OUTPUT` or
+  `STREHL_GREEN_PROBE_OUTPUT` fail in the plain harness, as before this round.
+
+## Files
+
+`ab-settle.py`, `ec-e2e.py`, `exposure-floor.py`, `calibrate-e2e.py`, `return-analyse.py`,
+`thinning-numbers.py`, `prove-thinning.ps1`, `compacted-jpeg-check.py`, `deploy.py`,
+`build-pi.sh`, `clean-runs.py` (deletes only named test runs made on 2026-11-20); the lab
+script `../capture-pipeline-2026-11-20/ptp-lab/l11-return.txt`; results in `evidence/`.

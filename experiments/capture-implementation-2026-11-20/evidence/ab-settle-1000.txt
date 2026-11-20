@@ -1,0 +1,4 @@
+settle 1000 ms: stack-1795199603473-3703  wall 75.4 s, plane period 6.00 s, 11/12 pass, witness shift max per plane 0.154 0.209 0.103 0.107 0.094 0.097 0.142 0.056 0.115 0.140 0.050 0.160
+settle 1000 ms: stack-1795199682597-3703  wall 75.7 s, plane period 6.02 s, 10/12 pass, witness shift max per plane 0.080 0.147 0.117 0.219 0.134 0.046 0.073 0.142 0.085 0.041 0.110 0.067
+settle 1000 ms: stack-1795199761896-3703  wall 75.6 s, plane period 6.02 s, 12/12 pass, witness shift max per plane 0.098 0.074 0.112 0.114 0.155 0.133 0.078 0.044 0.077 0.053 0.086 0.131
+settle 1000 ms: stack-1795199841298-3703  wall 75.7 s, plane period 6.02 s, 12/12 pass, witness shift max per plane 0.097 0.107 0.101 0.087 0.034 0.158 0.052 0.049 0.152 0.115 0.063 0.150

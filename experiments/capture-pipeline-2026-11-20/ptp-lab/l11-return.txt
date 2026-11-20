@@ -1,0 +1,83 @@
+# L11 (decision D5): does a plane revisited later, through the approach move, give the same
+# image as when it was first taken? Group at A, a second group at A without moving (the
+# measure's own noise), then three cycles of: three planes forward 8 units apart, back below
+# A by the approach (128) and up to A again, a group at A. RAWs kept for the PC.
+configure
+pixel-shift 4
+focus 40772 500
+focus 40900 500
+lab-keep on
+lab-mark a1
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw a1
+lab-sleep 500
+lab-mark a2
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw a2
+focus 40908 500
+lab-mark c1f1
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw c1f1
+focus 40916 500
+lab-mark c1f2
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw c1f2
+focus 40924 500
+lab-mark c1f3
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw c1f3
+focus 40772 500
+focus 40900 500
+lab-mark c1r
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw c1r
+focus 40908 500
+lab-mark c2f1
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw c2f1
+focus 40916 500
+lab-mark c2f2
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw c2f2
+focus 40924 500
+lab-mark c2f3
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw c2f3
+focus 40772 500
+focus 40900 500
+lab-mark c2r
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw c2r
+focus 40908 500
+lab-mark c3f1
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw c3f1
+focus 40916 500
+lab-mark c3f2
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw c3f2
+focus 40924 500
+lab-mark c3f3
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw c3f3
+focus 40772 500
+focus 40900 500
+lab-mark c3r
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw c3r
+lab-keep off
+status
