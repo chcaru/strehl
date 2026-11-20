@@ -1,6 +1,11 @@
 # A7CR four-shot stacking performance, round 3: the stones that are left
 
-**Status:** Investigation and plan (2026-11-19). Nothing in it is built.
+**Status:** Plan, partly built (2026-11-19, night): R2, the lateral-colour measurement
+(section 3.1's preview line) and C1 are on `main`; R1 was built, measured and not kept;
+C0 is still the owner's (the Pi sees no SuperSpeed device at all). Results:
+[implementation.md](../../experiments/a7cr-stacking-performance-2026-11-19/implementation.md).
+Owner's decisions: D1, D2 and D3 pocketed; D4 yes where it helps (measured: not on this
+machine); D5 answered by measurement (about 0.7 s a render).
 **Date:** 2026-11-19.
 **Owner's question:** what big performance stones are left unturned? Does running the
 engine from WSL give any lift? Better I/O? Anything else, including new algorithms?

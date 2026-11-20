@@ -1,0 +1,200 @@
+  0.219  build           : strehl 0.1.0-alpha.6 (30dec68eea42-dirty)
+  0.219  merge backend   : pyramid (default)
+  0.250  CA refinement   : PREVIEW pass over every 8th of 784 frames, measuring the lateral CA the profile leaves (default; --refine-ca=off skips it)
+  0.266  pixel shift     : REMOSAIC (STREHL_PIXEL_SHIFT) -- 196 focal planes: 196 four-shot groups assembled from measured channels at the gather, 0 single-shot, 0 incomplete (first durable member as an ordinary frame). Each group's offsets are measured; a group that fails is folded as its member 1 and reported.
+  0.266                    members' measured sub-photosite residuals COMPENSATED at the assembly (first order); the witness gate judges what compensation leaves (STREHL_PIXEL_SHIFT_RESIDUAL=compensate)
+  0.312  strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)
+  0.312  camera          : ILCE-7CR
+  0.312  lateral CA      : CORRECTING, profile "a7cr-fe100gm-2xtc" (gear matched; default on)
+  0.312  iso             : 100
+  0.312  levels          : black 512, white 15360
+  0.312  noise model     : PROVENANCE=Profile -- camera profile at ISO 100. Trustworthy for ranking.
+  0.312                    GAIN: anchored by a PHOTON-TRANSFER MEASUREMENT on signal (M25 fact 200,
+  0.312                    SYNTHESIS fact 550). The divisor was originally DERIVED by reproducing the
+  0.312                    camera's own white level, which checks one relation and is not a PTC; the
+  0.312                    PTC now exists and the relation survives it at true gain steps -- the ISO 160
+  0.312                    control measures 0.3273 DN/e- against the relation's 0.3663, 10.7% low.
+  0.312                    READ NOISE: not photon-transfer measured. DERIVED from dark frames, and below
+  0.312                    ISO 400 it carries a shape error `profile.rs` asserts rather than hides.
+  0.312                    This is a PROFILE, NOT A PER-BODY CALIBRATION: the constants describe the
+  0.312                    camera MODEL and nothing here was fitted from this stack. Below the profile's
+  0.312                    base ISO the sensor reads out at base-ISO gain (extended/pull ISO); that floor
+  0.312                    is measured, but the ISO at which it starts is not (SYNTHESIS question 126
+  0.312                    -- the corpus holds no ISO 64 or 80 capture).
+  0.312  defect map      : off (STREHL_DEFECT=off)
+  0.312  frames          : 196 from D:/StrehlCaptures/stack-1794786793543-11226  (first decode 0.05 s)
+  0.312  planes          : 4752 x 3168 per CFA plane
+  0.312  --- the merge ---
+  0.312  bands           : 7 Laplacian levels + 1 base, coarsest 38 x 25
+  0.312  selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+  0.312                    Sign coherence is free: a convex combination cannot take adjacent
+  0.312                    coefficients from opposite-signed frames, which is the ringing a
+  0.312                    coefficient-wise argmax produces.
+  0.312  noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+  0.312                    merge averages -- which is the correct estimator when there is no
+  0.312                    information, and the only operation that gets below single-frame noise.
+  0.312  ensemble gate   : ON -- a coefficient selects only where the stack as a whole shows signal (one
+  0.312                    frame dominating the rest, or detail adding coherently across
+  0.312                    frames); elsewhere it is the plain mean of every frame.
+  0.312                    STREHL_PYRAMID_ENSEMBLE=0 turns it off.
+  0.312  pooled evidence : ON -- each band selects on its own and every finer band's energy, so coarse bands
+  0.312                    follow the frames that are in focus there instead of a defocused frame's
+  0.312                    spread light. STREHL_PYRAMID_POOLED_EVIDENCE=0 turns it off.
+  0.312  pooled ratio    : 2.00 -- each finer level counts this many times its next coarser one (STREHL_PYRAMID_POOLED_RATIO).
+  0.312  exponent        : 4.00
+  0.312  per-band exp    : 4 6 8 8 8 8 8   (coarsest -> finest)
+  0.312                    sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+  0.312                    fine band is one high-frequency coefficient nobody can see; a wrong pick
+  0.312                    in a coarse band IS the rim.
+  0.312  base band       : weighted by the coarsest band's weight, reduced once onto the base grid
+  0.312  not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+  0.312                    statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+  0.312  alignment       : ON (sidecar), reference frame 98, 196 placed / 0 refused, 0.0 s
+  0.312    held-out err  : 3.307 px   resampler: CatmullRom
+  0.312    coverage      : field of view scaled to 0.9827 so that EVERY frame covers every pixel (1.7% of width dropped, then upsampled to keep the output dimensions).
+  0.312  memory plan     : 2 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 32 execution threads
+  0.312                    CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+  0.312                    the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+  0.312                    2 frame(s) prepared ahead in parallel and folded in index order (STREHL_PYRAMID_LOOKAHEAD=1 is serial).
+  0.719  gpu fold        : ON, NVIDIA GeForce RTX 5090 (2364 MB device memory); bit-identical to the CPU fold
+  0.719                    preparation: GPU (gather, probe, extraction, variance)
+  0.766  depth energies  : on the device (STREHL_DEPTH_DEVICE=off measures them on the CPU)
+  0.766  decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+  2.734  archive checks  : 0 decodes verified against their SHA-256 (and recorded), 101 vouched for by a transfer receipt or an earlier verification (STREHL_ARCHIVE_VERIFY=always verifies every decode)
+  2.734  file reads      : 8 from the file cache, 32 from the drive unbuffered, 0 buffered; 2.6 GB, 3.7 reader-seconds (STREHL_READ_MODE)
+  2.766  reference crops : 643 candidate tiles predicted from the preview's 25 frames, to be captured during the fold
+  2.766  
+  2.766  folded          : 25 / 196 frames in 2.4 s (0.10 s per frame, 32 execution threads)
+  2.766  band noise gain : 0.8898 0.0529 0.0101 0.0024 0.0006 0.0001 0.0000 0.0000
+  2.766                    (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+  2.766  measured floor  : 1.0661 0.0505 0.0102 0.0024
+  2.766                    x white       : 1.1982 0.9540 1.0070 1.0324
+  2.766                    THE FLOOR THE GATE ACTUALLY USED, averaged over 25 warped
+  2.766    frames. The line above it is the white-noise constant, which is
+  2.766    exact only for an UNWARPED frame; resampling correlates neighbours
+  2.766                    and moves the per-band split. Bands past this list kept the constant.
+  2.766                    STREHL_GATE_FLOOR=white restores it everywhere.
+  2.766  averaged        : 13.0% 6.4% 0.0% 0.0% 0.0% 0.0% 0.0% 0.0%
+  2.766                    per level, the fraction of coefficients where NO frame cleared the noise
+  2.766                    floor and the merge therefore averaged instead of selecting. Near 0%
+  2.766                    everywhere would mean the gate is not gating and this is a naive
+  2.766                    pyramid stacker.
+  2.766  
+  3.047  ensemble band 0 : 11.4% of coefficients averaged, mean selection 0.882; null measured -- dominance 4.60..6.09, coherence 2.24..2.93, wide 1.247..1.343
+  3.047  ensemble band 1 : 1.2% of coefficients averaged, mean selection 0.985; null measured -- dominance 3.61..4.47, coherence 2.33..3.07, wide 1.283..1.378
+  3.047  ensemble band 2 : 0.0% of coefficients averaged, mean selection 1.000; null measured -- dominance 3.76..4.73, coherence 2.38..3.13, wide 1.302..1.431
+  3.047  ensemble band 3 : 0.0% of coefficients averaged, mean selection 1.000; null measured -- dominance 3.83..4.76, coherence 2.39..3.12, wide 1.289..1.386
+  3.047  ensemble band 4 : 0.0% of coefficients averaged, mean selection 1.000; null measured -- dominance 3.87..4.81, coherence 2.36..3.13, wide 1.288..1.368
+  3.047  ensemble band 5 : 0.0% of coefficients averaged, mean selection 1.000; null measured -- dominance 3.82..4.46, coherence 2.44..3.03, wide 1.302..1.391
+  3.047  ensemble band 6 : 0.0% of coefficients averaged, mean selection 1.000; null measured -- dominance 3.60..4.20, coherence 2.42..3.00, wide 1.252..1.337
+  3.750  collapse+write  : 1.0 s
+  3.750  total           : 3.5 s
+  3.750  group journal   : 25 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\Users\chris\AppData\Local\strehl\warpmaps\groups\stack-1794786793543-11226-356a223479e6af49.jsonl)
+  3.750  CA refinement   : measured red t (-0.092, -0.115) px, scale -12.6 ppm (688 of 694 tiles, rms 0.217 px)
+  3.750                    measured blue t (+0.039, +0.245) px, scale -34.2 ppm (689 of 694 tiles, rms 0.111 px)
+  3.750                    APPLIED on top of the profile for the render below
+  3.781  pixel shift     : REMOSAIC (STREHL_PIXEL_SHIFT) -- 196 focal planes: 196 four-shot groups assembled from measured channels at the gather, 0 single-shot, 0 incomplete (first durable member as an ordinary frame). Each group's offsets are measured; a group that fails is folded as its member 1 and reported.
+  3.781                    members' measured sub-photosite residuals COMPENSATED at the assembly (first order); the witness gate judges what compensation leaves (STREHL_PIXEL_SHIFT_RESIDUAL=compensate)
+  3.812  strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)
+  3.812  camera          : ILCE-7CR
+  3.812  lateral CA      : CORRECTING, profile "a7cr-fe100gm-2xtc" (gear matched; default on)
+  3.812  iso             : 100
+  3.812  levels          : black 512, white 15360
+  3.812  noise model     : PROVENANCE=Profile -- camera profile at ISO 100. Trustworthy for ranking.
+  3.812                    GAIN: anchored by a PHOTON-TRANSFER MEASUREMENT on signal (M25 fact 200,
+  3.812                    SYNTHESIS fact 550). The divisor was originally DERIVED by reproducing the
+  3.812                    camera's own white level, which checks one relation and is not a PTC; the
+  3.812                    PTC now exists and the relation survives it at true gain steps -- the ISO 160
+  3.812                    control measures 0.3273 DN/e- against the relation's 0.3663, 10.7% low.
+  3.812                    READ NOISE: not photon-transfer measured. DERIVED from dark frames, and below
+  3.812                    ISO 400 it carries a shape error `profile.rs` asserts rather than hides.
+  3.812                    This is a PROFILE, NOT A PER-BODY CALIBRATION: the constants describe the
+  3.812                    camera MODEL and nothing here was fitted from this stack. Below the profile's
+  3.812                    base ISO the sensor reads out at base-ISO gain (extended/pull ISO); that floor
+  3.812                    is measured, but the ISO at which it starts is not (SYNTHESIS question 126
+  3.812                    -- the corpus holds no ISO 64 or 80 capture).
+  3.812  defect map      : off (STREHL_DEFECT=off)
+  3.812  colour carry    : ON (default for pixel-shift stacks; to be confirmed on a second subject) -- every site's red, green and blue gathered (measured for a pixel-shift group, Malvar otherwise) and merged as 12 planes on one green election; written as full-resolution RGB with no second demosaic; red and blue = green + their difference from green smoothed at 1 px
+  3.812  optical restore : ON by default for pixel-shift stacks with colour carry (to be confirmed on a second subject; STREHL_OPTICAL_RESTORE=off disables it)
+  3.812  frames          : 196 from D:/StrehlCaptures/stack-1794786793543-11226  (first decode 0.03 s)
+  3.812  planes          : 4752 x 3168 per CFA plane
+  3.812  --- the merge ---
+  3.812  bands           : 7 Laplacian levels + 1 base, coarsest 38 x 25
+  3.812  selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+  3.812                    Sign coherence is free: a convex combination cannot take adjacent
+  3.812                    coefficients from opposite-signed frames, which is the ringing a
+  3.812                    coefficient-wise argmax produces.
+  3.812  noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+  3.812                    merge averages -- which is the correct estimator when there is no
+  3.812                    information, and the only operation that gets below single-frame noise.
+  3.812  ensemble gate   : ON -- a coefficient selects only where the stack as a whole shows signal (one
+  3.812                    frame dominating the rest, or detail adding coherently across
+  3.812                    frames); elsewhere it is the plain mean of every frame.
+  3.812                    STREHL_PYRAMID_ENSEMBLE=0 turns it off.
+  3.812  pooled evidence : ON -- each band selects on its own and every finer band's energy, so coarse bands
+  3.812                    follow the frames that are in focus there instead of a defocused frame's
+  3.812                    spread light. STREHL_PYRAMID_POOLED_EVIDENCE=0 turns it off.
+  3.812  pooled ratio    : 2.00 -- each finer level counts this many times its next coarser one (STREHL_PYRAMID_POOLED_RATIO).
+  3.812  exponent        : 4.00
+  3.812  per-band exp    : 4 6 8 8 8 8 8   (coarsest -> finest)
+  3.812                    sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+  3.812                    fine band is one high-frequency coefficient nobody can see; a wrong pick
+  3.812                    in a coarse band IS the rim.
+  3.812  base band       : weighted by the coarsest band's weight, reduced once onto the base grid
+  3.812  not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+  3.812                    statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+  3.812  alignment       : ON (sidecar), reference frame 98, 196 placed / 0 refused, 0.0 s
+  3.812    held-out err  : 3.307 px   resampler: CatmullRom
+  3.812    coverage      : field of view scaled to 0.9827 so that EVERY frame covers every pixel (1.7% of width dropped, then upsampled to keep the output dimensions).
+  3.812  memory plan     : 1 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 32 execution threads
+  3.812                    CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+  3.812                    the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+  3.812                    2 frame(s) prepared ahead in parallel and folded in index order (STREHL_PYRAMID_LOOKAHEAD=1 is serial).
+  3.875  gpu fold        : ON, NVIDIA GeForce RTX 5090 (5121 MB device memory); bit-identical to the CPU fold
+  3.875                    preparation: GPU (gather, probe, extraction, variance)
+  3.875                    two half-stack accumulators on the device (8734 MB in all)
+  3.875  depth energies  : on the device (STREHL_DEPTH_DEVICE=off measures them on the CPU)
+  3.875  decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+  9.922  pixel shift     : frame 137 demoted to member 1: witness tiles disagree locally (p99/median z^2 5.82): motion, a focus slip or a wrong member
+ 13.531  archive checks  : 0 decodes verified against their SHA-256 (and recorded), 782 vouched for by a transfer receipt or an earlier verification (STREHL_ARCHIVE_VERIFY=always verifies every decode)
+ 13.531  file reads      : 52 from the file cache, 724 from the drive unbuffered, 0 buffered; 50.7 GB, 27.1 reader-seconds (STREHL_READ_MODE)
+ 13.609  depth map       : measured during the fold for the optical restoration's in-focus tiles (594 x 396 cells of 8 plane px from 196 placed frames, 9.8 s since the fold began); fusion off
+ 13.625  reference crops : 373 of the planned tiles' reference crops captured during the fold (4501 captured from the preview's prediction; STREHL_REFERENCE_CAPTURE=off gathers them all again)
+ 14.375  half-stacks     : alternate folded frames finished separately for the optical              restoration's noise measurement (0.8 s)
+ 14.859  reference tiles : 10 frames gathered again over the rows and columns of the optical restoration's in-focus tiles (1.2 s; 1.5 slot-seconds, 0.8 of them decoding rows)
+ 14.859  
+ 14.859  folded          : 196 / 196 frames in 11.0 s (0.06 s per frame, 32 execution threads)
+ 14.859  band noise gain : 0.8898 0.0529 0.0101 0.0024 0.0006 0.0001 0.0000 0.0000
+ 14.859                    (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+ 14.859  measured floor  : 1.0662 0.0505 0.0102 0.0024
+ 14.859                    x white       : 1.1983 0.9539 1.0066 1.0297
+ 14.859                    THE FLOOR THE GATE ACTUALLY USED, averaged over 196 warped
+ 14.859    frames. The line above it is the white-noise constant, which is
+ 14.859    exact only for an UNWARPED frame; resampling correlates neighbours
+ 14.859                    and moves the per-band split. Bands past this list kept the constant.
+ 14.859                    STREHL_GATE_FLOOR=white restores it everywhere.
+ 14.859  averaged        : 12.7% 5.5% 0.0% 0.0% 0.0% 0.0% 0.0% 0.0%
+ 14.859                    per level, the fraction of coefficients where NO frame cleared the noise
+ 14.859                    floor and the merge therefore averaged instead of selecting. Near 0%
+ 14.859                    everywhere would mean the gate is not gating and this is a naive
+ 14.859                    pyramid stacker.
+ 14.859  
+ 15.203  ensemble band 0 : 2.8% of coefficients averaged, mean selection 0.966; null measured -- dominance 5.63..7.01, coherence 2.31..3.03, wide 1.267..1.361
+ 15.203  ensemble band 1 : 0.0% of coefficients averaged, mean selection 1.000; null measured -- dominance 4.19..5.03, coherence 2.38..3.10, wide 1.289..1.413
+ 15.203  ensemble band 2 : 0.0% of coefficients averaged, mean selection 1.000; null measured -- dominance 4.40..5.29, coherence 2.41..3.23, wide 1.293..1.389
+ 15.203  ensemble band 3 : 0.0% of coefficients averaged, mean selection 1.000; null measured -- dominance 4.46..5.37, coherence 2.44..3.25, wide 1.283..1.403
+ 15.203  ensemble band 4 : 0.0% of coefficients averaged, mean selection 1.000; null measured -- dominance 4.42..5.40, coherence 2.48..3.43, wide 1.297..1.410
+ 15.203  ensemble band 5 : 0.0% of coefficients averaged, mean selection 1.000; null measured -- dominance 4.45..5.09, coherence 2.49..3.09, wide 1.312..1.401
+ 15.203  ensemble band 6 : 0.0% of coefficients averaged, mean selection 1.000; null measured -- dominance 4.22..4.83, coherence 2.36..2.94, wide 1.258..1.343
+ 17.187  optical restore : ON (default for pixel-shift stacks) -- target Gaussian sigma 0.70 px, Wiener against the measured noise, gain cap 8, square-root domain
+ 17.187                    200 in-focus tiles of 256 px (200 planned; 0 missing a reference frame, 0 near clipping): halves' signal and noise, reference = the two frames at each tile's focus
+ 17.187                    R: cutoff 0.556 cycles/px (fitted 0.580, cube-root 0.535, fit rms 0.0012); blend transfer at 0.2/0.3/0.4 0.86/0.84/0.84; system -> restored (target) MTF at 0.2/0.3/0.4 0.45->0.67 (0.68) 0.25->0.40 (0.42) 0.11->0.17 (0.21); kernel radius 32 delivers 0.973 of the designed gain in 0.25-0.40 cycles/px (worst 0.028 of the peak gain there, 0.059 anywhere)
+ 17.187                    G: cutoff 0.624 cycles/px (fitted 0.580, cube-root 0.560, fit rms 0.0004); blend transfer at 0.2/0.3/0.4 0.95/0.88/0.88; system -> restored (target) MTF at 0.2/0.3/0.4 0.54->0.68 (0.68) 0.31->0.41 (0.42) 0.16->0.19 (0.21); kernel radius 32 delivers 0.957 of the designed gain in 0.25-0.40 cycles/px (worst 0.043 of the peak gain there, 0.043 anywhere)
+ 17.187                    B: cutoff 0.718 cycles/px (fitted 0.844, cube-root -, fit rms 0.0001); blend transfer at 0.2/0.3/0.4 0.89/0.83/0.83; system -> restored (target) MTF at 0.2/0.3/0.4 0.54->0.67 (0.68) 0.34->0.39 (0.42) 0.21->0.15 (0.21); kernel radius 32 delivers 0.940 of the designed gain in 0.25-0.40 cycles/px (worst 0.060 of the peak gain there, 0.061 anywhere)
+ 17.187                    cutoffs R/G/B 0.556/0.624/0.718: one aperture fitted to all three reference channels (relative residual 0.0015; diffraction ratios from nominal wavelengths 600/535/465 nm); highlight guard covers 0.00% of the frame; 1.8 s
+ 17.469  
+ 17.469  wrote           : outputs/r-impl/tl.tif (9504 x 6336, 16-bit RGB, linear camera-native RGB, colour carried through the merge, no demosaic, optically restored)
+ 17.469  collapse+write  : 2.6 s
+ 17.469  total           : 13.7 s
+ 17.469  group journal   : 171 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\Users\chris\AppData\Local\strehl\warpmaps\groups\stack-1794786793543-11226-356a223479e6af49.jsonl)
+ 17.812  exit 0

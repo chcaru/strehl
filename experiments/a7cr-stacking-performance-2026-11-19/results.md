@@ -50,6 +50,17 @@ The traces were taken with round 2's
 [`trace.py`](../a7cr-stacking-performance-2026-11-18/trace.py), which now also records
 the process's page faults, other I/O operations and bytes written.
 
+## Round 3, implemented (same night)
+
+[`implementation.md`](implementation.md) holds the stages built after the owner's
+direction and what they measured. Its evidence: `evidence/implementation-runs.txt`
+(every render), `evidence/timeline-*.txt` (engine logs with a timestamp per line, from
+`outputs`' `timeline.py`), `evidence/usb-link-2026-11-19.txt` (the Pi's USB state, port
+registers and the link warning live). Its Pi scripts: `pi-now.py` and
+`port-registers.py` (read-only; the second as root, for debugfs), `camera-on-check.py`
+(powers the camera on through the controller, reads its link, powers it off; the light
+stays off).
+
 ## What was removed afterwards
 
 The WSL toolchain and build, the 24-plane and whole-stack copies on C:, and the

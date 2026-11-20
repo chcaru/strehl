@@ -1,0 +1,183 @@
+# 2026-11-19 ~21:45 local, after the owner restarted the Pi and re-plugged the camera's USB cable
+# pi-now.py (read-only): devices, root-hub port states, this boot's USB kernel lines
+uptime: 961.61 s
+kernel: Linux version 6.18.50+rpt-rpi-2712 (serge@raspberrypi.com) (aarch64-linux-gnu-gcc-14 (Debian 14.2.0-19) 14.2.0, GNU ld (
+-- devices now (sysfs): path, speed Mbit/s, vendor:product, product
+  1-1 12 054c:0d68 USB Bus-powered Device
+  4-1 5000 0e8d:7961 Wireless_Device
+  usb1 480 1d6b:0002 xHCI Host Controller
+  usb2 5000 1d6b:0003 xHCI Host Controller
+  usb3 480 1d6b:0002 xHCI Host Controller
+  usb4 5000 1d6b:0003 xHCI Host Controller
+-- root hub ports: link state / disable / connect_type
+  usb1-port1 state=configured disable=0 connect_type=unknown over_current=0 early_stop=no quirks=00000000 usb3_lpm=
+  usb1-port2 state=not attached disable=0 connect_type=unknown over_current=0 early_stop=no quirks=00000000 usb3_lpm=
+  usb2-port1 state=not attached disable=0 connect_type=unknown over_current=0 early_stop=no quirks=00000000 usb3_lpm=u1_u2
+  usb3-port1 state=not attached disable=0 connect_type=unknown over_current=0 early_stop=no quirks=00000000 usb3_lpm=
+  usb3-port2 state=not attached disable=0 connect_type=unknown over_current=0 early_stop=no quirks=00000000 usb3_lpm=
+  usb4-port1 state=configured disable=0 connect_type=unknown over_current=0 early_stop=no quirks=00000000 usb3_lpm=u1_u2
+-- dmesg usb/xhci lines this boot: 64
+  [Fri Nov 20 05:29:44 2026] Kernel command line: reboot=w coherent_pool=1M 8250.nr_uarts=1 pci=pcie_bus_safe cgroup_disable=memory numa_policy=interleave nvme.max_host_mem_size_mb=32  numa=fake=4 syste
+  [Fri Nov 20 05:29:44 2026] usbcore: registered new interface driver usbfs
+  [Fri Nov 20 05:29:44 2026] usbcore: registered new interface driver hub
+  [Fri Nov 20 05:29:44 2026] usbcore: registered new device driver usb
+  [Fri Nov 20 05:29:44 2026] usbcore: registered new interface driver lan78xx
+  [Fri Nov 20 05:29:44 2026] usbcore: registered new interface driver smsc95xx
+  [Fri Nov 20 05:29:44 2026] usbcore: registered new interface driver uas
+  [Fri Nov 20 05:29:44 2026] usbcore: registered new interface driver usb-storage
+  [Fri Nov 20 05:29:44 2026] usbcore: registered new interface driver usbhid
+  [Fri Nov 20 05:29:44 2026] usbhid: USB HID core driver
+  [Fri Nov 20 05:29:44 2026] xhci-hcd xhci-hcd.0: xHCI Host Controller
+  [Fri Nov 20 05:29:44 2026] xhci-hcd xhci-hcd.0: new USB bus registered, assigned bus number 1
+  [Fri Nov 20 05:29:44 2026] xhci-hcd xhci-hcd.0: hcc params 0x0240fe6d hci version 0x110 quirks 0x0000808000000810
+  [Fri Nov 20 05:29:44 2026] xhci-hcd xhci-hcd.0: irq 130, io mem 0x1f00200000
+  [Fri Nov 20 05:29:44 2026] xhci-hcd xhci-hcd.0: xHCI Host Controller
+  [Fri Nov 20 05:29:44 2026] xhci-hcd xhci-hcd.0: new USB bus registered, assigned bus number 2
+  [Fri Nov 20 05:29:44 2026] xhci-hcd xhci-hcd.0: Host supports USB 3.0 SuperSpeed
+  [Fri Nov 20 05:29:44 2026] usb usb1: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 6.18
+  [Fri Nov 20 05:29:44 2026] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+  [Fri Nov 20 05:29:44 2026] usb usb1: Product: xHCI Host Controller
+  [Fri Nov 20 05:29:44 2026] usb usb1: Manufacturer: Linux 6.18.50+rpt-rpi-2712 xhci-hcd
+  [Fri Nov 20 05:29:44 2026] usb usb1: SerialNumber: xhci-hcd.0
+  [Fri Nov 20 05:29:44 2026] hub 1-0:1.0: USB hub found
+  [Fri Nov 20 05:29:44 2026] usb usb2: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice= 6.18
+  [Fri Nov 20 05:29:44 2026] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+  [Fri Nov 20 05:29:44 2026] usb usb2: Product: xHCI Host Controller
+  [Fri Nov 20 05:29:44 2026] usb usb2: Manufacturer: Linux 6.18.50+rpt-rpi-2712 xhci-hcd
+  [Fri Nov 20 05:29:44 2026] usb usb2: SerialNumber: xhci-hcd.0
+  [Fri Nov 20 05:29:44 2026] hub 2-0:1.0: USB hub found
+  [Fri Nov 20 05:29:44 2026] xhci-hcd xhci-hcd.1: xHCI Host Controller
+  [Fri Nov 20 05:29:44 2026] xhci-hcd xhci-hcd.1: new USB bus registered, assigned bus number 3
+  [Fri Nov 20 05:29:44 2026] xhci-hcd xhci-hcd.1: hcc params 0x0240fe6d hci version 0x110 quirks 0x0000808000000810
+  [Fri Nov 20 05:29:44 2026] xhci-hcd xhci-hcd.1: irq 135, io mem 0x1f00300000
+  [Fri Nov 20 05:29:44 2026] xhci-hcd xhci-hcd.1: xHCI Host Controller
+  [Fri Nov 20 05:29:44 2026] xhci-hcd xhci-hcd.1: new USB bus registered, assigned bus number 4
+  [Fri Nov 20 05:29:44 2026] xhci-hcd xhci-hcd.1: Host supports USB 3.0 SuperSpeed
+  [Fri Nov 20 05:29:44 2026] usb usb3: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 6.18
+  [Fri Nov 20 05:29:44 2026] usb usb3: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+  [Fri Nov 20 05:29:44 2026] usb usb3: Product: xHCI Host Controller
+  [Fri Nov 20 05:29:44 2026] usb usb3: Manufacturer: Linux 6.18.50+rpt-rpi-2712 xhci-hcd
+  [Fri Nov 20 05:29:44 2026] usb usb3: SerialNumber: xhci-hcd.1
+  [Fri Nov 20 05:29:44 2026] hub 3-0:1.0: USB hub found
+  [Fri Nov 20 05:29:44 2026] usb usb4: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice= 6.18
+  [Fri Nov 20 05:29:44 2026] usb usb4: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+  [Fri Nov 20 05:29:44 2026] usb usb4: Product: xHCI Host Controller
+  [Fri Nov 20 05:29:44 2026] usb usb4: Manufacturer: Linux 6.18.50+rpt-rpi-2712 xhci-hcd
+  [Fri Nov 20 05:29:44 2026] usb usb4: SerialNumber: xhci-hcd.1
+  [Fri Nov 20 05:29:44 2026] hub 4-0:1.0: USB hub found
+  [Fri Nov 20 05:29:45 2026] usb 1-1: new full-speed USB device number 2 using xhci-hcd
+  [Fri Nov 20 05:29:45 2026] usb 4-1: new SuperSpeed USB device number 2 using xhci-hcd
+  [Fri Nov 20 05:29:45 2026] usb 4-1: New USB device found, idVendor=0e8d, idProduct=7961, bcdDevice= 1.00
+  [Fri Nov 20 05:29:45 2026] usb 4-1: New USB device strings: Mfr=2, Product=3, SerialNumber=4
+  [Fri Nov 20 05:29:45 2026] usb 4-1: Product: Wireless_Device
+  [Fri Nov 20 05:29:45 2026] usb 4-1: Manufacturer: MediaTek Inc.
+  [Fri Nov 20 05:29:45 2026] usb 4-1: SerialNumber: 000000000
+  [Fri Nov 20 05:29:45 2026] usb 1-1: New USB device found, idVendor=054c, idProduct=0d68, bcdDevice= 1.00
+  [Fri Nov 20 05:29:45 2026] usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+  [Fri Nov 20 05:29:45 2026] usb 1-1: Product: USB Bus-powered Device
+  [Fri Nov 20 05:29:45 2026] usb 1-1: Manufacturer: Sony
+  [Fri Nov 20 05:29:45 2026] input: Sony USB Bus-powered Device as /devices/platform/axi/1000120000.pcie/1f00200000.usb/xhci-hcd.0/usb1/1-1/1-1:1.0/0003:054C:0D68.0001/input/input1
+  [Fri Nov 20 05:29:45 2026] hid-generic 0003:054C:0D68.0001: input,hidraw0: USB HID v1.11 Device [Sony USB Bus-powered Device] on usb-xhci-hcd.0-1/input0
+  [Fri Nov 20 05:29:47 2026] usbcore: registered new interface driver brcmfmac
+  [Fri Nov 20 05:29:48 2026] usb 4-1: reset SuperSpeed USB device number 2 using xhci-hcd
+  [Fri Nov 20 05:29:48 2026] usbcore: registered new interface driver mt7921u
+
+
+# camera-on-check.py: camera powered on through the controller, its sysfs speed, then off
+21:46:16 before | phase disconnected connected False busy False manage_stack False camera False 0.0 W light False 0.0 W | Connect your A7C II in USB Remote Shoot mode.
+21:46:16 camera power requested | phase disconnected connected False busy True manage_stack False camera False 0.0 W light False 0.0 W | Connect your A7C II in USB Remote Shoot mode.
+21:46:23 connected | phase ready connected True busy False manage_stack False camera True 0.0 W light False 0.0 W | Connected � A7CR four-shot pixel shift saves to the PC
+sysfs 1-1 480 Mbit/s 0e88 ILCE-7CR version 2.10 bMaxPower 500mA power/control on
+   [Fri Nov 20 05:46:18 2026] usb 1-1: new full-speed USB device number 3 using xhci-hcd
+   [Fri Nov 20 05:46:18 2026] usb 1-1: New USB device found, idVendor=054c, idProduct=0d68, bcdDevice= 1.00
+   [Fri Nov 20 05:46:18 2026] usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+   [Fri Nov 20 05:46:18 2026] usb 1-1: Product: USB Bus-powered Device
+   [Fri Nov 20 05:46:18 2026] usb 1-1: Manufacturer: Sony
+   [Fri Nov 20 05:46:18 2026] input: Sony USB Bus-powered Device as /devices/platform/axi/1000120000.pcie/1f00200000.usb/xhci-hcd.0/usb1/1-1/1-1:1.0/0003:054C:0D68.0002/input/input6
+   [Fri Nov 20 05:46:18 2026] hid-generic 0003:054C:0D68.0002: input,hidraw0: USB HID v1.11 Device [Sony USB Bus-powered Device] on usb-xhci-hcd.0-1/input0
+   [Fri Nov 20 05:46:21 2026] usb 1-1: USB disconnect, device number 3
+   [Fri Nov 20 05:46:23 2026] usb 1-1: new high-speed USB device number 4 using xhci-hcd
+   [Fri Nov 20 05:46:23 2026] usb 1-1: New USB device found, idVendor=054c, idProduct=0e88, bcdDevice= 1.00
+   [Fri Nov 20 05:46:23 2026] usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+   [Fri Nov 20 05:46:23 2026] usb 1-1: Product: ILCE-7CR
+   [Fri Nov 20 05:46:23 2026] usb 1-1: Manufacturer: Sony
+   [Fri Nov 20 05:46:23 2026] usb 1-1: SerialNumber: D12EB014C7E8
+21:46:24 manage power re-enabled | phase ready connected True busy False manage_stack True camera True 0.0 W light False 0.0 W | Connected � A7CR four-shot pixel shift saves to the PC
+21:46:24 after | phase disconnected connected False busy False manage_stack True camera False 0.0 W light False 0.0 W | Camera shut down � supply off
+
+
+# port-registers.py (root, debugfs): xHCI PORTSC with the camera on; packages, controller deploys
+21:48:36 before | phase disconnected connected False manage_stack True camera False light False
+21:48:43 connected | phase ready connected True manage_stack True camera True light False
+   xhci-hcd.0/ports/port01/portsc 0x00000e03 Powered Connected Enabled Link:U0 PortSpeed:3 Change: Wake:
+   xhci-hcd.0/ports/port02/portsc 0x000002a0 Powered Not-connected Disabled Link:RxDetect PortSpeed:0 Change: Wake:
+   xhci-hcd.0/ports/port03/portsc 0x0a0002a0 Powered Not-connected Disabled Link:RxDetect PortSpeed:0 Change: Wake: WCE WOE
+   xhci-hcd.1/ports/port01/portsc 0x0a0002a0 Powered Not-connected Disabled Link:RxDetect PortSpeed:0 Change: Wake: WCE WOE
+   xhci-hcd.1/ports/port02/portsc 0x0a0002a0 Powered Not-connected Disabled Link:RxDetect PortSpeed:0 Change: Wake: WCE WOE
+   xhci-hcd.1/ports/port03/portsc 0x00001203 Powered Connected Enabled Link:U0 PortSpeed:4 Change: Wake:
+  sysfs 1-1 480 0e88 ILCE-7CR
+-- modprobe.d / udev rules mentioning usb
+   /etc/udev/rules.d/70-strehl-camera.rules | SUBSYSTEM=="usb", ATTR{idVendor}=="054c", MODE="0660", GROUP="plugdev"
+-- config.txt usb/otg/current lines
+   # Enable host mode on the 2711 built-in XHCI USB controller.
+   # This line should be removed if the legacy DWC2 controller is required
+   # (e.g. for USB device mode) or if USB support is not required.
+   otg_mode=1
+   dtoverlay=dwc2,dr_mode=host
+-- apt/dpkg 13-16 Nov
+   Start-Date: 2026-11-12  05:31:42
+   Commandline: apt-get install -y iperf3
+   Install: libiperf0:arm64 (3.18-2+deb13u2, automatic), libsctp1:arm64 (1.0.21+dfsg-1, automatic), iperf3:arm64 (3.18-2+deb13u2)
+-- /root and /opt/strehl-capture entries (mtime)
+   2026-07-17 18:05:00 BST /root/.bashrc
+   2026-07-17 18:05:00 BST /root/.profile
+   2026-10-06 01:19:14 BST /root/.ssh
+   2026-11-12 06:44:05 GMT /root/Camera Remote SDK
+   2026-11-13 05:06:30 GMT /root/strehl-edup-20261112
+   2026-11-13 05:59:59 GMT /root/strehl-transport-20261112
+   2026-11-13 23:10:24 GMT /root/strehl-a7cr-20261113
+   2026-11-14 02:18:57 GMT /root/strehl-controls-1794622736
+   2026-11-14 02:34:50 GMT /root/strehl-controls-1794623689
+   2026-11-14 08:49:51 GMT /root/strehl-controls-1794646189
+   2026-11-19 05:37:01 GMT /root/strehl-studio-power-1795066619
+   2026-11-19 05:45:59 GMT /root/strehl-studio-power-1795067157
+   2026-11-19 05:50:36 GMT /root/strehl-studio-power-1795067434
+   2026-11-19 05:56:16 GMT /root/strehl-studio-power-1795067775
+   2026-11-19 06:25:26 GMT /root/strehl-before-stack-schedule-1795069525
+   2026-11-19 06:31:00 GMT /root/strehl-before-stack-schedule-1795069859
+   2026-11-19 17:15:18 GMT /root/strehl-before-error-correction-1795108517
+   2026-11-12 04:06:51 GMT /opt/strehl-capture/CrAdapter
+   2026-11-12 04:06:51 GMT /opt/strehl-capture/libCr_Core.so
+   2026-11-12 04:06:52 GMT /opt/strehl-capture/sony-sdk-notices.md
+   2026-11-12 04:06:52 GMT /opt/strehl-capture/libmonitor_protocol.so
+   2026-11-12 04:06:52 GMT /opt/strehl-capture/libmonitor_protocol_pf.so
+   2026-11-12 05:53:14 GMT /opt/strehl-capture/before-overlap-20261111
+   2026-11-12 06:15:27 GMT /opt/strehl-capture/strehl-sony-control
+   2026-11-12 06:15:27 GMT /opt/strehl-capture/before-final-status-20261111
+   2026-11-19 05:56:15 GMT /opt/strehl-capture/strehl-sony-ptp
+   2026-11-19 17:15:18 GMT /opt/strehl-capture/strehl-capture-headless
+
+21:48:46 after | phase disconnected connected False manage_stack True camera False light False
+
+# After installing the C1 controller: the warning, live
+23:46:37 before | phase disconnected connected False busy False manage_stack False camera False 0.0 W light False 0.0 W | usb None | Connect your A7C II in USB Remote Shoot mode.
+23:46:37 camera power requested | phase disconnected connected False busy True manage_stack False camera False 0.0 W light False 0.0 W | usb None | Connect your A7C II in USB Remote Shoot mode.
+23:46:45 connected | phase ready connected True busy False manage_stack False camera True 3.9 W light False 0.0 W | usb 480 | Connected · A7CR four-shot pixel shift saves to the PC · Slow camera link: USB 480 Mbit/s, not USB 3. Each RAW reaches the Pi several times slower and a plane takes about twice as long. Push the cable fully into a blue port and the camera, or use a USB 3 data cable
+sysfs 1-1 480 Mbit/s 0e88 ILCE-7CR version 2.10 bMaxPower 500mA power/control on
+   [Fri Nov 20 07:46:39 2026] usb 1-1: New USB device found, idVendor=054c, idProduct=0d68, bcdDevice= 1.00
+   [Fri Nov 20 07:46:39 2026] usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+   [Fri Nov 20 07:46:39 2026] usb 1-1: Product: USB Bus-powered Device
+   [Fri Nov 20 07:46:39 2026] usb 1-1: Manufacturer: Sony
+   [Fri Nov 20 07:46:39 2026] input: Sony USB Bus-powered Device as /devices/platform/axi/1000120000.pcie/1f00200000.usb/xhci-hcd.0/usb1/1-1/1-1:1.0/0003:054C:0D68.0008/input/input12
+   [Fri Nov 20 07:46:39 2026] hid-generic 0003:054C:0D68.0008: input,hidraw0: USB HID v1.11 Device [Sony USB Bus-powered Device] on usb-xhci-hcd.0-1/input0
+   [Fri Nov 20 07:46:42 2026] usb 1-1: USB disconnect, device number 13
+   [Fri Nov 20 07:46:43 2026] usb 1-1: new full-speed USB device number 14 using xhci-hcd
+   [Fri Nov 20 07:46:44 2026] usb 1-1: new high-speed USB device number 15 using xhci-hcd
+   [Fri Nov 20 07:46:44 2026] usb 1-1: New USB device found, idVendor=054c, idProduct=0e88, bcdDevice= 1.00
+   [Fri Nov 20 07:46:44 2026] usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+   [Fri Nov 20 07:46:44 2026] usb 1-1: Product: ILCE-7CR
+   [Fri Nov 20 07:46:44 2026] usb 1-1: Manufacturer: Sony
+   [Fri Nov 20 07:46:44 2026] usb 1-1: SerialNumber: D12EB014C7E8
+23:46:45 manage power re-enabled | phase ready connected True busy False manage_stack True camera True 3.9 W light False 0.0 W | usb 480 | Connected · A7CR four-shot pixel shift saves to the PC · Slow camera link: USB 480 Mbit/s, not USB 3. Each RAW reaches the Pi several times slower and a plane takes about twice as long. Push the cable fully into a blue port and the camera, or use a USB 3 data cable
+23:46:46 after | phase disconnected connected False busy False manage_stack True camera False 0.0 W light False 0.0 W | usb None | Camera shut down · supply off
+
