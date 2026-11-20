@@ -243,6 +243,19 @@ an `index` from `capture.completed` rechecks and opens a completed receiver run.
 or `false`. Folder selection remains in the native UI. Closing a headless control
 workspace does not stop the Pi or the background receiver.
 
+`calibrate_step` (with the start and end marked and the camera idle) takes 25
+single RAWs across the middle of the marked range, measures with `strehl
+focus-step` how far detail stays sharp, deletes the survey, and puts the camera's
+pixel-shift mode back; `capture.tools.calibration` reports its `stage`
+(`switching`, `capturing`, `measuring`, `restoring`, `done`, `failed`) and, when
+done, the `result` with `width` (focus units) and `suggested_step`. Applying the
+step is a separate `settings` capture command. `measure_focus_step` with an
+`index` from `capture.completed` measures a completed capture
+(`capture.tools.focus_step`). `compact_capture` with an `index` and `apply: false`
+estimates a completed capture's calibrated compaction and writes nothing
+(`capture.tools.compact_estimate`); `apply: true` compacts it (not lossless;
+`capture.tools.compact`) and is refused unless that capture was estimated first.
+
 Capture commands also include `{"op":"focus","target":37308}` (absolute
 normalized focus, while idle) and `{"op":"pixel_shift","shots":4}` (or `1`).
 Use `pixel_shift_options` from state for capability detection. `initial_seconds`,

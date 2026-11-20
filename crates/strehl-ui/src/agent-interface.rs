@@ -91,6 +91,19 @@ pub(crate) enum AgentCommand {
     ImportCapture {
         index: usize,
     },
+    /// Calibrate the focus step: a short single-shot survey across the middle
+    /// of the marked range, measured on this PC, then deleted. Takes RAWs.
+    CalibrateStep {},
+    /// Measure how far detail stayed sharp across a completed capture's planes.
+    MeasureFocusStep {
+        index: usize,
+    },
+    /// Compact a completed capture (not lossless). `apply: false` estimates
+    /// the saving and writes nothing; `apply: true` needs that estimate first.
+    CompactCapture {
+        index: usize,
+        apply: bool,
+    },
     Snapshot {},
     /// Inspect one imported source without selecting it or opening a report.
     Metadata {

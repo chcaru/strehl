@@ -417,6 +417,15 @@ impl StrehlApp {
             CaptureCommand { request } => {
                 self.capture.submit(request)?;
             }
+            CalibrateStep {} => {
+                self.capture.calibrate()?;
+            }
+            MeasureFocusStep { index } => {
+                self.capture.measure_focus_step(index)?;
+            }
+            CompactCapture { index, apply } => {
+                self.capture.compact(index, apply)?;
+            }
             ImportCapture { index } => {
                 anyhow::ensure!(
                     self.job.is_none()

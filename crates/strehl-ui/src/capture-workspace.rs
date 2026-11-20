@@ -19,6 +19,8 @@ use strehl_capture::{
 mod follow;
 #[path = "capture-schedule.rs"]
 mod schedule_ui;
+#[path = "capture-tools.rs"]
+mod tools;
 
 pub(crate) struct CaptureWorkspace {
     config: Config,
@@ -61,6 +63,15 @@ pub(crate) struct CaptureWorkspace {
     finished_capture: Option<PathBuf>,
     /// What became of the last finished capture, from the workspace.
     pub follow_note: Option<String>,
+    /// The engine the desktop runs (from `poll_follow`).
+    engine: Option<PathBuf>,
+    /// Calibrate step: a short survey measured for the focus step.
+    calibration: tools::Calibration,
+    /// A completed capture's focus step, its compact estimate and compaction.
+    step_report: tools::Slot,
+    compact_estimate: tools::Slot,
+    compact_apply: tools::Slot,
+    compact_confirm: bool,
 }
 impl CaptureWorkspace {
     pub fn new(path: Option<PathBuf>) -> Self {
@@ -104,12 +115,364 @@ impl CaptureWorkspace {
             follow_refused: None,
             finished_capture: None,
             follow_note: None,
+            engine: None,
+            calibration: tools::Calibration::Idle,
+            step_report: Default::default(),
+            compact_estimate: Default::default(),
+            compact_apply: Default::default(),
+            compact_confirm: false,
+        }
+    }
+    fn calibrating(&self) -> bool {
+        !matches!(
+            self.calibration,
+            tools::Calibration::Idle | tools::Calibration::Done(_) | tools::Calibration::Failed(_)
+        )
+    }
+    /// Advances the step calibration and the background engine jobs.
+    fn poll_tools(&mut self) {
+        self.step_report.poll();
+        self.compact_estimate.poll();
+        self.compact_apply.poll();
+        let Some(connection) = &self.connection else {
+            return;
+        };
+        let s = connection.snapshot();
+        use tools::Calibration as C;
+        let state = std::mem::replace(&mut self.calibration, C::Idle);
+        let idle = s.state["busy"] != true && s.state["editable"] == true;
+        let shots = s.state["shots_per_plane"].as_u64();
+        self.calibration = match state {
+            C::Switching {
+                restore_four,
+                positions,
+                round,
+            } if idle && shots == Some(1) => {
+                let sequence = s.state["sequence_id"].as_u64().unwrap_or(0) + 1;
+                let spacing = positions
+                    .windows(2)
+                    .map(|w| w[0].abs_diff(w[1]))
+                    .next()
+                    .unwrap_or(1);
+                match s
+                    .request(Command::CapturePositions { positions })
+                    .and_then(|r| self.submit(r))
+                {
+                    Ok(()) => C::Capturing {
+                        restore_four,
+                        sequence,
+                        round,
+                        spacing,
+                    },
+                    Err(e) => C::Failed(format!("{e:#}")),
+                }
+            }
+            C::Capturing {
+                restore_four,
+                sequence,
+                round,
+                spacing,
+            } if s.state["sequence_id"].as_u64() == Some(sequence) && s.state["busy"] != true => {
+                match s.state["phase"].as_str() {
+                    Some("complete") => {
+                        let run = s.state["storage"]["receipt"]["path"]
+                            .as_str()
+                            .and_then(|p| std::path::Path::new(p).parent())
+                            .map(|p| {
+                                PathBuf::from(p.to_string_lossy().trim_start_matches(r"\\?\"))
+                            });
+                        match (run, &self.engine) {
+                            (Some(run), Some(engine)) => {
+                                match tools::EngineJob::start(
+                                    engine,
+                                    vec!["focus-step".into(), run.clone().into_os_string()],
+                                ) {
+                                    Ok(job) => C::Measuring {
+                                        restore_four,
+                                        run,
+                                        job,
+                                        round,
+                                        spacing,
+                                    },
+                                    Err(e) => C::Failed(format!("{e:#}")),
+                                }
+                            }
+                            (None, _) => C::Failed("The survey's folder was not reported".into()),
+                            (_, None) => C::Failed("The Strehl engine was not found".into()),
+                        }
+                    }
+                    Some("stopped" | "fault" | "disconnected") => {
+                        C::Failed("The survey did not finish".into())
+                    }
+                    _ => C::Capturing {
+                        restore_four,
+                        sequence,
+                        round,
+                        spacing,
+                    },
+                }
+            }
+            C::Measuring {
+                restore_four,
+                run,
+                mut job,
+                round,
+                spacing,
+            } => match job.poll() {
+                None => C::Measuring {
+                    restore_four,
+                    run,
+                    job,
+                    round,
+                    spacing,
+                },
+                Some(result) => {
+                    // The survey's RAWs served their purpose: free the disk.
+                    if run.join("manifest.json").is_file() && run.join("events.jsonl").is_file() {
+                        let _ = std::fs::remove_dir_all(&run);
+                    }
+                    match result {
+                        Err(e) => C::Failed(format!("{e:#}")),
+                        Ok(v) => {
+                            let width = v["width"].as_f64();
+                            let again = match width {
+                                None => Some(spacing.saturating_mul(4)),
+                                Some(w) if w < 3.0 * f64::from(spacing) && spacing > 2 => {
+                                    Some((spacing / 4).max(1))
+                                }
+                                _ => None,
+                            };
+                            let (start, end) = plan_bounds(&s);
+                            match again.filter(|_| round == 0) {
+                                Some(spacing) => C::Switching {
+                                    restore_four,
+                                    positions: tools::survey_positions(
+                                        start,
+                                        end,
+                                        spacing,
+                                        tools::SURVEY_PLANES,
+                                    ),
+                                    round: 1,
+                                },
+                                None if restore_four => {
+                                    let r = s
+                                        .request(Command::PixelShift { shots: 4 })
+                                        .and_then(|r| self.submit(r));
+                                    match r {
+                                        Ok(()) => C::Restoring { result: v },
+                                        Err(e) => C::Failed(format!("{e:#}")),
+                                    }
+                                }
+                                None => C::Done(v),
+                            }
+                        }
+                    }
+                }
+            },
+            C::Restoring { result } if idle && shots == Some(4) => C::Done(result),
+            other => other,
+        };
+    }
+    /// Starts a step calibration: single RAWs across the middle of the marked
+    /// range, measured on this PC, then the camera's pixel shift as it was.
+    fn start_calibration(&mut self, s: &Snapshot) {
+        let restore_four = s.state["shots_per_plane"] == 4;
+        let (start, end) = plan_bounds(s);
+        let positions =
+            tools::survey_positions(start, end, tools::SURVEY_SPACING, tools::SURVEY_PLANES);
+        if restore_four {
+            self.command(s, Command::PixelShift { shots: 1 });
+        }
+        self.calibration = tools::Calibration::Switching {
+            restore_four,
+            positions,
+            round: 0,
+        };
+    }
+    /// `calibrate_step` from the control interface.
+    pub fn calibrate(&mut self) -> anyhow::Result<()> {
+        let s = self
+            .connection
+            .as_ref()
+            .ok_or_else(|| anyhow::anyhow!("Open Capture first"))?
+            .snapshot();
+        anyhow::ensure!(!self.calibrating(), "A calibration is running");
+        anyhow::ensure!(self.engine.is_some(), "The Strehl engine was not found");
+        anyhow::ensure!(
+            s.fresh() && s.state["editable"] == true && !s.pending,
+            "The camera is not ready"
+        );
+        anyhow::ensure!(
+            s.state["start_set"] == true && s.state["end_set"] == true,
+            "Mark the start and end first"
+        );
+        self.start_calibration(&s);
+        match self.error.take() {
+            Some(e) => {
+                self.calibration = tools::Calibration::Failed(e.clone());
+                anyhow::bail!(e)
+            }
+            None => Ok(()),
+        }
+    }
+    fn completed_folder(&self, index: usize) -> anyhow::Result<PathBuf> {
+        let s = self
+            .connection
+            .as_ref()
+            .ok_or_else(|| anyhow::anyhow!("Open Capture first"))?
+            .snapshot();
+        Ok(s.completed
+            .get(index)
+            .ok_or_else(|| anyhow::anyhow!("Completed capture unavailable"))?
+            .folder
+            .clone())
+    }
+    /// `measure_focus_step` from the control interface.
+    pub fn measure_focus_step(&mut self, index: usize) -> anyhow::Result<()> {
+        let folder = self.completed_folder(index)?;
+        anyhow::ensure!(!self.step_report.running(), "A measurement is running");
+        let engine = self.engine.clone();
+        self.step_report.start(
+            engine.as_deref(),
+            &folder,
+            vec!["focus-step".into(), folder.clone().into_os_string()],
+        );
+        Ok(())
+    }
+    /// `compact_capture` from the control interface: an estimate, or (after
+    /// an estimate of the same capture) the compaction itself.
+    pub fn compact(&mut self, index: usize, apply: bool) -> anyhow::Result<()> {
+        let folder = self.completed_folder(index)?;
+        anyhow::ensure!(
+            !self.compact_estimate.running() && !self.compact_apply.running(),
+            "A compaction is running"
+        );
+        let engine = self.engine.clone();
+        let mut args = vec!["compact".into(), folder.clone().into_os_string()];
+        if apply {
+            anyhow::ensure!(
+                matches!(self.compact_estimate.for_folder(&folder), Some(Ok(_))),
+                "Estimate this capture's compaction first"
+            );
+            args.push("--apply".into());
+            self.compact_apply.start(engine.as_deref(), &folder, args);
+        } else {
+            self.compact_estimate
+                .start(engine.as_deref(), &folder, args);
+        }
+        Ok(())
+    }
+    /// Calibration, focus-step and compaction state for snapshots.
+    fn tools_public(&self) -> Value {
+        use tools::Calibration as C;
+        let (stage, result) = match &self.calibration {
+            C::Idle => ("idle", Value::Null),
+            C::Switching { .. } => ("switching", Value::Null),
+            C::Capturing { .. } => ("capturing", Value::Null),
+            C::Measuring { .. } => ("measuring", Value::Null),
+            C::Restoring { result } => ("restoring", result.clone()),
+            C::Done(v) => ("done", v.clone()),
+            C::Failed(e) => ("failed", json!({"error":e})),
+        };
+        let slot = |s: &tools::Slot| {
+            json!({"running":s.running(),"folder":s.folder,
+                "result":match &s.result {Some(Ok(v))=>v.clone(),Some(Err(e))=>json!({"error":e}),None=>Value::Null}})
+        };
+        json!({"calibration":{"stage":stage,"result":result},
+            "focus_step":slot(&self.step_report),
+            "compact_estimate":slot(&self.compact_estimate),
+            "compact":slot(&self.compact_apply)})
+    }
+    fn calibration_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot, editable: bool) {
+        use tools::Calibration as C;
+        let bounds = s.state["start_set"] == true && s.state["end_set"] == true;
+        let busy = self.calibrating();
+        ui.horizontal(|ui| {
+            if ui
+                .add_enabled(
+                    editable && bounds && !busy && self.engine.is_some() && !self.draft_dirty,
+                    egui::Button::new("Calibrate step"),
+                )
+                .on_hover_text("Takes 25 single RAWs around the middle of the marked range (about a minute), measures how far detail stays sharp, suggests the step, and deletes the survey. Needs the light on and the bounds marked.")
+                .clicked()
+            {
+                self.start_calibration(s);
+            }
+            match &self.calibration {
+                C::Switching { .. } | C::Restoring { .. } => {
+                    ui.spinner();
+                    ui.small("Setting the camera…");
+                }
+                C::Capturing { .. } => {
+                    ui.spinner();
+                    ui.small("Surveying…");
+                }
+                C::Measuring { .. } => {
+                    ui.spinner();
+                    ui.small("Measuring…");
+                }
+                _ => {}
+            }
+        });
+        match &self.calibration {
+            C::Done(v) => {
+                ui.small(v["summary"].as_str().unwrap_or(""));
+                if let Some(step) = v["suggested_step"].as_u64().map(|n| n as u16) {
+                    let range = self.confirmed_plan.start.abs_diff(self.confirmed_plan.end);
+                    let planes = u64::from(range / step.max(1)) + 1;
+                    let shots = if s.state["shots_per_plane"] == 4 {
+                        4
+                    } else {
+                        1
+                    };
+                    let estimate = s.state["exposure"]["shutter"]
+                        .as_u64()
+                        .and_then(|shutter| {
+                            strehl_capture::timing::initial_plane(
+                                shutter,
+                                self.confirmed_plan.settle_ms,
+                                shots,
+                            )
+                        })
+                        .map(|plane| plane * planes as u32);
+                    ui.small(format!(
+                        "At step {step}: {planes} planes{}",
+                        estimate.map_or(String::new(), |d| format!(
+                            ", about {}",
+                            strehl_capture::timing::format_duration(d)
+                        ))
+                    ));
+                    if step != self.confirmed_plan.step
+                        && ui
+                            .add_enabled(editable, egui::Button::new(format!("Use step {step}")))
+                            .clicked()
+                    {
+                        let command = Command::Settings {
+                            step,
+                            settle_ms: self.confirmed_plan.settle_ms,
+                            approach: self.confirmed_plan.approach,
+                            capture_timeout_s: self.confirmed_plan.capture_timeout_s,
+                        };
+                        let result = s.request(command).and_then(|mut r| {
+                            r.plan_revision = self.draft_revision;
+                            self.submit(r)
+                        });
+                        self.record(result);
+                    }
+                }
+            }
+            C::Failed(e) => {
+                ui.colored_label(AMBER, format!("Calibration stopped: {e}"));
+            }
+            _ => {}
         }
     }
     /// Starts, watches and ends the engine's checker for the capture being
     /// written (see `capture-follow.rs`). Called every frame, whichever tab
     /// is open, once Capture has connected.
     pub fn poll_follow(&mut self, engine: Option<&std::path::Path>) {
+        self.engine = engine.map(std::path::Path::to_path_buf);
+        self.poll_tools();
         let Some(connection) = &self.connection else {
             return;
         };
@@ -147,9 +510,11 @@ impl CaptureWorkspace {
             .follow_refused
             .as_ref()
             .is_some_and(|(r, _)| *r == run.folder);
+        // A calibration survey is measured and deleted, never followed.
         if self.follow_enabled
             && fresh
             && !refused
+            && !self.calibrating()
             && (capturing || run.idle < follow::ABANDONED)
             && let Some(engine) = engine
         {
@@ -189,6 +554,7 @@ impl CaptureWorkspace {
                 c.snapshot().public()
             });
         value["follow"] = self.follow_public();
+        value["tools"] = self.tools_public();
         value
     }
     /// Turns stacking during capture on or off. Turning it on, or retrying,
@@ -753,6 +1119,7 @@ impl CaptureWorkspace {
                 ui.label("Settle time");self.draft_dirty|=ui.add(egui::DragValue::new(&mut self.draft.settle_ms).range(100..=30000).suffix(" ms")).changed();ui.end_row();
             });
             ui.small("1 is the smallest normalized camera step. Lens response is not a calibrated distance.");
+            self.calibration_ui(ui, s, editable);
             egui::CollapsingHeader::new("Sequence settings").show(ui,|ui| {
                 ui.horizontal(|ui|{ui.label("Approach"); self.draft_dirty|=ui.add(egui::DragValue::new(&mut self.draft.approach).range(1..=4096)).changed();});
                 ui.horizontal(|ui|{ui.label("Capture timeout");self.draft_dirty|=ui.add(egui::DragValue::new(&mut self.draft.capture_timeout_s).range(5..=3600).suffix(" s")).changed();});
@@ -918,7 +1285,7 @@ impl CaptureWorkspace {
                 egui::Checkbox::new(&mut correct, "Error correction"),
             )
             .on_hover_text(if supported {
-                "After each plane the camera holds focus until this PC has checked it (about 2 s), and takes a group that failed for movement, a focus slip or a level change again on the spot, up to twice. Planes that fail for too little detail are not retaken. Needs the checks above."
+                "This PC checks each plane while the camera goes on to the next. A group that failed for movement, a focus slip or a level change is taken again: the camera goes back to that plane (approaching it from the same side as before) and then carries on, up to twice a plane. Planes that fail for too little detail are not retaken. Needs the checks above."
             } else {
                 "Update the camera host to use error correction."
             })
@@ -929,7 +1296,7 @@ impl CaptureWorkspace {
         if s.state["error_correction"] == true && !self.follow_enabled {
             ui.colored_label(
                 AMBER,
-                "Error correction needs the checks above; without them the camera stops waiting after one plane.",
+                "Error correction needs the checks above; without them it turns itself off after the first plane.",
             );
         }
         let saved = s.state["saved"].as_u64();
@@ -1070,6 +1437,124 @@ impl CaptureWorkspace {
             self.record(result);
         }
         ui.small("Open the complete bracket for processing.");
+        let folder = stack.folder.clone();
+        let engine = self.engine.clone();
+        ui.add_space(6.0);
+        // How finely the planes sampled the depth of field.
+        if ui
+            .add_enabled(
+                !self.step_report.running() && engine.is_some(),
+                egui::Button::new("Measure focus step"),
+            )
+            .on_hover_text("How far detail stays sharp across this capture's planes, and the step that would have done.")
+            .clicked()
+        {
+            self.step_report.start(
+                engine.as_deref(),
+                &folder,
+                vec!["focus-step".into(), folder.clone().into_os_string()],
+            );
+        }
+        if self.step_report.running() && self.step_report.folder.as_deref() == Some(&folder) {
+            ui.horizontal(|ui| {
+                ui.spinner();
+                ui.small("Measuring…");
+            });
+        }
+        match self.step_report.for_folder(&folder) {
+            Some(Ok(v)) => {
+                ui.small(v["summary"].as_str().unwrap_or(""));
+            }
+            Some(Err(e)) => {
+                ui.colored_label(AMBER, e);
+            }
+            None => {}
+        }
+        // Compact: an estimate first, then an explicit confirmation.
+        ui.add_space(6.0);
+        let busy = self.compact_estimate.running() || self.compact_apply.running();
+        if ui
+            .add_enabled(!busy && engine.is_some(), egui::Button::new("Compact…"))
+            .on_hover_text("Estimate how small this capture becomes when every sample is kept to within half a step of the camera's own noise. Nothing is changed until you confirm.")
+            .clicked()
+        {
+            self.compact_confirm = false;
+            self.compact_estimate.start(
+                engine.as_deref(),
+                &folder,
+                vec!["compact".into(), folder.clone().into_os_string()],
+            );
+        }
+        if busy && self.compact_estimate.folder.as_deref() == Some(&folder) {
+            ui.horizontal(|ui| {
+                ui.spinner();
+                ui.small(if self.compact_apply.running() {
+                    "Compacting… (the originals are replaced one by one, each after its new file reads back)"
+                } else {
+                    "Estimating…"
+                });
+            });
+        }
+        if let Some(Ok(v)) = self.compact_apply.for_folder(&folder) {
+            let (before, after) = (
+                v["before_bytes"].as_f64().unwrap_or(0.0),
+                v["after_bytes"].as_f64().unwrap_or(0.0),
+            );
+            ui.colored_label(
+                GREEN,
+                format!(
+                    "Compacted: {:.1} GB, {:.1} GB freed",
+                    after / 1e9,
+                    (before - after) / 1e9
+                ),
+            );
+        } else if let Some(Err(e)) = self.compact_apply.for_folder(&folder) {
+            ui.colored_label(
+                AMBER,
+                format!("Compact stopped: {e}. Files not yet compacted are unchanged."),
+            );
+        } else {
+            match self.compact_estimate.for_folder(&folder) {
+                Some(Ok(v)) => {
+                    let (before, after) = (
+                        v["before_bytes"].as_f64().unwrap_or(0.0),
+                        v["estimated_after_bytes"].as_f64().unwrap_or(0.0),
+                    );
+                    ui.small(format!(
+                        "Now {:.1} GB; compacted about {:.1} GB ({:.1} GB freed).",
+                        before / 1e9,
+                        after / 1e9,
+                        (before - after) / 1e9
+                    ));
+                    ui.checkbox(
+                        &mut self.compact_confirm,
+                        "I understand this is not lossless: every sample is kept to within half a step of the camera's noise (renders measured the same as with that much extra noise, about +0.5 %), the camera's full-size preview JPEG is removed, and the original RAWs cannot be restored afterwards.",
+                    );
+                    if ui
+                        .add_enabled(
+                            self.compact_confirm && !busy,
+                            egui::Button::new("Compact now"),
+                        )
+                        .clicked()
+                    {
+                        self.compact_confirm = false;
+                        self.compact_apply.start(
+                            engine.as_deref(),
+                            &folder,
+                            vec![
+                                "compact".into(),
+                                folder.clone().into_os_string(),
+                                "--apply".into(),
+                            ],
+                        );
+                    }
+                }
+                Some(Err(e)) => {
+                    ui.colored_label(AMBER, e);
+                }
+                None => {}
+            }
+        }
     }
     fn sequence_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot) {
         let phase = s.state["phase"].as_str().unwrap_or("disconnected");
@@ -1373,6 +1858,12 @@ impl CaptureWorkspace {
             });
     }
 }
+/// The marked start and end, as the camera host holds them.
+fn plan_bounds(s: &Snapshot) -> (u16, u16) {
+    let at = |k: &str| s.state["plan"][k].as_u64().unwrap_or(0).min(65535) as u16;
+    (at("start"), at("end"))
+}
+
 fn duration(seconds: Option<f64>) -> String {
     let Some(seconds) = seconds.filter(|s| s.is_finite() && *s >= 0.0) else {
         return "—".into();
