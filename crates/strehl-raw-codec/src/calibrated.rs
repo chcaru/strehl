@@ -277,13 +277,35 @@ fn chain_jpegs(b: &[u8]) -> Vec<(usize, usize, usize, usize)> {
     out
 }
 
+/// A baseline or progressive JPEG's width and height, from its frame header.
+fn jpeg_size(j: &[u8]) -> Option<(u32, u32)> {
+    if j.get(..2)? != [0xff, 0xd8] {
+        return None;
+    }
+    let mut at = 2;
+    while at + 9 < j.len() {
+        if j[at] != 0xff {
+            return None;
+        }
+        let marker = j[at + 1];
+        let len = usize::from(u16::from_be_bytes([j[at + 2], j[at + 3]]));
+        if matches!(marker, 0xc0..=0xc3 | 0xc5..=0xc7 | 0xc9..=0xcb | 0xcd..=0xcf) {
+            let h = u16::from_be_bytes([j[at + 5], j[at + 6]]);
+            let w = u16::from_be_bytes([j[at + 7], j[at + 8]]);
+            return (w > 0 && h > 0).then_some((u32::from(w), u32::from(h)));
+        }
+        at += 2 + len;
+    }
+    None
+}
+
 /// Point the largest embedded JPEG's IFD at the second largest (the camera's
 /// preview), with that preview's dimensions, and zero the large JPEG's bytes.
 /// Returns the bytes freed (0 when the file has no such pair).
 pub fn drop_large_jpeg(b: &mut [u8], strip_start: usize) -> usize {
     let mut jpegs = chain_jpegs(b);
     jpegs.sort_by_key(|j| std::cmp::Reverse(j.2));
-    let (Some(&(entry, offset, length, ifd)), Some(&(_, p_offset, p_length, p_ifd))) =
+    let (Some(&(entry, offset, length, ifd)), Some(&(_, p_offset, p_length, _))) =
         (jpegs.first(), jpegs.get(1))
     else {
         return 0;
@@ -295,34 +317,18 @@ pub fn drop_large_jpeg(b: &mut [u8], strip_start: usize) -> usize {
     {
         return 0;
     }
-    // The preview's dimensions, from its own IFD when it states them.
-    let dims = |ifd: usize, b: &[u8]| -> Vec<(u16, u16, u32)> {
-        let count = u16_at(b, ifd).unwrap_or(0);
-        (0..usize::from(count))
-            .filter_map(|i| {
-                let p = ifd + 2 + 12 * i;
-                let tag = u16_at(b, p)?;
-                ((tag == 0x0100 || tag == 0x0101) && u32_at(b, p + 4)? == 1).then(|| {
-                    let ty = u16_at(b, p + 2).unwrap_or(0);
-                    let v = if ty == 3 {
-                        u32::from(u16_at(b, p + 8).unwrap_or(0))
-                    } else {
-                        u32_at(b, p + 8).unwrap_or(0)
-                    };
-                    (tag, ty, v)
-                })
-            })
-            .collect()
+    // The preview's dimensions, from its own frame header (the camera's
+    // preview IFD states none). Unreadable: keep the large JPEG.
+    let Some((p_width, p_height)) = jpeg_size(&b[p_offset..p_offset + p_length]) else {
+        return 0;
     };
-    let preview_dims = dims(p_ifd, b);
     let count = u16_at(b, ifd).unwrap_or(0);
     for i in 0..usize::from(count) {
         let p = ifd + 2 + 12 * i;
         let tag = u16_at(b, p).unwrap_or(0);
         let ty = u16_at(b, p + 2).unwrap_or(0);
-        if (tag == 0x0100 || tag == 0x0101)
-            && let Some(&(_, _, v)) = preview_dims.iter().find(|d| d.0 == tag)
-        {
+        if tag == 0x0100 || tag == 0x0101 {
+            let v = if tag == 0x0100 { p_width } else { p_height };
             match ty {
                 3 => b[p + 8..p + 10].copy_from_slice(&(v as u16).to_le_bytes()),
                 4 => b[p + 8..p + 12].copy_from_slice(&v.to_le_bytes()),
@@ -566,6 +572,10 @@ mod tests {
                 b[at + x] = (x * 7 % 251) as u8;
             }
         }
+        // The preview's frame header: SOF0, 1616 x 1080.
+        b[1026..1037].copy_from_slice(&[
+            0xff, 0xc0, 0x00, 0x11, 0x08, 0x04, 0x38, 0x06, 0x50, 0x03, 0x01,
+        ]);
         let mut s = 1u32;
         for i in 0..width * height {
             s = s.wrapping_mul(1664525).wrapping_add(1013904223);
@@ -597,6 +607,9 @@ mod tests {
         // The large JPEG's IFD now names the preview and its bytes are gone.
         assert_eq!(u32_at(&restored, 514 + 12 * 2 + 8), Some(1024));
         assert_eq!(u32_at(&restored, 514 + 12 * 3 + 8), Some(100));
+        // ... and states the preview's dimensions, not the dropped JPEG's.
+        assert_eq!(u32_at(&restored, 514 + 8), Some(1616));
+        assert_eq!(u32_at(&restored, 514 + 12 + 8), Some(1080));
         assert!(restored[2048..2048 + 1500].iter().all(|&x| x == 0));
         assert_eq!(&restored[1024..1124], &original[1024..1124]);
         // Smaller than the lossless format 2.

@@ -1002,23 +1002,26 @@ pub fn retake_helps(m: &GroupMeasurement, residual: ResidualMode) -> bool {
 fn demotion(m: &GroupMeasurement, residual: ResidualMode) -> Option<(String, bool)> {
     let c = &m.check;
     let tile_ratio = m.witness.as_ref().map_or(f64::NAN, |w| w.tile_ratio);
-    let max_residual = m.witness.as_ref().map_or(f64::INFINITY, |w| {
-        w.pair_shift
-            .iter()
-            .zip(&w.pair_members)
-            .map(|(d, &[a, b])| {
-                let (px, py) = if residual == ResidualMode::Off {
-                    (0.0, 0.0)
-                } else {
-                    (
-                        c.residual[b][0] - c.residual[a][0],
-                        c.residual[b][1] - c.residual[a][1],
-                    )
-                };
-                (d[0] - px).hypot(d[1] - py)
-            })
-            .fold(0.0, f64::max)
-    });
+    let misregistration = |residual: ResidualMode| {
+        m.witness.as_ref().map_or(f64::INFINITY, |w| {
+            w.pair_shift
+                .iter()
+                .zip(&w.pair_members)
+                .map(|(d, &[a, b])| {
+                    let (px, py) = if residual == ResidualMode::Off {
+                        (0.0, 0.0)
+                    } else {
+                        (
+                            c.residual[b][0] - c.residual[a][0],
+                            c.residual[b][1] - c.residual[a][1],
+                        )
+                    };
+                    (d[0] - px).hypot(d[1] - py)
+                })
+                .fold(0.0, f64::max)
+        })
+    };
+    let max_residual = misregistration(residual);
     let reach = c
         .offsets
         .iter()
@@ -1040,6 +1043,13 @@ fn demotion(m: &GroupMeasurement, residual: ResidualMode) -> Option<(String, boo
             false,
         ))
     } else if !(max_residual < PAIR_SHIFT_TOLERANCE_PX) {
+        // MEASURED (2026-11-20, a pencil and a printed part on the studio
+        // rig): every group's witness pairs agreed to 0.05-0.15 photosite,
+        // but the residuals measured from that plain scene were off by about
+        // 0.4, so compensating with them misregistered every group. That is
+        // the scene's measurement, not the exposures: a retake would fail
+        // the same way. Only a misregistration the exposures show themselves
+        // is worth one.
         Some((
             format!(
                 "witness pairs misregistered by {max_residual:.3} photosite{}",
@@ -1049,7 +1059,7 @@ fn demotion(m: &GroupMeasurement, residual: ResidualMode) -> Option<(String, boo
                     " after residual compensation"
                 }
             ),
-            true,
+            !(misregistration(ResidualMode::Off) < PAIR_SHIFT_TOLERANCE_PX),
         ))
     } else if !(tile_ratio < TILE_RATIO_TOLERANCE) {
         Some((
@@ -1730,9 +1740,33 @@ mod tests {
         flicker.levels_agree = false;
         assert!(judge(&flicker, r).unwrap().contains("black or white level"));
         assert!(retake_helps(&flicker, r));
-        let mut edge = good;
+        let mut edge = good.clone();
         edge.margins = [0; 4];
         assert!(judge(&edge, r).unwrap().contains("leave the sensor buffer"));
         assert!(!retake_helps(&edge, r));
+        // Misregistered only once the measured residuals are applied: the
+        // exposures agree and the residual estimate is what fails.
+        let mut estimate = good.clone();
+        let w = estimate.witness.as_mut().unwrap();
+        let [a, b] = w.pair_members[0];
+        w.pair_shift[0] = [0.05, 0.0];
+        estimate.check.residual[b] = [
+            estimate.check.residual[a][0] + 0.45,
+            estimate.check.residual[a][1],
+        ];
+        assert!(
+            judge(&estimate, r)
+                .unwrap()
+                .contains("after residual compensation")
+        );
+        assert!(!retake_helps(&estimate, r));
+        // Misregistered in the exposures themselves: worth a retake.
+        let mut shaken = good;
+        let w = shaken.witness.as_mut().unwrap();
+        let [a, b] = w.pair_members[0];
+        w.pair_shift[0] = [0.45, 0.0];
+        shaken.check.residual[b] = shaken.check.residual[a];
+        assert!(judge(&shaken, r).unwrap().contains("misregistered"));
+        assert!(retake_helps(&shaken, r));
     }
 }
