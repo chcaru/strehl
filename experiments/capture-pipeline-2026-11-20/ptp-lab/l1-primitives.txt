@@ -1,0 +1,22 @@
+# L1: cost of the polling primitives, the properties that matter, and the three ways to
+# press the shutter (four-shot, the owner's 0.6 s exposure, downloads as files become ready).
+configure
+pixel-shift 4
+status
+lab-props 40
+lab-allowed d23b
+lab-allowed 5013
+lab-allowed d288
+lab-allowed d222
+lab-allowed d20d
+lab-mark s1-200ms-s2
+lab-shutter 200 s1s2
+lab-watch 14000 auto idle
+lab-sleep 400
+lab-mark s1-0ms-s2
+lab-shutter 0 s1s2
+lab-watch 14000 auto idle
+lab-sleep 400
+lab-mark s2-only
+lab-shutter 0 s2
+lab-watch 14000 auto idle

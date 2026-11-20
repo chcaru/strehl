@@ -1,0 +1,70 @@
+== stack-1794786793543-11226 frame 1  9600 x 6376
+   whole strip            n= 61209600 min   496 max  9328  0.01-99.99 % range [  513,  8443] empty codes inside     0 of  7931  even/odd 0.9999  %(v mod 2,4,8 == 0) [49.998, 24.9946, 12.4948]  hist roughness 1.09 (1 = Poisson)
+   active site (0,0)      n= 15054336 min   496 max  5006  0.01-99.99 % range [  513,  4619] empty codes inside     0 of  4107  even/odd 1.0007  %(v mod 2,4,8 == 0) [50.0196, 25.0055, 12.4945]  hist roughness 1.08 (1 = Poisson)
+   active site (0,1)      n= 15054336 min   499 max  9328  0.01-99.99 % range [  518,  8591] empty codes inside     0 of  8074  even/odd 1.0004  %(v mod 2,4,8 == 0) [50.0089, 25.0132, 12.5073]  hist roughness 1.02 (1 = Poisson)
+   active site (1,0)      n= 15054336 min   502 max  9309  0.01-99.99 % range [  518,  8605] empty codes inside     0 of  8088  even/odd 0.9996  %(v mod 2,4,8 == 0) [49.9886, 24.9896, 12.5044]  hist roughness 1.04 (1 = Poisson)
+   active site (1,1)      n= 15054336 min   497 max  4211  0.01-99.99 % range [  513,  3835] empty codes inside     0 of  3323  even/odd 0.9991  %(v mod 2,4,8 == 0) [49.9791, 24.9767, 12.4836]  hist roughness 1.17 (1 = Poisson)
+   centre 1024^2          n=  1048576 min   982 max  6853  0.01-99.99 % range [ 1062,  6706] empty codes inside     2 of  5645  even/odd 0.9981  %(v mod 2,4,8 == 0) [49.9547, 24.9656, 12.4207]  hist roughness 1.07 (1 = Poisson)
+   top-left 1024^2        n=  1048576 min   731 max  7014  0.01-99.99 % range [  818,  6790] empty codes inside    68 of  5973  even/odd 1.0021  %(v mod 2,4,8 == 0) [50.0519, 25.0131, 12.5126]  hist roughness 1.09 (1 = Poisson)
+   bottom-right 1024^2    n=  1048576 min   496 max  4011  0.01-99.99 % range [  507,  3926] empty codes inside     1 of  3420  even/odd 0.9980  %(v mod 2,4,8 == 0) [49.9513, 25.0337, 11.9484]  hist roughness 2.59 (1 = Poisson)
+   border left 32 cols     n=  204032 mean  2795.86 sd 1382.98 min   525 max  7338  distinct 5958
+   border right 64 cols    n=  408064 mean  2114.41 sd 1756.93 min   500 max  8692  distinct 7527
+   border top 20 rows      n=  192000 mean  2466.11 sd 1228.56 min   510 max  5947  distinct 5237
+   border bottom 20 rows   n=  192000 mean  1239.73 sd  650.76 min   505 max  4254  distinct 3122
+   darkest 0.5 % of active: mean 515.85 sd 1.30 (black level is near the lowest mean seen)
+== stack-1794786793543-11226 frame 400  9600 x 6376
+   whole strip            n= 61209600 min   497 max 10712  0.01-99.99 % range [  514,  9060] empty codes inside     0 of  8547  even/odd 0.9999  %(v mod 2,4,8 == 0) [49.9952, 25.0022, 12.497]  hist roughness 1.05 (1 = Poisson)
+   active site (0,0)      n= 15054336 min   498 max  5698  0.01-99.99 % range [  513,  4924] empty codes inside     0 of  4412  even/odd 0.9993  %(v mod 2,4,8 == 0) [49.9821, 24.9878, 12.4862]  hist roughness 1.08 (1 = Poisson)
+   active site (0,1)      n= 15054336 min   502 max 10712  0.01-99.99 % range [  519,  9225] empty codes inside     0 of  8707  even/odd 1.0007  %(v mod 2,4,8 == 0) [50.02, 25.017, 12.504]  hist roughness 1.01 (1 = Poisson)
+   active site (1,0)      n= 15054336 min   505 max 10659  0.01-99.99 % range [  519,  9236] empty codes inside     0 of  8718  even/odd 0.9993  %(v mod 2,4,8 == 0) [49.9858, 24.9978, 12.502]  hist roughness 1.05 (1 = Poisson)
+   active site (1,1)      n= 15054336 min   497 max  4690  0.01-99.99 % range [  514,  4194] empty codes inside     0 of  3681  even/odd 0.9997  %(v mod 2,4,8 == 0) [49.9912, 25.0031, 12.491]  hist roughness 1.05 (1 = Poisson)
+   centre 1024^2          n=  1048576 min   524 max  7567  0.01-99.99 % range [  535,  7400] empty codes inside    21 of  6866  even/odd 0.9991  %(v mod 2,4,8 == 0) [49.9776, 25.0034, 12.4897]  hist roughness 1.01 (1 = Poisson)
+   top-left 1024^2        n=  1048576 min  1405 max  5720  0.01-99.99 % range [ 1457,  5595] empty codes inside     0 of  4139  even/odd 1.0008  %(v mod 2,4,8 == 0) [50.0206, 25.006, 12.4991]  hist roughness 0.98 (1 = Poisson)
+   bottom-right 1024^2    n=  1048576 min   497 max  3635  0.01-99.99 % range [  508,  3553] empty codes inside     0 of  3046  even/odd 0.9982  %(v mod 2,4,8 == 0) [49.9553, 25.0036, 12.043]  hist roughness 1.94 (1 = Poisson)
+   border left 32 cols     n=  204032 mean  2731.42 sd 1350.43 min   515 max  5804  distinct 5174
+   border right 64 cols    n=  408064 mean  2230.21 sd 1587.98 min   504 max  6995  distinct 6410
+   border top 20 rows      n=  192000 mean  2695.10 sd 1151.02 min   541 max  5718  distinct 5090
+   border bottom 20 rows   n=  192000 mean  1286.89 sd  602.72 min   504 max  3387  distinct 2545
+   darkest 0.5 % of active: mean 518.14 sd 2.16 (black level is near the lowest mean seen)
+== stack-1794786793543-11226 frame 780  9600 x 6376
+   whole strip            n= 61209600 min   496 max  9013  0.01-99.99 % range [  515,  8225] empty codes inside     0 of  7711  even/odd 0.9997  %(v mod 2,4,8 == 0) [49.9944, 25.0033, 12.4959]  hist roughness 1.05 (1 = Poisson)
+   active site (0,0)      n= 15054336 min   496 max  5054  0.01-99.99 % range [  514,  4627] empty codes inside     0 of  4114  even/odd 0.9992  %(v mod 2,4,8 == 0) [49.9787, 24.9914, 12.4966]  hist roughness 1.07 (1 = Poisson)
+   active site (0,1)      n= 15054336 min   507 max  9009  0.01-99.99 % range [  520,  8353] empty codes inside     0 of  7834  even/odd 1.0003  %(v mod 2,4,8 == 0) [50.0052, 25.013, 12.502]  hist roughness 1.00 (1 = Poisson)
+   active site (1,0)      n= 15054336 min   505 max  9013  0.01-99.99 % range [  520,  8360] empty codes inside     0 of  7841  even/odd 0.9994  %(v mod 2,4,8 == 0) [49.9837, 25.0024, 12.4959]  hist roughness 1.02 (1 = Poisson)
+   active site (1,1)      n= 15054336 min   500 max  4063  0.01-99.99 % range [  514,  3829] empty codes inside     0 of  3316  even/odd 1.0006  %(v mod 2,4,8 == 0) [50.0135, 25.0066, 12.4901]  hist roughness 1.04 (1 = Poisson)
+   centre 1024^2          n=  1048576 min   524 max  8248  0.01-99.99 % range [  531,  7867] empty codes inside    45 of  7337  even/odd 1.0006  %(v mod 2,4,8 == 0) [50.0164, 25.0409, 12.5504]  hist roughness 1.22 (1 = Poisson)
+   top-left 1024^2        n=  1048576 min  1629 max  5573  0.01-99.99 % range [ 1692,  5486] empty codes inside   407 of  3795  even/odd 0.9992  %(v mod 2,4,8 == 0) [49.9793, 24.9953, 12.4699]  hist roughness 1.00 (1 = Poisson)
+   bottom-right 1024^2    n=  1048576 min   496 max  3389  0.01-99.99 % range [  511,  3320] empty codes inside     0 of  2810  even/odd 0.9987  %(v mod 2,4,8 == 0) [49.9665, 24.9757, 12.2651]  hist roughness 1.41 (1 = Poisson)
+   border left 32 cols     n=  204032 mean  2694.43 sd 1239.42 min   637 max  5263  distinct 4567
+   border right 64 cols    n=  408064 mean  2255.70 sd 1389.29 min   506 max  5683  distinct 5121
+   border top 20 rows      n=  192000 mean  2798.62 sd 1098.65 min   753 max  5360  distinct 4500
+   border bottom 20 rows   n=  192000 mean  1290.10 sd  554.57 min   502 max  2753  distinct 2181
+   darkest 0.5 % of active: mean 526.35 sd 7.09 (black level is near the lowest mean seen)
+== stack-1794687317465-11226 frame 1  9600 x 6376
+   whole strip            n= 61209600 min   520 max 16383  0.01-99.99 % range [  537,  8764] empty codes inside     8 of  8228  even/odd 1.0002  %(v mod 2,4,8 == 0) [50.0068, 25.0003, 12.4827]  hist roughness 1.47 (1 = Poisson)
+   active site (0,0)      n= 15054336 min   528 max 12948  0.01-99.99 % range [  543,  5766] empty codes inside   129 of  5224  even/odd 1.0004  %(v mod 2,4,8 == 0) [50.0099, 25.0091, 12.455]  hist roughness 1.53 (1 = Poisson)
+   active site (0,1)      n= 15054336 min   553 max 16383  0.01-99.99 % range [  574, 10126] empty codes inside   699 of  9553  even/odd 1.0004  %(v mod 2,4,8 == 0) [50.0083, 25.0058, 12.4931]  hist roughness 1.13 (1 = Poisson)
+   active site (1,0)      n= 15054336 min   552 max 16383  0.01-99.99 % range [  574, 10127] empty codes inside   666 of  9554  even/odd 1.0001  %(v mod 2,4,8 == 0) [50.0006, 24.9898, 12.4919]  hist roughness 1.14 (1 = Poisson)
+   active site (1,1)      n= 15054336 min   520 max  8789  0.01-99.99 % range [  535,  4344] empty codes inside    53 of  3810  even/odd 0.9999  %(v mod 2,4,8 == 0) [49.999, 24.994, 12.4897]  hist roughness 1.88 (1 = Poisson)
+   centre 1024^2          n=  1048576 min   526 max  1041  0.01-99.99 % range [  535,   955] empty codes inside     0 of   421  even/odd 1.0001  %(v mod 2,4,8 == 0) [50.0031, 24.9701, 12.4499]  hist roughness 1.26 (1 = Poisson)
+   top-left 1024^2        n=  1048576 min   532 max 16383  0.01-99.99 % range [  543, 16383] empty codes inside  5351 of 15841  even/odd 1.0007  %(v mod 2,4,8 == 0) [50.019, 25.0254, 12.5285]  hist roughness 0.99 (1 = Poisson)
+   bottom-right 1024^2    n=  1048576 min   528 max  2302  0.01-99.99 % range [  542,  2260] empty codes inside     0 of  1719  even/odd 1.0024  %(v mod 2,4,8 == 0) [50.0591, 25.0233, 12.5236]  hist roughness 1.02 (1 = Poisson)
+   border left 32 cols     n=  204032 mean   665.40 sd  254.51 min   522 max  5658  distinct 2457
+   border right 64 cols    n=  408064 mean  1430.18 sd 1086.95 min   538 max 10929  distinct 5949
+   border top 20 rows      n=  192000 mean  1615.55 sd 1018.42 min   573 max  9291  distinct 4774
+   border bottom 20 rows   n=  192000 mean   749.40 sd  262.37 min   528 max  2155  distinct 1599
+   darkest 0.5 % of active: mean 548.42 sd 3.06 (black level is near the lowest mean seen)
+== stack-1794689780304-11226 frame 200  9600 x 6376
+   whole strip            n= 61209600 min   492 max 16383  0.01-99.99 % range [  518, 16383] empty codes inside     0 of 15866  even/odd 0.9983  %(v mod 2,4,8 == 0) [49.9566, 24.9722, 12.4714]  hist roughness 1.25 (1 = Poisson)
+   active site (0,0)      n= 15054336 min   492 max 16383  0.01-99.99 % range [  517, 16383] empty codes inside  1756 of 15867  even/odd 0.9993  %(v mod 2,4,8 == 0) [49.9835, 24.9973, 12.4703]  hist roughness 1.35 (1 = Poisson)
+   active site (0,1)      n= 15054336 min   511 max 16383  0.01-99.99 % range [  527, 16383] empty codes inside    58 of 15857  even/odd 0.9975  %(v mod 2,4,8 == 0) [49.9393, 24.9704, 12.493]  hist roughness 1.08 (1 = Poisson)
+   active site (1,0)      n= 15054336 min   512 max 16383  0.01-99.99 % range [  527, 16383] empty codes inside    70 of 15857  even/odd 0.9964  %(v mod 2,4,8 == 0) [49.9111, 24.9394, 12.4641]  hist roughness 1.09 (1 = Poisson)
+   active site (1,1)      n= 15054336 min   499 max 16383  0.01-99.99 % range [  517, 16383] empty codes inside  1908 of 15867  even/odd 0.9995  %(v mod 2,4,8 == 0) [49.9897, 24.9848, 12.4644]  hist roughness 1.39 (1 = Poisson)
+   centre 1024^2          n=  1048576 min   532 max 16383  0.01-99.99 % range [  540, 16383] empty codes inside  7752 of 15844  even/odd 1.0011  %(v mod 2,4,8 == 0) [50.0268, 25.018, 12.5145]  hist roughness 1.07 (1 = Poisson)
+   top-left 1024^2        n=  1048576 min   534 max 16383  0.01-99.99 % range [  540, 16383] empty codes inside  5871 of 15844  even/odd 1.0020  %(v mod 2,4,8 == 0) [50.0494, 25.0098, 12.5181]  hist roughness 1.04 (1 = Poisson)
+   bottom-right 1024^2    n=  1048576 min   501 max   613  0.01-99.99 % range [  516,   589] empty codes inside     0 of    74  even/odd 1.0020  %(v mod 2,4,8 == 0) [50.0503, 24.976, 12.4568]  hist roughness 2.59 (1 = Poisson)
+   border left 32 cols     n=  204032 mean   902.34 sd  912.75 min   519 max 16383  distinct 5599
+   border right 64 cols    n=  408064 mean   544.13 sd   15.31 min   505 max   611  distinct 97
+   border top 20 rows      n=  192000 mean  1208.94 sd 1796.31 min   514 max 16383  distinct 7845
+   border bottom 20 rows   n=  192000 mean   740.80 sd  433.52 min   502 max  5738  distinct 3387
+   darkest 0.5 % of active: mean 520.07 sd 1.33 (black level is near the lowest mean seen)

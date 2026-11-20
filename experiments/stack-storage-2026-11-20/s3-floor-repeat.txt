@@ -1,0 +1,186 @@
+run stack-1794687317465-11226 black 512.0 gain 0.404 DN/e- read 1.334 DN
+== shift position 1: frames [1, 5, 9, 13, 17, 21]  lamp level per frame (relative) [0.99915 0.99991 1.00044 0.99953 1.00156 0.9994 ]
+   correlation of (f2-f1) with (f4-f3), should be ~0 with no scene motion: -0.2149
+   saturated pixels (any repeat at 16383): 0.0006 %
+   2x2 site means (DN): [[656.  786.7]
+ [787.  623.8]]
+   R  site (0,0): level bin (DN above black) | % of pixels | mean level | measured var | model var | ratio | sigma DN | oracle bits (measured) | fixed pattern sd DN | bits a spatial coder loses to it
+      [    25,     50)   5.00 %      47.6      19.08      21.00  0.909     4.37   4.177     0.14  0.0008
+      [    50,    100)  55.11 %      67.9      43.44      29.23  1.486     6.59   4.769     0.20  0.0007
+      [   100,    200)  21.49 %     144.1     134.40      60.00  2.240    11.59   5.583     0.43  0.0010
+      [   200,    400)  12.42 %     267.4     276.92     109.82  2.522    16.64   6.104     0.80  0.0017
+      [   400,    800)   5.21 %     561.2     719.68     228.49  3.150    26.83   6.793     1.68  0.0028
+      [   800,   1600)   0.62 %     948.0    3777.12     384.75  9.817    61.46   7.989     2.84  0.0015
+      [  1600,   3200)   0.09 %    2314.9   31183.17     937.00  33.280   176.59   9.511     6.94  0.0011
+      [  3200,   6400)   0.06 %    4166.2   84287.40    1684.92  50.024   290.32  10.229    12.50  0.0013
+      oracle floor: 4.783 bits/px (model sigma), 5.201 (measured sigma); leave-one-out empirical 5.311 (expected oracle + 0.132 = 5.333); fixed pattern adds 0.0010 bits for a spatial coder
+   G1 site (0,1): level bin (DN above black) | % of pixels | mean level | measured var | model var | ratio | sigma DN | oracle bits (measured) | fixed pattern sd DN | bits a spatial coder loses to it
+      [    50,    100)  10.78 %      92.7      40.73      39.25  1.038     6.38   4.723     0.32  0.0019
+      [   100,    200)  51.07 %     132.9     136.75      55.46  2.466    11.69   5.595     0.47  0.0011
+      [   200,    400)  21.24 %     289.9     440.35     118.88  3.704    20.98   6.438     1.01  0.0017
+      [   400,    800)  11.40 %     539.1     955.15     219.56  4.350    30.91   6.997     1.89  0.0027
+      [   800,   1600)   4.84 %    1134.4    2666.39     460.06  5.796    51.64   7.737     3.97  0.0043
+      [  1600,   3200)   0.53 %    1898.2   14471.29     768.67  18.826   120.30   8.958     6.64  0.0022
+      [  3200,   6400)   0.09 %    4665.5   96545.11    1886.64  51.173   310.72  10.327    16.33  0.0020
+      [  6400,  16000)   0.05 %    8180.7  245446.45    3306.78  74.225   495.43  11.000    28.63  0.0024
+      oracle floor: 5.223 bits/px (model sigma), 5.957 (measured sigma); leave-one-out empirical 6.056 (expected oracle + 0.132 = 6.089); fixed pattern adds 0.0017 bits for a spatial coder
+   G2 site (1,0): level bin (DN above black) | % of pixels | mean level | measured var | model var | ratio | sigma DN | oracle bits (measured) | fixed pattern sd DN | bits a spatial coder loses to it
+      [    50,    100)  10.66 %      92.8      40.63      39.27  1.035     6.37   4.721     0.32  0.0019
+      [   100,    200)  51.13 %     133.0     136.82      55.50  2.465    11.70   5.596     0.47  0.0011
+      [   200,    400)  21.25 %     289.8     440.82     118.86  3.709    21.00   6.439     1.01  0.0017
+      [   400,    800)  11.44 %     538.9     955.12     219.50  4.351    30.90   6.997     1.89  0.0027
+      [   800,   1600)   4.85 %    1134.5    2671.26     460.12  5.806    51.68   7.739     3.97  0.0042
+      [  1600,   3200)   0.54 %    1893.1   14391.11     766.60  18.773   119.96   8.954     6.63  0.0022
+      [  3200,   6400)   0.09 %    4668.4   97113.62    1887.82  51.442   311.63  10.331    16.34  0.0020
+      [  6400,  16000)   0.05 %    8184.4  240751.86    3308.27  72.773   490.66  10.986    28.65  0.0025
+      oracle floor: 5.225 bits/px (model sigma), 5.959 (measured sigma); leave-one-out empirical 6.058 (expected oracle + 0.132 = 6.091); fixed pattern adds 0.0017 bits for a spatial coder
+   B  site (1,1): level bin (DN above black) | % of pixels | mean level | measured var | model var | ratio | sigma DN | oracle bits (measured) | fixed pattern sd DN | bits a spatial coder loses to it
+      [    25,     50)  37.53 %      42.1      17.75      18.80  0.944     4.21   4.125     0.17  0.0012
+      [    50,    100)  30.01 %      68.6      52.77      29.51  1.789     7.26   4.909     0.27  0.0010
+      [   100,    200)  20.41 %     142.1     100.17      59.19  1.692    10.01   5.371     0.57  0.0023
+      [   200,    400)   8.35 %     278.4     257.63     114.26  2.255    16.05   6.052     1.11  0.0035
+      [   400,    800)   3.45 %     538.4     610.08     219.31  2.782    24.70   6.674     2.15  0.0055
+      [   800,   1600)   0.15 %    1044.3    7207.91     423.67  17.013    84.90   8.455     4.18  0.0017
+      [  1600,   3200)   0.09 %    2296.1   19405.11     929.39  20.880   139.30   9.169     9.18  0.0031
+      [  3200,   6400)   0.02 %    3891.5   58196.05    1573.94  36.975   241.24   9.961    15.57  0.0030
+      oracle floor: 4.599 bits/px (model sigma), 4.866 (measured sigma); leave-one-out empirical 4.990 (expected oracle + 0.132 = 4.998); fixed pattern adds 0.0017 bits for a spatial coder
+   ALL SITES shift 1: oracle 4.957 bits/px (model), 5.496 (measured), LOO 5.604, fixed-pattern cost 0.0015
+== shift position 2: frames [2, 6, 10, 14, 18, 22]  lamp level per frame (relative) [1.00035 1.00035 0.9995  1.00023 0.99961 0.99995]
+   correlation of (f2-f1) with (f4-f3), should be ~0 with no scene motion: -0.2972
+   saturated pixels (any repeat at 16383): 0.0006 %
+   2x2 site means (DN): [[656.1 787.1]
+ [787.5 624. ]]
+   R  site (0,0): level bin (DN above black) | % of pixels | mean level | measured var | model var | ratio | sigma DN | oracle bits (measured) | fixed pattern sd DN | bits a spatial coder loses to it
+      [    25,     50)   5.06 %      47.6      18.63      21.00  0.887     4.32   4.160     0.14  0.0008
+      [    50,    100)  55.15 %      67.8      32.72      29.18  1.121     5.72   4.565     0.20  0.0009
+      [   100,    200)  21.34 %     144.2      91.45      60.02  1.524     9.56   5.305     0.43  0.0015
+      [   200,    400)  12.44 %     267.3     186.20     109.78  1.696    13.65   5.818     0.80  0.0025
+      [   400,    800)   5.23 %     561.3     464.92     228.53  2.034    21.56   6.478     1.68  0.0044
+      [   800,   1600)   0.63 %     945.4    2675.61     383.71  6.973    51.73   7.740     2.84  0.0022
+      [  1600,   3200)   0.09 %    2321.2   24885.37     939.53  26.487   157.75   9.349     6.96  0.0014
+      [  3200,   6400)   0.06 %    4174.6   57022.25    1688.31  33.775   238.79   9.947    12.52  0.0020
+      oracle floor: 4.782 bits/px (model sigma), 4.974 (measured sigma); leave-one-out empirical 5.092 (expected oracle + 0.132 = 5.106); fixed pattern adds 0.0014 bits for a spatial coder
+   G1 site (0,1): level bin (DN above black) | % of pixels | mean level | measured var | model var | ratio | sigma DN | oracle bits (measured) | fixed pattern sd DN | bits a spatial coder loses to it
+      [    50,    100)  10.89 %      92.8      38.20      39.26  0.973     6.18   4.676     0.32  0.0020
+      [   100,    200)  51.03 %     132.6      81.34      55.36  1.469     9.02   5.221     0.46  0.0019
+      [   200,    400)  21.11 %     289.9     262.32     118.91  2.206    16.20   6.065     1.01  0.0028
+      [   400,    800)  11.43 %     538.9     569.33     219.50  2.594    23.86   6.624     1.89  0.0045
+      [   800,   1600)   4.86 %    1135.1    1553.80     460.38  3.375    39.42   7.348     3.97  0.0073
+      [  1600,   3200)   0.54 %    1892.2   10583.69     766.24  13.812   102.88   8.732     6.62  0.0030
+      [  3200,   6400)   0.09 %    4671.4   76237.35    1889.02  40.358   276.11  10.156    16.35  0.0025
+      [  6400,  16000)   0.05 %    8188.6  150758.50    3309.98  45.547   388.28  10.648    28.66  0.0039
+      oracle floor: 5.223 bits/px (model sigma), 5.617 (measured sigma); leave-one-out empirical 5.727 (expected oracle + 0.132 = 5.749); fixed pattern adds 0.0027 bits for a spatial coder
+   G2 site (1,0): level bin (DN above black) | % of pixels | mean level | measured var | model var | ratio | sigma DN | oracle bits (measured) | fixed pattern sd DN | bits a spatial coder loses to it
+      [    50,    100)  10.77 %      92.8      37.98      39.28  0.967     6.16   4.672     0.32  0.0020
+      [   100,    200)  51.08 %     132.7      81.31      55.40  1.468     9.02   5.221     0.46  0.0019
+      [   200,    400)  21.12 %     289.8     262.62     118.85  2.210    16.21   6.066     1.01  0.0028
+      [   400,    800)  11.48 %     538.6     568.45     219.39  2.591    23.84   6.623     1.89  0.0045
+      [   800,   1600)   4.87 %    1135.4    1544.70     460.49  3.354    39.30   7.344     3.97  0.0073
+      [  1600,   3200)   0.54 %    1887.9   10594.02     764.51  13.857   102.93   8.733     6.61  0.0030
+      [  3200,   6400)   0.09 %    4672.5   77272.99    1889.48  40.897   277.98  10.166    16.35  0.0025
+      [  6400,  16000)   0.05 %    8196.8  143861.49    3313.29  43.420   379.29  10.614    28.69  0.0041
+      oracle floor: 5.224 bits/px (model sigma), 5.618 (measured sigma); leave-one-out empirical 5.728 (expected oracle + 0.132 = 5.750); fixed pattern adds 0.0027 bits for a spatial coder
+   B  site (1,1): level bin (DN above black) | % of pixels | mean level | measured var | model var | ratio | sigma DN | oracle bits (measured) | fixed pattern sd DN | bits a spatial coder loses to it
+      [    25,     50)  37.88 %      42.1      16.31      18.80  0.867     4.04   4.065     0.17  0.0013
+      [    50,    100)  29.67 %      68.6      36.21      29.51  1.227     6.02   4.638     0.27  0.0015
+      [   100,    200)  20.36 %     142.2      74.37      59.23  1.256     8.62   5.156     0.57  0.0031
+      [   200,    400)   8.36 %     278.5     176.17     114.31  1.541    13.27   5.778     1.11  0.0051
+      [   400,    800)   3.46 %     539.1     411.07     219.57  1.872    20.27   6.389     2.16  0.0081
+      [   800,   1600)   0.15 %    1042.8    5286.88     423.07  12.496    72.71   8.231     4.17  0.0024
+      [  1600,   3200)   0.09 %    2296.9   13585.69     929.72  14.613   116.56   8.912     9.19  0.0045
+      [  3200,   6400)   0.02 %    3886.3   35050.88    1571.85  22.299   187.22   9.596    15.55  0.0050
+      oracle floor: 4.598 bits/px (model sigma), 4.683 (measured sigma); leave-one-out empirical 4.808 (expected oracle + 0.132 = 4.815); fixed pattern adds 0.0023 bits for a spatial coder
+   ALL SITES shift 2: oracle 4.957 bits/px (model), 5.223 (measured), LOO 5.339, fixed-pattern cost 0.0023
+== shift position 3: frames [3, 7, 11, 15, 19, 23]  lamp level per frame (relative) [0.99965 0.99982 1.00024 1.00078 1.00074 0.99877]
+   correlation of (f2-f1) with (f4-f3), should be ~0 with no scene motion: -0.0073
+   saturated pixels (any repeat at 16383): 0.0006 %
+   2x2 site means (DN): [[656.  786.6]
+ [787.  624. ]]
+   R  site (0,0): level bin (DN above black) | % of pixels | mean level | measured var | model var | ratio | sigma DN | oracle bits (measured) | fixed pattern sd DN | bits a spatial coder loses to it
+      [    25,     50)   5.09 %      47.6      18.49      21.00  0.880     4.30   4.155     0.14  0.0008
+      [    50,    100)  55.21 %      67.8      32.12      29.17  1.101     5.67   4.552     0.20  0.0009
+      [   100,    200)  21.23 %     144.2      87.39      60.03  1.456     9.35   5.272     0.43  0.0015
+      [   200,    400)  12.44 %     267.3     176.51     109.79  1.608    13.29   5.779     0.80  0.0026
+      [   400,    800)   5.23 %     561.3     437.65     228.54  1.915    20.92   6.434     1.68  0.0047
+      [   800,   1600)   0.64 %     944.9    2491.03     383.52  6.495    49.91   7.688     2.83  0.0023
+      [  1600,   3200)   0.09 %    2321.0   23750.81     939.46  25.281   154.11   9.315     6.96  0.0015
+      [  3200,   6400)   0.06 %    4184.3   56217.23    1692.22  33.221   237.10   9.936    12.55  0.0020
+      oracle floor: 4.781 bits/px (model sigma), 4.951 (measured sigma); leave-one-out empirical 5.070 (expected oracle + 0.132 = 5.083); fixed pattern adds 0.0015 bits for a spatial coder
+   G1 site (0,1): level bin (DN above black) | % of pixels | mean level | measured var | model var | ratio | sigma DN | oracle bits (measured) | fixed pattern sd DN | bits a spatial coder loses to it
+      [    50,    100)  10.99 %      92.8      38.15      39.25  0.972     6.18   4.676     0.32  0.0020
+      [   100,    200)  51.02 %     132.5      79.72      55.32  1.441     8.93   5.206     0.46  0.0019
+      [   200,    400)  21.02 %     290.0     247.00     118.94  2.077    15.72   6.022     1.02  0.0030
+      [   400,    800)  11.42 %     539.0     528.30     219.55  2.406    22.98   6.570     1.89  0.0048
+      [   800,   1600)   4.86 %    1135.5    1437.30     460.51  3.121    37.91   7.292     3.97  0.0079
+      [  1600,   3200)   0.54 %    1891.5    9672.81     765.93  12.629    98.35   8.667     6.62  0.0033
+      [  3200,   6400)   0.09 %    4663.1   73068.85    1885.66  38.750   270.31  10.126    16.32  0.0026
+      [  6400,  16000)   0.05 %    8211.7  144291.49    3319.30  43.470   379.86  10.616    28.74  0.0041
+      oracle floor: 5.222 bits/px (model sigma), 5.590 (measured sigma); leave-one-out empirical 5.701 (expected oracle + 0.132 = 5.722); fixed pattern adds 0.0028 bits for a spatial coder
+   G2 site (1,0): level bin (DN above black) | % of pixels | mean level | measured var | model var | ratio | sigma DN | oracle bits (measured) | fixed pattern sd DN | bits a spatial coder loses to it
+      [    50,    100)  10.91 %      92.8      37.98      39.27  0.967     6.16   4.672     0.32  0.0020
+      [   100,    200)  51.05 %     132.6      79.73      55.34  1.441     8.93   5.206     0.46  0.0019
+      [   200,    400)  21.01 %     289.9     247.16     118.88  2.079    15.72   6.022     1.01  0.0030
+      [   400,    800)  11.47 %     538.8     528.73     219.44  2.409    22.99   6.570     1.89  0.0048
+      [   800,   1600)   4.87 %    1135.7    1417.47     460.62  3.077    37.65   7.282     3.98  0.0080
+      [  1600,   3200)   0.55 %    1886.8    9705.24     764.06  12.702    98.52   8.669     6.60  0.0032
+      [  3200,   6400)   0.09 %    4669.6   76074.99    1888.29  40.288   275.82  10.155    16.34  0.0025
+      [  6400,  16000)   0.05 %    8220.0  151403.26    3322.68  45.567   389.11  10.651    28.77  0.0039
+      oracle floor: 5.223 bits/px (model sigma), 5.591 (measured sigma); leave-one-out empirical 5.702 (expected oracle + 0.132 = 5.723); fixed pattern adds 0.0028 bits for a spatial coder
+   B  site (1,1): level bin (DN above black) | % of pixels | mean level | measured var | model var | ratio | sigma DN | oracle bits (measured) | fixed pattern sd DN | bits a spatial coder loses to it
+      [    25,     50)  38.08 %      42.1      16.19      18.81  0.861     4.02   4.059     0.17  0.0013
+      [    50,    100)  29.52 %      68.6      35.32      29.51  1.197     5.94   4.620     0.27  0.0015
+      [   100,    200)  20.30 %     142.3      71.69      59.25  1.210     8.47   5.130     0.57  0.0033
+      [   200,    400)   8.37 %     278.6     168.07     114.32  1.470    12.96   5.744     1.11  0.0053
+      [   400,    800)   3.47 %     539.5     383.98     219.75  1.747    19.60   6.340     2.16  0.0087
+      [   800,   1600)   0.15 %    1041.3    4858.16     422.48  11.499    69.70   8.170     4.17  0.0026
+      [  1600,   3200)   0.09 %    2297.7   12445.27     930.04  13.381   111.56   8.849     9.19  0.0049
+      [  3200,   6400)   0.02 %    3887.2   31525.24    1572.21  20.051   177.55   9.519    15.55  0.0055
+      oracle floor: 4.597 bits/px (model sigma), 4.664 (measured sigma); leave-one-out empirical 4.789 (expected oracle + 0.132 = 4.796); fixed pattern adds 0.0024 bits for a spatial coder
+   ALL SITES shift 3: oracle 4.956 bits/px (model), 5.199 (measured), LOO 5.316, fixed-pattern cost 0.0024
+== shift position 4: frames [4, 8, 12, 16, 20, 24]  lamp level per frame (relative) [0.99993 1.00062 0.99969 1.00012 0.99924 1.0004 ]
+   correlation of (f2-f1) with (f4-f3), should be ~0 with no scene motion: 0.1781
+   saturated pixels (any repeat at 16383): 0.0006 %
+   2x2 site means (DN): [[655.9 786.8]
+ [787.2 623.7]]
+   R  site (0,0): level bin (DN above black) | % of pixels | mean level | measured var | model var | ratio | sigma DN | oracle bits (measured) | fixed pattern sd DN | bits a spatial coder loses to it
+      [    25,     50)   5.18 %      47.6      18.60      20.99  0.886     4.31   4.159     0.14  0.0008
+      [    50,    100)  55.21 %      67.7      31.57      29.14  1.083     5.62   4.539     0.20  0.0009
+      [   100,    200)  21.16 %     144.2      81.47      60.04  1.357     9.03   5.222     0.43  0.0017
+      [   200,    400)  12.43 %     267.4     162.31     109.81  1.478    12.74   5.719     0.80  0.0029
+      [   400,    800)   5.23 %     561.5     372.65     228.61  1.630    19.30   6.318     1.68  0.0055
+      [   800,   1600)   0.64 %     946.4    1644.85     384.11  4.282    40.56   7.389     2.84  0.0035
+      [  1600,   3200)   0.09 %    2313.5   14596.73     936.44  15.587   120.82   8.964     6.94  0.0024
+      [  3200,   6400)   0.06 %    4191.9   34566.87    1695.30  20.390   185.92   9.586    12.58  0.0033
+      oracle floor: 4.780 bits/px (model sigma), 4.917 (measured sigma); leave-one-out empirical 5.038 (expected oracle + 0.132 = 5.049); fixed pattern adds 0.0016 bits for a spatial coder
+   G1 site (0,1): level bin (DN above black) | % of pixels | mean level | measured var | model var | ratio | sigma DN | oracle bits (measured) | fixed pattern sd DN | bits a spatial coder loses to it
+      [    50,    100)  11.15 %      92.7      38.14      39.22  0.972     6.18   4.675     0.32  0.0020
+      [   100,    200)  50.95 %     132.4      76.01      55.26  1.376     8.72   5.172     0.46  0.0020
+      [   200,    400)  20.94 %     290.1     218.33     118.97  1.835    14.78   5.933     1.02  0.0034
+      [   400,    800)  11.41 %     539.2     462.93     219.62  2.108    21.52   6.475     1.89  0.0055
+      [   800,   1600)   4.85 %    1136.0    1134.75     460.72  2.463    33.69   7.121     3.98  0.0100
+      [  1600,   3200)   0.55 %    1895.8    6117.71     767.67  7.969    78.22   8.336     6.64  0.0052
+      [  3200,   6400)   0.09 %    4663.1   45738.47    1885.69  24.256   213.87   9.788    16.32  0.0042
+      [  6400,  16000)   0.05 %    8238.7   96980.04    3330.22  29.121   311.42  10.330    28.84  0.0062
+      oracle floor: 5.220 bits/px (model sigma), 5.531 (measured sigma); leave-one-out empirical 5.645 (expected oracle + 0.132 = 5.663); fixed pattern adds 0.0031 bits for a spatial coder
+   G2 site (1,0): level bin (DN above black) | % of pixels | mean level | measured var | model var | ratio | sigma DN | oracle bits (measured) | fixed pattern sd DN | bits a spatial coder loses to it
+      [    50,    100)  11.04 %      92.7      38.00      39.24  0.968     6.16   4.673     0.32  0.0020
+      [   100,    200)  51.00 %     132.5      76.12      55.29  1.377     8.72   5.173     0.46  0.0020
+      [   200,    400)  20.94 %     290.0     218.93     118.93  1.841    14.80   5.935     1.01  0.0034
+      [   400,    800)  11.45 %     539.0     460.49     219.53  2.098    21.46   6.471     1.89  0.0056
+      [   800,   1600)   4.87 %    1136.2    1137.50     460.79  2.469    33.73   7.123     3.98  0.0100
+      [  1600,   3200)   0.55 %    1890.5    5999.84     765.56  7.837    77.46   8.322     6.62  0.0052
+      [  3200,   6400)   0.09 %    4665.9   46116.97    1886.81  24.442   214.75   9.794    16.33  0.0042
+      [  6400,  16000)   0.05 %    8235.6   95667.18    3328.97  28.738   309.30  10.320    28.82  0.0062
+      oracle floor: 5.221 bits/px (model sigma), 5.533 (measured sigma); leave-one-out empirical 5.647 (expected oracle + 0.132 = 5.665); fixed pattern adds 0.0031 bits for a spatial coder
+   B  site (1,1): level bin (DN above black) | % of pixels | mean level | measured var | model var | ratio | sigma DN | oracle bits (measured) | fixed pattern sd DN | bits a spatial coder loses to it
+      [    25,     50)  38.25 %      42.1      16.17      18.80  0.860     4.02   4.058     0.17  0.0013
+      [    50,    100)  29.41 %      68.6      34.01      29.51  1.153     5.83   4.593     0.27  0.0016
+      [   100,    200)  20.24 %     142.3      68.33      59.26  1.153     8.27   5.095     0.57  0.0034
+      [   200,    400)   8.37 %     278.6     154.57     114.32  1.352    12.43   5.684     1.11  0.0058
+      [   400,    800)   3.47 %     539.8     323.10     219.86  1.470    17.97   6.215     2.16  0.0103
+      [   800,   1600)   0.15 %    1041.4    3028.04     422.52  7.167    55.03   7.829     4.17  0.0041
+      [  1600,   3200)   0.09 %    2300.0    8314.35     930.96  8.931    91.18   8.558     9.20  0.0073
+      [  3200,   6400)   0.02 %    3898.3   20572.06    1576.69  13.048   143.43   9.211    15.59  0.0085
+      oracle floor: 4.596 bits/px (model sigma), 4.637 (measured sigma); leave-one-out empirical 4.764 (expected oracle + 0.132 = 4.769); fixed pattern adds 0.0025 bits for a spatial coder
+   ALL SITES shift 4: oracle 4.955 bits/px (model), 5.155 (measured), LOO 5.273, fixed-pattern cost 0.0026
+RUN MEAN (active area): oracle floor 4.956 bits/px by the model, 5.268 by measured variance; LOO check 5.383; a spatial coder cannot go below floor + 0.0022 (fixed pattern)

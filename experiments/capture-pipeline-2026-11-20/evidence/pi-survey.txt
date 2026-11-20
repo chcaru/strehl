@@ -1,0 +1,131 @@
+{
+ "phase": "disconnected",
+ "connected": false,
+ "busy": false,
+ "message": "Camera shut down \u00b7 supply off",
+ "usb_speed_mbps": null,
+ "error_correction": false,
+ "editable": false,
+ "failure": null,
+ "power": {
+  "available": true,
+  "camera": {
+   "on": false,
+   "watts": 0.0
+  },
+  "can_manage": false,
+  "can_start_camera": true,
+  "can_stop_camera": false,
+  "error": null,
+  "light": {
+   "on": false,
+   "watts": 0.0
+  },
+  "manage_stack": true,
+  "warmup_seconds": 5
+ },
+ "storage": {
+  "bytes": 124641280,
+  "captured_frames": 0,
+  "folder": "\\\\?\\D:\\StrehlCaptures",
+  "free_bytes": 394859315200,
+  "message": "RAW verified and saved on PC",
+  "mode": "host-pc",
+  "pending_bytes": 0,
+  "pending_frames": 0,
+  "pipelined": true,
+  "queue_capacity": 4,
+  "queue_peak": 0,
+  "receipt": {
+   "bytes": 124641280,
+   "chunks": 52,
+   "durable": true,
+   "encoding": "strehl-raw-v1",
+   "logical_name": "frame-000016.ARW",
+   "ok": true,
+   "path": "\\\\?\\D:\\StrehlCaptures\\stack-1795169064540-1325\\frame-000016.ARW.straw",
+   "saved_unix_ms": 1795169095932,
+   "sha256": "8505d8e252d1e15d29c21954eb4a235070cf51404bddc3cf852646be3dd7d919",
+   "storage_bytes": 50120546,
+   "storage_encoding": "strehl-archive-v2",
+   "transfer_saved_percent": 59.107423319144345,
+   "upload_MB_per_second": 131.54512421125807,
+   "upload_seconds": 0.947517293,
+   "wire_MB_per_second": 53.792190788015525,
+   "wire_bytes": 50969031
+  },
+  "saved_frames": 0,
+  "state": "saved",
+  "upload_MB_per_second": 131.54512421125807
+ }
+}
+model: Raspberry Pi 5 Model B Rev 1.1
+mem: ['MemTotal:        4146320 kB', 'MemAvailable:    3824112 kB']
+cpus: 4 governor ondemand cur kHz 1800000
+-- usb devices
+  1-1 12 054c:0d68 USB Bus-powered Device
+  4-1 5000 0e8d:7961 Wireless_Device
+  usb1 480 1d6b:0002 xHCI Host Controller
+  usb2 5000 1d6b:0003 xHCI Host Controller
+  usb3 480 1d6b:0002 xHCI Host Controller
+  usb4 5000 1d6b:0003 xHCI Host Controller
+-- net
+  eth0 state down speed -1 carrier 0
+  lo state unknown speed  carrier 1
+  wlan0 state up speed  carrier 1
+  wlan1 state up speed  carrier 1
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+eth0             DOWN           
+wlan0            UP             10.0.0.187/24 
+wlan1            UP             10.0.0.178/24
+default via 10.0.0.1 dev wlan1 proto dhcp src 10.0.0.178 metric 100 
+default via 10.0.0.1 dev wlan0 proto dhcp src 10.0.0.187 metric 600 
+10.0.0.0/24 dev wlan1 proto kernel scope link src 10.0.0.178 metric 100 
+10.0.0.0/24 dev wlan0 proto kernel scope link src 10.0.0.187 metric 600
+-- iw wlan0
+ERR FileNotFoundError(2, 'No such file or directory')
+ERR FileNotFoundError(2, 'No such file or directory')
+ERR FileNotFoundError(2, 'No such file or directory')
+-- iw wlan1
+ERR FileNotFoundError(2, 'No such file or directory')
+ERR FileNotFoundError(2, 'No such file or directory')
+ERR FileNotFoundError(2, 'No such file or directory')
+-- df
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/mmcblk0p2  117G  2.1G  110G   2% /
+tmpfs           1.0G     0  1.0G   0% /run/strehl-raw
+/dev/mmcblk0p2  117G  2.1G  110G   2% /
+/dev/mmcblk0p2  117G  2.1G  110G   2% /
+-- mounts strehl: ['tmpfs /run/strehl-raw tmpfs rw,nosuid,nodev,noexec,relatime,size=1048576k,mode=700,uid=1001,gid=1001,noswap 0 0']
+-- /opt/strehl-capture
+total 18080
+drwxrwxrwx 5 root root    4096 2026-11-20 07:46 .
+drwxr-xr-x 3 root root    4096 2026-11-12 04:11 ..
+drwxr-xr-x 2 root root    4096 2026-11-12 06:15 before-final-status-20261111
+drwxr-xr-x 2 root root    4096 2026-11-12 05:53 before-overlap-20261111
+drwxrwxrwx 2 root root    4096 2026-11-12 04:06 CrAdapter
+-rwxrwxrwx 1 root root 2046200 2026-11-12 04:06 libCr_Core.so
+-rwxrwxrwx 1 root root 4856112 2026-11-12 04:06 libmonitor_protocol_pf.so
+-rwxrwxrwx 1 root root 6591368 2026-11-12 04:06 libmonitor_protocol.so
+-rwxrwxrwx 1 root root   29797 2026-11-12 04:06 sony-sdk-notices.md
+-rwxr-xr-x 1 root root 4266080 2026-11-20 07:46 strehl-capture-headless
+-rwxr-xr-x 1 root root  157144 2026-11-12 06:15 strehl-sony-control
+-rwxr-xr-x 1 root root  529216 2026-11-19 05:56 strehl-sony-ptp
+-- service
+MainPID=1325
+ExecStart={ path=/opt/strehl-capture/strehl-capture-headless ; argv[]=/opt/strehl-capture/strehl-capture-headless --config /etc/strehl-capture/headless.json ; ignore_errors=no ; start_time=[Fri 2026-11-20 07:46:37 GMT] ; stop_time=[n/a] ; pid=1325 ; code=(null) ; status=0/0 }
+User=strehl
+ActiveState=active
+-- lsusb -t
+/:  Bus 001.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/2p, 480M
+    |__ Port 001: Dev 020, If 0, Class=Human Interface Device, Driver=usbhid, 12M
+/:  Bus 002.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/1p, 5000M
+/:  Bus 003.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/2p, 480M
+/:  Bus 004.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/1p, 5000M
+    |__ Port 001: Dev 002, If 0, Class=Vendor Specific Class, Driver=mt7921u, 5000M
+-- python usb modules: Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import usb; print(usb.__version__)
+    ^^^^^^^^^^
+ModuleNotFoundError: No module named 'usb'
+-- uptime 16587.72

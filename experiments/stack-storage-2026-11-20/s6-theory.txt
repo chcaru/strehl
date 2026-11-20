@@ -1,0 +1,8 @@
+systematic bias of a uniform quantiser of step D on a Gaussian of sigma s, as a mean over repeats sees it
+(exact: E[Q(x)] - mu over all phases of mu within a step; in units of sigma)
+   k = step / sigma = 0.25: worst bias 1.735e-16 sigma, rms 5.933e-17 sigma; added noise sigma x 1.0026 (+0.26 %)
+   k = step / sigma = 0.50: worst bias 2.220e-16 sigma, rms 7.544e-17 sigma; added noise sigma x 1.0104 (+1.04 %)
+   k = step / sigma = 1.00: worst bias 8.516e-10 sigma, rms 6.007e-10 sigma; added noise sigma x 1.0408 (+4.08 %)
+   k = step / sigma = 2.00: worst bias 4.578e-03 sigma, rms 3.229e-03 sigma; added noise sigma x 1.1547 (+15.47 %)
+   k = step / sigma = 3.00: worst bias 1.065e-01 sigma, rms 7.514e-02 sigma; added noise sigma x 1.3229 (+32.29 %)
+   k = step / sigma = 4.00: worst bias 3.709e-01 sigma, rms 2.616e-01 sigma; added noise sigma x 1.5275 (+52.75 %)

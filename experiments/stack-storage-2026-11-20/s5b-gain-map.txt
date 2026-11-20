@@ -1,0 +1,18 @@
+frames 8 of 62
+frames 16 of 62
+frames 24 of 62
+frames 32 of 62
+frames 40 of 62
+frames 48 of 62
+frames 56 of 62
+site 0: raw map sd 0.4497 %, its noise sd (median) 0.2361 %, shrink factor median 0.618, covered 98.7 % of photosites, shrunk map sd 0.2319 %
+site 1: raw map sd 0.4315 %, its noise sd (median) 0.1837 %, shrink factor median 0.784, covered 99.1 % of photosites, shrunk map sd 0.2977 %
+site 2: raw map sd 0.4296 %, its noise sd (median) 0.1835 %, shrink factor median 0.784, covered 99.1 % of photosites, shrunk map sd 0.2969 %
+site 3: raw map sd 0.5257 %, its noise sd (median) 0.2532 %, shrink factor median 0.714, covered 98.4 % of photosites, shrunk map sd 0.3247 %
+site 0: correlation with the 2026-11-16 calibration-burst map (other scene, other day) 0.323
+site 1: correlation with the 2026-11-16 calibration-burst map (other scene, other day) 0.514
+site 2: correlation with the 2026-11-16 calibration-burst map (other scene, other day) 0.518
+site 3: correlation with the 2026-11-16 calibration-burst map (other scene, other day) 0.403
+map quantised to 0.05 % steps: 34.3 MB (static entropy)
+map quantised to 0.10 % steps: 26.8 MB (static entropy)
+map quantised to 0.20 % steps: 19.4 MB (static entropy)

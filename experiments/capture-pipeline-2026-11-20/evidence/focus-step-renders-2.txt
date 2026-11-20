@@ -1,0 +1,14 @@
+631 flat tiles, 315 detail tiles (the full render's top tenth by 1.5 px gradient energy)
+
+scale   signal/noise in detail tiles (full)   flat-tile energy vs full: s2, s4   detail energy vs full (floor removed): s2 median [p10], s4 median [p10]   amplitude s2, s4
+0.5 px      9.5x (noise-limited: do not read)   0.992, 0.923   0.998 [0.986], 0.943 [0.928]   0.999, 0.971
+0.7 px      9.7x (noise-limited: do not read)   0.994, 0.934   0.999 [0.988], 0.952 [0.941]   1.000, 0.976
+1.0 px      9.8x (noise-limited: do not read)   0.996, 0.943   1.000 [0.989], 0.958 [0.949]   1.000, 0.979
+1.5 px     10.0x (noise-limited: do not read)   0.997, 0.949   1.000 [0.990], 0.963 [0.954]   1.000, 0.981
+2.5 px     10.0x   0.998, 0.953   1.000 [0.989], 0.967 [0.958]   1.000, 0.983
+
+crops at the strongest edges, 200 % nearest neighbour (left to right: full, every 2nd plane, every 4th plane)
+   edge-0-y694-x6274.png: origin y=694 x=6274, 160 px square each, shown at 200 %
+   edge-1-y2351-x8824.png: origin y=2351 x=8824, 160 px square each, shown at 200 %
+   edge-2-y1961-x6757.png: origin y=1961 x=6757, 160 px square each, shown at 200 %
+   edge-3-y2031-x7937.png: origin y=2031 x=7937, 160 px square each, shown at 200 %

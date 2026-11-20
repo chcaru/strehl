@@ -1,0 +1,34 @@
+# L3: can the lens move, and the next group start, while the last RAW of a group is still in
+# the camera? Four-shot, 0.6 s. Group A is downloaded as it becomes ready until the camera
+# says the group is over (active=0, RAW 4 still inside); then:
+#   1. focus +8 is sent at once and watched without downloading;
+#   2. 300 ms after the lens reports the target, the next shutter is pressed with RAW 4
+#      still in the camera;
+#   3. everything is downloaded as it becomes ready.
+configure
+pixel-shift 4
+lab-mark group-A
+lab-shutter 0 s2
+lab-watch 14000 auto active0
+lab-mark move-with-RAW4-inside
+lab-jog 8
+lab-watch 3000 hold attarget
+lab-sleep 300
+lab-mark group-B-shutter-with-RAW4-inside
+lab-shutter 0 s2
+lab-watch 16000 auto idle
+lab-sleep 500
+# The same, but RAW 4 is downloaded while the lens moves and settles (the pipelined order).
+lab-mark group-C
+lab-shutter 0 s2
+lab-watch 14000 auto active0
+lab-mark move-and-download
+lab-jog 8
+lab-watch 3000 auto attarget
+lab-watch 3000 auto count:0
+lab-mark group-D-shutter
+lab-shutter 0 s2
+lab-watch 16000 auto idle
+lab-mark back
+lab-jog -16
+lab-watch 2500 hold attarget

@@ -1,0 +1,14 @@
+# L7: when does the image stop changing after a focus step? Live view at 30 fps on the
+# sharp lettering (about 41000), the step sent 600 ms into each 2.2 s recording.
+configure
+pixel-shift 4
+focus 40700 500
+focus 40828 500
+lab-liveview 2200 /home/strehl/lab/lv/m8a 600 8
+lab-liveview 2200 /home/strehl/lab/lv/m8b 600 8
+lab-liveview 2200 /home/strehl/lab/lv/m8c 600 8
+lab-liveview 2200 /home/strehl/lab/lv/m32 600 32
+lab-liveview 2200 /home/strehl/lab/lv/m128 600 128
+lab-liveview 2200 /home/strehl/lab/lv/m512 600 512
+lab-liveview 2200 /home/strehl/lab/lv/m-128 600 -128
+lab-liveview 2200 /home/strehl/lab/lv/m1 600 1

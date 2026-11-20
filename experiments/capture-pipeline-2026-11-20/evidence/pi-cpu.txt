@@ -1,0 +1,50 @@
+ "capture_timeout_s": 120, "end": 0, "settle_ms": 500, "start": 0, "step": 1} | exposure {"f_number": 560, "iso": 100, "iso_options": [16777215, 268435506, 268435520, 268435536, 100, 125, 160, 200, 25
+storage {"saved_frames": 16, "pending_frames": 0, "queue_peak": 2, "state": "saved"}
+folder \\?\D:\StrehlCaptures\stack-1795169064540-1325
+last receipt {"bytes": 124641280, "wire_bytes": 50969031, "upload_seconds": 0.947517293, "upload_MB_per_second": 131.54512421125807, "wire_MB_per_second": 53.792190788015525, "storage_bytes": 50120546
+ 
+  1.0 s  all   0%  cores   0   0   0   1  | 
+  2.0 s  all   0%  cores   1   0   0   1  | strehl-sony-ptp 2%
+  3.0 s  all   1%  cores   1   1   1   0  | 
+  4.0 s  all   0%  cores   1   0   0   1  | strehl-sony-ptp 2%
+  5.0 s  all  15%  cores  14   6  17  21  | strehl-capture- 48% strehl-sony-ptp 7%
+  6.0 s  all  37%  cores  44  32  40  33  | strehl-capture- 84% strehl-sony-ptp 10%
+  7.0 s  all  46%  cores  46  43  56  39  | strehl-capture- 102% strehl-sony-ptp 12%
+  8.0 s  all  46%  cores  42  36  64  39  | strehl-capture- 112% strehl-sony-ptp 10%
+  9.0 s  all  39%  cores  52  28  46  32  | strehl-capture- 104% strehl-sony-ptp 5%
+ 10.1 s  all   5%  cores   4   4   6   6  | strehl-capture- 10% strehl-sony-ptp 1%
+ 11.1 s  all   0%  cores   1   1   0   0  | strehl-sony-ptp 1%
+ 12.1 s  all   2%  cores   2   6   0   0  | strehl-sony-ptp 7%
+ 13.1 s  all  46%  cores  47  47  35  54  | strehl-capture- 120% strehl-sony-ptp 7%
+ 14.1 s  all  37%  cores  33  30  44  40  | strehl-capture- 94% strehl-sony-ptp 7%
+ 15.1 s  all  39%  cores  53  29  31  43  | strehl-capture- 103% strehl-sony-ptp 9%
+ 16.1 s  all  44%  cores  42  38  51  47  | strehl-capture- 105% strehl-sony-ptp 11%
+ 17.1 s  all  18%  cores  24  17  17  17  | strehl-capture- 41% strehl-sony-ptp 2%
+ 18.1 s  all   1%  cores   1   0   1   0  | strehl-capture- 1% strehl-sony-ptp 1%
+ 19.1 s  all   1%  cores   0   0   4   0  | strehl-sony-ptp 5%
+ 20.1 s  all  40%  cores  33  48  48  29  | strehl-capture- 107% strehl-sony-ptp 5%
+ 21.1 s  all  31%  cores  24  23  35  39  | strehl-capture- 78% strehl-sony-ptp 7%
+ 22.1 s  all  43%  cores  40  49  37  46  | strehl-capture- 103% strehl-sony-ptp 12%
+ 23.1 s  all  42%  cores  39  35  58  33  | strehl-capture- 103% strehl-sony-ptp 14%
+ 24.1 s  all  29%  cores  31  31  30  24  | strehl-capture- 64% strehl-sony-ptp 1%
+ 25.1 s  all   1%  cores   2   3   0   1  | strehl-capture- 1% strehl-sony-ptp 1%
+ 26.2 s  all   1%  cores   0   2   0   1  | strehl-sony-ptp 2%
+ 27.2 s  all  27%  cores  32  23  19  34  | strehl-capture- 75% strehl-sony-ptp 7%
+ 28.2 s  all  37%  cores  48  32  30  39  | strehl-capture- 90% strehl-sony-ptp 9%
+ 29.2 s  all  39%  cores  51  33  33  40  | strehl-capture- 91% strehl-sony-ptp 10%
+ 30.2 s  all  42%  cores  42  44  34  48  | strehl-capture- 91% strehl-sony-ptp 11%
+ 31.2 s  all  38%  cores  40  42  33  37  | strehl-capture- 99% strehl-sony-ptp 1%
+ 32.2 s  all   1%  cores   4   0   0   1  | strehl-capture- 5%
+ 33.2 s  all   2%  cores   5   0   0   0  | strehl-capture- 6% strehl-sony-ptp 2%
+ 34.2 s  all   2%  cores   6   1   0   1  | strehl-capture- 6% strehl-sony-ptp 1%
+ 35.2 s  all   2%  cores   5   0   0   0  | strehl-capture- 6% strehl-sony-ptp 1%
+ 36.2 s  all   2%  cores   5   0   0   1  | strehl-capture- 6%
+ 37.2 s  all   2%  cores   6   0   1   0  | strehl-capture- 6% strehl-sony-ptp 2%
+ 38.2 s  all   1%  cores   5   0   0   1  | strehl-capture- 6% strehl-sony-ptp 1%
+ 39.2 s  all   2%  cores   6   0   1   1  | strehl-capture- 5% strehl-sony-ptp 1%
+ 40.2 s  all   2%  cores   7   0   1   0  | strehl-capture- 7% strehl-sony-ptp 1%
+ 41.2 s  all   2%  cores   4   1   0   0  | strehl-capture- 7% strehl-sony-ptp 1%
+ 42.2 s  all   2%  cores   5   0   1   1  | strehl-capture- 5% strehl-sony-ptp 1%
+ 43.2 s  all   2%  cores   5   1   2   1  | strehl-capture- 5% strehl-sony-ptp 1%
+ 44.3 s  all   2%  cores   6   1   0   0  | strehl-capture- 7% strehl-sony-ptp 1%
+ 

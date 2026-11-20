@@ -1,0 +1,127 @@
+# L9: the pipelined order sustained over eight four-shot planes (0.6 s, step 8): the lens is
+# sent on at the fourth image-arrival event, the next shutter is pressed 300 ms after the
+# focus-result event, and RAWs are downloaded as they become ready, never waited for.
+configure
+pixel-shift 4
+focus 40780 500
+focus 40908 500
+lab-mark plane-0
+lab-shutter 0 s2
+lab-watch 14000 auto evn:c206:4
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 300
+lab-mark plane-1
+lab-shutter 0 s2
+lab-watch 14000 auto evn:c206:4
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 300
+lab-mark plane-2
+lab-shutter 0 s2
+lab-watch 14000 auto evn:c206:4
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 300
+lab-mark plane-3
+lab-shutter 0 s2
+lab-watch 14000 auto evn:c206:4
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 300
+lab-mark plane-4
+lab-shutter 0 s2
+lab-watch 14000 auto evn:c206:4
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 300
+lab-mark plane-5
+lab-shutter 0 s2
+lab-watch 14000 auto evn:c206:4
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 300
+lab-mark plane-6
+lab-shutter 0 s2
+lab-watch 14000 auto evn:c206:4
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 300
+lab-mark plane-7
+lab-shutter 0 s2
+lab-watch 14000 auto evn:c206:4
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 300
+lab-mark drain
+lab-watch 6000 auto count:0
+lab-watch 1500 auto none
+# The same for one RAW per plane, 100 ms after the focus-result event.
+pixel-shift 1
+lab-mark single-0
+lab-shutter 0 s2
+lab-watch 6000 auto evn:c206:1
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 100
+lab-mark single-1
+lab-shutter 0 s2
+lab-watch 6000 auto evn:c206:1
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 100
+lab-mark single-2
+lab-shutter 0 s2
+lab-watch 6000 auto evn:c206:1
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 100
+lab-mark single-3
+lab-shutter 0 s2
+lab-watch 6000 auto evn:c206:1
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 100
+lab-mark single-4
+lab-shutter 0 s2
+lab-watch 6000 auto evn:c206:1
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 100
+lab-mark single-5
+lab-shutter 0 s2
+lab-watch 6000 auto evn:c206:1
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 100
+lab-mark single-6
+lab-shutter 0 s2
+lab-watch 6000 auto evn:c206:1
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 100
+lab-mark single-7
+lab-shutter 0 s2
+lab-watch 6000 auto evn:c206:1
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 100
+lab-mark single-8
+lab-shutter 0 s2
+lab-watch 6000 auto evn:c206:1
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 100
+lab-mark single-9
+lab-shutter 0 s2
+lab-watch 6000 auto evn:c206:1
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 100
+lab-mark drain-single
+lab-watch 6000 auto count:0
+lab-watch 1500 auto none
+pixel-shift 4
+focus 50960 500
+focus 51088 500
+status

@@ -1,0 +1,12 @@
+# L10: is the per-shot overhead of a single RAW per plane a property of the pixel-shift drive
+# mode? Read whether the mode can be changed over PTP at all (it is only read here).
+configure
+pixel-shift 1
+lab-allowed d239
+lab-allowed d23a
+lab-allowed 5013
+lab-allowed d253
+lab-allowed d21b
+lab-allowed d20e
+pixel-shift 4
+status

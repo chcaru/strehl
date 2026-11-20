@@ -1,0 +1,68 @@
+# L4a: the camera's own four-shot cadence at shorter exposures (what more light would buy).
+configure
+pixel-shift 4
+exposure 100 65546
+lab-mark four-shot-1/10s
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-sleep 300
+exposure 100 65636
+lab-mark four-shot-1/100s
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-sleep 300
+exposure 100 393226
+# L4b: the lens moved at the fourth image's arrival event (c206), before the camera reports
+# the group over, then the next group at the focus result event plus 300 ms.
+lab-mark c206-anchored-group-A
+lab-shutter 0 s2
+lab-watch 14000 auto evn:c206:4
+lab-mark jog-at-4th-c206
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 300
+lab-mark c206-anchored-group-B
+lab-shutter 0 s2
+lab-watch 16000 auto idle
+lab-sleep 300
+# L4c: single shot per plane, pipelined: shutter, lens moved when the image arrives in the
+# buffer (c206), next shutter at the focus result event plus 100 ms; RAWs downloaded as they
+# become ready, never waited for.
+pixel-shift 1
+lab-mark single-1
+lab-shutter 0 s2
+lab-watch 6000 auto evn:c206:1
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 100
+lab-mark single-2
+lab-shutter 0 s2
+lab-watch 6000 auto evn:c206:1
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 100
+lab-mark single-3
+lab-shutter 0 s2
+lab-watch 6000 auto evn:c206:1
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 100
+lab-mark single-4
+lab-shutter 0 s2
+lab-watch 6000 auto evn:c206:1
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 100
+lab-mark single-5
+lab-shutter 0 s2
+lab-watch 6000 auto evn:c206:1
+lab-jog 8
+lab-watch 3000 auto ev:c218
+lab-sleep 100
+lab-mark single-6
+lab-shutter 0 s2
+lab-watch 8000 auto idle
+lab-mark back
+lab-jog -48
+lab-watch 2500 hold attarget
+pixel-shift 4

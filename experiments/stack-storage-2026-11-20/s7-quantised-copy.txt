@@ -1,0 +1,14 @@
+wrote 8 of 96
+wrote 16 of 96
+wrote 24 of 96
+wrote 32 of 96
+wrote 40 of 96
+wrote 48 of 96
+wrote 56 of 96
+wrote 64 of 96
+wrote 72 of 96
+wrote 80 of 96
+wrote 88 of 96
+wrote 96 of 96
+rms change 9.002 DN over 5876121600 samples
+done: C:\strehl-scratch\storage-study\scarab-k1

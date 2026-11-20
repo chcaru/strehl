@@ -1,0 +1,15 @@
+== stack-1794786793543-11226 frame 1
+   IFD0 JPEG 215205 bytes | jxl 174881 bytes (18.7 % smaller, byte-exact True, encode 0.03 s, decode 0.01 s) | brunsli 160914 bytes (25.2 % smaller, byte-exact False, encode 0.02 s, decode 0.02 s)
+   IFD1 JPEG 8454 bytes | jxl 7754 bytes (8.3 % smaller, byte-exact True, encode 0.00 s, decode 0.00 s) | brunsli 7006 bytes (17.1 % smaller, byte-exact False, encode 0.00 s, decode 0.00 s)
+   IFD2 JPEG 2784657 bytes | jxl 1750835 bytes (37.1 % smaller, byte-exact True, encode 0.48 s, decode 0.34 s) | brunsli 1630447 bytes (41.4 % smaller, byte-exact False, encode 0.29 s, decode 0.37 s)
+   all embedded JPEGs 3008316 bytes = 3.01 MB; lossless recompression saves 1.07 MB (JXL) / 1.21 MB (Brunsli); dropping them saves 3.01 MB
+== stack-1794786793543-11226 frame 401
+   IFD0 JPEG 328785 bytes | jxl 270024 bytes (17.9 % smaller, byte-exact True, encode 0.03 s, decode 0.02 s) | brunsli 252627 bytes (23.2 % smaller, byte-exact False, encode 0.03 s, decode 0.03 s)
+   IFD1 JPEG 10208 bytes | jxl 9194 bytes (9.9 % smaller, byte-exact True, encode 0.00 s, decode 0.00 s) | brunsli 8557 bytes (16.2 % smaller, byte-exact False, encode 0.00 s, decode 0.00 s)
+   IFD2 JPEG 3848370 bytes | jxl 2764888 bytes (28.2 % smaller, byte-exact True, encode 0.51 s, decode 0.29 s) | brunsli 2562958 bytes (33.4 % smaller, byte-exact False, encode 0.38 s, decode 0.42 s)
+   all embedded JPEGs 4187363 bytes = 4.19 MB; lossless recompression saves 1.14 MB (JXL) / 1.36 MB (Brunsli); dropping them saves 4.19 MB
+== stack-1794687317465-11226 frame 1
+   IFD0 JPEG 401902 bytes | jxl 319016 bytes (20.6 % smaller, byte-exact True, encode 0.03 s, decode 0.02 s) | brunsli 292749 bytes (27.2 % smaller, byte-exact False, encode 0.03 s, decode 0.03 s)
+   IFD1 JPEG 6821 bytes | jxl 6267 bytes (8.1 % smaller, byte-exact True, encode 0.00 s, decode 0.00 s) | brunsli 5552 bytes (18.6 % smaller, byte-exact False, encode 0.00 s, decode 0.00 s)
+   IFD2 JPEG 4034025 bytes | jxl 3009550 bytes (25.4 % smaller, byte-exact True, encode 0.56 s, decode 0.30 s) | brunsli 2823330 bytes (30.0 % smaller, byte-exact False, encode 0.37 s, decode 0.42 s)
+   all embedded JPEGs 4442748 bytes = 4.44 MB; lossless recompression saves 1.11 MB (JXL) / 1.32 MB (Brunsli); dropping them saves 4.44 MB

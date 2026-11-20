@@ -1,0 +1,15 @@
+== stack-1794786793543-11226 frame 401
+   k = 0.25 (2350 codes, mean bin width 5.5 DN): bits/px  JPEG-LS 5.156 | JXL e3 5.075 | f2 predictor static 5.519 | E0 5.196 | E3 4.735 | noise-only entropy of a code at the nominal step 4.051 | E3 = 36.23 MB for the strip
+   k = 0.50 (1380 codes, mean bin width 11.9 DN): bits/px  JPEG-LS 4.077 | JXL e3 3.949 | f2 predictor static 4.400 | E0 4.089 | E3 3.620 | noise-only entropy of a code at the nominal step 3.062 | E3 = 27.70 MB for the strip
+   k = 1.00 ( 928 codes, mean bin width 24.7 DN): bits/px  JPEG-LS 3.048 | JXL e3 2.926 | JXL e7 2.874 | f2 predictor static 3.362 | E0 3.062 | E3 2.584 | noise-only entropy of a code at the nominal step 2.105 | E3 = 19.77 MB for the strip
+   k = 2.00 ( 714 codes, mean bin width 50.4 DN): bits/px  JPEG-LS 2.103 | JXL e3 2.052 | f2 predictor static 2.420 | E0 2.154 | E3 1.666 | noise-only entropy of a code at the nominal step 1.255 | E3 = 12.75 MB for the strip
+== stack-1794689780304-11226 frame 201
+   k = 0.25 (2350 codes, mean bin width 1.6 DN): bits/px  JPEG-LS 5.514 | JXL e3 5.401 | f2 predictor static 5.845 | E0 5.535 | E3 5.123 | noise-only entropy of a code at the nominal step 4.051 | E3 = 39.20 MB for the strip
+   k = 0.50 (1380 codes, mean bin width 3.4 DN): bits/px  JPEG-LS 4.488 | JXL e3 4.315 | f2 predictor static 4.662 | E0 4.437 | E3 4.020 | noise-only entropy of a code at the nominal step 3.062 | E3 = 30.75 MB for the strip
+   k = 1.00 ( 928 codes, mean bin width 7.7 DN): bits/px  JPEG-LS 3.250 | JXL e3 3.078 | JXL e7 3.036 | f2 predictor static 3.457 | E0 3.194 | E3 2.772 | noise-only entropy of a code at the nominal step 2.105 | E3 = 21.21 MB for the strip
+   k = 2.00 ( 714 codes, mean bin width 16.2 DN): bits/px  JPEG-LS 2.226 | JXL e3 2.123 | f2 predictor static 2.457 | E0 2.202 | E3 1.775 | noise-only entropy of a code at the nominal step 1.255 | E3 = 13.58 MB for the strip
+== stack-1794687317465-11226 frame 1
+   k = 0.25 (2350 codes, mean bin width 1.2 DN): bits/px  JPEG-LS 5.345 | JXL e3 5.314 | f2 predictor static 5.694 | E0 5.371 | E3 4.989 | noise-only entropy of a code at the nominal step 4.051 | E3 = 38.17 MB for the strip
+   k = 0.50 (1380 codes, mean bin width 2.5 DN): bits/px  JPEG-LS 4.268 | JXL e3 4.152 | f2 predictor static 4.482 | E0 4.215 | E3 3.826 | noise-only entropy of a code at the nominal step 3.062 | E3 = 29.27 MB for the strip
+   k = 1.00 ( 928 codes, mean bin width 6.4 DN): bits/px  JPEG-LS 2.974 | JXL e3 2.870 | JXL e7 2.789 | f2 predictor static 3.223 | E0 2.943 | E3 2.508 | noise-only entropy of a code at the nominal step 2.105 | E3 = 19.19 MB for the strip
+   k = 2.00 ( 714 codes, mean bin width 13.4 DN): bits/px  JPEG-LS 1.944 | JXL e3 1.932 | f2 predictor static 2.232 | E0 1.971 | E3 1.522 | noise-only entropy of a code at the nominal step 1.255 | E3 = 11.65 MB for the strip

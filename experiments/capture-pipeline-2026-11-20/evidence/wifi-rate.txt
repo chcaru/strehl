@@ -1,0 +1,45 @@
+Inter-| sta-|   Quality        |   Discarded packets               | Missed | WE
+ face | tus | link level noise |  nwid  crypt   frag  retry   misc | beacon | 22
+ wlan0: 0000   56.  -54.  -256        0      0      0      8      0        0
+ wlan1: 0000   54.  -56.  -256        0      0      0      0      6        0
+
+-- wlan1
+RSSI=-56
+LINKSPEED=960
+NOISE=9999
+FREQUENCY=5785
+WIDTH=80 MHz
+CENTER_FRQ1=5775
+AVG_RSSI=-55
+freq=5785
+wifi_generation=6
+key_mgmt=SAE
+wpa_state=COMPLETED
+ieee80211ac=1
+-- wlan0
+RSSI=-54
+LINKSPEED=24
+NOISE=9999
+FREQUENCY=5785
+WIDTH=80 MHz
+CENTER_FRQ1=5775
+freq=5785
+key_mgmt=WPA2-PSK
+wpa_state=COMPLETED
+ieee80211ac=1
+ERR TimeoutExpired(['nmcli', '-t', '-f', 'ACTIVE,CHAN,FREQ,RATE,SIGNAL,BARS,DEVICE', 'dev', 'wifi'], 10)
+driver: mt7921u
+version: 6.18.50+rpt-rpi-2712
+firmware-version: ____010000-20260224110949
+expansion-rom-version: 
+bus-info: 4-1:1.0
+supports-statistics: yes
+supports-test: no
+supports-eeprom-access: no
+supports-register-dump: no
+supports-priv-flags: no
+
+1 stream(s): 347 MB in 6.06 s = 57.3 MB/s (57.5)
+1 stream(s): 351 MB in 6.07 s = 57.9 MB/s (58.1)
+2 stream(s): 419 MB in 6.09 s = 68.8 MB/s (24.2, 45.1)
+4 stream(s): 428 MB in 6.18 s = 69.3 MB/s (23.7, 17.8, 13.9, 14.3)

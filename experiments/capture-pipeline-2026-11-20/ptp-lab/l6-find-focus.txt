@@ -1,0 +1,17 @@
+# L6: find best focus on the wood grain: from 49487 to 36000, then steps of +500 to 42000.
+configure
+pixel-shift 4
+focus 36000 500
+lab-liveview 1100 /home/strehl/lab/lv/f00 0 0
+lab-liveview 1100 /home/strehl/lab/lv/f01 0 500
+lab-liveview 1100 /home/strehl/lab/lv/f02 0 500
+lab-liveview 1100 /home/strehl/lab/lv/f03 0 500
+lab-liveview 1100 /home/strehl/lab/lv/f04 0 500
+lab-liveview 1100 /home/strehl/lab/lv/f05 0 500
+lab-liveview 1100 /home/strehl/lab/lv/f06 0 500
+lab-liveview 1100 /home/strehl/lab/lv/f07 0 500
+lab-liveview 1100 /home/strehl/lab/lv/f08 0 500
+lab-liveview 1100 /home/strehl/lab/lv/f09 0 500
+lab-liveview 1100 /home/strehl/lab/lv/f10 0 500
+lab-liveview 1100 /home/strehl/lab/lv/f11 0 500
+lab-liveview 1100 /home/strehl/lab/lv/f12 0 500

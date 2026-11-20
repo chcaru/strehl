@@ -1,0 +1,31 @@
+render 9504x6336; 631 flat tiles, 315 detail tiles of 128 px
+
+1. flat tiles: gradient energy of the k = 1 render over the lossless render (noise change)
+   blur 0.0 px: median 1.0106 (amplitude 1.0053), 10th-90th percentile 1.0049-1.0186
+   blur 0.5 px: median 1.0078 (amplitude 1.0039), 10th-90th percentile 1.0032-1.0146
+   blur 1.0 px: median 1.0042 (amplitude 1.0021), 10th-90th percentile 1.0013-1.0089
+   blur 1.5 px: median 1.0031 (amplitude 1.0016), 10th-90th percentile 1.0008-1.0069
+   blur 2.5 px: median 1.0024 (amplitude 1.0012), 10th-90th percentile 1.0005-1.0055
+
+2. levels: channel means, k = 1 minus lossless
+   R: lossless 13993.243, k = 1 13993.632, difference +0.3887 (+2.78e-05 of the level)
+   G: lossless 15564.126, k = 1 15564.344, difference +0.2178 (+1.40e-05 of the level)
+   B: lossless 16339.331, k = 1 16339.767, difference +0.4355 (+2.67e-05 of the level)
+
+3. detail tiles: gradient energy over the lossless render, each render's own flat-tile floor removed
+   blur 0.5 px: median 1.0005, 10th percentile 1.0000, 1st percentile 0.9997 (signal/floor 336x)
+   blur 1.0 px: median 1.0003, 10th percentile 0.9999, 1st percentile 0.9996 (signal/floor 341x)
+   blur 1.5 px: median 1.0002, 10th percentile 0.9998, 1st percentile 0.9995 (signal/floor 324x)
+   blur 2.5 px: median 1.0001, 10th percentile 0.9997, 1st percentile 0.9993 (signal/floor 279x)
+
+4. the difference image (green)
+   rms difference 20.347; lossless render's own high-pass rms in flat tiles 27.299; ratio in flat tiles: median 0.318
+   rms difference in detail tiles over flat tiles at the same brightness: 3.743 (1 = no extra error where there is detail)
+   correlation of |difference| with local contrast 0.300, with brightness 0.126 (noise grows with brightness; contrast should add nothing)
+   largest |difference| 1236.0 against a white level of 44243
+
+5. crops, 200 % nearest neighbour: lossless | k = 1 | difference x16 about mid grey
+   k1-0-edge-y768-x6912.png: origin y=768 x=6912, 160 px square
+   k1-1-edge-y256-x6016.png: origin y=256 x=6016, 160 px square
+   k1-2-edge-y2048-x8704.png: origin y=2048 x=8704, 160 px square
+   k1-3-flat-y256-x384.png: origin y=256 x=384, 160 px square

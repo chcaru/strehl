@@ -1,0 +1,22 @@
+full: (6336, 9504, 3) float32, green mean 15700.17188, min 0.00000, max 47579.00000
+s2: (6336, 9504, 3) float32, green mean 15695.28613, min 0.00000, max 47297.00000
+s4: (6336, 9504, 3) float32, green mean 15683.51172, min 6.00000, max 46225.00000
+
+74 x 49 tiles of 128 px; flat tiles: 631 (fine energy <= 4.02e+05), detail tiles: 630 (>= 1.54e+06, 9x the flat median)
+
+1. flat tiles (noise): energy relative to the full stack, median over tiles
+   s2: fine 0.889, mid 0.997   (1.0 = the full stack's noise; sqrt of it is the amplitude ratio)
+   s4: fine 0.540, mid 0.951   (1.0 = the full stack's noise; sqrt of it is the amplitude ratio)
+
+2. detail tiles: detail energy (noise floor at the tile's brightness removed) relative to the full stack
+   s2 fine: median 0.897, 10th percentile 0.873, 1st percentile 0.855, share of tiles below 0.90: 59.8 %  (amplitude = sqrt: median 0.947)
+   s2 mid: median 1.001, 10th percentile 0.990, 1st percentile 0.973, share of tiles below 0.90: 0.0 %  (amplitude = sqrt: median 1.001)
+   s4 fine: median 0.536, 10th percentile 0.510, 1st percentile 0.483, share of tiles below 0.90: 100.0 %  (amplitude = sqrt: median 0.732)
+   s4 mid: median 0.965, 10th percentile 0.955, 1st percentile 0.943, share of tiles below 0.90: 0.0 %  (amplitude = sqrt: median 0.982)
+
+3. crops (100 %, one display transform; left to right: full, every 2nd plane, every 4th plane)
+   crop-0-worst-s4-y2720-x5024.png: origin y=2720 x=5024, 320 px square each; fine ratio s2 0.831, s4 0.467
+   crop-1-worst-s4-y1952-x3360.png: origin y=1952 x=3360, 320 px square each; fine ratio s2 0.873, s4 0.470
+   crop-2-worst-s4-y2336-x2720.png: origin y=2336 x=2720, 320 px square each; fine ratio s2 0.875, s4 0.480
+   crop-3-median-s4-y1952-x5664.png: origin y=1952 x=5664, 320 px square each; fine ratio s2 0.897, s4 0.536
+   crop-4-flat-y4640-x1568.png: origin y=4640 x=1568, 320 px square each; fine ratio s2 nan, s4 nan

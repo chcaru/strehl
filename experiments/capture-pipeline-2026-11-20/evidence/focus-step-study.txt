@@ -1,0 +1,32 @@
+
+73 planes (64-136) of stack-1794786793543-11226
+
+mid detail, 64 px tiles: 3369 of 14751 tiles peak inside the range (by 12 planes) at more than 6x their floor
+   peak width at half height, all:                    median 26.4 planes (10th-90th percentile 22.9-31.8), n=3369
+   peak width at half height, strongest-detail third: median 26.5 planes (10th-90th percentile 22.9-31.9), n=1123
+   peak width at half height, weakest-detail third:   median 26.5 planes (10th-90th percentile 22.8-32.5), n=1123
+   left of the peak value at a distance of d planes (median tile, mean of both sides; 10th percentile tile in brackets):
+   d=1: 0.990 (0.983)  d=2: 0.978 (0.969)  d=3: 0.955 (0.939)  d=4: 0.926 (0.903)  d=6: 0.848 (0.804)  d=8: 0.755 (0.693)
+
+mid detail, 256 px tiles: 218 of 888 tiles peak inside the range (by 12 planes) at more than 6x their floor
+   peak width at half height, all:                    median 30.1 planes (10th-90th percentile 27.1-34.3), n=218
+   peak width at half height, strongest-detail third: median 30.4 planes (10th-90th percentile 27.1-34.3), n=72
+   peak width at half height, weakest-detail third:   median 30.8 planes (10th-90th percentile 28.3-36.1), n=72
+   left of the peak value at a distance of d planes (median tile, mean of both sides; 10th percentile tile in brackets):
+   d=1: 0.993 (0.988)  d=2: 0.985 (0.979)  d=3: 0.967 (0.957)  d=4: 0.945 (0.932)  d=6: 0.883 (0.856)  d=8: 0.808 (0.769)
+
+fine detail, 64 px tiles: 3311 of 14751 tiles peak inside the range (by 12 planes) at more than 6x their floor
+   peak width at half height, all:                    median 14.3 planes (10th-90th percentile 12.2-16.4), n=3311
+   peak width at half height, strongest-detail third: median 13.4 planes (10th-90th percentile 11.5-15.0), n=1103
+   peak width at half height, weakest-detail third:   median 15.2 planes (10th-90th percentile 12.9-17.1), n=1103
+   left of the peak value at a distance of d planes (median tile, mean of both sides; 10th percentile tile in brackets):
+   d=1: 0.931 (0.851)  d=2: 0.877 (0.798)  d=3: 0.814 (0.718)  d=4: 0.751 (0.668)  d=6: 0.587 (0.510)  d=8: 0.444 (0.368)
+
+fine detail, 256 px tiles: 176 of 888 tiles peak inside the range (by 12 planes) at more than 6x their floor
+   peak width at half height, all:                    median 19.3 planes (10th-90th percentile 16.0-23.7), n=176
+   peak width at half height, strongest-detail third: median 20.6 planes (10th-90th percentile 15.1-24.5), n=58
+   peak width at half height, weakest-detail third:   median 19.3 planes (10th-90th percentile 17.0-22.3), n=58
+   left of the peak value at a distance of d planes (median tile, mean of both sides; 10th percentile tile in brackets):
+   d=1: 0.958 (0.885)  d=2: 0.929 (0.877)  d=3: 0.890 (0.746)  d=4: 0.855 (0.751)  d=6: 0.725 (0.631)  d=8: 0.605 (0.497)
+
+A focus step k times coarser puts the worst-placed point k/2 planes from its best plane: read d = k/2 above.

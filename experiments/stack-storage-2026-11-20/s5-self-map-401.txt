@@ -1,0 +1,22 @@
+== stack-1794786793543-11226 group 401..404, previous plane 397..400; tile 512
+   shot 0  I intra                             7.266 bits/px   55.59 MB  side 45 kB  14 s  22 taps 
+   shot 0  M intra + gain map x 0.3            7.252 bits/px   55.49 MB  side 45 kB  15 s  
+   shot 0  M intra + gain map x 0.6            7.243 bits/px   55.41 MB  side 45 kB  15 s  
+   shot 0  M intra + gain map x 1.0            7.238 bits/px   55.38 MB  side 45 kB  13 s  
+   shot 1  I intra                             7.260 bits/px   55.54 MB  side 45 kB  12 s  22 taps 
+   shot 1  M intra + gain map x 0.3            7.246 bits/px   55.44 MB  side 45 kB  12 s  
+   shot 1  M intra + gain map x 0.6            7.236 bits/px   55.36 MB  side 45 kB  12 s  
+   shot 1  M intra + gain map x 1.0            7.231 bits/px   55.33 MB  side 45 kB  12 s  
+   shot 2  I intra                             7.263 bits/px   55.57 MB  side 45 kB  12 s  22 taps 
+   shot 2  M intra + gain map x 0.3            7.249 bits/px   55.46 MB  side 45 kB  14 s  
+   shot 2  M intra + gain map x 0.6            7.240 bits/px   55.39 MB  side 45 kB  17 s  
+   shot 2  M intra + gain map x 1.0            7.235 bits/px   55.36 MB  side 45 kB  14 s  
+   shot 3  I intra                             7.255 bits/px   55.51 MB  side 45 kB  14 s  22 taps 
+   shot 3  M intra + gain map x 0.3            7.241 bits/px   55.40 MB  side 45 kB  14 s  
+   shot 3  M intra + gain map x 0.6            7.231 bits/px   55.33 MB  side 45 kB  13 s  
+   shot 3  M intra + gain map x 1.0            7.226 bits/px   55.29 MB  side 45 kB  12 s  
+== group mean (bits/px over the four shots; shot 0 has no earlier shot, so G and GP average its I or P in)
+   I intra                             7.261 bits/px  (+0.00 % against intra)  per shot [7.266 7.26  7.263 7.255]
+   M intra + gain map x 0.3            7.247 bits/px  (-0.19 % against intra)  per shot [7.252 7.246 7.249 7.241]
+   M intra + gain map x 0.6            7.237 bits/px  (-0.32 % against intra)  per shot [7.243 7.236 7.24  7.231]
+   M intra + gain map x 1.0            7.233 bits/px  (-0.39 % against intra)  per shot [7.238 7.231 7.235 7.226]

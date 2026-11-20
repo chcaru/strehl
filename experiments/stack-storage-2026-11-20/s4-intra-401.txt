@@ -1,0 +1,12 @@
+== stack-1794786793543-11226 frame 401 (9600 x 6376 = 61.21 MP; 4376576 non-strip bytes)
+   oracle floor (noise model x measured ratio)     6.786 bits/px   51.92 MB CFA  
+   format 2 as packed (strip share)                7.811 bits/px   59.77 MB CFA  whole archive 64.14 MB; upper bound for the strip: non-strip bytes counted raw
+   JPEG-LS (CharLS) per site plane                 7.725 bits/px   59.11 MB CFA  encode 57 MP/s, decode 63 MP/s (one thread)
+   JPEG XL lossless effort 3 per site plane        7.649 bits/px   58.53 MB CFA  encode 28 MP/s, decode 43 MP/s (one thread)
+   JPEG XL lossless effort 7 per site plane        7.793 bits/px   59.62 MB CFA  encode 2 MP/s, decode 21 MP/s (one thread)
+   format 2 predictor, static entropy of residuals  8.128 bits/px   62.19 MB CFA  one ideal static code per site per frame
+   E0 format 2 predictor + adaptive contexts       7.721 bits/px   59.08 MB CFA  per site [7.415 8.148 8.15  7.172]; 4 s
+   E1 LS 10 same-site taps, per frame              7.461 bits/px   57.08 MB CFA  per site [7.197 7.82  7.838 6.989]; side info 0.1 kB; fit 8 s, model 1 s
+   E2 LS 22 cross-colour taps, per frame           7.355 bits/px   56.27 MB CFA  per site [7.145 7.676 7.649 6.95 ]; side info 0.2 kB; fit 16 s, model 1 s
+   E3 LS 22 cross-colour taps, 512 px tiles        7.266 bits/px   55.59 MB CFA  per site [7.092 7.578 7.568 6.803]; side info 45.4 kB; fit 12 s, model 1 s
+   E4 LS 22 cross-colour taps, 256 px tiles        7.267 bits/px   55.60 MB CFA  per site [7.079 7.561 7.553 6.782]; side info 174.8 kB; fit 12 s, model 1 s

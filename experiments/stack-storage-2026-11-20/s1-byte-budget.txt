@@ -1,0 +1,42 @@
+== stack-1794786793543-11226 frame 1: ARW 125616128 bytes
+   CFA strip: IFD IFD0.Sub0, 9600 x 6376, 14 bits/sample container, offset 3194880, 122419200 bytes (97.46 % of file)
+   IFD0         at 8         19 entries dims (None, None) JPEG by tag at 192674, 215205 bytes 
+   IFD0.Sub0    at 138530    35 entries dims ([9600], [6376]) {50719: [32, 20], 50720: [9504, 6336], 29895: [32, 20], 29896: [9504, 6336]}
+   IFD0.Exif    at 4544      45 entries dims (None, None) 
+   IFD1         at 43654     14 entries dims (None, None) JPEG by tag at 43928, 8454 bytes 
+   IFD2         at 138222    16 entries dims ([9504], [6336]) JPEG by tag at 409600, 2784657 bytes 
+   JPEG at 43928          8454 bytes  (160, 120) (None, 'RGB')
+   JPEG at 192674       215205 bytes  (1616, 1080) (None, 'RGB')
+   JPEG at 409600      2784657 bytes  (9504, 6336) (None, 'RGB')
+   embedded JPEGs 3008316 bytes (2.39 %); other metadata and padding 188612 bytes (of the non-strip bytes, 161211 are zero)
+   archive on disk (STRHARC1): 62007355 bytes; packed today (STRHARC2): 59883080 bytes
+   on disk   if non-strip bytes stored raw: CFA <= 7.686 bits/px; if they cost nothing: 8.104 bits/px (whole file)
+   format 2  if non-strip bytes stored raw: CFA <= 7.409 bits/px; if they cost nothing: 7.827 bits/px (whole file)
+== stack-1794786793543-11226 frame 400: ARW 126791680 bytes
+   CFA strip: IFD IFD0.Sub0, 9600 x 6376, 14 bits/sample container, offset 4370432, 122419200 bytes (96.55 % of file)
+   IFD0         at 8         19 entries dims (None, None) JPEG by tag at 192674, 328637 bytes 
+   IFD0.Sub0    at 138530    35 entries dims ([9600], [6376]) {50719: [32, 20], 50720: [9504, 6336], 29895: [32, 20], 29896: [9504, 6336]}
+   IFD0.Exif    at 4544      45 entries dims (None, None) 
+   IFD1         at 43654     14 entries dims (None, None) JPEG by tag at 43928, 10216 bytes 
+   IFD2         at 138222    16 entries dims ([9504], [6336]) JPEG by tag at 524288, 3843096 bytes 
+   JPEG at 43928         10216 bytes  (160, 120) (None, 'RGB')
+   JPEG at 192674       328637 bytes  (1616, 1080) (None, 'RGB')
+   JPEG at 524288      3843096 bytes  (9504, 6336) (None, 'RGB')
+   embedded JPEGs 4181949 bytes (3.30 %); other metadata and padding 190531 bytes (of the non-strip bytes, 144814 are zero)
+   archive on disk (STRHARC1): 67515404 bytes; packed today (STRHARC2): 64128874 bytes
+   on disk   if non-strip bytes stored raw: CFA <= 8.253 bits/px; if they cost nothing: 8.824 bits/px (whole file)
+   format 2  if non-strip bytes stored raw: CFA <= 7.810 bits/px; if they cost nothing: 8.382 bits/px (whole file)
+== stack-1794687317465-11226 frame 1: ARW 127053824 bytes
+   CFA strip: IFD IFD0.Sub0, 9600 x 6376, 14 bits/sample container, offset 4632576, 122419200 bytes (96.35 % of file)
+   IFD0         at 8         19 entries dims (None, None) JPEG by tag at 192674, 401902 bytes 
+   IFD0.Sub0    at 138530    35 entries dims ([9600], [6376]) {50719: [32, 20], 50720: [9504, 6336], 29895: [32, 20], 29896: [9504, 6336]}
+   IFD0.Exif    at 4544      45 entries dims (None, None) 
+   IFD1         at 43654     14 entries dims (None, None) JPEG by tag at 43928, 6821 bytes 
+   IFD2         at 138222    16 entries dims ([9504], [6336]) JPEG by tag at 598016, 4034025 bytes 
+   JPEG at 43928          6821 bytes  (160, 120) (None, 'RGB')
+   JPEG at 192674       401902 bytes  (1616, 1080) (None, 'RGB')
+   JPEG at 598016      4034025 bytes  (9504, 6336) (None, 'RGB')
+   embedded JPEGs 4442748 bytes (3.50 %); other metadata and padding 191876 bytes (of the non-strip bytes, 156768 are zero)
+   archive on disk (STRHARC1): 51488143 bytes; packed today (STRHARC2): 49778850 bytes
+   on disk   if non-strip bytes stored raw: CFA <= 6.124 bits/px; if they cost nothing: 6.729 bits/px (whole file)
+   format 2  if non-strip bytes stored raw: CFA <= 5.900 bits/px; if they cost nothing: 6.506 bits/px (whole file)

@@ -1,0 +1,5 @@
+# Where is the lens, and put it back at the position the session started from.
+configure
+status
+focus 51088 500
+status

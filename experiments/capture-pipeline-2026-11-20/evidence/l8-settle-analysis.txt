@@ -1,0 +1,45 @@
+frame 9564x6376 black 512; detail window at y=4784 x=1376, flat window at y=2192 x=2816 (1536 px square)
+
+control, flat window: gradient energy of exposure 1 over exposures 2-4 (expect 1 within noise)
+    p00/0:0.996  p01/100:0.998  p02/300:1.000  p03/1500:0.995  p04/0:1.001  p05/100:0.995  p06/300:1.002  p07/1500:1.008  p08/0:1.004  p09/100:0.997  p10/300:0.998  p11/1500:1.000  p12/0:1.001  p13/100:1.001  p14/300:1.001  p15/1500:0.996
+    spread of the flat ratio: 0.0034 (std over 16 groups)
+
+pixel-shift pattern as this estimator sees it (median over the 1500 ms groups): exposure 2 at (+0.014, -0.853) px, exposure 3 at (+0.984, -1.001) px, exposure 4 at (+0.968, +0.038) px
+control, planted in exposure 1 of p15: Gaussian blur sigma 0.5 px -> sharp ratio 0.976 (unplanted 1.014); 0.2 px shift -> residual 0.367 px (unplanted 0.090)
+
+per group: settle ms, plane, level ratio 1/234, sharp1/sharp234, shift residual px, detail energy of exposure 1
+       0  p00  0.9975  1.0054  0.194  293388.8
+       0  p04  1.0011  1.0069  0.248  361710.7
+       0  p08  1.0016  0.9904  0.245  441774.8
+       0  p12  1.0003  0.9798  0.138  569756.4
+     100  p01  0.9958  0.9961  0.297  309285.5
+     100  p05  0.9982  1.0080  0.287  382822.1
+     100  p09  0.9995  1.0128  0.311  478912.3
+     100  p13  1.0013  1.0111  0.323  639283.1
+     300  p02  1.0025  1.0091  0.338  330142.2
+     300  p06  1.0013  1.0100  0.274  410137.3
+     300  p10  1.0007  0.9824  0.325  500505.4
+     300  p14  1.0002  1.0088  0.318  693177.2
+    1500  p03  1.0004  0.9992  0.277  345614.9
+    1500  p07  1.0060  1.0045  0.076  431749.6
+    1500  p11  1.0009  1.0075  0.085  552642.9
+    1500  p15  1.0008  1.0138  0.090  727285.7
+
+summary by settle after the focus-result event:
+       0 ms: sharp1/sharp234 median 0.9979 (min 0.9798, max 1.0069); shift residual median 0.219 px (max 0.248); n=4
+     100 ms: sharp1/sharp234 median 1.0095 (min 0.9961, max 1.0128); shift residual median 0.304 px (max 0.323); n=4
+     300 ms: sharp1/sharp234 median 1.0090 (min 0.9824, max 1.0100); shift residual median 0.322 px (max 0.338); n=4
+    1500 ms: sharp1/sharp234 median 1.0060 (min 0.9992, max 1.0138); shift residual median 0.088 px (max 0.277); n=4
+
+shift of exposures 2, 3, 4 against exposure 1 per plane (px), in plane order:
+   exposure 2 x: +0.083 +0.172 +0.167 +0.061 -0.027 +0.107 +0.066 +0.012 -0.017 +0.042 +0.042 +0.016 +0.007 +0.011 +0.056 -0.071
+   exposure 2 y: -1.034 -1.105 -1.154 -1.126 -1.098 -1.125 -1.122 -0.843 -1.096 -1.163 -1.177 -0.809 -0.809 -1.176 -1.169 -0.863
+   exposure 3 x: +1.068 +1.119 +0.968 +1.013 +1.021 +1.044 +0.937 +1.001 +0.996 +0.953 +1.080 +0.967 +1.026 +0.985 +0.955 +0.898
+   exposure 3 y: -1.003 -0.910 -1.060 -1.017 -0.961 -0.873 -0.956 -0.927 -0.955 -0.878 -0.848 -0.985 -0.903 -0.986 -0.998 -1.031
+   exposure 4 x: +0.894 +1.076 +1.148 +1.075 +1.098 +1.065 +1.029 +0.953 +0.902 +1.028 +0.967 +0.983 +1.029 +0.966 +0.972 +0.937
+   exposure 4 y: -0.059 -0.117 +0.064 -0.023 +0.069 -0.135 -0.114 +0.049 +0.147 +0.189 -0.101 +0.122 -0.085 -0.144 -0.122 +0.027
+   departure from a quadratic in plane index, rms over exposures and axes, by settle:
+       0 ms: rms 0.075 px, worst 0.207 px
+     100 ms: rms 0.077 px, worst 0.172 px
+     300 ms: rms 0.081 px, worst 0.189 px
+    1500 ms: rms 0.082 px, worst 0.227 px

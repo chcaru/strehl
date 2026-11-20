@@ -1,0 +1,18 @@
+# L5: look for something in focus on the stage: live-view frames at lens positions across the
+# range from 51088 (each directory holds the frames of one position; the last frame is the
+# settled one). Ends where it started.
+configure
+pixel-shift 4
+lab-liveview 900 /home/strehl/lab/lv/p00 0 0
+lab-liveview 1500 /home/strehl/lab/lv/p01 0 -6000
+lab-liveview 1500 /home/strehl/lab/lv/p02 0 -6000
+lab-liveview 1500 /home/strehl/lab/lv/p03 0 -6000
+lab-liveview 1500 /home/strehl/lab/lv/p04 0 -6000
+lab-liveview 1500 /home/strehl/lab/lv/p05 0 -6000
+lab-liveview 1500 /home/strehl/lab/lv/p06 0 -6000
+lab-liveview 1500 /home/strehl/lab/lv/p07 0 -6000
+lab-liveview 1800 /home/strehl/lab/lv/p08 0 48000
+lab-liveview 1500 /home/strehl/lab/lv/p09 0 4000
+lab-liveview 1500 /home/strehl/lab/lv/p10 0 4000
+lab-liveview 1800 /home/strehl/lab/lv/p11 0 -14000
+status

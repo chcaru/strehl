@@ -1,0 +1,4 @@
+bound files 96 in 24 planes; receipts for 96; present 96
+every file matches its journal and receipt SHA-256 and size
+frame 1: bytes outside the strip identical True; strip is the k = 1 table of the original True; error min -28 max 29 mean +0.0292 DN rms 9.011 DN; clipped samples kept True
+frame 50: bytes outside the strip identical True; strip is the k = 1 table of the original True; error min -29 max 30 mean +0.0306 DN rms 8.994 DN; clipped samples kept True

@@ -1,0 +1,28 @@
+# L2: how long the lens takes to move and report, for the stack's usual step and larger
+# ones, polled as fast as the link allows (no exposure, nothing in the buffer).
+configure
+pixel-shift 4
+lab-mark jog+8
+lab-jog 8
+lab-watch 1500 hold attarget
+lab-watch 700 hold none
+lab-mark jog+8-again
+lab-jog 8
+lab-watch 1500 hold attarget
+lab-watch 700 hold none
+lab-mark jog+1
+lab-jog 1
+lab-watch 1500 hold attarget
+lab-watch 700 hold none
+lab-mark jog+32
+lab-jog 32
+lab-watch 1500 hold attarget
+lab-watch 700 hold none
+lab-mark jog+128
+lab-jog 128
+lab-watch 2500 hold attarget
+lab-watch 700 hold none
+lab-mark jog-177-back
+lab-jog -177
+lab-watch 2500 hold attarget
+lab-watch 700 hold none

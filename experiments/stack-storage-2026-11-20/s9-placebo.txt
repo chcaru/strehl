@@ -1,0 +1,12 @@
+the lossless render's own high-pass rms: flat tiles 27.30, detail tiles 480.28 (detail there is signal, not noise)
+
+pair                    rms difference: flat tiles (median)   detail tiles (median)   detail tiles (90th percentile)   whole frame
+k1       vs lossless       8.774     33.719     44.343     20.347
+placebo  vs lossless       8.725     34.140     45.289     20.408
+k1       vs placebo       11.720     54.138     67.269     28.035
+
+gradient energy relative to the lossless render (blur 1.0 px), median over tiles: flat, detail
+   k1       1.0042, 1.0003
+   placebo  1.0040, 1.0002
+
+levels (green mean): lossless 15564.126, k1 +0.2178, placebo -0.1230

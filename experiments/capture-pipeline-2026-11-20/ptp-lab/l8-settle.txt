@@ -1,0 +1,117 @@
+# L8: four-shot groups after a focus step of 8 with the shutter pressed S ms after the camera's
+# focus-result event (S interleaved: 0, 100, 300, 1500), RAWs kept for analysis.
+configure
+pixel-shift 4
+focus 40780 500
+focus 40908 500
+lab-keep on
+lab-jog 8
+lab-watch 3000 hold ev:c218
+lab-mark plane-00-settle-0
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw p00-s0000
+lab-jog 8
+lab-watch 3000 hold ev:c218
+lab-sleep 100
+lab-mark plane-01-settle-100
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw p01-s0100
+lab-jog 8
+lab-watch 3000 hold ev:c218
+lab-sleep 300
+lab-mark plane-02-settle-300
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw p02-s0300
+lab-jog 8
+lab-watch 3000 hold ev:c218
+lab-sleep 1500
+lab-mark plane-03-settle-1500
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw p03-s1500
+lab-jog 8
+lab-watch 3000 hold ev:c218
+lab-mark plane-04-settle-0
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw p04-s0000
+lab-jog 8
+lab-watch 3000 hold ev:c218
+lab-sleep 100
+lab-mark plane-05-settle-100
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw p05-s0100
+lab-jog 8
+lab-watch 3000 hold ev:c218
+lab-sleep 300
+lab-mark plane-06-settle-300
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw p06-s0300
+lab-jog 8
+lab-watch 3000 hold ev:c218
+lab-sleep 1500
+lab-mark plane-07-settle-1500
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw p07-s1500
+lab-jog 8
+lab-watch 3000 hold ev:c218
+lab-mark plane-08-settle-0
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw p08-s0000
+lab-jog 8
+lab-watch 3000 hold ev:c218
+lab-sleep 100
+lab-mark plane-09-settle-100
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw p09-s0100
+lab-jog 8
+lab-watch 3000 hold ev:c218
+lab-sleep 300
+lab-mark plane-10-settle-300
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw p10-s0300
+lab-jog 8
+lab-watch 3000 hold ev:c218
+lab-sleep 1500
+lab-mark plane-11-settle-1500
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw p11-s1500
+lab-jog 8
+lab-watch 3000 hold ev:c218
+lab-mark plane-12-settle-0
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw p12-s0000
+lab-jog 8
+lab-watch 3000 hold ev:c218
+lab-sleep 100
+lab-mark plane-13-settle-100
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw p13-s0100
+lab-jog 8
+lab-watch 3000 hold ev:c218
+lab-sleep 300
+lab-mark plane-14-settle-300
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw p14-s0300
+lab-jog 8
+lab-watch 3000 hold ev:c218
+lab-sleep 1500
+lab-mark plane-15-settle-1500
+lab-shutter 0 s2
+lab-watch 14000 auto idle
+lab-stash /home/strehl/lab/raw p15-s1500
+lab-keep off
+status
