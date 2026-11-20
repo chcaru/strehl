@@ -57,6 +57,8 @@ mod sony_tiff;
 pub mod trust;
 
 pub use identity::{CaptureIdentity, identity, identity_cached};
+/// The archive formats, for tools that store or compact captures.
+pub use strehl_raw_codec as codec;
 /// Whole files read ahead by reader threads for [`decode_serial`].
 pub use strehl_raw_codec::preload;
 
@@ -316,6 +318,28 @@ pub fn archive_sha256(path: &Path) -> Option<String> {
     strehl_raw_codec::archive::read_header(file)
         .ok()
         .map(|h| h.sha256)
+}
+
+/// For a compacted (calibrated, format 3) archive, the noise its quantiser
+/// adds as a fraction of the camera's own variance; `None` for any other
+/// file. Reads and checks the archive's head only.
+pub fn calibrated_added_variance(path: &Path) -> Option<f64> {
+    use std::io::Read;
+    if !strehl_raw_codec::archive::is_archive(path) {
+        return None;
+    }
+    let mut file = std::fs::File::open(path).ok()?;
+    let mut first = vec![0u8; 128];
+    file.read_exact(&mut first).ok()?;
+    if !strehl_raw_codec::calibrated::is_calibrated(&first) {
+        return None;
+    }
+    let mut head = first.clone();
+    head.resize(strehl_raw_codec::calibrated::head_len(&first).ok()?, 0);
+    file.read_exact(&mut head[128..]).ok()?;
+    strehl_raw_codec::calibrated::parse_head(&head)
+        .ok()
+        .map(|h| h.table.added_variance)
 }
 
 /// [`decode`] (into `buffer`, when given) on the calling thread alone, for

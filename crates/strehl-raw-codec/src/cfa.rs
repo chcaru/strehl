@@ -727,6 +727,9 @@ fn decode_archive_impl(
     if crate::v2::is_v2(&file) {
         return decode_v2(path, file, sparse, buffer, rows, resident, trusted);
     }
+    if crate::calibrated::is_calibrated(&file) {
+        return decode_calibrated(path, file, sparse.is_some(), buffer, resident, trusted);
+    }
     let header = archive::read_header(&file[..])?;
     // Skip the whole-file hash only for the exact hash the caller trusts.
     let hashing = !trusted.is_some_and(|s| s.eq_ignore_ascii_case(&header.sha256));
@@ -1009,6 +1012,51 @@ fn decode_archive_impl(
 /// results, errors and checksum verdict. Its index places every chunk, so a
 /// partial decode reads the index, the metadata and the wanted chunks only;
 /// every chunk's CRC is checked before it is decoded, on every route.
+/// A calibrated archive (format 3): its embedded format-2 code file decoded
+/// as any format-2 archive (whole: the code file sits at an offset), then
+/// each code mapped to its value. The head's own SHA-256 and the code file's
+/// are checked (the latter skipped only when `trusted` names the restored
+/// file this archive declares); the result declares the restored file's
+/// SHA-256, the identity every cache keys on.
+fn decode_calibrated(
+    path: &Path,
+    file: FileBytes,
+    sparse: bool,
+    buffer: Option<Vec<u16>>,
+    mut resident: Option<Resident>,
+    trusted: Option<&str>,
+) -> Result<Option<CfaFile>> {
+    use crate::calibrated;
+    let whole = if sparse {
+        std::fs::read(path).with_context(|| format!("Read {}", path.display()))?
+    } else {
+        file.to_vec()
+    };
+    file.release(resident.as_mut());
+    let head = calibrated::parse_head(&whole)?;
+    let inner = whole[head.inner..].to_vec();
+    drop(whole);
+    let inner_sha = archive::read_header(&inner[..])?.sha256;
+    let inner_trusted = trusted
+        .filter(|t| t.eq_ignore_ascii_case(&head.restored_sha256))
+        .map(|_| inner_sha);
+    let Some(mut cfa) = decode_v2(
+        path,
+        FileBytes::Owned(inner),
+        None,
+        buffer,
+        None,
+        resident,
+        inner_trusted.as_deref(),
+    )?
+    else {
+        bail!("A calibrated archive's code file is not a plain CFA strip");
+    };
+    calibrated::restore_samples(&mut cfa.samples, &head.table)?;
+    cfa.declared_sha256 = head.restored_sha256;
+    Ok(Some(cfa))
+}
+
 fn decode_v2(
     path: &Path,
     mut file: FileBytes,

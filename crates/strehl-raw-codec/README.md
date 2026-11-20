@@ -29,6 +29,19 @@ renders do not feel: they are bound elsewhere (20.1 s against 20.4 s cached,
 About 3 MB of each A7CR file is embedded preview JPEGs, which neither format
 compresses.
 
+**Format 3** (`src/calibrated.rs`, `STRHARC3`) is written only by `strehl
+compact`, an explicit action on a finished capture, and is **not lossless**: each
+CFA sample is kept to within half a step of `k` noise sigma (a table on the
+sample's own value, built from the camera profile's noise model; near black and at
+16383 values are exact), and the camera's full-size embedded JPEG is dropped (its
+IFD then points at the 1616 x 1080 preview). The envelope's length and SHA-256 are
+those of the RAW it restores; the head also records the original's SHA-256 (the
+capture journal's binding), the table and the noise variance it adds, which the
+merge adds to its noise model. MEASURED on the scarab capture at k = 1: 51.2 GB to
+18.6 GB, and a render that differs from the lossless one by under 0.05 % in noise
+amplitude and 0.03 % in detail energy (`experiments/capture-implementation-2026-11-20`).
+`restore` writes the restored (calibrated) RAW.
+
 RAWs that are not a plain strip (Sony's lossless-compressed ARW, any other
 file) are stored in format 1. Every reader accepts both formats; format 1 stays
 readable for good. `STREHL_ARCHIVE_FORMAT=1` makes the receiver and `pack`

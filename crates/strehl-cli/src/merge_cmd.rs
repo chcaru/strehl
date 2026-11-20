@@ -3408,7 +3408,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
     let frame_bytes = first.allocated_bytes();
     drop(first);
 
-    let noise = profile::noise_model_for(&camera, iso, levels);
+    let noise = calibrated_noise(profile::noise_model_for(&camera, iso, levels), &paths);
     let middle = (paths.len() / 2) as u16;
 
     for (label, roi) in [
@@ -9370,7 +9370,7 @@ fn run_pyramid_attempt(opts: &MergeOptions) -> Result<()> {
     }
     drop(first);
 
-    let noise = profile::noise_model_for(&camera, iso, levels);
+    let noise = calibrated_noise(profile::noise_model_for(&camera, iso, levels), &paths);
     // `STREHL_SELF_FLAT`: the response maps, built from every raw frame of
     // the stack before the fold (cached for a second pass over the stack).
     let _self_flat =
@@ -15020,3 +15020,27 @@ mod insect_blur_phase_render;
 ))]
 #[path = "../../../experiments/raw-quality-2026-10-27/weevil-fusion-order/implementation.rs"]
 mod weevil_fusion_order;
+
+/// The injected noise model for frames some of which come from a compacted
+/// stack (`strehl compact`): their samples carry the quantiser's noise on top
+/// of the sensor's, and the model says so. The largest fraction among the
+/// frames is used. Any other stack's model is returned unchanged.
+fn calibrated_noise(
+    noise: strehl_core::noise::NoiseModel,
+    paths: &[PathBuf],
+) -> strehl_core::noise::NoiseModel {
+    use rayon::prelude::*;
+    let added = paths
+        .par_iter()
+        .filter_map(|p| strehl_raw::calibrated_added_variance(p))
+        .reduce(|| 0.0f64, f64::max);
+    if added > 0.0 {
+        eprintln!(
+            "noise model     : +{:.1} % variance for compacted frames (stored to within a step of the noise)",
+            100.0 * added
+        );
+        noise.with_added_variance(added as f32)
+    } else {
+        noise
+    }
+}

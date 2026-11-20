@@ -259,6 +259,24 @@ impl NoiseModel {
         self.prnu
     }
 
+    /// The model of frames that carry extra noise of `fraction` of this
+    /// model's temporal variance at every level: a compacted stack, whose
+    /// samples were stored to within a step of the noise
+    /// (`strehl_raw_codec::calibrated`). Gain is scaled by `1 + fraction` and
+    /// read noise in electrons by its inverse square root, so the variance is
+    /// `1 + fraction` times this model's at every signal, the read floor
+    /// included. One injected model, as everywhere.
+    #[must_use]
+    pub fn with_added_variance(&self, fraction: f32) -> Self {
+        let f = 1.0 + fraction.max(0.0);
+        let mut m = self.clone();
+        for p in &mut m.planes {
+            p.gain_dn_per_e *= f;
+            p.read_noise_e /= f.sqrt();
+        }
+        m
+    }
+
     pub fn plane(&self, p: CfaPlane) -> &PlaneNoise {
         &self.planes[plane_slot(p)]
     }
@@ -370,6 +388,34 @@ impl NoiseModel {
     /// True when every gating decision made against this model is trustworthy.
     pub fn is_trustworthy(&self) -> bool {
         !matches!(self.provenance, Provenance::Fallback)
+    }
+}
+
+#[cfg(test)]
+mod added_variance_tests {
+    use super::*;
+
+    #[test]
+    fn added_variance_scales_every_level_and_nothing_else() {
+        let p = PlaneNoise {
+            gain_dn_per_e: 0.404,
+            read_noise_e: 3.3,
+            levels: Levels {
+                black: 512.0,
+                white: 15360.0,
+            },
+        };
+        let m = NoiseModel::new([p; 4], 100.0, Provenance::Profile);
+        let q = m.with_added_variance(0.0683);
+        for s in [0.0f32, 3.0, 100.0, 4000.0, 14000.0] {
+            let r = q.variance(CfaPlane::G1, s) / m.variance(CfaPlane::G1, s);
+            assert!((r - 1.0683).abs() < 1e-5, "{s}: {r}");
+        }
+        assert_eq!(q.iso, m.iso);
+        assert_eq!(q.provenance, m.provenance);
+        assert_eq!(q.plane(CfaPlane::R).levels, p.levels);
+        let same = m.with_added_variance(0.0);
+        assert_eq!(same.plane(CfaPlane::B), m.plane(CfaPlane::B));
     }
 }
 

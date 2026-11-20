@@ -5,7 +5,7 @@
 //! STRHARC2 ([`crate::v2`]) has the same 48-byte envelope, then an index and
 //! a code built for decoding. Every reader here takes either; the magic
 //! decides. Format 1 stays readable for good.
-use crate::{Decoded, Encoder, MAX_RAW, WORKERS, decode, v2};
+use crate::{Decoded, Encoder, MAX_RAW, WORKERS, calibrated, decode, v2};
 use anyhow::{Context, Result, ensure};
 use sha2::{Digest, Sha256};
 use std::{
@@ -30,7 +30,9 @@ pub fn is_archive(path: &Path) -> bool {
 pub struct Header {
     pub bytes: u64,
     pub sha256: String,
-    /// 1 or 2.
+    /// 1 or 2; 3 for a calibrated (compacted, not lossless) archive, whose
+    /// `bytes` and `sha256` are those of the RAW it restores
+    /// ([`crate::calibrated`]).
     pub format: u8,
 }
 
@@ -69,6 +71,8 @@ pub fn read_header(mut input: impl Read) -> Result<Header> {
         1
     } else if &h[..8] == v2::MAGIC {
         2
+    } else if &h[..8] == calibrated::MAGIC {
+        3
     } else {
         anyhow::bail!("Unsupported RAW archive version")
     };
@@ -90,6 +94,9 @@ pub fn unpack(mut input: impl Read, output: impl Write) -> Result<Decoded> {
         .context("Truncated RAW archive header")?;
     if &magic == v2::MAGIC {
         return v2::unpack(io::Cursor::new(magic).chain(input), output);
+    }
+    if &magic == calibrated::MAGIC {
+        return calibrated::unpack(io::Cursor::new(magic).chain(input), output);
     }
     let mut input = io::Cursor::new(magic).chain(input);
     let header = read_header(&mut input)?;
@@ -197,6 +204,11 @@ pub fn read_original(path: &Path) -> Result<Vec<u8>> {
     if header.format == 2 {
         let mut input = BufReader::new(File::open(path)?);
         v2::unpack(&mut input, &mut bytes)?;
+        return Ok(bytes);
+    }
+    if header.format == 3 {
+        let mut input = BufReader::new(File::open(path)?);
+        calibrated::unpack(&mut input, &mut bytes)?;
         return Ok(bytes);
     }
     let decoded = decode(input, &mut bytes, header.bytes, true)?;
@@ -325,6 +337,10 @@ fn open_sparse(path: &Path) -> Result<Option<Sparse>> {
     let header = read_header(&mut f)?;
     if header.format == 2 {
         return open_sparse_v2(path);
+    }
+    if header.format == 3 {
+        // Read whole: a compacted file is a quarter of its original's size.
+        return Ok(None);
     }
     let mut magic = [0u8; 16];
     f.read_exact(&mut magic)?;

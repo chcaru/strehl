@@ -589,6 +589,7 @@ mod tests {
 }
 
 pub mod archive;
+pub mod calibrated;
 pub mod cfa;
 pub mod preload;
 pub mod v2;

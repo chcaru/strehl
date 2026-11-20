@@ -186,6 +186,15 @@ enum Command {
     /// sub-photosite residuals, exposure gains and the green witness.
     PixelShift(pixel_shift_cmd::PixelShiftArgs),
 
+    /// Measure how far detail stays sharp across a capture's focus
+    /// positions, and the focus step that supports it.
+    FocusStep(focus_step_cmd::FocusStepArgs),
+
+    /// Store a finished capture in the calibrated format: every sample kept
+    /// to within half a step of the noise, the camera's full-size JPEG
+    /// dropped. Not lossless; nothing is written without --apply.
+    Compact(compact_cmd::CompactArgs),
+
     /// Check a capture run's focal planes while it is captured, then report
     /// retakes and optionally run the ordinary stack (plan stage S1).
     Follow(follow_cmd::FollowArgs),
@@ -999,6 +1008,13 @@ enum Command {
 /// group and alignment-edge journals, verified-archive records and the GPU
 /// self-test and pipeline caches, each keyed by what it was computed from,
 /// and is shared by every command and by `strehl follow`.
+// Round 4 (2026-11-20): the focus step a capture needed, and the calibrated
+// compact of a finished capture.
+#[path = "compact-cmd.rs"]
+pub mod compact_cmd;
+#[path = "focus-step-cmd.rs"]
+pub mod focus_step_cmd;
+
 pub fn default_cache_root() -> PathBuf {
     align_cmd::default_cache_root()
 }
@@ -1070,6 +1086,8 @@ where
         Command::ImportPreset(args) => develop_cmd::import(&args),
         Command::Probe { dir, limit } => probe(&dir, limit),
         Command::PixelShift(args) => pixel_shift_cmd::run(&args),
+        Command::FocusStep(args) => focus_step_cmd::run(&args),
+        Command::Compact(args) => compact_cmd::run(&args),
         Command::Follow(args) => follow_cmd::run(&args),
         Command::Focus { action } => match action {
             FocusAction::Inspect(args) => sony_focus_cmd::run(&args),
