@@ -357,7 +357,14 @@ fn connect_camera(
     let opened = camera.as_mut().unwrap();
     opened.configure()?;
     refresh(opened.as_mut(), s)?;
-    let identity = opened.identity();
+    let mut identity = opened.identity();
+    // The link the camera negotiated (round-3 performance plan, C1): a body
+    // that falls back to USB 2.0 still works, at about half the capture
+    // speed, and said nothing for four days.
+    let usb = crate::ptp::camera_usb_speed_mbps();
+    if let Some(speed) = usb {
+        identity["usb_speed_mbps"] = json!(speed);
+    }
     update(s, |v| {
         v.connected = true;
         v.capture_run = false;
@@ -377,11 +384,25 @@ fn connect_camera(
             "Connected · RAW captures stay on the SD card"
         }
         .into();
+        if let Some(warning) = usb.and_then(usb_link_warning) {
+            v.message = format!("{} · {warning}", v.message);
+        }
         v.suggestion = None;
         v.timing = None;
     });
     Ok(())
 }
+/// What to tell the user about a camera link slower than USB 3, or `None`.
+pub fn usb_link_warning(speed_mbps: u32) -> Option<String> {
+    (speed_mbps < crate::ptp::USB3_MBPS).then(|| {
+        format!(
+            "Slow camera link: USB {speed_mbps} Mbit/s, not USB 3. Each RAW reaches the Pi {} {}",
+            "several times slower and a plane takes about twice as long.",
+            "Push the cable fully into a blue port and the camera, or use a USB 3 data cable"
+        )
+    })
+}
+
 fn wake_camera(
     rig: &RigPower,
     factory: &Factory,
@@ -2282,6 +2303,19 @@ mod tests {
                 std::fs::read(old_journal.join("events.jsonl")).unwrap(),
                 old_bytes
             );
+        }
+    }
+
+    /// The link warning: USB 2.0 and slower warn, USB 3 and faster do not.
+    #[test]
+    fn a_camera_link_below_usb3_is_reported() {
+        for slow in [12, 480] {
+            let warning = super::usb_link_warning(slow).expect("a slow link warns");
+            assert!(warning.contains(&format!("USB {slow} Mbit/s")), "{warning}");
+            assert!(!warning.contains("  "), "{warning}");
+        }
+        for fast in [5000, 10000, 20000] {
+            assert_eq!(super::usb_link_warning(fast), None);
         }
     }
 }

@@ -1106,6 +1106,16 @@ impl CaptureWorkspace {
                 .as_str()
                 .unwrap_or("Connect the Pi to begin"),
         );
+        // The camera's USB link, while it is connected (round-3 performance
+        // plan, C1): a body that fell back to USB 2.0 captures at about half
+        // speed and says nothing else.
+        if s.state["connected"] == true
+            && let Some(warning) = s.state["usb_speed_mbps"]
+                .as_u64()
+                .and_then(|mbps| strehl_capture::worker::usb_link_warning(mbps as u32))
+        {
+            ui.colored_label(AMBER, format!("{warning}."));
+        }
         if let Some(error) = self.error.as_ref().or(s.command_error.as_ref()) {
             ui.colored_label(AMBER, error);
         }

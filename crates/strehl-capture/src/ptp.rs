@@ -830,6 +830,21 @@ impl<L: Link> Camera<L> {
     }
 }
 
+/// The USB speed the ILCE-7CR negotiated with this host, in Mbit/s (sysfs
+/// `speed`: 480 is USB 2.0, 5000 USB 3), when exactly one is attached.
+/// MEASURED on the studio Pi, 2026-11-15 to 19: a camera that fell back to
+/// 480 took 3.1 s to deliver each RAW against 0.4 s at 5000, and a four-shot
+/// plane 16.4 s against 7.1 s; nothing reported it.
+pub fn camera_usb_speed_mbps() -> Option<u32> {
+    #[cfg(target_os = "linux")]
+    return usb::a7cr_speed();
+    #[cfg(not(target_os = "linux"))]
+    None
+}
+
+/// Below this the camera's link is not USB 3 SuperSpeed.
+pub const USB3_MBPS: u32 = 5000;
+
 #[cfg(target_os = "linux")]
 mod usb {
     use super::*;
@@ -847,6 +862,21 @@ mod usb {
         close: unsafe extern "C" fn(*mut c_void),
         exit: unsafe extern "C" fn(*mut c_void),
     }
+    /// The `speed` of the one attached ILCE-7CR, rounded down to Mbit/s.
+    pub(crate) fn a7cr_speed() -> Option<u32> {
+        let mut found = Vec::new();
+        for e in std::fs::read_dir("/sys/bus/usb/devices").ok()? {
+            let p = e.ok()?.path();
+            let read = |name: &str| std::fs::read_to_string(p.join(name)).ok();
+            if read("idVendor").as_deref().map(str::trim) == Some("054c")
+                && read("idProduct").as_deref().map(str::trim) == Some("0e88")
+            {
+                found.push(read("speed")?.trim().parse::<f64>().ok()? as u32);
+            }
+        }
+        (found.len() == 1).then(|| found[0])
+    }
+
     pub(crate) fn count_a7cr() -> Result<usize> {
         fn id(path: &Path) -> std::io::Result<Option<String>> {
             match std::fs::read_to_string(path) {

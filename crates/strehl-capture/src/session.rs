@@ -185,6 +185,13 @@ impl Session {
             "preview":{"available":s.preview.is_some(),"fresh":fresh,"generation":s.preview_generation,"age_seconds":s.preview_at.map(|t|t.elapsed().as_secs_f64()),"error":s.preview_error,"width":s.preview.as_ref().map(|p|p.rgb.width()),"height":s.preview.as_ref().map(|p|p.rgb.height())},
             "magnifier_ratios":ratios,"magnifier_current":property(&s.status,"Focus_Magnifier_Setting").map(|n|n>>32),"suggestion":s.suggestion,"samples":s.samples,
             "exposure":exposure_summary(&s.status)});
+        // The camera's negotiated USB speed while connected (round-3
+        // performance plan, C1); null when unknown or disconnected.
+        state["usb_speed_mbps"] = if s.connected {
+            s.identity["usb_speed_mbps"].clone()
+        } else {
+            Value::Null
+        };
         state["schedule"] = json!(schedule);
         state["error_correction"] = json!(s.error_correction);
         state
