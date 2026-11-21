@@ -15,7 +15,7 @@ import struct
 import sys
 from pathlib import Path
 
-KINDS = {0: 'gate-support', 1: 'averaging', 2: 'focus-energy', 3: 'gate-floor'}
+KINDS = {0: 'gate-support', 1: 'averaging', 2: 'focus-energy', 3: 'gate-floor', 6: 'preview-sample'}
 
 
 def read_evidence(path):
@@ -42,6 +42,11 @@ def read_evidence(path):
         payload = data[at + 16:at + 16 + length]
         at += 16 + length
         assert reserved == 0
+        sequences.append(sequence)
+        if kind in (1, 6):
+            # The stack's maps after each generation: compared by
+            # p2-stack-compare.py, not here.
+            continue
         (lw, lh), _ = lattices[level]
         sites = lw * lh
         if kind == 0:
@@ -55,7 +60,6 @@ def read_evidence(path):
         key = (frame, level, KINDS[kind])
         assert key not in maps, f'duplicate {key}'
         maps[key] = value
-        sequences.append(sequence)
     return dict(source='evidence', lattices=lattices, frames=frames, maps=maps,
                 sequences_increasing=all(a < b for a, b in zip(sequences, sequences[1:])),
                 records=len(sequences), torn=torn, bytes=len(data))
