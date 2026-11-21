@@ -1,21 +1,39 @@
 //! The live view in the Capture canvas (Studio 2; mockup `capture-plan.html`):
 //! the camera's JPEG preview fitted or at 100 %, focus peaking with its
-//! threshold, the clipping overlay, a thirds grid, the subject box with its
-//! corner marks, the camera magnifier, and the estimate panel with the
-//! preview's histogram, labelled "estimate, not the RAW".
+//! threshold, the clipping overlay, a thirds grid, the subject box, the
+//! camera magnifier, and the estimate panel, labelled "estimate, not the
+//! RAW".
+//!
+//! The subject box keeps its corner marks and has eight square handles
+//! (corners and edge midpoints): a handle resizes it, a drag inside moves
+//! it, a drag outside draws a new one. It is clamped to the picture and no
+//! smaller than the host accepts ([`MIN_BOX`]); the new box goes to the host
+//! on release, as a drawn one always did, and is shown until the host has it.
+//!
+//! The estimate panel draws the preview's histograms antialiased (luma filled
+//! and stroked, red, green and blue as lines) with the black and clipped
+//! shares at their ends; the focus in the subject box with its recent trace
+//! (it rises as the lens brings the box's detail into focus; the lens
+//! position of the sharpest recent preview is named); the exposure and the
+//! preview rate.
 //!
 //! Textures are uploaded only when the preview's generation (or the peaking
-//! threshold) changes; the histogram is one cached mesh per generation.
+//! threshold) changes. The per-pixel work (histograms, clip mask, focus
+//! tiles) is done on the client thread; here the histogram and the focus
+//! trace are meshes rebuilt once per generation (or rectangle), and the box's
+//! focus is reduced from at most 768 tiles once per generation or box.
+use std::collections::VecDeque;
 use std::sync::Arc;
 
 use eframe::egui::{
-    self, Align2, Color32, Mesh, Rect, Sense, Shape, Stroke, StrokeKind, TextureHandle,
-    TextureOptions, Ui,
+    self, Align2, Color32, CursorIcon, Mesh, Pos2, Rect, Sense, Shape, Stroke, StrokeKind,
+    TextureHandle, TextureOptions, Ui, Vec2,
+    epaint::{TessellationOptions, Tessellator},
 };
 use strehl_capture::model::Roi;
 
 use super::style::{self, ButtonKind, CapturePalette, Mark};
-use crate::capture_aids::PreviewLevels;
+use crate::capture_aids::{PREVIEW_BLACK_CODE, PREVIEW_CLIP_CODE, PreviewLevels};
 use crate::capture_client::Snapshot;
 
 /// What the user asked of the live view.
@@ -27,8 +45,351 @@ pub(crate) enum LiveIntent {
     Magnify { ratio: u32, x: u16, y: u16 },
 }
 
-/// The histogram's mesh, keyed by the preview's generation and rectangle.
-type HistogramCache = Option<((u64, [u32; 4]), Arc<Mesh>)>;
+/// The smallest subject box, as a share of the preview's width and height
+/// (the host refuses smaller: `Roi::valid`).
+pub(crate) const MIN_BOX: f32 = 0.05;
+/// A handle's drawn side and its reach (points from its centre).
+const HANDLE: f32 = 7.0;
+const HANDLE_REACH: f32 = 8.0;
+/// How near an edge between handles still takes that edge.
+const EDGE_REACH: f32 = 4.0;
+/// How many previews the focus trace keeps.
+pub(crate) const TRACE_LEN: usize = 48;
+/// The estimate panel's size.
+const PANEL: Vec2 = Vec2::new(300.0, 202.0);
+
+/// A handle of the subject box.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum Handle {
+    NorthWest,
+    North,
+    NorthEast,
+    East,
+    SouthEast,
+    South,
+    SouthWest,
+    West,
+}
+
+impl Handle {
+    pub const ALL: [Handle; 8] = [
+        Handle::NorthWest,
+        Handle::North,
+        Handle::NorthEast,
+        Handle::East,
+        Handle::SouthEast,
+        Handle::South,
+        Handle::SouthWest,
+        Handle::West,
+    ];
+    /// The sides it moves: left, right, top, bottom.
+    fn sides(self) -> (bool, bool, bool, bool) {
+        match self {
+            Handle::NorthWest => (true, false, true, false),
+            Handle::North => (false, false, true, false),
+            Handle::NorthEast => (false, true, true, false),
+            Handle::East => (false, true, false, false),
+            Handle::SouthEast => (false, true, false, true),
+            Handle::South => (false, false, false, true),
+            Handle::SouthWest => (true, false, false, true),
+            Handle::West => (true, false, false, false),
+        }
+    }
+    fn is_corner(self) -> bool {
+        let (l, r, t, b) = self.sides();
+        (l || r) && (t || b)
+    }
+    /// Where it sits on `r`.
+    pub fn at(self, r: Rect) -> Pos2 {
+        let (l, rt, t, b) = self.sides();
+        let x = if l {
+            r.left()
+        } else if rt {
+            r.right()
+        } else {
+            r.center().x
+        };
+        let y = if t {
+            r.top()
+        } else if b {
+            r.bottom()
+        } else {
+            r.center().y
+        };
+        egui::pos2(x, y)
+    }
+    pub fn cursor(self) -> CursorIcon {
+        match self {
+            Handle::North | Handle::South => CursorIcon::ResizeVertical,
+            Handle::East | Handle::West => CursorIcon::ResizeHorizontal,
+            Handle::NorthWest | Handle::SouthEast => CursorIcon::ResizeNwSe,
+            Handle::NorthEast | Handle::SouthWest => CursorIcon::ResizeNeSw,
+        }
+    }
+}
+
+/// What a point on the picture is, for the subject box drawn at `r`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum BoxHit {
+    Handle(Handle),
+    Inside,
+    Outside,
+}
+
+/// Hit-tests the box drawn at `r` (screen points): corners first, then the
+/// edge midpoints, then the edges themselves, then inside.
+pub(crate) fn box_hit(r: Rect, pos: Pos2) -> BoxHit {
+    let near = |h: Handle| {
+        let d = (h.at(r) - pos).abs();
+        d.x <= HANDLE_REACH && d.y <= HANDLE_REACH
+    };
+    if let Some(h) = Handle::ALL
+        .into_iter()
+        .filter(|h| h.is_corner())
+        .chain(Handle::ALL.into_iter().filter(|h| !h.is_corner()))
+        .find(|h| near(*h))
+    {
+        return BoxHit::Handle(h);
+    }
+    let within_x = pos.x >= r.left() && pos.x <= r.right();
+    let within_y = pos.y >= r.top() && pos.y <= r.bottom();
+    let edge = [
+        (
+            Handle::West,
+            within_y && (pos.x - r.left()).abs() <= EDGE_REACH,
+        ),
+        (
+            Handle::East,
+            within_y && (pos.x - r.right()).abs() <= EDGE_REACH,
+        ),
+        (
+            Handle::North,
+            within_x && (pos.y - r.top()).abs() <= EDGE_REACH,
+        ),
+        (
+            Handle::South,
+            within_x && (pos.y - r.bottom()).abs() <= EDGE_REACH,
+        ),
+    ]
+    .into_iter()
+    .find(|(_, hit)| *hit);
+    match edge {
+        Some((h, _)) => BoxHit::Handle(h),
+        None if r.contains(pos) => BoxHit::Inside,
+        None => BoxHit::Outside,
+    }
+}
+
+/// `from` (preview fractions) with `handle` moved by `delta`: the sides it
+/// moves follow, within the picture and no closer than `min` to the
+/// opposite side (the box never turns inside out).
+pub(crate) fn resized(from: Rect, handle: Handle, delta: Vec2, min: f32) -> Rect {
+    let (l, r, t, b) = handle.sides();
+    let (mut x0, mut x1, mut y0, mut y1) = (from.left(), from.right(), from.top(), from.bottom());
+    if l {
+        x0 = (x0 + delta.x).min(x1 - min).max(0.0);
+    }
+    if r {
+        x1 = (x1 + delta.x).max(x0 + min).min(1.0);
+    }
+    if t {
+        y0 = (y0 + delta.y).min(y1 - min).max(0.0);
+    }
+    if b {
+        y1 = (y1 + delta.y).max(y0 + min).min(1.0);
+    }
+    Rect::from_min_max(egui::pos2(x0, y0), egui::pos2(x1, y1))
+}
+
+/// `from` moved by `delta`, kept whole inside the picture.
+pub(crate) fn moved(from: Rect, delta: Vec2) -> Rect {
+    let x = (from.left() + delta.x).min(1.0 - from.width()).max(0.0);
+    let y = (from.top() + delta.y).min(1.0 - from.height()).max(0.0);
+    Rect::from_min_size(egui::pos2(x, y), from.size())
+}
+
+fn roi_rect(roi: Roi) -> Rect {
+    Rect::from_min_size(egui::pos2(roi.x, roi.y), egui::vec2(roi.width, roi.height))
+}
+
+fn rect_roi(r: Rect) -> Roi {
+    Roi {
+        x: r.left(),
+        y: r.top(),
+        width: r.width(),
+        height: r.height(),
+    }
+}
+
+fn same_roi(a: Roi, b: Roi) -> bool {
+    (a.x - b.x).abs() < 1e-3
+        && (a.y - b.y).abs() < 1e-3
+        && (a.width - b.width).abs() < 1e-3
+        && (a.height - b.height).abs() < 1e-3
+}
+
+/// A drag on the picture.
+#[derive(Clone, Copy, Debug, PartialEq)]
+enum BoxDrag {
+    /// A new box from this point (preview fractions).
+    Draw(Pos2),
+    /// The box as it was (preview fractions) and where the press was.
+    Move { from: Rect, press: Pos2 },
+    Resize {
+        from: Rect,
+        handle: Handle,
+        press: Pos2,
+    },
+}
+
+/// The focus in the subject box of one preview.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub(crate) struct FocusSample {
+    /// Where the lens was when the preview arrived.
+    pub lens: Option<u16>,
+    /// The box's mean squared Laplacian (`FocusTiles::focus_in`).
+    pub value: f32,
+}
+
+/// What makes focus readings comparable: the same box, magnifier,
+/// exposure and preview size.
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct TraceContext {
+    roi: [u32; 4],
+    magnifier: Option<u64>,
+    iso: Option<u64>,
+    shutter: Option<u64>,
+    size: [usize; 2],
+}
+
+/// The subject box's focus over the recent previews, and when they came.
+#[derive(Default)]
+pub(crate) struct FocusTrace {
+    context: Option<TraceContext>,
+    /// The preview last read for this context, and the last seen at all.
+    generation: Option<u64>,
+    arrived: Option<u64>,
+    samples: VecDeque<FocusSample>,
+    arrivals: VecDeque<f64>,
+    /// Changes with every sample: the trace mesh's cache key.
+    pub revision: u64,
+}
+
+impl FocusTrace {
+    /// Takes the box's focus from a new preview, once per generation; a new
+    /// box, magnifier ratio, exposure or preview size starts the trace again
+    /// (its readings are not comparable). `now` is the input's time.
+    pub fn observe(&mut self, s: &Snapshot, roi: Roi, now: f64) -> bool {
+        let Some((generation, peaks)) = &s.peaking else {
+            return false;
+        };
+        let e = s.host.exposure.as_ref();
+        let context = TraceContext {
+            roi: [
+                roi.x.to_bits(),
+                roi.y.to_bits(),
+                roi.width.to_bits(),
+                roi.height.to_bits(),
+            ],
+            magnifier: s.host.magnifier_current,
+            iso: e.and_then(|e| e.iso),
+            shutter: e.and_then(|e| e.shutter),
+            size: peaks.focus.size,
+        };
+        if self.context != Some(context) {
+            if self.context.is_some() {
+                self.samples.clear();
+            }
+            self.context = Some(context);
+            self.generation = None;
+        }
+        if self.arrived != Some(*generation) {
+            self.arrived = Some(*generation);
+            if self.arrivals.len() == 8 {
+                self.arrivals.pop_front();
+            }
+            self.arrivals.push_back(now);
+        }
+        if self.generation == Some(*generation) {
+            return false;
+        }
+        self.generation = Some(*generation);
+        if let Some(value) = peaks.focus.focus_in(roi.x, roi.y, roi.width, roi.height) {
+            if self.samples.len() == TRACE_LEN {
+                self.samples.pop_front();
+            }
+            self.samples.push_back(FocusSample {
+                lens: s.host.position,
+                value,
+            });
+        }
+        self.revision += 1;
+        true
+    }
+
+    /// Readings from before the first preview (fixtures): oldest first.
+    pub fn seed(&mut self, samples: impl IntoIterator<Item = FocusSample>) {
+        for sample in samples {
+            if self.samples.len() == TRACE_LEN {
+                self.samples.pop_front();
+            }
+            self.samples.push_back(sample);
+        }
+        self.revision += 1;
+    }
+
+    pub fn samples(&self) -> &VecDeque<FocusSample> {
+        &self.samples
+    }
+
+    pub fn latest(&self) -> Option<FocusSample> {
+        self.samples.back().copied()
+    }
+
+    /// The sharpest reading kept (the newest of equals).
+    pub fn best(&self) -> Option<FocusSample> {
+        self.samples
+            .iter()
+            .copied()
+            .reduce(|best, s| if s.value >= best.value { s } else { best })
+    }
+
+    /// The latest reading as a share of the best (0-1).
+    pub fn share_of_best(&self) -> Option<f32> {
+        let (latest, best) = (self.latest()?, self.best()?);
+        (best.value > 0.0).then(|| latest.value / best.value)
+    }
+
+    /// Previews a second over the last few, when at least three came within
+    /// the last five seconds of `now`.
+    pub fn rate(&self, now: f64) -> Option<f32> {
+        let recent: Vec<f64> = self
+            .arrivals
+            .iter()
+            .copied()
+            .filter(|t| now - t <= 5.0)
+            .collect();
+        let (first, last) = (recent.first()?, recent.last()?);
+        (recent.len() >= 3 && last > first)
+            .then(|| ((recent.len() - 1) as f64 / (last - first)) as f32)
+    }
+}
+
+/// A cached mesh and its key.
+type MeshCache<K> = Option<(K, Arc<Mesh>)>;
+/// The histogram's key: the preview's generation, the rectangle, the scale.
+type HistogramKey = (u64, [u32; 4], u32);
+/// The trace's key: its revision, the rectangle, the scale.
+type TraceKey = (u64, [u32; 4], u32);
+
+fn rect_bits(r: Rect) -> [u32; 4] {
+    [
+        r.left().to_bits(),
+        r.top().to_bits(),
+        r.width().to_bits(),
+        r.height().to_bits(),
+    ]
+}
 
 /// The live view's switches and textures.
 pub(crate) struct LiveView {
@@ -38,13 +399,21 @@ pub(crate) struct LiveView {
     pub clipping: bool,
     pub grid: bool,
     pub subject_box: bool,
-    drag_from: Option<egui::Pos2>,
+    drag: Option<BoxDrag>,
+    /// A box sent to the host, shown until the host reports it (or for
+    /// three seconds), so a resized box does not jump back meanwhile.
+    sent: Option<(Roi, f64)>,
     preview: Option<(u64, TextureHandle)>,
     peaks: Option<(u64, u8, TextureHandle)>,
     clip: Option<(u64, TextureHandle)>,
-    histogram: HistogramCache,
+    histogram: MeshCache<HistogramKey>,
+    trace_mesh: MeshCache<TraceKey>,
+    /// The subject box's focus over the recent previews.
+    pub trace: FocusTrace,
     /// Texture uploads (tests and performance checks).
     pub uploads: u64,
+    /// Histogram and trace mesh builds (tests and performance checks).
+    pub mesh_builds: u64,
 }
 
 impl Default for LiveView {
@@ -56,12 +425,16 @@ impl Default for LiveView {
             clipping: true,
             grid: false,
             subject_box: true,
-            drag_from: None,
+            drag: None,
+            sent: None,
             preview: None,
             peaks: None,
             clip: None,
             histogram: None,
+            trace_mesh: None,
+            trace: FocusTrace::default(),
             uploads: 0,
+            mesh_builds: 0,
         }
     }
 }
@@ -153,6 +526,19 @@ impl LiveView {
         }
     }
 
+    /// The subject box to draw: a box sent and not yet reported by the host
+    /// (for at most three seconds), else the host's.
+    fn current_roi(&mut self, host: Option<Roi>, now: f64) -> Roi {
+        let host = host.unwrap_or_else(Roi::subject);
+        match self.sent {
+            Some((roi, at)) if now - at < 3.0 && !same_roi(roi, host) => roi,
+            _ => {
+                self.sent = None;
+                host
+            }
+        }
+    }
+
     /// Draws the live view into the canvas `ui` gives it.
     pub fn show(&mut self, ui: &mut Ui, s: &Snapshot, palette: &CapturePalette) -> Vec<LiveIntent> {
         let mut out = Vec::new();
@@ -160,6 +546,7 @@ impl LiveView {
         ui.painter().rect_filled(canvas, 0.0, palette.surround);
         self.sync_textures(ui.ctx(), s, palette);
         let host = &s.host;
+        let now = ui.input(|i| i.time);
         let aspect = self
             .preview
             .as_ref()
@@ -169,7 +556,10 @@ impl LiveView {
         let photo = photo_rect(canvas, aspect);
         let p = ui.painter_at(canvas);
         p.rect_filled(photo, 0.0, Color32::BLACK);
-        let roi = host.roi.unwrap_or_else(Roi::subject);
+        let roi = self.current_roi(host.roi, now);
+        // The focus reading follows the box the host measures with.
+        self.trace
+            .observe(s, host.roi.unwrap_or_else(Roi::subject), now);
         // 100 %: one preview pixel a point, around the subject box.
         let uv = match (&self.preview, self.actual_size) {
             (Some((_, t)), true) => {
@@ -227,57 +617,134 @@ impl LiveView {
                 );
             }
         }
-        // The subject box: drawn, and redrawn by dragging on the picture.
+        // The subject box: its handles resize it, inside moves it, outside
+        // draws a new one. The picture's hit area reaches the handles on
+        // its border.
         let response = ui.interact(
-            photo,
+            photo.expand(HANDLE_REACH),
             ui.id().with("capture-live-photo"),
             Sense::click_and_drag(),
         );
         let editable = s.fresh() && host.editable && !s.pending;
-        let to_uv = |pos: egui::Pos2| {
+        let to_uv = |pos: Pos2| {
             let fx = ((pos.x - photo.left()) / photo.width()).clamp(0.0, 1.0);
             let fy = ((pos.y - photo.top()) / photo.height()).clamp(0.0, 1.0);
             egui::pos2(uv.left() + fx * uv.width(), uv.top() + fy * uv.height())
         };
-        let to_screen = |u: egui::Pos2| {
+        let to_screen = |u: Pos2| {
             egui::pos2(
                 photo.left() + (u.x - uv.left()) / uv.width() * photo.width(),
                 photo.top() + (u.y - uv.top()) / uv.height() * photo.height(),
             )
         };
-        if self.subject_box && editable {
-            if response.drag_started() {
-                self.drag_from = ui.input(|i| i.pointer.press_origin()).map(to_uv);
-            }
-            if response.drag_stopped()
-                && let (Some(a), Some(b)) = (
-                    self.drag_from.take(),
-                    response.interact_pointer_pos().map(to_uv),
-                )
+        // A pointer move on the screen as a move in preview fractions.
+        let to_delta = |d: Vec2| {
+            egui::vec2(
+                d.x / photo.width() * uv.width(),
+                d.y / photo.height() * uv.height(),
+            )
+        };
+        let mut roi = roi;
+        let box_uv = roi_rect(roi);
+        let mut box_screen = Rect::from_min_max(to_screen(box_uv.min), to_screen(box_uv.max));
+        let can_edit = self.subject_box && editable;
+        if can_edit {
+            if response.drag_started()
+                && let Some(press) = ui.input(|i| i.pointer.press_origin())
             {
-                let r = Rect::from_two_pos(a, b);
-                let roi = Roi {
-                    x: r.left(),
-                    y: r.top(),
-                    width: r.width(),
-                    height: r.height(),
-                };
-                if roi.width >= 0.05 && roi.height >= 0.05 && roi.valid() {
-                    out.push(LiveIntent::SetRoi(roi));
-                }
+                self.drag = Some(match box_hit(box_screen, press) {
+                    BoxHit::Handle(handle) => BoxDrag::Resize {
+                        from: box_uv,
+                        handle,
+                        press,
+                    },
+                    BoxHit::Inside => BoxDrag::Move {
+                        from: box_uv,
+                        press,
+                    },
+                    BoxHit::Outside => BoxDrag::Draw(to_uv(press)),
+                });
             }
         } else {
-            self.drag_from = None;
+            self.drag = None;
+        }
+        let pointer = response.interact_pointer_pos();
+        let dragged = match (self.drag, pointer) {
+            (Some(BoxDrag::Draw(a)), Some(b)) => Some(Rect::from_two_pos(a, to_uv(b))),
+            (Some(BoxDrag::Move { from, press }), Some(b)) => {
+                Some(moved(from, to_delta(b - press)))
+            }
+            (
+                Some(BoxDrag::Resize {
+                    from,
+                    handle,
+                    press,
+                }),
+                Some(b),
+            ) => Some(resized(from, handle, to_delta(b - press), MIN_BOX)),
+            _ => None,
+        };
+        if response.drag_stopped()
+            && self.drag.take().is_some()
+            && let Some(r) = dragged
+        {
+            let next = rect_roi(r);
+            let big_enough = next.width >= MIN_BOX && next.height >= MIN_BOX;
+            if big_enough && !same_roi(next, roi) && next.valid() {
+                out.push(LiveIntent::SetRoi(next));
+                self.sent = Some((next, now));
+                roi = next;
+                box_screen = Rect::from_min_max(to_screen(r.min), to_screen(r.max));
+            }
+        }
+        // The pointer's cursor: the handle's resize, move inside, a cross
+        // to draw outside.
+        if can_edit {
+            let cursor = match (self.drag, response.hover_pos()) {
+                (Some(BoxDrag::Resize { handle, .. }), _) => Some(handle.cursor()),
+                (Some(BoxDrag::Move { .. }), _) => Some(CursorIcon::Grabbing),
+                (Some(BoxDrag::Draw(_)), _) => Some(CursorIcon::Crosshair),
+                (None, Some(pos)) => Some(match box_hit(box_screen, pos) {
+                    BoxHit::Handle(h) => h.cursor(),
+                    BoxHit::Inside => CursorIcon::Grab,
+                    BoxHit::Outside => CursorIcon::Crosshair,
+                }),
+                (None, None) => None,
+            };
+            if let Some(cursor) = cursor
+                && (self.drag.is_some() || response.hovered())
+            {
+                ui.ctx().set_cursor_icon(cursor);
+            }
         }
         if self.subject_box {
-            let shown = match (self.drag_from, response.interact_pointer_pos()) {
-                (Some(a), Some(b)) => Rect::from_two_pos(to_screen(a), b),
-                _ => Rect::from_min_max(
-                    to_screen(egui::pos2(roi.x, roi.y)),
-                    to_screen(egui::pos2(roi.x + roi.width, roi.y + roi.height)),
+            let (shown, active) = match dragged.filter(|_| self.drag.is_some()) {
+                Some(r) => (
+                    Rect::from_min_max(to_screen(r.min), to_screen(r.max)),
+                    match self.drag {
+                        Some(BoxDrag::Resize { handle, .. }) => Some(handle),
+                        _ => None,
+                    },
                 ),
+                None => (box_screen, None),
             };
-            subject_box(&p, shown, palette);
+            let hovered = match (self.drag, response.hover_pos()) {
+                (None, Some(pos)) if can_edit => match box_hit(box_screen, pos) {
+                    BoxHit::Handle(h) => Some(h),
+                    _ => None,
+                },
+                _ => active,
+            };
+            let caption = match dragged.filter(|_| self.drag.is_some()) {
+                Some(r) => format!(
+                    "Subject box · {:.0} × {:.0} % of the frame",
+                    100.0 * r.width(),
+                    100.0 * r.height()
+                ),
+                None => "Subject box · used by the survey and the magnifier".to_owned(),
+            };
+            let ppp = ui.ctx().pixels_per_point();
+            subject_box(&p, shown, &caption, can_edit, hovered, ppp);
         }
         // The state at the top left.
         let state = match host.preview.age_seconds {
@@ -304,7 +771,7 @@ impl LiveView {
             palette.ink2,
         );
         self.bar(ui, photo, s, roi, palette, &mut out);
-        self.estimate(ui, photo, s, palette);
+        self.estimate(ui, photo, s, now, palette);
         out
     }
 
@@ -387,53 +854,176 @@ impl LiveView {
         );
     }
 
-    /// The estimate panel at the bottom right (`.expo`): the preview's
-    /// histogram with its clipped share, and the exposure.
-    fn estimate(&mut self, ui: &mut Ui, photo: Rect, s: &Snapshot, palette: &CapturePalette) {
+    /// The estimate panel at the bottom right (`.expo`): the histograms
+    /// with the black and clipped shares at their ends, the focus in the
+    /// subject box and its trace, the exposure and the preview rate.
+    fn estimate(
+        &mut self,
+        ui: &mut Ui,
+        photo: Rect,
+        s: &Snapshot,
+        now: f64,
+        palette: &CapturePalette,
+    ) {
+        // Above the tool bar when the picture is too narrow for both.
+        let lift = if photo.width() < 520.0 + PANEL.x + 30.0 {
+            34.0 + 8.0
+        } else {
+            0.0
+        };
         let rect = Rect::from_min_size(
-            photo.right_bottom() + egui::vec2(-254.0, -10.0 - 106.0),
-            egui::vec2(244.0, 106.0),
+            photo.right_bottom() + egui::vec2(-10.0 - PANEL.x, -10.0 - lift - PANEL.y),
+            PANEL,
         );
+        // Presses on the panel do not draw a subject box under it.
+        ui.interact(
+            rect,
+            ui.id().with("capture-live-estimate"),
+            Sense::click_and_drag(),
+        );
+        let ppp = ui.ctx().pixels_per_point();
         let p = ui.painter();
         glass(p, rect, palette);
         let inner = rect.shrink2(egui::vec2(12.0, 10.0));
-        style::paint_job(
-            p,
-            inner.left_top(),
-            Align2::LEFT_TOP,
-            style::caps_job("Live view", 10.5, palette.ink3),
-        );
-        style::paint_job(
-            p,
+        let text = |pos: Pos2, anchor: Align2, s: &str, size: f32, color: Color32| {
+            style::paint_job(p, pos, anchor, style::job(s, size, color, 0.0))
+        };
+        let caps = |pos: Pos2, anchor: Align2, s: &str| {
+            style::paint_job(p, pos, anchor, style::caps_job(s, 10.5, palette.ink3))
+        };
+        caps(inner.left_top(), Align2::LEFT_TOP, "Live view");
+        text(
             inner.right_top(),
             Align2::RIGHT_TOP,
-            style::job(PreviewLevels::CAUTION_SHORT, 12.0, palette.ink3, 0.0),
+            PreviewLevels::CAUTION_SHORT,
+            12.0,
+            palette.ink3,
         );
+        // The histograms.
         let hist = Rect::from_min_size(
-            egui::pos2(inner.left(), inner.top() + 21.0),
-            egui::vec2(inner.width(), 52.0),
+            egui::pos2(inner.left(), inner.top() + 19.0),
+            egui::vec2(inner.width(), 48.0),
         );
+        let ends = inner.top() + 70.0;
         if let Some((generation, levels)) = &s.levels {
-            let key = (
-                *generation,
-                [
-                    hist.left().to_bits(),
-                    hist.top().to_bits(),
-                    hist.width().to_bits(),
-                    hist.height().to_bits(),
-                ],
-            );
+            let key = (*generation, rect_bits(hist), ppp.to_bits());
             if self.histogram.as_ref().is_none_or(|(k, _)| *k != key) {
-                self.histogram = Some((key, Arc::new(histogram_mesh(levels, hist, palette))));
+                self.histogram = Some((key, Arc::new(histogram_mesh(levels, hist, ppp, palette))));
+                self.mesh_builds += 1;
             }
             if let Some((_, mesh)) = &self.histogram {
                 p.add(Shape::mesh(mesh.clone()));
             }
+            let black = 100.0 * levels.black_share;
+            text(
+                egui::pos2(hist.left(), ends),
+                Align2::LEFT_TOP,
+                &format!("{} % black", share_text(black)),
+                11.5,
+                palette.ink3,
+            );
+            let clipped = 100.0 * levels.clipped_share;
+            text(
+                egui::pos2(hist.right(), ends),
+                Align2::RIGHT_TOP,
+                &format!("{clipped:.1} % clipped"),
+                11.5,
+                if clipped > 0.05 {
+                    palette.warn
+                } else {
+                    palette.ok
+                },
+            );
+        } else {
+            text(
+                hist.center(),
+                Align2::CENTER_CENTER,
+                "no preview yet",
+                11.5,
+                palette.ink3,
+            );
         }
+        let rule = |y: f32| {
+            style::hairline(
+                p,
+                egui::pos2(inner.left(), y),
+                egui::pos2(inner.right(), y),
+                palette.line2,
+            );
+        };
+        // The focus in the subject box, and its trace.
+        rule(inner.top() + 90.5);
+        let head = inner.top() + 97.0;
+        caps(
+            egui::pos2(inner.left(), head),
+            Align2::LEFT_TOP,
+            "Focus · subject box",
+        );
+        let trace = Rect::from_min_size(
+            egui::pos2(inner.left(), inner.top() + 114.0),
+            egui::vec2(inner.width(), 22.0),
+        );
+        let key = (self.trace.revision, rect_bits(trace), ppp.to_bits());
+        if self.trace_mesh.as_ref().is_none_or(|(k, _)| *k != key) {
+            self.trace_mesh = Some((key, Arc::new(trace_mesh(&self.trace, trace, ppp, palette))));
+            self.mesh_builds += 1;
+        }
+        if let Some((_, mesh)) = &self.trace_mesh {
+            p.add(Shape::mesh(mesh.clone()));
+        }
+        let below = inner.top() + 139.0;
+        match (self.trace.share_of_best(), self.trace.best()) {
+            (Some(share), Some(best)) => {
+                text(
+                    egui::pos2(inner.right(), head - 1.0),
+                    Align2::RIGHT_TOP,
+                    &format!("{:.0} % of the best", 100.0 * share),
+                    12.5,
+                    if share >= 0.995 {
+                        palette.plane
+                    } else {
+                        palette.ink
+                    },
+                );
+                text(
+                    egui::pos2(inner.left(), below),
+                    Align2::LEFT_TOP,
+                    &match best.lens {
+                        Some(lens) => format!("sharpest at lens {}", style::focus_units(lens)),
+                        None => "sharpest of these previews".to_owned(),
+                    },
+                    11.5,
+                    palette.ink3,
+                );
+                let n = self.trace.samples().len();
+                text(
+                    egui::pos2(inner.right(), below),
+                    Align2::RIGHT_TOP,
+                    &if n == 1 {
+                        "the first preview of this box".to_owned()
+                    } else {
+                        format!("last {n} previews")
+                    },
+                    11.5,
+                    palette.ink3,
+                );
+            }
+            _ => {
+                text(
+                    egui::pos2(inner.left(), below),
+                    Align2::LEFT_TOP,
+                    "rises as the box comes into focus",
+                    11.5,
+                    palette.ink3,
+                );
+            }
+        }
+        // The exposure and the preview rate.
+        rule(inner.top() + 159.5);
         let y = inner.bottom();
         let e = s.host.exposure.as_ref();
         let mut x = inner.left();
-        for text in [
+        for t in [
             e.and_then(|e| e.iso).map(style::iso_label),
             e.and_then(|e| e.shutter).map(style::shutter_label),
             e.and_then(|e| e.f_number)
@@ -447,56 +1037,296 @@ impl LiveView {
                 p,
                 egui::pos2(x, y),
                 Align2::LEFT_BOTTOM,
-                style::job(&text, 12.5, palette.ink, 0.2),
+                style::job(&t, 12.5, palette.ink, 0.2),
             )
             .right()
                 + 6.0;
         }
-        if let Some((_, levels)) = &s.levels {
-            let share = 100.0 * levels.clipped_share;
-            style::paint_job(
-                p,
+        if let Some(rate) = self.trace.rate(now) {
+            text(
                 egui::pos2(inner.right(), y),
                 Align2::RIGHT_BOTTOM,
-                style::job(
-                    &format!("{share:.1} % clipped"),
-                    12.5,
-                    if share > 0.05 {
-                        palette.warn
-                    } else {
-                        palette.ok
-                    },
-                    0.0,
-                ),
+                &format!("{rate:.1} previews/s"),
+                11.5,
+                palette.ink3,
             );
         }
     }
 }
 
-/// Bars of the preview's 256-bin luma histogram (square-root scale) and the
-/// clipped band at the right.
-pub(crate) fn histogram_mesh(levels: &PreviewLevels, rect: Rect, palette: &CapturePalette) -> Mesh {
+/// A share in percent with the precision it needs (0.04, 0.4, 4, 40).
+fn share_text(percent: f32) -> String {
+    if percent > 0.0 && percent < 1.0 {
+        format!("{percent:.1}")
+    } else {
+        format!("{percent:.0}")
+    }
+}
+
+/// `x` on the nearest physical pixel.
+fn on_pixel(x: f32, ppp: f32) -> f32 {
+    (x * ppp).round() / ppp
+}
+
+/// The x of code `i` (0-255) across `rect`.
+fn code_x(rect: Rect, i: f32) -> f32 {
+    rect.left() + (i + 0.5) / 256.0 * rect.width()
+}
+
+/// Display heights (0-1) of a 256-bin histogram: smoothed by a 5-tap
+/// binomial (a JPEG's tone curve combs its codes; the end bins are kept as
+/// they are), square root of the count over `peak`.
+fn heights(h: &[u32; 256], peak: f32) -> [f32; 256] {
+    const TAPS: [f32; 5] = [1.0, 4.0, 6.0, 4.0, 1.0];
+    let mut out = [0.0f32; 256];
+    for (i, v) in out.iter_mut().enumerate() {
+        let n = if !(2..=253).contains(&i) {
+            h[i] as f32
+        } else {
+            TAPS.iter()
+                .enumerate()
+                .map(|(k, w)| w * h[i + k - 2] as f32)
+                .sum::<f32>()
+                / 16.0
+        };
+        *v = (n / peak).sqrt().min(1.0);
+    }
+    out
+}
+
+/// The runs of a curve that hold counts (with the zero point either side,
+/// so a run comes down to the baseline), as separate polylines.
+fn runs(points: &[Pos2], values: &[f32; 256]) -> Vec<Vec<Pos2>> {
+    let mut out: Vec<Vec<Pos2>> = Vec::new();
+    let mut open = false;
+    for (i, p) in points.iter().enumerate() {
+        let near = values[i.saturating_sub(1)..(i + 2).min(256)]
+            .iter()
+            .any(|v| *v > 0.0);
+        if near {
+            if !open {
+                out.push(Vec::new());
+                open = true;
+            }
+            if let Some(run) = out.last_mut() {
+                run.push(*p);
+            }
+        } else {
+            open = false;
+        }
+    }
+    out.retain(|run| run.len() > 1);
+    out
+}
+
+/// A filled area from `points` down to `base`, as triangles.
+fn fill_under(mesh: &mut Mesh, points: &[Pos2], base: f32, color: Color32) {
+    for pair in points.windows(2) {
+        let i = mesh.vertices.len() as u32;
+        mesh.colored_vertex(pair[0], color);
+        mesh.colored_vertex(egui::pos2(pair[0].x, base), color);
+        mesh.colored_vertex(pair[1], color);
+        mesh.colored_vertex(egui::pos2(pair[1].x, base), color);
+        mesh.add_triangle(i, i + 1, i + 2);
+        mesh.add_triangle(i + 1, i + 3, i + 2);
+    }
+}
+
+/// An antialiased polyline appended to `mesh` (egui's feathered stroke).
+fn line(tessellator: &mut Tessellator, mesh: &mut Mesh, points: Vec<Pos2>, stroke: Stroke) {
+    tessellator.tessellate_shape(Shape::line(points, stroke), mesh);
+}
+
+/// The preview's histograms, antialiased: the luma filled and stroked, red,
+/// green and blue as lines, on a square-root scale (bins 0-3 and 254-255
+/// are left out of the scale's peak: their spikes are the end zones). The
+/// black zone at the left and the clipped zone at the right are marked, and
+/// stronger when they hold pixels.
+pub(crate) fn histogram_mesh(
+    levels: &PreviewLevels,
+    rect: Rect,
+    ppp: f32,
+    palette: &CapturePalette,
+) -> Mesh {
     let mut mesh = Mesh::default();
-    let peak = levels.histogram.iter().copied().max().unwrap_or(0).max(1) as f32;
-    let columns = rect.width().max(1.0) as usize;
-    for c in 0..columns {
-        let a = c * 256 / columns;
-        let b = ((c + 1) * 256 / columns).max(a + 1).min(256);
-        let n = levels.histogram[a..b].iter().copied().max().unwrap_or(0) as f32;
-        let h = (n / peak).sqrt() * rect.height();
-        if h > 0.0 {
-            mesh.add_colored_rect(
-                Rect::from_min_max(
-                    egui::pos2(rect.left() + c as f32, rect.bottom() - h),
-                    egui::pos2(rect.left() + c as f32 + 1.0, rect.bottom()),
-                ),
-                palette.ink3.gamma_multiply(0.7),
+    let px = 1.0 / ppp;
+    let base = rect.bottom();
+    let span = |a: u8, b: u8| {
+        let w = rect.width() / 256.0;
+        (
+            on_pixel(rect.left() + f32::from(a) * w, ppp),
+            on_pixel(rect.left() + (f32::from(b) + 1.0) * w, ppp),
+        )
+    };
+    // Quarter rules and the baseline.
+    for q in 1..4 {
+        let x = on_pixel(rect.left() + rect.width() * q as f32 / 4.0, ppp);
+        mesh.add_colored_rect(
+            Rect::from_min_max(egui::pos2(x, rect.top()), egui::pos2(x + px, base)),
+            palette.line,
+        );
+    }
+    // The end zones.
+    let (a, b) = span(0, PREVIEW_BLACK_CODE);
+    mesh.add_colored_rect(
+        Rect::from_min_max(egui::pos2(a, rect.top()), egui::pos2(b, base)),
+        palette.ink3.gamma_multiply(if levels.black_share > 0.0005 {
+            0.4
+        } else {
+            0.14
+        }),
+    );
+    let (a, b) = span(PREVIEW_CLIP_CODE, 255);
+    mesh.add_colored_rect(
+        Rect::from_min_max(egui::pos2(a, rect.top()), egui::pos2(b, base)),
+        palette
+            .warn
+            .gamma_multiply(if levels.clipped_share > 0.0005 {
+                0.75
+            } else {
+                0.22
+            }),
+    );
+    // One scale for all four: the highest bin between the end zones.
+    let inner = usize::from(PREVIEW_BLACK_CODE) + 1..usize::from(PREVIEW_CLIP_CODE);
+    let peak = std::iter::once(&levels.histogram)
+        .chain(levels.channels.iter())
+        .flat_map(|h| h[inner.clone()].iter().copied())
+        .max()
+        .unwrap_or(0)
+        .max(1) as f32;
+    // The curves stand a pixel above the baseline, where they hold counts.
+    let floor = base - 1.5 * px;
+    let height = floor - rect.top() - 1.0;
+    let curve = |h: &[u32; 256]| -> (Vec<Pos2>, [f32; 256]) {
+        let values = heights(h, peak);
+        let points = values
+            .iter()
+            .enumerate()
+            .map(|(i, v)| egui::pos2(code_x(rect, i as f32), floor - v * height))
+            .collect();
+        (points, values)
+    };
+    let (luma, luma_values) = curve(&levels.histogram);
+    fill_under(&mut mesh, &luma, floor, palette.ink2.gamma_multiply(0.2));
+    let mut tessellator = Tessellator::new(ppp, TessellationOptions::default(), [1, 1], vec![]);
+    for (channel, color) in levels.channels.iter().zip(CHANNEL_COLORS) {
+        let (points, values) = curve(channel);
+        for run in runs(&points, &values) {
+            line(
+                &mut tessellator,
+                &mut mesh,
+                run,
+                Stroke::new(1.0_f32, color),
             );
         }
     }
+    for run in runs(&luma, &luma_values) {
+        line(
+            &mut tessellator,
+            &mut mesh,
+            run,
+            Stroke::new(1.25_f32, palette.ink2),
+        );
+    }
+    // The baseline over the curves' feet.
     mesh.add_colored_rect(
-        Rect::from_min_max(egui::pos2(rect.right() - 8.0, rect.top()), rect.max),
-        palette.warn.gamma_multiply(0.25),
+        Rect::from_min_max(
+            egui::pos2(rect.left(), base - px),
+            egui::pos2(rect.right(), base),
+        ),
+        palette.line2,
+    );
+    mesh
+}
+
+/// Red, green and blue for the channel lines: muted, readable on the
+/// dark glass of every theme.
+const CHANNEL_COLORS: [Color32; 3] = [
+    Color32::from_rgba_premultiplied(196, 78, 68, 214),
+    Color32::from_rgba_premultiplied(104, 168, 88, 214),
+    Color32::from_rgba_premultiplied(84, 128, 206, 214),
+];
+
+/// The focus trace: the subject box's focus over the recent previews, the
+/// newest at the right, scaled between the lowest and highest kept; the
+/// sharpest marked with a rule, the newest with a square.
+pub(crate) fn trace_mesh(
+    trace: &FocusTrace,
+    rect: Rect,
+    ppp: f32,
+    palette: &CapturePalette,
+) -> Mesh {
+    let mut mesh = Mesh::default();
+    let px = 1.0 / ppp;
+    let base = on_pixel(rect.bottom(), ppp);
+    mesh.add_colored_rect(
+        Rect::from_min_max(
+            egui::pos2(rect.left(), base - px),
+            egui::pos2(rect.right(), base),
+        ),
+        palette.line2,
+    );
+    let samples = trace.samples();
+    let Some(best) = trace.best() else {
+        return mesh;
+    };
+    let (lo, hi) = samples
+        .iter()
+        .fold((f32::INFINITY, f32::NEG_INFINITY), |(lo, hi), s| {
+            (lo.min(s.value), hi.max(s.value))
+        });
+    let flat = hi - lo <= hi.abs() * 1e-3;
+    let height = rect.height() - 4.0;
+    let dx = rect.width() / (TRACE_LEN - 1) as f32;
+    let n = samples.len();
+    let point = |i: usize, v: f32| {
+        let f = if flat { 0.5 } else { (v - lo) / (hi - lo) };
+        egui::pos2(
+            rect.right() - (n - 1 - i) as f32 * dx,
+            rect.bottom() - 2.0 - f * height,
+        )
+    };
+    let points: Vec<Pos2> = samples
+        .iter()
+        .enumerate()
+        .map(|(i, s)| point(i, s.value))
+        .collect();
+    fill_under(
+        &mut mesh,
+        &points,
+        base - px,
+        palette.plane.gamma_multiply(0.12),
+    );
+    // The sharpest: a rule down to the baseline.
+    let best_at = samples
+        .iter()
+        .rposition(|s| s.value == best.value)
+        .unwrap_or(n - 1);
+    let bx = on_pixel(points[best_at].x, ppp);
+    mesh.add_colored_rect(
+        Rect::from_min_max(
+            egui::pos2(bx - px * 0.5, rect.top()),
+            egui::pos2(bx + px * 0.5, base),
+        ),
+        palette.ink3,
+    );
+    let mut tessellator = Tessellator::new(ppp, TessellationOptions::default(), [1, 1], vec![]);
+    if points.len() > 1 {
+        line(
+            &mut tessellator,
+            &mut mesh,
+            points.clone(),
+            Stroke::new(1.5_f32, palette.plane),
+        );
+    }
+    let last = points[n - 1];
+    mesh.add_colored_rect(
+        Rect::from_center_size(
+            egui::pos2(on_pixel(last.x, ppp), on_pixel(last.y, ppp)),
+            egui::vec2(5.0, 5.0),
+        ),
+        palette.plane,
     );
     mesh
 }
@@ -512,9 +1342,17 @@ fn glass(p: &egui::Painter, rect: Rect, palette: &CapturePalette) {
     p.rect_filled(rect, 0.0, palette.panel);
 }
 
-/// The subject box: a faint frame, white corner marks and its caption.
-fn subject_box(p: &egui::Painter, r: Rect, palette: &CapturePalette) {
-    let _ = palette;
+/// The subject box: a faint frame, white corner marks, its caption and,
+/// when it can be edited, eight square handles (the one under the pointer
+/// or being dragged filled).
+fn subject_box(
+    p: &egui::Painter,
+    r: Rect,
+    caption: &str,
+    handles: bool,
+    hot: Option<Handle>,
+    ppp: f32,
+) {
     p.rect_stroke(
         r,
         0.0,
@@ -532,170 +1370,36 @@ fn subject_box(p: &egui::Painter, r: Rect, palette: &CapturePalette) {
         p.line_segment([c, c + egui::vec2(l * dx, 0.0)], stroke);
         p.line_segment([c, c + egui::vec2(0.0, l * dy)], stroke);
     }
+    if handles {
+        for h in Handle::ALL {
+            let c = h.at(r);
+            let c = egui::pos2(on_pixel(c.x, ppp), on_pixel(c.y, ppp));
+            let square = Rect::from_center_size(c, egui::vec2(HANDLE, HANDLE));
+            p.rect_filled(
+                square,
+                0.0,
+                if hot == Some(h) {
+                    Color32::WHITE
+                } else {
+                    Color32::from_black_alpha(170)
+                },
+            );
+            p.rect_stroke(
+                square,
+                0.0,
+                Stroke::new(1.0_f32, Color32::WHITE),
+                StrokeKind::Inside,
+            );
+        }
+    }
     style::paint_job(
         p,
         r.left_top() - egui::vec2(0.0, 8.0),
         Align2::LEFT_BOTTOM,
-        style::caps_job(
-            "Subject box · used by the survey and the magnifier",
-            10.0,
-            Color32::from_white_alpha(153),
-        ),
+        style::caps_job(caption, 10.0, Color32::from_white_alpha(153)),
     );
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use eframe::egui::ColorImage;
-    use serde_json::json;
-    use std::time::Instant;
-
-    fn snapshot(generation: u64) -> Snapshot {
-        let mut image = ColorImage::filled([120, 80], Color32::from_gray(100));
-        image.pixels[0] = Color32::WHITE;
-        let image = Arc::new(image);
-        let mut s = Snapshot {
-            online: true,
-            observed: Some(Instant::now()),
-            preview: Some((generation, image.clone())),
-            peaking: Some((
-                generation,
-                Arc::new(crate::capture_aids::Peaking::analyze(&image)),
-            )),
-            levels: Some((generation, Arc::new(PreviewLevels::analyze(&image)))),
-            ..Default::default()
-        };
-        s.set_state(json!({"camera_revision":1,"plan_revision":1,"sequence_id":1,"phase":"ready","connected":true,
-            "editable":true,"busy":false,"roi":{"x":0.1,"y":0.1,"width":0.8,"height":0.8},
-            "preview":{"available":true,"fresh":true,"generation":generation,"age_seconds":0.2},
-            "magnifier_ratios":[0,59,117],"magnifier_current":0,
-            "exposure":{"iso":100,"shutter":65544,"f_number":560}}));
-        s
-    }
-
-    fn frame(
-        ctx: &egui::Context,
-        view: &mut LiveView,
-        s: &Snapshot,
-        time: f64,
-        events: Vec<egui::Event>,
-    ) -> (egui::FullOutput, Vec<LiveIntent>) {
-        let palette = CapturePalette::default();
-        let mut intents = Vec::new();
-        let out = ctx.run(
-            egui::RawInput {
-                screen_rect: Some(Rect::from_min_size(
-                    egui::Pos2::ZERO,
-                    egui::vec2(1332.0, 811.0),
-                )),
-                time: Some(time),
-                events,
-                ..Default::default()
-            },
-            |ctx| {
-                egui::CentralPanel::default()
-                    .frame(egui::Frame::NONE)
-                    .show(ctx, |ui| intents = view.show(ui, s, &palette));
-            },
-        );
-        (out, intents)
-    }
-
-    /// Textures are uploaded when the preview changes, never on pointer
-    /// motion; the estimate panel says what it is.
-    #[test]
-    fn uploads_follow_the_preview_not_the_pointer() {
-        let ctx = egui::Context::default();
-        let mut view = LiveView::default();
-        let s = snapshot(1);
-        let (out, _) = frame(&ctx, &mut view, &s, 0.0, vec![]);
-        assert_eq!(view.uploads, 3, "picture, peaking and clipping");
-        for i in 0..5 {
-            frame(
-                &ctx,
-                &mut view,
-                &s,
-                0.1 * (i + 1) as f64,
-                vec![egui::Event::PointerMoved(egui::pos2(
-                    300.0 + 50.0 * i as f32,
-                    300.0,
-                ))],
-            );
-        }
-        assert_eq!(view.uploads, 3);
-        frame(&ctx, &mut view, &snapshot(2), 1.0, vec![]);
-        assert_eq!(view.uploads, 6);
-        let texts: Vec<String> = out
-            .shapes
-            .iter()
-            .filter_map(|s| match &s.shape {
-                Shape::Text(t) => Some(t.galley.text().to_owned()),
-                _ => None,
-            })
-            .collect();
-        for want in [
-            "estimate, not the RAW",
-            "ISO 100",
-            "1/8 s",
-            "f/5.6",
-            "LIVE VIEW",
-        ] {
-            assert!(texts.iter().any(|t| t == want), "{want}: {texts:?}");
-        }
-    }
-
-    /// Dragging on the picture draws a new subject box.
-    #[test]
-    fn dragging_draws_a_subject_box() {
-        let ctx = egui::Context::default();
-        let mut view = LiveView::default();
-        let s = snapshot(1);
-        frame(&ctx, &mut view, &s, 0.0, vec![]);
-        let photo = photo_rect(
-            Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(1332.0, 811.0)),
-            1.5,
-        );
-        let a = photo.lerp_inside(egui::vec2(0.25, 0.25));
-        let b = photo.lerp_inside(egui::vec2(0.75, 0.6));
-        let button = |pos, pressed| egui::Event::PointerButton {
-            pos,
-            button: egui::PointerButton::Primary,
-            pressed,
-            modifiers: Default::default(),
-        };
-        let mut all = Vec::new();
-        for (i, events) in [
-            vec![egui::Event::PointerMoved(a), button(a, true)],
-            vec![egui::Event::PointerMoved(a + egui::vec2(20.0, 20.0))],
-            vec![egui::Event::PointerMoved(b)],
-            vec![button(b, false)],
-        ]
-        .into_iter()
-        .enumerate()
-        {
-            all.extend(frame(&ctx, &mut view, &s, 0.1 * (i + 1) as f64, events).1);
-        }
-        match all.as_slice() {
-            [LiveIntent::SetRoi(roi)] => {
-                assert!(
-                    (roi.x - 0.25).abs() < 0.01 && (roi.y - 0.25).abs() < 0.01,
-                    "{roi:?}"
-                );
-                assert!(
-                    (roi.width - 0.5).abs() < 0.01 && (roi.height - 0.35).abs() < 0.01,
-                    "{roi:?}"
-                );
-            }
-            other => panic!("{other:?}"),
-        }
-    }
-
-    #[test]
-    fn the_preview_fits_its_canvas() {
-        let canvas = Rect::from_min_size(egui::pos2(0.0, 80.0), egui::vec2(1332.0, 811.0));
-        let r = photo_rect(canvas, 1.5);
-        assert!((r.height() - 773.0).abs() < 0.5, "the mockup's 1160 x 773");
-        assert!((r.width() - 1159.5).abs() < 1.0);
-    }
-}
+#[path = "capture-live-tests.rs"]
+mod tests;

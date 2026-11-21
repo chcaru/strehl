@@ -123,6 +123,13 @@ impl CaptureWorkspace {
         self.station.palette = palette;
     }
 
+    /// Zooms the depth rail to focus units `lo` to `hi` (`--capture-rail-view`).
+    pub fn set_rail_view(&mut self, lo: u16, hi: u16) {
+        self.station
+            .rail
+            .set_view(Some(super::rail::RailView::of((lo, hi))));
+    }
+
     /// The catalog's subject names, offered by the plan's subject field.
     pub fn set_subjects(&mut self, subjects: Vec<String>) {
         self.station.subjects = subjects;
@@ -216,6 +223,10 @@ impl CaptureWorkspace {
         let which = Fixture::parse(name)
             .ok_or_else(|| anyhow::anyhow!("Use --capture-fixture plan, flight or glance"))?;
         self.connection = Some(Connection::fixture(fixture::snapshot(which)));
+        if which == Fixture::Plan {
+            let trace = fixture::focus_trace(&self.station_snapshot());
+            self.station.live.trace.seed(trace);
+        }
         self.station.plan.subject = "Blue weevil".into();
         self.station.plan.stack_name = "Dorsal · 2.8×".into();
         self.test_shot = TestShot::Done {
@@ -326,6 +337,7 @@ impl CaptureWorkspace {
                     ("E", "mark end"),
                     ("T", "test shot"),
                     ("Enter", "start"),
+                    ("Wheel", "rail scale"),
                 ],
                 note,
             },

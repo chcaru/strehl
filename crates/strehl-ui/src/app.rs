@@ -521,6 +521,9 @@ impl StrehlApp {
         {
             app.capture.error = Some(format!("{error:#}"));
         }
+        if let Some((lo, hi)) = launch.capture_rail_view {
+            app.capture.set_rail_view(lo, hi);
+        }
         if launch_depth_brush {
             app.editor.develop.tool = crate::develop_station::DevelopTool::DepthBrush;
         }
