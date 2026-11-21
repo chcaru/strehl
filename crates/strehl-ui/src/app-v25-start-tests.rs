@@ -127,7 +127,9 @@ fn local_stack_command_freezes_request_and_second_click_cannot_stop_or_duplicate
     let ctx = egui::Context::default();
     theme::install(&ctx);
     let before = paint(&mut app, &ctx, 0.0, vec![]);
-    assert!(text(&before, "Petal study").top() < 100.0);
+    // Under the drawer's tab and a state label at the scale's 10.5 px.
+    let name = text(&before, "Petal study");
+    assert!(name.top() < 104.0, "{name:?}");
     assert!(text(&before, "First 2 of 3 photos · new result").top() < 130.0);
     let action = text(&before, "Stack");
     assert!(

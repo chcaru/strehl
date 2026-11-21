@@ -226,7 +226,7 @@ fn the_stations_navigate_and_every_existing_pane_stays_reachable() {
         find(&menu, "Agent").expect("brand menu").center(),
         time + 0.35,
     );
-    assert_eq!(app.sidebar, Some(workspace::Sidebar::Agent));
+    assert_eq!(app.shell.navigator.drawer, Some(Drawer::Agent));
     assert_eq!(
         app.shell.navigator.station(),
         Station::Stack,
@@ -684,8 +684,24 @@ fn the_top_bar_right_end_fits_between_the_stations_and_the_window_buttons() {
                     "61 / 96 · 3:18 left"
                 };
                 assert!(bar.iter().any(|(t, _)| t == dim), "{bar:?}");
-                assert!(bar.iter().any(|(t, _)| t == "light 41 W"), "{bar:?}");
+                if !both {
+                    assert!(bar.iter().any(|(t, _)| t == "light 41 W"), "{bar:?}");
+                }
             }
         }
     }
+}
+
+#[test]
+fn launch_overlays_open_the_shells_own_surfaces() {
+    let mut app = app();
+    app.apply_launch_route(LaunchRoute::Library, None);
+    app.apply_launch_overlay("projects");
+    assert_eq!(app.shell.navigator.drawer, Some(Drawer::Projects));
+    app.apply_launch_overlay("activity");
+    assert_eq!(app.shell.navigator.drawer, Some(Drawer::Activity));
+    app.apply_launch_overlay("palette");
+    assert!(app.shell.palette.is_open());
+    app.apply_launch_overlay("preferences");
+    assert!(app.shell.preferences_open);
 }

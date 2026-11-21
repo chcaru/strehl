@@ -1522,8 +1522,15 @@ impl ProjectExplorer {
         }
         if let Some(draft) = &node.stack {
             let source = crate::display_path::display_path(&draft.source);
-            ui.add(egui::Label::new(RichText::new(&source).size(9.0).color(MUTED)).truncate())
-                .on_hover_text(source);
+            ui.add(
+                egui::Label::new(
+                    RichText::new(&source)
+                        .size(crate::studio_theme::scale::CAPS)
+                        .color(MUTED),
+                )
+                .truncate(),
+            )
+            .on_hover_text(source);
         } else {
             theme::caption(ui, "New stack adds source photos here");
         }
@@ -1665,7 +1672,11 @@ fn paint_row(ui: &egui::Ui, rect: egui::Rect, hit: &egui::Response, selected: bo
 }
 fn row_text(ui: &egui::Ui, rect: egui::Rect, left: f32, title: &str, suffix: &str, color: Color32) {
     let painter = ui.painter_at(rect);
-    let suffix_galley = painter.layout_no_wrap(suffix.to_owned(), FontId::proportional(9.0), MUTED);
+    let suffix_galley = painter.layout_no_wrap(
+        suffix.to_owned(),
+        FontId::proportional(crate::studio_theme::scale::CAPS),
+        MUTED,
+    );
     let title_right = rect.right()
         - 8.0
         - if suffix.is_empty() {

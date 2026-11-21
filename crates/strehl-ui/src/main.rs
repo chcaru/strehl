@@ -208,6 +208,10 @@ pub struct LaunchOptions {
     pub(crate) route: Option<app::studio_route::LaunchRoute>,
     /// `--route subject:<name or id>`: which subject.
     pub(crate) route_subject: Option<String>,
+    /// `--overlay projects|activity|agent|palette|preferences`: open a
+    /// drawer, the command palette or Preferences over the route (offscreen
+    /// checks of the shell's own surfaces).
+    pub(crate) overlay: Option<String>,
     /// `--theme`: Graphite, Instrument or Lightbox for this session only.
     pub(crate) theme: Option<studio_theme::ThemeName>,
     /// `--capture-fixture plan|flight|glance`: the Capture station from a
@@ -455,6 +459,19 @@ fn main() -> eframe::Result {
             launch.route_subject = subject;
             if launch.route.is_none() {
                 eprintln!("Use --route {}", app::studio_route::LaunchRoute::NAMES);
+                std::process::exit(2);
+            }
+            continue;
+        }
+        if arg == "--overlay" {
+            launch.overlay = args.next().and_then(|v| v.to_str().map(str::to_owned));
+            if !launch.overlay.as_deref().is_some_and(|v| {
+                matches!(
+                    v,
+                    "projects" | "activity" | "agent" | "palette" | "preferences"
+                )
+            }) {
+                eprintln!("Use --overlay projects|activity|agent|palette|preferences");
                 std::process::exit(2);
             }
             continue;

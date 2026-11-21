@@ -171,8 +171,7 @@ pub(crate) fn run_offscreen_with(
             app.metadata_requested || app.camera_metadata.is_loading(),
             app.draft_job.is_some(),
             app.draft_requested,
-            app.sidebar == Some(workspace::Sidebar::Projects)
-                && app.project_explorer.preview_pending(),
+            app.projects_visible() && app.project_explorer.preview_pending(),
             app.process_space.transitioning(),
             app.process_contacts()
                 .into_iter()

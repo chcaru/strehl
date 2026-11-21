@@ -67,14 +67,16 @@ fn every_route_writes_the_flags_todays_panes_read() {
 }
 
 #[test]
-fn drawers_override_the_pane_without_leaving_the_station() {
+fn drawers_open_over_the_station_and_leave_its_flags() {
     let mut navigator = Navigator::default();
     navigator.go(Route::Develop {
         stack: None,
         render: None,
     });
     navigator.toggle_drawer(Drawer::Agent);
-    assert_eq!(navigator.legacy(true).0, Some(Sidebar::Agent));
+    // Develop keeps editing under the drawer.
+    assert_eq!(navigator.legacy(true).0, Some(Sidebar::Edit));
+    assert_eq!(navigator.drawer, Some(Drawer::Agent));
     assert_eq!(navigator.station(), Station::Develop);
     navigator.toggle_drawer(Drawer::Agent);
     assert_eq!(navigator.legacy(true).0, Some(Sidebar::Edit));
@@ -102,10 +104,10 @@ fn flags_written_by_older_code_are_adopted_then_rewritten() {
     // Opening a photograph in Edit.
     synced(&mut navigator, Some(Sidebar::Edit), true);
     assert_eq!(navigator.station(), Station::Develop);
-    // The agent pane opens over Develop.
+    // The agent pane opens over Develop, which keeps its flags.
     assert_eq!(
         synced(&mut navigator, Some(Sidebar::Agent), true),
-        (Some(Sidebar::Agent), true)
+        (Some(Sidebar::Edit), true)
     );
     assert_eq!(
         (navigator.station(), navigator.drawer),
@@ -154,7 +156,7 @@ fn projects_written_with_a_document_open_means_its_stack_station() {
     let written = synced(&mut navigator, Some(Sidebar::Projects), true);
     navigator.toggle_drawer(Drawer::Projects);
     let written = synced(&mut navigator, written.0, written.1);
-    assert_eq!(written, (Some(Sidebar::Projects), true));
+    assert_eq!(written, (Some(Sidebar::Adjust), true));
     synced(&mut navigator, Some(Sidebar::Projects), false);
     assert_eq!(navigator.drawer, Some(Drawer::Projects));
     assert_eq!(navigator.station(), Station::Stack);

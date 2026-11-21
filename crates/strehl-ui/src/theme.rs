@@ -3,9 +3,11 @@ use eframe::egui::{self, Color32, FontFamily, FontId, Stroke, TextStyle};
 // today and now hold the Graphite tokens (studio-theme.rs, appendix A), so the
 // whole app adopts the new palette at once. A constant cannot follow the
 // theme chosen in Preferences: new code reads `crate::studio_theme::tokens(ctx)`
-// instead, and the shell draws views that still use these constants in the
-// Graphite scope on a light theme so they stay legible. Replace call sites
-// module by module and delete a constant when no caller remains.
+// instead. The shell draws stations that still use these constants in the
+// Graphite scope on a light theme so they stay legible, and passes drawers
+// (today's panes) through `follow_theme`, which recolours them in the theme in
+// effect. Replace call sites module by module and delete a constant when no
+// caller remains.
 pub const BG: Color32 = crate::studio_theme::GRAPHITE.bg;
 pub const PANEL: Color32 = crate::studio_theme::GRAPHITE.panel;
 pub const RAISED: Color32 = crate::studio_theme::GRAPHITE.raised;
@@ -18,6 +20,122 @@ pub const AMBER: Color32 = crate::studio_theme::GRAPHITE.warn;
 /// Failure: a capture fault, a stopped render, a refused file.
 #[allow(dead_code)]
 pub const RED: Color32 = crate::studio_theme::GRAPHITE.bad;
+
+/// The legacy project tree's selected row (`project-explorer.rs`).
+const LEGACY_SELECTED: Color32 = Color32::from_rgb(43, 49, 61);
+
+/// Run `paint`, which draws with the Graphite constants above, so that what
+/// it adds to `layer` reads natively in the theme in effect: every shape
+/// colour that is a Graphite token becomes that token of the current theme.
+/// Derived colours (tints, alpha) and pictures are left alone. Costs one pass
+/// over the shapes `paint` added, and nothing in Graphite.
+pub(crate) fn follow_theme<R>(
+    ctx: &egui::Context,
+    layer: egui::LayerId,
+    paint: impl FnOnce() -> R,
+) -> R {
+    use crate::studio_theme::{GRAPHITE as G, ThemeName};
+    if crate::studio_theme::theme_name(ctx) == ThemeName::Graphite {
+        return paint();
+    }
+    let from = ctx.graphics_mut(|graphics| graphics.entry(layer).next_idx());
+    let result = paint();
+    let t = crate::studio_theme::tokens(ctx);
+    let pairs = [
+        (G.bg, t.bg),
+        (G.panel, t.panel),
+        (G.raised, t.raised),
+        (G.control, t.control),
+        (G.line, t.line),
+        (G.line2, t.line2),
+        (G.ink, t.ink),
+        (G.ink2, t.ink2),
+        (G.ink3, t.ink3),
+        (G.accent, t.accent),
+        (G.accent_ink, t.accent_ink),
+        (G.ok, t.ok),
+        (G.warn, t.warn),
+        (G.bad, t.bad),
+        (G.info, t.info),
+        (LEGACY_SELECTED, t.control),
+    ];
+    let map = |color: Color32| {
+        pairs
+            .iter()
+            .find(|(graphite, _)| *graphite == color)
+            .map_or(color, |(_, current)| *current)
+    };
+    ctx.graphics_mut(|graphics| {
+        let list = graphics.entry(layer);
+        for index in from.0..list.next_idx().0 {
+            list.mutate_shape(egui::layers::ShapeIdx(index), |clipped| {
+                recolor(&mut clipped.shape, &map);
+            });
+        }
+    });
+    result
+}
+
+fn recolor(shape: &mut egui::Shape, map: &impl Fn(Color32) -> Color32) {
+    use egui::{Shape, epaint::ColorMode};
+    let stroke = |mode: &mut ColorMode| {
+        if let ColorMode::Solid(color) = mode {
+            *color = map(*color);
+        }
+    };
+    match shape {
+        Shape::Vec(shapes) => shapes.iter_mut().for_each(|s| recolor(s, map)),
+        Shape::Circle(circle) => {
+            circle.fill = map(circle.fill);
+            circle.stroke.color = map(circle.stroke.color);
+        }
+        Shape::Ellipse(ellipse) => {
+            ellipse.fill = map(ellipse.fill);
+            ellipse.stroke.color = map(ellipse.stroke.color);
+        }
+        Shape::LineSegment { stroke, .. } => stroke.color = map(stroke.color),
+        Shape::Path(path) => {
+            path.fill = map(path.fill);
+            stroke(&mut path.stroke.color);
+        }
+        Shape::Rect(rect) => {
+            rect.fill = map(rect.fill);
+            rect.stroke.color = map(rect.stroke.color);
+        }
+        Shape::Text(text) => {
+            text.underline.color = map(text.underline.color);
+            if let Some(color) = text.override_text_color {
+                text.override_text_color = Some(map(color));
+            } else {
+                let mut colors = text.galley.job.sections.iter().map(|s| s.format.color);
+                let first = colors.next();
+                if let Some(first) = first
+                    && colors.all(|color| color == first)
+                {
+                    if first == Color32::PLACEHOLDER {
+                        text.fallback_color = map(text.fallback_color);
+                    } else if map(first) != first {
+                        text.override_text_color = Some(map(first));
+                    }
+                }
+            }
+        }
+        Shape::Mesh(mesh) if mesh.texture_id == egui::TextureId::default() => {
+            for vertex in &mut std::sync::Arc::make_mut(mesh).vertices {
+                vertex.color = map(vertex.color);
+            }
+        }
+        Shape::QuadraticBezier(curve) => {
+            curve.fill = map(curve.fill);
+            stroke(&mut curve.stroke.color);
+        }
+        Shape::CubicBezier(curve) => {
+            curve.fill = map(curve.fill);
+            stroke(&mut curve.stroke.color);
+        }
+        _ => {}
+    }
+}
 
 /// Keep the button and popup tied to the parent control's width. egui's Width
 /// option is a minimum, and its popup defaults to Extend; neither bounds long
@@ -208,8 +326,13 @@ pub(crate) fn studio_style(
         .insert(TextStyle::Monospace, FontId::monospace(scale::HINT));
     style
 }
+/// A quiet sentence: the scale's smallest size for one (12 px).
 pub fn caption(ui: &mut egui::Ui, text: &str) {
-    ui.label(egui::RichText::new(text).size(11.0).color(MUTED));
+    ui.label(
+        egui::RichText::new(text)
+            .size(crate::studio_theme::scale::SECONDARY)
+            .color(MUTED),
+    );
 }
 /// A full-width command row. Its geometry stays unchanged when disabled or
 /// hovered, and the resource line has its own reserved strip.

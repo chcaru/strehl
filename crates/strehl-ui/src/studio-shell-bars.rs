@@ -54,6 +54,8 @@ pub(super) enum CrumbTarget {
 }
 
 const CRUMBS_MAX: f32 = 430.0;
+/// The crumb standing for segments folded away in a narrow window.
+const ELLIPSIS: &str = "…";
 const CRUMB_GAP: f32 = 18.0;
 
 /// One status button on the right of the top bar.
@@ -66,6 +68,9 @@ struct Stat<'a> {
     search: bool,
     /// The search stat's "Ctrl K" cap (dropped when the bar is tight).
     key: bool,
+    /// When the name and the dim do not both fit, show the dim alone (the
+    /// activity's count and time say more than its phase word).
+    dim_first: bool,
     max_width: f32,
 }
 
@@ -104,6 +109,20 @@ fn stat_layout(ui: &egui::Ui, stat: &Stat<'_>) -> StatLayout {
     }
     let lead = if content > 0.0 { gap } else { 0.0 };
     let mut room = stat.max_width - content - 28.0 - lead;
+    let natural = |label: &str| {
+        w::text_galley(ui, label, Face::Regular, scale::CONTROL)
+            .size()
+            .x
+    };
+    let name_label = if stat.dim_first
+        && !stat.name.is_empty()
+        && !stat.dim.is_empty()
+        && natural(stat.name) + gap + natural(stat.dim) > room
+    {
+        ""
+    } else {
+        stat.name
+    };
     let mut text = |label: &str| {
         if label.is_empty() || room < STAT_TEXT_MIN {
             return None;
@@ -112,7 +131,7 @@ fn stat_layout(ui: &egui::Ui, stat: &Stat<'_>) -> StatLayout {
         room -= galley.size().x + gap;
         Some(galley)
     };
-    let name = text(stat.name);
+    let name = text(name_label);
     let dim = text(stat.dim);
     let words = match (&name, &dim) {
         (Some(n), Some(d)) => n.size().x + gap + d.size().x,
@@ -149,10 +168,11 @@ fn elided(ui: &egui::Ui, text: &str, max: f32) -> std::sync::Arc<egui::Galley> {
 
 /// Fit the right end of the top bar into `budget`, between the stations and
 /// the window buttons. With nothing running, an unread failure takes the
-/// activity's words. Then in order: the activity shortens to its floor; the
-/// rig drops its fact; the failure shortens to its floor, then folds into the
-/// activity's mark; search drops its key; the rig keeps only its lamp; the
-/// activity takes what is left, down to its mark.
+/// activity's words. Then in order: search drops its key; the rig drops its
+/// fact; the failure shortens to its floor; the activity shortens to its
+/// floor (keeping its count and time over its phase word); the failure folds
+/// into the activity's mark; the rig keeps only its lamp; the activity takes
+/// what is left, down to its mark.
 fn fit_right_cluster(
     ui: &egui::Ui,
     budget: f32,
@@ -174,8 +194,7 @@ fn fit_right_cluster(
         (activity.name, activity.dim) = ("", "");
     }
     if over(palette, activity, failure, rig) {
-        let left = budget - others(palette, failure, rig);
-        activity.max_width = activity.max_width.min(left.max(ACTIVITY_FLOOR));
+        palette.key = false;
     }
     if over(palette, activity, failure, rig) {
         rig.dim = "";
@@ -186,14 +205,15 @@ fn fit_right_cluster(
         let left = budget - width(palette) - width(activity) - width(rig);
         failure.max_width = failure.max_width.min(left.max(FAILURE_FLOOR));
     }
+    if over(palette, activity, failure, rig) {
+        let left = budget - others(palette, failure, rig);
+        activity.max_width = activity.max_width.min(left.max(ACTIVITY_FLOOR));
+    }
     if over(palette, activity, failure, rig) && failure.take().is_some() {
         activity.mark = Some(Mark::Failed);
         if idle {
             (activity.name, activity.dim) = idle_words;
         }
-    }
-    if over(palette, activity, failure, rig) {
-        palette.key = false;
     }
     if over(palette, activity, failure, rig) {
         rig.name = "";
@@ -344,6 +364,7 @@ impl StrehlApp {
             progress: None,
             search: true,
             key: true,
+            dim_first: false,
             max_width: 200.0,
         };
         let mut activity_stat = Stat {
@@ -354,6 +375,7 @@ impl StrehlApp {
             progress,
             search: false,
             key: false,
+            dim_first: true,
             max_width: 340.0,
         };
         let mut failure_stat = failure.as_deref().map(|text| Stat {
@@ -364,6 +386,7 @@ impl StrehlApp {
             progress: None,
             search: false,
             key: false,
+            dim_first: false,
             max_width: 300.0,
         });
         let mut rig_stat = Stat {
@@ -374,6 +397,7 @@ impl StrehlApp {
             progress: None,
             search: false,
             key: false,
+            dim_first: false,
             max_width: 260.0,
         };
         fit_right_cluster(
@@ -785,18 +809,36 @@ impl StrehlApp {
         height: f32,
         limit: f32,
     ) -> f32 {
-        let segments = self.crumb_segments().to_vec();
+        let mut segments = self.crumb_segments().to_vec();
         let size = scale::CONTROL;
         let font = w::font(ui, Face::Regular, size);
         let separator = w::text_galley(ui, "/", Face::Regular, size);
         let sep_width = separator.size().x + 18.0;
-        let widths: Vec<f32> = segments
-            .iter()
-            .map(|s| w::text_galley(ui, &s.label, Face::Regular, size).size().x)
-            .collect();
+        let measure = |segments: &[Crumb]| -> Vec<f32> {
+            segments
+                .iter()
+                .map(|s| w::text_galley(ui, &s.label, Face::Regular, size).size().x)
+                .collect()
+        };
         let room = CRUMBS_MAX.min(limit - left - 40.0).max(60.0);
-        let natural: f32 =
-            widths.iter().sum::<f32>() + sep_width * segments.len().saturating_sub(1) as f32;
+        let span = |widths: &[f32]| {
+            widths.iter().sum::<f32>() + sep_width * widths.len().saturating_sub(1) as f32
+        };
+        // Too long: the segments after Library fold into one "…" first, so
+        // what stays is whole (Library / … / Dorsal · 2.8× / Capturing).
+        let mut widths = measure(&segments);
+        while span(&widths) > room && segments.len() > 3 {
+            if segments[1].label == ELLIPSIS {
+                segments.remove(2);
+            } else {
+                segments[1] = Crumb {
+                    label: ELLIPSIS.into(),
+                    target: CrumbTarget::Here,
+                };
+            }
+            widths = measure(&segments);
+        }
+        let natural = span(&widths);
         let mut allowed = widths.clone();
         if natural > room && segments.len() > 2 {
             let fixed =
@@ -1180,7 +1222,11 @@ impl StrehlApp {
             }
             ui.add_space(12.0);
             if let Some(tip) = tip {
-                ui.label(egui::RichText::new(tip).size(scale::HINT).color(t.ink3));
+                ui.label(
+                    egui::RichText::new(tip)
+                        .size(scale::SECONDARY)
+                        .color(t.ink3),
+                );
             }
             for (fact, strong) in self.photo_facts().into_iter().rev() {
                 ui.label(

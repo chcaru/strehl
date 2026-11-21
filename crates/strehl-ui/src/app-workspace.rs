@@ -14,7 +14,6 @@ pub(super) enum Sidebar {
     Export,
     Agent,
     Review,
-    Activity,
 }
 
 impl StrehlApp {
@@ -131,18 +130,26 @@ impl StrehlApp {
             .inner_margin(egui::Margin::symmetric(8, 7))
             .show(ui, |ui| {
                 ui.spacing_mut().item_spacing = egui::vec2(4.0, 3.0);
-                ui.label(RichText::new(state).monospace().size(8.0).color(if busy {
-                    ACCENT
-                } else {
-                    MUTED
-                }));
+                ui.label(
+                    RichText::new(state)
+                        .monospace()
+                        .size(crate::studio_theme::scale::CAPS)
+                        .color(if busy { ACCENT } else { MUTED }),
+                );
                 ui.add(egui::Label::new(RichText::new(&name).size(12.0).color(INK)).truncate())
                     .on_hover_text(self.stack.as_ref().map_or_else(
                         || name.clone(),
                         |stack| crate::display_path::display_path(&stack.directory),
                     ));
-                ui.add(egui::Label::new(RichText::new(&detail).size(10.0).color(MUTED)).truncate())
-                    .on_hover_text(&detail);
+                ui.add(
+                    egui::Label::new(
+                        RichText::new(&detail)
+                            .size(crate::studio_theme::scale::HINT)
+                            .color(MUTED),
+                    )
+                    .truncate(),
+                )
+                .on_hover_text(&detail);
                 ui.add_space(3.0);
                 let (row, _) = ui.allocate_exact_size(
                     egui::vec2(ui.available_width(), 32.0),

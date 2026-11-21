@@ -301,23 +301,20 @@ impl Navigator {
 
     /// The flags today's panes read, for the current route.
     pub(in crate::app) fn legacy(&self, process_view: bool) -> Legacy {
-        let sidebar = match self.drawer {
-            Some(Drawer::Agent) => Some(Sidebar::Agent),
-            Some(Drawer::Activity) => Some(Sidebar::Activity),
-            Some(Drawer::Projects) => Some(Sidebar::Projects),
-            None => match &self.route {
-                Route::Library(_) | Route::Subject(_) => Some(Sidebar::Projects),
-                Route::Capture(_) => Some(Sidebar::Capture),
-                Route::Stack {
-                    room: Room::Engine, ..
-                } => None,
-                Route::Stack { .. } => Some(match self.stack_tab {
-                    StackTab::Adjust => Sidebar::Adjust,
-                    StackTab::Review => Sidebar::Review,
-                }),
-                Route::Develop { .. } => Some(Sidebar::Edit),
-                Route::Export { .. } => Some(Sidebar::Export),
-            },
+        // A drawer opens over the station and leaves its flags alone: the
+        // canvas under it keeps its mode (Develop keeps editing).
+        let sidebar = match &self.route {
+            Route::Library(_) | Route::Subject(_) => Some(Sidebar::Projects),
+            Route::Capture(_) => Some(Sidebar::Capture),
+            Route::Stack {
+                room: Room::Engine, ..
+            } => None,
+            Route::Stack { .. } => Some(match self.stack_tab {
+                StackTab::Adjust => Sidebar::Adjust,
+                StackTab::Review => Sidebar::Review,
+            }),
+            Route::Develop { .. } => Some(Sidebar::Edit),
+            Route::Export { .. } => Some(Sidebar::Export),
         };
         // The engine room also hosts the diagnostic workbench that opens
         // with process_view off (`--draft`, `--workbench`, a dropped image).
@@ -334,7 +331,6 @@ impl Navigator {
             .map_or((None, None), |(s, r)| (s, r.map(Path::to_path_buf)));
         match sidebar {
             Some(Sidebar::Agent) => self.drawer = Some(Drawer::Agent),
-            Some(Sidebar::Activity) => self.drawer = Some(Drawer::Activity),
             // Opening something from the project tree keeps the tree open.
             Some(Sidebar::Projects) if self.drawer == Some(Drawer::Projects) => {}
             other => {
@@ -353,7 +349,7 @@ impl Navigator {
                     }
                     Some(Sidebar::Edit) => Station::Develop,
                     Some(Sidebar::Export) => Station::Export,
-                    Some(Sidebar::Agent | Sidebar::Activity) => unreachable!(),
+                    Some(Sidebar::Agent) => unreachable!(),
                     None => Station::Stack,
                 };
                 let engine = other.is_none() || !process_view;

@@ -238,6 +238,23 @@ impl StrehlApp {
         }
         self.navigate(route.route(self.active_stack, self.result.clone()));
     }
+    /// The project tree is on screen: the Library's legacy flag, or its
+    /// drawer over another station.
+    pub(super) fn projects_visible(&self) -> bool {
+        self.sidebar == Some(workspace::Sidebar::Projects)
+            || self.shell.navigator.drawer == Some(Drawer::Projects)
+    }
+    /// The `--overlay` launch option.
+    pub(super) fn apply_launch_overlay(&mut self, overlay: &str) {
+        match overlay {
+            "projects" => self.open_project_tree(),
+            "activity" => self.open_drawer(Drawer::Activity),
+            "agent" => self.open_drawer(Drawer::Agent),
+            "palette" => self.shell.palette.open(),
+            "preferences" => self.shell.preferences_open = true,
+            _ => {}
+        }
+    }
     /// Restore the last station on an interactive launch that asked for none.
     pub(super) fn restore_station(&mut self) {
         let Some(station) = Station::from_number(self.shell.prefs.station) else {
@@ -797,13 +814,14 @@ impl StrehlApp {
                 .response
                 .rect
         }
-        // Drawers hold today's panes: over a redrawn station on a light theme
-        // they need the Graphite scope that legacy stations get as a whole.
-        let legacy_drawer = self.shell.navigator.drawer.is_some()
-            && studio_theme::tokens(ctx).light
-            && !self.station_paints_legacy(station);
-        let rect = if legacy_drawer {
-            studio_theme::scoped(ctx, ThemeName::Graphite, || panel(self, ctx, station))
+        // Drawers hold today's panes, painted with the Graphite constants:
+        // over a redrawn station they are recoloured into the theme in effect
+        // (a legacy station is drawn in the Graphite scope as a whole).
+        let drawer = self.shell.navigator.drawer.is_some() && !self.station_paints_legacy(station);
+        let rect = if drawer {
+            theme::follow_theme(ctx, egui::LayerId::background(), || {
+                panel(self, ctx, station)
+            })
         } else {
             panel(self, ctx, station)
         };
