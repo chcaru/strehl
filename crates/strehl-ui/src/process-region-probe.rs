@@ -558,34 +558,45 @@ impl RegionProbe {
                 self.windows.push((level, window));
             }
             self.spatial_dirty = true;
-            for frame in archive.frames(level).filter(|&frame| frame < frame_count) {
-                if self
-                    .evidence
-                    .get(&(level, frame))
-                    .is_some_and(|evidence| evidence.window == window)
-                {
+            // One ordered pass over the level's masks beside the level's
+            // retained readings: no per-capture search at long-stack sizes.
+            let lattice = window.map(|window| (window.columns, window.rows));
+            let mut retained = self
+                .evidence
+                .range_mut((level, 0)..=(level, usize::MAX))
+                .peekable();
+            let mut fresh = Vec::new();
+            for (frame, meta, count) in archive.window_counts_all(level, lattice) {
+                if frame >= frame_count {
+                    break;
+                }
+                if meta.extent != analysis_extent {
                     continue;
                 }
-                if let Some(meta) = archive.metadata(level, frame)
-                    && meta.extent == analysis_extent
-                {
-                    let count = window.map_or_else(SampleCount::default, |window| {
-                        window.archive_counts(archive, level, frame)
-                    });
-                    self.evidence.insert(
-                        (level, frame),
-                        Evidence {
-                            meta,
-                            window,
-                            count,
-                        },
-                    );
-                    #[cfg(test)]
-                    {
-                        self.readings += 1;
+                while retained.next_if(|(key, _)| key.1 < frame).is_some() {}
+                let reading = Evidence {
+                    meta,
+                    window,
+                    count: count.map_or_else(SampleCount::default, |(admitted, observed)| {
+                        SampleCount { admitted, observed }
+                    }),
+                };
+                match retained.peek_mut() {
+                    Some((key, evidence)) if key.1 == frame => {
+                        if evidence.window == window && evidence.meta == meta {
+                            continue;
+                        }
+                        **evidence = reading;
                     }
+                    _ => fresh.push(((level, frame), reading)),
+                }
+                #[cfg(test)]
+                {
+                    self.readings += 1;
                 }
             }
+            drop(retained);
+            self.evidence.extend(fresh);
         }
         self.sync_spatial(archive, active);
     }

@@ -9,7 +9,16 @@ use crate::{
 };
 use std::time::Instant;
 
-const FRAMES: usize = 130;
+/// Captures in the fixture: 130, the baseline's, unless
+/// `STREHL_UI_BENCH_FRAMES` names another count (at least 66) for a long-stack
+/// run of the ignored benchmark.
+static FRAMES: std::sync::LazyLock<usize> = std::sync::LazyLock::new(|| {
+    std::env::var("STREHL_UI_BENCH_FRAMES")
+        .ok()
+        .and_then(|value| value.parse().ok())
+        .filter(|&frames: &usize| frames > 65)
+        .unwrap_or(130)
+});
 const ANALYSIS: [usize; 2] = [3516, 2344];
 const OUTPUT: [u32; 2] = [7032, 4688];
 
@@ -27,14 +36,14 @@ impl Fixture {
         crate::theme::install(&ctx);
         let mut progress = PipelineProgress::default();
         progress.ingest("planes : 3516 x 2344 per CFA plane\ncoverage : field of view scaled to 0.9500 so that EVERY frame covers every pixel\nbands : 7 Laplacian levels + 1 base, coarsest 28 x 19\nwrote : result.tiff (7032 x 4688, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)\n");
-        progress.frames_total = Some(FRAMES);
-        progress.frames_accepted = Some(FRAMES);
+        progress.frames_total = Some(*FRAMES);
+        progress.frames_accepted = Some(*FRAMES);
         let mut maps = Vec::new();
         for level in 0..8 {
             let spacing = 1usize << level;
             let width = ANALYSIS[0].div_ceil(spacing).min(128);
             let height = ANALYSIS[1].div_ceil(spacing).min(96);
-            for frame in 0..FRAMES {
+            for frame in 0..*FRAMES {
                 // Broad overlapping capture support plus a changed fine pattern;
                 // neither all-positive nor all-negative masks can pass for this.
                 let pixels = (0..height)
@@ -52,7 +61,7 @@ impl Fixture {
                     })
                     .collect::<Vec<_>>();
                 let packet = DiagnosticSurface {
-                    sequence: (level * FRAMES + frame + 1) as u64,
+                    sequence: (level * *FRAMES + frame + 1) as u64,
                     frame,
                     level,
                     kind: DiagnosticKind::GateSupport,
@@ -95,7 +104,7 @@ impl Fixture {
                     folded: if scope == DiagnosticScope::Frame {
                         1
                     } else {
-                        FRAMES
+                        *FRAMES
                     },
                     pixels: (0..width * height)
                         .map(|i| {
@@ -117,7 +126,7 @@ impl Fixture {
             }
         }
         progress.mark_complete();
-        assert_eq!(progress.admission_archive.len(), FRAMES * 8);
+        assert_eq!(progress.admission_archive.len(), *FRAMES * 8);
         for level in 0..8 {
             let (meta, _) = progress.admission_archive.cells(level, 65).unwrap();
             assert!(
@@ -127,7 +136,7 @@ impl Fixture {
             let (yes, total) = progress.admission_archive.counts(level, 65).unwrap();
             assert!(yes > 0 && yes < total);
         }
-        let photos = (0..FRAMES)
+        let photos = (0..*FRAMES)
             .map(|index| SourcePhoto {
                 epoch: 1,
                 index,
@@ -181,7 +190,7 @@ impl Fixture {
 
     fn with_overlapping_ranges() -> Self {
         let mut fixture = Self::new();
-        for frame in 0..FRAMES {
+        for frame in 0..*FRAMES {
             // Neither the last capture in a range nor an unrelated comparison
             // source can supply the whole selected region. The range unions
             // cover x16..78 and x50..112, with a substantial shared interior.
@@ -262,7 +271,7 @@ impl Fixture {
         let input = Input {
             epoch: 1,
             progress: &self.progress,
-            frame_count: FRAMES,
+            frame_count: *FRAMES,
             selected: 65,
             inspected_pair: None,
             photos: &self.photos,
@@ -404,7 +413,7 @@ fn timeline_point(output: &egui::FullOutput, frame: usize) -> Pos2 {
             _ => None,
         })
         .expect("actual painted timeline axis");
-    axis[0].lerp(axis[1], frame as f32 / (FRAMES - 1) as f32) - egui::vec2(0.0, 4.0)
+    axis[0].lerp(axis[1], frame as f32 / (*FRAMES - 1) as f32) - egui::vec2(0.0, 4.0)
 }
 
 fn timeline_gesture(
@@ -1462,8 +1471,9 @@ fn benchmark_finished_workspace_pointer_sweeps() {
         timings[0], timings[1]
     );
     println!(
-        "full_workspace_cpu_min_ms process={} source={} final_vertices={vertices:?} frames={FRAMES} levels=8 max_grid=128x96 confidence_map=absent",
+        "full_workspace_cpu_min_ms process={} source={} final_vertices={vertices:?} frames={} levels=8 max_grid=128x96 confidence_map=absent",
         timings[0].iter().copied().fold(f64::INFINITY, f64::min),
-        timings[1].iter().copied().fold(f64::INFINITY, f64::min)
+        timings[1].iter().copied().fold(f64::INFINITY, f64::min),
+        *FRAMES
     );
 }
