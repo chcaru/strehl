@@ -296,6 +296,8 @@ given a second step.
   at the pointer, as a preview with the same region outlined in dashes. Nothing reflows.
 - *Click* to hold. The canvas becomes two-up, final beside plane, with one small map per detail
   size beneath (today's "FINAL admit / px" strip). Escape or "Photograph" returns.
+- *While holding,* moving along the rail shows other planes in the two-up without letting go
+  of the held one; leaving the rail returns to it, and a click holds the new plane.
 - The outline on the camera preview is labelled as today: approximate, not a registration.
 
 Source: estimated admission regions and the "Source + final" split
@@ -322,8 +324,8 @@ uncoloured.
 popover, kept and tidied. Hovering the photograph marks a square region with its sample points
 and opens the popover beside it; a click pins it. It holds:
 
-- the final crop beside the same crop from the planes that lead there, each with its share of
-  samples kept;
+- the final crop beside the same crop from the three planes that lead there, each with its
+  share of samples kept;
 - one strip per detail size, plane by plane, in the detail spectrum (section 6), with the
   leading planes marked;
 - a sentence ("Fine detail here comes from planes 61–70. Broad shapes draw on 58–73. Nothing
@@ -502,7 +504,8 @@ already uses zero corner radius and one-pixel rules.
   monospaced face appears only for file names. The mockups use Bahnschrift, which ships with
   Windows and cannot be redistributed; the application would bundle an open face of the same
   tradition (Barlow or D-DIN, both under the Open Font Licence).
-- **Colour measures.** Amber marks what is selected and the main action, as today. Sage green
+- **Colour measures.** Amber marks what is selected and the main action, as today. Links are
+  neutral; a link takes the accent only on a check that needs a look. Sage green
   is detail kept (today's GREEN). Teal is the plane under the pointer (today's overlay
   colour). Status has drawn shapes as well as colours, so it reads without colour vision: a
   lamp for fine, a triangle for look, a diamond for failed, a ring for not yet, a half for
@@ -606,7 +609,8 @@ after a camera folder; every disabled Start shows a reason.
 job tray with the five states and a queue, themes and components, subjects in the catalog with
 migration, library grid, subject page, storage review, preferences.
 Acceptance: a capture started and left alone ends as a stacked render without the Capture tab
-open; every long task can be stopped or says why not; nothing readable is below 12 px.
+open; every long task can be stopped or says why not; no sentence is set below 12 px (labels are
+tracked capitals at 10.5 px).
 
 **Phase 2: Stack.** Photograph-first page, checks (validated ones marked, the rest as facts),
 depth rail with bars and filmstrip, the plane lens (peek and hold), core sample, lens for soft spots, recipe
@@ -714,6 +718,13 @@ The owner liked the direction and asked for four things (2026-11-21).
 | The filmstrip hover that shows a plane's in-focus region on the final image against the same region on the plane was missed | Restored as the plane lens, section 5.3: hover to peek, click to hold two-up with a map per detail size |
 | The popover that highlights a region of the final image and lists its sources was missed | Restored as the core sample, section 5.3: marked region, final crop beside the leading planes, a strip per detail size |
 | Today's filmstrip chart was preferred | The rail is redrawn as one bar per plane with a dashed region line, on an engraved scale, with the filmstrip beneath |
+
+A polish pass followed the same day. Design changes in it: the held two-up follows the
+pointer along the rail; the core sample names the three leading planes; links became neutral;
+the filmstrip is evenly spaced; axis numerals give way to the index marker. It also fixed a
+fault in the mockup that kept the rig, job tray and command palette from opening on six
+screens, and added `check-interactions.py`, which drives the built mockup with synthetic
+pointer and key events (21 checks, all passing).
 
 Dropped from the first iteration: the circular loupe that showed a lens only under the
 pointer. The marked region and its core sample do that job and are what the owner uses today.

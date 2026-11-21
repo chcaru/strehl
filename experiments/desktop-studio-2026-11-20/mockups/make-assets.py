@@ -96,7 +96,7 @@ def thumb(path):
     return Image.open(io.BytesIO(bytes(data.data))).convert("RGB")
 
 
-PLANE_SLOTS = 32
+PLANE_SLOTS = 33
 
 
 def planes(bracket):

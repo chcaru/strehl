@@ -1,0 +1,67 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>harness</title>
+<iframe id="f" style="width:1720px;height:1300px;border:0"></iframe>
+<pre id="out">pending</pre>
+<script>
+var f = document.getElementById("f"), out = document.getElementById("out"), log = [];
+function ok(name, cond, extra) { log.push((cond ? "PASS " : "FAIL ") + name + (extra ? " | " + extra : "")); }
+f.src = "MOCKUP#stack";
+f.onload = function () {
+  try {
+    var w = f.contentWindow, d = f.contentDocument, q = function (s) { return d.querySelector(s); };
+    var app = q("#s-stack .stage .app"), photo = q("#s-stack .photo.single"), rail = q("#s-stack .rail"), svg = q("#s-stack .rail-svg svg");
+    var at = function (el, u, v) { var r = el.getBoundingClientRect(); return { clientX: r.left + r.width * u, clientY: r.top + r.height * v, bubbles: true }; };
+    var key = function (k, type) { d.body.dispatchEvent(new w.KeyboardEvent(type || "keydown", { key: k, bubbles: true })); };
+
+    // 1. hovering the photograph: core sample goes live, rail gets the dashed profile
+    photo.dispatchEvent(new w.MouseEvent("mousemove", at(photo, 0.36, 0.40)));
+    ok("hover photo: core sample live", q("#s-stack .cs").classList.contains("live"), q('#s-stack [data-k="words"]').textContent.slice(0, 60));
+    ok("hover photo: rail trace drawn", q("#s-stack .rail .trace path") !== null);
+    ok("hover photo: three leading planes", /plane \d+ · \d+ %/.test(q('#s-stack [data-k="l3"]').textContent), q('#s-stack [data-k="l1"]').textContent + " / " + q('#s-stack [data-k="l2"]').textContent + " / " + q('#s-stack [data-k="l3"]').textContent);
+    photo.dispatchEvent(new w.MouseEvent("click", at(photo, 0.36, 0.40)));
+    photo.dispatchEvent(new w.MouseEvent("mouseleave", {}));
+    ok("click photo: sample pinned there", Math.abs(parseFloat(photo.dataset.probe) - 0.36) < 0.01 && !q("#s-stack .cs").classList.contains("live"), photo.dataset.probe);
+
+    // 2. hovering the rail: peek
+    svg.dispatchEvent(new w.MouseEvent("mousemove", at(svg, 0.43, 0.5)));
+    ok("hover rail: peek on", app.dataset.peek === "on", q('#s-stack [data-k="pk-plane"]').textContent + " · " + q('#s-stack [data-k="pk-share"]').textContent);
+    ok("hover rail: axis numeral under the index hidden", Array.prototype.some.call(d.querySelectorAll("#s-stack text.ax"), function (t) { return t.style.opacity === "0"; }));
+
+    // 3. click: hold; scrub; escape
+    svg.dispatchEvent(new w.MouseEvent("click", at(svg, 0.43, 0.5)));
+    var heldPlane = app.dataset.hold;
+    ok("click rail: hold", !!heldPlane && app.dataset.lens === "plane", "plane " + heldPlane);
+    ok("hold: eight size maps", d.querySelectorAll("#s-stack .tu-sizes > div").length === 8, q("#s-stack .tu-sizes > div span").textContent);
+    svg.dispatchEvent(new w.MouseEvent("mousemove", at(svg, 0.26, 0.5)));
+    var shown = q('#s-stack .tu-plane [data-k="hold-plane"]').textContent;
+    ok("hold + hover: two-up follows the pointer", shown !== heldPlane && app.dataset.hold === heldPlane, "held " + heldPlane + ", showing " + shown);
+    svg.dispatchEvent(new w.MouseEvent("mouseleave", {}));
+    ok("hold + leave: back to the held plane", q('#s-stack .tu-plane [data-k="hold-plane"]').textContent === heldPlane);
+    key("Escape");
+    ok("Escape: released", !app.dataset.hold && app.dataset.lens === "photo");
+
+    // 4. keys
+    key("3"); ok("key 3: depth lens", app.dataset.lens === "depth");
+    key("1"); ok("key 1: photograph", app.dataset.lens === "photo");
+    key(" "); ok("space down: clean", app.dataset.clean === "on");
+    key(" ", "keyup"); ok("space up: restored", !app.dataset.clean);
+    key("e"); ok("key e: engine room", q("#s-engine").classList.contains("on"));
+    key("e"); ok("key e again: back to stack", q("#s-stack").classList.contains("on"));
+
+    // 5. popovers on a screen where they were broken
+    w.location.hash = "library";
+    q('.proto-nav [data-go="library"]').click();
+    var lib = q("#s-library .stage .app");
+    lib.querySelector('.top [data-pop-open="jobs"]').click();
+    ok("library: job tray opens", lib.querySelector('.pop[data-pop="jobs"]').classList.contains("on"));
+    lib.querySelector('.top [data-pop-open="rig"]').click();
+    ok("library: rig opens, tray closes", lib.querySelector('.pop[data-pop="rig"]').classList.contains("on") && !lib.querySelector('.pop[data-pop="jobs"]').classList.contains("on"));
+    q('.proto-nav [data-go="flight"]').click();
+    key("g"); ok("flight: key g opens glance", q("#s-glance").classList.contains("on"));
+    key("Escape"); ok("glance: Escape returns", q("#s-flight").classList.contains("on"));
+  } catch (e) { log.push("ERROR " + e.message); }
+  out.textContent = log.join("\n");
+  document.title = "done";
+};
+</script>

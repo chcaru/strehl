@@ -149,7 +149,8 @@ body[data-theme="lightbox"] .app {
 .stat.job::after { content: ""; position: absolute; left: 0; bottom: -1px; height: 2px; width: calc(var(--p, 0) * 1%); background: var(--accent); }
 .kbd { font: 600 9.5px/1 var(--ui); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); box-shadow: inset 0 0 0 1px var(--line-2); padding: 3px 5px 2px; }
 .wctl { display: flex; border-left: 1px solid var(--line); }
-.wctl span { width: 42px; display: grid; place-items: center; color: var(--ink-3); font-size: 13px; }
+.wctl span { width: 42px; display: grid; place-items: center; color: var(--ink-3); }
+.wctl svg { width: 10px; height: 10px; fill: none; stroke: currentColor; stroke-width: 1; }
 .wctl span:hover { background: var(--raised); color: var(--ink); }
 
 /* ---------- body layout ---------- */
@@ -159,6 +160,7 @@ body[data-theme="lightbox"] .app {
 .body.l-side-main { grid-template-columns: 232px minmax(0, 1fr); }
 .main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
 .cstrip { height: 36px; flex: none; display: flex; align-items: center; gap: 14px; padding: 0 14px; background: var(--panel); border-bottom: 1px solid var(--line); font-size: 12.5px; position: relative; }
+.cstrip > * { white-space: nowrap; flex: none; } .cstrip > .sp { flex: 1; }
 .cstrip .vr { width: 1px; align-self: stretch; background: var(--line); margin: 8px 0; }
 .canvas { position: relative; flex: 1; background: var(--surround); min-height: 0; overflow: hidden; }
 .canvas.center { display: grid; place-items: center; }
@@ -166,6 +168,8 @@ body[data-theme="lightbox"] .app {
 .canvas.center > .photo { position: relative; aspect-ratio: 3 / 2; height: calc(100% - 38px); margin-bottom: 10px; }
 .photo .base, .photo .lens, .photo canvas.lens { position: absolute; inset: 0; width: 100%; height: 100%; }
 .photo .lens { pointer-events: none; }
+.photo.single { cursor: crosshair; }
+.rail-svg svg { cursor: crosshair; }
 .insp { background: var(--panel); border-left: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; }
 .insp-body { padding: 14px 16px; overflow: visible; display: flex; flex-direction: column; gap: 14px; flex: 1; min-height: 0; }
 .insp-foot { padding: 12px 16px; border-top: 1px solid var(--line); display: flex; gap: 8px; align-items: center; }
@@ -199,8 +203,10 @@ body[data-theme="lightbox"] .app {
 .btn.wide { flex: 1; justify-content: center; }
 .btn.on, .btn.on2 { color: var(--ink); box-shadow: inset 0 -1.5px 0 var(--accent); }
 .btn[disabled] { opacity: .4; cursor: default; }
-.link { background: none; border: 0; padding: 0; color: var(--accent); cursor: pointer; white-space: nowrap;
+.link { background: none; border: 0; padding: 0; color: var(--ink-2); cursor: pointer; white-space: nowrap;
   font-size: 10.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.link:hover { color: var(--ink); box-shadow: 0 1px 0 var(--ink-3); }
+.check.warn .link, .check.bad .link, .link.acc { color: var(--accent); }
 .seg { display: inline-flex; align-items: stretch; height: 24px; box-shadow: inset 0 0 0 1px var(--line-2); }
 .seg span { display: flex; align-items: center; gap: 6px; padding: 0 10px; color: var(--ink-3); cursor: pointer; white-space: nowrap; font-size: 12px; position: relative; }
 .seg span + span { box-shadow: inset 1px 0 0 var(--line-2); }

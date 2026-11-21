@@ -32,7 +32,7 @@ IMAGE_NAMES = """hero hero-small detail-a detail-b proof-partial lens-depth lens
 plane-06-large today-process today-capture today-edit today-metadata
 lib-star-sand lib-chia lib-tweezers lib-peacock-ore lib-garnet lib-marigold lib-slide lib-jewel-weevil
 lib-weevil-tan lib-scarab-green lib-elytra-brown lib-bubbles lib-chip lib-weevil-blue lib-bee lib-jewel-beetle
-lib-spotted-beetle lib-weevil-orange lib-white-beetle lib-net-beetle""".split() + [f"pl-{i:02d}" for i in range(32)]
+lib-spotted-beetle lib-weevil-orange lib-white-beetle lib-net-beetle""".split() + [f"pl-{i:02d}" for i in range(33)]
 
 
 def icon(name):
@@ -79,7 +79,9 @@ def topbar(meta):
     return (f'<div class="top"><div class="brand">{BRAND}Strehl</div>'
             f'<div class="crumbs">{"".join(crumbs)}</div><div class="stations">{"".join(parts)}</div>'
             f'<div class="right">{rig}{jobs}<div class="stat" data-pop-open="palette">{icon("search")}<span class="kbd">Ctrl K</span></div>'
-            f'<div class="wctl"><span>–</span><span>□</span><span>×</span></div></div></div>')
+            '<div class="wctl"><span><svg viewBox="0 0 10 10"><path d="M1 5.5h8"/></svg></span>'
+            '<span><svg viewBox="0 0 10 10"><path d="M1.5 1.5h7v7h-7z"/></svg></span>'
+            '<span><svg viewBox="0 0 10 10"><path d="M1.5 1.5l7 7M8.5 1.5l-7 7"/></svg></span></div></div></div>')
 
 
 def overlays(meta):
@@ -148,7 +150,7 @@ def screen(meta, parts):
         stage = parts["body"]
     else:
         body, _, rest = parts["body"].partition('<div class="hint">')
-        hint, _, pins = rest.partition("</div>\n")
+        hint, _, pins = rest.partition("</div>")  # the hint holds spans only: its first close is its own
         stage = (f'<div class="app">{topbar(meta)}{body}<div class="hint">{hint}</div>'
                  f'{overlays(meta)}{pins}</div>')
     notes = f'<div class="notes">{parts["notes"]}</div>' if parts["notes"] else ""

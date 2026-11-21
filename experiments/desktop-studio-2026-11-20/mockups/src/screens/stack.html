@@ -16,7 +16,7 @@ Three things to try. Move the pointer over the photograph: a region is marked an
         <span class="on" style="--c:#5fd9cf">2</span><span style="--c:#7fd3ea">4</span><span style="--c:#a7c9f2">8</span><span style="--c:#c8c0ef">16</span><span style="--c:#e2b9dc">32</span><span style="--c:#f1b7b4">64</span><span style="--c:#f4c18a">128</span><span style="--c:#edd06c">256</span>
       </div>
       <span class="sp"></span>
-      <span class="holdnote">Holding plane <b data-k="hold-plane">143</b><span class="dim2" data-k="hold-share"></span><span class="dim2">of the frame</span><span class="kbd">Esc</span></span>
+      <span class="holdnote"><span>Holding a plane</span><span class="kbd">Esc</span></span>
       <span class="vr"></span>
       <div class="seg"><span class="on">Fit</span><span>100 %</span></div>
       <div class="seg"><span class="on">Render 3</span><span>vs Render 2</span></div>
@@ -48,9 +48,9 @@ Three things to try. Move the pointer over the photograph: a region is marked an
         <svg class="mmrule" data-mm="9.42"></svg>
       </div>
       <div class="twoup">
-        <div class="tu tu-final"><div class="tu-cap"><b>Final</b>where plane <span data-k="hold-plane">143</span> was kept, at 2 px</div><div class="photo"><div class="base im im-hero"></div><canvas class="lens" width="720" height="480"></canvas></div></div>
-        <div class="tu tu-plane"><div class="tu-cap"><b>Plane <span data-k="hold-plane">143</span></b>camera preview · the outline is approximate, not a registration</div><div class="photo"><div class="base im"></div><canvas class="lens" width="720" height="480"></canvas></div></div>
-        <div class="tu-sizes"></div>
+        <div class="tu tu-final"><div class="tu-cap"><b>Final</b><span>where plane <span data-k="hold-plane">143</span> was kept, at 2 px · <span data-k="hold-share"></span> of the frame</span></div><div class="photo"><div class="base im im-hero"></div><canvas class="lens" width="720" height="480"></canvas></div></div>
+        <div class="tu tu-plane"><div class="tu-cap"><b>Plane <span data-k="hold-plane">143</span></b><span>camera preview · the outline is approximate, not a registration</span></div><div class="photo"><div class="base im"></div><canvas class="lens" width="720" height="480"></canvas></div></div>
+        <div class="tu-sizes pickone"></div>
       </div>
       <div class="peek glass">
         <div class="peek-im im"></div><canvas width="720" height="480"></canvas>
@@ -58,13 +58,13 @@ Three things to try. Move the pointer over the photograph: a region is marked an
         <i class="peek-arrow"></i>
       </div>
     </div>
-    <div class="rail" data-rail='{"inspect":true,"film":18,"margins":[[1,55],[212,299]],"h":84}'>
+    <div class="rail" data-rail='{"inspect":true,"film":17,"margins":[[1,55],[212,299]],"h":84}'>
       <i class="pin in" style="left:auto;right:9px;top:-9px">3</i>
       <div class="rail-head"><b>Depth rail</b><span>299 planes · step 7</span>
         <span class="key"><i class="bars"></i>detail held by each plane</span>
         <span class="key"><i class="dash"></i>detail in the region under the pointer</span>
         <span class="key"><i class="pl"></i>plane under the pointer</span>
-        <span class="sp"></span><span class="read" data-rest="Hover a plane to see where it was kept · click to hold it beside the photograph"></span>
+        <span class="sp"></span><span class="read" data-rest="Hover a plane to see where it was kept · click to hold it beside the photograph" data-held="Holding a plane · move along the rail to compare others · click to hold another"></span>
       </div>
       <div class="rail-svg"></div>
       <div class="film"></div>
@@ -85,8 +85,8 @@ Three things to try. Move the pointer over the photograph: a region is marked an
         <div class="acts"><button class="btn sm">Keep the rig on</button><button class="btn sm">Extend the stack…</button><button class="btn sm">Reshoot…</button></div>
       </div>
       <div>
-        <div class="check"><div><b>Every plane read and placed</b><span>299 of 299 · none refused</span></div><button class="link">Show</button></div>
-        <div class="check"><div><b>Alignment</b><span>2,340 pair fits accepted · worst 0.13 px</span></div><button class="link">Show</button></div>
+        <div class="check"><div><b>Every plane read and placed</b><span>299 of 299 · none refused</span></div><button class="link" data-go="engine">Show</button></div>
+        <div class="check"><div><b>Alignment</b><span>2,340 pair fits accepted · worst 0.13 px</span></div><button class="link" data-go="engine">Show</button></div>
         <div class="check warn"><i class="pin in new" style="left:-16px;top:12px">6</i><div><b>Empty planes at both ends</b><span>Planes 1–55 and 212–299 hold no subject detail: 143 planes, 48 % of the capture time</span></div><button class="link">Show</button>
           <div class="acts"><button class="btn sm">Tighter bounds next time</button><button class="btn sm">Trim sources… 4.6 GB</button></div></div>
         <div class="check warn"><div><b>Soft spots</b><span>1.9 % of the subject has no sharp plane, mostly where parts overlap</span></div><button class="link" data-lens-set="soft">Show</button></div>

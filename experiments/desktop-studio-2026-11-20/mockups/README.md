@@ -25,6 +25,10 @@ themes, Design system.
   where that plane was kept and the plane appears above the rail with the same outline. Click
   a plane to hold the two side by side; Escape returns. Try the lens buttons and the three
   inspector tabs.
+- While a plane is held, moving along the rail shows other planes in the two-up; a click
+  holds the new one.
+- Keys on Stack: `1`–`5` choose the lens, hold `Space` for the clean photograph, `E` opens
+  the engine room (and `E` there returns). On Capture · in flight, `G` opens glance mode.
 - On **Develop**, the rail shows the painted area's profile and the chosen range.
 - A link can select a theme and a state:
   `strehl-studio-2-mockups.html?theme=lightbox&do=peek:128;tab:recipe;pop:jobs#stack`.
@@ -32,6 +36,17 @@ themes, Design system.
   `peek:PLANE`, `hold:PLANE` and `hover:U,V` (a position on the photograph, 0 to 1).
 - The lettering is Bahnschrift, which ships with Windows. Elsewhere the page falls back to
   another DIN-style face or the system face.
+
+## Check
+
+```powershell
+python experiments/desktop-studio-2026-11-20/mockups/check-interactions.py
+```
+
+Loads the built file in a headless Chrome or Edge, dispatches pointer and key events (hover the
+photograph, hover and click the rail, hold, scrub, Escape, lens keys, popovers on another
+screen) and prints PASS or FAIL per check. It needs the pictures and data: with placeholders
+the probe has nothing to read. It does not judge appearance.
 
 ## Pictures and data
 
@@ -48,7 +63,7 @@ python experiments/desktop-studio-2026-11-20/mockups/make-assets.py SHOTS_DIR BR
   `--photo-center` for the two details), and for the Today page `run-default.png`,
   `capture.png`, `run-edit.png`, `source-metadata.png` at 1680 × 1050.
 - `BRACKET_DIR` is one source bracket of Sony ARW files. Only the embedded camera JPEGs are
-  read: 32 evenly spaced planes become the filmstrip and the plane previews.
+  read: 33 evenly spaced planes become the filmstrip and the plane previews.
 - Renders that `SHOTS_DIR` does not hold are skipped, so the data can be rebuilt on its own.
 - Library thumbnails come from the desktop's explorer preview cache, read only.
 
@@ -64,6 +79,7 @@ and a camera-JPEG composite cannot predict the RAW merge's detail or noise.
 | --- | --- |
 | `build.py` | Wraps each screen in the shared shell, inlines styles, script, icons, pictures and data |
 | `make-assets.py` | Builds the pictures and the illustrative data into `outputs/assets` |
+| `check-interactions.py`, `src/check.html` | Drive the built mockup with synthetic events and report PASS or FAIL |
 | `src/index.html` | Page template and the prototype bar |
 | `src/base.css` | Themes, shell and shared components |
 | `src/screens.css` | Per-screen layout |

@@ -5,9 +5,12 @@
   "use strict";
   var SD = window.SD || { planes: 299, sampled: 100, ridge: [], strength: [], grid_w: 24, grid_h: 16, plane_ids: [], map_w: 240, map_h: 160 };
   var bytes = function (s) { return s ? Uint8Array.from(atob(s), function (c) { return c.charCodeAt(0); }) : new Uint8Array(0); };
-  var GRID = bytes(SD.grid), ORDER = bytes(SD.order), SUPPORT = bytes(SD.support), PLANES = SD.plane_ids || [];
+  var GRID = bytes(SD.grid), ORDER = bytes(SD.order), SUPPORT = bytes(SD.support);
+  var PLANES = (SD.plane_ids && SD.plane_ids.length) ? SD.plane_ids : Array.from({ length: 33 }, function (_, i) { return Math.round(i * (SD.planes - 1) / 32) + 1; });
   /* the detail spectrum: fine detail is cool, broad shapes are warm */
   var SPEC = ["#5fd9cf", "#7fd3ea", "#a7c9f2", "#c8c0ef", "#e2b9dc", "#f1b7b4", "#f4c18a", "#edd06c"];
+  var SPEC_PAPER = ["#0f9d92", "#1f8fb5", "#3f78c9", "#6a5fc4", "#a2529f", "#c2524d", "#c47a1c", "#a58a00"];
+  function spec() { return document.body.dataset.theme === "lightbox" ? SPEC_PAPER : SPEC; }
   var SIZES = ["2 px", "4", "8", "16", "32", "64", "128", "256"];
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
@@ -41,6 +44,7 @@
       document.body.dataset.theme = theme.dataset.themeSet;
       $$("[data-theme-set]").forEach(function (b) { b.classList.toggle("on", b === theme); });
       masks = {};
+      $$(".tu-sizes").forEach(function (s) { s.innerHTML = ""; });
       redraw($(".screen.on"));
       return;
     }
@@ -74,12 +78,25 @@
     if (opt) { $$(":scope > *", opt.parentNode).forEach(function (t) { t.classList.toggle("on", t === opt); }); }
   });
   document.addEventListener("keydown", function (e) {
-    if (e.target.matches("input, textarea") || e.ctrlKey || e.metaKey || e.altKey) { return; }
+    if ((e.target.matches && e.target.matches("input, textarea")) || e.ctrlKey || e.metaKey || e.altKey) { return; }
     var app = $(".screen.on .stage .app");
     if (e.key === "Escape" && app && app.dataset.hold) { release(app); return; }
+    var cur = ($(".screen.on") || {}).id || "", key = e.key.toLowerCase();
+    if (cur === "s-stack" && app) {
+      var lensKeys = { "1": "photo", "2": "plane", "3": "depth", "4": "soft", "5": "align" };
+      if (lensKeys[key]) { setLens(app, lensKeys[key]); return; }
+      if (key === " ") { app.dataset.clean = "on"; e.preventDefault(); return; }
+      if (key === "e") { show("engine"); return; }
+    } else if (cur === "s-engine" && key === "e") { show("stack"); return; }
+    if (cur === "s-flight" && key === "g") { show("glance"); return; }
+    if (cur === "s-glance" && e.key === "Escape") { show("flight"); return; }
     var i = screens.findIndex(function (s) { return s.classList.contains("on"); });
     if (e.key === "ArrowRight" && i < screens.length - 1) { show(screens[i + 1].id.slice(2)); }
     if (e.key === "ArrowLeft" && i > 0) { show(screens[i - 1].id.slice(2)); }
+  });
+  document.addEventListener("keyup", function (e) {
+    var app = $(".screen.on .stage .app");
+    if (e.key === " " && app) { delete app.dataset.clean; }
   });
   window.addEventListener("resize", fit);
 
@@ -153,9 +170,9 @@
     for (var k = 5; k <= N; k += 5) {
       var major = k % 25 === 0;
       s += '<line x1="' + X(k) + '" x2="' + X(k) + '" y1="' + base + '" y2="' + (base + (major ? 6 : 3)) + '" stroke="' + (major ? c.ink3 : c.line2) + '"/>';
-      if (major && (!focus || k % 50 === 0) && k < N - 8) { s += '<text x="' + X(k) + '" y="' + (H - 3) + '" text-anchor="middle">' + label(k) + "</text>"; }
+      if (major && (!focus || k % 50 === 0) && k < N - 8) { s += '<text class="ax" x="' + X(k) + '" y="' + (H - 3) + '" text-anchor="middle">' + label(k) + "</text>"; }
     }
-    s += '<text x="' + pad + '" y="' + (H - 3) + '" style="letter-spacing:.12em">NEAR</text><text x="' + (W - pad) + '" y="' + (H - 3) + '" text-anchor="end" style="letter-spacing:.12em">FAR</text>';
+    s += '<text class="ax" data-w="46" x="' + pad + '" y="' + (H - 3) + '" style="letter-spacing:.12em">NEAR</text><text class="ax" data-w="40" x="' + (W - pad) + '" y="' + (H - 3) + '" text-anchor="end" style="letter-spacing:.12em">FAR</text>';
     if (o.bounds) {
       [["START", o.bounds[0], -1], ["END", o.bounds[1], 1]].forEach(function (b) {
         var x = X(b[1]);
@@ -180,6 +197,7 @@
     var film = $(".film", el);
     if (film && o.film) { drawFilm(el, film, o.film); }
     var svg = $("svg", host), read = $(".read", el);
+    if (read) { read.textContent = (app.dataset.hold && read.dataset.held) || read.dataset.rest || ""; }
     var planeAt = function (e) {
       var r = svg.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * W;
       return clamp(Math.round(1 + (x - pad) / step), 1, N);
@@ -192,19 +210,31 @@
     };
     svg.onmouseleave = function () {
       mark(el, "hover", null);
-      if (read) { read.textContent = read.dataset.rest || ""; }
+      if (read) { read.textContent = (app.dataset.hold && read.dataset.held) || read.dataset.rest || ""; }
       if (o.inspect) { peek(app, el, null); }
     };
     svg.onclick = function (e) { if (o.inspect) { hold(app, planeAt(e)); } else { mark(el, "head", planeAt(e)); } };
   }
   function mark(el, cls, p) {
     var g = $("." + cls, el), geo = el._g; if (!g || !geo) { return; }
-    if (!p) { g.style.display = "none"; return; }
+    if (!p) { g.style.display = "none"; maskAxis(el); return; }
     var x = geo.X(p), line = g.querySelector("line"), dot = g.querySelector("circle"), box = g.querySelector("rect"), text = g.querySelector("text");
     g.style.display = "";
     line.setAttribute("x1", x); line.setAttribute("x2", x);
     if (dot) { dot.setAttribute("cx", x); dot.setAttribute("cy", geo.base - held(p) * geo.hgt); }
     box.setAttribute("x", clamp(x - 15, 0, geo.W - 30)); text.setAttribute("x", clamp(x, 15, geo.W - 15)); text.textContent = p;
+    maskAxis(el);
+  }
+  function maskAxis(el) {
+    var xs = [];
+    ["head", "hover"].forEach(function (cls) {
+      var g = $("." + cls, el);
+      if (g && g.style.display !== "none") { xs.push(+g.querySelector("text").getAttribute("x")); }
+    });
+    $$("text.ax", el).forEach(function (t) {
+      var x = +t.getAttribute("x"), reach = +(t.dataset.w || 28);
+      t.style.opacity = xs.some(function (v) { return Math.abs(v - x) < reach; }) ? 0 : 1;
+    });
   }
   function setTrace(el, profile) {
     var g = $(".trace", el), geo = el._g; if (!g || !geo) { return; }
@@ -225,7 +255,7 @@
         var v = 0, m = 0;
         for (var d = -r * 3; d <= r * 3; d += 3) { v += held(clamp(p + d, 1, SD.planes)); m++; }
         v = Math.pow(v / m, 0.7);
-        bars += '<u style="height:' + (1 + v * 7).toFixed(1) + "px;background:" + SPEC[r] + ";opacity:" + (0.25 + v * 0.75).toFixed(2) + '"></u>';
+        bars += '<u style="height:' + (1 + v * 7).toFixed(1) + "px;background:" + spec()[r] + ";opacity:" + (0.25 + v * 0.75).toFixed(2) + '"></u>';
       }
       html += '<div data-plane="' + p + '" data-slot="' + slot + '"><i class="' + slotClass(slot) + '"></i><span><b>' + p + "</b><em>" + bars + "</em></span></div>";
     }
@@ -289,16 +319,49 @@
   }
   function share(p, half) {
     if (!ORDER.length) { return 0; }
-    var k = planeMask(p, half), n = 0;
-    for (var i = 0; i < k.m.length; i += 7) { n += k.m[i]; }
-    return n * 7 / k.m.length;
+    var at = Math.round((p - 1) / (SD.planes - 1) * (SD.sampled - 1)), n = 0;
+    half = half || 2;
+    for (var i = 0; i < ORDER.length; i++) { if (SUPPORT[i] > 46 && Math.abs(ORDER[i] - at) <= half) { n++; } }
+    return n / ORDER.length;
+  }
+  function paintSmall(canvas, p, half, app) {
+    var w = SD.map_w, h = SD.map_h, ctx = canvas.getContext("2d"), out = ctx.createImageData(w, h), d = out.data, col = rgb(css(app, "--plane"));
+    var at = Math.round((p - 1) / (SD.planes - 1) * (SD.sampled - 1));
+    var on = function (i) { return SUPPORT[i] > 46 && Math.abs(ORDER[i] - at) <= half; };
+    for (var y = 1; y < h - 1; y++) {
+      for (var x = 1; x < w - 1; x++) {
+        var i = y * w + x; if (!on(i)) { continue; }
+        var edge = !(on(i - 1) && on(i + 1) && on(i - w) && on(i + w)), o = i * 4;
+        d[o] = col[0]; d[o + 1] = col[1]; d[o + 2] = col[2]; d[o + 3] = edge ? 255 : 110;
+      }
+    }
+    ctx.putImageData(out, 0, 0);
+  }
+  function twoUp(app, p) {
+    var two = $(".twoup", app); if (!two) { return; }
+    paintRegion($(".tu-final canvas", two), p, "final", app);
+    $(".tu-plane .base", two).className = "base im " + slotClass(nearestSlot(p));
+    paintRegion($(".tu-plane canvas", two), p, "source", app);
+    $$('[data-k="hold-plane"]', app).forEach(function (e) { e.textContent = p; });
+    $$('[data-k="hold-share"]', app).forEach(function (e) { e.textContent = Math.round(share(p) * 1000) / 10 + " %"; });
+    var sizes = $(".tu-sizes", two); if (!sizes) { return; }
+    if (!sizes.firstChild) {
+      sizes.innerHTML = SIZES.map(function (name, r) {
+        return "<div" + (r ? "" : ' class="on"') + '><i class="im im-hero-small"><canvas width="' + SD.map_w + '" height="' + SD.map_h + '"></canvas></i><b style="color:' + spec()[r] + '">' + name + "</b><span></span></div>";
+      }).join("");
+    }
+    $$(":scope > div", sizes).forEach(function (cell, r) {
+      paintSmall($("canvas", cell), p, 2 + r * 0.9, app);
+      $("span", cell).textContent = Math.round(share(p, 2 + r * 0.9) * 1000) / 10 + " % kept";
+    });
   }
   function peek(app, rail, p) {
-    var box = $(".peek", app), photo = $(".photo.single", app);
+    var box = $(".peek", app), photo = $(".photo.single", app), heldPlane = +app.dataset.hold || 0;
     nearFilm(rail, p);
+    if (heldPlane) { twoUp(app, p || heldPlane); return; }   /* while holding, the two-up follows the pointer */
     if (!p) {
       app.dataset.peek = "off";
-      if (photo) { paintRegion($("canvas.lens-plane", photo), +app.dataset.hold || (app.dataset.lens === "plane" ? +app.dataset.plane : 0), "final", app); }
+      if (photo) { paintRegion($("canvas.lens-plane", photo), 0, "final", app); }
       return;
     }
     app.dataset.peek = "on";
@@ -308,33 +371,22 @@
     var x = geo.X(p) + (railBox.left - canvasBox.left) / scale, w = box.offsetWidth;
     box.style.left = clamp(x - w / 2, 10, box.parentNode.offsetWidth - w - 10) + "px";
     $(".peek-arrow", box).style.left = clamp(x - parseFloat(box.style.left), 12, w - 12) + "px";
-    var slot = nearestSlot(p), im = $(".peek-im", box);
-    im.className = "peek-im im " + slotClass(slot);
+    $(".peek-im", box).className = "peek-im im " + slotClass(nearestSlot(p));
     paintRegion($("canvas", box), p, "source", app);
     $('[data-k="pk-plane"]', box).textContent = "Plane " + p;
     $('[data-k="pk-share"]', box).textContent = Math.round(share(p) * 1000) / 10 + " % of the frame kept from here";
   }
   function hold(app, p) {
     if (+app.dataset.hold === p) { release(app); return; }
-    app.dataset.hold = p; app.dataset.plane = p; app.dataset.lens = "plane";
-    var two = $(".twoup", app), rail = $(".rail", app), slot = nearestSlot(p);
-    if (two) {
-      paintRegion($(".tu-final canvas", two), p, "final", app);
-      $(".tu-plane .base", two).className = "base im " + slotClass(slot);
-      paintRegion($(".tu-plane canvas", two), p, "source", app);
-      $$('[data-k="hold-plane"]', app).forEach(function (e) { e.textContent = p; });
-      $$('[data-k="hold-share"]', app).forEach(function (e) { e.textContent = Math.round(share(p) * 1000) / 10 + " %"; });
-      var sizes = $(".tu-sizes", two);
-      if (sizes) {
-        sizes.innerHTML = SIZES.map(function (name, r) {
-          return '<div' + (r ? "" : ' class="on"') + '><i class="im im-hero-small"><canvas width="720" height="480"></canvas></i><b style="color:' + SPEC[r] + '">' + name + "</b>" +
-            Math.round(share(p, 2 + r * 0.9) * 1000) / 10 + " % kept</div>";
-        }).join("");
-        $$("canvas", sizes).forEach(function (cv, r) { paintRegion(cv, p, "source", app, 2 + r * 0.9); });
-      }
-    }
+    app.dataset.hold = p; app.dataset.plane = p; app.dataset.lens = "plane"; app.dataset.peek = "off";
+    var rail = $(".rail", app);
+    twoUp(app, p);
     $$(".seg [data-lens-set]", app).forEach(function (t) { t.classList.toggle("on", t.dataset.lensSet === "plane"); });
-    if (rail) { mark(rail, "head", p); setTrace(rail, null); nearFilm(rail, null); }
+    if (rail) { mark(rail, "head", p); setTrace(rail, null); nearFilm(rail, null); restRead(app); }
+  }
+  function restRead(app) {
+    var read = $(".rail .read", app);
+    if (read) { read.textContent = (app.dataset.hold && read.dataset.held) || read.dataset.rest || ""; }
   }
   function release(app) {
     delete app.dataset.hold;
@@ -343,6 +395,7 @@
     var photo = $(".photo.single", app), rail = $(".rail", app);
     if (photo) { paintRegion($("canvas.lens-plane", photo), 0, "final", app); probe(photo, null); }
     if (rail) { nearFilm(rail, null); }
+    restRead(app);
   }
   function setLens(app, name) {
     if (name === "plane") { hold(app, +app.dataset.plane || 143); return; }
@@ -379,11 +432,11 @@
         for (var d = -w; d <= w; d++) { var z = q + d; if (z >= 0 && z < n) { acc += values[z]; cnt++; } }
         sm.push(acc / cnt); top = Math.max(top, acc / cnt);
       }
-      s += '<text x="0" y="' + (y + 7.5) + '" style="font:9.5px var(--ui);letter-spacing:.04em;fill:' + SPEC[r] + '">' + name + "</text>";
+      s += '<text x="0" y="' + (y + 7.5) + '" style="font:9.5px var(--ui);letter-spacing:.04em;fill:' + spec()[r] + '">' + name + "</text>";
       s += '<rect x="' + x0 + '" y="' + y + '" width="' + W + '" height="' + rh + '" fill="' + css(app, "--line") + '"/>';
       for (var i = 0; i < n; i++) {
         var val = top > 0 ? sm[i] / top : 0;
-        if (val > 0.05) { s += '<rect x="' + (x0 + i * W / n).toFixed(1) + '" y="' + y + '" width="' + (W / n + 0.4).toFixed(1) + '" height="' + rh + '" fill="' + SPEC[r] + '" opacity="' + Math.min(1, val * 1.05).toFixed(2) + '"/>'; }
+        if (val > 0.05) { s += '<rect x="' + (x0 + i * W / n).toFixed(1) + '" y="' + y + '" width="' + (W / n + 0.4).toFixed(1) + '" height="' + rh + '" fill="' + spec()[r] + '" opacity="' + Math.min(1, val * 1.05).toFixed(2) + '"/>'; }
       }
     });
     (marks || []).forEach(function (p) {
@@ -417,10 +470,13 @@
     var W = photo.offsetWidth, H = photo.offsetHeight, cw = cs.offsetWidth || 330, ch = cs.offsetHeight || 340;
     var right = (uv[0] + R / 2) * W + 16 + cw < W - 8, x = right ? (uv[0] + R / 2) * W + 16 : (uv[0] - R / 2) * W - 16 - cw, y = clamp(uv[1] * H - ch / 2, 8, H - ch - 8);
     cs.style.transform = "translate(" + clamp(x, 8, W - cw - 8).toFixed(0) + "px," + y.toFixed(0) + "px)";
+    cs.style.setProperty("--ly", clamp(uv[1] * H - y, 10, ch - 10).toFixed(0) + "px");
+    cs.classList.toggle("r", right); cs.classList.toggle("l", !right);
     cs.classList.toggle("live", live);
     var set = function (k, t) { var e = $('[data-k="' + k + '"]', cs); if (e) { e.textContent = t; } };
-    var s1 = nearestSlot(sp.peak), s2 = clamp(s1 + (PLANES[s1] < sp.peak ? 1 : -1), 0, PLANES.length - 1), s3 = clamp(s1 + 4, 0, PLANES.length - 1);
     var pct = function (slot) { var i = Math.round((PLANES[slot] - 1) / (SD.planes - 1) * (pr.values.length - 1)); return Math.round(Math.min(1, pr.values[i] * 1.02) * 92); };
+    var lead = PLANES.map(function (_, i) { return i; }).sort(function (a, b) { return pct(b) - pct(a) || Math.abs(PLANES[a] - sp.peak) - Math.abs(PLANES[b] - sp.peak); }).slice(0, 3);
+    var s1 = lead[0], s2 = lead[1], s3 = lead[2];
     set("mode", live ? "live" : "pinned");
     set("xy", Math.round(R * 7032) + " px square at " + Math.round(uv[0] * 7032) + ", " + Math.round(uv[1] * 4688));
     crop($('[data-k="c0"]', cs), "im-hero", uv[0], uv[1], R, 1.5);
@@ -434,7 +490,7 @@
       set("words", "Fine detail here comes from planes " + sp.a + "–" + sp.b + " (" + (sp.b - sp.a + 1) + " planes). Broad shapes draw on " + wide.a + "–" + wide.b + ". Nothing was filled in.");
     }
     var st = $('[data-k="strips"]', cs);
-    if (st) { strips(st, empty ? pr.values.map(function () { return 0; }) : pr.values, app, empty ? [] : [PLANES[s1], PLANES[s2]]); }
+    if (st) { strips(st, empty ? pr.values.map(function () { return 0; }) : pr.values, app, empty ? [] : [PLANES[s1], PLANES[s2], PLANES[s3]]); }
   }
   $$(".photo[data-probe]").forEach(function (photo) {
     var app = photo.closest(".app");
@@ -492,20 +548,20 @@
       s += '<rect x="' + (p[0] - r) + '" y="' + (p[1] - r) + '" width="' + r * 2 + '" height="' + r * 2 + '" fill="' + (sel ? acc : dull ? ink3 : ok) + '" transform="rotate(' + (j / n * 360) + " " + p[0] + " " + p[1] + ')"/>';
     }
     s += '<text x="' + c + '" y="' + (c - 2) + '" text-anchor="middle" style="font:300 26px var(--ui);fill:' + css(app, "--ink") + '">2,340</text>';
-    s += '<text x="' + c + '" y="' + (c + 16) + '" text-anchor="middle" style="font:600 9.5px var(--ui);letter-spacing:.13em;fill:' + css(app, "--ink-3") + '">PAIR FITS ACCEPTED</text>';
+    s += '<text x="' + c + '" y="' + (c + 16) + '" text-anchor="middle" style="font:600 9.5px var(--ui);letter-spacing:.13em;fill:' + css(app, "--ink-3") + '">PAIR FITS</text>';
     el.innerHTML = s;
   }
   function drawGridmap(el) {
     var app = el.closest(".app"), W = +el.getAttribute("width"), H = +el.getAttribute("height"), rows = SIZES.concat([]);
     var n = 100, x0 = 34, cw = (W - x0) / n, rh = (H - 16) / rows.length, s = "";
     rows.forEach(function (label, r) {
-      s += '<text x="0" y="' + (r * rh + rh * 0.66) + '" style="font:9.5px var(--ui);fill:' + SPEC[r] + '">' + label + "</text>";
+      s += '<text x="0" y="' + (r * rh + rh * 0.66) + '" style="font:9.5px var(--ui);fill:' + spec()[r] + '">' + label + "</text>";
       s += '<rect x="' + x0 + '" y="' + r * rh + '" width="' + (W - x0) + '" height="' + (rh - 3) + '" fill="' + css(app, "--line") + '"/>';
       for (var i = 0; i < n; i++) {
         var w = 1 + r * 2, a = 0, m = 0;
         for (var k = -w; k <= w; k++) { var j = i + k; if (j >= 0 && j < n) { a += SD.ridge[j] || 0; m++; } }
         var v = Math.min(1, Math.pow(a / m, 0.6));
-        if (v > 0.06) { s += '<rect x="' + (x0 + i * cw).toFixed(1) + '" y="' + r * rh + '" width="' + (cw + 0.3).toFixed(1) + '" height="' + (rh - 3) + '" fill="' + SPEC[r] + '" opacity="' + v.toFixed(2) + '"/>'; }
+        if (v > 0.06) { s += '<rect x="' + (x0 + i * cw).toFixed(1) + '" y="' + r * rh + '" width="' + (cw + 0.3).toFixed(1) + '" height="' + (rh - 3) + '" fill="' + spec()[r] + '" opacity="' + v.toFixed(2) + '"/>'; }
       }
     });
     s += '<text x="' + x0 + '" y="' + (H - 2) + '" style="font:9.5px var(--ui);fill:' + css(app, "--ink-3") + '">1</text><text x="' + W + '" y="' + (H - 2) + '" text-anchor="end" style="font:9.5px var(--ui);fill:' + css(app, "--ink-3") + '">299</text>';
@@ -516,7 +572,7 @@
       ["Small forms", "32 px", 2.6, 100, 0], ["Forms", "64 px", 4, 100, 0], ["Broad forms", "128 px", 6, 100, 0], ["Broad tone", "what is left", 9, 100, 0]];
     el.innerHTML = rows.map(function (r, idx) {
       var blur = "blur(" + r[2] + "px)", dots = 5 + r[2] * 2.2, m = "radial-gradient(ellipse 46% 40% at 52% 50%,#000 55%,transparent 75%)";
-      return '<div class="lrow"><div><b style="box-shadow:inset 2px 0 0 ' + SPEC[idx] + ';padding-left:8px">' + r[0] + '</b><small style="padding-left:8px">' + r[1] + "</small></div>" +
+      return '<div class="lrow"><div><b style="box-shadow:inset 2px 0 0 ' + spec()[idx] + ';padding-left:8px">' + r[0] + '</b><small style="padding-left:8px">' + r[1] + "</small></div>" +
         '<div class="ltile"><div class="im im-hero-small" style="filter:grayscale(1) contrast(1.5) ' + blur + '"></div></div>' +
         '<div class="ltile"><div style="background:radial-gradient(ellipse at 55% 50%,#333338,#101012 70%);filter:' + blur + '"></div></div>' +
         '<div class="ltile"><div class="im im-hero-small" style="filter:grayscale(1) brightness(.45) ' + blur + '"></div><div style="background-image:radial-gradient(circle,#a9c779 0 1.2px,transparent 1.7px);background-size:' + dots + "px " + dots + "px;opacity:" + (r[3] / 100 * 0.9) + ";-webkit-mask-image:" + m + ";mask-image:" + m + '"></div><em>' + r[3] + " %</em></div>" +
