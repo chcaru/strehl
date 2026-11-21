@@ -325,17 +325,40 @@ impl AdmissionArchive {
         level: usize,
         window: Option<([usize; 2], [usize; 2])>,
     ) -> impl Iterator<Item = (usize, AdmissionMeta, Option<(usize, usize)>)> + '_ {
+        self.window_counts_range(level, 0..usize::MAX, window)
+    }
+
+    /// [`Self::window_counts_all`] for the level's retained captures at
+    /// `positions` (capture order, clamped): a long recount resumes where the
+    /// previous frame's budget ended without walking the masks before it.
+    pub(crate) fn window_counts_range(
+        &self,
+        level: usize,
+        positions: std::ops::Range<usize>,
+        window: Option<([usize; 2], [usize; 2])>,
+    ) -> impl Iterator<Item = (usize, AdmissionMeta, Option<(usize, usize)>)> + '_ {
         self.levels
             .get(level)
             .and_then(Option::as_ref)
             .into_iter()
             .flat_map(move |masks| {
-                masks.iter().map(move |mask| {
-                    let count =
-                        window.and_then(|(columns, rows)| window_count(mask, columns, rows));
-                    (mask.frame, mask.meta, count)
-                })
+                let end = positions.end.min(masks.len());
+                masks[positions.start.min(end)..end]
+                    .iter()
+                    .map(move |mask| {
+                        let count =
+                            window.and_then(|(columns, rows)| window_count(mask, columns, rows));
+                        (mask.frame, mask.meta, count)
+                    })
             })
+    }
+
+    /// Retained captures at `level`.
+    pub(crate) fn level_len(&self, level: usize) -> usize {
+        self.levels
+            .get(level)
+            .and_then(Option::as_ref)
+            .map_or(0, |masks| masks.len())
     }
 
     /// Exact retained binary samples in row-major order. This is the observed

@@ -72,6 +72,12 @@ pub(crate) struct SampleWindow {
     rows: [usize; 2],
 }
 impl SampleWindow {
+    /// The window's half-open lattice columns and rows, as the archive's
+    /// window counts take them.
+    pub(crate) fn lattice(self) -> ([usize; 2], [usize; 2]) {
+        (self.columns, self.rows)
+    }
+
     pub(crate) fn new(level: usize, meta: AdmissionMeta, region: Rect) -> Option<Self> {
         if !region.is_finite() || region.width() < 0.0 || region.height() < 0.0 {
             return None;
@@ -202,15 +208,23 @@ fn sample_count(count: Option<(usize, usize)>) -> SampleCount {
     })
 }
 
-/// At most this many (level, plane) windows are recounted in one frame. A
-/// longer recount runs over several frames into a staging list while the
-/// previous complete window stays on screen; it then replaces it at once,
-/// and the newest pointer region starts only after it (spec 5.3 budget for
-/// 6,000 planes). Short stacks recount immediately, exactly as before.
-pub(crate) const RECOUNT_BUDGET: usize = 4096;
+/// At most this many plane windows are recounted in one frame. A longer
+/// recount runs over several frames into a staging list while the previous
+/// complete window stays on screen; it then replaces it at once, and the
+/// newest pointer region starts only after it (spec 5.3 budget for 6,000
+/// planes). Short stacks recount immediately, exactly as before. The
+/// engine room's timeline uses the same budget for its region lane.
+/// 512 holds the 6,000-plane photograph sweep within 1.25 x its 130-plane
+/// figure (MEASURED, P3 results); a 6,000-plane window commits after twelve
+/// frames.
+pub(crate) const RECOUNT_BUDGET: usize = 512;
 
-/// A changed level, its new window, its planes and their staged counts.
-type StagedLevel = (usize, Option<SampleWindow>, Vec<usize>, Vec<SampleCount>);
+/// A staged archive reading: capture, receipt and window count.
+pub(crate) type Staged = (usize, AdmissionMeta, Option<(usize, usize)>);
+
+/// A changed level, its new window, the next capture position in the
+/// archive's level and the readings staged so far (capture order).
+type StagedLevel = (usize, Option<SampleWindow>, usize, Vec<Staged>);
 
 struct PendingWindows {
     region: Rect,
@@ -275,24 +289,6 @@ impl EvidenceStore {
     fn clear(&mut self) {
         self.levels.clear();
         self.len = 0;
-    }
-    fn entries(&self, level: usize) -> usize {
-        self.frames(level).map_or(0, |frames| {
-            frames.iter().filter(|slot| slot.is_some()).count()
-        })
-    }
-    fn planes(&self, level: usize) -> Vec<usize> {
-        self.frames(level).map_or_else(Vec::new, |frames| {
-            frames.iter().flatten().map(|(key, _)| key.1).collect()
-        })
-    }
-    fn set_count(&mut self, key: EvidenceKey, window: Option<SampleWindow>, count: SampleCount) {
-        if let Some((_, frames)) = self.levels.iter_mut().find(|(slot, _)| *slot == key.0)
-            && let Some(Some((_, evidence))) = frames.get_mut(key.1)
-        {
-            evidence.count = count;
-            evidence.window = window;
-        }
     }
     /// Give every retained entry of one level its count in a new window,
     /// from the archive's ordered pass; returns the entries updated.
@@ -754,14 +750,13 @@ impl RegionProbe {
             {
                 self.receipt_scans += 1;
             }
+            // Only the active level is ever read (the spatial evidence, the
+            // core sample and the depth rail all ask for it), so only it is
+            // counted: a window change costs one level's planes, not every
+            // level's. Choosing another level is a receipt change here.
             self.levels.clear();
-            self.levels.extend(archive.levels().take(16));
-            if !self.levels.contains(&active) && archive.frames(active).next().is_some() {
-                if self.levels.len() == 16 {
-                    self.levels.pop();
-                }
+            if archive.frames(active).next().is_some() {
                 self.levels.push(active);
-                self.levels.sort_unstable();
             }
             self.level_meta.clear();
             self.level_meta.extend(self.levels.iter().map(|&level| {
@@ -807,7 +802,7 @@ impl RegionProbe {
             self.window_revision = self.window_revision.wrapping_add(1);
             // One ordered pass over the level's masks (P2): no per-capture
             // search at long-stack sizes. Each reading lands in its dense slot.
-            let lattice = window.map(|window| (window.columns, window.rows));
+            let lattice = window.map(SampleWindow::lattice);
             let counts = archive.window_counts_all(level, lattice);
             if !receipts_changed && self.evidence.frames(level).is_some() {
                 // Same receipts, new window: recount in place with each
@@ -872,7 +867,7 @@ impl RegionProbe {
                 .collect();
             let work: usize = changed
                 .iter()
-                .map(|&(level, _)| self.evidence.entries(level))
+                .map(|&(level, _)| archive.level_len(level))
                 .sum();
             // Levels seen for the first time take the full path below.
             let complete = self.level_meta.iter().all(|&(level, meta)| {
@@ -888,9 +883,8 @@ impl RegionProbe {
                 levels: changed
                     .into_iter()
                     .map(|(level, window)| {
-                        let planes = self.evidence.planes(level);
-                        let counts = Vec::with_capacity(planes.len());
-                        (level, window, planes, counts)
+                        let staged = Vec::with_capacity(archive.level_len(level));
+                        (level, window, 0, staged)
                     })
                     .collect(),
                 level: 0,
@@ -899,16 +893,15 @@ impl RegionProbe {
         let mut pending = self.pending.take().expect("a recount in progress");
         let mut budget = RECOUNT_BUDGET;
         while budget > 0 && pending.level < pending.levels.len() {
-            let (level, window, planes, counts) = &mut pending.levels[pending.level];
-            let start = counts.len();
-            let end = (start + budget).min(planes.len());
-            for &frame in &planes[start..end] {
-                counts.push(window.map_or_else(SampleCount::default, |window| {
-                    window.archive_counts(archive, *level, frame)
-                }));
-            }
-            budget -= end - start;
-            if counts.len() == planes.len() {
+            let (level, window, position, staged) = &mut pending.levels[pending.level];
+            let total = archive.level_len(*level);
+            let end = (*position + budget).min(total);
+            // The archive's ordered pass, resumed where the last frame ended.
+            let lattice = window.map(SampleWindow::lattice);
+            staged.extend(archive.window_counts_range(*level, *position..end, lattice));
+            budget -= end - *position;
+            *position = end;
+            if end == total {
                 pending.level += 1;
             } else {
                 break;
@@ -919,13 +912,11 @@ impl RegionProbe {
             return true;
         }
         // Commit the whole window at once.
-        for (level, window, planes, counts) in pending.levels {
-            for (&frame, &count) in planes.iter().zip(&counts) {
-                self.evidence.set_count((level, frame), window, count);
-            }
+        for (level, window, _, staged) in pending.levels {
+            let _read = self.evidence.recount(level, window, staged.into_iter());
             #[cfg(test)]
             {
-                self.readings += counts.len();
+                self.readings += _read;
             }
             if let Some((_, old)) = self.windows.iter_mut().find(|(old, _)| *old == level) {
                 *old = window;

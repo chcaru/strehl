@@ -5,7 +5,7 @@ use std::collections::BTreeMap;
 use crate::{
     pipeline::Stage,
     process_provenance::{AdmissionArchive, AdmissionMeta},
-    process_region_probe::SampleWindow,
+    process_region_probe::{RECOUNT_BUDGET, SampleWindow, Staged},
     process_space::Input,
     theme::{ACCENT, BG, GREEN, LINE, MUTED},
 };
@@ -137,6 +137,16 @@ struct EvidenceKey {
     extent: Option<[usize; 2]>,
     window: Option<SampleWindow>,
 }
+/// The region lane's recount on a long stack: the requested key, whether the
+/// window covers the whole image, the next capture position in the archive's
+/// level and the readings staged so far (capture order).
+struct PendingWindow {
+    key: EvidenceKey,
+    whole: bool,
+    position: usize,
+    staged: Vec<Staged>,
+}
+
 #[derive(Clone, Copy, PartialEq)]
 struct LaneKey {
     lanes: [Rect; 2],
@@ -194,6 +204,9 @@ pub(crate) struct CaptureParticipation {
     refinements: BTreeMap<usize, ContactRefinement>,
     evidence: BTreeMap<usize, Evidence>,
     evidence_key: Option<EvidenceKey>,
+    /// A long stack's region-lane recount in progress (see `RECOUNT_BUDGET`):
+    /// the previous complete lane stays until it commits at once.
+    pending_window: Option<PendingWindow>,
     band_key: Option<BandKey>,
     plot_cache: Vec<[Area; 2]>,
     plot_key: Option<(usize, usize)>,
@@ -510,7 +523,7 @@ impl CaptureParticipation {
                 && key.frames == input.frame_count
                 && key.extent == extent
         });
-        if same_receipts && self.aperture == Some(aperture) {
+        if same_receipts && self.aperture == Some(aperture) && self.pending_window.is_none() {
             return;
         }
         self.aperture = Some(aperture);
@@ -527,6 +540,20 @@ impl CaptureParticipation {
             extent,
             window,
         };
+        let whole = aperture.contains_rect(Rect::from_min_max(Pos2::ZERO, egui::pos2(1.0, 1.0)));
+        if same_receipts {
+            // Only the pointer's window moved: every retained receipt is
+            // already here and still valid. Recount the region lane from the
+            // archive's ordered pass; a long stack does it within the budget.
+            let budget = if self.evidence.len() > RECOUNT_BUDGET {
+                RECOUNT_BUDGET
+            } else {
+                usize::MAX
+            };
+            self.recount_window(archive, key, whole, budget);
+            return;
+        }
+        self.pending_window = None;
         if self.evidence_key == Some(key) {
             return;
         }
@@ -539,28 +566,6 @@ impl CaptureParticipation {
         if self.level != Some(level) {
             self.evidence.clear();
             self.level = Some(level);
-        }
-        let whole = aperture.contains_rect(Rect::from_min_max(Pos2::ZERO, egui::pos2(1.0, 1.0)));
-        if same_receipts {
-            // Only the pointer's window moved: every retained receipt is
-            // already here and still valid. Recount the window in place,
-            // without revalidating each receipt against the archive.
-            for (&frame, evidence) in &mut self.evidence {
-                if evidence.window_key != window {
-                    evidence.window = if whole && window.is_some() {
-                        evidence.scene
-                    } else {
-                        window
-                            .map(|window| window.archive_counts(archive, level, frame))
-                            .map_or_else(Area::default, |count| Area {
-                                observed: count.observed,
-                                admitted: count.admitted,
-                            })
-                    };
-                    evidence.window_key = window;
-                }
-            }
-            return;
         }
         self.evidence.retain(|&frame, item| {
             frame < input.frame_count && archive.metadata(level, frame) == Some(item.meta)
@@ -612,6 +617,79 @@ impl CaptureParticipation {
         }
     }
 
+    /// Recount the region lane for `key` (same receipts, new window), at most
+    /// `budget` captures this frame. A longer recount stages its readings and
+    /// commits them at once; the newest window starts only after it.
+    fn recount_window(
+        &mut self,
+        archive: &AdmissionArchive,
+        key: EvidenceKey,
+        whole: bool,
+        budget: usize,
+    ) {
+        let start = |level: usize| PendingWindow {
+            key,
+            whole,
+            position: 0,
+            staged: Vec::with_capacity(if whole { 0 } else { archive.level_len(level) }),
+        };
+        if self.pending_window.is_none() {
+            if self.evidence_key == Some(key) {
+                return;
+            }
+            self.pending_window = Some(start(key.level));
+        }
+        let pending = self.pending_window.as_mut().expect("a recount in progress");
+        if !(pending.whole && pending.key.window.is_some()) {
+            let total = archive.level_len(pending.key.level);
+            let end = pending.position.saturating_add(budget).min(total);
+            let lattice = pending.key.window.map(SampleWindow::lattice);
+            pending.staged.extend(archive.window_counts_range(
+                pending.key.level,
+                pending.position..end,
+                lattice,
+            ));
+            pending.position = end;
+            if end < total {
+                return;
+            }
+        }
+        let done = self.pending_window.take().expect("a recount in progress");
+        let committed = done.key;
+        let window = committed.window;
+        let scene = done.whole && window.is_some();
+        let mut staged = done.staged.into_iter().peekable();
+        for (&frame, evidence) in &mut self.evidence {
+            evidence.window = if scene {
+                evidence.scene
+            } else {
+                while staged.next_if(|reading| reading.0 < frame).is_some() {}
+                match staged.next_if(|reading| reading.0 == frame) {
+                    Some((_, meta, Some((admitted, observed)))) if meta == evidence.meta => {
+                        Area { observed, admitted }
+                    }
+                    _ => Area::default(),
+                }
+            };
+            evidence.window_key = window;
+        }
+        self.evidence_key = Some(committed);
+        self.plot_dirty = true;
+        #[cfg(test)]
+        {
+            self.evidence_refreshes += 1;
+        }
+        if committed != key {
+            self.pending_window = Some(start(key.level));
+        }
+    }
+
+    /// A long stack's region-lane recount is still running.
+    #[cfg(test)]
+    pub(crate) fn recounting(&self) -> bool {
+        self.pending_window.is_some()
+    }
+
     pub(crate) fn show(
         &mut self,
         ui: &mut Ui,
@@ -622,6 +700,9 @@ impl CaptureParticipation {
         aperture: Rect,
     ) -> ParticipationResponse {
         self.update(input, archive, level, aperture, rect.width(), rect.height());
+        if self.pending_window.is_some() {
+            ui.ctx().request_repaint();
+        }
         let mut result = ParticipationResponse::default();
         let Some(mut layout) = Layout::new(rect, input.frame_count, self.anchors.len()) else {
             return result;
