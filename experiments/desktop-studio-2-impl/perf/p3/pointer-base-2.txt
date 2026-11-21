@@ -1,0 +1,8 @@
+
+running 1 test
+test process_theater::v26_perf_tests::benchmark_finished_workspace_pointer_sweeps ... full_workspace_cpu_ms_per_frame process=[1.3409725000000001, 1.269245, 1.37739125, 1.387535, 1.2991137499999998, 1.30617625] source=[0.5028925, 0.50367125, 0.45823, 0.5584975, 0.48891999999999997, 0.4629125]
+full_workspace_cpu_min_ms process=1.269245 source=0.45823 final_vertices=[223300, 112006] frames=130 levels=8 max_grid=128x96 confidence_map=absent
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1076 filtered out; finished in 0.97s
+

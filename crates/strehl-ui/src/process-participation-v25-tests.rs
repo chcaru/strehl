@@ -357,6 +357,8 @@ fn cached_curves_and_band_signatures_do_no_recount_for_pointer_motion_without_ne
         before.0 > 0 && before.1 > 0 && before.2 > 0,
         "the fixture must actually exercise all caches"
     );
+    let lanes = row.lane_builds;
+    assert!(lanes > 0, "the completed lanes are a cached mesh");
     for step in 0..100 {
         paint(
             &mut row,
@@ -378,6 +380,7 @@ fn cached_curves_and_band_signatures_do_no_recount_for_pointer_motion_without_ne
         before,
         "100 pointer paints within one capture do not scan masks, pool curves, or format off-hover band tips"
     );
+    assert_eq!(row.lane_builds, lanes, "nor rebuild the lane mesh");
     // Same key and length, newer real observation: generation must invalidate all views.
     let length = progress.admission_archive.len();
     progress
@@ -389,7 +392,28 @@ fn cached_curves_and_band_signatures_do_no_recount_for_pointer_motion_without_ne
     assert_eq!(row.band_evidence[&(35, 0)].1.admitted, 0);
     assert_eq!(row.evidence_refreshes, before.0 + 1);
     assert_eq!(row.plot_builds, before.2 + 1);
+    assert_eq!(
+        row.lane_builds,
+        lanes + 1,
+        "new evidence rebuilds the lanes once"
+    );
     assert_eq!(row.band_count_reads, before.1 + 1);
+    // Sweeping across every capture moves only the highlight.
+    let lanes = row.lane_builds;
+    for frame in 0..130 {
+        let at = egui::pos2(layout.x(frame), layout.lane(0).center().y);
+        paint(
+            &mut row,
+            &ctx,
+            data(&progress, &[]),
+            2.1 + frame as f64 * 0.004,
+            vec![egui::Event::PointerMoved(at)],
+        );
+    }
+    assert_eq!(
+        row.lane_builds, lanes,
+        "a sweep across captures rebuilds no lane"
+    );
 }
 
 #[test]

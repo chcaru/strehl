@@ -85,6 +85,9 @@ pub(crate) struct ProcessTheater {
     // another source or keeps a selection/gesture alive.
     returning_source: Option<usize>,
     inspection_mix: f32,
+    /// The Stack station shows inspection in place, with no relayout and no
+    /// 0.24 s workspace animation (spec 7.2). The engine room keeps it.
+    pub(crate) instant_inspection: bool,
     source_relation_rect: Option<Rect>,
     source_axis_bounds: Option<Rect>,
     review_hover: Option<usize>,
@@ -98,6 +101,8 @@ pub(crate) struct ProcessTheater {
     source_relation_axis: Option<SourceRelationAxis>,
     source_admission: source_admission::SourceAdmissionCache,
     dense_admission: crate::process_admission_regions::DenseAdmissionCache,
+    // Single-capture regions are extracted on a worker, never during paint.
+    dense_regions: crate::process_admission_regions::DenseRegionWorker,
     source_region_painter: crate::process_admission_regions::DenseRegionPainter,
     source_selection_painter: crate::process_admission_regions::DenseSelectionPainter,
     source_drag: Option<(Pos2, Pos2, f32)>,
@@ -167,6 +172,7 @@ impl Default for ProcessTheater {
             hover_source: None,
             returning_source: None,
             inspection_mix: 0.0,
+            instant_inspection: false,
             source_relation_rect: None,
             source_axis_bounds: None,
             review_hover: None,
@@ -180,6 +186,16 @@ impl Default for ProcessTheater {
             source_relation_axis: None,
             source_admission: Default::default(),
             dense_admission: Default::default(),
+            dense_regions: {
+                #[allow(unused_mut)]
+                let mut worker = crate::process_admission_regions::DenseRegionWorker::default();
+                // Legacy paint-exact tests; `v26_perf_tests` covers the worker.
+                #[cfg(test)]
+                {
+                    worker.inline = true;
+                }
+                worker
+            },
             source_region_painter: Default::default(),
             source_selection_painter: Default::default(),
             source_drag: None,
@@ -695,6 +711,29 @@ impl ProcessTheater {
         self.hover_source.or(self.inspected_source)
     }
 
+    #[allow(dead_code)] // Called by the Stack station (stage 2).
+    /// The Stack station's plane lens drives the same shared inspection state
+    /// the timeline uses: a peek is a hover, a hold is an inspected source.
+    /// Neither touches the exploration journal or the app's selection.
+    pub(crate) fn set_inspection(&mut self, hover: Option<usize>, held: Option<usize>) {
+        if held.is_none() && hover.is_none() && self.inspection_frame().is_some() {
+            self.resume_live();
+            return;
+        }
+        self.returning_source = None;
+        self.hover_source = hover;
+        self.inspected_source = held;
+        if hover.is_some() || held.is_some() {
+            self.enlarged = None;
+        }
+    }
+
+    /// Region extraction is pending on its worker.
+    #[allow(dead_code)] // Read by the Stack station (stage 2).
+    pub(crate) fn region_pending(&self) -> bool {
+        self.dense_regions.pending()
+    }
+
     /// The timeline temporarily owns inspection even with Edit open. Canvas
     /// gestures and clean-photo editing resume on the first paint outside it.
     fn edit_timeline_inspection(&self) -> bool {
@@ -843,6 +882,7 @@ impl ProcessTheater {
                 edit_navigation: self.edit_navigation,
                 edit_focus: self.edit_focus,
                 edit_workspace: self.edit_workspace,
+                instant_inspection: self.instant_inspection,
                 ..Default::default()
             };
             self.set_photo_paint(photo_paint);
@@ -950,6 +990,10 @@ impl ProcessTheater {
         }
         self.inspection_mix = if standalone || (self.edit_workspace && self.edit_focus) {
             1.0
+        } else if self.instant_inspection {
+            let target = (self.inspection_frame().is_some() || self.edit_focus)
+                && self.output_space(input).is_some();
+            if target { 1.0 } else { 0.0 }
         } else {
             ui.ctx().animate_bool_with_time(
                 ui.id().with(("inspection-workspace", input.epoch)),
@@ -2705,14 +2749,17 @@ impl ProcessTheater {
             let dense = current
                 .zip(input.progress.analysis_size.or(input.progress.plane_size))
                 .and_then(|(frame, extent)| {
-                    self.dense_admission.region(
-                        &input.progress.admission_archive,
-                        [input.epoch, input.progress.diagnostic_epoch],
-                        frame,
-                        self.level,
-                        extent,
-                        crate::process_admission_regions::RegionSettings::read(ui.ctx()),
-                    )
+                    self.dense_regions
+                        .region(
+                            ui.ctx(),
+                            &input.progress.admission_archive,
+                            [input.epoch, input.progress.diagnostic_epoch],
+                            frame,
+                            self.level,
+                            extent,
+                            crate::process_admission_regions::RegionSettings::read(ui.ctx()),
+                        )
+                        .region
                 });
             self.result_photo.configure_dense_region(dense);
         }
@@ -3400,14 +3447,19 @@ impl ProcessTheater {
                         uv,
                     );
                 }
-            } else if let Some(region) = self.dense_admission.region(
-                &input.progress.admission_archive,
-                [input.epoch, input.progress.diagnostic_epoch],
-                photo.index,
-                self.level,
-                analysis,
-                settings,
-            ) {
+            } else if let Some(region) = self
+                .dense_regions
+                .region(
+                    ui.ctx(),
+                    &input.progress.admission_archive,
+                    [input.epoch, input.progress.diagnostic_epoch],
+                    photo.index,
+                    self.level,
+                    analysis,
+                    settings,
+                )
+                .region
+            {
                 self.source_region_painter.paint_approximate(
                     &painter.with_clip_rect(image_box),
                     &region,

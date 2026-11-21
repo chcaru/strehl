@@ -1,0 +1,7 @@
+
+running 1 test
+test source_browser::tests::v26_tests::benchmark::benchmark_real_stack_scrub_publication ... 1444 actual sources; sparse tier 1461.8 ms, both tiers 3565.7 ms; sparse-only sweeps exact 482+490 stand-in 962+954 blank 0+0 worst 1 / 1; reopen sparse Some(713.1951) ms; report C:/strehl-scratch/p3/sparse16-1444-2.json
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1120 filtered out; finished in 41.28s
+

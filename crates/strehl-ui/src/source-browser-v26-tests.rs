@@ -6,3 +6,6 @@ mod resident;
 
 #[path = "source-browser-resident-benchmark.rs"]
 mod benchmark;
+
+#[path = "source-browser-sparse-tests.rs"]
+mod sparse;

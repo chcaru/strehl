@@ -27,6 +27,10 @@ mod capture_workspace;
 #[path = "command-palette.rs"]
 mod command_palette;
 mod controls;
+#[path = "core-sample.rs"]
+mod core_sample;
+#[path = "depth-rail.rs"]
+mod depth_rail;
 #[path = "develop-presets.rs"]
 mod develop_presets;
 #[path = "develop-station.rs"]
@@ -46,6 +50,8 @@ mod evidence_file;
 mod export_presets;
 #[path = "export-station.rs"]
 mod export_station;
+#[path = "filmstrip.rs"]
+mod filmstrip;
 #[path = "hdr-display.rs"]
 mod hdr_display;
 #[path = "image-gesture.rs"]
@@ -63,6 +69,8 @@ mod photo_coverage;
 #[path = "photo-viewport.rs"]
 mod photo_viewport;
 mod pipeline;
+#[path = "plane-lens.rs"]
+mod plane_lens;
 mod preview;
 #[path = "process-admission-regions.rs"]
 mod process_admission_regions;
@@ -120,8 +128,14 @@ mod session_workspace;
 mod source_browser;
 #[path = "source-preview.rs"]
 mod source_preview;
+#[cfg(test)]
+#[path = "stack-flow-tests.rs"]
+mod stack_flow_tests;
 #[path = "stack-map.rs"]
 mod stack_map;
+#[cfg(test)]
+#[path = "stack-parts-perf-tests.rs"]
+mod stack_parts_perf_tests;
 #[path = "studio-fonts.rs"]
 mod studio_fonts;
 #[path = "studio-preferences.rs"]

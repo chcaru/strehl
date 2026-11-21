@@ -1,0 +1,20 @@
+started 2026-11-21T04:44:24-08:00
+base C:/strehl-scratch/p3/base/strehl_ui-base.exe
+mine C:/strehl-scratch/p3/strehl_ui-p3.exe (build b2fb7a619)
+strehl_ui-base.exe benchmark_finished_workspace_pointer_sweeps exit 0 cpu load before 3 % compilers 2
+strehl_ui-p3.exe benchmark_finished_workspace_pointer_sweeps exit 0 cpu load before 1 % compilers 2
+strehl_ui-base.exe benchmark_finished_workspace_pointer_sweeps exit 0 cpu load before 0 % compilers 2
+strehl_ui-p3.exe benchmark_finished_workspace_pointer_sweeps exit 0 cpu load before 1 % compilers 2
+strehl_ui-base.exe benchmark_finished_workspace_pointer_sweeps exit 0 cpu load before 2 % compilers 2
+strehl_ui-p3.exe benchmark_finished_workspace_pointer_sweeps exit 0 cpu load before 6 % compilers 2
+strehl_ui-p3.exe benchmark_long_stack_pointer_sweeps exit 0 cpu load before 0 % compilers 2
+strehl_ui-p3.exe benchmark_stack_parts_pointer_sweeps exit 0 cpu load before 10 % compilers 0
+strehl_ui-p3.exe benchmark_long_stack_pointer_sweeps exit 0 cpu load before 2 % compilers 3
+strehl_ui-p3.exe benchmark_stack_parts_pointer_sweeps exit 0 cpu load before 1 % compilers 3
+strehl_ui-base.exe benchmark_real_stack_scrub_publication exit 0 cpu load before 6 % compilers 0
+strehl_ui-p3.exe benchmark_real_stack_scrub_publication exit 0 cpu load before 2 % compilers 3
+strehl_ui-base.exe benchmark_real_stack_scrub_publication exit 0 cpu load before 0 % compilers 3
+strehl_ui-p3.exe benchmark_real_stack_scrub_publication exit 0 cpu load before 1 % compilers 3
+strehl_ui-p3.exe benchmark_real_stack_scrub_publication exit 0 cpu load before 8 % compilers 0
+strehl_ui-p3.exe benchmark_real_stack_scrub_publication exit 0 cpu load before 2 % compilers 0
+finished 2026-11-21T04:47:23-08:00

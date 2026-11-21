@@ -127,6 +127,68 @@ fn cells(layout: Layout, archive: &AdmissionArchive, pin: Pos2) -> Vec<Vec<Cell>
     }
     rows
 }
+/// The pin's cells change only with the evidence, the layout or the pin:
+/// each `archive.sample` walks the sample axes, so a stack of 6,000 planes
+/// at 8 levels must not repeat it every frame (spec 5.5 item 5).
+#[derive(Clone)]
+struct CellCache {
+    key: CellKey,
+    cells: std::sync::Arc<Vec<Vec<Cell>>>,
+    #[cfg(test)]
+    builds: usize,
+}
+#[derive(Clone, Copy, PartialEq)]
+struct CellKey {
+    domain: (u64, u64),
+    archive: usize,
+    revision: u64,
+    rows: usize,
+    columns: usize,
+    captures: usize,
+    pin: [u32; 2],
+}
+fn cached_cells(
+    ctx: &egui::Context,
+    input: &Input<'_>,
+    layout: Layout,
+    archive: &AdmissionArchive,
+    pin: Pos2,
+) -> std::sync::Arc<Vec<Vec<Cell>>> {
+    let id = egui::Id::new("process-fingerprint-cells");
+    let key = CellKey {
+        domain: (input.epoch, input.progress.diagnostic_epoch),
+        archive: std::ptr::from_ref(archive) as usize,
+        revision: archive.revision(),
+        rows: layout.rows,
+        columns: layout.columns,
+        captures: layout.captures,
+        pin: [pin.x.to_bits(), pin.y.to_bits()],
+    };
+    let cached = ctx.data(|data| data.get_temp::<CellCache>(id));
+    if let Some(cache) = &cached
+        && cache.key == key
+    {
+        return cache.cells.clone();
+    }
+    let cells = std::sync::Arc::new(cells(layout, archive, pin));
+    ctx.data_mut(|data| {
+        data.insert_temp(
+            id,
+            CellCache {
+                key,
+                cells: cells.clone(),
+                #[cfg(test)]
+                builds: cached.map_or(0, |cache| cache.builds) + 1,
+            },
+        )
+    });
+    cells
+}
+#[cfg(test)]
+fn cell_builds(ctx: &egui::Context) -> usize {
+    ctx.data(|data| data.get_temp::<CellCache>(egui::Id::new("process-fingerprint-cells")))
+        .map_or(0, |cache| cache.builds)
+}
 fn pick(layout: Layout, cells: &[Vec<Cell>], level: usize, column: usize) -> FingerprintPick {
     let range = layout.range(column);
     FingerprintPick {
@@ -195,7 +257,8 @@ pub(crate) fn show(
     let Some(layout) = Layout::new(rect, rows(input, archive), input.frame_count) else {
         return result;
     };
-    let cells = cells(layout, archive, pin);
+    let cells = cached_cells(ui.ctx(), input, layout, archive, pin);
+    let cells: &[Vec<Cell>] = &cells;
     let selected_level = selected_level.min(layout.rows - 1);
     let p = ui.painter_at(rect);
     let cross = rect.min + egui::vec2(5.0, 7.0);
@@ -301,7 +364,7 @@ pub(crate) fn show(
     if let Some(point) = response.hover_pos()
         && let Some((level, column)) = layout.pick(point)
     {
-        let selection = pick(layout, &cells, level, column);
+        let selection = pick(layout, cells, level, column);
         result.hovered = Some(selection);
         if response.clicked() {
             result.clicked = Some(selection);

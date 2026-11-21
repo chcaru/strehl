@@ -1,0 +1,12 @@
+
+running 1 test
+test stack_parts_perf_tests::benchmark_stack_parts_pointer_sweeps ... stack_parts_cpu_ms_per_frame planes=130 retained_maps=1040 dropped_maps=0 fixture_build_s=0.0 photo_sweep=[0.12038833333333333, 0.11765166666666667, 0.11779916666666666, 0.12235833333333333] rail_sweep=[0.031755, 0.032105, 0.03593583333333333, 0.03705166666666667]
+stack_parts_cpu_min_ms planes=130 photo_sweep=0.118 rail_sweep=0.032
+stack_parts_cpu_ms_per_frame planes=1500 retained_maps=8192 dropped_maps=3808 fixture_build_s=0.2 photo_sweep=[0.6273333333333333, 0.6212616666666667, 0.6186033333333333, 0.6208966666666667] rail_sweep=[0.043015000000000005, 0.04449, 0.04721333333333333, 0.04851916666666667]
+stack_parts_cpu_min_ms planes=1500 photo_sweep=0.619 rail_sweep=0.043
+stack_parts_cpu_ms_per_frame planes=6000 retained_maps=8192 dropped_maps=39808 fixture_build_s=0.7 photo_sweep=[0.6745733333333334, 0.6696616666666666, 0.6649416666666668, 0.6668283333333334] rail_sweep=[0.04180333333333333, 0.05210833333333333, 0.04660333333333333, 0.05245166666666667]
+stack_parts_cpu_min_ms planes=6000 photo_sweep=0.665 rail_sweep=0.042
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1120 filtered out; finished in 1.62s
+
