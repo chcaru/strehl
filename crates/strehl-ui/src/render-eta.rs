@@ -14,10 +14,6 @@
 //! render of the same stack (its `render.log`, read on a worker) seeds it.
 //! A log can hold more than one pass (a quick preview fold, then the full
 //! one): a new `strehl stack` header or `stage name=read` starts a pass.
-#![allow(
-    dead_code,
-    reason = "the shell feeds render logs to the tracker in P5 stage 2"
-)]
 use anyhow::Result;
 use std::{
     collections::VecDeque,
@@ -207,15 +203,16 @@ impl EtaTracker {
     pub(crate) fn set_seed(&mut self, seed: Option<StageTimes>) {
         self.seed = seed;
     }
+    pub(crate) fn seed(&self) -> Option<StageTimes> {
+        self.seed
+    }
+    #[cfg(test)]
     pub(crate) fn phase(&self) -> Phase {
         self.phase
     }
+    #[cfg(test)]
     pub(crate) fn processed(&self) -> (usize, Option<usize>) {
         (self.processed, self.total)
-    }
-    /// The pass this tracker has seen printed so far.
-    pub(crate) fn pass(&self) -> &StageTimes {
-        &self.pass
     }
     pub(crate) fn ingest(&mut self, chunk: &str, now: Instant) {
         for line in chunk.lines() {

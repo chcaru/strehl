@@ -99,6 +99,7 @@ pub(crate) fn burn_scale_bar(
         "a {} scale bar would be {length_px:.1} px on this {w} px export; choose about {} for this size",
         bar.label(),
         ScaleBar {
+            enabled: true,
             length_um: ScaleBar::suggested_length_um(um_per_px, w),
             ..*bar
         }

@@ -700,8 +700,6 @@ mod views;
 
 #[path = "session-bundle-export.rs"]
 mod bundle_export;
-pub(crate) use bundle_export::export as export_view_bundle;
-#[allow(unused_imports, reason = "the shell tracks the copy in P5 stage 2")]
 pub(crate) use bundle_export::{
     BundleProgress, export_with_progress as export_view_bundle_with_progress,
 };

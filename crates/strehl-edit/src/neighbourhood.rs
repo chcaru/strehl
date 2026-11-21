@@ -43,9 +43,10 @@ impl<'a> Neighbourhood<'a> {
         let heals = recipe
             .heals
             .iter()
+            .filter(|h| h.enabled)
             .map(|h| prepare_heal(image, h))
             .collect();
-        let backdrop = recipe.backdrop.map(|b| {
+        let backdrop = recipe.backdrop.filter(|b| b.enabled).map(|b| {
             (
                 b,
                 (long * KEY_FRACTION).round().max(1.0) as usize,
@@ -216,6 +217,13 @@ impl<'a> Neighbourhood<'a> {
                     let o = &mut line[col * 3..col * 3 + 3];
                     o.copy_from_slice(v);
                     if m <= 0.0 {
+                        continue;
+                    }
+                    if backdrop.key == crate::BackdropKey::Dark {
+                        // Clean to black, by membership.
+                        for c in 0..3 {
+                            o[c] = v[c] * (1.0 - m);
+                        }
                         continue;
                     }
                     let mut acc = [0.0f32; 4];

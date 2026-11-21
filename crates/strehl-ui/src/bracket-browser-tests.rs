@@ -1075,7 +1075,7 @@ fn compact_library_stays_below_native_title_and_close_only_dismisses_the_chooser
             |ctx| {
                 egui::CentralPanel::default().show(ctx, |_| {});
                 selected = browser.show(ctx);
-                window_chrome::finish(ctx, browser.active());
+                window_chrome::finish_with(ctx, browser.active(), 1.0);
             },
         );
         (output, selected)
@@ -1088,8 +1088,11 @@ fn compact_library_stays_below_native_title_and_close_only_dismisses_the_chooser
         !browser.visible.is_empty(),
         "the fixture must paint the actual populated gallery"
     );
-    let below_title = Rect::from_min_max(egui::pos2(window_chrome::RAIL_WIDTH, 0.0), viewport.max);
-    let window_dock = window_chrome::dock_rect(viewport);
+    let below_title = Rect::from_min_max(
+        egui::pos2(0.0, window_chrome::CONTROLS_HEIGHT + 1.0),
+        viewport.max,
+    );
+    let window_dock = window_chrome::controls_rect(viewport);
     let label = |name: &str| {
         let (bounds, clip) = output
             .shapes
@@ -1146,11 +1149,11 @@ fn compact_library_stays_below_native_title_and_close_only_dismisses_the_chooser
         .expect("bounded library frame must be present");
     assert!(
         Rect::from_min_max(
-            egui::pos2(window_chrome::RAIL_WIDTH + 16.0, 12.0),
+            egui::pos2(16.0, window_chrome::CONTROLS_HEIGHT + 13.0),
             egui::pos2(1044.0, 704.0)
         )
         .contains_rect(modal_frame),
-        "the composed modal, not only its nominal minimum height, must fit beside the native rail: {modal_frame:?}"
+        "the composed modal, not only its nominal minimum height, must fit under the top bar: {modal_frame:?}"
     );
     let (pressed, selected) = frame(&mut browser, 0.4, pointer(close.center(), true));
     assert!(browser.active() && selected.is_none());

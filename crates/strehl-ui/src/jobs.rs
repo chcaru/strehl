@@ -22,6 +22,9 @@ const EVENT_CAPACITY: usize = 96;
 const LOG_CHUNK: usize = 8 * 1024;
 const LOG_READS_PER_TICK: usize = 64;
 const LOG_RETRY: Duration = Duration::from_millis(5);
+/// Evidence-file bytes read per poll: at most about 40 plane maps, so one
+/// event's ingestion on the UI thread stays a few hundred microseconds.
+const EVIDENCE_CHUNK: usize = 64 * 1024;
 
 /// Available execution capacity. This controls pool limits only: it never
 /// changes the engine's canonical reduction partition or image settings.
@@ -431,6 +434,9 @@ pub enum RenderEvent {
         log: PathBuf,
     },
     Log(String),
+    /// Maps decoded from the run's evidence file, in file order, after every
+    /// log line that preceded them on disk.
+    Evidence(Box<crate::evidence_file::EvidenceBatch>),
     Finished(RenderOutcome),
 }
 
@@ -1314,7 +1320,12 @@ fn run_process(
     }
     let mut child = OwnedChild(command.spawn().context("Starting the Strehl engine")?);
     let mut live_log = File::open(log).context("Opening live render output")?;
-    let mut reader = LiveLogReader::default();
+    let mut reader = LiveLogReader {
+        evidence: log.parent().map(|directory| {
+            crate::evidence_file::EvidenceTail::new(directory.join(crate::evidence_file::FILE_NAME))
+        }),
+        ..LiveLogReader::default()
+    };
     loop {
         if cancelled.load(Ordering::Relaxed) {
             let _ = child.0.kill();
@@ -1346,6 +1357,9 @@ struct LiveLogReader {
     decoder: Utf8LogDecoder,
     pending: Option<String>,
     disconnected: bool,
+    /// The run's evidence file, followed by its length beside the log.
+    evidence: Option<crate::evidence_file::EvidenceTail>,
+    pending_evidence: Option<Box<crate::evidence_file::EvidenceBatch>>,
 }
 
 impl LiveLogReader {
@@ -1365,6 +1379,53 @@ impl LiveLogReader {
             }
             Err(mpsc::TrySendError::Full(_)) => unreachable!("only a log was sent"),
         }
+    }
+
+    fn flush_evidence(&mut self, sender: &SyncSender<RenderEvent>) -> bool {
+        let Some(batch) = self.pending_evidence.take() else {
+            return true;
+        };
+        match sender.try_send(RenderEvent::Evidence(batch)) {
+            Ok(()) => true,
+            Err(mpsc::TrySendError::Full(RenderEvent::Evidence(batch))) => {
+                self.pending_evidence = Some(batch);
+                false
+            }
+            Err(mpsc::TrySendError::Disconnected(_)) => {
+                self.disconnected = true;
+                true
+            }
+            Err(mpsc::TrySendError::Full(_)) => unreachable!("only evidence was sent"),
+        }
+    }
+
+    /// Forward the evidence file's new records, read only once the log is
+    /// caught up, so the log lines the engine wrote before a map (its
+    /// analysis domain) always arrive first. Like the log, a full queue keeps
+    /// one batch and stops reading; the file stays complete on disk. True when
+    /// nothing more is waiting. A read failure stops following the file
+    /// without failing the render: reopening reads it whole.
+    fn tail_evidence(&mut self, sender: &SyncSender<RenderEvent>) -> bool {
+        for _ in 0..LOG_READS_PER_TICK {
+            if !self.flush_evidence(sender) {
+                return false;
+            }
+            if self.disconnected {
+                return true;
+            }
+            let Some(tail) = self.evidence.as_mut() else {
+                return true;
+            };
+            let Ok((batch, more)) = tail.poll(EVIDENCE_CHUNK) else {
+                self.evidence = None;
+                return true;
+            };
+            self.pending_evidence = batch.map(Box::new);
+            if !more {
+                return self.flush_evidence(sender);
+            }
+        }
+        false
     }
 }
 
@@ -1412,7 +1473,7 @@ fn tail_log(
                 let text = reader.decoder.decode(&[], true);
                 reader.pending = (!text.is_empty()).then_some(text);
             }
-            return Ok(reader.flush(sender));
+            return Ok(reader.flush(sender) && reader.tail_evidence(sender));
         }
         let text = reader.decoder.decode(&buffer[..count], false);
         reader.pending = (!text.is_empty()).then_some(text);
@@ -2104,6 +2165,61 @@ pub(crate) mod tests {
             ready.exists(),
             "The fake child must actually start before cancellation"
         );
+    }
+
+    #[test]
+    fn evidence_follows_the_log_and_waits_behind_a_full_queue() {
+        use crate::evidence_file::tests::{header_bytes, record_bytes, support_payload};
+        let directory = TestDirectory::new("evidence-follow");
+        let log_path = directory.path().join("render.log");
+        let evidence_path = directory.path().join(crate::evidence_file::FILE_NAME);
+        fs::write(&log_path, "planes: 4 x 2 per CFA plane\n").unwrap();
+        let mut bytes = header_bytes(&[([2, 1], [4, 2])], 3);
+        bytes.extend(record_bytes(0, 0, 0, 1, &support_payload(&[true, false])));
+        fs::write(&evidence_path, &bytes).unwrap();
+        let (sender, receiver) = mpsc::sync_channel(1);
+        let mut log = File::open(&log_path).unwrap();
+        let mut reader = LiveLogReader {
+            evidence: Some(crate::evidence_file::EvidenceTail::new(
+                evidence_path.clone(),
+            )),
+            ..LiveLogReader::default()
+        };
+        // A queue of one: the log's text takes it, so the file's maps wait.
+        assert!(!tail_log(&mut log, &sender, &mut reader, false).unwrap());
+        assert!(
+            matches!(receiver.try_recv(), Ok(RenderEvent::Log(text)) if text.contains("planes"))
+        );
+        assert!(
+            reader.pending_evidence.is_some(),
+            "one batch is held, not dropped"
+        );
+        assert!(tail_log(&mut log, &sender, &mut reader, false).unwrap());
+        let Ok(RenderEvent::Evidence(batch)) = receiver.try_recv() else {
+            panic!("the held batch follows the log");
+        };
+        assert_eq!(batch.records.len(), 1);
+        assert_eq!(batch.header.frames_total, 3);
+        // Growth is followed by length; nothing is read twice.
+        let mut file = OpenOptions::new()
+            .append(true)
+            .open(&evidence_path)
+            .unwrap();
+        file.write_all(&record_bytes(1, 0, 0, 2, &support_payload(&[false, true])))
+            .unwrap();
+        assert!(tail_log(&mut log, &sender, &mut reader, true).unwrap());
+        let Ok(RenderEvent::Evidence(batch)) = receiver.try_recv() else {
+            panic!("an appended record is forwarded");
+        };
+        assert_eq!(
+            batch
+                .records
+                .iter()
+                .map(|record| record.surface.sequence)
+                .collect::<Vec<_>>(),
+            [2]
+        );
+        assert!(receiver.try_recv().is_err());
     }
 
     #[test]

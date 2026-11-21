@@ -257,10 +257,12 @@ fn hundreds_of_captures_remain_queryable_after_packet_payloads_are_gone() {
 
 #[test]
 fn capacity_is_global_and_explicit_while_existing_keys_and_domain_resets_still_work() {
+    const LEVELS: usize = 16;
+    let frames = MAX_ENTRIES / LEVELS;
     let mut archive = AdmissionArchive::default();
     for index in 0..MAX_ENTRIES + 5 {
-        let level = index % 16;
-        let frame = index / 16;
+        let level = index % LEVELS;
+        let frame = index / LEVELS;
         let samples = [
             900usize.div_ceil(1 << level).min(64),
             600usize.div_ceil(1 << level).min(48),
@@ -270,23 +272,112 @@ fn capacity_is_global_and_explicit_while_existing_keys_and_domain_resets_still_w
     assert_eq!(archive.len(), MAX_ENTRIES);
     assert_eq!(archive.dropped(), 5);
     assert_eq!(archive.sample(0, 0, [0.0, 0.0]), Some(false));
-    assert_eq!(archive.sample(15, 511, [1.0, 1.0]), Some(false));
-    assert_eq!(archive.sample(0, 512, [0.0, 0.0]), None);
-    assert!(archive.allocated_bytes() < 14 * 1024 * 1024);
-    let capacity = archive.entries.capacity();
-    let mut refresh = packet(20_000, 0, 0, [64, 48]);
+    assert_eq!(archive.sample(15, frames - 1, [1.0, 1.0]), Some(false));
+    assert_eq!(archive.sample(0, frames, [0.0, 0.0]), None);
+    // Growth slack is at most an eighth of the retained masks.
+    let per_mask = std::mem::size_of::<Mask>();
+    let slack = MAX_ENTRIES / 8 + LEVELS;
+    assert!(archive.capacity() <= MAX_ENTRIES + slack);
+    assert!(archive.allocated_bytes() <= (MAX_ENTRIES + slack) * per_mask + 64 * 1024);
+    let first = MAX_ENTRIES as u64 + 100;
+    let mut refresh = packet(first, 0, 0, [64, 48]);
     refresh.pixels = Arc::from(vec![255; 64 * 48]);
     archive.ingest(&refresh, [900, 600]);
     assert_eq!(archive.sample(0, 0, [0.5, 0.5]), Some(true));
     assert_eq!((archive.len(), archive.dropped()), (MAX_ENTRIES, 5));
 
-    archive.ingest(&packet(20_001, 700, 0, [3, 2]), [800, 600]);
-    assert_eq!(archive.len(), MAX_ENTRIES - 512 + 1);
+    archive.ingest(&packet(first + 1, frames + 200, 0, [3, 2]), [800, 600]);
+    assert_eq!(archive.len(), MAX_ENTRIES - frames + 1);
     assert_eq!(archive.resets(), 1);
     assert_eq!(archive.sample(0, 0, [0.5, 0.5]), None);
-    assert_eq!(archive.sample(15, 511, [0.5, 0.5]), Some(false));
-    archive.ingest(&packet(20_002, 512, 1, [64, 48]), [900, 600]);
-    assert_eq!(archive.sample(1, 512, [0.5, 0.5]), Some(false));
-    assert_eq!(archive.entries.capacity(), capacity);
+    assert_eq!(archive.sample(15, frames - 1, [0.5, 0.5]), Some(false));
+    archive.ingest(&packet(first + 2, frames, 1, [64, 48]), [900, 600]);
+    assert_eq!(archive.sample(1, frames, [0.5, 0.5]), Some(false));
+    assert!(archive.capacity() <= MAX_ENTRIES + slack);
     assert_eq!(archive.dropped(), 5);
+}
+
+#[test]
+fn more_than_eight_thousand_planes_keep_every_level_and_clones_share_storage() {
+    // 1,444 planes at eight levels is 11,552 masks: beyond the old 8,192 cap.
+    let mut archive = AdmissionArchive::default();
+    let mut sequence = 0;
+    for frame in 0..1444 {
+        for level in 0..8 {
+            sequence += 1;
+            let mut mask = packet(sequence, frame, level, [128, 96]);
+            let pixels = Arc::get_mut(&mut mask.pixels).unwrap();
+            pixels[(frame * 7 + level) % (128 * 96)] = 255;
+            archive.ingest(&mask, [7008, 4672]);
+        }
+    }
+    assert_eq!((archive.len(), archive.dropped()), (1444 * 8, 0));
+    for level in 0..8 {
+        assert_eq!(archive.frames(level).count(), 1444);
+        assert_eq!(archive.counts(level, 1443), Some((1, 128 * 96)));
+    }
+    // A clone copies no masks; a later write copies only the level it touches.
+    let snapshot = archive.clone();
+    let mut later = packet(sequence + 1, 1444, 3, [128, 96]);
+    Arc::get_mut(&mut later.pixels).unwrap()[0] = 255;
+    archive.ingest(&later, [7008, 4672]);
+    assert_eq!(archive.counts(3, 1444), Some((1, 128 * 96)));
+    assert_eq!(snapshot.counts(3, 1444), None);
+    assert_eq!(snapshot.len(), 1444 * 8);
+    assert_eq!(snapshot.counts(5, 100), archive.counts(5, 100));
+}
+
+#[test]
+fn packed_masks_match_pixel_masks_and_reject_dirty_tails() {
+    let mut pixels = vec![0u8; 13 * 7];
+    for index in [0, 12, 63, 64, 90] {
+        pixels[index] = 255;
+    }
+    let mut from_pixels = AdmissionArchive::default();
+    let mut grid = packet(1, 4, 2, [13, 7]);
+    grid.pixels = pixels.clone().into();
+    from_pixels.ingest(&grid, [900, 600]);
+    let mut bits = [0u64; WORDS];
+    for (index, &value) in pixels.iter().enumerate() {
+        if value == 255 {
+            bits[index / 64] |= 1 << (index % 64);
+        }
+    }
+    let mut packed = AdmissionArchive::default();
+    packed.ingest_packed(&grid, [900, 600], &bits);
+    assert_eq!(packed.counts(2, 4), from_pixels.counts(2, 4));
+    assert_eq!(
+        packed.cells(2, 4).unwrap().1.collect::<Vec<_>>(),
+        from_pixels.cells(2, 4).unwrap().1.collect::<Vec<_>>()
+    );
+    // A bit past the 91 samples would be counted by `counts`: refused.
+    let mut dirty = bits;
+    dirty[1] |= 1 << 27;
+    let mut refused = AdmissionArchive::default();
+    refused.ingest_packed(&grid, [900, 600], &dirty);
+    assert_eq!(refused.len(), 0);
+}
+
+#[test]
+fn archive_memory_at_the_cap_is_bounded_and_reported() {
+    // Eight levels of 8,192 planes at the full lattice: the cap's real shape.
+    let mut archive = AdmissionArchive::default();
+    let bits = [0u64; WORDS];
+    let mut mask = packet(0, 0, 0, [128, 96]);
+    for frame in 0..MAX_ENTRIES / 8 + 1 {
+        for level in 0..8 {
+            mask.sequence += 1;
+            (mask.frame, mask.level) = (frame, level);
+            archive.ingest_packed(&mask, [7008, 4672], &bits);
+        }
+    }
+    assert_eq!((archive.len(), archive.dropped()), (MAX_ENTRIES, 8));
+    let bytes = archive.allocated_bytes();
+    eprintln!(
+        "MEASURED archive at the cap: {} masks, capacity {}, {bytes} bytes ({:.1} MiB)",
+        archive.len(),
+        archive.capacity(),
+        bytes as f64 / (1024.0 * 1024.0)
+    );
+    assert!(bytes <= (MAX_ENTRIES + MAX_ENTRIES / 8 + 8) * std::mem::size_of::<Mask>() + 64 * 1024);
 }

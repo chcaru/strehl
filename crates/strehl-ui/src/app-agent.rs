@@ -359,6 +359,9 @@ impl StrehlApp {
                 "hdr_available":self.editor.loaded.as_ref().is_some_and(|p|self.agent_photo_is_current() && p.image.origin==strehl_edit::ImageOrigin::SceneLinear)});
         let diagnostics = json!({"admission_packets":self.progress.admission_archive.len(),
                 "omitted_packets":self.progress.admission_archive.dropped(),
+                "evidence_file":self.progress.evidence_file.as_ref().map(|(name, _)| name),
+                "evidence_maps":self.progress.evidence_records,"evidence_refused":self.progress.evidence_refused,
+                "unplaced_frames":self.progress.unplaced_frames.len(),
                 "confidence":self.progress.confidence.as_ref().map(|p|json!({"compared":p.compared,"total":p.total,
                     "meaning":"folded aligned-observation rank: 0 one-sided, 1000 balanced; ties can also read 0; neither end is a quality grade"})),
                 "alignment":self.progress.alignment,"placed":self.progress.placed,"refused":self.progress.refused,
@@ -390,6 +393,10 @@ impl StrehlApp {
             "saved_diagnostics":self.process_space.diagnostic_snapshot(),
             "semantics":"Camera previews are unregistered. Admission is sampled gate evidence, not fractional ownership. Annotations use final-photo normalized coordinates. Exports and new runs preserve originals."
         });
+        // Studio 2 additions (plan 11): the route, notices and activities.
+        for (key, value) in self.studio_snapshot() {
+            snapshot[key] = value;
+        }
         snapshot["view_progress"] =
             serde_json::to_value(self.progress.view.as_ref()).expect("Serializable view progress");
         snapshot["view_progress_observations_missing"] =
@@ -645,6 +652,23 @@ impl StrehlApp {
                 self.start_render();
                 return Ok(json!({"state":"queued","operation":"stack"}));
             }
+            QueueStack { id } => {
+                let queue_id = self.queue_stack(id)?;
+                return Ok(json!({"state":"queued","operation":"queue_stack","queue_id":queue_id}));
+            }
+            RemoveQueuedStack { queue_id } => {
+                anyhow::ensure!(
+                    self.activity_hub.queue.remove(queue_id).is_some(),
+                    "That stack is not waiting in the queue"
+                );
+            }
+            MoveQueuedStack { queue_id, position } => {
+                anyhow::ensure!(
+                    self.activity_hub.queue.move_to(queue_id, position),
+                    "That stack is not waiting in the queue"
+                );
+            }
+            ResumeQueue {} => self.activity_hub.queue.resume(),
             CancelStack {} => {
                 if let Some((_, _, task)) = &self.session_import {
                     task.cancel();
@@ -1305,6 +1329,7 @@ pub(super) fn region_statistics(
     let mut sum = 0.0f64;
     let mut maximum = f32::NEG_INFINITY;
     let mut over_white = 0u64;
+    let prepared = recipe.prepare();
     for (i, pixel) in image.pixels.as_chunks::<3>().0.iter().enumerate() {
         let uv = [
             ((i % image.width as usize) as f32 + 0.5) / image.width as f32,
@@ -1313,7 +1338,7 @@ pub(super) fn region_statistics(
         if region.weight(uv, 0.0) <= 0.0 {
             continue;
         }
-        let rgb = recipe.apply_pixel([pixel[0], pixel[1], pixel[2]], uv);
+        let rgb = prepared.apply_pixel([pixel[0], pixel[1], pixel[2]], uv);
         let y = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
         count += 1;
         sum += f64::from(y);

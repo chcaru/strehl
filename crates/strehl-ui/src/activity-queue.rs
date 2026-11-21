@@ -6,10 +6,6 @@
 //!
 //! Queue and history live in `%LOCALAPPDATA%\Strehl\activities.json`, never
 //! in `projects.json`; it is written atomically and its history is bounded.
-#![allow(
-    dead_code,
-    reason = "the shell runs the queue and saves the file in P5 stage 2"
-)]
 use crate::{
     activity::{
         ActionId, Activities, ActivityKind, ActivityState, ActivityStatus, CancelMode,
@@ -44,6 +40,18 @@ pub(crate) struct FrozenRequest {
     pub settings: RenderSettings,
     pub retain_master: bool,
     pub recipe: Option<strehl_edit::DevelopmentRecipe>,
+}
+impl FrozenRequest {
+    /// Whether two requests render the same photograph: one source, one
+    /// recipe of settings, exposure, gate and workers (the engine path and
+    /// a development recipe carried along aside).
+    pub(crate) fn same_render(&self, other: &Self) -> bool {
+        self.source == other.source
+            && self.settings == other.settings
+            && self.exposure_ev == other.exposure_ev
+            && self.pyramid_gate == other.pyramid_gate
+            && self.worker_threads == other.worker_threads
+    }
 }
 impl From<&RenderRequest> for FrozenRequest {
     fn from(request: &RenderRequest) -> Self {
@@ -111,8 +119,11 @@ pub(crate) struct QueueEntry {
 pub(crate) struct StartGate {
     /// A Heavy-lane activity is running (a stack, a repair, compaction).
     pub heavy_busy: bool,
-    /// Quiet mode holds (switch or full-screen program).
+    /// Quiet mode holds (a full-screen program is in front).
     pub quiet: bool,
+    /// Why the workspace cannot take a stack now (a dialog, an opening,
+    /// a photograph being developed), if it cannot.
+    pub workspace: Option<&'static str>,
 }
 
 #[derive(Debug, Default)]
@@ -136,15 +147,18 @@ pub(crate) struct RunningStack {
 }
 
 impl StackQueue {
+    #[cfg(test)]
     pub(crate) fn len(&self) -> usize {
         self.items.len()
     }
     pub(crate) fn is_empty(&self) -> bool {
         self.items.is_empty()
     }
+    #[cfg(test)]
     pub(crate) fn items(&self) -> impl Iterator<Item = &QueuedStack> {
         self.items.iter()
     }
+    #[cfg(test)]
     pub(crate) fn running(&self) -> Option<&RunningStack> {
         self.running.as_ref()
     }
@@ -191,6 +205,12 @@ impl StackQueue {
         self.touch();
         Ok(id)
     }
+    /// Whether `stack` already waits with the same render.
+    pub(crate) fn waiting_same(&self, stack: NodeId, request: &FrozenRequest) -> bool {
+        self.items
+            .iter()
+            .any(|item| item.stack == stack && item.request.same_render(request))
+    }
     /// Remove a waiting stack; a started one is cancelled through its job.
     pub(crate) fn remove(&mut self, id: u64) -> Option<QueuedStack> {
         let at = self.items.iter().position(|item| item.id == id)?;
@@ -222,11 +242,11 @@ impl StackQueue {
         } else if gate.quiet {
             Some(
                 quiet_reason
-                    .unwrap_or("Quiet to be switched off")
+                    .unwrap_or("the full-screen program in front to close (Quiet)")
                     .to_owned(),
             )
         } else {
-            None
+            gate.workspace.map(str::to_owned)
         }
     }
     /// The head, when the lane is free; it becomes the running stack.
@@ -357,12 +377,6 @@ struct StoredActivities {
     history: Vec<HistoryEntry>,
 }
 
-/// `%LOCALAPPDATA%\Strehl\activities.json` beside the catalog; never in tests.
-pub(crate) fn default_path() -> Option<PathBuf> {
-    crate::workspace_history::default_path()
-        .and_then(|p| p.parent().map(|d| d.join("activities.json")))
-}
-
 /// The file's contents, or why they could not be read (then everything
 /// starts empty and the unreadable file is left untouched until a save).
 pub(crate) fn load(path: &Path) -> (StackQueue, VecDeque<HistoryEntry>, Option<String>) {
@@ -453,6 +467,10 @@ impl ActivityStore {
             error: None,
         }
     }
+    /// What was just loaded needs no writing back.
+    pub(crate) fn mark_saved(&mut self, queue: &StackQueue, activities: &Activities) {
+        self.saved = Some((queue.revision(), activities.history_revision()));
+    }
     /// Cheap when nothing changed: two counters compared.
     pub(crate) fn save_if_changed(&mut self, queue: &StackQueue, activities: &Activities) {
         let key = (queue.revision(), activities.history_revision());
@@ -468,7 +486,11 @@ impl ActivityStore {
                 self.saved = Some(key);
                 self.error = None;
             }
-            Err(error) => self.error = Some(format!("Saving activity: {error:#}")),
+            Err(error) => {
+                // One attempt per change: a failing disk is not retried every frame.
+                self.saved = Some(key);
+                self.error = Some(format!("Saving activity: {error:#}"));
+            }
         }
     }
 }

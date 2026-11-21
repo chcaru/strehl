@@ -335,10 +335,7 @@ impl ProcessSpace {
         let journey = Rect::from_min_size(
             scene.min + egui::vec2(12.0, 6.0),
             egui::vec2(
-                (crate::window_chrome::dock_rect(ui.ctx().content_rect()).left()
-                    - scene.left()
-                    - 24.0)
-                    .max(240.0),
+                (scene.width() - 24.0).max(240.0),
                 crate::process_journey::HEIGHT,
             ),
         );

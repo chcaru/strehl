@@ -741,7 +741,7 @@ fn metadata_window_fits_small_viewport_and_keeps_title_below_native_chrome() {
             safe.expand(1.0).contains_rect(window),
             "window {window:?} escaped safe area {safe:?} at {size:?}"
         );
-        let chrome = crate::window_chrome::dock_rect(screen);
+        let chrome = crate::window_chrome::controls_rect(screen);
         assert!(
             window.top() > chrome.bottom(),
             "title/close must remain below custom native chrome"

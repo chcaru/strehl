@@ -1,35 +1,42 @@
-//! One compact, persistent native window dock; no full-width title row.
-use crate::theme::{ACCENT, AMBER, BG, INK, LINE, MUTED, PANEL, RAISED};
+//! The native window controls at the right end of the top bar, and the
+//! window's resize edges. The top bar's empty space is the move handle
+//! (`drag_space`); there is no title row and no floating dock.
 use eframe::egui::{self, Color32, Id, Pos2, Rect, Sense, Stroke, Ui, Vec2, ViewportCommand};
 
 const EDGE: f32 = 5.0;
 const CORNER: f32 = 12.0;
 
-pub(crate) const RAIL_WIDTH: f32 = 48.0;
-pub(crate) const DOCK_WIDTH: f32 = 192.0;
-pub(crate) const DOCK_HEIGHT: f32 = 30.0;
-const DOCK_INSET: f32 = 6.0;
-const GRIP_WIDTH: f32 = 84.0;
-const BUTTON_WIDTH: f32 = 36.0;
+/// Minimise, maximise and close, each this wide (the mockup's `.wctl`).
+pub(crate) const BUTTON_WIDTH: f32 = 42.0;
+/// The top bar reserves this much at its right end for the three buttons.
+pub(crate) const CONTROLS_WIDTH: f32 = 3.0 * BUTTON_WIDTH;
+/// The top bar's height without its bottom rule.
+pub(crate) const CONTROLS_HEIGHT: f32 = 43.0;
 
-/// Reserve this corner only. The rest of the workspace reaches the top edge.
-pub(crate) fn dock_rect(viewport: Rect) -> Rect {
+/// The three buttons, flush with the window's top-right corner.
+pub(crate) fn controls_rect(viewport: Rect) -> Rect {
     Rect::from_min_size(
-        egui::pos2(
-            viewport.right() - DOCK_INSET - DOCK_WIDTH,
-            viewport.top() + DOCK_INSET,
-        ),
-        egui::vec2(DOCK_WIDTH, DOCK_HEIGHT),
+        egui::pos2(viewport.right() - CONTROLS_WIDTH, viewport.top()),
+        egui::vec2(CONTROLS_WIDTH, CONTROLS_HEIGHT),
     )
 }
-fn grip_rect(dock: Rect) -> Rect {
-    Rect::from_min_size(dock.min, egui::vec2(GRIP_WIDTH, dock.height()))
-}
-fn button_rect(dock: Rect, index: usize) -> Rect {
+fn button_rect(controls: Rect, index: usize) -> Rect {
     Rect::from_min_size(
-        dock.min + egui::vec2(GRIP_WIDTH + index as f32 * BUTTON_WIDTH, 0.0),
-        egui::vec2(BUTTON_WIDTH, dock.height()),
+        controls.min + egui::vec2(index as f32 * BUTTON_WIDTH, 0.0),
+        egui::vec2(BUTTON_WIDTH, controls.height()),
     )
+}
+/// The part of a button that answers the pointer. While the window can be
+/// resized, the outer few pixels at the top and right belong to the resize
+/// edges, as they do on a native caption.
+fn button_hit(button: Rect, viewport: Rect, resizable: bool) -> Rect {
+    if !resizable {
+        return button;
+    }
+    let mut hit = button;
+    hit.min.y = hit.min.y.max(viewport.top() + EDGE);
+    hit.max.x = hit.max.x.min(viewport.right() - EDGE);
+    hit
 }
 
 #[derive(Clone, Copy, Default)]
@@ -123,54 +130,49 @@ fn toggle_maximized(ctx: &egui::Context) {
     });
 }
 
-/// Run after application modals. Only these small native-control/edge areas
-/// sit above them; no full-window foreground hit surface can consume photos.
-pub(crate) fn finish(ctx: &egui::Context, modal: bool) {
+/// Run after application modals: the resize edges, then the three window
+/// buttons. The buttons sit over the top bar's reserved right end, in their
+/// own foreground layer, so they still work while a modal dims the window.
+/// They are drawn at `opacity` (focus mode fades the chrome); at zero they
+/// are not drawn and do not take clicks.
+pub(crate) fn finish_with(ctx: &egui::Context, modal: bool, opacity: f32) {
     finish_resize(ctx, modal);
+    if opacity <= 0.01 {
+        return;
+    }
     let viewport = ctx.viewport_rect();
-    let controls = dock_rect(viewport);
+    let controls = controls_rect(viewport);
+    let t = crate::studio_theme::tokens(ctx);
+    let maximized = ctx.input(|i| {
+        i.viewport().maximized.unwrap_or(false) || i.viewport().fullscreen.unwrap_or(false)
+    });
+    let resizable = !maximized && !modal;
+    // The layer answers the pointer only where the buttons do, so the resize
+    // strips along the top and right edges stay reachable beneath it.
+    let hit_area = if resizable {
+        Rect::from_min_max(
+            egui::pos2(controls.left(), viewport.top() + EDGE),
+            egui::pos2(viewport.right() - EDGE, controls.bottom()),
+        )
+    } else {
+        controls
+    };
     let layer = egui::LayerId::new(egui::Order::Foreground, Id::new("native-window-controls"));
     ctx.move_to_top(layer);
     egui::Area::new(layer.id)
         .order(layer.order)
-        .fixed_pos(controls.min)
-        .default_size(controls.size())
+        .fixed_pos(hit_area.min)
+        .default_size(hit_area.size())
         .movable(false)
         .constrain(false)
         .sense(Sense::hover())
         .show(ctx, |ui| {
-            ui.set_min_size(controls.size());
-            ui.painter().rect_filled(controls, 0.0, PANEL);
-            let grip = grip_rect(controls);
-            let grip_hovered = ui.rect_contains_pointer(grip);
-            if grip_hovered {
-                ui.painter().rect_filled(grip, 0.0, RAISED);
-            }
-            let grip_ink = if grip_hovered { INK } else { MUTED };
-            for row in 0..3 {
-                for column in 0..2 {
-                    ui.painter().circle_filled(
-                        egui::pos2(
-                            grip.left() + 11.0 + column as f32 * 4.0,
-                            grip.center().y - 4.0 + row as f32 * 4.0,
-                        ),
-                        0.7,
-                        grip_ink,
-                    );
-                }
-            }
-            ui.painter().text(
-                grip.min + egui::vec2(27.0, grip.height() * 0.5),
-                egui::Align2::LEFT_CENTER,
-                "Move",
-                egui::FontId::proportional(10.5),
-                grip_ink,
-            );
-            // Native chrome remains usable while an application modal is open.
-            drag_space(ui, grip, false);
-            let maximized = ctx.input(|i| {
-                i.viewport().maximized.unwrap_or(false) || i.viewport().fullscreen.unwrap_or(false)
-            });
+            ui.set_opacity(opacity);
+            ui.set_min_size(hit_area.size());
+            ui.set_max_size(hit_area.size());
+            let mut painter = ctx.layer_painter(layer);
+            painter.set_opacity(opacity);
+            painter.rect_filled(controls, 0.0, t.panel);
             for index in 0..3 {
                 let rect = button_rect(controls, index);
                 let label = match index {
@@ -180,7 +182,7 @@ pub(crate) fn finish(ctx: &egui::Context, modal: bool) {
                     _ => "Close window",
                 };
                 let response = ui.interact(
-                    rect,
+                    button_hit(rect, viewport, resizable),
                     Id::new(("native-window-button", index)),
                     Sense::click(),
                 );
@@ -188,27 +190,25 @@ pub(crate) fn finish(ctx: &egui::Context, modal: bool) {
                     egui::WidgetInfo::labeled(egui::WidgetType::Button, true, label)
                 });
                 let active = ui.input(|i| i.viewport().focused.unwrap_or(i.focused));
-                let ink = if response.hovered() && index == 2 {
-                    AMBER
+                let ink = if response.hovered() || (active && index == 2) {
+                    t.ink
                 } else if active {
-                    INK
+                    t.ink2
                 } else {
-                    MUTED
+                    t.ink3
                 };
-                ui.painter().rect_filled(
-                    rect,
-                    0.0,
-                    if response.hovered() { RAISED } else { PANEL },
-                );
+                if response.hovered() {
+                    painter.rect_filled(rect, 0.0, t.raised);
+                }
                 if response.has_focus() {
-                    ui.painter().rect_stroke(
+                    painter.rect_stroke(
                         rect.shrink(2.0),
                         0.0,
-                        Stroke::new(1.0_f32, ACCENT),
+                        Stroke::new(1.0_f32, t.accent),
                         egui::StrokeKind::Inside,
                     );
                 }
-                window_icon(ui.painter(), rect.center(), index, maximized, ink);
+                window_icon(&painter, rect.center(), index, maximized, ink, t.panel);
                 if response.clicked() {
                     match index {
                         0 => ctx.send_viewport_cmd(ViewportCommand::Minimized(true)),
@@ -218,32 +218,16 @@ pub(crate) fn finish(ctx: &egui::Context, modal: bool) {
                 }
                 response.on_hover_text(label);
             }
-            let painter = ui.painter();
-            for x in [controls.left(), grip.right(), controls.right()] {
-                crate::theme::rule(
-                    painter,
-                    egui::pos2(x, controls.top()),
-                    egui::pos2(x, controls.bottom()),
-                    LINE,
-                );
-            }
-            crate::theme::rule(painter, controls.left_top(), controls.right_top(), LINE);
             crate::theme::rule(
-                painter,
+                &painter,
+                controls.left_top(),
                 controls.left_bottom(),
-                controls.right_bottom(),
-                LINE,
+                t.line,
             );
         });
-    // Keep chrome above application modal and resize layers, including the
-    // frame after focus/maximize changes. Only the dock owns this layer.
+    // Keep the buttons above application modals and the resize layers,
+    // including the frame after focus or maximise changes.
     ctx.move_to_top(layer);
-}
-
-/// Legacy test permutations share the ordinary workspace's native affordances.
-#[cfg(test)]
-pub(crate) fn finish_spatial(ctx: &egui::Context, modal: bool) {
-    finish(ctx, modal);
 }
 
 fn finish_resize(ctx: &egui::Context, modal: bool) {
@@ -283,7 +267,14 @@ fn prepare_native_drag() {
     crate::window_native::prepare_drag();
 }
 
-fn window_icon(p: &egui::Painter, center: Pos2, index: usize, maximized: bool, color: Color32) {
+fn window_icon(
+    p: &egui::Painter,
+    center: Pos2,
+    index: usize,
+    maximized: bool,
+    color: Color32,
+    fill: Color32,
+) {
     let stroke = Stroke::new(1.0 / p.ctx().pixels_per_point(), color);
     let rect = Rect::from_center_size(center, Vec2::splat(9.0));
     match index {
@@ -301,7 +292,7 @@ fn window_icon(p: &egui::Painter, center: Pos2, index: usize, maximized: bool, c
                 stroke,
                 egui::StrokeKind::Inside,
             );
-            p.rect_filled(rect.translate(egui::vec2(-1.0, 1.0)), 0.0, BG);
+            p.rect_filled(rect.translate(egui::vec2(-1.0, 1.0)), 0.0, fill);
             p.rect_stroke(
                 rect.translate(egui::vec2(-1.0, 1.0)),
                 0.0,

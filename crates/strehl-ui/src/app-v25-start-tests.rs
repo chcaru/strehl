@@ -53,11 +53,13 @@ fn paint(
         },
         |ctx| {
             app.undo_shortcuts(ctx);
+            app.shell_bars(ctx);
             app.workspace(ctx);
             let _ = app.bracket_browser.show(ctx);
         },
     )
 }
+/// Text in the Library's left pane, below the top bar.
 fn text(out: &egui::FullOutput, needle: &str) -> egui::Rect {
     out.shapes
         .iter()
@@ -65,8 +67,24 @@ fn text(out: &egui::FullOutput, needle: &str) -> egui::Rect {
             egui::Shape::Text(t) if t.galley.text() == needle => Some(t.visual_bounding_rect()),
             _ => None,
         })
-        .find(|rect| rect.left() > crate::window_chrome::RAIL_WIDTH && rect.left() < 340.0)
+        .find(|rect| rect.top() > 44.0 && rect.left() < 340.0)
         .unwrap_or_else(|| panic!("missing sidebar text: {needle}"))
+}
+/// Text anywhere in the frame.
+fn anywhere(out: &egui::FullOutput, needle: &str) -> egui::Rect {
+    out.shapes
+        .iter()
+        .find_map(|shape| match &shape.shape {
+            egui::Shape::Text(t) if t.galley.text() == needle => Some(t.visual_bounding_rect()),
+            _ => None,
+        })
+        .unwrap_or_else(|| panic!("missing text: {needle}"))
+}
+/// A station's label in the top bar.
+fn station(out: &egui::FullOutput, label: &str) -> egui::Pos2 {
+    let rect = anywhere(out, label);
+    assert!(rect.bottom() <= 44.0, "{label} is a top bar station");
+    rect.center()
 }
 fn click(app: &mut StrehlApp, ctx: &egui::Context, at: egui::Pos2, time: f64) {
     for (offset, pressed) in [(0.0, true), (0.02, false)] {
@@ -140,26 +158,14 @@ fn local_stack_command_freezes_request_and_second_click_cannot_stop_or_duplicate
     );
     app.sidebar = None;
     let running = paint(&mut app, &ctx, 0.3, vec![]);
-    let rail = running
-        .shapes
-        .iter()
-        .find_map(|shape| match &shape.shape {
-            egui::Shape::Text(text)
-                if text.galley.text() == "Stack"
-                    && text.visual_bounding_rect().right() < crate::window_chrome::RAIL_WIDTH =>
-            {
-                Some(text.visual_bounding_rect().center())
-            }
-            _ => None,
-        })
-        .expect("running stack retains its rail launch target");
-    click(&mut app, &ctx, rail, 0.4);
+    let library = station(&running, "LIBRARY");
+    click(&mut app, &ctx, library, 0.4);
     assert_eq!(app.sidebar, Some(workspace::Sidebar::Projects));
-    click(&mut app, &ctx, rail, 0.5);
+    click(&mut app, &ctx, library, 0.5);
     assert_eq!(app.started, Some(started));
     assert!(
         !app.job.as_ref().unwrap().is_cancelling(),
-        "repeated rail clicks reveal the running stack without cancelling it"
+        "repeated station clicks reveal the running stack without cancelling it"
     );
     let stop = text(&paint(&mut app, &ctx, 0.6, vec![]), "Stop");
     assert!(
@@ -169,7 +175,7 @@ fn local_stack_command_freezes_request_and_second_click_cannot_stop_or_duplicate
     click(&mut app, &ctx, stop.center(), 0.7);
     assert!(app.job.as_ref().unwrap().is_cancelling());
     app.sidebar = None;
-    click(&mut app, &ctx, rail, 0.8);
+    click(&mut app, &ctx, library, 0.8);
     assert_eq!(app.sidebar, Some(workspace::Sidebar::Projects));
     text(&paint(&mut app, &ctx, 0.9, vec![]), "STOPPING");
 }
@@ -228,13 +234,15 @@ fn adjust_keeps_launch_above_scrolling_recipe_and_cancelled_import_preserves_cur
     click(&mut app, &ctx, text(&output, "Adjust").center(), 0.1);
     assert_eq!(app.sidebar, Some(workspace::Sidebar::Adjust));
     let adjusted = paint(&mut app, &ctx, 0.2, vec![]);
-    let at = text(&adjusted, "Stack");
+    // On the Stack station the launch is the inspector's footer.
+    let at = anywhere(&adjusted, "Stack 2 photos");
+    assert!(at.left() > 1060.0 - 440.0 && at.bottom() > 600.0, "{at:?}");
     paint(
         &mut app,
         &ctx,
         0.3,
         vec![
-            egui::Event::PointerMoved(egui::pos2(200.0, 500.0)),
+            egui::Event::PointerMoved(egui::pos2(at.center().x, 300.0)),
             egui::Event::MouseWheel {
                 unit: egui::MouseWheelUnit::Point,
                 delta: egui::vec2(0.0, -600.0),
@@ -242,7 +250,10 @@ fn adjust_keeps_launch_above_scrolling_recipe_and_cancelled_import_preserves_cur
             },
         ],
     );
-    assert_eq!(text(&paint(&mut app, &ctx, 0.4, vec![]), "Stack"), at);
+    assert_eq!(
+        anywhere(&paint(&mut app, &ctx, 0.4, vec![]), "Stack 2 photos"),
+        at
+    );
     app.sidebar = Some(workspace::Sidebar::Projects);
     let previous_source = app.stack.as_ref().unwrap().directory.clone();
     let active = app.active_stack;

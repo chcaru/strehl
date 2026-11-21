@@ -2454,7 +2454,7 @@ fn process_workspace(
             ..Default::default()
         },
         |ctx| {
-            app.status_bar(ctx);
+            app.shell_bars(ctx);
             app.workspace(ctx);
         },
     )

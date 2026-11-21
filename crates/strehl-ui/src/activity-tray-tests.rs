@@ -1,13 +1,14 @@
-//! The tray: what it lists and the intent each control returns.
+//! The tray: what it lists and the action each control returns.
 use super::*;
 use crate::activity::{ActivityKind, Lane};
-use eframe::egui::{Event, Modifiers, PointerButton, RawInput};
+use crate::notices::Source;
+use eframe::egui::{Event, Modifiers, PointerButton, Pos2, RawInput, Rect, Vec2};
 use std::{path::PathBuf, time::Duration};
 
 struct Harness {
     ctx: egui::Context,
     time: f64,
-    palette: LibraryPalette,
+    notices: Notices,
 }
 impl Harness {
     fn new() -> Self {
@@ -16,59 +17,49 @@ impl Harness {
         Self {
             ctx,
             time: 0.0,
-            palette: LibraryPalette::graphite(),
+            notices: Notices::default(),
         }
     }
-    /// One frame; a popover's first frame is egui's invisible sizing pass,
-    /// so a fresh tray is drawn twice.
+    /// One frame of the tray in a 430-wide column.
     fn frame(
         &mut self,
         activities: &Activities,
         quiet: (bool, bool),
         events: Vec<Event>,
-    ) -> (egui::FullOutput, Option<TrayIntent>) {
-        if self.time == 0.0 {
-            self.once(activities, quiet, vec![]);
-        }
-        self.once(activities, quiet, events)
-    }
-    fn once(
-        &mut self,
-        activities: &Activities,
-        quiet: (bool, bool),
-        events: Vec<Event>,
-    ) -> (egui::FullOutput, Option<TrayIntent>) {
+    ) -> (egui::FullOutput, Option<TrayAction>) {
         self.time += 1.0 / 60.0;
-        let mut intent = None;
+        let mut action = None;
         let input = RawInput {
             events,
             time: Some(self.time),
-            screen_rect: Some(Rect::from_min_size(Pos2::ZERO, Vec2::new(1680.0, 1050.0))),
+            screen_rect: Some(Rect::from_min_size(Pos2::ZERO, Vec2::new(800.0, 1400.0))),
             ..Default::default()
         };
-        let palette = self.palette;
+        let notices = &mut self.notices;
         let output = self.ctx.run(input, |ctx| {
-            intent = show(
-                ctx,
-                Pos2::new(1554.0, 43.0),
-                TrayInputs {
-                    activities,
-                    quiet_switch: quiet.0,
-                    quiet_holds: quiet.1,
-                    palette: &palette,
-                    now: Instant::now(),
-                    unix: unix_now(),
-                },
-            );
+            egui::CentralPanel::default().show(ctx, |ui| {
+                action = tray(
+                    ui,
+                    TrayInputs {
+                        activities,
+                        notices,
+                        status: "Ready",
+                        quiet: quiet.0,
+                        quiet_holds: quiet.1,
+                        now: Instant::now(),
+                        unix: unix_now(),
+                    },
+                );
+            });
         });
-        (output, intent)
+        (output, action)
     }
     fn click(
         &mut self,
         activities: &Activities,
         quiet: (bool, bool),
         at: Pos2,
-    ) -> Option<TrayIntent> {
+    ) -> Option<TrayAction> {
         // Clicks a second apart never pair up as double clicks.
         self.time += 1.0;
         let button = |pressed| Event::PointerButton {
@@ -89,29 +80,26 @@ impl Harness {
 fn unix_now() -> u64 {
     crate::workspace_history::timestamp()
 }
-fn find(output: &egui::FullOutput, needle: &str) -> Option<Pos2> {
-    fn visit(shape: &egui::Shape, needle: &str) -> Option<Pos2> {
-        match shape {
-            egui::Shape::Text(t) if t.galley.text() == needle => {
-                Some(t.pos + t.galley.size() * 0.5)
-            }
-            egui::Shape::Vec(v) => v.iter().find_map(|s| visit(s, needle)),
-            _ => None,
-        }
+fn visit(shape: &egui::Shape, out: &mut Vec<(String, Pos2)>) {
+    match shape {
+        egui::Shape::Text(t) => out.push((
+            t.galley.text().to_owned(),
+            t.visual_bounding_rect().center(),
+        )),
+        egui::Shape::Vec(v) => v.iter().for_each(|s| visit(s, out)),
+        _ => {}
     }
-    output.shapes.iter().find_map(|s| visit(&s.shape, needle))
 }
-fn texts(output: &egui::FullOutput) -> Vec<String> {
-    fn visit(shape: &egui::Shape, out: &mut Vec<String>) {
-        match shape {
-            egui::Shape::Text(t) => out.push(t.galley.text().to_owned()),
-            egui::Shape::Vec(v) => v.iter().for_each(|s| visit(s, out)),
-            _ => {}
-        }
-    }
+fn texts(output: &egui::FullOutput) -> Vec<(String, Pos2)> {
     let mut out = Vec::new();
     output.shapes.iter().for_each(|s| visit(&s.shape, &mut out));
     out
+}
+fn find(output: &egui::FullOutput, needle: &str) -> Option<Pos2> {
+    texts(output)
+        .into_iter()
+        .find(|(t, _)| t == needle)
+        .map(|(_, at)| at)
 }
 
 fn busy() -> (Activities, u64, u64) {
@@ -150,8 +138,9 @@ fn busy() -> (Activities, u64, u64) {
     )
     .with_phase("Merge")
     .with_progress(Some(120), Some(299))
-    .with_cancel(CancelMode::Kill);
+    .with_cancel(CancelMode::Cooperative);
     stack.eta = Some(Duration::from_secs(198));
+    stack.facts = "32 workers · 299 RAW · 61.4 GiB".into();
     let stack_id = stack.id;
     activities.report(stack);
     let mut queued = ActivityStatus::new(
@@ -173,31 +162,50 @@ fn busy() -> (Activities, u64, u64) {
 }
 
 #[test]
-fn the_tray_lists_running_waiting_and_earlier_work() {
+fn the_tray_lists_running_waiting_earlier_work_and_notices() {
     let (activities, _, _) = busy();
     let mut harness = Harness::new();
-    let (output, _) = harness.frame(&activities, (false, false), vec![]);
-    let all = texts(&output);
+    harness
+        .notices
+        .push(Severity::Done, Source::Export, "Exported weevil.avif", None);
+    harness.notices.push(
+        Severity::Failure,
+        Source::Stack,
+        "The engine stopped",
+        Some(notices::Action::OpenLog),
+    );
+    let (output, _) = harness.frame(&activities, (true, false), vec![]);
+    let all: Vec<String> = texts(&output).into_iter().map(|(t, _)| t).collect();
     for text in [
         "ACTIVITY",
         "Quiet",
         "Stack · Blue weevil, dorsal",
+        "STOP",
         "WAITING · 1",
+        "start when the running stack ends",
         "Stack · Bumblebee, frontal",
         "183 planes · about 1 min",
+        "REMOVE",
         "EARLIER TODAY",
         "FULL LOG",
         "Calibrate step",
         "REVEAL",
+        "NOTICES",
+        "MARK ALL READ",
+        "The engine stopped",
+        "Exported weevil.avif",
+        "ENGINE LOG",
+        "AGENT",
     ] {
         assert!(all.iter().any(|t| t == text), "{text} missing from {all:?}");
     }
     let detail = all
         .iter()
-        .find(|t| t.starts_with("Merge · 120 of 299"))
-        .expect("phase, frames and time left");
+        .find(|t| t.starts_with("Merge · 120 / 299"))
+        .expect("phase, planes and time left");
     assert!(
-        detail.contains("3 min 18 s left") && detail.contains("ends "),
+        detail.contains("3 min 18 s left · ends ")
+            && detail.ends_with("32 workers · 299 RAW · 61.4 GiB"),
         "{detail}"
     );
     assert!(
@@ -205,50 +213,71 @@ fn the_tray_lists_running_waiting_and_earlier_work() {
             .any(|t| t.starts_with("Step 7 suggested") && t.ends_with("took 1 min 8 s")),
         "{all:?}"
     );
+    // The order of the mockup (running work, the queue, earlier today),
+    // then the notices, newest first.
+    let y = |text| find(&output, text).unwrap().y;
+    assert!(y("The engine stopped") < y("Exported weevil.avif"));
+    assert!(y("Stack · Blue weevil, dorsal") < y("WAITING · 1"));
+    assert!(y("WAITING · 1") < y("EARLIER TODAY"));
+    assert!(y("EARLIER TODAY") < y("NOTICES"));
+    // A counted task shows its progress rule in the ok colour of the theme.
+    let ok = crate::studio_theme::tokens(&harness.ctx).ok;
+    let bar = output.shapes.iter().any(
+        |s| matches!(&s.shape, egui::Shape::Rect(r) if r.rect.height() == 2.0 && r.fill == ok),
+    );
+    assert!(bar, "a counted task shows its progress rule");
     assert!(!all.iter().any(|t| t == "Quiet holds heavy work"));
     let (output, _) = harness.frame(&activities, (true, true), vec![]);
     assert!(find(&output, "Quiet holds heavy work").is_some());
-    let (output, _) = harness.frame(&Activities::default(), (false, false), vec![]);
+    let (output, _) = harness.frame(&Activities::default(), (true, false), vec![]);
     assert!(find(&output, "Nothing running").is_some());
     assert!(find(&output, "EARLIER TODAY").is_none());
+    assert!(find(&output, "WAITING · 1").is_none());
 }
 
 #[test]
-fn every_control_returns_its_intent() {
+fn every_control_returns_its_action() {
     let (activities, stack_id, queue_id) = busy();
     let mut harness = Harness::new();
+    harness.notices.push(
+        Severity::Failure,
+        Source::Stack,
+        "The engine stopped",
+        Some(notices::Action::OpenLog),
+    );
     let (output, _) = harness.frame(&activities, (false, false), vec![]);
-    let at = find(&output, "STOP").unwrap();
-    assert_eq!(
-        harness.click(&activities, (false, false), at),
-        Some(TrayIntent::Cancel(stack_id))
-    );
-    let at = find(&output, "REMOVE").unwrap();
-    assert_eq!(
-        harness.click(&activities, (false, false), at),
-        Some(TrayIntent::Remove(queue_id))
-    );
-    let at = find(&output, "FULL LOG").unwrap();
-    assert_eq!(
-        harness.click(&activities, (false, false), at),
-        Some(TrayIntent::FullLog)
-    );
-    let at = find(&output, "REVEAL").unwrap();
-    assert_eq!(
-        harness.click(&activities, (false, false), at),
-        Some(TrayIntent::Action(ActionId::Reveal {
-            path: PathBuf::from("exports/weevil-dorsal-web.jpg")
-        }))
-    );
+    let at = |text| find(&output, text).unwrap_or_else(|| panic!("{text}"));
+    let cases = [
+        ("STOP", TrayAction::Cancel(stack_id)),
+        ("REMOVE", TrayAction::Remove(queue_id)),
+        ("FULL LOG", TrayAction::OpenLog),
+        (
+            "REVEAL",
+            TrayAction::Action(ActionId::Reveal {
+                path: PathBuf::from("exports/weevil-dorsal-web.jpg"),
+            }),
+        ),
+        ("LOG", TrayAction::Notice(notices::Action::OpenLog)),
+        ("ENGINE LOG", TrayAction::OpenLog),
+        ("AGENT", TrayAction::OpenAgent),
+    ];
+    for (text, expected) in cases {
+        let point = at(text);
+        assert_eq!(
+            harness.click(&activities, (false, false), point),
+            Some(expected),
+            "{text}"
+        );
+    }
     // The switch sits right of "Quiet".
-    let quiet = find(&output, "Quiet").unwrap();
+    let quiet = at("Quiet");
     assert_eq!(
-        harness.click(&activities, (false, false), quiet + Vec2::new(40.0, 0.0)),
-        Some(TrayIntent::SetQuiet(true))
+        harness.click(&activities, (false, false), quiet + Vec2::new(30.0, 0.0)),
+        Some(TrayAction::SetQuiet(true))
     );
     assert_eq!(
-        harness.click(&activities, (true, false), quiet + Vec2::new(40.0, 0.0)),
-        Some(TrayIntent::SetQuiet(false))
+        harness.click(&activities, (true, false), quiet + Vec2::new(30.0, 0.0)),
+        Some(TrayAction::SetQuiet(false))
     );
     // A paused queue offers Resume.
     let mut paused = Activities::default();
@@ -266,35 +295,85 @@ fn every_control_returns_its_intent() {
     let at = find(&output, "RESUME").expect("a paused queue offers Resume");
     assert_eq!(
         harness.click(&paused, (false, false), at),
-        Some(TrayIntent::ResumeQueue)
+        Some(TrayAction::ResumeQueue)
     );
 }
 
-/// Offscreen picture of the tray for the side-by-side check against the
-/// mockup's `capture-flight-jobs.png`. `STREHL_P5_SHOTS` names the folder.
 #[test]
-#[ignore = "needs a GPU; writes a PNG into STREHL_P5_SHOTS"]
-fn offscreen_tray_picture() {
+fn work_that_cannot_stop_offers_no_stop_and_dismiss_removes_a_notice() {
+    let mut activities = Activities::default();
+    activities.begin();
+    activities.report(
+        ActivityStatus::running(ActivityKind::CompactApply, "Compacting", Lane::Heavy)
+            .with_cancel(CancelMode::None),
+    );
+    activities.end(Instant::now(), unix_now());
+    let mut harness = Harness::new();
+    harness
+        .notices
+        .push(Severity::Info, Source::App, "Preferences saved", None);
+    let (output, _) = harness.frame(&activities, (true, false), vec![]);
+    assert!(find(&output, "Compacting").is_some());
+    assert!(
+        find(&output, "STOP").is_none(),
+        "compaction runs to its end"
+    );
+    let dismiss = find(&output, "Dismiss").unwrap();
+    harness.click(&activities, (true, false), dismiss);
+    assert_eq!(harness.notices.len(), 0);
+    let (output, _) = harness.frame(&activities, (true, false), vec![]);
+    assert!(find(&output, "No notices").is_some());
+}
+
+/// Offscreen pictures of the tray in each theme, for the side-by-side check
+/// against the mockup's `capture-flight-jobs.png`. `STREHL_P5_SHOTS` names
+/// the folder.
+#[test]
+#[ignore = "needs a GPU; writes PNGs into STREHL_P5_SHOTS"]
+fn offscreen_tray_pictures() {
+    use crate::studio_theme::{Surround, ThemeName};
     let shots = PathBuf::from(std::env::var_os("STREHL_P5_SHOTS").expect("STREHL_P5_SHOTS"));
     std::fs::create_dir_all(&shots).unwrap();
     let (activities, _, _) = busy();
-    let palette = LibraryPalette::graphite();
-    crate::library_station::visual_tests::render(&shots.join("tray.png"), |ui| {
-        ui.painter()
-            .rect_filled(ui.max_rect(), CornerRadius::ZERO, palette.bg);
-        show(
-            ui.ctx(),
-            Pos2::new(1554.0, 43.0),
-            TrayInputs {
-                activities: &activities,
-                quiet_switch: false,
-                quiet_holds: true,
-                palette: &palette,
-                now: Instant::now(),
-                unix: unix_now(),
-            },
+    for (name, theme) in [
+        ("graphite", ThemeName::Graphite),
+        ("instrument", ThemeName::Instrument),
+        ("lightbox", ThemeName::Lightbox),
+    ] {
+        let mut notices = Notices::default();
+        notices.push(
+            Severity::Failure,
+            Source::Stack,
+            "The engine stopped",
+            Some(notices::Action::OpenLog),
         );
-        true
-    })
-    .unwrap();
+        let destination = shots.join(format!("tray-{name}.png"));
+        crate::library_station::visual_tests::render(&destination, |ui| {
+            crate::studio_theme::apply(ui.ctx(), theme, Surround::Theme, false);
+            let t = crate::studio_theme::tokens(ui.ctx());
+            ui.painter().rect_filled(ui.max_rect(), 0.0, t.bg);
+            let area = Rect::from_min_size(Pos2::new(1124.0, 43.0), Vec2::new(432.0, 1000.0));
+            ui.scope_builder(egui::UiBuilder::new().max_rect(area), |ui| {
+                egui::Frame::new()
+                    .fill(t.panel)
+                    .stroke(egui::Stroke::new(1.0_f32, t.line2))
+                    .show(ui, |ui| {
+                        tray(
+                            ui,
+                            TrayInputs {
+                                activities: &activities,
+                                notices: &mut notices,
+                                status: "Ready",
+                                quiet: true,
+                                quiet_holds: true,
+                                now: Instant::now(),
+                                unix: unix_now(),
+                            },
+                        )
+                    });
+            });
+            true
+        })
+        .unwrap();
+    }
 }

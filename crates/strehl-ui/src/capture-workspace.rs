@@ -23,12 +23,26 @@ use strehl_capture::{
     power::Outlet,
     session::{Command, CommandRequest, PositionsKind},
 };
+#[path = "capture-flight.rs"]
+pub(crate) mod flight;
 #[path = "capture-follow.rs"]
 pub(crate) mod follow;
+#[path = "capture-glance.rs"]
+pub(crate) mod glance;
+#[path = "capture-live.rs"]
+pub(crate) mod live;
+#[path = "capture-plan.rs"]
+pub(crate) mod plan;
 #[path = "capture-preflight.rs"]
 pub(crate) mod preflight;
+#[path = "capture-rail.rs"]
+pub(crate) mod rail;
 #[path = "capture-schedule.rs"]
 mod schedule_ui;
+#[path = "capture-station.rs"]
+pub(crate) mod station;
+#[path = "capture-style.rs"]
+pub(crate) mod style;
 #[path = "capture-test-shot.rs"]
 pub(crate) mod test_shot;
 #[path = "capture-tools.rs"]
@@ -116,6 +130,8 @@ pub(crate) struct CaptureWorkspace {
     /// The last success notice read (`Snapshot::notice_id`).
     notice_read: u64,
     selected_stopped: usize,
+    /// The Studio 2 station's views (`capture-station.rs`).
+    station: station::Station,
 }
 impl CaptureWorkspace {
     pub fn new(path: Option<PathBuf>) -> Self {
@@ -174,6 +190,7 @@ impl CaptureWorkspace {
             unfollowed_sequence: None,
             notice_read: 0,
             selected_stopped: 0,
+            station: station::Station::default(),
         }
     }
     fn calibrating(&self) -> bool {
@@ -234,7 +251,9 @@ impl CaptureWorkspace {
             };
             self.connect_wait = None;
         }
+        self.poll_station(&s);
         use tools::Calibration as C;
+        let stage_before = self.calibration.stage();
         let state = std::mem::replace(&mut self.calibration, C::Idle);
         let host = &s.host;
         let idle = !host.busy && host.editable;
@@ -400,6 +419,7 @@ impl CaptureWorkspace {
             C::Restoring { result, .. } if idle && shots == Some(4) => C::Done(result),
             other => other,
         };
+        station::note_calibration(&mut self.station, stage_before, &self.calibration);
         // A survey left running when the calibration gave up is not followed.
         let survey = self.calibration.survey_sequence();
         self.calibration.expire(now);
@@ -785,6 +805,15 @@ impl CaptureWorkspace {
         self.error = result.err().map(|e| format!("{e:#}"));
     }
     pub fn show(&mut self, ctx: &egui::Context, can_import: bool) {
+        if let Some(mode) = std::env::var_os("STREHL_CAPTURE_STATION")
+            && (mode == "1" || mode == "glance")
+        {
+            if mode == "glance" && !self.station_glance_seen() {
+                self.open_glance_once();
+            }
+            self.show_station(ctx);
+            return;
+        }
         self.activate(ctx);
         self.shown = true;
         let s = self
@@ -2326,7 +2355,6 @@ impl CaptureWorkspace {
     }
     /// The capture, its checker, the calibration and the engine tools as
     /// activities (Studio 2 P5, plan 6.6). Cheap: no I/O, one snapshot read.
-    #[allow(dead_code, reason = "the shell reports activities in P5 stage 2")]
     pub(crate) fn report_activities(&self, activities: &mut crate::activity::Activities) {
         use crate::activity::{
             ActivityKind, ActivityState, ActivityStatus, CancelMode, Lane, calibration_status,

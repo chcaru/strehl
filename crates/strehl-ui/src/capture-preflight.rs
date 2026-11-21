@@ -10,7 +10,9 @@
 //! Start (H1: the exposure program) and what the desktop itself is doing
 //! with the camera (a calibration or a test shot).
 use super::CaptureWorkspace;
+use super::style::{self, CapturePalette, Mark};
 use crate::capture_client::Snapshot;
+use eframe::egui;
 
 /// Which condition a [`Blocker`] stands for (stable; tests and the strip
 /// key on it).
@@ -252,6 +254,156 @@ pub(crate) fn start_blockers(s: &Snapshot, ui: &CaptureWorkspace) -> Vec<Blocker
 /// schedule editor, which is where scheduling happens.
 pub(crate) fn can_schedule(blockers: &[Blocker]) -> bool {
     blockers.iter().all(|b| b.check == Check::Schedule)
+}
+
+/// One chip of the pre-flight strip.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(crate) struct StripChip {
+    pub label: &'static str,
+    pub mark: Mark,
+    /// What is wrong, for an unmet chip.
+    pub sentence: Option<String>,
+    pub fix: Option<Fix>,
+}
+
+/// The strip's groups, in the mockup's order, and the checks each covers.
+const GROUPS: &[(&str, &[Check])] = &[
+    (
+        "Rig",
+        &[
+            Check::Offline,
+            Check::HostState,
+            Check::Camera,
+            Check::Failure,
+            Check::NotEditable,
+            Check::Calibration,
+            Check::TestShot,
+            Check::Sending,
+        ],
+    ),
+    ("Exposure", &[Check::Exposure]),
+    ("Bounds", &[Check::StartMark, Check::EndMark, Check::Plan]),
+    ("Step", &[Check::Edits, Check::Focus]),
+    ("Disk", &[Check::Capacity]),
+    ("Receiver", &[Check::Receiver]),
+    ("Schedule", &[Check::Schedule]),
+];
+
+/// The strip's chips from the blockers: one per group, unmet (with the
+/// group's first sentence and fix) or met. The light is shown when the Pi
+/// has studio outlets; it never blocks Start (managed power warms it). The
+/// schedule chip appears only while its editor is open.
+pub(crate) fn strip_chips(s: &Snapshot, blockers: &[Blocker]) -> Vec<StripChip> {
+    let fresh = s.fresh() && s.host_error.is_none();
+    let mut chips = Vec::new();
+    for (label, checks) in GROUPS {
+        let first = blockers.iter().find(|b| checks.contains(&b.check));
+        if *label == "Schedule" && first.is_none() {
+            continue;
+        }
+        let chip = match first {
+            Some(b) => StripChip {
+                label,
+                mark: if matches!(b.check, Check::Failure | Check::HostState) {
+                    Mark::Bad
+                } else {
+                    Mark::Warn
+                },
+                sentence: Some(b.sentence.clone()),
+                fix: b.fix,
+            },
+            None => StripChip {
+                label,
+                mark: if fresh || *label == "Step" {
+                    Mark::Ok
+                } else {
+                    Mark::Idle
+                },
+                sentence: None,
+                fix: None,
+            },
+        };
+        chips.push(chip);
+        if *label == "Rig"
+            && let Some(power) = &s.host.power
+        {
+            let warm = power.light.on == Some(true) && power.light.watts.is_some_and(|w| w > 0.0);
+            chips.push(StripChip {
+                label: if warm { "Light warm" } else { "Light off" },
+                mark: if warm { Mark::Ok } else { Mark::Idle },
+                sentence: (!warm).then(|| {
+                    if power.manage_stack {
+                        "The light is switched on and warmed at the start".to_owned()
+                    } else {
+                        "The light is off".to_owned()
+                    }
+                }),
+                fix: None,
+            });
+        }
+    }
+    chips
+}
+
+/// Draws the pre-flight strip (`.cstrip`, 36 px): the chips, and at the
+/// right "Ready" with the plan's `summary`, or the first blocker. Returns
+/// the fix of an unmet chip that was clicked.
+pub(crate) fn strip_ui(
+    ui: &mut egui::Ui,
+    chips: &[StripChip],
+    blockers: &[Blocker],
+    summary: &str,
+    palette: &CapturePalette,
+) -> Option<Fix> {
+    let rect = ui.max_rect();
+    ui.painter().rect_filled(rect, 0.0, palette.panel);
+    style::hairline(
+        ui.painter(),
+        rect.left_bottom() - egui::vec2(0.0, 0.5),
+        rect.right_bottom() - egui::vec2(0.0, 0.5),
+        palette.line,
+    );
+    let mut fix = None;
+    ui.scope_builder(
+        egui::UiBuilder::new()
+            .max_rect(rect.shrink2(egui::vec2(14.0, 0.0)))
+            .layout(egui::Layout::left_to_right(egui::Align::Center)),
+        |ui| {
+            ui.spacing_mut().item_spacing.x = 14.0;
+            style::caps(ui, "Pre-flight", palette);
+            for chip in chips {
+                let color = if chip.sentence.is_some() && chip.mark != Mark::Idle {
+                    palette.ink
+                } else {
+                    palette.ink2
+                };
+                let r = style::chip(ui, chip.mark, chip.label, color, palette);
+                let r = match &chip.sentence {
+                    Some(sentence) => r.on_hover_text(sentence),
+                    None => r,
+                };
+                if r.clicked() && chip.fix.is_some() {
+                    fix = chip.fix;
+                }
+            }
+            ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                ui.spacing_mut().item_spacing.x = 10.0;
+                match blockers.first() {
+                    None => {
+                        style::text(ui, summary, 12.5, palette.ink2);
+                        style::chip(ui, Mark::Ok, "Ready", palette.ink, palette);
+                    }
+                    Some(b) => {
+                        let r = style::chip(ui, Mark::Warn, &b.sentence, palette.ink, palette);
+                        if r.clicked() && b.fix.is_some() {
+                            fix = b.fix;
+                        }
+                    }
+                }
+            });
+        },
+    );
+    fix
 }
 
 #[cfg(test)]

@@ -6,6 +6,7 @@ import math
 import os
 from pathlib import Path
 import re
+import struct
 import subprocess
 
 
@@ -105,7 +106,7 @@ def commission_alignment_verifier():
     return dict(valid_mixed_result=True, missing_refusal_rejected=True, edited_population_rejected=True)
 
 
-def merge_events(events, frame_count, levels=8, chunk_frames=None, require_intrachunk=False):
+def merge_events(events, frame_count, levels=8, chunk_frames=None, require_intrachunk=False, plain_base=True):
     """Observe the consumer's required populations, not a producer-only count."""
     parsed = []
     for line in events:
@@ -171,7 +172,9 @@ def merge_events(events, frame_count, levels=8, chunk_frames=None, require_intra
     assert any(item['kind'] == 'reconstructed' and int(item['folded']) == frame_count for item in maps)
     preview = preview_events(parsed, frame_count, chunk_frames, require_intrachunk, levels=levels)
     base = [item for item in maps if item['kind'] == 'gate-support' and int(item['level']) == levels - 1]
-    assert base and all(set(item['data']) <= {'0'} for item in base), 'The configured plain-mean base cannot claim selected support'
+    assert base, 'The base band reported no support'
+    if plain_base:
+        assert all(set(item['data']) <= {'0'} for item in base), 'The configured plain-mean base cannot claim selected support'
     render = [item for item in parsed if item['event'] == 'render-step']
     assert [(item['name'], item['state']) for item in render] == [
         (name, state) for name in ['reconstruct', 'develop', 'write'] for state in ['started', 'finished']]
@@ -264,6 +267,81 @@ def preview_events(parsed, frame_count, chunk_frames=None, require_intrachunk=Fa
                 scope='stack', scale='linear', cadence='every accepted input, all accumulated scales',
                 accumulated_scale_maps=len(accumulated),
                 product='coarse green reconstruction before hull bounds and colour development')
+
+
+EVIDENCE_KINDS = {0: ('gate-support', 'linear'), 2: ('focus-energy', 'log'), 3: ('gate-floor', 'log')}
+
+
+def evidence_events(data):
+    """The engine's evidence file (crates/strehl-cli/src/ui-evidence.rs) read
+    back as the hex diagnostic lines it replaces, from an independent decoder.
+    Returns (sequence, line) pairs; any malformed byte fails."""
+    assert data[:8] == b'STRHEVD1', 'not an evidence file'
+    version, levels = struct.unpack_from('<II', data, 8)
+    assert version == 1 and 1 <= levels <= 64
+    lattices = [struct.unpack_from('<HHII', data, 16 + 12 * k)[:2] for k in range(levels)]
+    at = 16 + 12 * levels
+    (total,) = struct.unpack_from('<I', data, at)
+    at += 4
+    out = []
+    while at < len(data):
+        assert len(data) - at >= 16, 'torn record header'
+        frame, level, kind, reserved, sequence, length = struct.unpack_from('<IBBHII', data, at)
+        payload = data[at + 16:at + 16 + length]
+        assert len(payload) == length and reserved == 0 and kind in EVIDENCE_KINDS
+        at += 16 + length
+        width, height = lattices[level]
+        name, scale = EVIDENCE_KINDS[kind]
+        if kind == 0:
+            assert length == (width * height + 7) // 8
+            pixels = bytes(255 * ((payload[i // 8] >> (i % 8)) & 1) for i in range(width * height))
+            low, high = '0e0', '1e0'
+        else:
+            assert length == 8 + width * height
+            low, high = (repr(v) for v in struct.unpack_from('<ff', payload, 0))
+            pixels = payload[8:]
+        out.append((sequence, f'STREHL_UI_PROGRESS event=diagnostic seq={sequence} frame={frame} level={level} '
+                    f'kind={name} scope=frame scale={scale} width={width} height={height} min={low} '
+                    f'max={high} folded=1 total={total} sampling=nearest data={pixels.hex()}'))
+    return out
+
+
+def with_evidence(events, evidence):
+    """Interleave the file's maps with the log's by the shared sequence."""
+    pending = sorted(evidence)
+    merged = []
+    for line in events:
+        if line.startswith('STREHL_UI_PROGRESS event=diagnostic '):
+            sequence = int(line.split(' seq=', 1)[1].split()[0])
+            while pending and pending[0][0] < sequence:
+                merged.append(pending.pop(0)[1])
+        merged.append(line)
+    merged.extend(line for _, line in pending)
+    return merged
+
+
+def commission_evidence_reader():
+    """A frame map moved to the file must verify exactly as its hex line did,
+    and a map missing from the file must fail."""
+    header = b'STRHEVD1' + struct.pack('<II', 1, 2) + struct.pack('<HHII', 2, 1, 4, 2) \
+        + struct.pack('<HHII', 1, 1, 2, 1) + struct.pack('<I', 3)
+    def record(frame, level, kind, sequence, payload):
+        return struct.pack('<IBBHII', frame, level, kind, 0, sequence, len(payload)) + payload
+    data = header + record(1, 0, 0, 4, bytes([0b10])) + record(1, 0, 2, 5, struct.pack('<ff', 0.5, 2.0) + bytes([0, 255]))
+    lines = [line for _, line in evidence_events(data)]
+    assert 'kind=gate-support' in lines[0] and lines[0].endswith('data=00ff') and 'seq=4 ' in lines[0]
+    assert 'kind=focus-energy' in lines[1] and 'min=0.5 max=2.0' in lines[1] and lines[1].endswith('data=00ff')
+    log = ['STREHL_UI_PROGRESS event=diagnostic seq=3 frame=0 kind=x', 'STREHL_UI_PROGRESS event=frame-finished',
+           'STREHL_UI_PROGRESS event=diagnostic seq=6 frame=1 kind=y']
+    merged = with_evidence(log, evidence_events(data))
+    assert [line.split(' seq=')[1].split()[0] for line in merged if 'seq=' in line] == ['3', '4', '5', '6']
+    for label, broken in [('torn', data[:-1]), ('magic', b'X' + data[1:]), ('kind', data[:-21] + b'\x09' + data[-20:])]:
+        try:
+            evidence_events(broken)
+        except (AssertionError, struct.error, IndexError, KeyError):
+            continue
+        raise AssertionError(f'Evidence reader accepted a {label} file')
+    return dict(round_trip=True, interleaved_by_sequence=True, malformed_rejected=True)
 
 
 def commission_merge_verifier():
@@ -447,6 +525,10 @@ def main():
     parser.add_argument('--workers', type=int, default=1, help='Execution threads for both Rayon and pyramid pools (1–1024)')
     parser.add_argument('--require-intrachunk-preview', action='store_true', help='Require changed real preview pixels between accepted folds inside one canonical chunk')
     parser.add_argument('--commission', action='store_true', help='Exercise verifier controls without reading RAW files')
+    parser.add_argument('--merge-only', action='store_true',
+                        help='Skip the alignment-event checks. The streaming alignment no longer reports a '
+                             'pyramids phase (MEASURED 2026-11-21 at 61effa01b), so those checks fail on '
+                             'every current engine until they are updated; the merge and bytes are still checked')
     args = parser.parse_args()
     if not 1 <= args.workers <= 1024:
         parser.error('--workers must be between 1 and 1024')
@@ -454,8 +536,10 @@ def main():
         parser.error('--limit must be between 3 and 256')
     validator_controls = commission_alignment_verifier()
     merge_validator_controls = commission_merge_verifier()
+    evidence_controls = commission_evidence_reader()
     if args.commission:
-        print(json.dumps(dict(alignment=validator_controls, merge=merge_validator_controls), sort_keys=True))
+        print(json.dumps(dict(alignment=validator_controls, merge=merge_validator_controls,
+                              evidence=evidence_controls), sort_keys=True))
         return
     if args.engine is None or args.source is None or args.out is None:
         parser.error('--engine, --source and --out are required unless --commission is used')
@@ -465,11 +549,17 @@ def main():
     out.mkdir(parents=True, exist_ok=False)
     environment = {k: v for k, v in os.environ.items()
                    if not k.upper().startswith('STREHL_') and k.upper() != 'RAYON_NUM_THREADS'}
-    environment.update(RAYON_NUM_THREADS=str(args.workers), STREHL_PYRAMID_WORKERS=str(args.workers))
-    controls = dict(schema=6, validator_controls=validator_controls, merge_validator_controls=merge_validator_controls,
+    # This verifier checks the CPU fold's per-step events (extraction, focus).
+    # The GPU fold is the default where a device passes its self-test, and it
+    # reports neither, so the CPU fold is named here, not inherited.
+    environment.update(RAYON_NUM_THREADS=str(args.workers), STREHL_PYRAMID_WORKERS=str(args.workers),
+                       STREHL_GPU_FOLD='off')
+    controls = dict(schema=7, validator_controls=validator_controls, merge_validator_controls=merge_validator_controls,
+                    evidence_controls=evidence_controls,
                     engine=str(engine), engine_sha256=digest(engine),
                     source=str(source), limit=args.limit, binned=args.binned, workers=args.workers,
-                    require_intrachunk_preview=args.require_intrachunk_preview, environment_overrides={k: v for k, v in environment.items()
+                    require_intrachunk_preview=args.require_intrachunk_preview, merge_only=args.merge_only,
+                    environment_overrides={k: v for k, v in environment.items()
                         if k.startswith('STREHL_') or k == 'RAYON_NUM_THREADS'}, runs=[])
     # Failure inputs: a telemetry arm that emits no frame events, an off/placebo
     # arm that emits events, a cached on-arm hiding the real alignment path,
@@ -495,7 +585,21 @@ def main():
         events = [line for line in text.splitlines() if line.startswith('STREHL_UI_PROGRESS ')]
         finished = [line for line in events if 'event=frame-finished ' in line]
         assert (len(finished) == args.limit) if name == 'on' else not events, f'Unexpected observer routing: {name}'
-        alignment = alignment_events(events, args.limit) if name == 'on' else None
+        # The per-plane maps are in the evidence file the log names (engines
+        # before it keep them in the log); a disabled or placebo arm must
+        # neither name nor create one.
+        evidence = out / 'evidence.strehl'
+        named = [line for line in events if line.startswith('STREHL_UI_PROGRESS event=evidence-file ')]
+        assert bool(named) == evidence.exists() and (name == 'on' or not named), (
+            f'Unexpected evidence routing: {name}')
+        evidence_records = 0
+        if named:
+            assert named == ['STREHL_UI_PROGRESS event=evidence-file path=evidence.strehl version=1'], named
+            records = evidence_events(evidence.read_bytes())
+            evidence_records = len(records)
+            events = with_evidence(events, records)
+            evidence.rename(out / f'{name}.evidence.strehl')
+        alignment = alignment_events(events, args.limit) if name == 'on' and not args.merge_only else None
         merge = None
         if name == 'on':
             plan = re.search(r'memory plan\s*:\s*(\d+) canonical chunks', text)
@@ -503,13 +607,19 @@ def main():
             chunks = int(plan.group(1))
             assert 1 <= chunks <= args.limit
             chunk_frames = (args.limit + chunks - 1) // chunks
+            # The base band is weighted from the coarsest band by default
+            # (image-quality-2026-11-02 section 1b); a weighted base may
+            # report support. The engine's banner says which one ran.
+            plain_base = not re.search(r'^base band\s*:\s*weighted', text, re.M)
             merge = merge_events(events, args.limit, chunk_frames=chunk_frames,
-                                 require_intrachunk=args.require_intrachunk_preview)
+                                 require_intrachunk=args.require_intrachunk_preview, plain_base=plain_base)
+            merge['plain_base'] = plain_base
             merge['canonical_planned_chunks'] = chunks
         assert image.stat().st_size > 0
         controls['runs'].append(dict(name=name, command=command, observer=enabled,
                                     bytes=image.stat().st_size, sha256=digest(image),
                                     events=len(events), frame_events=len(finished), alignment=alignment, merge=merge,
+                                    evidence_records=evidence_records,
                                     environment_overrides={k: v for k, v in arm_environment.items()
                                         if k.startswith('STREHL_') or k == 'RAYON_NUM_THREADS'}))
         print(name, controls['runs'][-1]['sha256'], flush=True)

@@ -488,7 +488,7 @@ impl StrehlApp {
                         self.catalog.add_photo_version(version.clone())?;
                         self.photo_history.dirty = true;
                         anyhow::ensure!(
-                            current && job.recipe() == &self.editor.recipe,
+                            current && job.recipe() == &self.editor.export_recipe(),
                             "The photograph changed while preparing export. Review it and export again."
                         );
                         self.catalog.save()?;
@@ -687,7 +687,7 @@ impl StrehlApp {
                         self.photo_history.error = None;
                         self.photo_history.status = Some(format!(
                             "This window’s history was preserved in {}",
-                            path.display()
+                            crate::display_path::display_path(&path)
                         ));
                     }
                     Err(e) => self.photo_history.error = Some(e.to_string()),

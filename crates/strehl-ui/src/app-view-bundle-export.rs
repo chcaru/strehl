@@ -32,10 +32,17 @@ impl StrehlApp {
             .view_bundle_source()
             .ok_or_else(|| anyhow::anyhow!("Open a completed independent-view bundle first"))?;
         self.last_view_bundle_export = None;
+        let progress = std::sync::Arc::new(crate::session_import::BundleProgress::default());
+        self.activity_hub.bundle_progress = Some(progress.clone());
         self.view_bundle_export = Some(jobs::spawn_reporting_task(
             "strehl-export-view-bundle",
             move |cancelled| {
-                crate::session_import::export_view_bundle(&source, &destination, &cancelled)
+                crate::session_import::export_view_bundle_with_progress(
+                    &source,
+                    &destination,
+                    &cancelled,
+                    &progress,
+                )
             },
         ));
         self.error = None;
@@ -62,9 +69,13 @@ impl StrehlApp {
             return;
         };
         self.view_bundle_export = None;
+        self.activity_hub.bundle_progress = None;
         match result {
             Ok(path) => {
-                self.status = format!("Exported complete view bundle to {}", path.display());
+                self.status = format!(
+                    "Exported complete view bundle to {}",
+                    crate::display_path::display_path(&path)
+                );
                 self.last_view_bundle_export = Some(path);
             }
             Err(error) => {

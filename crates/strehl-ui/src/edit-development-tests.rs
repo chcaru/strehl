@@ -124,6 +124,7 @@ fn same_path_same_revision_reload_discards_ready_coarse_pixels_and_keeps_latest(
     .unwrap();
     let task = spawn_task("stale-ready-coarse", move |_| {
         Ok(DevelopedPreview {
+            histogram: None,
             snapshot: old.token(),
             revision,
             before: false,
@@ -172,6 +173,7 @@ fn explicit_cancelled_ready_coarse_result_is_replaced_not_published() {
     .unwrap();
     let task = spawn_task("cancel-ready-coarse", move |_| {
         Ok(DevelopedPreview {
+            histogram: None,
             snapshot: token,
             revision: 0,
             before: false,

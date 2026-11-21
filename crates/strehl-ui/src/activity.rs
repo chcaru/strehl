@@ -6,10 +6,6 @@
 //! frame's list, notices terminal states and keeps a bounded history.
 //!
 //! Interactive edit previews and thumbnails are not activities.
-#![allow(
-    dead_code,
-    reason = "the shell wires activities, the tray and the queue in P5 stage 2"
-)]
 use crate::workspace_history::NodeId;
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
@@ -39,8 +35,28 @@ pub(crate) enum ActivityKind {
     Capture,
     Metadata,
     Import,
+    /// Reading a bracket or reopening a saved render (additive to the plan's
+    /// list: they hold the workspace while they run).
+    Open,
 }
 impl ActivityKind {
+    /// The snapshot's name for the kind.
+    pub(crate) fn key(self) -> &'static str {
+        match self {
+            Self::Stack => "stack",
+            Self::Export => "export",
+            Self::ViewBundle => "view_bundle",
+            Self::FocusStep => "focus_step",
+            Self::CompactEstimate => "compact_estimate",
+            Self::CompactApply => "compact_apply",
+            Self::Calibration => "calibration",
+            Self::CaptureFollow => "capture_follow",
+            Self::Capture => "capture",
+            Self::Metadata => "metadata",
+            Self::Import => "import",
+            Self::Open => "open",
+        }
+    }
     pub(crate) fn label(self) -> &'static str {
         match self {
             Self::Stack => "Stack",
@@ -54,6 +70,7 @@ impl ActivityKind {
             Self::Capture => "Capture",
             Self::Metadata => "Camera metadata",
             Self::Import => "Open completed session",
+            Self::Open => "Open",
         }
     }
 }
@@ -156,6 +173,8 @@ pub(crate) struct ActivityStatus {
     pub log: Option<PathBuf>,
     /// A queued stack's place in the queue, for Remove.
     pub queued: Option<u64>,
+    /// Facts beside the progress: workers, RAW count, size.
+    pub facts: String,
 }
 impl ActivityStatus {
     /// A running activity identified by `key` (a run folder, a capture, …).
@@ -175,7 +194,12 @@ impl ActivityStatus {
             lane,
             log: None,
             queued: None,
+            facts: String::new(),
         }
+    }
+    /// One running activity of a kind that runs one at a time.
+    pub(crate) fn running(kind: ActivityKind, title: impl Into<String>, lane: Lane) -> Self {
+        Self::new(kind, kind.key(), title, lane)
     }
     pub(crate) fn with_state(mut self, state: ActivityState) -> Self {
         self.state = state;
@@ -199,6 +223,28 @@ impl ActivityStatus {
         let (done, total) = (self.done?, self.total?);
         (total > 0).then(|| (done as f32 / total as f32).clamp(0.0, 1.0))
     }
+    /// The short line under a title: phase, count, then time left when
+    /// known, else the time it has run ("Merge · 120 / 299 · 1 min 40 s left").
+    pub(crate) fn progress_line(&self, now: Instant) -> String {
+        let mut parts: Vec<String> = Vec::new();
+        if !self.phase.is_empty() {
+            parts.push(self.phase.clone());
+        }
+        if let (Some(done), Some(total)) = (self.done, self.total) {
+            parts.push(format!("{done} / {total}"));
+        }
+        if let Some(eta) = self.eta {
+            parts.push(format!("{} left", crate::render_eta::spoken(eta)));
+        } else if let Some(started) = self.started {
+            let seconds = now.saturating_duration_since(started).as_secs();
+            parts.push(format!("{}:{:02}", seconds / 60, seconds % 60));
+        }
+        parts.join(" · ")
+    }
+    /// Whether the activity still holds the user's attention (not finished).
+    pub(crate) fn active(&self) -> bool {
+        !self.state.terminal()
+    }
     pub(crate) fn public(&self, now: Instant) -> Value {
         let mut value = json!({
             "id": self.id, "kind": self.kind, "title": self.title, "stack": self.stack,
@@ -206,6 +252,7 @@ impl ActivityStatus {
             "elapsed_seconds": self.started.map(|s| now.saturating_duration_since(s).as_secs_f64()),
             "eta_seconds": self.eta.map(|e| e.as_secs_f64()),
             "cancel": self.cancel, "lane": self.lane, "log": self.log, "queued": self.queued,
+            "facts": self.facts,
         });
         match &self.state {
             ActivityState::Waiting { for_what, gives_up } => {
@@ -229,12 +276,6 @@ impl ActivityStatus {
         }
         value
     }
-}
-
-/// An owner that can describe and stop its work.
-pub(crate) trait Activity {
-    fn status(&self) -> ActivityStatus;
-    fn cancel(&mut self);
 }
 
 /// FNV-1a of the kind and key: stable across frames and runs.
@@ -297,9 +338,6 @@ impl Activities {
     }
     pub(crate) fn report(&mut self, status: ActivityStatus) {
         self.current.push(status);
-    }
-    pub(crate) fn report_from(&mut self, owner: &dyn Activity) {
-        self.report(owner.status());
     }
     /// Close the frame: record terminal states once, note changes.
     pub(crate) fn end(&mut self, now: Instant, unix: u64) {
@@ -374,6 +412,7 @@ impl Activities {
     pub(crate) fn find(&self, id: u64) -> Option<&ActivityStatus> {
         self.current.iter().find(|s| s.id == id)
     }
+    #[cfg(test)]
     pub(crate) fn running(&self) -> impl Iterator<Item = &ActivityStatus> {
         self.current
             .iter()
@@ -384,10 +423,9 @@ impl Activities {
             .iter()
             .filter(|s| matches!(s.state, ActivityState::Waiting { .. }))
     }
-    pub(crate) fn needs_you(&self) -> impl Iterator<Item = &ActivityStatus> {
-        self.current
-            .iter()
-            .filter(|s| matches!(s.state, ActivityState::NeedsYou { .. }))
+    /// What is under way or waiting for the user: everything not finished.
+    pub(crate) fn active(&self) -> impl Iterator<Item = &ActivityStatus> {
+        self.current.iter().filter(|s| s.active())
     }
     /// Whether a Heavy-lane activity is running (the lane is serial).
     pub(crate) fn heavy_busy(&self) -> bool {
@@ -399,7 +437,8 @@ impl Activities {
     pub(crate) fn history(&self) -> &VecDeque<HistoryEntry> {
         &self.history
     }
-    /// Changes when the list or a state changes; views cache on it.
+    /// Changes when the list or a state changes.
+    #[cfg(test)]
     pub(crate) fn revision(&self) -> u64 {
         self.revision
     }
@@ -417,12 +456,13 @@ impl Activities {
     }
 }
 
-/// Quiet mode: hold the Heavy lane's next start while a full-screen program
-/// is in front, or while the owner's switch is on. Captures and transfers
-/// never wait. The foreground is read at most every `QUIET_POLL`.
+/// Quiet mode: while it is on (the Preferences switch, default on), hold the
+/// Heavy lane's next start while a full-screen program is in front.
+/// Captures and transfers never wait. The foreground is read at most every
+/// `QUIET_POLL`, and only while Quiet is on.
 pub(crate) struct QuietMode {
-    /// The Preferences switch (supplied by the shell).
-    pub switch: bool,
+    /// The Preferences switch.
+    pub enabled: bool,
     detected: bool,
     checked: Option<Instant>,
     probe: fn() -> bool,
@@ -431,7 +471,7 @@ pub(crate) const QUIET_POLL: Duration = Duration::from_secs(2);
 impl Default for QuietMode {
     fn default() -> Self {
         Self {
-            switch: false,
+            enabled: true,
             detected: false,
             checked: None,
             probe: full_screen_in_front,
@@ -448,6 +488,10 @@ impl QuietMode {
     }
     /// Whether heavy work waits now; reads the foreground on a timer.
     pub(crate) fn holds(&mut self, now: Instant) -> bool {
+        if !self.enabled {
+            self.detected = false;
+            return false;
+        }
         if self
             .checked
             .is_none_or(|at| now.saturating_duration_since(at) >= QUIET_POLL)
@@ -455,7 +499,7 @@ impl QuietMode {
             self.checked = Some(now);
             self.detected = (self.probe)();
         }
-        self.switch || self.detected
+        self.detected
     }
     /// The last reading, without probing.
     pub(crate) fn full_screen(&self) -> bool {
@@ -463,13 +507,8 @@ impl QuietMode {
     }
     /// Why heavy work waits, for a Waiting state.
     pub(crate) fn reason(&self) -> Option<&'static str> {
-        if self.detected {
-            Some("the full-screen program in front to close (Quiet)")
-        } else if self.switch {
-            Some("Quiet to be switched off")
-        } else {
-            None
-        }
+        (self.enabled && self.detected)
+            .then_some("the full-screen program in front to close (Quiet)")
     }
 }
 
@@ -509,9 +548,13 @@ pub(crate) fn tool_status(
     let title = format!("{} · {name}", kind.label());
     let status = ActivityStatus::new(kind, &key, title, lane);
     if let Some(job) = &slot.job {
-        let mut status = status
-            .with_phase("Running the engine")
-            .with_cancel(CancelMode::Kill);
+        // Compaction rewrites a capture: once started it runs to the end.
+        let cancel = if kind == ActivityKind::CompactApply {
+            CancelMode::None
+        } else {
+            CancelMode::Kill
+        };
+        let mut status = status.with_phase("Running the engine").with_cancel(cancel);
         status.started = Instant::now().checked_sub(job.elapsed());
         return Some(status);
     }

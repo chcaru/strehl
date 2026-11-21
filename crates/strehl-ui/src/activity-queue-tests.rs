@@ -81,7 +81,8 @@ fn the_heavy_lane_starts_one_stack_at_a_time_in_order() {
             .take_next(
                 StartGate {
                     heavy_busy: true,
-                    quiet: false
+                    quiet: false,
+                    workspace: None
                 },
                 1
             )
@@ -93,7 +94,8 @@ fn the_heavy_lane_starts_one_stack_at_a_time_in_order() {
             .take_next(
                 StartGate {
                     heavy_busy: false,
-                    quiet: true
+                    quiet: true,
+                    workspace: None
                 },
                 1
             )
@@ -148,6 +150,7 @@ fn waiting_stacks_say_what_they_wait_for() {
     let quiet = StartGate {
         heavy_busy: false,
         quiet: true,
+        workspace: None,
     };
     assert_eq!(
         report(&queue, &mut activities, quiet)[0].1,

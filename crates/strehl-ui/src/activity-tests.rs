@@ -151,7 +151,7 @@ fn busy_probe() -> bool {
 }
 
 #[test]
-fn quiet_mode_reads_the_foreground_on_a_timer_and_the_switch_always_holds() {
+fn quiet_mode_reads_the_foreground_on_a_timer_and_only_while_on() {
     let mut quiet = QuietMode::with_probe(busy_probe);
     let start = Instant::now();
     let before = PROBES.load(Ordering::SeqCst);
@@ -164,11 +164,15 @@ fn quiet_mode_reads_the_foreground_on_a_timer_and_the_switch_always_holds() {
     assert_eq!(PROBES.load(Ordering::SeqCst) - before, 2);
     assert!(quiet.full_screen());
     assert!(quiet.reason().unwrap().contains("full-screen"));
-    let mut switch = QuietMode::with_probe(|| false);
-    assert!(!switch.holds(start));
-    switch.switch = true;
-    assert!(switch.holds(start));
-    assert_eq!(switch.reason(), Some("Quiet to be switched off"));
+    // Off: no hold and no reading of the foreground.
+    let mut off = QuietMode::with_probe(busy_probe);
+    off.enabled = false;
+    let probes = PROBES.load(Ordering::SeqCst);
+    assert!(!off.holds(start + Duration::from_secs(60)));
+    assert_eq!(PROBES.load(Ordering::SeqCst), probes);
+    assert_eq!(off.reason(), None);
+    let mut idle = QuietMode::with_probe(|| false);
+    assert!(!idle.holds(start), "nothing in front, nothing held");
     // The real probe answers without failing on this machine.
     let _ = full_screen_in_front();
 }
@@ -218,11 +222,14 @@ fn engine_tool_slots_report_running_and_their_kept_results() {
             )
             .unwrap(),
         );
-        let status = tool_status(ActivityKind::CompactApply, &slot, Lane::Heavy).unwrap();
+        let status = tool_status(ActivityKind::FocusStep, &slot, Lane::Background).unwrap();
         assert_eq!(status.state, ActivityState::Running);
+        assert_eq!(status.cancel, CancelMode::Kill);
+        let compaction = tool_status(ActivityKind::CompactApply, &slot, Lane::Heavy).unwrap();
         assert_eq!(
-            (status.cancel, status.lane),
-            (CancelMode::Kill, Lane::Heavy)
+            (compaction.cancel, compaction.lane),
+            (CancelMode::None, Lane::Heavy),
+            "compaction runs to its end"
         );
         assert!(status.started.is_some());
         slot.cancel();

@@ -9,7 +9,9 @@ use std::sync::{Mutex, OnceLock};
 
 #[path = "ui-diagnostics.rs"]
 mod diagnostics;
-pub(crate) use diagnostics::FrameTap;
+#[path = "ui-evidence.rs"]
+mod evidence;
+pub(crate) use diagnostics::{FrameTap, lattice};
 
 const ENV: &str = "STREHL_UI_PROGRESS";
 
@@ -229,6 +231,25 @@ impl Progress {
         }
     }
 
+    /// Each frame the alignment could not place, with the solve's reason
+    /// (implementation plan E3), so a view can mark it refused rather than
+    /// missing. Its own key: the byte-freeze tests parse `alignment`,
+    /// `workers` and `memory plan` lines, never these.
+    pub(crate) fn unplaced_frames(&self, map: &strehl_core::warpmap::WarpMap) {
+        if !self.enabled {
+            return;
+        }
+        for frame in 0..map.len() {
+            if let Ok(strehl_core::warpmap::FrameWarp::Refused(reason)) = map.warp(frame) {
+                self.emit(format!(
+                    "event=frame-unplaced frame={frame} reason={} total={}",
+                    reason_token(reason),
+                    self.total
+                ));
+            }
+        }
+    }
+
     #[cfg(test)]
     pub(crate) fn captured(total: usize) -> (Self, std::sync::Arc<Mutex<Vec<String>>>) {
         let capture = std::sync::Arc::new(Mutex::new(Vec::new()));
@@ -334,6 +355,27 @@ impl Progress {
 
 fn enabled_value(value: Option<&str>) -> bool {
     value == Some("1")
+}
+
+/// A refusal reason as one `key=value` token: whitespace and `=` become
+/// `-`, other characters outside a plain set `_`, at most 160 characters.
+fn reason_token(reason: &str) -> String {
+    let token: String = reason
+        .trim()
+        .chars()
+        .map(|c| match c {
+            c if c.is_ascii_alphanumeric() => c,
+            '-' | '_' | '.' | ',' | ':' | '(' | ')' | '/' | '+' => c,
+            c if c.is_whitespace() || c == '=' => '-',
+            _ => '_',
+        })
+        .take(160)
+        .collect();
+    if token.is_empty() {
+        "unstated".into()
+    } else {
+        token
+    }
 }
 
 fn snapshot(completed: usize, total: usize) -> bool {

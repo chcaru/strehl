@@ -1,0 +1,1186 @@
+//! The Export station (implementation plan 7.6; mockup `screens/export.html`)
+//! as self-contained parts for the Studio 2 shell: the presets list with its
+//! check boxes, the selected preset's editor, the "In every file" switches,
+//! name and place, the export history under the photograph, and the batch
+//! that writes every ticked preset through one job, a phase per file.
+//!
+//! Files are never overwritten: names come from `available_path` before the
+//! batch starts, and every encoder publishes with `new_file_checked`.
+#![allow(
+    dead_code,
+    reason = "the Studio 2 shell (P1) composes these parts; tests use them until then"
+)]
+use crate::develop_station::style::{self, ButtonKind, Mark, StudioPalette};
+use crate::export_presets::{
+    ExportPreset, ImagePreset, Library, NameFields, PresetOutput, available_path, expand_name,
+};
+use anyhow::{Context, Result, ensure};
+use eframe::egui::{self, Align2, CornerRadius, Rect, Sense, Ui};
+use std::{
+    io::Write,
+    path::{Path, PathBuf},
+    sync::{
+        Arc,
+        atomic::{AtomicBool, AtomicU8, AtomicUsize, Ordering},
+    },
+};
+use strehl_edit::{
+    ExportDateTime, ExportFormat, ExportSettings, OutputColorSpace, OutputSharpening, Resize,
+    ResizeFilter,
+};
+
+// ------------------------------------------------------------------ summaries
+
+fn format_name(format: ExportFormat) -> &'static str {
+    match format {
+        ExportFormat::Avif => "AVIF",
+        ExportFormat::Tiff => "TIFF",
+        ExportFormat::Png => "PNG",
+        ExportFormat::Jpeg => "JPEG",
+    }
+}
+
+fn space_name(space: OutputColorSpace, hdr: bool) -> &'static str {
+    match (space, hdr) {
+        (OutputColorSpace::Srgb, _) => "sRGB",
+        (OutputColorSpace::DisplayP3, _) => "Display P3",
+        (OutputColorSpace::Rec2020, true) => "Rec.2020 PQ",
+        (OutputColorSpace::Rec2020, false) => "Rec.2020",
+    }
+}
+
+/// The preset's one line, for example `JPEG · sRGB · 2560 px long edge · quality 90`.
+pub(crate) fn preset_summary(output: &PresetOutput) -> String {
+    match output {
+        PresetOutput::Archive => "Linear master and the develop recipe".into(),
+        PresetOutput::Image(image) => {
+            let s = &image.settings;
+            let mut parts = vec![
+                match s.format {
+                    ExportFormat::Tiff => "TIFF 16-bit".into(),
+                    format => format_name(format).to_owned(),
+                },
+                space_name(s.color_space, s.hdr).to_owned(),
+                s.resize.map_or("full size".into(), |r| {
+                    format!("{} px long edge", r.long_edge)
+                }),
+            ];
+            match s.format {
+                ExportFormat::Jpeg => parts.push(format!("quality {}", s.quality)),
+                ExportFormat::Avif => parts.push("10-bit".into()),
+                _ => {}
+            }
+            parts.join(" · ")
+        }
+    }
+}
+
+/// Output size in pixels for a photograph of `size` (after its crop).
+pub(crate) fn output_size(output: &PresetOutput, size: [u32; 2]) -> [u32; 2] {
+    match output {
+        PresetOutput::Image(image) => image
+            .settings
+            .resize
+            .and_then(|r| r.target(size))
+            .unwrap_or(size),
+        PresetOutput::Archive => size,
+    }
+}
+
+/// A rough file size: bytes per pixel measured on the owner's 33 MP weevil
+/// (P7 model note: JPEG q90 0.39, AVIF HDR q100 0.42, PNG 16-bit P3 4.2,
+/// TIFF 16-bit 6.0; the master 12).
+pub(crate) fn estimate_bytes(output: &PresetOutput, size: [u32; 2]) -> u64 {
+    let [w, h] = output_size(output, size);
+    let pixels = f64::from(w) * f64::from(h);
+    let per_pixel = match output {
+        PresetOutput::Archive => 12.0,
+        PresetOutput::Image(image) => match image.settings.format {
+            ExportFormat::Jpeg => 0.39 * f64::from(image.settings.quality) / 90.0,
+            ExportFormat::Avif => 0.42,
+            ExportFormat::Png => 4.2,
+            ExportFormat::Tiff => 6.0,
+        },
+    };
+    (pixels * per_pixel) as u64
+}
+
+pub(crate) fn human_bytes(bytes: u64) -> String {
+    let b = bytes as f64;
+    if b >= 1e9 {
+        format!("{:.1} GB", b / 1e9)
+    } else if b >= 1e6 {
+        format!("{:.1} MB", b / 1e6).replace(".0 MB", " MB")
+    } else {
+        format!("{:.0} KB", (b / 1e3).max(1.0))
+    }
+}
+
+/// Seconds for a batch, from encoder speeds measured on the 33 MP master
+/// (AVIF speed 10 about 16 s, the SDR formats under 2 s).
+pub(crate) fn estimate_seconds(outputs: &[&PresetOutput], size: [u32; 2]) -> f64 {
+    outputs
+        .iter()
+        .map(|output| {
+            let [w, h] = output_size(output, size);
+            let mp = f64::from(w) * f64::from(h) / 1e6;
+            match output {
+                PresetOutput::Archive => 0.02 * mp,
+                PresetOutput::Image(image) => match image.settings.format {
+                    ExportFormat::Avif => {
+                        0.5 * mp * (1.0 + f64::from(10 - image.settings.speed.min(10)) * 0.4)
+                    }
+                    _ => 0.05 * mp + 0.2,
+                },
+            }
+        })
+        .sum()
+}
+
+// ------------------------------------------------------------------- history
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum HistoryStatus {
+    Checking,
+    Unchanged,
+    /// The file is still there but its bytes are not the ones written.
+    Changed,
+    Missing,
+    /// Written from a version older than the current edit.
+    Older,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) struct HistoryRow {
+    pub id: String,
+    pub path: PathBuf,
+    pub preset: String,
+    pub size: String,
+    pub version: String,
+    pub when: String,
+    pub status: HistoryStatus,
+}
+
+// ---------------------------------------------------------------------- view
+
+/// What the Export parts read; built by the caller from state it holds.
+pub(crate) struct ExportView<'a> {
+    pub palette: &'a StudioPalette,
+    pub library: &'a Library,
+    pub fields: NameFields<'a>,
+    pub destination: Option<&'a Path>,
+    /// Size of the developed photograph after its crop.
+    pub size: [u32; 2],
+    pub has_scale_bar: bool,
+    pub calibrated: bool,
+    pub hdr_photo: bool,
+    pub history: &'a [HistoryRow],
+    pub batch: Option<BatchSnapshot>,
+    pub can_export: bool,
+    /// For example: a depth repair is pending; files use the last finished pixels.
+    pub note: Option<&'a str>,
+}
+
+/// Panel state that is not the library itself.
+#[derive(Clone, Debug, Default)]
+pub(crate) struct ExportPanel {
+    /// The preset shown in the editor (and in the canvas preview).
+    pub selected: Option<String>,
+    pub template_draft: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) enum ExportIntent {
+    Tick(String, bool),
+    Select(String),
+    Edit(String, PresetOutput),
+    NewPreset,
+    SetTemplate(String),
+    ChangeDestination,
+    OpenFolder,
+    ExportTicked,
+    CancelBatch,
+    Reveal(PathBuf),
+    CopyPath(PathBuf),
+    ExportAgain(String),
+}
+
+/// Sharpening choices "for the size". `Screen` is the conservative default
+/// measured against the flat-ROI control (engineering ledger rule 9).
+pub(crate) fn sharpen_choices() -> [(&'static str, Option<OutputSharpening>); 3] {
+    [
+        ("Off", None),
+        ("Screen", Some(OutputSharpening::default())),
+        (
+            "Print",
+            Some(OutputSharpening {
+                amount: 0.4,
+                radius_px: 1.2,
+                ..OutputSharpening::default()
+            }),
+        ),
+    ]
+}
+
+/// The inspector: presets, the selected preset, "In every file", name and
+/// place, and the foot with the batch button.
+pub(crate) fn inspector(
+    ui: &mut Ui,
+    panel: &mut ExportPanel,
+    view: &ExportView<'_>,
+) -> Vec<ExportIntent> {
+    let pal = view.palette;
+    let mut intents = Vec::new();
+    let full = ui.available_rect_before_wrap();
+    ui.painter()
+        .rect_filled(full, CornerRadius::ZERO, pal.panel);
+    style::hairline(ui.painter(), full.left_top(), full.left_bottom(), pal.line);
+    let foot_height = 53.0;
+    let body = Rect::from_min_max(
+        egui::pos2(full.left() + 16.0, full.top() + 14.0),
+        egui::pos2(full.right() - 16.0, full.bottom() - foot_height - 8.0),
+    );
+    if panel
+        .selected
+        .as_ref()
+        .is_none_or(|id| !view.library.presets.iter().any(|p| &p.id == id))
+    {
+        panel.selected = view.library.ticked().next().map(|p| p.id.clone());
+    }
+    let mut body_ui = ui.new_child(
+        egui::UiBuilder::new()
+            .max_rect(body)
+            .layout(egui::Layout::top_down(egui::Align::Min)),
+    );
+    egui::ScrollArea::vertical()
+        .id_salt("export-inspector")
+        .auto_shrink([false, false])
+        .show(&mut body_ui, |ui| {
+            ui.spacing_mut().item_spacing.y = 8.0;
+            presets_list(ui, panel, view, &mut intents);
+            if let Some(preset) = panel
+                .selected
+                .as_ref()
+                .and_then(|id| view.library.presets.iter().find(|p| &p.id == id))
+            {
+                preset_editor(ui, view, preset, &mut intents);
+            }
+            every_file(ui, view, &mut intents);
+            name_and_place(ui, panel, view, &mut intents);
+        });
+    let foot = Rect::from_min_max(
+        egui::pos2(full.left(), full.bottom() - foot_height),
+        full.max,
+    );
+    style::hairline(ui.painter(), foot.left_top(), foot.right_top(), pal.line);
+    let mut foot_ui = ui.new_child(
+        egui::UiBuilder::new()
+            .max_rect(foot.shrink2(egui::vec2(16.0, 12.0)))
+            .layout(egui::Layout::left_to_right(egui::Align::Center)),
+    );
+    let ticked: Vec<&PresetOutput> = view.library.ticked().map(|p| &p.output).collect();
+    if let Some(batch) = &view.batch {
+        let text = batch.caption();
+        let width = foot_ui.available_width() - 80.0;
+        let (rect, _) = foot_ui.allocate_exact_size(egui::vec2(width, 28.0), Sense::hover());
+        style::paint_text(
+            foot_ui.painter(),
+            rect.left_center(),
+            Align2::LEFT_CENTER,
+            &text,
+            12.5,
+            pal.ink,
+        );
+        let bar = Rect::from_min_max(
+            egui::pos2(rect.left(), rect.bottom() - 2.0),
+            rect.right_bottom(),
+        );
+        foot_ui
+            .painter()
+            .rect_filled(bar, CornerRadius::ZERO, pal.line_2);
+        foot_ui.painter().rect_filled(
+            Rect::from_min_size(bar.min, egui::vec2(bar.width() * batch.fraction(), 2.0)),
+            CornerRadius::ZERO,
+            pal.accent,
+        );
+        if style::button(
+            &mut foot_ui,
+            pal,
+            "Cancel",
+            ButtonKind::Plain,
+            egui::vec2(72.0, 28.0),
+            !batch.cancelling,
+        )
+        .clicked()
+        {
+            intents.push(ExportIntent::CancelBatch);
+        }
+    } else {
+        let count = ticked.len();
+        let label = match count {
+            0 => "Tick a preset to export".to_owned(),
+            1 => "Export 1 file".to_owned(),
+            n => format!("Export {n} files"),
+        };
+        let seconds = estimate_seconds(&ticked, view.size);
+        let estimate = format!("about {}", format_seconds(seconds));
+        let width = foot_ui.available_width() - 80.0;
+        if style::button(
+            &mut foot_ui,
+            pal,
+            &label,
+            ButtonKind::Primary,
+            egui::vec2(width, 28.0),
+            count > 0 && view.can_export && view.destination.is_some(),
+        )
+        .on_hover_text(if view.destination.is_none() {
+            "Choose where the files go"
+        } else {
+            "Ctrl+E · existing files are never overwritten"
+        })
+        .clicked()
+        {
+            intents.push(ExportIntent::ExportTicked);
+        }
+        style::text(&mut foot_ui, &estimate, style::SMALL, pal.ink_3);
+    }
+    ui.advance_cursor_after_rect(full);
+    if ui.input(|i| i.modifiers.command && i.key_pressed(egui::Key::E))
+        && view.batch.is_none()
+        && view.can_export
+    {
+        intents.push(ExportIntent::ExportTicked);
+    }
+    intents
+}
+
+pub(crate) fn format_seconds(seconds: f64) -> String {
+    if seconds < 60.0 {
+        format!("{} s", (seconds.round() as u64).max(1))
+    } else {
+        format!("{} min", (seconds / 60.0).round() as u64)
+    }
+}
+
+fn presets_list(
+    ui: &mut Ui,
+    panel: &mut ExportPanel,
+    view: &ExportView<'_>,
+    intents: &mut Vec<ExportIntent>,
+) {
+    let pal = view.palette;
+    ui.horizontal(|ui| {
+        style::caps(ui, "Presets", style::CAPS, pal.ink_3);
+        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+            if style::link(ui, pal, "New preset…", false).clicked() {
+                intents.push(ExportIntent::NewPreset);
+            }
+        });
+    });
+    for preset in &view.library.presets {
+        let width = ui.available_width();
+        let (rect, response) = ui.allocate_exact_size(egui::vec2(width, 66.0), Sense::click());
+        let on = panel.selected.as_ref() == Some(&preset.id);
+        let painter = ui.painter();
+        if on {
+            painter.rect_filled(
+                Rect::from_min_size(rect.min, egui::vec2(2.0, rect.height())),
+                CornerRadius::ZERO,
+                pal.accent,
+            );
+        } else if response.hovered() {
+            painter.rect_filled(rect, CornerRadius::ZERO, pal.raised);
+        }
+        style::hairline(painter, rect.left_bottom(), rect.right_bottom(), pal.line);
+        let left = rect.left() + if on { 10.0 } else { 0.0 };
+        let check =
+            Rect::from_min_size(egui::pos2(left, rect.top() + 13.0), egui::vec2(14.0, 14.0));
+        style::paint_checkbox(painter, check, pal, preset.enabled);
+        let text = left + 28.0;
+        style::paint_text(
+            painter,
+            egui::pos2(text, rect.top() + 18.0),
+            Align2::LEFT_CENTER,
+            &preset.name,
+            style::BODY,
+            pal.ink,
+        );
+        style::paint_text(
+            painter,
+            egui::pos2(text, rect.top() + 36.0),
+            Align2::LEFT_CENTER,
+            &preset_summary(&preset.output),
+            style::SMALL,
+            pal.ink_2,
+        );
+        let file = expand_name(
+            &view.library.template,
+            &NameFields {
+                preset: &preset.name,
+                ..view.fields.clone()
+            },
+        )
+        .map(|stem| {
+            format!(
+                "{stem}.{} · {}",
+                preset.output.extension(),
+                human_bytes(estimate_bytes(&preset.output, view.size))
+            )
+        })
+        .unwrap_or_else(|_| "the name template needs attention".into());
+        painter.text(
+            egui::pos2(text, rect.top() + 53.0),
+            Align2::LEFT_CENTER,
+            file,
+            egui::FontId::monospace(11.0),
+            pal.ink_3,
+        );
+        let check_hit = ui.interact(
+            check.expand(6.0),
+            ui.id().with(("tick", &preset.id)),
+            Sense::click(),
+        );
+        if check_hit.clicked() {
+            intents.push(ExportIntent::Tick(preset.id.clone(), !preset.enabled));
+        } else if response.clicked() {
+            panel.selected = Some(preset.id.clone());
+            intents.push(ExportIntent::Select(preset.id.clone()));
+        }
+    }
+}
+
+fn row(ui: &mut Ui, pal: &StudioPalette, label: &str, new: bool, add: impl FnOnce(&mut Ui)) {
+    ui.horizontal(|ui| {
+        ui.set_min_height(24.0);
+        style::text(ui, label, style::BODY, pal.ink_2);
+        if new {
+            style::tag(ui, pal, "new", true);
+        }
+        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), add);
+    });
+}
+
+fn preset_editor(
+    ui: &mut Ui,
+    view: &ExportView<'_>,
+    preset: &ExportPreset,
+    intents: &mut Vec<ExportIntent>,
+) {
+    let pal = view.palette;
+    style::sect(
+        ui,
+        pal,
+        &format!("{} preset", preset.name),
+        Some("changes are saved to the preset"),
+    );
+    let PresetOutput::Image(image) = &preset.output else {
+        style::text(
+            ui,
+            "Copies the scene-linear master and the develop recipe beside each other.",
+            style::SMALL,
+            pal.ink_2,
+        );
+        return;
+    };
+    let mut next = image.clone();
+    let s = &mut next.settings;
+    let formats = [
+        ExportFormat::Avif,
+        ExportFormat::Tiff,
+        ExportFormat::Png,
+        ExportFormat::Jpeg,
+    ];
+    row(ui, pal, "Format", false, |ui| {
+        // Right-to-left: list in reverse so AVIF stays first on screen.
+        if let Some(i) = style::seg(
+            ui,
+            pal,
+            &["AVIF", "TIFF", "PNG", "JPEG"],
+            formats.iter().position(|f| *f == s.format),
+        ) {
+            s.format = formats[i];
+            s.hdr = s.format == ExportFormat::Avif && s.hdr && view.hdr_photo;
+            if s.format != ExportFormat::Tiff {
+                s.embed_recipe = false;
+            }
+        }
+    });
+    let spaces = [
+        OutputColorSpace::Srgb,
+        OutputColorSpace::DisplayP3,
+        OutputColorSpace::Rec2020,
+    ];
+    row(ui, pal, "Colour space", false, |ui| {
+        if let Some(i) = style::seg(
+            ui,
+            pal,
+            &["sRGB", "P3", "Rec.2020"],
+            spaces.iter().position(|c| *c == s.color_space),
+        ) {
+            s.color_space = spaces[i];
+        }
+    });
+    if s.format == ExportFormat::Avif && view.hdr_photo {
+        row(ui, pal, "Range", false, |ui| {
+            if let Some(i) = style::seg(ui, pal, &["HDR", "SDR"], Some(usize::from(!s.hdr))) {
+                s.hdr = i == 0;
+            }
+        });
+    }
+    row(ui, pal, "Size", true, |ui| {
+        let mut long = s.resize.map(|r| r.long_edge).unwrap_or(0);
+        let response = ui.add(
+            egui::DragValue::new(&mut long)
+                .range(0..=65_535)
+                .custom_formatter(|v, _| {
+                    if v < 16.0 {
+                        "Full size".into()
+                    } else {
+                        format!("Long edge {v:.0} px")
+                    }
+                }),
+        );
+        if response.changed() {
+            s.resize = (long >= 16).then_some(Resize {
+                long_edge: long,
+                filter: s.resize.map_or(ResizeFilter::Mitchell, |r| r.filter),
+            });
+        }
+    });
+    let choices = sharpen_choices();
+    row(ui, pal, "Sharpen for the size", true, |ui| {
+        let current = choices.iter().position(|(_, c)| *c == s.sharpen);
+        if let Some(i) = style::seg(ui, pal, &["Off", "Screen", "Print"], current) {
+            s.sharpen = choices[i].1;
+        }
+    });
+    if matches!(s.format, ExportFormat::Jpeg | ExportFormat::Avif) {
+        row(ui, pal, "Quality", false, |ui| {
+            let mut q = s.quality;
+            if ui
+                .add(egui::DragValue::new(&mut q).range(1..=100))
+                .changed()
+            {
+                s.quality = q;
+            }
+        });
+    }
+    if next != *image {
+        intents.push(ExportIntent::Edit(
+            preset.id.clone(),
+            PresetOutput::Image(next),
+        ));
+    }
+}
+
+fn every_file(ui: &mut Ui, view: &ExportView<'_>, intents: &mut Vec<ExportIntent>) {
+    let pal = view.palette;
+    style::sect(ui, pal, "In every file", None);
+    let images: Vec<(&ExportPreset, &ImagePreset)> = view
+        .library
+        .ticked()
+        .filter_map(|p| match &p.output {
+            PresetOutput::Image(image) => Some((p, image)),
+            PresetOutput::Archive => None,
+        })
+        .collect();
+    let all =
+        |f: &dyn Fn(&ImagePreset) -> bool| !images.is_empty() && images.iter().all(|(_, i)| f(i));
+    let mut set = |f: &dyn Fn(&mut ImagePreset, bool), on: bool| {
+        for (preset, image) in &images {
+            let mut next = (*image).clone();
+            f(&mut next, on);
+            if &next != *image {
+                intents.push(ExportIntent::Edit(
+                    preset.id.clone(),
+                    PresetOutput::Image(next),
+                ));
+            }
+        }
+    };
+    let bar_on = all(&|i| i.settings.scale_bar);
+    let option = |ui: &mut Ui, on: bool, enabled: bool, label: &str, aside: &str| -> bool {
+        let mut clicked = false;
+        ui.horizontal(|ui| {
+            ui.set_min_height(26.0);
+            ui.add_enabled_ui(enabled, |ui| {
+                clicked = style::toggle(ui, pal, on).clicked();
+            });
+            style::text(
+                ui,
+                label,
+                style::BODY,
+                if enabled { pal.ink } else { pal.ink_3 },
+            );
+            if !aside.is_empty() {
+                style::text(ui, aside, style::SMALL, pal.ink_3);
+            }
+        });
+        clicked
+    };
+    let bar_possible = view.has_scale_bar && view.calibrated;
+    if option(
+        ui,
+        bar_on,
+        bar_possible,
+        "Scale bar",
+        if !view.has_scale_bar {
+            "add one in Develop"
+        } else if !view.calibrated {
+            "the subject has no scale calibration"
+        } else {
+            ""
+        },
+    ) {
+        set(&|i, on| i.settings.scale_bar = on, !bar_on);
+    }
+    let words_on = all(&|i| i.copyright && i.description);
+    if option(ui, words_on, true, "Copyright and description", "") {
+        set(
+            &|i, on| {
+                i.copyright = on;
+                i.description = on;
+            },
+            !words_on,
+        );
+    }
+    let tiffs: Vec<_> = images
+        .iter()
+        .filter(|(_, i)| i.settings.format == ExportFormat::Tiff)
+        .collect();
+    let recipe_on = !tiffs.is_empty() && tiffs.iter().all(|(_, i)| i.settings.embed_recipe);
+    if option(
+        ui,
+        recipe_on,
+        !tiffs.is_empty(),
+        "Develop recipe and region notes",
+        "TIFF only, off by default",
+    ) {
+        for (preset, image) in tiffs {
+            let mut next = (*image).clone();
+            next.settings.embed_recipe = !recipe_on;
+            intents.push(ExportIntent::Edit(
+                preset.id.clone(),
+                PresetOutput::Image(next),
+            ));
+        }
+    }
+    if let Some(note) = view.note {
+        ui.horizontal(|ui| {
+            let (rect, _) = ui.allocate_exact_size(egui::vec2(10.0, 16.0), Sense::hover());
+            style::mark(ui.painter(), rect.center(), Mark::Warn, pal);
+            style::text(ui, note, style::SMALL, pal.ink_2);
+        });
+    }
+}
+
+fn name_and_place(
+    ui: &mut Ui,
+    panel: &mut ExportPanel,
+    view: &ExportView<'_>,
+    intents: &mut Vec<ExportIntent>,
+) {
+    let pal = view.palette;
+    style::sect(ui, pal, "Name and place", None);
+    let draft = panel
+        .template_draft
+        .get_or_insert_with(|| view.library.template.clone());
+    let edit = ui.add(
+        egui::TextEdit::singleline(draft)
+            .font(egui::FontId::monospace(12.0))
+            .frame(false)
+            .desired_width(f32::INFINITY),
+    );
+    if edit.lost_focus() {
+        if draft.trim() != view.library.template {
+            intents.push(ExportIntent::SetTemplate(draft.trim().to_owned()));
+        }
+        panel.template_draft = None;
+    }
+    ui.horizontal(|ui| {
+        let place = view
+            .destination
+            .map_or("No folder chosen for this subject".into(), |p| {
+                p.display().to_string()
+            });
+        style::text(ui, &place, 12.5, pal.ink_2);
+        if style::link(ui, pal, "Change…", false).clicked() {
+            intents.push(ExportIntent::ChangeDestination);
+        }
+    });
+}
+
+/// "Preview of" and the selected preset's output, above the canvas.
+pub(crate) fn control_strip(
+    ui: &mut Ui,
+    panel: &mut ExportPanel,
+    view: &ExportView<'_>,
+) -> Vec<ExportIntent> {
+    let pal = view.palette;
+    let mut intents = Vec::new();
+    let rect = ui.available_rect_before_wrap();
+    let strip = Rect::from_min_size(rect.min, egui::vec2(rect.width(), 36.0));
+    ui.painter()
+        .rect_filled(strip, CornerRadius::ZERO, pal.panel);
+    style::hairline(
+        ui.painter(),
+        strip.left_bottom(),
+        strip.right_bottom(),
+        pal.line,
+    );
+    let mut child = ui.new_child(
+        egui::UiBuilder::new()
+            .max_rect(strip.shrink2(egui::vec2(14.0, 0.0)))
+            .layout(egui::Layout::left_to_right(egui::Align::Center)),
+    );
+    let ui = &mut child;
+    ui.spacing_mut().item_spacing.x = 14.0;
+    style::caps(ui, "Preview of", style::CAPS, pal.ink_3);
+    let ticked: Vec<&ExportPreset> = view.library.ticked().collect();
+    let names: Vec<&str> = ticked.iter().map(|p| p.name.as_str()).collect();
+    let current = ticked
+        .iter()
+        .position(|p| Some(&p.id) == panel.selected.as_ref());
+    if !names.is_empty()
+        && let Some(i) = style::seg(ui, pal, &names, current)
+    {
+        panel.selected = Some(ticked[i].id.clone());
+        intents.push(ExportIntent::Select(ticked[i].id.clone()));
+    }
+    if let Some(preset) = panel
+        .selected
+        .as_ref()
+        .and_then(|id| view.library.presets.iter().find(|p| &p.id == id))
+    {
+        let [w, h] = output_size(&preset.output, view.size);
+        let space = match &preset.output {
+            PresetOutput::Image(i) => space_name(i.settings.color_space, i.settings.hdr),
+            PresetOutput::Archive => "linear BT.709",
+        };
+        style::text(
+            ui,
+            &format!(
+                "{w} × {h} · {space} · about {}",
+                human_bytes(estimate_bytes(&preset.output, view.size))
+            ),
+            12.5,
+            pal.ink_2,
+        );
+    }
+    intents
+}
+
+/// The exports of this photograph, under the canvas (152 px in the mockup).
+pub(crate) fn history_table(ui: &mut Ui, view: &ExportView<'_>) -> Vec<ExportIntent> {
+    let pal = view.palette;
+    let mut intents = Vec::new();
+    let rect = ui.available_rect_before_wrap();
+    ui.painter()
+        .rect_filled(rect, CornerRadius::ZERO, pal.panel);
+    style::hairline(ui.painter(), rect.left_top(), rect.right_top(), pal.line);
+    let mut child =
+        ui.new_child(egui::UiBuilder::new().max_rect(rect.shrink2(egui::vec2(14.0, 8.0))));
+    let ui = &mut child;
+    ui.horizontal(|ui| {
+        style::caps(ui, "Exports of this photograph", style::CAPS, pal.ink_3);
+        let unchanged = view
+            .history
+            .iter()
+            .filter(|r| r.status == HistoryStatus::Unchanged)
+            .count();
+        let summary = match view.history.len() {
+            0 => "none yet".to_owned(),
+            n if unchanged == n => format!(
+                "{n} file{} · all still where they were written",
+                if n == 1 { "" } else { "s" }
+            ),
+            n => format!("{n} file{}", if n == 1 { "" } else { "s" }),
+        };
+        style::text(ui, &summary, style::SMALL, pal.ink_3);
+        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+            if view.destination.is_some()
+                && style::link(ui, pal, "Open the folder", false).clicked()
+            {
+                intents.push(ExportIntent::OpenFolder);
+            }
+        });
+    });
+    let columns = [0.0, 228.0, 407.0, 593.0, 812.0, 925.0];
+    let headers = ["File", "Preset", "Size", "From version", "When", ""];
+    let top = ui.cursor().top() + 4.0;
+    let painter = ui.painter().clone();
+    for (x, header) in columns.iter().zip(headers) {
+        painter.galley(
+            egui::pos2(rect.left() + 14.0 + x, top),
+            painter.layout_job(style::caps_job(header, 9.5, pal.ink_3)),
+            pal.ink_3,
+        );
+    }
+    let mut y = top + 18.0;
+    egui::ScrollArea::vertical()
+        .id_salt("export-history")
+        .show(ui, |ui| {
+            for row in view.history {
+                let line = Rect::from_min_max(
+                    egui::pos2(rect.left(), y),
+                    egui::pos2(rect.right(), y + 32.0),
+                );
+                style::hairline(&painter, line.left_top(), line.right_top(), pal.line);
+                let cy = line.center().y;
+                let x = |i: usize| rect.left() + 14.0 + columns[i];
+                let name = row.path.file_name().unwrap_or_default().to_string_lossy();
+                painter.text(
+                    egui::pos2(x(0), cy),
+                    Align2::LEFT_CENTER,
+                    name,
+                    egui::FontId::monospace(11.5),
+                    pal.ink,
+                );
+                for (i, text) in [
+                    (1, &row.preset),
+                    (2, &row.size),
+                    (3, &row.version),
+                    (4, &row.when),
+                ] {
+                    style::paint_text(
+                        &painter,
+                        egui::pos2(x(i), cy),
+                        Align2::LEFT_CENTER,
+                        text,
+                        12.5,
+                        pal.ink_2,
+                    );
+                }
+                let (mark, words) = match row.status {
+                    HistoryStatus::Checking => (Mark::Idle, "checking"),
+                    HistoryStatus::Unchanged => (Mark::Ok, "unchanged"),
+                    HistoryStatus::Changed => (Mark::Bad, "changed since it was written"),
+                    HistoryStatus::Missing => (Mark::Bad, "missing"),
+                    HistoryStatus::Older => (Mark::Warn, "older than the current version"),
+                };
+                style::mark(&painter, egui::pos2(x(5) + 4.0, cy), mark, pal);
+                let after = style::paint_text(
+                    &painter,
+                    egui::pos2(x(5) + 12.0, cy),
+                    Align2::LEFT_CENTER,
+                    words,
+                    12.5,
+                    pal.ink_2,
+                );
+                let mut at = after.right() + 10.0;
+                let mut action = |label: &str, intent: ExportIntent, available: bool| {
+                    if !available {
+                        return;
+                    }
+                    let galley = painter.layout_job(style::caps_job(label, style::CAPS, pal.ink_2));
+                    let hit = Rect::from_min_size(egui::pos2(at, cy - 7.0), galley.size());
+                    let response = ui.interact(hit, ui.id().with((&row.id, label)), Sense::click());
+                    painter.galley_with_override_text_color(
+                        hit.min,
+                        galley,
+                        if response.hovered() {
+                            pal.ink
+                        } else {
+                            pal.ink_2
+                        },
+                    );
+                    if response.clicked() {
+                        intents.push(intent);
+                    }
+                    at = hit.right() + 12.0;
+                };
+                let present = row.status != HistoryStatus::Missing;
+                action("Reveal", ExportIntent::Reveal(row.path.clone()), present);
+                action(
+                    "Copy path",
+                    ExportIntent::CopyPath(row.path.clone()),
+                    present,
+                );
+                action(
+                    "Export again",
+                    ExportIntent::ExportAgain(row.id.clone()),
+                    true,
+                );
+                y += 32.0;
+            }
+            ui.allocate_space(egui::vec2(1.0, (y - top).max(0.0)));
+        });
+    intents
+}
+
+// --------------------------------------------------------------------- batch
+
+/// One file of a batch, with its name chosen before the batch starts.
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) struct BatchFile {
+    pub preset: String,
+    pub path: PathBuf,
+    pub output: BatchOutput,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) enum BatchOutput {
+    Image(ExportSettings),
+    /// Copy of the master, with the recipe written beside it.
+    Archive {
+        master: PathBuf,
+        recipe: PathBuf,
+    },
+}
+
+/// Who wrote the file and what it says, filled in per batch.
+#[derive(Clone, Debug, Default)]
+pub(crate) struct BatchText {
+    pub artist: String,
+    pub copyright: String,
+    pub description: String,
+}
+
+/// Plan every ticked preset into a file with a free name in `folder`.
+pub(crate) fn plan_batch(
+    library: &Library,
+    fields: &NameFields<'_>,
+    folder: &Path,
+    master: &Path,
+    text: &BatchText,
+    exists: impl Fn(&Path) -> bool,
+) -> Result<Vec<BatchFile>> {
+    library.validate()?;
+    ensure!(folder.is_absolute(), "Choose where the files go");
+    let mut files: Vec<BatchFile> = Vec::new();
+    for preset in library.ticked() {
+        let stem = expand_name(
+            &library.template,
+            &NameFields {
+                preset: &preset.name,
+                ..fields.clone()
+            },
+        )?;
+        let taken = |path: &Path| exists(path) || files.iter().any(|f| f.path == path);
+        let path = available_path(folder, &stem, preset.output.extension(), taken)?;
+        let output = match &preset.output {
+            PresetOutput::Image(image) => BatchOutput::Image(image.resolve(
+                &text.artist,
+                &text.copyright,
+                &text.description,
+            )?),
+            PresetOutput::Archive => BatchOutput::Archive {
+                master: master.to_path_buf(),
+                recipe: path.with_extension("strehl-edits.json"),
+            },
+        };
+        files.push(BatchFile {
+            preset: preset.name.clone(),
+            path,
+            output,
+        });
+    }
+    ensure!(!files.is_empty(), "Tick at least one preset");
+    Ok(files)
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub(crate) enum BatchPhase {
+    Preparing = 0,
+    Encoding = 1,
+    Recording = 2,
+    Done = 3,
+}
+
+/// Shared progress of one batch: which file, which phase.
+#[derive(Debug)]
+pub(crate) struct BatchProgress {
+    files: Vec<String>,
+    current: AtomicUsize,
+    phase: AtomicU8,
+    pub cancelled: AtomicBool,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) struct BatchSnapshot {
+    pub file: usize,
+    pub files: usize,
+    pub name: String,
+    pub phase: BatchPhase,
+    pub cancelling: bool,
+}
+
+impl BatchSnapshot {
+    pub(crate) fn fraction(&self) -> f32 {
+        if self.phase == BatchPhase::Done {
+            return 1.0;
+        }
+        let step = match self.phase {
+            BatchPhase::Preparing => 0.0,
+            BatchPhase::Encoding => 0.3,
+            BatchPhase::Recording => 0.9,
+            BatchPhase::Done => 1.0,
+        };
+        ((self.file as f32 + step) / self.files.max(1) as f32).clamp(0.0, 1.0)
+    }
+
+    pub(crate) fn caption(&self) -> String {
+        let phase = match self.phase {
+            BatchPhase::Preparing => "preparing",
+            BatchPhase::Encoding => "encoding",
+            BatchPhase::Recording => "recording",
+            BatchPhase::Done => "done",
+        };
+        if self.cancelling {
+            "Cancelling after this file…".into()
+        } else {
+            format!(
+                "File {} of {} · {} · {phase}",
+                (self.file + 1).min(self.files),
+                self.files,
+                self.name
+            )
+        }
+    }
+}
+
+impl BatchProgress {
+    pub(crate) fn new(files: &[BatchFile]) -> Arc<Self> {
+        Arc::new(Self {
+            files: files.iter().map(|f| f.preset.clone()).collect(),
+            current: AtomicUsize::new(0),
+            phase: AtomicU8::new(BatchPhase::Preparing as u8),
+            cancelled: AtomicBool::new(false),
+        })
+    }
+
+    fn set(&self, file: usize, phase: BatchPhase) {
+        self.current.store(file, Ordering::Relaxed);
+        self.phase.store(phase as u8, Ordering::Relaxed);
+    }
+
+    pub(crate) fn snapshot(&self) -> BatchSnapshot {
+        let file = self.current.load(Ordering::Relaxed);
+        let phase = match self.phase.load(Ordering::Relaxed) {
+            1 => BatchPhase::Encoding,
+            2 => BatchPhase::Recording,
+            3 => BatchPhase::Done,
+            _ => BatchPhase::Preparing,
+        };
+        BatchSnapshot {
+            file,
+            files: self.files.len(),
+            name: self.files.get(file).cloned().unwrap_or_default(),
+            phase,
+            cancelling: self.cancelled.load(Ordering::Relaxed),
+        }
+    }
+}
+
+/// What a finished batch wrote.
+#[derive(Debug, Default)]
+pub(crate) struct BatchDone {
+    pub written: Vec<(BatchFile, Option<crate::workspace_history::PhotoExport>)>,
+    pub failed: Vec<(PathBuf, String)>,
+    pub cancelled: bool,
+}
+
+/// The batch's inputs beyond its files.
+pub(crate) struct BatchContext {
+    pub job: crate::development_job::DevelopmentJob,
+    pub recipe_json: Vec<u8>,
+    pub um_per_px: Option<f64>,
+    pub date: Option<ExportDateTime>,
+    /// The version every image file is recorded against.
+    pub version: Option<crate::workspace_history::PhotoVersion>,
+}
+
+/// Run a batch on a worker: one file at a time, never overwriting. A failed
+/// file is reported and the batch goes on; cancellation stops after the
+/// current codec call and removes nothing that was published.
+pub(crate) fn run_batch(
+    files: Vec<BatchFile>,
+    context: &BatchContext,
+    progress: &BatchProgress,
+) -> BatchDone {
+    let mut done = BatchDone::default();
+    for (index, file) in files.into_iter().enumerate() {
+        if progress.cancelled.load(Ordering::Relaxed) {
+            done.cancelled = true;
+            break;
+        }
+        progress.set(index, BatchPhase::Encoding);
+        let result = (|| -> Result<Option<crate::workspace_history::PhotoExport>> {
+            match &file.output {
+                BatchOutput::Image(settings) => {
+                    context.job.export_with(
+                        &file.path,
+                        settings,
+                        context.um_per_px,
+                        context.date,
+                        &progress.cancelled,
+                    )?;
+                    progress.set(index, BatchPhase::Recording);
+                    context
+                        .version
+                        .as_ref()
+                        .map(|version| {
+                            crate::workspace_history::photographs::record_export(
+                                version,
+                                file.path.clone(),
+                                settings.clone(),
+                                &progress.cancelled,
+                            )
+                        })
+                        .transpose()
+                }
+                BatchOutput::Archive { master, recipe } => {
+                    copy_new(master, &file.path, &progress.cancelled)?;
+                    let mut out = std::fs::OpenOptions::new()
+                        .write(true)
+                        .create_new(true)
+                        .open(recipe)
+                        .with_context(|| format!("writing {}", recipe.display()))?;
+                    out.write_all(&context.recipe_json)?;
+                    out.sync_all()?;
+                    Ok(None)
+                }
+            }
+        })();
+        match result {
+            Ok(record) => done.written.push((file, record)),
+            Err(error) => done.failed.push((file.path, format!("{error:#}"))),
+        }
+    }
+    progress.set(progress.files.len().saturating_sub(1), BatchPhase::Done);
+    done
+}
+
+/// Copy a file to a new name, never replacing one.
+fn copy_new(from: &Path, to: &Path, cancelled: &AtomicBool) -> Result<()> {
+    let mut source =
+        std::fs::File::open(from).with_context(|| format!("reading {}", from.display()))?;
+    let mut target = std::fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(to)
+        .with_context(|| format!("{} already exists or cannot be written", to.display()))?;
+    let result = (|| -> Result<()> {
+        let mut buffer = vec![0u8; 4 << 20];
+        loop {
+            ensure!(!cancelled.load(Ordering::Relaxed), "export cancelled");
+            let n = std::io::Read::read(&mut source, &mut buffer)?;
+            if n == 0 {
+                break;
+            }
+            target.write_all(&buffer[..n])?;
+        }
+        target.sync_all()?;
+        Ok(())
+    })();
+    if result.is_err() {
+        drop(target);
+        let _ = std::fs::remove_file(to);
+    }
+    result
+}
+
+#[cfg(test)]
+#[path = "export-station-tests.rs"]
+mod tests;

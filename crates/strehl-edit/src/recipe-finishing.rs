@@ -13,6 +13,14 @@ fn is_zero(value: &f32) -> bool {
     *value == 0.0
 }
 
+fn enabled() -> bool {
+    true
+}
+
+fn is_enabled(value: &bool) -> bool {
+    *value
+}
+
 /// A crop rectangle in normalized full-photograph coordinates, turned about its
 /// own centre by `angle_deg`.
 ///
@@ -163,6 +171,9 @@ pub struct ScaleBar {
     pub corner: ScaleBarCorner,
     #[serde(default)]
     pub style: ScaleBarStyle,
+    /// Hidden from the layer list and from exports when false.
+    #[serde(default = "enabled", skip_serializing_if = "is_enabled")]
+    pub enabled: bool,
 }
 
 impl ScaleBar {
@@ -214,6 +225,8 @@ pub struct Heal {
     pub center: [f32; 2],
     pub radius: [f32; 2],
     pub source_offset: [f32; 2],
+    #[serde(default = "enabled", skip_serializing_if = "is_enabled")]
+    pub enabled: bool,
 }
 
 impl Heal {
@@ -234,16 +247,36 @@ impl Heal {
     }
 }
 
-/// Backdrop clean-up: where the local light (post-placement luminance, 5x5
-/// mean) reaches `threshold`, the backdrop is replaced by a smoothed backdrop
-/// built only from backdrop pixels. `softness` is the width, in stops, of the
-/// transition below `threshold`; 0 is a hard key. Pixels below the transition
-/// are left bit-identical.
+/// Which side of the threshold is backdrop.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum BackdropKey {
+    /// A light ground at or above the threshold, smoothed from itself.
+    #[default]
+    Light,
+    /// A dark ground at or below the threshold, cleaned to black.
+    Dark,
+}
+
+fn is_light(key: &BackdropKey) -> bool {
+    *key == BackdropKey::Light
+}
+
+/// Backdrop clean-up, keyed on the local light (post-placement luminance,
+/// a small mean). A light key replaces the ground at or above `threshold` by
+/// a smoothed ground built only from ground pixels; a dark key takes the
+/// ground at or below `threshold` to black. `softness` is the width, in
+/// stops, of the transition into the subject; 0 is a hard key. Pixels past
+/// the transition are left bit-identical.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Backdrop {
     pub threshold: f32,
     pub softness: f32,
+    #[serde(default, skip_serializing_if = "is_light")]
+    pub key: BackdropKey,
+    #[serde(default = "enabled", skip_serializing_if = "is_enabled")]
+    pub enabled: bool,
 }
 
 impl Backdrop {
@@ -254,15 +287,27 @@ impl Backdrop {
 
     /// Backdrop membership of a local light level.
     pub fn membership(&self, light: f32) -> f32 {
-        // Also refuses NaN.
-        if light.is_nan() || light <= 0.0 {
+        if light.is_nan() {
             return 0.0;
         }
-        let stops = (light / self.threshold).log2();
-        if self.softness <= 0.0 {
-            return if stops >= 0.0 { 1.0 } else { 0.0 };
+        if light <= 0.0 {
+            // Black is dark ground, never light ground.
+            return if self.key == BackdropKey::Dark {
+                1.0
+            } else {
+                0.0
+            };
         }
-        let t = ((stops + self.softness) / self.softness).clamp(0.0, 1.0);
+        let stops = (light / self.threshold).log2();
+        // Distance into the ground, in stops: positive inside it.
+        let depth = match self.key {
+            BackdropKey::Light => stops,
+            BackdropKey::Dark => -stops,
+        };
+        if self.softness <= 0.0 {
+            return if depth >= 0.0 { 1.0 } else { 0.0 };
+        }
+        let t = ((depth + self.softness) / self.softness).clamp(0.0, 1.0);
         t * t * (3.0 - 2.0 * t)
     }
 }

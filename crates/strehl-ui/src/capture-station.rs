@@ -1,0 +1,768 @@
+//! The Capture station composed (Studio 2, 7.4): the pre-flight strip, the
+//! canvas (live view, or the capture in flight), the focus rail, the
+//! inspector (the plan, or the health column) and glance mode, each drawn
+//! into the slot the shell gives it, with the user's intents applied to the
+//! camera through the workspace's own checks.
+//!
+//! Calls for the shell, in its frame slots:
+//! `station_strip`, `station_canvas`, `station_rail`, `station_inspector`,
+//! and `station_glance` over the whole window while `glance_open()`;
+//! `station_hints()` for the hint bar; `take_open_rig()` and
+//! `take_show_plane()` for what belongs to the shell.
+//! Until the shell is merged, `STREHL_CAPTURE_STATION=1` lays the station
+//! out inside today's Capture tab (`show_station`).
+use std::{
+    path::PathBuf,
+    sync::Arc,
+    time::{Duration, Instant, SystemTime},
+};
+
+use eframe::egui::{self, Rect, TextureHandle, TextureOptions, Ui};
+use strehl_capture::session::Command;
+
+use super::{
+    CaptureWorkspace, Confirm,
+    flight::{self, FlightInputs, FlightIntent},
+    glance::{self, GlanceInputs, Next},
+    live::{LiveIntent, LiveView},
+    plan::{CalibrationView, PlanInputs, PlanIntent, PlanView, Switches, TestShotView},
+    preflight::{self, Fix},
+    rail::{FlightTicks, FocusRail, RailInputs, RailIntent},
+    style::CapturePalette,
+    test_shot::TestShot,
+    tools::Calibration,
+};
+use crate::capture_client::{Connection, Snapshot};
+use crate::draft_preview::{ProofEvent, ProofJob, ProofUpdate};
+
+/// What the flight ticks depend on: the plan, the counts and the
+/// checker's published progress.
+type TicksKey = ((u16, u16, u16), (u64, Option<u64>, u64), Option<usize>);
+
+/// How long a dragged bound may take to be reached and marked.
+const MARK_AT_TIMEOUT: Duration = Duration::from_secs(20);
+
+/// The proof of the capture being written.
+struct ProofState {
+    run: PathBuf,
+    job: ProofJob,
+    latest: Option<Box<ProofUpdate>>,
+    texture: Option<(u64, TextureHandle)>,
+    error: Option<String>,
+}
+
+/// A dragged bound: focus moves there, then it is marked.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) struct MarkAt {
+    pub start: bool,
+    pub to: u16,
+    pub since: Instant,
+}
+
+/// The station's views and their state.
+#[derive(Default)]
+pub(crate) struct Station {
+    pub palette: CapturePalette,
+    pub plan: PlanView,
+    rail: FocusRail,
+    pub live: LiveView,
+    pub glance: bool,
+    glance_seen: bool,
+    proof: Option<ProofState>,
+    pub mark_at: Option<MarkAt>,
+    /// The flight rail's ticks and what they were built from.
+    ticks: Option<(TicksKey, Arc<FlightTicks>)>,
+    rig_requested: bool,
+    show_plane: Option<u64>,
+    pub calibrated_at: Option<SystemTime>,
+    recover_open: bool,
+    settings_open: bool,
+}
+
+/// Which screen the station shows.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum StationMode {
+    Plan,
+    Flight,
+}
+
+/// The hint bar's keys and its right-hand note.
+#[allow(dead_code)]
+pub(crate) struct StationHints {
+    pub keys: Vec<(&'static str, &'static str)>,
+    pub note: String,
+}
+
+impl CaptureWorkspace {
+    fn station_snapshot(&self) -> Snapshot {
+        self.connection
+            .as_ref()
+            .map(Connection::snapshot)
+            .unwrap_or_default()
+    }
+
+    /// Plan, or flight while a capture runs or is paused.
+    pub fn station_mode(&self) -> StationMode {
+        if self.station_snapshot().host.phase.capturing()
+            && !self.calibrating()
+            && !self.test_shot.running()
+        {
+            StationMode::Flight
+        } else {
+            StationMode::Plan
+        }
+    }
+
+    /// Glance mode is open (it covers the window).
+    #[allow(dead_code)]
+    pub fn glance_open(&self) -> bool {
+        self.station.glance
+    }
+
+    /// Opens glance mode (the shell's `G`, or the stage-1 preview).
+    #[allow(dead_code)]
+    pub fn open_glance(&mut self) {
+        self.station.glance = true;
+    }
+
+    pub(super) fn station_glance_seen(&self) -> bool {
+        self.station.glance_seen
+    }
+
+    pub(super) fn open_glance_once(&mut self) {
+        self.station.glance_seen = true;
+        self.station.glance = true;
+    }
+
+    /// The shell's rig popover was asked for from the plan.
+    #[allow(dead_code)]
+    pub fn take_open_rig(&mut self) -> bool {
+        std::mem::take(&mut self.station.rig_requested)
+    }
+
+    /// A plane the user asked to see (a retaken one, from "Last planes").
+    #[allow(dead_code)]
+    pub fn take_show_plane(&mut self) -> Option<u64> {
+        self.station.show_plane.take()
+    }
+
+    /// The keys the station answers, for the hint bar.
+    #[allow(dead_code)]
+    pub fn station_hints(&self) -> StationHints {
+        let s = self.station_snapshot();
+        let note = if s.fresh() {
+            format!(
+                "Camera host online · {} · {}",
+                if s.receiver["ok"] == true {
+                    "receiver ready"
+                } else {
+                    "receiver not ready"
+                },
+                s.receiver["folder"].as_str().unwrap_or("")
+            )
+        } else {
+            "Camera host offline".into()
+        };
+        match self.station_mode() {
+            StationMode::Plan => StationHints {
+                keys: vec![
+                    ("←→", "focus by 1"),
+                    ("Shift", "by 16"),
+                    ("S", "mark start"),
+                    ("E", "mark end"),
+                    ("T", "test shot"),
+                    ("Enter", "start"),
+                ],
+                note,
+            },
+            StationMode::Flight => StationHints {
+                keys: vec![("Space", "pause"), ("G", "glance mode")],
+                note: "Stop asks first, and keeps the planes already taken".into(),
+            },
+        }
+    }
+
+    /// Advances the proof and a dragged bound; called with the other polls.
+    pub(super) fn poll_station(&mut self, s: &Snapshot) {
+        // The proof follows the capture being written (not a test shot).
+        if let Some(run) = s
+            .in_progress
+            .as_ref()
+            .filter(|r| !r.test && s.host.phase.capturing())
+            && self
+                .station
+                .proof
+                .as_ref()
+                .is_none_or(|p| p.run != run.folder)
+        {
+            self.station.proof = Some(ProofState {
+                run: run.folder.clone(),
+                job: ProofJob::for_run(run.folder.clone(), s.host.shots()),
+                latest: None,
+                texture: None,
+                error: None,
+            });
+        }
+        if let Some(proof) = &mut self.station.proof {
+            match proof.job.poll() {
+                Some(ProofEvent::Updated(update)) => {
+                    proof.latest = Some(update);
+                    proof.error = None;
+                }
+                Some(ProofEvent::Failed(e)) => proof.error = Some(e),
+                None => {}
+            }
+        }
+        // A dragged bound: once the lens is there and the camera idle, mark.
+        if let Some(at) = self.station.mark_at {
+            let host = &s.host;
+            if at.since.elapsed() > MARK_AT_TIMEOUT || !s.fresh() {
+                self.station.mark_at = None;
+                self.error = Some("The bound was not reached; it was not marked".into());
+            } else if host.position == Some(at.to)
+                && host.editable
+                && !s.pending
+                && self.focus_pending.is_none()
+                && self.focus_flight.is_none()
+            {
+                self.station.mark_at = None;
+                self.command(s, Command::Mark { start: at.start });
+            }
+        }
+    }
+
+    fn proof_texture(
+        &mut self,
+        ctx: &egui::Context,
+    ) -> Option<(egui::TextureId, egui::Vec2, String)> {
+        let proof = self.station.proof.as_mut()?;
+        let update = proof.latest.as_ref()?;
+        if proof
+            .texture
+            .as_ref()
+            .is_none_or(|(r, _)| *r != update.revision)
+        {
+            let image = &update.draft.image;
+            let color = egui::ColorImage::from_rgba_unmultiplied(image.size, &image.rgba);
+            match &mut proof.texture {
+                Some((r, t)) => {
+                    t.set(color, TextureOptions::LINEAR);
+                    *r = update.revision;
+                }
+                None => {
+                    proof.texture = Some((
+                        update.revision,
+                        ctx.load_texture("capture-proof", color, TextureOptions::LINEAR),
+                    ))
+                }
+            }
+        }
+        let (_, t) = proof.texture.as_ref()?;
+        Some((
+            t.id(),
+            t.size_vec2(),
+            format!("planes 1–{}", update.received),
+        ))
+    }
+
+    /// The pre-flight strip, in the control strip's slot.
+    pub fn station_strip(&mut self, ui: &mut Ui) {
+        let s = self.station_snapshot();
+        let blockers = preflight::start_blockers(&s, self);
+        let chips = preflight::strip_chips(&s, &blockers);
+        let rows = super::plan::step_rows(
+            &s,
+            s.host.plan.as_ref().map_or(1, |p| p.step),
+            s.host.plan.as_ref().map_or(500, |p| p.settle_ms),
+            &self.calibration_result(),
+        );
+        let summary = super::plan::strip_summary(&s, &rows);
+        let palette = self.station.palette;
+        if let Some(fix) = preflight::strip_ui(ui, &chips, &blockers, &summary, &palette) {
+            self.apply_fix(&s, fix);
+        }
+    }
+
+    fn calibration_result(&self) -> serde_json::Value {
+        match &self.calibration {
+            Calibration::Done(v) | Calibration::Restoring { result: v, .. } => v.clone(),
+            Calibration::Failed(e) => serde_json::json!({"error":e}),
+            _ => serde_json::Value::Null,
+        }
+    }
+
+    /// The canvas: the live view while planning, the capture in flight.
+    pub fn station_canvas(&mut self, ui: &mut Ui) {
+        let s = self.station_snapshot();
+        let palette = self.station.palette;
+        match self.station_mode() {
+            StationMode::Plan => {
+                let intents = self.station.live.show(ui, &s, &palette);
+                for intent in intents {
+                    self.apply_live(&s, intent);
+                }
+            }
+            StationMode::Flight => {
+                let proof = self.proof_texture(ui.ctx());
+                self.station.live.sync_textures(ui.ctx(), &s, &palette);
+                let latest = self.station.live.preview_texture();
+                let progress = self.follower.as_ref().map(|f| f.progress_arc());
+                let inputs = FlightInputs {
+                    s: &s,
+                    progress: progress.as_deref(),
+                    checking: self.follow_enabled,
+                    proof,
+                    latest,
+                    stack_when_done: self.stack_when_done,
+                    power_down: s.host.power.as_ref().map(|p| p.manage_stack),
+                    confirm_stop: self.confirm == Some(Confirm::Stop),
+                };
+                let intents = flight::canvas(ui, &inputs, &palette);
+                for intent in intents {
+                    self.apply_flight(&s, intent);
+                }
+            }
+        }
+    }
+
+    /// The focus rail, in the rail's slot.
+    pub fn station_rail(&mut self, ui: &mut Ui) {
+        let s = self.station_snapshot();
+        let host = &s.host;
+        let palette = self.station.palette;
+        let flight_mode = self.station_mode() == StationMode::Flight;
+        let (start, end) = host.plan_bounds();
+        let progress = self.follower.as_ref().map(|f| f.progress_arc());
+        let ticks = flight_mode.then(|| {
+            let step = host.plan.as_ref().map_or(1, |p| p.step);
+            // Rebuilt only when a plane's state can have changed.
+            let key = (
+                (start, end, step),
+                (host.completed, host.storage.saved_frames, host.shots()),
+                progress.as_ref().map(|p| Arc::as_ptr(p) as usize),
+            );
+            if self.station.ticks.as_ref().is_none_or(|(k, _)| *k != key) {
+                let revision = self.station.ticks.as_ref().map_or(0, |(_, t)| t.revision) + 1;
+                let mut ticks = flight::flight_ticks(
+                    super::rail::planned(start, end, step),
+                    &s,
+                    progress.as_deref(),
+                );
+                ticks.revision = revision;
+                self.station.ticks = Some((key, Arc::new(ticks)));
+            }
+            self.station.ticks.as_ref().map(|(_, t)| t.clone()).unwrap()
+        });
+        let survey =
+            (!host.samples.is_empty()).then(|| "survey: where the subject is sharp".to_owned());
+        let inputs = RailInputs {
+            samples: &host.samples,
+            start: host.start_set.then_some(start),
+            end: host.end_set.then_some(end),
+            step: host.plan.as_ref().map_or(1, |p| p.step),
+            lens: self.focus_pending.or(host.position),
+            flight: ticks.as_deref(),
+            survey,
+            can_use_survey: host.suggestion.as_ref().is_some_and(|s| !s.clipped),
+            editable: s.fresh() && host.editable && !s.pending && self.focus_flight.is_none(),
+            keys: !self.station.glance,
+        };
+        let intents = self.station.rail.show(ui, &inputs, &palette);
+        for intent in intents {
+            self.apply_rail(&s, intent);
+        }
+    }
+
+    /// The inspector: the plan, or the capture's health while it runs.
+    pub fn station_inspector(&mut self, ui: &mut Ui) {
+        let s = self.station_snapshot();
+        let palette = self.station.palette;
+        match self.station_mode() {
+            StationMode::Plan => {
+                let blockers = preflight::start_blockers(&s, self);
+                let now = Instant::now();
+                let (stage, levels, taken, error) = match &self.test_shot {
+                    TestShot::Done { levels, taken, .. } => {
+                        ("done", Some(levels.clone()), Some(*taken), None)
+                    }
+                    TestShot::Failed(e) => ("failed", None, None, Some(e.clone())),
+                    other => (other.stage(), None, None, None),
+                };
+                let inputs = PlanInputs {
+                    s: &s,
+                    blockers: &blockers,
+                    step: self.draft.step,
+                    settle_ms: self.draft.settle_ms,
+                    calibration: CalibrationView {
+                        stage: self.calibration.stage(),
+                        gives_up_in: self.calibration.gives_up_in(now),
+                        result: self.calibration_result(),
+                        finished: self.station.calibrated_at,
+                    },
+                    test_shot: TestShotView {
+                        stage,
+                        levels,
+                        taken,
+                        error,
+                    },
+                    switches: Switches {
+                        check: self.follow_enabled,
+                        retake: s.host.error_correction,
+                        stack_when_done: self.stack_when_done,
+                        power_down: s.host.power.as_ref().map(|p| p.manage_stack),
+                    },
+                    engine: self.engine.is_some(),
+                };
+                let mut intents = self.station.plan.show(ui, &inputs, &palette);
+                // T takes a test shot; Enter starts a ready plan.
+                if !ui.ctx().wants_keyboard_input() && !self.station.glance {
+                    ui.input(|i| {
+                        if i.key_pressed(egui::Key::T) {
+                            intents.push(PlanIntent::TestShot);
+                        }
+                        if i.key_pressed(egui::Key::Enter) && blockers.is_empty() {
+                            intents.push(PlanIntent::Start);
+                        }
+                    });
+                }
+                for intent in intents {
+                    self.apply_plan(&s, intent);
+                }
+            }
+            StationMode::Flight => {
+                let progress = self.follower.as_ref().map(|f| f.progress_arc());
+                let inputs = FlightInputs {
+                    s: &s,
+                    progress: progress.as_deref(),
+                    checking: self.follow_enabled,
+                    proof: None,
+                    latest: None,
+                    stack_when_done: self.stack_when_done,
+                    power_down: s.host.power.as_ref().map(|p| p.manage_stack),
+                    confirm_stop: self.confirm == Some(Confirm::Stop),
+                };
+                let intents = flight::inspector(ui, &inputs, &palette);
+                for intent in intents {
+                    self.apply_flight(&s, intent);
+                }
+            }
+        }
+        self.station_windows(ui.ctx(), &s);
+    }
+
+    /// Glance mode over the whole window; Escape returns.
+    pub fn station_glance(&mut self, ui: &mut Ui) {
+        let s = self.station_snapshot();
+        let palette = self.station.palette;
+        let proof = self.proof_texture(ui.ctx()).map(|(id, size, _)| (id, size));
+        let progress = self.follower.as_ref().map(|f| f.progress_arc());
+        let received = self
+            .station
+            .proof
+            .as_ref()
+            .and_then(|p| p.latest.as_ref())
+            .map(|u| u.received);
+        let caption = [
+            self.station.plan.subject.clone(),
+            self.station.plan.stack_name.clone(),
+            received
+                .map(|n| format!("proof from planes 1–{n}"))
+                .unwrap_or_default(),
+        ]
+        .into_iter()
+        .filter(|t| !t.is_empty())
+        .collect::<Vec<_>>()
+        .join(" · ");
+        let inputs = GlanceInputs {
+            s: &s,
+            progress: progress.as_deref(),
+            proof,
+            caption,
+            next: Next {
+                stack: self.follow_enabled && self.stack_when_done,
+                power_down: s.host.power.as_ref().is_some_and(|p| p.manage_stack),
+            },
+        };
+        if glance::show(ui, &inputs, &palette) {
+            self.station.glance = false;
+        }
+    }
+
+    /// Recovery and connection settings, opened from a pre-flight fix.
+    fn station_windows(&mut self, ctx: &egui::Context, s: &Snapshot) {
+        if self.station.recover_open {
+            let mut open = true;
+            egui::Window::new("Recover the camera")
+                .open(&mut open)
+                .collapsible(false)
+                .resizable(false)
+                .show(ctx, |ui| {
+                    let failure = s.host.failure.clone();
+                    ui.label(
+                        failure
+                            .as_ref()
+                            .and_then(|f| f.message.clone())
+                            .unwrap_or_else(|| "The camera needs recovery".into()),
+                    );
+                    let uncertain = failure.as_ref().is_some_and(|f| f.exposure_uncertain);
+                    if uncertain {
+                        ui.checkbox(
+                            &mut self.acknowledge_uncertain,
+                            "I checked the last exposure; recover without replaying it",
+                        );
+                    }
+                    if ui
+                        .add_enabled(
+                            s.fresh() && !s.pending && (!uncertain || self.acknowledge_uncertain),
+                            egui::Button::new("Recover camera"),
+                        )
+                        .clicked()
+                    {
+                        self.command(
+                            s,
+                            Command::Recover {
+                                acknowledge_uncertain: self.acknowledge_uncertain,
+                            },
+                        );
+                        self.acknowledge_uncertain = false;
+                        self.station.recover_open = false;
+                    }
+                });
+            self.station.recover_open &= open && s.host.failure.is_some();
+        }
+        if self.station.settings_open {
+            let mut open = true;
+            egui::Window::new("Camera host connection")
+                .open(&mut open)
+                .collapsible(false)
+                .show(ctx, |ui| {
+                    self.connection_ui(ui, s);
+                });
+            self.station.settings_open &= open;
+        }
+        if self.schedule_ui.editing() {
+            let blockers = preflight::start_blockers(s, self);
+            let mut cmd = None;
+            egui::Window::new("Schedule stack")
+                .collapsible(false)
+                .show(ctx, |ui| {
+                    cmd = self
+                        .schedule_ui
+                        .show(ui, s, preflight::can_schedule(&blockers));
+                });
+            if let Some(cmd) = cmd {
+                self.command(s, cmd);
+            }
+        }
+    }
+
+    fn apply_fix(&mut self, s: &Snapshot, fix: Fix) {
+        match fix {
+            Fix::ConnectionSettings => self.station.settings_open = true,
+            Fix::ConnectCamera => self.connect_camera(s, Command::Connect {}),
+            Fix::RecoverCamera => self.station.recover_open = true,
+            Fix::MarkStart => self.command(s, Command::Mark { start: true }),
+            Fix::MarkEnd => self.command(s, Command::Mark { start: false }),
+            Fix::ApplyEdits => self.send_settings(s, self.draft.step, self.draft.settle_ms),
+            Fix::StartReceiver => {
+                let result = self.start_receiver();
+                self.record(result);
+            }
+            Fix::StopWaiting => {
+                if self.calibrating() {
+                    self.stop_calibration();
+                }
+                if self.test_shot.running() {
+                    self.stop_test_shot();
+                }
+            }
+        }
+    }
+
+    /// Sends the plan's step and settle as the host's `settings` command.
+    fn send_settings(&mut self, s: &Snapshot, step: u16, settle_ms: u32) {
+        let Some(plan) = s.host.plan.clone() else {
+            return;
+        };
+        let command = Command::Settings {
+            step: step.max(1),
+            settle_ms,
+            approach: plan.approach,
+            capture_timeout_s: plan.capture_timeout_s,
+        };
+        let revision = s.host.plan_revision.unwrap_or(0);
+        let result = s.request(command).and_then(|mut r| {
+            r.plan_revision = revision;
+            self.submit(r)
+        });
+        if result.is_ok() {
+            self.draft.step = step.max(1);
+            self.draft.settle_ms = settle_ms;
+            self.draft_dirty = false;
+        }
+        self.record(result);
+    }
+
+    pub(super) fn apply_plan(&mut self, s: &Snapshot, intent: PlanIntent) {
+        match intent {
+            PlanIntent::SetSubject(_) | PlanIntent::SetStackName(_) => {}
+            PlanIntent::OpenRig => self.station.rig_requested = true,
+            PlanIntent::Connect => self.connect_camera(s, Command::Connect {}),
+            PlanIntent::Exposure { iso, shutter } => {
+                self.command(s, Command::Exposure { iso, shutter })
+            }
+            PlanIntent::TestShot => {
+                if !self.test_shot.running() && !self.calibrating() {
+                    let result = self.test_shot();
+                    self.record(result);
+                }
+            }
+            PlanIntent::StopTestShot => self.stop_test_shot(),
+            PlanIntent::MarkStart => self.command(s, Command::Mark { start: true }),
+            PlanIntent::MarkEnd => self.command(s, Command::Mark { start: false }),
+            PlanIntent::Calibrate => {
+                let result = self.calibrate();
+                self.record(result);
+            }
+            PlanIntent::StopCalibration => self.stop_calibration(),
+            PlanIntent::SetStep(step) => self.send_settings(s, step, self.draft.settle_ms),
+            PlanIntent::SetSettle(ms) => self.send_settings(s, self.draft.step, ms),
+            PlanIntent::SetFourShot(four) => self.command(
+                s,
+                Command::PixelShift {
+                    shots: if four { 4 } else { 1 },
+                },
+            ),
+            PlanIntent::SetCheck(on) => self.set_follow(on),
+            PlanIntent::SetRetake(on) => self.command(s, Command::ErrorCorrection { enabled: on }),
+            PlanIntent::SetStackWhenDone(on) => self.stack_when_done = on,
+            PlanIntent::SetPowerDown(on) => self.command(s, Command::PowerPlan { enabled: on }),
+            PlanIntent::Start => {
+                if preflight::start_blockers(s, self).is_empty() {
+                    self.command(s, Command::Start {});
+                }
+            }
+            PlanIntent::Schedule => self.schedule_ui.open(s),
+            PlanIntent::Fix(fix) => self.apply_fix(s, fix),
+        }
+    }
+
+    pub(super) fn apply_rail(&mut self, s: &Snapshot, intent: RailIntent) {
+        match intent {
+            RailIntent::Jog(delta) => self.command(s, Command::Jog { delta }),
+            RailIntent::Focus(target) => self.focus_pending = Some(target),
+            RailIntent::MarkStart => self.command(s, Command::Mark { start: true }),
+            RailIntent::MarkEnd => self.command(s, Command::Mark { start: false }),
+            RailIntent::MoveBound { start, to } => {
+                self.station.mark_at = Some(MarkAt {
+                    start,
+                    to,
+                    since: Instant::now(),
+                });
+                if s.host.position != Some(to) {
+                    self.focus_pending = Some(to);
+                }
+            }
+            RailIntent::UseSurveyBounds => self.command(s, Command::ApplyBounds {}),
+            RailIntent::SurveyAgain => self.command(s, Command::Survey {}),
+        }
+    }
+
+    pub(super) fn apply_live(&mut self, s: &Snapshot, intent: LiveIntent) {
+        match intent {
+            LiveIntent::SetRoi(roi) => self.command(s, Command::Roi { roi }),
+            LiveIntent::Magnify { ratio, x, y } => {
+                self.command(s, Command::Magnify { ratio, x, y })
+            }
+        }
+    }
+
+    pub(super) fn apply_flight(&mut self, s: &Snapshot, intent: FlightIntent) {
+        match intent {
+            FlightIntent::Pause => self.command(s, Command::Pause {}),
+            FlightIntent::Resume => self.command(s, Command::Resume {}),
+            FlightIntent::AskStop => self.confirm = Some(Confirm::Stop),
+            FlightIntent::Stop => {
+                self.confirm = None;
+                self.command(s, Command::Stop {});
+            }
+            FlightIntent::KeepGoing => self.confirm = None,
+            FlightIntent::Glance => self.station.glance = true,
+            FlightIntent::SetStackWhenDone(on) => self.stack_when_done = on,
+            FlightIntent::SetPowerDown(on) => self.command(s, Command::PowerPlan { enabled: on }),
+            FlightIntent::ShowPlane(plane) => self.station.show_plane = Some(plane),
+        }
+    }
+
+    /// Stage 1: the station inside today's Capture tab, laid out as the
+    /// mockup's frame (control strip, canvas, rail, 348 px inspector), for
+    /// checking the screens before the shell composes them.
+    pub fn show_station(&mut self, ctx: &egui::Context) {
+        self.activate(ctx);
+        self.shown = true;
+        let s = self.station_snapshot();
+        self.observe_focus(&s);
+        if let Some(plan) = s.host.plan.clone() {
+            self.sync_plan(plan, s.host.plan_revision.unwrap_or(0));
+        }
+        self.painted_ready = (!s.receiver.is_null() || s.receiver_error.is_some())
+            && ((s.observed.is_some() && (s.preview.is_some() || !s.host.preview.available))
+                || s.connection_error.is_some()
+                || self.config.controller.is_empty());
+        egui::CentralPanel::default()
+            .frame(egui::Frame::NONE)
+            .show(ctx, |ui| {
+                let full = ui.max_rect();
+                if self.station.glance {
+                    self.station_glance(ui);
+                    return;
+                }
+                let insp =
+                    Rect::from_min_max(egui::pos2(full.right() - 348.0, full.top()), full.max);
+                let main = Rect::from_min_max(full.min, egui::pos2(insp.left(), full.bottom()));
+                let flight_mode = self.station_mode() == StationMode::Flight;
+                let strip_h = if flight_mode { 0.0 } else { 36.0 };
+                let rail_h = if flight_mode { 127.0 } else { 135.0 };
+                let strip = Rect::from_min_size(main.min, egui::vec2(main.width(), strip_h));
+                let rail =
+                    Rect::from_min_max(egui::pos2(main.left(), main.bottom() - rail_h), main.max);
+                let canvas = Rect::from_min_max(
+                    egui::pos2(main.left(), strip.bottom()),
+                    egui::pos2(main.right(), rail.top()),
+                );
+                if !flight_mode {
+                    ui.scope_builder(egui::UiBuilder::new().max_rect(strip), |ui| {
+                        self.station_strip(ui)
+                    });
+                }
+                ui.scope_builder(egui::UiBuilder::new().max_rect(canvas), |ui| {
+                    self.station_canvas(ui)
+                });
+                ui.scope_builder(egui::UiBuilder::new().max_rect(rail), |ui| {
+                    self.station_rail(ui)
+                });
+                ui.scope_builder(egui::UiBuilder::new().max_rect(insp), |ui| {
+                    self.station_inspector(ui)
+                });
+            });
+        self.flush_focus(&s);
+    }
+}
+
+impl LiveView {
+    /// The live preview's texture, for the in-flight view's latest plane.
+    pub(crate) fn preview_texture(&self) -> Option<(egui::TextureId, egui::Vec2)> {
+        self.preview_handle().map(|t| (t.id(), t.size_vec2()))
+    }
+}
+
+/// Records when a calibration finished, for the plan's "Calibrated 21:33".
+pub(super) fn note_calibration(station: &mut Station, before: &str, after: &Calibration) {
+    if before != "done" && matches!(after, Calibration::Done(_)) {
+        station.calibrated_at = Some(SystemTime::now());
+    }
+}
+
+#[cfg(test)]
+#[path = "capture-station-tests.rs"]
+mod tests;

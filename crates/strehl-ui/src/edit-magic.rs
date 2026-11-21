@@ -298,6 +298,7 @@ fn segment(
     let mut inside = vec![false; w * h];
     let mut boundary = vec![false; w * h];
     let mut border = Vec::new();
+    let prepared = recipe.prepare();
     for y in 0..h {
         check_cancel(cancel)?;
         for x in 0..w {
@@ -325,9 +326,9 @@ fn segment(
                     let index = py * image.width as usize + px;
                     let scene = image.origin == strehl_edit::ImageOrigin::SceneLinear;
                     let pixel = if scene {
-                        image.developed_pixel(index, recipe)
+                        image.developed_pixel_prepared(index, &prepared)
                     } else {
-                        image.display_pixel(index, recipe)
+                        image.display_pixel_prepared(index, &prepared)
                     };
                     anyhow::ensure!(
                         pixel.iter().all(|v| v.is_finite()),

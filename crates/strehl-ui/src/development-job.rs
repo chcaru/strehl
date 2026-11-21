@@ -91,6 +91,30 @@ impl DevelopmentJob {
         )
     }
 
+    /// Export with a scale calibration and a date for the file's metadata.
+    pub(crate) fn export_with(
+        &self,
+        path: &Path,
+        settings: &ExportSettings,
+        um_per_px: Option<f64>,
+        date_time: Option<strehl_edit::ExportDateTime>,
+        cancelled: &AtomicBool,
+    ) -> Result<ExportReport> {
+        let extras = strehl_edit::ExportExtras {
+            coverage: self.coverage.as_ref().map(|mask| mask.values.as_ref()),
+            um_per_px,
+            date_time,
+        };
+        strehl_edit::export_image_with(
+            path,
+            &self.image,
+            &self.recipe,
+            settings,
+            &extras,
+            cancelled,
+        )
+    }
+
     pub(crate) fn thumbnail(&self, side: u32) -> Result<(u32, u32, Vec<u8>)> {
         let (width, height, mut rgb) =
             self.image

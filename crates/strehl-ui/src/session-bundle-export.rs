@@ -45,6 +45,7 @@ fn copy_checked(
     Ok(())
 }
 
+#[cfg(test)]
 pub(crate) fn export(
     source: &Path,
     destination: &Path,
@@ -56,14 +57,12 @@ pub(crate) fn export(
 /// Bytes copied and the bundle's size, read by the activity tray while a
 /// worker copies (Studio 2 P5).
 #[derive(Debug, Default)]
-#[allow(dead_code, reason = "the shell tracks the copy in P5 stage 2")]
 pub(crate) struct BundleProgress {
     pub copied: std::sync::atomic::AtomicU64,
     pub total: std::sync::atomic::AtomicU64,
 }
 
 /// `export`, counting bytes into `progress` as they are verified and written.
-#[allow(dead_code, reason = "the shell tracks the copy in P5 stage 2")]
 pub(crate) fn export_with_progress(
     source: &Path,
     destination: &Path,
@@ -81,6 +80,7 @@ pub(crate) fn export_with_progress(
     )
 }
 
+#[cfg(test)]
 fn export_observed(
     source: &Path,
     destination: &Path,
