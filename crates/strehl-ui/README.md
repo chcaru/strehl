@@ -41,6 +41,8 @@ open station, and the window's last undo.
 | F | Capture, Stack, Develop, Export | focus mode: the canvas takes the window until F or Escape |
 | Ctrl Z / Ctrl Shift Z | everywhere | undo and redo the latest change, whichever pane made it |
 | Ctrl O | everywhere | open source photos |
+| Wheel, Shift wheel | Capture | over the depth rail: zoom around the pointer, pan; drag the empty rail to pan; **Fit** returns to the bounds |
+| Drag | Capture | the subject box's handles resize it, inside moves it, outside draws a new box |
 | Enter, F2 | Library | open the selected subject; rename it |
 | Ctrl click, Shift click, Ctrl A | Library, a subject | select subjects or stacks; Escape clears |
 | Delete | Library, a subject | delete what is selected (it asks first) |

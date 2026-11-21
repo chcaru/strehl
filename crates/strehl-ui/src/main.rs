@@ -229,6 +229,9 @@ pub struct LaunchOptions {
     /// `plan+schedule`... with a panel open): the Capture station from a
     /// fabricated state (offscreen checks); nothing reaches a camera.
     pub(crate) capture_fixture: Option<String>,
+    /// `--capture-rail-view LO-HI`: the Capture station's depth rail opens
+    /// zoomed to focus units LO to HI (offscreen checks of the rail's scale).
+    pub(crate) capture_rail_view: Option<(u16, u16)>,
 }
 
 fn parse_screenshot_ranges(value: &str) -> Option<Vec<[usize; 2]>> {
@@ -530,6 +533,21 @@ fn main() -> eframe::Result {
                 .is_some_and(|v| matches!(v.split('+').next(), Some("plan" | "flight" | "glance")))
             {
                 eprintln!("Use --capture-fixture plan|flight|glance");
+                std::process::exit(2);
+            }
+            continue;
+        }
+        if arg == "--capture-rail-view" {
+            launch.capture_rail_view = args
+                .next()
+                .and_then(|v| v.to_str().map(str::to_owned))
+                .and_then(|v| {
+                    let (lo, hi) = v.split_once('-')?;
+                    Some((lo.parse::<u16>().ok()?, hi.parse::<u16>().ok()?))
+                })
+                .filter(|(lo, hi)| lo < hi);
+            if launch.capture_rail_view.is_none() {
+                eprintln!("Use --capture-rail-view LO-HI (focus units, LO below HI)");
                 std::process::exit(2);
             }
             continue;

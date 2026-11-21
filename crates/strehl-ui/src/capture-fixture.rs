@@ -183,3 +183,29 @@ pub(crate) fn test_levels() -> RawLevels {
 pub(crate) fn earlier(minutes: u64) -> SystemTime {
     SystemTime::now() - std::time::Duration::from_secs(minutes * 60)
 }
+
+/// The plan fixture's focus trace before its preview: the lens stepped by
+/// 4 from 37,468 through a peak at 37,540, scaled so the fixture's own
+/// preview (at 37,556) reads as it would on that curve. Fabricated, like
+/// the rest of the fixture.
+pub(crate) fn focus_trace(s: &Snapshot) -> Vec<super::live::FocusSample> {
+    let curve = |p: f32| 0.25 + 0.75 * (-((p - 37_540.0) / 26.0).powi(2)).exp();
+    let roi = s
+        .host
+        .roi
+        .unwrap_or_else(strehl_capture::model::Roi::subject);
+    let Some(now) = s
+        .peaking
+        .as_ref()
+        .and_then(|(_, peaks)| peaks.focus.focus_in(roi.x, roi.y, roi.width, roi.height))
+    else {
+        return Vec::new();
+    };
+    (37_468..37_556u16)
+        .step_by(4)
+        .map(|lens| super::live::FocusSample {
+            lens: Some(lens),
+            value: now / curve(37_556.0) * curve(f32::from(lens)),
+        })
+        .collect()
+}

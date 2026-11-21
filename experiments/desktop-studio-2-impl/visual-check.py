@@ -67,6 +67,14 @@ ROUTES = {
                                   "capture-plan.png"),
     "capture-schedule-instrument": (["--route", "capture", "--capture-fixture", "plan+schedule-in", "--theme",
                                      "instrument"], "capture-plan.png"),
+    # The depth rail's scale (fb-live): zoomed in to single units, and the whole lens travel.
+    "capture-plan-rail-zoom": (["--route", "capture", "--capture-fixture", "plan",
+                                "--capture-rail-view", "37500-37620"], "capture-plan.png"),
+    "capture-plan-rail-travel": (["--route", "capture", "--capture-fixture", "plan",
+                                  "--capture-rail-view", "0-65535"], "capture-plan.png"),
+    # The subject box's east handle under the pointer (1680 x 1050).
+    "capture-plan-box-hover": (["--route", "capture", "--capture-fixture", "plan",
+                                "--screenshot-hover", "0.6726,0.4571"], "capture-plan.png"),
     "engine-lightbox": (["--open-run", RUN, "--route", "engine", "--theme", "lightbox"], "engine-room.png"),
     "develop-instrument": (["--open-run", RUN, "--route", "develop", "--theme", "instrument"], "develop.png"),
     "develop-lightbox": (["--open-run", RUN, "--route", "develop", "--theme", "lightbox"], "develop.png"),

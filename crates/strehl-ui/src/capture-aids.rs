@@ -4,7 +4,66 @@ use eframe::egui::{Color32, ColorImage};
 pub(crate) struct Peaking {
     size: [usize; 2],
     strength: Vec<u8>,
+    /// The Laplacian's energy over a fixed grid of tiles, for the live
+    /// view's focus readout in the subject box.
+    pub focus: FocusTiles,
 }
+
+/// Columns and rows of [`FocusTiles`], whatever the preview's size.
+pub(crate) const FOCUS_COLUMNS: usize = 32;
+pub(crate) const FOCUS_ROWS: usize = 24;
+
+/// The sum of the squared luma Laplacian (the peaking filter's response
+/// before its floor and scaling, in whole codes) and the pixels it was taken
+/// at, per tile of a fixed grid over the preview. Summed on the client
+/// thread with the peaking; the UI reduces at most 768 tiles to the subject
+/// box once per preview or box ([`Self::focus_in`]). A focus aid on the
+/// camera's JPEG: it rises as the box's detail sharpens, it is not a
+/// measure of the RAW.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub(crate) struct FocusTiles {
+    pub size: [usize; 2],
+    pub energy: Vec<u64>,
+    pub pixels: Vec<u32>,
+}
+
+impl FocusTiles {
+    /// The mean squared Laplacian over the normalised rectangle `x`, `y`,
+    /// `width`, `height` (tiles weighted by their overlap), or `None` when
+    /// it covers no measured pixel.
+    pub fn focus_in(&self, x: f32, y: f32, width: f32, height: f32) -> Option<f32> {
+        let [w, h] = self.size;
+        if w == 0 || h == 0 || self.energy.len() != FOCUS_COLUMNS * FOCUS_ROWS {
+            return None;
+        }
+        let overlap = |a0: f32, a1: f32, b0: f32, b1: f32| (a1.min(b1) - a0.max(b0)).max(0.0);
+        let edge = |i: usize, n: usize, of: usize| (i * of / n) as f32 / of as f32;
+        let (mut energy, mut pixels) = (0.0f64, 0.0f64);
+        for row in 0..FOCUS_ROWS {
+            let (t0, t1) = (edge(row, FOCUS_ROWS, h), edge(row + 1, FOCUS_ROWS, h));
+            let oy = overlap(t0, t1, y, y + height);
+            if oy <= 0.0 || t1 <= t0 {
+                continue;
+            }
+            for column in 0..FOCUS_COLUMNS {
+                let (l0, l1) = (
+                    edge(column, FOCUS_COLUMNS, w),
+                    edge(column + 1, FOCUS_COLUMNS, w),
+                );
+                let ox = overlap(l0, l1, x, x + width);
+                if ox <= 0.0 || l1 <= l0 {
+                    continue;
+                }
+                let share = f64::from(ox / (l1 - l0) * oy / (t1 - t0));
+                let i = row * FOCUS_COLUMNS + column;
+                energy += share * self.energy[i] as f64;
+                pixels += share * f64::from(self.pixels[i]);
+            }
+        }
+        (pixels > 0.0).then(|| (energy / pixels) as f32)
+    }
+}
+
 impl Peaking {
     /// A fixed local high-pass response, independent of scene-wide contrast.
     /// A small absolute floor suppresses JPEG/flat-field noise; the user can raise it.
@@ -16,21 +75,61 @@ impl Peaking {
             .map(|p| 0.2126 * p.r() as f32 + 0.7152 * p.g() as f32 + 0.0722 * p.b() as f32)
             .collect();
         let mut strength = vec![0; w * h];
+        let mut focus = FocusTiles {
+            size: image.size,
+            energy: vec![0; FOCUS_COLUMNS * FOCUS_ROWS],
+            pixels: vec![0; FOCUS_COLUMNS * FOCUS_ROWS],
+        };
         if w >= 3 && h >= 3 {
+            // Each tile's interior columns; a row is summed a tile at a
+            // time, in integers (no per-pixel lookup or float chain).
+            let spans: Vec<(usize, usize)> = (0..FOCUS_COLUMNS)
+                .map(|t| {
+                    (
+                        (t * w / FOCUS_COLUMNS).max(1),
+                        ((t + 1) * w / FOCUS_COLUMNS).min(w - 1),
+                    )
+                })
+                .collect();
             for y in 1..h - 1 {
-                for x in 1..w - 1 {
-                    let i = y * w + x;
-                    strength[i] =
-                        ((4.0 * luma[i] - luma[i - 1] - luma[i + 1] - luma[i - w] - luma[i + w])
-                            .abs()
-                            * 0.25)
-                            .min(255.0) as u8;
+                let tiles = (y * FOCUS_ROWS / h) * FOCUS_COLUMNS;
+                let (above, row, below) = (
+                    &luma[(y - 1) * w..y * w],
+                    &luma[y * w..(y + 1) * w],
+                    &luma[(y + 1) * w..(y + 2) * w],
+                );
+                let out = &mut strength[y * w..(y + 1) * w];
+                for (t, &(x0, x1)) in spans.iter().enumerate() {
+                    if x1 <= x0 {
+                        continue;
+                    }
+                    // Equal-length slices: no bounds checks in the loop. The
+                    // Laplacian of 8-bit luma is at most 1,020, so a span's
+                    // sum of squares fits a u32 for any width the decoder
+                    // admits (8,192 px).
+                    let mut energy = 0u32;
+                    for (((((c, l), r), u), d), s) in row[x0..x1]
+                        .iter()
+                        .zip(&row[x0 - 1..x1 - 1])
+                        .zip(&row[x0 + 1..x1 + 1])
+                        .zip(&above[x0..x1])
+                        .zip(&below[x0..x1])
+                        .zip(out[x0..x1].iter_mut())
+                    {
+                        let lap = (4.0 * c - l - r - u - d).abs();
+                        *s = (lap * 0.25).min(255.0) as u8;
+                        let code = lap as i32;
+                        energy += (code * code) as u32;
+                    }
+                    focus.energy[tiles + t] += u64::from(energy);
+                    focus.pixels[tiles + t] += (x1 - x0) as u32;
                 }
             }
         }
         Self {
             size: image.size,
             strength,
+            focus,
         }
     }
     pub fn overlay(&self, threshold: u8) -> ColorImage {
@@ -56,13 +155,21 @@ pub(crate) const PREVIEW_CLIP_CODE: u8 = 254;
 pub(crate) struct PreviewLevels {
     /// Pixels per Rec. 709 luma code of the sRGB values, 0-255.
     pub histogram: [u32; 256],
+    /// Pixels per code of the red, green and blue channels.
+    pub channels: [[u32; 256]; 3],
     pub pixels: u64,
     /// Share of pixels with any channel at or above [`PREVIEW_CLIP_CODE`].
     pub clipped_share: f32,
+    /// Share of pixels with every channel at or below [`PREVIEW_BLACK_CODE`].
+    pub black_share: f32,
     /// The clipped pixels (1) of the `size` image, for the clipping overlay.
     pub clip: Vec<u8>,
     pub size: [usize; 2],
 }
+
+/// A pixel whose channels are all at or below this code is black in a
+/// camera JPEG: shadow detail there is gone from the preview.
+pub(crate) const PREVIEW_BLACK_CODE: u8 = 3;
 
 impl PreviewLevels {
     /// Shown beside every display of these levels.
@@ -72,24 +179,38 @@ impl PreviewLevels {
 
     pub fn analyze(image: &ColorImage) -> Self {
         let mut histogram = [0u32; 256];
-        let mut clipped = 0u64;
+        let mut channels = [[0u32; 256]; 3];
+        let (mut clipped, mut black) = (0u64, 0u64);
         let mut clip = Vec::with_capacity(image.pixels.len());
         for p in &image.pixels {
-            let luma = 0.2126 * p.r() as f32 + 0.7152 * p.g() as f32 + 0.0722 * p.b() as f32;
-            histogram[(luma.round() as usize).min(255)] += 1;
-            let hot = p.r().max(p.g()).max(p.b()) >= PREVIEW_CLIP_CODE;
+            let (r, g, b) = (p.r(), p.g(), p.b());
+            // Rec. 709 weights in integers, rounded half up.
+            let luma =
+                (2126 * u32::from(r) + 7152 * u32::from(g) + 722 * u32::from(b) + 5000) / 10_000;
+            histogram[luma.min(255) as usize] += 1;
+            channels[0][usize::from(r)] += 1;
+            channels[1][usize::from(g)] += 1;
+            channels[2][usize::from(b)] += 1;
+            let top = r.max(g).max(b);
+            let hot = top >= PREVIEW_CLIP_CODE;
             clipped += u64::from(hot);
+            black += u64::from(top <= PREVIEW_BLACK_CODE);
             clip.push(u8::from(hot));
         }
         let pixels = image.pixels.len() as u64;
-        Self {
-            histogram,
-            pixels,
-            clipped_share: if pixels == 0 {
+        let share = |n: u64| {
+            if pixels == 0 {
                 0.0
             } else {
-                clipped as f32 / pixels as f32
-            },
+                n as f32 / pixels as f32
+            }
+        };
+        Self {
+            histogram,
+            channels,
+            pixels,
+            clipped_share: share(clipped),
+            black_share: share(black),
             clip,
             size: image.size,
         }
@@ -139,6 +260,10 @@ pub(crate) fn phone_qr(link: &str) -> anyhow::Result<ColorImage> {
     }
     Ok(image)
 }
+
+#[cfg(test)]
+#[path = "capture-aids-tests.rs"]
+mod live_tests;
 
 #[cfg(test)]
 mod tests {
